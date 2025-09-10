@@ -3,58 +3,58 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Thank You | <?php echo ucwords(SITE_APP_NAME) ?></title>
     <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
 
-    .container {
-        max-width: 800px;
-        margin: 50px auto;
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-    }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
 
-    h1 {
-        color: #333;
-    }
+        h1 {
+            color: #333;
+        }
 
-    p {
-        color: #666;
-        line-height: 1.6;
-        margin: 10px 0;
-    }
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
 
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px 10px 10px 0;
-        color: #fff;
-        background-color: #007bff;
-        text-decoration: none;
-        border-radius: 4px;
-    }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 10px 10px 0;
+            color: #fff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
 
-    .button:hover {
-        background-color: #0056b3;
-    }
+        .button:hover {
+            background-color: #0056b3;
+        }
 
-    .social-media a {
-        margin-right: 10px;
-        color: #007bff;
-        text-decoration: none;
-    }
+        .social-media a {
+            margin-right: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
 
-    .social-media a:hover {
-        text-decoration: underline;
-    }
+        .social-media a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 

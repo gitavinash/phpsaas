@@ -11,32 +11,32 @@ $postType = ((isset($postType)) ? $postType : 'discussion');
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Create New <?php echo ucwords(str_replace('_', ' ', $postType)) ?> - <?php echo SITE_NAME ?></title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: '#4F46E5',
-                    secondary: '#10B981'
-                },
-                borderRadius: {
-                    'none': '0px',
-                    'sm': '4px',
-                    DEFAULT: '8px',
-                    'md': '12px',
-                    'lg': '16px',
-                    'xl': '20px',
-                    '2xl': '24px',
-                    '3xl': '32px',
-                    'full': '9999px',
-                    'button': '8px'
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
                 }
             }
         }
-    }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,263 +44,263 @@ $postType = ((isset($postType)) ? $postType : 'discussion');
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
     <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
 
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f9fafb;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+        }
 
-    input[type="search"]::-webkit-search-decoration,
-    input[type="search"]::-webkit-search-cancel-button,
-    input[type="search"]::-webkit-search-results-button,
-    input[type="search"]::-webkit-search-results-decoration {
-        display: none;
-    }
+        input[type="search"]::-webkit-search-decoration,
+        input[type="search"]::-webkit-search-cancel-button,
+        input[type="search"]::-webkit-search-results-button,
+        input[type="search"]::-webkit-search-results-decoration {
+            display: none;
+        }
 
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
-    .dropdown-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background: white;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        min-width: 200px;
-        z-index: 50;
-        margin-top: 4px;
-    }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            min-width: 200px;
+            z-index: 50;
+            margin-top: 4px;
+        }
 
-    .dropdown-menu.show {
-        display: block;
-    }
+        .dropdown-menu.show {
+            display: block;
+        }
 
-    .dropdown-item {
-        display: block;
-        padding: 8px 16px;
-        text-decoration: none;
-        color: #374151;
-        font-size: 14px;
-        transition: background-color 0.2s;
-    }
+        .dropdown-item {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #374151;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
 
-    .dropdown-item:hover {
-        background-color: #f3f4f6;
-    }
+        .dropdown-item:hover {
+            background-color: #f3f4f6;
+        }
 
-    .dropdown-divider {
-        border-top: 1px solid #e5e7eb;
-        margin: 4px 0;
-    }
+        .dropdown-divider {
+            border-top: 1px solid #e5e7eb;
+            margin: 4px 0;
+        }
 
-    .category-dropdown {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: white;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        min-width: 100%;
-        z-index: 50;
-        margin-top: 4px;
-        max-height: 200px;
-        overflow-y: auto;
-    }
+        .category-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            min-width: 100%;
+            z-index: 50;
+            margin-top: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
 
-    .category-dropdown.show {
-        display: block;
-    }
+        .category-dropdown.show {
+            display: block;
+        }
 
-    .category-option {
-        display: block;
-        padding: 8px 16px;
-        text-decoration: none;
-        color: #374151;
-        font-size: 14px;
-        transition: background-color 0.2s;
-        cursor: pointer;
-    }
+        .category-option {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #374151;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
 
-    .category-option:hover {
-        background-color: #f3f4f6;
-    }
+        .category-option:hover {
+            background-color: #f3f4f6;
+        }
 
-    .radio-custom {
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        border: 2px solid #d1d5db;
-        border-radius: 50%;
-        position: relative;
-        cursor: pointer;
-    }
+        .radio-custom {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+        }
 
-    .radio-custom:checked {
-        border-color: #4F46E5;
-        background-color: #4F46E5;
-    }
+        .radio-custom:checked {
+            border-color: #4F46E5;
+            background-color: #4F46E5;
+        }
 
-    .radio-custom:checked::after {
-        content: '';
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: white;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
+        .radio-custom:checked::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-    .toggle-switch {
-        width: 44px;
-        height: 24px;
-        background-color: #d1d5db;
-        border-radius: 12px;
-        position: relative;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background-color: #d1d5db;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-    .toggle-switch.active {
-        background-color: #4F46E5;
-    }
+        .toggle-switch.active {
+            background-color: #4F46E5;
+        }
 
-    .toggle-switch::after {
-        content: '';
-        width: 20px;
-        height: 20px;
-        background-color: white;
-        border-radius: 50%;
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        transition: transform 0.3s;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+        .toggle-switch::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-    .toggle-switch.active::after {
-        transform: translateX(20px);
-    }
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
 
-    .tag-input {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        padding: 8px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        min-height: 44px;
-        cursor: text;
-    }
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            min-height: 44px;
+            cursor: text;
+        }
 
-    .tag-item {
-        display: flex;
-        align-items: center;
-        background-color: #e5e7eb;
-        padding: 4px 8px;
-        border-radius: 16px;
-        font-size: 14px;
-    }
+        .tag-item {
+            display: flex;
+            align-items: center;
+            background-color: #e5e7eb;
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 14px;
+        }
 
-    .tag-remove {
-        margin-left: 4px;
-        cursor: pointer;
-        color: #6b7280;
-    }
+        .tag-remove {
+            margin-left: 4px;
+            cursor: pointer;
+            color: #6b7280;
+        }
 
-    .tag-remove:hover {
-        color: #374151;
-    }
+        .tag-remove:hover {
+            color: #374151;
+        }
 
-    .tag-input input {
-        border: none;
-        outline: none;
-        flex: 1;
-        min-width: 120px;
-        font-size: 14px;
-    }
+        .tag-input input {
+            border: none;
+            outline: none;
+            flex: 1;
+            min-width: 120px;
+            font-size: 14px;
+        }
 
-    .preview-panel {
-        display: none;
-    }
+        .preview-panel {
+            display: none;
+        }
 
-    .preview-panel.show {
-        display: block;
-    }
+        .preview-panel.show {
+            display: block;
+        }
 
-    .editor-toolbar {
-        border-bottom: 1px solid #e5e7eb;
-        padding: 8px;
-        display: flex;
-        gap: 4px;
-    }
+        .editor-toolbar {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 8px;
+            display: flex;
+            gap: 4px;
+        }
 
-    .editor-btn {
-        padding: 6px 8px;
-        border: none;
-        background: transparent;
-        border-radius: 4px;
-        cursor: pointer;
-        color: #6b7280;
-    }
+        .editor-btn {
+            padding: 6px 8px;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #6b7280;
+        }
 
-    .editor-btn:hover {
-        background-color: #f3f4f6;
-        color: #374151;
-    }
+        .editor-btn:hover {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
 
-    .editor-btn.active {
-        background-color: #e5e7eb;
-        color: #374151;
-    }
+        .editor-btn.active {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
 
-    .editor-content {
-        min-height: 200px;
-        padding: 16px;
-        border: none;
-        outline: none;
-        resize: none;
-        font-family: inherit;
-    }
+        .editor-content {
+            min-height: 200px;
+            padding: 16px;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: inherit;
+        }
 
-    .upload-zone {
-        border: 2px dashed #d1d5db;
-        border-radius: 8px;
-        padding: 32px;
-        text-align: center;
-        transition: border-color 0.3s;
-        cursor: pointer;
-    }
+        .upload-zone {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 32px;
+            text-align: center;
+            transition: border-color 0.3s;
+            cursor: pointer;
+        }
 
-    .upload-zone:hover {
-        border-color: #4F46E5;
-        background-color: #f8fafc;
-    }
+        .upload-zone:hover {
+            border-color: #4F46E5;
+            background-color: #f8fafc;
+        }
 
-    .upload-zone.dragover {
-        border-color: #4F46E5;
-        background-color: #eff6ff;
-    }
+        .upload-zone.dragover {
+            border-color: #4F46E5;
+            background-color: #eff6ff;
+        }
 
-    .image-preview {
-        display: none;
-    }
+        .image-preview {
+            display: none;
+        }
 
-    .image-preview.show {
-        display: block;
-    }
+        .image-preview.show {
+            display: block;
+        }
     </style>
 </head>
 
@@ -552,289 +552,289 @@ $postType = ((isset($postType)) ? $postType : 'discussion');
     require_once 'footer.php';
     ?>
     <script id="profileDropdownScript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const profileButton = document.getElementById('profileButton');
-        const profileDropdown = document.getElementById('profileDropdown');
-        profileButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('show');
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileButton = document.getElementById('profileButton');
+            const profileDropdown = document.getElementById('profileDropdown');
+            profileButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('show');
+            });
+            document.addEventListener('click', function() {
+                profileDropdown.classList.remove('show');
+            });
+            profileDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
         });
-        document.addEventListener('click', function() {
-            profileDropdown.classList.remove('show');
-        });
-        profileDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-    });
     </script>
     <script id="categoryDropdownScript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const categoryButton = document.getElementById('categoryButton');
-        const categoryDropdown = document.getElementById('categoryDropdown');
-        const categoryText = document.getElementById('categoryText');
-        const categoryOptions = document.querySelectorAll('.category-option');
-        categoryButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            categoryDropdown.classList.toggle('show');
-        });
-        document.addEventListener('click', function() {
-            categoryDropdown.classList.remove('show');
-        });
-        categoryOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                const value = this.getAttribute('data-value');
-                const text = this.textContent;
-                categoryText.textContent = text;
-                categoryText.classList.remove('text-gray-500');
-                categoryText.classList.add('text-gray-900');
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryButton = document.getElementById('categoryButton');
+            const categoryDropdown = document.getElementById('categoryDropdown');
+            const categoryText = document.getElementById('categoryText');
+            const categoryOptions = document.querySelectorAll('.category-option');
+            categoryButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                categoryDropdown.classList.toggle('show');
+            });
+            document.addEventListener('click', function() {
                 categoryDropdown.classList.remove('show');
             });
+            categoryOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const value = this.getAttribute('data-value');
+                    const text = this.textContent;
+                    categoryText.textContent = text;
+                    categoryText.classList.remove('text-gray-500');
+                    categoryText.classList.add('text-gray-900');
+                    categoryDropdown.classList.remove('show');
+                });
+            });
         });
-    });
     </script>
     <script id="titleCounterScript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const titleInput = document.getElementById('title');
-        const titleCounter = document.getElementById('titleCounter');
-        titleInput.addEventListener('input', function() {
-            const length = this.value.length;
-            titleCounter.textContent = `${length}/150`;
-            if (length > 120) {
-                titleCounter.classList.add('text-yellow-600');
-                titleCounter.classList.remove('text-gray-400');
-            }
-            if (length > 140) {
-                titleCounter.classList.add('text-red-600');
-                titleCounter.classList.remove('text-yellow-600');
-            }
-            if (length <= 120) {
-                titleCounter.classList.add('text-gray-400');
-                titleCounter.classList.remove('text-yellow-600', 'text-red-600');
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            const titleInput = document.getElementById('title');
+            const titleCounter = document.getElementById('titleCounter');
+            titleInput.addEventListener('input', function() {
+                const length = this.value.length;
+                titleCounter.textContent = `${length}/150`;
+                if (length > 120) {
+                    titleCounter.classList.add('text-yellow-600');
+                    titleCounter.classList.remove('text-gray-400');
+                }
+                if (length > 140) {
+                    titleCounter.classList.add('text-red-600');
+                    titleCounter.classList.remove('text-yellow-600');
+                }
+                if (length <= 120) {
+                    titleCounter.classList.add('text-gray-400');
+                    titleCounter.classList.remove('text-yellow-600', 'text-red-600');
+                }
+            });
         });
-    });
     </script>
     <script id="richTextEditorScript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const editorButtons = document.querySelectorAll('.editor-btn');
-        const editor = document.getElementById('editor');
-        editorButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const command = this.getAttribute('data-command');
-                if (command === 'createLink') {
-                    const url = prompt('Enter URL:');
-                    if (url) {
-                        document.execCommand(command, false, url);
+        document.addEventListener('DOMContentLoaded', function() {
+            const editorButtons = document.querySelectorAll('.editor-btn');
+            const editor = document.getElementById('editor');
+            editorButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const command = this.getAttribute('data-command');
+                    if (command === 'createLink') {
+                        const url = prompt('Enter URL:');
+                        if (url) {
+                            document.execCommand(command, false, url);
+                        }
+                    } else {
+                        document.execCommand(command, false, null);
                     }
-                } else {
-                    document.execCommand(command, false, null);
+                    editor.focus();
+                });
+            });
+            editor.addEventListener('focus', function() {
+                if (this.textContent.trim() === '' && this.innerHTML === '') {
+                    this.innerHTML = '';
                 }
-                editor.focus();
+            });
+            editor.addEventListener('blur', function() {
+                if (this.textContent.trim() === '') {
+                    this.innerHTML = '';
+                }
             });
         });
-        editor.addEventListener('focus', function() {
-            if (this.textContent.trim() === '' && this.innerHTML === '') {
-                this.innerHTML = '';
-            }
-        });
-        editor.addEventListener('blur', function() {
-            if (this.textContent.trim() === '') {
-                this.innerHTML = '';
-            }
-        });
-    });
     </script>
     <script id="imageUploadScript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const uploadZone = document.getElementById('uploadZone');
-        const imageInput = document.getElementById('imageInput');
-        const imagePreview = document.getElementById('imagePreview');
-        const previewGrid = document.getElementById('previewGrid');
-        const beforeAfterSection = document.getElementById('beforeAfterSection');
-        let uploadedImages = [];
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadZone = document.getElementById('uploadZone');
+            const imageInput = document.getElementById('imageInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewGrid = document.getElementById('previewGrid');
+            const beforeAfterSection = document.getElementById('beforeAfterSection');
+            let uploadedImages = [];
 
-        // Show/hide before/after section based on post type
-        const postTypeRadios = document.querySelectorAll('input[name="postType"]');
-        postTypeRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                if (this.value === 'success_story') {
-                    beforeAfterSection.classList.remove('hidden');
-                } else {
-                    beforeAfterSection.classList.add('hidden');
-                }
+            // Show/hide before/after section based on post type
+            const postTypeRadios = document.querySelectorAll('input[name="postType"]');
+            postTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'success_story') {
+                        beforeAfterSection.classList.remove('hidden');
+                    } else {
+                        beforeAfterSection.classList.add('hidden');
+                    }
+                });
             });
-        });
 
-        // Before Image Upload
-        const beforeUploadZone = document.querySelector('.before-upload-zone');
-        const beforeImageInput = document.getElementById('beforeImageInput');
-        const beforePreview = document.getElementById('beforePreview');
+            // Before Image Upload
+            const beforeUploadZone = document.querySelector('.before-upload-zone');
+            const beforeImageInput = document.getElementById('beforeImageInput');
+            const beforePreview = document.getElementById('beforePreview');
 
-        beforeUploadZone.addEventListener('click', () => beforeImageInput.click());
+            beforeUploadZone.addEventListener('click', () => beforeImageInput.click());
 
-        beforeImageInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    beforePreview.querySelector('img').src = e.target.result;
-                    beforePreview.classList.remove('hidden');
-                    beforeUploadZone.classList.add('hidden');
-                };
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-
-        beforePreview.querySelector('button').addEventListener('click', function() {
-            beforePreview.classList.add('hidden');
-            beforeUploadZone.classList.remove('hidden');
-            beforeImageInput.value = '';
-            beforePreview.querySelector('img').src = '';
-        });
-
-        // After Image Upload
-        const afterUploadZone = document.querySelector('.after-upload-zone');
-        const afterImageInput = document.getElementById('afterImageInput');
-        const afterPreview = document.getElementById('afterPreview');
-
-        afterUploadZone.addEventListener('click', () => afterImageInput.click());
-
-        afterImageInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    afterPreview.querySelector('img').src = e.target.result;
-                    afterPreview.classList.remove('hidden');
-                    afterUploadZone.classList.add('hidden');
-                };
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-
-        afterPreview.querySelector('button').addEventListener('click', function() {
-            afterPreview.classList.add('hidden');
-            afterUploadZone.classList.remove('hidden');
-            afterImageInput.value = '';
-            afterPreview.querySelector('img').src = '';
-        });
-        uploadZone.addEventListener('click', function() {
-            imageInput.click();
-        });
-        uploadZone.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            this.classList.add('dragover');
-        });
-        uploadZone.addEventListener('dragleave', function() {
-            this.classList.remove('dragover');
-        });
-        uploadZone.addEventListener('drop', function(e) {
-            e.preventDefault();
-            this.classList.remove('dragover');
-            const files = Array.from(e.dataTransfer.files);
-            handleFiles(files);
-        });
-        imageInput.addEventListener('change', function() {
-            const files = Array.from(this.files);
-            handleFiles(files);
-        });
-
-        function handleFiles(files) {
-            files.forEach(file => {
-                if (file.type.startsWith('image/') && uploadedImages.length < 5) {
+            beforeImageInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        uploadedImages.push({
-                            file: file,
-                            url: e.target.result
-                        });
-                        displayImages();
+                        beforePreview.querySelector('img').src = e.target.result;
+                        beforePreview.classList.remove('hidden');
+                        beforeUploadZone.classList.add('hidden');
                     };
-                    reader.readAsDataURL(file);
+                    reader.readAsDataURL(this.files[0]);
                 }
             });
-        }
 
-        function displayImages() {
-            previewGrid.innerHTML = '';
-            uploadedImages.forEach((image, index) => {
-                const imageContainer = document.createElement('div');
-                imageContainer.className = 'relative';
-                imageContainer.innerHTML = `
+            beforePreview.querySelector('button').addEventListener('click', function() {
+                beforePreview.classList.add('hidden');
+                beforeUploadZone.classList.remove('hidden');
+                beforeImageInput.value = '';
+                beforePreview.querySelector('img').src = '';
+            });
+
+            // After Image Upload
+            const afterUploadZone = document.querySelector('.after-upload-zone');
+            const afterImageInput = document.getElementById('afterImageInput');
+            const afterPreview = document.getElementById('afterPreview');
+
+            afterUploadZone.addEventListener('click', () => afterImageInput.click());
+
+            afterImageInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        afterPreview.querySelector('img').src = e.target.result;
+                        afterPreview.classList.remove('hidden');
+                        afterUploadZone.classList.add('hidden');
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            afterPreview.querySelector('button').addEventListener('click', function() {
+                afterPreview.classList.add('hidden');
+                afterUploadZone.classList.remove('hidden');
+                afterImageInput.value = '';
+                afterPreview.querySelector('img').src = '';
+            });
+            uploadZone.addEventListener('click', function() {
+                imageInput.click();
+            });
+            uploadZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+            uploadZone.addEventListener('dragleave', function() {
+                this.classList.remove('dragover');
+            });
+            uploadZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files);
+                handleFiles(files);
+            });
+            imageInput.addEventListener('change', function() {
+                const files = Array.from(this.files);
+                handleFiles(files);
+            });
+
+            function handleFiles(files) {
+                files.forEach(file => {
+                    if (file.type.startsWith('image/') && uploadedImages.length < 5) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            uploadedImages.push({
+                                file: file,
+                                url: e.target.result
+                            });
+                            displayImages();
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            function displayImages() {
+                previewGrid.innerHTML = '';
+                uploadedImages.forEach((image, index) => {
+                    const imageContainer = document.createElement('div');
+                    imageContainer.className = 'relative';
+                    imageContainer.innerHTML = `
 <img src="${image.url}" alt="Preview" class="w-full h-24 object-cover object-top rounded-lg">
 <button type="button" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600" onclick="removeImage(${index})">
 <i class="ri-close-line"></i>
 </button>
 `;
-                previewGrid.appendChild(imageContainer);
-            });
-            if (uploadedImages.length > 0) {
-                imagePreview.classList.add('show');
-            } else {
-                imagePreview.classList.remove('show');
+                    previewGrid.appendChild(imageContainer);
+                });
+                if (uploadedImages.length > 0) {
+                    imagePreview.classList.add('show');
+                } else {
+                    imagePreview.classList.remove('show');
+                }
             }
-        }
-        window.removeImage = function(index) {
-            uploadedImages.splice(index, 1);
-            displayImages();
-        };
-    });
+            window.removeImage = function(index) {
+                uploadedImages.splice(index, 1);
+                displayImages();
+            };
+        });
     </script>
     <script id="tagInputScript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const tagInput = document.getElementById('tagInput');
-        const tagInputField = tagInput.querySelector('.tag-input-field');
-        let tags = [];
-        tagInputField.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ',') {
-                e.preventDefault();
-                addTag(this.value.trim());
-                this.value = '';
-            }
-        });
-        tagInputField.addEventListener('blur', function() {
-            if (this.value.trim()) {
-                addTag(this.value.trim());
-                this.value = '';
-            }
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const tagInput = document.getElementById('tagInput');
+            const tagInputField = tagInput.querySelector('.tag-input-field');
+            let tags = [];
+            tagInputField.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    addTag(this.value.trim());
+                    this.value = '';
+                }
+            });
+            tagInputField.addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    addTag(this.value.trim());
+                    this.value = '';
+                }
+            });
 
-        function addTag(tagText) {
-            if (tagText && !tags.includes(tagText) && tags.length < 10) {
-                tags.push(tagText);
+            function addTag(tagText) {
+                if (tagText && !tags.includes(tagText) && tags.length < 10) {
+                    tags.push(tagText);
+                    renderTags();
+                }
+            }
+
+            function removeTag(tagText) {
+                tags = tags.filter(tag => tag !== tagText);
                 renderTags();
             }
-        }
 
-        function removeTag(tagText) {
-            tags = tags.filter(tag => tag !== tagText);
-            renderTags();
-        }
-
-        function renderTags() {
-            const existingTags = tagInput.querySelectorAll('.tag-item');
-            existingTags.forEach(tag => tag.remove());
-            tags.forEach(tag => {
-                const tagElement = document.createElement('div');
-                tagElement.className = 'tag-item';
-                tagElement.innerHTML = `
+            function renderTags() {
+                const existingTags = tagInput.querySelectorAll('.tag-item');
+                existingTags.forEach(tag => tag.remove());
+                tags.forEach(tag => {
+                    const tagElement = document.createElement('div');
+                    tagElement.className = 'tag-item';
+                    tagElement.innerHTML = `
 <span>${tag}</span>
 <span class="tag-remove" onclick="removeTag('${tag}')">×</span>
 `;
-                tagInput.insertBefore(tagElement, tagInputField);
-            });
-        }
-        window.removeTag = removeTag;
-    });
+                    tagInput.insertBefore(tagElement, tagInputField);
+                });
+            }
+            window.removeTag = removeTag;
+        });
     </script>
     <script id="toggleSwitchScript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const toggleSwitches = document.querySelectorAll('.toggle-switch');
-        toggleSwitches.forEach(toggle => {
-            toggle.addEventListener('click', function() {
-                this.classList.toggle('active');
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleSwitches = document.querySelectorAll('.toggle-switch');
+            toggleSwitches.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
             });
         });
-    });
     </script>
 </body>
 

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title><?php echo SITE_NAME . ' stocks list' ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,15 +82,18 @@
         .no-border td {
             border: none !important;
         }
-            .left {
-                text-align: left !important;
-            }
-            .right {
-                text-align: right !important;
-            }
-            .center {
-                text-align: center !important;
-            }
+
+        .left {
+            text-align: left !important;
+        }
+
+        .right {
+            text-align: right !important;
+        }
+
+        .center {
+            text-align: center !important;
+        }
 
         @media print {
             body {
@@ -99,10 +102,11 @@
                 padding: 0;
                 margin: 0;
             }
+
             .left {
                 text-align: left !important;
             }
-            
+
             .right {
                 text-align: right !important;
             }
@@ -191,7 +195,7 @@
 
     mysqli_query($connection, "SET SESSION group_concat_max_len = 10000000");
 
-        $query = "
+    $query = "
     SELECT
         w.warehouse_title,
         b.block_size_dimension,
@@ -246,8 +250,8 @@
 
 
     if ($inventoryList = mysqli_query($connection, $query)) {
-        if(mysqli_num_rows($inventoryList) > 0) {
-            $warehouseBlockData=extract(mysqli_fetch_assoc($inventoryList));
+        if (mysqli_num_rows($inventoryList) > 0) {
+            $warehouseBlockData = extract(mysqli_fetch_assoc($inventoryList));
 
             echo "
                 <table>
@@ -261,7 +265,7 @@
 
             // print_r($warehouseBlockDetails);
 
-            foreach($warehouseBlockDetails as $blockKey => $blockValue) {
+            foreach ($warehouseBlockDetails as $blockKey => $blockValue) {
                 extract($blockValue);
                 echo "<table>
                     <tr>
@@ -299,42 +303,42 @@
                         </tr>
                     </div>";
 
-                $i=0;
-                foreach($block_slabs as $slabsKey => $slabsvalue) {
+                $i = 0;
+                foreach ($block_slabs as $slabsKey => $slabsvalue) {
                     echo "
                         <tr>
-                            <td>".($i+1)."</td>
+                            <td>" . ($i + 1) . "</td>
                             <td>{$slabsvalue['width']}</td>
                             <td>{$slabsvalue['height']}</td>
                             <td>{$slabsvalue['slab_net_size']}</td>";
 
-                            $warehouseBlockSlabDamageArea=json_decode($slabsvalue['damage_area'], true);
+                    $warehouseBlockSlabDamageArea = json_decode($slabsvalue['damage_area'], true);
 
-                            for($j=0; $j<5; $j++) {
-                                if(isset($warehouseBlockSlabDamageArea[$j])) {
-                                    echo "
+                    for ($j = 0; $j < 5; $j++) {
+                        if (isset($warehouseBlockSlabDamageArea[$j])) {
+                            echo "
                                         <td>{$warehouseBlockSlabDamageArea[$j]['damageAreaWidth']}</td>
                                         <td>{$warehouseBlockSlabDamageArea[$j]['damageAreaHeight']}</td>
                                         <td></td>
                                     ";
-                                } else {
-                                    echo "
+                        } else {
+                            echo "
                                         <td class='center' >-</td>
                                         <td class='center'>-</td>
                                         <td class='center'>-</td>
                                     ";
-                                }
-                            }
+                        }
+                    }
 
-                            // foreach($warehouseBlockSlabDamageArea as $key => $value) {
-                            //     echo "
-                            //         <td>{$value['damageAreaWidth']}</td>
-                            //         <td>{$value['damageAreaHeight']}</td>
-                            //         <td></td>
-                            //     ";
-                            // }
+                    // foreach($warehouseBlockSlabDamageArea as $key => $value) {
+                    //     echo "
+                    //         <td>{$value['damageAreaWidth']}</td>
+                    //         <td>{$value['damageAreaHeight']}</td>
+                    //         <td></td>
+                    //     ";
+                    // }
 
-                        echo "</tr>
+                    echo "</tr>
                     ";
                     $i++;
                 }
@@ -379,7 +383,7 @@
     }
 
     ?>
-    
+
 </body>
 
 </html>

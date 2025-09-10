@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -176,113 +176,113 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script>
-    $('.testimonial_slider').slick({
-        infinite: true,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        autoplay: false,
-        autoplaySpeed: 2000,
-        arrows: true,
-        dots: false,
-        nextArrow: '<button type="button" class="custom-next slick-next">Next</button>',
-        prevArrow: '<button type="button" class="custom-prev slick-prev">Prev</button>',
-        responsive: [{
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 2,
-                }
-            },
-            {
-                breakpoint: 992,
-                settings: {
-                    slidesToShow: 2,
-                }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 2,
-                }
-            },
-            {
-                breakpoint: 576,
-                settings: {
-                    slidesToShow: 1,
-                }
-            },
-        ]
-    });
-    </script>
-
-    <script>
-    $('.manage_slider').slick({
-        infinite: true,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: false,
-        autoplaySpeed: 2000,
-        arrows: true,
-        dots: false,
-        responsive: [{
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 1,
-                }
-            },
-            {
-                breakpoint: 992,
-                settings: {
-                    slidesToShow: 1,
-                }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 1,
-                }
-            },
-            {
-                breakpoint: 576,
-                settings: {
-                    slidesToShow: 1,
-                }
-            },
-        ]
-    });
-    </script>
-
-    <script>
-    $(".testimonial_slider .slick-prev").hover(
-        function() {
-            $(".testimonial_slider").addClass("prev-hovered");
-        },
-        function() {
-            $(".testimonial_slider").removeClass("prev-hovered");
-        }
-    );
-    </script>
-
-    <script>
-    jQuery(document).ready(function() {
-        if (jQuery(window).width() < 768) {
-            jQuery('.price_slider').slick({
-                infinite: true,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                // autoplay: true,
-                arrows: false,
-                dots: true,
-                mobileFirst: true,
-                responsive: [{
+        $('.testimonial_slider').slick({
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            autoplay: false,
+            autoplaySpeed: 2000,
+            arrows: true,
+            dots: false,
+            nextArrow: '<button type="button" class="custom-next slick-next">Next</button>',
+            prevArrow: '<button type="button" class="custom-prev slick-prev">Prev</button>',
+            responsive: [{
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 2,
+                    }
+                },
+                {
+                    breakpoint: 992,
+                    settings: {
+                        slidesToShow: 2,
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2,
+                    }
+                },
+                {
                     breakpoint: 576,
                     settings: {
                         slidesToShow: 1,
-                        mobileFirst: true,
                     }
-                }, ]
-            });
-        }
-    });
+                },
+            ]
+        });
+    </script>
+
+    <script>
+        $('.manage_slider').slick({
+            infinite: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            autoplay: false,
+            autoplaySpeed: 2000,
+            arrows: true,
+            dots: false,
+            responsive: [{
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 1,
+                    }
+                },
+                {
+                    breakpoint: 992,
+                    settings: {
+                        slidesToShow: 1,
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1,
+                    }
+                },
+                {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: 1,
+                    }
+                },
+            ]
+        });
+    </script>
+
+    <script>
+        $(".testimonial_slider .slick-prev").hover(
+            function() {
+                $(".testimonial_slider").addClass("prev-hovered");
+            },
+            function() {
+                $(".testimonial_slider").removeClass("prev-hovered");
+            }
+        );
+    </script>
+
+    <script>
+        jQuery(document).ready(function() {
+            if (jQuery(window).width() < 768) {
+                jQuery('.price_slider').slick({
+                    infinite: true,
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    // autoplay: true,
+                    arrows: false,
+                    dots: true,
+                    mobileFirst: true,
+                    responsive: [{
+                        breakpoint: 576,
+                        settings: {
+                            slidesToShow: 1,
+                            mobileFirst: true,
+                        }
+                    }, ]
+                });
+            }
+        });
     </script>
 
 </body>

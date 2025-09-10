@@ -21,7 +21,7 @@ $data = $AesCipher->encrypt(PG_AUTH_KEY, PG_AUTH_IV, $encData);
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Redirecting to payment gateway</title>
     <?php require_once DEFAULT_META ?>
 </head>

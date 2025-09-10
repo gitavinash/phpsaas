@@ -82,33 +82,33 @@ function login($connection, $data)
             header("Content-Type: text/html; charset=UTF-8");
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
+            <!DOCTYPE html>
+            <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirect to new url.</title>
-    <script>
-    window.onload = function() {
-        console.log("Form submission initiated."); // Debugging log
-        document.getElementById("autoSubmitForm").submit();
-    };
-    </script>
-</head>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+                <title>Redirect to new url.</title>
+                <script>
+                    window.onload = function() {
+                        console.log("Form submission initiated."); // Debugging log
+                        document.getElementById("autoSubmitForm").submit();
+                    };
+                </script>
+            </head>
 
-<body>
-    <form id="autoSubmitForm" action="<?php echo $baseUrl ?>" method="<?php echo $method ?>">
-        <input type="hidden" name="id" value="<?php echo $id ?>">
-        <input type="hidden" name="redirect_url" value="<?php echo $hardRedirectURL ?>">
-        <noscript>
-            <p>JavaScript is disabled. Please click the submit button.</p>
-            <button type="submit">Submit</button>
-        </noscript>
-    </form>
-</body>
+            <body>
+                <form id="autoSubmitForm" action="<?php echo $baseUrl ?>" method="<?php echo $method ?>">
+                    <input type="hidden" name="id" value="<?php echo $id ?>">
+                    <input type="hidden" name="redirect_url" value="<?php echo $hardRedirectURL ?>">
+                    <noscript>
+                        <p>JavaScript is disabled. Please click the submit button.</p>
+                        <button type="submit">Submit</button>
+                    </noscript>
+                </form>
+            </body>
 
-</html>
+            </html>
 
 <?php
 

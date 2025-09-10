@@ -7,7 +7,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Offline • <?php echo SITE_NAME; ?></title>
 
     <!-- Brand Colors -->
@@ -21,58 +21,58 @@
     <link rel="stylesheet" href="/dashboard/assets/app.css">
 
     <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f9fafb;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        color: #333;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9fafb;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #333;
+        }
 
-    .offline-box {
-        max-width: 400px;
-        text-align: center;
-        background: #fff;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    }
+        .offline-box {
+            max-width: 400px;
+            text-align: center;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
 
-    .offline-box img {
-        max-width: 120px;
-        margin-bottom: 15px;
-    }
+        .offline-box img {
+            max-width: 120px;
+            margin-bottom: 15px;
+        }
 
-    .offline-box h1 {
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-        color: #222;
-    }
+        .offline-box h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #222;
+        }
 
-    .offline-box p {
-        font-size: 1rem;
-        margin-bottom: 20px;
-    }
+        .offline-box p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
 
-    .offline-box button {
-        background: <?php echo SITE_THEME_COLOUR;
-        ?>;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-    }
+        .offline-box button {
+            background: <?php echo SITE_THEME_COLOUR;
+                        ?>;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
 
-    .offline-box button:hover {
-        background: #0f3ab5;
-    }
+        .offline-box button:hover {
+            background: #0f3ab5;
+        }
     </style>
 </head>
 

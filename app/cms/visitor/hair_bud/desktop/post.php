@@ -3,32 +3,32 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>HairBud Forum - Home</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: '#4F46E5',
-                    secondary: '#10B981'
-                },
-                borderRadius: {
-                    'none': '0px',
-                    'sm': '4px',
-                    DEFAULT: '8px',
-                    'md': '12px',
-                    'lg': '16px',
-                    'xl': '20px',
-                    '2xl': '24px',
-                    '3xl': '32px',
-                    'full': '9999px',
-                    'button': '8px'
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
                 }
             }
         }
-    }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,129 +37,129 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
     <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
 
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f9fafb;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+        }
 
-    input[type="search"]::-webkit-search-decoration,
-    input[type="search"]::-webkit-search-cancel-button,
-    input[type="search"]::-webkit-search-results-button,
-    input[type="search"]::-webkit-search-results-decoration {
-        display: none;
-    }
+        input[type="search"]::-webkit-search-decoration,
+        input[type="search"]::-webkit-search-cancel-button,
+        input[type="search"]::-webkit-search-results-button,
+        input[type="search"]::-webkit-search-results-decoration {
+            display: none;
+        }
 
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
-    .custom-switch {
-        position: relative;
-        display: inline-block;
-        width: 3rem;
-        height: 1.5rem;
-    }
+        .custom-switch {
+            position: relative;
+            display: inline-block;
+            width: 3rem;
+            height: 1.5rem;
+        }
 
-    .custom-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+        .custom-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-    .switch-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #e5e7eb;
-        transition: .4s;
-        border-radius: 34px;
-    }
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e5e7eb;
+            transition: .4s;
+            border-radius: 34px;
+        }
 
-    .switch-slider:before {
-        position: absolute;
-        content: "";
-        height: 1.1rem;
-        width: 1.1rem;
-        left: 0.2rem;
-        bottom: 0.2rem;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 1.1rem;
+            width: 1.1rem;
+            left: 0.2rem;
+            bottom: 0.2rem;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
 
-    input:checked+.switch-slider {
-        background-color: #4F46E5;
-    }
+        input:checked+.switch-slider {
+            background-color: #4F46E5;
+        }
 
-    input:checked+.switch-slider:before {
-        transform: translateX(1.5rem);
-    }
+        input:checked+.switch-slider:before {
+            transform: translateX(1.5rem);
+        }
 
-    .category-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
 
-    .discussion-card:hover {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
+        .discussion-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
 
-    .specialist-card:hover {
-        transform: translateY(-4px);
-    }
+        .specialist-card:hover {
+            transform: translateY(-4px);
+        }
 
-    .success-story-card:hover {
-        transform: scale(1.02);
-    }
+        .success-story-card:hover {
+            transform: scale(1.02);
+        }
 
-    .activity-item:hover {
-        background-color: #f3f4f6;
-    }
+        .activity-item:hover {
+            background-color: #f3f4f6;
+        }
 
-    .dropdown-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background: white;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        min-width: 200px;
-        z-index: 50;
-        margin-top: 4px;
-    }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            min-width: 200px;
+            z-index: 50;
+            margin-top: 4px;
+        }
 
-    .dropdown-menu.show {
-        display: block;
-    }
+        .dropdown-menu.show {
+            display: block;
+        }
 
-    .dropdown-item {
-        display: block;
-        padding: 8px 16px;
-        text-decoration: none;
-        color: #374151;
-        font-size: 14px;
-        transition: background-color 0.2s;
-    }
+        .dropdown-item {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #374151;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
 
-    .dropdown-item:hover {
-        background-color: #f3f4f6;
-    }
+        .dropdown-item:hover {
+            background-color: #f3f4f6;
+        }
 
-    .dropdown-divider {
-        border-top: 1px solid #e5e7eb;
-        margin: 4px 0;
-    }
+        .dropdown-divider {
+            border-top: 1px solid #e5e7eb;
+            margin: 4px 0;
+        }
     </style>
 </head>
 
@@ -588,20 +588,20 @@
 
     <?php require_once 'footer.php'; ?>
     <script id="profileDropdownScript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const profileButton = document.getElementById('profileButton');
-        const profileDropdown = document.getElementById('profileDropdown');
-        profileButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('show');
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileButton = document.getElementById('profileButton');
+            const profileDropdown = document.getElementById('profileDropdown');
+            profileButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('show');
+            });
+            document.addEventListener('click', function() {
+                profileDropdown.classList.remove('show');
+            });
+            profileDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
         });
-        document.addEventListener('click', function() {
-            profileDropdown.classList.remove('show');
-        });
-        profileDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-    });
     </script>
 </body>
 

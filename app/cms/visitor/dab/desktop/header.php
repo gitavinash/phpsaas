@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <base href="<?php echo SITE_URL ?>">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : ${$link_type.'_title'} ) : SITE_DESC.' | '.SITE_NAME ) ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title><?php echo ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'}) : SITE_DESC . ' | ' . SITE_NAME) ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.min.css">
@@ -14,14 +15,15 @@
 
     <meta name="theme-color" content="<?php echo SITE_THEME_COLOUR ?>">
     <meta name='robots' content='index, follow' />
-    <meta name='title' content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title!='') ? $meta_title : SITE_NAME ) : SITE_NAME ))))) ?>" />
-    <meta name="description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description!='') ? $meta_description : SITE_DESC ) : SITE_DESC ))))) ?>" >
-    <meta name="keywords" content="<?php echo ((isset($meta_keyword)) ? (($meta_keyword!='') ? $meta_keyword : $tagName ) : SITE_TAGS ) ?>" >
-    <meta name="author" content="<?php echo ((isset($profile_display_name)) ? $profile_display_name : SITE_NAME ); ?>">
+    <meta name='title' content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : SITE_NAME) : SITE_NAME))))) ?>" />
+    <meta name="description" content="<?php echo str_replace("''", "", str_replace('\"', '', str_replace("\'", "", str_replace('"', "'", ((isset($meta_description)) ? (($meta_description != '') ? $meta_description : SITE_DESC) : SITE_DESC))))) ?>">
+    <meta name="keywords" content="<?php echo ((isset($meta_keyword)) ? (($meta_keyword != '') ? $meta_keyword : $tagName) : SITE_TAGS) ?>">
+    <meta name="author" content="<?php echo ((isset($profile_display_name)) ? $profile_display_name : SITE_NAME); ?>">
 
 
 </head>
-<body id="home" >
+
+<body id="home">
     <header>
         <div class="container">
             <div class="desktop">
@@ -31,28 +33,28 @@
                 <div class="menu">
                     <ul>
                         <?php
-                        
-                            if(BASE_URL=='/') { ?>
 
-                                <li><a href="#home">Home</a></li>
-                                <li><a href="#ourstory">Our Story</a></li>
-                                <li><a href="#services">Services</a></li>
-                                <li><a href="#portfolio">Portfolio</a></li>
-                                <li><a href="#blog">Blog</a></li>
-                                <li><a href="#contactus">Contact Us</a></li>
+                        if (BASE_URL == '/') { ?>
 
-                            <?php
-                            } else { ?>
-                                
-                                <li><a href="/">Home</a></li>
-                                <li><a href="/">Our Story</a></li>
-                                <li><a href="/">Services</a></li>
-                                <li><a href="/">Portfolio</a></li>
-                                <li><a href="/">Blog</a></li>
-                                <li><a href="/">Contact Us</a></li>
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#ourstory">Our Story</a></li>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#portfolio">Portfolio</a></li>
+                            <li><a href="#blog">Blog</a></li>
+                            <li><a href="#contactus">Contact Us</a></li>
 
-                            <?php
-                            }
+                        <?php
+                        } else { ?>
+
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Our Story</a></li>
+                            <li><a href="/">Services</a></li>
+                            <li><a href="/">Portfolio</a></li>
+                            <li><a href="/">Blog</a></li>
+                            <li><a href="/">Contact Us</a></li>
+
+                        <?php
+                        }
 
                         ?>
                     </ul>
@@ -68,28 +70,28 @@
                         <span id="closeMenu">x</span>
                         <ul>
                             <?php
-                                
-                                if(BASE_URL=='/') { ?>
 
-                                    <li><a href="#home">Home</a></li>
-                                    <li><a href="#ourstory">Our Story</a></li>
-                                    <li><a href="#services">Services</a></li>
-                                    <li><a href="#portfolio">Portfolio</a></li>
-                                    <li><a href="#blog">Blog</a></li>
-                                    <li><a href="#contactus">Contact Us</a></li>
+                            if (BASE_URL == '/') { ?>
 
-                                <?php
-                                } else { ?>
-                                    
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="/">Our Story</a></li>
-                                    <li><a href="/">Services</a></li>
-                                    <li><a href="/">Portfolio</a></li>
-                                    <li><a href="/">Blog</a></li>
-                                    <li><a href="/">Contact Us</a></li>
+                                <li><a href="#home">Home</a></li>
+                                <li><a href="#ourstory">Our Story</a></li>
+                                <li><a href="#services">Services</a></li>
+                                <li><a href="#portfolio">Portfolio</a></li>
+                                <li><a href="#blog">Blog</a></li>
+                                <li><a href="#contactus">Contact Us</a></li>
 
-                                <?php
-                                }
+                            <?php
+                            } else { ?>
+
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/">Our Story</a></li>
+                                <li><a href="/">Services</a></li>
+                                <li><a href="/">Portfolio</a></li>
+                                <li><a href="/">Blog</a></li>
+                                <li><a href="/">Contact Us</a></li>
+
+                            <?php
+                            }
 
                             ?>
                         </ul>

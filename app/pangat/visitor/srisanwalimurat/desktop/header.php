@@ -1,12 +1,11 @@
 <?php
 
-	/** Check month range setting is already defined or not */
+/** Check month range setting is already defined or not */
 
-	if(!defined('CALENDER_MONTH_VISIBLE')) {
+if (!defined('CALENDER_MONTH_VISIBLE')) {
 
-		define('CALENDER_MONTH_VISIBLE', 2);
-
- 	}
+    define('CALENDER_MONTH_VISIBLE', 2);
+}
 
 ?>
 <!DOCTYPE html>
@@ -14,7 +13,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Playfair+Display&display=swap"

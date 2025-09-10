@@ -4,7 +4,7 @@
 <head>
     <base href="<?php echo SITE_URL ?>">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title><?php echo SITE_NAME ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">

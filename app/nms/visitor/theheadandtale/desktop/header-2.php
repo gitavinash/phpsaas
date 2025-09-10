@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.min.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.min.css">
@@ -32,26 +32,26 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KN6V4VKJN4"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
-    gtag('config', 'G-KN6V4VKJN4');
+        gtag('config', 'G-KN6V4VKJN4');
     </script>
     <script type="text/javascript">
-    (function(c, l, a, r, i, t, y) {
-        c[a] = c[a] || function() {
-            (c[a].q = c[a].q || []).push(arguments)
-        };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = "https://www.clarity.ms/tag/" + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-    })(window, document, "clarity", "script", "qicb9eq9ym");
+        (function(c, l, a, r, i, t, y) {
+            c[a] = c[a] || function() {
+                (c[a].q = c[a].q || []).push(arguments)
+            };
+            t = l.createElement(r);
+            t.async = 1;
+            t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0];
+            y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "qicb9eq9ym");
     </script>
 </head>
 
@@ -82,28 +82,28 @@
 
                     if (isset($_COOKIE['user_data'])) { ?>
 
-                    <div class="header_right">
-                        <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
-                        </p>
-                    </div>
+                        <div class="header_right">
+                            <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
+                            </p>
+                        </div>
 
-                    <!-- profile side--bar -->
-                    <div class="profile--sideBar">
-                        <div class="profile_container">
-                            <div class="profile_cancel">
-                                <i class='bx bx-x'></i>
-                            </div>
-                            <div class="profile_header">
-                                <!-- <div class="profile--img">
+                        <!-- profile side--bar -->
+                        <div class="profile--sideBar">
+                            <div class="profile_container">
+                                <div class="profile_cancel">
+                                    <i class='bx bx-x'></i>
+                                </div>
+                                <div class="profile_header">
+                                    <!-- <div class="profile--img">
                                         <img src="<?php echo PROFILE_IMAGE ?>" class="img-fluid" alt="user_img">
                                     </div> -->
-                                <div class="user--content">
-                                    <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
-                                    <a href="#"><?php echo PROFILE_EMAIL ?></a>
+                                    <div class="user--content">
+                                        <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
+                                        <a href="#"><?php echo PROFILE_EMAIL ?></a>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <?php
+                                <?php
 
                                 if ($activeSubscription == true) {
 
@@ -132,20 +132,20 @@
 
                                 ?>
 
+                            </div>
                         </div>
-                    </div>
 
                     <?php
                     } else { ?>
 
 
-                    <div class="header_right">
-                        <!-- <button class="subscribe">subscribe</button> -->
-                        <a href="/subscribe/" class="subscribe">subscribe</a>
-                        <!-- <button class="sign_in"></button> -->
-                        <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
-                            class="sign_in">sign in</a>
-                    </div>
+                        <div class="header_right">
+                            <!-- <button class="subscribe">subscribe</button> -->
+                            <a href="/subscribe/" class="subscribe">subscribe</a>
+                            <!-- <button class="sign_in"></button> -->
+                            <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                                class="sign_in">sign in</a>
+                        </div>
 
                     <?php
                     }
@@ -183,23 +183,23 @@
                 <?php
 
                 if (SITE_ID == 49) { ?>
-                <li><a href="/deep-tales/" <?php echo ((BASE_URL == '/deep-tales/') ? 'class="active"' : '') ?>
-                        title="Deepdives">Deepdives</a></li>
-                <li><a href="/explainer/" <?php echo ((BASE_URL == '/explainer/') ? 'class="active"' : '') ?>
-                        title="Explainer">Explainer</a></li>
-                <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
-                        title="FIntech News">News</a></li>
-                <li><a href="/ai-emerging-tech/" title="Report"
-                        <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
-                </li>
-                <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
-                        title="Money Trivia">Money Trivia</a></li>
-                <li><a href="/money-and-machines/"
-                        <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
-                        title="Money & Machines">Money & Machines</a></li>
-                <li><a href="https://stack.theheadandtale.com/" target="_blank" title="Report"
-                        <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>>Report<sup
-                            class="sup">NEW</sup></a></li>
+                    <li><a href="/deep-tales/" <?php echo ((BASE_URL == '/deep-tales/') ? 'class="active"' : '') ?>
+                            title="Deepdives">Deepdives</a></li>
+                    <li><a href="/explainer/" <?php echo ((BASE_URL == '/explainer/') ? 'class="active"' : '') ?>
+                            title="Explainer">Explainer</a></li>
+                    <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
+                            title="FIntech News">News</a></li>
+                    <li><a href="/ai-emerging-tech/" title="Report"
+                            <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
+                    </li>
+                    <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
+                            title="Money Trivia">Money Trivia</a></li>
+                    <li><a href="/money-and-machines/"
+                            <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
+                            title="Money & Machines">Money & Machines</a></li>
+                    <li><a href="https://stack.theheadandtale.com/" target="_blank" title="Report"
+                            <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>>Report<sup
+                                class="sup">NEW</sup></a></li>
                 <?php
                 }
 

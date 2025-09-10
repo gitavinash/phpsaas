@@ -1,7 +1,7 @@
 <?php
 
-    header("Location: /manage-subscription/", TRUE, 301);
-    exit();
+header("Location: /manage-subscription/", TRUE, 301);
+exit();
 
 ?>
 <!DOCTYPE html>
@@ -9,7 +9,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.css">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.css">
@@ -26,65 +26,65 @@
 <body>
     <header>
         <nav>
-            <div class="myHeader <?php echo (($link_type=='page') ? 'about_bg' : '') ?>">
+            <div class="myHeader <?php echo (($link_type == 'page') ? 'about_bg' : '') ?>">
                 <div class="container">
                     <div class="header_flex">
                         <div class="company-logo">
                             <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt="logo"></a>
                         </div>
                         <?php
-                        
-                            if(isset($_COOKIE['user_data'])) { ?>
 
-                        <div class="header_right">
-                            <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
-                            </p>
-                        </div>
+                        if (isset($_COOKIE['user_data'])) { ?>
 
-                        <!-- profile side--bar -->
-                        <div class="profile--sideBar">
-                            <div class="profile_container">
-                                <div class="profile_cancel">
-                                    <i class='bx bx-x'></i>
-                                </div>
-                                <div class="profile_header">
-                                    <!-- <div class="profile--img">
+                            <div class="header_right">
+                                <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
+                                </p>
+                            </div>
+
+                            <!-- profile side--bar -->
+                            <div class="profile--sideBar">
+                                <div class="profile_container">
+                                    <div class="profile_cancel">
+                                        <i class='bx bx-x'></i>
+                                    </div>
+                                    <div class="profile_header">
+                                        <!-- <div class="profile--img">
                                         <img src="<?php echo PROFILE_IMAGE ?>" class="img-fluid" alt="user_img">
                                     </div> -->
-                                    <div class="user--content">
-                                        <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
-                                        <a href="#"><?php echo PROFILE_EMAIL ?></a>
-                                        <a href="/logout/">Logout</a>
+                                        <div class="user--content">
+                                            <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
+                                            <a href="#"><?php echo PROFILE_EMAIL ?></a>
+                                            <a href="/logout/">Logout</a>
+                                        </div>
                                     </div>
+
+                                    <div class="manage_link">
+                                        <a href="/manage-subscription/">MANAGE MY SUBSCRIPTION</a>
+                                    </div>
+
+                                    <div class="plan_card">
+                                        <h6>YOUR CURRENT PLAN</h6>
+                                        <h3>The Head And Tale 1 Year Plan</h3>
+                                        <p>next billing date : 16 may 2024</p>
+                                    </div>
+
+
                                 </div>
-
-                                <div class="manage_link">
-                                    <a href="/manage-subscription/">MANAGE MY SUBSCRIPTION</a>
-                                </div>
-
-                                <div class="plan_card">
-                                    <h6>YOUR CURRENT PLAN</h6>
-                                    <h3>The Head And Tale 1 Year Plan</h3>
-                                    <p>next billing date : 16 may 2024</p>
-                                </div>
-
-
                             </div>
-                        </div>
 
                         <?php
-                            } else { ?>
+                        } else { ?>
 
 
-                        <div class="header_right">
-                            <!-- <button class="subscribe">subscribe</button> -->
-                            <a href="/subscribe/" class="subscribe">subscribe</a>
-                            <!-- <button class="sign_in"></button> -->
-                            <a href="/login/" class="sign_in">sign in</a>
-                        </div>
+                            <div class="header_right">
+                                <!-- <button class="subscribe">subscribe</button> -->
+                                <a href="/subscribe/" class="subscribe">subscribe</a>
+                                <!-- <button class="sign_in"></button> -->
+                                <a href="/login/" class="sign_in">sign in</a>
+                            </div>
 
                         <?php
-                            }
+                        }
 
                         ?>
                     </div>
@@ -92,4 +92,4 @@
             </div>
         </nav>
     </header>
-    <main <?php echo (($link_type=='page') ? 'style="border-top: 0px"' : '') ?>>
+    <main <?php echo (($link_type == 'page') ? 'style="border-top: 0px"' : '') ?>>
