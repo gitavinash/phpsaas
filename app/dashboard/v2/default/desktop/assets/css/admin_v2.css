@@ -5,6 +5,43 @@
   --c-grey-400: #7b7b7b;
   --c-grey-500: #3d3d3d;
   --c-blue-500: #688afd;
+
+  /* Neutral slate */
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1f2937;
+  --gray-900: #0f172a;
+
+  /* Status */
+  --success-600: #1f9d63;
+  --success-700: #188255;
+  --warning-500: #d8a106;
+  --warning-600: #b78705;
+  --danger-600: #c0504d;
+  --danger-700: #a23f3d;
+
+  /* Accents (subtle) */
+  --blue-600: #2563eb;
+  --indigo-600: #4f46e5;
+  --gold-500: #f4b400;
+  --purple-600: #7c3aed;
+
+  /* Text */
+  --text-strong: var(--gray-900);
+  --text-default: var(--gray-700);
+  --text-muted: var(--gray-500);
+
+  /* Surfaces & borders */
+  --surface: #ffffff;
+  --surface-subtle: var(--gray-50);
+  --border-soft: var(--gray-200);
+  --border-mid: var(--gray-300);
 }
 
 body {
@@ -3773,56 +3810,6 @@ button:disabled {
 /* =========================================
    PREMIUM THEME OVERRIDES (put AFTER current CSS)
    ========================================= */
-:root {
-  /* Brand (muted teal-slate) */
-  --brand-50: #f2f7f8;
-  --brand-100: #e6f0f2;
-  --brand-200: #cee3e7;
-  --brand-300: #a9cfd7;
-  --brand-400: #7fb6c3;
-  --brand-500: #5ba1b0;
-  --brand-600: #3d899a; /* main brand */
-  --brand-700: #2f7685; /* headers/active */
-  --brand-800: #215d6a;
-  --brand-900: #15434d;
-
-  /* Neutral slate */
-  --gray-50: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
-  --gray-300: #cbd5e1;
-  --gray-400: #94a3b8;
-  --gray-500: #64748b;
-  --gray-600: #475569;
-  --gray-700: #334155;
-  --gray-800: #1f2937;
-  --gray-900: #0f172a;
-
-  /* Status */
-  --success-600: #1f9d63;
-  --success-700: #188255;
-  --warning-500: #d8a106;
-  --warning-600: #b78705;
-  --danger-600: #c0504d;
-  --danger-700: #a23f3d;
-
-  /* Accents (subtle) */
-  --blue-600: #2563eb;
-  --indigo-600: #4f46e5;
-  --gold-500: #f4b400;
-  --purple-600: #7c3aed;
-
-  /* Text */
-  --text-strong: var(--gray-900);
-  --text-default: var(--gray-700);
-  --text-muted: var(--gray-500);
-
-  /* Surfaces & borders */
-  --surface: #ffffff;
-  --surface-subtle: var(--gray-50);
-  --border-soft: var(--gray-200);
-  --border-mid: var(--gray-300);
-}
 
 /* Body & general text */
 body {

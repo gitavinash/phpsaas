@@ -33,7 +33,33 @@ if (isset($daterange)) {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="icon" href="<?php echo SITE_ICON ?>">
     <title><?php echo str_replace('_', ' ', $dashboardPageTitle . ' | ' . SITE_NAME); ?></title>
-    <!-- <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>uicons-regular-rounded.min.css"> -->
+    <style>
+    :root {
+        /* Base Brand Color */
+        --brand-700: <?php echo SITE_THEME_COLOUR ?>;
+        /* Main brand color */
+
+        /* Generate lighter shades dynamically */
+        --brand-50: color-mix(in srgb, var(--brand-700) 5%, white);
+        --brand-100: color-mix(in srgb, var(--brand-700) 10%, white);
+        --brand-200: color-mix(in srgb, var(--brand-700) 25%, white);
+        --brand-300: color-mix(in srgb, var(--brand-700) 40%, white);
+        --brand-400: color-mix(in srgb, var(--brand-700) 55%, white);
+        --brand-500: color-mix(in srgb, var(--brand-700) 70%, white);
+        --brand-600: color-mix(in srgb, var(--brand-700) 85%, white);
+
+        /* Generate darker shades dynamically */
+        --brand-800: color-mix(in srgb, var(--brand-700) 85%, black);
+        --brand-900: color-mix(in srgb, var(--brand-700) 70%, black);
+
+        /* Example UI specific tokens */
+        --brand-bg-light: var(--brand-50);
+        --brand-border: var(--brand-200);
+        --brand-text: var(--brand-900);
+        --brand-hover: var(--brand-600);
+        --brand-active: var(--brand-800);
+    }
+    </style>
     <link rel='stylesheet'
         href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
@@ -49,7 +75,7 @@ if (isset($daterange)) {
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin_v2.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin_v2.css">
     <?php
     if (SITE_VERSION == 'mobile') {
         echo "<link rel='stylesheet' type='text/css' href='" . ADMIN_STYLESHEET . "admin_v2_mobile.min.css'>";
@@ -61,19 +87,19 @@ if (isset($daterange)) {
     <?php
 
     if (DEVELOPMENT_MODE == false) { ?>
-        <script type="text/javascript">
-            var oldGalleryImages = '';
-            (function(c, l, a, r, i, t, y) {
-                c[a] = c[a] || function() {
-                    (c[a].q = c[a].q || []).push(arguments)
-                };
-                t = l.createElement(r);
-                t.async = 1;
-                t.src = "https://www.clarity.ms/tag/" + i;
-                y = l.getElementsByTagName(r)[0];
-                y.parentNode.insertBefore(t, y);
-            })(window, document, "clarity", "script", "lrfkm51aya");
-        </script>
+    <script type="text/javascript">
+    var oldGalleryImages = '';
+    (function(c, l, a, r, i, t, y) {
+        c[a] = c[a] || function() {
+            (c[a].q = c[a].q || []).push(arguments)
+        };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "lrfkm51aya");
+    </script>
     <?php
     }
 
@@ -117,12 +143,12 @@ if (isset($daterange)) {
                     </a>
                     <?php
                     if (SITE_VERSION != 'mobile') { ?>
-                        <div class="profile-menu">
-                            <ul>
-                                <li><a href="/dashboard/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
-                                <li><a href="/logout/"><i class="fi-rr-exit"></i> Logout</a></li>
-                            </ul>
-                        </div>
+                    <div class="profile-menu">
+                        <ul>
+                            <li><a href="/dashboard/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
+                            <li><a href="/logout/"><i class="fi-rr-exit"></i> Logout</a></li>
+                        </ul>
+                    </div>
                     <?php
                     }
                     ?>
@@ -164,7 +190,7 @@ if (isset($daterange)) {
                             <?php
                             if ($site_access_type == 'administrator') { ?>
 
-                                <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                            <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
                             <?php } ?>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
@@ -176,7 +202,7 @@ if (isset($daterange)) {
 
                             if ($site_access_type == 'administrator') { ?>
 
-                                <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                            <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
                             <?php } ?>
                             <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
@@ -188,21 +214,21 @@ if (isset($daterange)) {
                 if ($site_access_type == 'administrator') { ?>
 
 
-                    <li <?php echo ((strpos(ADMIN_BASE_URL, '/user/') !== false) ? 'class="active"' : '') ?>>
-                        <a href="user/"><i class="fi fi-rr-user"></i> Users</a>
-                        <div class="side-menu">
-                            <ul>
-                                <li><a href="user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                                <li><a href="user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
-                            </ul>
-                        </div>
-                        <div class="bottom-menu">
-                            <ul>
-                                <li><a href="user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                                <li><a href="user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
-                            </ul>
-                        </div>
-                    </li>
+                <li <?php echo ((strpos(ADMIN_BASE_URL, '/user/') !== false) ? 'class="active"' : '') ?>>
+                    <a href="user/"><i class="fi fi-rr-user"></i> Users</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                            <li><a href="user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                            <li><a href="user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
+                        </ul>
+                    </div>
+                </li>
 
                 <?php }
                 ?>
@@ -239,10 +265,10 @@ if (isset($daterange)) {
 
             if (ADMIN_BASE_URL != '/') { ?>
 
-                <div class="i-m-here-pagination">
-                    <ul>
-                        <li><a href="/dashboard/"><i class="fi-rr-home"></i></a></li>
-                        <?php
+            <div class="i-m-here-pagination">
+                <ul>
+                    <li><a href="/dashboard/"><i class="fi-rr-home"></i></a></li>
+                    <?php
 
                         $paginationURL = '';
 
@@ -253,8 +279,8 @@ if (isset($daterange)) {
                         }
 
                         ?>
-                    </ul>
-                </div>
+                </ul>
+            </div>
 
             <?php
             }
