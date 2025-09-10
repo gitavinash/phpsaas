@@ -21,19 +21,19 @@ echo json_encode([
       "src" => SITE_URL . '/viewmedia/?url=' . urlencode(SITE_ICON) . '&width=512&height=512',
       "sizes" => "512x512",
       "type" => "image/png",
-      "purpose" => "any"
+      "purpose" => "any maskable"
     ],
     [
       "src" => SITE_URL . '/viewmedia/?url=' . urlencode(SITE_ICON) . '&width=192&height=192',
       "sizes" => "192x192",
       "type" => "image/png",
-      "purpose" => "any"
+      "purpose" => "any maskable"
     ],
     [
       "src" => SITE_URL . '/viewmedia/?url=' . urlencode(SITE_ICON) . '&width=96&height=96',
       "sizes" => "96x96",
       "type" => "image/png",
-      "purpose" => "any"
+      "purpose" => "any maskable"
     ]
   ],
   "screenshots" => [
