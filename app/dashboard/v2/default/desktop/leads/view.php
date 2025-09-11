@@ -564,15 +564,12 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                         }
                 ?>
                 <a href="#" class="btn btn-orange-follow" id="followUpBtn">
-                    <i class="fi-rr-alarm-clock"></i> Follow-ups
+                    <i class="fi-rr-alarm-clock"></i> Set Follow-ups
                 </a>
                 <?php
                         if (SITE_APP == 'astro_client') {
                             echo "<a href='' class='btn btn-teal-payment' id='upayBtn'>
                             <i class='fi-rr-story-book'></i> Add Upay
-                          </a>";
-                            echo "<a href='' class='btn btn-teal-payment' id='updatePaymentBtn'>
-                            <i class='fi-rr-notes'></i> Update payment records
                           </a>";
                         }
 
@@ -583,14 +580,19 @@ if ($checkEnquiry = mysqli_query($connection, $enquiryQuery)) {
                               </a>';
                             }
                         ?>
-                <a href="#" class="btn btn-purple-links" id="paymentBtn">
-                    <i class="fi-rr-indian-rupee-sign"></i> Send payment links
-                </a>
                 <a href="#" class="btn btn-gold-voucher" id="voucherBtn">
                     <i class="fi-rr-ticket"></i> Send Vouchers
                 </a>
                 <?php
                         }
+                        ?>
+                <a href="#" class="btn btn-purple-links" id="paymentBtn">
+                    <i class="fi-rr-indian-rupee-sign"></i> Send payment links
+                </a>
+                <a href='' class='btn btn-teal-payment' id='updatePaymentBtn'>
+                    <i class='fi-rr-notes'></i> Update payment records
+                </a>
+                <?php
                         if ($enquiry_status != 1) {
                             echo '<a href="" class="btn btn-red-close" id="noteBtn">
                             <i class="fi-rr-circle-xmark"></i> Close this lead

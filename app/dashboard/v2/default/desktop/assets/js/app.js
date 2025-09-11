@@ -1112,26 +1112,42 @@ $(document).ready(function (e) {
 
   $("#convertToSale").click(function (e) {
     e.preventDefault();
+    $("#convertToSale").hide();
     let leadId = $(this).data("id");
-
     if (!leadId) {
       popUpMessage("center", "Lead ID is missing", "warning");
+      $("#convertToSale").show();
       return;
     } else {
-      console.log(`${leadId}`);
-      $.ajax({
-        type: "GET",
-        url: "/api/leads/confirm/?id=" + leadId,
-        dataType: "json",
-        success: function (response) {
-          popUpMessage("center", response.msg, response.status);
-          setTimeout(function () {
-            window.location.reload();
-          }, 1500);
-        },
-        error: function (response) {
-          console.log(`Error : `, response);
-        },
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Convert to sales",
+      }).then((result) => {
+        if (result.value) {
+          $.ajax({
+            type: "GET",
+            url: "/api/leads/confirm/?id=" + leadId,
+            dataType: "json",
+            success: function (response) {
+              popUpMessage("center", response.msg, response.status);
+              $("#convertToSale").show();
+              setTimeout(function () {
+                window.location.reload();
+              }, 1500);
+            },
+            error: function (response) {
+              console.log(`Error : `, response);
+              $("#convertToSale").show();
+            },
+          });
+        } else {
+          $("#convertToSale").show();
+        }
       });
     }
   });
