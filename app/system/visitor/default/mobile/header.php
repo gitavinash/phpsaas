@@ -18,7 +18,7 @@
     }
     </style>
     <link href="<?php echo CSS_LIBRARY ?>bootstrap_5/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/app/system/visitor/default/desktop/assets/css/onboarding.min.css">
+    <link rel="stylesheet" href="/app/system/visitor/default/mobile/assets/css/onboarding.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
         rel="stylesheet">
     <?php require_once PWA . 'header.php' ?>
