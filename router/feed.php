@@ -1,27 +1,26 @@
 <?php
 
-	header('Content-Type: application/xml; charset=utf-8');
 
-	$feedURL=str_replace('feed/', '', BASE_URL);
+$feedURL = str_replace('feed/', '', BASE_URL);
 
-	$feedPath=RESOURCE.'feeds/';
+$feedPath = RESOURCE . 'feeds/';
 
-	if($feedURL!='/') {
+if ($feedURL != '/') {
 
-		if(file_exists($feedPath.$urlStructure[1].'.php')) {
+	$feedResourceFile = $feedPath . $urlStructure[1] . '.php';
 
-			require_once $feedPath.$urlStructure[1].'.php';
-
-		} else {
-
-			require_once $feedPath.'single-default.php';
-
-		}
-
-	} else {
-
-		/** Recent post from website */
-
-		require_once RESOURCE.'feeds/default.php';
-
+	if (!file_exists($feedPath . $urlStructure[1] . '.php')) {
+		require_once $feedPath . 'single-default.php';
 	}
+} else {
+
+	$feedResourceFile = RESOURCE . 'feeds/default.php';
+}
+
+if (file_exists($feedResourceFile)) {
+	// header('Content-Type: application/xml; charset=utf-8');
+	require_once $feedResourceFile;
+} else {
+	require_once ERROR_404;
+}
+exit();

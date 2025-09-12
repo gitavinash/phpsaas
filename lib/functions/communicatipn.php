@@ -41,8 +41,6 @@ function sendOTPviaSMS($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in
     return true;
 }
 
-
-
 function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in')
 {
     $url = "https://control.msg91.com/api/v5/flow/";
@@ -85,7 +83,6 @@ function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.
     }
     return true;
 }
-
 function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.in')
 {
     $name = (($name != '') ? $name : 'User');
