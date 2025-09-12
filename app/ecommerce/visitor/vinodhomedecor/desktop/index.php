@@ -277,8 +277,8 @@ if ($recentProducts = mysqli_query($connection, "
 
             <!-- Image Section -->
             <div class="w-full md:w-1/2 mb-10 md:mb-0 md:pr-10 flex justify-center items-center">
-                <img src="<?php echo USER_IMAGES ?>main_banner.jpg" alt="Vinod Home Decor"
-                    class="w-full h-full rounded-lg shadow-md" />
+                <img src="<?php echo SITE_LOGO ?>" style="background:<?php echo SITE_THEME_COLOUR ?>"
+                    alt="<?php echo SITE_NAME ?>" class="w-full h-full rounded-lg shadow-md" />
             </div>
 
             <!-- Text Section -->
