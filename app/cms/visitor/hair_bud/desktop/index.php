@@ -1,5 +1,5 @@
 <?php
-exit();
+
 require_once HOMEPAGE_FUNCTIONS;
 ?>
 <!DOCTYPE html>

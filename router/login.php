@@ -6,14 +6,10 @@ $themeLoginFile = USER_PATH . $urlStructure[0] . '.php';
 
 if (!file_exists($themeLoginFile)) {
 
-    if (DEVELOPMENT_MODE == true) {
-        $fileName = 'login';
-    } else {
-        if (SITE_APP == 'spa') {
-            $authby = 'mobile';
-        }
-        $fileName = ((isset($authby)) ? strtolower($authby) : 'email') . '-login';
+    if (SITE_APP == 'spa') {
+        $authby = 'mobile';
     }
+    $fileName = ((isset($authby)) ? strtolower($authby) : 'email') . '-login';
 
     $themeLoginFile = str_replace('/default/', '/' . USER_TYPE . '/', ADMIN_PATH) . $fileName . '.php';
 

@@ -3,7 +3,8 @@
         <!-- Logo -->
         <div class="flex items-center">
             <a href="/">
-                <h1 class="text-2xl font-['Pacifico'] text-primary">HairBud</h1>
+                <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>"
+                    class="h-full max-h-[45px] w-auto object-contain">
             </a>
         </div>
         <!-- Search Bar -->
@@ -41,33 +42,33 @@
                     <i class="ri-arrow-down-s-line ri-lg"></i>
                 </button>
                 <div id="profileDropdown" class="dropdown-menu">
-                    <a href="#" class="dropdown-item">
+                    <!-- <a href="#" class="dropdown-item">
                         <i class="ri-user-line mr-2"></i>My Profile
                     </a>
                     <a href="#" class="dropdown-item">
                         <i class="ri-settings-line mr-2"></i>Account Settings
-                    </a>
+                    </a> -->
                     <div class="dropdown-divider"></div>
                     <a href="#" class="dropdown-item">
                         <i class="ri-discuss-line mr-2"></i>My Discussions
                     </a>
-                    <a href="#" class="dropdown-item">
+                    <!-- <a href="#" class="dropdown-item">
                         <i class="ri-bookmark-line mr-2"></i>Bookmarks
                     </a>
-                    <!-- <a href="#" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="ri-notification-line mr-2"></i>Notifications
-                    </a> -->
+                    </a>
                     <div class="dropdown-divider"></div>
-                    <!-- <a href="#" class="dropdown-item">
+                    <a href="#" class="dropdown-item">
                         <i class="ri-question-line mr-2"></i>Help & Support
                     </a> -->
-                    <a href="#" class="dropdown-item">
+                    <a href="/logout/" class="dropdown-item">
                         <i class="ri-logout-box-line mr-2"></i>Logout
                     </a>
                 </div>
                 <?php
                 } else { ?>
-                <a href="/login/?authby=mobile"
+                <a href="/login/?regType=subscriber"
                     class="bg-primary text-white px-4 py-2 rounded-full hover:bg-primary/90 font-medium text-sm whitespace-nowrap">
                     Get Started
                 </a>
