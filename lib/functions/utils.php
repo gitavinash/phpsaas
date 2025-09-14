@@ -49,3 +49,55 @@ function getRootDomain($host)
         return $host;
     }
 }
+
+function getPastDuration($pastTimestamp)
+{
+    // Convert string datetime to timestamp if necessary
+    if (!is_numeric($pastTimestamp)) {
+        $pastTimestamp = strtotime($pastTimestamp);
+        if ($pastTimestamp === false) {
+            return "Invalid date";
+        }
+    }
+
+    $diff = time() - $pastTimestamp;
+
+    if ($diff < 0) {
+        return "In the future";
+    } elseif ($diff < 60) {
+        return "just now";
+    } elseif ($diff < 3600) {
+        $minutes = floor($diff / 60);
+        return $minutes . " minute" . ($minutes > 1 ? "s" : "") . " ago";
+    } elseif ($diff < 86400) {
+        $hours = floor($diff / 3600);
+        return $hours . " hour" . ($hours > 1 ? "s" : "") . " ago";
+    } else {
+        $days = floor($diff / 86400);
+        return $days . " day" . ($days > 1 ? "s" : "") . " ago";
+    }
+}
+
+function truncateText($text, $maxLength = 300)
+{
+    // Remove any extra whitespace
+    $text = trim($text);
+
+    // If text is already short enough, return as is
+    if (strlen($text) <= $maxLength) {
+        return $text;
+    }
+
+    // Truncate text to maxLength
+    $truncated = substr($text, 0, $maxLength);
+
+    // Make sure not to cut off in the middle of a word
+    // Find the last space within the truncated string
+    $lastSpace = strrpos($truncated, ' ');
+    if ($lastSpace !== false) {
+        $truncated = substr($truncated, 0, $lastSpace);
+    }
+
+    // Add ellipsis to indicate truncation
+    return $truncated . '...';
+}

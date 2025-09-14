@@ -3,6 +3,7 @@
 if (ACTIVE_URL == '/start-a-discussion/') {
     require_once LOGIN_CHECK;
 }
+require_once UTIL_FUNCTIONS;
 require_once HOMEPAGE_FUNCTIONS;
 
 $postType = ((isset($postType)) ? $postType : 'discussion');
