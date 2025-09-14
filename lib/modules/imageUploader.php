@@ -28,7 +28,9 @@ if (isset($_FILES)) {
 						/* Default upload path directory of image */
 
 						$uploadPath = ROOT . '/upload/' . SITE_DOMAIN . '/' . date('Y/m/');
-						$uploadFile = $uploadPath . time() . '_' . strtolower(preg_replace('~[^\p{M}\w.-]+~u', '', $filename));
+						$uniquePrefix = time() . '_' . bin2hex(random_bytes(5));
+						$cleanName = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $filename));
+						$uploadFile = $uploadPath . $uniquePrefix . '_' . $cleanName;
 						$uploadMediaPath = str_replace(ROOT, '', $uploadFile);
 						$uploadMediaLink = '/attachment' . str_replace('.' . $fileExtension, '', $uploadMediaPath) . '/';
 						$uploadFileName = ucwords(preg_replace('/[_]+/', ' ', str_replace($fileExtension, '', preg_replace('~[^\p{M}\s\w-]+~u', '', $filename))));
@@ -58,17 +60,25 @@ if (isset($_FILES)) {
 							}
 						}
 
+						// Ensure base upload directory exists
 						if (!is_dir($uploadPath)) {
+							if (!mkdir($uploadPath, 0755, true) && !is_dir($uploadPath)) {
+								die("Failed to create upload directory: $uploadPath");
+							}
+						}
 
-							mkdir($uploadPath, 0755, true);
+						// Ensure original upload directory exists
+						if (!is_dir($originalUploadDir)) {
+							if (!mkdir($originalUploadDir, 0755, true) && !is_dir($originalUploadDir)) {
+								die("Failed to create original upload directory: $originalUploadDir");
+							}
+						}
 
-							/* Creating original image directory inside default upload directory */
-
-							mkdir($originalUploadDir, 0755, true);
-
-							/* Creating thumbnail image directory inside default upload directory */
-
-							mkdir($thumbnailUploadDir, 0755, true);
+						// Ensure thumbnail upload directory exists
+						if (!is_dir($thumbnailUploadDir)) {
+							if (!mkdir($thumbnailUploadDir, 0755, true) && !is_dir($thumbnailUploadDir)) {
+								die("Failed to create thumbnail upload directory: $thumbnailUploadDir");
+							}
 						}
 
 						/** Compressing Images Process Start Here */

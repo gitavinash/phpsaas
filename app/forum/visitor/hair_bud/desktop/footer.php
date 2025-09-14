@@ -77,3 +77,40 @@
     </div>
 </footer>
 <?php require_once NOTIFICATION . 'index.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#4F46E5',
+                secondary: '#10B981'
+            },
+            borderRadius: {
+                'none': '0px',
+                'sm': '4px',
+                DEFAULT: '8px',
+                'md': '12px',
+                'lg': '16px',
+                'xl': '20px',
+                '2xl': '24px',
+                '3xl': '32px',
+                'full': '9999px',
+                'button': '8px'
+            }
+        }
+    }
+}
+</script>
+<script src="<?php echo USER_JS ?>app.js"></script>
+<?php
+
+if (ACTIVE_URL == '/start-a-discussion/') {
+    echo "<script src='" . USER_JS . "discussion.js'></script>";
+}
+
+?>
+</body>
+
+</html>

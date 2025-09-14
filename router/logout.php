@@ -44,7 +44,7 @@ if (file_exists(USER_PATH . 'logout.php')) {
 	$redirect_url = urlencode((isset($redirect_url)) ? (($redirect_url != '') ? $redirect_url : '/dashboard/') : '/dashboard/');
 
 	$authByParam = (isset($authby)) ? '&authby=mobile' : '';
-
-	header("Location: /login/?logout=true{$authByParam}&redirect_url=" . urlencode($redirect_url) . "&timestamp=" . time());
+	$regType = ((isset($regType)) ? $regType : 'subscriber');
+	header("Location: /login/?logout=true{$authByParam}&regType={$regType}&redirect_url=" . urlencode($redirect_url) . "&timestamp=" . time());
 	exit();
 }

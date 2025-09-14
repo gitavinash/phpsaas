@@ -5,7 +5,8 @@ $isMobile = ((isset($redirectToMobileAuth)) ? 'authby=mobile' : '');
 
 if (!isset($_COOKIE['user_data'])) {
 
-	header("Location: /logout/?redirect_url=" . ACTIVE_URL . "&{$isMobile}");
+	$regType = ((isset($regType)) ? $regType : 'subscriber');
+	header("Location: /logout/?redirect_url=" . ACTIVE_URL . "&{$isMobile}&regType={$regType}");
 	exit();
 } else {
 
