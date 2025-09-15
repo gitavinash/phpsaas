@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
                 $response['status'] = 'success';
                 $response['msg'] = 'OTP verified successfully';
+                $response['userInfo'] = $otpData['otp_destination'];
                 $httpStatus = 200;
 
                 $user_id = $otpData['otp_user_id'];
