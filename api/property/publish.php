@@ -49,7 +49,7 @@ if ($name != '') {
 
     mysqli_query($connection, "START TRANSACTION");
 
-    if ($checkURL = mysqli_query($connection, "SELECT link_relation_id FROM " . TABLE_PREFIX . "link WHERE link_url='{$url}' AND link_site_id='" . SITE_ID . "'")) {
+    if ($checkURL = mysqli_query($connection, "SELECT property_id FROM " . TABLE_PREFIX . "property WHERE property_site_id=" . SITE_ID . " AND property_title='{$name}' AND property_pincode='{$pinCode}'")) {
 
         if (mysqli_num_rows($checkURL) == 0) {
 
@@ -90,7 +90,7 @@ if ($name != '') {
             }
         } else {
 
-            $msg = 'Please change url';
+            $msg = 'Property is already exits';
         }
     } else {
 
