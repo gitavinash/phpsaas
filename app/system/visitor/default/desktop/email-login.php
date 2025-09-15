@@ -61,7 +61,7 @@ require_once 'header.php';
                         <input type="number" class="form-control input-with-label" name="mobile" id="mobile" required
                             placeholder="Enter your mobile number">
                     </div>
-                    <button type="submit" id="emailRegistrationeBtn" class="button theme-button">Complete
+                    <button type="submit" id="registrationeBtn" class="button theme-button">Complete
                         registration</button>
                 </form>
             </div>

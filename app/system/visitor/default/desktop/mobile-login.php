@@ -49,11 +49,16 @@ require_once 'header.php';
                 <div class="form-heading">
                     <strong>Create Your Profile</strong> Complete your profile to get started.
                 </div>
-                <form id="login" autocomplete="off">
+                <form id="registration" autocomplete="off">
                     <div class="form-group">
-
+                        <input type="text" class="form-control input-with-label" name="full_name" id="fullName" required
+                            placeholder="Enter your full name*">
                     </div>
-                    <button type="submit" id="mobileRegistrationeBtn" class="button theme-button">Complete
+                    <div class="form-group">
+                        <input type="email" class="form-control input-with-label" name="email" id="email" required
+                            placeholder="Enter your email address">
+                    </div>
+                    <button type="submit" id="registrationeBtn" class="button theme-button">Complete
                         registration</button>
                 </form>
             </div>
