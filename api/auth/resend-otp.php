@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                 $sendStatus = sendOTPviaMSG91($otpData['otp_destination'], $otpCode, $otpComment, $site_name);
                                 break;
                             default:
-                                $sendStatus = sendOTPviaSMS($otpData['otp_destination'], $otpCode, $otpComment, $site_name);
+                                $sendStatus = sendOTPviaNimbus($otpData['otp_destination'], $otpCode, $otpComment, $site_name);
                                 break;
                         }
                         break;

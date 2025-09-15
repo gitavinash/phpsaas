@@ -1,5 +1,46 @@
 <?php
 
+function sendOTPviaNimbus($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in'): bool
+{
+    $smsUserName = defined('SMS_USERNAME') ? SMS_USERNAME : 'blumoxbiz';
+    $smsPassword = defined('SMS_PASSWORD') ? SMS_PASSWORD : 'nvb!f1pY';
+    $smsHeader   = defined('SMS_HEADER')   ? SMS_HEADER   : 'BLUMOX';
+
+    $message = "Your OTP is {$otpCode}. Please use this code to verify your account. Do not share this code with anyone. - Blumox";
+
+    $queryParams = http_build_query([
+        'UserID'     => $smsUserName,
+        'Password'     => $smsPassword,
+        'SenderID'   => $smsHeader,
+        'Phno'    => $mobile,
+        'Msg'     => $message,
+        'EntityID' => '1201159479739325882',
+        'TemplateID'    => '1607100000000316341',
+    ], '', '&', PHP_QUERY_RFC3986);
+
+    $url = "http://nimbusit.biz/api/SmsApi/SendSingleApi?{$queryParams}";
+
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_CUSTOMREQUEST       => 'GET',            // force GET
+        CURLOPT_NOBODY              => false,            // MUST be false (true => HEAD)
+        CURLOPT_RETURNTRANSFER      => false,            // don't buffer
+        CURLOPT_HEADER              => false,            // ignore headers
+        CURLOPT_HTTPHEADER          => ['Connection: close'],
+        CURLOPT_HTTP_VERSION        => CURL_HTTP_VERSION_1_0, // simple close semantics
+        CURLOPT_IPRESOLVE           => CURL_IPRESOLVE_V4,     // avoid IPv6 delays
+        CURLOPT_CONNECTTIMEOUT_MS   => 400,              // enough to actually connect
+        CURLOPT_TIMEOUT_MS          => 1200,             // short, but lets request be sent
+        // Discard any body ASAP (don’t block on reading)
+        CURLOPT_WRITEFUNCTION       => static function ($ch, $data) {
+            return strlen($data);
+        },
+    ]);
+    @curl_exec($ch); // fire the GET; we don't care about the response
+    @curl_close($ch);
+    return true;
+}
+
 function sendOTPviaSMS($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in'): bool
 {
     $smsUserName = defined('SMS_USERNAME') ? SMS_USERNAME : 'blumoxsms';
