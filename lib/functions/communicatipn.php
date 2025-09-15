@@ -70,8 +70,8 @@ function sendOTPviaSMS($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.in
         CURLOPT_HTTPHEADER          => ['Connection: close'],
         CURLOPT_HTTP_VERSION        => CURL_HTTP_VERSION_1_0, // simple close semantics
         CURLOPT_IPRESOLVE           => CURL_IPRESOLVE_V4,     // avoid IPv6 delays
-        CURLOPT_CONNECTTIMEOUT_MS   => 400,              // enough to actually connect
-        CURLOPT_TIMEOUT_MS          => 1200,             // short, but lets request be sent
+        CURLOPT_CONNECTTIMEOUT_MS   => 2000,              // enough to actually connect
+        CURLOPT_TIMEOUT_MS          => 5000,             // short, but lets request be sent
         // Discard any body ASAP (don’t block on reading)
         CURLOPT_WRITEFUNCTION       => static function ($ch, $data) {
             return strlen($data);
