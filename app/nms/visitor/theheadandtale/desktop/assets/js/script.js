@@ -282,7 +282,7 @@ $("#emailLoginContinueBtn").click(function (e) {
           // Switch sections
           $("#enterEmail").hide();
           $("#verifyEmailOTP").show();
-
+          $("#otpEmailValue").focus().select();
           // Make OTP focusable + validated now
           $("#otpEmailValue")
             .prop("disabled", false)
