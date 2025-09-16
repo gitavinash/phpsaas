@@ -5,6 +5,9 @@ function getCategoryWithTotalPost($connection, $postType = 'post', $pageLimit = 
     $limit  = max(1, min(100, (int) $pageLimit));
     $prefix = TABLE_PREFIX;
 
+    // Escape string for postType
+    $postTypeEscaped = mysqli_real_escape_string($connection, $postType);
+
     $sql = "
         SELECT
             c.category_title,
@@ -16,46 +19,37 @@ function getCategoryWithTotalPost($connection, $postType = 'post', $pageLimit = 
           ON l.link_relation_id = c.category_id
          AND l.link_status      = 200
          AND l.link_type        = 'category'
-         AND l.link_site_id     = ?
+         AND l.link_site_id     = {$siteId}
         LEFT JOIN {$prefix}discussion AS d
           ON d.discussion_category = c.category_id
          AND d.discussion_status   = 1
-         AND d.discussion_site_id  = ?
+         AND d.discussion_site_id  = {$siteId}
         WHERE c.category_status = 1
-          AND c.category_type   = ?
-          AND c.category_site_id= ?
+          AND c.category_type   = '{$postTypeEscaped}'
+          AND c.category_site_id= {$siteId}
         GROUP BY
             c.category_id, c.category_title, l.link_url
         ORDER BY
             l.link_is_featured DESC,
             totalCount DESC,
             c.category_title ASC
-        LIMIT ?
+        LIMIT {$limit}
     ";
 
-    if (!$stmt = mysqli_prepare($connection, $sql)) {
+    $result = mysqli_query($connection, $sql);
+    if (!$result) {
         return [];
     }
 
-    mysqli_stmt_bind_param($stmt, 'iisii', $siteId, $siteId, $postType, $siteId, $limit);
-
-    if (!mysqli_stmt_execute($stmt)) {
-        mysqli_stmt_close($stmt);
-        return [];
+    $rows = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $row['totalCount'] = (int) ($row['totalCount'] ?? 0);
+        $rows[] = $row;
     }
-
-    $result = mysqli_stmt_get_result($stmt);
-    $rows   = [];
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $row['totalCount'] = (int) ($row['totalCount'] ?? 0);
-            $rows[] = $row;
-        }
-    }
-    mysqli_stmt_close($stmt);
 
     return $rows;
 }
+
 
 function getAllCategoryList($connection, $postType = 'post', $pageLimit = 1000)
 {
