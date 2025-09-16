@@ -129,32 +129,6 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                     </div>
                 </li>
 
-                <li <?php echo (($postType == 'questions') ? 'class="active"' : '') ?>>
-                    <a href="questions/?type=list&status=all"><i class="fas fa-question"></i> Questions</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="questions/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
-                            </li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=questions" target="_blank"><i
-                                        class="fas fa-plus"></i>Add
-                                    new
-                                    Questions</a></li>
-                            <li><a href="questions/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="questions/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
-                            </li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=questions" target="_blank"><i
-                                        class="fas fa-plus"></i>Add
-                                    new
-                                    Questions</a></li>
-                            <li><a href="questions/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                </li>
-
                 <li <?php echo (($postType == 'discussion') ? 'class="active"' : '') ?>>
                     <a href="discussion/?type=list&status=all"><i class="fas fa-comments"></i> Discussion</a>
                     <div class="side-menu">
@@ -175,31 +149,6 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                                     <i class="fas fa-plus"></i> Add New Discussion</a>
                             </li>
                             <li><a href="discussion/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <!-- Success Store Menu -->
-                <li <?php echo (($postType == 'success_story') ? 'class="active"' : '') ?>>
-                    <a href="success_story/?type=list&status=all"><i class="fas fa-star"></i> Success Stories</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="success_story/?type=list&status=all"><i class="fas fa-list"></i> All Success
-                                    Stories</a></li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=success_story" target="_blank">
-                                    <i class="fas fa-plus"></i> Add New Success Story</a>
-                            </li>
-                            <li><a href="success_story/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="success_story/?type=list&status=all"><i class="fas fa-list"></i> All Success
-                                    Stories</a></li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=success_story" target="_blank">
-                                    <i class="fas fa-plus"></i> Add New Success Story</a>
-                            </li>
-                            <li><a href="success_story/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
                         </ul>
                     </div>
                 </li>
