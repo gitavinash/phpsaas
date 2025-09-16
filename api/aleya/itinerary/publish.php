@@ -151,8 +151,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     require_once USER_EMAIL_TEMPLATE . 'send-itinerary.php';
                                 }
 
-                                // Send WhatsApp
-                                // require_once WHATSAPP_TEMPLATE_VISITOR . 'send-itinerary.php';
+                                // Send whatsapp
+                                if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
+                                    if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
+                                        require_once WHATSAPP_TEMPLATE_USER . 'send-itinerary.php';
+                                    }
+                                }
                             }
                         }
                     }

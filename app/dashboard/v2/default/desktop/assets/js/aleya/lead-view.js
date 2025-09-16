@@ -311,9 +311,6 @@ function sendItineraryToCustomer(isDownload = false) {
   const editorContent = tinymce.get("itineraryEditorBox").getContent();
   const intinenaryObject = parseItineraryHtml(editorContent);
 
-  console.log(`editorContent`);
-  console.log(editorContent);
-
   const payload = {
     id: itinenaryId,
     type: itinenaryType,
