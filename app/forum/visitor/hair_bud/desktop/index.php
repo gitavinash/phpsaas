@@ -229,7 +229,7 @@ require_once 'header.php';
                     "SELECT * FROM " . TABLE_PREFIX . "discussion 
     INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=discussion_id AND link_site_id=" . SITE_ID . " AND link_type='discussion' 
     INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=link_owner_id 
-    WHERE discussion_status=0 AND discussion_type='success_story' AND discussion_site_id=" . SITE_ID . " 
+    WHERE discussion_status=1 AND discussion_type='success_story' AND discussion_site_id=" . SITE_ID . " 
     LIMIT 3"
                 )) {
 

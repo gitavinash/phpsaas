@@ -45,6 +45,9 @@ require_once 'header.php';
                         </button>
                     </div>
                 </div>
+                <?php
+
+                if ($discussion_status == 1) { ?>
                 <h1 class="text-3xl font-bold text-gray-900 mb-6"><?php echo $discussion_title ?></h1>
                 <!-- Engagement Stats -->
                 <div class="flex items-center justify-between mb-8 p-4 bg-gray-50 rounded-lg">
@@ -69,19 +72,19 @@ require_once 'header.php';
                 <div class="prose prose-lg max-w-none">
                     <?php
 
-                    echo $discussion_description
+                        echo $discussion_description
 
-                    ?>
+                        ?>
                     <!-- Progress Photos -->
                     <div class="mb-8">
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">Progress Photos</h2>
                         <div class="photo-gallery">
                             <?php
 
-                            $gallery = json_decode($gallery_image_list, TRUE);
+                                $gallery = json_decode($gallery_image_list, TRUE);
 
-                            foreach ($gallery as $image) {
-                                echo "<div class='bg-white rounded-lg overflow-hidden shadow-sm border cursor-pointer h-full'>
+                                foreach ($gallery as $image) {
+                                    echo "<div class='bg-white rounded-lg overflow-hidden shadow-sm border cursor-pointer h-full'>
                                         <img src='https://readdy.ai/api/search-image?query=male%20pattern%20baldness%20before%20treatment%20crown%20view%20thinning%20hair%20receding%20hairline%20medical%20documentation%20clean%20background%20professional%20lighting%20dermatology%20clinic&width=300&height=400&seq=before1&orientation=portrait'
                                             alt='Before - Crown View' class='w-full h-64 object-cover object-top'>
                                         <div class='p-3'>
@@ -89,9 +92,9 @@ require_once 'header.php';
                                             <p class='text-sm text-gray-500'>February 2024</p>
                                         </div>
                                     </div>";
-                            }
+                                }
 
-                            ?>
+                                ?>
                         </div>
                     </div>
                     <!-- Side Effects Section -->
@@ -164,187 +167,12 @@ require_once 'header.php';
                         Report
                     </button>
                 </div>
-            </div>
-            <!-- Comments Section -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-semibold text-gray-900">Comments (48)</h3>
-                    <div class="flex items-center space-x-2">
-                        <button
-                            class="px-3 py-1.5 bg-primary text-white text-sm rounded !rounded-button whitespace-nowrap">Latest</button>
-                        <button
-                            class="px-3 py-1.5 text-gray-600 hover:bg-gray-100 text-sm rounded !rounded-button whitespace-nowrap">Top</button>
-                        <button
-                            class="px-3 py-1.5 text-gray-600 hover:bg-gray-100 text-sm rounded !rounded-button whitespace-nowrap">Oldest</button>
-                    </div>
-                </div>
-                <!-- Comment Input -->
-                <div class="mb-8">
-                    <div class="flex items-start space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                            <span class="text-white font-medium text-sm">JD</span>
-                        </div>
-                        <div class="flex-1">
-                            <textarea placeholder="Share your thoughts or ask a question..."
-                                class="w-full p-4 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                                rows="3"></textarea>
-                            <div class="flex justify-between items-center mt-3">
-                                <div class="flex items-center space-x-2 text-sm text-gray-500">
-                                    <button class="hover:text-gray-700"><i class="ri-bold"></i></button>
-                                    <button class="hover:text-gray-700"><i class="ri-italic"></i></button>
-                                    <button class="hover:text-gray-700"><i class="ri-link"></i></button>
-                                    <button class="hover:text-gray-700"><i class="ri-image-line"></i></button>
-                                </div>
-                                <button
-                                    class="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 !rounded-button whitespace-nowrap">Post
-                                    Comment</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Comments List -->
-                <div class="space-y-6">
-                    <!-- Comment 1 -->
-                    <div class="flex items-start space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                            <span class="text-green-600 font-medium text-sm">DR</span>
-                        </div>
-                        <div class="flex-1">
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center">
-                                        <p class="font-medium text-gray-900 mr-2">Dr. Robert Chen</p>
-                                        <div
-                                            class="w-4 h-4 flex items-center justify-center bg-blue-100 rounded-full mr-2">
-                                            <i class="ri-verified-badge-fill text-blue-600 text-xs"></i>
-                                        </div>
-                                        <span class="text-sm text-gray-500">3 hours ago</span>
-                                    </div>
-                                    <button class="text-gray-400 hover:text-gray-600">
-                                        <i class="ri-more-line"></i>
-                                    </button>
-                                </div>
-                                <p class="text-gray-700 mb-3">Excellent documentation, Emily! Your experience aligns
-                                    perfectly with what we typically see in clinical practice. The dosage adjustment
-                                    you made was smart - it's exactly what I recommend to patients experiencing side
-                                    effects. The 6-month timeline you've shared will be very helpful for others
-                                    considering this treatment.</p>
-                                <div class="flex items-center space-x-4 text-sm">
-                                    <button class="flex items-center text-gray-500 hover:text-red-600">
-                                        <i class="ri-heart-line mr-1"></i>
-                                        <span>24</span>
-                                    </button>
-                                    <button class="flex items-center text-gray-500 hover:text-blue-600">
-                                        <i class="ri-reply-line mr-1"></i>
-                                        Reply
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- Nested Reply -->
-                            <div class="comment-thread mt-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                                        <span class="text-indigo-600 font-medium text-xs">EM</span>
-                                    </div>
-                                    <div class="flex-1">
-                                        <div class="bg-white rounded-lg p-3 border">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <div class="flex items-center">
-                                                    <p class="font-medium text-gray-900 mr-2 text-sm">Emily Morgan
-                                                    </p>
-                                                    <span class="text-xs text-gray-500">2 hours ago</span>
-                                                </div>
-                                            </div>
-                                            <p class="text-gray-700 text-sm">Thank you so much, Dr. Chen! Your
-                                                guidance throughout this process has been invaluable. I'm hoping my
-                                                experience can help others make informed decisions.</p>
-                                            <div class="flex items-center space-x-4 text-xs mt-2">
-                                                <button class="flex items-center text-gray-500 hover:text-red-600">
-                                                    <i class="ri-heart-line mr-1"></i>
-                                                    <span>8</span>
-                                                </button>
-                                                <button class="flex items-center text-gray-500 hover:text-blue-600">
-                                                    <i class="ri-reply-line mr-1"></i>
-                                                    Reply
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Comment 2 -->
-                    <div class="flex items-start space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                            <span class="text-yellow-600 font-medium text-sm">MH</span>
-                        </div>
-                        <div class="flex-1">
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center">
-                                        <p class="font-medium text-gray-900 mr-2">Michael Harris</p>
-                                        <span class="text-sm text-gray-500">5 hours ago</span>
-                                    </div>
-                                    <button class="text-gray-400 hover:text-gray-600">
-                                        <i class="ri-more-line"></i>
-                                    </button>
-                                </div>
-                                <p class="text-gray-700 mb-3">This is incredibly helpful! I'm currently at month 2
-                                    and experiencing similar side effects. Did you notice the brain fog completely
-                                    disappear after the dosage adjustment, or did it take some time? Also, when
-                                    exactly did you start seeing the baby hairs around your hairline?</p>
-                                <div class="flex items-center space-x-4 text-sm">
-                                    <button class="flex items-center text-gray-500 hover:text-red-600">
-                                        <i class="ri-heart-line mr-1"></i>
-                                        <span>12</span>
-                                    </button>
-                                    <button class="flex items-center text-gray-500 hover:text-blue-600">
-                                        <i class="ri-reply-line mr-1"></i>
-                                        Reply
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Comment 3 -->
-                    <div class="flex items-start space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                            <span class="text-purple-600 font-medium text-sm">SJ</span>
-                        </div>
-                        <div class="flex-1">
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center">
-                                        <p class="font-medium text-gray-900 mr-2">Sarah Johnson</p>
-                                        <span class="text-sm text-gray-500">1 day ago</span>
-                                    </div>
-                                    <button class="text-gray-400 hover:text-gray-600">
-                                        <i class="ri-more-line"></i>
-                                    </button>
-                                </div>
-                                <p class="text-gray-700 mb-3">The progress photos are amazing! The difference in
-                                    density is really noticeable. I'm curious about your daily routine - do you take
-                                    it at a specific time? And have you made any other lifestyle changes that might
-                                    have contributed to the results?</p>
-                                <div class="flex items-center space-x-4 text-sm">
-                                    <button class="flex items-center text-gray-500 hover:text-red-600">
-                                        <i class="ri-heart-line mr-1"></i>
-                                        <span>18</span>
-                                    </button>
-                                    <button class="flex items-center text-gray-500 hover:text-blue-600">
-                                        <i class="ri-reply-line mr-1"></i>
-                                        Reply
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button
-                    class="w-full py-3 text-primary hover:bg-gray-50 rounded-lg border border-gray-200 mt-6 !rounded-button whitespace-nowrap">
-                    Load More Comments
-                </button>
+                <?php
+                } else {
+                    echo "Article is not live";
+                }
+
+                ?>
             </div>
         </main>
         <!-- Sidebar -->
