@@ -43,8 +43,10 @@ if ($site_dashboard_version == 1) {
 	$dashboardDirectory = strtolower(str_replace('/default/', '/' . SITE_APP . '/' . USER_TYPE . '/', ADMIN_PATH));
 	$userDashboardDirectory = $dashboardDirectory;
 	if (!is_dir($dashboardDirectory)) {
-		$dashboardDirectory = str_replace('/default/', '/default/', ADMIN_PATH);
-		$userDashboardDirectory = '';
+		if (USER_TYPE != 'customer' && USER_TYPE != 'subscriber') {
+			$dashboardDirectory = str_replace('/default/', '/default/', ADMIN_PATH);
+			$userDashboardDirectory = '';
+		}
 	}
 }
 
@@ -78,10 +80,14 @@ $dashboardPageTitle = ucwords(str_replace('/', ' &#8702; ', mysqli_real_escape_s
 
 // Call dashboard theme file header, footer and main required file as per uri
 
-require_once $dashboardDirectory . '/header.php';
+if (is_dir($dashboardDirectory)) {
+	require_once $dashboardDirectory . '/header.php';
 
-require_once $dashboardFile;
+	require_once $dashboardFile;
 
-require_once $dashboardDirectory . '/footer.php';
+	require_once $dashboardDirectory . '/footer.php';
+} else {
+	require_once ERROR_404;
+}
 
 exit();
