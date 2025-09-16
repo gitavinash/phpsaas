@@ -186,8 +186,7 @@
 <!-- Bottom Navigation -->
 <nav class="bottom-nav" role="navigation" aria-label="Primary">
     <?php if ($site_access_type === 'administrator') { ?>
-    <a href="dashboard/"
-        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/dashboard/') !== false) ? 'active' : ''; ?>"
+    <a href="/dashboard/" class="bn-item spa-link <?php echo (ADMIN_BASE_URL == '/dashboard/') ? 'active' : ''; ?>"
         data-route="/dashboard/">
         <i class="fi-rr-home"></i><span>Home</span>
     </a>

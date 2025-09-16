@@ -1662,8 +1662,9 @@ section.form label {
   font-weight: normal;
   position: absolute;
   pointer-events: none;
-  left: 15px;
+  left: 10px;
   top: -12px;
+  z-index: 9;
   transition: 300ms ease all;
   padding: 0 2px;
   background: #fff;
