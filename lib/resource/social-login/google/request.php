@@ -111,7 +111,28 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                                 setcookie('user_type', base64_encode('subscriber'), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
                                 $_COOKIE['user_data'] = $saltKey;
-                                require_once API_MODULES . 'analytics/session-record.php';
+                                if (!isset($_COOKIE['device_id'])) {
+
+                                    if (!isset($cookieOptions)) {
+
+                                        $cleanDomain = getRootDomain(SITE_DOMAIN);
+
+                                        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+                                        $cookieOptions = [
+                                            'expires'  => time() + (30 * 24 * 60 * 60),
+                                            'path'     => '/',
+                                            'domain'   => '.' . $cleanDomain,
+                                            'secure'   => $isSecure,
+                                            'httponly' => true,
+                                            'samesite' => 'Lax',
+                                        ];
+                                    }
+                                    $deviceID = bin2hex(random_bytes(16)); // Generate a random unique ID
+                                    setcookie('device_id', $deviceID, $cookieOptions); // 1-year expiry
+
+                                } else {
+                                    $deviceID = $_COOKIE['device_id'];
+                                }
                                 ob_end_flush();
                             } else {
                                 echo $addUser . " && " . $createProfile . " && " . $userSiteAccess;
