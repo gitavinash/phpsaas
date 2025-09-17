@@ -27,7 +27,7 @@ if (!isset($_COOKIE['user_data'])) {
 			if (isset($_COOKIE['device_id'])) {
 				if ($checkSession = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user_sessions WHERE us_user_id='{$user_id}' AND us_active_device='{$_COOKIE['device_id']}' AND us_site_id{$activeSiteID}")) {
 					if (mysqli_num_rows($checkSession) == 0) {
-						echo "Invalid user token";
+						echo  "SELECT * FROM " . TABLE_PREFIX . "user_sessions WHERE us_user_id='{$user_id}' AND us_active_device='{$_COOKIE['device_id']}' AND us_site_id{$activeSiteID}";
 						// header("Location: /logout/?msg=invalid+session+token+or+expire", true, 301);
 						exit();
 					}
