@@ -2,6 +2,12 @@
 
 header('Content-Type: text/html; charset=utf-8');
 
+// if ($_SERVER['HTTP_HOST'] == 'localhost') {
+// 	$redirect = 'http://nms.local' . $_SERVER['REQUEST_URI'];
+// 	header("Location: {$redirect}", TRUE, 301);
+// 	exit();
+// }
+
 /** Check website domain status */
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/lib/modules/siteStatus.php';
@@ -22,6 +28,7 @@ if (ACTIVE_URL == '/homepage/') {
 	header("Location: /", TRUE, 301);
 	exit();
 }
+
 
 // Site APP table name
 

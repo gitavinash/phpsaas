@@ -4,9 +4,9 @@
 $isMobile = ((isset($redirectToMobileAuth)) ? 'authby=mobile' : '');
 
 if (!isset($_COOKIE['user_data'])) {
-
 	$regType = ((isset($regType)) ? $regType : 'subscriber');
-	header("Location: /logout/?redirect_url=" . ACTIVE_URL . "&{$isMobile}&regType={$regType}");
+	echo "invalid data cookie";
+	// header("Location: /logout/?redirect_url=" . ACTIVE_URL . "&{$isMobile}&regType={$regType}");
 	exit();
 } else {
 
@@ -27,12 +27,14 @@ if (!isset($_COOKIE['user_data'])) {
 			if (isset($_COOKIE['device_id'])) {
 				if ($checkSession = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user_sessions WHERE us_user_id='{$user_id}' AND us_active_device='{$_COOKIE['device_id']}' AND us_site_id{$activeSiteID}")) {
 					if (mysqli_num_rows($checkSession) == 0) {
-						header("Location: /logout/?msg=invalid+session+token+or+expire", true, 301);
+						echo "Invalid user token";
+						// header("Location: /logout/?msg=invalid+session+token+or+expire", true, 301);
 						exit();
 					}
 				}
 			} else {
-				header("Location: /logout/?msg=session_token%20not%20found", true, 301);
+				echo "Invalid deviceid";
+				// header("Location: /logout/?msg=session_token%20not%20found", true, 301);
 				exit();
 			}
 
@@ -122,7 +124,8 @@ if (!isset($_COOKIE['user_data'])) {
 				}
 			}
 		} else {
-			header("Location: /logout/?{$isMobile}");
+			echo "invalid user found";
+			// header("Location: /logout/?{$isMobile}");
 			exit();
 		}
 	} else {

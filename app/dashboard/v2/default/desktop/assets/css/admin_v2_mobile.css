@@ -66,6 +66,7 @@
     padding: 4px 0px;
     height: 45px !important;
     overflow: hidden;
+    z-index: 99;
   }
   aside {
     display: none;
@@ -223,7 +224,7 @@
   border-top: 1px solid var(--line);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  z-index: 9;
+  z-index: 99;
   padding-bottom: env(safe-area-inset-bottom);
   box-shadow: var(--shadow-2);
 }
