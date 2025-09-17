@@ -12,9 +12,8 @@ $google_oauth_client_secret = GOOGLE_AUTH_CLIENT_SECRET;
 if (DEVELOPMENT_MODE == true) {
     $google_oauth_redirect_uri = 'http://localhost/oauth/google/';
 } else {
-    $google_oauth_redirect_uri = ((SITE_ID == 234) ? HTTP_PROTOCOL . MAIN_DOMAIN : SITE_URL) . '/oauth/google/';
+    $google_oauth_redirect_uri = 'https://' . MAIN_DOMAIN . '/oauth/google/';
 }
-$google_oauth_redirect_uri = 'https://' . MAIN_DOMAIN . '/oauth/google/';
 
 $google_oauth_version = 'v3';
 
