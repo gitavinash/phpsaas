@@ -5,14 +5,14 @@ $isMobile = ((isset($redirectToMobileAuth)) ? 'authby=mobile' : '');
 
 if (!isset($_COOKIE['user_data'])) {
 	$regType = ((isset($regType)) ? $regType : 'subscriber');
-	echo "invalid data cookie";
-	// header("Location: /logout/?redirect_url=" . ACTIVE_URL . "&{$isMobile}&regType={$regType}");
+	// echo "invalid data cookie";
+	header("Location: /logout/?redirect_url=" . ACTIVE_URL . "&{$isMobile}&regType={$regType}");
 	exit();
 } else {
 
 	$user_salt_key = base64_decode($_COOKIE['user_data']);
 
-	$activeSiteID = ((SITE_ID == 234) ? " IN (49, 234)" : "=" . SITE_ID);
+	$activeSiteID = ((SITE_ID == 234 && SITE_ID == 49) ? " IN (49, 234)" : "=" . SITE_ID);
 
 	$checkUserAccessQuery = "SELECT user_id, user_email, user_salt_key, user_status, site_domain, site_url, site_name, site_icon, site_status, site_app_id, site_access_site_id, site_access_type, site_dashboard_version, profile_display_name as logginUserName FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "user ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_access_site_id=site_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id WHERE user_salt_key='{$user_salt_key}' AND site_access_site_id{$activeSiteID}";
 
@@ -33,8 +33,8 @@ if (!isset($_COOKIE['user_data'])) {
 					}
 				}
 			} else {
-				echo "Invalid deviceid";
-				// header("Location: /logout/?msg=session_token%20not%20found", true, 301);
+				// echo "Invalid deviceid";
+				header("Location: /logout/?msg=session_token%20not%20found", true, 301);
 				exit();
 			}
 
@@ -124,8 +124,8 @@ if (!isset($_COOKIE['user_data'])) {
 				}
 			}
 		} else {
-			echo "invalid user found";
-			// header("Location: /logout/?{$isMobile}");
+			// echo "invalid user found";
+			header("Location: /logout/?{$isMobile}");
 			exit();
 		}
 	} else {
