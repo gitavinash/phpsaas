@@ -122,6 +122,24 @@
 
         <!-- SETTINGS -->
         <div class="more-section is-settings">
+            <h4>Business Hub <small>Control Your Business</small></h4>
+            <div class="more-row">
+                <div class="more-grid">
+                    <a href="company/" class="more-item spa-link">
+                        <i class="fi fi-rr-building"></i><span>Company</span>
+                    </a>
+                    <a href="company/add/" class="more-item spa-link">
+                        <i class="fi fi-rr-add"></i><span>Add Company</span>
+                    </a>
+                    <a href="warehouse/add/" class="more-item spa-link">
+                        <i class="fi fi-rr-add"></i><span>Add Branch</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="more-section is-settings">
             <h4>Settings <small>Configure your spa</small></h4>
             <div class="more-row">
                 <div class="more-grid">

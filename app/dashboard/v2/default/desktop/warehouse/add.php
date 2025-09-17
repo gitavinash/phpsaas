@@ -1,21 +1,38 @@
-<h2 class="heading"><?php echo 'Add New warehouse' ?><span></span>
+<?php $formName = ((SITE_APP == 'spa' ? 'Branch' : '<?php echo $formName ?>')) ?>
+<h2 class="heading">Add New <?php echo $formName ?></span>
 </h2>
 <div class="main-box">
     <section>
+        <?php
+
+        if (SITE_VERSION != 'mobile') { ?>
         <ul class="steps-tab">
-            <li class="step-box active" id="step_1"><span>1</span>Warehouse details</li>
+            <li class="step-box active" id="step_1"><span>1</span><?php echo $formName ?> details</li>
         </ul>
+        <?php
+        }
+
+        ?>
         <div class="steps-box">
-            <form action="#" id="addNewWarehouseForm" method="POST">
+            <form action="#" id="addNew<?php echo $formName ?>Form" method="POST">
                 <section class="form">
 
                     <div class="step-open-box step_1_box">
+                        <?php
+
+                        if (SITE_VERSION != 'mobile') { ?>
+
                         <div class="form-header">
-                            <h1>Enter warehouse details</h1>
+                            <h1>Enter <?php echo $formName ?> details</h1>
                             <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="Add new Hosting tld">
                         </div>
+
+                        <?php
+                        }
+
+                        ?>
                         <div class="form-group">
-                            <p>Warehouse company</p>
+                            <p><?php echo $formName ?> company</p>
                             <select class="selectJS form-control" name="companyId" id="companyId">
                                 <option value="select">Select company</option>
                                 <?php
@@ -33,15 +50,15 @@
                         </div>
                         <div class="form-group">
                             <input id="name" name="name" type="text" />
-                            <label class="form-lable" id="Label">Warehouse name<sup>*</sup></label>
+                            <label class="form-lable" id="Label"><?php echo $formName ?> name<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input id="warehouseCode" name="warehouseCode" type="text" />
-                            <label class="form-lable" id="Label">Warehouse Code or ID</label>
+                            <input id="<?php echo $formName ?>Code" name="<?php echo $formName ?>Code" type="text" />
+                            <label class="form-lable" id="Label"><?php echo $formName ?> Code or ID</label>
                         </div>
                         <div class="form-group">
                             <textarea name="description" id="description" cols="30" rows="10"></textarea>
-                            <label class="form-lable" id="Label">About warehouse</label>
+                            <label class="form-lable" id="Label">About <?php echo $formName ?></label>
                         </div>
                         <div class="form-group">
                             <input id="address" name="address" type="text" />
@@ -87,7 +104,8 @@
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <input type="button" class="btn btn-green" id="addWarehouse" value="Add new warehouse">
+                                <input type="button" class="btn btn-green" id="add<?php echo $formName ?>"
+                                    value="Add new <?php echo $formName ?>">
                             </div>
                         </div>
                     </div>

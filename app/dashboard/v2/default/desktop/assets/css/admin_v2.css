@@ -1136,7 +1136,7 @@ main .container .heading span {
   width: 60px;
   padding: 14px;
   box-sizing: border-box;
-  background: #167a92;
+  background: var(--brand-700);
   height: 60px;
   text-align: center;
   margin: 10px;
