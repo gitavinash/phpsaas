@@ -102,43 +102,40 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                                 mysqli_query($connection, 'COMMIT');
 
                                 ob_start();
-                                setcookie('user_name', base64_encode($_SESSION['google_name']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                                setcookie('user_email', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                                setcookie('user_mobile', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                                setcookie('user_image', base64_encode($_SESSION['google_picture']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                                setcookie('user_data', base64_encode($saltKey), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                                setcookie('user_meta', '', time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                                setcookie('user_type', base64_encode('subscriber'), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                                setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+
+                                $cleanDomain = preg_replace('#^https?://#', '', MAIN_DOMAIN);
+                                $cleanDomain = explode(':', $cleanDomain)[0];
+                                $cleanDomain = rtrim($cleanDomain, '/');
+
+                                $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+
+                                $cookieOptions = [
+                                    'expires'  => time() + (30 * 24 * 60 * 60),
+                                    'path'     => '/',
+                                    'domain'   => '.' . $cleanDomain,
+                                    'secure'   => $isSecure,
+                                    'httponly' => true,
+                                    'samesite' => 'Lax',
+                                ];
+
+                                setcookie('user_name', base64_encode($_SESSION['google_name']), $cookieOptions);
+                                setcookie('user_email', base64_encode($_SESSION['google_email']), $cookieOptions);
+                                setcookie('user_mobile', base64_encode($_SESSION['google_email']), $cookieOptions);
+                                setcookie('user_image', base64_encode($_SESSION['google_picture']), $cookieOptions);
+                                setcookie('user_data', base64_encode($saltKey), $cookieOptions);
+                                setcookie('user_meta', '', $cookieOptions);
+                                setcookie('user_type', base64_encode('subscriber'), $cookieOptions);
+                                setcookie('site_app', base64_encode(SITE_APP), $cookieOptions);
                                 $_COOKIE['user_data'] = $saltKey;
-                                if (!isset($_COOKIE['device_id'])) {
 
-                                    if (!isset($cookieOptions)) {
+                                require_once API_MODULES . 'analytics/session-record.php';
 
-                                        $cleanDomain = getRootDomain(SITE_DOMAIN);
-
-                                        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
-                                        $cookieOptions = [
-                                            'expires'  => time() + (30 * 24 * 60 * 60),
-                                            'path'     => '/',
-                                            'domain'   => '.' . $cleanDomain,
-                                            'secure'   => $isSecure,
-                                            'httponly' => true,
-                                            'samesite' => 'Lax',
-                                        ];
-                                    }
-                                    $deviceID = bin2hex(random_bytes(16)); // Generate a random unique ID
-                                    setcookie('device_id', $deviceID, $cookieOptions); // 1-year expiry
-
-                                } else {
-                                    $deviceID = $_COOKIE['device_id'];
-                                }
                                 ob_end_flush();
                             } else {
-                                echo $addUser . " && " . $createProfile . " && " . $userSiteAccess;
                                 /** Rollback mysql query if query is fail */
                                 mysqli_query($connection, 'ROLLBACK');
                             }
+
                             $redirectUrl = '/login/';
                         } else {
                             extract(mysqli_fetch_assoc($checkUser));
@@ -157,13 +154,30 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                     if ($site_access_status == 1) {
 
                         ob_start();
-                        setcookie('user_name', base64_encode($profile_display_name), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                        setcookie('user_email', base64_encode($_SESSION['google_email']), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                        setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                        setcookie('user_data', base64_encode($user_salt_key), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                        setcookie('user_meta', base64_encode($site_access_meta), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                        setcookie('user_type', base64_encode($user_type), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
-                        setcookie('site_app', base64_encode(SITE_APP), time() + 30 * 24 * 60 * 60, '/', MAIN_DOMAIN);
+
+
+                        $cleanDomain = preg_replace('#^https?://#', '', MAIN_DOMAIN);
+                        $cleanDomain = explode(':', $cleanDomain)[0];
+                        $cleanDomain = rtrim($cleanDomain, '/');
+
+                        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+
+                        $cookieOptions = [
+                            'expires'  => time() + (30 * 24 * 60 * 60),
+                            'path'     => '/',
+                            'domain'   => '.' . $cleanDomain,
+                            'secure'   => $isSecure,
+                            'httponly' => true,
+                            'samesite' => 'Lax',
+                        ];
+
+                        setcookie('user_name', base64_encode($profile_display_name), $cookieOptions);
+                        setcookie('user_email', base64_encode($_SESSION['google_email']), $cookieOptions);
+                        setcookie('user_image', base64_encode($profile_image), $cookieOptions);
+                        setcookie('user_data', base64_encode($user_salt_key), $cookieOptions);
+                        setcookie('user_meta', base64_encode($site_access_meta), $cookieOptions);
+                        setcookie('user_type', base64_encode($user_type), $cookieOptions);
+                        setcookie('site_app', base64_encode(SITE_APP), $cookieOptions);
                         $_COOKIE['user_data'] = $user_salt_key;
                         require_once API_MODULES . 'analytics/session-record.php';
 
