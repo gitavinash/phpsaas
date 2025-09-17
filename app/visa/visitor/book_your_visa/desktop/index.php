@@ -368,6 +368,436 @@ require_once 'header.php';
             </div>
         </div>
     </section>
+
+
+    <section class="w-full">
+        <!-- Why Choose Us -->
+        <div class="bg-white py-20">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-extrabold tracking-tight text-gray-900">
+                        Why Choose Us
+                    </h2>
+                    <p class="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
+                        Trusted by thousands worldwide for seamless visa solutions with expert support at every step.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div
+                        class="flex flex-col items-center justify-center bg-gray-50 rounded-xl py-8 shadow-sm hover:shadow-md transition">
+                        <div class="text-4xl font-bold text-primary">50K+</div>
+                        <p class="mt-2 text-gray-600 text-sm">Visas Processed</p>
+                    </div>
+                    <div
+                        class="flex flex-col items-center justify-center bg-gray-50 rounded-xl py-8 shadow-sm hover:shadow-md transition">
+                        <div class="text-4xl font-bold text-primary">100+</div>
+                        <p class="mt-2 text-gray-600 text-sm">Countries Served</p>
+                    </div>
+                    <div
+                        class="flex flex-col items-center justify-center bg-gray-50 rounded-xl py-8 shadow-sm hover:shadow-md transition">
+                        <div class="text-4xl font-bold text-primary">98%</div>
+                        <p class="mt-2 text-gray-600 text-sm">Success Rate</p>
+                    </div>
+                    <div
+                        class="flex flex-col items-center justify-center bg-gray-50 rounded-xl py-8 shadow-sm hover:shadow-md transition">
+                        <div class="text-4xl font-bold text-primary">24/7</div>
+                        <p class="mt-2 text-gray-600 text-sm">Support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testimonials -->
+        <div class="bg-gray-50 py-20">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10">
+                    <h2 class="text-4xl font-extrabold text-gray-900 text-center md:text-left">
+                        What Our Customers Say
+                    </h2>
+                    <p class="mt-4 md:mt-0 text-gray-600 text-center md:text-left max-w-md">
+                        Hear from our satisfied clients about their experience using our visa services.
+                    </p>
+                </div>
+
+                <!-- Slider Container -->
+                <div class="relative overflow-hidden">
+                    <div id="testimonial-track"
+                        class="flex gap-6 overflow-x-hidden snap-x snap-mandatory scroll-smooth pb-4" role="list"
+                        aria-label="Customer Testimonials">
+                        <!-- Testimonial Card -->
+                        <div class="snap-start shrink-0 w-80 bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition"
+                            role="listitem">
+                            <p class="text-gray-700 italic mb-4">
+                                “Excellent service! The process was smooth and the team was supportive throughout.”
+                            </p>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                <div>
+                                    <div class="font-medium">Sarah Thompson</div>
+                                    <div class="text-sm text-gray-500">United States Visa</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="snap-start shrink-0 w-80 bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition"
+                            role="listitem">
+                            <p class="text-gray-700 italic mb-4">
+                                “Fast and reliable service. Got my visa approved without any hassle. Highly
+                                recommended!”
+                            </p>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                <div>
+                                    <div class="font-medium">Michael Chen</div>
+                                    <div class="text-sm text-gray-500">Australia Visa</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="snap-start shrink-0 w-80 bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition"
+                            role="listitem">
+                            <p class="text-gray-700 italic mb-4">
+                                “Clear guidance at each step. Their checklist saved me days. Fantastic service!”
+                            </p>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                <div>
+                                    <div class="font-medium">Aarav Khanna</div>
+                                    <div class="text-sm text-gray-500">Canada Visa</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="snap-start shrink-0 w-80 bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition"
+                            role="listitem">
+                            <p class="text-gray-700 italic mb-4">
+                                “24/7 support actually means 24/7. My late-night queries were answered immediately.”
+                            </p>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                <div>
+                                    <div class="font-medium">Priya Mehta</div>
+                                    <div class="text-sm text-gray-500">UK Visa</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="snap-start shrink-0 w-80 bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition"
+                            role="listitem">
+                            <p class="text-gray-700 italic mb-4">
+                                “They caught a mistake in my application that would have delayed my visa. Total
+                                lifesaver.”
+                            </p>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                <div>
+                                    <div class="font-medium">Daniel Ruiz</div>
+                                    <div class="text-sm text-gray-500">Schengen Visa</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gradient Scroll Hints -->
+                    <div
+                        class="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none">
+                    </div>
+                    <div
+                        class="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auto Scroll Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const track = document.getElementById('testimonial-track');
+        let scrollAmount = 0;
+        let cardWidth = 0;
+
+        function updateCardWidth() {
+            const card = track.querySelector('div[role="listitem"]');
+            if (card) {
+                const style = window.getComputedStyle(card);
+                cardWidth = card.offsetWidth + parseInt(style.marginRight);
+            }
+        }
+
+        function autoScroll() {
+            if (!cardWidth) updateCardWidth();
+
+            scrollAmount += cardWidth;
+            if (scrollAmount >= track.scrollWidth - track.clientWidth) {
+                // Reset to start
+                scrollAmount = 0;
+            }
+
+            track.scrollTo({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
+        // Adjust on window resize
+        window.addEventListener('resize', updateCardWidth);
+
+        // Auto scroll every 3 seconds
+        setInterval(autoScroll, 3000);
+
+        updateCardWidth();
+    });
+    </script>
+
+    <section class="w-full bg-white">
+        <!-- Why Choose Us -->
+        <div class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold tracking-tight text-gray-900">Why Choose Us</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                        Trusted by thousands worldwide for seamless visa solutions with expert support at every step.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border hover:shadow-md transition">
+                        <div class="text-4xl font-extrabold text-primary text-center">50K+</div>
+                        <p class="mt-2 text-gray-600 text-center text-sm">Visas Processed</p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border hover:shadow-md transition">
+                        <div class="text-4xl font-extrabold text-primary text-center">100+</div>
+                        <p class="mt-2 text-gray-600 text-center text-sm">Countries Served</p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border hover:shadow-md transition">
+                        <div class="text-4xl font-extrabold text-primary text-center">98%</div>
+                        <p class="mt-2 text-gray-600 text-center text-sm">Success Rate</p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border hover:shadow-md transition">
+                        <div class="text-4xl font-extrabold text-primary text-center">24/7</div>
+                        <p class="mt-2 text-gray-600 text-center text-sm">Support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testimonials -->
+        <div class="bg-white py-20">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-900">What Our Customers Say</h2>
+                    <p class="mt-3 text-gray-600 max-w-xl mx-auto">
+                        Real experiences from our happy clients around the world.
+                    </p>
+                </div>
+
+                <!-- Slider Container -->
+                <div class="relative overflow-hidden">
+                    <!-- Track -->
+                    <div id="testimonial-track" class="flex transition-transform duration-700 ease-in-out"
+                        style="will-change: transform;">
+                        <!-- Testimonial Card Template (8–10 Testimonials) -->
+                        <div class="testimonial-card w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-4">
+                            <div
+                                class="bg-gray-50 p-6 rounded-xl shadow-sm border hover:shadow-md h-full flex flex-col justify-between">
+                                <p class="text-gray-700 italic mb-4">
+                                    “Excellent service! The process was smooth and the team was incredibly responsive at
+                                    every step.”
+                                </p>
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">Sarah Thompson</div>
+                                        <div class="text-sm text-gray-500">United States Visa</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-4">
+                            <div
+                                class="bg-gray-50 p-6 rounded-xl shadow-sm border hover:shadow-md h-full flex flex-col justify-between">
+                                <p class="text-gray-700 italic mb-4">
+                                    “Fast and reliable service. My visa was approved without any hassle!”
+                                </p>
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">Michael Chen</div>
+                                        <div class="text-sm text-gray-500">Australia Visa</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-4">
+                            <div
+                                class="bg-gray-50 p-6 rounded-xl shadow-sm border hover:shadow-md h-full flex flex-col justify-between">
+                                <p class="text-gray-700 italic mb-4">
+                                    “Their checklist saved me days. Clear guidance at every step!”
+                                </p>
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">Aarav Khanna</div>
+                                        <div class="text-sm text-gray-500">Canada Visa</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-4">
+                            <div
+                                class="bg-gray-50 p-6 rounded-xl shadow-sm border hover:shadow-md h-full flex flex-col justify-between">
+                                <p class="text-gray-700 italic mb-4">
+                                    “24/7 support actually means 24/7. Got help even at midnight!”
+                                </p>
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">Priya Mehta</div>
+                                        <div class="text-sm text-gray-500">UK Visa</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-4">
+                            <div
+                                class="bg-gray-50 p-6 rounded-xl shadow-sm border hover:shadow-md h-full flex flex-col justify-between">
+                                <p class="text-gray-700 italic mb-4">
+                                    “They caught a small mistake that would have delayed my visa. Lifesaver!”
+                                </p>
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">Daniel Ruiz</div>
+                                        <div class="text-sm text-gray-500">Schengen Visa</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-4">
+                            <div
+                                class="bg-gray-50 p-6 rounded-xl shadow-sm border hover:shadow-md h-full flex flex-col justify-between">
+                                <p class="text-gray-700 italic mb-4">
+                                    “Super transparent pricing and updates at every milestone.”
+                                </p>
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">Nora Williams</div>
+                                        <div class="text-sm text-gray-500">New Zealand Visa</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-4">
+                            <div
+                                class="bg-gray-50 p-6 rounded-xl shadow-sm border hover:shadow-md h-full flex flex-col justify-between">
+                                <p class="text-gray-700 italic mb-4">
+                                    “The most professional and supportive team I've ever worked with.”
+                                </p>
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">Raj Patel</div>
+                                        <div class="text-sm text-gray-500">Dubai Visa</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 p-4">
+                            <div
+                                class="bg-gray-50 p-6 rounded-xl shadow-sm border hover:shadow-md h-full flex flex-col justify-between">
+                                <p class="text-gray-700 italic mb-4">
+                                    “My visa approval was faster than I expected. Highly recommended!”
+                                </p>
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">Emma Davis</div>
+                                        <div class="text-sm text-gray-500">Singapore Visa</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Arrows -->
+                    <button id="prev-btn"
+                        class="absolute top-1/2 -translate-y-1/2 left-0 bg-white shadow-md rounded-full p-2 hover:bg-gray-100 transition z-10"
+                        aria-label="Previous">
+                        &#8592;
+                    </button>
+                    <button id="next-btn"
+                        class="absolute top-1/2 -translate-y-1/2 right-0 bg-white shadow-md rounded-full p-2 hover:bg-gray-100 transition z-10"
+                        aria-label="Next">
+                        &#8594;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slider Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const track = document.getElementById('testimonial-track');
+        const cards = track.querySelectorAll('.testimonial-card');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        let index = 0;
+        const visibleSlides = () => {
+            if (window.innerWidth >= 1024) return 3; // Desktop
+            if (window.innerWidth >= 640) return 2; // Tablet
+            return 1; // Mobile
+        };
+
+        function updateSlider() {
+            const slideWidth = cards[0].offsetWidth;
+            track.style.transform = `translateX(-${index * slideWidth}px)`;
+        }
+
+        function nextSlide() {
+            if (index < cards.length - visibleSlides()) {
+                index++;
+            } else {
+                index = 0; // loop back
+            }
+            updateSlider();
+        }
+
+        function prevSlide() {
+            if (index > 0) {
+                index--;
+            } else {
+                index = cards.length - visibleSlides(); // loop to last
+            }
+            updateSlider();
+        }
+
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        window.addEventListener('resize', updateSlider);
+
+        // Autoplay
+        setInterval(nextSlide, 4000);
+
+        // Initialize
+        updateSlider();
+    });
+    </script>
+
+
+
 </main>
 <?php
 
