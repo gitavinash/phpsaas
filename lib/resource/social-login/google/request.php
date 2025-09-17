@@ -14,6 +14,7 @@ if (DEVELOPMENT_MODE == true) {
 } else {
     $google_oauth_redirect_uri = ((SITE_ID == 234) ? HTTP_PROTOCOL . MAIN_DOMAIN : SITE_URL) . '/oauth/google/';
 }
+$google_oauth_redirect_uri = ((SITE_ID == 234) ? HTTP_PROTOCOL . MAIN_DOMAIN : SITE_URL) . '/oauth/google/';
 
 $google_oauth_version = 'v3';
 
