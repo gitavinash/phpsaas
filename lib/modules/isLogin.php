@@ -13,7 +13,6 @@ if (!isset($_COOKIE['user_data'])) {
 	$user_salt_key = base64_decode($_COOKIE['user_data']);
 
 	$activeSiteID = ((SITE_ID == 234 || SITE_ID == 49) ? " IN (49, 234)" : "=" . SITE_ID);
-	echo $activeSiteID . ' - ' . SITE_ID;
 	$checkUserAccessQuery = "SELECT user_id, user_email, user_salt_key, user_status, site_domain, site_url, site_name, site_icon, site_status, site_app_id, site_access_site_id, site_access_type, site_dashboard_version, profile_display_name as logginUserName FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "user ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_access_site_id=site_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id WHERE user_salt_key='{$user_salt_key}' AND site_access_site_id{$activeSiteID}";
 
 	if ($checkUserIsReal = mysqli_query($connection, $checkUserAccessQuery)) {
@@ -27,7 +26,8 @@ if (!isset($_COOKIE['user_data'])) {
 			if (isset($_COOKIE['device_id'])) {
 				if ($checkSession = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user_sessions WHERE us_user_id='{$user_id}' AND us_active_device='{$_COOKIE['device_id']}' AND us_site_id{$activeSiteID}")) {
 					if (mysqli_num_rows($checkSession) == 0) {
-
+						echo $activeSiteID . ' - ' . SITE_ID;
+						exit();
 						header("Location: /logout/?msg=invalid+session+token+or+expire", true, 301);
 						exit();
 					}
