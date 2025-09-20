@@ -15,10 +15,18 @@
                     <div class="form-group">
                         <label class="form-lable">Room type<sup>*</sup></label>
                         <select class="selectJS" style="float: left; width:100%" name="package" id="package">
-                            <option value="deluxe" seleted>Deluxe</option>
-                            <option value="luxury">Luxury</option>
-                            <option value="semi_luxury">Semi Luxury</option>
-                            <option value="super_deluxe">Super deluxe</option>
+                            <option value="">Select room type</option>
+                            <?php
+
+                            if ($roomType = mysqli_query($connection, "SELECT category_id, category_title FROM " . TABLE_PREFIX . "category WHERE category_status=1 AND category_site_id='" . SITE_ID . "' AND category_type='" . ((SITE_APP == 'spa' ? 'spa_' : '')) . "room'")) {
+                                if (mysqli_num_rows($roomType) != 0) {
+                                    while ($room = mysqli_fetch_assoc($roomType)) {
+                                        echo "<option value='{$room['category_id']}' " . (($room['category_title'] == 'deluxe') ? 'selected' : '') . ">{$room['category_title']}</option>";
+                                    }
+                                }
+                            }
+
+                            ?>
                         </select>
                     </div>
                     <div class="form-group">

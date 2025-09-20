@@ -7,6 +7,7 @@ $status = 'warning';
 $msg = 'Something went wrong';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    print_r($_POST);
 } else {
     $httpStatus = 400;
     $msg = 'Bad request';

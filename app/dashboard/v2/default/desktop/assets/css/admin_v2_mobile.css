@@ -834,3 +834,10 @@ section.form .form-header h1 {
   color: #333;
   border: 1px solid #ddd;
 }
+
+.smallPopUpBox {
+  display: block !important;
+  height: 100vh;
+  width: 100%;
+  background: #fff !important;
+}

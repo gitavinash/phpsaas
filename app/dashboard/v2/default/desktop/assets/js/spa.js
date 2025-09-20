@@ -143,4 +143,24 @@ $(document).ready(function () {
       },
     });
   });
+
+  $(".addNewRoomType").click(function (e) {
+    e.preventDefault();
+    $(".popUp").hide();
+    document.querySelector(".roomTypeBox").style.display = "flex";
+    $(".roomTypeBox").show();
+  });
+
+  $(".editRoomType").click(function (e) {
+    e.preventDefault();
+    $(".popUp").hide();
+    updateRoomTypeId = $(this).attr("id");
+    roomTypeName = $(this).attr("data_name");
+    roomTypeDescription = $(this).attr("data_desc");
+    $("#updateRoomType").show();
+    $("#editName").val(roomTypeName);
+    $("#editDescription").val(roomTypeDescription);
+    document.querySelector(".editRoomTypeBox").style.display = "flex";
+    $(".editRoomTypeBox").show();
+  });
 });

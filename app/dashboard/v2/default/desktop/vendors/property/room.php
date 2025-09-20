@@ -3,7 +3,7 @@
 $id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? base64_decode($_GET['id']) : 0));
 
 
-if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_deletable FROM " . TABLE_PREFIX . "category WHERE category_type='room'")) {
+if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_deletable FROM " . TABLE_PREFIX . "category WHERE category_type='" . ((SITE_APP == 'spa' ? 'spa_' : '')) . "room'")) {
     $roomsList = array();
     if (mysqli_num_rows($roomsData) != 0) {
         while ($data = mysqli_fetch_assoc($roomsData)) {
@@ -62,7 +62,8 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
                                     <input id="name" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="description" id="description" placeholder="Description*" class="form-control" required></textarea>
+                                    <textarea type="text" name="description" id="description" placeholder="Description*"
+                                        class="form-control" required></textarea>
                                     <label class="form-lable" id="descriptionLabel">Description</label>
                                 </div>
                             </div>
@@ -71,8 +72,7 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
             </div>
             <div class="widget box-3">
                 <div class="actionArea">
-                    <a href="#" class="btn popUpBtn" id="addRoomType"><i class="fi-rr-check"></i> Add new room
-                        type</a>
+                    <a href="#" class="btn popUpBtn" id="addRoomType"><i class="fi-rr-check"></i>Save</a>
                     <span href="#" class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
                         Cancel</span>
                 </div>
@@ -95,7 +95,8 @@ if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, 
                                     <input id="editName" name="name" type="text" />
                                 </div>
                                 <div class="form-group">
-                                    <textarea type="text" name="description" id="editDescription" placeholder="Description*" class="form-control" required></textarea>
+                                    <textarea type="text" name="description" id="editDescription"
+                                        placeholder="Description*" class="form-control" required></textarea>
                                     <label class="form-lable" id="descriptionLabel">Description</label>
                                 </div>
                             </div>

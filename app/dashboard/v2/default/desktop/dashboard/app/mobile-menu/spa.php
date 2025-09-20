@@ -65,7 +65,7 @@
             <h4>Rooms & Facilities <small>Track spa rooms</small></h4>
             <div class="more-row">
                 <div class="more-grid">
-                    <a href="room/add/" class="more-item spa-link" data-route="/room/add/">
+                    <a href="vendors/property/room/" class="more-item spa-link" data-route="/room/add/">
                         <i class="fi fi-rr-door-open"></i><span>Add Room</span>
                     </a>
                     <a href="room/" class="more-item spa-link" data-route="/room/">
