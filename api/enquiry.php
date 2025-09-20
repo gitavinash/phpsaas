@@ -320,9 +320,9 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}'
                 $redirect_url = '/dashboard/leads/view/?id=' . base64_encode($leadId);
             }
 
-            // header("Location: " . $redirect_url, TRUE, 301);
-            echo 'We are redirecting you to <a href="' . htmlspecialchars($redirect_url) . '">' . htmlspecialchars($redirect_url) . '</a>...';
-            header("Refresh: 3; URL=" . $redirect_url);
+            header("Location: " . $redirect_url, TRUE, 301);
+            // echo 'We are redirecting you to <a href="' . htmlspecialchars($redirect_url) . '">' . htmlspecialchars($redirect_url) . '</a>...';
+            // header("Refresh: 3; URL=" . $redirect_url);
         }
     } else {
         echo "<h2>Enter valid mobile number</h2>";

@@ -2,7 +2,7 @@
 
 require_once UTIL_FUNCTIONS;
 
-$httpStatus = 500;
+$httpStatus = ((DEVELOPMENT_MODE == true) ? 200 : 500);
 $status = 'warning';
 $msg = 'Invalid request';
 
@@ -30,9 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $msg = 'OTP sent successfully';
                 $httpStatus = 200;
             } else {
-                $status = 'error';
+                $status = ((DEVELOPMENT_MODE == true)) ? 'success' : 'error';;
                 $msg = ((DEVELOPMENT_MODE == true)) ? $response['msg'] : 'Failed to send OTP';
-                $httpStatus = 500;
             }
         } else {
             $status = 'error';
