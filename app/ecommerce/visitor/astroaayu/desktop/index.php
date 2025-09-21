@@ -390,7 +390,7 @@ require_once 'header.php';
 
                 <?php
 
-                if ($checkCategory = mysqli_query($connection, "SELECT category_image, category_title, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id AND link_site_id=" . SITE_ID . " WHERE link_status=200 AND category_type='product' AND category_status=1 AND category_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID)) {
+                if ($checkCategory = mysqli_query($connection, "SELECT category_image, category_title, link_url FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id AND link_site_id=" . SITE_ID . " WHERE link_status=200 AND link_category='category' AND category_type='product' AND category_status=1 AND category_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID)) {
 
                     if (mysqli_num_rows($checkCategory) == 0) {
 
