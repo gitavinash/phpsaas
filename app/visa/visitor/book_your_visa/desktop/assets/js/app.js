@@ -47,6 +47,37 @@ function getCookie(name) {
 }
 
 $(document).ready(function () {
+  var $track = $("#testimonial-track");
+  var scrollAmount = 0;
+  var cardWidth = 0;
+
+  function updateCardWidth() {
+    var $card = $track.find('div[role="listitem"]').first();
+    if ($card.length) {
+      var style = $card.css("margin-right");
+      cardWidth = $card.outerWidth() + parseInt(style, 10);
+    }
+  }
+
+  function autoScroll() {
+    if (!cardWidth) updateCardWidth();
+
+    scrollAmount += cardWidth;
+    if (scrollAmount >= $track[0].scrollWidth - $track[0].clientWidth) {
+      scrollAmount = 0; // Reset to start
+    }
+
+    $track.animate({ scrollLeft: scrollAmount }, 500); // Smooth scroll
+  }
+
+  // Update on window resize
+  $(window).on("resize", updateCardWidth);
+
+  // Auto scroll every 3 seconds
+  setInterval(autoScroll, 3000);
+
+  updateCardWidth();
+
   $(".datepicker").datepicker({
     dateFormat: "yy-mm-dd",
     changeMonth: true,
