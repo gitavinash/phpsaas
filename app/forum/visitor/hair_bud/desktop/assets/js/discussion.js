@@ -108,13 +108,13 @@ $(function () {
       return false;
     }
 
-    const postType = $('input[name="postType"]:checked').val();
+    const postType = $('input[name="discussion_type"]:checked').val();
     if (!postType) {
       await warn(
         "Missing Post Type",
         "Please choose Discussion, Question, or Success Story."
       );
-      highlightError($('input[name="postType"]').first());
+      highlightError($('input[name="discussion_type"]').first());
       return false;
     }
 
