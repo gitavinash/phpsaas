@@ -40,22 +40,27 @@ $discussionStatus = (($discussionStatus == 'all') ? '' : "AND discussion_status=
     <tbody>
         <?php
 
-		if ($dataList = mysqli_query($connection, "SELECT discussion_id, discussion_title, category_title, link_url, link_status, link_creation, profile_display_name, discussion_status FROM " . TABLE_PREFIX . "discussion, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "profile WHERE link_type='discussion' AND link_relation_id=discussion_id AND link_site_id='" . SITE_ID . "' AND category_id=discussion_category AND profile_user_id='" . USER_ID . "' AND link_status!=301 $discussionStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
-			if (mysqli_num_rows($dataList) != 0) {
-				while ($data = mysqli_fetch_assoc($dataList)) {
-					extract($data) ?>
+        if ($dataList = mysqli_query($connection, "SELECT discussion_id, discussion_title, category_title, link_url, link_status, link_creation, profile_display_name, discussion_status FROM " . TABLE_PREFIX . "discussion, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "profile WHERE link_type='discussion' AND link_relation_id=discussion_id AND link_site_id='" . SITE_ID . "' AND category_id=discussion_category AND profile_user_id='" . USER_ID . "' AND link_status!=301 $discussionStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
+            if (mysqli_num_rows($dataList) != 0) {
+                while ($data = mysqli_fetch_assoc($dataList)) {
+                    extract($data) ?>
         <tr>
             <td>
                 <p><a
-                        href="discussion/?type=edit&editor=true&id=<?php echo base64_encode($discussion_id); ?>"><?php echo $discussion_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
+                        href="/start-a-discussion/?id=<?php echo base64_encode($discussion_id); ?>"><?php echo $discussion_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
                 </p>
                 <div class="hover">
-                    <a href="discussion/?type=edit&editor=true&id=<?php echo base64_encode($discussion_id); ?>"><i
-                            class="fas fa-pencil-alt"></i> Edit</a>
+                    <a href="/start-a-discussion/?id=<?php echo base64_encode($discussion_id); ?>"><i
+                            class=" fas fa-pencil-alt"></i> Edit</a>
                     <a href="#" id="<?php echo $discussion_id ?>_discussion" class="deleteBtn"><i
                             class="fas fa-trash"></i> Delete</a>
+                    <?php
+                                if ($discussion_status != 1) { ?>
                     <a href="#" id="<?php echo $discussion_id ?>_discussion" class="makeItLive"><i
                             class="fas fa-thumbs"></i> Make it live</a>
+                    <?php
+                                }
+                                ?>
                     <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
                 </div>
             </td>
@@ -64,31 +69,31 @@ $discussionStatus = (($discussionStatus == 'all') ? '' : "AND discussion_status=
             <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
             <td>
                 <?php
-							switch ($discussion_status) {
-								case 0:
-									echo 'Pending';
-									break;
-								case 1:
-									echo 'Live';
-									break;
-								case 2:
-									echo 'Closed';
-									break;
-								case 3:
-									echo 'Archived';
-									break;
-								default:
-									echo 'Unknown Status';
-									break;
-							}
-							?>
+                            switch ($discussion_status) {
+                                case 0:
+                                    echo 'Pending';
+                                    break;
+                                case 1:
+                                    echo 'Live';
+                                    break;
+                                case 2:
+                                    echo 'Closed';
+                                    break;
+                                case 3:
+                                    echo 'Archived';
+                                    break;
+                                default:
+                                    echo 'Unknown Status';
+                                    break;
+                            }
+                            ?>
             </td>
         </tr>
         <?php
-				}
-			}
-		}
+                }
+            }
+        }
 
-		?>
+        ?>
     </tbody>
 </table>

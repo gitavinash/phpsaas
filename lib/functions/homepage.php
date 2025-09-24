@@ -51,10 +51,25 @@ function getCategoryWithTotalPost($connection, $postType = 'post', $pageLimit = 
 }
 
 
-function getAllCategoryList($connection, $postType = 'post', $pageLimit = 1000)
+function getAllCategoryList($connection, $pageLimit = 1000)
 {
     $categoryListData = array();
     if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url, category_type, link_is_featured, link_published, link_modified FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id AND link_site_id=" . SITE_ID . " AND link_status=200 AND link_type='category' WHERE category_site_id=" . SITE_ID . " AND category_status=1 ORDER BY category_title ASC")) {
+        if (mysqli_num_rows($categoryList) != 0) {
+            while ($categoryData = mysqli_fetch_assoc($categoryList)) {
+                $categoryListData[] = $categoryData;
+            }
+        }
+    }
+
+    return $categoryListData;
+}
+
+
+function getAllCategoryListFilter($connection, $postType = 'post', $pageLimit = 1000)
+{
+    $categoryListData = array();
+    if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url, category_type, link_is_featured, link_published, link_modified FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id AND link_site_id=" . SITE_ID . " AND link_status=200 AND link_type='category' WHERE category_type='discussion' AND category_site_id=" . SITE_ID . " AND category_status=1 ORDER BY category_title ASC")) {
         if (mysqli_num_rows($categoryList) != 0) {
             while ($categoryData = mysqli_fetch_assoc($categoryList)) {
                 $categoryListData[] = $categoryData;

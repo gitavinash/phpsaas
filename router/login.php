@@ -9,7 +9,12 @@ if (!file_exists($themeLoginFile)) {
     if (SITE_APP == 'spa') {
         $authby = 'mobile';
     }
-    $fileName = ((isset($authby)) ? strtolower($authby) : 'email') . '-login';
+
+    if (DEVELOPMENT_MODE == true) {
+        $fileName = 'login';
+    } else {
+        $fileName = ((isset($authby)) ? strtolower($authby) : 'email') . '-login';
+    }
 
     $themeLoginFile = str_replace('/default/', '/' . USER_TYPE . '/', ADMIN_PATH) . $fileName . '.php';
 

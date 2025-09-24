@@ -22,7 +22,7 @@
                 </thead>
                 <?php
 
-                if ($supplierList = mysqli_query($connection, "SELECT post_id, post_title, link_url, category_title, link_status, post_type, post_status, link_published FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "category ON post_category=category_id AND category_site_id=" . SITE_ID . " INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=post_id WHERE link_status=200 AND link_type='post' AND post_type='blog' AND post_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID)) {
+                if ($supplierList = mysqli_query($connection, "SELECT post_id, post_title, link_url, category_title, link_status, post_type, post_status, link_published FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "category ON post_category=category_id AND category_site_id=" . SITE_ID . " INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=post_id WHERE link_status=200 AND link_type='post' AND post_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID)) {
                     echo "<tbody>";
                     if (mysqli_num_rows($supplierList) > 0) {
                         while ($supplierData = mysqli_fetch_assoc($supplierList)) {

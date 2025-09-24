@@ -88,6 +88,30 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
+
+                <li <?php echo (($postType == 'testimonial') ? 'class="active"' : '') ?>>
+                    <a href="testimonial/?type=list&status=all"><i class="fas fa-comments"></i>
+                        Testimonials</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="testimonial/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    testimonials</a>
+                            </li>
+                            <li><a href="testimonial/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    testimonial</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="testimonial/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    testimonials</a>
+                            </li>
+                            <li><a href="testimonial/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    testimonial</a></li>
+                        </ul>
+                    </div>
+                </li>
+
                 <li <?php echo ((ADMIN_BASE_URL == '/subscription/') ? 'class="active"' : '') ?>>
                     <a href="subscription/?type=list&status=all"><i class="fas fa-crown"></i> Subscription</a>
                     <div class="side-menu">
@@ -161,25 +185,25 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
 
                 if ($site_access_type == 'administrator') { ?>
 
-                    <li <?php echo ((ADMIN_BASE_URL == '/user/') ? 'class="active"' : '') ?>>
-                        <a href="user/?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
-                        <div class="side-menu">
-                            <ul>
-                                <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
-                                </li>
-                                <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
-                                <li><a href="user/?type=sessions"><i class="fas fa-bolt"></i> Manage sessions</a></li>
-                            </ul>
-                        </div>
-                        <div class="bottom-menu">
-                            <ul>
-                                <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
-                                </li>
-                                <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
-                                <li><a href="user/?type=sessions"><i class="fas fa-bolt"></i> Manage sessions</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                <li <?php echo ((ADMIN_BASE_URL == '/user/') ? 'class="active"' : '') ?>>
+                    <a href="user/?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                            </li>
+                            <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                            <li><a href="user/?type=sessions"><i class="fas fa-bolt"></i> Manage sessions</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                            </li>
+                            <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                            <li><a href="user/?type=sessions"><i class="fas fa-bolt"></i> Manage sessions</a></li>
+                        </ul>
+                    </div>
+                </li>
                 <?php
                 }
 

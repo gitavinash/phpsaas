@@ -2,7 +2,9 @@
 
 $id = base64_decode($id);
 
-if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "category WHERE category_type='{$pageType}' AND category_status=1 AND category_site_id='" . SITE_ID . "' AND link_type='page' LIMIT 1")) {
+$pageType = 'testimonial';
+
+if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "category WHERE category_type='{$pageType}' AND category_status=1 AND category_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($pageDetails) != 0) {
         extract(mysqli_fetch_assoc($pageDetails));
     } else {
