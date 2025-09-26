@@ -96,7 +96,7 @@ function record($connection, $data)
                     'domain'   => '.' . $cleanDomain,
                     'secure'   => $isSecure,
                     'httponly' => true,
-                    'samesite' => 'Lax',
+                    'samesite' => 'None',
                 ];
             }
             $deviceID = bin2hex(random_bytes(16)); // Generate a random unique ID

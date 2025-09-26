@@ -97,7 +97,7 @@ if ($user_id != 0) {
                 'domain'   => '.' . $cleanDomain,
                 'secure'   => $isSecure,
                 'httponly' => true,
-                'samesite' => 'Lax',
+                'samesite' => 'None',
             ];
         }
         $deviceID = bin2hex(random_bytes(16)); // Generate a random unique ID
