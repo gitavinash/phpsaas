@@ -2,9 +2,9 @@
 
 require_once UTIL_FUNCTIONS;
 
-print_r($_SESSION);
-print_r($_COOKIE);
-exit();
+// print_r($_SESSION);
+// print_r($_COOKIE);
+// exit();
 clearAllCookies();
 
 
