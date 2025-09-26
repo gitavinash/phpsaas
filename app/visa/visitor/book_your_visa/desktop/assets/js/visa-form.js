@@ -833,15 +833,18 @@ $(document).ready(function () {
 
   $("#submitVisaApplicationFormBtn").on("click", function (e) {
     e.preventDefault();
+
     const $btn = $("#submitVisaApplicationFormBtn");
-    $btn.prop("disabled", true);
+
+    // Disable button and show processing state
+    $btn.prop("disabled", true).text("Processing...");
 
     const applicationId = localStorage.getItem("visaApplicationId");
     const personsData = JSON.parse(localStorage.getItem("personsData")) || [];
 
     if (!applicationId || personsData.length === 0) {
       popUpMessage("center", "Missing data to submit application", "error");
-      $btn.prop("disabled", false);
+      $btn.prop("disabled", false).text("Pay Now");
       return;
     }
 
@@ -896,7 +899,7 @@ $(document).ready(function () {
     });
 
     if (missingRequired) {
-      $btn.prop("disabled", false);
+      $btn.prop("disabled", false).text("Pay Now");
       return;
     }
 
@@ -918,7 +921,8 @@ $(document).ready(function () {
           window.location.href = "/generate-order/?id=" + applicationId;
         }, 1500);
 
-        $btn.prop("disabled", false);
+        // Keep button disabled after success
+        $btn.prop("disabled", true).text("Processing...");
       },
       error: function (xhr) {
         console.error("❌ Submission failed:", xhr);
@@ -927,7 +931,9 @@ $(document).ready(function () {
           xhr.responseJSON?.msg || "Submission failed. Please try again.",
           "error"
         );
-        $btn.prop("disabled", false);
+
+        // Enable button and reset text
+        $btn.prop("disabled", false).text("Pay Now");
       },
     });
   });

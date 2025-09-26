@@ -103,7 +103,7 @@ $(document).ready(function () {
   });
 
   // 🛬 Arrival Date Picker
-  $(".arrivalDatePicker").datepicker({
+  $(".departureDatePicker").datepicker({
     dateFormat: "yy-mm-dd",
     changeMonth: true,
     changeYear: true,
@@ -113,13 +113,13 @@ $(document).ready(function () {
       // When arrival date changes, update departure minDate
       var arrivalDate = $(this).datepicker("getDate");
       if (arrivalDate) {
-        $(".departureDatePicker").datepicker("option", "minDate", arrivalDate);
+        $(".arrivalDatePicker").datepicker("option", "minDate", arrivalDate);
       }
     },
   });
 
   // 🛫 Departure Date Picker
-  $(".departureDatePicker").datepicker({
+  $(".arrivalDatePicker").datepicker({
     dateFormat: "yy-mm-dd",
     changeMonth: true,
     changeYear: true,
