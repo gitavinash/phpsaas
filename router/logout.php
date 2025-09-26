@@ -1,5 +1,9 @@
 <?php
 
+print_r($_SESSION);
+print_r($_COOKIE);
+exit();
+
 session_destroy();
 
 if (isset($_SERVER['HTTP_COOKIE'])) {
