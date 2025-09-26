@@ -1,8 +1,8 @@
 <?php
 
-// print_r($_SESSION);
-// print_r($_COOKIE);
-// exit();
+print_r($_SESSION);
+print_r($_COOKIE);
+exit();
 
 session_destroy();
 
