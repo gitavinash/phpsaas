@@ -1,6 +1,6 @@
 <?php
 
-function record($connection, $data)
+function notinusedrecord($connection, $data)
 {
     require_once UTIL_FUNCTIONS;
 
