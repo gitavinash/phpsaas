@@ -60,7 +60,7 @@ define('REGISTRATION_PATH', '/register/');
 /* Active domain and URL information */
 
 if (DEVELOPMENT_MODE == true) {
-	define('HTTP_PROTOCOL', 'http://'); // Check HTTP protocol is secure or not
+	define('HTTP_PROTOCOL', ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ((int)($_SERVER['SERVER_PORT'] ?? 0) === 443)) ? 'https://' : 'http://'); // Check HTTP protocol is secure or not
 } else {
 	define('HTTP_PROTOCOL', 'https://'); // Check HTTP protocol is secure or not
 }

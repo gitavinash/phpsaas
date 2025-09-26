@@ -441,4 +441,98 @@ $(document).ready(function () {
         .html("Track Application");
     }
   });
+
+  // Popular destination slider
+
+  var $slider = $("#destinationSlider");
+  var $prev = $("#prevBtn");
+  var $next = $("#nextBtn");
+
+  var pos = 0;
+  var timer = null;
+  var cardW = 0;
+
+  function getVisible() {
+    return window.innerWidth < 768 ? 1 : 4;
+  }
+
+  function calcCardW() {
+    var $first = $slider.children().first();
+    return $first.length ? $first.outerWidth(true) : 0; // width + margin
+  }
+
+  function maxPos() {
+    var total = $slider.children().length;
+    var visible = getVisible();
+    var steps = Math.max(total - visible, 0);
+    return -(steps * cardW);
+  }
+
+  function update() {
+    $slider.css("transform", "translateX(" + pos + "px)");
+  }
+
+  function recalc() {
+    cardW = calcCardW();
+    pos = 0;
+    update();
+  }
+
+  function autoSlide() {
+    var maxP = maxPos();
+    if (pos > maxP) {
+      pos -= cardW; // move left
+    } else {
+      pos = 0; // reset to start
+    }
+    update();
+  }
+
+  function start() {
+    stop();
+    timer = setInterval(autoSlide, 3000); // every 3s
+  }
+
+  function stop() {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }
+
+  // Buttons
+  $prev.on("click", function () {
+    stop();
+    if (pos < 0) {
+      pos += cardW;
+    }
+    update();
+    start();
+  });
+
+  $next.on("click", function () {
+    stop();
+    var maxP = maxPos();
+    if (pos > maxP) {
+      pos -= cardW;
+    } else {
+      pos = 0;
+    }
+    update();
+    start();
+  });
+
+  // Pause on hover
+  $slider.on("mouseenter", stop).on("mouseleave", start);
+
+  // Recompute on resize
+  $(window).on("resize", function () {
+    stop();
+    recalc();
+    start();
+  });
+
+  // Init
+  recalc();
+  start();
 });
