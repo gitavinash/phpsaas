@@ -2,10 +2,6 @@
 
 session_destroy();
 
-print_r($_SESSION);
-print_r($_COOKIE);
-exit();
-
 if (isset($_SERVER['HTTP_COOKIE'])) {
 
 	$cookies = explode(';', $_SERVER['HTTP_COOKIE']);
