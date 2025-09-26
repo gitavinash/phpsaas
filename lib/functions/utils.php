@@ -101,3 +101,29 @@ function truncateText($text, $maxLength = 300)
     // Add ellipsis to indicate truncation
     return $truncated . '...';
 }
+
+function clearAllCookies()
+{
+    $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+
+    foreach ($_COOKIE as $name => $value) {
+        // Clear cookie without specifying domain — applies to current host
+        setcookie($name, '', [
+            'expires'  => time() - 3600, // past date
+            'path'     => '/',
+            'secure'   => $isSecure,
+            'httponly' => true,
+            'samesite' => $isSecure ? 'None' : 'Lax',
+        ]);
+
+        // Also try clearing with root domain wildcard
+        setcookie($name, '', [
+            'expires'  => time() - 3600,
+            'path'     => '/',
+            'domain'   => '.' . $_SERVER['SERVER_NAME'], // root + subdomains
+            'secure'   => $isSecure,
+            'httponly' => true,
+            'samesite' => $isSecure ? 'None' : 'Lax',
+        ]);
+    }
+}
