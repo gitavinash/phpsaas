@@ -314,7 +314,7 @@ localStorage.setItem('governmentFees', '<?php echo $visa_package_goverment_fee; 
                                         <div class="font-medium" id="governmentVisaCharges"></div>
                                     </div>
                                     <div>
-                                        <div class="text-gray-500">BMV Service Fee</div>
+                                        <div class="text-gray-500">Book Your VISA Service Fee</div>
                                         <div class="font-medium" id="serviceFee"></div>
                                     </div>
                                     <div>
