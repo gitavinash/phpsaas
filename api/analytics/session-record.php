@@ -84,32 +84,40 @@ $recordAnalytics = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "an
 $analyticsId = mysqli_insert_id($connection);
 
 if ($user_id != 0) {
-    if (!isset($_COOKIE['device_id'])) {
+    // Build cookie options once
+    $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+    $cookieOptions = [
+        'expires'  => time() + (30 * 24 * 60 * 60), // 30 days
+        'path'     => '/',
+        'domain'   => '.' . MAIN_DOMAIN,            // root scope (all subdomains)
+        'secure'   => $isSecure,
+        'httponly' => true,
+        'samesite' => $isSecure ? 'None' : 'Lax',
+    ];
 
-        if (!isset($cookieOptions)) {
-
-            $cleanDomain = getRootDomain(SITE_DOMAIN);
-
-            $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
-            $cookieOptions = [
-                'expires'  => time() + (30 * 24 * 60 * 60),
-                'path'     => '/',
-                'domain'   => '.' . $cleanDomain,
-                'secure'   => $isSecure,
-                'httponly' => true,
-                'samesite' => 'None',
-            ];
+    if (!isset($_COOKIE['device_id']) || $_COOKIE['device_id'] === '') {
+        // No cookie anywhere -> create once on ROOT domain
+        $deviceID = bin2hex(random_bytes(16));
+        if (!headers_sent()) {
+            setcookie('device_id', $deviceID, $cookieOptions);
         }
-        $deviceID = bin2hex(random_bytes(16)); // Generate a random unique ID
-        setcookie('device_id', $deviceID, $cookieOptions); // 1-year expiry
     } else {
-        $deviceID = $_COOKIE['device_id'];
+        $deviceID = (string) $_COOKIE['device_id'];
     }
 
-
-    if ($checkUserSession = mysqli_query($connection, "SELECT us_id FROM " . TABLE_PREFIX . "user_sessions WHERE us_active_device='{$deviceID}' AND us_status=1 AND us_user_id='{$user_id}' AND us_site_id=" . SITE_ID)) {
+    // Your session logic unchanged
+    if ($checkUserSession = mysqli_query(
+        $connection,
+        "SELECT us_id FROM " . TABLE_PREFIX . "user_sessions
+         WHERE us_active_device='{$deviceID}' AND us_status=1 AND us_user_id='{$user_id}' AND us_site_id=" . SITE_ID
+    )) {
         if (mysqli_num_rows($checkUserSession) == 0) {
-            $recordUserSession = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user_sessions(us_site_id, us_user_id, us_analytics_id, us_active_device, us_status) VALUES('" . SITE_ID . "', '{$user_id}', '{$analyticsId}', '{$deviceID}', 1)");
+            $recordUserSession = mysqli_query(
+                $connection,
+                "INSERT INTO " . TABLE_PREFIX . "user_sessions
+                 (us_site_id, us_user_id, us_analytics_id, us_active_device, us_status)
+                 VALUES('" . SITE_ID . "', '{$user_id}', '{$analyticsId}', '{$deviceID}', 1)"
+            );
         } else {
             $recordUserSession = true;
         }

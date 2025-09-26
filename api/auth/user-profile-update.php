@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $cookieOptions = [
                         'expires'  => time() + (30 * 24 * 60 * 60),
                         'path'     => '/',
-                        'domain'   => '.' . $cleanDomain,
+                        'domain'   => '.' . MAIN_DOMAIN,
                         'secure'   => $isSecure,
                         'httponly' => true,
                         'samesite' => 'None',
