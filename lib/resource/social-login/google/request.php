@@ -115,7 +115,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                                     'domain'   => '.' . $cleanDomain,
                                     'secure'   => $isSecure,
                                     'httponly' => true,
-                                    'samesite' => 'Lax',
+                                    'samesite' => 'None',
                                 ];
 
                                 setcookie('user_name', base64_encode($_SESSION['google_name']), $cookieOptions);
@@ -168,7 +168,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                             'domain'   => '.' . $cleanDomain,
                             'secure'   => $isSecure,
                             'httponly' => true,
-                            'samesite' => 'Lax',
+                            'samesite' => 'None',
                         ];
 
                         setcookie('user_name', base64_encode($profile_display_name), $cookieOptions);

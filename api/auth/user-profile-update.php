@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         'domain'   => '.' . $cleanDomain,
                         'secure'   => $isSecure,
                         'httponly' => true,
-                        'samesite' => 'Lax',
+                        'samesite' => 'None',
                     ];
 
                     setcookie('user_name', base64_encode($name), $cookieOptions);

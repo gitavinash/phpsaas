@@ -79,7 +79,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_sal
             'domain'   => '.' . $cleanDomain,
             'secure'   => $isSecure,
             'httponly' => true,
-            'samesite' => 'Lax',
+            'samesite' => 'None',
         ];
 
         setcookie('user_name', base64_encode($profile_display_name), $cookieOptions);
