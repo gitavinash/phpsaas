@@ -33,10 +33,11 @@ require_once 'header.php';
                                 <span
                                     class="px-2.5 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"><?php echo $category_title ?></span>
                                 <span class="mx-2">•</span>
-                                <div class="flex items-center text-xs">
-                                    <i class="ri-pushpin-line mr-1"></i>
-                                    <span>Pinned Discussion</span>
-                                </div>
+                                <?php
+                                if ($link_is_featured == 1) {
+                                    echo "<div class='flex items-center text-xs'><i class='ri-pushpin-line mr-1'></i><span>Pinned Discussion</span></div>";
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -71,78 +72,47 @@ require_once 'header.php';
                     </div>
                 </div>
                 <!-- Main Content -->
-                <div class="prose prose-lg max-w-none">
+                <div class="prose prose-lg max-w-none custom-prose">
                     <?php
 
                         echo $discussion_description
 
                         ?>
-                    <!-- Progress Photos -->
-                    <div class="mb-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-6">Progress Photos</h2>
-                        <div class="photo-gallery">
-                            <?php
-
-                                $gallery = json_decode($gallery_image_list, TRUE);
-
-                                foreach ($gallery as $image) {
-                                    echo "<div class='bg-white rounded-lg overflow-hidden shadow-sm border cursor-pointer h-full'>
-                                        <img src='https://readdy.ai/api/search-image?query=male%20pattern%20baldness%20before%20treatment%20crown%20view%20thinning%20hair%20receding%20hairline%20medical%20documentation%20clean%20background%20professional%20lighting%20dermatology%20clinic&width=300&height=400&seq=before1&orientation=portrait'
-                                            alt='Before - Crown View' class='w-full h-64 object-cover object-top'>
-                                        <div class='p-3'>
-                                            <p class='font-medium text-gray-900'>Before - Crown View</p>
-                                            <p class='text-sm text-gray-500'>February 2024</p>
-                                        </div>
-                                    </div>";
-                                }
-
-                                ?>
-                        </div>
-                    </div>
-                    <!-- Side Effects Section -->
-                    <div class="bg-red-50 rounded-lg p-6 mb-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Side Effects Experience</h2>
-                        <div class="space-y-4">
-                            <div class="flex items-start">
-                                <div
-                                    class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                    <i class="ri-alert-line text-red-600 text-sm"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-gray-900">Decreased Libido (Weeks 2-4)</h3>
-                                    <p class="text-gray-700">Experienced about 20-30% reduction in sexual desire.
-                                        Resolved completely after dosage adjustment.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div
-                                    class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                    <i class="ri-brain-line text-red-600 text-sm"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-gray-900">Mild Brain Fog (Weeks 2-3)</h3>
-                                    <p class="text-gray-700">Slight difficulty concentrating during the initial
-                                        adjustment period. Completely resolved by month 2.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div
-                                    class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                    <i class="ri-scissors-cut-line text-red-600 text-sm"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-gray-900">Initial Shedding (Months 1-2)</h3>
-                                    <p class="text-gray-700">Significant increase in daily hair loss, which was
-                                        expected and temporary according to my dermatologist.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+                <?php
+                    $gallery = json_decode($gallery_image_list, true);
+
+                    if (is_array($gallery) && count($gallery) > 0) {
+                        // Show title and gallery only if gallery has images
+                        echo '<div class="mb-8 mt-4">';
+                        echo '<h2 class="text-2xl font-bold text-gray-900 mb-6">Progress Photos</h2>';
+                        echo '<div class="photo-gallery grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">';
+
+                        foreach ($gallery as $image) {
+                            $url = htmlspecialchars($image['path'] ?? '', ENT_QUOTES);
+                            $title = htmlspecialchars($image['name'] ?? 'Progress Photo', ENT_QUOTES);
+
+                            if (!$url) {
+                                continue; // skip if no URL
+                            }
+
+                            echo "
+            <div class='bg-white rounded-lg overflow-hidden shadow-sm border cursor-pointer h-full flex flex-col'>
+              <img src='{$url}' alt='{$title}' class='w-full h-64 object-cover object-top' loading='lazy'>
+            </div>
+          ";
+                        }
+
+                        echo '</div>'; // close photo-gallery
+                        echo '</div>'; // close mb-8
+                    }
+                    // else do nothing if gallery is empty or invalid
+                    ?>
+
                 <!-- Reaction Buttons -->
                 <div class="flex items-center justify-between py-6 border-t border-gray-200">
                     <div class="flex items-center space-x-4">
-                        <button
+                        <!-- <button
                             class="flex items-center px-4 py-2 bg-red-50 text-red-600 rounded-full hover:bg-red-100 reaction-btn !rounded-button whitespace-nowrap">
                             <i class="ri-heart-line mr-2"></i>
                             <span>86</span>
@@ -156,18 +126,18 @@ require_once 'header.php';
                             class="flex items-center px-4 py-2 bg-yellow-50 text-yellow-600 rounded-full hover:bg-yellow-100 reaction-btn !rounded-button whitespace-nowrap">
                             <i class="ri-star-line mr-2"></i>
                             <span>15</span>
-                        </button>
-                        <button
+                        </button> -->
+                        <button onclick="shareDiscussion()"
                             class="flex items-center px-4 py-2 bg-gray-50 text-gray-600 rounded-full hover:bg-gray-100 reaction-btn !rounded-button whitespace-nowrap">
                             <i class="ri-share-line mr-2"></i>
                             Share
                         </button>
                     </div>
-                    <button
+                    <!-- <button
                         class="flex items-center px-4 py-2 text-gray-600 hover:text-red-600 !rounded-button whitespace-nowrap">
                         <i class="ri-flag-line mr-2"></i>
                         Report
-                    </button>
+                    </button> -->
                 </div>
                 <?php
                 } else {
@@ -247,16 +217,36 @@ require_once 'header.php';
                         <i class="ri-add-line mr-2"></i>
                         Start New Discussion
                     </a>
-                    <!-- <button
-                        class="w-full flex items-center justify-center px-4 py-2 border border-gray-200 text-gray-700 rounded hover:bg-gray-50 !rounded-button whitespace-nowrap">
-                        <i class="ri-bookmark-line mr-2"></i>
-                        Save for Later
-                    </button>
-                    <button
+                    <button onclick="shareDiscussion()"
                         class="w-full flex items-center justify-center px-4 py-2 border border-gray-200 text-gray-700 rounded hover:bg-gray-50 !rounded-button whitespace-nowrap">
                         <i class="ri-share-line mr-2"></i>
                         Share Discussion
-                    </button> -->
+                    </button>
+                    <div id="share-fallback" class="mt-2 p-4 border rounded bg-white shadow-md hidden">
+                        <p class="text-sm mb-2 font-semibold">Share via:</p>
+                        <div class="flex flex-wrap gap-3 text-sm">
+                            <button onclick="copyLink()"
+                                class="flex items-center gap-2 px-3 py-2 border rounded text-gray-700 hover:bg-gray-100">
+                                <i class="ri-link"></i> Copy Link
+                            </button>
+                            <a id="twitter-share" target="_blank"
+                                class="flex items-center gap-2 px-3 py-2 border rounded text-blue-500 hover:bg-gray-100">
+                                <i class="ri-twitter-x-line"></i> Twitter
+                            </a>
+                            <a id="facebook-share" target="_blank"
+                                class="flex items-center gap-2 px-3 py-2 border rounded text-blue-700 hover:bg-gray-100">
+                                <i class="ri-facebook-circle-line"></i> Facebook
+                            </a>
+                            <a id="linkedin-share" target="_blank"
+                                class="flex items-center gap-2 px-3 py-2 border rounded text-blue-800 hover:bg-gray-100">
+                                <i class="ri-linkedin-box-line"></i> LinkedIn
+                            </a>
+                            <a id="email-share"
+                                class="flex items-center gap-2 px-3 py-2 border rounded text-gray-800 hover:bg-gray-100">
+                                <i class="ri-mail-line"></i> Email
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </aside>

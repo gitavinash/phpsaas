@@ -15,7 +15,6 @@ $postType = ((isset($postType)) ? $postType : 'discussion');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>Create New <?php echo ucwords(str_replace('_', ' ', $postType)) ?> - <?php echo SITE_NAME ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
@@ -23,6 +22,7 @@ $postType = ((isset($postType)) ? $postType : 'discussion');
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-tailwind@5/tailwind.min.css">
     <link href="<?php echo USER_STYLESHEET ?>style.css" rel="stylesheet">
+    <?php require_once DEFAULT_META ?>
 </head>
 
 <body>

@@ -68,7 +68,7 @@ require_once 'header.php';
                     </div>
                 </div>
                 <!-- Main Content -->
-                <div class="prose prose-lg max-w-none">
+                <div class="prose prose-lg max-w-none custom-prose">
                     <?php
 
                     echo $post_description
@@ -76,7 +76,7 @@ require_once 'header.php';
                     ?>
                 </div>
                 <!-- Reaction Buttons -->
-                <div class="flex items-center justify-between py-6 border-t border-gray-200">
+                <div class=" flex items-center justify-between py-6 border-t border-gray-200">
                     <div class="flex items-center space-x-4">
                         <button
                             class="flex items-center px-4 py-2 bg-red-50 text-red-600 rounded-full hover:bg-red-100 reaction-btn !rounded-button whitespace-nowrap">
@@ -178,16 +178,36 @@ require_once 'header.php';
                         <i class="ri-add-line mr-2"></i>
                         Start New Discussion
                     </a>
-                    <!-- <button
-                        class="w-full flex items-center justify-center px-4 py-2 border border-gray-200 text-gray-700 rounded hover:bg-gray-50 !rounded-button whitespace-nowrap">
-                        <i class="ri-bookmark-line mr-2"></i>
-                        Save for Later
-                    </button>
-                    <button
+                    <button onclick="shareDiscussion()"
                         class="w-full flex items-center justify-center px-4 py-2 border border-gray-200 text-gray-700 rounded hover:bg-gray-50 !rounded-button whitespace-nowrap">
                         <i class="ri-share-line mr-2"></i>
                         Share Discussion
-                    </button> -->
+                    </button>
+                    <div id="share-fallback" class="mt-2 p-4 border rounded bg-white shadow-md hidden">
+                        <p class="text-sm mb-2 font-semibold">Share via:</p>
+                        <div class="flex flex-wrap gap-3 text-sm">
+                            <button onclick="copyLink()"
+                                class="flex items-center gap-2 px-3 py-2 border rounded text-gray-700 hover:bg-gray-100">
+                                <i class="ri-link"></i> Copy Link
+                            </button>
+                            <a id="twitter-share" target="_blank"
+                                class="flex items-center gap-2 px-3 py-2 border rounded text-blue-500 hover:bg-gray-100">
+                                <i class="ri-twitter-x-line"></i> Twitter
+                            </a>
+                            <a id="facebook-share" target="_blank"
+                                class="flex items-center gap-2 px-3 py-2 border rounded text-blue-700 hover:bg-gray-100">
+                                <i class="ri-facebook-circle-line"></i> Facebook
+                            </a>
+                            <a id="linkedin-share" target="_blank"
+                                class="flex items-center gap-2 px-3 py-2 border rounded text-blue-800 hover:bg-gray-100">
+                                <i class="ri-linkedin-box-line"></i> LinkedIn
+                            </a>
+                            <a id="email-share"
+                                class="flex items-center gap-2 px-3 py-2 border rounded text-gray-800 hover:bg-gray-100">
+                                <i class="ri-mail-line"></i> Email
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </aside>

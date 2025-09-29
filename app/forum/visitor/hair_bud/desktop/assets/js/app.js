@@ -23,6 +23,56 @@ const confirmAction = (
     reverseButtons: true,
   });
 
+// Share button
+
+function shareDiscussion() {
+  const shareData = {
+    title: document.title,
+    text: "Check out this discussion!",
+    url: window.location.href,
+  };
+
+  // Detect if the user is on a mobile device
+  const isMobile =
+    /iPhone|iPad|iPod|Android|webOS|BlackBerry|Windows Phone/i.test(
+      navigator.userAgent
+    );
+
+  if (isMobile && navigator.share) {
+    // Use native share on mobile only
+    navigator
+      .share(shareData)
+      .then(() => console.log("Successfully shared"))
+      .catch((error) => console.error("Error sharing:", error));
+  } else {
+    // Show fallback options (desktop and unsupported mobile)
+    document.getElementById("share-fallback").classList.remove("hidden");
+
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent("Check out this discussion!");
+
+    document.getElementById(
+      "twitter-share"
+    ).href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+    document.getElementById(
+      "facebook-share"
+    ).href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    document.getElementById(
+      "linkedin-share"
+    ).href = `https://www.linkedin.com/shareArticle?url=${url}&title=${text}`;
+    document.getElementById(
+      "email-share"
+    ).href = `mailto:?subject=${document.title}&body=${text}%0A${url}`;
+  }
+}
+
+function copyLink() {
+  navigator.clipboard
+    .writeText(window.location.href)
+    .then(() => alert("Link copied to clipboard!"))
+    .catch(() => alert("Failed to copy link."));
+}
+
 const warn = (title, text) => Swal.fire({ icon: "warning", title, text });
 const errorBox = (title, text) => Swal.fire({ icon: "error", title, text });
 const successToast = (title) => Toast.fire({ icon: "success", title });
