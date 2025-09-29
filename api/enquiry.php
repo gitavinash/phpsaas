@@ -212,7 +212,7 @@ enquiry_subject='{$subject}' AND enquiry_mobile='{$mobile}' AND enquiry_first_na
 
         if (SITE_APP_ID == 20) {
             if ($freshEnquiry != TRUE) {
-                $saveEnquiry == FALSE;
+                $saveEnquiry = FALSE;
             }
         }
 
@@ -313,14 +313,14 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}'
             $postUrlValue = "&name=" . urlencode($first_name) . "&email=" . urlencode($email) . "&mobile=" . urlencode($mobile) .
                 "&pickup_date=" . urlencode($pickup_date) . "&pickup_time=" . urlencode($pickup_time) . "&address=" .
                 urlencode($address);
-            header("Location: {$redirect_url}{$postUrlValue}", TRUE, 301);
+            header("Location: {$redirect_url}{$postUrlValue}", TRUE, 303);
         } else {
 
             if (!isset($redirect_url)) {
                 $redirect_url = '/dashboard/leads/view/?id=' . base64_encode($leadId);
             }
 
-            header("Location: " . $redirect_url, TRUE, 301);
+            header("Location: " . $redirect_url, TRUE, 303);
             // echo 'We are redirecting you to <a href="' . htmlspecialchars($redirect_url) . '">' . htmlspecialchars($redirect_url) . '</a>...';
             // header("Refresh: 3; URL=" . $redirect_url);
         }
