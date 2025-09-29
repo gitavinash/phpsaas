@@ -72,14 +72,13 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_sal
         $cleanDomain = rtrim($cleanDomain, '/');
 
         $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
-
         $cookieOptions = [
-            'expires'  => time() + (30 * 24 * 60 * 60),
+            'expires'  => time() + (30 * 24 * 60 * 60), // 30 days
             'path'     => '/',
-            'domain'   => '.' . MAIN_DOMAIN,
+            'domain'   => '.' . MAIN_DOMAIN,            // root scope (all subdomains)
             'secure'   => $isSecure,
             'httponly' => true,
-            'samesite' => 'None',
+            'samesite' => $isSecure ? 'None' : 'Lax',
         ];
 
         setcookie('user_name', base64_encode($profile_display_name), $cookieOptions);
