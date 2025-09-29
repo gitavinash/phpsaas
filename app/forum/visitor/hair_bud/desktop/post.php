@@ -68,7 +68,7 @@ require_once 'header.php';
                     </div>
                 </div>
                 <!-- Main Content -->
-                <div class="prose prose-lg max-w-none custom-prose">
+                <div class="prose prose-lg max-w-none custom-prose mb-4">
                     <?php
 
                     echo $post_description

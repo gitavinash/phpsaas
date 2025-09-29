@@ -72,7 +72,7 @@ require_once 'header.php';
                     </div>
                 </div>
                 <!-- Main Content -->
-                <div class="prose prose-lg max-w-none custom-prose">
+                <div class="prose prose-lg max-w-none custom-prose mb-4">
                     <?php
 
                         echo $discussion_description
@@ -80,33 +80,35 @@ require_once 'header.php';
                         ?>
                 </div>
                 <?php
-                    $gallery = json_decode($gallery_image_list, true);
 
-                    if (is_array($gallery) && count($gallery) > 0) {
-                        // Show title and gallery only if gallery has images
-                        echo '<div class="mb-8 mt-4">';
-                        echo '<h2 class="text-2xl font-bold text-gray-900 mb-6">Progress Photos</h2>';
-                        echo '<div class="photo-gallery grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">';
+                    if ($gallery_image_list != '') {
+                        $gallery = json_decode($gallery_image_list, true);
 
-                        foreach ($gallery as $image) {
-                            $url = htmlspecialchars($image['path'] ?? '', ENT_QUOTES);
-                            $title = htmlspecialchars($image['name'] ?? 'Progress Photo', ENT_QUOTES);
+                        if (is_array($gallery) && count($gallery) > 0) {
+                            // Show title and gallery only if gallery has images
+                            echo '<div class="mb-8">';
+                            echo '<h2 class="text-2xl font-bold text-gray-900 mb-6">Progress Photos</h2>';
+                            echo '<div class="photo-gallery grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">';
 
-                            if (!$url) {
-                                continue; // skip if no URL
-                            }
+                            foreach ($gallery as $image) {
+                                $url = htmlspecialchars($image['path'] ?? '', ENT_QUOTES);
+                                $title = htmlspecialchars($image['name'] ?? 'Progress Photo', ENT_QUOTES);
 
-                            echo "
+                                if (!$url) {
+                                    continue; // skip if no URL
+                                }
+
+                                echo "
             <div class='bg-white rounded-lg overflow-hidden shadow-sm border cursor-pointer h-full flex flex-col'>
               <img src='{$url}' alt='{$title}' class='w-full h-64 object-cover object-top' loading='lazy'>
             </div>
           ";
-                        }
+                            }
 
-                        echo '</div>'; // close photo-gallery
-                        echo '</div>'; // close mb-8
+                            echo '</div>'; // close photo-gallery
+                            echo '</div>'; // close mb-8
+                        }
                     }
-                    // else do nothing if gallery is empty or invalid
                     ?>
 
                 <!-- Reaction Buttons -->
