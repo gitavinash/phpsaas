@@ -1,49 +1,45 @@
 <?php
 
-	/** Including database connection file */
+/** Including database connection file */
 
-	require_once $_SERVER['DOCUMENT_ROOT'].'/lib/modules/connection.php';
-	
-	/** This script run only when Request method is not POST */
+require_once $_SERVER['DOCUMENT_ROOT'] . '/lib/modules/connection.php';
 
-	if($_SERVER['REQUEST_METHOD']!='POST') {
+/** This script run only when Request method is not POST */
 
-		if(SITE_DOMAIN==MAIN_DOMAIN) {
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
-			require_once 'checkMainDomain.php';
-		
-		} else {
+	if (SITE_DOMAIN == MAIN_DOMAIN) {
 
-			require_once 'checkSubDomain.php';
-			
-		}
-
+		require_once 'checkMainDomain.php';
 	} else {
 
-		require_once 'getDomainData.php';
-
+		require_once 'checkSubDomain.php';
 	}
+} else {
 
-	if(isset($site_id)) {
+	require_once 'getDomainData.php';
+}
 
-		/** Fetch global website configuration settings */
+if (isset($site_id)) {
 
-		if($websiteConfigutration=mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM ".TABLE_PREFIX."site_configuration WHERE site_configuration_status=1 AND ( site_configuration_site_id={$site_id} OR site_configuration_site_id={$site_owner_id})")) {
+	/** Fetch global website configuration settings */
 
-			if(mysqli_num_rows($websiteConfigutration)!=0) {
+	if ($websiteConfigutration = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_status=1 AND ( site_configuration_site_id={$site_id} OR site_configuration_site_id={$site_owner_id})")) {
 
-				while($websiteConfigutrationData=mysqli_fetch_assoc($websiteConfigutration)) {
+		if (mysqli_num_rows($websiteConfigutration) != 0) {
 
-					if($websiteConfigutrationData['site_configuration_key']!='') {
+			while ($websiteConfigutrationData = mysqli_fetch_assoc($websiteConfigutration)) {
 
-						define(strtoupper($websiteConfigutrationData['site_configuration_key']), $websiteConfigutrationData['site_configuration_value']);
-					
+				if ($websiteConfigutrationData['site_configuration_key'] != '') {
+
+					$constantName = strtoupper($websiteConfigutrationData['site_configuration_key']);
+					$constantValue = $websiteConfigutrationData['site_configuration_value'];
+
+					if (!defined($constantName)) {
+						define($constantName, $constantValue);
 					}
-
 				}
-
 			}
-
 		}
-
 	}
+}

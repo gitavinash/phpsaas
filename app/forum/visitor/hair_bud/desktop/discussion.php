@@ -1,5 +1,6 @@
 <?php
 
+require_once DATA_FUNCTIONS;
 require_once 'header.php';
 
 ?>
@@ -18,7 +19,8 @@ require_once 'header.php';
                         </div>
                         <div>
                             <div class="flex items-center mb-2">
-                                <h2 class="text-xl font-semibold text-gray-900 mr-3"><?php echo $profile_display_name ?>
+                                <h2 class="text-xl font-semibold text-gray-900 mr-3">
+                                    <?php echo ucwords($profile_display_name) ?>
                                 </h2>
                                 <!-- <button
                                     class="px-4 py-1.5 bg-primary text-white text-sm rounded-full hover:bg-primary/90 !rounded-button whitespace-nowrap">
@@ -179,84 +181,61 @@ require_once 'header.php';
         <aside class="w-80">
             <!-- Author Info -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
-                <div class="flex items-center mb-4">
-                    <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mr-4">
-                        <span class="text-indigo-600 font-medium text-lg">EM</span>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-900">Emily Morgan</h3>
-                        <p class="text-sm text-gray-500">Active member since 2023</p>
-                        <div class="flex items-center mt-1">
-                            <div class="flex text-yellow-400">
-                                <i class="ri-star-fill text-xs"></i>
-                                <i class="ri-star-fill text-xs"></i>
-                                <i class="ri-star-fill text-xs"></i>
-                                <i class="ri-star-fill text-xs"></i>
-                                <i class="ri-star-line text-xs"></i>
+                <?php
+
+                $authorInfo = authorInfo($connection, $linkOwnerId);
+                foreach ($authorInfo as $authorData) {
+                    echo "<div class='flex items-center mb-4'>
+                            <div class='w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mr-4'>
+                                <span class='text-indigo-600 font-medium text-lg'>" . getInitials($authorData['profile_display_name']) . "</span>
                             </div>
-                            <span class="text-xs text-gray-500 ml-2">4.8 rating</span>
+                            <div>
+                                <h3 class='font-semibold text-gray-900'>" . ucwords($authorData['profile_display_name']) . "</h3>
+                                <p class='text-sm text-gray-500'>Active member since " . date('Y', strtotime($authorData['user_reg_time'])) . "</p>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-4 text-center text-sm">
-                    <div>
-                        <div class="font-semibold text-gray-900">23</div>
-                        <div class="text-gray-500">Posts</div>
-                    </div>
-                    <div>
-                        <div class="font-semibold text-gray-900">156</div>
-                        <div class="text-gray-500">Helpful</div>
-                    </div>
-                    <!-- <div class="border-l border-gray-200 pl-4">
-                        <div class="font-semibold text-gray-900">2.1k</div>
-                        <div class="text-gray-500">Followers</div>
-                    </div> -->
-                </div>
+                        <div class='grid grid-cols-3 gap-4 text-center text-sm'>
+                            <div>
+                                <div class='font-semibold text-gray-900'>{$authorData['totalPost']}</div>
+                                <div class='text-gray-500'>Posts</div>
+                            </div>
+                        </div>";
+                }
+
+                ?>
             </div>
             <!-- Related Discussions -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
                 <h3 class="font-semibold text-gray-900 mb-4">Related Discussions</h3>
                 <div class="space-y-4">
-                    <div class="border-b border-gray-100 pb-3">
-                        <h4 class="text-sm font-medium text-gray-900 hover:text-primary cursor-pointer">My 2-year
-                            finasteride + minoxidil journey</h4>
-                        <p class="text-xs text-gray-500 mt-1">by Michael Harris • 156 replies</p>
-                    </div>
-                    <div class="border-b border-gray-100 pb-3">
-                        <a href="https://readdy.ai/home/0ed8e6fd-1b57-4961-9c40-f04471f53645/3d16d496-b6c8-4d0a-b501-417eb8e5f03a"
-                            data-readdy="true">
-                            <h4 class="text-sm font-medium text-gray-900 hover:text-primary cursor-pointer">
-                                Finasteride side effects - what to expect</h4>
+                    <?php
+                    $similarArticles = similarArticles($connection, $discussion_id, $postType, 10);
+
+                    foreach ($similarArticles as $artcileInfo) {
+                        echo "<div class='border-b border-gray-100 pb-3'>
+                        <a href='{$artcileInfo['link_url']}' data-readdy='true'>
+                            <h4 class='text-sm font-medium text-gray-900 hover:text-primary cursor-pointer'>{$artcileInfo['title']}t</h4>
                         </a>
-                        <p class="text-xs text-gray-500 mt-1">by Dr. Robert Chen • 89 replies</p>
-                    </div>
-                    <div class="border-b border-gray-100 pb-3">
-                        <h4 class="text-sm font-medium text-gray-900 hover:text-primary cursor-pointer">
-                            Before/after: 1 year on the big 3</h4>
-                        <p class="text-xs text-gray-500 mt-1">by James Wilson • 234 replies</p>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-900 hover:text-primary cursor-pointer">Dosage
-                            adjustment success stories</h4>
-                        <p class="text-xs text-gray-500 mt-1">by Katherine Lee • 67 replies</p>
-                    </div>
+                        <p class='text-xs text-gray-500 mt-1'>by " . ucwords($artcileInfo['profile_display_name']) . "</p>
+                    </div>";
+                    }
+
+                    ?>
                 </div>
             </div>
             <!-- Similar Topics -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
                 <h3 class="font-semibold text-gray-900 mb-4">Similar Topics</h3>
                 <div class="flex flex-wrap gap-2">
-                    <span
-                        class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full cursor-pointer">finasteride</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full cursor-pointer">side
-                        effects</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full cursor-pointer">progress
-                        photos</span>
-                    <span
-                        class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full cursor-pointer">timeline</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full cursor-pointer">dosage</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full cursor-pointer">6
-                        months</span>
+                    <?php
+
+                    $tagName = explode(', ', $tagName);
+
+                    for ($i = 0; $i < sizeof($tagName); $i++) {
+                        echo "<span class='px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full cursor-pointer'><a href='/tag/" . str_replace(' ', '-', $tagName[$i]) . "' title='" . ucwords($tagName[$i]) . "'>{$tagName[$i]}</a></span>";
+                    }
+
+                    ?>
                 </div>
             </div>
             <!-- Quick Actions -->

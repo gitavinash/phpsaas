@@ -40,7 +40,7 @@ $discussionStatus = (($discussionStatus == 'all') ? '' : "AND discussion_status=
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT discussion_id, discussion_title, category_title, link_url, link_status, link_creation, profile_display_name, discussion_status FROM " . TABLE_PREFIX . "discussion, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "profile WHERE link_type='discussion' AND link_relation_id=discussion_id AND link_site_id='" . SITE_ID . "' AND category_id=discussion_category AND profile_user_id='" . USER_ID . "' AND link_status!=301 $discussionStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
+        if ($dataList = mysqli_query($connection, "SELECT discussion_id, discussion_title, category_title, link_url, link_status, link_creation, profile_display_name, discussion_status FROM " . TABLE_PREFIX . "discussion, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "profile WHERE link_type='discussion' AND link_relation_id=discussion_id AND link_site_id='" . SITE_ID . "' AND category_id=discussion_category AND profile_user_id=link_owner_id AND link_status!=301 $discussionStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>

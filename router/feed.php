@@ -1,6 +1,5 @@
 <?php
 
-
 $feedURL = str_replace('feed/', '', BASE_URL);
 
 $feedPath = RESOURCE . 'feeds/';
@@ -18,7 +17,7 @@ if ($feedURL != '/') {
 }
 
 if (file_exists($feedResourceFile)) {
-	// header('Content-Type: application/xml; charset=utf-8');
+	header('Content-Type: application/xml; charset=utf-8');
 	require_once $feedResourceFile;
 } else {
 	require_once ERROR_404;
