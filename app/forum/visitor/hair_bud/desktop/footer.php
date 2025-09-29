@@ -27,28 +27,34 @@
                     </a>
                 </div>
             </div>
-            <div>
-                <h4 class="font-medium mb-4">Quick Links</h4>
-                <ul class="space-y-2 text-gray-300 text-sm">
-                    <li><a href="#" class="hover:text-white">Home</a></li>
-                    <li><a href="#" class="hover:text-white">Find a Specialist</a></li>
-                    <li><a href="#" class="hover:text-white">Before & After Gallery</a></li>
-                    <li><a href="#" class="hover:text-white">Treatment Options</a></li>
-                    <li><a href="#" class="hover:text-white">Cost Calculator</a></li>
-                    <li><a href="#" class="hover:text-white">Success Stories</a></li>
-                </ul>
+
+            <!-- WRAPPER makes Quick + Resources 2-col on mobile; becomes 'contents' on md -->
+            <div class="grid grid-cols-2 gap-8 md:contents">
+                <div>
+                    <h4 class="font-medium mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><a href="#" class="hover:text-white">Home</a></li>
+                        <li><a href="#" class="hover:text-white">Find a Specialist</a></li>
+                        <li><a href="#" class="hover:text-white">Before & After Gallery</a></li>
+                        <li><a href="#" class="hover:text-white">Treatment Options</a></li>
+                        <li><a href="#" class="hover:text-white">Cost Calculator</a></li>
+                        <li><a href="#" class="hover:text-white">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-4">Resources</h4>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><a href="#" class="hover:text-white">Hair Loss Guide</a></li>
+                        <li><a href="#" class="hover:text-white">Procedure Types</a></li>
+                        <li><a href="#" class="hover:text-white">Recovery Tips</a></li>
+                        <li><a href="#" class="hover:text-white">Financing Options</a></li>
+                        <li><a href="#" class="hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
             </div>
-            <div>
-                <h4 class="font-medium mb-4">Resources</h4>
-                <ul class="space-y-2 text-gray-300 text-sm">
-                    <li><a href="#" class="hover:text-white">Hair Loss Guide</a></li>
-                    <li><a href="#" class="hover:text-white">Procedure Types</a></li>
-                    <li><a href="#" class="hover:text-white">Recovery Tips</a></li>
-                    <li><a href="#" class="hover:text-white">Financing Options</a></li>
-                    <li><a href="#" class="hover:text-white">FAQ</a></li>
-                    <li><a href="#" class="hover:text-white">Blog</a></li>
-                </ul>
-            </div>
+            <!-- /WRAPPER -->
+
             <div>
                 <h4 class="font-medium mb-4">Stay Updated</h4>
                 <p class="text-gray-300 text-sm mb-3">Subscribe to our newsletter for the latest treatments,

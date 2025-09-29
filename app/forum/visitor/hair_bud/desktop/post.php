@@ -5,13 +5,13 @@ require_once 'header.php';
 ?>
 <!-- Main Content -->
 <div class="container mx-auto px-4 py-8">
-    <div class="flex gap-8">
+    <div class="flex flex-col md:flex-row gap-8">
         <!-- Main Discussion Content -->
-        <main class="flex-1 max-w-4xl">
+        <main class="flex-1 w-full md:max-w-4xl">
             <!-- Discussion Header -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-8 mb-6">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center">
+                <div class="flex items-start md:items-center justify-between mb-6 flex-col md:flex-row gap-4">
+                    <div class="flex items-start md:items-center">
                         <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mr-4">
                             <span
                                 class="text-indigo-600 font-medium text-lg"><?php echo (($profile_image != '') ? $profile_image : getInitials($profile_display_name)) ?></span>
@@ -26,12 +26,12 @@ require_once 'header.php';
                                     <i class="ri-user-add-line mr-1"></i>Follow
                                 </button> -->
                             </div>
-                            <div class="flex items-center text-sm text-gray-500">
+                            <div class="flex flex-wrap items-center text-sm text-gray-500 gap-x-2 gap-y-1">
                                 <span>Posted <?php echo $published = getPastDuration($link_published); ?></span>
-                                <span class="mx-2">•</span>
+                                <span class="hidden md:inline">•</span>
                                 <span
                                     class="px-2.5 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"><?php echo $category_title ?></span>
-                                <span class="mx-2">•</span>
+                                <span class="hidden md:inline">•</span>
                                 <div class="flex items-center text-xs">
                                     <i class="ri-pushpin-line mr-1"></i>
                                     <span>Pinned Discussion</span>
@@ -39,7 +39,7 @@ require_once 'header.php';
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-4 self-end md:self-auto">
                         <button
                             class="flex items-center px-3 py-1.5 text-gray-600 hover:bg-gray-100 rounded !rounded-button whitespace-nowrap">
                             <i class="ri-more-line"></i>
@@ -47,10 +47,10 @@ require_once 'header.php';
                     </div>
                 </div>
 
-                <h1 class="text-3xl font-bold text-gray-900 mb-6"><?php echo $post_title ?></h1>
+                <h1 class="text-3xl font-bold text-gray-900 mb-6 break-words"><?php echo $post_title ?></h1>
                 <!-- Engagement Stats -->
-                <div class="flex items-center justify-between mb-8 p-4 bg-gray-50 rounded-lg">
-                    <div class="flex items-center space-x-8 text-sm text-gray-600">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-8 p-4 bg-gray-50 rounded-lg">
+                    <div class="flex flex-wrap items-center gap-6 text-sm text-gray-600">
                         <span class="flex items-center"><i class="ri-eye-line mr-2"></i> 1,247 views</span>
                         <span class="flex items-center"><i class="ri-message-2-line mr-2"></i> 48 comments</span>
                         <span class="flex items-center"><i class="ri-heart-line mr-2"></i> 86 likes</span>
@@ -76,8 +76,8 @@ require_once 'header.php';
                     ?>
                 </div>
                 <!-- Reaction Buttons -->
-                <div class=" flex items-center justify-between py-6 border-t border-gray-200">
-                    <div class="flex items-center space-x-4">
+                <div class="flex flex-wrap items-center justify-between gap-4 py-6 border-t border-gray-200">
+                    <div class="flex flex-wrap items-center gap-3">
                         <button
                             class="flex items-center px-4 py-2 bg-red-50 text-red-600 rounded-full hover:bg-red-100 reaction-btn !rounded-button whitespace-nowrap">
                             <i class="ri-heart-line mr-2"></i>
@@ -108,7 +108,7 @@ require_once 'header.php';
             </div>
         </main>
         <!-- Sidebar -->
-        <aside class="w-80">
+        <aside class="w-full md:w-80 md:flex-none">
             <!-- Author Info -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
                 <?php
@@ -142,7 +142,6 @@ require_once 'header.php';
                     $similarArticles = similarArticles($connection, $post_id, $postType, 10);
 
                     foreach ($similarArticles as $artcileInfo) {
-                        print_r($artcileInfo);
                         echo "<div class='border-b border-gray-100 pb-3'>
                         <a href='{$artcileInfo['link_url']}' data-readdy='true'>
                             <h4 class='text-sm font-medium text-gray-900 hover:text-primary cursor-pointer'>{$artcileInfo['title']}t</h4>
