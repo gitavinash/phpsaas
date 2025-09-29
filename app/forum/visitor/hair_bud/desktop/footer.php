@@ -116,6 +116,16 @@ if (ACTIVE_URL == '/start-a-discussion/') {
     echo "<script src='" . USER_JS . "discussion.js'></script>";
 }
 
+if (ACTIVE_URL == '/trending-discussions/') {
+    echo "<script src='" . USER_JS . "category.js'></script>";
+}
+
+switch ($link_type) {
+    case 'category':
+        echo "<script src='" . USER_JS . "category.js'></script>";
+        break;
+}
+
 ?>
 </body>
 

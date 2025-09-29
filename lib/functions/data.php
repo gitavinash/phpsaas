@@ -138,3 +138,29 @@ function authorInfo($conn, $user_id, $postType = 'post')
 
     return $out;
 }
+
+function popularTags($conn, $type = 'post', $pageLimit = 10)
+{
+    $query = "SELECT 
+    tag_title,
+    COUNT(*) AS total_usage
+FROM isw_tag
+WHERE tag_site_id = " . SITE_ID . "
+  AND tag_type = '{$type}'
+GROUP BY tag_title
+ORDER BY total_usage DESC
+LIMIT {$pageLimit}";
+
+    $resData = mysqli_query($conn, $query);
+    if (!$resData) {
+        return [];
+    }
+
+    $out = [];
+    while ($row = mysqli_fetch_assoc($resData)) {
+        $out[] = $row;
+    }
+    mysqli_free_result($resData);
+
+    return $out;
+}

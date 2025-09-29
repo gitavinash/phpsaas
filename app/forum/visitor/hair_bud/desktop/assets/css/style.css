@@ -1,7 +1,9 @@
+/* Icons */
 :where([class^="ri-"])::before {
   content: "\f3c2";
 }
 
+/* Base */
 body {
   font-family: "Inter", sans-serif;
   background-color: #f9fafb;
@@ -76,6 +78,7 @@ input:checked + .switch-slider:before {
 }
 
 .discussion-card:hover {
+  transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
@@ -265,7 +268,7 @@ input:checked + .switch-slider:before {
   font-size: 14px;
 }
 
-/* Editor and Preview */
+/* Editor */
 .preview-panel {
   display: none;
 }
@@ -309,6 +312,17 @@ input:checked + .switch-slider:before {
   font-family: inherit;
 }
 
+/* Hide default link button in editor */
+.editor-content a {
+  color: inherit !important;
+  text-decoration: none !important;
+  pointer-events: none !important;
+}
+
+.editor-toolbar .editor-btn[data-command="createLink"] {
+  display: none !important;
+}
+
 /* Upload Zone */
 .upload-zone {
   border: 2px dashed #d1d5db;
@@ -338,39 +352,7 @@ input:checked + .switch-slider:before {
   display: block;
 }
 
-/* neutralize any anchors that momentarily appear */
-.editor-content a {
-  color: inherit !important;
-  text-decoration: none !important;
-  pointer-events: none !important;
-}
-/* optional: fully hide the link button in the toolbar */
-.editor-toolbar .editor-btn[data-command="createLink"] {
-  display: none !important;
-}
-
-:where([class^="ri-"])::before {
-  content: "\f3c2";
-}
-
-body {
-  font-family: "Inter", sans-serif;
-  background-color: #f9fafb;
-}
-
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration {
-  display: none;
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
+/* Timeline */
 .timeline-item::before {
   content: "";
   position: absolute;
@@ -385,18 +367,21 @@ input[type="number"]::-webkit-outer-spin-button {
   display: none;
 }
 
+/* Gallery */
 .photo-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
 
+/* Comments */
 .comment-thread {
   border-left: 2px solid #f3f4f6;
   margin-left: 1rem;
   padding-left: 1rem;
 }
 
+/* Voting and Reactions */
 .vote-btn:hover {
   transform: scale(1.1);
 }
@@ -405,6 +390,7 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: #f3f4f6;
 }
 
+/* Image Modal */
 .image-modal {
   display: none;
   position: fixed;
@@ -422,6 +408,7 @@ input[type="number"]::-webkit-outer-spin-button {
   justify-content: center;
 }
 
+/* Charts */
 .progress-chart {
   background: linear-gradient(
     135deg,
@@ -430,6 +417,7 @@ input[type="number"]::-webkit-outer-spin-button {
   );
 }
 
+/* Prose Styling */
 .custom-prose h1 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
@@ -445,19 +433,8 @@ input[type="number"]::-webkit-outer-spin-button {
   color: #1f2937;
 }
 
-.custom-prose p {
-  line-height: 2 !important;
-  margin-bottom: 1rem !important;
-  color: #374151 !important;
-  text-align: justify !important;
-}
-.custom-prose p span {
-  line-height: 2 !important;
-  margin-bottom: 1rem !important;
-  color: #374151 !important;
-  text-align: justify !important;
-}
-
+.custom-prose p,
+.custom-prose p span,
 .custom-prose div {
   line-height: 2 !important;
   margin-bottom: 1rem !important;
@@ -499,4 +476,50 @@ input[type="number"]::-webkit-outer-spin-button {
   height: auto;
   border-radius: 0.5rem;
   margin: 1rem 0;
+}
+
+/* Filter Dropdown */
+.filter-dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.dropdown-content.show {
+  display: block;
+}
+
+.tag-filter {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tag-filter:hover {
+  background-color: #f3f4f6;
+}
+
+.tag-filter.active {
+  background-color: #4f46e5;
+  color: white;
+}
+
+/* Pagination */
+.pagination-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.pagination-btn.active {
+  background-color: #4f46e5;
+  color: white;
 }
