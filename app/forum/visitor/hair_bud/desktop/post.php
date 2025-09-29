@@ -32,10 +32,11 @@ require_once 'header.php';
                                 <span
                                     class="px-2.5 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"><?php echo $category_title ?></span>
                                 <span class="hidden md:inline">•</span>
-                                <div class="flex items-center text-xs">
-                                    <i class="ri-pushpin-line mr-1"></i>
-                                    <span>Pinned Discussion</span>
-                                </div>
+                                <?php
+                                if ($link_is_featured == 1) {
+                                    echo "<span class='mx-2 hidden sm:inline'>•</span><div class='flex items-center text-xs'><i class='ri-pushpin-line mr-1'></i><span>Pinned Discussion</span></div>";
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
