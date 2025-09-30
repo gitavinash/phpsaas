@@ -1,7 +1,7 @@
 function disableButtonWithCTA(selector, ctaText = "Processing...") {
   $(selector).prop("disabled", true).text(ctaText).addClass("disabled-button");
 }
-function enableButtonWithCTA(selector, ctaText = "Processing...") {
+function enableButtonWithCTA(selector, ctaText = "Submit") {
   $(selector)
     .prop("disabled", true)
     .html(ctaText)

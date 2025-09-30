@@ -1,9 +1,10 @@
 $(document).ready(function () {
   $("#addMembership").on("click", function (e) {
     e.preventDefault();
-
+    $("#addMembership").hide();
     // Get values
     var name = $("#name").val().trim();
+    var warehouseId = $("#warehouseId").val().trim();
     var mobile = $("#mobile").val().trim();
     var packageType = $("#package").val();
     var price = $("#price").val().trim();
@@ -14,6 +15,7 @@ $(document).ready(function () {
     // ===== VALIDATION =====
     if (name === "") {
       popUpMessage("center", "Please enter customer name", "warning");
+      $("#addMembership").show();
       return;
     }
 
@@ -23,11 +25,13 @@ $(document).ready(function () {
         "Please enter a valid 10-digit mobile number",
         "warning"
       );
+      $("#addMembership").show();
       return;
     }
 
     if (packageType === "") {
       popUpMessage("center", "Please select a room type", "warning");
+      $("#addMembership").show();
       return;
     }
 
@@ -37,11 +41,13 @@ $(document).ready(function () {
         "Please enter a valid price greater than 0",
         "warning"
       );
+      $("#addMembership").show();
       return;
     }
 
     if (dueAmount === "" || parseFloat(dueAmount) < 0) {
       popUpMessage("center", "Due amount cannot be negative", "warning");
+      $("#addMembership").show();
       return;
     }
 
@@ -51,11 +57,13 @@ $(document).ready(function () {
         "Due amount cannot exceed the total price",
         "warning"
       );
+      $("#addMembership").show();
       return;
     }
 
     if (visit === "" || parseInt(visit) < 1) {
       popUpMessage("center", "Total visit must be at least 1", "warning");
+      $("#addMembership").show();
       return;
     }
 
@@ -63,6 +71,7 @@ $(document).ready(function () {
       url: "/api/membership/add/",
       type: "POST",
       data: {
+        warehouseId: warehouseId,
         name: name,
         mobile: mobile,
         package: packageType,
@@ -81,15 +90,18 @@ $(document).ready(function () {
             response.msg || "Something went wrong",
             "success"
           );
+          window.location.href = "/dashboard/membership/list/";
         } else {
           popUpMessage(
             "center",
             response.msg || "Something went wrong",
             "error"
           );
+          $("#addMembership").show();
         }
       },
       error: function (xhr) {
+        $("#addMembership").show();
         var errorMsg = "An error occurred while saving membership.";
         if (xhr.responseJSON && xhr.responseJSON.msg) {
           errorMsg = xhr.responseJSON.msg;
