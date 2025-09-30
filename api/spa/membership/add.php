@@ -59,7 +59,7 @@ user_mobile='{$mobile}'")) {
 
         // Create a membership
 
-        if ($generateMembership = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership(membership_site_id, membership_user_id, membership_profile_name, membership_branch_id, membership_type, membership_type_id, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, membership_comment, membership_status, membership_created, membership_expire) VALUES('" . SITE_ID . "', '{$userID}', '{$name}', '{$warehouseId}', '{$package}', '{$visit}', 'category', '{$visit}', '{$price}', '{$dueAmount}', '{$requirements}', 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR))")) {
+        if ($generateMembership = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership(membership_site_id, membership_user_id, membership_profile_name, membership_branch_id, membership_type, membership_type_id, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, membership_comment, membership_status, membership_created, membership_expire) VALUES('" . SITE_ID . "', '{$userID}', '{$name}', '{$warehouseId}', 'category', '{$package}', '{$visit}', '{$visit}', '{$price}', '{$dueAmount}', '{$requirements}', 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR))")) {
             $httpStatus = 201;
             $status = 'success';
             $msg = 'New membership package is generated successfully';

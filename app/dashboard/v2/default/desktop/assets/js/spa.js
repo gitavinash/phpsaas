@@ -90,7 +90,7 @@ $(document).ready(function () {
             response.msg || "Something went wrong",
             "success"
           );
-          window.location.href = "/dashboard/membership/list/";
+          window.location.href = "/dashboard/membership/member/";
         } else {
           popUpMessage(
             "center",
@@ -102,6 +102,120 @@ $(document).ready(function () {
       },
       error: function (xhr) {
         $("#addMembership").show();
+        var errorMsg = "An error occurred while saving membership.";
+        if (xhr.responseJSON && xhr.responseJSON.msg) {
+          errorMsg = xhr.responseJSON.msg;
+        }
+        popUpMessage("center", errorMsg, "error");
+      },
+    });
+  });
+
+  $("#updateMembership").on("click", function (e) {
+    e.preventDefault();
+    $("#updateMembership").hide();
+    // Get values
+    var name = $("#name").val().trim();
+    var warehouseId = $("#warehouseId").val().trim();
+    var membershipId = $("#membershipId").val().trim();
+    var packageType = $("#package").val();
+    var price = $("#price").val().trim();
+    var dueAmount = $("#dueAmount").val().trim();
+    var visit = $("#visit").val().trim();
+    var avlVisit = $("#avlVisit").val().trim();
+    var requirements = $("#requirements").val().trim();
+
+    // ===== VALIDATION =====
+    if (name === "") {
+      popUpMessage("center", "Please enter customer name", "warning");
+      $("#updateMembership").show();
+      return;
+    }
+
+    if (packageType === "") {
+      popUpMessage("center", "Please select a room type", "warning");
+      $("#updateMembership").show();
+      return;
+    }
+
+    if (price === "" || parseFloat(price) <= 0) {
+      popUpMessage(
+        "center",
+        "Please enter a valid price greater than 0",
+        "warning"
+      );
+      $("#updateMembership").show();
+      return;
+    }
+
+    if (dueAmount === "" || parseFloat(dueAmount) < 0) {
+      popUpMessage("center", "Due amount cannot be negative", "warning");
+      $("#updateMembership").show();
+      return;
+    }
+
+    if (parseFloat(dueAmount) > parseFloat(price)) {
+      popUpMessage(
+        "center",
+        "Due amount cannot exceed the total price",
+        "warning"
+      );
+      $("#updateMembership").show();
+      return;
+    }
+
+    if (visit === "" || parseInt(visit) < 1) {
+      popUpMessage("center", "Total visit must be at least 1", "warning");
+      $("#updateMembership").show();
+      return;
+    }
+
+    if (avlVisit === "" || parseInt(avlVisit) > parseInt(visit)) {
+      popUpMessage(
+        "center",
+        "Total available visit must be at below than Total Visits",
+        "warning"
+      );
+      $("#updateMembership").show();
+      return;
+    }
+
+    $.ajax({
+      url: "/api/membership/update/",
+      type: "POST",
+      data: {
+        warehouseId: warehouseId,
+        membershipId: membershipId,
+        name: name,
+        package: packageType,
+        price: price,
+        dueAmount: dueAmount,
+        visit: visit,
+        avlVisit: avlVisit,
+        requirements: requirements,
+      },
+      dataType: "JSON",
+      success: function (response) {
+        if (response.status === "success") {
+          // Reset form after success
+          $("#updateMembershipForm")[0].reset();
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "success"
+          );
+          window.location.href = "/dashboard/membership/member/";
+        } else {
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "error"
+          );
+          $("#updateMembership").show();
+        }
+      },
+      error: function (xhr) {
+        $("#updateMembership").show();
         var errorMsg = "An error occurred while saving membership.";
         if (xhr.responseJSON && xhr.responseJSON.msg) {
           errorMsg = xhr.responseJSON.msg;

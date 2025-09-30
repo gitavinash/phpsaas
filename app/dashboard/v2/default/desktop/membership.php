@@ -3,7 +3,7 @@
 <div class="main-menu-list">
 
     <div class="widget box-2-5">
-        <a href="membership/list/">
+        <a href="membership/member/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi-rr-apps-sort"></i>
@@ -17,7 +17,7 @@
     </div>
 
     <div class="widget box-2-5">
-        <a href="membership/list/">
+        <a href="membership/sell/">
             <div class="widget-setting-info">
                 <div class="feature-icon">
                     <i class="fi fi-rr-add"></i>

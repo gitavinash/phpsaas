@@ -841,3 +841,83 @@ section.form .form-header h1 {
   width: 100%;
   background: #fff !important;
 }
+
+/* Keeps frozen panes above the scroll body */
+.dtfc-fixed-left,
+.dtfc-fixed-right {
+  z-index: 3;
+  background: #fff;
+}
+div.dataTables_scrollBody {
+  overflow: auto !important;
+}
+
+.only-mobile {
+  display: block;
+}
+
+.only-desktop {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .only-mobile {
+    display: none;
+  }
+
+  .only-desktop {
+    display: block;
+  }
+}
+
+/* stack actions cleanly (both views) */
+.info-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  float: left;
+}
+
+.action-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  float: left;
+}
+
+.action-stack .tableActionIconBtn,
+.action-stack .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+}
+
+/* keep frozen panes above, with white bg */
+.dtfc-fixed-left,
+.dtfc-fixed-right {
+  z-index: 3;
+  background: #fff;
+}
+
+.widget-setting-info {
+  width: 100%;
+  padding: 0% 5% 2% 5%;
+  box-sizing: border-box;
+}
+
+.widget-setting-info .about-feature {
+  max-width: 54%;
+}
+
+.widget-setting-info .about-feature p {
+  width: auto !important;
+}
+
+.widget h3 {
+  font-size: 1em;
+}
+
+.widget-info i {
+  margin-top: 7px;
+}
