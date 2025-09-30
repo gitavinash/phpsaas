@@ -779,7 +779,7 @@ section.form .form-header h1 {
 }
 
 .popUp {
-  z-index: 99 !important;
+  z-index: 9999 !important;
 }
 
 .box-7 {

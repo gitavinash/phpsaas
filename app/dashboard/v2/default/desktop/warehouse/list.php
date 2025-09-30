@@ -1,18 +1,19 @@
-<h2 class="heading">Warehouses list<span>All Warehouses list will be displayed here</span>
+<?php $formName = ((SITE_APP == 'spa' ? 'Branch' : 'Warehouses')) ?>
+<h2 class="heading"><?php echo $formName ?> list<span>All <?php echo $formName ?> list will be displayed here</span>
 </h2>
 <div class="shortcut">
     <a href="/dashboard/warehouse/add/"><i class="fi fi-rr-plus"></i></a>
 </div>
 <div class="main-box">
     <section>
-        <div class="filters">
+        <!-- <div class="filters">
             <div class="form-group">
                 <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
                 <select id="hostingStatus">
-                    <option value="">Warehouse Status</option>
+                    <option value=""><?php echo $formName ?> Status</option>
                 </select>
             </div>
-        </div>
+        </div> -->
         <div class="list-box">
             <table class="showTableList">
                 <thead>

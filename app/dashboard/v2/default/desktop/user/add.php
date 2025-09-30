@@ -33,16 +33,6 @@
                             <label class="form-lable">Email<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-control" id="password" placeholder="Password*"
-                                name="password" required />
-                            <label class="form-lable">Password<sup>*</sup></label>
-                        </div>
-                        <div class="form-group">
-                            <input type="password" class="form-control" id="confirmPassword"
-                                placeholder="Confirm Password*" name="confirm_password" required />
-                            <label class="form-lable">Confirm password<sup>*</sup></label>
-                        </div>
-                        <div class="form-group">
                             <p>User role <sup>*</sup></p>
                             <select class="selectJS form-control" name="userRole" id="select">
                                 <option value="">Select user role</option>
@@ -60,7 +50,7 @@
                         </div>
                         <?php
 
-                        if (SITE_APP == 'ims_marble') { ?>
+                        if (SITE_APP == 'ims_marble' || SITE_APP == 'spa') { ?>
                         <div class="form-group" id="companyDropDown">
                             <p>Company<sup>*</sup></p>
                             <select class="selectJS form-control" name="company" id="company">

@@ -77,6 +77,12 @@
                                         </a>
                                 </li>";
                 }
+                echo
+                "<li>
+                                        <a href='/money-and-machines/' class='readMore'>
+                                           Previous editions...
+                                        </a>
+                                </li>";
             } else {
                 echo "<li><a title=''>No article found</a></li>";
             }

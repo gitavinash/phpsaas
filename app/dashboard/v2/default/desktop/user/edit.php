@@ -71,7 +71,7 @@ window.location.href = 'dashboard/user/?type=list&status=all';
                         </div>
                         <?php
 
-                        if (SITE_APP == 'ims_marble') { ?>
+                        if (SITE_APP == 'ims_marble' || SITE_APP == 'spa') { ?>
 
                         <div class="form-group" id="companyDropDown">
                             <p>Company<sup>*</sup></p>

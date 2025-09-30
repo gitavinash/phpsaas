@@ -4,7 +4,7 @@ require_once LOGIN_CHECK;
 $responseCode = 500;
 if ($name != '') {
 
-	if ($checkRoomType = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "category WHERE category_id='{$id}' AND category_type='room'")) {
+	if ($checkRoomType = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "category WHERE category_id='{$id}' AND category_type='" . ((SITE_APP == 'spa' ? 'spa_' : '')) . "room'")) {
 		if (mysqli_num_rows($checkRoomType) != 0) {
 			if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "category SET category_title='{$name}', category_description='{$description}', category_owner_id=" . USER_ID . " WHERE category_id='{$id}'")) {
 				$status = 'success';

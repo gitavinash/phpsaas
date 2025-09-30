@@ -146,7 +146,7 @@
                     <a href="settings/general/" class="more-item spa-link" data-route="/settings/general/">
                         <i class="fi-rr-settings"></i><span>General Settings</span>
                     </a>
-                    <a href="settings/users/" class="more-item spa-link" data-route="/settings/users/">
+                    <a href="user/list/" class="more-item spa-link" data-route="/settings/users/">
                         <i class="fi fi-rr-user"></i><span>Users</span>
                     </a>
                     <a href="settings/roles/" class="more-item spa-link" data-route="/settings/roles/">

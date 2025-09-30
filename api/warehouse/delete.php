@@ -17,7 +17,7 @@ if (isset($deleteData)) {
         if (mysqli_num_rows($checkData) == 1) {
             $deleteDataFromDatabase = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "warehouse SET warehouse_status=2 WHERE warehouse_id={$warehouseId}");
             if ($deleteDataFromDatabase) {
-                $msg = "Warehouse deleted successfully";
+                $msg = ((SITE_APP == 'spa') ? 'Branch' : 'Warehouse') . " deleted successfully";
                 $httpStatus = 202;
                 $status = 'success';
                 mysqli_query($connection, "COMMIT");

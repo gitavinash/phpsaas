@@ -1,4 +1,4 @@
-<?php $formName = ((SITE_APP == 'spa' ? 'Branch' : '<?php echo $formName ?>')) ?>
+<?php $formName = ((SITE_APP == 'spa' ? 'Branch' : 'Warehouse')) ?>
 <h2 class="heading">Add New <?php echo $formName ?></span>
 </h2>
 <div class="main-box">
@@ -14,7 +14,7 @@
 
         ?>
         <div class="steps-box">
-            <form action="#" id="addNew<?php echo $formName ?>Form" method="POST">
+            <form action="#" id="addNewWarehouseForm" method="POST">
                 <section class="form">
 
                     <div class="step-open-box step_1_box">
@@ -53,7 +53,7 @@
                             <label class="form-lable" id="Label"><?php echo $formName ?> name<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input id="<?php echo $formName ?>Code" name="<?php echo $formName ?>Code" type="text" />
+                            <input id="warehouseCode" name="warehouseCode" type="text" />
                             <label class="form-lable" id="Label"><?php echo $formName ?> Code or ID</label>
                         </div>
                         <div class="form-group">
@@ -104,7 +104,7 @@
                         </div>
                         <div class="box-1">
                             <div class="form-group">
-                                <input type="button" class="btn btn-green" id="add<?php echo $formName ?>"
+                                <input type="button" class="btn btn-green" id="addWarehouse"
                                     value="Add new <?php echo $formName ?>">
                             </div>
                         </div>

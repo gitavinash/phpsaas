@@ -1,32 +1,34 @@
 <?php
 
 if (!isset($id)) { ?>
-    <script>
-        window.location.href = '/dashboard/warehouse/list/';
-    </script>
+<script>
+window.location.href = '/dashboard/warehouse/list/';
+</script>
 <?php
 } else if ($id == '') { ?>
-    <script>
-        window.location.href = '/dashboard/warehouse/list/';
-    </script>
+<script>
+window.location.href = '/dashboard/warehouse/list/';
+</script>
 <?php
 }
-
+$formName = ((SITE_APP == 'spa' ? 'Branch' : 'Warehouse'));
 $warehouseId = base64_decode($id);
 
-if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN " . TABLE_PREFIX . "state ON city_state_id=state_id WHERE warehouse_id='{$warehouseId}'")) {
+if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX
+    . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id INNER JOIN
+" . TABLE_PREFIX . "state ON city_state_id=state_id WHERE warehouse_id='{$warehouseId}'")) {
     if (mysqli_num_rows($checkWarehouse) > 0) {
         extract(mysqli_fetch_assoc($checkWarehouse));
     }
 }
 
 ?>
-<h2 class="heading"><?php echo 'Update warehouse details' ?><span></span>
+<h2 class="heading"><?php echo "Update {$formName} details" ?><span></span>
 </h2>
 <div class="main-box">
     <section>
         <ul class="steps-tab">
-            <li class="step-box active" id="step_1"><span>1</span>Warehouse details</li>
+            <li class="step-box active" id="step_1"><span>1</span><?php echo $formName ?> details</li>
         </ul>
         <div class="steps-box">
             <form action="#" id="updateWarehouseForm" method="POST">
@@ -38,7 +40,7 @@ if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                             <img src="<?php echo IMG_LIBRARY ?>storyset/hotel.png" alt="">
                         </div>
                         <div class="form-group">
-                            <p>Warehouse company</p>
+                            <p><?php echo $formName ?> company</p>
                             <select class="selectJS form-control" name="companyId" id="companyId">
                                 <option value="select">Select company</option>
                                 <?php
@@ -56,14 +58,16 @@ if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                         </div>
                         <div class="form-group">
                             <input id="name" name="name" value="<?php echo $warehouse_title ?>" type="text" />
-                            <label class="form-lable" id="Label">Warehouse name<sup>*</sup></label>
+                            <label class="form-lable" id="Label"><?php echo $formName ?> name<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input id="warehouseCode" name="warehouseCode" value="<?php echo $warehouse_code ?>" type="text" />
-                            <label class="form-lable" id="Label">Warehouse Code or ID</label>
+                            <input id="warehouseCode" name="warehouseCode" value="<?php echo $warehouse_code ?>"
+                                type="text" />
+                            <label class="form-lable" id="Label"><?php echo $formName ?> Code or ID</label>
                         </div>
                         <div class="form-group">
-                            <textarea name="description" id="description" cols="30" rows="10"><?php echo $warehouse_description ?></textarea>
+                            <textarea name="description" id="description" cols="30"
+                                rows="10"><?php echo $warehouse_description ?></textarea>
                             <label class="form-lable" id="Label">About warehouse</label>
                         </div>
                         <div class="form-group">
@@ -105,7 +109,8 @@ if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                             </select>
                         </div>
                         <div class="form-group">
-                            <input id="pinCode" name="pinCode" value="<?php echo $address_pin_code ?>" type="number" onwheel="this.blur()" />
+                            <input id="pinCode" name="pinCode" value="<?php echo $address_pin_code ?>" type="number"
+                                onwheel="this.blur()" />
                             <label class="form-lable" id="Label">Pin code<sup>*</sup></label>
                         </div>
                         <div class="form-group">
@@ -113,7 +118,8 @@ if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                             <label class="form-lable" id="Label">Email<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <input id="mobile" name="mobile" value="<?php echo $warehouse_mobile ?>" type="number" onwheel="this.blur()" />
+                            <input id="mobile" name="mobile" value="<?php echo $warehouse_mobile ?>" type="number"
+                                onwheel="this.blur()" />
                             <label class="form-lable" id="Label">Contact no.<sup>*</sup></label>
                         </div>
                         <div class="form-group">
@@ -123,7 +129,8 @@ if ($checkWarehouse = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                         <div class="box-1">
                             <div class="form-group">
                                 <input type="hidden" name="warehouseId" value="<?php echo $warehouseId ?>">
-                                <input type="button" class="btn btn-green" id="updateWarehouse" value="Update warehouse">
+                                <input type="button" class="btn btn-green" id="updateWarehouse"
+                                    value="Update warehouse">
                             </div>
                         </div>
                     </div>
