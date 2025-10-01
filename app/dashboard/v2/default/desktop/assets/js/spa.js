@@ -199,7 +199,7 @@ $(document).ready(function () {
             response.msg || "Something went wrong",
             "success"
           );
-          window.location.href = "/dashboard/membership/member/";
+          window.location.href = "/dashboard/membership/";
         } else {
           popUpMessage(
             "center",
