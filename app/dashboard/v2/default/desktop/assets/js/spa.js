@@ -1,4 +1,113 @@
 $(document).ready(function () {
+  let redeemVisit = 0;
+  // ===== Resend OTP timer =====
+  let resendTimerId = null;
+  let resendRemaining = 0;
+
+  // Helper to set label for both <input type="button"> and <button>
+  function setBtnLabel($btn, label) {
+    if ($btn.is('input[type="button"], input[type="submit"]')) {
+      $btn.val(label);
+    } else {
+      $btn.text(label);
+    }
+  }
+
+  // Start/Restart 30s countdown: always visible, disabled, with live label
+  function startResendTimer(seconds) {
+    const $btn = $("#resendOTPBtn");
+    clearInterval(resendTimerId);
+    resendRemaining = seconds;
+
+    $btn.show().prop("disabled", true);
+    setBtnLabel($btn, `Resend OTP in ${resendRemaining} Seconds`);
+
+    resendTimerId = setInterval(() => {
+      resendRemaining -= 1;
+
+      if (resendRemaining <= 0) {
+        clearInterval(resendTimerId);
+        resendTimerId = null;
+        $btn.prop("disabled", false);
+        setBtnLabel($btn, "Resend OTP");
+        return;
+      }
+
+      setBtnLabel($btn, `Resend OTP in ${resendRemaining} Seconds`);
+    }, 1000);
+  }
+
+  // Call this when you enter Step 4 the first time
+  function onEnterStep4StartResendClock() {
+    startResendTimer(30); // first 30s disabled countdown
+  }
+
+  // Optional: clear timer when leaving Step 4
+  function clearResendTimer() {
+    if (resendTimerId) {
+      clearInterval(resendTimerId);
+      resendTimerId = null;
+    }
+  }
+
+  // ===== Resend OTP click =====
+  $(document).on("click", "#resendOTPBtn", function () {
+    const $btn = $(this);
+    const otpRefId = ($("#otpRefId").val() || "").trim();
+    const url = $btn.data("url") || "/api/auth/resend-otp/"; // your endpoint
+
+    if (!otpRefId) {
+      popUpMessage("center", "Missing OTP reference.", "error");
+      return;
+    }
+
+    $btn.prop("disabled", true);
+    $("#loader").show();
+    $(".step_4_box").hide();
+
+    $.ajax({
+      url: url,
+      type: "GET", // keep GET as per your API
+      dataType: "json",
+      data: { otp_ref_id: otpRefId, otp_mode: "sms" },
+      success: function (resp) {
+        if (resp.status === "success") {
+          popUpMessage(
+            "center",
+            resp.msg || "OTP resent successfully.",
+            "success"
+          );
+          // Start a fresh 30s disabled countdown
+          startResendTimer(30);
+          $("#loader").hide();
+          $(".step_4_box").show();
+        } else {
+          popUpMessage("center", resp.msg || "Failed to resend OTP.", "error");
+          // Allow immediate retry on failure
+          $("#resendOTPBtn").prop("disabled", false);
+          setBtnLabel($("#resendOTPBtn"), "Resend OTP");
+          $("#loader").hide();
+          $(".step_4_box").show();
+        }
+      },
+      error: function (xhr) {
+        popUpMessage(
+          "center",
+          (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed.",
+          (xhr.responseJSON && xhr.responseJSON.status) || "error"
+        );
+        $("#resendOTPBtn").prop("disabled", false);
+        setBtnLabel($("#resendOTPBtn"), "Resend OTP");
+        $("#loader").hide();
+        $(".step_4_box").show();
+      },
+      complete: function () {
+        $("#loader").hide();
+        $(".step_4_box").show();
+      },
+    });
+  });
+
   $("#addMembership").on("click", function (e) {
     e.preventDefault();
     $("#addMembership").hide();
@@ -225,18 +334,53 @@ $(document).ready(function () {
     });
   });
 
+  $(".backToStep1").on("click", function (e) {
+    e.preventDefault();
+    $(".step_1_box").show();
+    $(".step_2_box").hide();
+    $(".step_3_box").hide();
+    $(".step_4_box").hide();
+    $(".step_5_box").hide();
+  });
+
+  $(".backToStep2").on("click", function (e) {
+    e.preventDefault();
+    $(".step_2_box").show();
+    $(".step_1_box").hide();
+    $(".step_3_box").hide();
+    $(".step_4_box").hide();
+    $(".step_5_box").hide();
+  });
+
+  $(".backToStep3").on("click", function (e) {
+    e.preventDefault();
+    $(".step_3_box").show();
+    $(".step_1_box").hide();
+    $(".step_2_box").hide();
+    $(".step_4_box").hide();
+    $(".step_5_box").hide();
+  });
+
   $("#checkInMembership").on("click", function (e) {
     e.preventDefault();
-    $("#checkInMembership").hide();
+
+    var $btn = $("#checkInMembership");
+    var $loader = $("#loader");
+    $(".step_1_box").hide();
+    $btn.hide();
+    $loader.show();
+
     // Get values
-    var visits = $("#visits").val().trim();
+    redeemVisit = $("#visits").val().trim();
     var mobile = $("#mobile").val().trim();
     var warehouseId = $("#warehouseId").val().trim();
 
     // ===== VALIDATION =====
-    if (visits === "") {
+    if (redeemVisit === "") {
       popUpMessage("center", "Please enter customer's visits", "warning");
-      $("#checkInMembership").show();
+      $btn.show();
+      $loader.hide();
+      $(".step_1_box").show();
       return;
     }
 
@@ -246,31 +390,378 @@ $(document).ready(function () {
         "Please enter a valid 10-digit mobile number",
         "warning"
       );
-      $("#checkInMembership").show();
+      $btn.show();
+      $(".step_1_box").show();
+      $loader.hide();
       return;
     }
 
     $.ajax({
       url: "/api/membership/check-in/",
       type: "POST",
-      data: {
-        warehouseId: warehouseId,
-        mobile: mobile,
-      },
+      data: { warehouseId: warehouseId, mobile: mobile },
       dataType: "JSON",
       success: function (response) {
         if (response.status === "success") {
-          popUpMessage("center", response.msg, "success");
+          var $step2 = $(".showMembershipList");
+          $step2.empty();
+
+          // parse requested visits once
+          var redeemQty = parseInt(redeemVisit, 10) || 0;
+
+          $.each(response.data, function (index, item) {
+            // Red strip (amount only, large)
+            var dueStrip = "";
+            var due = parseFloat(item.membership_amount_due || 0);
+            if (due > 0) {
+              dueStrip = `
+        <div class="membership-due-strip">
+          <div style="font-size:13px;opacity:0.9;">Amount Due</div>
+          <div style="font-size:24px; line-height:1.1; font-weight:800;">₹ ${due}</div>
+        </div>
+      `;
+            }
+
+            var startDate = item.membership_created
+              ? item.membership_created.split(" ")[0]
+              : "—";
+            var comment = item.membership_comment || "—";
+            var packageName = item.category_title || "Deluxe";
+
+            // --- NEW: enable/disable Continue based on available visits ---
+            var avl = parseInt(item.membership_avl_visit, 10) || 0;
+            var canContinue = redeemQty > 0 && redeemQty <= avl;
+
+            // Optional: show a small warning if insufficient visits
+            var visitsWarn = "";
+            if (!canContinue) {
+              visitsWarn = `
+        <div class='membership-not-redeem'>
+          Insufficient visits. Requested: <strong>${redeemQty}</strong>
+        </div>
+      `;
+            }
+            //       var visitsWarn = "";
+            //       if (!canContinue) {
+            //         visitsWarn = `
+            //   <div class='membership-not-redeem'>
+            //     Requested: <strong>${redeemQty}</strong>, Available: <strong>${avl}</strong>
+            //   </div>
+            // `;
+            //       }
+
+            //         // Build Continue button (disabled if not allowed)
+            //         var continueBtn = `
+            //   <button class="btn btn-green dataTableBtn continueButton"
+            //           data-id="${item.membership_id}" title="${
+            //           canContinue ? "Continue" : "Insufficient available visits"
+            //         }"
+            //           ${canContinue ? "" : "disabled aria-disabled='true'"} >
+            //     <i class="fi-rr-arrow-right"></i> Continue
+            //   </button>
+            // `;
+
+            // If you prefer to HIDE the button instead of disabling it, replace above with:
+            var continueBtn = canContinue
+              ? `
+              <button class="btn btn-green dataTableBtn continueButton"
+                      data-id="${item.membership_id}" title="Continue">
+                <i class="fi-rr-arrow-right"></i> Continue
+              </button>`
+              : "";
+
+            var cardHtml = `
+      <article class="widget-setting-info membership-card" data-id="${item.membership_id}">
+        <div class="about-feature" style="max-width:100%;">
+          <h3 class="heading" style="margin:0;">
+            #${item.membership_id} | ${item.membership_profile_name}
+            <span>Room: ${packageName}</span>
+          </h3>
+
+          <hr>
+
+          <div class="row">
+            <div class="box-12 info-stack">
+              <p style="margin:0;">
+                <strong>Mobile</strong><br>
+                <span>${mobile}</span>
+              </p>
+              <p style="margin:0;">
+                <strong>Total Visits</strong><br>
+                <span>${item.membership_total_visit}</span>
+              </p>
+              <p style="margin:0;">
+                <strong>Avl. Visits</strong><br>
+                <span>${avl}</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="box-12 info-stack">
+              <p style="margin:0;">
+                <strong>Start Date</strong><br>
+                <span>${startDate}</span>
+              </p>
+            </div>
+            <div class="box-12 info-stack">
+              <p style="margin:0;">
+                <strong>Comment</strong><br>
+                <span>${comment}</span>
+              </p>
+            </div>
+          </div>
+
+          ${dueStrip}
+          ${visitsWarn}
+
+          <!-- Actions -->
+          <div class="action-stack" style="margin-top:10px;">
+            <div class="action-item">
+              ${continueBtn}
+            </div>
+          </div>
+        </div>
+      </article>
+    `;
+
+            $step2.append(cardHtml);
+          });
+
+          $(".step_1_box").hide();
+          $(".step_2_box").show();
+        } else {
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "error"
+          );
+          $(".step_1_box").show();
         }
-        $("#checkInMembership").show();
       },
       error: function (xhr) {
         popUpMessage(
           "center",
-          xhr.responseJSON && xhr.responseJSON.msg,
-          xhr.responseJSON.status
+          (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed",
+          (xhr.responseJSON && xhr.responseJSON.status) || "error"
         );
-        $("#checkInMembership").show();
+        $(".step_1_box").show();
+      },
+      complete: function () {
+        $btn.show();
+        $loader.hide();
+      },
+    });
+  });
+
+  // Handle Continue button → Step 3
+  // helper: 1st, 2nd, 3rd...
+  function ordinal(n) {
+    const s = ["th", "st", "nd", "rd"],
+      v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  }
+
+  // build duration fields inside .allotRoomAndStaff
+  function renderDurationFields(visitsCount) {
+    const $step3 = $(".step_3_box");
+    const $box = $step3.find(".allotRoomAndStaff");
+
+    // default from existing input (if present), else 60
+    const defaultDuration = Number($step3.find("#duration").val()) || 60;
+
+    // clear previous clones (keep area clean)
+    $box.empty();
+
+    // generate visit blocks
+    for (let i = 1; i <= visitsCount; i++) {
+      const id = `duration_${i}`;
+      const block = `
+      <div class="duration-block cloned-duration" data-visit="${i}">
+        <p class="formBoxHeading">Select for ${ordinal(i)} Visit</p>
+        <div class="form-group">
+          <input id="${id}" name="duration[]" value="${defaultDuration}" type="number" min="1" required />
+          <label class="form-lable" for="${id}">Massage duration?<sup>*</sup></label>
+        </div>
+      </div>
+    `;
+      $box.append(block);
+    }
+  }
+
+  $(document).on("click", ".continueButton", function (e) {
+    e.preventDefault();
+    $("#loader").show();
+    const membershipId = String($(this).data("id") || "");
+    // get visit count from your global or the input; coerce to a safe int
+    const raw =
+      typeof redeemVisit !== "undefined" && redeemVisit
+        ? redeemVisit
+        : $("#visits").val().trim();
+    const v = Math.floor(Number(raw));
+    const visitsCount = Number.isFinite(v) && v > 0 ? v : 1;
+
+    const $step3 = $(".step_3_box");
+
+    // assign to hidden inputs
+    $step3.find('input[name="membershipId"]').val(membershipId);
+    $step3.find('input[name="visits"]').val(visitsCount);
+
+    // render duration fields for each visit
+    renderDurationFields(visitsCount);
+
+    // move to step 3
+    $(".step_2_box").hide();
+    $("#loader").hide();
+    $step3.show();
+
+    // focus first duration input & scroll
+    const $first = $step3.find('input[id^="duration_"]').first();
+    $first
+      .trigger("focus")[0]
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  $("#startRedeemVisit").click(function (e) {
+    e.preventDefault();
+    const $step3 = $(".step_3_box");
+    const $step4 = $(".step_4_box");
+    $("#loader").show();
+    $(".step_3_box").hide();
+    const membershipId = (
+      $step3.find('input[name="membershipId"]').val() || ""
+    ).trim();
+    const visitsVal = $step3.find('input[name="visits"]').val();
+    const visits = parseInt(visitsVal, 10);
+
+    // collect durations
+    const durations = [];
+    let invalid = false;
+
+    // clear previous invalid styles
+    $step3.find('input[name="duration[]"]').removeClass("is-invalid");
+
+    $step3.find('input[name="duration[]"]').each(function () {
+      const v = parseInt($(this).val(), 10);
+      if (!Number.isFinite(v) || v <= 0) {
+        invalid = true;
+        $(this).addClass("is-invalid");
+      } else {
+        durations.push(v);
+      }
+    });
+
+    // basic validation
+    if (!membershipId) {
+      popUpMessage("center", "Missing membership ID.", "error");
+      $("#loader").hide();
+      $(".step_3_box").show();
+      return;
+    }
+    if (!Number.isInteger(visits) || visits <= 0) {
+      popUpMessage("center", "Invalid visits count.", "warning");
+      $("#loader").hide();
+      $(".step_3_box").show();
+      return;
+    }
+    if (invalid || durations.length !== visits) {
+      popUpMessage(
+        "center",
+        "Please enter duration for all visits.",
+        "warning"
+      );
+
+      $("#loader").hide();
+      $(".step_3_box").show();
+      return;
+    }
+
+    $.ajax({
+      url: "/api/membership/start-redeem/",
+      type: "POST",
+      data: { membershipId: membershipId, visits: visits, duration: durations },
+      dataType: "JSON",
+      success: function (response) {
+        if (response.status === "success") {
+          popUpMessage("center", response.msg, response.status);
+          $('input[name="otpRefId"]').val(response.otpRefId);
+          $(".step_3_box").hide();
+          $(".step_4_box").show();
+        } else {
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "error"
+          );
+          $(".step_3_box").show();
+          $(".step_4_box").hide();
+        }
+        $("#loader").hide();
+      },
+      error: function (xhr) {
+        popUpMessage(
+          "center",
+          (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed",
+          (xhr.responseJSON && xhr.responseJSON.status) || "error"
+        );
+        $(".step_3_box").show();
+        $("#loader").hide();
+      },
+    });
+  });
+
+  $("#redeemVisit").click(function (e) {
+    e.preventDefault();
+    $("#loader").show();
+    $(".step_4_box").hide();
+
+    var otpRefId = $("#otpRefId").val().trim();
+    var otpValue = $("#otpValue").val().trim();
+
+    if (otpRefId === "") {
+      popUpMessage("center", "otpRefId is missing", "error");
+      $("#loader").hide();
+      $(".step_4_box").show();
+      return;
+    }
+
+    if (otpValue === "") {
+      popUpMessage("center", "Please enter a OTP code", "warning");
+      $("#loader").hide();
+      $(".step_4_box").show();
+      return;
+    }
+
+    $.ajax({
+      url: "/api/membership/redeem/",
+      type: "POST",
+      data: { otpRefId: otpRefId, otpCode: otpValue },
+      dataType: "JSON",
+      success: function (response) {
+        if (response.status === "success") {
+          popUpMessage("center", response.msg, response.status);
+          $('input[name="otpRefId"]').val(response.otpRefId);
+          $(".step_4_box").hide();
+          $(".step_5_box").show();
+        } else {
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "error"
+          );
+          $(".step_4_box").show();
+          $(".step_5_box").hide();
+        }
+        $("#loader").hide();
+      },
+      error: function (xhr) {
+        popUpMessage(
+          "center",
+          (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed",
+          (xhr.responseJSON && xhr.responseJSON.status) || "error"
+        );
+        $(".step_4_box").show();
+        $("#loader").hide();
       },
     });
   });

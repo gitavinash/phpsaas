@@ -6,6 +6,7 @@ require_once LOGIN_CHECK;
 $httpStatus = 500;
 $status = 'warning';
 $msg = 'Something went wrong';
+$data = array();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -41,11 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $warehouseFilter = "";
     }
 
-    if ($checkMembership = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "membership ON membership_user_id=user_id WHERE {$warehouseFilter} membership_status=1 AND user_mobile='{$mobile}' AND membership_site_id=" . SITE_ID)) {
+    if ($checkMembership = mysqli_query($connection, "SELECT membership_id, membership_comment, membership_profile_name, membership_total_visit, membership_avl_visit, membership_amount_due, category_title as packageName, membership_created, membership_update FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "membership ON membership_user_id=user_id INNER JOIN " . TABLE_PREFIX . "category ON category_id=membership_type_id AND category_site_id='" . SITE_ID . "' AND category_type='spa_room' WHERE {$warehouseFilter} membership_status=1 AND user_mobile='{$mobile}' AND membership_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkMembership) != 0) {
             $status = 'success';
             $httpStatus = 200;
             $msg = "Membership found";
+            while ($membership = mysqli_fetch_assoc($checkMembership)) {
+                $data[] = $membership;
+            }
         } else {
             $httpStatus = 400;
             $status = 'warning';
@@ -59,7 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $result = array(
     'status' => ((isset($status)) ? $status : 'error'),
-    'msg' => ((isset($msg)) ? $msg : 'Something went wrong')
+    'msg' => ((isset($msg)) ? $msg : 'Something went wrong'),
+    'data' => ((isset($data)) ? $data : '')
 );
 
 

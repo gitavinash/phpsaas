@@ -26,8 +26,10 @@
 
                                 if ($warehouseList = mysqli_query($connection, "SELECT warehouse_id, warehouse_title, warehouse_code, warehouse_title, company_title FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_status=1 AND company_address_id!=0 AND warehouse_site_id=" . SITE_ID)) {
                                     if (mysqli_num_rows($warehouseList) > 0) {
+                                        $i = 0;
                                         while ($row = mysqli_fetch_array($warehouseList)) {
-                                            echo "<option value='{$row['warehouse_id']}'>{$row['warehouse_title']}</option>";
+                                            echo "<option value='{$row['warehouse_id']}' " . (($i == 0) ? 'selected' : '') . ">{$row['warehouse_title']}</option>";
+                                            $i++;
                                         }
                                     }
                                 }

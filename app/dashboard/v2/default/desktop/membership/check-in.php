@@ -1,8 +1,11 @@
-<h2 class="heading">Check-in</h2>
+<h2 class="heading">Check-in<span>All membership visits are redeemed here</span></h2>
 <div class="main-box">
     <section>
         <form action="#" id="addNewInventoryForm" method="POST" enctype="multipart/form-data">
-            <section class="form" style="padding-top:25px">
+            <section class="form">
+                <div id="loader" style="display: none; text-align: center;">
+                    <img src="<?php echo IMG_LIBRARY ?>circle-loader.gif" alt="Loading..." />
+                </div>
                 <div class="step-open-box step_1_box">
                     <?php
 
@@ -26,8 +29,10 @@
 
                                 if ($warehouseList = mysqli_query($connection, "SELECT warehouse_id, warehouse_title, warehouse_code, warehouse_title, company_title FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_status=1 AND company_address_id!=0 AND warehouse_site_id=" . SITE_ID)) {
                                     if (mysqli_num_rows($warehouseList) > 0) {
+                                        $i = 0;
                                         while ($row = mysqli_fetch_array($warehouseList)) {
-                                            echo "<option value='{$row['warehouse_id']}'>{$row['warehouse_title']}</option>";
+                                            echo "<option value='{$row['warehouse_id']}' " . (($i == 0) ? 'selected' : '') . ">{$row['warehouse_title']}</option>";
+                                            $i++;
                                         }
                                     }
                                 }
@@ -54,6 +59,75 @@
                     <div class="box-1">
                         <div class="form-group">
                             <input type="button" class="btn btn-green" id="checkInMembership" value="Continue">
+                        </div>
+                    </div>
+                </div>
+                <div class="step-open-box step_2_box" style="display:none">
+                    <div class="stepNavigation">
+                        <button type="button" class="btn btn-light backToStep1">
+                            <i class="fi-rr-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    <div class="showMembershipList"></div>
+                </div>
+                <div class="step-open-box step_3_box" style="display:none">
+                    <div class="stepNavigation">
+                        <button type="button" class="btn btn-light backToStep2">
+                            <i class="fi-rr-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    <div class="allotRoomAndStaff">
+                        <p class="formBoxHeading">Select for 1st Person</p>
+                        <div class="form-group">
+                            <input id="duration" name="duration" value="60" type="number" required />
+                            <label class="form-lable" id="Label">Massage duration</label>
+                        </div>
+                    </div>
+                    <div class="box-1">
+                        <div class="form-group">
+                            <input type="hidden" name="membershipId" value="">
+                            <input type="hidden" name="visits" value="">
+                            <input type="button" class="btn btn-green" id="startRedeemVisit" value="Send OTP">
+                        </div>
+                    </div>
+                </div>
+                <div class="step-open-box step_4_box" style="display:none">
+                    <div class="stepNavigation">
+                        <button type="button" class="btn btn-light backToStep3">
+                            <i class="fi-rr-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    <div class="form-group" style="margin-top: 20px;">
+                        <input id="otpValue" name="otpValue" placeholder="123456" type="number" required />
+                        <label class="form-lable" id="Label">Verify OTP<sup>*</sup></label>
+                    </div>
+                    <div class="box-1">
+                        <div class="form-group">
+                            <input type="hidden" id="otpRefId" name="otpRefId" value="">
+                            <input type="button" class="btn btn-green" id="redeemVisit" value="Verify OTP">
+                        </div>
+                        <div class="form-group">
+                            <input type="button" class="btn btn-light" id="resendOTPBtn" value="Resend
+                                OTP">
+                        </div>
+                    </div>
+                </div>
+                <div class="step-open-box step_5_box" style="display:none">
+                    <div class="success-card">
+                        <div class="success-hero">
+                            <img src="<?php echo IMG_LIBRARY ?>green-tick-animation.gif">
+                        </div>
+
+                        <h2 class="success-title">Thank you!</h2>
+                        <p class="success-text">The visit has been redeemed successfully.</p>
+
+                        <div class="success-actions">
+                            <button type="button" class="btn btn-light backToStep1">
+                                <i class="fi-rr-arrow-left"></i> New check-in
+                            </button>
+                            <a href="/dashboard/" class="btn btn-green">
+                                Go to Dashboard
+                            </a>
                         </div>
                     </div>
                 </div>

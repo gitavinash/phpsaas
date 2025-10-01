@@ -904,6 +904,11 @@ div.dataTables_scrollBody {
   width: 100%;
   padding: 0% 5% 2% 5%;
   box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.widget-setting-info:last-child {
+  margin-bottom: 10px;
 }
 
 .widget-setting-info .about-feature {
@@ -920,4 +925,27 @@ div.dataTables_scrollBody {
 
 .widget-info i {
   margin-top: 7px;
+}
+
+.success-hero {
+  float: left;
+  width: 100%;
+  text-align: center;
+}
+.success-hero img {
+  width: 80%;
+}
+.success-title {
+  float: left;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.success-text {
+  float: left;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
 }
