@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // decrement available visits only if strictly greater than requested
                         $updateMembership = mysqli_query(
                             $connection,
-                            "UPDATE " . TABLE_PREFIX . "membership SET membership_avl_visit=membership_avl_visit-'{$totalVisit}' WHERE membership_avl_visit>{$totalVisit} AND membership_id='{$membershipId}' AND membership_site_id=" . SITE_ID
+                            "UPDATE " . TABLE_PREFIX . "membership SET membership_avl_visit=membership_avl_visit-'{$totalVisit}' WHERE membership_avl_visit>={$totalVisit} AND membership_id='{$membershipId}' AND membership_site_id=" . SITE_ID
                         );
 
                         // mark OTP as used so it can't be reused

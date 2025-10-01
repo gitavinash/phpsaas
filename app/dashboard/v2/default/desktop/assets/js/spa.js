@@ -751,7 +751,7 @@ $(document).ready(function () {
       dataType: "JSON",
       success: function (response) {
         if (response.status === "success") {
-          popUpMessage("center", response.msg, response.status);
+          // popUpMessage("center", response.msg, response.status);
           $('input[name="otpRefId"]').val(response.otpRefId);
           $(".step_4_box").hide();
           $(".step_5_box").show();
