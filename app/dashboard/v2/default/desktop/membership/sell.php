@@ -80,7 +80,11 @@
                     </div>
                     <div class="form-group">
                         <input id="visit" value="5" name="visit" type="number" required />
-                        <label class="form-lable" id="Label">Total visit<sup>*</sup></label>
+                        <label class="form-lable" id="Label">Total visits<sup>*</sup></label>
+                    </div>
+                    <div class="form-group">
+                        <input id="avlVisit" value="5" name="avlVisit" type="number" required />
+                        <label class="form-lable" id="Label">Total Available visits<sup>*</sup></label>
                     </div>
                     <div class="form-group">
                         <textarea name="requirements" id="requirements" cols="30" rows="10"></textarea>

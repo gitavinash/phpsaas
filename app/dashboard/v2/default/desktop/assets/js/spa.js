@@ -119,6 +119,7 @@ $(document).ready(function () {
     var price = $("#price").val().trim();
     var dueAmount = $("#dueAmount").val().trim();
     var visit = $("#visit").val().trim();
+    var avlVisit = $("#avlVisit").val().trim();
     var requirements = $("#requirements").val().trim();
 
     // ===== VALIDATION =====
@@ -176,6 +177,16 @@ $(document).ready(function () {
       return;
     }
 
+    if (avlVisit === "" || parseInt(avlVisit) < 1) {
+      popUpMessage(
+        "center",
+        "Total available visit must be at least 1",
+        "warning"
+      );
+      $("#addMembership").show();
+      return;
+    }
+
     $.ajax({
       url: "/api/membership/add/",
       type: "POST",
@@ -187,6 +198,7 @@ $(document).ready(function () {
         price: price,
         dueAmount: dueAmount,
         visit: visit,
+        avlVisit: avlVisit,
         requirements: requirements,
       },
       dataType: "JSON",

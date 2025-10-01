@@ -26,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'mobile'    => "Kindly enter mobile number",
         'package'    => "Kindly select room type",
         'price'    => "Kindly enter membership price",
-        'visit'    => "Kindly enter total number of visis",
+        'visit'    => "Kindly enter total number of visits",
+        'avlVisit'    => "Kindly enter total available number of visits",
     ];
 
     // Generic empty checks
@@ -59,7 +60,16 @@ user_mobile='{$mobile}'")) {
 
         // Create a membership
 
-        if ($generateMembership = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership(membership_site_id, membership_user_id, membership_profile_name, membership_branch_id, membership_type, membership_type_id, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, membership_comment, membership_status, membership_created, membership_expire) VALUES('" . SITE_ID . "', '{$userID}', '{$name}', '{$warehouseId}', 'category', '{$package}', '{$visit}', '{$visit}', '{$price}', '{$dueAmount}', '{$requirements}', 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR))")) {
+        if ($generateMembership = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership(membership_site_id, membership_user_id, membership_profile_name, membership_branch_id, membership_type, membership_type_id, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, membership_comment, membership_status, membership_created, membership_expire) VALUES('" . SITE_ID . "', '{$userID}', '{$name}', '{$warehouseId}', 'category', '{$package}', '{$visit}', '{$avlVisit}', '{$price}', '{$dueAmount}', '{$requirements}', 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR))")) {
+
+            $membershipId = mysqli_insert_id($connection);
+
+            if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
+                if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
+                    require_once WHATSAPP_TEMPLATE_ADMIN . 'new_membership.php';
+                }
+            }
+
             $httpStatus = 201;
             $status = 'success';
             $msg = 'New membership package is generated successfully';
