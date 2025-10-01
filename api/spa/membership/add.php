@@ -56,28 +56,37 @@ user_mobile='{$mobile}'")) {
         }
     }
 
-    if ($userID != '') {
+    if ($categoryInfo = mysqli_query($connection, "SELECT category_title FROM " . TABLE_PREFIX . "category WHERE category_id='{$package}' AND category_site_id=" . SITE_ID)) {
+        if (mysqli_num_rows($categoryInfo) != 0) {
 
-        // Create a membership
+            extract(mysqli_fetch_assoc($categoryInfo));
 
-        if ($generateMembership = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership(membership_site_id, membership_user_id, membership_profile_name, membership_branch_id, membership_type, membership_type_id, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, membership_comment, membership_status, membership_created, membership_expire) VALUES('" . SITE_ID . "', '{$userID}', '{$name}', '{$warehouseId}', 'category', '{$package}', '{$visit}', '{$avlVisit}', '{$price}', '{$dueAmount}', '{$requirements}', 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR))")) {
+            if ($userID != '') {
 
-            $membershipId = mysqli_insert_id($connection);
+                // Create a membership
 
-            if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
-                if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
-                    require_once WHATSAPP_TEMPLATE_ADMIN . 'new_membership.php';
+                if ($generateMembership = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership(membership_site_id, membership_user_id, membership_profile_name, membership_branch_id, membership_type, membership_type_id, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, membership_comment, membership_status, membership_created, membership_expire) VALUES('" . SITE_ID . "', '{$userID}', '{$name}', '{$warehouseId}', 'category', '{$package}', '{$visit}', '{$avlVisit}', '{$price}', '{$dueAmount}', '{$requirements}', 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR))")) {
+
+                    $membershipId = mysqli_insert_id($connection);
+
+                    if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
+                        if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
+                            require_once WHATSAPP_TEMPLATE_ADMIN . 'new_membership.php';
+                        }
+                    }
+
+                    $httpStatus = 201;
+                    $status = 'success';
+                    $msg = 'New membership package is generated successfully';
+                } else {
+                    $msg = 'Something went wrong while trying to create a membership';
                 }
+            } else {
+                $msg = 'Something went wrong while trying to create a membership';
             }
-
-            $httpStatus = 201;
-            $status = 'success';
-            $msg = 'New membership package is generated successfully';
         } else {
-            $msg = 'Something went wrong while trying to create a membership';
+            $msg = 'Invalid category information found';
         }
-    } else {
-        $msg = 'Something went wrong while trying to create a membership';
     }
 } else {
     $httpStatus = 400;
