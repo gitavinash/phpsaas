@@ -3,7 +3,7 @@
 $id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? base64_decode($_GET['id']) : 0));
 
 
-if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_deletable FROM " . TABLE_PREFIX . "category WHERE category_type='" . ((SITE_APP == 'spa' ? 'spa_' : '')) . "room'")) {
+if ($roomsData = mysqli_query($connection, "SELECT category_id, category_title, category_image, category_description, category_deletable FROM " . TABLE_PREFIX . "category WHERE category_type='" . ((SITE_APP == 'spa' ? 'spa_' : '')) . "room' " . ((SITE_APP == 'spa') ? 'category_site_id="' . SITE_ID . '"' : '') . "")) {
     $roomsList = array();
     if (mysqli_num_rows($roomsData) != 0) {
         while ($data = mysqli_fetch_assoc($roomsData)) {
