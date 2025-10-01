@@ -227,14 +227,16 @@ $(document).ready(function () {
 
   $("#checkInMembership").on("click", function (e) {
     e.preventDefault();
-
+    $("#checkInMembership").hide();
     // Get values
     var visits = $("#visits").val().trim();
     var mobile = $("#mobile").val().trim();
+    var warehouseId = $("#warehouseId").val().trim();
 
     // ===== VALIDATION =====
     if (visits === "") {
       popUpMessage("center", "Please enter customer's visits", "warning");
+      $("#checkInMembership").show();
       return;
     }
 
@@ -244,6 +246,7 @@ $(document).ready(function () {
         "Please enter a valid 10-digit mobile number",
         "warning"
       );
+      $("#checkInMembership").show();
       return;
     }
 
@@ -251,7 +254,7 @@ $(document).ready(function () {
       url: "/api/membership/check-in/",
       type: "POST",
       data: {
-        visits: visits,
+        warehouseId: warehouseId,
         mobile: mobile,
       },
       dataType: "JSON",
@@ -259,13 +262,15 @@ $(document).ready(function () {
         if (response.status === "success") {
           popUpMessage("center", response.msg, "success");
         }
+        $("#checkInMembership").show();
       },
       error: function (xhr) {
-        var errorMsg = "An error occurred while saving membership.";
-        if (xhr.responseJSON && xhr.responseJSON.msg) {
-          errorMsg = xhr.responseJSON.msg;
-        }
-        popUpMessage("center", errorMsg, "error");
+        popUpMessage(
+          "center",
+          xhr.responseJSON && xhr.responseJSON.msg,
+          xhr.responseJSON.status
+        );
+        $("#checkInMembership").show();
       },
     });
   });

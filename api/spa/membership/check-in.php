@@ -1,0 +1,67 @@
+<?php
+
+require_once USER_FUNCTIONS;
+require_once LOGIN_CHECK;
+
+$httpStatus = 500;
+$status = 'warning';
+$msg = 'Something went wrong';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    // Trim inputs
+    $name = trim($name ?? '');
+    $mobile    = trim($mobile ?? '');
+
+    // List of required fields
+    $required = [
+        'mobile'    => "Kindly enter mobile number",
+    ];
+
+    // Generic empty checks
+    foreach ($required as $field => $message) {
+        if ($$field === '') {
+            $status = 'warning';
+            $msg = $message;
+            break;
+        }
+    }
+
+    // Extra validations if not already failed
+    if (!isset($msg)) {
+        if (!preg_match('/^(\+91[\-\s]?)?[0]?(91)?[6-9]\d{9}$/', $mobile)) {
+            $status = 'warning';
+            $msg = "Kindly enter a valid mobile number";
+        }
+    }
+
+    if ($warehouseId != '') {
+        $warehouseFilter = "membership_branch_id='{$warehouseId}' AND ";
+    } else {
+        $warehouseFilter = "";
+    }
+
+    if ($checkMembership = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "membership ON membership_user_id=user_id WHERE {$warehouseFilter} membership_status=1 AND user_mobile='{$mobile}' AND membership_site_id=" . SITE_ID)) {
+        if (mysqli_num_rows($checkMembership) != 0) {
+            $status = 'success';
+            $httpStatus = 200;
+            $msg = "Membership found";
+        } else {
+            $httpStatus = 400;
+            $status = 'warning';
+            $msg = 'No active membership found';
+        }
+    }
+} else {
+    $httpStatus = 400;
+    $msg = 'Bad request';
+}
+
+$result = array(
+    'status' => ((isset($status)) ? $status : 'error'),
+    'msg' => ((isset($msg)) ? $msg : 'Something went wrong')
+);
+
+
+http_response_code($httpStatus);
+echo json_encode($result, TRUE);
