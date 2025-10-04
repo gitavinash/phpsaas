@@ -1,5 +1,7 @@
 <?php
 
+require_once DATA_FUNCTIONS;
+require_once UTIL_FUNCTIONS;
 require_once 'header.php';
 
 $newsContent = strip_tags($news_description);
@@ -123,6 +125,80 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                     ?>
                 </ul>
             </div>
+
+            <!-- Testimonial slider -->
+
+            <?php
+
+            $testimonials = testimonialsList($connection, 5);
+
+            if (sizeof($testimonials) > 0) {
+                echo "<div class='sliderBox'>
+                <h2>Who Reads Us</h2>
+                <div class=' testimonial-slider compact'>
+                    <div class='testimonial-track'>";
+                foreach ($testimonials as $row) {
+                    $readerInfo = explode(",", $row["category_title"]);
+                    $readerImage = (($row['category_image'] != '')  ? $row['category_image'] : IMG_LIBRARY . 'default-black-profile-pic-icon.png');
+                    $readerName = $readerInfo[0];
+                    $readerPosition = ucwords(trim(str_replace($readerName . ((sizeof($readerInfo) == 1) ? "" : ","), "", $row["category_title"])));
+                    echo "<div class='testimonial-slide'>
+                            <p class='testimonial-quote'>
+                                “{$row['category_description']}”
+                            </p>
+                            <div class='testimonial-profile'>
+                                <img src='{$readerImage}' alt='{$row['category_title']}'>
+                                <div class='testimonial-meta'>
+                                    <span class='testimonial-name'>{$readerName}</span>
+                                    <span class='testimonial-role'>{$readerPosition}</span>
+                                </div>
+                            </div>
+                        </div>";
+                }
+                echo "</div><div class='testimonial-dots' aria-label='Testimonials pagination'></div></div></div>";
+            }
+
+
+            ?>
+
+
+            <!-- Related News -->
+
+            <?php
+
+            $newsList = similarArticles($connection, $news_id, 'news', 5);
+
+            if (sizeof($newsList['articles']) > 0) {
+                echo "<section class='related-wrapper' aria-labelledby='relatedHeading'>
+                <div class='container'>
+                    <h2 id='relatedHeading' class='related-title'>Related News</h2>
+
+                    <div class='related-grid'>";
+                foreach ($newsList['articles'] as $news) {
+                    echo "<article class='related-card'>
+                <a class='related-link' href='{$news['link_url']}'>
+                    <figure class='related-media'>
+                        <img loading='lazy' src='{$news['image']}'
+                            alt='{$news['title']}'>
+                    </figure>
+                    <div class='related-content'>
+                        <span class='related-tag'>{$news['category_title']}</span>
+                        <h3 class='related-head line-2'>{$news['title']}</h3>
+                        <p class='related-excerpt line-2'>" . truncateText($news['description'], 100) . "</p>
+                        <time class='related-date' datetime='" . date("M d, Y", strtotime($news['link_published'])) . "'>" . date("M d, Y", strtotime($news['link_published'])) . "</time>
+                    </div>
+                </a>
+            </article>";
+                }
+                echo "</div>
+                <div class='related-footer'>
+            <a class='related-more-link' href='/search/?q={$newsList['mostUserKeyword']}'>View all related news</a>
+        </div>
+                </div></section>";
+            }
+
+            ?>
+
         </div>
     </div>
 </section>

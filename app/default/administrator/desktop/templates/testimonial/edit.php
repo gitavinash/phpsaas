@@ -4,7 +4,7 @@ $id = base64_decode($id);
 
 $pageType = 'testimonial';
 
-if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "category WHERE category_type='{$pageType}' AND category_status=1 AND category_site_id=" . SITE_ID)) {
+if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "category WHERE category_type='{$pageType}' AND category_id='{$id}' AND category_status=1 AND category_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($pageDetails) != 0) {
         extract(mysqli_fetch_assoc($pageDetails));
     } else {
@@ -43,8 +43,6 @@ window.location.href = "dashboard/<?php echo $pageType; ?>/?type=list&status=all
                 <input type="hidden" name='postStatus' value='<?php echo $category_status ?>'>
                 <input type="hidden" name="id" value="<?php echo $id ?>">
                 <input type="hidden" name="postType" value="<?php echo $category_type ?>">
-                <a href='<?php echo SITE_URL . $link_url; ?>' class='btn btn-block btn-blue' target='_blank'>View live
-                    post</a>
             </div>
             <h2>Feature Image</h2>
             <div class="form-group featureImageUploadBox upload-btn"

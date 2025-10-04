@@ -56,7 +56,7 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 
             <div class="copyright">
                 <p>Copyright <?php echo date('Y') ?> @ <?php echo SITE_NAME ?></p>
-                <p class="right">Design and Developed by <a href="https://blumox.com"
+                <p class="right">Designed and Developed by <a href="https://blumox.com"
                         title="News website development company in new delhi">Blumox
                         Technologies</a></p>
             </div>
@@ -67,6 +67,7 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 <?php require_once NOTIFICATION . 'index.php'; ?>
 <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo USER_JS ?>script.min.js"></script>
+<script src="<?php echo USER_JS ?>slider.min.js"></script>
 <script>
 const searchButton = document.getElementById('searchButton');
 const closeButton = document.getElementById('closeButton');

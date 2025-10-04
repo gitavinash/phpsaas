@@ -169,62 +169,62 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                 if (SITE_ID == 35) { ?>
 
 
-                    <li <?php echo (($postType == 'post') ? 'class="active"' : '') ?>>
-                        <a href="post/?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
-                        <div class="side-menu">
-                            <ul>
-                                <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
-                                <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
-                                <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                            </ul>
-                        </div>
-                        <div class="bottom-menu">
-                            <ul>
-                                <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
-                                <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
-                                <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                <li <?php echo (($postType == 'post') ? 'class="active"' : '') ?>>
+                    <a href="post/?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="post/?type=list&status=all"><i class="fas fa-list"></i> All post</a></li>
+                            <li><a href="post/?type=add&editor=true"><i class="fas fa-plus"></i>Add new post</a></li>
+                            <li><a href="post/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-                    <li <?php echo ((ADMIN_BASE_URL == '/enquiry/') ? 'class="active"' : '') ?>>
-                        <a href="enquiry/?type=list&status=all"><i class="fas fa-filter"></i> Enquiry</a>
-                        <div class="side-menu">
-                            <ul>
-                                <li><a href="enquiry/?type=list&status=all"><i class="fas fa-list"></i> All enquiries</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="bottom-menu">
-                            <ul>
-                                <li><a href="enquiry/?type=list&status=all"><i class="fas fa-list"></i> All enquiries</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                <li <?php echo ((ADMIN_BASE_URL == '/enquiry/') ? 'class="active"' : '') ?>>
+                    <a href="enquiry/?type=list&status=all"><i class="fas fa-filter"></i> Enquiry</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="enquiry/?type=list&status=all"><i class="fas fa-list"></i> All enquiries</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="enquiry/?type=list&status=all"><i class="fas fa-list"></i> All enquiries</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
 
                 <?php
                 }
 
                 if (SITE_ID != 22 && SITE_ID != 35 && SITE_ID != 32) { ?>
 
-                    <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
-                        <a href="coupon/?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
-                        <div class="side-menu">
-                            <ul>
-                                <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
-                                </li>
-                                <li><a href="coupon/?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
-                            </ul>
-                        </div>
-                        <div class="bottom-menu">
-                            <ul>
-                                <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
-                                </li>
-                                <li><a href="coupon/?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
+                    <a href="coupon/?type=list&status=all"><i class="fas fa-ticket-alt"></i> Coupon</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
+                            </li>
+                            <li><a href="coupon/?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="coupon/?type=list&status=all"><i class="fas fa-list"></i> All coupons</a>
+                            </li>
+                            <li><a href="coupon/?type=add"><i class="fas fa-plus"></i> Add new coupon</a></li>
+                        </ul>
+                    </div>
+                </li>
 
                 <?php
                 }
@@ -248,14 +248,14 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                     <a href="appearance/?type=configuration"><i class="fas fa-paint-brush"></i> Appearance</a>
                     <div class="side-menu">
                         <ul>
-                            <!-- <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
+                            <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
                             <li><a href="appearance/?type=sliders"><i class="fas fa-images"></i>
                                     Sliders</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <!-- <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
+                            <li><a href="appearance/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
                             <li><a href="appearance/?type=sliders"><i class="fas fa-images"></i>
                                     Sliders</a></li>
                         </ul>

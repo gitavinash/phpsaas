@@ -19,6 +19,7 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
     $pageLimit  = max(1, (int)$pageLimit);
     $pageNumber = max(0, (int)$pageNumber);
     $offset     = $pageNumber * $pageLimit;
+    $mostUsedKeyword = null;
 
     $postTypeEsc = $conn->real_escape_string($postType);
     $siteId      = (int)SITE_ID;
@@ -72,8 +73,11 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
             {$postTypeEsc}_id   AS id,
             {$postTypeEsc}_image AS image,
             {$postTypeEsc}_title AS title,
+            {$postType}_description AS description,
             link_url,
-            profile_display_name
+            link_published,
+            profile_display_name,
+            category_title
         FROM {$table}
         INNER JOIN {$link}
             ON link_relation_id = {$postTypeEsc}_id
@@ -82,6 +86,10 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
            AND link_site_id = {$siteId}
         INNER JOIN {$profile}
             ON link_owner_id=profile_user_id
+        INNER JOIN " . TABLE_PREFIX . "category
+            ON category_id={$postType}_category
+            AND category_type='{$postType}'
+            AND category_site_id=" . SITE_ID . "
         WHERE {$postTypeEsc}_id IN ({$idsCsv})
           AND {$postTypeEsc}_status = 1
           AND {$postTypeEsc}_site_id = {$siteId}
@@ -100,7 +108,30 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
     }
     mysqli_free_result($resData);
 
-    return $out;
+    if (!empty($ids)) {
+        $idsCsvForTag = implode(',', $ids);
+        $sqlKeyword = "
+            SELECT tag_title, COUNT(*) AS tag_count
+            FROM isw_tag
+            WHERE tag_type = '{$postTypeEsc}'
+              AND tag_site_id = {$siteId}
+              AND tag_relation_id IN ({$idsCsvForTag})
+            GROUP BY tag_title
+            ORDER BY tag_count DESC
+            LIMIT 1
+        ";
+
+        $resKeyword = mysqli_query($conn, $sqlKeyword);
+        if ($resKeyword && $row = mysqli_fetch_assoc($resKeyword)) {
+            $mostUsedKeyword = $row['tag_title'];
+        }
+        mysqli_free_result($resKeyword);
+    }
+
+    return array(
+        'articles' => $out,
+        'mostUserKeyword' => $mostUsedKeyword
+    );
 }
 
 function authorInfo($conn, $user_id, $postType = 'post')
@@ -150,6 +181,25 @@ WHERE tag_site_id = " . SITE_ID . "
 GROUP BY tag_title
 ORDER BY total_usage DESC
 LIMIT {$pageLimit}";
+
+    $resData = mysqli_query($conn, $query);
+    if (!$resData) {
+        return [];
+    }
+
+    $out = [];
+    while ($row = mysqli_fetch_assoc($resData)) {
+        $out[] = $row;
+    }
+    mysqli_free_result($resData);
+
+    return $out;
+}
+
+function testimonialsList($conn, $limit = 5, $featuredOnly = 0)
+{
+
+    $query = "SELECT * FROM " . TABLE_PREFIX . "category WHERE category_type='testimonial' AND category_status=1 AND category_site_id=" . SITE_ID . " LIMIT 0, {$limit}";
 
     $resData = mysqli_query($conn, $query);
     if (!$resData) {

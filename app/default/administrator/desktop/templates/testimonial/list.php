@@ -3,7 +3,7 @@
 $postStatus = mysqli_real_escape_string($connection, $_GET['status']);
 $startFrom = (isset($_GET['page']) ? $_GET['page'] : 0);
 
-$postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
+$postStatus = (($postStatus == 'all') ? '' : "AND category_status='{$postStatus}'");
 
 ?>
 <h2>All testimonial</h2>
@@ -48,7 +48,7 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
                 <div class="hover">
                     <a href="testimonial/?type=edit&editor=true&id=<?php echo base64_encode($category_id); ?>"><i
                             class="fas fa-pencil-alt"></i> Edit</a>
-                    <a href="#" id="<?php echo base64_encode($page_id) ?>_page" class="deleteBtn"><i
+                    <a href="#" id="<?php echo base64_encode($category_id) ?>_testimonial" class="deleteBtn"><i
                             class="fas fa-trash"></i> Delete</a>
                 </div>
             </td>

@@ -1866,3 +1866,183 @@ ul.tabs li.active {
 .selectSimilarProduct {
   min-height: 100px;
 }
+
+.fix-box,
+.menu-box {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.fix-box h3,
+.menu-box h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #00609e;
+}
+
+.menu-creator li {
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  background: #f8f9fb;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.menu-creator li:hover {
+  background: #eef5fb;
+  border-color: #c8def5;
+}
+
+.dd3-handle {
+  width: 24px;
+  height: 24px;
+  background: #00609e;
+  color: #fff;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 24px;
+  font-size: 14px;
+  margin-right: 8px;
+  cursor: grab;
+}
+.dd3-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fdfdfd;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+.dd3-content .item-title {
+  font-weight: 500;
+  color: #333;
+}
+.dd3-content .item-remove {
+  background: #ff4d4d;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+.dd3-content .item-remove:hover {
+  background: #d93636;
+}
+
+.menu-creator input.form-control {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+#addCustom {
+  width: 100%;
+  background: #00609e;
+  color: #fff;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+#addCustom:hover {
+  background: #005080;
+}
+
+/* Drag handle: dotted grip with your blue */
+.dd-handle {
+  height: auto !important;
+  border-radius: 4px;
+  background: #00609e;
+  cursor: grab;
+  display: inline-block;
+  margin-right: 8px;
+  background-image: radial-gradient(#fff 22%, transparent 22%),
+    radial-gradient(#fff 22%, transparent 22%);
+  background-size: 6px 6px;
+  background-position: 0 0, 3px 3px;
+  background-repeat: repeat;
+}
+
+/* tree lists */
+.dd-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.dd-list .dd-list {
+  margin-left: 34px;
+}
+
+.dd-ghost {
+  opacity: 0.35;
+}
+
+/* compact row look to match your admin */
+.mb-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #f8f9fb;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 6px;
+}
+
+.row-main {
+  flex: 1;
+  color: #333;
+  font-weight: 600;
+}
+
+.row-side {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.row-side .item-url-text {
+  color: #666;
+  font-size: 12px;
+}
+
+.edit-box {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 8px;
+  float: left;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.edit-actions {
+  float: left;
+  width: 100%;
+}
+
+/* position bar minor tweaks */
+.mb-positionbar .form-control {
+  min-width: 160px;
+}
+
+.item-edit {
+  margin-right: 3em;
+}
+
+.dd-item .item-remove {
+  height: auto !important;
+  width: auto !important;
+  top: 15px;
+}

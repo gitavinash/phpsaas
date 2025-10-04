@@ -146,7 +146,7 @@ require_once 'header.php';
                 <div class="space-y-4">
                     <?php
                     $similarArticles = similarArticles($connection, $discussion_id, $postType, 10);
-                    foreach ($similarArticles as $artcileInfo) {
+                    foreach ($similarArticles['articles'] as $artcileInfo) {
                         echo "<div class='border-b border-gray-100 pb-3 break-words'>
                                 <a href='{$artcileInfo['link_url']}' data-readdy='true'>
                                     <h4 class='text-sm font-medium text-gray-900 hover:text-primary cursor-pointer'>{$artcileInfo['title']}t</h4>

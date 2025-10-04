@@ -77,20 +77,14 @@
             ?>
 
             <!-- Left News Container -->
-            <div class="left-container"
-                <?php echo ((SITE_DOMAIN != 'theheadandtale.com') ? 'style="width: 100%;"' : '') ?>>
+            <div class="left-container" <?php echo ((SITE_ID != '49') ? 'style="width: 100%;"' : '') ?>>
                 <!-- Featured Article -->
                 <div class="featureArticle">
                     <?php if (!empty($latestNewsData[0])) renderNewsCard($latestNewsData[0]); ?>
                 </div>
                 <?php
                 // Show next 4 articles
-                for ($i = 1; $i < min(5, TOTAL_RESULT); $i++) {
-                    renderNewsCard($latestNewsData[$i]);
-                }
-
-                // Show remaining articles up to 20
-                for ($i = 5; $i < min(20, TOTAL_RESULT); $i++) {
+                for ($i = 1; $i < min(20, TOTAL_RESULT); $i++) {
                     renderNewsCard($latestNewsData[$i]);
                 }
                 ?>
@@ -99,7 +93,7 @@
             <!-- Sidebar -->
             <?php
 
-            if (SITE_DOMAIN == 'theheadandtale.com') {
+            if (SITE_ID == '49') {
                 require_once 'sidebar.php';
             }
 
@@ -107,5 +101,17 @@
         </div>
     </div>
 </section>
+
+<?php
+
+if (SITE_VERSION == 'mobile') { ?>
+<!-- Floating trigger (mobile only) -->
+<a href='/who-reads-us/' class="reviews-fab" id="openReviews" aria-controls="reviewsSheet" aria-expanded="false">
+    Who Reads Us
+</a>
+<?php
+}
+
+?>
 
 <?php require_once 'footer.php'; ?>

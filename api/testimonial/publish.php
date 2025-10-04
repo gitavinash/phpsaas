@@ -8,7 +8,7 @@ function publish($connection, $data)
 	extract($data);
 
 	if (isset($_FILES)) {
-
+		$featureImage = '';
 		require_once MODULES . 'imageUploader.php';
 	} else {
 		$featureImage = '';

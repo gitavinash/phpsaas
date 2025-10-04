@@ -1,4 +1,13 @@
 <div class="right-container">
+    <?php
+
+    if (SITE_VERSION == 'desktop') {
+        echo "<div class='hightlightBox' style='background:none; box-shadow:none; margin-bottom: 1em'><div class='who-reads'>
+  <a href='/who-reads-us/' class='who-reads-btn'>Who Reads Us</a>
+</div></div>";
+    }
+
+    ?>
     <div class="hightlightBox">
         <h2>Fintech Highlights</h2>
         <?php
