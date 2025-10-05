@@ -4257,3 +4257,7 @@ a:hover {
   width: 100%;
   box-sizing: border-box;
 }
+
+.name-cap {
+  text-transform: capitalize;
+}

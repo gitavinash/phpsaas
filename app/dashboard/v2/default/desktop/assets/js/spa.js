@@ -56,6 +56,10 @@ $(document).ready(function () {
     const otpRefId = ($("#otpRefId").val() || "").trim();
     const url = $btn.data("url") || "/api/auth/resend-otp/"; // your endpoint
 
+    // Reset value
+
+    $("#otpValue").val("");
+
     if (!otpRefId) {
       popUpMessage("center", "Missing OTP reference.", "error");
       return;
@@ -387,6 +391,10 @@ $(document).ready(function () {
     var mobile = $("#mobile").val().trim();
     var warehouseId = $("#warehouseId").val().trim();
 
+    // Reset value
+
+    $("#mobile").val("");
+
     // ===== VALIDATION =====
     if (redeemVisit === "") {
       popUpMessage("center", "Please enter customer's visits", "warning");
@@ -437,7 +445,7 @@ $(document).ready(function () {
             var startDate = item.membership_created
               ? item.membership_created.split(" ")[0]
               : "—";
-            var comment = item.membership_comment || "—";
+            var comment = item.membership_comment || "";
             var packageName = item.category_title || "Deluxe";
 
             // --- NEW: enable/disable Continue based on available visits ---
@@ -485,8 +493,8 @@ $(document).ready(function () {
             var cardHtml = `
       <article class="widget-setting-info membership-card" data-id="${item.membership_id}">
         <div class="about-feature" style="max-width:100%;">
-          <h3 class="heading" style="margin:0;">
-            #${item.membership_id} | ${item.membership_profile_name}
+          <h3 class="heading name-cap" style="margin:0;">
+            ${item.membership_profile_name}
             <span>Room: ${packageName}</span>
           </h3>
 
@@ -729,6 +737,10 @@ $(document).ready(function () {
 
     var otpRefId = $("#otpRefId").val().trim();
     var otpValue = $("#otpValue").val().trim();
+
+    // Reset value
+
+    $("#otpValue").val("");
 
     if (otpRefId === "") {
       popUpMessage("center", "otpRefId is missing", "error");

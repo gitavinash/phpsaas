@@ -1,13 +1,13 @@
 <?php
 
-function registerUserByMobile($connection, $mobile, $name = 'user')
+function registerUserByMobile($connection, $mobile, $name = 'user', $emailDomain = '@noemail.com')
 {
 
     mysqli_query($connection, "START TRANSACTION");
 
     /* Encrypt password with salt key */
 
-    $email = $mobile . '@noemail.com';
+    $email = $mobile . $emailDomain;
 
     $saltKey = hash('sha256', uniqid(mt_rand(), true) . $email . substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12) . time());
     $enc_password = hash('sha256', $saltKey . 'Qwerty!@345');

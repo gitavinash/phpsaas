@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $price = trim($price ?? '');
     $dueAmount   = trim($dueAmount ?? '');
     $visit  = trim($visit ?? '');
+    $avlVisit  = trim($avlVisit ?? '');
     $requirements  = trim($requirements ?? '');
 
     // List of required fields
