@@ -446,7 +446,7 @@ $(document).ready(function () {
               ? item.membership_created.split(" ")[0]
               : "—";
             var comment = item.membership_comment || "";
-            var packageName = item.category_title || "Deluxe";
+            var packageName = item.packageName || "Normal";
 
             // --- NEW: enable/disable Continue based on available visits ---
             var avl = parseInt(item.membership_avl_visit, 10) || 0;
