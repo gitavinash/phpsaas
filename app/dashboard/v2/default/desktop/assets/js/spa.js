@@ -441,6 +441,18 @@ $(document).ready(function () {
         </div>
       `;
             }
+            adminEditBtn = "";
+            if (siteAdminType == "administrator") {
+              encryptMembershipId = btoa(item.membership_id);
+              adminEditBtn = `
+              <div class="action-item">
+              <a href='/dashboard/membership/update/?id=${encryptMembershipId}' class="btn btn-blue dataTableBtn"
+                       title="Edit membership">
+                <i class="fi-rr-pencil"></i> Edit
+              </a>
+            </div>
+              `;
+            }
 
             var startDate = item.membership_created
               ? item.membership_created.split(" ")[0]
@@ -540,6 +552,7 @@ $(document).ready(function () {
             <div class="action-item">
               ${continueBtn}
             </div>
+            ${adminEditBtn}
           </div>
         </div>
       </article>

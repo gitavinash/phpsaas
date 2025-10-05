@@ -37,6 +37,9 @@
 				<script src="<?php echo JS_LIBRARY ?>tinymce/tinymce.min.js"></script>
 				<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 				<script src="<?php echo ADMIN_JS_LIBRARY ?>script.js"></script>
+				<script>
+const siteAdminType = '<?php echo $site_access_type ?>';
+				</script>
 				<?php
                 if (SITE_VERSION == 'mobile') { ?>
 
