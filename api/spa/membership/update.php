@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $price = trim($price ?? '');
     $dueAmount   = trim($dueAmount ?? '');
     $visit  = trim($visit ?? '');
+    $avlVisit  = trim($visit ?? '');
     $requirements  = trim($requirements ?? '');
 
     // List of required fields
@@ -40,13 +41,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $membershipId = base64_decode($membershipId);
 
+    $membershipStatus = (($avlVisit != 0) ? 1 : 2);
+
     if ($checkMembership = mysqli_query($connection, "SELECT membership_id FROM " . TABLE_PREFIX . "membership WHERE
 membership_id='{$membershipId}' AND membership_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkMembership) != 0) {
             extract(mysqli_fetch_assoc($checkMembership));
             // Update a membership
 
-            if ($updateMembership = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "membership SET membership_profile_name='{$name}', membership_branch_id='{$warehouseId}', membership_type_id='{$package}', membership_type='category', membership_total_visit='{$visit}', membership_avl_visit='{$avlVisit}', membership_price='{$price}', membership_amount_due='{$dueAmount}', membership_comment='{$requirements}' WHERE membership_id='{$membershipId}' AND membership_site_id=" . SITE_ID)) {
+            if ($updateMembership = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "membership SET membership_profile_name='{$name}', membership_branch_id='{$warehouseId}', membership_type_id='{$package}', membership_type='category', membership_total_visit='{$visit}', membership_avl_visit='{$avlVisit}', membership_price='{$price}', membership_amount_due='{$dueAmount}', membership_comment='{$requirements}', membership_status='{$membershipStatus}' WHERE membership_id='{$membershipId}' AND membership_site_id=" . SITE_ID)) {
                 $httpStatus = 201;
                 $status = 'success';
                 $msg = 'Membership package is update successfully';
