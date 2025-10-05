@@ -1,6 +1,6 @@
 <h2>Manage Menu</h2>
 
-<div class="form-box main-box" style="display:flex; gap:16px;">
+<div class="form-box main-box" style="display:flex; gap:16px; border: none;">
     <!-- LEFT PANE -->
     <div class="fix-box" style="min-width:250px; max-width:280px;">
         <!-- Categories (open) -->
@@ -129,7 +129,7 @@
                 <button id="expandAll" class="btn btn-sm">Expand all</button>
                 <button id="collapseAll" class="btn btn-sm">Collapse all</button>
                 <button id="clearAll" class="btn btn-red btn-sm">Clear</button>
-                <button id="submitMenu" class="btn btn-green">Submit current menu</button>
+                <button id="submitMenu" style="float: left; width: 100%;" class="btn btn-green">Save menu</button>
             </div>
         </div>
     </div>
