@@ -24,7 +24,10 @@ function publish($connection, $data)
 
         /** page page url */
 
-        $url = '/' . strtolower(preg_replace('~[^\p{M}\w-]+~u', '-', $url)) . '/';
+        $pageTitle = strtolower($title);
+        $url = ($pageTitle === 'home' || $pageTitle === 'homepage')
+            ? '/'
+            : '/' . preg_replace('~[^\p{M}\w-]+~u', '-', $title) . '/';
 
         /* define facebook and twitter meta desciption */
 
@@ -66,7 +69,7 @@ function publish($connection, $data)
                 }
             } else {
 
-                $msg = 'Please change url';
+                $msg = (($pageTitle == 'home' || $pageTitle == 'homepage') ? "Homepage is already exits." : "Please change page url. Because its already in used");
             }
         } else {
 

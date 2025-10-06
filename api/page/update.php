@@ -39,7 +39,14 @@ function update($connection, $data)
                     $twitterImage = (($oldTwitterImage == '') ? $oldFeatureImage : $oldTwitterImage);
                 }
 
-                $url = '/' . strtolower(preg_replace('~[^\p{M}\w-]+~u', '-', $url)) . '/';
+                // Generate page URL
+
+                $pageTitle = strtolower($title);
+                $url = ($pageTitle === 'home' || $pageTitle === 'homepage')
+                    ? '/'
+                    : '/' . preg_replace('~[^\p{M}\w-]+~u', '-', $title) . '/';
+
+
                 $linkID = $link_id;
                 $highlight = (isset($highlight) ? $highlight : '');
 
@@ -170,7 +177,7 @@ function update($connection, $data)
 
                             $addRedirect = FALSE;
                             $status = 'warning';
-                            $msg = "Please change page url. Because its already in used";
+                            $msg = (($pageTitle == 'home' || $pageTitle == 'homepage') ? "Homepage is already exits." : "Please change page url. Because its already in used");
                         }
                     }
                 } else {
