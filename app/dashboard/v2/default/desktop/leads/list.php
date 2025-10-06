@@ -59,7 +59,9 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
 }
 
 ?>
-<h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List<span>All hostings list will be displayed here</span>
+<h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List ( Between
+    <?php echo date('jS F y', strtotime($startDate)) . ' to ' . date('jS F y', strtotime($endDate)) ?>)<span>All
+        hostings list will be displayed here</span>
 </h2>
 <div class="box-1">
     <div class="shortcut">
