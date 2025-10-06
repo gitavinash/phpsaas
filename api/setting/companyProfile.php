@@ -155,7 +155,7 @@ if ($checkConfiguration = mysqli_query($connection, "SELECT site_configuration_i
         extract(mysqli_fetch_assoc($checkConfiguration));
         $query = "UPDATE " . TABLE_PREFIX . "site_configuration SET site_configuration_value='{$json}', site_configuration_status=1 WHERE site_configuration_id='{$site_configuration_id}' AND site_configuration_site_id=" . SITE_ID;
     } else {
-        $query = "INERT INTO " . TABLE_PREFIX . "site_configuration(site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status, site_configuration_global) VALUES(" . SITE_ID . ", '{$CFG_KEY}',  '{$json}', 1, 0)";
+        $query = "INSERT INTO " . TABLE_PREFIX . "site_configuration(site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status, site_configuration_global) VALUES(" . SITE_ID . ", '{$CFG_KEY}',  '{$json}', 1, 0)";
     }
 }
 
