@@ -29,14 +29,15 @@ if (defined('SETTING_COMPANY_PROFILE')) {
                 <label for="company_name">Company Name <span style="color:#d00">*</span></label>
                 <input type="text" id="company_name" name="company_name" class="form-control inside-shadow"
                     placeholder="e.g., Acme Pvt. Ltd."
-                    value="<?php echo htmlspecialchars(profile_val($profile, 'company_name'), ENT_QUOTES); ?>" required>
+                    value="<?php echo htmlspecialchars(profile_val($profile, 'companyName'), ENT_QUOTES); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="owner_name">Owner / Proprietor Name <span style="color:#d00">*</span></label>
                 <input type="text" id="owner_name" name="owner_name" class="form-control inside-shadow"
                     placeholder="e.g., John Doe"
-                    value="<?php echo htmlspecialchars(profile_val($profile, 'owner_name'), ENT_QUOTES); ?>" required>
+                    value="<?php echo htmlspecialchars(profile_val($profile, 'companyOwnerName'), ENT_QUOTES); ?>"
+                    required>
             </div>
 
             <!-- Domain -->
@@ -51,14 +52,14 @@ if (defined('SETTING_COMPANY_PROFILE')) {
                 <label for="intro">Short Intro (under 300 characters) <span style="color:#d00">*</span></label>
                 <textarea id="intro" name="intro" class="form-control inside-shadow"
                     placeholder="Briefly describe your company..." maxlength="300" rows="3"
-                    required><?php echo htmlspecialchars(profile_val($profile, 'intro'), ENT_QUOTES); ?></textarea>
+                    required><?php echo htmlspecialchars(profile_val($profile, 'companyIntro'), ENT_QUOTES); ?></textarea>
                 <small id="introCounter" class="muted">0 / 300</small>
             </div>
 
             <div class="form-group">
                 <label for="account_email">Account Email</label>
                 <input type="email" id="account_email" class="form-control inside-shadow"
-                    value="<?php echo htmlspecialchars(profile_val($profile, 'email'), ENT_QUOTES); ?>"
+                    value="<?php echo htmlspecialchars(profile_val($profile, 'companyEmail'), ENT_QUOTES); ?>"
                     placeholder="Email">
             </div>
 
@@ -67,21 +68,22 @@ if (defined('SETTING_COMPANY_PROFILE')) {
                 <label for="email_notify">Notification Email</label>
                 <input type="email" id="email_notify" name="email_notify" class="form-control inside-shadow"
                     placeholder="alerts@example.com"
-                    value="<?php echo htmlspecialchars(profile_val($profile, 'email_notify'), ENT_QUOTES); ?>">
+                    value="<?php echo htmlspecialchars(profile_val($profile, 'companyEmailNotify'), ENT_QUOTES); ?>">
             </div>
 
             <div class="form-group">
                 <label for="mobile">Primary Mobile <span style="color:#d00">*</span></label>
                 <input type="tel" id="mobile" name="mobile" class="form-control inside-shadow"
                     placeholder="e.g., +91 98765 43210"
-                    value="<?php echo htmlspecialchars(profile_val($profile, 'mobile'), ENT_QUOTES); ?>" required>
+                    value="<?php echo htmlspecialchars(profile_val($profile, 'companyMobile'), ENT_QUOTES); ?>"
+                    required>
             </div>
 
             <div class="form-group">
                 <label for="mobile_notify">Notification Mobile</label>
                 <input type="tel" id="mobile_notify" name="mobile_notify" class="form-control inside-shadow"
                     placeholder="e.g., +91 98765 43210"
-                    value="<?php echo htmlspecialchars(profile_val($profile, 'mobile_notify'), ENT_QUOTES); ?>">
+                    value="<?php echo htmlspecialchars(profile_val($profile, 'companyMobileNotify'), ENT_QUOTES); ?>">
             </div>
         </form>
     </div>
@@ -92,14 +94,14 @@ if (defined('SETTING_COMPANY_PROFILE')) {
             <label for="whatsapp">Primary WhatsApp <span style="color:#d00">*</span></label>
             <input type="tel" id="whatsapp" name="whatsapp" class="form-control inside-shadow"
                 placeholder="e.g., +91 98765 43210"
-                value="<?php echo htmlspecialchars(profile_val($profile, 'whatsapp'), ENT_QUOTES); ?>" required>
+                value="<?php echo htmlspecialchars(profile_val($profile, 'companyWhatsapp'), ENT_QUOTES); ?>" required>
         </div>
 
         <div class="form-group">
             <label for="whatsapp_notify">Notification WhatsApp</label>
             <input type="tel" id="whatsapp_notify" name="whatsapp_notify" class="form-control inside-shadow"
                 placeholder="e.g., +91 98765 43210"
-                value="<?php echo htmlspecialchars(profile_val($profile, 'whatsapp_notify'), ENT_QUOTES); ?>">
+                value="<?php echo htmlspecialchars(profile_val($profile, 'companyWhatsappNotify'), ENT_QUOTES); ?>">
         </div>
 
         <!-- Address -->
@@ -107,7 +109,7 @@ if (defined('SETTING_COMPANY_PROFILE')) {
             <label for="address">Registered Address <span style="color:#d00">*</span></label>
             <textarea id="address" name="address" class="form-control inside-shadow"
                 placeholder="Street, City, State, PIN / ZIP" rows="3"
-                required><?php echo htmlspecialchars(profile_val($profile, 'address'), ENT_QUOTES); ?></textarea>
+                required><?php echo htmlspecialchars(profile_val($profile, 'companyAddress'), ENT_QUOTES); ?></textarea>
         </div>
 
         <!-- Socials -->
@@ -115,34 +117,34 @@ if (defined('SETTING_COMPANY_PROFILE')) {
             <label for="facebook">Facebook</label>
             <input type="url" id="facebook" name="facebook" class="form-control inside-shadow"
                 placeholder="https://facebook.com/yourpage"
-                value="<?php echo htmlspecialchars(profile_val($profile, 'facebook'), ENT_QUOTES); ?>">
+                value="<?php echo htmlspecialchars(profile_val($profile, 'companyFacebookProfile'), ENT_QUOTES); ?>">
         </div>
 
         <div class="form-group">
             <label for="x">X (formerly Twitter)</label>
             <input type="url" id="x" name="x" class="form-control inside-shadow" placeholder="https://x.com/yourhandle"
-                value="<?php echo htmlspecialchars(profile_val($profile, 'x'), ENT_QUOTES); ?>">
+                value="<?php echo htmlspecialchars(profile_val($profile, 'companyTwitterProfile'), ENT_QUOTES); ?>">
         </div>
 
         <div class="form-group">
             <label for="linkedin">LinkedIn</label>
             <input type="url" id="linkedin" name="linkedin" class="form-control inside-shadow"
                 placeholder="https://linkedin.com/company/yourcompany"
-                value="<?php echo htmlspecialchars(profile_val($profile, 'linkedin'), ENT_QUOTES); ?>">
+                value="<?php echo htmlspecialchars(profile_val($profile, 'companyLinkedinProfile'), ENT_QUOTES); ?>">
         </div>
 
         <div class="form-group">
             <label for="instagram">Instagram</label>
             <input type="url" id="instagram" name="instagram" class="form-control inside-shadow"
                 placeholder="https://instagram.com/yourhandle"
-                value="<?php echo htmlspecialchars(profile_val($profile, 'instagram'), ENT_QUOTES); ?>">
+                value="<?php echo htmlspecialchars(profile_val($profile, 'companyInstagramProfile'), ENT_QUOTES); ?>">
         </div>
 
         <div class="form-group">
             <label for="youtube">YouTube</label>
             <input type="url" id="youtube" name="youtube" class="form-control inside-shadow"
                 placeholder="https://youtube.com/@yourchannel"
-                value="<?php echo htmlspecialchars(profile_val($profile, 'youtube'), ENT_QUOTES); ?>">
+                value="<?php echo htmlspecialchars(profile_val($profile, 'companyYoutubeProfile'), ENT_QUOTES); ?>">
         </div>
 
         <!-- Hidden meta -->

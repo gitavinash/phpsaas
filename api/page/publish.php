@@ -29,6 +29,8 @@ function publish($connection, $data)
             ? '/'
             : '/' . preg_replace('~[^\p{M}\w-]+~u', '-', $title) . '/';
 
+        $title = ($pageTitle === 'home' || $pageTitle === 'homepage') ? 'homepage' : $title;
+
         /* define facebook and twitter meta desciption */
 
         $fb_desc = (($fb_desc == '') ? $meta_desc : $fb_desc);

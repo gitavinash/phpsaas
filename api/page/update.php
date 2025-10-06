@@ -46,6 +46,7 @@ function update($connection, $data)
                     ? '/'
                     : '/' . preg_replace('~[^\p{M}\w-]+~u', '-', $title) . '/';
 
+                $title = ($pageTitle === 'home' || $pageTitle === 'homepage') ? 'homepage' : $title;
 
                 $linkID = $link_id;
                 $highlight = (isset($highlight) ? $highlight : '');

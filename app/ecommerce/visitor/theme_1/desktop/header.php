@@ -2,6 +2,14 @@
 
 require_once MENU_FUNCTIONS;
 
+if (defined('SETTING_COMPANY_PROFILE')) {
+    $companyProfile = json_decode(SETTING_COMPANY_PROFILE, true);
+    if (json_last_error() === JSON_ERROR_NONE && is_array($companyProfile)) {
+        extract($companyProfile, EXTR_SKIP);
+    }
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

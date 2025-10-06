@@ -7,21 +7,21 @@
                     <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo"
                         class="h-8 brightness-0 invert">
                 </a>
-                <p class="text-white-400 mb-6">Crafting unique home décor pieces that tell your story since 2022.</p>
+                <p class="text-white-400 mb-6"><?php echo ((isset($companyIntro)) ? $companyIntro : ''); ?></p>
                 <div class="flex space-x-4">
-                    <a href="#"
+                    <a href="<?php echo ((isset($companyFacebookProfile)) ? $companyFacebookProfile : ''); ?>"
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition">
                         <i class="ri-facebook-fill"></i>
                     </a>
-                    <a href="#"
+                    <a href="<?php echo ((isset($companyInstagramProfile)) ? $companyInstagramProfile : ''); ?>"
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition">
                         <i class="ri-instagram-line"></i>
                     </a>
-                    <a href="#"
+                    <a href="<?php echo ((isset($companyYoutubeProfile)) ? $companyYoutubeProfile : ''); ?>"
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition">
-                        <i class="ri-pinterest-line"></i>
+                        <i class="ri-youtube-line"></i>
                     </a>
-                    <a href="#"
+                    <a href="<?php echo ((isset($companyTwitterProfile)) ? $companyTwitterProfile : ''); ?>"
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition">
                         <i class="ri-twitter-x-line"></i>
                     </a>
@@ -47,25 +47,25 @@
                 <div>
                     <p class="text-gray-600 font-medium mb-1">Address</p>
                     <address class="not-italic text-gray-700 leading-relaxed">
-                        House No. 51, Shop No. 1, Banjara Market,<br />
-                        Sector 58, Ghata, Haryana 122011
+                        <?php echo ((isset($companyAddress)) ? $companyAddress : '') ?>
                     </address>
                 </div>
 
                 <!-- Phone -->
                 <div>
                     <p class="text-gray-600 font-medium mb-1">Call</p>
-                    <a href="tel:+919810494275" class="text-blue-600 hover:underline">
-                        +91&nbsp;98104&nbsp;94275
+                    <a href="tel:+91<?php echo ((isset($companyMobile)) ? $companyMobile : '') ?>"
+                        class="text-blue-600 hover:underline">
+                        +91<?php echo ((isset($companyMobile)) ? $companyMobile : '') ?>
                     </a>
                 </div>
 
                 <!-- WhatsApp -->
                 <div>
                     <p class="text-gray-600 font-medium mb-1">WhatsApp</p>
-                    <a href="https://wa.me/919810494275" target="_blank" rel="noopener"
-                        class="text-green-600 hover:underline">
-                        +91&nbsp;98104&nbsp;94275
+                    <a href="https://wa.me/91<?php echo ((isset($companyWhatsapp)) ? $companyWhatsapp : '') ?>"
+                        target="_blank" rel="noopener" class="text-green-600 hover:underline">
+                        +91<?php echo ((isset($companyWhatsapp)) ? $companyWhatsapp : '') ?>
                     </a>
                 </div>
             </div>

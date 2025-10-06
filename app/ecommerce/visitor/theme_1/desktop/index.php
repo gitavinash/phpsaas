@@ -264,34 +264,10 @@ if ($recentProducts = mysqli_query($connection, "
 <!-- About Preview -->
 <section class="py-20 px-6">
     <div class="container mx-auto">
-        <div class="flex flex-col md:flex-row items-center md:items-stretch">
-
-            <!-- Image Section -->
-            <div class="w-full md:w-1/2 mb-10 md:mb-0 md:pr-10 flex justify-center items-center">
-                <img src="<?php echo SITE_LOGO ?>" style="background:<?php echo SITE_THEME_COLOUR ?>"
-                    alt="<?php echo SITE_NAME ?>" class="w-full h-full rounded-lg shadow-md" />
-            </div>
-
-            <!-- Text Section -->
-            <div class="w-full md:w-1/2 md:pl-10 flex flex-col justify-center">
-                <h2 class="serif text-3xl md:text-4xl mb-6">Our Story</h2>
-                <p class="text-gray-700 mb-6 leading-relaxed">
-                    Vinod Home Decor was established in 2022 and is proudly based in Gurugram’s vibrant Banjara Market.
-                    Born from a love for timeless craftsmanship and aesthetic living, we are dedicated to creating home
-                    décor pieces that transform houses into warm, inviting homes.
-                </p>
-                <p class="text-gray-700 mb-8 leading-relaxed">
-                    Every product in our collection is thoughtfully curated and handcrafted, blending traditional
-                    artistry with modern design. From rustic accents to elegant statement pieces, our creations reflect
-                    both charm and functionality.
-                </p>
-                <p class="text-gray-700 mb-8 leading-relaxed">
-                    At Vinod Home Decor, we believe home décor is more than just decoration — it’s an expression of
-                    personality, memories, and the little details that make every space truly unique.
-                </p>
-            </div>
-
-        </div>
+        <?php
+        $homepageContent = getHomepageContent($connection);
+        echo $homepageContent['homepageContent'];
+        ?>
     </div>
 </section>
 

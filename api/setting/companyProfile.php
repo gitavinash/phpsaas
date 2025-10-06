@@ -105,21 +105,21 @@ if (!empty($errors)) {
 
 // -------- Build profile object (exact schema) --------
 $profile = [
-    'company_name'     => $company_name,
-    'owner_name'       => $owner_name,
-    'intro'            => $intro,
-    'email'            => $account_email, // optional/legacy
-    'email_notify'     => $email_notify,
-    'mobile'           => $mobile,
-    'mobile_notify'    => $mobile_notify,
-    'whatsapp'         => $whatsapp,
-    'whatsapp_notify'  => $whatsapp_notify,
-    'address'          => $address,
-    'facebook'         => $facebook,
-    'x'                => $x,
-    'linkedin'         => $linkedin,
-    'instagram'        => $instagram,
-    'youtube'          => $youtube,
+    'companyName'     => $company_name,
+    'companyOwnerName'       => $owner_name,
+    'companyIntro'            => $intro,
+    'companyEmail'            => $account_email, // optional/legacy
+    'companyEmailNotify'     => $email_notify,
+    'companyMobile'           => $mobile,
+    'companyMobileNotify'    => $mobile_notify,
+    'companyWhatsapp'         => $whatsapp,
+    'companyWhatsappNotify'  => $whatsapp_notify,
+    'companyAddress'          => $address,
+    'companyFacebookProfile'         => $facebook,
+    'companyTwitterProfile'                => $x,
+    'companyLinkedinProfile'         => $linkedin,
+    'companyInstagramProfile'        => $instagram,
+    'companyYoutubeProfile'          => $youtube,
 ];
 
 $json = json_encode($profile, JSON_UNESCAPED_SLASHES);

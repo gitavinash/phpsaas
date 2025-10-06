@@ -234,3 +234,19 @@ function getSlider($conn, $sliderName = '')
 
     return $out;
 }
+
+function getHomepageContent($conn)
+{
+    $query = "SELECT page_description as homepageContent FROM " . TABLE_PREFIX . "page WHERE page_title='homepage' AND page_status=1 AND page_site_id=" . SITE_ID;
+
+    $resData = mysqli_query($conn, $query);
+    if (!$resData) {
+        return [];
+    } else {
+        $out = mysqli_fetch_assoc($resData);
+    }
+
+    mysqli_free_result($resData);
+
+    return $out;
+}
