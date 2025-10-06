@@ -125,7 +125,7 @@ include_once 'header.php';
             </div>
             <h3 class="font-serif text-xl mb-3">WhatsApp</h3>
             <p class="text-gray-600 mb-6">Message us directly on WhatsApp for quick responses and updates.</p>
-            <a href="https://wa.me/919810494275" target="_blank"
+            <a href="https://wa.me/91<?php echo (isset($companyWhatsapp) ? $companyWhatsapp : '') ?>" target="_blank"
                 class="inline-block bg-[#25D366] text-white px-6 py-3 rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors">WhatsApp
                 Us</a>
         </div>
@@ -137,7 +137,7 @@ include_once 'header.php';
             </div>
             <h3 class="font-serif text-xl mb-3">Email Support</h3>
             <p class="text-gray-600 mb-6">Send us an email and we'll get back to you within 24 hours.</p>
-            <a href="mailto:vinodhomedecor78@gmail.com"
+            <a href="mailto:<?php echo (isset($companyEmail) ? $companyEmail : '') ?>"
                 class="inline-block border border-primary text-primary px-6 py-3 rounded-button whitespace-nowrap hover:bg-primary hover:text-white transition-colors">Email
                 Us</a>
         </div>
@@ -150,11 +150,12 @@ include_once 'header.php';
             <h3 class="font-serif text-xl mb-3">Social Media</h3>
             <p class="text-gray-600 mb-6">Connect with us on social media for updates and inspiration.</p>
             <div class="flex justify-center space-x-3">
-                <a href="https://www.facebook.com/profile.php?id=61560513337525" target="_blank"
+                <a href="<?php echo (isset($companyFacebookProfile) ? $companyFacebookProfile : '') ?>" target="_blank"
                     class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
                     <i class="ri-facebook-fill"></i>
                 </a>
-                <a href="https://www.instagram.com/vinodhomedecor/" target="_blank"
+                <a href="<?php echo (isset($companyInstagramProfile) ? $companyInstagramProfile : '') ?>"
+                    target="_blank"
                     class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
                     <i class="ri-instagram-line"></i>
                 </a>

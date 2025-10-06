@@ -1,5 +1,8 @@
 <?php
-$whatsappUrl = 'https://wa.me/919810494275?text=' . ((isset($link_type)) ? (($link_type == 'product') ? urlencode('i want to know about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
+
+require_once 'header.php';
+
+$whatsappUrl = 'https://wa.me/91' . (isset($companyWhatsapp) ? $companyWhatsapp : '') . '?text=' . ((isset($link_type)) ? (($link_type == 'product') ? urlencode('i want to know about ' . $product_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
 
 if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, product_meta_value FROM " . TABLE_PREFIX . "product_meta WHERE product_meta_relation_id='{$product_id}' AND product_meta_site_id=" . SITE_ID)) {
 
@@ -16,8 +19,6 @@ if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, prod
         }
     }
 }
-
-require_once 'header.php';
 
 ?>
 
@@ -331,36 +332,44 @@ WHERE p.product_status = 1
     <!-- Trust Indicators -->
     <div class="bg-gray-50 rounded-lg p-8 mb-16">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Fast & Reliable Shipping -->
             <div class="flex flex-col items-center text-center">
                 <div class="w-16 h-16 flex items-center justify-center text-primary text-3xl mb-4">
-                    <i class="ri-truck-line"></i>
+                    <i class="ri-truck-fill"></i>
                 </div>
-                <h3 class="font-semibold text-gray-800 mb-2">Fast Delivery</h3>
-                <p class="text-gray-600 text-sm">Same-day delivery available for orders placed before 11am</p>
+                <h3 class="font-semibold text-gray-800 mb-2">Fast & Reliable Shipping</h3>
+                <p class="text-gray-600 text-sm">Speedy and trackable delivery options for every order</p>
             </div>
+
+            <!-- Quality Assurance -->
             <div class="flex flex-col items-center text-center">
                 <div class="w-16 h-16 flex items-center justify-center text-primary text-3xl mb-4">
-                    <i class="ri-plant-line"></i>
+                    <i class="ri-award-line"></i>
                 </div>
-                <h3 class="font-semibold text-gray-800 mb-2">Fresh Guarantee</h3>
-                <p class="text-gray-600 text-sm">7-day freshness guarantee or your money back</p>
+                <h3 class="font-semibold text-gray-800 mb-2">Quality Guaranteed</h3>
+                <p class="text-gray-600 text-sm">Carefully sourced products backed by our quality promise</p>
             </div>
+
+            <!-- Secure Checkout -->
             <div class="flex flex-col items-center text-center">
                 <div class="w-16 h-16 flex items-center justify-center text-primary text-3xl mb-4">
-                    <i class="ri-shield-check-line"></i>
+                    <i class="ri-lock-2-line"></i>
                 </div>
-                <h3 class="font-semibold text-gray-800 mb-2">Secure Payment</h3>
-                <p class="text-gray-600 text-sm">Multiple secure payment options for your convenience</p>
+                <h3 class="font-semibold text-gray-800 mb-2">Secure Checkout</h3>
+                <p class="text-gray-600 text-sm">Protected transactions with trusted encryption methods</p>
             </div>
+
+            <!-- Responsive Support -->
             <div class="flex flex-col items-center text-center">
                 <div class="w-16 h-16 flex items-center justify-center text-primary text-3xl mb-4">
-                    <i class="ri-customer-service-2-line"></i>
+                    <i class="ri-chat-3-line"></i>
                 </div>
                 <h3 class="font-semibold text-gray-800 mb-2">Customer Support</h3>
-                <p class="text-gray-600 text-sm">Dedicated support team available 7 days a week</p>
+                <p class="text-gray-600 text-sm">Friendly assistance anytime via chat, email, or phone</p>
             </div>
         </div>
     </div>
+
 </main>
 <?php
 

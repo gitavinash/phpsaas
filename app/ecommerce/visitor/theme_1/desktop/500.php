@@ -46,20 +46,6 @@ include_once 'header.php';
                 </div>
             </form>
 
-            <div class="mt-12 pt-8 border-t border-gray-200">
-                <p class="text-gray-500 mb-4">Looking for something specific? Try these popular options:</p>
-                <div class="flex flex-wrap justify-center gap-4">
-                    <a href="/category/wall-decor/" class="text-primary hover:underline transition-colors">Wall
-                        Décor</a>
-                    <a href="/category/furniture-and-accents/"
-                        class="text-primary hover:underline transition-colors">Furniture & Accents</a>
-                    <a href="/category/lighting/" class="text-primary hover:underline transition-colors">Lighting</a>
-                    <a href="/category/showpieces-and-idols/"
-                        class="text-primary hover:underline transition-colors">Showpieces & Idols</a>
-                    <a href="/category/water-fountains/" class="text-primary hover:underline transition-colors">Water
-                        Fountains</a>
-                </div>
-            </div>
             <div class="mt-8">
                 <p class="text-gray-500 text-sm">
                     Need help? Contact our customer service at
