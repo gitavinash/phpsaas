@@ -1,84 +1,74 @@
 <?php
 
+require_once DATA_FUNCTIONS;
 require_once 'header.php';
 
-if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "slide WHERE slide_status=1 AND slider_device='" . SITE_VERSION . "' AND slide_site_id=" . SITE_ID . " ORDER BY slide_update DESC")) {
+$sliderList = getSlider($connection);
 
-    if (mysqli_num_rows($checkSlider) != 0) {
+if (count($sliderList) != 0) {
+    echo "<section
+    class='relative h-screen w-full overflow-hidden z-[50] max-h-[380px] md:max-h-[550px] float-left mt-[4.5em] mb-[2em]'>
+    <div class='slider-container relative w-full h-full transition-transform duration-500' id='heroSlider'>";
+    $slideIndex = 0;
+    foreach ($sliderList as $slide) {
+        $bgImage = htmlspecialchars($slide['slide_image']);
+        $title = htmlspecialchars($slide['slide_title']);
+        $subtitle = htmlspecialchars($slide['slide_description']);
+        $btnText = htmlspecialchars($slide['slider_cta']);
+        $btnUrl = htmlspecialchars($slide['slide_link']);
+
+        // Assign slide class
+        $slideClass = $slideIndex === 0 ? '' : 'translate-x-full';
 ?>
-<!-- Hero Section -->
-<section
-    class="relative h-screen w-full overflow-hidden z-[50] max-h-[380px] md:max-h-[550px] float-left mt-[4.5em] mb-[2em]">
-    <div class="slider-container relative w-full h-full transition-transform duration-500" id="heroSlider">
-        <?php
-                $slideIndex = 0;
-                while ($slide = mysqli_fetch_assoc($checkSlider)) {
-                    $bgImage = htmlspecialchars($slide['slide_image']);
-                    $title = htmlspecialchars($slide['slide_title']);
-                    $subtitle = htmlspecialchars($slide['slide_description']);
-                    $btnText = htmlspecialchars($slide['slider_cta']);
-                    $btnUrl = htmlspecialchars($slide['slide_link']);
-
-                    // Assign slide class
-                    $slideClass = $slideIndex === 0 ? '' : 'translate-x-full';
-                ?>
-        <a href="<?php echo $btnUrl ?>" title="<?php echo $title ?>">
-            <div class="slide absolute inset-0 bg-cover bg-left bg-no-repeat <?php echo $slideClass ?>"
-                style="background-image: url('<?php echo $bgImage ?>')">
-                <div class="absolute inset-0"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="text-center px-6 w-full">
-                        <h1 class="text-4xl md:text-6xl text-white font-medium mb-6 leading-tight">
-                            <?php echo nl2br($title) ?>
-                        </h1>
-                        <p class="text-white text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-                            <?php echo nl2br($subtitle) ?>
-                        </p>
-                        <?php if (!empty($btnText) && !empty($btnUrl)): ?>
-                        <a href="<?php echo $btnUrl ?>"
-                            class="inline-block bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap">
-                            <?php echo $btnText ?>
-                        </a>
-                        <?php endif; ?>
-                    </div>
-                </div>
+<a href='<?php echo $btnUrl ?>' title='<?php echo $title ?>'>
+    <div class='slide absolute inset-0 bg-cover bg-left bg-no-repeat <?php echo $slideClass ?>'
+        style='background-image: url(<?php echo $bgImage ?>)'>
+        <div class='absolute inset-0'></div>
+        <div class='absolute inset-0 flex items-center justify-center'>
+            <div class='text-center px-6 w-full'>
+                <h1 class='text-4xl md:text-6xl text-white font-medium mb-6 leading-tight'>
+                    <?php echo nl2br($title) ?>
+                </h1>
+                <p class='text-white text-lg md:text-xl mb-8 max-w-2xl mx-auto'>
+                    <?php echo nl2br($subtitle) ?>
+                </p>
+                <?php if (!empty($btnText) && !empty($btnUrl)): ?>
+                <a href='<?php echo $btnUrl ?>'
+                    class='inline-block bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap'>
+                    <?php echo $btnText ?>
+                </a>
+                <?php endif; ?>
             </div>
-        </a>
-        <?php
-                    $slideIndex++;
-                }
-                ?>
-    </div>
-
-    <!-- Navigation & Dots -->
-    <div class="absolute bottom-8 left-0 right-0 flex justify-center items-center space-x-6">
-        <button
-            class="slider-nav-btn prev w-10 h-10 flex items-center justify-center text-white hover:text-primary transition-colors">
-            <i class="ri-arrow-left-s-line text-2xl"></i>
-        </button>
-        <div class="flex space-x-2">
-            <?php for ($i = 0; $i < $slideIndex; $i++): ?>
-            <button
-                class="slider-dot w-3 h-3 rounded-full bg-white <?php $i === 0 ? 'bg-opacity-100' : 'bg-opacity-50' ?>"
-                data-index="<?php $i ?>"></button>
-            <?php endfor; ?>
         </div>
-        <button
-            class="slider-nav-btn next w-10 h-10 flex items-center justify-center text-white hover:text-primary transition-colors">
-            <i class="ri-arrow-right-s-line text-2xl"></i>
-        </button>
     </div>
-</section>
+</a>
 <?php
+
+        $slideIndex++;
     }
+    echo "<div class='absolute bottom-8 left-0 right-0 flex justify-center items-center space-x-6'>
+        <button
+            class='slider-nav-btn prev w-10 h-10 flex items-center justify-center text-white hover:text-primary transition-colors'>
+            <i class='ri-arrow-left-s-line text-2xl'></i>
+        </button>
+        <div class='flex space-x-2'>";
+    for ($i = 0; $i < $slideIndex; $i++): ?>
+<button class='slider-dot w-3 h-3 rounded-full bg-white <?php $i === 0 ? 'bg-opacity-100' : 'bg-opacity-50' ?>'
+    data-index='<?php $i ?>'></button>
+<?php endfor;
+    echo "</div>
+<button
+    class='slider-nav-btn next w-10 h-10 flex items-center justify-center text-white hover:text-primary transition-colors'>
+    <i class='ri-arrow-right-s-line text-2xl'></i>
+</button>
+</div>
+</section>";
 }
-?>
 
-
-
-<?php
-
-if ($featureCategory = mysqli_query($connection, "SELECT link_url, category_title, category_image FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "category ON link_relation_id=category_id AND category_type='product' AND category_site_id=" . SITE_ID . " WHERE link_status=200 AND link_type='category' AND link_is_featured=1 AND link_site_id=" . SITE_ID . " ORDER BY RAND() LIMIT 0, 10")) {
+if ($featureCategory = mysqli_query($connection, "SELECT link_url, category_title, category_image FROM " . TABLE_PREFIX
+    . "link INNER JOIN " . TABLE_PREFIX . "category ON link_relation_id=category_id AND category_type='product' AND
+category_site_id=" . SITE_ID . " WHERE link_status=200 AND link_type='category' AND link_is_featured=1 AND
+link_site_id=" . SITE_ID . " ORDER BY RAND() LIMIT 0, 10")) {
     if (mysqli_num_rows($featureCategory) != 0) {
         echo '<section class="py-20 px-6">
     <div class="container mx-auto">
@@ -87,26 +77,27 @@ if ($featureCategory = mysqli_query($connection, "SELECT link_url, category_titl
         while ($categoryData = mysqli_fetch_assoc($featureCategory)) {
             extract($categoryData);
             echo "
-                <a href='{$link_url}' title='{$category_title}' class='group block'>
-                    <div class='relative h-40 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100'>
-                        
-                        <!-- Background Image with Zoom -->
-                        <div class='absolute inset-0 bg-cover bg-center transform transition-transform duration-700 group-hover:scale-110'
-                             style='background-image: url({$category_image});'></div>
-                        
-                        <!-- Black Overlay -->
-                        <div class='absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all duration-300'></div>
-                        
-                        <!-- Text -->
-                        <div class='relative flex items-center justify-center h-full p-4'>
-                            <p class='text-center text-white font-medium text-lg'>{$category_title}</p>
-                        </div>
+            <a href='{$link_url}' title='{$category_title}' class='group block'>
+                <div
+                    class='relative h-40 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100'>
+
+                    <!-- Background Image with Zoom -->
+                    <div class='absolute inset-0 bg-cover bg-center transform transition-transform duration-700 group-hover:scale-110'
+                        style='background-image: url({$category_image});'></div>
+
+                    <!-- Black Overlay -->
+                    <div class='absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all duration-300'></div>
+
+                    <!-- Text -->
+                    <div class='relative flex items-center justify-center h-full p-4'>
+                        <p class='text-center text-white font-medium text-lg'>{$category_title}</p>
                     </div>
-                </a>
+                </div>
+            </a>
             ";
         }
         echo "
-</div>
+        </div>
 </section>
 </div>";
     }

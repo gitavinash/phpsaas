@@ -268,6 +268,9 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
                             <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
+                            <li><a href="setting/?type=company_profile"><i class="fas fa-building"></i> Company
+                                    Profile</a>
+                            </li>
                             <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
                             <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i>
                                     URL redirection</a></li>
@@ -277,6 +280,9 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         <ul>
                             <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
                             <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
+                            </li>
+                            <li><a href="setting/?type=company_profile"><i class="fas fa-building"></i> Company
+                                    Profile</a>
                             </li>
                             <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
                             <li><a href="setting/?type=redirection&status=all"><i class="fas fa-external-link-alt"></i>

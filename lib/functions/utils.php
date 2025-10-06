@@ -127,3 +127,20 @@ function clearAllCookies()
         ]);
     }
 }
+
+function safe_html($string)
+{
+    return htmlspecialchars((string)$string, ENT_QUOTES, 'UTF-8');
+}
+function get_object_from_constant(string $menu_name): array
+{
+    if (!defined($menu_name)) {
+        return [];
+    }
+    $json = constant($menu_name);
+    $decoded = json_decode($json, true);
+    if (json_last_error() !== JSON_ERROR_NONE || !is_array($decoded)) {
+        return [];
+    }
+    return $decoded;
+}

@@ -251,3 +251,9 @@ input:focus {
   color: inherit;
   line-height: inherit;
 }
+
+section,
+footer {
+  float: left !important;
+  width: 100% !important;
+}

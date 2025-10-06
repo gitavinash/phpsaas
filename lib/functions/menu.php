@@ -1,32 +1,7 @@
 <?php
 
-/**
- * Escape safely.
- */
-function safe_html($string)
-{
-    return htmlspecialchars((string)$string, ENT_QUOTES, 'UTF-8');
-}
+require_once UTIL_FUNCTIONS;
 
-/**
- * Fetch and decode items from a constant (e.g., 'SITE_NAV_MAIN_HEADER').
- */
-function get_menu_items_from_constant(string $menu_name): array
-{
-    if (!defined($menu_name)) {
-        return [];
-    }
-    $json = constant($menu_name);
-    $decoded = json_decode($json, true);
-    if (json_last_error() !== JSON_ERROR_NONE || !is_array($decoded)) {
-        return [];
-    }
-    return $decoded;
-}
-
-/**
- * DESKTOP header-style renderer (hover dropdowns / fly-outs).
- */
 function render_menu_with_children(array $items, int $depth = 0): void
 {
     foreach ($items as $item) {
@@ -149,7 +124,7 @@ function render_mobile_menu(array $items, int $depth = 0): void
  */
 function generateMenu(string $menu_name, string $type = 'dropdown', bool $echo = true)
 {
-    $items = get_menu_items_from_constant($menu_name);
+    $items = get_object_from_constant($menu_name);
 
     switch ($type) {
         case 'plain':
