@@ -1,4 +1,6 @@
 <?php
+
+
 header('Content-Type: application/json; charset=UTF-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -7,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+require_once UTIL_FUNCTIONS;
 require_once LOGIN_CHECK;
 
 $SITE_ID  = defined('SITE_ID') ? SITE_ID : 0;
@@ -49,6 +52,13 @@ $youtube          = $get('youtube');
 
 // Optional legacy email slot (not in current form, harmless if empty)
 $account_email    = $get('email');
+
+
+// ---- Normalize Indian numbers BEFORE validation ----
+$mobile          = normalizeIndianMobile($mobile);
+$mobile_notify   = $mobile_notify !== '' ? normalizeIndianMobile($mobile_notify) : '';
+$whatsapp        = normalizeIndianMobile($whatsapp);
+$whatsapp_notify = $whatsapp_notify !== '' ? normalizeIndianMobile($whatsapp_notify) : '';
 
 // -------- Validate --------
 $errors = [];

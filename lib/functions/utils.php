@@ -144,3 +144,24 @@ function get_object_from_constant(string $menu_name): array
     }
     return $decoded;
 }
+
+function normalizeIndianMobile($input)
+{
+    // Remove everything except digits
+    $num = preg_replace('/\D/', '', $input);
+
+    // Remove leading country code patterns like +91, 91, 0091
+    if (preg_match('/^(91|0091)/', $num)) {
+        $num = preg_replace('/^(91|0091)/', '', $num);
+    }
+
+    // Remove leading zero if present (e.g., 09876543210)
+    $num = ltrim($num, '0');
+
+    // Now it should be exactly 10 digits starting with 6-9
+    if (preg_match('/^[6-9]\d{9}$/', $num)) {
+        return $num; // valid normalized Indian number
+    }
+
+    return false; // invalid number
+}
