@@ -272,9 +272,54 @@ if ($recentProducts = mysqli_query($connection, "
 </section>
 
 
+<?php
+$testimonialsList = testimonialsList($connection, 10);
+if (!empty($testimonialsList)) {
+    echo "<section class='py-20 px-6'>
+    <div class='container mx-auto'>";
+    echo '<h2 class="serif text-3xl md:text-4xl mb-10 text-center">What Our Customers Say</h2>';
+    echo "<div class='relative'>
+  <!-- Viewport -->
+  <div class='overflow-hidden'>
+    <!-- Track -->
+    <div id='tTrack' class='flex transition-transform duration-500 ease-out'>";
+    foreach ($testimonialsList as $testimonials) {
+        echo "<div class='t-slide px-3'>
+  <div class='h-full bg-white border border-gray-100 rounded-xl shadow-sm p-6 flex flex-col'>
+    <div class='flex items-center gap-4 mb-4'>
+      <img src='" . (($testimonials['category_image'] != '') ? $testimonials['category_image'] : IMG_LIBRARY . 'default-profile.png') . "'
+alt='{$testimonials['category_title']} photo'
+class='w-12 h-12 rounded-full object-cover border'>
+<div>
+    <div class='font-semibold text-gray-900'>{$testimonials['category_title']}</div>
+<div class='text-xs text-gray-400'>Verified Customer</div>
+</div>
+</div>
+<div style='text-align: justify' >" . $testimonials['category_description'] . "</div>
+</div>
+</div>";
+    }
+    echo "</div>
+</div>
+</div>";
+    echo "
+<div id='tDots' class='flex justify-center gap-2 mt-6'></div>
+<button id='tPrev'
+    class='absolute -left-3 md:-left-6 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white border hover:border-primary hover:text-primary shadow'>
+    <i class='ri-arrow-left-s-line text-xl'></i>
+</button>
+<button id='tNext'
+    class='absolute -right-3 md:-right-6 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white border hover:border-primary hover:text-primary shadow'>
+    <i class='ri-arrow-right-s-line text-xl'></i>
+</button>";
+    echo "</div>
+</section>";
+}
+?>
+
 
 <!-- Newsletter Section -->
-<!-- <section class="py-20 newsletter-container">
+<section class="py-20 newsletter-container">
     <div class="container mx-auto px-6">
         <div class="max-w-xl mx-auto text-center">
             <h2 class="serif text-3xl md:text-4xl mb-4">Join Our Mailing List</h2>
@@ -294,7 +339,7 @@ if ($recentProducts = mysqli_query($connection, "
             </label>
         </div>
     </div>
-</section> -->
+</section>
 <?php
 
 require_once 'footer.php';
