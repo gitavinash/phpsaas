@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <g id="prefix__wallet" transform="translate(-5219 5702)">
+        <path id="prefix__Rectangle_160" d="M0 0H32V32H0z" data-name="Rectangle 160" transform="translate(5219 -5702)" style="fill:none"/>
+        <g id="prefix__wallet_2_" data-name="wallet (2)" transform="translate(5223 -5740.308)">
+            <g id="prefix__Group_1684" data-name="Group 1684" transform="translate(0 44.308)">
+                <g id="prefix__Group_1683" data-name="Group 1683">
+                    <path id="prefix__Path_24338" d="M20.538 44.308H3.462A3.465 3.465 0 0 0 0 47.77v12.923a3.465 3.465 0 0 0 3.462 3.462h17.076A3.465 3.465 0 0 0 24 60.693V47.77a3.465 3.465 0 0 0-3.462-3.462zm2.077 12h-5.077a2.077 2.077 0 0 1 0-4.154h5.077zm0-5.538h-5.077a3.462 3.462 0 1 0 0 6.923h5.077v3a2.079 2.079 0 0 1-2.077 2.077H3.462a2.079 2.079 0 0 1-2.077-2.077V47.77a2.079 2.079 0 0 1 2.077-2.077h17.076a2.079 2.079 0 0 1 2.077 2.077v3z" data-name="Path 24338" transform="translate(0 -44.308)" style="fill:#333;stroke:#333;stroke-width:.3px"/>
+                    <path id="prefix__Path_24340" d="M4.75 0H9.5a.75.75 0 1 1 0 1.5H4.75a.75.75 0 0 1 0-1.5z" data-name="Path 24340" transform="rotate(180 7.124 8.25)" style="fill:#618d3d"/>
+                </g>
+            </g>
+            <g id="prefix__Group_1686" data-name="Group 1686" transform="translate(16.846 53.539)">
+                <g id="prefix__Group_1685" data-name="Group 1685">
+                    <path id="prefix__Path_24339" d="M361 241.231h-.923a.692.692 0 1 0 0 1.385H361a.692.692 0 1 0 0-1.385z" data-name="Path 24339" transform="translate(-359.385 -241.231)" style="stroke:#618d3d;stroke-width:.5px;fill:#618d3d"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
