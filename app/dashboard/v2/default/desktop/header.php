@@ -1,5 +1,7 @@
 <?php
 
+require_once UTIL_FUNCTIONS;
+
 $appDashboardDirectory = ADMIN_PATH . 'dashboard/app/';
 $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';

@@ -1,5 +1,9 @@
 <?php
 $statusCondition = '';
+$nameCondition = '';
+$emailCondition = '';
+$mobileCondition = '';
+
 if (isset($leadStatus)) {
     $statusCondition = "e.enquiry_status={$leadStatus} AND ";
 }
@@ -9,9 +13,25 @@ if (isset($daterange)) {
     $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
     $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
 } else {
-    $startDate = date("Y-m-d 00:00:00", strtotime("-12 month"));
+    $startDate = date("Y-m-d 00:00:00", strtotime("-1 month"));
     $endDate = date("Y-m-d 23:59:59");
 }
+
+if (isset($leadEmail)) {
+    $emailCondition = " e.enquiry_email='{$leadEmail}' AND ";
+}
+
+if (isset($leadMobile)) {
+    $leadMobile = normalizeIndianMobile($leadMobile);
+    $mobileCondition = " e.enquiry_mobile='{$leadMobile}' AND ";
+}
+
+if (isset($leadName)) {
+    $nameCondition = " e.enquiry_first_name LIKE '%{$leadName}%' AND ";
+}
+// if (isset($leadName)) {
+//     $nameCondition = " CONCAT_WS(' ', e.enquiry_first_name, e.enquiry_middle_name, e.enquiry_last_name) LIKE CONCAT('%{$leadName}%') AND ";
+// }
 
 $user_filter = '';
 
@@ -41,12 +61,13 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
 ?>
 <h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List<span>All hostings list will be displayed here</span>
 </h2>
-<div class="main-box">
+<div class="box-1">
     <div class="shortcut">
-        <a href="/dashboard/leads/add/"><i class="fi fi-rr-plus"></i></a>
+        <a href="#" id="showFilterPopUp" data-title="Filter leads" style="background: #167a92;"><i
+                class="fi fi-rr-filter"></i></a>
+        <a href="/dashboard/leads/add/" data-title="Add new leads"><i class="fi fi-rr-plus"></i></a>
     </div>
-    <section>
-        <!-- <div class="filters">
+    <!-- <div class="filters">
             <div class="form-group">
                 <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
                 <select id="hostingStatus">
@@ -64,49 +85,49 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                 <input type="text" class="dateRangePicker" placeholder="Select date range">
             </div>
         </div> -->
-        <div class="list-box">
-            <table class="showTableList nowrap">
-                <thead>
-                    <tr>
-                        <?php
+    <div class="list-box">
+        <table class="showTableList nowrap">
+            <thead>
+                <tr>
+                    <?php
 
-                        if ($site_access_type == 'digital_marketing') { ?>
-                        <th>Name</th>
-                        <th>Subject</th>
-                        <th>Time</th>
-                        <th>Source</th>
-                        <th>Status</th>
-                        <?php
-                        } else { ?>
-                        <th>Name</th>
-                        <!-- <th>Email</th> -->
-                        <th>Mobile</th>
-                        <?php echo ((SITE_APP == 'astro_client') ? '<th>Alternate mobile</th>' : '') ?>
-                        <th>Subject</th>
-                        <th>Time</th>
-                        <?php
+                    if ($site_access_type == 'digital_marketing') { ?>
+                    <th>Name</th>
+                    <th>Subject</th>
+                    <th>Time</th>
+                    <th>Source</th>
+                    <th>Status</th>
+                    <?php
+                    } else { ?>
+                    <th>Name</th>
+                    <!-- <th>Email</th> -->
+                    <th>Mobile</th>
+                    <?php echo ((SITE_APP == 'astro_client') ? '<th>Alternate mobile</th>' : '') ?>
+                    <th>Subject</th>
+                    <th>Time</th>
+                    <?php
 
-                            if ($site_access_type != 'agent') {
-                                echo "<th>Source</th><th>Assign to</th>";
-                            }
-                            if (SITE_APP != 'astro_client') {
-                                echo "<th>Recent note</th>";
-                            }
-
-                            ?>
-                        <th>Status</th>
-                        <th></th>
-                        <?php
-
+                        if ($site_access_type != 'agent') {
+                            echo "<th>Source</th><th>Assign to</th>";
+                        }
+                        if (SITE_APP != 'astro_client') {
+                            echo "<th>Recent note</th>";
                         }
 
                         ?>
-                    </tr>
-                </thead>
-                <tbody>
+                    <th>Status</th>
+                    <th></th>
                     <?php
 
-                    if ($dataList = mysqli_query($connection, "SELECT
+                    }
+
+                    ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+
+                $enquiryQuery = "SELECT
     e.enquiry_id,
     e.enquiry_time,
     CASE
@@ -139,147 +160,206 @@ LEFT JOIN
 WHERE
     {$user_filter}
     {$statusCondition}
+    {$nameCondition}
+    {$mobileCondition}
+    {$emailCondition}
     e.enquiry_site_id = " . SITE_ID . "
     AND enquiry_time BETWEEN '{$startDate}' AND '{$endDate}'
     GROUP BY enquiry_id
 ORDER BY
-    e.enquiry_time DESC
-LIMIT
-    0, 1000")) {
-                        if (mysqli_num_rows($dataList) != 0) {
-                            while ($data = mysqli_fetch_assoc($dataList)) {
-                                extract($data);
+    e.enquiry_time DESC";
 
-                                switch ($enquiry_status) {
-                                    case 1:
-                                        $leadCurrentStatus = 'Success';
-                                        break;
-                                    case 2:
-                                        $leadCurrentStatus = 'Pending';
-                                        break;
-                                    case 3:
-                                        $leadCurrentStatus = 'Follow up';
-                                        break;
-                                    case 4:
-                                        $leadCurrentStatus = 'Failed';
-                                        break;
-                                    case 5:
-                                        $leadCurrentStatus = 'Duplicate';
-                                        break;
-                                    case 6:
-                                        $leadCurrentStatus = 'Payment initiate';
-                                        break;
-                                    default:
-                                        $leadCurrentStatus = 'Initiate';
-                                        break;
-                                }
+                if ($dataList = mysqli_query($connection, $enquiryQuery)) {
+                    if (mysqli_num_rows($dataList) != 0) {
+                        while ($data = mysqli_fetch_assoc($dataList)) {
+                            extract($data);
 
-                    ?>
-                    <tr>
-                        <?php
+                            switch ($enquiry_status) {
+                                case 1:
+                                    $leadCurrentStatus = 'Success';
+                                    break;
+                                case 2:
+                                    $leadCurrentStatus = 'Pending';
+                                    break;
+                                case 3:
+                                    $leadCurrentStatus = 'Follow up';
+                                    break;
+                                case 4:
+                                    $leadCurrentStatus = 'Failed';
+                                    break;
+                                case 5:
+                                    $leadCurrentStatus = 'Duplicate';
+                                    break;
+                                case 6:
+                                    $leadCurrentStatus = 'Payment initiate';
+                                    break;
+                                case 8:
+                                    $leadCurrentStatus = 'Closed';
+                                    break;
+                                default:
+                                    $leadCurrentStatus = 'Initiate';
+                                    break;
+                            }
 
-                                    if ($site_access_type == 'digital_marketing') { ?>
-                        <td><?php echo ucwords($enquiry_first_name) ?></td>
-                        <td><?php echo $enquiry_subject; ?></td>
-                        <td>
-                            <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
-                        <td><?php echo ucwords($enquiry_source) ?></td>
-                        <td><?php echo ucwords($leadCurrentStatus) ?></td>
-                        <?php
-                                    } else { ?>
-                        <td><?php echo ucwords($enquiry_first_name) ?></td>
-                        <!-- <td><?php echo $enquiry_email; ?></td> -->
-                        <td><?php echo $enquiry_mobile; ?></td>
-                        <?php
+                ?>
+                <tr>
+                    <?php
 
-                                        if (SITE_APP == 'astro_client') { ?>
-                        <td><?php echo $enquiry_alt_mobile; ?></td>
-                        <?php
-                                        }
+                                if ($site_access_type == 'digital_marketing') { ?>
+                    <td><?php echo ucwords($enquiry_first_name) ?></td>
+                    <td><?php echo $enquiry_subject; ?></td>
+                    <td>
+                        <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
+                    <td><?php echo ucwords($enquiry_source) ?></td>
+                    <td><?php echo ucwords($leadCurrentStatus) ?></td>
+                    <?php
+                                } else { ?>
+                    <td><?php echo ucwords($enquiry_first_name) ?></td>
+                    <!-- <td><?php echo $enquiry_email; ?></td> -->
+                    <td><?php echo $enquiry_mobile; ?></td>
+                    <?php
 
-                                        ?>
-                        <td><?php echo $enquiry_subject; ?></td>
-                        <td>
-                            <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
-                        <?php
-
-                                        if ($site_access_type != 'agent') { ?>
-                        <td><?php echo ucwords($enquiry_source) ?></td>
-                        <td>
-                            <form method="POST">
-                                <?php
-                                                    if ($site_access_type != 'agent' && $enquiry_status == 0 && $agent_display_name == null) { ?>
-                                <select class="selectJS form-control" name="userId" required>
-                                    <option value="">Select user</option>
-                                    <?php
-
-                                                            for ($i = 0; $i < sizeof($userList); $i++) {
-                                                                echo "<option value='" . base64_encode($userList[$i]['id'] . '_' . $userList[$i]['name']) . "'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
-                                                            }
-
-                                                            ?>
-                                </select>
-                                <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
-                                <input type="hidden" name="action" value="assign">
-                                <input type="hidden" name="type" value="leads">
-                                <input type="submit" value="Assign lead to user"
-                                    class="btn dataTableSubmitBtn dataTableBtn">
-                                <?php
-                                                    } else {
-                                                        echo $agent_display_name;
-                                                    }
-                                                    ?>
-                            </form>
-                        </td>
-                        <?php
-                                        }
-
-                                        if (SITE_APP != 'astro_client') { ?>
-                        <td>
-                            <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
-                        </td>
-                        <?php
-                                        }
-
-                                        ?>
-                        </td>
-                        <td><?php echo $leadCurrentStatus ?></td>
-                        <td>
-                            <a href='leads/view/?id=<?php echo base64_encode($enquiry_id) ?>' target='_blank'
-                                class='tableActionIconBtn' title='View package' data-title='View package'><i
-                                    class="fi-rr-eye bgWhite"></i></a>
-                            <?php
-
-                                            if ($enquiry_status == 0 && $site_access_type != 'agent') { ?>
-
-                            <a href='#' target='_blank' class='tableActionIconBtn duplicateLead'
-                                title='Mark as Duplicate' id="<?php echo base64_encode($enquiry_id) ?>"
-                                data-title='Mark as Duplicate'><i class="fi-rr-clipoard-wrong bgYellow"></i></a>
-
-                            <?php
-                                            }
-
-                                            if ($site_access_type == 'administrator') { ?>
-                            <a href='#' target='_blank' class='tableActionIconBtn deleteButton' title='Delete lead'
-                                data-type='leads' data-id="<?php echo $enquiry_id ?>" data-title='Delete lead'><i
-                                    class="fi-rr-trash bgRed"></i></a>
-                            <?php                                        }
-
-                                            ?>
-                        </td>
-                        <?php
+                                    if (SITE_APP == 'astro_client') { ?>
+                    <td><?php echo $enquiry_alt_mobile; ?></td>
+                    <?php
                                     }
 
                                     ?>
-                    </tr>
+                    <td><?php echo $enquiry_subject; ?></td>
+                    <td>
+                        <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
                     <?php
-                            }
+
+                                    if ($site_access_type != 'agent') { ?>
+                    <td><?php echo ucwords($enquiry_source) ?></td>
+                    <td>
+                        <form method="POST">
+                            <?php
+                                                if ($site_access_type != 'agent' && $enquiry_status == 0 && $agent_display_name == null) { ?>
+                            <select class="selectJS form-control" name="userId" required>
+                                <option value="">Select user</option>
+                                <?php
+
+                                                        for ($i = 0; $i < sizeof($userList); $i++) {
+                                                            echo "<option value='" . base64_encode($userList[$i]['id'] . '_' . $userList[$i]['name']) . "'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
+                                                        }
+
+                                                        ?>
+                            </select>
+                            <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
+                            <input type="hidden" name="action" value="assign">
+                            <input type="hidden" name="type" value="leads">
+                            <input type="submit" value="Assign lead to user"
+                                class="btn dataTableSubmitBtn dataTableBtn">
+                            <?php
+                                                } else {
+                                                    echo $agent_display_name;
+                                                }
+                                                ?>
+                        </form>
+                    </td>
+                    <?php
+                                    }
+
+                                    if (SITE_APP != 'astro_client') { ?>
+                    <td>
+                        <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
+                    </td>
+                    <?php
+                                    }
+
+                                    ?>
+                    </td>
+                    <td><?php echo $leadCurrentStatus ?></td>
+                    <td>
+                        <a href='leads/view/?id=<?php echo base64_encode($enquiry_id) ?>' target='_blank'
+                            class='tableActionIconBtn' title='View package' data-title='View package'><i
+                                class="fi-rr-eye bgWhite"></i></a>
+                        <?php
+
+                                        if ($enquiry_status == 0 && $site_access_type != 'agent') { ?>
+
+                        <a href='#' target='_blank' class='tableActionIconBtn duplicateLead' title='Mark as Duplicate'
+                            id="<?php echo base64_encode($enquiry_id) ?>" data-title='Mark as Duplicate'><i
+                                class="fi-rr-clipoard-wrong bgYellow"></i></a>
+
+                        <?php
+                                        }
+
+                                        if ($site_access_type == 'administrator') { ?>
+                        <a href='#' target='_blank' class='tableActionIconBtn deleteButton' title='Delete lead'
+                            data-type='leads' data-id="<?php echo $enquiry_id ?>" data-title='Delete lead'><i
+                                class="fi-rr-trash bgRed"></i></a>
+                        <?php                                        }
+
+                                        ?>
+                    </td>
+                    <?php
+                                }
+
+                                ?>
+                </tr>
+                <?php
                         }
                     }
+                }
 
-                    ?>
-                </tbody>
-            </table>
+                ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="popUp filterBox">
+        <div class="fullScreenPopUpBox">
+            <div class="widget box-7">
+                <div class="contentArea">
+                    <form method="POST" action="#" autocomplete="off">
+                        <section class="form">
+                            <div class="step-open-box step_1_box">
+                                <div class="form-header">
+                                    <h4 class="heading">Set Filter conditions</h4>
+                                </div>
+                                <div class="form-group">
+                                    <select class="selectJS form-control" id="filterStatus" name="filterStatus">
+                                        <option value="">All statuses</option>
+                                        <option value="0">Initiated</option>
+                                        <option value="1">Successful</option>
+                                        <option value="2">Pending</option>
+                                        <option value="3">Follow-up</option>
+                                        <option value="4">Failed</option>
+                                        <option value="5">Duplicate</option>
+                                        <option value="8">Closed</option>
+                                    </select>
+                                    <label>Status</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="name" id="filterName">
+                                    <label class="form-lable">Name</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" name="filterEmail" id="filterEmail">
+                                    <label class="form-lable">Email</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="filterMobile" id="filterMobile">
+                                    <label class="form-lable">Mobile</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="dateRangePicker" name="filterDuration"
+                                        id="filterDuration">
+                                    <label class="form-lable">Duration</label>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+            <div class="widget box-3">
+                <div class="actionArea">
+                    <span class="btn popUpBtn" id="applyFilterOnLeads"><i class="fi-rr-check"></i> Apply filter</span>
+                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                        Cancel</span>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
+
 </div>

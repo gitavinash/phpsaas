@@ -911,6 +911,9 @@ $(document).ready(function (e) {
         case "approved":
           color = "#b4e2b4"; // Darkened pastel green for active
           break;
+        case "closed":
+          color = "#b4e2b4"; // Darkened pastel green for active
+          break;
         case "sold_out":
           color = "#b87085"; // Darkened pastel pinkish-red for sold out
           break;
@@ -1858,6 +1861,79 @@ $(document).ready(function (e) {
     $("#startImportProperty").on("click", function (e) {
       e.preventDefault();
       uploadCSV("fileInput", "property", "startImportProperty");
+    });
+  }
+
+  if ($("#showFilterPopUp").length) {
+    $("#showFilterPopUp").on("click", function (e) {
+      e.preventDefault();
+      $(".filterBox").show();
+    });
+
+    $("#applyFilterOnLeads").on("click", function (e) {
+      e.preventDefault();
+
+      function showLoader() {
+        var $loader = $(".pageLoader");
+        if ($loader.length) {
+          $loader.removeClass("hidden").css("display", "flex");
+        } else {
+          // Fallback overlay (no external assets)
+          var spinnerCSS = "@keyframes _spin{to{transform:rotate(360deg)}}";
+          if (!$("style[data-loader]").length) {
+            $("head").append("<style data-loader>" + spinnerCSS + "</style>");
+          }
+          var $fallback = $(
+            '<div class="pageLoader" style="position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:99999">' +
+              '<div style="width:44px;height:44px;border:4px solid #e5e7eb;border-top-color:#167a92;border-radius:50%;animation:_spin 1s linear infinite"></div>' +
+              "</div>"
+          );
+          $("body").append($fallback);
+        }
+      }
+
+      // Parse current query into an object (no URL API needed)
+      function getQueryObject() {
+        var q = window.location.search.replace(/^\?/, "");
+        var obj = {};
+        if (!q) return obj;
+        q.split("&").forEach(function (pair) {
+          if (!pair) return;
+          var kv = pair.split("=");
+          var k = decodeURIComponent(kv[0] || "");
+          var v = decodeURIComponent(kv[1] || "");
+          if (k) obj[k] = v;
+        });
+        return obj;
+      }
+
+      var params = getQueryObject();
+
+      // Read fields
+      var fields = {
+        leadStatus: $("#filterStatus").val(),
+        leadName: $("#filterName").val(),
+        leadEmail: $("#filterEmail").val(),
+        leadMobile: $("#filterMobile").val(),
+        daterange: $("#filterDuration").val(),
+      };
+
+      // Merge: set if value, delete if empty
+      $.each(fields, function (key, val) {
+        var v = $.trim(val || "");
+        if (v) {
+          params[key] = v;
+        } else {
+          delete params[key];
+        }
+      });
+
+      // Build query string & navigate (reload)
+      var qs = $.param(params); // jQuery encodes properly
+      var newUrl =
+        window.location.pathname + (qs ? "?" + qs : "") + window.location.hash;
+      showLoader();
+      window.location.assign(newUrl);
     });
   }
 

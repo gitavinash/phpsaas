@@ -1398,61 +1398,39 @@ table.dataTable thead th {
 .daterangepicker td.active:hover {
   background: #40b56f !important;
 }
-
-/* Shortcut */
-
 .shortcut {
   position: fixed;
-  border: none;
-  border-radius: 100%;
-  background: var(--success-700);
-  text-align: center;
   right: 2%;
   bottom: 3%;
-  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
-    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
-    0 100px 80px rgba(0, 0, 0, 0.12);
-  width: 60px;
-  height: 60px;
-  z-index: 9999;
-  transform: scale(1);
-  transition: transform 0.3s ease-in-out;
-}
-
-.shortcut:hover {
-  transform: scale(1.1);
-}
-
-.shortcut:active {
-  transform: scale(0.95); /* Slight zoom-out when clicked */
+  display: flex;
+  flex-direction: column; /* Stack vertically */
+  align-items: center;
+  gap: 10px; /* Space between buttons */
+  z-index: 888;
 }
 
 .shortcut a {
-  width: 100%;
-  float: left;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--success-700);
+  border-radius: 50%;
   color: #fff;
-  font-size: 30px;
-  padding: 15px;
+  font-size: 26px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease-in-out;
+  padding-top: 10px;
   box-sizing: border-box;
-  position: relative;
-  display: inline-block;
-  text-align: center;
 }
 
-.shortcut a[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  top: -30px;
-  padding: 3px 2px;
-  left: 0;
-  background: #333;
-  right: 0;
-  font-size: 12px;
-  border-radius: 7px;
-  box-sizing: border-box;
-  font-weight: 400;
-  letter-spacing: 1px;
+.shortcut a:hover {
+  transform: scale(1.1);
+}
+
+.shortcut a:active {
+  transform: scale(0.95);
 }
 
 /* Main box tabs section */
@@ -2213,16 +2191,15 @@ section.form
 }
 
 .popUp {
-  display: none;
+  display: none; /* Hidden by default */
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  margin: 0;
   position: fixed;
-  width: 100%;
-  left: 0;
+  width: 100vw;
+  height: 100vh;
   top: 0;
-  z-index: 9;
+  left: 0;
+  z-index: 888;
   background-color: rgba(0, 0, 0, 0.8);
 }
 
@@ -2239,7 +2216,7 @@ section.form
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   overflow-y: scroll;
-  max-height: 600px;
+  max-height: 500px;
 }
 
 .popUp .contentArea form {
@@ -2276,8 +2253,8 @@ section.form
   background: var(--brand-700);
   padding: 10% 5%;
   box-sizing: border-box;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
   /* height: 100vh; */
   max-height: 600px;
 }
@@ -2322,8 +2299,10 @@ section.form
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #fff; /* Optional, for contrast */
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  border-radius: 8px; /* Optional */
 }
 
 .itinerarySearchBox {
