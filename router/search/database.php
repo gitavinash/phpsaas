@@ -13,32 +13,50 @@ if ($raw === '') {
     exit;
 }
 
-/** Build strict(+word*) and loose(word*) boolean queries */
-if (!function_exists('buildBooleanQueries')) {
-    function buildBooleanQueries(string $q): array
-    {
-        $q = trim(mb_strtolower($q));
-        $q = preg_replace('/[^\p{L}\p{N}\s]+/u', ' ', $q);
-        $parts = preg_split('/\s+/', $q, -1, PREG_SPLIT_NO_EMPTY);
-        $tokens = [];
-        foreach ($parts as $w) {
-            if (mb_strlen($w) >= 2) $tokens[] = $w;
+/** Get server FULLTEXT min token length (handles local vs server differences) */
+function getServerFtMinLen(mysqli $conn): int
+{
+    $innodb = 3;  // defaults that work well locally
+    $myisam = 4;
+    if ($res = mysqli_query($conn, "SELECT @@innodb_ft_min_token_size AS innodb_min, @@ft_min_word_len AS myisam_min")) {
+        if ($row = mysqli_fetch_assoc($res)) {
+            if (isset($row['innodb_min']) && $row['innodb_min'] !== null) $innodb = (int)$row['innodb_min'];
+            if (isset($row['myisam_min']) && $row['myisam_min'] !== null) $myisam = (int)$row['myisam_min'];
         }
-        if (!$tokens && $q !== '') $tokens[] = mb_substr($q, 0, 20);
-        $strict = implode(' ', array_map(fn($t) => '+' . $t . '*', $tokens)); // all terms
-        $loose  = implode(' ', array_map(fn($t) =>      $t . '*',  $tokens)); // any term
-        return [$strict, $loose];
     }
+    return max(1, min($innodb, $myisam));
 }
-[$qAll, $qAny] = buildBooleanQueries($raw);
+
+/** Build strict(+token*) and loose(token*) queries using server min token length */
+function buildBooleanQueriesWithMin(string $q, int $minLen): array
+{
+    $q = trim(mb_strtolower($q));
+    $q = preg_replace('/[^\p{L}\p{N}\s]+/u', ' ', $q);
+    $parts = preg_split('/\s+/', $q, -1, PREG_SPLIT_NO_EMPTY);
+
+    $validTokens = [];
+    $allTokens   = []; // includes short tokens for LIKE fallback
+    foreach ($parts as $w) {
+        $allTokens[] = $w;
+        if (mb_strlen($w) >= $minLen) $validTokens[] = $w;
+    }
+    if (!$validTokens && $q !== '') $validTokens[] = mb_substr($q, 0, 20);
+
+    $strict = implode(' ', array_map(fn($t) => '+' . $t . '*', $validTokens)); // all terms must appear
+    $loose  = implode(' ', array_map(fn($t) =>      $t . '*',  $validTokens)); // any term may appear
+    return [$strict, $loose, $allTokens];
+}
+
+$minLen = getServerFtMinLen($connection);
+[$qAll, $qAny, $allTokens] = buildBooleanQueriesWithMin($raw, $minLen);
 
 /**
- * NORMALIZED RESULT SHAPE
+ * NORMALIZED RESULT SHAPE returned to the template:
  * - item_type: 'tag' | 'post' | 'product'
  * - title, image, url, published_at
  * - relation_id: product_id when item is a product, or tag_relation_id when tag points to a product; NULL otherwise
  * - tag_type: 'product' for product tags, NULL for others
- * - rel_score: weighted relevance (strict + loose)
+ * - rel_score: weighted relevance (strict + loose + tag matches)
  */
 $sql = "
 SELECT * FROM (
@@ -136,41 +154,40 @@ SELECT * FROM (
         OR (tprod.tag_id IS NOT NULL AND MATCH(tprod.tag_title, tprod.tag_description) AGAINST (? IN BOOLEAN MODE))
       )
 ) AS u
+/* final score = relevance * mild freshness */
 CROSS JOIN (SELECT NOW() AS nowref) AS _t
 WHERE rel_score > 0
 ORDER BY (rel_score * POW(0.98, DATEDIFF(CURDATE(), DATE(u.published_at)))) DESC, u.published_at DESC
 LIMIT ? OFFSET ?";
 
-/* Bind params in order of appearance */
+/* Bind params in left-to-right order */
 $params = [
-    /* TAGS score */
+    // TAGS (rel_score + WHERE)
     $qAll,
     $qAny,
-    /* TAGS where */
     $siteId,
     $qAll,
     $qAny,
 
-    /* POSTS score */
+    // POSTS (rel_score + WHERE)
     $qAll,
     $qAll,
     $qAny,
     $qAny,
-    /* POSTS where */
     $siteId,
     $qAll,
     $qAll,
     $qAny,
     $qAny,
 
-    /* PRODUCTS score */
+    // PRODUCTS (rel_score strict+loose)
     $qAll,
     $qAll,
     $qAll,
     $qAny,
     $qAny,
     $qAny,
-    /* PRODUCTS where */
+    // PRODUCTS WHERE
     $siteId,
     $qAll,
     $qAll,
@@ -179,7 +196,7 @@ $params = [
     $qAny,
     $qAny,
 
-    /* LIMIT/OFFSET */
+    // LIMIT/OFFSET
     $limit,
     $offset
 ];
@@ -192,70 +209,111 @@ if (!$stmt) {
     exit;
 }
 
-/* Auto-build $types string */
+/* Auto-build $types and execute (prevents bind count mismatches) */
 $types = '';
 foreach ($params as $p) {
     $types .= is_int($p) ? 'i' : 's';
 }
-
 mysqli_stmt_bind_param($stmt, $types, ...$params);
-mysqli_stmt_execute($stmt);
-$res = mysqli_stmt_get_result($stmt);
+
+$ok = mysqli_stmt_execute($stmt);
+if (!$ok) {
+    error_log('Search execute failed: ' . mysqli_stmt_error($stmt));
+}
+$res = $ok ? mysqli_stmt_get_result($stmt) : false;
 
 $results = [];
-while ($row = mysqli_fetch_assoc($res)) {
-    $row['url'] = (!empty($row['url']) && $row['url'][0] === '/') ? $row['url'] : '/' . ltrim((string)($row['url'] ?? ''), '/');
-    $results[] = $row;
+if ($res) {
+    while ($row = mysqli_fetch_assoc($res)) {
+        $row['url'] = (!empty($row['url']) && $row['url'][0] === '/') ? $row['url'] : '/' . ltrim((string)($row['url'] ?? ''), '/');
+        $results[] = $row;
+    }
 }
 
-/* ---------- Fallback (LIKE) with AUTO types to avoid mismatches ---------- */
+/* ---------- Robust FALLBACK (tokenized LIKE) for server FT differences ---------- */
 if (!$results) {
-    $like = '%' . mysqli_real_escape_string($connection, $raw) . '%';
+    // tokens for LIKE across fields (covers short tokens and stopwords)
+    $cleanRaw   = preg_replace('/[^\p{L}\p{N}\s]+/u', ' ', mb_strtolower($raw));
+    $tokenArray = array_values(array_unique(array_filter(preg_split('/\s+/', trim($cleanRaw), -1, PREG_SPLIT_NO_EMPTY))));
+    $likePhrase = '%' . mysqli_real_escape_string($connection, $raw) . '%';
+    $likeTokens = array_map(function ($t) use ($connection) {
+        return '%' . mysqli_real_escape_string($connection, $t) . '%';
+    }, $tokenArray);
+
+    // helper: (alias.field1 LIKE ? OR alias.field2 LIKE ? ... for phrase & tokens)
+    $buildLike = function (string $alias, array $fields, string $phrase, array $tokens) {
+        $parts = [];
+        $params = [];
+        foreach ($fields as $f) {
+            $parts[] = "{$alias}.{$f} LIKE ?";
+            $params[] = $phrase;
+        }
+        foreach ($tokens as $tok) {
+            foreach ($fields as $f) {
+                $parts[] = "{$alias}.{$f} LIKE ?";
+                $params[] = $tok;
+            }
+        }
+        return ['(' . implode(' OR ', $parts) . ')', $params];
+    };
+
+    [$tagWhere,  $tagParams]  = $buildLike('t',   ['tag_title', 'tag_description'],                          $likePhrase, $likeTokens);
+    [$postWhere, $postParams] = $buildLike('p',   ['post_title', 'post_highlight', 'post_description'],       $likePhrase, $likeTokens);
+    [$prodWhere, $prodParams] = $buildLike('pr',  ['product_title', 'product_highlight', 'product_description'], $likePhrase, $likeTokens);
+    [$ptagWhere, $ptagParams] = $buildLike('tprod', ['tag_title', 'tag_description'],                        $likePhrase, $likeTokens);
+
     $fallbackSql = "
-        SELECT 'tag' AS item_type, tag_title AS title, tag_image AS image, '' AS url, tag_time AS published_at,
-               tag_relation_id AS relation_id, tag_type AS tag_type, 0.1 AS rel_score
-        FROM " . TABLE_PREFIX . "tag
-        WHERE tag_site_id = ? AND (tag_title LIKE ? OR tag_description LIKE ?)
+        SELECT 'tag' AS item_type, t.tag_title AS title, t.tag_image AS image, '' AS url, t.tag_time AS published_at,
+               t.tag_relation_id AS relation_id, t.tag_type AS tag_type, 0.1 AS rel_score
+        FROM " . TABLE_PREFIX . "tag t
+        WHERE t.tag_site_id = ?
+          AND {$tagWhere}
+
         UNION ALL
-        SELECT 'post', post_title, post_image, l.link_url, post_time,
+
+        SELECT 'post', p.post_title, p.post_image, l.link_url, p.post_time,
                NULL AS relation_id, NULL AS tag_type, 0.1
         FROM " . TABLE_PREFIX . "post p
-        JOIN " . TABLE_PREFIX . "link l ON l.link_relation_id=p.post_id AND l.link_type='post' AND l.link_status=200
-        WHERE p.post_site_id = ? AND (p.post_title LIKE ? OR p.post_highlight LIKE ? OR p.post_description LIKE ?)
+        JOIN " . TABLE_PREFIX . "link l
+             ON l.link_relation_id=p.post_id
+            AND l.link_type='post'
+            AND l.link_status=200
+        WHERE p.post_site_id = ?
+          AND {$postWhere}
+
         UNION ALL
+
         SELECT 'product', pr.product_title, pr.product_image, l.link_url, pr.product_time,
                pr.product_id AS relation_id, NULL AS tag_type, 0.1
         FROM " . TABLE_PREFIX . "product pr
-        JOIN " . TABLE_PREFIX . "link l ON l.link_relation_id=pr.product_id AND l.link_type='product' AND l.link_status=200
+        JOIN " . TABLE_PREFIX . "link l
+             ON l.link_relation_id=pr.product_id
+            AND l.link_type='product'
+            AND l.link_status=200
         LEFT JOIN " . TABLE_PREFIX . "tag tprod
-          ON tprod.tag_type='product'
-         AND tprod.tag_relation_id=pr.product_id
-         AND tprod.tag_site_id=pr.product_site_id
+               ON tprod.tag_type='product'
+              AND tprod.tag_relation_id=pr.product_id
+              AND tprod.tag_site_id=pr.product_site_id
         WHERE pr.product_site_id = ?
-          AND (pr.product_title LIKE ? OR pr.product_highlight LIKE ? OR pr.product_description LIKE ?
-               OR tprod.tag_title LIKE ? OR tprod.tag_description LIKE ?)
+          AND ( {$prodWhere} OR {$ptagWhere} )
         LIMIT ? OFFSET ?";
 
     $fb = mysqli_prepare($connection, $fallbackSql);
     if ($fb) {
-        /* Build params & types dynamically so counts always match */
-        $fbParams = [
-            $siteId,
-            $like,
-            $like,
-            $siteId,
-            $like,
-            $like,
-            $like,
-            $siteId,
-            $like,
-            $like,
-            $like,
-            $like,
-            $like,
-            $limit,
-            $offset
-        ];
+        // Build params dynamically so counts always match
+        $fbParams = [];
+        $fbParams[] = $siteId; // TAGS site_id
+        $fbParams   = array_merge($fbParams, $tagParams);
+
+        $fbParams[] = $siteId; // POSTS site_id
+        $fbParams   = array_merge($fbParams, $postParams);
+
+        $fbParams[] = $siteId; // PRODUCTS site_id
+        $fbParams   = array_merge($fbParams, $prodParams, $ptagParams);
+
+        $fbParams[] = $limit;
+        $fbParams[] = $offset;
+
         $fbTypes = '';
         foreach ($fbParams as $p) {
             $fbTypes .= is_int($p) ? 'i' : 's';
@@ -273,7 +331,7 @@ if (!$results) {
     }
 }
 
-/* Hand off to template */
+/* Hand off to the view */
 $search_path = USER_PATH . "search.php";
 $searchData  = [
     'q'       => $raw,

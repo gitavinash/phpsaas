@@ -1,7 +1,7 @@
 <?php include_once 'header.php'; ?>
 
 <?php
-// Use new controller data if present, else fall back to legacy $queryPost
+// Use normalized controller data if present; else fall back to legacy $queryPost
 $rawResults = [];
 if (isset($searchData['results']) && is_array($searchData['results'])) {
     $rawResults = $searchData['results'];
@@ -9,9 +9,10 @@ if (isset($searchData['results']) && is_array($searchData['results'])) {
     $rawResults = $queryPost;
 }
 
-// Collect product IDs from:
-// - item_type === 'product'  -> relation_id (product_id)
-// - item_type === 'tag' AND tag_type === 'product' -> relation_id (product_id)
+/** Collect product IDs from:
+ * - item_type === 'product'  -> relation_id (product_id)
+ * - item_type === 'tag' AND tag_type === 'product' -> relation_id (product_id)
+ */
 $productIds = [];
 foreach ($rawResults as $row) {
     $itemType = $row['item_type'] ?? '';
@@ -32,27 +33,26 @@ if (empty($productIds)) {
     exit;
 }
 
-// Build IN (...) safely
 $idList = implode(',', array_map('intval', $productIds));
 
-// Sorting
-$sortBy = 'link_published DESC';
+// Sorting (avoid ONLY_FULL_GROUP_BY issues; we won’t use GROUP BY)
+$sortBy = 'l.link_published DESC';
 if (isset($_GET['sort'])) {
     switch ($_GET['sort']) {
         case 'price_low':
-            $sortBy = 'inventory_price ASC';
+            $sortBy = 'i.inventory_price ASC';
             break;
         case 'price_high':
-            $sortBy = 'inventory_price DESC';
+            $sortBy = 'i.inventory_price DESC';
             break;
         case 'latest':
-            $sortBy = 'link_published DESC';
+            $sortBy = 'l.link_published DESC';
             break;
     }
 }
 
 $tag_title = ucwords(str_replace('-', ' ', htmlspecialchars($searchKeyword ?? '', ENT_QUOTES, 'UTF-8')));
-$tag_description = ''; // optional blurb if you want one
+$tag_description = ''; // optional
 ?>
 
 <!-- Banner with Breadcrumb -->
@@ -91,23 +91,33 @@ $tag_description = ''; // optional blurb if you want one
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         <?php
+        // Return one row per product (avoid GROUP BY by selecting the latest link per product)
         $query = "
-            SELECT
-                link_url, product_id, product_title, product_image,
-                inventory_currency_symbol, inventory_price, inventory_mrp,
-                inventory_in_stock, link_published
-            FROM " . TABLE_PREFIX . "link
-            INNER JOIN " . TABLE_PREFIX . "product   ON link_relation_id = product_id
-            INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id = product_id
-                AND inventory_type = 'product'
-                AND inventory_site_id = " . SITE_ID . "
-            WHERE link_relation_id IN ($idList)
-              AND link_site_id = " . SITE_ID . "
-              AND link_type = 'product'
-              AND link_status = 200
-            GROUP BY link_url
-            ORDER BY $sortBy
-            LIMIT 0, 100";
+      SELECT
+        l.link_url, p.product_id, p.product_title, p.product_image,
+        i.inventory_currency_symbol, i.inventory_price, i.inventory_mrp,
+        i.inventory_in_stock, l.link_published
+      FROM " . TABLE_PREFIX . "product p
+      JOIN " . TABLE_PREFIX . "link l
+        ON l.link_relation_id = p.product_id
+       AND l.link_type = 'product'
+       AND l.link_status = 200
+       AND l.link_site_id = " . SITE_ID . "
+      JOIN " . TABLE_PREFIX . "inventory i
+        ON i.inventory_relation_id = p.product_id
+       AND i.inventory_type = 'product'
+       AND i.inventory_site_id = " . SITE_ID . "
+      WHERE p.product_id IN ($idList)
+        AND NOT EXISTS (
+          SELECT 1 FROM " . TABLE_PREFIX . "link l2
+           WHERE l2.link_relation_id = p.product_id
+             AND l2.link_type = 'product'
+             AND l2.link_status = 200
+             AND l2.link_site_id = " . SITE_ID . "
+             AND l2.link_published > l.link_published
+        )
+      ORDER BY $sortBy
+      LIMIT 100";
 
         $result = mysqli_query($connection, $query);
 
