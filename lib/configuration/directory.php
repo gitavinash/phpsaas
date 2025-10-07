@@ -73,6 +73,7 @@ define('SITE_STATUS', MODULES . 'siteStatus.php');
 define('UTIL_FUNCTIONS', FUNCTIONS . '/utils.php');
 define('MENU_FUNCTIONS', FUNCTIONS . '/menu.php');
 define('DATA_FUNCTIONS', FUNCTIONS . '/data.php');
+define('SEARCH_FUNCTIONS', FUNCTIONS . '/search.php');
 define('USER_FUNCTIONS', FUNCTIONS . '/user.php');
 define('COMMUNICATION_FUNCTIONS', FUNCTIONS . 'communicatipn.php');
 define('HOMEPAGE_FUNCTIONS', FUNCTIONS . 'homepage.php');
