@@ -132,7 +132,32 @@ window.location.href = '/dashboard/country/list/';
                                 </div>
                             </div>
                         </div>
+                        <div class="box-1">
+                            <div class="form-group">
+                                <p>Country type</p>
+                                <select class="selectJS" id="countryType" name="countryType">
+                                    <option value="">Select Country type</option>
+                                    <option value="schengen"
+                                        <?php echo (($visa_country_type == 'schengen') ? 'selected' : '') ?>>Schengen
+                                        Area
+                                    </option>
+                                    <option value="ca4" <?php echo (($visa_country_type == 'ca4') ? 'selected' : '') ?>>
+                                        CA-4 (Central America Four)</option>
+                                    <option value="east_africa"
+                                        <?php echo (($visa_country_type == 'east_africa') ? 'selected' : '') ?>>East
+                                        Africa Tourist Visa</option>
+                                    <option value="asean"
+                                        <?php echo (($visa_country_type == 'asean') ? 'selected' : '') ?>>ASEAN
+                                        Region (Association of Southeast Asian Nations)</option>
+                                    <option value="gcc" <?php echo (($visa_country_type == 'gcc') ? 'selected' : '') ?>>
+                                        GCC Countries (Gulf Cooperation Council)</option>
+                                    <option value="kaza"
+                                        <?php echo (($visa_country_type == 'kaza') ? 'selected' : '') ?>>KAZA
+                                        Univisa (Zambia & Zimbabwe)</option>
+                                </select>
 
+                            </div>
+                        </div>
                         <div class="box-1">
                             <div class="form-group">
                                 <input type="hidden" id="countryId" name="countryId" value="<?php echo $id ?>">

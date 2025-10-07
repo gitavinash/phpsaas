@@ -8,6 +8,7 @@ $(document).ready(function () {
       // Collecting field values
       var countryName = $("#name").val().trim();
       var countryCode = $("#code").val().trim();
+      var countryType = $("#countryType").val().trim();
       var documentRequired = $("#requirements").text().trim();
       var importantInformation = $("#information").text().trim();
       var faqs = $("#faq").text().trim();
@@ -88,6 +89,7 @@ $(document).ready(function () {
       formData.append("faqs", faqs);
       formData.append("visaTypes", JSON.stringify(visaTypes));
       formData.append("isFeatured", isFeaturedValue);
+      formData.append("countryType", countryType);
       formData.append("featureImage", selectedFiles[0]); // Append image
 
       // AJAX call
@@ -132,6 +134,7 @@ $(document).ready(function () {
       // Collecting field values
       var countryName = $("#name").val().trim();
       var countryCode = $("#code").val().trim();
+      var countryType = $("#countryType").val().trim();
       var documentRequired = $("#requirements").text().trim();
       var importantInformation = $("#information").text().trim();
       var faqs = $("#faq").text().trim();
@@ -216,6 +219,7 @@ $(document).ready(function () {
       formData.append("faqs", faqs);
       formData.append("visaTypes", JSON.stringify(visaTypes));
       formData.append("isFeatured", isFeaturedValue);
+      formData.append("countryType", countryType);
       formData.append("oldFeatureImage", oldGallery);
       formData.append("id", $("#countryId").val().trim());
       formData.append("featureImage", selectedFiles[0]); // Append image

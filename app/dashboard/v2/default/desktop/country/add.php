@@ -29,15 +29,15 @@
                             <label class="form-lable">Country code<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <label class="form-lable">Documents Required</label>
+                            <label class="form-lable">Documents Required<sup>*</sup></label>
                             <div class="editableBox" id="requirements" contenteditable="true"></div>
                         </div>
                         <div class="form-group">
-                            <label class="form-lable">Important Information</label>
+                            <label class="form-lable">Important Information<sup>*</sup></label>
                             <div class="editableBox" id="information" contenteditable="true"></div>
                         </div>
                         <div class="form-group">
-                            <label class="form-lable">FAQ's</label>
+                            <label class="form-lable">FAQ's<sup>*</sup></label>
                             <div class="editableBox" id="faq" contenteditable="true"></div>
                         </div>
                         <div class="form-group-box">
@@ -100,6 +100,21 @@
                                         <label class="radio-button" for="visasType2Label">No</label>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="box-1">
+                            <div class="form-group">
+                                <p>Country type</p>
+                                <select class="selectJS" id="countryType" name="countryType">
+                                    <option value="">Select Country type</option>
+                                    <option value="schengen">Schengen Area</option>
+                                    <option value="ca4">CA-4 (Central America Four)</option>
+                                    <option value="east_africa">East Africa Tourist Visa</option>
+                                    <option value="asean">ASEAN Region (Association of Southeast Asian Nations)</option>
+                                    <option value="gcc">GCC Countries (Gulf Cooperation Council)</option>
+                                    <option value="kaza">KAZA Univisa (Zambia & Zimbabwe)</option>
+                                </select>
+
                             </div>
                         </div>
                         <div class="box-1">
