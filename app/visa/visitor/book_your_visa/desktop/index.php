@@ -205,6 +205,238 @@ require_once 'header.php';
         });
         </script>
     </section>
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        <title>Schengen Countries – Minimal</title>
+        <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    </head>
+
+    <body class="bg-white text-gray-900">
+        <!-- Schengen Countries • Minimal -->
+        <section id="schengen-minimal" class="py-16">
+            <div class="container mx-auto px-4">
+                <header class="mb-6 flex items-start justify-between gap-4">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Schengen Countries</h2>
+                        <p class="text-gray-600 mt-1">Quick apply for popular Schengen destinations.</p>
+                    </div>
+                    <!-- Arrows (mobile only, live inside slider width) -->
+                    <div class="md:hidden">
+                        <div class="flex items-center gap-2">
+                            <button id="schPrev"
+                                class="w-9 h-9 rounded-full bg-white ring-1 ring-gray-300 text-gray-700 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+                                aria-label="Previous">
+                                <i class="ri-arrow-left-s-line"></i>
+                            </button>
+                            <button id="schNext"
+                                class="w-9 h-9 rounded-full bg-white ring-1 ring-gray-300 text-gray-700 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+                                aria-label="Next">
+                                <i class="ri-arrow-right-s-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Mobile slider: single row, exactly 2 cards per view -->
+                <div class="md:hidden">
+                    <div id="schTrack"
+                        class="flex flex-nowrap gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-1"
+                        role="list" aria-label="Schengen country slider">
+                        <!-- Cards injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Desktop grid: 4 per row x 2 rows (8 max) -->
+                <div id="schGrid" class="hidden md:grid grid-cols-4 gap-6">
+                    <!-- Cards injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <script>
+        // --- Data (max 8) ---
+        const SCHENGEN = [{
+                name: "Germany",
+                code: "de"
+            },
+            {
+                name: "France",
+                code: "fr"
+            },
+            {
+                name: "Italy",
+                code: "it"
+            },
+            {
+                name: "Spain",
+                code: "es"
+            },
+            {
+                name: "Netherlands",
+                code: "nl"
+            },
+            {
+                name: "Switzerland",
+                code: "ch"
+            },
+            {
+                name: "Sweden",
+                code: "se"
+            },
+            {
+                name: "Greece",
+                code: "gr"
+            },
+        ].slice(0, 8);
+
+        // --- Helpers ---
+        const toSlug = s => s.toLowerCase().replace(/\&/g, "and").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+        const flagURL = c => `https://flagcdn.com/w320/${c}.png`;
+        const isMobile = () => window.innerWidth < 768;
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        // Minimal, crisp card (no shared CSS needed)
+        function cardHTML(c, extra = "") {
+            const slug = toSlug(c.name);
+            return `
+        <div class="group bg-white rounded-xl ring-1 ring-gray-200 hover:ring-gray-300 transition ${extra}">
+          <img src="${flagURL(c.code)}" loading="lazy" alt="${c.name} flag" class="w-full h-28 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold text-base md:text-lg mb-1">${c.name}</h3>
+            <p class="text-xs md:text-sm text-gray-500 mb-3">Schengen Visa</p>
+            <a href="/start-application/?country=${slug}"
+               class="w-full inline-flex items-center justify-center rounded-button ring-1 ring-blue-600 text-blue-700 hover:bg-blue-600 hover:text-white font-medium py-2 transition">
+               Apply Now
+            </a>
+          </div>
+        </div>
+      `;
+        }
+
+        // --- Desktop render (grid) ---
+        const schGrid = document.getElementById("schGrid");
+        schGrid.innerHTML = SCHENGEN.map(c => cardHTML(c)).join("");
+
+        // --- Mobile slider (single row, 2 per view) ---
+        const schTrack = document.getElementById("schTrack");
+        // Key trick: each card is exactly half the visible width minus half the gap,
+        // so two cards + one gap fill the viewport width perfectly.
+        // gap = 1rem -> each card basis calc(50% - 0.5rem)
+        schTrack.innerHTML = SCHENGEN.map(c =>
+            cardHTML(c, "shrink-0 basis-[calc(50%-0.5rem)] snap-start")
+        ).join("");
+
+        // --- Slider controls (mobile only) ---
+        const schPrev = document.getElementById("schPrev");
+        const schNext = document.getElementById("schNext");
+
+        function step() {
+            // One "page" is exactly the visible width (2 cards)
+            return schTrack.clientWidth;
+        }
+
+        function currentIndex() {
+            return Math.round(schTrack.scrollLeft / step());
+        }
+
+        function totalPages() {
+            const visible = 2;
+            return Math.max(1, Math.ceil(SCHENGEN.length / visible));
+        }
+
+        function goTo(i, behavior = "smooth") {
+            const max = totalPages() - 1;
+            const idx = Math.max(0, Math.min(i, max));
+            schTrack.scrollTo({
+                left: idx * step(),
+                behavior
+            });
+        }
+
+        function updateArrows() {
+            const idx = currentIndex();
+            if (schPrev) schPrev.disabled = (idx <= 0);
+            if (schNext) schNext.disabled = (idx >= totalPages() - 1);
+        }
+
+        schPrev?.addEventListener("click", () => goTo(currentIndex() - 1));
+        schNext?.addEventListener("click", () => goTo(currentIndex() + 1));
+
+        // --- Autoplay (mobile only) ---
+        let autoplayTimer = null;
+        const AUTOPLAY_MS = 2500;
+
+        function startAutoplay() {
+            if (!isMobile() || reducedMotion || totalPages() <= 1) return;
+            stopAutoplay();
+            autoplayTimer = setInterval(() => {
+                const idx = currentIndex();
+                goTo(idx >= totalPages() - 1 ? 0 : idx + 1);
+            }, AUTOPLAY_MS);
+        }
+
+        function stopAutoplay() {
+            if (autoplayTimer) {
+                clearInterval(autoplayTimer);
+                autoplayTimer = null;
+            }
+        }
+
+        // Pause on interaction; resume after a moment
+        ["touchstart", "pointerdown", "mousedown", "keydown"].forEach(evt =>
+            schTrack.addEventListener(evt, () => stopAutoplay(), {
+                passive: true
+            })
+        );
+        ["touchend", "pointerup", "mouseup", "keyup"].forEach(evt =>
+            schTrack.addEventListener(evt, () => setTimeout(startAutoplay, 400), {
+                passive: true
+            })
+        );
+
+        // Keep UI in sync
+        let rAF;
+        schTrack.addEventListener("scroll", () => {
+            if (rAF) return;
+            rAF = requestAnimationFrame(() => {
+                updateArrows();
+                rAF = null;
+            });
+        }, {
+            passive: true
+        });
+
+        let resizeTimer;
+        window.addEventListener("resize", () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                goTo(currentIndex(), "auto"); // snap after layout change
+                stopAutoplay();
+                startAutoplay();
+            }, 120);
+        });
+
+        // Pause when tab hidden; resume when visible
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) stopAutoplay();
+            else startAutoplay();
+        });
+
+        // Init
+        updateArrows();
+        startAutoplay();
+        </script>
+    </body>
+
+    </html>
+
+
     <section class="py-20 bg-gray-50">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
