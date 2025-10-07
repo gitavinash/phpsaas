@@ -3,6 +3,7 @@ $statusCondition = '';
 $nameCondition = '';
 $emailCondition = '';
 $mobileCondition = '';
+$durationCondition = '';
 
 if (isset($leadStatus)) {
     $statusCondition = "e.enquiry_status={$leadStatus} AND ";
@@ -12,9 +13,7 @@ if (isset($daterange)) {
     $dates = explode(" - ", $daterange);
     $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
     $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
-} else {
-    $startDate = date("Y-m-d 00:00:00", strtotime("-1 month"));
-    $endDate = date("Y-m-d 23:59:59");
+    $durationCondition = " e.enquiry_time BETWEEN '{$startDate}' AND '{$endDate}' AND ";
 }
 
 if (isset($leadEmail)) {
@@ -165,11 +164,11 @@ WHERE
     {$nameCondition}
     {$mobileCondition}
     {$emailCondition}
+    {$durationCondition}
     e.enquiry_site_id = " . SITE_ID . "
-    AND enquiry_time BETWEEN '{$startDate}' AND '{$endDate}'
     GROUP BY enquiry_id
 ORDER BY
-    e.enquiry_time DESC";
+    e.enquiry_time DESC LIMIT 0, 1000";
 
                 if ($dataList = mysqli_query($connection, $enquiryQuery)) {
                     if (mysqli_num_rows($dataList) != 0) {
