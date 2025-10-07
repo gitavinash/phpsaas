@@ -94,7 +94,7 @@ require_once 'header.php';
         </div>
     </section>
     <section class="py-20">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-4 popularDestinationSlider">
             <h2 class="text-3xl font-bold text-center mb-12">Popular Destinations</h2>
             <div class="relative">
                 <div class="overflow-hidden">
@@ -168,273 +168,117 @@ require_once 'header.php';
             </div>
 
         </div>
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const slider = document.getElementById('destinationSlider');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            let currentPosition = 0;
-            const cardWidth = slider.children[0].offsetWidth + 24; // Including margin
-            const totalCards = slider.children.length;
-            const visibleCards = window.innerWidth < 768 ? 1 : 4;
-            const maxPosition = -(totalCards - visibleCards) * cardWidth;
-            // Update on window resize
-            window.addEventListener('resize', () => {
-                const newVisibleCards = window.innerWidth < 768 ? 1 : 4;
-                if (newVisibleCards !== visibleCards) {
-                    currentPosition = 0;
-                    updateSliderPosition();
-                }
-            });
-
-            function updateSliderPosition() {
-                slider.style.transform = `translateX(${currentPosition}px)`;
-            }
-            prevBtn.addEventListener('click', () => {
-                if (currentPosition < 0) {
-                    currentPosition += cardWidth;
-                    updateSliderPosition();
-                }
-            });
-            nextBtn.addEventListener('click', () => {
-                if (currentPosition > maxPosition) {
-                    currentPosition -= cardWidth;
-                    updateSliderPosition();
-                }
-            });
-        });
-        </script>
     </section>
 
-    <!DOCTYPE html>
-    <html lang="en">
+    <section class="py-20" class='schengenCountrySlider' id="popular-destinations">
+        <div class="container mx-auto px-4">
+            <header class="mb-6 flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Schengen Countries</h2>
+                    <p class="text-gray-600 mt-1">Apply quickly for these Schengen destinations.</p>
+                </div>
+            </header>
 
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-        <title>Schengen Countries – Minimal</title>
-        <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
-    </head>
+            <?php
+            $schengenQuery = "
+        SELECT 
+          vc.visa_country_code,
+          vc.visa_country_image,
+          vc.visa_country_title,
+          vc.visa_country_services
+        FROM {$tableNamePrefix}country AS vc
+        WHERE 
+          vc.visa_country_status = 1
+          AND LOWER(TRIM(vc.visa_country_type)) = 'schengen'
+          AND vc.visa_country_site_id = " . SITE_ID . "
+        ORDER BY vc.visa_country_is_featured DESC
+        LIMIT 8";
 
-    <body class="bg-white text-gray-900">
-        <!-- Schengen Countries • Minimal -->
-        <section id="schengen-minimal" class="py-16">
-            <div class="container mx-auto px-4">
-                <header class="mb-6 flex items-start justify-between gap-4">
-                    <div>
-                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Schengen Countries</h2>
-                        <p class="text-gray-600 mt-1">Quick apply for popular Schengen destinations.</p>
-                    </div>
-                    <!-- Arrows (mobile only, live inside slider width) -->
-                    <div class="md:hidden">
-                        <div class="flex items-center gap-2">
-                            <button id="schPrev"
-                                class="w-9 h-9 rounded-full bg-white ring-1 ring-gray-300 text-gray-700 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
-                                aria-label="Previous">
-                                <i class="ri-arrow-left-s-line"></i>
-                            </button>
-                            <button id="schNext"
-                                class="w-9 h-9 rounded-full bg-white ring-1 ring-gray-300 text-gray-700 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
-                                aria-label="Next">
-                                <i class="ri-arrow-right-s-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                </header>
+            $countries = [];
+            if ($featuredCountry = mysqli_query($connection, $schengenQuery)) {
+                while ($row = mysqli_fetch_assoc($featuredCountry)) {
+                    $title = trim($row['visa_country_title']);
+                    $countries[] = [
+                        'title' => $title,
+                        'slug'  => strtolower(preg_replace('/[^a-z0-9]+/i', '_', $title)),
+                        'img'   => $row['visa_country_image'] ?: '',
+                    ];
+                }
+            }
+            ?>
 
-                <!-- Mobile slider: single row, exactly 2 cards per view -->
-                <div class="md:hidden">
-                    <div id="schTrack"
+            <!-- Mobile slider: single row, 2 cards per view, arrows in top-right (inside width) -->
+            <div class="md:hidden">
+                <div class="relative">
+                    <!-- Track -->
+                    <div id="destTrack"
                         class="flex flex-nowrap gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-1"
                         role="list" aria-label="Schengen country slider">
-                        <!-- Cards injected by JS -->
+                        <?php if (!empty($countries)): ?>
+                        <?php foreach ($countries as $c):
+                                $t = htmlspecialchars($c['title'], ENT_QUOTES, 'UTF-8');
+                                $s = htmlspecialchars($c['slug'],  ENT_QUOTES, 'UTF-8');
+                                $img = htmlspecialchars($c['img'], ENT_QUOTES, 'UTF-8');
+                            ?>
+                        <div
+                            class="shrink-0 basis-[calc(50%-0.5rem)] snap-start group bg-white rounded-xl ring-1 ring-gray-200 hover:ring-gray-300 transition">
+                            <img src="<?php echo $img; ?>" alt="<?php echo $t; ?>" class="w-full h-28 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-semibold text-base text-gray-900 mb-1"><?php echo $t; ?></h3>
+                                <p class="text-xs text-gray-500 mb-3">Schengen Visa</p>
+                                <a href="/start-application/?country=<?php echo $s; ?>"
+                                    class="w-full inline-flex items-center justify-center rounded-button ring-1 ring-primary text-primary hover:bg-primary hover:text-white font-medium py-2 transition">
+                                    Apply Now
+                                </a>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                        <?php else: ?>
+                        <div class="text-sm text-gray-500">No countries available.</div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Arrows (inside slider width, top-right) -->
+                    <div class="absolute top-0 right-0 p-2 flex items-center gap-2">
+                        <button id="destPrev"
+                            class="w-9 h-9 rounded-full bg-white ring-1 ring-gray-300 text-gray-700 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+                            aria-label="Previous">
+                            <i class="ri-arrow-left-s-line"></i>
+                        </button>
+                        <button id="destNext"
+                            class="w-9 h-9 rounded-full bg-white ring-1 ring-gray-300 text-gray-700 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+                            aria-label="Next">
+                            <i class="ri-arrow-right-s-line"></i>
+                        </button>
                     </div>
                 </div>
-
-                <!-- Desktop grid: 4 per row x 2 rows (8 max) -->
-                <div id="schGrid" class="hidden md:grid grid-cols-4 gap-6">
-                    <!-- Cards injected by JS -->
-                </div>
             </div>
-        </section>
 
-        <script>
-        // --- Data (max 8) ---
-        const SCHENGEN = [{
-                name: "Germany",
-                code: "de"
-            },
-            {
-                name: "France",
-                code: "fr"
-            },
-            {
-                name: "Italy",
-                code: "it"
-            },
-            {
-                name: "Spain",
-                code: "es"
-            },
-            {
-                name: "Netherlands",
-                code: "nl"
-            },
-            {
-                name: "Switzerland",
-                code: "ch"
-            },
-            {
-                name: "Sweden",
-                code: "se"
-            },
-            {
-                name: "Greece",
-                code: "gr"
-            },
-        ].slice(0, 8);
-
-        // --- Helpers ---
-        const toSlug = s => s.toLowerCase().replace(/\&/g, "and").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
-        const flagURL = c => `https://flagcdn.com/w320/${c}.png`;
-        const isMobile = () => window.innerWidth < 768;
-        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-        // Minimal, crisp card (no shared CSS needed)
-        function cardHTML(c, extra = "") {
-            const slug = toSlug(c.name);
-            return `
-        <div class="group bg-white rounded-xl ring-1 ring-gray-200 hover:ring-gray-300 transition ${extra}">
-          <img src="${flagURL(c.code)}" loading="lazy" alt="${c.name} flag" class="w-full h-28 object-cover">
-          <div class="p-4">
-            <h3 class="font-semibold text-base md:text-lg mb-1">${c.name}</h3>
-            <p class="text-xs md:text-sm text-gray-500 mb-3">Schengen Visa</p>
-            <a href="/start-application/?country=${slug}"
-               class="w-full inline-flex items-center justify-center rounded-button ring-1 ring-blue-600 text-blue-700 hover:bg-blue-600 hover:text-white font-medium py-2 transition">
-               Apply Now
-            </a>
-          </div>
+            <!-- Desktop grid: 4 per row x 2 rows (8 max) -->
+            <div id="destGrid" class="hidden md:grid grid-cols-4 gap-6">
+                <?php if (!empty($countries)): ?>
+                <?php foreach ($countries as $c):
+                        $t = htmlspecialchars($c['title'], ENT_QUOTES, 'UTF-8');
+                        $s = htmlspecialchars($c['slug'],  ENT_QUOTES, 'UTF-8');
+                        $img = htmlspecialchars($c['img'], ENT_QUOTES, 'UTF-8');
+                    ?>
+                <div class="group bg-white rounded-xl ring-1 ring-gray-200 hover:ring-gray-300 transition">
+                    <img src="<?php echo $img; ?>" alt="<?php echo $t; ?>" class="w-full h-32 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-1"><?php echo $t; ?></h3>
+                        <p class="text-sm text-gray-500 mb-3">Schengen Visa</p>
+                        <a href="/start-application/?country=<?php echo $s; ?>"
+                            class="w-full inline-flex items-center justify-center rounded-button ring-1 ring-primary text-primary hover:bg-primary hover:text-white font-medium py-2 transition">
+                            Apply Now
+                        </a>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </div>
-      `;
-        }
+    </section>
 
-        // --- Desktop render (grid) ---
-        const schGrid = document.getElementById("schGrid");
-        schGrid.innerHTML = SCHENGEN.map(c => cardHTML(c)).join("");
-
-        // --- Mobile slider (single row, 2 per view) ---
-        const schTrack = document.getElementById("schTrack");
-        // Key trick: each card is exactly half the visible width minus half the gap,
-        // so two cards + one gap fill the viewport width perfectly.
-        // gap = 1rem -> each card basis calc(50% - 0.5rem)
-        schTrack.innerHTML = SCHENGEN.map(c =>
-            cardHTML(c, "shrink-0 basis-[calc(50%-0.5rem)] snap-start")
-        ).join("");
-
-        // --- Slider controls (mobile only) ---
-        const schPrev = document.getElementById("schPrev");
-        const schNext = document.getElementById("schNext");
-
-        function step() {
-            // One "page" is exactly the visible width (2 cards)
-            return schTrack.clientWidth;
-        }
-
-        function currentIndex() {
-            return Math.round(schTrack.scrollLeft / step());
-        }
-
-        function totalPages() {
-            const visible = 2;
-            return Math.max(1, Math.ceil(SCHENGEN.length / visible));
-        }
-
-        function goTo(i, behavior = "smooth") {
-            const max = totalPages() - 1;
-            const idx = Math.max(0, Math.min(i, max));
-            schTrack.scrollTo({
-                left: idx * step(),
-                behavior
-            });
-        }
-
-        function updateArrows() {
-            const idx = currentIndex();
-            if (schPrev) schPrev.disabled = (idx <= 0);
-            if (schNext) schNext.disabled = (idx >= totalPages() - 1);
-        }
-
-        schPrev?.addEventListener("click", () => goTo(currentIndex() - 1));
-        schNext?.addEventListener("click", () => goTo(currentIndex() + 1));
-
-        // --- Autoplay (mobile only) ---
-        let autoplayTimer = null;
-        const AUTOPLAY_MS = 2500;
-
-        function startAutoplay() {
-            if (!isMobile() || reducedMotion || totalPages() <= 1) return;
-            stopAutoplay();
-            autoplayTimer = setInterval(() => {
-                const idx = currentIndex();
-                goTo(idx >= totalPages() - 1 ? 0 : idx + 1);
-            }, AUTOPLAY_MS);
-        }
-
-        function stopAutoplay() {
-            if (autoplayTimer) {
-                clearInterval(autoplayTimer);
-                autoplayTimer = null;
-            }
-        }
-
-        // Pause on interaction; resume after a moment
-        ["touchstart", "pointerdown", "mousedown", "keydown"].forEach(evt =>
-            schTrack.addEventListener(evt, () => stopAutoplay(), {
-                passive: true
-            })
-        );
-        ["touchend", "pointerup", "mouseup", "keyup"].forEach(evt =>
-            schTrack.addEventListener(evt, () => setTimeout(startAutoplay, 400), {
-                passive: true
-            })
-        );
-
-        // Keep UI in sync
-        let rAF;
-        schTrack.addEventListener("scroll", () => {
-            if (rAF) return;
-            rAF = requestAnimationFrame(() => {
-                updateArrows();
-                rAF = null;
-            });
-        }, {
-            passive: true
-        });
-
-        let resizeTimer;
-        window.addEventListener("resize", () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                goTo(currentIndex(), "auto"); // snap after layout change
-                stopAutoplay();
-                startAutoplay();
-            }, 120);
-        });
-
-        // Pause when tab hidden; resume when visible
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden) stopAutoplay();
-            else startAutoplay();
-        });
-
-        // Init
-        updateArrows();
-        startAutoplay();
-        </script>
-    </body>
-
-    </html>
 
 
     <section class="py-20 bg-gray-50">
