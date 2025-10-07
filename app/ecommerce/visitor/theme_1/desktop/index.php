@@ -319,7 +319,7 @@ class='w-12 h-12 rounded-full object-cover border'>
 
 
 <!-- Newsletter Section -->
-<section class="py-20 newsletter-container">
+<!-- <section class="py-20 newsletter-container">
     <div class="container mx-auto px-6">
         <div class="max-w-xl mx-auto text-center">
             <h2 class="serif text-3xl md:text-4xl mb-4">Join Our Mailing List</h2>
@@ -339,7 +339,7 @@ class='w-12 h-12 rounded-full object-cover border'>
             </label>
         </div>
     </div>
-</section>
+</section> -->
 <?php
 
 require_once 'footer.php';
