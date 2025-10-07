@@ -581,4 +581,169 @@ $(document).ready(function () {
       }
     });
   }
+
+  // Find each Schengen slider wrapper
+  var $wrappers = $(".schengenCountrySlider");
+  if (!$wrappers.length) return;
+
+  $wrappers.each(function () {
+    var $wrap = $(this);
+    if ($wrap.data("schengenWired")) return; // avoid double-binding
+    $wrap.data("schengenWired", true);
+
+    // Elements inside this wrapper
+    var $track = $wrap.find("#destTrack, .destTrack"); // scroll-snap track
+    var $prev = $wrap.find("#destPrev, .destPrev"); // left arrow (mobile)
+    var $next = $wrap.find("#destNext, .destNext"); // right arrow (mobile)
+    if (!$track.length) return;
+
+    // Ensure horizontal scroll is allowed (safe)
+    $track.css({ overflowX: "auto" });
+
+    var AUTOPLAY_MS = 2500;
+    var timer = null;
+    var rAF = null;
+    var resizeTimer = null;
+    var reducedMotion =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function isMobile() {
+      return window.innerWidth < 768;
+    }
+    function pageWidth() {
+      return $track[0].clientWidth || 0;
+    } // one "page" = 2 cards visible
+    function cardCount() {
+      return $track.children().length;
+    }
+    function pageCount() {
+      return Math.max(1, Math.ceil(cardCount() / 2));
+    }
+    function currentIdx() {
+      var w = pageWidth();
+      return w ? Math.round($track[0].scrollLeft / w) : 0;
+    }
+
+    function goTo(i, behavior) {
+      var max = pageCount() - 1;
+      var idx = Math.max(0, Math.min(i, max));
+      var left = idx * pageWidth();
+
+      if ($track[0].scrollTo) {
+        $track[0].scrollTo({
+          left: left,
+          behavior: behavior === "auto" ? "auto" : "smooth",
+        });
+      } else {
+        $track
+          .stop()
+          .animate({ scrollLeft: left }, behavior === "auto" ? 0 : 300);
+      }
+    }
+
+    function updateArrows() {
+      var i = currentIdx(),
+        p = pageCount();
+      if ($prev.length) $prev.prop("disabled", i <= 0);
+      if ($next.length) $next.prop("disabled", i >= p - 1);
+    }
+
+    // Buttons
+    if ($prev.length)
+      $prev.off(".schengen").on("click.schengen", function () {
+        goTo(currentIdx() - 1);
+      });
+    if ($next.length)
+      $next.off(".schengen").on("click.schengen", function () {
+        goTo(currentIdx() + 1);
+      });
+
+    // Autoplay (mobile only)
+    function startAutoplay() {
+      if (!isMobile() || reducedMotion || pageCount() <= 1) return;
+      stopAutoplay();
+      timer = setInterval(function () {
+        var i = currentIdx();
+        var p = pageCount();
+        goTo(i >= p - 1 ? 0 : i + 1);
+      }, AUTOPLAY_MS);
+    }
+    function stopAutoplay() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    // Pause on interaction; resume shortly after
+    $track
+      .off(".schengen")
+      .on(
+        "touchstart.schengen pointerdown.schengen mousedown.schengen keydown.schengen",
+        stopAutoplay
+      )
+      .on(
+        "touchend.schengen pointerup.schengen mouseup.schengen keyup.schengen",
+        function () {
+          setTimeout(startAutoplay, 400);
+        }
+      )
+      .on("scroll.schengen", function () {
+        if (rAF) return;
+        rAF = requestAnimationFrame(function () {
+          updateArrows();
+          rAF = null;
+        });
+      });
+
+    // Realign on resize, and restart autoplay if still mobile
+    $(window)
+      .off("resize.schengen")
+      .on("resize.schengen", function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          goTo(currentIdx(), "auto"); // snap to nearest after layout change
+          stopAutoplay();
+          startAutoplay();
+        }, 120);
+      });
+
+    // Pause when tab hidden; resume when visible
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stopAutoplay();
+      else startAutoplay();
+    });
+
+    // Wait until the track has width & children (prevents no-op on first paint)
+    function ensureReady(tries) {
+      tries = tries || 0;
+
+      if (!isMobile()) {
+        // desktop: no slider needed
+        updateArrows();
+        return;
+      }
+
+      var ready = pageWidth() > 0 && cardCount() > 0;
+      if (ready) {
+        updateArrows();
+        startAutoplay();
+      } else if (tries < 30) {
+        setTimeout(function () {
+          ensureReady(tries + 1);
+        }, 100);
+      } else {
+        // proceed anyway, but log for debugging
+        console.warn("[Schengen] Track not fully ready", {
+          width: pageWidth(),
+          cards: cardCount(),
+        });
+        updateArrows();
+        startAutoplay();
+      }
+    }
+
+    ensureReady();
+  });
 });

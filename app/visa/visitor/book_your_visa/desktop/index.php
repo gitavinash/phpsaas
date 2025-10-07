@@ -170,7 +170,7 @@ require_once 'header.php';
         </div>
     </section>
 
-    <section class="py-20" class='schengenCountrySlider' id="popular-destinations">
+    <section class="py-20 schengenCountrySlider" id="popular-destinations">
         <div class="container mx-auto px-4">
             <header class="mb-6 flex items-start justify-between gap-4">
                 <div>
@@ -207,10 +207,9 @@ require_once 'header.php';
             }
             ?>
 
-            <!-- Mobile slider: single row, 2 cards per view, arrows in top-right (inside width) -->
+            <!-- Mobile slider -->
             <div class="md:hidden">
                 <div class="relative">
-                    <!-- Track -->
                     <div id="destTrack"
                         class="flex flex-nowrap gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-1"
                         role="list" aria-label="Schengen country slider">
@@ -238,7 +237,7 @@ require_once 'header.php';
                         <?php endif; ?>
                     </div>
 
-                    <!-- Arrows (inside slider width, top-right) -->
+                    <!-- Mobile arrows (inside width) -->
                     <div class="absolute top-0 right-0 p-2 flex items-center gap-2">
                         <button id="destPrev"
                             class="w-9 h-9 rounded-full bg-white ring-1 ring-gray-300 text-gray-700 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
@@ -254,7 +253,7 @@ require_once 'header.php';
                 </div>
             </div>
 
-            <!-- Desktop grid: 4 per row x 2 rows (8 max) -->
+            <!-- Desktop grid -->
             <div id="destGrid" class="hidden md:grid grid-cols-4 gap-6">
                 <?php if (!empty($countries)): ?>
                 <?php foreach ($countries as $c):
