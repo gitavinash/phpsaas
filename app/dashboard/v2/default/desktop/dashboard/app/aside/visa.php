@@ -65,7 +65,7 @@ if ($site_access_type != 'customer') {
         </ul>
     </div>
 </li>
-<!-- 
+
 <li class="header-section-name">
     <p>Website Manager<span>Pages, design, forms & more</span></p>
 </li>
@@ -88,22 +88,10 @@ if ($site_access_type != 'customer') {
 
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/menus/') !== false) ? 'class="active"' : '') ?>>
     <a href="menus/"><i class="fi fi-rr-list"></i> Menus</a>
-    <div class="side-menu">
-        <ul>
-            <li><a href="menus/list/"><i class="fi-rr-apps-sort"></i> All Menus</a></li>
-            <li><a href="menus/add/"><i class="fi fi-rr-add"></i> Add Menu</a></li>
-        </ul>
-    </div>
-    <div class="bottom-menu">
-        <ul>
-            <li><a href="menus/list/"><i class="fi-rr-apps-sort"></i> All Menus</a></li>
-            <li><a href="menus/add/"><i class="fi fi-rr-add"></i> Add Menu</a></li>
-        </ul>
-    </div>
 </li>
 
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/sliders/') !== false) ? 'class="active"' : '') ?>>
-    <a href="sliders/"><i class="fi fi-rr-images"></i> Hero Sliders</a>
+    <a href="sliders/"><i class="fi fi-rr-images"></i> Sliders</a>
     <div class="side-menu">
         <ul>
             <li><a href="sliders/list/"><i class="fi-rr-apps-sort"></i> All Sliders</a></li>
@@ -133,7 +121,7 @@ if ($site_access_type != 'customer') {
         </ul>
     </div>
 </li>
-
+<!-- 
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/forms/') !== false) ? 'class="active"' : '') ?>>
     <a href="forms/"><i class="fi fi-rr-envelope"></i> Contact Form</a>
     <div class="side-menu">
