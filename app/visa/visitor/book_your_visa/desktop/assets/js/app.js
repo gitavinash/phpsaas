@@ -535,4 +535,50 @@ $(document).ready(function () {
   // Init
   recalc();
   start();
+
+  // Popular country slider
+
+  if ($(".popularDestinationSlider").length) {
+    const $slider = $("#destinationSlider");
+    const $prevBtn = $("#prevBtn");
+    const $nextBtn = $("#nextBtn");
+    let currentPosition = 0;
+
+    const getCardWidth = () => $slider.children().first().outerWidth(true); // includes margin
+    const getVisibleCards = () => ($(window).width() < 768 ? 1 : 4);
+
+    let cardWidth = getCardWidth();
+    let totalCards = $slider.children().length;
+    let visibleCards = getVisibleCards();
+    let maxPosition = -(totalCards - visibleCards) * cardWidth;
+
+    function updateSliderPosition() {
+      $slider.css("transform", `translateX(${currentPosition}px)`);
+    }
+
+    $(window).on("resize", function () {
+      let newVisibleCards = getVisibleCards();
+      if (newVisibleCards !== visibleCards) {
+        visibleCards = newVisibleCards;
+        cardWidth = getCardWidth();
+        maxPosition = -(totalCards - visibleCards) * cardWidth;
+        currentPosition = 0;
+        updateSliderPosition();
+      }
+    });
+
+    $prevBtn.on("click", function () {
+      if (currentPosition < 0) {
+        currentPosition += cardWidth;
+        updateSliderPosition();
+      }
+    });
+
+    $nextBtn.on("click", function () {
+      if (currentPosition > maxPosition) {
+        currentPosition -= cardWidth;
+        updateSliderPosition();
+      }
+    });
+  }
 });
