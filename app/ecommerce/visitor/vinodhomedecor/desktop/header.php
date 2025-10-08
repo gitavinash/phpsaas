@@ -244,11 +244,13 @@
         <div class="md:hidden hidden bg-white w-full py-4 px-4 shadow-md" id="mobile-menu">
             <div class="mb-4">
                 <div class="relative">
-                    <input type="text" placeholder="Search..."
-                        class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-primary text-sm">
-                    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                        <i class="ri-search-line"></i>
-                    </div>
+                    <form action="/search/" method="get">
+                        <input type="text" name="q" placeholder="Search..."
+                            class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-primary text-sm">
+                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i class="ri-search-line"></i>
+                        </div>
+                    </form>
                 </div>
             </div>
             <nav class="flex flex-col space-y-3">
