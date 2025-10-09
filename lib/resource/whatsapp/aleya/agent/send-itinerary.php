@@ -15,7 +15,7 @@ if (defined('COMPANY_WHATSAPP_ITINERARY_SENT')) {
         }
 
         // Clean and sanitize values
-        $tourDuration = $totalDays . ' Nights / ' . $totalDays . ' Days';
+        $tourDuration = $totalDays - 1 . ' Nights / ' . $totalDays . ' Days';
         $paymentLink      = 'https://d2h.in/56drt';
 
         // Build final param string for WhatsApp API
