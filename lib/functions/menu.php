@@ -96,7 +96,7 @@ function render_mobile_menu(array $items, int $depth = 0): void
                 echo   '</ul>';
                 echo '</details>';
             } else {
-                echo '<a href="' . $url . '" class="' . $link_classes . '">' . $label . '</a>';
+                echo '<li><a href="' . $url . '" class="' . $link_classes . '">' . $label . '</a></li>';
             }
             continue;
         }

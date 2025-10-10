@@ -42,7 +42,7 @@ window.location.href = 'dashboard/page/?type=list&status=all';
 
             <div class="form-group fullscreen-editor">
                 <textarea name="description"
-                    class="editor inside-shadow"><?php echo html_entity_decode($page_description); ?></textarea>
+                    class="editor inside-shadow"><?php echo htmlspecialchars($page_description, ENT_QUOTES, 'UTF-8'); ?></textarea>
             </div>
             <?php
 
