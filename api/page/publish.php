@@ -25,9 +25,9 @@ function publish($connection, $data)
         /** page page url */
 
         $pageTitle = strtolower($title);
-        $url = ($pageTitle === 'home' || $pageTitle === 'homepage')
+        $url = strtolower(($pageTitle === 'home' || $pageTitle === 'homepage')
             ? '/'
-            : '/' . preg_replace('~[^\p{M}\w-]+~u', '-', $title) . '/';
+            : '/' . preg_replace('~[^\p{M}\w-]+~u', '-', $title) . '/');
 
         $title = ($pageTitle === 'home' || $pageTitle === 'homepage') ? 'homepage' : $title;
 

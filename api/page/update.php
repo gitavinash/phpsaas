@@ -42,9 +42,9 @@ function update($connection, $data)
                 // Generate page URL
 
                 $pageTitle = strtolower($title);
-                $url = ($pageTitle === 'home' || $pageTitle === 'homepage')
+                $url = strtolower(($pageTitle === 'home' || $pageTitle === 'homepage')
                     ? '/'
-                    : '/' . preg_replace('~[^\p{M}\w-]+~u', '-', $title) . '/';
+                    : '/' . preg_replace('~[^\p{M}\w-]+~u', '-', $title) . '/');
 
                 $title = ($pageTitle === 'home' || $pageTitle === 'homepage') ? 'homepage' : $title;
 
@@ -176,7 +176,8 @@ function update($connection, $data)
                             $linkID = mysqli_insert_id($connection);
                         } else {
 
-                            $addRedirect = FALSE;
+                            $addRedirect = true;
+                            $updateLink = true;
                             $status = 'warning';
                             $msg = (($pageTitle == 'home' || $pageTitle == 'homepage') ? "Homepage is already exits." : "Please change page url. Because its already in used");
                         }
