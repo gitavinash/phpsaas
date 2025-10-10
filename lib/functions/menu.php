@@ -80,10 +80,10 @@ function render_mobile_menu(array $items, int $depth = 0): void
             return is_array($child) && !empty($child['label']);
         }));
 
-        $summary_classes = 'cursor-pointer text-gray-700 hover:text-primary transition';
-        $link_classes    = 'text-white-700 hover:text-primary transition';
+        $summary_classes = 'cursor-pointer text-gray-700 hover:opacity-50 transition';
+        $link_classes    = 'text-white-700 hover:opacity-50 transition';
         $list_classes    = 'pl-4 mt-2 space-y-1 text-sm';
-        $block_link      = 'block hover:text-primary';
+        $block_link      = 'block hover:opacity-50';
 
         // ROOT level: render siblings inline (no wrapper)
         if ($depth === 0) {
