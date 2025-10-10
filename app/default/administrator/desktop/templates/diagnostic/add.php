@@ -50,7 +50,7 @@
                     </div>
                     <div class="box-2">
                         <div class="form-group">
-                            <label>Regular price (₹)</label>
+                            <label>Regular price in ₹ ( MRP )</label>
                             <input type="number" onwheel="this.blur()" class="form-control inside-shadow" name="mrp"
                                 placeholder="Regular price">
                         </div>

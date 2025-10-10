@@ -107,7 +107,7 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                     </div>
                     <div class="box-2">
                         <div class="form-group">
-                            <label>Regular price (₹)</label>
+                            <label>Regular price in ₹ ( MRP )</label>
                             <input type="number" onwheel="this.blur()" class="form-control inside-shadow" value="<?php echo $inventory_mrp ?>"
                                 name="mrp" placeholder="Regular price">
                         </div>

@@ -48,13 +48,13 @@
                     <div class="box-2">
                         <div class="form-group">
                             <label>Sale price (₹)</label>
-                            <input type="number" onwheel="this.blur()" class="form-control inside-shadow" name="salePrice"
-                                placeholder="Sale price">
+                            <input type="number" onwheel="this.blur()" class="form-control inside-shadow"
+                                name="salePrice" placeholder="Sale price">
                         </div>
                     </div>
                     <div class="box-2">
                         <div class="form-group">
-                            <label>Regular price (₹)</label>
+                            <label>Regular price in ₹ ( MRP )</label>
                             <input type="number" onwheel="this.blur()" class="form-control inside-shadow" name="mrp"
                                 placeholder="Regular price">
                         </div>
@@ -229,12 +229,12 @@
 
                 if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
                     while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                        <div class="form-group">
-                            <input type="radio" name="category"
-                                value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                                <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
-                            <?php echo ucwords($category['category_title']); ?>
-                        </div>
+                <div class="form-group">
+                    <input type="radio" name="category"
+                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                        <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
+                    <?php echo ucwords($category['category_title']); ?>
+                </div>
                 <?php
                     }
                 }
