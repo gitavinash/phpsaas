@@ -14,7 +14,7 @@ window.location.href = '/dashboard/blog/list/';
 
 $supplierId = base64_decode($id);
 
-if ($checkSupplier = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=post_id WHERE post_id='{$supplierId}' AND link_type='post' AND post_site_id=" . SITE_ID . " AND link_status=200 AND link_site_id=" . SITE_ID)) {
+if ($checkSupplier = mysqli_query($connection, "SELECT *, GROUP_CONCAT(tag_title SEPARATOR ',') AS tag_titles  FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=post_id LEFT JOIN " . TABLE_PREFIX . "tag ON tag_relation_id=post_id AND tag_type='post' WHERE post_id='{$supplierId}' AND link_type='post' AND post_site_id=" . SITE_ID . " AND link_status=200 AND tag_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($checkSupplier) > 0) {
         extract(mysqli_fetch_assoc($checkSupplier));
     }
@@ -55,10 +55,36 @@ if ($checkSupplier = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX .
                             <input type="file" id="fileInput" data-limit="1" name="featureImage[]"
                                 accept=".jpg, .jpeg, .png" />
                         </div>
+                        <div class="form-group-box">
+                            <p>Mark as featured</p>
+                            <div class="box-2 left p-right-10">
+                                <div class="form-group">
+                                    <div class="input-box">
+                                        <input type="radio" id="radio1" name="featurePost" value="1"
+                                            <?php echo ($link_is_featured == 1) ? 'checked' : '' ?> />
+                                        <label class="radio-button" for="radio1Lable">Yes</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-2 left p-left-10">
+                                <div class="form-group">
+                                    <div class="input-box">
+                                        <input type="radio" id="radio2" name="featurePost" value="0"
+                                            <?php echo ($link_is_featured == 0) ? 'checked' : '' ?> />
+                                        <label class="radio-button" for="radio2Lable">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" name="tags" id="tags"><?php echo $tag_titles ?></textarea>
+                            <label class="form-lable" id="textareaLabel">Blog keywords ( Use , to seprate keywords
+                                )</label>
+                        </div>
                         <div class="box-1">
                             <div class="form-group">
                                 <input type="hidden" name="id" id="id" value=" <?php echo base64_encode($post_id) ?>">
-                                <a href="#" class="btn btn-green" id="updatePolicy">Update blog</a>
+                                <a href="#" class="btn btn-green" id="updateBlogV2">Update blog</a>
                             </div>
                         </div>
                     </div>

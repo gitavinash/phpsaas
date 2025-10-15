@@ -1800,6 +1800,7 @@ section.form .form-group {
 section.form .form-group-box {
   float: left;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 section.form .form-group-box p {
@@ -2143,6 +2144,11 @@ section.form
   margin-top: 10px;
   box-sizing: border-box;
   word-break: break-all;
+}
+
+.leadInfo table tbody {
+  float: left;
+  width: 100%;
 }
 
 .leadInfo table tr {

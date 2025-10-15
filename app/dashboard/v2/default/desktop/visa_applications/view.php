@@ -69,6 +69,9 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                             Details</a>
                         <a id="noteDetailsBtn" class="btn detailsBtn"><i class="fi-rr-time-past"></i> Follow up
                             history</a>
+                        <a id="additionalPassengerBtn" class="btn detailsBtn"><i class="fi-rr-user"></i> Additional
+                            Passengers</a>
+                        <a id="documentBtn" class="btn detailsBtn"><i class="fi-rr-document"></i> Documents</a>
                         <?php
 
                         if ($visa_application_status != 5) { ?>
@@ -84,41 +87,25 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                     <div class="leadInfo">
                         <table>
                             <?php
-                            if ($first_name != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>First name</strong></td>
-                                <td class='box-7'>{$first_name}</td>
-                            </tr>";
-                            }
+                            if (isset($personsDataObject['personsData'][0])) {
+                                $person = $personsDataObject['personsData'][0];
 
-                            if ($middle_name != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Middle name</strong></td>
-                                <td class='box-7'>{$middle_name}</td>
-                            </tr>";
-                            }
+                                foreach ($person as $key => $value) {
 
-                            if ($last_name != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Last name</strong></td>
-                                <td class='box-7'>{$last_name}</td>
-                            </tr>";
-                            }
+                                    // ✅ Skip 'media' or any array type
+                                    if ($key === 'media' || is_array($value)) {
+                                        continue;
+                                    }
 
-                            if ($email != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Email</strong></td>
-                                <td class='box-7'>{$email}</td>
-                            </tr>";
+                                    if (trim($value) !== '') {
+                                        $key_name = ucwords(str_replace('_', ' ', $key));
+                                        echo "<tr>
+                    <td class='box-3'><strong>{$key_name}</strong></td>
+                    <td class='box-7'>{$value}</td>
+                  </tr>";
+                                    }
+                                }
                             }
-
-                            if ($mobile != '') {
-                                echo "<tr>
-                                <td class='box-3'><strong>Mobile</strong></td>
-                                <td class='box-7'>{$mobile}</td>
-                            </tr>";
-                            }
-
                             ?>
                         </table>
                     </div>
@@ -201,102 +188,72 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                         </div>
                     </div>
                 </div>
-                <?php
-
-                if (SITE_APP_ID == 24) { ?>
-                <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox" style='display:none'>
+                <div class="widget openBtnBox no-padding box-1" id="additionalPassengerBox" style="display: none;">
                     <div class="leadInfo">
-                        <div class="historyBox">
+                        <table>
                             <?php
 
-                                if ($leadHistory = mysqli_query($connection, "SELECT visa_application_notes_id,  visa_application_notes_meta_type, visa_application_notes_meta_value, profile_display_name, visa_application_notes_update FROM " . TABLE_PREFIX . "visa_application_notes INNER JOIN " . TABLE_PREFIX . "profile ON visa_application_notes_user_id=profile_user_id WHERE visa_application_notes_ref_id='{$leadId}' AND visa_application_notes_meta_type='upay' ORDER BY visa_application_notes_update DESC")) {
-                                    if (mysqli_num_rows($leadHistory) != 0) {
-                                        echo "<ol class='timeline'>";
-                                        while ($leadHistoryData = mysqli_fetch_array($leadHistory)) {
-                                            extract($leadHistoryData);
-                                            $commentBox = '';
+                            $addPersonData = $personsDataObject['personsData'];
+                            for ($i = 1; $i < sizeof($addPersonData); $i++) {
+                                $person = $addPersonData[$i];
+                                echo "<tr><td colspan=2><h3>Passenger " . ($i + 1) . "</h3></td></tr>";
 
-                                            switch (strtolower($visa_application_notes_meta_type)) {
-                                                case "upay":
-                                                    $visa_application_notes_meta_value = json_decode($visa_application_notes_meta_value, true);
-                                                    if (is_array($visa_application_notes_meta_value)) {
-                                                        extract($visa_application_notes_meta_value);
-                                                    } else {
-                                                        $upayMsg = '';
-                                                        $upayImages = '';
-                                                    }
-                                                    $icon = 'story-book';
-                                                    $msg = "<a>{$visa_application_notes_meta_type}</a> added by " . $profile_display_name;
-                                                    if ($visa_application_notes_meta_value != '') {
-                                                        $commentBox = "<div class='comment'><p>" . str_replace('\r\n', '<br />', $upayMsg) . "</p>";
-                                                        $upayImages = (json_decode($upayImages, true));
-                                                        if (!empty($upayImages)) {
-                                                            $commentBox .= "<div class='imagesList' >";
-                                                            $upayImages = json_decode($upayImages, true);
-                                                            for ($i = 0; $i < sizeof($upayImages); $i++) {
-                                                                $fileExtension = strtolower(pathinfo($upayImages[$i]['path'], PATHINFO_EXTENSION));
-                                                                switch ($fileExtension) {
-                                                                    case 'pdf':
-                                                                        $featureThumbnail = "/upload/others/docs/pdf.png";
-                                                                        break;
-                                                                    case 'doc':
-                                                                    case 'docx':
-                                                                        $featureThumbnail = "/upload/others/docs/doc.png";
-                                                                        break;
-                                                                    case 'xls':
-                                                                    case 'xlsx':
-                                                                        $featureThumbnail = "/upload/others/docs/xls.png";
-                                                                        break;
-                                                                    default:
-                                                                        $featureThumbnail = $upayImages[$i]['path'];
-                                                                        break;
-                                                                }
-                                                                $commentBox .= "<a href='{$upayImages[$i]['path']}' target='_blank'><img class='leadInfoImage' src='{$featureThumbnail}' ></a>";
-                                                            }
-                                                            $commentBox .= "</div>";
-                                                        }
-                                                        $commentBox .= "</div>";
-                                                    }
-                                                    break;
-                                                default:
-                                                    $icon = 'times-hexagon';
-                                                    $msg = '';
-                                                    break;
-                                            }
+                                foreach ($person as $key => $value) {
+                                    if (trim($value) !== '') {
+                                        // Make key name readable, e.g., first_name → First Name
+                                        $key_name = ucwords(str_replace('_', ' ', $key));
 
-                                            echo "<li class='timeline-item " . (($commentBox != '') ? ' | extra-space' : '') . "'>
-                                                    <span class='timeline-item-icon | faded-icon'>
-                                                        <i class='fi-rr-{$icon}'></i>
-                                                    </span>
-                                                    <div class='timeline-item-description'>
-                                                        <span>{$msg}
-                                                            on <time>" . date('d-m-Y h:i A', strtotime(($visa_application_notes_update))) . "</time></span>
-                                                    </div>
-                                                    {$commentBox}
-                                                    ";
-                                            if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
-                                                echo "<div class='timeline-action'>
-                                                        <a href='#' data-type='leads/upay' data-id='{$visa_application_notes_id}' title='Edit upay' data-msg='" . base64_encode($commentBox) . "' class='btn dataTableBtn btn-blue upayEditButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-edit'></i> Edit upay</a>
-                                                        <a href='#' data-type='leads/upay' data-id='{$visa_application_notes_id}' title='Delete upay' data-title='Delete upay' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete upay</a>
-                                                    </div>";
-                                            }
-
-                                            echo  "</li>";
-                                        }
-                                        echo "</ol>";
+                                        echo "<tr>
+                    <td class='box-3'><strong>{$key_name}</strong></td>
+                    <td class='box-7'>{$value}</td>
+                  </tr>";
                                     }
-                                } else {
-                                    echo "Something went wrong";
                                 }
-
-                                ?>
-                        </div>
+                            }
+                            ?>
+                        </table>
                     </div>
                 </div>
-                <?php
-                }
+                <div class="widget openBtnBox no-padding box-1" id="documentBox" style="display: none;">
+                    <div class="leadInfo">
+                        <table>
+                            <?php
+                            $addPersonData = $personsDataObject['personsData'];
 
-                ?>
+                            for ($i = 0; $i < sizeof($addPersonData); $i++) {
+                                echo "<tr><td colspan='2'><h3>Passenger " . ($i + 1) . "</h3></td></tr>";
+
+                                if (isset($addPersonData[$i]['media']) && is_array($addPersonData[$i]['media'])) {
+                                    $mediaData = $addPersonData[$i]['media'];
+
+                                    foreach ($mediaData as $mediaType => $files) {
+                                        if (!empty($files) && is_array($files)) {
+                                            foreach ($files as $filePath) {
+                                                if (trim($filePath) !== '') {
+                                                    $key_name = ucwords(str_replace('_', ' ', $mediaType));
+                                                    $fileUrl = htmlspecialchars($filePath, ENT_QUOTES);
+
+                                                    echo "<tr>
+                                <td class='box-3'><strong>{$key_name}</strong></td>
+                                <td class='box-7'>
+                                   <a href='{$fileUrl}' target='_blank' style='color:#007bff;text-decoration:underline;'>
+    Click here to view <i class='fi-rr-external-link-square' style='font-size:13px;margin-left:4px;'></i>
+</a>
+                                </td>
+                              </tr>";
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='2'>No media available</td></tr>";
+                                }
+                            }
+                            ?>
+                        </table>
+
+                    </div>
+                </div>
                 <div class="widget openBtnBox no-padding box-1" id="paymentDetailsBox">
                     <div class="leadInfo">
                         <div class="historyBox">
@@ -420,60 +377,30 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
 
                 if ($visa_application_status != 5) {
                     if ($visa_application_status != 4) {
-                        if (SITE_APP_ID == 22 && ($visa_application_status == 2 || $visa_application_status == 1)) {
-                            echo "<a href='/dashboard/sales/add/?ref=visa_application&leadId=" . $id . "' class='btn btn-green'><i class='fi-rr-point-of-sale-bill'></i> Convert to sales</a>";
-                        } else {
-                            echo (($visa_application_status != 1) ? "<a href='#' class='btn btn-natural-green' id='convertToSale' data-id='" . base64_encode($visa_application_id) . "'.><i class='fi-rr-octagon-check'></i> Convert to Sale</a>" : '');
-                        }
+                        echo (($visa_application_status != 1) ? "<a href='#' class='btn btn-natural-green' id='convertToSale' data-id='" . base64_encode($visa_application_id) . "'.><i class='fi-rr-octagon-check'></i> Convert to Sale</a>" : '');
                 ?>
 
                 <a href="" class="btn btn-green" id="followUpBtn"><i class="fi-rr-alarm-clock"></i> Follow-ups</a>
+
                 <?php
+                    }
 
-                        if (SITE_APP == 'astro_client') {
-                            echo "<a href='' class='btn btn-green' id='upayBtn'><i class='fi-rr-story-book'></i> Add Upay</a>";
-                            echo "
-                <a href='' class='btn btn-green' id='updatePaymentBtn'><i class='fi-rr-notes'></i> Update payment
-                    records</a>";
-                        }
-
-                        if (SITE_APP == 'aleya') { ?>
-
-                <a href="" class="btn btn-green" id="paymentBtn"><i class="fi-rr-indian-rupee-sign"></i> Send payment
-                    links</a>
-                <?php
+                        ?><?php
 
                             if ($visa_application_status != 1) {
-                                echo '<a href="" class="btn btn-green" id="itineraryBtn"><i class="fi-rr-track"></i> Send itinerary</a>';
+                                echo '<a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>';
                             }
 
                             ?>
-                <a href="" class="btn btn-green" id="voucherBtn"><i class="fi-rr-ticket"></i> Send Vouchers</a>
-
-                <?php
-                        }
-
-                            ?><?php
-
-                                if ($visa_application_status != 1) {
-                                    echo '<a href="" class="btn btn-red" id="noteBtn"><i class="fi-rr-circle-xmark"></i> Close this lead</a>';
-                                }
-
-                                ?>
 
 
                 <?php
-                    } else { ?>
+                } else { ?>
 
                 <form method="POST" class="">
                     <!-- Design a form to assign lead to intern -->
                 </form>
 
-                <?php
-                    }
-                }
-
-                    ?>
             </section>
         </div>
     </div>
@@ -611,7 +538,7 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                                                 <select class="selectJS form-control" id="paymentRecordTitle"
                                                     name="payment_method">
                                                     <option value=""></option>
-                                                    <?php echo ((SITE_APP == 'astro_client') ? "<option value='free'>Free</option>" : '') ?>
+                                                    <option value="free">Free</option>
                                                     <option value="cash">Cash</option>
                                                     <option value="upi">UPI</option>
                                                     <option value="net_banking">Net banking</option>
@@ -636,7 +563,7 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                                             <div class="form-group">
                                                 <input type="file" id="fileUpload" name="files"
                                                     accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx">
-                                                <label class="form-lable" id="upayPhoto">Upload photo</label>
+                                                <label class="form-lable" id="paymentPhoto">Upload photo</label>
                                             </div>
                                             <div class="form-group">
                                                 <textarea type="text" name="payment_notes" id="noteMsg"
@@ -708,88 +635,9 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
     </div>
 
     <?php
+                }
 
-    if (SITE_APP == 'astro_client') { ?>
-
-    <div class="popUp upayBox">
-        <div class="smallPopUpBox">
-            <div class="widget box-7">
-                <div class="contentArea">
-                    <form method="POST" action="#" id="addUpayForm">
-                        <section class="form">
-                            <div class="step-open-box step_1_box">
-                                <div class="form-header">
-                                    <h4 class="heading">Add new upay</h4>
-                                </div>
-                                <div class="form-group">
-                                    <textarea type="text" name="upayText" class="editor editUpayEditor" id="upayComment"
-                                        placeholder="Add your comment"></textarea>
-                                    <label class="form-lable" id="commentLable">Any comment</label>
-                                </div>
-                                <div class="form-group">
-                                    <div id="dropZone">
-                                        <span class="defaultText">Drag & Drop files here or click to upload</span>
-                                    </div>
-                                    <input type="file" id="fileInput" name="files[]" accept=".pdf, .jpg, .jpeg, .png"
-                                        multiple />
-                                </div>
-                            </div>
-                    </form>
-                </div>
-            </div>
-            <div class="widget box-3">
-                <div class="actionArea">
-                    <span class="btn popUpBtn" id="addUpayBtn"><i class="fi-rr-check"></i> Save Upay</span>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="popUp editUpayBox">
-        <div class="smallPopUpBox">
-            <div class="widget box-7">
-                <div class="contentArea">
-                    <form method="POST" action="#" id="editUpayForm">
-                        <section class="form">
-                            <div class="step-open-box step_1_box">
-                                <div class="form-header">
-                                    <h4 class="heading">Edit upay</h4>
-                                </div>
-                                <div class="form-group">
-                                    <textarea type="text" name="upayText" class="editor upayEditor" id="editUpayComment"
-                                        placeholder="Add your comment"></textarea>
-                                    <label class="form-lable" id="commentLable">Any comment</label>
-                                    <p class="copyToClipboard"><a href="https://onlinehtmleditor.dev/"
-                                            id="upayContentValue" target="_blank">Click here to format the content</a>
-                                    </p>
-                                </div>
-                                <!-- <div class="form-group">
-                                    <div id="editDropZone">
-                                        <span class="editDefaultText">Drag & Drop files here or click to upload</span>
-                                    </div>
-                                    <input type="file" id="editFileInput" name="files[]"
-                                        accept=".pdf, .jpg, .jpeg, .png" multiple />
-                                </div> -->
-                            </div>
-                    </form>
-                </div>
-            </div>
-            <div class="widget box-3">
-                <div class="actionArea">
-                    <span class="btn popUpBtn" id="updateUpayBtn" data-id=""><i class="fi-rr-check"></i> Update
-                        Upay</span>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php
-    }
-
-    ?>
+?>
 
     <div class="popUp itineraryBox">
         <div class="fullScreenPopUpBox">

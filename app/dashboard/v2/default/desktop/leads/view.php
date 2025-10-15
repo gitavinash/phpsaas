@@ -789,7 +789,7 @@ if ($site_access_type == 'digital_marketing') {
                                             <div class="form-group">
                                                 <input type="file" id="fileUpload" name="files"
                                                     accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx">
-                                                <label class="form-lable" id="upayPhoto">Upload photo</label>
+                                                <label class="form-lable" id="paymentPhoto">Upload photo</label>
                                             </div>
                                             <div class="form-group">
                                                 <textarea type="text" name="payment_notes" id="noteMsg"

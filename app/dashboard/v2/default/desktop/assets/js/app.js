@@ -1193,6 +1193,7 @@ $(document).ready(function (e) {
     hidePageLoader();
     e.preventDefault();
   });
+
   $("#leadDetailsBtn").click(function (e) {
     toggleDisplay("#leadDetailsBox", true);
     e.preventDefault();
@@ -1210,6 +1211,16 @@ $(document).ready(function (e) {
 
   $("#leadEditBtn").click(function (e) {
     toggleDisplay("#leadEditBox", false);
+    e.preventDefault();
+  });
+
+  $("#additionalPassengerBtn").click(function (e) {
+    toggleDisplay("#additionalPassengerBox", false);
+    e.preventDefault();
+  });
+
+  $("#documentBtn").click(function (e) {
+    toggleDisplay("#documentBox", false);
     e.preventDefault();
   });
 
@@ -1852,6 +1863,49 @@ $(document).ready(function (e) {
         error: function (error) {
           popUpMessage("center", error.responseJSON.msg, "error");
           $("#addBlogV2").show();
+        },
+      });
+    });
+
+    // Submit blog form
+    $("#updateBlogV2").click(function (e) {
+      e.preventDefault();
+
+      $("#updateBlogV2").hide(); // Disable submit button
+
+      // Get description safely from textarea
+      var description = $("#editor-0").val() || "";
+      $("#editor-0").val(description.trim());
+
+      const fileInput = document.getElementById("fileInput");
+      const formData = new FormData(document.getElementById("blogFormV2"));
+      formData.append("action", "publish");
+
+      // Append image file if selected
+      if (fileInput.files.length > 0) {
+        formData.append("featureImage", fileInput.files[0]); // single file, not array
+      }
+
+      $.ajax({
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function (response) {
+          if (response.status == 200) {
+            popUpMessage("center", response.msg, "success");
+            setTimeout(function () {
+              window.location.href = "/dashboard/blog/list/";
+            }, 1600);
+          } else {
+            popUpMessage("center", response.msg, "warning");
+          }
+          $("#updateBlogV2").show(); // Re-enable button
+        },
+        error: function (error) {
+          popUpMessage("center", error.responseJSON.msg, "error");
+          $("#updateBlogV2").show();
         },
       });
     });
