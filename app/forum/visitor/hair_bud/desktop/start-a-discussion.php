@@ -334,7 +334,7 @@ window.EDIT_DATA = <?php echo json_encode($jsPayload, JSON_UNESCAPED_UNICODE | J
 
                 <!-- Submit -->
                 <div class="flex flex-col sm:flex-row gap-4 justify-end">
-                    <button type="submit" id="submitADiscussion"
+                    <button type="submit" id="submitDiscussion"
                         class="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-md !rounded-button whitespace-nowrap">
                         <i
                             class="ri-send-plane-line mr-2"></i><?php echo $isEdit ? 'Update Discussion' : 'Publish Discussion'; ?>

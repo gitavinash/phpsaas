@@ -250,3 +250,141 @@ function getHomepageContent($conn)
 
     return $out;
 }
+
+function getCategoryPost($conn, $categoryId = 0, $categoryType = 'post', $sortBy = 'new', $dateFilter = 'all', $pageNo = 0)
+{
+    if ($categoryId == 0) {
+        return [];
+    }
+
+    switch ($sortBy) {
+        case 'old':
+            $orderBy = 'link_published ASC';
+            break;
+        case 'popular':
+            $orderBy = 'post_viewed DESC, link_published DESC';
+            break;
+        case 'replies':
+            $orderBy = 'post_replies DESC, link_published DESC';
+            break;
+        case 'likes':
+            $orderBy = 'post_likes DESC, link_published DESC';
+            break;
+        default:
+            $orderBy = 'link_published DESC';
+            break;
+    }
+
+    switch ($dateFilter) {
+        case 'today':
+            // From today 00:00:00 to today 23:59:59
+            $dateSql = "AND link_published BETWEEN CONCAT(CURDATE(), ' 00:00:00') 
+                    AND CONCAT(CURDATE(), ' 23:59:59')";
+            break;
+
+        case 'week':
+            // From 7 days ago 00:00:00 to today 23:59:59
+            $dateSql = "AND link_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 7 DAY) 
+                    AND CONCAT(CURDATE(), ' 23:59:59')";
+            break;
+
+        case 'month':
+            // From 1 month ago 00:00:00 to today 23:59:59
+            $dateSql = "AND link_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 1 MONTH) 
+                    AND CONCAT(CURDATE(), ' 23:59:59')";
+            break;
+
+        case 'year':
+            // From 1 year ago 00:00:00 to today 23:59:59
+            $dateSql = "AND link_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 1 YEAR) 
+                    AND CONCAT(CURDATE(), ' 23:59:59')";
+            break;
+
+        default:
+            $dateSql = "";
+            break;
+    }
+
+    $categoryQuery = "SELECT * FROM " . TABLE_PREFIX . "post WHERE post_category={$categoryId} AND post_type='{$categoryType}' AND post_status=1 AND post_site_id=" . SITE_ID;
+
+    $resData = mysqli_query($conn, $categoryQuery);
+    if (!$resData) {
+        return [];
+    } else {
+        $out = mysqli_fetch_assoc($resData);
+    }
+
+    echo $categoryQuery;
+    mysqli_free_result($resData);
+
+    return $out;
+}
+
+function getCategoryDiscussion($conn, $categoryId = 0, $categoryType = 'discussion', $sortBy = 'new', $dateFilter = 'all', $pageNo = 0)
+{
+    if ($categoryId == 0) {
+        return [];
+    }
+
+    switch ($sortBy) {
+        case 'old':
+            $orderBy = 'link_published ASC';
+            break;
+        case 'popular':
+            $orderBy = 'post_viewed DESC, link_published DESC';
+            break;
+        case 'replies':
+            $orderBy = 'post_replies DESC, link_published DESC';
+            break;
+        case 'likes':
+            $orderBy = 'post_likes DESC, link_published DESC';
+            break;
+        default:
+            $orderBy = 'link_published DESC';
+            break;
+    }
+
+    switch ($dateFilter) {
+        case 'today':
+            // From today 00:00:00 to today 23:59:59
+            $dateSql = "AND link_published BETWEEN CONCAT(CURDATE(), ' 00:00:00') 
+                    AND CONCAT(CURDATE(), ' 23:59:59')";
+            break;
+
+        case 'week':
+            // From 7 days ago 00:00:00 to today 23:59:59
+            $dateSql = "AND link_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 7 DAY) 
+                    AND CONCAT(CURDATE(), ' 23:59:59')";
+            break;
+
+        case 'month':
+            // From 1 month ago 00:00:00 to today 23:59:59
+            $dateSql = "AND link_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 1 MONTH) 
+                    AND CONCAT(CURDATE(), ' 23:59:59')";
+            break;
+
+        case 'year':
+            // From 1 year ago 00:00:00 to today 23:59:59
+            $dateSql = "AND link_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 1 YEAR) 
+                    AND CONCAT(CURDATE(), ' 23:59:59')";
+            break;
+
+        default:
+            $dateSql = "";
+            break;
+    }
+
+    $categoryQuery = "SELECT * FROM " . TABLE_PREFIX . "discussion WHERE discussion_category={$categoryId} AND discussion_type='{$categoryType}' AND discussion_status=1 AND discussion_site_id=" . SITE_ID;
+
+    $resData = mysqli_query($conn, $categoryQuery);
+    if (!$resData) {
+        return [];
+    } else {
+        $out = mysqli_fetch_assoc($resData);
+    }
+
+    echo $categoryQuery;
+    mysqli_free_result($resData);
+
+    return $out;
+}

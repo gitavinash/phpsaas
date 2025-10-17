@@ -38,11 +38,13 @@ $postType = ((isset($postType)) ? $postType : 'discussion');
             </div>
             <!-- Search Bar -->
             <div class="relative w-1/3">
-                <div class="absolute inset-y-0 left-0 w-10 h-10 flex items-center justify-center text-gray-500">
-                    <i class="ri-search-line ri-lg"></i>
-                </div>
-                <input type="search" placeholder="Search discussions, doctors, topics..."
-                    class="w-full h-10 pl-10 pr-4 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                <form action="/search/" method="get">
+                    <div class="absolute inset-y-0 left-0 w-10 h-10 flex items-center justify-center text-gray-500">
+                        <i class="ri-search-line ri-lg"></i>
+                    </div>
+                    <input type="search" name="q" placeholder="Search discussions, doctors, topics..."
+                        class="w-full h-10 pl-10 pr-4 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                </form>
             </div>
             <!-- User Actions -->
             <div class="flex items-center space-x-4">

@@ -8,7 +8,7 @@ $(function () {
   const $imageInput = $("#imageInput");
   const $beforeInput = $("#beforeImageInput");
   const $afterInput = $("#afterImageInput");
-  const $submitBtn = $("#submitADiscussion");
+  const $submitBtn = $("#submitDiscussion");
 
   function setLoading(on) {
     $submitBtn
@@ -220,7 +220,7 @@ $(function () {
     const fd = new FormData();
     fd.append("title", ($("#title").val() || "").trim());
     fd.append("category", getCategory());
-    fd.append("post_type", $('input[name="postType"]:checked').val());
+    fd.append("post_type", $('input[name="discussion_type"]:checked').val());
     fd.append("content_html", ($editor.html() || "").trim());
     fd.append("content_text", ($editor.text() || "").trim());
     fd.append("tags", JSON.stringify(getTags()));

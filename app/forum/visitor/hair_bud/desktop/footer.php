@@ -112,11 +112,11 @@ tailwind.config = {
 <script src="<?php echo USER_JS ?>app.js"></script>
 <?php
 
-if (ACTIVE_URL == '/start-a-discussion/') {
+if (BASE_URL == '/start-a-discussion/') {
     echo "<script src='" . USER_JS . "discussion.js'></script>";
 }
 
-if (ACTIVE_URL == '/trending-discussions/') {
+if (BASE_URL == '/trending-discussions/') {
     echo "<script src='" . USER_JS . "category.js'></script>";
 }
 
