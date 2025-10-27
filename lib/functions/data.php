@@ -383,7 +383,6 @@ function getCategoryDiscussion($conn, $categoryId = 0, $categoryType = 'discussi
         $out = mysqli_fetch_assoc($resData);
     }
 
-    echo $categoryQuery;
     mysqli_free_result($resData);
 
     return $out;

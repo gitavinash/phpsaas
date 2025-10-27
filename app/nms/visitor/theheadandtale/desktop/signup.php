@@ -27,6 +27,7 @@ if (isset($_COOKIE['user_data'])) {
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta name="robots" content="noindex,nofollow">
     <?php require_once GOOGLE_RECAPTCHA_GENERATOR; ?>
 </head>
 
@@ -65,7 +66,7 @@ if (isset($_COOKIE['user_data'])) {
                         <?php
 
                         if (isset($auth)) { ?>
-                            <input type="hidden" name="autologin" value="true">
+                        <input type="hidden" name="autologin" value="true">
                         <?php
                         }
 
