@@ -203,6 +203,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Redirect to new url.</title>
+    <meta name="robots" content="noindex,nofollow">
     <script>
     window.onload = function() {
         document.getElementById("autoSubmitForm").submit();
