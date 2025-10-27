@@ -4,10 +4,20 @@
 <title>
     <?php echo ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'}) : SITE_DESC . ' | ' . SITE_NAME) ?>
 </title>
-<!-- Canonical URL -->
-<link rel="canonical" href="<?php echo $canonicalURL; ?>" />
 
 <?php
+
+echo "<link rel='canonical' href='{$canonicalURL}' />";
+
+$isSearch = strpos(BASE_URL, '/search/') !== false;
+$isTag = strpos(BASE_URL, '/tag/') !== false;
+$isPaginated = (int)($_GET['pg'] ?? $_GET['page'] ?? 1) > 1;
+
+if ($isSearch || $isTag) {
+    if ($isPaginated) {
+        echo '<meta name="robots" content="noindex,follow">';
+    }
+}
 
 if (defined('ENABLE_AMP')) {
 
