@@ -32,6 +32,7 @@ if ($checkProducts = mysqli_query($connection, "SELECT product_title,product_ima
 
             require_once $filterThemePath;
         } else {
+            http_response_code(404);
             echo '<h1>Unable to find the template path</h1>';
         }
     } else {

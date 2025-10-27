@@ -59,6 +59,7 @@ switch ($link_status) {
                             if (file_exists($defaultProductTemplatePath)) {
                                 require_once $defaultProductTemplatePath;
                             } else {
+                                http_response_code(404);
                                 echo '<h1>Unable to find the template path</h1>';
                             }
                         }

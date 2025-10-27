@@ -98,7 +98,7 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 
 						require_once USER_PATH . 'category.php';
 					} else {
-
+						http_response_code(404);
 						echo '<h1>Unable to find the template path</h1>';
 					}
 				}
