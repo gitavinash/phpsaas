@@ -4,12 +4,6 @@ http_response_code(404);
 
 require_once 'header.php';
 
-// Schedule redirect after 3 seconds
-header("Refresh: 3; url=/");
-
-// Optionally, set 301 redirect intent (Google still sees 404 but browser refreshes)
-header("Status: 301 Moved Permanently");
-
 ?>
 <section class="thankyou_wrapper" style="margin-bottom: 200px;">
     <div class="container">
@@ -18,6 +12,11 @@ header("Status: 301 Moved Permanently");
         </div>
     </div>
 </section>
+<script>
+setTimeout(function() {
+    window.location.replace('/');
+}, 3000);
+</script>
 <?php
 
 require_once 'footer.php';
