@@ -168,14 +168,15 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
 
             $newsList = similarArticles($connection, $news_id, 'news', 5);
 
-            if (sizeof($newsList['articles']) > 0) {
-                echo "<section class='related-wrapper' aria-labelledby='relatedHeading'>
+            if (isset($newsList['articles'])) {
+                if (sizeof($newsList['articles']) > 0) {
+                    echo "<section class='related-wrapper' aria-labelledby='relatedHeading'>
                 <div class='container'>
                     <h2 id='relatedHeading' class='related-title'>Related News</h2>
 
                     <div class='related-grid'>";
-                foreach ($newsList['articles'] as $news) {
-                    echo "<article class='related-card'>
+                    foreach ($newsList['articles'] as $news) {
+                        echo "<article class='related-card'>
                 <a class='related-link' href='{$news['link_url']}'>
                     <figure class='related-media'>
                         <img loading='lazy' src='{$news['image']}'
@@ -189,12 +190,13 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                     </div>
                 </a>
             </article>";
-                }
-                echo "</div>
+                    }
+                    echo "</div>
                 <div class='related-footer'>
             <a class='related-more-link' href='/search/?q={$newsList['mostUserKeyword']}'>View all related news</a>
         </div>
                 </div></section>";
+                }
             }
 
             ?>
