@@ -146,13 +146,17 @@ require_once 'header.php';
                 <div class="space-y-4">
                     <?php
                     $similarArticles = similarArticles($connection, $discussion_id, $postType, 10);
-                    foreach ($similarArticles['articles'] as $artcileInfo) {
-                        echo "<div class='border-b border-gray-100 pb-3 break-words'>
-                                <a href='{$artcileInfo['link_url']}' data-readdy='true'>
-                                    <h4 class='text-sm font-medium text-gray-900 hover:text-primary cursor-pointer'>{$artcileInfo['title']}t</h4>
-                                </a>
-                                <p class='text-xs text-gray-500 mt-1'>by " . ucwords($artcileInfo['profile_display_name']) . "</p>
-                            </div>";
+                    if (!empty($similarArticles) && isset($similarArticles['articles'])) {
+                        foreach ($similarArticles['articles'] as $articleInfo) {
+                            echo "<div class='border-b border-gray-100 pb-3 break-words'>
+                                    <a href='{$articleInfo['link_url']}' data-readdy='true'>
+                                        <h4 class='text-sm font-medium text-gray-900 hover:text-primary cursor-pointer'>{$articleInfo['title']}</h4>
+                                    </a>
+                                    <p class='text-xs text-gray-500 mt-1'>by " . ucwords($articleInfo['profile_display_name']) . "</p>
+                                </div>";
+                        }
+                    } else {
+                        echo "<p class='text-sm text-gray-500'>No related discussions found.</p>";
                     }
                     ?>
                 </div>
@@ -166,7 +170,7 @@ require_once 'header.php';
                     $tagName = explode(', ', $tagName);
                     foreach ($tagName as $tag) {
                         echo "<span class='px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full cursor-pointer'>
-                            <a href='/tag/" . str_replace(' ', '-', $tag) . "' title='" . ucwords($tag) . "'>{$tag}</a>
+                            <a href='/tag/" . str_replace(' ', '-', $tag) . "/' title='" . ucwords($tag) . "'>{$tag}</a>
                         </span>";
                     }
                     ?>

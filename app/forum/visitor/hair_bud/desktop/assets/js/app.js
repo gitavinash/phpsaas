@@ -167,7 +167,7 @@ $(document).ready(function () {
      POST TYPE -> BEFORE/AFTER TOGGLE
   ========================= */
   const $beforeAfter = $("#beforeAfterSection");
-  $(document).on("change", 'input[name="postType"]', function () {
+  $(document).on("change", 'input[name="discussion_type"]', function () {
     $(this).val() === "success_story"
       ? $beforeAfter.removeClass("hidden")
       : $beforeAfter.addClass("hidden");

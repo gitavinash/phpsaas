@@ -209,27 +209,95 @@ $activeDateLabel = $dateOptions[$currentDate];
 <!-- Main Content -->
 <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-        <!-- Discussion List -->
         <main class="lg:col-span-8 xl:col-span-9">
             <div class="space-y-4" id="discussions-container">
-                <!-- demo cards ... (your static/demo items remain unchanged) -->
-                <!-- ... -->
+
+
+                <?php
+
+                $categoryPost = getCategoryDiscussion(
+                    $connection,
+                    $category_id,
+                    'discussion',
+                    $currentSort,
+                    $currentDate,
+                    $pageNo
+                );
+
+                print_r($categoryPost);
+                exit();
+
+                ?>
+
+                <div
+                    class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 transition-all duration-300 discussion-card cursor-pointer">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mr-4">
+                                <span class="text-indigo-600 font-medium">EM</span>
+                            </div>
+                            <div>
+                                <div class="flex items-center">
+                                    <p class="font-medium text-gray-900">Emily Morgan</p>
+                                    <span class="mx-2 text-gray-400">•</span>
+                                    <p class="text-sm text-gray-500">2 hours ago</p>
+                                </div>
+                                <div class="flex items-center mt-1">
+                                    <span
+                                        class="px-2.5 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Hair
+                                        Loss</span>
+                                    <div class="ml-3 flex items-center text-xs text-gray-500">
+                                        <i class="ri-pushpin-line mr-1"></i>
+                                        <span>Pinned</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-3 h-3 bg-primary rounded-full"></div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3 hover:text-primary">
+                        My experience with finasteride after 6 months - detailed review
+                    </h3>
+                    <a href="https://readdy.ai/home/0ed8e6fd-1b57-4961-9c40-f04471f53645/3e271e94-ec38-40af-bb38-d59c4857883b"
+                        data-readdy="true" class="block">
+                        <p class="text-gray-600 mb-4 line-clamp-3">
+                            I wanted to share my comprehensive journey with finasteride so
+                            far. The first 2 months were challenging with some side
+                            effects, but after adjusting the dosage with my doctor's
+                            guidance, I'm seeing real improvements in hair density. I've
+                            documented everything including photos, side effects, and
+                            timeline...
+                        </p>
+                    </a>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-6 text-sm text-gray-500">
+                            <span class="flex items-center"><i class="ri-eye-line mr-2"></i> 1,247</span>
+                            <span class="flex items-center"><i class="ri-message-2-line mr-2"></i> 48</span>
+                            <span class="flex items-center"><i class="ri-heart-line mr-2"></i> 86</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="flex -space-x-2">
+                                <div
+                                    class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center border-2 border-white">
+                                    <span class="text-green-600 text-xs font-medium">DR</span>
+                                </div>
+                                <div
+                                    class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center border-2 border-white">
+                                    <span class="text-purple-600 text-xs font-medium">SJ</span>
+                                </div>
+                                <div
+                                    class="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center border-2 border-white">
+                                    <span class="text-orange-600 text-xs font-medium">+5</span>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-500">Last reply 1h ago</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Pagination (static demo) -->
-            <div class="flex flex-wrap justify-center items-center gap-2 mt-6 sm:mt-8">
-                <button class="px-3 py-2 text-gray-500 hover:text-gray-700 pagination-btn"><i
-                        class="ri-arrow-left-s-line"></i></button>
-                <button class="px-3 py-2 rounded-md pagination-btn active">1</button>
-                <button class="px-3 py-2 rounded-md pagination-btn">2</button>
-                <button class="px-3 py-2 rounded-md pagination-btn">3</button>
-                <button class="px-3 py-2 rounded-md pagination-btn">4</button>
-                <button class="px-3 py-2 rounded-md pagination-btn">5</button>
-                <span class="px-3 py-2 text-gray-500">...</span>
-                <button class="px-3 py-2 rounded-md pagination-btn">87</button>
-                <button class="px-3 py-2 text-gray-500 hover:text-gray-700 pagination-btn"><i
-                        class="ri-arrow-right-s-line"></i></button>
-            </div>
         </main>
 
         <!-- Sidebar -->
