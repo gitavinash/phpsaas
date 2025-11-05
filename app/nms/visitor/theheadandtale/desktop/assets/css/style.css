@@ -321,12 +321,12 @@ section {
 }
 
 .news_box .feature_image img:nth-child(2) {
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
   margin-top: 10px;
   position: static;
   float: left;
-  margin-left: -50px;
+  margin-left: -40px;
 }
 
 .news_box .news_intro {
