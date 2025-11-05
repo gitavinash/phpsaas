@@ -90,7 +90,7 @@
                 echo
                 "<li>
                                         <a href='/ipo-tales/' class='readMore'>
-                                           Previous editions...
+                                           Read more news...
                                         </a>
                                 </li>";
             } else {

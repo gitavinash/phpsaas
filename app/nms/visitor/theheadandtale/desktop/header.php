@@ -249,8 +249,11 @@ if (isset($_COOKIE['user_data'])) {
                         title="Explainer">Explainer</a></li>
                 <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
                         title="FIntech News">News</a></li>
-                <li><a href="/ai-emerging-tech/" title="Report"
+                <li><a href="/ai-emerging-tech/" title="AI/Emerging Tech"
                         <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
+                </li>
+                <li><a href="/ipo-tales/" title="IPO Tales"
+                        <?php echo ((BASE_URL == '/ipo-tales/') ? 'class="active"' : '') ?>>IPO Tales</a>
                 </li>
                 <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
                         title="Money Trivia">Money Trivia</a></li>
