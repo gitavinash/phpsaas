@@ -132,15 +132,15 @@
                     </div>
                 </div>
                 <div class="step-open-box step_6_box historyBox" style="display:none">
-                    <div class="stepNavigation">
-                        <button type="button" class="btn btn-primary backToStep2">
-                            <i class="fi-rr-arrow-left"></i> Back
-                        </button>
-                    </div>
                     <h2 style="font-size:24px;font-weight:700;margin-bottom:12px; margin-left: 5px;">
                         Visit Logs
                     </h2>
                     <div class="showVisitorHistory"></div>
+                    <div class="stepNavigation">
+                        <button type="button" style="width: 100%;" class="btn btn-primary backToStep2">
+                            <i class="fi-rr-arrow-left"></i> Back
+                        </button>
+                    </div>
                 </div>
                 <div class="step-open-box step_7_box clearDueBox" style="display:none">
                     <div class="stepNavigation">
