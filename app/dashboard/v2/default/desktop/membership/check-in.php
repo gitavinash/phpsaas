@@ -93,7 +93,7 @@
                 </div>
                 <div class="step-open-box step_4_box" style="display:none">
                     <div class="stepNavigation">
-                        <button type="button" class="btn btn-primary backToStep3">
+                        <button type="button" class="btn btn-primary backToStep2">
                             <i class="fi-rr-arrow-left"></i> Back
                         </button>
                     </div>
@@ -128,6 +128,38 @@
                             <a href="/dashboard/" class="btn btn-green">
                                 Go to Dashboard
                             </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-open-box step_6_box historyBox" style="display:none">
+                    <div class="stepNavigation">
+                        <button type="button" class="btn btn-primary backToStep2">
+                            <i class="fi-rr-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    <h2 style="font-size:24px;font-weight:700;margin-bottom:12px; margin-left: 5px;">
+                        Visit Logs
+                    </h2>
+                    <div class="showVisitorHistory"></div>
+                </div>
+                <div class="step-open-box step_7_box clearDueBox" style="display:none">
+                    <div class="stepNavigation">
+                        <button type="button" class="btn btn-primary backToStep2">
+                            <i class="fi-rr-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    <div class="form-group" style="margin-top: 20px;">
+                        <input id="otpValue" name="otpValue" placeholder="123456" type="number" required />
+                        <label class="form-lable" id="Label">Verify OTP<sup>*</sup></label>
+                    </div>
+                    <div class="box-1">
+                        <div class="form-group">
+                            <input type="hidden" id="otpRefId" name="otpRefId" value="">
+                            <input type="button" class="btn btn-green" id="redeemVisit" value="Verify OTP">
+                        </div>
+                        <div class="form-group">
+                            <input type="button" class="btn btn-blue" id="resendOTPBtn" value="Resend
+                                OTP">
                         </div>
                     </div>
                 </div>
