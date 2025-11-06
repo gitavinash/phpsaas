@@ -58,13 +58,13 @@
                     </div>
                     <div class="box-1">
                         <div class="form-group">
-                            <input type="button" class="btn btn-green" id="checkInMembership" value="Continue">
+                            <input type="button" class="btn btn-primary" id="checkInMembership" value="Continue">
                         </div>
                     </div>
                 </div>
                 <div class="step-open-box step_2_box" style="display:none">
                     <div class="stepNavigation">
-                        <button type="button" class="btn btn-light backToStep1">
+                        <button type="button" class="btn btn-primary backToStep1">
                             <i class="fi-rr-arrow-left"></i> Back
                         </button>
                     </div>
@@ -72,7 +72,7 @@
                 </div>
                 <div class="step-open-box step_3_box" style="display:none">
                     <div class="stepNavigation">
-                        <button type="button" class="btn btn-light backToStep2">
+                        <button type="button" class="btn btn-primary backToStep2">
                             <i class="fi-rr-arrow-left"></i> Back
                         </button>
                     </div>
@@ -93,7 +93,7 @@
                 </div>
                 <div class="step-open-box step_4_box" style="display:none">
                     <div class="stepNavigation">
-                        <button type="button" class="btn btn-light backToStep3">
+                        <button type="button" class="btn btn-primary backToStep3">
                             <i class="fi-rr-arrow-left"></i> Back
                         </button>
                     </div>
@@ -107,7 +107,7 @@
                             <input type="button" class="btn btn-green" id="redeemVisit" value="Verify OTP">
                         </div>
                         <div class="form-group">
-                            <input type="button" class="btn btn-light" id="resendOTPBtn" value="Resend
+                            <input type="button" class="btn btn-blue" id="resendOTPBtn" value="Resend
                                 OTP">
                         </div>
                     </div>

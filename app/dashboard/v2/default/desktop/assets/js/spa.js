@@ -454,6 +454,32 @@ $(document).ready(function () {
               `;
             }
 
+            var clearDueBtn = "";
+
+            if (due > 0) {
+              // Create "Clear dues" button
+              clearDueBtn = `
+              <div class="action-stack" style="margin-top:10px;">
+                <div class="action-item">
+                  <a href='#' class="btn btn-clear dataTableBtn clearDuesButton"
+                          data-id="${item.membership_id}" title="Clear dues">
+                    <i class="fi-rr-check-circle"></i> Clear old dues
+                  </a>
+                </div>
+              </div>
+            `;
+            }
+
+            // Create "Continue" button
+            const visitHistoryBtn = `
+              <div class="action-item">
+                <a href='#' class="btn btn-grey dataTableBtn visitHistoryButton"
+                        data-id="${item.membership_id}" title="Visit History">
+                  <i class="fi-rr-time-past"></i> History
+                </a>
+              </div>
+            `;
+
             var startDate = item.membership_created
               ? item.membership_created.split(" ")[0]
               : "—";
@@ -496,10 +522,11 @@ $(document).ready(function () {
             // If you prefer to HIDE the button instead of disabling it, replace above with:
             var continueBtn = canContinue
               ? `
-              <button class="btn btn-green dataTableBtn continueButton"
+              <div class="action-item">
+              <a href='#' class="btn btn-green-sales dataTableBtn continueButton"
                       data-id="${item.membership_id}" title="Continue">
-                <i class="fi-rr-arrow-right"></i> Continue
-              </button>`
+                <i class="fi-rr-arrow-right"></i> Continue to Redeem
+              </a></div>`
               : "";
 
             var cardHtml = `
@@ -549,12 +576,13 @@ $(document).ready(function () {
 
           <!-- Actions -->
           <div class="action-stack" style="margin-top:10px;">
-            <div class="action-item">
-              ${continueBtn}
-            </div>
             ${adminEditBtn}
+            ${visitHistoryBtn}
           </div>
-        </div>
+            ${clearDueBtn}
+          <div class="action-stack" style="margin-top:10px;">
+            ${continueBtn}
+          </div>
       </article>
     `;
 

@@ -37,7 +37,7 @@ if ($showForm == true) { ?>
 
                     <div class="form-group">
                         <select class="selectJS form-control" name="warehouseId" id="warehouseId">
-                            <option value="select">Select warehouse</option>
+                            <option value="select">Select branch</option>
                             <?php
 
                                     if ($warehouseList = mysqli_query($connection, "SELECT warehouse_id, warehouse_title, warehouse_code, warehouse_title, company_title FROM " . TABLE_PREFIX . "warehouse INNER JOIN " . TABLE_PREFIX . "company ON warehouse_company_id=company_id WHERE warehouse_status=1 AND company_address_id!=0 AND warehouse_site_id=" . SITE_ID)) {
