@@ -441,8 +441,9 @@ $(document).ready(function () {
       `;
             }
             adminEditBtn = "";
+            encryptMembershipId = btoa(item.membership_id);
+            $("#membershipId").val(encryptMembershipId);
             if (siteAdminType == "administrator") {
-              encryptMembershipId = btoa(item.membership_id);
               adminEditBtn = `
               <div class="action-item">
               <a href='/dashboard/membership/update/?id=${encryptMembershipId}' class="btn btn-blue dataTableBtn"
@@ -461,7 +462,7 @@ $(document).ready(function () {
               <div class="action-stack" style="margin-top:10px;">
                 <div class="action-item">
                   <a href='#' class="btn btn-clear dataTableBtn clearDuesButton"
-                          data-id="${item.membership_id}" title="Clear dues">
+                          data-id="${encryptMembershipId}" title="Clear dues">
                     <i class="fi-rr-check-circle"></i> Clear old dues
                   </a>
                 </div>
@@ -473,7 +474,7 @@ $(document).ready(function () {
             const visitHistoryBtn = `
               <div class="action-item">
                 <a href='#' class="btn btn-grey dataTableBtn visitHistoryButton"
-                        data-id="${item.membership_id}" title="Visit History">
+                        data-id="${encryptMembershipId}" title="Visit History">
                   <i class="fi-rr-time-past"></i> History
                 </a>
               </div>
@@ -498,38 +499,19 @@ $(document).ready(function () {
         </div>
       `;
             }
-            //       var visitsWarn = "";
-            //       if (!canContinue) {
-            //         visitsWarn = `
-            //   <div class='membership-not-redeem'>
-            //     Requested: <strong>${redeemQty}</strong>, Available: <strong>${avl}</strong>
-            //   </div>
-            // `;
-            //       }
-
-            //         // Build Continue button (disabled if not allowed)
-            //         var continueBtn = `
-            //   <button class="btn btn-green dataTableBtn continueButton"
-            //           data-id="${item.membership_id}" title="${
-            //           canContinue ? "Continue" : "Insufficient available visits"
-            //         }"
-            //           ${canContinue ? "" : "disabled aria-disabled='true'"} >
-            //     <i class="fi-rr-arrow-right"></i> Continue
-            //   </button>
-            // `;
 
             // If you prefer to HIDE the button instead of disabling it, replace above with:
             var continueBtn = canContinue
               ? `
               <div class="action-item">
               <a href='#' class="btn btn-green-sales dataTableBtn continueButton"
-                      data-id="${item.membership_id}" title="Continue">
+                      data-id="${encryptMembershipId}" title="Continue">
                 <i class="fi-rr-arrow-right"></i> Continue to Redeem
               </a></div>`
               : "";
 
             var cardHtml = `
-      <article class="widget-setting-info membership-card" data-id="${item.membership_id}">
+      <article class="widget-setting-info membership-card" data-id="${encryptMembershipId}">
         <div class="about-feature" style="max-width:100%;">
           <h3 class="heading name-cap" style="margin:0;">
             ${item.membership_profile_name}
@@ -627,7 +609,7 @@ $(document).ready(function () {
     $("#loader").show();
 
     $.ajax({
-      url: "/api/membership/history/?membershipId=" + btoa(membershipId),
+      url: "/api/membership/history/?membershipId=" + encryptMembershipId,
       type: "GET",
       dataType: "JSON",
       success: function (response) {
@@ -695,6 +677,13 @@ $(document).ready(function () {
         $("#loader").hide();
       },
     });
+  });
+
+  // Clear dues
+
+  $(document).on("click", ".clearDuesButton", function (e) {
+    e.preventDefault();
+    showStep(7);
   });
 
   // Handle Continue button → Step 3

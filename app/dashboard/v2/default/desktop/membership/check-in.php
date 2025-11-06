@@ -143,23 +143,37 @@
                     </div>
                 </div>
                 <div class="step-open-box step_7_box clearDueBox" style="display:none">
-                    <div class="stepNavigation">
-                        <button type="button" class="btn btn-primary backToStep2">
-                            <i class="fi-rr-arrow-left"></i> Back
-                        </button>
-                    </div>
+                    <h2 style="font-size:24px;font-weight:700;margin-bottom:12px; margin-left: 5px;">
+                        Collect Due Payment
+                    </h2>
                     <div class="form-group" style="margin-top: 20px;">
-                        <input id="otpValue" name="otpValue" placeholder="123456" type="number" required />
-                        <label class="form-lable" id="Label">Verify OTP<sup>*</sup></label>
+                        <input id="amount" name="amount" placeholder="1000" type="number" required />
+                        <label class="form-lable" id="Label">Amount ( In ₹ )<sup>*</sup></label>
+                    </div>
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <select class="selectJS form-control" id="paymentMode" name="paymentMode" required
+                            style="width:100%;height:44px;border:1px solid #dfe3e8;border-radius:8px;padding:0 10px;font-size:16px;background:#fff;">
+                            <option value="">Select mode</option>
+                            <option value="cash">Cash</option>
+                            <option value="upi">UPI</option>
+                            <option value="card">Card</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <label class="form-lable" id="paymentModeLabel">Payment Mode <sup>*</sup></label>
+                    </div>
+                    <div class="form-group" style="margin-top: 20px; margin-bottom:10px;">
+                        <textarea name="comment" id="comment" placeholder="Any comment?"></textarea>
+                        <label class="form-lable" id="Label">Notes (optional)</label>
                     </div>
                     <div class="box-1">
                         <div class="form-group">
-                            <input type="hidden" id="otpRefId" name="otpRefId" value="">
-                            <input type="button" class="btn btn-green" id="redeemVisit" value="Verify OTP">
+                            <input type="hidden" id="membershipId" name="membershipId" value="">
+                            <input type="button" class="btn btn-green" id="collectPaymentBtn" value="Collect Payment">
                         </div>
                         <div class="form-group">
-                            <input type="button" class="btn btn-blue" id="resendOTPBtn" value="Resend
-                                OTP">
+                            <button type="button" style="width: 100%;" class="btn btn-primary backToStep2">
+                                <i class="fi-rr-arrow-left"></i> Back
+                            </button>
                         </div>
                     </div>
                 </div>

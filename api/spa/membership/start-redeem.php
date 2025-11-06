@@ -11,6 +11,8 @@ $data = array();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($membershipId)) {
 
+        $membershipId = base64_decode($membershipId);
+
         if ($checkPost = mysqli_query($connection, "SELECT membership_id, user_id, user_mobile FROM " . TABLE_PREFIX . "membership INNER JOIN " . TABLE_PREFIX . "user ON user_id=membership_user_id WHERE membership_site_id=" . SITE_ID . " AND membership_id='{$membershipId}'")) {
 
             if (mysqli_num_rows($checkPost) != 0) {
