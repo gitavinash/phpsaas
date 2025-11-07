@@ -112,6 +112,16 @@ $(document).ready(function () {
     });
   });
 
+  $(document).ready(function () {
+    if ($("#addMembership").length) {
+      // Bind the onchange event of #visit to update #avlVisit
+      $("#visit").on("change", function () {
+        var visitValue = $(this).val(); // Get the value of #visit
+        $("#avlVisit").val(visitValue); // Set the value of #avlVisit
+      });
+    }
+  });
+
   $("#addMembership").on("click", function (e) {
     e.preventDefault();
     $("#addMembership").hide();
@@ -119,12 +129,13 @@ $(document).ready(function () {
     var name = $("#name").val().trim();
     var warehouseId = $("#warehouseId").val().trim();
     var mobile = $("#mobile").val().trim();
-    var packageType = $("#package").val();
+    var packageType = $("#package").val()?.trim() || "";
     var price = $("#price").val().trim();
     var dueAmount = $("#dueAmount").val().trim();
     var visit = $("#visit").val().trim();
     var avlVisit = $("#avlVisit").val().trim();
     var requirements = $("#requirements").val().trim();
+    const paymentMode = $("#paymentMode").val()?.trim() || "";
 
     // ===== VALIDATION =====
     if (name === "") {
@@ -145,6 +156,12 @@ $(document).ready(function () {
 
     if (packageType === "") {
       popUpMessage("center", "Please select a room type", "warning");
+      $("#addMembership").show();
+      return;
+    }
+
+    if (paymentMode === "") {
+      popUpMessage("center", "Please select a payment mode", "warning");
       $("#addMembership").show();
       return;
     }
@@ -204,6 +221,7 @@ $(document).ready(function () {
         visit: visit,
         avlVisit: avlVisit,
         requirements: requirements,
+        paymentMode: paymentMode,
       },
       dataType: "JSON",
       success: function (response) {
@@ -721,7 +739,7 @@ $(document).ready(function () {
     console.log("payload", payload);
 
     $.ajax({
-      url: "/api/membership/clear-due/",
+      url: "/api/membership/clear-dues/",
       type: "POST",
       dataType: "json",
       data: payload,

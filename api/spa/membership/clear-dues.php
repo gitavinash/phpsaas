@@ -3,7 +3,7 @@
 require_once COMMUNICATION_FUNCTIONS;
 require_once LOGIN_CHECK;
 
-$httpStatus = 500;
+$httpStatus = 400;
 $status = 'warning';
 $msg = 'Something went wrong';
 $data = array();
@@ -13,42 +13,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $membershipId = base64_decode($membershipId);
 
-        if ($checkPost = mysqli_query($connection, "SELECT membership_id, user_id, user_mobile FROM " . TABLE_PREFIX . "membership INNER JOIN " . TABLE_PREFIX . "user ON user_id=membership_user_id WHERE membership_site_id=" . SITE_ID . " AND membership_id='{$membershipId}'")) {
+        if ($checkPost = mysqli_query($connection, "SELECT membership_id, membership_amount_due, user_id, user_mobile FROM " . TABLE_PREFIX . "membership INNER JOIN " . TABLE_PREFIX . "user ON user_id=membership_user_id WHERE membership_site_id=" . SITE_ID . " AND membership_id='{$membershipId}'")) {
 
             if (mysqli_num_rows($checkPost) != 0) {
 
                 extract(mysqli_fetch_assoc($checkPost));
 
-                $otpCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                if ($paymentAmount <= $membership_amount_due) {
 
-                $durations = $_POST['duration'] ?? [];
-                if (!is_array($durations)) {
-                    $durations = [$durations];
-                }
-                $durations = array_values(array_map('intval', $durations));
+                    mysqli_query($connection, "START TRANSACTION");
 
-                $otpCommentArr = [
-                    'membership_id' => (int)$membershipId,
-                    'visitDuration' => $durations
-                ];
+                    $saveTransaction = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "transaction (transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_amount, transaction_type, transaction_comment, transaction_status) VALUES (" . SITE_ID . ", '{$user_id}', '{$membership_id}', '{$paymentMode}', '{$paymentAmount}', 'membership', '{$paymentNotes}', 1)");
 
-                $otpComment = mysqli_real_escape_string(
-                    $connection,
-                    json_encode($otpCommentArr, JSON_UNESCAPED_UNICODE)
-                );
+                    $updateMembership = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "membership SET membership_amount_due=membership_amount_due-{$paymentAmount} WHERE membership_site_id=" . SITE_ID . " AND membership_id='{$membership_id}'");
 
-                $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_destination, otp_code, otp_comment, otp_status, otp_time, otp_expire) VALUES ('{$user_id}', " . SITE_ID . ", 'sms', '{$user_mobile}', '{$otpCode}', '{$otpComment}', 0, NOW(), DATE_ADD(NOW(), INTERVAL 10 MINUTE))";
-                $insertOTP = mysqli_query($connection, $sql);
-                $otpRefId = base64_encode(mysqli_insert_id($connection));
-                $sendResult = sendOTPviaSMS($user_mobile, $otpCode);
-
-                if ($sendResult !== true) {
-                    $status = 'warning';
-                    $msg = 'OTP stored but failed to send' . ((DEVELOPMENT_MODE == true) ? $sendResult : '');
+                    if ($saveTransaction && $updateMembership) {
+                        $status = 'success';
+                        $msg = 'Dues updated successfully';
+                        $httpStatus = 201;
+                        mysqli_query($connection, "COMMIT");
+                    } else {
+                        $msg = 'Technical error';
+                        mysqli_query($connection, "ROLLBACK");
+                    }
                 } else {
-                    $httpStatus = 201;
-                    $status = 'success';
-                    $msg = 'OTP send successfully';
+                    $status = 'warning';
+                    $msg = 'Amount exceeds due amount';
                 }
             } else {
 
@@ -69,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $result = array(
     'status' => ((isset($status)) ? $status : 'error'),
     'msg' => ((isset($msg)) ? $msg : 'Something went wrong'),
-    'otpRefId' => ((isset($otpRefId)) ? $otpRefId : '')
 );
 
 

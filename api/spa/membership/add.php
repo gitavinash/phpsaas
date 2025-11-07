@@ -64,11 +64,36 @@ user_mobile='{$mobile}'")) {
 
             if ($userID != '') {
 
+                mysqli_query($connection, "START TRANSACTION");
+
                 // Create a membership
 
-                if ($generateMembership = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership(membership_site_id, membership_user_id, membership_profile_name, membership_branch_id, membership_type, membership_type_id, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, membership_comment, membership_status, membership_created, membership_expire) VALUES('" . SITE_ID . "', '{$userID}', '{$name}', '{$warehouseId}', 'category', '{$package}', '{$visit}', '{$avlVisit}', '{$price}', '{$dueAmount}', '{$requirements}', 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR))")) {
+                $generateMembership = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership(membership_site_id, membership_user_id, membership_profile_name, membership_branch_id, membership_type, membership_type_id, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, membership_comment, membership_status, membership_created, membership_expire) VALUES('" . SITE_ID . "', '{$userID}', '{$name}', '{$warehouseId}', 'category', '{$package}', '{$visit}', '{$avlVisit}', '{$price}', '{$dueAmount}', '{$requirements}', 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR))");
 
-                    $membershipId = mysqli_insert_id($connection);
+                $membershipId = mysqli_insert_id($connection);
+                $paymentAmount = $price - $dueAmount;
+
+                $saveTransaction = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "transaction (transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_amount, transaction_type, transaction_status) VALUES (" . SITE_ID . ", '{$user_id}', '{$membershipId}', '{$paymentMode}', '{$paymentAmount}', 'membership', 1)");
+
+                if ($avlVisit < $visit) {
+
+                    $deductVisits = $visit - $avlVisit;
+
+                    $visitRecord = array();
+                    for ($i = 0; $i < $deductVisits; $i++) {
+                        $visitRecord[] = "('{$membershipId}', '" . SITE_ID . "', '0', '', '0', '0', 1)";
+                    }
+
+                    // bulk insert
+                    $insertVisit = mysqli_query(
+                        $connection,
+                        "INSERT INTO " . TABLE_PREFIX . "membership_visits(visit_membership_id, visit_site_id, visit_duration, visit_room_number, visit_staff_one_id, visit_staff_two_id, visit_status) VALUES " . implode(',', $visitRecord)
+                    );
+                } else {
+                    $insertVisit = true;
+                }
+
+                if ($generateMembership && $saveTransaction && $insertVisit) {
 
                     if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
                         if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
@@ -79,11 +104,13 @@ user_mobile='{$mobile}'")) {
                     $httpStatus = 201;
                     $status = 'success';
                     $msg = 'New membership package is generated successfully';
+                    mysqli_query($connection, "COMMIT");
                 } else {
                     $msg = 'Something went wrong while trying to create a membership';
+                    mysqli_query($connection, "ROLLBACK");
                 }
             } else {
-                $msg = 'Something went wrong while trying to create a membership';
+                $msg = 'Invalid user information found';
             }
         } else {
             $msg = 'Invalid category information found';

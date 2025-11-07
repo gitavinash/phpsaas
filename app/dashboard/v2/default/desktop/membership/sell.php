@@ -62,7 +62,7 @@
                             if ($roomType = mysqli_query($connection, "SELECT category_id, category_title FROM " . TABLE_PREFIX . "category WHERE category_status=1 AND category_site_id='" . SITE_ID . "' AND category_type='spa_room'")) {
                                 if (mysqli_num_rows($roomType) != 0) {
                                     while ($room = mysqli_fetch_assoc($roomType)) {
-                                        echo "<option value='{$room['category_id']}' " . (($room['category_title'] == 'deluxe') ? 'selected' : '') . ">{$room['category_title']}</option>";
+                                        echo "<option value='{$room['category_id']}' " . (($room['category_title'] == 'deluxe') ? 'selected' : '') . ">" . ucwords($room['category_title']) . "</option>";
                                     }
                                 }
                             }
@@ -70,13 +70,24 @@
                             ?>
                         </select>
                     </div>
+                    <div class="form-group" style="margin-bottom:20px;">
+                        <select class="selectJS form-control" id="paymentMode" name="paymentMode" required
+                            style="width:100%;height:44px;border:1px solid #dfe3e8;border-radius:8px;padding:0 10px;font-size:16px;background:#fff;">
+                            <option value="">Select mode</option>
+                            <option value="cash" selected>Cash</option>
+                            <option value="upi">UPI</option>
+                            <option value="card">Card</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <label class="form-lable" id="paymentModeLabel">Payment Mode <sup>*</sup></label>
+                    </div>
                     <div class="form-group">
                         <input id="price" placeholder="5000" name="price" type="number" required />
-                        <label class="form-lable" id="Label">Price<sup>*</sup></label>
+                        <label class="form-lable" id="Label">Price ( In ₹ ) <sup>*</sup></label>
                     </div>
                     <div class="form-group">
                         <input id="dueAmount" value="0" name="dueAmount" type="number" required />
-                        <label class="form-lable" id="Label">Any Due Amount?<sup>*</sup></label>
+                        <label class="form-lable" id="Label">Any Due Amount ( In ₹ ) ?<sup>*</sup></label>
                     </div>
                     <div class="form-group">
                         <input id="visit" value="5" name="visit" type="number" required />

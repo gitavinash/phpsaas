@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $warehouseFilter = "";
     }
 
-    if ($checkMembership = mysqli_query($connection, "SELECT membership_id, membership_comment, membership_profile_name, membership_total_visit, membership_avl_visit, membership_amount_due, category_title as packageName, membership_created, membership_update FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "membership ON membership_user_id=user_id INNER JOIN " . TABLE_PREFIX . "category ON category_id=membership_type_id AND category_site_id='" . SITE_ID . "' AND category_type='spa_room' WHERE {$warehouseFilter} membership_status=1 AND user_mobile='{$mobile}' AND membership_site_id=" . SITE_ID)) {
+    if ($checkMembership = mysqli_query($connection, "SELECT membership_id, membership_comment, membership_profile_name, membership_total_visit, membership_avl_visit, membership_amount_due, category_title as packageName, membership_created, membership_update FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "membership ON membership_user_id=user_id INNER JOIN " . TABLE_PREFIX . "category ON category_id=membership_type_id AND category_site_id='" . SITE_ID . "' AND category_type='spa_room' WHERE {$warehouseFilter} membership_status=1 AND user_mobile='{$mobile}' AND membership_site_id=" . SITE_ID . " ORDER BY membership_expire ASC")) {
         if (mysqli_num_rows($checkMembership) != 0) {
             $status = 'success';
             $httpStatus = 200;
