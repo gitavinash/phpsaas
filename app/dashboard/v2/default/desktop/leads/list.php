@@ -109,7 +109,8 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                     <?php
 
                         if ($site_access_type != 'agent') {
-                            echo "<th>Source</th><th>Assign to</th>";
+                            echo (($site_access_type != 'team_lead') ? '<th>Source</th>' : '');
+                            echo "<th>Assign to</th>";
                         }
                         if (SITE_APP != 'astro_client') {
                             echo "<th>Recent note</th>";
@@ -231,8 +232,11 @@ ORDER BY
                         <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
                     <?php
 
-                                    if ($site_access_type != 'agent') { ?>
-                    <td><?php echo ucwords($enquiry_source) ?></td>
+                                    if ($site_access_type != 'agent') {
+                                        if ($site_access_type != 'team_lead') {
+                                            echo "<td>" . ucwords($enquiry_source) . "</td>";
+                                        } ?>
+
                     <td>
                         <form method="POST">
                             <?php

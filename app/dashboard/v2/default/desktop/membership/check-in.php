@@ -154,7 +154,7 @@
                         <select class="selectJS form-control" id="paymentMode" name="paymentMode" required
                             style="width:100%;height:44px;border:1px solid #dfe3e8;border-radius:8px;padding:0 10px;font-size:16px;background:#fff;">
                             <option value="">Select mode</option>
-                            <option value="cash">Cash</option>
+                            <option value="cash" selected>Cash</option>
                             <option value="upi">UPI</option>
                             <option value="card">Card</option>
                             <option value="other">Other</option>
@@ -168,7 +168,9 @@
                     <div class="box-1">
                         <div class="form-group">
                             <input type="hidden" id="membershipId" name="membershipId" value="">
-                            <input type="button" class="btn btn-green" id="collectPaymentBtn" value="Collect Payment">
+                            <button type="button" style="width: 100%;" class="btn btn-green" id="collectPaymentBtn">
+                                <i class="fi-rr-check"></i> Collect Payment
+                            </button>
                         </div>
                         <div class="form-group">
                             <button type="button" style="width: 100%;" class="btn btn-primary backToStep2">

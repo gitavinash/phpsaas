@@ -441,6 +441,7 @@ $(document).ready(function () {
       `;
             }
             adminEditBtn = "";
+
             encryptMembershipId = btoa(item.membership_id);
             $("#membershipId").val(encryptMembershipId);
             if (siteAdminType == "administrator") {
@@ -609,12 +610,10 @@ $(document).ready(function () {
     $("#loader").show();
 
     $.ajax({
-      url: "/api/membership/history/?membershipId=" + encryptMembershipId,
+      url: "/api/membership/history/?membershipId=" + membershipId,
       type: "GET",
       dataType: "JSON",
       success: function (response) {
-        console.log("response:", response);
-
         if (response.status === "success") {
           var $visitsList = $(".showVisitorHistory");
           $visitsList.empty();
@@ -684,6 +683,79 @@ $(document).ready(function () {
   $(document).on("click", ".clearDuesButton", function (e) {
     e.preventDefault();
     showStep(7);
+  });
+
+  $("#collectPaymentBtn").on("click", function (e) {
+    e.preventDefault();
+
+    const membershipId = $("#membershipId").val()?.trim() || "";
+    const paymentAmount = $("#amount").val()?.trim() || "";
+    const paymentMode = $("#paymentMode").val()?.trim() || "";
+    const paymentNotes = $("#comment").val()?.trim() || "";
+
+    if (!membershipId) {
+      popUpMessage("center", "Membership ID is missing", "error");
+      return;
+    }
+
+    if (!paymentAmount || isNaN(paymentAmount) || paymentAmount <= 0) {
+      popUpMessage("center", "Please enter a valid payment amount", "warning");
+      return;
+    }
+
+    if (!paymentMode) {
+      popUpMessage("center", "Please select a payment mode", "warning");
+      return;
+    }
+
+    $(".step_7_box").hide();
+    $("#loader").show();
+
+    const payload = {
+      membershipId,
+      paymentAmount,
+      paymentMode,
+      paymentNotes,
+    };
+
+    console.log("payload", payload);
+
+    $.ajax({
+      url: "/api/membership/clear-due/",
+      type: "POST",
+      dataType: "json",
+      data: payload,
+      success: function (response) {
+        if (response.status === "success") {
+          popUpMessage(
+            "center",
+            response.msg || "Payment collected successfully",
+            "success"
+          );
+
+          // update UI after success
+          setTimeout(() => {
+            // redisplay membership updated view / redirect
+            window.location.reload();
+          }, 1200);
+        } else {
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "error"
+          );
+        }
+      },
+      error: function (xhr) {
+        popUpMessage(
+          "center",
+          (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed",
+          (xhr.responseJSON && xhr.responseJSON.status) || "error"
+        );
+        $("#loader").hide();
+        showStep(7);
+      },
+    });
   });
 
   // Handle Continue button → Step 3
