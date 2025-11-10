@@ -78,3 +78,20 @@
 <?php } ?>
 
 <?php } ?>
+
+
+<div class="widget box-1">
+    <?php
+
+    require_once ADMIN_PATH . 'dashboard/widgets/sales-chart.php';
+
+    ?>
+</div>
+
+<div class="widget box-1">
+    <?php
+
+    require_once ADMIN_PATH . 'dashboard/widgets/visits-chart.php';
+
+    ?>
+</div>

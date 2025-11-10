@@ -74,6 +74,7 @@ user_mobile='{$mobile}'")) {
                 $paymentAmount = $price - $dueAmount;
 
                 $saveTransaction = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "transaction (transaction_site_id, transaction_user_id, transaction_order_id, transaction_method, transaction_amount, transaction_type, transaction_status) VALUES (" . SITE_ID . ", '{$user_id}', '{$membershipId}', '{$paymentMode}', '{$paymentAmount}', 'membership', 1)");
+                $transactionId = mysqli_insert_id($connection);
 
                 if ($avlVisit < $visit) {
 
@@ -98,6 +99,7 @@ user_mobile='{$mobile}'")) {
                     if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
                         if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
                             require_once WHATSAPP_TEMPLATE_ADMIN . 'new_membership.php';
+                            require_once WHATSAPP_TEMPLATE_ADMIN . 'payment_alert.php';
                         }
                     }
 
