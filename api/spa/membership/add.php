@@ -99,7 +99,6 @@ user_mobile='{$mobile}'")) {
                     if (defined('ENABLE_WHATSAPP_BUSINESS_API')) {
                         if (ENABLE_WHATSAPP_BUSINESS_API == 'yes') {
                             require_once WHATSAPP_TEMPLATE_ADMIN . 'new_membership.php';
-                            require_once WHATSAPP_TEMPLATE_ADMIN . 'payment_alert.php';
                         }
                     }
 

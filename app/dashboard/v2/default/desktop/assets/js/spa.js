@@ -461,7 +461,6 @@ $(document).ready(function () {
             adminEditBtn = "";
 
             encryptMembershipId = btoa(item.membership_id);
-            $("#membershipId").val(encryptMembershipId);
             if (siteAdminType == "administrator") {
               adminEditBtn = `
               <div class="action-item">
@@ -700,6 +699,10 @@ $(document).ready(function () {
 
   $(document).on("click", ".clearDuesButton", function (e) {
     e.preventDefault();
+    var membershipId = $(this).data("id") || "";
+    console.log("Value of Btn Id:", membershipId);
+
+    $("#membershipId").val(membershipId);
     showStep(7);
   });
 

@@ -7,7 +7,7 @@ $templateName = 'spa_new_membership';
 $link = SITE_URL . '/dashboard/membership/update/?id=' . base64_encode($membershipId);
 
 // Build the message parameters string
-$variablesValues = SITE_ADMIN_NAME . ',' . $name . ',' . $category_title . ',' . 'INR ' . $price . ',' . 'INR ' . $dueAmount . ',' . $visit . ',' . $link;
+$variablesValues = SITE_ADMIN_NAME . ',' . ucwords($name) . ',' . ucwords($category_title) . ',' . 'INR ' . $price . ',' . 'INR ' . $dueAmount . ',' . $visit . ',' . $link;
 
 // Remove accidental trailing comma if any
 $variablesValues = rtrim($variablesValues, ',');

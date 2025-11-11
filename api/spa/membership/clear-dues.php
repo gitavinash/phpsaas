@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $membershipId = base64_decode($membershipId);
 
-        if ($checkPost = mysqli_query($connection, "SELECT membership_id, membership_amount_due, profile_user_id, profile_mobile, profile_display_name as name FROM " . TABLE_PREFIX . "membership INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=membership_user_id WHERE membership_site_id=" . SITE_ID . " AND membership_id='{$membershipId}'")) {
+        if ($checkPost = mysqli_query($connection, "SELECT membership_id, membership_amount_due, profile_user_id, profile_mobile, membership_profile_name as fullName FROM " . TABLE_PREFIX . "membership INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=membership_user_id WHERE membership_site_id=" . SITE_ID . " AND membership_id='{$membershipId}'")) {
 
             if (mysqli_num_rows($checkPost) != 0) {
 
