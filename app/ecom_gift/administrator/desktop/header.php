@@ -64,7 +64,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <li><a href="product/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     product</a></li>
                             <li><a href="product/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
-                            <!-- <li><a href="product/?type=tags"><i class="fas fa-tags"></i>Tags</a></li> -->
+                            <li><a href="product/?type=tags"><i class="fas fa-tags"></i>Tags</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
@@ -74,7 +74,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <li><a href="product/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     product</a></li>
                             <li><a href="product/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
-                            <!-- <li><a href="product/?type=tags"><i class="fas fa-tags"></i>Tags</a></li> -->
+                            <li><a href="product/?type=tags"><i class="fas fa-tags"></i>Tags</a></li>
                         </ul>
                     </div>
                 </li>
