@@ -302,3 +302,39 @@
   ) !important;
   color: #000 !important;
 }
+
+@media (max-width: 720px) {
+  .call-sticky {
+    position: fixed;
+    left: 0;
+    z-index: 9;
+    bottom: 2%;
+    animation: blink 2s infinite alternate;
+  }
+  /* Define the blinking effect */
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  .call-sticky .hero-input {
+    width: 65px;
+    margin: 0;
+    height: 65px;
+    background: red;
+    border-radius: 100%;
+    padding: 4%;
+    float: left;
+  }
+  .call-sticky .hero-input i {
+    margin: 0;
+    color: #fff !important;
+    font-size: 32px;
+  }
+}

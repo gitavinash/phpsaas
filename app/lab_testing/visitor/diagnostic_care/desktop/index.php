@@ -25,12 +25,12 @@ require_once 'header.php';
                         </div>
                     </div>
 
-                    <div class="col-12 col-lg-6 is-color-blue">
+                    <div class="col-12 col-lg-6 is-color-blue call-sticky">
                         <a href="tel:+91 9212535996">
                             <div class="hero-input d-flex mt-3 px-4">
                                 <i class="bx bx-phone-call isfont-24 is-margin-side-20 is-color-blue"></i>
                                 <button class="is-color-blue isfont-18">
-                                    Call to book
+                                    <?php echo ((SITE_VERSION == 'mobile') ? '' : 'Call to book') ?>
                                 </button>
                             </div>
                         </a>
@@ -238,7 +238,7 @@ require_once 'header.php';
         <div class="row my-4 tests-slider overflow-hidden">
             <?php
 
-            if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . "  AND link_status = 200 AND product_type = 'diagnostic' GROUP BY product_title LIMIT 0, 9")) {
+            if ($packageList = mysqli_query($connection, "SELECT product_id, product_title, product_highlight, product_description, product_image, product_thumbnail, product_type, inventory_currency_symbol, inventory_mrp, inventory_price FROM isw_product INNER JOIN isw_product_meta ON product_id=product_meta_relation_id INNER JOIN isw_inventory ON product_id=inventory_relation_id INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE product_site_id =  " . SITE_ID . " AND inventory_site_id = " . SITE_ID . " AND product_meta_site_id =  " . SITE_ID . "  AND link_status = 200 AND product_type = 'diagnostic' GROUP BY product_title LIMIT 0, 9")) {
 
                 if (mysqli_num_rows($packageList) != 0) {
                     while ($packageListInfo = mysqli_fetch_assoc($packageList)) {
@@ -293,7 +293,7 @@ require_once 'header.php';
                     }
                 }
             } else {
-                echo ((DEVELOPMENT_MODE==true) ? mysqli_error($connection) : "");
+                echo ((DEVELOPMENT_MODE == true) ? mysqli_error($connection) : "");
             }
 
             ?>
