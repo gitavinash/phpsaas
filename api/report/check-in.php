@@ -68,7 +68,7 @@ if ($isSameDay) {
 
     // Fill hours 08 → 22
     $result = [];
-    for ($h = 8; $h <= 22; $h++) {
+    for ($h = 0; $h <= 24; $h++) {
         $oldKey = str_pad($h, 2, "0", STR_PAD_LEFT) . ":00";
         $newKey = date("h:00 A", strtotime($oldKey));
 
