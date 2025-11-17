@@ -53,7 +53,7 @@ if ($isSameDay) {
 
     // Fill hours 08 → 12
     $result = array();
-    for ($h = 8; $h <= 22; $h++) {
+    for ($h = 0; $h <= 24; $h++) {
         // Original format "08:00"
         $oldKey = str_pad($h, 2, "0", STR_PAD_LEFT) . ":00";
 
