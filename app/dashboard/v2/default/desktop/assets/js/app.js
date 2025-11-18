@@ -667,9 +667,10 @@ $(document).ready(function (e) {
 
     // ---- 1) Total value animation ----
     // Support multiple possible keys from different APIs
-    const total = Number(
-      apiData.total ?? apiData.totalSalesAmount ?? apiData.totalLeads ?? 0
-    );
+    const rawTotal =
+      apiData.total ?? apiData.totalSalesAmount ?? apiData.totalLeads ?? 0;
+
+    const total = Number(rawTotal) || 0; // handle NaN safely
 
     let startValue;
 
@@ -687,13 +688,22 @@ $(document).ready(function (e) {
     console.log("startValue:", startValue);
     console.log("total:", total);
 
-    // If the counter function somehow no-ops, at least set the text once
     const valueEl = document.getElementById(valueElementId);
     if (!valueEl) {
       console.error("Value element not found:", valueElementId);
+      // nothing more to do
+      return;
     }
 
-    // Run the animation
+    // If total is 0 (or start == end), don't animate, just set the value once
+    if (total === 0 || startValue === total) {
+      valueEl.textContent = "0";
+      // also remove any loading state if you have one
+      // valueEl.classList.remove("is-loading");
+      return;
+    }
+
+    // Run the animation only when we actually have something to count up
     increaseCountingNumberAnimation(valueElementId, startValue, total, 1, 86);
 
     // ---- 2) Prepare chart data from apiData.data ----
