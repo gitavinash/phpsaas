@@ -41,6 +41,21 @@
         </div>
     </a>
 </div>
+
+<div class="widget box-1">
+    <?php
+
+            require_once ADMIN_PATH . 'dashboard/widgets/sales-chart.php';
+
+            ?>
+</div>
+<div class="widget box-1">
+    <?php
+
+            require_once ADMIN_PATH . 'dashboard/widgets/visits-chart.php';
+
+            ?>
+</div>
 <?php } ?>
 
 <?php if ($site_access_type === 'reception' || $site_access_type === '') { ?>
@@ -75,23 +90,14 @@
         </div>
     </a>
 </div>
-<?php } ?>
-
-<?php } ?>
-
 
 <div class="widget box-1">
     <?php
 
-    require_once ADMIN_PATH . 'dashboard/widgets/sales-chart.php';
+            require_once ADMIN_PATH . 'dashboard/widgets/visits-chart.php';
 
-    ?>
+            ?>
 </div>
+<?php } ?>
 
-<div class="widget box-1">
-    <?php
-
-    require_once ADMIN_PATH . 'dashboard/widgets/visits-chart.php';
-
-    ?>
-</div>
+<?php } ?>
