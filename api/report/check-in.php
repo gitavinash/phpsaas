@@ -2,44 +2,50 @@
 
 // require_once LOGIN_CHECK;
 
+header('Content-Type: application/json; charset=utf-8');
+
 // ------------------------------
 // INPUT DATE RANGE
 // ------------------------------
 $daterange = $_GET['daterange'] ?? null;
 
 if (!empty($daterange) && $daterange !== 'null') {
-    $dates = explode(" - ", $daterange);
+    $dates = explode(' - ', $daterange);
 
-    $startDateRaw = trim($dates[0]);
-    $endDateRaw   = trim($dates[1]);
+    $startDateRaw = trim($dates[0] ?? '');
+    $endDateRaw   = trim($dates[1] ?? $startDateRaw);
 
-    $isSameDay = (date("Y-m-d", strtotime($startDateRaw)) === date("Y-m-d", strtotime($endDateRaw)));
+    $isSameDay = (
+        date('Y-m-d', strtotime($startDateRaw)) ===
+        date('Y-m-d', strtotime($endDateRaw))
+    );
 
-    $startDate = date("Y-m-d 00:00:00", strtotime($startDateRaw));
-    $endDate   = date("Y-m-d 23:59:59", strtotime($endDateRaw));
+    $startDate = date('Y-m-d 00:00:00', strtotime($startDateRaw));
+    $endDate   = date('Y-m-d 23:59:59', strtotime($endDateRaw));
 } else {
     // Default: last 1 month
     $isSameDay = false;
-    $startDate = date("Y-m-d 00:00:00", strtotime("-1 month"));
-    $endDate   = date("Y-m-d 23:59:59");
+    $startDate = date('Y-m-d 00:00:00', strtotime('-1 month'));
+    $endDate   = date('Y-m-d 23:59:59');
 }
-
 
 // ------------------------------
 // USER ID FILTER
 // ------------------------------
-$userFilter = "";
+$userFilter = '';
 if (!empty($userId)) {
-    $decodedUser = intval(base64_decode($userId));
-    $userFilter = " AND user_id = {$decodedUser} ";
-}
+    $decodedUser = base64_decode($userId, true);
+    $decodedUser = $decodedUser !== false ? (int)$decodedUser : 0;
 
+    if ($decodedUser > 0) {
+        $userFilter = ' AND user_id = ' . $decodedUser . ' ';
+    }
+}
 
 // ======================================================
 //  SAME DAY → HOURLY VISIT COUNT
 // ======================================================
 if ($isSameDay) {
-
     $amountQuery = "
         SELECT 
             HOUR(visit_time) AS hour,
@@ -57,29 +63,35 @@ if ($isSameDay) {
             hour ASC
     ";
 
-    $data = [];
+    $rawData = [];
 
     if ($query = mysqli_query($connection, $amountQuery)) {
         while ($row = mysqli_fetch_assoc($query)) {
-            $hourKey = str_pad($row['hour'], 2, "0", STR_PAD_LEFT) . ":00";
-            $data[$hourKey] = (int)$row['totalVisits'];
+            $hourKey = str_pad((int)$row['hour'], 2, '0', STR_PAD_LEFT) . ':00';
+            $rawData[$hourKey] = (int)$row['totalVisits'];
         }
     }
 
-    // Fill hours 08 → 22
-    $result = [];
-    for ($h = 0; $h <= 24; $h++) {
-        $oldKey = str_pad($h, 2, "0", STR_PAD_LEFT) . ":00";
-        $newKey = date("h:00 A", strtotime($oldKey));
+    // Normalized result: 00:00 → 23:00 (12-hr format keys)
+    $data = [];
+    for ($h = 0; $h <= 23; $h++) {
+        $oldKey = str_pad($h, 2, '0', STR_PAD_LEFT) . ':00'; // "08:00"
+        $newKey = date('h:00 A', strtotime($oldKey));        // "08:00 AM"
 
-        $result[$newKey] = $data[$oldKey] ?? 0;
+        $data[$newKey] = $rawData[$oldKey] ?? 0;
     }
 
-    echo json_encode($result, true);
+    $total = array_sum($data);
+
+    echo json_encode(
+        [
+            'total' => $total,
+            'data'  => $data,
+        ],
+        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+    );
     exit;
 }
-
-
 
 // ======================================================
 //  DEFAULT RANGE → DAY-WISE VISIT COUNT
@@ -101,25 +113,32 @@ $amountQuery = "
         day ASC
 ";
 
-$data = [];
+$rawData = [];
 
 if ($query = mysqli_query($connection, $amountQuery)) {
     while ($row = mysqli_fetch_assoc($query)) {
-        $formattedDay = date("d-m-Y", strtotime($row['day']));
-        $data[$formattedDay] = (int)$row['totalVisits'];
+        $formattedDay = date('d-m-Y', strtotime($row['day']));
+        $rawData[$formattedDay] = (int)$row['totalVisits'];
     }
 }
 
-
 // Fill missing dates
-$result = [];
+$data = [];
 $cur = strtotime(substr($startDate, 0, 10));
 $end = strtotime(substr($endDate, 0, 10));
 
 while ($cur <= $end) {
-    $dayKey = date("d-m-Y", $cur);
-    $result[$dayKey] = $data[$dayKey] ?? 0;
-    $cur = strtotime("+1 day", $cur);
+    $dayKey = date('d-m-Y', $cur);
+    $data[$dayKey] = $rawData[$dayKey] ?? 0;
+    $cur = strtotime('+1 day', $cur);
 }
 
-echo json_encode($result, true);
+$total = array_sum($data);
+
+echo json_encode(
+    [
+        'total' => $total,
+        'data'  => $data,
+    ],
+    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+);
