@@ -44,7 +44,7 @@
 
 <div class="box-1 dashboard-datepicker">
     <div class="form-group right">
-        <label>Reporting period ( Last 30 days )</label>
+        <label>Reporting period <?php echo ((isset($daterange)) ? '' : ' ( Last 30 days )') ?></label>
         <form action="" class="widgetForm">
             <input type="text" name="daterange" class="dateRangePicker" value="" id="dashboardReportingDateRangePicker"
                 placeholder="Select date range" readonly autocomplete="off">
@@ -105,7 +105,7 @@
 
 <div class="box-1 dashboard-datepicker">
     <div class="form-group right">
-        <label>Reporting period ( Last 30 days )</label>
+        <label>Reporting period <?php echo ((isset($daterange)) ? '' : ' ( Last 30 days )') ?></label>
         <form action="" class="widgetForm">
             <input type="text" name="daterange" class="dateRangePicker" value="" id="dashboardReportingDateRangePicker"
                 placeholder="Select date range" autocomplete="off">
