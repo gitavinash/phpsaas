@@ -1,6 +1,6 @@
 <div class="widget-info" id="totalVisits">
     <div class="info-box">
-        <p>Today's Visits<span class="right"><i class="fi fi-ss-entrance"></i></span>
+        <p>Total Visits<span class="right"><i class="fi fi-ss-entrance"></i></span>
             <span id="totalVisitsValue"><img src="<?php echo IMG_LIBRARY ?>icons8/dots-loader.gif" alt=""></span>
             </span>
         </p>
