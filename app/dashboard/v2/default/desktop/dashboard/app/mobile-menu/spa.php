@@ -207,7 +207,7 @@
 <!-- Bottom Navigation -->
 <nav class="bottom-nav" role="navigation" aria-label="Primary">
     <?php if ($site_access_type === 'administrator') { ?>
-    <a href="/dashboard/" class="bn-item spa-link <?php echo (ADMIN_BASE_URL == '/') ? 'active' : ''; ?>"
+    <a href="/dashboard/" class="bn-item spa-link <?php echo (ADMIN_BASE_URL == '/dashboard/') ? 'active' : ''; ?>"
         data-route="/dashboard/">
         <i class="fi-rr-home"></i><span>Home</span>
     </a>
@@ -217,7 +217,7 @@
         <i class="fi fi-rr-id-badge"></i><span>Membership</span>
     </a>
     <a href="room/active/"
-        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/room/') !== false) ? 'active' : ''; ?>"
+        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/room/active/') !== false) ? 'active' : ''; ?>"
         data-route="/room/active/">
         <i class="fi fi-rr-door-open"></i><span>Active Rooms</span>
     </a>
@@ -225,18 +225,18 @@
         <i class="fi-rr-apps"></i><span>More</span>
     </button>
     <?php } else { ?>
-    <a href="dashboard/"
+    <a href="/dashboard/"
         class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/dashboard/') !== false) ? 'active' : ''; ?>"
         data-route="/dashboard/">
         <i class="fi-rr-home"></i><span>Home</span>
     </a>
-    <a href="membership/check-in/"
-        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/membership/check-in/') !== false) ? 'active' : ''; ?>"
+    <a href="membership/sell/"
+        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/membership/sell/') !== false) ? 'active' : ''; ?>"
         data-route="/membership/sell/">
         <i class="fi fi-rr-user-add"></i><span>Add Membership</span>
     </a>
-    <a href="rooms/active/"
-        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/rooms/active/') !== false) ? 'active' : ''; ?>"
+    <a href="membership/check-in/"
+        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/membership/check-in/') !== false) ? 'active' : ''; ?>"
         data-route="membership/check-in/">
         <i class="fi fi-rr-door-open"></i><span>Check-in</span>
     </a>

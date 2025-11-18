@@ -47,7 +47,7 @@
         <label>Reporting period ( Last 30 days )</label>
         <form action="" class="widgetForm">
             <input type="text" name="daterange" class="dateRangePicker" value="" id="dashboardReportingDateRangePicker"
-                placeholder="Select date range" autocomplete="off">
+                placeholder="Select date range" readonly autocomplete="off">
             <input type="submit" value="Update report" class="btn btn-green date-btn">
         </form>
     </div>
