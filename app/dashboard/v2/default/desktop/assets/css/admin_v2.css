@@ -4246,3 +4246,9 @@ a:hover {
 .name-cap {
   text-transform: capitalize;
 }
+
+.prefix-rupee::before {
+  content: "₹ ";
+  font-weight: 600;
+  margin-right: 2px;
+}

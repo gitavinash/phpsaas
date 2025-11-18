@@ -1,7 +1,8 @@
 <div class="widget-info" id="totalSalesAmount">
     <div class="info-box">
         <p>Today's Sales<span class="right">₹</span>
-            <span id="totalSalesAmountValue"><img src="<?php echo IMG_LIBRARY ?>icons8/dots-loader.gif" alt=""></span>
+            <span id="totalSalesAmountValue" class="prefix-rupee"><img
+                    src="<?php echo IMG_LIBRARY ?>icons8/dots-loader.gif" alt=""></span>
             </span>
         </p>
     </div>

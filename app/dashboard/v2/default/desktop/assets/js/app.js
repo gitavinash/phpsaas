@@ -659,31 +659,73 @@ $(document).ready(function (e) {
     );
   }
 
-  function dashboardWidgetWithChart(objectID, data) {
-    increaseCountingNumberAnimation(
-      `${objectID}Value`,
-      data.totalLeads - 10,
-      data.totalLeads,
-      1,
-      86
+  function dashboardWidgetWithChart(widgetId, apiData) {
+    console.log("dashboardWidgetWithChart called for:", widgetId, apiData);
+
+    const valueElementId = widgetId + "Value"; // e.g. "totalSalesAmountValue"
+    const chartElementId = widgetId + "Chart"; // e.g. "totalSalesAmountChart"
+
+    // ---- 1) Total value animation ----
+    // Support multiple possible keys from different APIs
+    const total = Number(
+      apiData.total ?? apiData.totalSalesAmount ?? apiData.totalLeads ?? 0
     );
+
+    let startValue;
+
+    if (total <= 100) {
+      // For small totals, animate from 0 → total
+      startValue = 0;
+    } else {
+      // For bigger totals, start a bit below total
+      let diff = Math.round(total * 0.01); // 1% of total
+      diff = Math.min(diff, 100); // max 100
+      startValue = Math.max(total - diff, 0);
+    }
+
+    console.log("valueElementId:", valueElementId);
+    console.log("startValue:", startValue);
+    console.log("total:", total);
+
+    // If the counter function somehow no-ops, at least set the text once
+    const valueEl = document.getElementById(valueElementId);
+    if (!valueEl) {
+      console.error("Value element not found:", valueElementId);
+    }
+
+    // Run the animation
+    increaseCountingNumberAnimation(valueElementId, startValue, total, 1, 86);
+
+    // ---- 2) Prepare chart data from apiData.data ----
+    const dataObj = apiData.data || {};
+    const labels = Object.keys(dataObj);
+    const currentData = Object.values(dataObj);
+
+    const currentDataLabel =
+      apiData.rangeLabel ||
+      (typeof dateRangeParams !== "undefined"
+        ? dateRangeParams
+        : "Current Period");
+
+    const previousDataLabel = "";
+    const previousData = new Array(labels.length).fill(0);
+
+    // ---- 3) Draw chart ----
+    const canvas = document.getElementById(chartElementId);
+    if (!canvas) {
+      console.error("Canvas not found for ID:", chartElementId);
+      return;
+    }
+
     createLineChart(
-      (objectID = `${objectID}Chart`),
-      (chartLabel = [
-        "Monday",
-        "Tueday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-      ]),
-      (currentDataLabel = "1st May 2021 - 8th May 2021"),
-      (currentData = ["20", "24", "13", "50", "5", "40", "24"]),
-      (currentDataColor = "#239B56"),
-      (previousDataLabel = "1st May 2021 - 8th May 2021"),
-      (previousData = ["20", "24", "13", "13", "50", "40", "45"]),
-      (previousDataColor = "#D1F9D1")
+      chartElementId,
+      labels,
+      currentDataLabel,
+      currentData,
+      "#239B56",
+      previousDataLabel,
+      previousData,
+      "#D1F9D1"
     );
   }
 
@@ -850,6 +892,41 @@ $(document).ready(function (e) {
 
   if ($("#totalOrderAmount").length) {
     increaseCountingNumberAnimation("totalOrderAmountValue", 0, 0, 1, 86);
+  }
+
+  // Total Sales Chart
+
+  if ($("#totalSalesAmount").length) {
+    $.ajax({
+      type: "GET",
+      url:
+        "/api/report/sales/?daterange=" + encodeURIComponent(dateRangeParams),
+      dataType: "json",
+      success: function (response) {
+        dashboardWidgetWithChart("totalSalesAmount", response);
+      },
+      error: function (response) {
+        console.log("Error:", response);
+      },
+    });
+  }
+
+  // Total Check in Charts
+
+  if ($("#totalVisits").length) {
+    $.ajax({
+      type: "GET",
+      url:
+        "/api/report/check-in/?daterange=" +
+        encodeURIComponent(dateRangeParams),
+      dataType: "json",
+      success: function (response) {
+        dashboardWidgetWithChart("totalVisits", response);
+      },
+      error: function (response) {
+        console.log("Error:", response);
+      },
+    });
   }
 
   // Custom sorting for extracting the numeric part of the string

@@ -169,6 +169,9 @@
                     <a href="membership/check-in/" class="more-item spa-link" data-route="/membership/check-in/">
                         <i class="fi fi-rr-entrance"></i><span>Check-in</span>
                     </a>
+                    <a href="membership/sell/" class="more-item spa-link" data-route="/membership/sell/">
+                        <i class="fi fi-rr-user-add"></i><span>Add New Membership</span>
+                    </a>
                     <a href="membership/member/" class="more-item spa-link" data-route="/membership/member/">
                         <i class="fi fi-rr-users"></i><span>Members</span>
                     </a>
@@ -229,8 +232,8 @@
     </a>
     <a href="membership/check-in/"
         class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/membership/check-in/') !== false) ? 'active' : ''; ?>"
-        data-route="/membership/check-in/">
-        <i class="fi fi-rr-entrance"></i><span>Check-in</span>
+        data-route="/membership/sell/">
+        <i class="fi fi-rr-user-add"></i><span>Add Membership</span>
     </a>
     <a href="rooms/active/"
         class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/rooms/active/') !== false) ? 'active' : ''; ?>"
