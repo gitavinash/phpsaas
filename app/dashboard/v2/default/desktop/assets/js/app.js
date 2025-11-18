@@ -659,7 +659,12 @@ $(document).ready(function (e) {
     );
   }
 
-  function dashboardWidgetWithChart(widgetId, apiData) {
+  function dashboardWidgetWithChart(
+    widgetId,
+    apiData,
+    primaryChartBackgroundColor = "#239B56",
+    secondaryChartBackgroundColor = "#D1F9D1"
+  ) {
     console.log("dashboardWidgetWithChart called for:", widgetId, apiData);
 
     const valueElementId = widgetId + "Value"; // e.g. "totalSalesAmountValue"
@@ -732,10 +737,10 @@ $(document).ready(function (e) {
       labels,
       currentDataLabel,
       currentData,
-      "#239B56",
+      primaryChartBackgroundColor,
       previousDataLabel,
       previousData,
-      "#D1F9D1"
+      secondaryChartBackgroundColor
     );
   }
 
@@ -913,7 +918,12 @@ $(document).ready(function (e) {
         "/api/report/sales/?daterange=" + encodeURIComponent(dateRangeParams),
       dataType: "json",
       success: function (response) {
-        dashboardWidgetWithChart("totalSalesAmount", response);
+        dashboardWidgetWithChart(
+          "totalSalesAmount",
+          response,
+          "#00657B",
+          "#38BDF8"
+        );
       },
       error: function (response) {
         console.log("Error:", response);
@@ -931,7 +941,7 @@ $(document).ready(function (e) {
         encodeURIComponent(dateRangeParams),
       dataType: "json",
       success: function (response) {
-        dashboardWidgetWithChart("totalVisits", response);
+        dashboardWidgetWithChart("totalVisits", response, "#4CAF50", "#81C784");
       },
       error: function (response) {
         console.log("Error:", response);
