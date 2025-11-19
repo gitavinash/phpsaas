@@ -21,7 +21,11 @@
 
 <!-- Banner with Breadcrumb -->
 <div class="relative h-[280px] w-full mb-8 mt-16">
+    <?php if (!empty($tag_image)) { ?>
+    <div style="background-image: url('<?= $tag_image ?>');" class="absolute inset-0 bg-cover bg-center"></div>
+    <?php } else { ?>
     <div class="absolute inset-0 bg-gradient-to-r from-[#D4946D] via-[#e0b89c] to-[#d4946d]"></div>
+    <?php } ?>
     <div class="absolute inset-0 bg-black bg-opacity-40"></div>
     <div class="container mx-auto px-4 h-full flex flex-col justify-center items-center text-center relative z-10">
         <div class="flex items-center text-sm text-white/80 mb-6">
