@@ -1,3 +1,13 @@
+<?php
+
+if (SITE_APP_ID == 12) {
+    $linkShorterTheme = USER_PATH . 'link-shorter.php';
+    if (file_exists($linkShorterTheme)) {
+        require_once $linkShorterTheme;
+        exit();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 

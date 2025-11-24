@@ -4252,3 +4252,9 @@ a:hover {
   font-weight: 600;
   margin-right: 2px;
 }
+
+.tableHeaderBar {
+  float: left;
+  width: 100%;
+  margin-bottom: -50px;
+}

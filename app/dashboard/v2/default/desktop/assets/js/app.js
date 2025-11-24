@@ -1593,6 +1593,7 @@ $(document).ready(function (e) {
             "Payment link sent to customer",
             response.status
           );
+          $(".paymentLinkBox").hide();
           enableButtonWithCTA(
             "#sendPaymentLink",
             "<i class='fi-rr-paper-plane'></i> Send payment link"

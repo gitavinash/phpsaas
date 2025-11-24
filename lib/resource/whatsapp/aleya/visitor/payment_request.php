@@ -17,8 +17,7 @@ if (defined('COMPANY_WHATSAPP_PAYMENT_REQUEST')) {
         // Clean and sanitize values
         $name   = sanitize_input($profile_display_name ?? '');
         $tourPackage      = str_replace(['tour', 'package'], '', $tour_package_title);
-        // $paymentLink      = sanitize_input($paymentLink ?? '');
-        $paymentLink      = 'https://d2h.in/56drt';
+        $paymentLink      = sanitize_input($paymentLink ?? '');
 
         // Build final param string for WhatsApp API
         $variablesValues =

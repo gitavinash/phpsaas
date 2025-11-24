@@ -165,3 +165,26 @@ function normalizeIndianMobile($input)
 
     return false; // invalid number
 }
+
+function longToShortUrl($connection, $longUrl)
+{
+
+    if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "redirection(redirection_from, redirection_to, redirection_http_status, redirection_owner_id, redirection_site_id, redirection_status) VALUES('#', '{$longUrl}', 301, " . USER_ID . ", " . SITE_ID . ", '1')")) {
+        return SITE_URL . '/' . base64_encode(mysqli_insert_id($connection));
+    }
+    return '';
+}
+
+function shortToLongUrl($connection, $shortUrl)
+{
+
+    $checkRedircetQuery = "SELECT redirection_to, redirection_http_status FROM " . TABLE_PREFIX . "redirection WHERE redirection_id='" . base64_decode($shortUrl) . "' AND  redirection_status='1'";
+
+    if ($checkUrl = mysqli_query($connection, $checkRedircetQuery)) {
+        if (mysqli_num_rows($checkUrl) != 0) {
+            $urlData = mysqli_fetch_assoc($checkUrl);
+            return $urlData;
+        }
+    }
+    return [];
+}

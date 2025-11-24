@@ -86,10 +86,26 @@ if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, us
                 <input type="text" class="dateRangePicker" placeholder="Select date range">
             </div>
         </div> -->
+    <div class="tableHeaderBar">
+        <select id="bulkActionOnLeads" class="form-control">
+            <option value="">Bulk actions</option>
+            <option value="delete">Delete leads</option>
+            <option value="convert_to_sales">Convert to sales</option>
+            <?php
+
+            if ($site_access_type != 'agent') { ?>
+            <option value="mark_duplicate">Mark as duplicate</option>
+            <?php
+            }
+
+            ?>
+        </select>
+    </div>
     <div class="list-box">
         <table class="showTableList nowrap">
             <thead>
                 <tr>
+                    <td></td>
                     <?php
 
                     if ($site_access_type == 'digital_marketing') { ?>
@@ -205,6 +221,7 @@ ORDER BY
 
                 ?>
                 <tr>
+                    <td><input type="checkbox" name="leads[]" value="<?php echo base64_encode($enquiry_id) ?>"></td>
                     <?php
 
                                 if ($site_access_type == 'digital_marketing') { ?>
