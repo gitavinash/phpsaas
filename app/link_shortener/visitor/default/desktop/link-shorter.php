@@ -13,11 +13,14 @@ if (!empty($redirectTo)) {
     $jsLocation = json_encode($location);
 
     // Return an HTML page with a loading animation and a JS + meta-refresh redirect.
-    // We avoid sending an immediate Location header so users can see the animation.
+    // We avoid sending an immediate Location header so users can see the animation,
+    // but we still set the HTTP response status so browsers/tools know this is a redirect.
     header('Content-Type: text/html; charset=utf-8');
-
+    http_response_code($status);
+    // Also provide a server-side Refresh header as another fallback some clients honor.
     $delayMs = 1200; // how long to show the loader before triggering redirect (ms)
     $delaySeconds = $delayMs / 1000;
+    header('Refresh: ' . $delaySeconds . '; url=' . $location);
 
     echo <<<HTML
 <!doctype html>
