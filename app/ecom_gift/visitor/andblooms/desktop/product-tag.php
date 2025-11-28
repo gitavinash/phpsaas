@@ -4,7 +4,7 @@
     $tagIds = array_map(fn($t) => $t['tag_relation_id'], $tagPost);
     $resultTags = implode(',', $tagIds);
 
-    $sortBy = 'link_published DESC';
+    $sortBy = 'RAND()';
     if (isset($_GET['sort'])) {
         switch ($_GET['sort']) {
             case 'price_low':
@@ -66,7 +66,7 @@
                   AND link_type='product' AND link_status=200 
                   GROUP BY link_url 
                   ORDER BY $sortBy 
-                  LIMIT 0, 12";
+                  LIMIT " . PER_PAGE_LIMIT . " OFFSET " . (PAGE_NO - 1) * PER_PAGE_LIMIT;
 
             $result = mysqli_query($connection, $query);
 
