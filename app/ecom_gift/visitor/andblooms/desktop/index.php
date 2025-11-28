@@ -1,5 +1,10 @@
 <?php
 
+if (SITE_VERSION == 'mobile') {
+    header("Location: /category/flower/", true, 301);
+    exit;
+}
+
 require_once 'header.php';
 
 if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "slide WHERE slide_status=1 AND slider_device='" . SITE_VERSION . "' AND slide_site_id=" . SITE_ID . " ORDER BY slide_update DESC")) {
