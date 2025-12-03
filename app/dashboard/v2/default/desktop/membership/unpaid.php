@@ -3,7 +3,7 @@
 </div>
 <div class="box-1 dashboard-datepicker">
     <div class="form-group right">
-        <label>Reporting period <?php echo ((isset($daterange)) ? '' : ' ( Last 30 days )') ?></label>
+        <label>Reporting period <?php echo ((isset($daterange)) ? '' : ' ( All Time )') ?></label>
         <form action="" class="widgetForm">
             <input type="text" name="daterange" class="dateRangePicker" value="" id="dashboardReportingDateRangePicker"
                 placeholder="Select date range" readonly autocomplete="off">
@@ -18,16 +18,16 @@ if (isset($daterange)) {
     $dates = explode(' - ', $daterange);
     $from = date('Y-m-d', strtotime($dates[0])) . ' 00:00:00';
     $to = date('Y-m-d', strtotime($dates[1])) . ' 23:59:59';
+    $reportDuration = "membership_created BETWEEN '$from' AND '$to' AND ";
 } else {
-    $from = date('Y-m-d', strtotime('-30 days')) . ' 00:00:00';
-    $to = date('Y-m-d') . ' 23:59:59';
+    $reportDuration = '';
 }
 
 $query = "SELECT membership_id, membership_profile_name, membership_total_visit, membership_avl_visit, membership_amount_due, user_mobile, membership_status
         FROM " . TABLE_PREFIX . "membership
         INNER JOIN " . TABLE_PREFIX . "warehouse ON membership_branch_id=warehouse_id
         INNER JOIN " . TABLE_PREFIX . "user ON membership_user_id=user_id
-        WHERE membership_amount_due!=0 AND membership_site_id=" . SITE_ID . "
+        WHERE {$reportDuration} membership_amount_due!=0 AND membership_site_id=" . SITE_ID . "
         ORDER BY membership_profile_name ASC, membership_id DESC";
 
 if ($dataList = mysqli_query($connection, $query)) {

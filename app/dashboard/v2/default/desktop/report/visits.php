@@ -23,7 +23,7 @@ if (isset($daterange)) {
     $to = date('Y-m-d') . ' 23:59:59';
 }
 
-$query = "SELECT membership_id, membership_profile_name, membership_total_visit, membership_avl_visit, membership_amount_due, user_mobile, membership_status
+$query = "SELECT membership_id, membership_profile_name, membership_total_visit, membership_avl_visit, membership_amount_due, user_mobile, membership_status, visit_time, visit_duration
         FROM " . TABLE_PREFIX . "membership_visits
         INNER JOIN " . TABLE_PREFIX . "membership ON visit_membership_id=membership_id
         INNER JOIN " . TABLE_PREFIX . "warehouse ON membership_branch_id=warehouse_id
@@ -52,12 +52,16 @@ if ($dataList = mysqli_query($connection, $query)) {
                 $amount_due = htmlspecialchars($data['membership_amount_due'] ?? '0', ENT_QUOTES, 'UTF-8');
                 $status = htmlspecialchars($data['membership_status'] ?? '', ENT_QUOTES, 'UTF-8');
                 $encoded_id = base64_encode($id);
+                $visit_time = htmlspecialchars($data['visit_time'] ?? '', ENT_QUOTES, 'UTF-8');
+                $visit_duration = htmlspecialchars($data['visit_duration'] ?? '', ENT_QUOTES, 'UTF-8');
                 ?>
         <article class="widget-setting-info membership-card" data-id="<?php echo $encoded_id; ?>">
             <div class="about-feature" style="max-width:100%;">
                 <h3 class="heading name-cap" style="margin:0;">
                     <?php echo $name; ?>
-                    <span>#<?php echo $id; ?></span>
+                    <span><strong>#<?php echo $id; ?></strong> | <strong>Visit at: </strong>
+                        <?php echo date('d-F-Y h:i A', strtotime($visit_time ?? '')); ?> <strong> for
+                        </strong><?php echo $visit_duration ?> Mins.</span>
                 </h3>
 
                 <hr>
