@@ -33,11 +33,11 @@
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="rooms/active/" class="actionBtn new-item-btn spa-link" data-route="/rooms/active/"
+    <a href="membership/unpaid/" class="actionBtn new-item-btn spa-link" data-route="/membership/unpaid/"
         aria-label="Manage active rooms">
         <div class="widget-info">
-            <i class="fi fi-rr-door-open plus-badge badge-green" aria-hidden="true"></i>
-            Active rooms
+            <i class="fi fi-rr-indian-rupee-sign plus-badge badge-green" aria-hidden="true"></i>
+            Due Memberships
         </div>
     </a>
 </div>
