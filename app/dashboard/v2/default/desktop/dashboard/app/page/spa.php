@@ -37,7 +37,7 @@
         aria-label="Manage active rooms">
         <div class="widget-info">
             <i class="fi fi-rr-indian-rupee-sign plus-badge badge-green" aria-hidden="true"></i>
-            Due Memberships
+            Unpaid Memberships
         </div>
     </a>
 </div>
