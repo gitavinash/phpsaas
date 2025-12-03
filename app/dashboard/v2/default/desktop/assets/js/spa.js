@@ -700,8 +700,6 @@ $(document).ready(function () {
   $(document).on("click", ".clearDuesButton", function (e) {
     e.preventDefault();
     var membershipId = $(this).data("id") || "";
-    console.log("Value of Btn Id:", membershipId);
-
     $("#membershipId").val(membershipId);
     showStep(7);
   });
@@ -738,8 +736,6 @@ $(document).ready(function () {
       paymentMode,
       paymentNotes,
     };
-
-    console.log("payload", payload);
 
     $.ajax({
       url: "/api/membership/clear-dues/",

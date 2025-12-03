@@ -4258,3 +4258,9 @@ a:hover {
   width: 100%;
   margin-bottom: -50px;
 }
+
+.pageHeading {
+  padding: 5px 0px;
+  font-size: 24px;
+  letter-spacing: 1px;
+}
