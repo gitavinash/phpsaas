@@ -40,16 +40,16 @@ require_once 'header.php';
                     for
                     travel.”
                     <footer class="mt-4 text-sm font-semibold text-gray-600">
-                        – Jitender Kapoor, Founder, Journey Finders
+                        – Founder, Journey Finders
                     </footer>
                 </blockquote>
                 <p class="text-gray-700 mb-6">
-                    Journey Finders was founded by Jitender Kapoor, a passionate traveler who believed that travel is
+                    Journey Finders was founded by a passionate traveler who believed that travel is
                     more than ticking destinations off a list – it's about meaningful experiences, lasting memories, and
                     personal discovery.
                 </p>
                 <p class="text-gray-700 mb-6">
-                    The idea for Journey Finders was born during one of Jitender's personal trips, where he helped a
+                    The idea for Journey Finders was born during one of the founder's personal trips, where he helped a
                     group of fellow travelers navigate a foreign city and turn a stressful situation into a joyful
                     adventure. It was in that moment he realized: people want to explore the world, but they often need
                     a reliable guide – someone who truly understands travel.
