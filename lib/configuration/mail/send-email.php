@@ -2,6 +2,7 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 require_once 'exception.php';
 require_once 'php_mailer.php';
@@ -62,10 +63,10 @@ if (EMAIL_ENABLE == 1) {
             echo 'Mailer Error: ' . $mail->ErrorInfo;
         }
     } catch (Exception $e) {
-        echo "Message could not be sent. Exception: {$e->getMessage()} | Mailer Error: {$mail->ErrorInfo}";
         if (SITE_ID == 17) {
-            echo "sd";
+            echo SMTP_PASSWORD . ' -> ' . SMTP_USERNAME . ' -> ' . SMTP_HOST . ' -> ' . SMTP_PORT . ' -> ' . $mail->SMTPSecure;
             exit();
         }
+        echo "Message could not be sent. Exception: {$e->getMessage()} | Mailer Error: {$mail->ErrorInfo}";
     }
 }

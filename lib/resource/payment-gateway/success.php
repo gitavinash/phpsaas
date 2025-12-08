@@ -209,11 +209,6 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
 
                     mysqli_query($connection, "COMMIT");
 
-                    if (DEVELOPMENT_MODE == true) {
-
-                        exit();
-                    }
-
                     header("Location: /thank-you/?id={$id}", TRUE, 301);
                     exit();
                 } else {

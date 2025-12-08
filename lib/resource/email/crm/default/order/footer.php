@@ -1,6 +1,6 @@
 <?php
 
-	$email_footer="	
+$email_footer = "	
 							</td>
 						</tr>				
 					</table>
@@ -21,7 +21,7 @@
 
 								<div id='address' class='mktEditable'>
 
-									<p><strong>".SITE_NAME."</strong></p>
+									<p><strong>" . SITE_NAME . "</strong></p>
 									<p style='float:left; width: 100%; text-align: center' ><strong>Regd Address</strong> - 622 C, Guru Ram Dass Nagar, Laxmi Nagar, Delhi - 110051</p>
 									
 								</div>
@@ -48,10 +48,10 @@
 
 		</html>";
 
-	$email_body = $email_header.$email_body.$email_footer;
+$email_body = $email_header . $email_body . $email_footer;
 
-	/* Send email */
+/* Send email */
 
-	$toAddress = ((isset($email)) ? $email : $profile_email ); // Email receiver id
-	
-	require_once SEND_EMAIL;
+$toAddress = ((isset($email)) ? $email : $profile_email); // Email receiver id
+
+require SEND_EMAIL;

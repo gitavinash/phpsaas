@@ -1,6 +1,6 @@
 <?php
 
-	$email_footer="	
+$email_footer = "	
 							</td>
 						</tr>				
 					</table>
@@ -21,7 +21,7 @@
 
 								<div id='address' class='mktEditable'>
 
-									<b>".SITE_NAME."</b>
+									<b>" . SITE_NAME . "</b>
 
 								</div>
 
@@ -47,10 +47,10 @@
 
 		</html>";
 
-	$email_body = $email_header.$email_body.$email_footer;
+$email_body = $email_header . $email_body . $email_footer;
 
-	/* Send email */
+/* Send email */
 
-	$toAddress = $email; // Email receiver id
-	
-	require_once SEND_EMAIL;
+$toAddress = $email; // Email receiver id
+
+require SEND_EMAIL;

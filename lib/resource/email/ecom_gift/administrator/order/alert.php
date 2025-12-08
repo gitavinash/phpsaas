@@ -82,6 +82,6 @@ $email_body = $email_header . $email_body . $email_footer;
 
 /* Send email */
 
-$toAddress = 'sales@andblooms.com';
+$toAddress = SITE_EMAIL;
 
-require_once SEND_EMAIL;
+require SEND_EMAIL;

@@ -84,4 +84,4 @@ $email_body = $email_header . $email_body . $email_footer;
 
 $toAddress = SITE_EMAIL;
 
-require_once SEND_EMAIL;
+require SEND_EMAIL;

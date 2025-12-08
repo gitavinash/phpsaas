@@ -45,4 +45,4 @@ if (!isset($toAddress)) {
 	$toAddress = $email;
 }
 
-require_once SEND_EMAIL;
+require SEND_EMAIL;
