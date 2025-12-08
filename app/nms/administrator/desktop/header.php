@@ -112,6 +112,21 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                     </div>
                 </li>
 
+                <li <?php echo ((ADMIN_BASE_URL == '/newsletter/') ? 'class="active"' : '') ?>>
+                    <a href="newsletter/?type=list&status=all"><i class="fas fa-rss"></i> Newsletters</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="newsletter/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    Subscribers</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="newsletter/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    Subscribers</a></li>
+                        </ul>
+                    </div>
+                </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/subscription/') ? 'class="active"' : '') ?>>
                     <a href="subscription/?type=list&status=all"><i class="fas fa-crown"></i> Subscription</a>
                     <div class="side-menu">

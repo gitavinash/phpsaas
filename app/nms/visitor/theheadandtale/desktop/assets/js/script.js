@@ -196,9 +196,10 @@ $("#submitNewsletter").on("click", function (e) {
   $("#submitNewsletter").hide();
   if (validateEmail(email)) {
     $.ajax({
-      url: "/api/mailchimp/addEmail/?list=6366f51d70&email=" + email,
-      type: "GET",
+      url: "/api/newsletter/add/",
+      type: "POST",
       dataType: "json",
+      data: { email: email },
       success: function (data) {
         if (data.status == "success") {
           $("#submitNewsletter").show();
