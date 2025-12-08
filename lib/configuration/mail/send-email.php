@@ -64,6 +64,7 @@ if (EMAIL_ENABLE == 1) {
     } catch (Exception $e) {
         echo "Message could not be sent. Exception: {$e->getMessage()} | Mailer Error: {$mail->ErrorInfo}";
         if (SITE_ID == 17) {
+            echo "sd";
             exit();
         }
     }
