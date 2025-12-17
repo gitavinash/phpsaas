@@ -175,9 +175,9 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
                     OR MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)
                     OR MATCH(n.news_title, n.news_highlight, n.news_description) AGAINST (? IN BOOLEAN MODE)
                   )
-                ORDER BY ( (MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)) * 2.0
-                         + (MATCH(n.news_title, n.news_highlight, n.news_description) AGAINST (? IN BOOLEAN MODE)) * 1.25 ) DESC,
-                         COALESCE(n.news_published, n.news_time) DESC
+                ORDER BY n.news_published DESC,
+                         ( (MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)) * 2.0
+                         + (MATCH(n.news_title, n.news_highlight, n.news_description) AGAINST (? IN BOOLEAN MODE)) * 1.25 ) DESC
                 LIMIT ? OFFSET ?";
 
             $countSql = "
