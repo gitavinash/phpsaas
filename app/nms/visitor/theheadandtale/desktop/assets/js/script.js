@@ -203,7 +203,7 @@ $("#submitNewsletter").on("click", function (e) {
       success: function (data) {
         if (data.status == "success") {
           $("#submitNewsletter").show();
-          window.location = "/thankyou_newsletter/";
+          window.location = "/pending_newsletter/";
         } else {
           popUpMessage("center", data.msg, data.status);
           $("#submitNewsletter").show();

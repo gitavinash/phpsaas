@@ -197,3 +197,90 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.i
 
     return true;
 }
+
+function sendNewsLetterVerficationLinkviaEmail($email)
+{
+    $email = trim((string)$email);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return 'Invalid email address: ' . $email;
+    }
+
+    // Generate a verification link
+
+    $payload = [
+        'email'   => strtolower(trim($email)),
+        'purpose' => 'email_verify',
+        'exp'     => time() + VERIFY_TTL // 10 minutes expiry
+    ];
+
+    $json    = json_encode($payload, JSON_UNESCAPED_SLASHES);
+    $data    = base64_encode($json);
+
+    $sig = hash_hmac('sha256', $data, EMAIL_VERIFY_SECRET);
+
+    $verificationURL = SITE_URL . '/verify/newsletter/'
+        . '?data=' . urlencode($data)
+        . '&sig='  . urlencode($sig);
+
+    $url = defined('SMTP_API_TEMPLATE_HOST')
+        ? SMTP_API_TEMPLATE_HOST
+        : 'https://api.zeptomail.in/v1.1/email/template';
+
+    $templateKey = defined('SMTP_NEWSLETTER_VERIFICATION_TEMPLATE')
+        ? SMTP_NEWSLETTER_VERIFICATION_TEMPLATE
+        : '2518b.5ed70a1e2b45b697.k1.f3fe18c0-dae4-11f0-91a1-621740bce2a6.19b29da544c';
+
+    $apiKey = defined('SMTP_API_KEY') ? SMTP_API_KEY : 'Zoho-enczapikey PHtE6r0IRenjiGUs8hEGsaPtF86gZtssqO00LwgVtt1CW/YKHk0Eqt4olDK/rkgvUaQXFfKYzIs9ub+e5eyGdzrsMTkZWmqyqK3sx/VYSPOZsbq6x00YtV8cf0fcUIbrd99r1yHWvNjeNA==';
+
+    $headers = [
+        'accept: application/json',
+        'content-type: application/json',
+        'authorization: ' . $apiKey,
+        'cache-control: no-cache',
+    ];
+
+    $payload = [
+        "mail_template_key" => $templateKey,
+        "from" => [
+            "address" => defined('EMAIL_SMTP_EMAIL') ? EMAIL_SMTP_EMAIL : 'alerts@blumox.com',
+            "name"    => defined('EMAIL_SMTP_NAME') ? EMAIL_SMTP_NAME : 'Blumox Technologies'
+        ],
+        "to" => [[
+            "email_address" => [
+                "address" => $email,
+            ]
+        ]],
+        "merge_info" => [
+            "verification_link" => $verificationURL,
+        ]
+    ];
+
+    $json = json_encode($payload, JSON_UNESCAPED_SLASHES);
+    if ($json === false) {
+        return 'JSON Encode Error: ' . json_last_error_msg();
+    }
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+
+    $result    = curl_exec($ch);
+    $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    if ($curlError) {
+        return 'cURL Error: ' . $curlError;
+    }
+
+    if ($httpCode != 201) {
+        return 'SMTP API Error: ' . $result;
+    }
+
+    return true;
+}

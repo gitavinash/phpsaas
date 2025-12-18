@@ -82,3 +82,67 @@ function password($connection, $data)
         }
     }
 }
+
+function newsletter($connection, $data)
+{
+
+    if (!isset($_GET['data'], $_GET['sig'])) {
+        http_response_code(400);
+        exit('Invalid request');
+    }
+
+    $data = $_GET['data'];
+    $sig  = $_GET['sig'];
+
+    // Verify signature
+    $expectedSig = hash_hmac('sha256', $data, EMAIL_VERIFY_SECRET);
+
+    if (!hash_equals($expectedSig, $sig)) {
+        http_response_code(403);
+        exit('Invalid signature');
+    }
+
+    // Decode payload
+    $payload = json_decode(base64_decode($data), true);
+
+    if (!$payload) {
+        http_response_code(400);
+        exit('Invalid payload');
+    }
+
+    // Validate purpose
+    if (($payload['purpose'] ?? '') !== 'email_verify') {
+        http_response_code(403);
+        exit('Invalid purpose');
+    }
+
+    // Validate expiry
+    if (($payload['exp'] ?? 0) < time()) {
+        http_response_code(410);
+        exit('Verification link expired');
+    }
+
+    $email = strtolower(trim($payload['email']));
+
+    if ($checkEmail = mysqli_query($connection, "SELECT newsletter_id FROM " . TABLE_PREFIX . "newsletter WHERE newsletter_email='{$email}' AND newsletter_site_id='" . SITE_ID . "'")) {
+
+        if (mysqli_num_rows($checkEmail) != 0) {
+
+            if (mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "newsletter SET newsletter_status=1, newsletter_verified_at=NOW() WHERE newsletter_email='{$email}' AND newsletter_site_id='" . SITE_ID . "'")) {
+
+                // Redirect to thank you page after successful verification
+                header('Location: /thankyou_newsletter/', true, 301);
+                exit();
+            } else {
+
+                echo 'Something went wrong while verifying your email.';
+            }
+        } else {
+
+            echo 'No subscription found for this email.';
+        }
+    } else {
+
+        echo 'Something went wrong';
+    }
+}

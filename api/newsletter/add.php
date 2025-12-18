@@ -1,6 +1,7 @@
 <?php
 
 require_once USER_FUNCTIONS;
+require_once COMMUNICATION_FUNCTIONS;
 
 $httpStatus = 500;
 $status = 'warning';
@@ -13,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (filter_var($newsletterEmail, FILTER_VALIDATE_EMAIL)) {
 
         // Check if email already exists
-        $checkQuery = "SELECT newsletter_id FROM " . TABLE_PREFIX . "newsletter WHERE newsletter_email='$newsletterEmail' AND newsletter_site_id='" . SITE_ID . "'";
+        $checkQuery = "SELECT newsletter_id, newsletter_status FROM " . TABLE_PREFIX . "newsletter WHERE newsletter_email='$newsletterEmail' AND newsletter_site_id='" . SITE_ID . "'";
         $checkResult = mysqli_query($connection, $checkQuery);
 
         if (mysqli_num_rows($checkResult) == 0) {
@@ -22,14 +23,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (mysqli_query($connection, $insertQuery)) {
                 $httpStatus = 201;
                 $status = 'success';
-                $msg = 'Subscriber added successfully';
+                $msg = 'You have been successfully subscribed to the newsletter. Please check your email for verification link.';
             } else {
                 $httpStatus = 500;
                 $msg = 'Database insertion failed';
             }
         } else {
-            $httpStatus = 409;
-            $msg = 'Email already subscribed';
+            extract(mysqli_fetch_assoc($checkResult));
+            if ($newsletter_status == 0) {
+                sendNewsLetterVerficationLinkviaEmail($newsletterEmail);
+                $httpStatus = 200;;
+                $status = 'success';
+                $msg = 'Verification link has been sent to your email address.';
+            } else {
+                $httpStatus = 200;
+                $status = 'info';
+                $msg = 'Email is already subscribed to the newsletter';
+            }
         }
     } else {
         $httpStatus = 400;
