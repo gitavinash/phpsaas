@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (mysqli_num_rows($checkResult) == 0) {
             // Insert new subscriber
-            $insertQuery = "INSERT INTO " . TABLE_PREFIX . "newsletter (newsletter_email, newsletter_status, newsletter_site_id) VALUES ('$newsletterEmail', 1, '" . SITE_ID . "')";
+            $insertQuery = "INSERT INTO " . TABLE_PREFIX . "newsletter (newsletter_email, newsletter_status, newsletter_site_id) VALUES ('$newsletterEmail', 0, '" . SITE_ID . "')";
             if (mysqli_query($connection, $insertQuery)) {
                 sendNewsLetterVerficationLinkviaEmail($newsletterEmail);
                 $httpStatus = 201;
