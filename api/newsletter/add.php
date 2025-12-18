@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Insert new subscriber
             $insertQuery = "INSERT INTO " . TABLE_PREFIX . "newsletter (newsletter_email, newsletter_status, newsletter_site_id) VALUES ('$newsletterEmail', 1, '" . SITE_ID . "')";
             if (mysqli_query($connection, $insertQuery)) {
+                sendNewsLetterVerficationLinkviaEmail($newsletterEmail);
                 $httpStatus = 201;
                 $status = 'success';
                 $msg = 'You have been successfully subscribed to the newsletter. Please check your email for verification link.';
