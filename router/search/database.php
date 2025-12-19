@@ -145,74 +145,164 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             break;
 
         case 'news':
-            $sql = "
-                SELECT
-                    'news' AS item_type,
-                    n.news_title     AS title,
-                    n.news_image     AS image,
-                    l.link_url       AS url,
-                    n.news_time      AS published_at,
-                    n.news_id        AS relation_id,
-                    NULL             AS tag_type,
-                    n.news_description AS description,
-                    (
-                        (MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)) * 2.0
-                      + (MATCH(n.news_title, n.news_highlight, n.news_description) AGAINST (? IN BOOLEAN MODE)) * 1.25
-                      + (MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)) * 0.6
-                      + (MATCH(n.news_title, n.news_highlight, n.news_description) AGAINST (? IN BOOLEAN MODE)) * 0.5
-                    ) AS rel_score
-                FROM " . TABLE_PREFIX . "news n
-                LEFT JOIN " . TABLE_PREFIX . "link l
-                  ON l.link_relation_id = n.news_id
-                 AND l.link_type = 'news'
-                 AND l.link_status = 200
-                WHERE n.news_site_id = ?
-                  AND n.news_status = 1
-                  AND n.news_is_public = 1
-                  AND (
-                       MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)
-                    OR MATCH(n.news_title, n.news_highlight, n.news_description) AGAINST (? IN BOOLEAN MODE)
-                    OR MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)
-                    OR MATCH(n.news_title, n.news_highlight, n.news_description) AGAINST (? IN BOOLEAN MODE)
-                  )
-                ORDER BY n.news_published DESC,
-                         ( (MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)) * 2.0
-                         + (MATCH(n.news_title, n.news_highlight, n.news_description) AGAINST (? IN BOOLEAN MODE)) * 1.25 ) DESC
-                LIMIT ? OFFSET ?";
 
-            $countSql = "
-                SELECT COUNT(*) AS total
-                FROM " . TABLE_PREFIX . "news n
-                LEFT JOIN " . TABLE_PREFIX . "link l
-                  ON l.link_relation_id = n.news_id
-                 AND l.link_type = 'news'
-                 AND l.link_status = 200
-                WHERE n.news_site_id = ?
-                  AND n.news_status = 1
-                  AND n.news_is_public = 1
-                  AND (
-                       MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)
-                    OR MATCH(n.news_title, n.news_highlight, n.news_description) AGAINST (? IN BOOLEAN MODE)
-                    OR MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)
-                    OR MATCH(n.news_title, n.news_highlight, n.news_description) AGAINST (? IN BOOLEAN MODE)
-                  )";
+            $sql = "
+    SELECT DISTINCT
+        item_type,
+        title,
+        image,
+        url,
+        published_at,
+        relation_id,
+        tag_type,
+        description,
+        rel_score,
+        priority
+    FROM (
+        /* 1️⃣ NEWS VIA TAG MATCH (HIGHEST PRIORITY) */
+        SELECT
+            'news' AS item_type,
+            n.news_title       AS title,
+            n.news_image       AS image,
+            l2.link_url        AS url,
+            COALESCE(l2.link_published, n.news_time) AS published_at,
+            n.news_id          AS relation_id,
+            'tag'              AS tag_type,
+            n.news_description AS description,
+            100                AS rel_score,
+            1                  AS priority
+        FROM isw_tag t
+        JOIN isw_link l1
+          ON l1.link_id = t.tag_relation_id
+         AND l1.link_status = 200
+         AND l1.link_site_id = ?
+        JOIN isw_news n
+          ON n.news_id = l1.link_relation_id
+         AND n.news_status = 1
+         AND n.news_is_public = 1
+         AND n.news_site_id = ?
+        LEFT JOIN isw_link l2
+          ON l2.link_relation_id = n.news_id
+         AND l2.link_type = 'news'
+         AND l2.link_status = 200
+         AND l2.link_site_id = ?
+        WHERE t.tag_type = 'news'
+          AND t.tag_site_id = ?
+          AND MATCH(t.tag_title) AGAINST (? IN BOOLEAN MODE)
+
+        UNION ALL
+
+        /* 2️⃣ NEWS TITLE MATCH */
+        SELECT
+            'news',
+            n.news_title,
+            n.news_image,
+            l.link_url,
+            COALESCE(l.link_published, n.news_time),
+            n.news_id,
+            NULL,
+            n.news_description,
+            MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE) * 5,
+            2
+        FROM isw_news n
+        LEFT JOIN isw_link l
+          ON l.link_relation_id = n.news_id
+         AND l.link_type = 'news'
+         AND l.link_status = 200
+         AND l.link_site_id = ?
+        WHERE n.news_site_id = ?
+          AND n.news_status = 1
+          AND n.news_is_public = 1
+          AND MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)
+
+        UNION ALL
+
+        /* 3️⃣ NEWS CONTENT MATCH */
+        SELECT
+            'news',
+            n.news_title,
+            n.news_image,
+            l.link_url,
+            COALESCE(l.link_published, n.news_time),
+            n.news_id,
+            NULL,
+            n.news_description,
+            MATCH(n.news_highlight, n.news_description)
+                AGAINST (? IN BOOLEAN MODE),
+            3
+        FROM isw_news n
+        LEFT JOIN isw_link l
+          ON l.link_relation_id = n.news_id
+         AND l.link_type = 'news'
+         AND l.link_status = 200
+         AND l.link_site_id = ?
+        WHERE n.news_site_id = ?
+          AND n.news_status = 1
+          AND n.news_is_public = 1
+          AND MATCH(n.news_highlight, n.news_description)
+              AGAINST (? IN BOOLEAN MODE)
+    ) AS combined_results
+    ORDER BY priority ASC, rel_score DESC, published_at DESC
+    LIMIT ? OFFSET ?
+    ";
 
             $params = [
-                $qAll,
-                $qAll,
-                $qAny,
-                $qAny,
-                $siteId,
-                $qAll,
-                $qAll,
-                $qAny,
-                $qAny,
-                $qAll,
-                $qAll,
+                // TAG → LINK → NEWS
+                $siteId,  // l1.link_site_id
+                $siteId,  // n.news_site_id
+                $siteId,  // l2.link_site_id
+                $siteId,  // t.tag_site_id
+                $qAll,    // tag title match
+
+                // TITLE
+                $qAll,    // title match (score)
+                $siteId,  // l.link_site_id
+                $siteId,  // n.news_site_id
+                $qAll,    // title match (where)
+
+                // CONTENT
+                $qAny,    // content match (score)
+                $siteId,  // l.link_site_id
+                $siteId,  // n.news_site_id
+                $qAny,    // content match (where)
+
+                // PAGINATION
                 $limit,
                 $offset
             ];
-            $countParams = [$siteId, $qAll, $qAll, $qAny, $qAny];
+
+            $countSql = "
+        SELECT COUNT(DISTINCT n.news_id) AS total
+        FROM isw_news n
+        LEFT JOIN isw_link l
+          ON l.link_relation_id = n.news_id
+         AND l.link_type = 'news'
+         AND l.link_status = 200
+         AND l.link_site_id = ?
+        LEFT JOIN isw_tag t
+          ON t.tag_relation_id = l.link_id
+         AND t.tag_type = 'news'
+         AND t.tag_site_id = ?
+        WHERE n.news_site_id = ?
+          AND n.news_status = 1
+          AND n.news_is_public = 1
+          AND (
+               MATCH(t.tag_title) AGAINST (? IN BOOLEAN MODE)
+            OR MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)
+            OR MATCH(n.news_highlight, n.news_description)
+               AGAINST (? IN BOOLEAN MODE)
+          )
+    ";
+
+            $countParams = [
+                $siteId,  // l.link_site_id
+                $siteId,  // t.tag_site_id
+                $siteId,  // n.news_site_id
+                $qAll,    // tag title match
+                $qAny,    // news title match
+                $qAny     // content match
+            ];
+
             break;
 
         default: // post
