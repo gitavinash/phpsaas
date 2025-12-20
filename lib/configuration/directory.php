@@ -77,6 +77,7 @@ define('SEARCH_FUNCTIONS', FUNCTIONS . '/search.php');
 define('USER_FUNCTIONS', FUNCTIONS . '/user.php');
 define('COMMUNICATION_FUNCTIONS', FUNCTIONS . 'communicatipn.php');
 define('HOMEPAGE_FUNCTIONS', FUNCTIONS . 'homepage.php');
+define('ALEYA_FUNCTIONS', FUNCTIONS . 'aleya.php');
 
 /** System default and usefull modules */
 

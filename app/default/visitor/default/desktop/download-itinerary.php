@@ -1,144 +1,17 @@
 <?php
+
 require_once UTIL_FUNCTIONS;
-function renderStarIcons($hotel_type)
-{
-    // Extract numeric part (e.g., "3" from "3_star")
-    preg_match('/(\d+)/', $hotel_type, $matches);
-    $stars = isset($matches[1]) ? (int)$matches[1] : 0;
-
-    // Max stars = 5
-    $filledStars = min($stars, 5);
-    $emptyStars = 5 - $filledStars;
-
-    // Generate HTML
-    $output = '<div class="flex items-center">';
-    for ($i = 0; $i < $filledStars; $i++) {
-        $output .= '<i class="ri-star-fill text-yellow-400"></i>';
-    }
-    for ($i = 0; $i < $emptyStars; $i++) {
-        $output .= '<i class="ri-star-line text-yellow-400"></i>';
-    }
-    $output .= '</div>';
-
-    return $output;
-}
+require_once ALEYA_FUNCTIONS;
 
 $quotationId = base64_decode(end($urlStructure));
+$quotationData = getQuotationDetails($connection, $quotationId);
 
-$query = "
-    SELECT 
-        q.*, 
-        tp.*, 
-        e.*, 
-        g.*, 
-        ep.*,
-        GROUP_CONCAT(
-    CONCAT_WS(':',
-        TRIM(tph.tph_hotel_id),
-        TRIM(tph.tph_room_type_id),
-        TRIM(tph.tph_room_type),
-        TRIM(tph.tph_night)
-    )
-    ORDER BY tph.tph_night
-    SEPARATOR ','
-) AS hotel_list
-    FROM " . TABLE_PREFIX . "quotation q
-    INNER JOIN " . TABLE_PREFIX . "tour_package tp 
-        ON q.quotation_type_id = tp.tour_package_id
-    INNER JOIN " . TABLE_PREFIX . "enquiry e 
-        ON e.enquiry_id = q.quotation_ref_id
-    LEFT JOIN " . TABLE_PREFIX . "gallery g 
-        ON g.gallery_category = tp.tour_package_id 
-        AND g.gallery_site_id = " . SITE_ID . "
-    LEFT JOIN " . TABLE_PREFIX . "enquiry_profile ep 
-        ON ep.enquiry_profile_ref_id = e.enquiry_id 
-        AND ep.status = 1
-    LEFT JOIN " . TABLE_PREFIX . "tour_package_hotel tph 
-        ON tph.tph_package_id = tp.tour_package_id
-    WHERE q.quotation_id = '{$quotationId}' 
-        AND q.quotation_type = 'tour_package' 
-        AND q.quotation_status IN (0,1) 
-        AND q.quotation_site_id = " . SITE_ID . "
-    GROUP BY q.quotation_id
-";
-
-if ($checkQuote = mysqli_query($connection, $query)) {
-    if (mysqli_num_rows($checkQuote) > 0) {
-        extract(mysqli_fetch_assoc($checkQuote));
-        if (!empty($enquiry_message)) {
-            extract(json_decode($enquiry_message, true));
-        }
-
-        $hotelListData = explode(',', $hotel_list);
-        $hotelIds = [];
-        $roomIds = [];
-
-        foreach ($hotelListData as $data) {
-            $parts = explode(':', $data);
-            if (count($parts) >= 4) {
-                $hotelIds[] = $parts[0];
-                $roomIds[] = $parts[1];
-            }
-        }
-
-        // 2. Remove duplicates & sanitize
-        $hotelIds = array_unique(array_filter($hotelIds));
-        $roomIds = array_unique(array_filter($roomIds));
-
-        // 3. Convert to comma-separated strings for IN clause
-        $hotelIdsIn = implode(',', array_map('intval', $hotelIds));
-        $roomIdsIn = implode(',', array_map('intval', $roomIds));
-
-        $hotelRoomMap = [];
-
-        // 4. Run optimized single query
-        if ($hotelIdsIn != '') {
-            $query = "
-    SELECT 
-        property_id,
-        property_title, 
-        property_thumbnail, 
-        property_city, 
-        property_state, 
-        property_country, 
-        property_type,
-        room_id,
-        room_feature_image, 
-        room_type 
-    FROM isw_tour_package_hotel 
-    INNER JOIN isw_property ON property_id = tph_hotel_id 
-    INNER JOIN isw_room ON room_id = tph_room_type_id
-    WHERE tph_hotel_id IN ($hotelIdsIn) 
-      AND tph_room_type_id IN ($roomIdsIn)
-";
-            // Execute query
-            $result = mysqli_query($connection, $query);
-            $i = 0;
-            while ($row = mysqli_fetch_assoc($result)) {
-                $key = $i;
-                $hotelRoomMap[$key] = $row;
-                $i++;
-            }
-        } else {
-        }
-    } else {
-        die("Quotation not found or inactive.");
-    }
+if (empty($quotationData)) {
+    die('Invalid Quotation ID or Quotation not found.');
 } else {
-    die("Database query failed: " . mysqli_error($connection));
+    extract($quotationData);
 }
 
-$quoteId = '#' . getInitials(SITE_NAME) . '/' . base64_encode($quotation_ref_id) . '/' . $quotationId;
-$pdfFileName = strtolower(str_replace(' ', '_', $enquiry_first_name . ' ' . $enquiry_last_name . ' ' . $tour_package_title) . '_itinerary_' . time() . '.pdf');
-$quotationDescription = json_decode($quotation_description, true);
-$quotationIninenary = $quotationDescription['itinerary'];
-$itineraries = $quotationIninenary;
-$inclusions = explode(',', $quotationDescription['inclusions']);
-$exclusions = explode(',', $quotationDescription['exclusions']);
-$dayCount = 1;
-$totalAdultPerson = isset($number_of_adults) ? $number_of_adults : 1;
-$totalChildPerson = isset($number_of_childrens) ? $number_of_childrens : 0;
-$numberOfDays = isset($number_of_days) ? $number_of_days : 4;
 ?>
 
 <!DOCTYPE html>
@@ -244,10 +117,14 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                                     <i class="ri-map-pin-line"></i>
                                     <span><?php echo $tour_package_city ?></span>
                                 </div>
+                                <?php
+
+                                if (!empty($travel_date)) { ?>
                                 <div class="flex items-center gap-2">
                                     <i class="ri-calendar-line"></i>
                                     <span><?php echo ((isset($travel_date)) ? (($travel_date != '') ? date('d F, Y', strtotime($travel_date)) : '') : '') ?></span>
                                 </div>
+                                <?php } ?>
                                 <div class="flex items-center gap-2">
                                     <i class="ri-time-line"></i>
                                     <span><?php echo $numberOfDays + 1 ?> Days</span>
@@ -255,7 +132,9 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                             </div>
                         </div>
                         <div class="flex flex-col items-end">
-                            <div class="text-3xl font-bold whitespace-nowrap">₹ <?php echo $quotation_price ?> /-</div>
+                            <div class="text-3xl font-bold whitespace-nowrap">₹
+                                <?php echo number_format($single_person_total, 2) ?> /-
+                            </div>
                             <div class="text-sm text-white/75 whitespace-nowrap mb-2">per person</div>
                             <div class="text-sm text-white/75 whitespace-nowrap">Ref. id: <?php echo $quoteId ?>
                             </div>
@@ -396,31 +275,6 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
             </div>
         </section>
 
-
-        <?php
-        // Pre-calculation
-        $days = $numberOfDays + 1;
-        $persons = isset($totalAdultPerson) ? intval($totalAdultPerson) : 1;
-        $base_price_per_person = isset($quotation_price) ? floatval(preg_replace('/[^\d.]/', '', $quotation_price)) : 0;
-        $mrp_per_person = $quotation_mrp;
-
-        $total_base_price = $base_price_per_person * $persons;
-        $total_mrp_price = $mrp_per_person * $persons;
-
-        $gst_percent = 5;
-        $gst_amount = $total_base_price * ($gst_percent / 100);
-        $mrp_gst_total = $total_mrp_price + ($total_mrp_price * $gst_percent / 100);
-
-        $final_price = $total_base_price + $gst_amount;
-        $single_person_total = $base_price_per_person + ($base_price_per_person * $gst_percent / 100);
-
-        $total_discount = $mrp_gst_total - $final_price;
-        $discount_percent = ($mrp_gst_total > 0)
-            ? round(($total_discount / $mrp_gst_total) * 100)
-            : 0;
-
-        ?>
-
         <section class="pdf-page">
             <div class="p-6 border-b border-gray-200">
                 <h2 class="text-xl font-semibold mb-4">Tour Pricing</h2>
@@ -435,9 +289,11 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                             </div>
                         </div>
                         <p class="text-gray-600 mt-1">
-                            <?php echo ($persons == 1 ? '1 Adult' : $persons . ' Adults'); ?> |
+                            <?php $passangerInfo = ($numberOfAdults == 1 ? '1 Adult' : $numberOfAdults . ' Adults') . (($numberOfChilds != 0) ? ', ' . ($numberOfChilds == 1 ? '1 Child' : $numberOfChilds . ' Children') : '') . (($numberOfInfants != 0) ? ', ' . ($numberOfInfants == 1 ? '1 Infant' : $numberOfInfants . ' Infants') : '');
+                            echo $passangerInfo; ?>
+                            |
                             <?php echo ucwords(str_replace('_', ' ', $tour_package_hotel)) ?> Accommodation |
-                            <?php echo $days; ?> Days, <?php echo $numberOfDays; ?> Nights
+                            <?php echo $numberOfDays; ?> Nights, <?php echo $days; ?> Days
                         </p>
                     </div>
 
@@ -446,31 +302,6 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                     ?>
 
                     <div class="p-6">
-                        <div class="flex items-center justify-between mb-6">
-                            <div class="space-y-1">
-                                <div class="text-3xl font-bold text-gray-900">
-                                    ₹<?php echo number_format($final_price, 2); ?>
-                                </div>
-
-                                <?php if ($isDiscount): ?>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-lg text-gray-500 line-through">
-                                        ₹<?php echo number_format($mrp_gst_total, 2); ?>
-                                    </span>
-                                    <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-sm font-medium">
-                                        Save <?php echo $discount_percent; ?>%
-                                    </span>
-                                </div>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="text-right">
-                                <div class="text-sm text-gray-500">Per Package</div>
-                                <div class="text-sm text-gray-500">
-                                    (₹<?php echo number_format($single_person_total, 2); ?> per person)
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Breakdown -->
                         <div class="space-y-3 border-t border-b border-gray-200 py-4 mb-6">
@@ -478,14 +309,14 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                                 <div class="flex items-center gap-2">
                                     <i class="ri-hotel-line text-primary"></i>
                                     <span>Base Price
-                                        (<?php echo ($persons == 1 ? '1 Adult' : $persons . ' Adults'); ?>)</span>
+                                        ( <?php echo $passangerInfo ?> )</span>
                                 </div>
                                 <span class="font-medium">₹<?php echo number_format($total_base_price, 2); ?></span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center gap-2">
                                     <i class="ri-percent-line text-primary"></i>
-                                    <span>GST (<?php echo $gst_percent; ?>%)</span>
+                                    <span>GST ( <?php echo $gst_percent; ?>% )</span>
                                 </div>
                                 <span class="font-medium">+ ₹<?php echo number_format($gst_amount, 2); ?></span>
                             </div>
@@ -500,6 +331,26 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                                     ₹<?php echo number_format($total_discount, 2); ?></span>
                             </div>
                             <?php endif; ?>
+                        </div>
+                        <div class="flex items-center justify-between mb-6">
+                            <div></div>
+                            <div class="text-right space-y-2">
+                                <div class="text-sm text-gray-600 font-medium">Total Price</div>
+                                <div class="text-4xl font-bold text-primary">
+                                    ₹<?php echo number_format($final_price, 2); ?>
+                                </div>
+
+                                <?php if ($isDiscount): ?>
+                                <div class="flex items-center justify-end gap-3 mt-2">
+                                    <span class="text-base text-gray-500 line-through">
+                                        ₹<?php echo number_format($mrp_gst_total, 2); ?>
+                                    </span>
+                                    <span class="px-3 py-1 bg-green-500 text-white rounded-full text-sm font-semibold">
+                                        Save <?php echo $discount_percent; ?>%
+                                    </span>
+                                </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
 
                         <!-- Offer -->
@@ -530,7 +381,8 @@ $numberOfDays = isset($number_of_days) ? $number_of_days : 4;
                 <div class="space-y-2">
                     <div class="flex items-start gap-2 text-sm text-gray-600">
                         <i class="ri-calendar-line mt-0.5"></i>
-                        <span>Prices valid until <?php echo date('F j, Y', strtotime('+7 days')); ?></span>
+                        <span>Prices valid until
+                            <?php echo date('F j, Y', strtotime($quotation_time . ' +1 week')); ?></span>
                     </div>
                 </div>
             </div>
