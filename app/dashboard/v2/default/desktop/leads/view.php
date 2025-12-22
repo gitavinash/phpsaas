@@ -18,6 +18,16 @@ if ($site_access_type == 'digital_marketing') {
             extract(mysqli_fetch_assoc($checkEnquiry));
             if ($enquiry_message != '') {
                 extract(json_decode($enquiry_message, true));
+                $date_of_travel = date('d-m-Y', strtotime($date_of_travel));
+?>
+<script type="text/javascript">
+localStorage.setItem('noOfAdults', '<?php echo $number_of_adults ?>');
+localStorage.setItem('noOfChildren', '<?php echo $number_of_childrens ?>');
+localStorage.setItem('noOfInfants', '<?php echo $number_of_infants ?>');
+localStorage.setItem('tourDuration', '<?php echo $number_of_days ?>');
+localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
+</script>
+<?php
             }
         } else {
             echo "Invalid request";
@@ -28,7 +38,7 @@ if ($site_access_type == 'digital_marketing') {
         exit();
     }
 
-?>
+    ?>
 <h2 class="heading">Lead details<span>Complete information of lead</span></h2>
 <div class="box-1">
 

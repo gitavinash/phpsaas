@@ -122,6 +122,24 @@ $("#showItinerary").click(function (e) {
     (item) => item.tour_package_id == itinenaryPrice
   );
 
+  const tourDuration = localStorage.getItem("tourDuration");
+  const numberOfAdults = parseInt(localStorage.getItem("noOfAdults"), 10) || 0;
+  const numberOfChildren =
+    parseInt(localStorage.getItem("noOfChildren"), 10) || 0;
+
+  const totalAdultsPrice =
+    numberOfAdults *
+    (matchedItinerary
+      ? parseFloat(matchedItinerary.tour_package_price_selling_adult)
+      : 0);
+  const totalChildrenPrice =
+    numberOfChildren *
+    (matchedItinerary
+      ? parseFloat(matchedItinerary.tour_package_price_selling_child)
+      : 0);
+
+  const totalCost = totalAdultsPrice + totalChildrenPrice;
+
   if (matchedItinerary) {
     let dayWiseItinerary;
     try {
@@ -150,19 +168,16 @@ $("#showItinerary").click(function (e) {
       `;
     });
 
-    var tripDurationDays =
-      parseInt(matchedItinerary.tour_package_duration, 10) + 1;
-
     var tripDuration =
-      matchedItinerary.tour_package_duration +
-      " Nights / " +
-      tripDurationDays +
-      " Days";
+      tourDuration + " Nights / " + (parseInt(tourDuration, 10) + 1) + " Days";
 
     var itineraryHtmlBody =
       `
       <h1>${matchedItinerary.tour_package_title}</h1>
       <table>
+      <tr>
+      <td colspan=2><strong>Overview</strong></td>
+      </tr>
         <tr>
           <td>Destination</td>
           <td>${matchedItinerary.tour_package_city}</td>
@@ -185,21 +200,53 @@ $("#showItinerary").click(function (e) {
         </tr>
         <tr>
           <td>Drop point</td>
-          <td>${matchedItinerary.tour_package_end_to}</td>
+          <td>${
+            matchedItinerary.tour_package_end_to != ""
+              ? matchedItinerary.tour_package_end_to
+              : matchedItinerary.tour_package_start_from
+          }</td>
+        </tr>
+        <tr>
+          <td>Travel Date</td>
+          <td>${localStorage.getItem("dateOfTravel")}</td>
         </tr>
         <tr>
           <td>Duration</td>
           <td>${tripDuration}</td>
         </tr>
         <tr>
-          <td>Price</td>
-          <td>₹ ${
-            matchedItinerary.tour_package_price_selling_adult
-          } per person</td>
+        <td colspan=2><strong>Cost Details (in INR)</strong></td>
         </tr>
         <tr>
-          <td>Prepared by</td>
-          <td></td>
+          <td>Adult (per person)</td>
+          <td>₹ ${matchedItinerary.tour_package_price_selling_adult}</td>
+        </tr>
+        <tr>
+          <td>Child (per person)</td>
+          <td>₹ ${matchedItinerary.tour_package_price_selling_child}</td>
+        </tr>
+        <tr>
+          <td>Infant (per person)</td>
+          <td>₹ 0</td>
+        </tr>
+        <tr>
+          <td>Total price</td>
+          <td>₹ ${totalCost}</td>
+        </tr>
+        <tr>
+          <td colspan=2><strong>Passenger Details</strong></td>
+        </tr>
+        <tr>
+          <td>Adults</td>
+          <td>${localStorage.getItem("noOfAdults")}</td>
+        </tr>
+        <tr>
+          <td>Children</td>
+          <td>${localStorage.getItem("noOfChildren")}</td>
+        </tr>
+        <tr>
+          <td>Infants</td>
+          <td>${localStorage.getItem("noOfInfants")}</td>
         </tr>
       </table>
       <h2>Overview</h2>

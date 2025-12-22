@@ -121,11 +121,15 @@ function getQuotationDetails($connection, $quotationId)
                 return [];
             }
             $numberOfDays = $number_of_days ?? 0;
-            $base_price_per_person = isset($quotation_price) ? floatval(preg_replace('/[^\d.]/', '', $quotation_price)) : 0;
-            $numberOfAdults = isset($totalAdultPerson) ? intval($totalAdultPerson) : 1;
-            $numberOfChilds = isset($totalChildPerson) ? intval($totalChildPerson) : 0;
-            $numberOfInfants = isset($totalInfantPerson) ? intval($totalInfantPerson) : 0;
+            $numberOfAdults = isset($number_of_adults) ? intval($number_of_adults) : 1;
+            $numberOfChilds = isset($number_of_childrens) ? intval($number_of_childrens) : 0;
+            $numberOfInfants = isset($number_of_infants) ? intval($number_of_infants) : 0;
             $gst_percent = 5;
+
+            $quotationTotalPrice = isset($quotation_price) ? floatval(preg_replace('/[^\d.]/', '', $quotation_price)) : 0;
+            $quotation_per_adult = ($numberOfAdults > 0) ? ($quotationTotalPrice / $numberOfAdults) : 0;
+
+            $base_price_per_person = isset($quotation_per_adult) ? floatval(preg_replace('/[^\d.]/', '', $quotation_per_adult)) : 0;
             $total_base_price = $base_price_per_person * $numberOfAdults;
             $gst_amount = $total_base_price * ($gst_percent / 100);
             $mrp_per_person = $quotation_mrp;
@@ -151,9 +155,9 @@ function getQuotationDetails($connection, $quotationId)
                 'inclusions' => explode(',', $quotationDescription['inclusions']),
                 'exclusions' => explode(',', $quotationDescription['exclusions']),
                 'dayCount' => 1,
-                'numberOfAdults' => $numberOfAdults ?? 1,
-                'numberOfChilds' => $numberOfChilds ?? 0,
-                'numberOfInfants' => $numberOfInfants ?? 0,
+                'numberOfAdults' => $numberOfAdults,
+                'numberOfChilds' => $numberOfChilds,
+                'numberOfInfants' => $numberOfInfants,
                 'numberOfDays' => $numberOfDays,
                 'final_price' => $final_price,
                 'mrp_gst_total' => $mrp_gst_total,
