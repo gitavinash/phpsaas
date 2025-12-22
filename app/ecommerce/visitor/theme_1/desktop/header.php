@@ -173,7 +173,8 @@ if (defined('SETTING_COMPANY_PROFILE')) {
             <!-- Logo -->
             <div class="flex items-center space-x-8">
                 <a href="/" class="flex items-center">
-                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo" class="h-8">
+                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo"
+                        class="h-<?php echo ((SITE_ID == 376) ? 20 : 8) ?>">
                 </a>
 
                 <!-- Desktop Menu -->
