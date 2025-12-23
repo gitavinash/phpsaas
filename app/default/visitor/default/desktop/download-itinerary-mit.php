@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Project</title>
+    <title><?php echo $tour_package_title . ' | ' . SITE_NAME ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
@@ -285,12 +285,12 @@
             const pageNumber = "Page " + (index + 1) + " of " + totalPages;
             footer.innerHTML =
                 "<footer style=\"position: relative; width: 100%;\">" +
-                "<div class='bottom-decor' style=\"display:flex; align-items:center; justify-content:center;\">" +
+                "<div class='bottom-decor' style=\"display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;\">" +
                 "<img src='<?php echo SITE_LOGO; ?>' class='center-logo'>" +
+                "<span style=\"font-size: 12px; color: #666; letter-spacing: 1px; white-space: nowrap;\"><?php echo COMPANY_SITE_DOMAIN ?></span>" +
                 "</div>" +
-                "<div style=\"display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:nowrap;\">" +
+                "<div style=\"display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:nowrap; margin: 0px 50px\">" +
                 "<span style=\"font-size: 12px; color: #666; white-space: nowrap;\">Powered by Aleya.in</span>" +
-                "<span style=\"flex:1; text-align:center; font-size: 12px; color: #666; white-space: nowrap;\"><?php echo COMPANY_SITE_DOMAIN ?></span>" +
                 "<span style=\"font-size: 12px; color: #666; white-space: nowrap;\">" + pageNumber +
                 "</span>" +
                 "</div>" +
