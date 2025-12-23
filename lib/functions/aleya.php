@@ -140,7 +140,10 @@ function getQuotationDetails($connection, $quotationId)
 
             return [
                 'quoteId' => '#' . getInitials(SITE_NAME) . '/' . base64_encode($quotation_ref_id) . '/' . $quotationId,
+                'travelDate' => $date_of_travel,
                 'tour_package_title' => $tour_package_title,
+                'tour_package_city' => $tour_package_city,
+                'tour_package_image' => SITE_URL . $tour_package_image,
                 'enquiry_first_name' => $enquiry_first_name,
                 'enquiry_last_name' => $enquiry_last_name,
                 'tour_package_overview' => $tour_package_overview,

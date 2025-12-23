@@ -1,0 +1,925 @@
+:root {
+  --primary-color: #e76317;
+  --secondary-color: #fb923c;
+  --dark-text: #111;
+  --medium-text: #333;
+  --light-text: #666;
+  --light-gray: #767676;
+  --background: #26679c;
+  --white: #ffffff;
+  --accent-success: #22c55e;
+  --accent-error: #ff4d4f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  background: var(--background);
+  color: var(--dark-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* A4 Page Configuration */
+.page {
+  position: relative;
+  width: 210mm; /* A4 width */
+  height: 297mm; /* A4 height */
+  margin: 0 auto;
+  background: white;
+  page-break-before: always;
+  page-break-after: always;
+  page-break-inside: avoid;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.page:first-child {
+  page-break-before: auto;
+}
+
+/* Hero Section - 20% of A4 height */
+/* Hero Section - 25-30% of A4 height */
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 74.25mm; /* 25% of 297mm A4 height */
+  max-height: 89.1mm; /* 30% of 297mm A4 height */
+  height: 89.1mm;
+  overflow: hidden;
+}
+
+.refid {
+  position: absolute;
+  bottom: 16px;
+  right: 20px;
+  font-size: 0.9rem;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--secondary-color);
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px var(--secondary-color);
+  z-index: 10;
+}
+
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ---------- Default Day Image (fallback when no feature image) ---------- */
+.days-page .hero .default-day-image {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: #fff;
+  padding: 16px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.days-page .hero .default-day-image h2 {
+  font-size: 5em;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Wave overlay (layered gradients) */
+.days-page .hero .default-day-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.45;
+  /* Tunable variables */
+  --wave-angle: 35deg;
+  --wave-strength: 12%;
+  --wave-shift: 60%;
+  background:
+    /* large corner sweeps */ radial-gradient(
+      120% 80% at 0% 100%,
+      rgba(255, 255, 255, 0.18) 0 var(--wave-shift),
+      transparent calc(var(--wave-shift) + 1%)
+    ),
+    radial-gradient(
+      120% 80% at 100% 0%,
+      rgba(255, 255, 255, 0.14) 0 calc(var(--wave-shift) - 5%),
+      transparent calc(var(--wave-shift) + 6%)
+    ),
+    /* subtle waves */
+      conic-gradient(
+        from var(--wave-angle),
+        rgba(255, 255, 255, 0.06) 0,
+        transparent 20%,
+        rgba(255, 255, 255, 0.08) 40%,
+        transparent 60%,
+        rgba(255, 255, 255, 0.06) 80%,
+        transparent 100%
+      ),
+    /* fine ripples */
+      repeating-linear-gradient(
+        calc(var(--wave-angle) + 90deg),
+        rgba(255, 255, 255, 0.04) 0,
+        rgba(255, 255, 255, 0.04) calc(6px + var(--wave-strength)),
+        transparent calc(12px + var(--wave-strength))
+      );
+}
+
+/* Cycle gradients per day using nth-of-type on hero headers */
+.days-page:nth-of-type(1) .hero .default-day-image {
+  background: linear-gradient(135deg, #5e1ba9, #c2185b);
+}
+.days-page:nth-of-type(1) .hero .default-day-image::before {
+  --wave-angle: 22deg;
+  --wave-strength: 10%;
+  --wave-shift: 58%;
+}
+.days-page:nth-of-type(2) .hero .default-day-image {
+  background: linear-gradient(135deg, #1565c0, #0277bd);
+}
+.days-page:nth-of-type(2) .hero .default-day-image::before {
+  --wave-angle: 48deg;
+  --wave-strength: 14%;
+  --wave-shift: 62%;
+}
+.days-page:nth-of-type(3) .hero .default-day-image {
+  background: linear-gradient(135deg, #0288d1, #7b1fa2);
+}
+.days-page:nth-of-type(3) .hero .default-day-image::before {
+  --wave-angle: 12deg;
+  --wave-strength: 16%;
+  --wave-shift: 55%;
+}
+.days-page:nth-of-type(4) .hero .default-day-image {
+  background: linear-gradient(135deg, #00796b, #558b2f);
+}
+.days-page:nth-of-type(4) .hero .default-day-image::before {
+  --wave-angle: 66deg;
+  --wave-strength: 12%;
+  --wave-shift: 60%;
+}
+.days-page:nth-of-type(5) .hero .default-day-image {
+  background: linear-gradient(135deg, #e65100, #c62828);
+}
+.days-page:nth-of-type(5) .hero .default-day-image::before {
+  --wave-angle: 30deg;
+  --wave-strength: 9%;
+  --wave-shift: 63%;
+}
+.days-page:nth-of-type(6) .hero .default-day-image {
+  background: linear-gradient(135deg, #c2185b, #6a1b9a);
+}
+.days-page:nth-of-type(6) .hero .default-day-image::before {
+  --wave-angle: 75deg;
+  --wave-strength: 15%;
+  --wave-shift: 57%;
+}
+.days-page:nth-of-type(7) .hero .default-day-image {
+  background: linear-gradient(135deg, #00695c, #004d40);
+}
+.days-page:nth-of-type(7) .hero .default-day-image::before {
+  --wave-angle: 40deg;
+  --wave-strength: 11%;
+  --wave-shift: 61%;
+}
+.days-page:nth-of-type(8) .hero .default-day-image {
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+}
+.days-page:nth-of-type(8) .hero .default-day-image::before {
+  --wave-angle: 18deg;
+  --wave-strength: 13%;
+  --wave-shift: 59%;
+}
+.days-page:nth-of-type(9) .hero .default-day-image {
+  background: linear-gradient(135deg, #0277bd, #00838f);
+}
+.days-page:nth-of-type(9) .hero .default-day-image::before {
+  --wave-angle: 52deg;
+  --wave-strength: 12%;
+  --wave-shift: 60%;
+}
+.days-page:nth-of-type(10) .hero .default-day-image {
+  background: linear-gradient(135deg, #6a1b9a, #1565c0);
+}
+.days-page:nth-of-type(10) .hero .default-day-image::before {
+  --wave-angle: 8deg;
+  --wave-strength: 10%;
+  --wave-shift: 62%;
+}
+
+/* Repeat cycle every 10 days */
+.days-page:nth-of-type(10n + 1) .hero .default-day-image {
+  background: linear-gradient(135deg, #5e1ba9, #c2185b);
+}
+.days-page:nth-of-type(10n + 1) .hero .default-day-image::before {
+  --wave-angle: 28deg;
+  --wave-strength: 12%;
+  --wave-shift: 58%;
+}
+.days-page:nth-of-type(10n + 2) .hero .default-day-image {
+  background: linear-gradient(135deg, #1565c0, #0277bd);
+}
+.days-page:nth-of-type(10n + 2) .hero .default-day-image::before {
+  --wave-angle: 36deg;
+  --wave-strength: 11%;
+  --wave-shift: 63%;
+}
+.days-page:nth-of-type(10n + 3) .hero .default-day-image {
+  background: linear-gradient(135deg, #0288d1, #7b1fa2);
+}
+.days-page:nth-of-type(10n + 3) .hero .default-day-image::before {
+  --wave-angle: 20deg;
+  --wave-strength: 15%;
+  --wave-shift: 56%;
+}
+.days-page:nth-of-type(10n + 4) .hero .default-day-image {
+  background: linear-gradient(135deg, #00796b, #558b2f);
+}
+.days-page:nth-of-type(10n + 4) .hero .default-day-image::before {
+  --wave-angle: 72deg;
+  --wave-strength: 10%;
+  --wave-shift: 60%;
+}
+.days-page:nth-of-type(10n + 5) .hero .default-day-image {
+  background: linear-gradient(135deg, #e65100, #c62828);
+}
+.days-page:nth-of-type(10n + 5) .hero .default-day-image::before {
+  --wave-angle: 14deg;
+  --wave-strength: 9%;
+  --wave-shift: 62%;
+}
+.days-page:nth-of-type(10n + 6) .hero .default-day-image {
+  background: linear-gradient(135deg, #c2185b, #6a1b9a);
+}
+.days-page:nth-of-type(10n + 6) .hero .default-day-image::before {
+  --wave-angle: 60deg;
+  --wave-strength: 13%;
+  --wave-shift: 59%;
+}
+.days-page:nth-of-type(10n + 7) .hero .default-day-image {
+  background: linear-gradient(135deg, #00695c, #004d40);
+}
+.days-page:nth-of-type(10n + 7) .hero .default-day-image::before {
+  --wave-angle: 44deg;
+  --wave-strength: 12%;
+  --wave-shift: 61%;
+}
+.days-page:nth-of-type(10n + 8) .hero .default-day-image {
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+}
+.days-page:nth-of-type(10n + 8) .hero .default-day-image::before {
+  --wave-angle: 26deg;
+  --wave-strength: 10%;
+  --wave-shift: 60%;
+}
+.days-page:nth-of-type(10n + 9) .hero .default-day-image {
+  background: linear-gradient(135deg, #0277bd, #00838f);
+}
+.days-page:nth-of-type(10n + 9) .hero .default-day-image::before {
+  --wave-angle: 50deg;
+  --wave-strength: 14%;
+  --wave-shift: 58%;
+}
+.days-page:nth-of-type(10n + 10) .hero .default-day-image {
+  background: linear-gradient(135deg, #6a1b9a, #1565c0);
+}
+
+.paragraph {
+  margin: 1.5rem 0;
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--medium-text);
+}
+
+.container {
+  width: 100%;
+  padding: 0 20px;
+}
+
+/* page 1 */
+
+.title-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* margin-top: -20px; */
+}
+
+.title-section h1 {
+  font-size: 34px;
+  font-weight: 600;
+  color: var(--dark-text);
+  letter-spacing: 0.2px;
+  padding: 0px 10px;
+}
+
+.line-left,
+.line-right {
+  color: var(--secondary-color);
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.route {
+  margin-top: 20px;
+  text-align: center;
+  color: var(--medium-text);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.stats {
+  margin-top: 35px;
+  margin-bottom: 50px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  text-align: center;
+}
+
+.stats .box {
+  background: var(--primary-color);
+}
+
+.stats .box p {
+  color: #fff;
+}
+
+.box {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(22, 22, 22, 0.7);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.box p:first-child {
+  font-size: 0.85rem;
+}
+
+.box p:last-child {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.stats img.icon {
+  width: 25px;
+  vertical-align: middle;
+}
+
+.stats div {
+  margin-top: 5px;
+  font-size: 16px;
+  color: var(--light-text);
+}
+
+/* top section start */
+.top-section {
+  margin-top: 15px;
+  padding: 0 24px;
+}
+/* top section end */
+
+/* -------------------------
+   CLIMAX SECTION
+--------------------------*/
+.climax-section {
+  width: 100%;
+}
+
+.top-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.top-heading .bar {
+  color: var(--secondary-color);
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.top-heading h2 {
+  margin: 0;
+  font-size: 26px;
+  color: var(--dark-text);
+  font-weight: 700;
+}
+
+.climax-list {
+  margin-top: 20px;
+  padding-left: 100px;
+  font-size: 24px;
+  line-height: 1.7;
+  color: var(--medium-text);
+}
+
+/* -------------------------
+   FOOTER DECOR
+--------------------------*/
+.bottom-decor {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 29.7mm; /* 10% of A4 height */
+  overflow: hidden;
+}
+
+/* Ensure bottom-decor image is centered and scales nicely */
+.bottom-decor img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 14.85mm; /* 5% of A4 height */
+  height: auto;
+  width: auto;
+  object-fit: contain;
+}
+
+.bottom-decor p {
+  font-size: 10px;
+  color: var(--light-gray);
+  margin-top: 8px;
+  letter-spacing: 2px;
+}
+
+footer {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  margin-top: 30px;
+  font-weight: bold;
+  max-height: 29.7mm; /* 10% of A4 height */
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* page 2  */
+
+.paragraphs {
+  margin-top: 20px;
+  padding-left: 100px;
+  font-size: 22px;
+  color: var(--medium-text);
+}
+.paragraphs p {
+  margin-top: 20px;
+}
+/* -------------------------
+   PAGE BREAK FIXED HERE
+--------------------------*/
+
+/* Ensure each section is treated as a separate page */
+.page {
+  width: 210mm;
+  height: 297mm;
+  margin: 0 auto 20px;
+  background: white;
+  page-break-before: always;
+  page-break-after: always;
+  page-break-inside: avoid;
+  overflow: hidden;
+  position: relative;
+}
+
+.page:first-child {
+  page-break-before: auto;
+}
+
+/* Make sure sections never split */
+.climax-section,
+.features,
+.stats,
+.title-section,
+.hero,
+footer {
+  page-break-inside: avoid;
+}
+
+/* Content area - remaining 80% of page after hero */
+/* Content area - remaining 70-75% of page after hero */
+.container {
+  width: 100%;
+  padding: 20px 50px;
+  max-height: calc(297mm - 89.1mm); /* Remaining height after 30% hero */
+  overflow: hidden;
+}
+
+/* Day header styling with accent line and gradient text */
+.day-header {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 50px 0 -40px 0;
+  padding-bottom: 10px;
+}
+
+.day-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  border-radius: 999px;
+  opacity: 0.7;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
+}
+
+.day-number-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: var(--white);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(6px);
+}
+
+.day-title {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0;
+  background: linear-gradient(120deg, #111, #333 50%, #555);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  text-transform: capitalize;
+  letter-spacing: 0.4px;
+}
+
+.day-title::before {
+  content: "";
+  position: absolute;
+  inset: -4px -8px;
+  background: radial-gradient(
+      circle at 10% 20%,
+      rgba(255, 255, 255, 0.18),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(255, 255, 255, 0.12),
+      transparent 40%
+    );
+  z-index: -1;
+  filter: blur(4px);
+}
+
+.day-content {
+  color: var(--medium-text);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.day-description {
+  margin: 0;
+}
+
+/* page 6  */
+.tour_container {
+  max-width: 700px;
+  margin: auto;
+}
+
+.tour_title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+  letter-spacing: 0.2px;
+  margin-bottom: 14px;
+}
+
+.tour_card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.tour_card_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #fff1e6;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.tour_package_title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+  letter-spacing: 0.2px;
+  margin-bottom: 6px;
+}
+
+.tour_package_meta {
+  font-size: 13px;
+  color: #666;
+}
+
+.tour_badge {
+  background: var(--primary-color);
+  color: var(--white);
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.tour_divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 20px 0;
+}
+
+.tour_price_row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: var(--medium-text);
+}
+
+.tour_discount span:last-child {
+  color: var(--accent-success);
+}
+
+.tour_total_section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px 0;
+}
+.text-right {
+  text-align: right;
+}
+
+.tour_total_text p {
+  font-size: 14px;
+  color: var(--light-text);
+  letter-spacing: 0.1px;
+}
+
+.tour_total_text h1 {
+  color: var(--primary-color);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  margin-top: 6px;
+}
+
+/* Save box */
+.tour_save_box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  gap: 12px;
+}
+
+.tour_old_price {
+  text-decoration: line-through;
+  color: var(--light-gray);
+  font-size: 13px;
+  display: block;
+}
+
+.tour_save_badge {
+  background: var(--accent-success);
+  color: var(--white);
+  font-size: 14px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+/* Button */
+.tour_btn {
+  width: 100%;
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 16px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tour_btn:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* upper section page 2 start */
+
+.tour_info_wrapper {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tour_info_card {
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.tour_info_card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.tour_included {
+  background: linear-gradient(135deg, #f1f8ff 0%, #e8f4ff 100%);
+  border-left: 4px solid var(--accent-success);
+}
+
+.tour_excluded {
+  background: linear-gradient(135deg, #fff1ee 0%, #ffe8e0 100%);
+  border-left: 4px solid var(--accent-error);
+}
+
+.tour_info_title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--dark-text);
+  margin-bottom: 18px;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tour_info_grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.tour_info_list {
+  list-style: none;
+  padding: 0;
+}
+
+.tour_info_list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 15px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  line-height: 1.6;
+  color: var(--medium-text);
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease;
+}
+
+.tour_info_list li:hover {
+  background: rgba(255, 255, 255, 0.8);
+  padding-left: 16px;
+}
+
+.tour_check {
+  color: var(--accent-success);
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(34, 197, 94, 0.1);
+  border-radius: 50%;
+}
+
+.tour_cross {
+  color: var(--accent-error);
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 77, 79, 0.1);
+  border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+  .tour_info_grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* upper section page 2 end */
+
+/* -------------------------
+   PRINT MODE
+--------------------------*/
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background: white;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    page-break-before: always;
+    page-break-after: always;
+    page-break-inside: avoid;
+    box-shadow: none;
+  }
+
+  .page:first-child {
+    page-break-before: auto;
+  }
+
+  /* Hero must be exactly 20% of A4 height */
+  /* Hero must be 25-30% of A4 height */
+  .hero {
+    min-height: 74.25mm;
+    max-height: 89.1mm;
+    height: 89.1mm;
+    page-break-inside: avoid;
+  }
+
+  .hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    page-break-inside: avoid;
+  }
+
+  /* Prevent orphaned content */
+  .climax-section,
+  .features,
+  .stats,
+  .title-section,
+  .tour_card,
+  .tour_info_card,
+  footer {
+    page-break-inside: avoid;
+  }
+}

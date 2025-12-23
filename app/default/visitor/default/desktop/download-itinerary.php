@@ -10,8 +10,11 @@ if (empty($quotationData)) {
     die('Invalid Quotation ID or Quotation not found.');
 } else {
     extract($quotationData);
-    // print_r($quotationData);
-    // exit();
+}
+
+if (SITE_ID == 53) {
+    require_once 'download-itinerary-mit.php';
+    exit;
 }
 
 ?>
