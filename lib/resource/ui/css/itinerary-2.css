@@ -52,7 +52,9 @@ body {
   min-height: 74.25mm; /* 25% of 297mm A4 height */
   max-height: 89.1mm; /* 30% of 297mm A4 height */
   height: 89.1mm;
-  overflow: hidden;
+  overflow: visible;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 .refid {
@@ -68,6 +70,7 @@ body {
   backdrop-filter: blur(6px);
   box-shadow: 0 4px 12px var(--secondary-color);
   z-index: 10;
+  margin-bottom: 50px;
 }
 
 .hero img {
@@ -101,6 +104,8 @@ body {
   letter-spacing: 1px;
   text-transform: uppercase;
   text-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
+  padding: 0px 50px;
+  box-sizing: border-box;
 }
 
 /* Wave overlay (layered gradients) */
@@ -302,6 +307,13 @@ body {
 }
 .days-page:nth-of-type(10n + 10) .hero .default-day-image {
   background: linear-gradient(135deg, #6a1b9a, #1565c0);
+}
+
+.greenGradient {
+  background: linear-gradient(135deg, #00796b, #558b2f) !important;
+}
+.redGradient {
+  background: linear-gradient(135deg, #e65100, #c62828) !important;
 }
 
 .paragraph {
@@ -580,11 +592,12 @@ footer {
 .day-title {
   font-size: 26px;
   font-weight: 800;
-  line-height: 1.1;
+  /* line-height: 1.1; */
   margin: 0;
-  background: linear-gradient(120deg, #111, #333 50%, #555);
+  /* background: linear-gradient(120deg, #111, #333 50%, #555); */
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* -webkit-text-fill-color: transparent; */
+  color: var(--dark-text);
   position: relative;
   text-transform: capitalize;
   letter-spacing: 0.4px;
