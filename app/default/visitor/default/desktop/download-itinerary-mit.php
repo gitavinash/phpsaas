@@ -62,6 +62,22 @@
         opacity: 0.9;
     }
 
+    .loader-powered-by {
+        margin-top: 30px;
+        font-size: 12px;
+        opacity: 0.8;
+    }
+
+    .loader-powered-by a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .loader-powered-by a:hover {
+        text-decoration: underline;
+    }
+
     #content-wrapper {
         opacity: 0;
         transition: opacity 0.5s ease;
@@ -78,6 +94,7 @@
         <div class="loader-spinner"></div>
         <div class="loader-text">Generating Your Itinerary PDF</div>
         <div class="loader-progress" id="loader-progress">Please wait...</div>
+        <div class="loader-powered-by">Powered by <a href='http://aleya.in'>Aleya</a></div>
     </div>
 
     <div id="content-wrapper">
@@ -290,10 +307,15 @@
                             <div class="tour_card_header">
                                 <div>
                                     <h3 class="tour_package_title">
-                                        Manali Kasol Jibhi Volvo Tour Package 5N 6D - Quotation
+                                        <?php echo $tour_package_title ?> - Quotation
                                     </h3>
                                     <p class="tour_package_meta">
-                                        1 Adult | 3 Star Hotel Accommodation | 0 Nights, 1 Days
+                                        <?php $passangerInfo = ($numberOfAdults == 1 ? '1 Adult' : $numberOfAdults . ' Adults') . (($numberOfChilds != 0) ? ', ' . ($numberOfChilds == 1 ? '1 Child' : $numberOfChilds . ' Children') : '') . (($numberOfInfants != 0) ? ', ' . ($numberOfInfants == 1 ? '1 Infant' : $numberOfInfants . ' Infants') : '');
+                                        echo $passangerInfo; ?>
+                                        |
+                                        <?php echo ucwords(str_replace('_', ' ', $tour_package_hotel)) ?> Accommodation
+                                        |
+                                        <?php echo $numberOfDays; ?> Nights, <?php echo $days; ?> Days
                                     </p>
                                 </div>
                                 <span class="tour_badge">Best Value</span>
@@ -302,19 +324,25 @@
                             <hr class="tour_divider" />
 
                             <div class="tour_price_row">
-                                <span><i class="ri-hotel-line"></i> Base Price ( 1 Adult )</span>
-                                <span>₹0.00</span>
+                                <span><i class="ri-hotel-line"></i> Base Price ( <?php echo $passangerInfo ?> )</span>
+                                <span>₹ <?php echo number_format($total_base_price, 2); ?></span>
                             </div>
 
                             <div class="tour_price_row">
-                                <span><i class="ri-percent-line text-primary"></i> GST ( 5% )</span>
-                                <span>+ ₹0.00</span>
+                                <span><i class="ri-percent-line text-primary"></i> GST ( <?php echo $gst_percent; ?>%
+                                    )</span>
+                                <span>+ ₹ <?php echo number_format($gst_amount, 2); ?></span>
                             </div>
 
+                            <?php
+
+                            if ($total_discount != 0) { ?>
                             <div class="tour_price_row tour_discount">
                                 <span><i class="ri-gift-line text-green-600"></i> Special Discount</span>
-                                <span>- ₹13,125.00</span>
+                                <span>- ₹ <?php echo number_format(str_replace('-', '', $total_discount), 2); ?></span>
                             </div>
+                            <?php
+                            } ?>
 
                             <div class="tour_total_section">
                                 <div></div>
@@ -322,17 +350,23 @@
 
                                     <div class="tour_total_text">
                                         <p>Total Price</p>
-                                        <h1>₹0.00</h1>
+                                        <h1>₹ <?php echo number_format($final_price, 2); ?></h1>
                                     </div>
 
+                                    <?php
+
+                                    if ($total_discount != 0) { ?>
                                     <div class="tour_save_box">
-                                        <span class="tour_old_price">₹13,125.00</span>
-                                        <span class="tour_save_badge">Save 100%</span>
+                                        <span class="tour_old_price">₹
+                                            <?php echo number_format($mrp_gst_total, 2); ?></span>
+                                        <span class="tour_save_badge">Save <?php echo $discount_percent; ?> %</span>
                                     </div>
+                                    <?php } ?>
                                 </div>
                             </div>
 
-                            <button class="tour_btn">Click here to Book Now</button>
+                            <a href="https://<?php echo SITE_DOMAIN ?>/book-now/?id=<?php echo base64_encode($quotationId) ?>"
+                                class="tour_btn">Click here to Book Now</a>
                         </div>
                     </div>
                 </div>

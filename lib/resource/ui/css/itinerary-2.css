@@ -760,6 +760,9 @@ footer {
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
+  float: left;
+  text-align: center;
+  text-decoration: none;
 }
 
 .tour_btn:hover {
