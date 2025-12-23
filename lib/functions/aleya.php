@@ -124,19 +124,12 @@ function getQuotationDetails($connection, $quotationId)
             $numberOfAdults = isset($number_of_adults) ? intval($number_of_adults) : 1;
             $numberOfChilds = isset($number_of_childrens) ? intval($number_of_childrens) : 0;
             $numberOfInfants = isset($number_of_infants) ? intval($number_of_infants) : 0;
-            $gst_percent = 5;
+            $passangerInfo = ($numberOfAdults == 1 ? '1 Adult' : $numberOfAdults . ' Adults') . (($numberOfChilds != 0) ? ', ' . ($numberOfChilds == 1 ? '1 Child' : $numberOfChilds . ' Children') : '') . (($numberOfInfants != 0) ? ', ' . ($numberOfInfants == 1 ? '1 Infant' : $numberOfInfants . ' Infants') : '');
+            $gst_percent = ((defined('GST_PERCENTAGE')) ? GST_PERCENTAGE : 5);
 
-            $quotationTotalPrice = isset($quotation_price) ? floatval(preg_replace('/[^\d.]/', '', $quotation_price)) : 0;
-            $quotation_per_adult = ($numberOfAdults > 0) ? ($quotationTotalPrice / $numberOfAdults) : 0;
-
-            $base_price_per_person = isset($quotation_per_adult) ? floatval(preg_replace('/[^\d.]/', '', $quotation_per_adult)) : 0;
-            $total_base_price = $base_price_per_person * $numberOfAdults;
-            $gst_amount = $total_base_price * ($gst_percent / 100);
-            $mrp_per_person = $quotation_mrp;
-            $total_mrp_price = $mrp_per_person * $numberOfAdults;
-            $mrp_gst_total = $total_mrp_price + ($total_mrp_price * $gst_percent / 100);
-            $final_price = $total_base_price + $gst_amount;
-            $total_discount = $mrp_gst_total - $final_price;
+            $quotationPriceWithOutGST = isset($quotation_price) ? floatval(preg_replace('/[^\d.]/', '', $quotation_price)) : 0;
+            $gstAmount = $quotationPriceWithOutGST * ($gst_percent / 100);
+            $quotationPriceWithGST = $quotationPriceWithOutGST + $gstAmount;
 
             return [
                 'quoteId' => '#' . getInitials(SITE_NAME) . '/' . base64_encode($quotation_ref_id) . '/' . $quotationId,
@@ -147,33 +140,21 @@ function getQuotationDetails($connection, $quotationId)
                 'enquiry_first_name' => $enquiry_first_name,
                 'enquiry_last_name' => $enquiry_last_name,
                 'tour_package_overview' => $tour_package_overview,
-                'tour_package_city' => $tour_package_city,
                 'tour_package_hotel' => $tour_package_hotel,
                 'tour_package_duration' => $tour_package_duration,
-                'quotation_mrp' => $quotation_mrp,
                 'quotation_time' => $quotation_time,
-                'quotation_price' => $quotation_price,
                 'gallery_image' => $gallery_image,
                 'itineraries' => $quotationDescription['itinerary'],
                 'inclusions' => explode(',', $quotationDescription['inclusions']),
                 'exclusions' => explode(',', $quotationDescription['exclusions']),
-                'dayCount' => 1,
-                'numberOfAdults' => $numberOfAdults,
-                'numberOfChilds' => $numberOfChilds,
-                'numberOfInfants' => $numberOfInfants,
+                'passangerInfo' => $passangerInfo,
                 'numberOfDays' => $numberOfDays,
-                'final_price' => $final_price,
-                'mrp_gst_total' => $mrp_gst_total,
                 'hotelRoomData' => $hotelRoomData,
-                'total_base_price' => $total_base_price,
-                'gst_percent' => $gst_percent,
-                'gst_amount' => $gst_amount,
-                'total_discount' => $total_discount,
-                'days' => $numberOfDays + 1,
-                'single_person_total' => $base_price_per_person + ($base_price_per_person * $gst_percent / 100),
-                'discount_percent' => ($mrp_gst_total > 0)
-                    ? round(($total_discount / $mrp_gst_total) * 100)
-                    : 0,
+                'quotationPriceWithOutGST' => number_format($quotationPriceWithOutGST, 2),
+                'gstPercent' => $gst_percent,
+                'gstAmount' => number_format($gstAmount, 2),
+                'quotationPriceWithGST' => number_format($quotationPriceWithGST, 2),
+                'total_discount' => number_format(0, 2),
                 'pdfFileName' => strtolower(str_replace(' ', '_', $enquiry_first_name . ' ' . $enquiry_last_name . ' ' . $tour_package_title) . '_itinerary_' . time() . '.pdf'),
             ];
         } else {

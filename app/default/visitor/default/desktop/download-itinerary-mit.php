@@ -132,7 +132,7 @@
                     if ($numberOfDays != 0) { ?>
                     <div class="box">
                         <p>Travel Duration</p>
-                        <p><strong><?php echo $numberOfDays ?> Nights / <?php echo $numberOfDays - 1 ?> Days</strong>
+                        <p><strong><?php echo $numberOfDays ?> Nights / <?php echo $numberOfDays + 1 ?> Days</strong>
                         </p>
                     </div>
                     <?php
@@ -163,9 +163,12 @@
 
         <?php
         $j = 0;
-        $dayCount = 01;
+        $dayCount = 1;
 
         foreach ($itineraries as $day) {
+
+            $currentDay = str_pad($dayCount, 2, '0', STR_PAD_LEFT);
+
             // Extract title and remove "Day X - " prefix
             $titleParts = explode(' - ', $day['day'], 2);
             $title = htmlspecialchars(isset($titleParts[1]) ? $titleParts[1] : $titleParts[0]);
@@ -179,20 +182,20 @@
                 echo "<img src='{$featureImage}' alt='" . $title . "'>";
             } else {
                 echo "<div class='default-day-image'>
-                <h2>Day " . $dayCount . "</h2>
-            </div>";
+                <h2>Day {$currentDay}</h2>
+    </div>";
             }
 
             echo "</header>
-            <div class='container'>
-            <div class='day-header'>
-                <div class='day-number-badge'>Day {$dayCount}</div>
-                <h2 class='day-title'>{$title}</h2>
-            </div>
-            <div class='day-content'>
-                <p class='day-description'>{$dayOverview}</p>
-            </div>
-            </div>";
+    <div class='container'>
+        <div class='day-header'>
+            <div class='day-number-badge'>Day {$currentDay}</div>
+            <h2 class='day-title'>{$title}</h2>
+        </div>
+        <div class='day-content'>
+            <p class='day-description'>{$dayOverview}</p>
+        </div>
+    </div>";
 
             $dayCount++;
             $j++;
@@ -310,12 +313,12 @@
                                         <?php echo $tour_package_title ?> - Quotation
                                     </h3>
                                     <p class="tour_package_meta">
-                                        <?php $passangerInfo = ($numberOfAdults == 1 ? '1 Adult' : $numberOfAdults . ' Adults') . (($numberOfChilds != 0) ? ', ' . ($numberOfChilds == 1 ? '1 Child' : $numberOfChilds . ' Children') : '') . (($numberOfInfants != 0) ? ', ' . ($numberOfInfants == 1 ? '1 Infant' : $numberOfInfants . ' Infants') : '');
+                                        <?php
                                         echo $passangerInfo; ?>
                                         |
                                         <?php echo ucwords(str_replace('_', ' ', $tour_package_hotel)) ?> Accommodation
                                         |
-                                        <?php echo $numberOfDays; ?> Nights, <?php echo $days; ?> Days
+                                        <?php echo $numberOfDays; ?> Nights, <?php echo $numberOfDays + 1; ?> Days
                                     </p>
                                 </div>
                                 <span class="tour_badge">Best Value</span>
@@ -325,13 +328,13 @@
 
                             <div class="tour_price_row">
                                 <span><i class="ri-hotel-line"></i> Base Price ( <?php echo $passangerInfo ?> )</span>
-                                <span>₹ <?php echo number_format($total_base_price, 2); ?></span>
+                                <span>₹ <?php echo $quotationPriceWithOutGST; ?></span>
                             </div>
 
                             <div class="tour_price_row">
-                                <span><i class="ri-percent-line text-primary"></i> GST ( <?php echo $gst_percent; ?>%
+                                <span><i class="ri-percent-line text-primary"></i> GST ( <?php echo $gstPercent; ?>%
                                     )</span>
-                                <span>+ ₹ <?php echo number_format($gst_amount, 2); ?></span>
+                                <span>+ ₹ <?php echo $gstAmount ?></span>
                             </div>
 
                             <?php
@@ -339,7 +342,7 @@
                             if ($total_discount != 0) { ?>
                             <div class="tour_price_row tour_discount">
                                 <span><i class="ri-gift-line text-green-600"></i> Special Discount</span>
-                                <span>- ₹ <?php echo number_format(str_replace('-', '', $total_discount), 2); ?></span>
+                                <span>- ₹ <?php echo $total_discount; ?></span>
                             </div>
                             <?php
                             } ?>
@@ -350,7 +353,7 @@
 
                                     <div class="tour_total_text">
                                         <p>Total Price</p>
-                                        <h1>₹ <?php echo number_format($final_price, 2); ?></h1>
+                                        <h1>₹ <?php echo $quotationPriceWithGST; ?></h1>
                                     </div>
 
                                     <?php
@@ -367,6 +370,15 @@
 
                             <a href="https://<?php echo SITE_DOMAIN ?>/book-now/?id=<?php echo base64_encode($quotationId) ?>"
                                 class="tour_btn">Click here to Book Now</a>
+
+                            <!-- Notes -->
+                            <div class="tour_notes_section">
+                                <div class="tour_note_item">
+                                    <i class="ri-calendar-line"></i>
+                                    <span>Prices valid until
+                                        <strong><?php echo date('F j, Y', strtotime($quotation_time . ' +1 week')); ?></strong></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
