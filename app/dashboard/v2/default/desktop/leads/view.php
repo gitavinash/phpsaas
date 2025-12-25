@@ -156,7 +156,7 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                             </tr>";
                                 }
 
-                                if ($date_of_travel != '1970-01-01' && $date_of_travel != '') {
+                                if ($date_of_travel != '01-01-1970' && $date_of_travel != '') {
                                     echo "<tr>
                                 <td class='box-3'><strong>Date of travel</strong></td>
                                 <td class='box-7'>{$date_of_travel}</td>
