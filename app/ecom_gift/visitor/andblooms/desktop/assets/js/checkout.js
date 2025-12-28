@@ -35,32 +35,48 @@ $(document).ready(function () {
   }
 
   function showDeliveryTimeSlots(dateInput) {
-    const now = new Date();
+    // ===== FORCE IST TIME (DO NOT USE new Date() DIRECTLY) =====
+    function getISTDate() {
+      const now = new Date();
+      const istOffset = 330; // IST = UTC + 5:30 (in minutes)
+      const localOffset = now.getTimezoneOffset();
+      return new Date(now.getTime() + (istOffset + localOffset) * 60000);
+    }
+
+    const now = getISTDate();
     const todayStr = formatDate(now);
 
     let deliveryDateStr = "";
     let deliveryDisplayStr = "";
+    let deliveryDateObj = null;
 
     if (dateInput === "today") {
-      deliveryDateStr = todayStr;
-      deliveryDisplayStr = formatDateForDisplay(now);
+      deliveryDateObj = new Date(now);
     } else if (dateInput === "tomorrow") {
-      const tomorrow = new Date(now);
-      tomorrow.setDate(now.getDate() + 1);
-      deliveryDateStr = formatDate(tomorrow);
-      deliveryDisplayStr = formatDateForDisplay(tomorrow);
+      deliveryDateObj = new Date(now);
+      deliveryDateObj.setDate(deliveryDateObj.getDate() + 1);
     } else {
-      deliveryDateStr = dateInput;
-      const parts = deliveryDateStr.split("/");
-      const selectedDate = new Date(`${parts[2]}-${parts[0]}-${parts[1]}`);
-      deliveryDisplayStr = formatDateForDisplay(selectedDate);
+      // Expected format: MM/DD/YYYY
+      const parts = dateInput.split("/");
+      deliveryDateObj = new Date(
+        parseInt(parts[2], 10),
+        parseInt(parts[0], 10) - 1,
+        parseInt(parts[1], 10)
+      );
     }
+
+    // Normalize time to avoid DST / edge issues
+    deliveryDateObj.setHours(12, 0, 0, 0);
+
+    deliveryDateStr = formatDate(deliveryDateObj);
+    deliveryDisplayStr = formatDateForDisplay(deliveryDateObj);
 
     selectedDeliveryDateStr = deliveryDateStr;
 
     $("#selectedDeliveryDate, #selectedDeliveryDateConfirm").text(
       deliveryDisplayStr
     );
+
     $("#deliveryModal").removeClass("hidden");
     $(".deliveryDateBox").removeClass("hidden");
     $(".showTimeBox").removeClass("hidden");
