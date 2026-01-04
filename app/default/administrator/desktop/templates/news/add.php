@@ -18,6 +18,27 @@
                 <textarea name="description" class="editor inside-shadow"></textarea>
             </div>
 
+            <?php
+
+            if (isset($theme)) {
+                if ($theme == 'gallery') { ?>
+
+            <!-- gallery description and other things -->
+
+            <section style="margin-bottom:20px">
+                <h3>Manage images</h3>
+                <div class="productGallery generalTab">
+                    <div class="input-field">
+                        <div class="input-images" style="padding-top: .5rem;"></div>
+                    </div>
+                </div>
+            </section>
+            <?php
+                }
+            }
+
+            ?>
+
             <!-- SEO & social media marketing -->
 
             <section>
@@ -104,6 +125,7 @@
                 <input type="button" id="publishPost" class="btn btn-green btn-block" value="Publish">
                 <!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
                 <input type="hidden" name="type" value="<?php echo $postType ?>">
+                <input type="hidden" name="newsType" value="<?php echo ((isset($theme)) ? $theme : 'news') ?>">
                 <input type="hidden" name="action" value="publish">
             </div>
             <div class="form-group">
@@ -117,12 +139,12 @@
                 <?php
                 if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
                     while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                        <div class="form-group">
-                            <input type="radio" name="category"
-                                value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                                <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
-                            <?php echo ucwords($category['category_title']); ?>
-                        </div>
+                <div class="form-group">
+                    <input type="radio" name="category"
+                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                        <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
+                    <?php echo ucwords($category['category_title']); ?>
+                </div>
                 <?php
                     }
                 }
@@ -140,7 +162,8 @@
             <h2>News price</h2>
             <div class="action-box inside-shadow">
                 <div class="form-group">
-                    <input type="number" onwheel="this.blur()" name="amount" class='form-control inside-shadow' placeholder="99" />
+                    <input type="number" onwheel="this.blur()" name="amount" class='form-control inside-shadow'
+                        placeholder="99" />
                 </div>
             </div>
             <h2>Tags</h2>
@@ -156,10 +179,10 @@
                 <?php
                 if ($authorList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_type!='subscriber' AND site_access_site_id=" . SITE_ID)) {
                     while ($author = mysqli_fetch_assoc($authorList)) { ?>
-                        <div class="form-group">
-                            <input type="radio" name="authorId" value="<?php echo $author['user_id'] ?>">
-                            <?php echo ucwords($author['profile_display_name']); ?>
-                        </div>
+                <div class="form-group">
+                    <input type="radio" name="authorId" value="<?php echo $author['user_id'] ?>">
+                    <?php echo ucwords($author['profile_display_name']); ?>
+                </div>
                 <?php
                     }
                 }

@@ -7,6 +7,61 @@ require_once 'header.php';
 $newsContent = strip_tags($news_description);
 $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130));
 ?>
+<link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.css">
+<link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.css">
+<style>
+.news-gallery {
+    margin-top: 24px;
+}
+
+.news-gallery__slide {
+    position: relative;
+}
+
+.news-gallery__slide img {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+}
+
+.news-gallery__caption {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.4;
+    border-radius: 4px;
+}
+
+.news-gallery .slick-slide {
+    padding: 0 6px;
+}
+
+.news-gallery .slick-list {
+    margin: 0 -6px;
+}
+
+.news-gallery .slick-dots {
+    bottom: -32px;
+}
+
+.news-gallery .slick-prev,
+.news-gallery .slick-next {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.news-gallery .slick-prev:before,
+.news-gallery .slick-next:before {
+    color: #fff;
+    font-size: 20px;
+}
+</style>
 <section class="newsDetails">
     <div class="container container--box">
         <div class="row">
@@ -85,6 +140,28 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                 }
 
                 echo "<div class='details_box__content {$news_paid} " . (($showFullNews == true) ? '' : 'text-gradient') . "'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
+
+                if ($news_gallery != '') {
+                    $galleryImages = json_decode($news_gallery, true);
+
+                    if (is_array($galleryImages) && sizeof($galleryImages) > 0) {
+                        echo "<div class='news-gallery'>";
+                        foreach ($galleryImages as $image) {
+                            $imagePath = (isset($image['path'])) ? htmlspecialchars(trim($image['path']), ENT_QUOTES, 'UTF-8') : '';
+                            $imageName = (isset($image['name'])) ? htmlspecialchars(trim($image['name']), ENT_QUOTES, 'UTF-8') : '';
+                            $imageAlt = ($imageName !== '') ? $imageName : 'Gallery image';
+
+                            echo "<figure class='news-gallery__slide'>";
+                            echo "<img src='{$imagePath}' alt='{$imageAlt}'>";
+                            if ($imageName !== '') {
+                                echo "<figcaption class='news-gallery__caption'>{$imageName}</figcaption>";
+                            }
+                            echo "</figure>";
+                        }
+                        echo "</div>";
+                    }
+                }
+
                 if ($showSignUpSection == true) {
                     require_once 'subscription-now-section.php';
                 }
@@ -204,6 +281,32 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
         </div>
     </div>
 </section>
+<script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
+<script src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js"></script>
+<script>
+(function($) {
+    $(function() {
+        const $gallery = $('.news-gallery');
+
+        if (!$gallery.length || typeof $.fn.slick !== 'function') {
+            return;
+        }
+
+        const slideCount = $gallery.children().length;
+
+        $gallery.slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            dots: true,
+            arrows: true,
+            adaptiveHeight: true,
+            infinite: slideCount > 1,
+            prevArrow: '<button type="button" class="slick-prev" aria-label="Previous slide">&#10094;</button>',
+            nextArrow: '<button type="button" class="slick-next" aria-label="Next slide">&#10095;</button>'
+        });
+    });
+})(window.jQuery);
+</script>
 <?php
 
 require_once 'footer.php';

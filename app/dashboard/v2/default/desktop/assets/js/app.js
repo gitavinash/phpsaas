@@ -309,7 +309,7 @@ $(document).ready(function (e) {
   if (addGallery) {
     $(".addGallery").imageUploader({
       imagesInputName: "gallery",
-      maxFiles: 10,
+      maxFiles: 50,
     });
   }
 
@@ -319,7 +319,7 @@ $(document).ready(function (e) {
       imagesInputName: "gallery",
       preloadedInputName: "oldGallery",
       maxSize: 2 * 1024 * 1024,
-      maxFiles: 10,
+      maxFiles: 50,
     });
   }
 

@@ -13,7 +13,7 @@ function update($connection, $data)
 
         if (isset($category)) {
 
-            if ($checkPost = mysqli_query($connection, "SELECT link_id FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link WHERE link_url='{$oldURL}' AND news_id='{$id}'")) {
+            if ($checkPost = mysqli_query($connection, "SELECT link_id, news_gallery FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link WHERE link_url='{$oldURL}' AND news_id='{$id}'")) {
 
                 if (mysqli_num_rows($checkPost) != 0) {
 
@@ -39,6 +39,41 @@ function update($connection, $data)
                         $facebookImage = (($oldFacebookImage == '') ? $oldFeatureImage : $oldFacebookImage);
                         $twitterImage = (($oldTwitterImage == '') ? $oldFeatureImage : $oldTwitterImage);
                     }
+
+
+                    if (isset($_FILES['gallery'])) {
+
+                        require_once MODULES . 'galleryUploader.php';
+
+                        if ($gallery != '') {
+
+                            $isGalleryUpdate = TRUE;
+                        }
+                    }
+
+                    $oldGallery = json_decode($news_gallery, TRUE);
+
+                    // Match old gallery db from from value
+                    $newGallery = array();
+
+                    if (isset($_POST['oldGallery'])) {
+
+                        for ($i = 0; $i < sizeof($_POST['oldGallery']); $i++) {
+
+                            $j = $_POST['oldGallery'][$i] - 1;
+
+                            $newGallery[] = $oldGallery[$j];
+                        }
+                    }
+
+                    /** Update old gallery */
+
+                    if (isset($isGalleryUpdate)) {
+
+                        $newGallery = array_merge($newGallery, $images);
+                    }
+
+                    $newGallery = json_encode($newGallery, TRUE);
 
                     /** Fetch category url */
 
@@ -89,7 +124,7 @@ function update($connection, $data)
 
                     $newsOwnerId = ((isset($authorId)) ? (($authorId == '') ? USER_ID : $authorId) : USER_ID);
 
-                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_mrp='{$amount}', news_price='{$amount}', news_status='1', news_paid='{$paid}'  WHERE news_id='{$id}'");
+                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_gallery='{$newGallery}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_mrp='{$amount}', news_price='{$amount}', news_status='1', news_paid='{$paid}'  WHERE news_id='{$id}'");
 
                     /** Update meta table */
 
@@ -120,7 +155,7 @@ function update($connection, $data)
 
                         $status = 200;
                         $msg = 'News is update successfully';
-                        $redirect = '/dashboard/' . $postType . '/?type=edit&editor=true&id=' . base64_encode($id);
+                        $redirect = '/dashboard/' . $postType . '/?type=edit&editor=true&id=' . base64_encode($id) . ((isset($newsType)) ? ((($newsType == 'gallery')) ? '&theme=' . $newsType : '') : '');;
                     } else {
 
                         $msg = "Somthing is wrong while updating {$postType}";

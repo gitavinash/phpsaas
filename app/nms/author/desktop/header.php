@@ -61,6 +61,8 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="news/?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
                             <li><a href="news/?type=add&editor=true"><i class="fas fa-plus"></i>Add new news</a></li>
+                            <li><a href="news/?type=add&editor=true&theme=gallery"><i class="fas fa-images"></i>Add new
+                                    gallery</a></li>
                             <li><a href="news/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
@@ -68,6 +70,8 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="news/?type=list&status=all"><i class="fas fa-list"></i> All news</a></li>
                             <li><a href="news/?type=add&editor=true"><i class="fas fa-plus"></i>Add new news</a></li>
+                            <li><a href="news/?type=add&editor=true&theme=gallery"><i class="fas fa-images"></i>Add new
+                                    gallery</a></li>
                             <li><a href="news/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>

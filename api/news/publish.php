@@ -15,6 +15,14 @@ function publish($connection, $data)
 
             if (isset($image['featureImage'])) {
 
+                if (isset($_FILES['gallery'])) {
+
+                    require_once MODULES . 'galleryUploader.php';
+                } else {
+
+                    $gallery = '';
+                }
+
                 // Extract the single upload image string to variables
 
                 $featurePost = ((isset($featurePost)) ? 1 : 0);
@@ -53,7 +61,7 @@ function publish($connection, $data)
 
                         $newsOwnerId = ((isset($authorId)) ? (($authorId == '') ? USER_ID : $authorId) : USER_ID);
 
-                        $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "news(news_site_id, news_image, news_thumbnail, news_title, news_description, news_category, news_owner_id, news_paid, news_mrp, news_price, news_status, news_type, news_published) VALUES(" . SITE_ID . ", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', {$newsOwnerId}, '{$paid}', '{$amount}', '{$amount}', '1', 'news', NOW())");
+                        $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "news(news_site_id, news_image, news_gallery, news_thumbnail, news_title, news_description, news_category, news_owner_id, news_paid, news_mrp, news_price, news_status, news_type, news_published) VALUES(" . SITE_ID . ", '{$featureImage}', '{$gallery}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', {$newsOwnerId}, '{$paid}', '{$amount}', '{$amount}', '1', 'news', NOW())");
                         $postID = mysqli_insert_id($connection);
 
                         $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', 'news', '{$featurePost}', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");
@@ -81,7 +89,7 @@ function publish($connection, $data)
 
                             $status = 200;
                             $msg = 'News add successfully';
-                            $redirect = '/dashboard/news/?type=edit&editor=true&id=' . base64_encode($postID);
+                            $redirect = '/dashboard/news/?type=edit&editor=true&id=' . base64_encode($postID) . ((isset($newsType)) ? ((($newsType == 'gallery')) ? '&theme=' . $newsType : '') : '');
                             mysqli_query($connection, "COMMIT");
                         } else {
 
