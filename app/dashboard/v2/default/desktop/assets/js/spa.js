@@ -528,62 +528,76 @@ $(document).ready(function () {
               </a></div>`
               : "";
 
+            var membershipStatusText =
+              item.membership_status == 2 ? "Expired" : "";
+
             var cardHtml = `
-      <article class="widget-setting-info membership-card" data-id="${encryptMembershipId}">
-        <div class="about-feature" style="max-width:100%;">
-          <h3 class="heading name-cap" style="margin:0;">
-            ${item.membership_profile_name}
-            <span>Room: ${packageName}</span>
-          </h3>
+            <article class="widget-setting-info membership-card" data-id="${encryptMembershipId}">
+            <div class="about-feature" style="max-width:100%;">
+            <h3 class="heading name-cap" style="margin:0;">
+            <div style='display: flex; justify-content: space-between; width: 100%;'>
+                  <p><strong>${item.membership_profile_name} </strong>
+                    <span><span>Room: ${packageName}</span></span>
+                  </p>
+                  ${
+                    membershipStatusText
+                      ? `
+                  <p
+                    style='background-color: #f8d7da; padding: 0px 12px; border-radius: 4px; font-weight: 700; line-height: 44px; font-size: 18px; text-align: center; min-width: 100px; color: #721c24;'>
+                    ${membershipStatusText}</p>`
+                      : ""
+                  }
+                </div>
+            </h3>
 
-          <hr>
+            <hr>
 
-          <div class="row">
+            <div class="row">
             <div class="box-12 info-stack">
               <p style="margin:0;">
-                <strong>Mobile</strong><br>
-                <span>${mobile}</span>
+              <strong>Mobile</strong><br>
+              <span>${mobile}</span>
               </p>
               <p style="margin:0;">
-                <strong>Total Visits</strong><br>
-                <span>${item.membership_total_visit}</span>
+              <strong>Total Visits</strong><br>
+              <span>${item.membership_total_visit}</span>
               </p>
               <p style="margin:0;">
-                <strong>Avl. Visits</strong><br>
-                <span>${avl}</span>
+              <strong>Avl. Visits</strong><br>
+              <span>${avl}</span>
               </p>
             </div>
-          </div>
+            </div>
 
-          <div class="row">
+            <div class="row">
             <div class="box-12 info-stack">
               <p style="margin:0;">
-                <strong>Start Date</strong><br>
-                <span>${startDate}</span>
+              <strong>Start Date</strong><br>
+              <span>${startDate}</span>
               </p>
             </div>
             <div class="box-12 info-stack">
               <p style="margin:0;">
-                <strong>Comment</strong><br>
-                <span>${comment}</span>
+              <strong>Comment</strong><br>
+              <span>${comment}</span>
               </p>
             </div>
-          </div>
+            </div>
 
-          ${dueStrip}
-          ${visitsWarn}
+            ${dueStrip}
+            ${visitsWarn}
 
-          <!-- Actions -->
-          <div class="action-stack" style="margin-top:10px;">
+            <!-- Actions -->
+            <div class="action-stack" style="margin-top:10px;">
             ${adminEditBtn}
             ${visitHistoryBtn}
-          </div>
+            </div>
             ${clearDueBtn}
-          <div class="action-stack" style="margin-top:10px;">
+            <div class="action-stack" style="margin-top:10px;">
             ${continueBtn}
-          </div>
-      </article>
-    `;
+            </div>
+            </article>
+          `;
 
             $step2.append(cardHtml);
           });

@@ -23,7 +23,7 @@ if (isset($daterange)) {
     $to = date('Y-m-d') . ' 23:59:59';
 }
 
-$query = "SELECT membership_id, membership_profile_name, membership_total_visit, membership_avl_visit, membership_amount_due, user_mobile, membership_status
+$query = "SELECT membership_id, membership_profile_name, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, user_mobile, membership_status
         FROM " . TABLE_PREFIX . "membership
         INNER JOIN " . TABLE_PREFIX . "warehouse ON membership_branch_id=warehouse_id
         INNER JOIN " . TABLE_PREFIX . "user ON membership_user_id=user_id
@@ -55,8 +55,14 @@ if ($dataList = mysqli_query($connection, $query)) {
         <article class="widget-setting-info membership-card" data-id="<?php echo $encoded_id; ?>">
             <div class="about-feature" style="max-width:100%;">
                 <h3 class="heading name-cap" style="margin:0;">
-                    <?php echo $name; ?>
-                    <span>#<?php echo $id; ?></span>
+                    <div style="display: flex; justify-content: space-between; width: 100%;">
+                        <p><strong><?php echo $name; ?></strong>
+                            <span>#<?php echo $id; ?></span>
+                        </p>
+                        <p
+                            style="background-color: #d4edda; padding: 0px 12px; border-radius: 4px; font-weight: 700; line-height: 44px; font-size: 18px; text-align: center; min-width: 100px; color: #155724;">
+                            ₹ <?php echo number_format($data['membership_price']); ?></p>
+                    </div>
                 </h3>
 
                 <hr>
