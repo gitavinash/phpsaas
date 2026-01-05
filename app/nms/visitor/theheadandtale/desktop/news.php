@@ -192,11 +192,13 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                 <ul>
                     <?php
 
-                    $tagName = explode(', ', $tagName);
+                    if ($tagName != '') {
+                        $tagName = explode(', ', $tagName);
 
-                    for ($i = 0; $i < sizeof($tagName); $i++) {
+                        for ($i = 0; $i < sizeof($tagName); $i++) {
 
-                        echo "<li><a href='/tag/" . str_replace(' ', '-', $tagName[$i]) . "'>{$tagName[$i]}</a></li>";
+                            echo "<li><a href='/tag/" . str_replace(' ', '-', $tagName[$i]) . "'>{$tagName[$i]}</a></li>";
+                        }
                     }
 
                     ?>
