@@ -15,74 +15,7 @@ switch ($link_status) {
         if (
             $postData = mysqli_query(
                 $connection,
-                "
-        SELECT
-            n.news_id,
-            n.news_image,
-            n.news_title,
-            n.news_description,
-            n.news_category,
-            n.news_price,
-            n.news_gallery,
-            c.category_title,
-
-            n.news_owner_id,
-            n.news_paid,
-            n.news_is_public,
-            n.news_published,
-            n.news_type,
-
-            p.profile_display_name,
-            p.profile_email,
-            p.profile_image,
-
-            u.user_username,
-
-            m.meta_title,
-            m.meta_description,
-            m.meta_canonical,
-            m.meta_keyword,
-            m.meta_robots,
-            m.meta_geo_position,
-            m.meta_geo_place_name,
-            m.meta_geo_region,
-
-            m.fb_img,
-            m.fb_title,
-            m.fb_desc,
-            m.tw_img,
-            m.tw_title,
-            m.tw_desc,
-
-            GROUP_CONCAT(DISTINCT t.tag_title ORDER BY t.tag_title SEPARATOR ', ') AS tagName
-
-        FROM " . TABLE_PREFIX . "news n
-
-        /* OPTIONAL: TAGS */
-        LEFT JOIN " . TABLE_PREFIX . "tag t
-            ON t.tag_relation_id = n.news_id
-           AND t.tag_site_id = " . SITE_ID . "
-
-        /* OPTIONAL: META (FIXED) */
-        LEFT JOIN " . TABLE_PREFIX . "meta m
-            ON m.meta_relation_id = n.news_id
-           AND m.meta_type = 'news'
-
-        /* REQUIRED */
-        INNER JOIN " . TABLE_PREFIX . "category c
-            ON c.category_id = n.news_category
-
-        INNER JOIN " . TABLE_PREFIX . "user u
-            ON u.user_id = n.news_owner_id
-
-        /* OPTIONAL */
-        LEFT JOIN " . TABLE_PREFIX . "profile p
-            ON p.profile_user_id = n.news_owner_id
-
-        WHERE n.news_id = '" . mysqli_real_escape_string($connection, $link_relation_id) . "'
-
-        GROUP BY n.news_id
-        "
+                "SELECT news_id, news_image, news_title, news_description, news_category, news_time, news_gallery, category_title, news_owner_id as linkOwnerId, profile_display_name, profile_image, user_username, news_type, meta_title, meta_description, meta_canonical, meta_keyword, meta_robots, meta_geo_position, meta_geo_place_name, meta_geo_region, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc, GROUP_CONCAT(DISTINCT tag_title SEPARATOR ', ') as tagName FROM " . TABLE_PREFIX . "news LEFT JOIN " . TABLE_PREFIX . "tag ON tag_relation_id=news_id AND tag_site_id=" . SITE_ID . " INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id={$link_id} INNER JOIN " . TABLE_PREFIX . "category ON news_category=category_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=news_owner_id INNER JOIN " . TABLE_PREFIX . "user ON news_owner_id=user_id WHERE news_id='{$link_relation_id}' AND news_site_id=" . SITE_ID
             )
         ) {
 
