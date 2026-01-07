@@ -2,10 +2,9 @@
 
 require_once 'header.php';
 
-?>
+if (SITE_ID == 34) {
+    header("Location: /coming-soon/", true, 301);
+    exit;
+}
 
-<?php
-
-require_once 'footer.php'
-
-?>
+require_once 'footer.php';
