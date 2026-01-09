@@ -88,29 +88,80 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
 
                 echo "<div class='details_box__content {$news_paid} " . (($showFullNews == true) ? '' : 'text-gradient') . "'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
 
-                if ($showFullNews == true) {
+                if ($showFullNews == true && !empty($news_gallery)) {
+                    $galleryImages = json_decode($news_gallery, true);
 
-                    if ($news_gallery != '') {
-                        $galleryImages = json_decode($news_gallery, true);
+                    if (is_array($galleryImages) && count($galleryImages) > 0) {
+                        echo "<div class='news-gallery'>";
+                        foreach ($galleryImages as $image) {
+                            $imagePath = htmlspecialchars($image['path'] ?? '', ENT_QUOTES, 'UTF-8');
+                            $imageName = htmlspecialchars($image['name'] ?? '', ENT_QUOTES, 'UTF-8');
+                            $imageAlt = !empty($imageName) ? $imageName : 'Gallery image';
 
-                        if (is_array($galleryImages) && sizeof($galleryImages) > 0) {
-                            echo "<div class='news-gallery'>";
-                            foreach ($galleryImages as $image) {
-                                $imagePath = (isset($image['path'])) ? htmlspecialchars(trim($image['path']), ENT_QUOTES, 'UTF-8') : '';
-                                $imageName = (isset($image['name'])) ? htmlspecialchars(trim($image['name']), ENT_QUOTES, 'UTF-8') : '';
-                                $imageAlt = ($imageName !== '') ? $imageName : 'Gallery image';
-
-                                echo "<figure class='news-gallery__slide'>";
-                                echo "<img src='{$imagePath}' alt='{$imageAlt}'>";
-                                if ($imageName !== '') {
-                                    echo "<figcaption class='news-gallery__caption'>{$imageName}</figcaption>";
-                                }
-                                echo "</figure>";
-                            }
-                            echo "</div>";
+                            echo "<figure class='news-gallery__slide'>
+                                    <img src='{$imagePath}' alt='{$imageAlt}'>
+                                    " . (!empty($imageName) ? "<figcaption class='news-gallery__caption'>{$imageName}</figcaption>" : "") . "
+                                  </figure>";
                         }
+                        echo "</div>";
                     }
                 }
+
+                ?>
+                <style>
+                .news-gallery {
+                    margin: 30px 0;
+                }
+
+                .news-gallery__slide {
+                    margin: 0;
+                    text-align: center;
+                }
+
+                .news-gallery__slide img {
+                    max-width: 100%;
+                    height: auto;
+                    display: block;
+                    margin-bottom: 10px;
+                }
+
+                .news-gallery__caption {
+                    font-size: 14px;
+                    color: #ee2a1a;
+                    margin-top: 8px;
+                    font-style: italic;
+                    line-height: 24px;
+                    padding: 10px 0px;
+                }
+
+                .slick-prev,
+                .slick-next {
+                    z-index: 1;
+                    width: 50px;
+                    height: 50px;
+                    color: aliceblue;
+                    background-color: rgba(205, 0, 0, 0.6);
+                    color: white;
+                    font-size: 20px;
+                    border: none;
+                    cursor: pointer;
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                    display: block !important;
+                }
+
+                .slick-prev:before,
+                .slick-next:before {
+                    content: none !important;
+                }
+
+                .slick-prev:hover,
+                .slick-next:hover {
+                    color: #fff;
+                    background-color: rgba(205, 0, 0, 0.8);
+                }
+                </style>
+                <?php
 
 
                 if ($showSignUpSection == true) {
@@ -254,8 +305,8 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
             arrows: true,
             adaptiveHeight: true,
             infinite: slideCount > 1,
-            prevArrow: '<button type="button" class="slick-prev" aria-label="Previous slide">&#10094;</button>',
-            nextArrow: '<button type="button" class="slick-next" aria-label="Next slide">&#10095;</button>'
+            prevArrow: '<button type="button" class="slick-prev" aria-label="Previous slide">&#8249;</button>',
+            nextArrow: '<button type="button" class="slick-next" aria-label="Next slide">&#8250;</button>'
         });
     });
 })(window.jQuery);

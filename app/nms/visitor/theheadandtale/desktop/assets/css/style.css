@@ -1851,59 +1851,6 @@ body.no-scroll {
   opacity: 0.9;
 }
 
-.news-gallery {
-  margin-top: 24px;
-}
-
-.news-gallery__slide {
-  position: relative;
-}
-
-.news-gallery__slide img {
-  width: 100%;
-  border-radius: 8px;
-  display: block;
-}
-
-.news-gallery__caption {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  padding: 6px 10px;
-  background: rgba(215, 3, 3, 0.65);
-  color: #fff;
-  font-size: 14px;
-  line-height: 1.4;
-  border-radius: 4px;
-}
-
-.news-gallery .slick-slide {
-  padding: 0 6px;
-}
-
-.news-gallery .slick-list {
-  margin: 0 -6px;
-}
-
-.news-gallery .slick-dots {
-  bottom: -32px;
-}
-
-.news-gallery .slick-prev,
-.news-gallery .slick-next {
-  width: 100%;
-  max-width: 80px;
-  height: 50px;
-  border-radius: 50%;
-  background: rgba(215, 3, 3, 0.65);
-}
-
-.news-gallery .slick-prev:before,
-.news-gallery .slick-next:before {
-  color: #fff;
-  font-size: 20px;
-}
-
 /* mobile tweaks */
 @media (max-width: 720px) {
   .t-avatar {
