@@ -81,7 +81,7 @@
                     $displayCurrency = '₹';
                     $displayPrice = $news_price;
                 } else {
-                    $convertedPrice = round($news_price / 70); // Convert to USD
+                    $convertedPrice = round($news_price / 90); // Convert to USD
                     $displayCurrency = '$';
                     $displayPrice = $convertedPrice;
                 }
