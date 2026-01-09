@@ -45,7 +45,7 @@
                         product_status = 1 
                         AND product_category = '$categoryId' 
                         AND product_type = 'subscription' 
-                        AND product_site_id = " . SITE_ID . " 
+                        AND product_site_id IN ( " . SITE_ID . ", 234 )
                     ORDER BY inventory_price DESC
                 ";
 
