@@ -220,7 +220,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
     <form id="autoSubmitForm" action="<?php echo $_SESSION['base_url'] ?>" method="<?php echo $_SESSION['method'] ?>">
         <input type="hidden" name="id" value="<?php echo $_SESSION['id'] ?>">
         <input type="hidden" name="redirect_url"
-            value="<?php echo str_replace('?redirect_url=', '', $_SESSION['redirect_after_login']) ?>">
+            value="<?php echo str_replace('?redirect_url=', '', ((isset($_SESSION['redirect_after_login'])) ? $_SESSION['redirect_after_login'] : '/')) ?>">
         <noscript>
             <p>JavaScript is disabled. Please click the submit button.</p>
             <button type="submit">Submit</button>
