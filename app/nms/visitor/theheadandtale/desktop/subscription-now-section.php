@@ -75,7 +75,7 @@
             }
 
             // Step 5: Show one-time unlock for all users if applicable
-            if (isset($news_price, $news_id) && $news_price != 0) {
+            if (isset($news_price, $news_id)) {
                 $isIndia = ($country === 'india');
                 if ($isIndia) {
                     $displayCurrency = '₹';
@@ -83,7 +83,7 @@
                 } else {
                     $convertedPrice = round($news_price / 90); // Convert to USD
                     $displayCurrency = '$';
-                    $displayPrice = $convertedPrice;
+                    $displayPrice = (($convertedPrice < 99) ? '99' : $convertedPrice);
                 }
                 ?>
             <div class="subscription_card__box">
