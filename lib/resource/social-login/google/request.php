@@ -192,12 +192,10 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
             // echo $redirectUrl;
 
             if (SITE_APP_ID == 3) {
-                if (SITE_ID == 234) {
+                if (!isset($_SESSION['redirect_after_login'])) {
                     $_SESSION['redirect_after_login'] = '/manage-subscription/';
-                    $redirectUrl = $_SESSION['redirect_after_login'];
-                } else {
-                    $redirectUrl = $_SESSION['redirect_after_login'];
                 }
+                $redirectUrl = $_SESSION['redirect_after_login'];
             }
 
             if (isset($_SESSION['base_url'])) { ?>
