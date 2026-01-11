@@ -75,7 +75,7 @@
             }
 
             // Step 5: Show one-time unlock for all users if applicable
-            if (isset($news_price, $news_id)) {
+            if (isset($news_price, $news_id) && $news_price > 0) {
                 $isIndia = ($country === 'india');
                 if ($isIndia) {
                     $displayCurrency = '₹';
