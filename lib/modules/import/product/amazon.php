@@ -352,6 +352,7 @@ while (($row = fgetcsv($file, 0, ",", '"', "\\")) !== false) {
 
             if ($addNewProduct && $addNewLink && $addNewInventory && $addNewMeta && $addNewTags) {
                 $success++;
+                $status = 'success';
                 $msg = 'Product import successfully';
                 mysqli_query($connection, "COMMIT");
             } else {
