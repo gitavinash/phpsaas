@@ -239,7 +239,7 @@ while (($row = fgetcsv($file, 0, ",", '"', "\\")) !== false) {
     $amazonUrl = trim($row[1] ?? '');
     if (!$amazonUrl) {
         if (DEVELOPMENT_MODE == true) {
-            echo $amazonUrl . '<br />';
+            echo 'Amazon URL: ' . $amazonUrl . '<br />';
         }
         $amazonUrl++;
         continue;
@@ -248,7 +248,7 @@ while (($row = fgetcsv($file, 0, ",", '"', "\\")) !== false) {
     $product = fetchAmazonProduct($amazonUrl, $uploadPath);
     if (!$product) {
         if (DEVELOPMENT_MODE == true) {
-            echo $product . '<br />';
+            echo 'Product: ' . $product . '<br />';
         }
         $amazonProduct++;
         continue;
