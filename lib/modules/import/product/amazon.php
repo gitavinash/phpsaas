@@ -327,15 +327,18 @@ while (($row = fgetcsv($file, 0, ",", '"', "\\")) !== false) {
                 }
             }
 
-            $addNewProduct = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product(product_site_id, product_title, product_image, product_thumbnail, product_gallery, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES(" . APP_SITE_ID . ", '{$productName}', '{$productFeatureImage}', '{$productFeatureImage}', '{$productImages}', '{$productDescription}', '{$productShortDescription}', '{$categoryId}', " . USER_ID . ",'1', 'product')");
+            $productShortDescription = mysqli_real_escape_string($connection, $product['productShortDescription']);
+
+
+            $addNewProduct = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "product(product_site_id, product_title, product_image, product_thumbnail, product_gallery, product_description, product_highlight, product_category, product_owner_id, product_status, product_type) VALUES(" . SITE_ID . ", '{$productName}', '{$productFeatureImage}', '{$productFeatureImage}', '{$productImages}', '{$productDescription}', '{$productShortDescription}', '{$categoryId}', " . USER_ID . ",'1', 'product')");
             $productID = mysqli_insert_id($connection);
 
             $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', '0', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");
             $linkID = mysqli_insert_id($connection);
 
-            $addNewInventory = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "inventory(inventory_relation_id, inventory_site_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_stock_notice, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_status, inventory_update) VALUES ('{$productID}', " . APP_SITE_ID . ", '', 'INR', '{$productSellingPrice}', '{$productMRP}', '0', '0', '1', '0', '1', '10', '0', '0', '0', '0', '1', current_timestamp())");
+            $addNewInventory = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "inventory(inventory_relation_id, inventory_site_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_stock_notice, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_status, inventory_update) VALUES ('{$productID}', " . SITE_ID . ", '', 'INR', '{$productSellingPrice}', '{$productMRP}', '0', '0', '1', '0', '1', '10', '0', '0', '0', '0', '1', current_timestamp())");
 
-            $addNewMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "meta(meta_relation_id, meta_site_id, meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', " . APP_SITE_ID . ",  'product', '{$productTitle}', '', '', '', '', '', '{$productTitle}', '', '', '{$productTitle}', '')");
+            $addNewMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "meta(meta_relation_id, meta_site_id, meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', " . SITE_ID . ",  'product', '{$productTitle}', '', '', '', '', '', '{$productTitle}', '', '', '{$productTitle}', '')");
 
             if ($productTags != '') {
                 $tags = explode(',', $productTags);
