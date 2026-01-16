@@ -12,6 +12,21 @@
                     <option value="etsy">Etsy</option> -->
                     <option value="csv">CSV</option>
                     <option value="meesho">Meesho</option>
+                    <option value="amazon">Amazon</option>
+                </select>
+                <label style="margin-top: 10px;">Category</label>
+                <select name="categoryID" id="categoryID" class='form-control inside-shadow' required>
+                    <?php
+
+                    if ($categoryData = mysqli_query($connection, "SELECT link_url, category_id, category_title FROM " . TABLE_PREFIX . "category INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=category_id AND link_type='category' AND link_site_id=" . SITE_ID . " WHERE category_site_id=" . SITE_ID . " AND category_status='1' ORDER BY category_title ASC")) {
+                        if (mysqli_num_rows($categoryData) > 0) {
+                            while ($categoryRow = mysqli_fetch_array($categoryData)) {
+                                echo "<option value='" . $categoryRow['category_id'] . '_' . $categoryRow['link_url'] . "'>" . $categoryRow['category_title'] . "</option>";
+                            }
+                        }
+                    }
+
+                    ?>
                 </select>
             </div>
 
