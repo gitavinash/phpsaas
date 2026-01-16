@@ -233,7 +233,6 @@ $categoryId = $categoryID[0];
 
 while (($row = fgetcsv($file, 0, ",", '"', "\\")) !== false) {
     if ($i++ < 1) continue;
-    echo "Value of {$i}";
 
     $amazonUrl = trim($row[1] ?? '');
     if (!$amazonUrl) {
@@ -324,7 +323,7 @@ while (($row = fgetcsv($file, 0, ",", '"', "\\")) !== false) {
         $msg = 'Something is wrong while checking product';
     }
 
-    sleep(2);
+    sleep(5);
 }
 
 fclose($file);
