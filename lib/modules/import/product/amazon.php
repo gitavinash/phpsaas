@@ -23,6 +23,8 @@ ini_set('memory_limit', '512M');
 $i = 0;
 $success = 0;
 $failed = 0;
+$amazonUrlfailed = 0;
+$amazonProduct = 0;
 $duplicate = 0;
 $failedMsg = '';
 
@@ -236,13 +238,19 @@ while (($row = fgetcsv($file, 0, ",", '"', "\\")) !== false) {
 
     $amazonUrl = trim($row[1] ?? '');
     if (!$amazonUrl) {
-        $failed++;
+        if (DEVELOPMENT_MODE == true) {
+            echo $amazonUrl . '<br />';
+        }
+        $amazonUrl++;
         continue;
     }
 
     $product = fetchAmazonProduct($amazonUrl, $uploadPath);
     if (!$product) {
-        $failed++;
+        if (DEVELOPMENT_MODE == true) {
+            echo $product . '<br />';
+        }
+        $amazonProduct++;
         continue;
     }
 
@@ -316,13 +324,10 @@ while (($row = fgetcsv($file, 0, ",", '"', "\\")) !== false) {
             }
         } else {
             $duplicate++;
-            $msg = 'Products import successfully but some dublicate products found';
+            $msg = 'Products import successfully but some duplicate products found';
         }
     } else {
         $failed++;
-        if (DEVELOPMENT_MODE == true) {
-            echo "SELECT product_title FROM " . TABLE_PREFIX . "product WHERE product_title='{$productName}'";
-        }
         $msg = 'Something is wrong while checking product';
     }
 
@@ -335,5 +340,5 @@ fclose($file);
 $responseData = array(
     'success' => $success,
     'failed' => $failed,
-    'dublicate' => $dublicate
+    'duplicate' => $duplicate
 );
