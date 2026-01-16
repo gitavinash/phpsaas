@@ -338,7 +338,7 @@ while (($row = fgetcsv($file, 0, ",", '"', "\\")) !== false) {
 
             $addNewInventory = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "inventory(inventory_relation_id, inventory_site_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_stock_notice, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_status, inventory_update) VALUES ('{$productID}', " . SITE_ID . ", '', 'INR', '{$productSellingPrice}', '{$productMRP}', '0', '0', '1', '0', '1', '10', '0', '0', '0', '0', '1', current_timestamp())");
 
-            $addNewMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "meta(meta_relation_id, meta_site_id, meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', " . SITE_ID . ",  'product', '{$productTitle}', '', '', '', '', '', '{$productTitle}', '', '', '{$productTitle}', '')");
+            $addNewMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "meta(meta_relation_id, meta_site_id, meta_type, meta_title, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', " . SITE_ID . ",  'product', '', '', '', '', '', '', '', '', '', '', '')");
 
             if ($productTags != '') {
                 $tags = explode(',', $productTags);
