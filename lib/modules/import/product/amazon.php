@@ -1,5 +1,7 @@
 <?php
 
+libxml_use_internal_errors(true);
+
 /**
  * ======================================================
  * Amazon CSV Import → Product Import (FINAL)
@@ -85,12 +87,26 @@ function downloadImage(string $imageUrl, string $uploadPath): ?string
     $imageName = time() . '_' . basename(parse_url($imageUrl, PHP_URL_PATH));
     $localPath = $uploadPath . $imageName;
 
-    $data = @file_get_contents($imageUrl);
-    if ($data === false) return null;
+    $ch = curl_init($imageUrl);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT => 40,
+        CURLOPT_USERAGENT => 'Mozilla/5.0'
+    ]);
+
+    $data = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode !== 200 || !$data) {
+        return null;
+    }
 
     file_put_contents($localPath, $data);
     return str_replace(ROOT, '', $localPath);
 }
+
 
 /* --------------------------------------
    Build Gallery JSON Object
@@ -120,16 +136,34 @@ function fetchHtml(string $url): string
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_USERAGENT => 'Mozilla/5.0',
-        CURLOPT_HTTPHEADER => ['Accept-Language: en-IN,en;q=0.9'],
+        CURLOPT_TIMEOUT => 40,
+        CURLOPT_CONNECTTIMEOUT => 20,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_2_0,
+
+        CURLOPT_USERAGENT =>
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' .
+            'AppleWebKit/537.36 (KHTML, like Gecko) ' .
+            'Chrome/123.0.0.0 Safari/537.36',
+
+        CURLOPT_HTTPHEADER => [
+            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language: en-IN,en;q=0.9',
+            'Cache-Control: no-cache',
+            'Pragma: no-cache',
+            'Upgrade-Insecure-Requests: 1'
+        ],
+
+        CURLOPT_ENCODING => '', // auto handle gzip/deflate/br
+        CURLOPT_SSL_VERIFYPEER => true,
+        CURLOPT_SSL_VERIFYHOST => 2,
     ]);
 
     $html = curl_exec($ch);
     curl_close($ch);
 
-    return $html ?: '';
+    return is_string($html) ? $html : '';
 }
+
 
 /* --------------------------------------
    Fetch Amazon Product
