@@ -320,6 +320,9 @@ while (($row = fgetcsv($file, 0, ",", '"', "\\")) !== false) {
         }
     } else {
         $failed++;
+        if (DEVELOPMENT_MODE == true) {
+            echo "SELECT product_title FROM " . TABLE_PREFIX . "product WHERE product_title='{$productName}'";
+        }
         $msg = 'Something is wrong while checking product';
     }
 
