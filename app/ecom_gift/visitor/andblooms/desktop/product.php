@@ -17,9 +17,34 @@ if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, prod
     }
 }
 
+if ($getTagIds = mysqli_query($connection, "SELECT * 
+FROM " . TABLE_PREFIX . "tag 
+WHERE tag_title LIKE CONCAT('%', (
+    SELECT tag_title 
+    FROM " . TABLE_PREFIX . "tag 
+    WHERE tag_relation_id = {$product_id} AND tag_site_id = " . SITE_ID . " AND tag_type = 'product'
+    LIMIT 1
+), '%')
+AND tag_relation_id != {$product_id}
+AND tag_site_id = " . SITE_ID . "
+AND tag_type = 'product'
+AND tag_time >= NOW() - INTERVAL 1 YEAR
+GROUP BY tag_relation_id
+ORDER BY RAND()
+LIMIT 0, 4")) {
+    if (mysqli_num_rows($getTagIds) > 0) {
+        $tagIds = array();
+        while ($tagData = mysqli_fetch_assoc($getTagIds)) {
+            $tagIds[] = $tagData['tag_relation_id'];
+        }
+        $tagList = implode(',', $tagIds);
+    }
+}
+
 // Fetch all tags for this product
 $productTags = array();
-if ($getProductTags = mysqli_query($connection, "SELECT DISTINCT tag_title FROM " . TABLE_PREFIX . "tag WHERE tag_relation_id = {$product_id} AND tag_site_id = " . SITE_ID . " AND tag_type = 'product' ORDER BY tag_title")) {
+if ($getProductTags = mysqli_query($connection, "SELECT DISTINCT tag_title FROM " . TABLE_PREFIX . "tag WHERE
+tag_relation_id = {$product_id} AND tag_site_id = " . SITE_ID . " AND tag_type = 'product' ORDER BY tag_title")) {
     while ($tagRow = mysqli_fetch_assoc($getProductTags)) {
         if (isset($tagRow['tag_title']) && $tagRow['tag_title'] !== '') {
             $productTags[] = $tagRow['tag_title'];
@@ -109,7 +134,22 @@ require_once 'header.php';
                 }
 
                 ?>
-                <div class="text-sm text-gray-500 mb-4"><?php echo ((isset($sub_heading)) ? $sub_heading : '') ?>
+                <div class="text-sm text-gray-500 mb-4">
+                    <?php
+
+                    // echo (isset($productTags) && in_array('valentine', array_map('strtolower', $productTags))) ? "It's Valentine" : ((isset($sub_heading)) ? $sub_heading : '') 
+                    ?>
+                    <?php
+                    $subHeadingText = isset($sub_heading) ? $sub_heading : '';
+                    $filterTags = isset($productTags) ? array_map('strtolower', $productTags) : [];
+
+                    $subHeadingText = match (true) {
+                        in_array('valentine', $filterTags) => "Love, Unfiltered — Valentine Edition | New Launch ",
+                        default => ''
+                    };
+
+                    echo ((isset($sub_heading)) ? $sub_heading : $subHeadingText);
+                    ?>
                 </div>
             </div>
 
@@ -275,34 +315,6 @@ require_once 'header.php';
         </div>
     </div>
 
-    <?php
-
-
-    if ($getTagIds = mysqli_query($connection, "SELECT * 
-FROM " . TABLE_PREFIX . "tag 
-WHERE tag_title LIKE CONCAT('%', (
-    SELECT tag_title 
-    FROM " . TABLE_PREFIX . "tag 
-    WHERE tag_relation_id = {$product_id} AND tag_site_id = " . SITE_ID . " AND tag_type = 'product'
-    LIMIT 1
-), '%')
-AND tag_relation_id != {$product_id}
-AND tag_site_id = " . SITE_ID . "
-AND tag_type = 'product'
-AND tag_time >= NOW() - INTERVAL 1 YEAR
-GROUP BY tag_relation_id
-ORDER BY RAND()
-LIMIT 0, 4")) {
-        if (mysqli_num_rows($getTagIds) > 0) {
-            $tagIds = array();
-            while ($tagData = mysqli_fetch_assoc($getTagIds)) {
-                $tagIds[] = $tagData['tag_relation_id'];
-            }
-            $tagList = implode(',', $tagIds);
-        }
-    }
-
-    ?>
     <!-- Related Products -->
 
     <?php
