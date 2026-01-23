@@ -140,8 +140,12 @@ require_once 'header.php';
                     $filterTags = isset($productTags) ? array_map('strtolower', $productTags) : [];
 
                     $filterTags = array_map('trim', $filterTags);
+                    $hasValentineTag = array_reduce($filterTags, function ($carry, $tag) {
+                        return $carry || (bool) preg_match('/valentine/i', $tag);
+                    }, false);
+
                     $subHeadingText = match (true) {
-                        in_array('valentine', $filterTags, true) => "Love, Unfiltered — Valentine Edition | New Launch",
+                        $hasValentineTag => "Love, Unfiltered — Valentine Edition | New Launch",
                         default => ''
                     };
 
