@@ -364,7 +364,7 @@
                 <div class="mt-auto p-4 bg-gray-50 border-t border-gray-100">
                     <div class="relative">
                         <form action="/search/" method="get">
-                            <input type="text" name="q" placeholder="Search products..."
+                            <input type="text" name="q" id="mobile-search-input" placeholder="Search products..."
                                 class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm transition bg-white">
                             <button type="submit"
                                 class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition">
@@ -504,6 +504,19 @@
                     });
                 }
             });
+
+            // Handle search input focus - scroll into view when keyboard appears
+            const mobileSearchInput = document.getElementById('mobile-search-input');
+            if (mobileSearchInput) {
+                mobileSearchInput.addEventListener('focus', function() {
+                    setTimeout(() => {
+                        this.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }, 300); // Delay to allow keyboard to appear
+                });
+            }
 
             console.log('Mobile menu initialized successfully');
         }
