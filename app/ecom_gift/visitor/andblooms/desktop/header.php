@@ -183,12 +183,12 @@
 
                     <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Faux Flowers</a>
                     <a href="/category/cake/" class="text-gray-700 hover:text-primary transition">Cake & Hampers</a>
+                    <a href="/tag/valentine/"
+                        class="hover:text-gray-700 text-primary transition font-semibold">Valentine Edition</a>
                     <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
                         class="text-gray-700 hover:text-primary transition">
                         Blooms of <?php echo date('F') ?>
                     </a>
-                    <!-- <a href="/tag/father/" class="hover:text-gray-700 text-primary transition font-semibold">Father's
-                        Day</a> -->
                 </nav>
             </div>
 

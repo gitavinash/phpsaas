@@ -99,7 +99,10 @@ require_once 'header.php';
                 }
 
                 ?>
+                <div class="text-sm text-gray-500 mb-4"><?php echo ((isset($sub_heading)) ? $sub_heading : '') ?>
+                </div>
             </div>
+
             <h3 class="text-xl font-semibold mb-4">Product Highlight</h3>
             <p class="text-gray-600 mb-6"><?php echo $product_highlight ?></p>
             <div class="flex flex-col sm:flex-row gap-4 mb-8">

@@ -24,18 +24,13 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                 extract($productMetaArray);
 
                 $availability_cities = ((isset($availability_cities)) ? $availability_cities : 'Delhi');
-            } else {
-
-                $care_n_tips = '';
-                $delivery_information = '';
-                $availability_cities = '';
             }
         }
     } else { ?>
-        <script type="text/javascript">
-            alert('Invalid action found');
-            window.location.href = 'dashboard/product/?type=list&status=all';
-        </script>
+<script type="text/javascript">
+alert('Invalid action found');
+window.location.href = 'dashboard/product/?type=list&status=all';
+</script>
 <?php
     }
 }
@@ -86,6 +81,12 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                         <label>Product short description / Highlights</label>
                         <textarea name="highlight" class="form-control inside-shadow"
                             placeholder="Product short description / Highlights"><?php echo $product_highlight ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Product sub heading</label>
+                        <input type="text" name="productMeta[sub_heading]" class="form-control inside-shadow"
+                            placeholder="Product sub heading"
+                            value="<?php echo ((isset($sub_heading)) ? $sub_heading : '') ?>">
                     </div>
                     <div class="box-1">
                         <input type="checkbox" name="sell_online" value=0
@@ -407,23 +408,23 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
 
             if (SITE_ID == 32) { ?>
 
-                <h2>Brand</h2>
-                <div class="action-box height-200 inside-shadow">
+            <h2>Brand</h2>
+            <div class="action-box height-200 inside-shadow">
 
-                    <?php
+                <?php
 
                     if ($brandList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='brand' AND link_status=200 ORDER BY category_title ASC")) {
                         while ($brand = mysqli_fetch_assoc($brandList)) { ?>
-                            <div class="form-group">
-                                <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
-                                    <?php echo (($brand['category_id'] == $product_brand_id) ? 'checked' : '') ?>>
-                                <?php echo ucwords($brand['category_title']); ?>
-                            </div>
-                    <?php
+                <div class="form-group">
+                    <input type="radio" name="brand" value="<?php echo $brand['category_id']; ?>"
+                        <?php echo (($brand['category_id'] == $product_brand_id) ? 'checked' : '') ?>>
+                    <?php echo ucwords($brand['category_title']); ?>
+                </div>
+                <?php
                         }
                     }
                     ?>
-                </div>
+            </div>
             <?php
             }
 
@@ -435,12 +436,12 @@ if ($productDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
 
                 if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_type='product' AND link_status=200 ORDER BY category_title ASC")) {
                     while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                        <div class="form-group">
-                            <input type="radio" name="category"
-                                value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                                <?php echo (($category['category_id'] == $category_id) ? 'checked' : '') ?>>
-                            <?php echo ucwords($category['category_title']); ?>
-                        </div>
+                <div class="form-group">
+                    <input type="radio" name="category"
+                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                        <?php echo (($category['category_id'] == $category_id) ? 'checked' : '') ?>>
+                    <?php echo ucwords($category['category_title']); ?>
+                </div>
                 <?php
                     }
                 }
