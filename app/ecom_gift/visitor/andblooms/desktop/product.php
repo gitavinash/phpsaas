@@ -153,8 +153,16 @@ require_once 'header.php';
                 </div>
             </div>
 
+            <?php
+
+            if ($product_highlight != '') { ?>
             <h3 class="text-xl font-semibold mb-4">Product Highlight</h3>
             <p class="text-gray-600 mb-6"><?php echo $product_highlight ?></p>
+            <?php
+            }
+
+            ?>
+
             <div class="flex flex-col sm:flex-row gap-4 mb-8">
                 <p style="display:none" id="productInfo"
                     value="<?php echo $product_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
