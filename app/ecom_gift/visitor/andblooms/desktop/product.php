@@ -136,7 +136,6 @@ require_once 'header.php';
                 ?>
                 <div class="text-sm text-gray-500 mb-4">
                     <?php
-                    $subHeadingText = isset($sub_heading) ? $sub_heading : '';
                     $filterTags = isset($productTags) ? array_map('strtolower', $productTags) : [];
 
                     $filterTags = array_map('trim', $filterTags);
@@ -144,12 +143,9 @@ require_once 'header.php';
                         return $carry || (bool) preg_match('/valentine/i', $tag);
                     }, false);
 
-                    $subHeadingText = match (true) {
-                        $hasValentineTag => "Love, Unfiltered — Valentine Edition | New Launch",
-                        default => ''
-                    };
+                    $subHeadingText = $hasValentineTag ? "Love, Unfiltered — Valentine Edition | New Launch" : '';
 
-                    echo ((isset($sub_heading)) ? $sub_heading : $subHeadingText);
+                    echo (!empty($sub_heading)) ? $sub_heading : $subHeadingText;
                     ?>
                 </div>
             </div>
