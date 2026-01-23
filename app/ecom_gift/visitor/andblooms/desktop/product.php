@@ -121,7 +121,7 @@ require_once 'header.php';
             </div>
             <div class="mb-6">
                 <?php
-                if ($inventory_price == $inventory_mrp) {
+                if ($inventory_price == $inventory_mrp || $inventory_mrp == 0) {
                     echo "<span class='text-2xl font-bold text-gray-900'>{$inventory_currency_symbol} {$inventory_price}</span>";
                 } else { ?>
                 <span

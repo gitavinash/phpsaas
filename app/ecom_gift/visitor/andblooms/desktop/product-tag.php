@@ -17,12 +17,42 @@
     }
 
     $tag_title = ucwords($tag_title);
+
+    // Execute query first to get products
+    $query = "SELECT link_url, product_id, product_title, product_image, inventory_currency_symbol, inventory_price, inventory_mrp, inventory_in_stock 
+          FROM " . TABLE_PREFIX . "link 
+          INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id 
+          INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id 
+          WHERE link_relation_id IN ($resultTags) AND link_site_id=" . SITE_ID . " 
+          AND link_type='product' AND link_status=200 
+          GROUP BY link_url 
+          ORDER BY $sortBy 
+          LIMIT " . PER_PAGE_LIMIT . " OFFSET " . (PAGE_NO - 1) * PER_PAGE_LIMIT;
+
+    $result = mysqli_query($connection, $query);
 ?>
 
 <!-- Banner with Breadcrumb -->
 <div class="relative h-[280px] w-full mb-8 mt-16">
-    <?php if (!empty($tag_image)) { ?>
-    <div style="background-image: url('<?= $tag_image ?>');" class="absolute inset-0 bg-cover bg-center"></div>
+    <?php
+        $bannerImage = $tag_image;
+        $bannerFromProduct = false;
+        if (empty($tag_image) && $result && mysqli_num_rows($result) > 0) {
+            mysqli_data_seek($result, 0);
+            $firstProduct = mysqli_fetch_assoc($result);
+            $bannerImage = $firstProduct['product_image'];
+            $bannerFromProduct = true;
+            mysqli_data_seek($result, 0);
+        }
+        ?>
+    <?php if (!empty($bannerImage)) { ?>
+    <?php
+            $bannerStyle = "background-image: url('{$bannerImage}');";
+            if ($bannerFromProduct) {
+                $bannerStyle .= ' filter: blur(10px); transform: scale(1.05);';
+            }
+            ?>
+    <div style="<?= $bannerStyle ?>" class="absolute inset-0 bg-cover bg-center"></div>
     <?php } else { ?>
     <div class="absolute inset-0 bg-gradient-to-r from-[#D4946D] via-[#e0b89c] to-[#d4946d]"></div>
     <?php } ?>
@@ -58,19 +88,9 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         <?php
-            $query = "SELECT link_url, product_id, product_title, product_image, inventory_currency_symbol, inventory_price, inventory_mrp, inventory_in_stock 
-                  FROM " . TABLE_PREFIX . "link 
-                  INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id 
-                  INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id 
-                  WHERE link_relation_id IN ($resultTags) AND link_site_id=" . SITE_ID . " 
-                  AND link_type='product' AND link_status=200 
-                  GROUP BY link_url 
-                  ORDER BY $sortBy 
-                  LIMIT " . PER_PAGE_LIMIT . " OFFSET " . (PAGE_NO - 1) * PER_PAGE_LIMIT;
-
-            $result = mysqli_query($connection, $query);
-
+            // Query already executed above, just check results
             if (mysqli_num_rows($result) > 0):
+                mysqli_data_seek($result, 0); // Reset pointer to start
                 while ($row = mysqli_fetch_assoc($result)):
                     extract($row);
                     $price = ($inventory_price != 0) ? $inventory_price : $inventory_mrp;

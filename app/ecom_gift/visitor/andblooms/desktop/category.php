@@ -1,9 +1,27 @@
 <?php include_once 'header.php'; ?>
 
+<?php
+$bannerImage = $category_image;
+$bannerFromProduct = false;
+if (empty($bannerImage) && !empty($categorySinglePost) && is_array($categorySinglePost)) {
+    $firstProduct = reset($categorySinglePost); // Safely grab the first product
+    if (is_array($firstProduct) && !empty($firstProduct['product_image'])) {
+        $bannerImage = $firstProduct['product_image'];
+        $bannerFromProduct = true;
+    }
+}
+?>
+
 <!-- Banner with Breadcrumb -->
 <div class="relative h-[280px] w-full mb-8 mt-16">
-    <?php if (!empty($category_image)) { ?>
-    <div style="background-image: url('<?= $category_image ?>');" class="absolute inset-0 bg-cover bg-center"></div>
+    <?php if (!empty($bannerImage)) { ?>
+    <?php
+        $bannerStyle = "background-image: url('{$bannerImage}');";
+        if ($bannerFromProduct) {
+            $bannerStyle .= ' filter: blur(10px); transform: scale(1.05);';
+        }
+        ?>
+    <div style="<?= $bannerStyle ?>" class="absolute inset-0 bg-cover bg-center"></div>
     <?php } else { ?>
     <div class="absolute inset-0 bg-gradient-to-r from-[#D4946D] via-[#e0b89c] to-[#d4946d]"></div>
     <?php } ?>
