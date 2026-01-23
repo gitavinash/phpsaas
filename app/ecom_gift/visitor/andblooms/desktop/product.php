@@ -136,15 +136,12 @@ require_once 'header.php';
                 ?>
                 <div class="text-sm text-gray-500 mb-4">
                     <?php
-
-                    // echo (isset($productTags) && in_array('valentine', array_map('strtolower', $productTags))) ? "It's Valentine" : ((isset($sub_heading)) ? $sub_heading : '') 
-                    ?>
-                    <?php
                     $subHeadingText = isset($sub_heading) ? $sub_heading : '';
                     $filterTags = isset($productTags) ? array_map('strtolower', $productTags) : [];
 
+                    $filterTags = array_map('trim', $filterTags);
                     $subHeadingText = match (true) {
-                        in_array('valentine', $filterTags) => "Love, Unfiltered — Valentine Edition | New Launch ",
+                        in_array('valentine', $filterTags, true) => "Love, Unfiltered — Valentine Edition | New Launch",
                         default => ''
                     };
 
