@@ -207,7 +207,7 @@ input:focus {
 }
 
 .tab-content.active {
-  max-height: 500px;
+  max-height: 2000px;
 }
 .sameFont * {
   all: unset;

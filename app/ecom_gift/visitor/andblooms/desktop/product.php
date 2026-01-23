@@ -17,6 +17,16 @@ if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, prod
     }
 }
 
+// Fetch all tags for this product
+$productTags = array();
+if ($getProductTags = mysqli_query($connection, "SELECT DISTINCT tag_title FROM " . TABLE_PREFIX . "tag WHERE tag_relation_id = {$product_id} AND tag_site_id = " . SITE_ID . " AND tag_type = 'product' ORDER BY tag_title")) {
+    while ($tagRow = mysqli_fetch_assoc($getProductTags)) {
+        if (isset($tagRow['tag_title']) && $tagRow['tag_title'] !== '') {
+            $productTags[] = $tagRow['tag_title'];
+        }
+    }
+}
+
 require_once 'header.php';
 
 ?>
@@ -145,6 +155,21 @@ require_once 'header.php';
                     <p class="text-sm text-gray-600">Secure payment</p>
                 </div>
             </div>
+            <?php if (!empty($productTags)) { ?>
+            <div class="mt-5 text-sm text-gray-600">
+                <div class="mb-2 font-medium text-gray-700">Tags</div>
+                <div class="flex flex-wrap gap-2">
+                    <?php foreach ($productTags as $tagTitle) { ?>
+                    <span
+                        class="px-3 py-1 rounded-full border border-gray-100 bg-gray-50 text-gray-700 hover:border-primary hover:text-primary transition">
+                        <?php
+                                $tagName = htmlspecialchars($tagTitle, ENT_QUOTES, 'UTF-8');
+                                echo "<a href='/tag/" . str_replace(' ', '-', strtolower($tagName))     . "/' target='_blank'>" . ucwords($tagName) . "</a>" ?>
+                    </span>
+                    <?php } ?>
+                </div>
+            </div>
+            <?php } ?>
         </div>
     </div>
     <!-- Product Information Tabs -->
