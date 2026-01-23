@@ -1,5 +1,7 @@
 <?php
 
+require_once LOGIN_CHECK;
+
 $redirect_url = ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/');
 
 $productInfo = mysqli_query($connection, "SELECT inventory_price, inventory_tax_status, inventory_tax_rate FROM " . TABLE_PREFIX . "inventory WHERE inventory_relation_id='{$id}' AND inventory_status=1 AND inventory_type='product' AND  inventory_site_id=" . SITE_ID);
