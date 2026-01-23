@@ -761,7 +761,7 @@ require_once 'header.php';
 <section class="corporate-subscription">
     <div class="container">
         <div class="corporate-header">
-            <h1>Enterprise Subscription Plans</h1>
+            <h1>Corporate Subscription Plans</h1>
             <p>Unlock comprehensive access to premium business journalism, in-depth analysis, and market intelligence
                 for your entire organization</p>
         </div>
