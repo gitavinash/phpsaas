@@ -120,217 +120,212 @@ if (ACTIVE_URL == '/checkout/') {
 }
 ?>
 <script>
-$(document).ready(function() {
-    // 1. Mobile Menu Toggle
-    if ($('#mobile-menu-button').length && $('#mobile-menu').length) {
-        $('#mobile-menu-button').on('click', function() {
-            $('#mobile-menu').toggleClass('hidden');
-        });
-    }
+    $(document).ready(function() {
+        // Mobile menu is now handled in header.php
 
-    // 2. Quantity Control
-    const $decrease = $('#decrease-quantity');
-    const $increase = $('#increase-quantity');
-    const $quantityInput = $('#quantity');
+        // 2. Quantity Control
+        const $decrease = $('#decrease-quantity');
+        const $increase = $('#increase-quantity');
+        const $quantityInput = $('#quantity');
 
-    if ($decrease.length && $increase.length && $quantityInput.length) {
-        $decrease.on('click', function() {
-            const val = parseInt($quantityInput.val());
-            if (val > 1) $quantityInput.val(val - 1);
-        });
+        if ($decrease.length && $increase.length && $quantityInput.length) {
+            $decrease.on('click', function() {
+                const val = parseInt($quantityInput.val());
+                if (val > 1) $quantityInput.val(val - 1);
+            });
 
-        $increase.on('click', function() {
-            const val = parseInt($quantityInput.val());
-            $quantityInput.val(val + 1);
-        });
+            $increase.on('click', function() {
+                const val = parseInt($quantityInput.val());
+                $quantityInput.val(val + 1);
+            });
 
-        $quantityInput.on('change', function() {
-            const val = parseInt($(this).val());
-            if (val < 1 || isNaN(val)) {
-                $(this).val(1);
-            }
-        });
-    }
-
-    // 3. Checkbox Styling (chocolate, card, vase)
-    const $checkboxLabels = $('label[for="chocolate"], label[for="card"], label[for="vase"]');
-
-    $checkboxLabels.each(function() {
-        $(this).on('click', function(e) {
-            const forAttr = $(this).attr('for');
-            const $checkbox = $('#' + forAttr);
-            const $checkIcon = $(this).find('.ri-check-line');
-            const $customCheckbox = $(this).find('.checkbox-custom');
-
-            $checkbox.prop('checked', !$checkbox.prop('checked'));
-
-            if ($checkbox.prop('checked')) {
-                $customCheckbox.addClass('bg-primary border-primary');
-                $checkIcon.removeClass('hidden');
-            } else {
-                $customCheckbox.removeClass('bg-primary border-primary');
-                $checkIcon.addClass('hidden');
-            }
-
-            e.preventDefault();
-        });
-    });
-
-    // 4. Tab Control
-    const $tabButtons = $('.tab-button');
-    const $tabContents = $('.tab-content');
-
-    if ($tabButtons.length) {
-        $tabButtons.on('click', function() {
-            const tabName = $(this).data('tab');
-
-            $tabButtons.removeClass('border-primary text-primary')
-                .addClass('border-transparent text-gray-500');
-
-            $(this).removeClass('border-transparent text-gray-500')
-                .addClass('border-primary text-primary');
-
-            $tabContents.removeClass('active');
-            $('#' + tabName + '-content').addClass('active');
-        });
-    }
-
-    // 5. Header Scroll + Mobile Slide Menu + Hero Slider
-    const $header = $('header');
-    const $menuButton = $('#menuButton');
-    const $closeMenu = $('#closeMenu');
-    const $mobileMenu = $('#mobileMenu');
-    const $mobileMenuOverlay = $('#mobileMenuOverlay');
-    const $mobileShopButton = $('#mobileShopButton');
-    const $mobileShopContent = $('#mobileShopContent');
-    const $slider = $('#heroSlider');
-    const $slides = $('.slide');
-    const $dots = $('.slider-dot');
-    const $prevBtn = $('.slider-nav-btn.prev');
-    const $nextBtn = $('.slider-nav-btn.next');
-
-    let currentSlide = 0;
-    let slideInterval;
-
-    function updateSlides() {
-        $slides.each(function(index) {
-            if (index === currentSlide) {
-                $(this).css('transform', 'translateX(0)');
-            } else if (index < currentSlide) {
-                $(this).css('transform', 'translateX(-100%)');
-            } else {
-                $(this).css('transform', 'translateX(100%)');
-            }
-        });
-
-        $dots.each(function(index) {
-            $(this).toggleClass('bg-opacity-100', index === currentSlide)
-                .toggleClass('bg-opacity-50', index !== currentSlide);
-        });
-    }
-
-    function nextSlide() {
-        currentSlide = (currentSlide + 1) % $slides.length;
-        updateSlides();
-    }
-
-    function prevSlide() {
-        currentSlide = (currentSlide - 1 + $slides.length) % $slides.length;
-        updateSlides();
-    }
-
-    function startSlideShow() {
-        slideInterval = setInterval(nextSlide, 5000);
-    }
-
-    function stopSlideShow() {
-        clearInterval(slideInterval);
-    }
-
-    $prevBtn.on('click', function() {
-        stopSlideShow();
-        prevSlide();
-        startSlideShow();
-    });
-
-    $nextBtn.on('click', function() {
-        stopSlideShow();
-        nextSlide();
-        startSlideShow();
-    });
-
-    $dots.on('click', function() {
-        stopSlideShow();
-        currentSlide = $(this).index();
-        updateSlides();
-        startSlideShow();
-    });
-
-    $slider.on('mouseenter', stopSlideShow).on('mouseleave', startSlideShow);
-
-    startSlideShow();
-
-    $(window).on('scroll', function() {
-        if ($(this).scrollTop() > 50) {
-            $header.removeClass('header-transparent').addClass('header-solid');
-        } else {
-            $header.addClass('header-transparent').removeClass('header-solid');
+            $quantityInput.on('change', function() {
+                const val = parseInt($(this).val());
+                if (val < 1 || isNaN(val)) {
+                    $(this).val(1);
+                }
+            });
         }
+
+        // 3. Checkbox Styling (chocolate, card, vase)
+        const $checkboxLabels = $('label[for="chocolate"], label[for="card"], label[for="vase"]');
+
+        $checkboxLabels.each(function() {
+            $(this).on('click', function(e) {
+                const forAttr = $(this).attr('for');
+                const $checkbox = $('#' + forAttr);
+                const $checkIcon = $(this).find('.ri-check-line');
+                const $customCheckbox = $(this).find('.checkbox-custom');
+
+                $checkbox.prop('checked', !$checkbox.prop('checked'));
+
+                if ($checkbox.prop('checked')) {
+                    $customCheckbox.addClass('bg-primary border-primary');
+                    $checkIcon.removeClass('hidden');
+                } else {
+                    $customCheckbox.removeClass('bg-primary border-primary');
+                    $checkIcon.addClass('hidden');
+                }
+
+                e.preventDefault();
+            });
+        });
+
+        // 4. Tab Control
+        const $tabButtons = $('.tab-button');
+        const $tabContents = $('.tab-content');
+
+        if ($tabButtons.length) {
+            $tabButtons.on('click', function() {
+                const tabName = $(this).data('tab');
+
+                $tabButtons.removeClass('border-primary text-primary')
+                    .addClass('border-transparent text-gray-500');
+
+                $(this).removeClass('border-transparent text-gray-500')
+                    .addClass('border-primary text-primary');
+
+                $tabContents.removeClass('active');
+                $('#' + tabName + '-content').addClass('active');
+            });
+        }
+
+        // 5. Header Scroll + Mobile Slide Menu + Hero Slider
+        const $header = $('header');
+        const $menuButton = $('#menuButton');
+        const $closeMenu = $('#closeMenu');
+        const $mobileMenu = $('#mobileMenu');
+        const $mobileMenuOverlay = $('#mobileMenuOverlay');
+        const $mobileShopButton = $('#mobileShopButton');
+        const $mobileShopContent = $('#mobileShopContent');
+        const $slider = $('#heroSlider');
+        const $slides = $('.slide');
+        const $dots = $('.slider-dot');
+        const $prevBtn = $('.slider-nav-btn.prev');
+        const $nextBtn = $('.slider-nav-btn.next');
+
+        let currentSlide = 0;
+        let slideInterval;
+
+        function updateSlides() {
+            $slides.each(function(index) {
+                if (index === currentSlide) {
+                    $(this).css('transform', 'translateX(0)');
+                } else if (index < currentSlide) {
+                    $(this).css('transform', 'translateX(-100%)');
+                } else {
+                    $(this).css('transform', 'translateX(100%)');
+                }
+            });
+
+            $dots.each(function(index) {
+                $(this).toggleClass('bg-opacity-100', index === currentSlide)
+                    .toggleClass('bg-opacity-50', index !== currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % $slides.length;
+            updateSlides();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + $slides.length) % $slides.length;
+            updateSlides();
+        }
+
+        function startSlideShow() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function stopSlideShow() {
+            clearInterval(slideInterval);
+        }
+
+        $prevBtn.on('click', function() {
+            stopSlideShow();
+            prevSlide();
+            startSlideShow();
+        });
+
+        $nextBtn.on('click', function() {
+            stopSlideShow();
+            nextSlide();
+            startSlideShow();
+        });
+
+        $dots.on('click', function() {
+            stopSlideShow();
+            currentSlide = $(this).index();
+            updateSlides();
+            startSlideShow();
+        });
+
+        $slider.on('mouseenter', stopSlideShow).on('mouseleave', startSlideShow);
+
+        startSlideShow();
+
+        $(window).on('scroll', function() {
+            if ($(this).scrollTop() > 50) {
+                $header.removeClass('header-transparent').addClass('header-solid');
+            } else {
+                $header.addClass('header-transparent').removeClass('header-solid');
+            }
+        });
+
+        function openMobileMenu() {
+            $mobileMenu.removeClass('translate-x-full');
+            $mobileMenuOverlay.removeClass('hidden');
+            $('body').css('overflow', 'hidden');
+        }
+
+        function closeMobileMenu() {
+            $mobileMenu.addClass('translate-x-full');
+            $mobileMenuOverlay.addClass('hidden');
+            $('body').css('overflow', '');
+        }
+
+        $menuButton.on('click', openMobileMenu);
+        $closeMenu.on('click', closeMobileMenu);
+        $mobileMenuOverlay.on('click', closeMobileMenu);
+
+        $mobileShopButton.on('click', function() {
+            $mobileShopContent.toggleClass('hidden');
+            const $icon = $(this).find('i');
+            const isRotated = $icon.css('transform') === 'matrix(-1, 0, 0, -1, 0, 0)';
+            $icon.css('transform', isRotated ? '' : 'rotate(180deg)');
+        });
+
+        // 6. Product Zoom and Thumbnail Switcher
+        $('.thumbnail img').on('click', function() {
+            const newSrc = $(this).attr('src');
+            $('#mainProductImage').attr('src', newSrc);
+            $('#zoomOverlay').css('background-image', 'url(' + newSrc + ')');
+
+            $('.thumbnail img').parent().removeClass('border-primary');
+            $(this).parent().addClass('border-primary');
+        });
+
+        $('#zoomOverlay').css('background-image', 'url(' + $('#mainProductImage').attr('src') + ')');
+
+        $('.product-image-container').on('mouseenter', function() {
+            $('#zoomOverlay').addClass('active');
+        }).on('mouseleave', function() {
+            $('#zoomOverlay').removeClass('active');
+        }).on('mousemove', function(e) {
+            const $this = $(this);
+            const offset = $this.offset();
+            const x = e.pageX - offset.left;
+            const y = e.pageY - offset.top;
+            const width = $this.width();
+            const height = $this.height();
+
+            const xPercent = (x / width) * 100;
+            const yPercent = (y / height) * 100;
+
+            $('#zoomOverlay').css('background-position', xPercent + '% ' + yPercent + '%');
+        });
     });
-
-    function openMobileMenu() {
-        $mobileMenu.removeClass('translate-x-full');
-        $mobileMenuOverlay.removeClass('hidden');
-        $('body').css('overflow', 'hidden');
-    }
-
-    function closeMobileMenu() {
-        $mobileMenu.addClass('translate-x-full');
-        $mobileMenuOverlay.addClass('hidden');
-        $('body').css('overflow', '');
-    }
-
-    $menuButton.on('click', openMobileMenu);
-    $closeMenu.on('click', closeMobileMenu);
-    $mobileMenuOverlay.on('click', closeMobileMenu);
-
-    $mobileShopButton.on('click', function() {
-        $mobileShopContent.toggleClass('hidden');
-        const $icon = $(this).find('i');
-        const isRotated = $icon.css('transform') === 'matrix(-1, 0, 0, -1, 0, 0)';
-        $icon.css('transform', isRotated ? '' : 'rotate(180deg)');
-    });
-
-    // 6. Product Zoom and Thumbnail Switcher
-    $('.thumbnail img').on('click', function() {
-        const newSrc = $(this).attr('src');
-        $('#mainProductImage').attr('src', newSrc);
-        $('#zoomOverlay').css('background-image', 'url(' + newSrc + ')');
-
-        $('.thumbnail img').parent().removeClass('border-primary');
-        $(this).parent().addClass('border-primary');
-    });
-
-    $('#zoomOverlay').css('background-image', 'url(' + $('#mainProductImage').attr('src') + ')');
-
-    $('.product-image-container').on('mouseenter', function() {
-        $('#zoomOverlay').addClass('active');
-    }).on('mouseleave', function() {
-        $('#zoomOverlay').removeClass('active');
-    }).on('mousemove', function(e) {
-        const $this = $(this);
-        const offset = $this.offset();
-        const x = e.pageX - offset.left;
-        const y = e.pageY - offset.top;
-        const width = $this.width();
-        const height = $this.height();
-
-        const xPercent = (x / width) * 100;
-        const yPercent = (y / height) * 100;
-
-        $('#zoomOverlay').css('background-position', xPercent + '% ' + yPercent + '%');
-    });
-});
 </script>
 
 </body>

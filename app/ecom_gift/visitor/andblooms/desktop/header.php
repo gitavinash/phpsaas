@@ -213,13 +213,65 @@
                     $cartItems = 0;
                 }
                 ?>
-                <div class="relative">
+                <div class="relative cart-dropdown-trigger group">
                     <a href="/checkout/"
-                        class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary">
+                        class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition">
                         <i class="ri-shopping-bag-line text-xl"></i>
                     </a>
+                    <?php if ($cartItems > 0) { ?>
                     <span id="cartItems"
-                        class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"><?php echo $cartItems ?></span>
+                        class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-medium"><?php echo $cartItems ?></span>
+
+                    <!-- Cart Dropdown Preview -->
+                    <div
+                        class="absolute right-0 top-full mt-3 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
+                        <!-- Header -->
+                        <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-primary/5 to-transparent">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-semibold text-gray-800 flex items-center">
+                                    <i class="ri-shopping-bag-3-line text-primary mr-2"></i>
+                                    Your Cart
+                                </h3>
+                                <span
+                                    class="bg-primary text-white text-xs px-2 py-1 rounded-full"><?php echo $cartItems ?>
+                                    item<?php echo $cartItems > 1 ? 's' : '' ?></span>
+                            </div>
+                        </div>
+
+                        <!-- Quick Message -->
+                        <div class="p-4 text-center bg-secondary/50">
+                            <p class="text-sm text-gray-600">
+                                <i class="ri-checkbox-circle-line text-green-500 mr-1"></i>
+                                You have <strong class="text-primary"><?php echo $cartItems ?></strong>
+                                item<?php echo $cartItems > 1 ? 's' : '' ?> in your cart
+                            </p>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="p-4 space-y-2">
+                            <a href="/checkout/"
+                                class="block w-full bg-primary text-white text-center py-3 rounded-lg font-medium hover:bg-opacity-90 transition shadow-sm">
+                                <i class="ri-shopping-cart-2-line mr-2"></i>
+                                View Cart & Checkout
+                            </a>
+                            <button onclick="this.closest('.cart-dropdown-trigger').querySelector('a').click()"
+                                class="block w-full bg-gray-100 text-gray-700 text-center py-2.5 rounded-lg font-medium hover:bg-gray-200 transition text-sm">
+                                Continue Shopping
+                            </button>
+                        </div>
+
+                        <!-- Footer Note -->
+                        <div class="px-4 pb-4 text-center">
+                            <p class="text-xs text-gray-500">
+                                <i class="ri-secure-payment-line text-primary"></i>
+                                Secure checkout • Same day delivery
+                            </p>
+                        </div>
+                    </div>
+                    <?php } else { ?>
+                    <span id="cartItems"
+                        class="absolute -top-1 -right-1 bg-gray-300 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                    <?php } ?>
                 </div>
 
                 <!-- Hamburger -->
@@ -230,39 +282,237 @@
             </div>
         </div>
 
-        <!-- Mobile Menu -->
-        <div class="md:hidden hidden bg-white w-full py-4 px-4 shadow-md" id="mobile-menu">
-            <div class="mb-4">
-                <div class="relative">
-                    <form action="/search/" method="get">
-                        <input type="text" name="q" placeholder="Search..."
-                            class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-primary text-sm">
-                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                            <i class="ri-search-line"></i>
-                        </div>
-                    </form>
+        <!-- Mobile Menu Full Screen -->
+        <div class="md:hidden fixed inset-0 bg-white z-50 transition-transform duration-300 ease-in-out"
+            id="mobile-menu" style="transform: translateX(-100%);">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-800">Menu</h2>
+                <div class="flex items-center space-x-4">
+                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>" class="h-6">
+                    <button id="close-mobile-menu"
+                        class="w-10 h-10 flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded-lg transition">
+                        <i class="ri-close-line text-xl"></i>
+                    </button>
                 </div>
             </div>
-            <nav class="flex flex-col space-y-3">
-                <a href="/" class="text-gray-700 hover:text-primary transition">Home</a>
 
-                <!-- Collapsible Mega Menu in Mobile -->
-                <details>
-                    <summary class="cursor-pointer text-gray-700 hover:text-primary transition">Luxury Collections
-                    </summary>
-                    <ul class="pl-4 mt-2 space-y-1 text-sm">
-                        <li><a href="/category/flower/" class="block">Fresh Flowers</a></li>
-                        <li><a href="/tag/everlasting/" class="block">Everlasting</a></li>
-                        <li><a href="/category/fresh-plants/" class="block">Fresh plants</a></li>
-                    </ul>
-                </details>
+            <!-- Overlay for smooth scroll -->
+            <div class="overflow-y-auto h-[calc(100vh-64px)]">
+                <!-- Navigation Links -->
+                <nav class="flex flex-col">
+                    <!-- Home -->
+                    <a href="/"
+                        class="mobile-menu-link px-4 py-4 text-gray-700 hover:bg-secondary transition flex items-center justify-between group">
+                        <span>Home</span>
+                        <i class="ri-arrow-right-s-line text-primary opacity-0 group-hover:opacity-100 transition"></i>
+                    </a>
 
-                <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Faux Flowers</a>
-                <a href="/category/cake/" class="text-gray-700 hover:text-primary transition">Cake & Hampers</a>
-                <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
-                    class="text-gray-700 hover:text-primary transition">
-                    Blooms of <?php echo date('F') ?>
-                </a>
-            </nav>
+                    <!-- Luxury Collections (Expandable) -->
+                    <div class="mobile-menu-section">
+                        <button
+                            class="mobile-menu-link px-4 py-4 w-full text-gray-700 hover:bg-secondary transition flex items-center justify-between"
+                            data-toggle="luxury">
+                            <span>Luxury Collections</span>
+                            <i class="ri-chevron-down-line transition-transform"></i>
+                        </button>
+                        <div class="mobile-menu-submenu hidden bg-gray-50 pl-4">
+                            <a href="/category/flower/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-flower-line mr-3 text-primary"></i> Fresh Flowers
+                            </a>
+                            <a href="/tag/everlasting/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-sparkling-2-line mr-3 text-primary"></i> Everlasting Flowers
+                            </a>
+                            <a href="/category/fresh-plants/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-leaf-line mr-3 text-primary"></i> Fresh Plants
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Faux Flowers -->
+                    <a href="/category/planters/"
+                        class="mobile-menu-link px-4 py-4 text-gray-700 hover:bg-secondary transition flex items-center justify-between group">
+                        <span>Faux Flowers</span>
+                        <i class="ri-arrow-right-s-line text-primary opacity-0 group-hover:opacity-100 transition"></i>
+                    </a>
+
+                    <!-- Cake & Hampers -->
+                    <a href="/category/cake/"
+                        class="mobile-menu-link px-4 py-4 text-gray-700 hover:bg-secondary transition flex items-center justify-between group">
+                        <span>Cake & Hampers</span>
+                        <i class="ri-arrow-right-s-line text-primary opacity-0 group-hover:opacity-100 transition"></i>
+                    </a>
+
+                    <!-- Valentine Edition (Highlighted) -->
+                    <a href="/tag/valentine/"
+                        class="mobile-menu-link px-4 py-4 bg-gradient-to-r from-primary/10 to-transparent border-l-4 border-primary text-primary font-semibold transition">
+                        <i class="ri-heart-line mr-2"></i> Valentine Edition
+                    </a>
+
+                    <!-- Blooms of Month -->
+                    <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
+                        class="mobile-menu-link px-4 py-4 text-gray-700 hover:bg-secondary transition flex items-center justify-between group">
+                        <span>Blooms of <?php echo date('F') ?></span>
+                        <i class="ri-arrow-right-s-line text-primary opacity-0 group-hover:opacity-100 transition"></i>
+                    </a>
+                </nav>
+
+                <!-- Search Bar at Bottom -->
+                <div class="mt-auto p-4 bg-gray-50 border-t border-gray-100">
+                    <div class="relative">
+                        <form action="/search/" method="get">
+                            <input type="text" name="q" placeholder="Search products..."
+                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm transition bg-white">
+                            <button type="submit"
+                                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition">
+                                <i class="ri-search-line"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Mobile Menu Overlay Backdrop -->
+        <div class="md:hidden fixed inset-0 z-40 transition-colors duration-300 ease-in-out pointer-events-none"
+            id="mobile-menu-overlay" style="background-color: rgba(0, 0, 0, 0);"></div>
     </header>
+
+    <style>
+    /* Mobile Menu Animations */
+    .mobile-menu-link {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .mobile-menu-link::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, rgba(212, 148, 109, 0), rgba(212, 148, 109, 0.05), rgba(212, 148, 109, 0));
+        transform: translateX(-100%);
+        transition: transform 500ms ease-out;
+    }
+
+    .mobile-menu-link:hover::before {
+        transform: translateX(100%);
+    }
+
+    .mobile-submenu-link {
+        position: relative;
+        transition: all 200ms;
+    }
+
+    .mobile-submenu-link::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background-color: #D4946D;
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: transform 300ms;
+    }
+
+    .mobile-submenu-link:hover::before {
+        transform: scaleY(1);
+    }
+    </style>
+
+    <script>
+    // Initialize mobile menu
+    (function() {
+        let menuOpen = false;
+
+        function initMobileMenu() {
+            console.log('Mobile menu initializing...');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const luxuryToggle = document.querySelector('[data-toggle="luxury"]');
+
+            if (!mobileMenuButton || !mobileMenu || !mobileMenuOverlay) {
+                console.error('Menu elements not found');
+                return;
+            }
+
+            console.log('All elements found, attaching listeners');
+
+            function openMenu(e) {
+                if (e) e.preventDefault();
+                if (menuOpen) return;
+
+                console.log('Opening menu');
+                menuOpen = true;
+
+                // Force reflow to ensure transition works
+                mobileMenu.offsetHeight;
+
+                mobileMenu.style.transform = 'translateX(0)';
+                mobileMenuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+                mobileMenuOverlay.style.pointerEvents = 'auto';
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMenu(e) {
+                if (e) e.preventDefault();
+                if (!menuOpen) return;
+
+                console.log('Closing menu');
+                menuOpen = false;
+
+                mobileMenu.style.transform = 'translateX(-100%)';
+                mobileMenuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+                mobileMenuOverlay.style.pointerEvents = 'none';
+                document.body.style.overflow = '';
+
+                // Close all submenus
+                document.querySelectorAll('.mobile-menu-submenu').forEach(el => {
+                    el.classList.add('hidden');
+                });
+            }
+
+            // Attach event listeners
+            mobileMenuButton.addEventListener('click', openMenu);
+            closeMobileMenuButton.addEventListener('click', closeMenu);
+            mobileMenuOverlay.addEventListener('click', closeMenu);
+
+            // Submenu toggle
+            if (luxuryToggle) {
+                const luxurySubmenu = luxuryToggle.nextElementSibling;
+                luxuryToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (luxurySubmenu) {
+                        luxurySubmenu.classList.toggle('hidden');
+                        const icon = this.querySelector('i');
+                        if (icon) icon.classList.toggle('rotate-180');
+                    }
+                });
+            }
+
+            // Close menu on link click (not toggle buttons)
+            document.querySelectorAll('.mobile-menu-link').forEach(link => {
+                if (!link.hasAttribute('data-toggle')) {
+                    link.addEventListener('click', function() {
+                        closeMenu();
+                    });
+                }
+            });
+
+            console.log('Mobile menu initialized successfully');
+        }
+
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initMobileMenu);
+        } else {
+            initMobileMenu();
+        }
+    })();
+    </script>
