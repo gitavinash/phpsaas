@@ -1,5 +1,5 @@
 <?php
-
+require_once LOGIN_CHECK;
 require_once 'header.php';
 ?>
 
@@ -26,7 +26,7 @@ require_once 'header.php';
     font-family: "Geologica", sans-serif;
     font-size: 56px;
     font-weight: 700;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     margin-bottom: 20px;
     line-height: 1.15;
     letter-spacing: -0.5px;
@@ -79,7 +79,7 @@ require_once 'header.php';
     font-family: "Geologica", sans-serif;
     font-size: 20px;
     font-weight: 700;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     margin-bottom: 28px;
     letter-spacing: -0.3px;
     line-height: 1.3;
@@ -100,17 +100,17 @@ require_once 'header.php';
     font-size: 28px;
     font-weight: 700;
     text-align: center;
-    border: 1px solid #ec1816;
+    border: 1px solid #EC2A1A;
     border-radius: 7px;
     transition: all 0.3s ease;
     background: #fff;
     box-shadow: 0 4px 16px rgba(236, 24, 22, 0.1);
-    color: #ec1816;
+    color: #333;
 }
 
 .license-input:focus {
     outline: none;
-    border-color: #ec1816;
+    border-color: #EC2A1A;
     background: #fff;
     box-shadow: 0 6px 20px rgba(236, 24, 22, 0.2);
     transform: scale(1.02);
@@ -119,7 +119,7 @@ require_once 'header.php';
 .license-add-btn {
     background: #fff;
     border: 1px solid #d0d0d0;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     padding: 5px 15px;
     font-family: "Noto Sans", sans-serif;
     font-size: 14px;
@@ -139,9 +139,9 @@ require_once 'header.php';
 }
 
 .license-add-btn:hover {
-    background: #ec1816;
+    background: #EC2A1A;
     color: var(--white-color, #fff);
-    border-color: #ec1816;
+    border-color: #EC2A1A;
     box-shadow: 0 4px 12px rgba(236, 24, 22, 0.15);
 }
 
@@ -179,7 +179,7 @@ require_once 'header.php';
     font-family: "Geologica", sans-serif;
     font-size: 48px;
     font-weight: 700;
-    color: #ec1816;
+    color: #EC2A1A;
     margin-bottom: 12px;
     letter-spacing: -0.5px;
     line-height: 1.1;
@@ -200,7 +200,7 @@ require_once 'header.php';
 }
 
 .pricing-structure {
-    background: #ffe9e9;
+    background: #F5C3AA;
     border-radius: 0;
     padding: 1em;
     box-shadow: none;
@@ -214,7 +214,7 @@ require_once 'header.php';
     font-family: "Geologica", sans-serif;
     font-size: 28px;
     font-weight: 700;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     margin-bottom: 40px;
     text-align: center;
     letter-spacing: -0.3px;
@@ -245,7 +245,7 @@ require_once 'header.php';
 }
 
 .pricing-tier-item:hover {
-    border-color: #ec1816;
+    border-color: #EC2A1A;
     background: transparent;
     box-shadow: none;
 }
@@ -254,7 +254,7 @@ require_once 'header.php';
     font-family: "Noto Sans", sans-serif;
     font-size: 18px;
     font-weight: 400;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     margin-bottom: 0;
     text-transform: none;
     letter-spacing: 0;
@@ -265,7 +265,7 @@ require_once 'header.php';
     font-family: "Geologica", sans-serif;
     font-size: 24px;
     font-weight: 700;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     margin-left: auto;
     text-align: right;
     display: inline;
@@ -309,7 +309,7 @@ require_once 'header.php';
 }
 
 .proceed-checkout-btn {
-    background: #ec1816;
+    background: #EC2A1A;
     color: var(--white-color, #fff);
     border: none;
     outline: none;
@@ -345,9 +345,9 @@ require_once 'header.php';
 }
 
 .proceed-checkout-btn:hover {
-    background: var(--black-color, #000);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    transform: translateY(-3px);
+    color: #F5C3AA;
+    /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); */
+    /* transform: translateY(-3px); */
 }
 
 .proceed-checkout-btn:hover::after {
@@ -372,7 +372,7 @@ require_once 'header.php';
     font-family: "Geologica", sans-serif;
     font-size: 36px;
     font-weight: 700;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     margin-bottom: 50px;
     text-align: center;
     letter-spacing: -0.3px;
@@ -414,7 +414,7 @@ require_once 'header.php';
     font-family: "Geologica", sans-serif;
     font-size: 20px;
     font-weight: 600;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     margin-bottom: 25px;
     letter-spacing: -0.2px;
 }
@@ -443,7 +443,7 @@ require_once 'header.php';
 
 .quantity-input:focus {
     outline: none;
-    border-color: #ec1816;
+    border-color: #EC2A1A;
     background: #fff;
     box-shadow: 0 4px 12px rgba(236, 24, 22, 0.1);
 }
@@ -451,7 +451,7 @@ require_once 'header.php';
 .quick-add-btn {
     background: #fafafa;
     border: 2px solid #ddd;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     padding: 12px 24px;
     font-family: "Noto Sans", sans-serif;
     font-size: 16px;
@@ -463,9 +463,9 @@ require_once 'header.php';
 }
 
 .quick-add-btn:hover {
-    background: #ec1816;
+    background: #EC2A1A;
     color: var(--white-color, #fff);
-    border-color: #ec1816;
+    border-color: #EC2A1A;
     box-shadow: 0 4px 12px rgba(236, 24, 22, 0.2);
 }
 
@@ -498,7 +498,7 @@ require_once 'header.php';
     font-family: "Geologica", sans-serif;
     font-size: 52px;
     font-weight: 700;
-    color: #ec1816;
+    color: #EC2A1A;
     margin-bottom: 15px;
     letter-spacing: -0.5px;
 }
@@ -558,13 +558,13 @@ require_once 'header.php';
 }
 
 .step.active .step-number {
-    background: #ec1816;
+    background: #EC2A1A;
     color: var(--white-color, #fff);
     box-shadow: 0 4px 12px rgba(236, 24, 22, 0.2);
 }
 
 .step.completed .step-number {
-    background: var(--black-color, #000);
+    background: var(--black-color, #333);
     color: var(--white-color, #fff);
 }
 
@@ -577,11 +577,11 @@ require_once 'header.php';
 }
 
 .step.active .step-label {
-    color: #ec1816;
+    color: #EC2A1A;
 }
 
 .step.completed .step-label {
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
 }
 
 .step-divider {
@@ -592,7 +592,7 @@ require_once 'header.php';
 }
 
 .continue-btn {
-    background: #ec1816;
+    background: #EC2A1A;
     color: var(--white-color, #fff);
     border: none;
     outline: none;
@@ -627,7 +627,7 @@ require_once 'header.php';
     font-family: "Noto Sans", sans-serif;
     font-size: 14px;
     font-weight: 600;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     margin-bottom: 10px;
     text-transform: uppercase;
     letter-spacing: 0.4px;
@@ -648,13 +648,13 @@ require_once 'header.php';
 .form-group input[type="text"]:focus,
 .form-group input[type="email"]:focus {
     outline: none;
-    border-color: #ec1816;
+    border-color: #EC2A1A;
     background: #fff;
     box-shadow: 0 4px 12px rgba(236, 24, 22, 0.1);
 }
 
 .checkout-btn {
-    background: var(--black-color, #000);
+    background: var(--black-color, #333);
     color: var(--white-color, #fff);
     border: none;
     outline: none;
@@ -682,7 +682,7 @@ require_once 'header.php';
 
 .info-notice {
     background: #fafafa;
-    border-left: 4px solid #ec1816;
+    border-left: 4px solid #EC2A1A;
     padding: 20px 24px;
     margin: 40px 0;
     border-radius: 10px;
@@ -692,7 +692,7 @@ require_once 'header.php';
 
 .info-notice p {
     margin: 0;
-    color: var(--black-color, #000);
+    color: var(--black-color, #333);
     font-family: "Noto Sans", sans-serif;
     font-weight: 500;
     font-size: 14px;
