@@ -7,7 +7,6 @@ require_once 'header.php';
 .corporate-subscription {
     padding: 80px 0;
     background: #fafafa;
-    float: left;
     width: 100%;
 }
 
@@ -208,6 +207,7 @@ require_once 'header.php';
     margin-bottom: 0;
     border: none;
     box-sizing: border-box;
+    width: 100%;
 }
 
 .pricing-structure h2 {
@@ -313,28 +313,50 @@ require_once 'header.php';
     color: var(--white-color, #fff);
     border: none;
     outline: none;
-    padding: 16px 40px;
+    padding: 20px 50px;
     font-family: "Noto Sans", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 700;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
     width: 100%;
-    margin-top: 35px;
+    margin-top: 40px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 12px rgba(236, 24, 22, 0.2);
+    letter-spacing: 1px;
+    box-shadow: 0 6px 20px rgba(236, 24, 22, 0.3);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.checkout-btn-wrapper {
+    width: 100%;
+    max-width: 100%;
+}
+
+.proceed-checkout-btn::after {
+    content: '→';
+    font-size: 22px;
+    font-weight: 700;
+    transition: transform 0.3s ease;
 }
 
 .proceed-checkout-btn:hover {
     background: var(--black-color, #000);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+}
+
+.proceed-checkout-btn:hover::after {
+    transform: translateX(5px);
 }
 
 .proceed-checkout-btn:active {
-    transform: translateY(0);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(236, 24, 22, 0.3);
 }
 
 .subscription-section {
@@ -704,56 +726,239 @@ require_once 'header.php';
         grid-template-columns: 1fr;
         gap: 40px;
     }
+
+    .purchase-box {
+        padding: 40px 30px;
+    }
+
+    .license-selector-section {
+        padding: 30px;
+    }
+
+    .final-price-section {
+        padding: 35px 30px;
+    }
 }
 
 @media (max-width: 768px) {
+    .corporate-subscription {
+        padding: 40px 0;
+    }
+
+    .corporate-header {
+        margin-bottom: 40px;
+        padding-bottom: 30px;
+    }
+
     .corporate-header h1 {
         font-size: 32px;
+        margin-bottom: 15px;
     }
 
     .corporate-header p {
         font-size: 16px;
+        line-height: 1.6;
     }
 
-    .license-quantity-controls {
-        flex-wrap: wrap;
+    .purchase-box {
+        padding: 30px 20px;
+        margin-bottom: 40px;
     }
 
-    .license-input {
-        width: 100px;
-        font-size: 20px;
-        padding: 12px 15px;
+    .purchase-box-layout {
+        gap: 30px;
+        display: flex;
+        flex-direction: column;
     }
 
-    .license-add-btn {
-        padding: 10px 20px;
-        font-size: 14px;
+    .left-purchase-section {
+        gap: 30px;
+        order: 2;
     }
 
-    .pricing-structure h2 {
-        font-size: 20px;
+    .pricing-structure {
+        order: 1;
+    }
+
+    .checkout-btn-wrapper {
+        margin-top: 2em;
+        order: 3;
+    }
+
+    .license-selector-section {
+        padding: 25px 20px;
+    }
+
+    .license-selector-section label {
+        font-size: 18px;
         margin-bottom: 20px;
     }
 
+    .license-input {
+        font-size: 36px;
+        padding: 20px 24px;
+    }
+
+    .license-buttons-row {
+        gap: 8px;
+    }
+
+    .license-add-btn {
+        padding: 10px 18px;
+        font-size: 13px;
+    }
+
+    .license-info {
+        font-size: 12px;
+    }
+
+    .final-price-section {
+        padding: 30px 25px;
+        position: static;
+    }
+
+    .final-price-section h4 {
+        font-size: 12px;
+        margin-bottom: 18px;
+    }
+
     .final-price-display {
-        font-size: 40px;
+        font-size: 38px;
+    }
+
+    .final-price-display .currency {
+        font-size: 24px;
+    }
+
+    .final-price-note {
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .pricing-structure h2 {
+        font-size: 22px;
+        margin-bottom: 25px;
+    }
+
+    .pricing-tiers {
+        margin-bottom: 35px;
     }
 
     .pricing-tier-item {
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
+        padding: 20px 0;
+    }
+
+    .tier-range {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .tier-price-wrapper {
+        align-items: flex-start;
+        margin-left: 0;
     }
 
     .tier-price {
         margin-left: 0;
-        margin-top: 10px;
+        margin-top: 0;
+        font-size: 20px;
+    }
+
+    .tier-price .currency {
+        font-size: 14px;
     }
 
     .tier-period {
         margin-left: 0;
-        margin-top: 5px;
+        margin-top: 2px;
         white-space: normal;
+        font-size: 11px;
+    }
+
+    .gst-notice {
+        font-size: 11px;
+        margin-top: 20px;
+        line-height: 1.6;
+    }
+
+    .proceed-checkout-btn {
+        padding: 18px 35px;
+        font-size: 16px;
+        margin-top: 0;
+        letter-spacing: 0.8px;
+    }
+
+    .proceed-checkout-btn::after {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .corporate-header h1 {
+        font-size: 26px;
+    }
+
+    .corporate-header p {
+        font-size: 14px;
+    }
+
+    .purchase-box {
+        padding: 25px 15px;
+    }
+
+    .license-selector-section {
+        padding: 20px 15px;
+    }
+
+    .license-selector-section label {
+        font-size: 16px;
+    }
+
+    .license-input {
+        font-size: 32px;
+        padding: 18px 20px;
+    }
+
+    .license-buttons-row {
+        gap: 6px;
+    }
+
+    .license-add-btn {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    .final-price-section {
+        padding: 25px 20px;
+    }
+
+    .final-price-display {
+        font-size: 32px;
+    }
+
+    .pricing-structure h2 {
+        font-size: 20px;
+    }
+
+    .tier-range {
+        font-size: 15px;
+    }
+
+    .tier-price {
+        font-size: 18px;
+    }
+
+    .proceed-checkout-btn {
+        padding: 16px 28px;
+        font-size: 14px;
+        letter-spacing: 0.6px;
+    }
+
+    .proceed-checkout-btn::after {
+        font-size: 18px;
     }
 }
 </style>
@@ -822,9 +1027,11 @@ require_once 'header.php';
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="proceed-checkout-btn" id="proceedCheckoutBtn">Proceed to
-                        Checkout</button>
                 </div>
+            </div>
+
+            <div class="checkout-btn-wrapper">
+                <button type="button" class="proceed-checkout-btn" id="proceedCheckoutBtn">Proceed to Checkout</button>
             </div>
         </div>
     </div>
