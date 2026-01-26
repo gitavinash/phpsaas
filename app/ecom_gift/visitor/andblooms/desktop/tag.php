@@ -20,7 +20,7 @@
 ?>
 
 <!-- Banner with Breadcrumb -->
-<div class="relative h-[280px] w-full mb-8 mt-16">
+<div class="relative h-[280px] w-full mb-8 mt-16 overflow-hidden">
     <?php if (!empty($tag_image)) { ?>
     <div style="background-image: url('<?= $tag_image ?>');" class="absolute inset-0 bg-cover bg-center"></div>
     <?php } else { ?>
