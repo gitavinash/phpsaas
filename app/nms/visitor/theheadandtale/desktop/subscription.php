@@ -1,5 +1,10 @@
 <?php
 
+if (!isset($id)) {
+    header("Location: /subscribe/", TRUE, 301);
+    exit();
+}
+
 require_once LOGIN_CHECK;
 
 $redirect_url = ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/');

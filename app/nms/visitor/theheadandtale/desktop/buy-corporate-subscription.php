@@ -1,125 +1,66 @@
 <?php
 
-require_once LOGIN_CHECK;
+if (isset($_COOKIE['user_data'])) {
+    $userSaltKey = base64_decode($_COOKIE['user_data']);
 
-// Cashfree credentials
-$cashfreeClientId = PG_APP_ID;
-$cashfreeClientSecret = PG_SECRET_KEY;
-if (DEVELOPMENT_MODE == TRUE) {
-    $cashfreeBaseUrl = 'https://sandbox.cashfree.com';
-} else {
-    $cashfreeBaseUrl = 'https://api.cashfree.com';
-}
-$cashfreeApiVersion = '2025-01-01';
+    mysqli_query($connection, "START TRANSACTION");
 
-// Pricing tiers
-function get_price_per_seat(int $seats): int
-{
-    if ($seats >= 51) {
-        return 1799;
-    }
-    if ($seats >= 26) {
-        return 2299;
-    }
-    return 2699; // 10 - 25
-}
-
-$minSeats = 10;
-$requestedSeats = max($minSeats, (int)($_GET['num_users'] ?? $minSeats));
-$pricePerSeat = get_price_per_seat($requestedSeats);
-$calculatedTotal = $requestedSeats * $pricePerSeat;
-
-$errors = [];
-
-// Get customer details from session/globals
-$customerName = $logginUserName ?? 'Corporate Customer';
-$customerEmail = $user_email ?? '';
-$customerPhone = $user_mobile ?? '';
-
-// Validate
-if (!$cashfreeClientId || !$cashfreeClientSecret) {
-    $errors[] = 'Cashfree credentials are missing.';
-}
-if (!$customerEmail || !filter_var($customerEmail, FILTER_VALIDATE_EMAIL)) {
-    $errors[] = 'Valid email required. Please login first.';
-}
-if (!$customerPhone) {
-    $errors[] = 'Phone number required. Please update your profile.';
-}
-
-if (empty($errors)) {
-    // First, generate a unique reference ID to track this transaction
-    $referenceId = uniqid('corp_sub_', true);
-
-    $payload = [
-        'customer_details' => [
-            'customer_name' => $customerName,
-            'customer_email' => $customerEmail,
-            'customer_phone' => $customerPhone,
-        ],
-        'link_amount' => $calculatedTotal,
-        'link_currency' => 'INR',
-        'link_purpose' => 'Corporate subscription - ' . $requestedSeats . ' seats',
-        'link_id' => $referenceId,
-        'link_auto_reminders' => true,
-        'link_partial_payments' => false,
-        'link_notify' => [
-            'send_sms' => true,
-            'send_email' => true,
-        ],
-        'link_notes' => [
-            'num_users' => (string)$requestedSeats,
-            'price_per_seat' => (string)$pricePerSeat,
-            'reference_id' => $referenceId,
-        ],
-        'link_meta' => [
-            'return_url' => (isset($_SERVER['HTTP_HOST']) ? 'https://' . $_SERVER['HTTP_HOST'] . '/corporate-subscription-status/?ref_id=' . urlencode($referenceId) : null),
-        ],
-    ];
-
-    $ch = curl_init($cashfreeBaseUrl . '/pg/links');
-    $headers = [
-        'Content-Type: application/json',
-        'x-api-version: ' . $cashfreeApiVersion,
-        'x-client-id: ' . $cashfreeClientId,
-        'x-client-secret: ' . $cashfreeClientSecret,
-    ];
-
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => $headers,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => json_encode($payload),
-    ]);
-
-    $responseBody = curl_exec($ch);
-    $curlErr = curl_error($ch);
-    $httpStatus = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    if ($curlErr) {
-        $errors[] = 'Cashfree request failed: ' . $curlErr;
-    } else {
-        $responseData = json_decode($responseBody, true);
-        if ($httpStatus === 200 && isset($responseData['link_url'])) {
-
-            $linkUrl = $responseData['link_url'];
-            header('Location: ' . $linkUrl);
-            exit;
+    if ($checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_salt_key='{$userSaltKey}'")) {
+        if (mysqli_num_rows($checkUser) != 0) {
+            extract(mysqli_fetch_assoc($checkUser));
         } else {
-            $errors[] = 'Cashfree responded with status ' . $httpStatus . '. ' . ($responseData['message'] ?? json_encode($responseData));
+            echo "invalid activity found by unknown users";
+            exit();
         }
     }
+
+    function get_price_per_seat(int $seats): int
+    {
+        if ($seats >= 51) {
+            return 1799;
+        }
+        if ($seats >= 26) {
+            return 2299;
+        }
+        return 2699;
+    }
+
+    $minSeats = 10;
+    $requestedSeats = max($minSeats, (int)($_GET['num_users'] ?? $minSeats));
+    $pricePerSeat = get_price_per_seat($requestedSeats);
+    $calculatedTotal = $requestedSeats * $pricePerSeat;
+
+    mysqli_query($connection, "START TRANSACTION");
+
+    if ($checkCart = mysqli_query($connection, "SELECT cart_id FROM " . TABLE_PREFIX . "cart WHERE cart_session_id='" . SESSION_ID . "' AND cart_site_id='" . SITE_ID . "' AND cart_status!=1")) {
+        if (mysqli_num_rows($checkCart) == 0) {
+            $addToCart = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_user_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$user_id}', '0', 'order', {$requestedSeats}, '{$calculatedTotal}', 2, NOW())");
+        } else {
+            $addToCart = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_relation_id='0', cart_price='{$calculatedTotal}', cart_qty='{$requestedSeats}' WHERE cart_relation_type='order' AND  cart_session_id='" . SESSION_ID . "' AND cart_site_id='" . SITE_ID . "'");
+        }
+    }
+
+    if ($checkOrder = mysqli_query($connection, "SELECT order_id FROM " . TABLE_PREFIX . "order WHERE order_cart_session_id='" . SESSION_ID . "' AND order_site_id='" . SITE_ID . "' AND order_status!=1")) {
+        if (mysqli_num_rows($checkOrder) == 0) {
+            $addNewOrder = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "order(order_site_id, order_user_id, order_cart_session_id, order_product_price, order_product_type, order_status, order_generate, order_msg) VALUES(" . SITE_ID . ", '{$user_id}', '" . SESSION_ID . "', '{$calculatedTotal}', 'order', 0, NOW(), '{$requestedSeats}')");
+            $order_id = base64_encode(mysqli_insert_id($connection));
+        } else {
+            extract(mysqli_fetch_assoc($checkOrder));
+            $addNewOrder = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_product_price='{$calculatedTotal}', order_msg='{$requestedSeats}' WHERE order_product_type='order' AND order_cart_session_id='" . SESSION_ID . "' AND order_site_id='" . SITE_ID . "'");
+            $order_id = base64_encode($order_id);
+        }
+    }
+
+    if ($addToCart && $addNewOrder) {
+        mysqli_query($connection, "COMMIT");
+        $curlRedirectUrl = "/procced-to-pg/?id={$order_id}&redirect_url=/corporate-subscription-status/";
+        header("Location: {$curlRedirectUrl}", TRUE, 301);
+    } else {
+        mysqli_query($connection, "ROLLBACK");
+        echo "Something went wrong while process to subscription";
+    }
+} else {
+    echo "<h1>Please login to continue.</h1>";
 }
 
-// If we reach here, there was an error
-if (!empty($errors)) {
-    echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Error</title></head><body style="font-family: sans-serif; padding: 40px; max-width: 600px; margin: 0 auto;">';
-    echo '<h2>Error</h2>';
-    foreach ($errors as $err) {
-        echo '<p>' . htmlspecialchars($err, ENT_QUOTES, 'UTF-8') . '</p>';
-    }
-    echo '</body></html>';
-} else {
-    echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Redirecting</title></head><body style="font-family: sans-serif; padding: 40px; text-align: center;"><p>Redirecting...</p></body></html>';
-}
+exit();
