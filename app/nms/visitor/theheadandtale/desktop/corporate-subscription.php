@@ -1,1037 +1,430 @@
 <?php
+
 require_once LOGIN_CHECK;
 require_once 'header.php';
-?>
 
-<style>
+?><style>
+:root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --accent: #ec1816;
+    --text: #1d1d1f;
+    --muted: #6b6b70;
+    --line: #e6e7ec;
+}
+
 .corporate-subscription {
-    padding: 80px 0;
-    background: #fafafa;
-    width: 100%;
+    padding: 80px 0 96px;
+    background: linear-gradient(180deg, #fdf7f5 0%, #f5f6f8 48%, #f5f6f8 100%);
 }
 
 .corporate-subscription .container {
-    max-width: 1200px;
-    width: 1200px;
+    max-width: 1180px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-.corporate-header {
+.hero {
     text-align: center;
-    padding-bottom: 50px;
+    margin-bottom: 52px;
 }
 
-.corporate-header h1 {
-    font-family: "Geologica", sans-serif;
-    font-size: 56px;
-    font-weight: 700;
-    color: var(--black-color, #333);
-    margin-bottom: 20px;
-    line-height: 1.15;
-    letter-spacing: -0.5px;
-}
-
-.corporate-header p {
+.hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
     font-family: "Noto Sans", sans-serif;
-    font-size: 18px;
-    color: #555;
-    max-width: 700px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    color: var(--muted);
+}
+
+.hero h1 {
+    margin: 16px 0 12px;
+    font-family: "Geologica", sans-serif;
+    font-size: 50px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.6px;
+}
+
+.hero p {
+    font-family: "Noto Sans", sans-serif;
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 760px;
     margin: 0 auto;
     line-height: 1.7;
-    font-weight: 300;
 }
 
-.purchase-box {
-    background: var(--white-color, #fff);
-    border-radius: 12px;
-    padding: 60px 50px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    margin-bottom: 60px;
-    border: 1px solid #f0f0f0;
-}
-
-.purchase-box-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: start;
-}
-
-.left-purchase-section {
+.hero-meta {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 50px;
-}
-
-.license-selector-section {
-    margin-bottom: 0;
-    background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
-    border: 1px solid #e8e8e8;
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.license-selector-section label {
-    display: block;
-    font-family: "Geologica", sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--black-color, #333);
-    margin-bottom: 28px;
-    letter-spacing: -0.3px;
-    line-height: 1.3;
-}
-
-.license-quantity-controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 28px;
+    gap: 14px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.meta-chip {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: #fff;
+    font-family: "Noto Sans", sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 26px;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 20px 24px 12px;
+    border-bottom: 1px solid var(--line);
+}
+
+.card-header h3 {
+    margin: 0;
+    font-family: "Geologica", sans-serif;
+    font-size: 22px;
+    font-weight: 750;
+    color: var(--text);
+    letter-spacing: -0.2px;
+}
+
+.card-body {
+    padding: 22px 24px 26px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.input-label {
+    font-family: "Noto Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--text);
 }
 
 .license-input {
     width: 100%;
-    padding: 10px 0px;
-    font-size: 28px;
-    font-weight: 700;
+    padding: 18px;
+    font-family: "Geologica", sans-serif;
+    font-size: 34px;
+    font-weight: 750;
     text-align: center;
-    border: 1px solid #EC2A1A;
-    border-radius: 7px;
-    transition: all 0.3s ease;
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    transition: all 0.22s ease;
+    color: var(--text);
     background: #fff;
-    box-shadow: 0 4px 16px rgba(236, 24, 22, 0.1);
-    color: #333;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .license-input:focus {
     outline: none;
-    border-color: #EC2A1A;
-    background: #fff;
-    box-shadow: 0 6px 20px rgba(236, 24, 22, 0.2);
-    transform: scale(1.02);
+    border-color: var(--accent);
+    box-shadow: 0 12px 30px rgba(236, 24, 22, 0.16);
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .license-add-btn {
     background: #fff;
-    border: 1px solid #d0d0d0;
-    color: var(--black-color, #333);
-    padding: 5px 15px;
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 10px 14px;
     font-family: "Noto Sans", sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: capitalize;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
-}
-
-.license-buttons-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
+    transition: all 0.2s ease;
 }
 
 .license-add-btn:hover {
-    background: #EC2A1A;
-    color: var(--white-color, #fff);
-    border-color: #EC2A1A;
-    box-shadow: 0 4px 12px rgba(236, 24, 22, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 8px 18px rgba(236, 24, 22, 0.14);
 }
 
-.license-info {
+.helper-text {
     font-family: "Noto Sans", sans-serif;
-    font-size: 13px;
-    color: #888;
-    margin-top: 14px;
-    font-weight: 400;
-    letter-spacing: 0.3px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.35px;
 }
 
-.final-price-section {
-    background: linear-gradient(135deg, #fff 0%, #fafafa 100%);
-    border: 1px solid #e8e8e8;
+.total-box {
+    margin-top: 20px;
+    padding: 20px 18px;
+    border: 1px dashed var(--line);
     border-radius: 12px;
-    padding: 45px 40px;
-    text-align: center;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    position: sticky;
-    top: 100px;
+    background: linear-gradient(135deg, #fff 0%, #fafafa 100%);
 }
 
-.final-price-section h4 {
+.total-box h4 {
+    margin: 0 0 6px;
     font-family: "Noto Sans", sans-serif;
-    font-size: 13px;
-    color: #999;
-    margin: 0 0 24px 0;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.4px;
     text-transform: uppercase;
 }
 
-.final-price-display {
+.total-amount {
     font-family: "Geologica", sans-serif;
-    font-size: 48px;
-    font-weight: 700;
-    color: #EC2A1A;
-    margin-bottom: 12px;
-    letter-spacing: -0.5px;
-    line-height: 1.1;
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.4px;
 }
 
-.final-price-display .currency {
-    font-size: 32px;
-}
-
-.final-price-note {
+.total-note {
+    margin-top: 6px;
     font-family: "Noto Sans", sans-serif;
     font-size: 12px;
-    color: #888;
-    margin-top: 18px;
-    font-weight: 400;
-    letter-spacing: 0.3px;
-    line-height: 1.6;
+    color: var(--muted);
 }
 
-.pricing-structure {
-    background: #F5C3AA;
-    border-radius: 0;
-    padding: 1em;
-    box-shadow: none;
-    margin-bottom: 0;
-    border: none;
-    box-sizing: border-box;
+.cta-primary {
+    margin-top: 22px;
     width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 18px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: "Noto Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 10px 26px rgba(236, 24, 22, 0.22);
+    transition: all 0.22s ease;
 }
 
-.pricing-structure h2 {
-    font-family: "Geologica", sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--black-color, #333);
-    margin-bottom: 40px;
-    text-align: center;
-    letter-spacing: -0.3px;
-    line-height: 3em;
+.cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(236, 24, 22, 0.28);
 }
 
-.pricing-tiers {
+.price-card {
+    background: #fffdfb;
+    border-radius: 14px;
+    border: 1px solid #f0d8c8;
+    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.05);
+}
+
+.price-card .card-body {
+    padding: 8px 24px 22px;
+}
+
+.price-list {
     display: flex;
     flex-direction: column;
-    gap: 0;
 }
 
-.pricing-tier-item {
-    background: transparent;
-    border-radius: 0;
-    padding: 25px 0;
-    text-align: left;
-    border: none;
-    border-bottom: 2px dotted #d0d0d0;
-    transition: all 0.3s ease;
+.price-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px dashed #dec8b8;
 }
 
-.pricing-tier-item:last-child {
+.price-row:last-child {
     border-bottom: none;
 }
 
-.pricing-tier-item:hover {
-    border-color: #EC2A1A;
-    background: transparent;
-    box-shadow: none;
-}
-
-.tier-range {
-    font-family: "Noto Sans", sans-serif;
-    font-size: 18px;
-    font-weight: 400;
-    color: var(--black-color, #333);
-    margin-bottom: 0;
-    text-transform: none;
-    letter-spacing: 0;
-    flex: 1;
-}
-
-.tier-price {
-    font-family: "Geologica", sans-serif;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--black-color, #333);
-    margin-left: auto;
-    text-align: right;
-    display: inline;
-}
-
-.tier-price-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-left: auto;
-}
-
-.tier-price .currency {
-    font-size: 16px;
-}
-
-.tier-period {
-    font-family: "Noto Sans", sans-serif;
-    font-size: 12px;
-    color: #999;
-    margin-top: 2px;
-    margin-left: 0;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    text-transform: uppercase;
-}
-
-.gst-notice {
-    display: block;
-    text-align: center;
-    color: #999;
-    font-size: 12px;
-    margin-top: 30px;
-    font-style: normal;
-    font-family: "Noto Sans", sans-serif;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    line-height: 1.8;
-}
-
-.proceed-checkout-btn {
-    background: #EC2A1A;
-    color: var(--white-color, #fff);
-    border: none;
-    outline: none;
-    padding: 20px 50px;
-    font-family: "Noto Sans", sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    margin-top: 40px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 6px 20px rgba(236, 24, 22, 0.3);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-}
-
-.checkout-btn-wrapper {
-    width: 100%;
-    max-width: 100%;
-}
-
-.proceed-checkout-btn::after {
-    content: '→';
-    font-size: 22px;
-    font-weight: 700;
-    transition: transform 0.3s ease;
-}
-
-.proceed-checkout-btn:hover {
-    color: #F5C3AA;
-    /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); */
-    /* transform: translateY(-3px); */
-}
-
-.proceed-checkout-btn:hover::after {
-    transform: translateX(5px);
-}
-
-.proceed-checkout-btn:active {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(236, 24, 22, 0.3);
-}
-
-.subscription-section {
-    background: var(--white-color, #fff);
-    border-radius: 12px;
-    padding: 60px 50px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    margin-bottom: 40px;
-    border: 1px solid #f0f0f0;
-}
-
-.subscription-section h2 {
-    font-family: "Geologica", sans-serif;
-    font-size: 36px;
-    font-weight: 700;
-    color: var(--black-color, #333);
-    margin-bottom: 50px;
-    text-align: center;
-    letter-spacing: -0.3px;
-}
-
-.two-column-layout {
-    display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 40px;
-    align-items: start;
-}
-
-@media (max-width: 968px) {
-    .two-column-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .pricing-sidebar {
-        order: -1;
-    }
-}
-
-.left-column {
-    flex: 1;
-}
-
-.pricing-sidebar {
-    position: sticky;
-    top: 20px;
-}
-
-.quantity-selector {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.quantity-selector label {
-    display: block;
+.seat-range {
     font-family: "Geologica", sans-serif;
     font-size: 20px;
-    font-weight: 600;
-    color: var(--black-color, #333);
-    margin-bottom: 25px;
-    letter-spacing: -0.2px;
-}
-
-.quantity-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-}
-
-.quantity-input {
-    width: 130px;
-    padding: 16px 20px;
-    font-family: "Geologica", sans-serif;
-    font-size: 26px;
     font-weight: 700;
-    text-align: center;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    background: #fafafa;
+    color: var(--text);
 }
 
-.quantity-input:focus {
-    outline: none;
-    border-color: #EC2A1A;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(236, 24, 22, 0.1);
-}
-
-.quick-add-btn {
-    background: #fafafa;
-    border: 2px solid #ddd;
-    color: var(--black-color, #333);
-    padding: 12px 24px;
-    font-family: "Noto Sans", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: capitalize;
-}
-
-.quick-add-btn:hover {
-    background: #EC2A1A;
-    color: var(--white-color, #fff);
-    border-color: #EC2A1A;
-    box-shadow: 0 4px 12px rgba(236, 24, 22, 0.2);
-}
-
-.price-display {
-    background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
-    border: 1px solid #e8e8e8;
-    border-radius: 12px;
-    padding: 35px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.price-display.sidebar {
-    margin: 0;
-    position: sticky;
-    top: 100px;
-}
-
-.price-display h3 {
-    font-family: "Noto Sans", sans-serif;
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 18px;
-    font-weight: 400;
-    line-height: 1.6;
-    letter-spacing: 0.3px;
-}
-
-.price-display .total-price {
+.seat-price {
+    text-align: right;
     font-family: "Geologica", sans-serif;
-    font-size: 52px;
-    font-weight: 700;
-    color: #EC2A1A;
-    margin-bottom: 15px;
-    letter-spacing: -0.5px;
+    font-size: 22px;
+    font-weight: 750;
+    color: var(--text);
 }
 
-.price-display .total-price .currency {
-    font-size: 32px;
-}
-
-.price-display .price-breakdown {
-    font-family: "Noto Sans", sans-serif;
-    font-size: 13px;
-    color: #888;
-    margin-top: 15px;
-    font-weight: 400;
-    padding-top: 15px;
-    border-top: 1px solid #e8e8e8;
-}
-
-.form-section {
-    margin-top: 30px;
-}
-
-.form-section.hidden {
-    display: none;
-}
-
-.step-indicator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 50px;
-    padding: 30px;
-    background: #fafafa;
-    border-radius: 12px;
-}
-
-.step {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.step-number {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #e8e8e8;
-    color: #888;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: "Geologica", sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    transition: all 0.3s ease;
-}
-
-.step.active .step-number {
-    background: #EC2A1A;
-    color: var(--white-color, #fff);
-    box-shadow: 0 4px 12px rgba(236, 24, 22, 0.2);
-}
-
-.step.completed .step-number {
-    background: var(--black-color, #333);
-    color: var(--white-color, #fff);
-}
-
-.step-label {
-    font-family: "Noto Sans", sans-serif;
-    font-size: 14px;
-    color: #888;
-    font-weight: 600;
-    transition: color 0.3s ease;
-}
-
-.step.active .step-label {
-    color: #EC2A1A;
-}
-
-.step.completed .step-label {
-    color: var(--black-color, #333);
-}
-
-.step-divider {
-    width: 50px;
-    height: 2px;
-    background: #ddd;
-    transition: background 0.3s ease;
-}
-
-.continue-btn {
-    background: #EC2A1A;
-    color: var(--white-color, #fff);
-    border: none;
-    outline: none;
-    padding: 12px 30px;
-    font-family: "Noto Sans", sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    margin-top: 30px;
-    text-transform: capitalize;
-}
-
-.continue-btn:hover {
-    opacity: 0.7;
-}
-
-.continue-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    opacity: 1;
-}
-
-.form-group {
-    margin-bottom: 25px;
-}
-
-.form-group label {
+.seat-price .seat-period {
     display: block;
     font-family: "Noto Sans", sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--black-color, #333);
-    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="email"] {
-    width: 100%;
-    padding: 14px 16px;
-    font-family: "Noto Sans", sans-serif;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    background: #fafafa;
-}
-
-.form-group input[type="text"]:focus,
-.form-group input[type="email"]:focus {
-    outline: none;
-    border-color: #EC2A1A;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(236, 24, 22, 0.1);
-}
-
-.checkout-btn {
-    background: var(--black-color, #333);
-    color: var(--white-color, #fff);
-    border: none;
-    outline: none;
-    padding: 12px 30px;
-    font-family: "Noto Sans", sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    margin-top: 20px;
-    text-transform: capitalize;
-}
-
-.checkout-btn:hover {
-    opacity: 0.7;
-}
-
-.checkout-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    opacity: 1;
-}
-
-.info-notice {
-    background: #fafafa;
-    border-left: 4px solid #EC2A1A;
-    padding: 20px 24px;
-    margin: 40px 0;
-    border-radius: 10px;
+.price-footnote {
+    margin-top: 14px;
     text-align: center;
-    border: 1px solid #e8e8e8;
-}
-
-.info-notice p {
-    margin: 0;
-    color: var(--black-color, #333);
     font-family: "Noto Sans", sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    letter-spacing: 0.2px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.4px;
+    line-height: 1.6;
 }
 
-.error-message {
-    background: #fff5f5;
-    color: #c4001d;
-    padding: 14px 16px;
-    border-radius: 10px;
-    font-family: "Noto Sans", sans-serif;
-    font-size: 13px;
-    margin-top: 12px;
-    display: none;
-    border-left: 4px solid #c4001d;
-    border: 1px solid #ffe5e5;
+.checkout-inline {
+    margin-top: 16px;
 }
 
-.error-message.show {
-    display: block;
-}
-
-@media (max-width: 1200px) {
-    .corporate-subscription .container {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .purchase-box-layout {
+@media (max-width: 1024px) {
+    .layout {
         grid-template-columns: 1fr;
-        gap: 40px;
-    }
-
-    .purchase-box {
-        padding: 40px 30px;
-    }
-
-    .license-selector-section {
-        padding: 30px;
-    }
-
-    .final-price-section {
-        padding: 35px 30px;
     }
 }
 
 @media (max-width: 768px) {
     .corporate-subscription {
-        padding: 40px 0;
+        padding: 54px 0 64px;
     }
 
-    .corporate-header {
-        margin-bottom: 40px;
-        padding-bottom: 30px;
-    }
-
-    .corporate-header h1 {
-        font-size: 32px;
-        margin-bottom: 15px;
-    }
-
-    .corporate-header p {
-        font-size: 16px;
-        line-height: 1.6;
-    }
-
-    .purchase-box {
-        padding: 30px 20px;
-        margin-bottom: 40px;
-    }
-
-    .purchase-box-layout {
-        gap: 30px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .left-purchase-section {
-        gap: 30px;
-        order: 2;
-    }
-
-    .pricing-structure {
-        order: 1;
-    }
-
-    .checkout-btn-wrapper {
-        margin-top: 2em;
-        order: 3;
-    }
-
-    .license-selector-section {
-        padding: 25px 20px;
-    }
-
-    .license-selector-section label {
-        font-size: 18px;
-        margin-bottom: 20px;
-    }
-
-    .license-input {
-        font-size: 36px;
-        padding: 20px 24px;
-    }
-
-    .license-buttons-row {
-        gap: 8px;
-    }
-
-    .license-add-btn {
-        padding: 10px 18px;
-        font-size: 13px;
-    }
-
-    .license-info {
-        font-size: 12px;
-    }
-
-    .final-price-section {
-        padding: 30px 25px;
-        position: static;
-    }
-
-    .final-price-section h4 {
-        font-size: 12px;
-        margin-bottom: 18px;
-    }
-
-    .final-price-display {
+    .hero h1 {
         font-size: 38px;
     }
 
-    .final-price-display .currency {
-        font-size: 24px;
-    }
-
-    .final-price-note {
-        font-size: 11px;
-        line-height: 1.5;
-    }
-
-    .pricing-structure h2 {
-        font-size: 22px;
-        margin-bottom: 25px;
-    }
-
-    .pricing-tiers {
-        margin-bottom: 35px;
-    }
-
-    .pricing-tier-item {
+    .layout {
+        display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
-        padding: 20px 0;
+        gap: 18px;
     }
 
-    .tier-range {
-        font-size: 16px;
-        margin-bottom: 10px;
+    .price-card {
+        order: 1;
     }
 
-    .tier-price-wrapper {
-        align-items: flex-start;
-        margin-left: 0;
+    .card-primary {
+        order: 2;
     }
 
-    .tier-price {
-        margin-left: 0;
-        margin-top: 0;
-        font-size: 20px;
+    .checkout-inline {
+        order: 3;
     }
 
-    .tier-price .currency {
-        font-size: 14px;
+    .license-input {
+        /* max-width: 200px; */
+        font-size: 30px;
     }
 
-    .tier-period {
-        margin-left: 0;
-        margin-top: 2px;
-        white-space: normal;
-        font-size: 11px;
-    }
-
-    .gst-notice {
-        font-size: 11px;
-        margin-top: 20px;
-        line-height: 1.6;
-    }
-
-    .proceed-checkout-btn {
-        padding: 18px 35px;
-        font-size: 16px;
-        margin-top: 0;
-        letter-spacing: 0.8px;
-    }
-
-    .proceed-checkout-btn::after {
-        font-size: 20px;
+    .cta-primary {
+        font-size: 15px;
+        padding: 14px 16px;
     }
 }
 
 @media (max-width: 480px) {
-    .corporate-header h1 {
-        font-size: 26px;
+    .hero h1 {
+        font-size: 30px;
     }
 
-    .corporate-header p {
-        font-size: 14px;
+    .seat-range {
+        font-size: 18px;
     }
 
-    .purchase-box {
-        padding: 25px 15px;
-    }
-
-    .license-selector-section {
-        padding: 20px 15px;
-    }
-
-    .license-selector-section label {
-        font-size: 16px;
-    }
-
-    .license-input {
-        font-size: 32px;
-        padding: 18px 20px;
-    }
-
-    .license-buttons-row {
-        gap: 6px;
-    }
-
-    .license-add-btn {
-        padding: 8px 14px;
-        font-size: 12px;
-    }
-
-    .final-price-section {
-        padding: 25px 20px;
-    }
-
-    .final-price-display {
-        font-size: 32px;
-    }
-
-    .pricing-structure h2 {
+    .seat-price {
         font-size: 20px;
-    }
-
-    .tier-range {
-        font-size: 15px;
-    }
-
-    .tier-price {
-        font-size: 18px;
-    }
-
-    .proceed-checkout-btn {
-        padding: 16px 28px;
-        font-size: 14px;
-        letter-spacing: 0.6px;
-    }
-
-    .proceed-checkout-btn::after {
-        font-size: 18px;
     }
 }
 </style>
 
 <section class="corporate-subscription">
     <div class="container">
-        <div class="corporate-header">
+        <div class="hero">
             <h1>Corporate Subscription Plans</h1>
-            <p>Unlock comprehensive access to premium business journalism, in-depth analysis, and market intelligence
-                for your entire organization</p>
+            <p>Power every team with premium reporting, analysis, and market intelligence designed for decision-makers.
+            </p>
         </div>
 
-        <div class="purchase-box">
-            <div class="purchase-box-layout">
-                <!-- Left Column: License Selector + Final Price -->
-                <div class="left-purchase-section">
-                    <div>
-                        <div class="license-selector-section">
-                            <label>How many licenses do you require?</label>
-                            <div class="license-quantity-controls">
-                                <input type="number" id="numUsers" name="num_users" class="license-input" min="10"
-                                    value="10" required>
-                                <div class="license-buttons-row">
-                                    <button type="button" class="license-add-btn" data-add="5">+5</button>
-                                    <button type="button" class="license-add-btn" data-add="10">+10</button>
-                                    <button type="button" class="license-add-btn" data-add="25">+25</button>
-                                    <button type="button" class="license-add-btn" data-add="100">+100</button>
-                                </div>
-                            </div>
-                            <div class="license-info"><sup><strong>*</strong></sup>Minimum 10 licenses required</div>
+        <div class="layout">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3>Select seats & calculate</h3>
+                </div>
+                <form id="subscriptionForm" class="card-body" action="/buy-corporate-subscription/" method="GET">
+                    <div class="input-group">
+                        <span class="input-label">How many licenses do you require?</span>
+                        <input type="number" id="numUsers" name="num_users" class="license-input" min="10" value="10"
+                            required>
+                        <div class="button-row">
+                            <button type="button" class="license-add-btn" data-add="5">+5</button>
+                            <button type="button" class="license-add-btn" data-add="10">+10</button>
+                            <button type="button" class="license-add-btn" data-add="25">+25</button>
+                            <button type="button" class="license-add-btn" data-add="100">+100</button>
                         </div>
+                        <div class="helper-text">* Minimum 10 licenses required. Prices shown include all taxes.</div>
                     </div>
 
-                    <div class="final-price-section">
-                        <h4>Total Annual Cost</h4>
-                        <div class="final-price-display">
-                            <span class="currency">₹</span><span id="displayTotal">26,990</span>
+                    <div class="total-box">
+                        <h4>Total annual cost</h4>
+                        <div class="total-amount"><span class="currency">₹</span><span id="displayTotal">26,990</span>
                         </div>
-                        <div class="final-price-note">Prices include all taxes. No hidden charges.</div>
+                        <div class="total-note">Annual billing • No hidden charges • GST invoice issued</div>
                     </div>
-                </div>
 
-                <!-- Right Column: Price Structure -->
-                <div class="pricing-structure">
-                    <h2>Pricing Structure</h2>
-                    <div class="pricing-tiers">
-                        <div class="pricing-tier-item">
-                            <div class="tier-range">10 - 25 seats</div>
-                            <div class="tier-price-wrapper">
-                                <div class="tier-price"><span class="currency">₹</span> 2,699</div>
-                                <div class="tier-period">per seat / year</div>
-                            </div>
-                        </div>
-                        <div class="pricing-tier-item">
-                            <div class="tier-range">26 - 50 seats</div>
-                            <div class="tier-price-wrapper">
-                                <div class="tier-price"><span class="currency">₹</span> 2,299</div>
-                                <div class="tier-period">per seat / year</div>
-                            </div>
-                        </div>
-                        <div class="pricing-tier-item">
-                            <div class="tier-range">51 and above seats</div>
-                            <div class="tier-price-wrapper">
-                                <div class="tier-price"><span class="currency">₹</span> 1,799</div>
-                                <div class="tier-period">per seat / year</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <button type="submit" class="cta-primary">Proceed to Checkout <span
+                            aria-hidden="true">→</span></button>
+                </form>
             </div>
 
-            <div class="checkout-btn-wrapper">
-                <button type="button" class="proceed-checkout-btn" id="proceedCheckoutBtn">Proceed to Checkout</button>
+            <div class="card price-card">
+                <div class="card-header">
+                    <h3>Pricing Structure</h3>
+                </div>
+                <div class="card-body">
+                    <div class="price-list">
+                        <div class="price-row">
+                            <div class="seat-range">10 - 25 seats</div>
+                            <div class="seat-price">₹ 2,699<span class="seat-period">per seat / year</span></div>
+                        </div>
+                        <div class="price-row">
+                            <div class="seat-range">26 - 50 seats</div>
+                            <div class="seat-price">₹ 2,299<span class="seat-period">per seat / year</span></div>
+                        </div>
+                        <div class="price-row">
+                            <div class="seat-range">51+ seats</div>
+                            <div class="seat-price">₹ 1,799<span class="seat-period">per seat / year</span></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1042,20 +435,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const numUsersInput = document.getElementById('numUsers');
     const displayTotal = document.getElementById('displayTotal');
     const licenseAddBtns = document.querySelectorAll('.license-add-btn');
+    const subscriptionForm = document.getElementById('subscriptionForm');
 
-    // Quick add buttons
     licenseAddBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-            const addValue = parseInt(this.getAttribute('data-add'));
-            const currentValue = parseInt(numUsersInput.value) || 10;
+            const addValue = parseInt(this.getAttribute('data-add'), 10);
+            const currentValue = parseInt(numUsersInput.value, 10) || 10;
             numUsersInput.value = currentValue + addValue;
             calculatePrice();
         });
     });
 
     function calculatePrice() {
-        const numUsers = parseInt(numUsersInput.value) || 0;
-
+        const numUsers = parseInt(numUsersInput.value, 10) || 0;
         let pricePerPerson = 0;
 
         if (numUsers >= 10 && numUsers <= 25) {
@@ -1067,21 +459,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const totalAmount = numUsers * pricePerPerson;
-
-        // Update display - NO GST calculation
         displayTotal.textContent = totalAmount.toLocaleString('en-IN');
     }
 
-    // Initialize with default value
     calculatePrice();
-
     numUsersInput.addEventListener('input', calculatePrice);
     numUsersInput.addEventListener('change', calculatePrice);
+
+    subscriptionForm.addEventListener('submit', function() {
+        const rawValue = parseInt(numUsersInput.value, 10) || 0;
+        const clampedValue = Math.max(10, rawValue);
+        if (clampedValue !== rawValue) {
+            numUsersInput.value = clampedValue;
+            calculatePrice();
+        }
+    });
 });
 </script>
 
 <?php
-
 require_once 'footer.php';
-
 ?>
