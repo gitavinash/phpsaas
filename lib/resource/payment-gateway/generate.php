@@ -54,7 +54,7 @@ if (isset($id)) {
             break;
 
         default:
-            $query = "SELECT order_user_id as userId, order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT({$orderType}_title, ',') as cartProduct FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=" . SITE_ID . " AND order_cart_session_id=cart_session_id ORDER BY cart_updated DESC LIMIT 0,1";
+            $query = "SELECT order_user_id as userId, order_id, order_total_price, cart_currency, profile_mobile, profile_email, profile_display_name, GROUP_CONCAT({$orderType}_title, ',') as cartProduct FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id LEFT JOIN " . TABLE_PREFIX . "{$orderType} ON cart_relation_id={$orderType}_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=transaction_user_id WHERE transaction_id='{$id}' AND transaction_site_id=" . SITE_ID . " AND order_cart_session_id=cart_session_id ORDER BY cart_updated DESC LIMIT 0,1";
             break;
     }
 
@@ -86,17 +86,22 @@ if (isset($id)) {
 
             $paymentAmount = str_replace(",", "", number_format($paymentAmount, 2));
 
-            $cartProduct = rtrim($cartProduct, ",");
-
-            $pgFile = PAYMENT_GATEWAY . PG_NAME . '/' . ((isset($urlStructure[1])) ? $urlStructure[1] : 'generate') . '.php';
-
-            if (file_exists($pgFile)) {
-
-                require_once $pgFile;
-                exit();
+            if ($paymentAmount == 0) {
+                $msg = 'Payment amount cannot be zero';
             } else {
 
-                require_once SYSTEM_THEME . 'payment-gateway-file-missing.php';
+                $cartProduct = (($cartProduct != '') ? $cartProduct : 'Purchase of #' . $order_id);
+
+                $pgFile = PAYMENT_GATEWAY . PG_NAME . '/' . ((isset($urlStructure[1])) ? $urlStructure[1] : 'generate') . '.php';
+
+                if (file_exists($pgFile)) {
+
+                    require_once $pgFile;
+                    exit();
+                } else {
+
+                    require_once SYSTEM_THEME . 'payment-gateway-file-missing.php';
+                }
             }
         } else {
 
@@ -110,5 +115,9 @@ if (isset($id)) {
     $msg = 'No transaction id found';
 }
 
-echo $msg;
+if (DEVELOPMENT_MODE == true) {
+    echo $query;
+} else {
+    echo '<h2>' . $msg . '</h2>';
+}
 exit();
