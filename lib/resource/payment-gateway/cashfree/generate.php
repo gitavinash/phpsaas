@@ -32,8 +32,8 @@ if (DEVELOPMENT_MODE == false) {
         $requestUrl = 'https://api.cashfree.com/pg/orders';
     }
 
-    $siteApp = ((isset($app)) ? $app : 'default');
-    $pgRequestType = ((isset($pgRequestType)) ? $pgRequestType : 'default');
+    $siteApp = ((isset($app)) ? trim($app) : 'default');
+    $pgRequestType = ((isset($pgRequestType)) ? trim($pgRequestType) : 'default');
     $order_id = ((isset($customOrderId)) ? $customOrderId : $order_id . '_' . time());
 
     $data = [
@@ -48,7 +48,15 @@ if (DEVELOPMENT_MODE == false) {
         "order_currency" => ((strtolower($country) == 'india') ? 'INR' : 'USD'),
         "order_note" => $cartProduct,
         "order_meta" => array(
-            "return_url" => ((!isset($customRedirection)) ? SITE_URL . '/payment/status/?orderId=' . base64_encode($order_id) . '&app=' . $siteApp . '&orderType=' . $pgRequestType : $customRedirection)
+            "return_url" => (
+                (!isset($customRedirection) || empty($customRedirection))
+                ? rtrim(SITE_URL, '/') . '/payment/status/?' . http_build_query([
+                    'orderId' => base64_encode($order_id),
+                    'app' => $siteApp,
+                    'orderType' => $pgRequestType,
+                ])
+                : $customRedirection
+            )
         )
     ];
 
