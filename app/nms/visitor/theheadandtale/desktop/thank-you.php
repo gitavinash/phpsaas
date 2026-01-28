@@ -54,6 +54,7 @@ if ($checkTransaction = mysqli_query($connection, $transactionQuery)) {
         }
     } else {
         echo "Invalid transaction found";
+        exit();
     }
 } else {
     echo mysqli_error($connection);

@@ -39,7 +39,7 @@ if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, ord
 
         if ($cartInfo = mysqli_query($connection, $cartQuery)) {
             if (mysqli_num_rows($cartInfo) == 0) {
-                echo "Empty cart";
+                echo "Empty shipping cart";
                 exit();
             } else {
                 $inventory_currency_symbol = ((isset($inventory_currency_symbol)) ? $inventory_currency_symbol : '₹');
@@ -48,7 +48,13 @@ if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, ord
             }
         } else {
             echo "Something went wrong while trying to fetch cart data";
+            exit();
         }
+    } else {
+        if (DEVELOPMENT_MODE == true) {
+            echo "SELECT order_cart_session_id, order_total_price, order_currency, cart_relation_type FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "cart ON cart_session_id=order_cart_session_id WHERE order_id='{$orderId}' AND order_status=0 AND order_site_id=" . SITE_ID . " ORDER BY cart_updated DESC";
+        }
+        exit();
     }
 } else {
     echo "Something went wrong";

@@ -21,7 +21,6 @@ if (DEVELOPMENT_MODE == false) {
     <h1>Redirecting to payment gateway</h1>
     <?php
 
-
     /** Start payment gateway code */
 
     $curl = curl_init();

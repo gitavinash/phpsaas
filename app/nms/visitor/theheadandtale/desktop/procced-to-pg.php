@@ -99,7 +99,7 @@ if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, ord
 
                                                     $siteApp = ((isset($app)) ? $app : 'default');
                                                     $pgRequestType = ((isset($pgRequestType)) ? $pgRequestType : 'default');
-                                                    $url = '/payment/generate/?id=' . $transaction_id . '&pg_type=order&app=' . str_replace(' ', '', $siteApp) . ' &pgRequestType=' . str_replace(' ', '', $pgRequestType);
+                                                    $url = '/payment/generate/?id=' . $transaction_id . '&pg_type=order&app=' . str_replace(' ', '', $siteApp) . ' &pgRequestType=' . str_replace(' ', '', $pgRequestType) . '&customRedirection=' . rtrim(SITE_URL, '/') . '/corporate-subscription-status/?orderId=' . base64_encode($transaction_id);
                                                     header('Location: ' . $url, true, 301);
                                                 }
                                             }
