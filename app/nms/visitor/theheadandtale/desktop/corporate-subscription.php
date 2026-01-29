@@ -408,14 +408,14 @@ require_once 'header.php';
 }
 </style>
 
-<section class="corporate-page">
+<section class="corporate-page" style="background-color: #fff9f9; color: gray;">
     <div class="subscribe_wrapper__heading">
         <h1>Corporate Subscription Plans</h1>
         <p>Power your team with independent reporting, sharp analysis, and market intelligence on money and technology.
         </p>
     </div>
 </section>
-<section class="corporate-page">
+<section class="corporate-page" style="background-color: #fff9f9; color:graygray">
     <div class="corporate-inner">
 
 
@@ -443,24 +443,24 @@ require_once 'header.php';
                 </div>
 
                 <div class="tiers">
-                    <div class="tier">
+                    <div class="tier" style="background-color: #fdf6f5;">
                         <div>
                             <span>10 – 25 seats</span>
-                            <strong>₹2,699</strong>
+                            <strong>₹2,799</strong>
                             <small>per seat / year</small>
                         </div>
                     </div>
-                    <div class="tier">
+                    <div class="tier" style="background-color: #fdf6f5;">
                         <div>
                             <span>26 – 50 seats</span>
-                            <strong>₹2,299</strong>
+                            <strong>₹2,399</strong>
                             <small>per seat / year</small>
                         </div>
                     </div>
-                    <div class="tier">
+                    <div class="tier" style="background-color: #fdf6f5;">
                         <div>
                             <span>51+ seats</span>
-                            <strong>₹1,799</strong>
+                            <strong>₹1,899</strong>
                             <small>per seat / year</small>
                         </div>
                     </div>

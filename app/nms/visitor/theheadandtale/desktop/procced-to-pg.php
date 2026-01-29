@@ -99,21 +99,18 @@ if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, ord
 
                                                     $siteApp = ((isset($app)) ? $app : 'default');
                                                     $pgRequestType = ((isset($pgRequestType)) ? $pgRequestType : 'default');
-                                                    $url = '/payment/generate/?id=' . $transaction_id . '&pg_type=order&app=' . str_replace(' ', '', $siteApp) . ' &pgRequestType=' . str_replace(' ', '', $pgRequestType) . '&customRedirection=' . rtrim(SITE_URL, '/') . '/corporate-subscription-status/?orderId=' . base64_encode($transaction_id);
+                                                    $url = '/payment/generate/?id=' . $transaction_id . '&pg_type=order&app=' . str_replace(' ', '', $siteApp) . ' &pgRequestType=' . str_replace(' ', '', $pgRequestType) . '&customRedirection=' . rtrim(SITE_URL, '/') . '/corporate-subscription-status/';
                                                     header('Location: ' . $url, true, 301);
                                                 }
                                             }
                                         }
                                     } else {
-
                                         echo 'Please select payment mode';
                                     }
                                 } else {
-
                                     echo 'Coupon code is invalid';
                                 }
                             } else {
-
                                 echo 'Cart is empty or something is wrong';
                             }
                         }
