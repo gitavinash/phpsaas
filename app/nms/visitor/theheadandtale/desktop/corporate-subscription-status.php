@@ -12,7 +12,10 @@ $order_id = $orderData[0];
 
 // Fetch payment status from Cashfree
 $cashfreeStatus = getCashfreePaymentStatus($orderId);
-// print_r($cashfreeStatus);
+
+$paymentStatus = $cashfreeStatus['order_status'] ?? 'UNKNOWN';
+$paymentSessionId = $cashfreeStatus['payment_session_id'] ?? '';
+
 function getCashfreePaymentStatus($orderId)
 {
     // Determine API endpoint based on environment
@@ -73,12 +76,12 @@ function getCashfreePaymentStatus($orderId)
 }
 
 $transactionQuery
-    = "SELECT transaction_id, transaction_status, transaction_user_id, transaction_type, order_msg FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id WHERE transaction_order_id=" . $order_id . " AND transaction_payment_id='" . $cashfreeStatus['payment_session_id'] . "' AND order_site_id=" . SITE_ID . "  AND transaction_site_id=" . SITE_ID;
+    = "SELECT transaction_id, transaction_status, transaction_user_id, transaction_type, order_msg FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id WHERE transaction_order_id=" . $order_id . " AND transaction_payment_id='" . $paymentSessionId . "' AND order_site_id=" . SITE_ID . "  AND transaction_site_id=" . SITE_ID;
 
 if ($checkTransaction = mysqli_query($connection, $transactionQuery)) {
     if (mysqli_num_rows($checkTransaction) != 0) {
         extract(mysqli_fetch_assoc($checkTransaction));
-        if ($cashfreeStatus['order_status'] == 'PAID') {
+        if ($paymentStatus == 'PAID') {
             echo "UPDATE " . TABLE_PREFIX . "transaction SET transaction_status=1 WHERE transaction_id='{$transaction_id}' AND transaction_site_id=" . SITE_ID;
             exit();
             // Update transaction status to completed
@@ -104,7 +107,7 @@ require_once 'header.php';
         <div class="thankyou_wrapper__content" style="margin-bottom: 200px">
             <?php
 
-            if (strtolower($cashfreeStatus['order_status']) == 'paid') { ?>
+            if (strtolower($paymentStatus) == 'paid') { ?>
             <h1>Thank You for Purchase!</h1>
             <p>Thank you for choosing to read an article from The Head and Tale. We hope you enjoyed it!</p>
             <p>We’re glad to have you with us and invite you to explore more of our thought-provoking content, exclusive
