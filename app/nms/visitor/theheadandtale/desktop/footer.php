@@ -49,6 +49,7 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
                             <a href="/refund-policy/">refund policy</a>
                             <a href="/partner-insights-guidelines/">partner insights guidelines</a>
                             <a href="/subscribe/" class="subscribe_btn">subscribe</a>
+                            <a href="/corporate-subscription/">Corporate Subscription</a>
                         </div>
                     </div>
                 </div>
