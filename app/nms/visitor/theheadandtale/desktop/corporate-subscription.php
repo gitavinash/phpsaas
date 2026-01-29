@@ -646,9 +646,9 @@ const plusBtn = document.getElementById("plusBtn");
 const chips = document.querySelectorAll(".chips button");
 
 function priceForSeats(n) {
-    if (n <= 25) return 2699;
-    if (n <= 50) return 2299;
-    return 1799;
+    if (n <= 25) return 2799;
+    if (n <= 50) return 2399;
+    return 1899;
 }
 
 function calculate() {
