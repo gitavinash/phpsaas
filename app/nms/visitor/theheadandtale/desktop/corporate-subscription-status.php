@@ -76,19 +76,54 @@ function getCashfreePaymentStatus($orderId)
 }
 
 $transactionQuery
-    = "SELECT transaction_id, transaction_status, transaction_user_id, transaction_type, order_msg FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id WHERE transaction_order_id=" . $order_id . " AND transaction_payment_id='" . $paymentSessionId . "' AND order_site_id=" . SITE_ID . "  AND transaction_site_id=" . SITE_ID;
+    = "SELECT transaction_id, transaction_status, transaction_user_id, transaction_type, order_msg FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id WHERE transaction_id=" . base64_decode($tid) . " AND order_site_id=" . SITE_ID . "  AND transaction_site_id=" . SITE_ID;
 
 if ($checkTransaction = mysqli_query($connection, $transactionQuery)) {
     if (mysqli_num_rows($checkTransaction) != 0) {
         extract(mysqli_fetch_assoc($checkTransaction));
-        if ($paymentStatus == 'PAID') {
-            echo "UPDATE " . TABLE_PREFIX . "transaction SET transaction_status=1 WHERE transaction_id='{$transaction_id}' AND transaction_site_id=" . SITE_ID;
+        if ($transaction_status == 1) {
+            // Transaction already completed
+            echo "<h1>Transaction is already acknowledged</h1>";
+            echo "<p>Redirecting to manage subscribers in 2 seconds...</p>";
+            echo "<p><a href='/manage-subscribers/'>Click here if not redirected automatically</a></p>";
+            header("Refresh: 2; url=/manage-subscribers/");
             exit();
-            // Update transaction status to completed
-            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "transaction SET transaction_status=3 WHERE transaction_id='{$transaction_id}' AND transaction_site_id=" . SITE_ID);
+        } else {
+            if ($paymentStatus == 'PAID') {
+
+                $updateQuery = "UPDATE " . TABLE_PREFIX . "transaction SET transaction_status=1 WHERE transaction_id='{$transaction_id}' AND transaction_site_id=" . SITE_ID;
+                if (!mysqli_query($connection, $updateQuery)) {
+                    if (DEVELOPMENT_MODE == true) {
+                        echo mysqli_error($connection);
+                    } else {
+                        echo "Something went wrong";
+                        exit();
+                    }
+                }
+
+                // Send confirmation email to user
+
+                // Update corporate subscription status
+
+                $addCorpSubscriptionQuery
+                    = "INSERT INTO " . TABLE_PREFIX . "corporate_subscription (cp_site_id, cp_admin_user_id, cp_used, cp_limit, cp_expiry) VALUES (" . SITE_ID . ", {$transaction_user_id}, 0, {$order_msg}, DATE_ADD(CURDATE(), INTERVAL 1 YEAR))";
+
+                if (!mysqli_query($connection, $addCorpSubscriptionQuery)) {
+                    if (DEVELOPMENT_MODE == true) {
+                        echo mysqli_error($connection);
+                    } else {
+                        echo "Something went wrong";
+                        exit();
+                    }
+                }
+            }
         }
     } else {
-        echo "Invalid transaction found";
+        if (DEVELOPMENT_MODE == true) {
+            echo $transactionQuery;
+        } else {
+            echo "Invalid transaction found";
+        }
         exit();
     }
 } else {
@@ -110,9 +145,16 @@ require_once 'header.php';
             if (strtolower($paymentStatus) == 'paid') { ?>
             <h1>Thank You for Purchase!</h1>
             <p>Thank you for choosing to read an article from The Head and Tale. We hope you enjoyed it!</p>
-            <p>We’re glad to have you with us and invite you to explore more of our thought-provoking content, exclusive
+            <p>We're glad to have you with us and invite you to explore more of our thought-provoking content, exclusive
                 news, and in-depth reports. If you have any questions, feedback, or suggestions, please feel free to
-                contact us at <a href="mailto: info@theheadandtale.com">info@theheadandtale.com</a>.</p>
+                contact us at <a href="mailto:info@theheadandtale.com">info@theheadandtale.com</a>.</p>
+            <p style="margin-top: 20px; color: #666;"><em>Redirecting to manage subscribers in 5 seconds...</em></p>
+            <p><a href="/manage-subscribers/">Click here if not redirected automatically</a></p>
+            <script>
+            setTimeout(function() {
+                window.location.href = '/manage-subscribers/';
+            }, 5000);
+            </script>
             <?php
             } else { ?>
             <h1>Payment Failed</h1>

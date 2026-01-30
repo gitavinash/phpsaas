@@ -54,7 +54,7 @@ if (DEVELOPMENT_MODE == false) {
                     'app' => $siteApp,
                     'orderType' => $pgRequestType,
                 ])
-                : $customRedirection . '?orderId=' . base64_encode($order_id)
+                : $customRedirection . '&orderId=' . base64_encode($order_id)
             )
         )
     ];

@@ -1,6 +1,16 @@
 <?php
 
 require_once LOGIN_CHECK;
+
+if ($checkSubscription = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "corporate_subscription WHERE cp_admin_user_id=" . USER_ID . " AND cp_site_id=" . SITE_ID)) {
+    if (mysqli_num_rows($checkSubscription) != 0) {
+        $subscriptionStatus = 'active';
+        extract(mysqli_fetch_assoc($checkSubscription));
+    } else {
+        $subscriptionStatus = 'inactive';
+    }
+}
+
 require_once 'header.php';
 
 // Sample data; replace with real data source.
@@ -390,6 +400,9 @@ table.subs-table th {
 }
 </style>
 
+<?php
+
+if ($subscriptionStatus == 'active') { ?>
 <section class="page-shell">
     <div class="page-wrap">
         <div class="hero">
@@ -430,11 +443,11 @@ table.subs-table th {
                         <div class="metric-label">Utilization</div>
                         <div class="metric-value">
                             <?php
-                            $util = $planSummary['total_licenses'] > 0
-                                ? round(($planSummary['active_licenses'] / $planSummary['total_licenses']) * 100)
-                                : 0;
-                            echo h((string)$util) . '%';
-                            ?>
+                                $util = $planSummary['total_licenses'] > 0
+                                    ? round(($planSummary['active_licenses'] / $planSummary['total_licenses']) * 100)
+                                    : 0;
+                                echo h((string)$util) . '%';
+                                ?>
                         </div>
                     </div>
                 </div>
@@ -538,3 +551,25 @@ table.subs-table th {
         </div>
     </div>
 </section>
+<?php
+} else {
+?>
+<section class="page-shell">
+    <div class="page-wrap">
+        <div class="panel" style="text-align: center; padding: 60px 20px;">
+            <h2>No Active Corporate Subscription</h2>
+            <br />
+            <p style="color: var(--muted); margin-bottom: 20px;">It seems you do not have an active corporate
+                subscription. To access all features, please consider purchasing a subscription. You will be redirected
+                to the subscription page shortly...</p>
+        </div>
+    </div>
+</section>
+<script>
+setTimeout(() => {
+    window.location.href = '/corporate-subscription/';
+}, 3000);
+</script>
+<?php
+}
+require_once 'footer.php';
