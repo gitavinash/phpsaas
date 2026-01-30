@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         if (mysqli_num_rows($checkSubscription) > 0) {
                             $msg = 'This email is already subscribed';
                         } else {
-                            $insertSubscription = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_user_id, subscription_refer_by, subscription_site_id, subscription_status, subscription_expiry) VALUES ({$user_id}, " . USER_ID . "," . SITE_ID . ", 1, '{$cp_expiry}')");
+                            $insertSubscription = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_user_id, subscription_refer_by, subscription_site_id, subscription_relation_id, subscription_mode, subscription_type, subscription_status, subscription_expiry) VALUES ({$user_id}, " . USER_ID . "," . SITE_ID . ", '4076', 'year', 'product', 1, '{$cp_expiry}')");
 
                             $deductCredit = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "corporate_subscription SET cp_used=cp_used+1 WHERE cp_admin_user_id='" . USER_ID . "' AND cp_site_id=" . SITE_ID . " AND cp_used<cp_limit");
 
