@@ -17,12 +17,12 @@ if (isset($_COOKIE['user_data'])) {
     function get_price_per_seat(int $seats): int
     {
         if ($seats >= 51) {
-            return 1799;
+            return 1899;
         }
         if ($seats >= 26) {
-            return 2299;
+            return 2399;
         }
-        return 2699;
+        return 2799;
     }
 
     $minSeats = 10;
