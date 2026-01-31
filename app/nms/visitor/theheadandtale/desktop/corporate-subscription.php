@@ -412,6 +412,7 @@ require_once 'header.php';
     .subscribe_wrapper__heading h1 {
         float: left;
         width: 100%;
+        font-size: 22px;
         color: #333 !important;
         text-align: center;
     }
@@ -419,9 +420,9 @@ require_once 'header.php';
     .subscribe_wrapper__heading p {
         float: left;
         width: 100%;
-        font-size: 16px;
+        font-size: 14px;
         margin-top: 10px !important;
-        line-height: 28px;
+        line-height: 22px;
         text-align: center;
     }
 
@@ -561,7 +562,8 @@ require_once 'header.php';
                         <h4>3. Minimum Seats & Eligibility</h4>
                         <ul>
                             <li>Standard corporate plans start at a minimum of 10 seats.</li>
-                            <li>Small businesses seeking fewer than 10 seats may submit an enquiry, which will be
+                            <li>Small businesses seeking fewer than 10 seats may submit an enquiry to <a
+                                    href='mailto:info@theheadandtale.com'>info@theheadandtale.com</a>, which will be
                                 reviewed on a
                                 case-by-case basis.</li>
                             <li>Approval of such requests is at the sole discretion of The Head and Tale.</li>
@@ -618,7 +620,9 @@ require_once 'header.php';
                         <ul>
                             <li>Corporate subscriptions are billed annually.</li>
                             <li>Pricing is calculated on a per-seat, per-year basis.</li>
-                            <li>For GST invoices, please write to us at info@theheadandtale.com. It will be issued
+                            <li>For GST invoices, please write to us at <a
+                                    href="mailto:info@theheadandtale.com">info@theheadandtale.com</a>. It will be
+                                issued
                                 within 48 hours.
                             </li>
                             <li>Full payment must be made in advance for activation.</li>
@@ -657,7 +661,8 @@ require_once 'header.php';
 
                         <h4>13. Contact</h4>
                         <p>For corporate subscription queries, seat transfers, or access issues, contact:</p>
-                        <div class="contact-info">info@theheadandtale.com</div>
+                        <div class="contact-info"><a href='mailto:info@theheadandtale.com'>info@theheadandtale.com</a>
+                        </div>
                     </div>
 
                 </div>
