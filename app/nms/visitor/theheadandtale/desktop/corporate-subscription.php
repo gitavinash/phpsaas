@@ -398,6 +398,7 @@ require_once 'header.php';
 
 .subscribe_wrapper__heading h1 {
     font-weight: 600 !important;
+    color: #333;
 }
 
 .subscribe_wrapper__heading p {
@@ -405,6 +406,32 @@ require_once 'header.php';
     font-weight: 400;
     font-size: 18px;
     line-height: 42px;
+}
+
+@media screen and (max-width: 768px) {
+    .subscribe_wrapper__heading h1 {
+        float: left;
+        width: 100%;
+        text-align: center;
+    }
+
+    .subscribe_wrapper__heading p {
+        float: left;
+        width: 100%;
+        font-size: 16px;
+        margin-top: 10px !important;
+        line-height: 28px;
+        text-align: center;
+    }
+
+    .total-bar {
+        float: left;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 9999;
+    }
 }
 </style>
 
