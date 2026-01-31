@@ -534,13 +534,15 @@ if ($subscriptionStatus == 'active') { ?>
                 </div>
                 <div class="panel-body">
                     <div class="filters">
-                        <input type="search" name="q" placeholder="Search by name or email">
-                        <select name="status_filter">
+                        <input type="search" id="subscriberSearch" name="q" placeholder="Search by name or email">
+                        <select id="statusFilter" name="status_filter">
                             <option value="">All statuses</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
                         </select>
-                        <select name="per_page">
+                        <select id="perPageSelect" name="per_page">
+                            <option value="5" selected>5 per page</option>
                             <option value="20">20 per page</option>
                             <option value="50">50 per page</option>
                             <option value="100">100 per page</option>
@@ -566,13 +568,16 @@ if ($subscriptionStatus == 'active') { ?>
 
                                         switch ($sub['subscription_status']) {
                                             case '1':
-                                                $isActive = 'Active';
+                                                $statusKey = 'active';
+                                                $statusLabel = 'Active';
                                                 break;
                                             case '0':
-                                                $isActive = 'Inactive';
+                                                $statusKey = 'inactive';
+                                                $statusLabel = 'Inactive';
                                                 break;
                                             default:
-                                                $isActive = 'Pending';
+                                                $statusKey = 'pending';
+                                                $statusLabel = 'Pending';
                                         }
 
                                     ?>
@@ -586,8 +591,10 @@ if ($subscriptionStatus == 'active') { ?>
                                     </td>
                                     <td><?php echo $sub['profile_email']; ?></td>
                                     <td>
-                                        <span
-                                            class="badge <?php echo $isActive ? 'active' : 'inactive'; ?>"><?php echo $isActive ? 'Active' : 'Inactive'; ?></span>
+                                        <span class="badge <?php echo $statusKey; ?>"
+                                            data-status="<?php echo $statusKey; ?>">
+                                            <?php echo $statusLabel; ?>
+                                        </span>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -599,10 +606,8 @@ if ($subscriptionStatus == 'active') { ?>
                         <span>Page <?php echo $currentPage; ?> of
                             <?php echo $totalPages; ?></span>
                         <div class="pager-buttons">
-                            <button class="pager-btn" id="prevBtn" onclick="goToPreviousPage()"
-                                <?php echo $currentPage <= 1 ? 'disabled' : ''; ?>>← Prev</button>
-                            <button class="pager-btn" id="nextBtn" onclick="goToNextPage()"
-                                <?php echo $currentPage >= $totalPages ? 'disabled' : ''; ?>>Next →</button>
+                            <button class="pager-btn" id="prevBtn" onclick="goToPreviousPage()" disabled>← Prev</button>
+                            <button class="pager-btn" id="nextBtn" onclick="goToNextPage()" disabled>Next →</button>
                         </div>
                     </div>
                 </div>
@@ -610,6 +615,90 @@ if ($subscriptionStatus == 'active') { ?>
         </div>
     </div>
 </section>
+
+<script>
+(() => {
+    const searchInput = document.getElementById('subscriberSearch');
+    const statusFilter = document.getElementById('statusFilter');
+    const perPageSelect = document.getElementById('perPageSelect');
+    const tableBody = document.querySelector('.subs-table tbody');
+    const pageLabel = document.querySelector('.pagination span');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    if (!tableBody) return;
+
+    const allRows = Array.from(tableBody.querySelectorAll('tr'));
+    let filteredRows = [...allRows];
+    let currentPage = 1;
+
+    const getPerPage = () => parseInt(perPageSelect.value, 10) || 5;
+
+    const applyFilters = () => {
+        const query = (searchInput.value || '').trim().toLowerCase();
+        const status = statusFilter.value;
+
+        filteredRows = allRows.filter(row => {
+            const name = row.querySelector('.name-cell')?.textContent?.toLowerCase() || '';
+            const email = row.children[1]?.textContent?.toLowerCase() || '';
+            const rowStatus = row.querySelector('[data-status]')?.getAttribute('data-status') || '';
+
+            const matchesQuery = query === '' || name.includes(query) || email.includes(query);
+            const matchesStatus = status === '' || rowStatus === status;
+            return matchesQuery && matchesStatus;
+        });
+
+        currentPage = 1;
+        renderPage();
+    };
+
+    const renderPage = () => {
+        const perPage = getPerPage();
+        const totalPages = Math.max(1, Math.ceil(filteredRows.length / perPage));
+        currentPage = Math.min(currentPage, totalPages);
+
+        allRows.forEach(row => row.style.display = 'none');
+
+        const start = (currentPage - 1) * perPage;
+        const end = start + perPage;
+        filteredRows.slice(start, end).forEach(row => {
+            row.style.display = '';
+        });
+
+        if (pageLabel) {
+            pageLabel.textContent = `Page ${currentPage} of ${totalPages}`;
+        }
+
+        prevBtn.disabled = currentPage <= 1;
+        nextBtn.disabled = currentPage >= totalPages;
+    };
+
+    window.goToPreviousPage = () => {
+        if (currentPage > 1) {
+            currentPage -= 1;
+            renderPage();
+        }
+    };
+
+    window.goToNextPage = () => {
+        const perPage = getPerPage();
+        const totalPages = Math.max(1, Math.ceil(filteredRows.length / perPage));
+        if (currentPage < totalPages) {
+            currentPage += 1;
+            renderPage();
+        }
+    };
+
+    searchInput.addEventListener('input', applyFilters);
+    statusFilter.addEventListener('change', applyFilters);
+    perPageSelect.addEventListener('change', () => {
+        currentPage = 1;
+        renderPage();
+    });
+
+    applyFilters();
+})();
+</script>
 
 <?php
 } else {
