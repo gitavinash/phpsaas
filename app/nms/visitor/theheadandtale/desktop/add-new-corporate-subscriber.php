@@ -7,6 +7,8 @@ $icon = 'error';
 $title = 'Error';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     if ($name == '') {
         $msg = 'Name is required';
     } elseif ($email == '') {
