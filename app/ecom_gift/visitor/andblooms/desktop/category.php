@@ -13,12 +13,12 @@ if (empty($bannerImage) && !empty($categorySinglePost) && is_array($categorySing
 ?>
 
 <!-- Banner with Breadcrumb -->
-<div class="relative h-[280px] w-full mb-8 mt-16">
+<div class="relative h-[280px] w-full mb-8 mt-16 overflow-hidden">
     <?php if (!empty($bannerImage)) { ?>
     <?php
         $bannerStyle = "background-image: url('{$bannerImage}');";
         if ($bannerFromProduct) {
-            $bannerStyle .= ' filter: blur(10px); transform: scale(1.05);';
+            $bannerStyle .= ' filter: blur(05px); transform: scale(1.05);';
         }
         ?>
     <div style="<?= $bannerStyle ?>" class="absolute inset-0 bg-cover bg-center"></div>
