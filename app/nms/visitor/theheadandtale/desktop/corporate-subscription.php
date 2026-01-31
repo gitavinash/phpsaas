@@ -398,7 +398,7 @@ require_once 'header.php';
 
 .subscribe_wrapper__heading h1 {
     font-weight: 600 !important;
-    color: #333;
+    color: #333 !important;
 }
 
 .subscribe_wrapper__heading p {
@@ -412,6 +412,7 @@ require_once 'header.php';
     .subscribe_wrapper__heading h1 {
         float: left;
         width: 100%;
+        color: #333 !important;
         text-align: center;
     }
 
