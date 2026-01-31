@@ -25,7 +25,7 @@
     }
 
     // Execute query first to get products
-    $query = "SELECT link_url, product_id, product_title, product_image, inventory_currency_symbol, inventory_price, inventory_mrp, inventory_in_stock 
+    $query = "SELECT link_url, link_published, product_id, product_title, product_image, inventory_currency_symbol, inventory_price, inventory_mrp, inventory_in_stock 
           FROM " . TABLE_PREFIX . "link 
           INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id 
           INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id 
@@ -113,6 +113,8 @@
                     <?php if ($inventory_in_stock == 0): ?>
                     <div class="absolute top-3 left-3 bg-red-600 text-white text-xs px-3 py-1 rounded">Out of Stock
                     </div>
+                    <?php elseif (strtotime($link_published) > strtotime('-1 month')): ?>
+                    <div class="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded">New</div>
                     <?php endif; ?>
                     <?php if ($discount > 0): ?>
                     <div class="absolute top-3 right-3 bg-green-600 text-white text-xs px-3 py-1 rounded">
