@@ -459,8 +459,8 @@ if ($subscriptionStatus == 'active') { ?>
     <div class="page-wrap">
         <div class="hero">
             <div>
-                <h1>Subscriber Desk</h1>
-                <p>Allocate seats, invite teammates, and keep your corporate plan healthy.</p>
+                <h1>Corporate Subscriber Desk</h1>
+                <p>Allocate subscribers, invite teammates, and keep your corporate plan healthy.</p>
             </div>
         </div>
 
@@ -477,7 +477,7 @@ if ($subscriptionStatus == 'active') { ?>
                         <div class="metric-value"><?php echo date('jS M Y', strtotime($cp_expiry)) ?></div>
                     </div>
                     <div class="metric">
-                        <div class="metric-label">Total Seats</div>
+                        <div class="metric-label">Total subscribers</div>
                         <div class="metric-value"><?php echo $cp_limit ?></div>
                     </div>
                     <div class="metric good">
