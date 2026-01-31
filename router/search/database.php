@@ -8,6 +8,18 @@ $page = max(1, (int)$pageParam);
 $limit  = 20;
 $offset = ($page - 1) * $limit;
 
+$sortBy = 'RAND()';
+if (isset($_GET['sort'])) {
+    switch ($_GET['sort']) {
+        case 'newest':
+            $sortBy = 'published_at DESC';
+            break;
+        case 'oldest':
+            $sortBy = 'published_at ASC';
+            break;
+    }
+}
+
 if ($raw === '') {
     http_response_code(400);
     require_once ERROR_404;
@@ -74,7 +86,7 @@ $source = $appSourceMap[strtolower($app)] ?? 'post';
  * Build SQL, COUNT SQL, and params based on source
  * normalized columns: item_type, title, image, url, published_at, relation_id, tag_type, rel_score
  */
-function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAny, int $limit, int $offset): array
+function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAny, int $limit, int $offset, string $sortBy = 'RAND()'): array
 {
     switch ($source) {
         case 'product':
@@ -106,9 +118,9 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
                     OR MATCH(pr.product_title) AGAINST (? IN BOOLEAN MODE)
                     OR MATCH(pr.product_title, pr.product_highlight, pr.product_description) AGAINST (? IN BOOLEAN MODE)
                   )
-                ORDER BY ( (MATCH(pr.product_title) AGAINST (? IN BOOLEAN MODE)) * 2.2
-                         + (MATCH(pr.product_title, pr.product_highlight, pr.product_description) AGAINST (? IN BOOLEAN MODE)) * 1.2 ) DESC,
-                         pr.product_time DESC
+                ORDER BY {$sortBy},
+                         ( (MATCH(pr.product_title) AGAINST (? IN BOOLEAN MODE)) * 2.2
+                         + (MATCH(pr.product_title, pr.product_highlight, pr.product_description) AGAINST (? IN BOOLEAN MODE)) * 1.2 ) DESC
                 LIMIT ? OFFSET ?";
 
             $countSql = "
@@ -242,7 +254,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
           AND MATCH(n.news_highlight, n.news_description)
               AGAINST (? IN BOOLEAN MODE)
     ) AS combined_results
-    ORDER BY priority ASC, rel_score DESC, published_at DESC
+    ORDER BY {$sortBy}, priority ASC, rel_score DESC
     LIMIT ? OFFSET ?
     ";
 
@@ -334,9 +346,9 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
                     OR MATCH(p.post_title) AGAINST (? IN BOOLEAN MODE)
                     OR MATCH(p.post_title, p.post_highlight, p.post_description) AGAINST (? IN BOOLEAN MODE)
                   )
-                ORDER BY ( (MATCH(p.post_title) AGAINST (? IN BOOLEAN MODE)) * 2.0
-                         + (MATCH(p.post_title, p.post_highlight, p.post_description) AGAINST (? IN BOOLEAN MODE)) * 1.25 ) DESC,
-                         p.post_time DESC
+                ORDER BY {$sortBy},
+                         ( (MATCH(p.post_title) AGAINST (? IN BOOLEAN MODE)) * 2.0
+                         + (MATCH(p.post_title, p.post_highlight, p.post_description) AGAINST (? IN BOOLEAN MODE)) * 1.25 ) DESC
                 LIMIT ? OFFSET ?";
 
             $countSql = "
@@ -376,7 +388,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
     return [$sql, $params, $countSql, $countParams];
 }
 
-[$sql, $params, $countSql, $countParams] = buildSqlBySource($source, $siteId, $qAll, $qAny, $limit, $offset);
+[$sql, $params, $countSql, $countParams] = buildSqlBySource($source, $siteId, $qAll, $qAny, $limit, $offset, $sortBy);
 
 /** Prepare + execute main query */
 $stmt = mysqli_prepare($connection, $sql);
