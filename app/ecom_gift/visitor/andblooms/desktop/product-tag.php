@@ -80,13 +80,16 @@
             <select name="sort" onchange="this.form.submit()"
                 class="border border-gray-300 rounded px-4 py-2 shadow-sm">
                 <option value="#">Sort by</option>
-                <option value="latest" <?php echo  @$_GET['sort'] === 'latest' ? 'selected' : '' ?>>Latest</option>
                 <option value="price_low" <?php echo  @$_GET['sort'] === 'price_low' ? 'selected' : '' ?>>Price low to
                     high
                 </option>
                 <option value="price_high" <?php echo  @$_GET['sort'] === 'price_high' ? 'selected' : '' ?>>Price high
                     to low
                 </option>
+                <option value="newest"
+                    <?php echo (isset($_GET['sort']) && $_GET['sort'] === 'newest') ? 'selected' : '' ?>>Newest</option>
+                <option value="oldest"
+                    <?php echo (isset($_GET['sort']) && $_GET['sort'] === 'oldest') ? 'selected' : '' ?>>Oldest</option>
             </select>
         </form>
     </div>

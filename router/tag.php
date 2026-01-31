@@ -22,12 +22,6 @@ if (is_numeric($currentPage)) {
 $sortBy = 'RAND()';
 if (isset($_GET['sort'])) {
     switch ($_GET['sort']) {
-        case 'price_low':
-            $sortBy = 'inventory_price ASC';
-            break;
-        case 'price_high':
-            $sortBy = 'inventory_price DESC';
-            break;
         case 'newest':
             $sortBy = 'tag_time DESC';
             break;
