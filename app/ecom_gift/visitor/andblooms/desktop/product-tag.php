@@ -13,6 +13,12 @@
             case 'price_high':
                 $sortBy = 'inventory_price DESC';
                 break;
+            case 'newest':
+                $sortBy = 'link_published DESC';
+                break;
+            case 'oldest':
+                $sortBy = 'link_published ASC';
+                break;
         }
     }
 
@@ -26,8 +32,7 @@
           WHERE link_relation_id IN ($resultTags) AND link_site_id=" . SITE_ID . " 
           AND link_type='product' AND link_status=200 
           GROUP BY link_url 
-          ORDER BY $sortBy 
-          LIMIT " . PER_PAGE_LIMIT . " OFFSET " . (PAGE_NO - 1) * PER_PAGE_LIMIT;
+          ORDER BY $sortBy";
 
     $result = mysqli_query($connection, $query);
 ?>
@@ -125,9 +130,14 @@
                         <?php echo  $inventory_currency_symbol . ' ' . $inventory_mrp ?></div>
                     <?php endif; ?>
                 </div>
+                <?php
+                                if ($inventory_in_stock > 0) { ?>
                 <button data-info='<?php echo $product_id . '_' . $inventory_price . '_1'; ?>'
                     class="quickAddToCart bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors">Add
                     to Cart</button>
+                <?php
+                                }
+                                ?>
                 <?php
                             }
                             ?>

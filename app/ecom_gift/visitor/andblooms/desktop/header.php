@@ -183,7 +183,7 @@
 
                     <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Faux Flowers</a>
                     <a href="/category/cake/" class="text-gray-700 hover:text-primary transition">Cake & Hampers</a>
-                    <a href="/tag/valentine/"
+                    <a href="/tag/valentine/?sort=newest"
                         class="hover:text-gray-700 text-primary transition font-semibold">Valentine Edition</a>
                     <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
                         class="text-gray-700 hover:text-primary transition">
@@ -347,7 +347,7 @@
                     </a>
 
                     <!-- Valentine Edition (Highlighted) -->
-                    <a href="/tag/valentine/"
+                    <a href="/tag/valentine/?sort=newest"
                         class="mobile-menu-link px-4 py-4 bg-gradient-to-r from-primary/10 to-transparent border-l-4 border-primary text-primary font-semibold transition">
                         <i class="ri-heart-line mr-2"></i> Valentine Edition
                     </a>
