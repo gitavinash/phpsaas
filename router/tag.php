@@ -22,6 +22,12 @@ if (is_numeric($currentPage)) {
 $sortBy = 'RAND()';
 if (isset($_GET['sort'])) {
     switch ($_GET['sort']) {
+        case 'price_low':
+            $sortBy = 'inventory_price ASC';
+            break;
+        case 'price_high':
+            $sortBy = 'inventory_price DESC';
+            break;
         case 'newest':
             $sortBy = 'tag_time DESC';
             break;
@@ -34,7 +40,7 @@ if (isset($_GET['sort'])) {
 
 $searchTag = mysqli_real_escape_string($connection, str_replace('-', ' ', $urlStructure[1]));
 
-if ($tagList = mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM " . TABLE_PREFIX . "tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID . " GROUP BY tag_relation_id ORDER BY {$sortBy} " . PAGINATION)) {
+if ($tagList = mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM " . TABLE_PREFIX . "tag LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=tag_relation_id AND inventory_site_id=" . SITE_ID . " WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID . " GROUP BY tag_relation_id ORDER BY {$sortBy} " . PAGINATION)) {
 
     if (mysqli_num_rows($tagList) != 0) {
 
