@@ -89,6 +89,22 @@ function update($connection, $data)
 
                     $productVariation = base64_encode($productVariation);
 
+                    // Product Add-ons
+
+                    $productAddons = '';
+                    $splitString = array();
+
+                    if (isset($_POST['addOnProducts'])) {
+
+                        for ($i = 0; $i < sizeof($_POST['addOnProducts']); $i++) {
+                            $splitString[] = explode('&&', $_POST['addOnProducts'][$i]);
+                        }
+
+                        $productAddons = json_encode($splitString, TRUE);
+                    }
+
+                    $productAddons = base64_encode($productAddons);
+
                     /** Category */
 
                     $category = explode('_', $category);
@@ -146,7 +162,7 @@ function update($connection, $data)
 
                     $updateProduct = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "product SET product_brand_id = '{$brand}', product_image='{$featureImage}', product_thumbnail='{$thumbnailImage}', product_gallery='{$newProductGallery}', product_title='{$title}', product_description='{$description}', product_highlight='{$highlight}', product_category='{$category}', product_owner_id='" . USER_ID . "', product_status=1, product_type='{$postType}' WHERE product_id='{$id}'");
 
-                    $updateInventtory = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "inventory SET inventory_sku='{$sku}', inventory_currency='INR', inventory_price='{$salePrice}', inventory_mrp='{$mrp}', inventory_tax_status='{$taxStatus}', inventory_tax_rate='{$taxRate}', inventory_in_stock='{$in_stock}', inventory_current_stock='{$currentStock}', inventory_backorder='{$backorder}', inventory_stock_notice='{$stock_warning}', inventory_weight='{$weight}', inventory_lenght='{$lenght}', inventory_width='{$width}', inventory_height='{$height}', inventory_status=1, inventory_update=current_timestamp(), inventory_sell_online='{$sell_online}', inventory_variation='{$productVariation}' WHERE inventory_relation_id='{$id}'");
+                    $updateInventtory = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "inventory SET inventory_sku='{$sku}', inventory_currency='INR', inventory_price='{$salePrice}', inventory_mrp='{$mrp}', inventory_tax_status='{$taxStatus}', inventory_tax_rate='{$taxRate}', inventory_in_stock='{$in_stock}', inventory_current_stock='{$currentStock}', inventory_backorder='{$backorder}', inventory_stock_notice='{$stock_warning}', inventory_weight='{$weight}', inventory_lenght='{$lenght}', inventory_width='{$width}', inventory_height='{$height}', inventory_status=1, inventory_update=current_timestamp(), inventory_sell_online='{$sell_online}', inventory_variation='{$productVariation}', inventory_addons='{$productAddons}' WHERE inventory_relation_id='{$id}'");
 
                     $updateMeta = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "meta SET meta_title='{$meta_title}', meta_description='{$meta_desc}', meta_canonical='{$canonical}', meta_keyword='{$meta_key}', meta_relation_id='{$link_id}', fb_img='{$facebookImage}', fb_title='{$fb_title}', fb_desc='{$fb_desc}', tw_img='{$twitterImage}', tw_title='{$tw_title}', tw_desc='{$tw_desc}' WHERE meta_relation_id='{$oldLinkID}'");
 

@@ -45,6 +45,7 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                     <li id="productShipping">Shipping</li>
                     <li id="productGallery">Gallery</li>
                     <li id="productAttributesDetails">Attributes</li>
+                    <li id="productAddOnsDetails">Add Ons</li>
                     <li id="productAdditionalDetails">Additional Details</li>
                 </ul>
                 <div class="productGeneral generalTab">
@@ -159,6 +160,18 @@ if (mysqli_num_rows(($allProductList)) != 0) {
                         <div class="form-group">
                             <label>Select product varients ( select multiple )</label>
                             <select name="similarProducts[]" class="form-control inside-shadow selectSimilarProduct"
+                                multiple="multiple">
+                                <?php echo $allProductOptionsDropDown ?>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="productAddOnsDetails generalTab" style="display: none;">
+                    <div class="productDiv">
+                        <div class="form-group">
+                            <label>Select add-on product ( select multiple )</label>
+                            <select name="addOnProducts[]" class="form-control inside-shadow selectSimilarProduct"
                                 multiple="multiple">
                                 <?php echo $allProductOptionsDropDown ?>
                             </select>

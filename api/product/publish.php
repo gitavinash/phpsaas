@@ -45,6 +45,25 @@ function publish($connection, $data)
 
             $productVariation = base64_encode($productVariation);
 
+            // Product add-ons
+
+            $productAddons = '';
+            $splitString = array();
+            $mrp = (($mrp == 0) ? $salePrice : $mrp);
+            $salePrice = (($salePrice == 0) ? $mrp : $salePrice);
+
+            if (isset($_POST['addOnProducts'])) {
+
+                for ($i = 0; $i < sizeof($_POST['addOnProducts']); $i++) {
+
+                    $splitString[] = explode('&&', $_POST['addOnProducts'][$i]);
+                }
+
+                $productAddons = json_encode($splitString, TRUE);
+            }
+
+            $productAddons = base64_encode($productAddons);
+
             /** Category */
 
             if (isset($category)) {
@@ -83,7 +102,7 @@ function publish($connection, $data)
                         $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$productID}', '200', 'product', '{$featurePost}', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");
                         $linkID = mysqli_insert_id($connection);
 
-                        $addNewInventory = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "inventory(inventory_relation_id, inventory_site_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_stock_notice, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_status, inventory_update, inventory_sell_online, inventory_variation) VALUES ('{$productID}', " . SITE_ID . ", '{$sku}', 'INR', '{$salePrice}', '{$mrp}', '{$taxStatus}', '{$taxRate}', '{$in_stock}', '{$currentStock}', '{$backorder}', '{$stock_warning}', '{$weight}', '{$lenght}', '{$width}', '{$height}', '1', current_timestamp(), '{$sell_online}', '{$productVariation}')");
+                        $addNewInventory = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "inventory(inventory_relation_id, inventory_site_id, inventory_sku, inventory_currency, inventory_price, inventory_mrp, inventory_tax_status, inventory_tax_rate, inventory_in_stock, inventory_current_stock, inventory_backorder, inventory_stock_notice, inventory_weight, inventory_lenght, inventory_width, inventory_height, inventory_status, inventory_update, inventory_sell_online, inventory_variation, inventory_addons) VALUES ('{$productID}', " . SITE_ID . ", '{$sku}', 'INR', '{$salePrice}', '{$mrp}', '{$taxStatus}', '{$taxRate}', '{$in_stock}', '{$currentStock}', '{$backorder}', '{$stock_warning}', '{$weight}', '{$lenght}', '{$width}', '{$height}', '1', current_timestamp(), '{$sell_online}', '{$productVariation}', '{$productAddons}')");
 
                         $addNewMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "meta(meta_relation_id, meta_site_id,  meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', " . SITE_ID . ", '{$meta_title}', 'product', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
 

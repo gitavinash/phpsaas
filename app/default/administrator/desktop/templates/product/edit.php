@@ -74,6 +74,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                     <li id="productShipping">Shipping</li>
                     <li id="productGallery">Gallery</li>
                     <li id="productAttributesDetails">Attributes</li>
+                    <li id="productAddOnsDetails">Add Ons</li>
                     <li id="productAdditionalDetails">Additional Details</li>
                 </ul>
                 <div class="productGeneral generalTab">
@@ -237,6 +238,67 @@ window.location.href = 'dashboard/product/?type=list&status=all';
 
                                 if (!empty($inventory_variation)) {
                                     $decoded = base64_decode($inventory_variation, true);
+                                    $similarProductsList = json_decode($decoded, true);
+
+                                    if (is_array($similarProductsList)) {
+                                        $selectedIds = [];
+
+                                        foreach ($similarProductsList as $item) {
+                                            if (isset($item[0])) {
+                                                $selectedIds[] = $item[0];
+                                            }
+                                        }
+
+                                        while ($productData = mysqli_fetch_assoc($allProductList)) {
+                                            extract($productData); // defines $varientProductId, $varientProductTitle, etc.
+
+                                            $isSelected = in_array($varientProductId, $selectedIds) ? "selected" : "";
+                                            $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}";
+
+                                            $varientProductList[] = "<option value='{$value}' {$isSelected}>{$varientProductTitle}</option>";
+                                        }
+
+                                        echo implode('', $varientProductList);
+                                    } else {
+                                        // fallback if decoding failed
+                                        while ($productData = mysqli_fetch_assoc($allProductList)) {
+                                            extract($productData);
+                                            $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}";
+                                            echo "<option value='{$value}'>{$varientProductTitle}</option>";
+                                        }
+                                    }
+                                } else {
+                                    // fallback if no variation set
+                                    while ($productData = mysqli_fetch_assoc($allProductList)) {
+                                        extract($productData);
+                                        $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}";
+                                        echo "<option value='{$value}'>{$varientProductTitle}</option>";
+                                    }
+                                }
+
+
+
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="productAddOnsDetails generalTab" style="display: none;">
+                    <div class="productDiv">
+                        <div class="form-group">
+                            <label>Select add-on product ( select multiple )</label>
+                            <select name="addOnProducts[]" class="form-control inside-shadow selectSimilarProduct"
+                                multiple="multiple">
+                                <?php
+
+                                $allProductList = mysqli_query($connection, "SELECT product_id as varientProductId, product_title as varientProductTitle, product_thumbnail as varientProductThumbnail, link_url as varientProductURL FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=" . SITE_ID . " ORDER BY product_title ASC");
+                                $allProductOptionsDropDown = '';
+
+                                $varientProductList = []; // initialize
+
+                                if (!empty($inventory_addons)) {
+                                    $decoded = base64_decode($inventory_addons, true);
                                     $similarProductsList = json_decode($decoded, true);
 
                                     if (is_array($similarProductsList)) {
