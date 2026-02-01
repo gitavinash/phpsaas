@@ -38,7 +38,7 @@ include_once 'header.php';
                         <img src="<?php echo $product_image ?>" class="w-24 h-24 object-cover rounded">
                         <div class="flex-1">
                             <a href="<?php echo $link_url ?>" target="_blank">
-                                <h2 class="text-lg font-medium text-gray-800"><?php echo $product_title ?></h2>
+                                <h2 class="text-lg font-medium text-gray-800"><?php echo ucwords($product_title) ?></h2>
                             </a>
                             <?php
                                 $priceToShow = $inventory_price;

@@ -124,90 +124,124 @@ $(document).ready(function () {
   $(".addAddOnProductToCart").click(function (e) {
     e.preventDefault();
     $(".addAddOnProductToCart").hide();
+
+    var addonProductInfo = $(this).data("info");
+    var addonQty = addonProductInfo.split("_");
+    var addonId = addonQty[0];
+    var addonPrice = addonQty[1];
+    var addonQtyVal = parseInt(addonQty[2]) || 1;
+
+    // If main product not added, add both products
     if (!isMainProductAddedToCart) {
       const mainProductInfo = $("#productInfo").attr("value");
-      console.log(
-        "Please add the main product to the cart first. Main Product Info:",
-        mainProductInfo,
-      );
-      $("#addToCart").hide();
-      $(".addAddOnProductToCart").show();
-      return;
-    }
-    var productInfo = $(this).data("info");
-    console.log(`Product info: `, productInfo);
+      var mainQty = mainProductInfo.split("_");
+      var mainId = mainQty[0];
+      var mainPrice = mainQty[1];
+      var mainQtyVal = parseInt(mainQty[2]) || 1;
 
-    var qty = productInfo.split("_");
-    var id = qty[0];
-    var price = qty[1];
-    var qty = parseInt(qty[2]) || 1; // Default to 1 if not specified
-
-    $.ajax({
-      type: "POST",
-      dataType: "json",
-      data: {
-        id: id,
-        quantity: 1,
-        price: price,
-        type: "cart",
-        action: "add",
-      },
-      success: function (data) {
-        $(".addAddOnProductToCart").show();
-
-        if (data.status == 200) {
-          $("#cartNumber").html(1);
-          $("#cartNumber").css({ background: "#219518", color: "#fff" });
-          $("#addToCardPopUp").show();
-
-          $("#selectedName").text("");
-          $("#selectedName").append(data.productName);
-          $("#selectedImg").text("");
-          $("#selectedImg").attr("src", data.productImage);
-          $("#selectedQty").text("");
-          $("#selectedQty").append(data.productQty);
-          // alert('Product added to cart successfully');
-          // Get the element
-          const cartCircle = document.querySelector(".crt-crcl");
-
-          // Increment the value
-          if (cartCircle) {
-            let currentValue = parseInt(cartCircle.textContent.trim(), 10) || 0;
-            cartCircle.textContent = currentValue + 1;
-          }
-
-          Swal.fire({
-            icon: "success",
-            title: "Product Added!",
-            text: "Do you want to go to the checkout page?",
-            showCancelButton: true,
-            confirmButtonText: "Go to Checkout",
-            cancelButtonText: "Continue Shopping",
-            reverseButtons: true, // Puts the cancel button first
-          }).then((result) => {
-            if (result.value) {
-              console.log("Redirecting to checkout..."); // Debugging output
-              window.location.href = "/checkout/";
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-              console.log("User chose to continue shopping.");
-            } else {
-              console.log("Unexpected action:", result);
+      // Make both API calls simultaneously
+      Promise.all([
+        $.ajax({
+          type: "POST",
+          dataType: "json",
+          data: {
+            id: mainId,
+            quantity: 1,
+            price: mainPrice,
+            type: "cart",
+            action: "add",
+          },
+        }),
+        $.ajax({
+          type: "POST",
+          dataType: "json",
+          data: {
+            id: addonId,
+            quantity: 1,
+            price: addonPrice,
+            type: "cart",
+            action: "add",
+          },
+        }),
+      ])
+        .then(([mainData, addonData]) => {
+          if (mainData.status == 200 && addonData.status == 200) {
+            isMainProductAddedToCart = true;
+            const cartCircle = document.querySelector(".crt-crcl");
+            if (cartCircle) {
+              let currentValue = parseInt(cartCircle.textContent.trim(), 10) || 0;
+              cartCircle.textContent = currentValue + 2;
             }
-          });
 
-          var currentCartCount = parseInt($("#cartItems").text()) || 0;
-          $("#cartItems").text(currentCartCount + qty);
+            var currentCartCount = parseInt($("#cartItems").text()) || 0;
+            $("#cartItems").text(currentCartCount + 2);
 
-          $(".addAddOnProductToCart").html("Added to cart");
-        } else {
-          console.log(data.msg);
-        }
-      },
-      error: function (data) {
-        console.log(data);
-        $(".addAddOnProductToCart").show();
-      },
-    });
+            Swal.fire({
+              icon: "success",
+              title: "Products Added!",
+              text: "Both main and add-on products added to cart",
+              showCancelButton: true,
+              confirmButtonText: "Go to Checkout",
+              cancelButtonText: "Continue Shopping",
+              reverseButtons: true,
+            }).then((result) => {
+              if (result.value) {
+                window.location.href = "/checkout/";
+              }
+            });
+          }
+          $(".addAddOnProductToCart").show();
+        })
+        .catch((err) => {
+          console.error("Error adding products:", err);
+          $(".addAddOnProductToCart").show();
+        });
+    } else {
+      // Main product already added, just add addon
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: {
+          id: addonId,
+          quantity: 1,
+          price: addonPrice,
+          type: "cart",
+          action: "add",
+        },
+        success: function (data) {
+          $(".addAddOnProductToCart").show();
+
+          if (data.status == 200) {
+            const cartCircle = document.querySelector(".crt-crcl");
+            if (cartCircle) {
+              let currentValue = parseInt(cartCircle.textContent.trim(), 10) || 0;
+              cartCircle.textContent = currentValue + 1;
+            }
+
+            var currentCartCount = parseInt($("#cartItems").text()) || 0;
+            $("#cartItems").text(currentCartCount + addonQtyVal);
+
+            Swal.fire({
+              icon: "success",
+              title: "Product Added!",
+              text: "Add-on product added to cart",
+              showCancelButton: true,
+              confirmButtonText: "Go to Checkout",
+              cancelButtonText: "Continue Shopping",
+              reverseButtons: true,
+            }).then((result) => {
+              if (result.value) {
+                window.location.href = "/checkout/";
+              }
+            });
+          }
+        },
+        error: function (data) {
+          console.error(data);
+          $(".addAddOnProductToCart").show();
+        },
+      });
+    }
   });
 
   /** Close add to cart popup */
