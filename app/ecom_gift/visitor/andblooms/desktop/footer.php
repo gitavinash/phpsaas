@@ -325,6 +325,29 @@ if (ACTIVE_URL == '/checkout/') {
 
             $('#zoomOverlay').css('background-position', xPercent + '% ' + yPercent + '%');
         });
+
+        // 7. Urgency Timer for Same-Day Delivery
+        function updateUrgencyTimer() {
+            const now = new Date();
+            const cutoffTime = new Date();
+            cutoffTime.setHours(11, 0, 0, 0); // 11 AM cutoff
+
+            const timerEl = document.getElementById('urgency-timer');
+            if (!timerEl) return;
+
+            if (now < cutoffTime) {
+                const diff = cutoffTime - now;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                timerEl.textContent = `${hours}h ${minutes}m`;
+            } else {
+                timerEl.parentElement.innerHTML = '<i class="ri-information-line text-orange-600 text-lg mr-1"></i><span class="text-sm text-gray-700">Next-day delivery available</span>';
+            }
+        }
+
+        // Update timer immediately and every minute
+        updateUrgencyTimer();
+        setInterval(updateUrgencyTimer, 60000);
     });
 </script>
 

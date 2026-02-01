@@ -430,7 +430,6 @@
         let menuOpen = false;
 
         function initMobileMenu() {
-            console.log('Mobile menu initializing...');
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const closeMobileMenuButton = document.getElementById('close-mobile-menu');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -441,8 +440,6 @@
                 console.error('Menu elements not found');
                 return;
             }
-
-            console.log('All elements found, attaching listeners');
 
             function openMenu(e) {
                 if (e) e.preventDefault();
@@ -517,8 +514,6 @@
                     }, 300); // Delay to allow keyboard to appear
                 });
             }
-
-            console.log('Mobile menu initialized successfully');
         }
 
         // Wait for DOM to be ready

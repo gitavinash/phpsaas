@@ -17,6 +17,43 @@ if ($checkProductMeta = mysqli_query($connection, "SELECT product_meta_key, prod
     }
 }
 
+/** Decode and fetch attributes/variations */
+$productAttributes = [];
+if (isset($inventory_variation) && !empty($inventory_variation)) {
+    $decodedVariation = base64_decode($inventory_variation);
+    $productAttributes = json_decode($decodedVariation, true) ?: [];
+}
+
+/** Decode and fetch add-ons */
+$productAddons = [];
+$addonProducts = [];
+if (isset($inventory_addons) && !empty($inventory_addons)) {
+    $decodedAddons = base64_decode($inventory_addons);
+    $productAddons = json_decode($decodedAddons, true) ?: [];
+
+    // Extract addon product IDs
+    $addonIds = array_column($productAddons, 0);
+    if (!empty($addonIds)) {
+        $addonIdsStr = implode(',', array_map('intval', $addonIds));
+        $addonQuery = "SELECT p.product_id, p.product_title, p.product_image, 
+                             i.inventory_price, i.inventory_mrp, i.inventory_currency_symbol, l.link_url
+                      FROM " . TABLE_PREFIX . "product p
+                      INNER JOIN " . TABLE_PREFIX . "inventory i ON p.product_id = i.inventory_relation_id
+                      INNER JOIN " . TABLE_PREFIX . "link l ON l.link_relation_id = p.product_id 
+                        AND l.link_status = 200 AND l.link_type = 'product'
+                      WHERE p.product_status = 1 
+                        AND p.product_site_id = " . SITE_ID . " 
+                        AND l.link_site_id = " . SITE_ID . " 
+                        AND p.product_id IN ({$addonIdsStr})";
+
+        if ($addonResult = mysqli_query($connection, $addonQuery)) {
+            while ($addon = mysqli_fetch_assoc($addonResult)) {
+                $addonProducts[] = $addon;
+            }
+        }
+    }
+}
+
 if ($getTagIds = mysqli_query($connection, "SELECT * 
 FROM " . TABLE_PREFIX . "tag 
 WHERE tag_title LIKE CONCAT('%', (
@@ -58,57 +95,61 @@ require_once 'header.php';
 
 <main class="container mx-auto px-4 py-8 pt-24">
     <!-- Breadcrumb -->
-    <div class="flex items-center text-sm text-gray-500 mb-6">
-        <a href="/" class="hover:text-primary">Home</a>
-        <span class="mx-2">/</span>
-        <a href="<?php echo $brandURL ?>" class="hover:text-primary"><?php echo $category_title ?></a>
-        <span class="mx-2">/</span>
-        <span class="text-gray-700"><?php echo $product_title ?></span>
-    </div>
+    <nav class="flex items-center text-gray-500 mb-6 overflow-x-auto" aria-label="Breadcrumb">
+        <ol class="flex items-center text-xs sm:text-sm whitespace-nowrap gap-1 sm:gap-2">
+            <li>
+                <a href="/" class="hover:text-primary transition-colors">Home</a>
+            </li>
+            <li class="text-gray-300">/</li>
+            <li>
+                <a href="<?php echo $brandURL ?>" class="hover:text-primary transition-colors truncate">
+                    <?php echo htmlspecialchars($category_title, ENT_QUOTES, 'UTF-8') ?>
+                </a>
+            </li>
+            <li class="text-gray-300">/</li>
+            <li class="text-gray-700 truncate" aria-current="page">
+                <?php echo htmlspecialchars(ucwords($product_title), ENT_QUOTES, 'UTF-8') ?>
+            </li>
+        </ol>
+    </nav>
     <!-- Product Hero Section -->
     <div class="flex flex-col md:flex-row gap-8 mb-16">
         <!-- Product Images -->
         <div class="md:w-1/2">
-            <div class="product-image-container mb-4 rounded-lg overflow-hidden position-relative">
-                <img src="<?php echo $product_image ?>" id="mainProductImage" alt="<?php echo $product_title ?>"
-                    class="w-full h-full object-cover object-top">
-                <div id="zoomOverlay"></div>
+            <div class="product-image-container mb-4 rounded-lg overflow-hidden bg-gray-100">
+                <div class="w-full aspect-square flex items-center justify-center">
+                    <img src="<?php echo $product_image ?>" id="mainProductImage"
+                        alt="<?php echo ucwords($product_title) ?>" class="w-full h-full object-contain">
+                </div>
             </div>
-            <div class="grid thumbnail grid-cols-4 gap-2">
-
+            <div class="grid thumbnail grid-cols-5 gap-2">
                 <?php
+                $thumbnails = array();
 
                 if ($product_gallery != '') {
-                    $galleryImages = json_decode($product_gallery, TRUE);
-
+                    $galleryImages = json_decode($product_gallery, true);
                     if (!empty($galleryImages)) {
-
-                        echo "<div class='h-24 rounded-md overflow-hidden cursor-pointer border-2 border-primary'>
-                <img src='{$product_image}'
-                     alt='{$product_title} Thumbnail 1'
-                     data-src='{$product_image}'
-                     class='w-full h-full object-cover object-center'>
-              </div>";
-
-                        for ($i = 0; $i < sizeof($galleryImages); $i++) {
-
-                            extract($galleryImages[$i]);
-                            echo "<div class='h-24 rounded-md overflow-hidden cursor-pointer border-2'>
-                    <img src='{$path}'
-                         alt='{$product_title} Thumbnail " . ($i + 1) . "'
-                         data-src='{$path}'
-                         class='w-full h-full object-cover object-center'>
-                  </div>";
+                        $thumbnails[] = array('path' => $product_image, 'title' => $product_title);
+                        foreach ($galleryImages as $gallery) {
+                            $thumbnails[] = array('path' => $gallery['path'], 'title' => $product_title);
                         }
                     }
+                } else {
+                    $thumbnails[] = array('path' => $product_image, 'title' => $product_title);
+                }
+
+                foreach ($thumbnails as $index => $thumb) {
+                    $isActive = $index === 0 ? 'border-primary ring-2 ring-primary' : 'border-gray-200 hover:border-gray-300';
+                    echo "<div class='aspect-square rounded-md overflow-hidden cursor-pointer border-2 {$isActive} transition-all duration-200 bg-gray-50' data-src='{$thumb['path']}'>";
+                    echo "<img src='{$thumb['path']}' alt='{$thumb['title']} Thumbnail " . ($index + 1) . "' class='w-full h-full object-contain p-1'>";
+                    echo "</div>";
                 }
                 ?>
-
             </div>
         </div>
         <!-- Product Details -->
         <div class="md:w-1/2">
-            <h1 class="text-3xl font-semibold text-gray-800 mb-2"><?php echo $product_title ?></h1>
+            <h1 class="text-3xl font-semibold text-gray-800 mb-2"><?php echo ucwords($product_title) ?></h1>
             <div class="flex items-center mb-4">
                 <div class="flex text-yellow-400">
                     <i class="ri-star-fill"></i>
@@ -150,6 +191,22 @@ require_once 'header.php';
                 </div>
             </div>
 
+            <!-- Stock & Urgency Indicators -->
+            <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                <div class="flex items-center gap-2 bg-green-50 rounded-lg px-4 py-2">
+                    <i class="ri-checkbox-circle-fill text-green-600 text-lg"></i>
+                    <span
+                        class="text-sm font-semibold text-green-700"><?php echo $inventory_in_stock == 1 ? 'In Stock' : 'Out of Stock'; ?></span>
+                </div>
+                <div class="flex items-center gap-2 bg-amber-50 rounded-lg px-4 py-2 flex-1">
+                    <i class="ri-time-line text-amber-600 text-lg"></i>
+                    <span class="text-sm text-gray-700">
+                        Order within <span id="urgency-timer" class="font-semibold text-amber-700"></span> for same-day
+                        delivery
+                    </span>
+                </div>
+            </div>
+
             <?php
 
             if ($product_highlight != '') { ?>
@@ -158,9 +215,50 @@ require_once 'header.php';
             <?php
             }
 
+            // Display attributes/variations as image cards
+            if (!empty($productAttributes)) {
+                $productIds = array();
+                foreach ($productAttributes as $attribute) {
+                    $productIds[] = $attribute[0];
+                }
+                $productVarient = implode(',', $productIds);
+
+                if ($productVarient = mysqli_query($connection, "SELECT product_title, product_image, link_url 
+                FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id 
+                WHERE product_id IN ({$productVarient}) AND product_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID . " AND link_type='product' AND link_status=200")) {
+                    if (mysqli_num_rows($productVarient) > 0) {
+                        echo '<div class="mb-6">';
+                        echo '<h3 class="text-lg font-semibold text-gray-800 mb-3">Available Variations</h3>';
+                        echo '<div class="flex overflow-x-auto gap-4 pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">';
+
+                        while ($productVarientData = mysqli_fetch_assoc($productVarient)) {
+                            echo "<a href='{$productVarientData['link_url']}' class='flex-shrink-0 group'>";
+                            echo "<div class='relative w-32 h-40 rounded-lg overflow-hidden border-2 border-gray-200 hover:border-primary transition-all duration-300 hover:shadow-lg'>";
+                            echo "<div class='absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-300' style='background-image: url(\"{$productVarientData['product_image']}\");'></div>";
+                            echo "<div class='absolute inset-0 bg-gradient-to-t from-black/70 to-transparent'></div>";
+                            echo "<div class='absolute bottom-0 left-0 right-0 p-2.5'>";
+                            echo "<p class='text-white font-medium text-xs line-clamp-2 drop-shadow-lg' style='text-shadow: 0 2px 8px rgba(0,0,0,0.9);'>{$productVarientData['product_title']}</p>";
+                            echo "</div>";
+                            echo "<div class='absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>";
+                            echo "</div>";
+                            echo "</a>";
+                        }
+
+                        echo '</div>';
+                        echo '</div>';
+                    }
+                } else {
+                    if (DEVELOPMENT_MODE == true) {
+                        echo mysqli_error($connection);
+                    } else {
+                        echo "Error in fetching product variations.";
+                    }
+                }
+            }
+
             ?>
 
-            <div class="flex flex-col sm:flex-row gap-4 mb-8">
+            <div class="hidden sm:flex flex-col sm:flex-row gap-4 mb-8">
                 <p style="display:none" id="productInfo"
                     value="<?php echo $product_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
                 </p>
@@ -174,48 +272,138 @@ require_once 'header.php';
                     <i class="ri-whatsapp-line mr-2 text-xl"></i>
                     Order on WhatsApp
                 </a>
+            </div>
 
-            </div>
-            <div class="border-t border-gray-200 pt-6">
-                <div class="flex items-center mb-3">
-                    <div class="w-6 h-6 flex items-center justify-center text-green-500 mr-2">
-                        <i class="ri-truck-line"></i>
-                    </div>
-                    <p class="text-sm text-gray-600">Same day delivery</p>
+            <!-- Mobile Fixed CTA Buttons -->
+            <div
+                class="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 shadow-2xl z-50 px-4 py-3">
+                <div class="flex gap-3">
+                    <button onclick="document.getElementById('addToCart').click()"
+                        class="flex-1 bg-primary text-white py-3.5 px-6 rounded-button font-bold hover:bg-opacity-90 transition flex items-center justify-center shadow-lg">
+                        <i class="ri-shopping-cart-line mr-2 text-lg"></i>
+                        Add to Cart
+                    </button>
+                    <a href="<?php echo $whatsappUrl ?>" target="_blank" rel="noopener noreferrer"
+                        class="flex items-center justify-center px-5 py-3.5 rounded-button font-bold text-white bg-green-600 hover:bg-green-700 transition shadow-lg">
+                        <i class="ri-whatsapp-line text-2xl"></i>
+                    </a>
                 </div>
-                <?php
-                if (strtolower($category_title) != 'planters' && strtolower($category_title) != 'cake') {
-                    echo "<div class='flex items-center mb-3'>
-                            <div class='w-6 h-6 flex items-center justify-center text-green-500 mr-2'>
-                                <i class='ri-refresh-line'></i>
+            </div>
+
+            <!-- Mobile Padding to prevent content being hidden by fixed buttons -->
+            <div class="sm:hidden h-20"></div>
+
+            <!-- Add-ons Recommendations -->
+            <?php if (!empty($addonProducts)) { ?>
+            <div
+                class="bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg sm:rounded-xl p-3 sm:p-5 md:p-6 mb-4 sm:mb-6 border border-pink-100">
+                <div class="mb-3 sm:mb-4">
+                    <h3
+                        class="text-sm sm:text-base md:text-lg font-bold text-gray-800 mb-0.5 sm:mb-1 flex items-center">
+                        <i class="ri-gift-line text-primary text-base sm:text-lg md:text-xl mr-1.5 sm:mr-2"></i>
+                        Complete Your Gift
+                    </h3>
+                    <p class="text-[10px] sm:text-xs md:text-sm text-gray-600">Make it extra special with these add-ons
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 sm:gap-3 md:gap-4">
+                    <?php foreach ($addonProducts as $addon) {
+                            extract($addon);
+                            $discountPercent = ($inventory_mrp > 0 && $inventory_price < $inventory_mrp)
+                                ? round((1 - $inventory_price / $inventory_mrp) * 100, 0) : 0;
+                        ?>
+                    <div
+                        class="bg-white rounded-md sm:rounded-lg overflow-hidden border border-gray-200 hover:border-primary hover:shadow-lg transition-all duration-300 group flex flex-col">
+                        <a href="<?php echo $link_url ?>" title="<?php echo ucwords($product_title) ?>"
+                            class="block flex flex-col h-full">
+                            <div class="relative w-full aspect-square overflow-hidden">
+                                <img src="<?php echo $product_image ?>" alt="<?php echo ucwords($product_title) ?>"
+                                    class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
+                                <?php if ($discountPercent > 0) { ?>
+                                <span
+                                    class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-red-500 text-white text-[9px] sm:text-[10px] md:text-xs font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded shadow-md z-10">
+                                    -<?php echo $discountPercent ?>%
+                                </span>
+                                <?php } ?>
                             </div>
-                            <p class='text-sm text-gray-600'>Fresh flower guarantee - 7 days</p>
-                        </div>";
-                }
-                ?>
-                <div class="flex items-center">
-                    <div class="w-6 h-6 flex items-center justify-center text-green-500 mr-2">
-                        <i class="ri-shield-check-line"></i>
+                            <div class="p-2 sm:p-2.5 md:p-3 flex flex-col flex-1">
+                                <h4
+                                    class="font-medium text-gray-800 text-[10px] sm:text-[11px] md:text-xs leading-snug mb-1.5 sm:mb-2 line-clamp-2 min-h-[2.5rem] sm:min-h-[2.75rem]">
+                                    <?php echo ucwords($product_title) ?></h4>
+                                <div class="flex items-baseline flex-wrap gap-1 sm:gap-1.5 mb-2 sm:mb-2.5">
+                                    <span
+                                        class="text-xs sm:text-sm md:text-base font-bold text-gray-900"><?php echo $inventory_currency_symbol . $inventory_price ?></span>
+                                    <?php if ($inventory_mrp > 0 && $inventory_price < $inventory_mrp) { ?>
+                                    <span
+                                        class="text-[9px] sm:text-[10px] md:text-xs text-gray-500 line-through"><?php echo $inventory_currency_symbol . $inventory_mrp ?></span>
+                                    <?php } ?>
+                                </div>
+                                <button data-info="<?php echo $product_id . '_' . $inventory_price . '_1' ?>"
+                                    class="w-full mt-auto addAddOnProductToCart py-1.5 sm:py-2 md:py-2.5 text-[10px] sm:text-[11px] md:text-xs bg-primary text-white rounded-md sm:rounded-lg font-semibold hover:bg-opacity-90 hover:shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
+                                    <i class="ri-add-circle-line text-xs sm:text-sm md:text-base"></i>
+                                    <span>Add</span>
+                                </button>
+                            </div>
+                        </a>
                     </div>
-                    <p class="text-sm text-gray-600">Secure payment</p>
-                </div>
-            </div>
-            <?php if (!empty($productTags)) { ?>
-            <div class="mt-5 text-sm text-gray-600">
-                <div class="mb-2 font-medium text-gray-700">Tags</div>
-                <div class="flex flex-wrap gap-2">
-                    <?php foreach ($productTags as $tagTitle) { ?>
-                    <span
-                        class="px-3 py-1 rounded-full border border-gray-100 bg-gray-50 text-gray-700 hover:border-primary hover:text-primary transition">
-                        <?php
-                                $tagName = htmlspecialchars($tagTitle, ENT_QUOTES, 'UTF-8');
-                                echo "<a href='/tag/" . str_replace(' ', '-', strtolower($tagName))     . "/' target='_blank'>" . ucwords($tagName) . "</a>" ?>
-                    </span>
                     <?php } ?>
                 </div>
             </div>
             <?php } ?>
+
+            <!-- Premium Trust Badges - Horizontal Layout -->
+            <div class="bg-white rounded-2xl border-2 border-gray-100 shadow-md overflow-hidden mb-6">
+                <div
+                    class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+                    <!-- Same Day Delivery -->
+                    <div
+                        class="p-6 text-center hover:bg-gradient-to-br hover:from-green-50 hover:to-transparent transition-all duration-300 group">
+                        <div
+                            class="w-16 h-16 mx-auto mb-3 flex items-center justify-center rounded-full bg-gradient-to-br from-green-400 to-green-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i class="ri-truck-line text-2xl text-white"></i>
+                        </div>
+                        <h5 class="text-sm font-bold text-gray-800 mb-1">Same Day Delivery</h5>
+                        <p class="text-xs text-gray-600">Fast & Reliable</p>
+                    </div>
+
+                    <!-- Fresh Flower Guarantee -->
+                    <div
+                        class="p-6 text-center hover:bg-gradient-to-br hover:from-blue-50 hover:to-transparent transition-all duration-300 group">
+                        <div
+                            class="w-16 h-16 mx-auto mb-3 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i class="ri-refresh-line text-2xl text-white"></i>
+                        </div>
+                        <h5 class="text-sm font-bold text-gray-800 mb-1">Fresh Flower Guarantee</h5>
+                        <p class="text-xs text-gray-600">7 Days Fresh</p>
+                    </div>
+
+                    <!-- Quality Guarantee -->
+                    <div
+                        class="p-6 text-center hover:bg-gradient-to-br hover:from-orange-50 hover:to-transparent transition-all duration-300 group">
+                        <div
+                            class="w-16 h-16 mx-auto mb-3 flex items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i class="ri-award-line text-2xl text-white"></i>
+                        </div>
+                        <h5 class="text-sm font-bold text-gray-800 mb-1">Quality Guarantee</h5>
+                        <p class="text-xs text-gray-600">Premium Quality</p>
+                    </div>
+
+                    <!-- Secure Payment -->
+                    <div
+                        class="p-6 text-center hover:bg-gradient-to-br hover:from-purple-50 hover:to-transparent transition-all duration-300 group">
+                        <div
+                            class="w-16 h-16 mx-auto mb-3 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-400 to-purple-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i class="ri-shield-check-line text-2xl text-white"></i>
+                        </div>
+                        <h5 class="text-sm font-bold text-gray-800 mb-1">Secure Payment</h5>
+                        <p class="text-xs text-gray-600">100% Protected</p>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    </div>
+
     </div>
     <!-- Product Information Tabs -->
     <div class="mb-16">
@@ -382,6 +570,24 @@ WHERE p.product_status = 1
     <?php
     }
     ?>
+
+
+    <?php if (!empty($productTags)) { ?>
+    <div class="mt-5 text-sm text-gray-600">
+        <div class="mb-2 font-medium text-gray-700">Tags</div>
+        <div class="flex flex-wrap gap-2">
+            <?php foreach ($productTags as $tagTitle) { ?>
+            <span
+                class="px-3 py-1 rounded-full border border-gray-100 bg-gray-50 text-gray-700 hover:border-primary hover:text-primary transition">
+                <?php
+                        $tagName = htmlspecialchars($tagTitle, ENT_QUOTES, 'UTF-8');
+                        echo "<a href='/tag/" . str_replace(' ', '-', strtolower($tagName))     . "/' target='_blank'>" . ucwords($tagName) . "</a>" ?>
+            </span>
+            <?php } ?>
+        </div>
+    </div>
+    <?php } ?>
+    </div>
 
     <!-- Trust Indicators -->
     <div class="bg-gray-50 rounded-lg p-8 mb-16">
