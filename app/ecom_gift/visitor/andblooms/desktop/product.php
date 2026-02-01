@@ -306,7 +306,7 @@ require_once 'header.php';
                     <p class="text-[10px] sm:text-xs md:text-sm text-gray-600">Make it extra special with these add-ons
                     </p>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 sm:gap-3 md:gap-4">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4">
                     <?php foreach ($addonProducts as $addon) {
                             extract($addon);
                             $discountPercent = ($inventory_mrp > 0 && $inventory_price < $inventory_mrp)
@@ -325,6 +325,14 @@ require_once 'header.php';
                                     -<?php echo $discountPercent ?>%
                                 </span>
                                 <?php } ?>
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 bg-primary/20 p-2 sm:p-2.5 md:p-3 translate-y-0 sm:translate-y-full sm:group-hover:translate-y-0 transition duration-300">
+                                    <button data-info="<?php echo $product_id . '_' . $inventory_price . '_1' ?>"
+                                        class="w-full addAddOnProductToCart py-1.5 sm:py-2 md:py-2.5 text-[10px] sm:text-[11px] md:text-xs bg-primary text-white rounded-md sm:rounded-lg font-semibold hover:bg-opacity-90 hover:shadow-md active:scale-95 transition-all duration-300 flex items-center justify-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:translate-y-1 sm:group-hover:translate-y-0 sm:pointer-events-none sm:group-hover:pointer-events-auto">
+                                        <i class="ri-add-circle-line text-xs sm:text-sm md:text-base"></i>
+                                        <span>Add</span>
+                                    </button>
+                                </div>
                             </div>
                             <div class="p-2 sm:p-2.5 md:p-3 flex flex-col flex-1">
                                 <h4
@@ -338,11 +346,6 @@ require_once 'header.php';
                                         class="text-[9px] sm:text-[10px] md:text-xs text-gray-500 line-through"><?php echo $inventory_currency_symbol . $inventory_mrp ?></span>
                                     <?php } ?>
                                 </div>
-                                <button data-info="<?php echo $product_id . '_' . $inventory_price . '_1' ?>"
-                                    class="w-full mt-auto addAddOnProductToCart py-1.5 sm:py-2 md:py-2.5 text-[10px] sm:text-[11px] md:text-xs bg-primary text-white rounded-md sm:rounded-lg font-semibold hover:bg-opacity-90 hover:shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
-                                    <i class="ri-add-circle-line text-xs sm:text-sm md:text-base"></i>
-                                    <span>Add</span>
-                                </button>
                             </div>
                         </a>
                     </div>
