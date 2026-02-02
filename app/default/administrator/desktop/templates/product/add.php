@@ -8,7 +8,7 @@ if (mysqli_num_rows(($allProductList)) != 0) {
     while ($productData = mysqli_fetch_assoc($allProductList)) {
 
         extract($productData);
-        $allProductOptionsDropDown = $allProductOptionsDropDown . "<option value='{$product_id}&&{$product_title}&&{$product_thumbnail}&&{$link_url}'>{$product_title}</option>";
+        $allProductOptionsDropDown = $allProductOptionsDropDown . "<option value='{$product_id}'>{$product_title}</option>";
     }
 }
 
