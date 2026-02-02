@@ -231,7 +231,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                                 multiple="multiple">
                                 <?php
 
-                                $allProductList = mysqli_query($connection, "SELECT product_id as varientProductId, product_title as varientProductTitle, product_thumbnail as varientProductThumbnail, link_url as varientProductURL FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=" . SITE_ID . " ORDER BY product_title ASC");
+                                $allProductList = mysqli_query($connection, "SELECT product_id as varientProductId, product_title as varientProductTitle, product_thumbnail as varientProductThumbnail, link_url as varientProductURL FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND product_id!='{$id}' AND link_site_id=" . SITE_ID . " ORDER BY product_title ASC");
                                 $allProductOptionsDropDown = '';
 
                                 $varientProductList = []; // initialize
@@ -292,7 +292,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                                 multiple="multiple">
                                 <?php
 
-                                $allProductList = mysqli_query($connection, "SELECT product_id as varientProductId, product_title as varientProductTitle, product_thumbnail as varientProductThumbnail, link_url as varientProductURL FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = product_id WHERE link_status=200 AND link_type='product' AND product_status=1 AND link_site_id=" . SITE_ID . " ORDER BY product_title ASC");
+                                $allProductList = mysqli_query($connection, "SELECT product_id as varientProductId, product_title as varientProductTitle, product_thumbnail as varientProductThumbnail, link_url as varientProductURL, category_title as categoryName FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id = product_id INNER JOIN " . TABLE_PREFIX . "category ON category_id = product_category WHERE link_status=200 AND link_type='product' AND product_status=1 AND product_id!='{$id}' AND link_site_id=" . SITE_ID . " ORDER BY product_title ASC");
                                 $allProductOptionsDropDown = '';
 
                                 $varientProductList = []; // initialize
@@ -314,7 +314,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                                             extract($productData); // defines $varientProductId, $varientProductTitle, etc.
 
                                             $isSelected = in_array($varientProductId, $selectedIds) ? "selected" : "";
-                                            $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}";
+                                            $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}&&{$categoryName}";
 
                                             $varientProductList[] = "<option value='{$value}' {$isSelected}>{$varientProductTitle}</option>";
                                         }
@@ -324,7 +324,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                                         // fallback if decoding failed
                                         while ($productData = mysqli_fetch_assoc($allProductList)) {
                                             extract($productData);
-                                            $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}";
+                                            $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}&&{$categoryName}";
                                             echo "<option value='{$value}'>{$varientProductTitle}</option>";
                                         }
                                     }
@@ -332,7 +332,7 @@ window.location.href = 'dashboard/product/?type=list&status=all';
                                     // fallback if no variation set
                                     while ($productData = mysqli_fetch_assoc($allProductList)) {
                                         extract($productData);
-                                        $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}";
+                                        $value = "{$varientProductId}&&{$varientProductTitle}&&{$varientProductThumbnail}&&{$varientProductURL}&&{$categoryName}";
                                         echo "<option value='{$value}'>{$varientProductTitle}</option>";
                                     }
                                 }

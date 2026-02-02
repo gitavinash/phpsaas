@@ -35,18 +35,19 @@ if (isset($inventory_addons) && !empty($inventory_addons)) {
     $addonIds = array_column($productAddons, 0);
     if (!empty($addonIds)) {
         $addonIdsStr = implode(',', array_map('intval', $addonIds));
-        $addonQuery = "SELECT p.product_id, p.product_title, p.product_image, 
-                             i.inventory_price, i.inventory_mrp, i.inventory_currency_symbol, l.link_url
+        $addOnQuery = "SELECT p.product_id, p.product_title, p.product_image, 
+                             i.inventory_price, i.inventory_mrp, i.inventory_currency_symbol, l.link_url, c.category_title
                       FROM " . TABLE_PREFIX . "product p
-                      INNER JOIN " . TABLE_PREFIX . "inventory i ON p.product_id = i.inventory_relation_id
+                      INNER JOIN " . TABLE_PREFIX . "inventory i ON p.product_id = i.inventory_relation_id AND i.inventory_site_id = " . SITE_ID . "
                       INNER JOIN " . TABLE_PREFIX . "link l ON l.link_relation_id = p.product_id 
                         AND l.link_status = 200 AND l.link_type = 'product'
+                    INNER JOIN " . TABLE_PREFIX . "category c ON c.category_id = p.product_category
                       WHERE p.product_status = 1 
                         AND p.product_site_id = " . SITE_ID . " 
                         AND l.link_site_id = " . SITE_ID . " 
                         AND p.product_id IN ({$addonIdsStr})";
 
-        if ($addonResult = mysqli_query($connection, $addonQuery)) {
+        if ($addonResult = mysqli_query($connection, $addOnQuery)) {
             while ($addon = mysqli_fetch_assoc($addonResult)) {
                 $addonProducts[] = $addon;
             }
@@ -294,7 +295,15 @@ require_once 'header.php';
             <div class="sm:hidden h-20"></div>
 
             <!-- Add-ons Recommendations -->
-            <?php if (!empty($addonProducts)) { ?>
+            <?php if (!empty($addonProducts)) {
+                // Get unique categories from addon products
+                $addonCategories = array();
+                foreach ($addonProducts as $addon) {
+                    if (!empty($addon['category_title']) && !in_array($addon['category_title'], $addonCategories)) {
+                        $addonCategories[] = $addon['category_title'];
+                    }
+                }
+            ?>
             <div
                 class="bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg sm:rounded-xl p-3 sm:p-5 md:p-6 mb-4 sm:mb-6 border border-pink-100">
                 <div class="mb-3 sm:mb-4">
@@ -306,14 +315,26 @@ require_once 'header.php';
                     <p class="text-[10px] sm:text-xs md:text-sm text-gray-600">Make it extra special with these add-ons
                     </p>
                 </div>
+                <?php if (!empty($addonCategories)) { ?>
+                <div class="mb-3 sm:mb-4 flex flex-wrap gap-2">
+                    <button
+                        class="addon-filter-btn active text-[10px] sm:text-xs md:text-sm px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full border-2 border-primary text-primary font-semibold transition-all"
+                        data-category="all">All</button>
+                    <?php foreach ($addonCategories as $cat) { ?>
+                    <button
+                        class="addon-filter-btn text-[10px] sm:text-xs md:text-sm px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full border-2 border-gray-300 text-gray-700 hover:border-primary hover:text-primary font-semibold transition-all"
+                        data-category="<?php echo strtolower(str_replace(' ', '-', $cat)); ?>"><?php echo ucwords($cat); ?></button>
+                    <?php } ?>
+                </div>
+                <?php } ?>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4">
                     <?php foreach ($addonProducts as $addon) {
                             extract($addon);
                             $discountPercent = ($inventory_mrp > 0 && $inventory_price < $inventory_mrp)
                                 ? round((1 - $inventory_price / $inventory_mrp) * 100, 0) : 0;
                         ?>
-                    <div
-                        class="bg-white rounded-md sm:rounded-lg overflow-hidden border border-gray-200 hover:border-primary hover:shadow-lg transition-all duration-300 group flex flex-col">
+                    <div class="addon-product-card bg-white rounded-md sm:rounded-lg overflow-hidden border border-gray-200 hover:border-primary hover:shadow-lg transition-all duration-300 group flex flex-col"
+                        data-category="<?php echo strtolower(str_replace(' ', '-', $addon['category_title'])); ?>">
                         <a href="<?php echo $link_url ?>" title="<?php echo ucwords($product_title) ?>"
                             class="block flex flex-col h-full">
                             <div class="relative w-full aspect-square overflow-hidden">
@@ -325,14 +346,6 @@ require_once 'header.php';
                                     -<?php echo $discountPercent ?>%
                                 </span>
                                 <?php } ?>
-                                <div
-                                    class="absolute bottom-0 left-0 right-0 bg-primary/20 p-2 sm:p-2.5 md:p-3 translate-y-0 sm:translate-y-full sm:group-hover:translate-y-0 transition duration-300">
-                                    <button data-info="<?php echo $product_id . '_' . $inventory_price . '_1' ?>"
-                                        class="w-full addAddOnProductToCart py-1.5 sm:py-2 md:py-2.5 text-[10px] sm:text-[11px] md:text-xs bg-primary text-white rounded-md sm:rounded-lg font-semibold hover:bg-opacity-90 hover:shadow-md active:scale-95 transition-all duration-300 flex items-center justify-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:translate-y-1 sm:group-hover:translate-y-0 sm:pointer-events-none sm:group-hover:pointer-events-auto">
-                                        <i class="ri-add-circle-line text-xs sm:text-sm md:text-base"></i>
-                                        <span>Add</span>
-                                    </button>
-                                </div>
                             </div>
                             <div class="p-2 sm:p-2.5 md:p-3 flex flex-col flex-1">
                                 <h4
@@ -346,6 +359,11 @@ require_once 'header.php';
                                         class="text-[9px] sm:text-[10px] md:text-xs text-gray-500 line-through"><?php echo $inventory_currency_symbol . $inventory_mrp ?></span>
                                     <?php } ?>
                                 </div>
+                                <button data-info="<?php echo $product_id . '_' . $inventory_price . '_1' ?>"
+                                    class="w-full addAddOnProductToCart py-1.5 sm:py-2 md:py-2.5 text-[10px] sm:text-[11px] md:text-xs bg-primary text-white rounded-md sm:rounded-lg font-semibold hover:bg-opacity-90 hover:shadow-md active:scale-95 transition-all duration-300 flex items-center justify-center gap-1 mt-auto">
+                                    <i class="ri-add-circle-line text-xs sm:text-sm md:text-base"></i>
+                                    <span>Add</span>
+                                </button>
                             </div>
                         </a>
                     </div>
@@ -626,6 +644,36 @@ WHERE p.product_status = 1
         </div>
     </div>
 </main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterBtns = document.querySelectorAll('.addon-filter-btn');
+    const productCards = document.querySelectorAll('.addon-product-card');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const selectedCategory = this.getAttribute('data-category');
+
+            // Update active button
+            filterBtns.forEach(b => b.classList.remove('active', 'border-primary',
+                'text-primary'));
+            filterBtns.forEach(b => b.classList.add('border-gray-300', 'text-gray-700'));
+            this.classList.add('active', 'border-primary', 'text-primary');
+            this.classList.remove('border-gray-300', 'text-gray-700');
+
+            // Filter products
+            productCards.forEach(card => {
+                if (selectedCategory === 'all') {
+                    card.style.display = '';
+                } else {
+                    const cardCategory = card.getAttribute('data-category');
+                    card.style.display = cardCategory === selectedCategory ? '' :
+                        'none';
+                }
+            });
+        });
+    });
+});
+</script>
 <?php
 
 require_once 'footer.php';
