@@ -33,6 +33,13 @@ if (isset($inventory_addons) && !empty($inventory_addons)) {
 
     // Extract addon product IDs
     $addonIds = array_column($productAddons, 0);
+
+    // remove current product id from add ons
+
+    $addonIds = array_filter($addonIds, function ($id) use ($product_id) {
+        return $id != $product_id;
+    });
+
     if (!empty($addonIds)) {
         $addonIdsStr = implode(',', array_map('intval', $addonIds));
         $addOnQuery = "SELECT p.product_id, p.product_title, p.product_image, 
