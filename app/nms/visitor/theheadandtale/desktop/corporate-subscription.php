@@ -1,5 +1,4 @@
 <?php
-require_once LOGIN_CHECK;
 require_once 'header.php';
 ?>
 
