@@ -38,7 +38,7 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 				}
 			}
 
-			$sortBy = 'link_published, link_is_featured DESC';
+			$sortBy = 'link_published DESC, link_is_featured DESC';
 			if (isset($_GET['sort'])) {
 				switch ($_GET['sort']) {
 					case 'price_low':
