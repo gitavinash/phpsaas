@@ -206,13 +206,6 @@ require_once 'header.php';
                     <span
                         class="text-sm font-semibold text-green-700"><?php echo $inventory_in_stock == 1 ? 'In Stock' : 'Out of Stock'; ?></span>
                 </div>
-                <div class="flex items-center gap-2 bg-amber-50 rounded-lg px-4 py-2 flex-1">
-                    <i class="ri-time-line text-amber-600 text-lg"></i>
-                    <span class="text-sm text-gray-700">
-                        Order within <span id="urgency-timer" class="font-semibold text-amber-700"></span> for same-day
-                        delivery
-                    </span>
-                </div>
             </div>
 
             <?php
