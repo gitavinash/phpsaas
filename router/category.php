@@ -38,9 +38,7 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 				}
 			}
 
-			// $sortBy = 'link_is_featured, link_published DESC';
-
-			$sortBy = 'link_is_featured, link_published DESC';
+			$sortBy = 'link_published, link_is_featured DESC';
 			if (isset($_GET['sort'])) {
 				switch ($_GET['sort']) {
 					case 'price_low':
@@ -70,7 +68,7 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 				$sortBy = "news_published DESC";
 			}
 
-			if ($categoryPost = mysqli_query($connection, "SELECT DISTINCT (link_id) as link_id, link_url, link_published as publishedTime, {$category_type}_id, {$category_type}_image, {$category_type}_title, meta_description, inventory_price, inventory_mrp, inventory_currency_symbol, inventory_in_stock {$addTime} {$addFilter} FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "{$category_type} ON link_relation_id={$category_type}_id INNER JOIN " . TABLE_PREFIX . "meta ON link_id=meta_relation_id LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id={$category_type}_id WHERE {$category_type}_category='{$category_id}' AND link_status=200 AND link_type='{$category_type}' AND {$category_type}_status=1 ORDER BY {$sortBy} " . PAGINATION)) {
+			if ($categoryPost = mysqli_query($connection, "SELECT DISTINCT (link_id) as link_id, link_url, link_published as publishedTime, {$category_type}_id, {$category_type}_image, {$category_type}_title, meta_description, inventory_price, inventory_mrp, inventory_currency_symbol, inventory_in_stock {$addTime} {$addFilter} FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "{$category_type} ON link_relation_id={$category_type}_id AND {$category_type}_site_id=" . SITE_ID . " INNER JOIN " . TABLE_PREFIX . "meta ON link_id=meta_relation_id LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id={$category_type}_id WHERE {$category_type}_category='{$category_id}' AND link_status=200 AND link_type='{$category_type}' AND {$category_type}_status=1 ORDER BY {$sortBy} " . PAGINATION)) {
 
 				if (mysqli_num_rows($categoryPost) != 0) {
 					while ($categoryPostData = mysqli_fetch_assoc($categoryPost)) {
