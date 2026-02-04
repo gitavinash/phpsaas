@@ -393,7 +393,7 @@ input:focus {
 /* Mobile */
 @media (max-width: 600px) {
   #orderPopup {
-    bottom: 16px;
+    bottom: 100px;
     left: 12px;
     right: 12px;
     z-index: 9999;
