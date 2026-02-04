@@ -393,17 +393,53 @@ input:focus {
 /* Mobile */
 @media (max-width: 600px) {
   #orderPopup {
+    bottom: 16px;
     left: 12px;
     right: 12px;
+    z-index: 9999;
   }
 
   .order-toast {
     max-width: 100%;
     min-width: auto;
+    height: 100px;
+    margin: 0;
   }
 
   .toast-img {
-    width: 90px;
+    width: 100px;
     height: 100px;
+  }
+
+  .toast-body {
+    padding: 12px 14px;
+  }
+
+  .toast-header {
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .toast-urgency-title {
+    font-size: 11px;
+  }
+
+  .toast-body-content {
+    font-size: 12px;
+    gap: 3px;
+  }
+
+  .toast-product {
+    font-size: 13px;
+  }
+
+  .toast-footer {
+    font-size: 10px;
+  }
+
+  .toast-close {
+    font-size: 16px;
+    top: 6px;
+    right: 6px;
   }
 }
