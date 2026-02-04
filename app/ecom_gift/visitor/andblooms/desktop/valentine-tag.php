@@ -36,7 +36,7 @@
 ?>
 
 <!-- Banner with Breadcrumb -->
-<div class="relative h-[280px] w-full mb-8 mt-16 overflow-hidden">
+<div class="relative h-[150px] md:h-[300px] w-full mt-16 overflow-hidden">
     <?php
         $bannerImage = $tag_image;
         $bannerFromProduct = false;
@@ -52,23 +52,15 @@
     <?php
             $bannerStyle = "background-image: url('{$bannerImage}');";
             if ($bannerFromProduct) {
-                $bannerStyle .= ' filter: blur(05px); transform: scale(1.05);';
+                $bannerStyle .= ' filter: blur(3px);';
             }
             ?>
-    <div style="<?= $bannerStyle ?>" class="absolute inset-0 bg-cover bg-center"></div>
+    <div style="<?= $bannerStyle ?>"
+        class="absolute inset-0 bg-contain bg-center bg-cover transition-transform duration-300">
+    </div>
     <?php } else { ?>
     <div class="absolute inset-0 bg-gradient-to-r from-[#D4946D] via-[#e0b89c] to-[#d4946d]"></div>
     <?php } ?>
-    <!-- <div class="absolute inset-0 bg-black bg-opacity-40"></div> -->
-    <div class="container mx-auto px-4 h-full flex flex-col justify-center items-center text-center relative z-10">
-        <!-- <div class="flex items-center text-sm text-white/80 mb-6">
-            <a href="/" class="hover:text-white">Home</a>
-            <span class="mx-2">/</span>
-            <span class="text-white"><?php echo  $tag_title ?></span>
-        </div>
-        <h1 class="font-serif text-4xl md:text-5xl text-white mb-4"><?php echo  $tag_title ?></h1>
-        <p class="text-white text-lg max-w-2xl"><?php echo  $tag_description ?></p> -->
-    </div>
 </div>
 
 <!-- Product Grid -->
