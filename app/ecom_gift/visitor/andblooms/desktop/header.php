@@ -184,7 +184,7 @@
                     <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Faux Flowers</a>
                     <a href="/category/cake/" class="text-gray-700 hover:text-primary transition">Cake & Hampers</a>
                     <a href="/tag/valentine/?sort=newest"
-                        class="hover:text-gray-700 text-primary transition font-semibold">Valentine Edition</a>
+                        class="hover:text-[#D2042D] text-[#D2042D] transition font-semibold">Valentine Edition</a>
                     <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
                         class="text-gray-700 hover:text-primary transition">
                         Blooms of <?php echo date('F') ?>
