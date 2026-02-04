@@ -45,10 +45,11 @@ INNER JOIN " . TABLE_PREFIX . "link l
     ON l.link_relation_id=p.{$productType}_id
     AND l.link_type='{$productType}'
     AND l.link_site_id=" . SITE_ID . "
+    AND l.link_status=200
 WHERE o.order_site_id = ?
   AND p.product_site_id = ?
-
 ORDER BY o.order_update DESC
+GROUP BY l.link_url
 LIMIT 20
 ";
 
