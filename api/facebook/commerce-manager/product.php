@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: text/csv');
-header('Content-Disposition: attachment; filename="facebook-feed-' . strtolower(str_replace('.', '-', SITE_DOMAIN)) . '.csv"');
+header('Content-Disposition: attachment; filename="facebook-commerce-manager-feed-' . strtolower(str_replace('.', '-', SITE_DOMAIN)) . '.csv"');
 
 $siteName = strtoupper(str_replace(' ', '-', strtolower(SITE_NAME)));
 
