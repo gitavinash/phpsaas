@@ -79,7 +79,7 @@ if (empty($bannerImage) && !empty($categorySinglePost) && is_array($categorySing
                     <?php if ($inventory_in_stock == 0): ?>
                     <div class="absolute top-3 left-3 bg-red-600 text-white text-xs px-3 py-1 rounded">Out of Stock
                     </div>
-                    <?php elseif (strtotime($link_published) > strtotime('-1 month')): ?>
+                    <?php elseif (strtotime($publishedTime) > strtotime('-1 month')): ?>
                     <div class="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded">New</div>
                     <?php endif; ?>
                     <?php if ($discount > 0): ?>
