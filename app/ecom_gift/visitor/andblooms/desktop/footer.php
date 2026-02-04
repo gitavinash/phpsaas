@@ -411,8 +411,8 @@ function showPopup() {
 
 // init
 fetchOrders();
-setInterval(showPopup, 7000);
-setInterval(fetchOrders, 60000);
+setInterval(showPopup, 10000);
+setInterval(fetchOrders, 100000);
 </script>
 
 
