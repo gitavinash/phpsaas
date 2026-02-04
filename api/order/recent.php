@@ -49,7 +49,6 @@ INNER JOIN " . TABLE_PREFIX . "link l
 WHERE o.order_site_id = ?
   AND p.product_site_id = ?
 ORDER BY o.order_update DESC
-GROUP BY l.link_url
 LIMIT 20
 ";
 
