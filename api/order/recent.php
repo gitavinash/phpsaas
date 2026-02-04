@@ -49,7 +49,7 @@ WHERE o.order_site_id = ?
   AND p.product_site_id = ?
 
 ORDER BY o.order_update DESC
-LIMIT 10
+LIMIT 20
 ";
 
 $stmt = mysqli_prepare($connection, $sql);

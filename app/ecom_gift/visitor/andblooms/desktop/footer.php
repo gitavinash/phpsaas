@@ -382,9 +382,9 @@ function showPopup() {
                     </div>
 
                     <div class="toast-body-content">
-                        <span class="font-semibold text-primary">${item.profile_display_name}</span>
+                        <span class="font-semibold text-primary">${item.profile_display_name.toUpperCase()}</span>
                         <span class="text-gray-600">placed an order for</span>
-                        <span class="toast-product">${item.product_title}</span>
+                        <span class="toast-product">${item.product_title.toUpperCase()}</span>
                     </div>
 
                     <div class="toast-footer">
