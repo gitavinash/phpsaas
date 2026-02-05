@@ -28,7 +28,7 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
                     $slideClass = $slideIndex === 0 ? '' : 'translate-x-full';
                 ?>
         <a href="<?php echo $btnUrl ?>" title="<?php echo $title ?>">
-            <div class="slide absolute inset-0 bg-cover bg-left bg-no-repeat <?php echo $slideClass ?>"
+            <div class="slide absolute inset-0 bg-cover bg-center bg-no-repeat <?php echo $slideClass ?>"
                 style="background-image: url('<?php echo $bgImage ?>')">
                 <div class="absolute inset-0"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
