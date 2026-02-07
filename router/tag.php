@@ -12,14 +12,16 @@ if (is_numeric($currentPage)) {
 
     /** Remove page no from url */
     $tag_title = str_replace('-', ' ', $urlStructure[1]);
-    $currentPage = str_replace('-', ' ', $urlStructure[2]);
+    $currentPage = (int)str_replace('-', ' ', $urlStructure[2]);
 } else {
 
     $tag_title = str_replace('-', ' ', $urlStructure[1]);
-    $currentPage = 0;
+    $currentPage = 1;
 }
 
-$sortBy = 'RAND()';
+$currentPage = max(1, (int)$currentPage);
+
+$sortBy = 'tag_time DESC, tag_id DESC';
 if (isset($_GET['sort'])) {
     switch ($_GET['sort']) {
         case 'price_low':
@@ -29,16 +31,30 @@ if (isset($_GET['sort'])) {
             $sortBy = 'inventory_price DESC';
             break;
         case 'newest':
-            $sortBy = 'tag_time DESC';
+            $sortBy = 'tag_time DESC, tag_id DESC';
             break;
         case 'oldest':
-            $sortBy = 'tag_time ASC';
+            $sortBy = 'tag_time ASC, tag_id ASC';
             break;
     }
 }
 
 
 $searchTag = mysqli_real_escape_string($connection, str_replace('-', ' ', $urlStructure[1]));
+
+// Count total result for pagination
+if ($totalTagPost = mysqli_query($connection, "SELECT COUNT(DISTINCT tag_relation_id) AS total_result FROM " . TABLE_PREFIX . "tag LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=tag_relation_id AND inventory_site_id=" . SITE_ID . " WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID)) {
+
+    if (mysqli_num_rows($totalTagPost) != 0) {
+
+        $totalRow = mysqli_fetch_assoc($totalTagPost);
+        $total_result = (int)$totalRow['total_result'];
+        $totalPages = ($total_result > 0) ? (int)ceil($total_result / PER_PAGE_LIMIT) : 0;
+
+        define('TOTAL_PAGE', $totalPages);
+        define('TOTAL_RESULT', $total_result);
+    }
+}
 
 if ($tagList = mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag_image, tag_description, tag_type FROM " . TABLE_PREFIX . "tag LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=tag_relation_id AND inventory_site_id=" . SITE_ID . " WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID . " GROUP BY tag_relation_id ORDER BY {$sortBy} " . PAGINATION)) {
 
@@ -50,13 +66,6 @@ if ($tagList = mysqli_query($connection, "SELECT tag_title, tag_relation_id, tag
         }
 
         extract($tagPost[0]);
-
-        // Count total result for pagination
-
-        $total_result = count($tagPost);
-
-        define('TOTAL_PAGE', round($total_result / PER_PAGE_LIMIT));
-        define('TOTAL_RESULT', $total_result);
 
         if ($pageDetails = mysqli_query($connection, "SELECT tag_id, tag_title, tag_image, tag_description, tag_type FROM " . TABLE_PREFIX . "tag WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID)) {
 

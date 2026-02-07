@@ -1,7 +1,10 @@
-<?php include_once 'header.php'; ?>
+<?php
+
+include_once 'header.php'; ?>
 
 <?php if (is_array($tagPost)):
-    $tagIds = array_map(fn($t) => $t['tag_relation_id'], $tagPost);
+    $tagIds = array_map(fn($t) => (int)$t['tag_relation_id'], $tagPost);
+    $tagIds = array_filter($tagIds, fn($id) => $id > 0);
     $resultTags = implode(',', $tagIds);
 
     $tag_title = ucwords($tag_title);
@@ -32,7 +35,10 @@
           WHERE link_relation_id IN ($resultTags) AND link_site_id=" . SITE_ID . " 
           AND link_type='product' AND link_status=200 ORDER BY $sortBy";
 
-    $result = mysqli_query($connection, $query);
+    $result = null;
+    if (!empty($resultTags)) {
+        $result = mysqli_query($connection, $query);
+    }
 ?>
 
 <!-- Banner with Breadcrumb -->
@@ -87,7 +93,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         <?php
             // Query already executed above, just check results
-            if (mysqli_num_rows($result) > 0):
+            if ($result && mysqli_num_rows($result) > 0):
                 mysqli_data_seek($result, 0); // Reset pointer to start
                 while ($row = mysqli_fetch_assoc($result)):
                     extract($row);
