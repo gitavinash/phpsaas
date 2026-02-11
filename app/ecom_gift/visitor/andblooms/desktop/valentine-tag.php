@@ -33,7 +33,7 @@ include_once 'header.php'; ?>
           INNER JOIN " . TABLE_PREFIX . "product ON link_relation_id=product_id 
           INNER JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=product_id 
           WHERE link_relation_id IN ($resultTags) AND link_site_id=" . SITE_ID . " 
-          AND link_type='product' AND link_status=200 ORDER BY $sortBy";
+          AND link_type='product' AND link_status=200 GROUP BY link_url ORDER BY $sortBy";
 
     $result = null;
     if (!empty($resultTags)) {
