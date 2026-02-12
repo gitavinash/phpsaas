@@ -43,7 +43,7 @@ if (isset($_GET['sort'])) {
 $searchTag = mysqli_real_escape_string($connection, str_replace('-', ' ', $urlStructure[1]));
 
 // Count total result for pagination
-if ($totalTagPost = mysqli_query($connection, "SELECT COUNT(DISTINCT tag_relation_id) AS total_result FROM " . TABLE_PREFIX . "tag LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=tag_relation_id AND inventory_site_id=" . SITE_ID . " WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID)) {
+if ($totalTagPost = mysqli_query($connection, "SELECT COUNT(DISTINCT tag_relation_id) AS total_result FROM " . TABLE_PREFIX . "tag LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=tag_relation_id AND inventory_site_id=" . SITE_ID . " LEFT JOIN " . TABLE_PREFIX . "product ON product_id=tag_relation_id AND product_site_id=" . SITE_ID . " AND product_status=1 WHERE tag_title LIKE '%{$searchTag}%' AND tag_site_id=" . SITE_ID)) {
 
     if (mysqli_num_rows($totalTagPost) != 0) {
 
