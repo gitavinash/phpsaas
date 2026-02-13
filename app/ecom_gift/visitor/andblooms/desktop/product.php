@@ -234,6 +234,15 @@ require_once 'header.php';
                 </div>
             </div>
 
+            <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                <div class="flex items-center gap-2 bg-green-50 rounded-lg px-4 py-2">
+                    <i class="ri-checkbox-circle-fill text-green-600 text-lg"></i>
+                    <span class="text-sm font-semibold text-green-700">
+                        Availability in: Delhi, Gurgaon, Noida, Ghaziabad, Faridabad
+                    </span>
+                </div>
+            </div>
+
             <?php
 
             if ($product_highlight != '') { ?>
@@ -241,6 +250,28 @@ require_once 'header.php';
             <p class="text-gray-600 mb-6"><?php echo $product_highlight ?></p>
             <?php
             }
+
+            if ($inventory_weight != '' || $inventory_lenght != '' || $inventory_height != '' || $inventory_width != '') { ?>
+            <p class="font-semibold mb-4"><strong>Product Details</strong></p>
+            <?php if ($inventory_weight != '') { ?>
+            <p class="text-gray-600 mb-6"><strong>Weight:</strong> <?php echo $inventory_weight ?></p>
+            <?php } ?>
+            <?php
+                $dimensions = array();
+                if ($inventory_lenght != '') {
+                    $dimensions[] = 'Length: ' . $inventory_lenght . ' CM';
+                }
+                if ($inventory_height != '') {
+                    $dimensions[] = 'Height: ' . $inventory_height . ' CM';
+                }
+                if ($inventory_width != '') {
+                    $dimensions[] = 'Width: ' . $inventory_width . ' CM';
+                }
+                if (!empty($dimensions)) { ?>
+            <p class="mb-4"><strong>Dimensions:</strong> <?php echo implode(' | ', $dimensions) ?>
+            </p>
+            <?php } ?>
+            <?php }
 
             // Display attributes/variations as image cards
             if (!empty($productAttributes)) {
@@ -250,23 +281,36 @@ require_once 'header.php';
                 }
                 $productVarient = implode(',', $productIds);
 
-                if ($productVarient = mysqli_query($connection, "SELECT product_title, product_image, link_url 
-                FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id 
-                WHERE product_id IN ({$productVarient}) AND product_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID . " AND link_type='product' AND link_status=200")) {
+                if ($productVarient = mysqli_query($connection, "SELECT product_title, product_image, link_url
+            FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id
+            WHERE product_id IN ({$productVarient}) AND product_site_id=" . SITE_ID . " AND link_site_id=" . SITE_ID
+                    . "
+            AND link_type='product' AND link_status=200")) {
                     if (mysqli_num_rows($productVarient) > 0) {
                         echo '<div class="mb-6">';
                         echo '<h3 class="text-lg font-semibold text-gray-800 mb-3">Available Variations</h3>';
-                        echo '<div class="flex overflow-x-auto gap-4 pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">';
+                        echo '<div
+                    class="flex overflow-x-auto gap-4 pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    ';
 
                         while ($productVarientData = mysqli_fetch_assoc($productVarient)) {
-                            echo "<a href='{$productVarientData['link_url']}' class='flex-shrink-0 group'>";
-                            echo "<div class='relative w-32 h-40 rounded-lg overflow-hidden border-2 border-gray-200 hover:border-primary transition-all duration-300 hover:shadow-lg'>";
-                            echo "<div class='absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-300' style='background-image: url(\"{$productVarientData['product_image']}\");'></div>";
-                            echo "<div class='absolute inset-0 bg-gradient-to-t from-black/70 to-transparent'></div>";
+                            echo "<a href='{$productVarientData[' link_url']}' class='flex-shrink-0 group'>";
+                            echo "<div
+                            class='relative w-32 h-40 rounded-lg overflow-hidden border-2 border-gray-200 hover:border-primary transition-all duration-300 hover:shadow-lg'>
+                            ";
+                            echo "<div
+                                class='absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-300'
+                                style='background-image: url(\"{$productVarientData[' product_image']}\");'></div>";
+                            echo "<div class='absolute inset-0 bg-gradient-to-t from-black/70 to-transparent'></div>
+                            ";
                             echo "<div class='absolute bottom-0 left-0 right-0 p-2.5'>";
-                            echo "<p class='text-white font-medium text-xs line-clamp-2 drop-shadow-lg' style='text-shadow: 0 2px 8px rgba(0,0,0,0.9);'>{$productVarientData['product_title']}</p>";
+                            echo "<p class='text-white font-medium text-xs line-clamp-2 drop-shadow-lg'
+                                    style='text-shadow: 0 2px 8px rgba(0,0,0,0.9);'>
+                                    {$productVarientData['product_title']}</p>";
                             echo "</div>";
-                            echo "<div class='absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>";
+                            echo "<div
+                                class='absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                            </div>";
                             echo "</div>";
                             echo "</a>";
                         }
@@ -338,7 +382,8 @@ require_once 'header.php';
                         <i class="ri-gift-line text-primary text-base sm:text-lg md:text-xl mr-1.5 sm:mr-2"></i>
                         Complete Your Gift
                     </h3>
-                    <p class="text-[10px] sm:text-xs md:text-sm text-gray-600">Make it extra special with these add-ons
+                    <p class="text-[10px] sm:text-xs md:text-sm text-gray-600">Make it extra special with these
+                        add-ons
                     </p>
                 </div>
                 <?php if (!empty($addonCategories)) { ?>
