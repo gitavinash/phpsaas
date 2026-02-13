@@ -124,6 +124,10 @@ require_once 'header.php';
         pointer-events: auto;
         transform: translateY(0);
     }
+
+    .desktop-default-cta.is-hidden {
+        display: none;
+    }
 }
 </style>
 
@@ -294,13 +298,13 @@ require_once 'header.php';
                     ';
 
                         while ($productVarientData = mysqli_fetch_assoc($productVarient)) {
-                            echo "<a href='{$productVarientData[' link_url']}' class='flex-shrink-0 group'>";
+                            echo "<a href='{$productVarientData['link_url']}' class='flex-shrink-0 group'>";
                             echo "<div
                             class='relative w-32 h-40 rounded-lg overflow-hidden border-2 border-gray-200 hover:border-primary transition-all duration-300 hover:shadow-lg'>
                             ";
                             echo "<div
                                 class='absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-300'
-                                style='background-image: url(\"{$productVarientData[' product_image']}\");'></div>";
+                                style='background-image: url(\"{$productVarientData['product_image']}\");'></div>";
                             echo "<div class='absolute inset-0 bg-gradient-to-t from-black/70 to-transparent'></div>
                             ";
                             echo "<div class='absolute bottom-0 left-0 right-0 p-2.5'>";
@@ -329,7 +333,7 @@ require_once 'header.php';
 
             ?>
 
-            <div class="hidden sm:flex flex-col sm:flex-row gap-4 mb-8">
+            <div class="hidden sm:flex flex-col sm:flex-row gap-4 mb-8 desktop-default-cta">
                 <p style="display:none" id="productInfo"
                     value="<?php echo $product_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
                 </p>
@@ -734,6 +738,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const productCards = document.querySelectorAll('.addon-product-card');
     const mediaSticky = document.querySelector('.product-media-sticky');
     const desktopStickyCta = document.querySelector('.desktop-sticky-cta');
+    const desktopDefaultCta = document.querySelector('.desktop-default-cta');
     const productDetails = document.querySelector('.product-details');
 
     filterBtns.forEach(btn => {
@@ -766,6 +771,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 desktopStickyCta.classList.remove('is-active');
                 desktopStickyCta.style.left = '';
                 desktopStickyCta.style.width = '';
+                if (desktopDefaultCta) {
+                    desktopDefaultCta.classList.remove('is-hidden');
+                }
                 return;
             }
 
@@ -780,8 +788,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 desktopStickyCta.style.left = `${detailsRect.left}px`;
                 desktopStickyCta.style.width = `${detailsRect.width}px`;
                 desktopStickyCta.classList.add('is-active');
+                if (desktopDefaultCta) {
+                    desktopDefaultCta.classList.add('is-hidden');
+                }
             } else {
                 desktopStickyCta.classList.remove('is-active');
+                if (desktopDefaultCta) {
+                    desktopDefaultCta.classList.remove('is-hidden');
+                }
             }
         };
 
