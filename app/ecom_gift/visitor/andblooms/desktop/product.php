@@ -101,7 +101,33 @@ require_once 'header.php';
 
 ?>
 
-<main class="container mx-auto px-4 py-8 pt-24">
+<style>
+@media (min-width: 768px) {
+    .product-media-sticky {
+        position: sticky;
+        top: 6.5rem;
+        align-self: flex-start;
+    }
+
+    .desktop-sticky-cta {
+        position: fixed;
+        bottom: 1.5rem;
+        z-index: 60;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(0.5rem);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .desktop-sticky-cta.is-active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<main class="container mx-auto px-4 py-8 pt-24 md:pb-32">
     <!-- Breadcrumb -->
     <nav class="flex items-center text-gray-500 mb-6 overflow-x-auto" aria-label="Breadcrumb">
         <ol class="flex items-center text-xs sm:text-sm whitespace-nowrap gap-1 sm:gap-2">
@@ -123,7 +149,7 @@ require_once 'header.php';
     <!-- Product Hero Section -->
     <div class="flex flex-col md:flex-row gap-8 mb-16">
         <!-- Product Images -->
-        <div class="md:w-1/2">
+        <div class="md:w-1/2 product-media-sticky">
             <div class="product-image-container mb-4 rounded-lg overflow-hidden bg-gray-100">
                 <div class="w-full aspect-square flex items-center justify-center">
                     <img src="<?php echo $product_image ?>" id="mainProductImage"
@@ -156,7 +182,7 @@ require_once 'header.php';
             </div>
         </div>
         <!-- Product Details -->
-        <div class="md:w-1/2">
+        <div class="md:w-1/2 product-details">
             <h1 class="text-3xl font-semibold text-gray-800 mb-2"><?php echo ucwords($product_title) ?></h1>
             <div class="flex items-center mb-4">
                 <div class="flex text-yellow-400">
@@ -644,10 +670,26 @@ WHERE p.product_status = 1
         </div>
     </div>
 </main>
+
+<div class="hidden md:flex desktop-sticky-cta flex-col sm:flex-row gap-4">
+    <button onclick="document.getElementById('addToCart').click()"
+        class="flex-1 bg-primary text-white py-3 px-6 rounded-button font-semibold hover:bg-opacity-90 transition flex items-center justify-center whitespace-nowrap">
+        <i class="ri-shopping-cart-line mr-2"></i>
+        Add to Cart
+    </button>
+    <a href="<?php echo $whatsappUrl ?>" target="_blank" rel="noopener noreferrer"
+        class="flex items-center justify-center px-6 py-3 rounded-button font-semibold text-green-800 bg-green-100 border border-green-300 hover:bg-green-200 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-400 transition whitespace-nowrap">
+        <i class="ri-whatsapp-line mr-2 text-xl"></i>
+        Order on WhatsApp
+    </a>
+</div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const filterBtns = document.querySelectorAll('.addon-filter-btn');
     const productCards = document.querySelectorAll('.addon-product-card');
+    const mediaSticky = document.querySelector('.product-media-sticky');
+    const desktopStickyCta = document.querySelector('.desktop-sticky-cta');
+    const productDetails = document.querySelector('.product-details');
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -672,6 +714,38 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    if (mediaSticky && desktopStickyCta && productDetails) {
+        const updateStickyCta = () => {
+            if (window.innerWidth < 768) {
+                desktopStickyCta.classList.remove('is-active');
+                desktopStickyCta.style.left = '';
+                desktopStickyCta.style.width = '';
+                return;
+            }
+
+            const stickyTop = parseFloat(getComputedStyle(mediaSticky).top) || 0;
+            const mediaRect = mediaSticky.getBoundingClientRect();
+            const mediaHeight = mediaSticky.offsetHeight;
+            const isStuck = mediaRect.top <= stickyTop + 1 &&
+                mediaRect.bottom >= stickyTop + mediaHeight - 1;
+
+            if (isStuck) {
+                const detailsRect = productDetails.getBoundingClientRect();
+                desktopStickyCta.style.left = `${detailsRect.left}px`;
+                desktopStickyCta.style.width = `${detailsRect.width}px`;
+                desktopStickyCta.classList.add('is-active');
+            } else {
+                desktopStickyCta.classList.remove('is-active');
+            }
+        };
+
+        updateStickyCta();
+        window.addEventListener('scroll', updateStickyCta, {
+            passive: true
+        });
+        window.addEventListener('resize', updateStickyCta);
+    }
 });
 </script>
 <?php
