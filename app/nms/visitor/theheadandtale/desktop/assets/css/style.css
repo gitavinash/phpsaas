@@ -1738,10 +1738,10 @@ nav ul li a.partnerInsights {
 
   /* Hide description on mobile */
   .news_box .news_intro p:not(:has(span)) {
-    display: block;
+    display: none;
   }
   .news_box .news_intro p:last-child {
-    display: block;
+    display: none;
   }
 
   /* Mobile news_box adjustments */
