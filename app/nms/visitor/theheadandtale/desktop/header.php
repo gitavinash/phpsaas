@@ -119,15 +119,15 @@ if (isset($_COOKIE['user_data'])) {
                     </div>
 
                     <!-- Desktop Search Bar (Center) -->
-                    <div class="header-search">
-                        <input type="text" placeholder="Search articles..." aria-label="Search">
+                    <form class="header-search" action="/search/" method="get">
+                        <input type="text" name="q" placeholder="Search news..." aria-label="Search">
                         <button type="submit" aria-label="Submit search">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
                                 <circle cx="11" cy="11" r="7" stroke="currentColor" />
                                 <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-linecap="round" />
                             </svg>
                         </button>
-                    </div>
+                    </form>
 
                     <div class="mobile-actions">
                         <?php if (isset($_COOKIE['user_data'])) { ?>

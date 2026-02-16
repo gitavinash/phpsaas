@@ -132,8 +132,12 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
                 return;
             }
             const isExpanded = searchContainer.classList.contains('expanded');
+            if (isExpanded && searchInput && searchInput.value.trim() !== '') {
+                submitSearch(searchInput);
+                return;
+            }
             searchContainer.classList.toggle('expanded', !isExpanded);
-            if (!isExpanded) {
+            if (!isExpanded && searchInput) {
                 searchInput.focus();
             }
         });
