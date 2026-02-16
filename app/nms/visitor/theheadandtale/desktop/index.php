@@ -238,11 +238,17 @@
                 if (SITE_VERSION == 'mobile' && SITE_ID == '49') {
                     $maxArticles = min(20, TOTAL_RESULT); // Same limit as desktop
 
+
+                    // Show articles 2-5
+                    for ($i = 1; $i <= 1 && $i < $maxArticles; $i++) {
+                        renderNewsCard($latestNewsData[$i]);
+                    }
+
                     // After 1st article: Fintech Highlights
                     renderFintechHighlights($connection);
 
                     // Show articles 2-5
-                    for ($i = 1; $i <= 4 && $i < $maxArticles; $i++) {
+                    for ($i = 2; $i <= 6 && $i < $maxArticles; $i++) {
                         renderNewsCard($latestNewsData[$i]);
                     }
 
