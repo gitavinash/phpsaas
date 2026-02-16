@@ -1,50 +1,62 @@
+/* Import CSS variables from main stylesheet */
+@import url("style.css");
+
 .thankyou_wrapper {
   padding-top: 200px;
 }
+
 .thankyou_wrapper__content {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  padding: var(--space-xl);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   border-radius: 1rem;
 }
+
 .thankyou_wrapper__content h1 {
-  font-size: 55px;
+  font-size: var(--text-5xl);
   text-align: center;
   font-weight: 600;
+  font-family: var(--font-primary);
+  line-height: var(--leading-tight);
 }
+
 .thankyou_wrapper__content p {
-  font-size: 20px;
-  margin-top: 2rem;
+  font-size: var(--text-xl);
+  margin-top: var(--space-xl);
   text-align: center;
+  font-family: var(--font-secondary);
+  line-height: var(--leading-relaxed);
 }
+
 .thankyou_wrapper__content p a {
   color: red;
 }
 
 @media (max-width: 992px) {
   .thankyou_wrapper__content h1 {
-    font-size: 38px;
+    font-size: var(--text-4xl);
   }
   .thankyou_wrapper__content p {
-    font-size: 18px;
-    margin-top: 1rem;
+    font-size: var(--text-lg);
+    margin-top: var(--space-base);
   }
 }
+
 @media (max-width: 768px) {
   .thankyou_wrapper {
     padding-top: 150px;
   }
   .thankyou_wrapper__content h1 {
-    font-size: 24px;
+    font-size: var(--text-2xl);
   }
   .thankyou_wrapper__content p {
-    font-size: 16px;
+    font-size: var(--text-base);
   }
   .thankyou_wrapper__content {
-    padding: 1rem;
+    padding: var(--space-base);
   }
 }
 

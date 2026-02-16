@@ -1,43 +1,56 @@
+/* Import CSS variables from main stylesheet */
+@import url("style.css");
+
 figcaption {
   padding: 20px 5px 10px 5px;
   box-sizing: border-box;
   background: #fff4f4;
   font-style: italic;
-  font-size: 14px;
-  line-height: 22px;
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
   margin-top: -10px;
   word-wrap: break-word;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
+
 .newsDetails {
   padding: 120px 0 60px 0;
 }
+
 .news_right {
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 100%;
-  gap: 2rem;
+  gap: var(--space-xl);
   padding-left: 4rem;
 }
+
 .img-fluid {
   border-radius: 10px;
 }
+
 .news_right h3 {
-  font-size: 2rem;
+  font-size: var(--text-4xl);
   font-weight: 700;
+  line-height: var(--leading-tight);
+  font-family: var(--font-primary);
 }
+
 .news_right .news_date {
   margin: 0;
   color: gray;
+  font-size: var(--text-base);
 }
+
 .news_right p {
-  font-size: 18px;
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
   display: -webkit-box;
-  /* -webkit-line-clamp: 3; */
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-family: var(--font-secondary);
 }
 
 .show-3-line {
@@ -50,27 +63,33 @@ figcaption {
 
 .header_right p {
   display: flex;
-  gap: 1rem;
-  font-size: 16px;
+  gap: var(--space-base);
+  font-size: var(--text-base);
   cursor: pointer;
   color: var(--black-color);
   align-items: center;
 }
+
 .header_right p i {
   font-size: 40px;
   opacity: 0.6;
 }
+
 .news_box__heading {
   margin: 0 5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .news_box__heading h6 {
-  font-size: 20px;
+  font-size: var(--text-xl);
+  font-family: var(--font-primary);
   max-width: max-content;
   position: relative;
+  font-weight: 600;
 }
+
 .news_box__heading h6::after {
   content: "";
   position: absolute;
@@ -80,8 +99,9 @@ figcaption {
   bottom: -5px;
   left: 0;
 }
+
 .news_box__heading p {
-  font-size: 18px;
+  font-size: var(--text-lg);
   text-align: right;
 }
 .social_link i {
@@ -186,7 +206,7 @@ figcaption {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.3);
-  z-index: 999;
+  z-index: 9999;
   transition: 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 .profile--sideBar.active {
@@ -226,17 +246,22 @@ figcaption {
 }
 
 .manage_link {
-  margin-top: 4rem;
-  padding: 1rem;
-  border-radius: 1rem;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  border: 1px solid whitesmoke;
+  margin-top: 1rem;
+  /* padding: 1rem;
+  border-radius: 1rem; */
+  /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  border: 1px solid whitesmoke; */
 }
 .manage_link a {
   text-decoration: none;
   color: red;
   font-weight: 400;
   font-size: 16px;
+  float: left;
+  width: 100%;
+  padding: 1rem 3.5rem;
+  box-sizing: border-box;
+  border-radius: 7px;
 }
 .manage_link a:hover {
   color: red;
@@ -248,7 +273,10 @@ figcaption {
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  float: left;
+  width: 100%;
 }
+
 .plan_card h6 {
   color: gray;
   font-weight: 600;
@@ -494,6 +522,7 @@ figcaption {
   }
   .manage_link a {
     font-size: 16px;
+    padding: 1rem 1.5rem;
   }
   .details_box {
     padding: 1rem;

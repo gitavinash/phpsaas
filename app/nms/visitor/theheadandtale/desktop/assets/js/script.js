@@ -57,14 +57,26 @@ function getURLParameter(name) {
 if (profileSideBar) {
   const profile = document.querySelector(".profile--sideBar");
   const profileBtn = document.querySelector(".user--name");
+  const mobileProfileBtn = document.querySelector(".mobile-user-btn");
   const cancelProfile = document.querySelector(".profile_cancel");
 
-  profileBtn.addEventListener("click", () => {
-    profile.classList.toggle("active");
-  });
-  cancelProfile.addEventListener("click", () => {
-    profile.classList.toggle("active");
-  });
+  if (profileBtn) {
+    profileBtn.addEventListener("click", () => {
+      profile.classList.toggle("active");
+    });
+  }
+
+  if (mobileProfileBtn) {
+    mobileProfileBtn.addEventListener("click", () => {
+      profile.classList.toggle("active");
+    });
+  }
+
+  if (cancelProfile) {
+    cancelProfile.addEventListener("click", () => {
+      profile.classList.toggle("active");
+    });
+  }
 }
 if (faqBox) {
   const footerFaq = document.querySelectorAll(".faq__box");
@@ -80,7 +92,7 @@ window.addEventListener(
   function (e) {
     e.preventDefault();
   },
-  false
+  false,
 );
 
 // disable cntrl+shift+I
@@ -122,7 +134,7 @@ $("#forgotPassword").on("click", function (event) {
       popUpMessage(
         "center",
         errorResponse.responseJSON.msg,
-        errorResponse.responseJSON.status
+        errorResponse.responseJSON.status,
       );
       setTimeout(function () {
         window.location.reload();
@@ -170,7 +182,7 @@ $("#updatePassword").on("click", function (event) {
         popUpMessage(
           "center",
           errorResponse.responseJSON.msg,
-          errorResponse.responseJSON.status
+          errorResponse.responseJSON.status,
         );
         setTimeout(function () {
           window.location.reload();
@@ -213,7 +225,7 @@ $("#submitNewsletter").on("click", function (e) {
         popUpMessage(
           "center",
           errorResponse.responseJSON.msg,
-          errorResponse.responseJSON.status
+          errorResponse.responseJSON.status,
         );
         setTimeout(function () {
           window.location.reload();
@@ -342,7 +354,7 @@ $("#verifyEmailOTPBtn").click(function (e) {
             popUpMessage(
               "center",
               "You are successfully logged in",
-              data.status
+              data.status,
             );
 
             const redirect = getURLParameter("redirect_url");
@@ -371,7 +383,7 @@ $("#verifyEmailOTPBtn").click(function (e) {
     popUpMessage(
       "center",
       "Invalid OTP. Please enter a 6-digit code.",
-      "warning"
+      "warning",
     );
   }
 });
@@ -430,7 +442,7 @@ $("#userRegistrationBtn").click(function (e) {
         popUpMessage(
           "center",
           data.msg || "Profile updated successfully!",
-          "success"
+          "success",
         );
 
         setTimeout(() => {

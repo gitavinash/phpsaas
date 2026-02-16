@@ -1,3 +1,15 @@
+figcaption {
+  padding: 20px 5px 10px 5px;
+  box-sizing: border-box;
+  background: #fff4f4;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 22px;
+  margin-top: -10px;
+  word-wrap: break-word;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
 .newsDetails {
   padding: 120px 0 60px 0;
 }
@@ -9,8 +21,11 @@
   gap: 2rem;
   padding-left: 4rem;
 }
+.img-fluid {
+  border-radius: 10px;
+}
 .news_right h3 {
-  font-size: 42px;
+  font-size: 2rem;
   font-weight: 700;
 }
 .news_right .news_date {
@@ -23,6 +38,14 @@
   /* -webkit-line-clamp: 3; */
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.show-3-line {
+  -webkit-line-clamp: 3 !important;
+  height: 280px !important;
+  overflow: hidden;
+  padding-bottom: 10px;
+  box-sizing: border-box;
 }
 
 .header_right p {
@@ -83,18 +106,16 @@
   margin: 2rem 5rem;
   background-color: #fff9f9;
 }
-.details_box__content img {
-  max-width: 100%;
-}
+
 .details_box__content {
+  font-family: "Noto Sans", sans-serif !important;
   font-weight: 500 !important;
-  font-size: 18px !important;
-  line-height: 33px !important;
-  margin-bottom: 30px !important;
-  background: none !important;
+  margin: 0 auto !important;
+  color: inherit !important;
   font-size: 18px !important;
   line-height: 36px !important;
 }
+
 .details_box__content div {
   font-family: "Noto Sans", sans-serif !important;
   font-weight: 500 !important;
@@ -104,14 +125,18 @@
   line-height: 36px !important;
 }
 
+.details_box__content img {
+  max-width: 100%;
+}
 .details_box__content p {
-  font-size: 18px !important;
-  line-height: 33px !important;
+  font-family: "Noto Sans", sans-serif !important;
+  font-weight: 500 !important;
+  margin: 0 auto !important;
+  color: inherit !important;
   margin-bottom: 30px !important;
   background: none !important;
   font-size: 18px !important;
   line-height: 36px !important;
-  font-weight: 500 !important;
 }
 .details_box__content span {
   font-size: 18px !important;
@@ -125,11 +150,18 @@
 .details_box__img {
   margin: 2rem 0;
 }
-.user_content {
+/* .user_content {
   display: flex;
   justify-content: space-between;
   align-items: start;
   margin: 0 0 5rem 0;
+} */
+.user_content {
+  display: block;
+  /* justify-content: space-between;
+  align-items: start; */
+  margin: 0 0 1rem 5rem;
+  text-align: left;
 }
 .profile_cancel i {
   position: absolute;
@@ -194,17 +226,22 @@
 }
 
 .manage_link {
-  margin-top: 4rem;
-  padding: 1rem;
-  border-radius: 1rem;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  border: 1px solid whitesmoke;
+  margin-top: 1rem;
+  /* padding: 1rem;
+  border-radius: 1rem; */
+  /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  border: 1px solid whitesmoke; */
 }
 .manage_link a {
   text-decoration: none;
   color: red;
   font-weight: 400;
   font-size: 16px;
+  float: left;
+  width: 100%;
+  padding: 1rem 3.5rem;
+  box-sizing: border-box;
+  border-radius: 7px;
 }
 .manage_link a:hover {
   color: red;
@@ -216,7 +253,10 @@
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  float: left;
+  width: 100%;
 }
+
 .plan_card h6 {
   color: gray;
   font-weight: 600;
@@ -235,7 +275,7 @@
 
 /* subscribe_wrapper__heading */
 .subscribe_wrapper {
-  padding: 0 0 120px 0;
+  padding: 20px 0 120px 0;
 }
 .subscribe_wrapper__heading {
   display: flex;
@@ -251,6 +291,10 @@
   font-size: 22px;
   font-weight: 600;
   color: var(--white-color);
+}
+.subscribe_wrapper__heading h6 a {
+  text-decoration: none;
+  color: #fff;
 }
 .subscribe_wrapper__heading h3 {
   text-align: left;
@@ -295,9 +339,21 @@
 }
 
 .subscription_card__box p {
-  font-size: 25px;
   font-weight: 600;
   color: gray;
+  font-size: 24px;
+  font-weight: 600;
+  color: gray;
+  float: left;
+  width: 100%;
+  text-align: center;
+}
+.subscription_card__box p span {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-weight: 400;
+  font-size: 0.8rem;
 }
 .subscription_card__box h6 {
   color: red;
@@ -417,7 +473,7 @@
     height: 260px;
   }
   .subscribe_wrapper {
-    padding: 0 0 70px 0;
+    padding: 30px 0 70px 0;
   }
   .news_right h3 {
     font-size: 24px;
@@ -446,9 +502,13 @@
   }
   .manage_link a {
     font-size: 16px;
+    padding: 1rem 1.5rem;
   }
   .details_box {
     padding: 1rem;
     margin: 2rem 0;
+  }
+  .show-3-line {
+    height: 250px !important;
   }
 }

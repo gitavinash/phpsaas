@@ -65,18 +65,57 @@
                     <div class="company-logo">
                         <a href="/"><img src="<?php echo SITE_LOGO ?>" class="img-fluid" alt="logo"></a>
                     </div>
-                    <div class="search-container">
-                        <button class="search-btn" id="searchButton">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                <path fill="#<?php echo ((SITE_VERSION == 'mobile') ? '5B99D5' : 'FFFFFF') ?>"
-                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+
+                    <!-- Desktop Search Bar (Center) -->
+                    <div class="header-search">
+                        <input type="text" placeholder="Search articles..." aria-label="Search">
+                        <button type="submit" aria-label="Submit search">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                <circle cx="11" cy="11" r="7" stroke="currentColor" />
+                                <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-linecap="round" />
                             </svg>
-                            <span class="btn-text">Search</span>
                         </button>
-                        <input type="text" class="search-input" id="searchInput" placeholder="Type to search...">
-                        <button class="close-btn" id="closeButton">
-                            <i class="icon-close">&times;</i>
+                    </div>
+
+                    <div class="mobile-actions">
+                        <button class="mobile-menu-btn" id="mobileMenuButton" aria-controls="siteNav"
+                            aria-expanded="false" aria-label="Open menu">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.6"
+                                    stroke-linecap="round" />
+                            </svg>
                         </button>
+                        <div class="search-container">
+                            <button class="search-btn" id="searchButton" aria-label="Search">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" />
+                                    <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.6"
+                                        stroke-linecap="round" />
+                                </svg>
+                                <span class="btn-text">Search</span>
+                            </button>
+                            <input type="text" class="search-input" id="searchInput" placeholder="Type to search...">
+                            <button class="close-btn" id="closeButton">
+                                <i class="icon-close">&times;</i>
+                            </button>
+                        </div>
+                        <?php if (isset($_COOKIE['user_data'])) { ?>
+                        <button class="mobile-user-btn user--name" type="button" aria-label="Account">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6" />
+                                <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" stroke="currentColor" stroke-width="1.6"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </button>
+                        <?php if (isset($showLogoutBtn) && $showLogoutBtn == 1) { ?>
+                        <a href="/logout/" class="mobile-auth-link">Logout</a>
+                        <?php } ?>
+                        <?php } else { ?>
+                        <a href="/subscribe/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                            class="mobile-auth-link">Subscribe</a>
+                        <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"><i
+                                class='bx bx-user-circle'></i></a>
+                        <?php } ?>
                     </div>
                     <?php
 
@@ -158,27 +197,55 @@
 
         switch (BASE_URL) {
             case '/partner-insights-guidelines/':
-                $changeBackground = "class='pinkBackground'";
+                $changeBackground = 'pinkBackground';
                 break;
             case '/about-us/':
-                $changeBackground = "class='pinkBackground'";
+                $changeBackground = 'pinkBackground';
                 break;
             case '/terms-and-conditions/':
-                $changeBackground = "class='pinkBackground'";
+                $changeBackground = 'pinkBackground';
                 break;
             case '/privacy-policy/':
-                $changeBackground = "class='pinkBackground'";
+                $changeBackground = 'pinkBackground';
                 break;
             case '/refund-policy/':
-                $changeBackground = "class='pinkBackground'";
+                $changeBackground = 'pinkBackground';
                 break;
             default:
-                $changeBackground = "";
+                $changeBackground = '';
                 break;
         }
 
         ?>
-        <nav <?php echo $changeBackground ?>>
+        <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
+        <nav id="siteNav" class="site-nav <?php echo $changeBackground ?>">
+            <div class="mobile-nav-header">
+                <span class="mobile-nav-title">Menu</span>
+                <button class="mobile-menu-close" id="mobileMenuClose" type="button" aria-label="Close menu">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <?php if (isset($_COOKIE['user_data'])) { ?>
+            <div class="mobile-user">
+                <div class="mobile-user__name"><?php echo PROFILE_DISPLAY_NAME ?></div>
+                <div class="mobile-user__email"><?php echo PROFILE_EMAIL ?></div>
+                <div class="mobile-user__links">
+                    <?php
+                        if (isset($activeSubscription) && $activeSubscription == true) {
+                            echo "<a href='/manage-subscription/'>Manage Subscription</a>";
+                        } else {
+                            echo "<a href='/subscribe/'>Buy Subscription</a>";
+                        }
+                        ?>
+                </div>
+            </div>
+            <?php } else { ?>
+            <div class="mobile-auth">
+                <a href="/subscribe/" class="mobile-auth__primary">Subscribe</a>
+                <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                    class="mobile-auth__secondary">Sign in</a>
+            </div>
+            <?php } ?>
             <ul>
                 <?php
 
@@ -205,6 +272,27 @@
 
                 ?>
             </ul>
+            <div class="mobile-nav-search">
+                <input type="text" class="mobile-nav-search__input" id="mobileNavSearchInput"
+                    placeholder="Search news...">
+                <button class="mobile-nav-search__btn" id="mobileNavSearchButton" type="button" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" />
+                        <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
         </nav>
+        <div class="mobile-search-overlay" id="mobileSearchOverlay" aria-hidden="true">
+            <div class="mobile-search-panel" role="dialog" aria-modal="true">
+                <div class="mobile-search-header">
+                    <span>Search</span>
+                    <button class="mobile-search-close" id="mobileSearchClose" type="button"
+                        aria-label="Close search">&times;</button>
+                </div>
+                <input type="text" class="mobile-search-input" id="mobileSearchInput" placeholder="Search news...">
+                <p class="mobile-search-hint">Press Enter to search</p>
+            </div>
+        </div>
     </header>
     <main <?php echo (($link_type == 'page') ? 'style="border-top: 0px"' : '') ?>>

@@ -64,7 +64,7 @@ button:hover {
   align-items: center;
 }
 .myHeader {
-  padding: 2.4rem 0;
+  padding: 1.5rem 0;
   background-color: #f1f0f1;
 }
 .company-logo img {
@@ -103,6 +103,14 @@ button:hover {
   font-weight: 400;
 }
 
+.premium-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+}
+
 main {
   float: left;
   width: 100%;
@@ -117,8 +125,8 @@ section {
 }
 
 .container {
-  max-width: 1200px;
-  width: 1200px;
+  max-width: 1200px !important;
+  width: 1200px !important;
 }
 
 .row {
@@ -355,7 +363,7 @@ section {
 }
 @media (max-width: 768px) {
   .myHeader {
-    padding: 1rem 0rem 2.4rem 0;
+    padding: 1rem 0rem 1rem 0;
   }
   .input_btn {
     width: 80%;

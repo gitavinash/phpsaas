@@ -61,6 +61,11 @@
   padding: 12px 30px;
   border-radius: 10px;
 }
+.buySubscription {
+  background-color: red !important;
+  color: var(--white-color) !important;
+  border: red 1px solid !important;
+}
 .copyright {
   float: left;
   margin-top: 5rem;
