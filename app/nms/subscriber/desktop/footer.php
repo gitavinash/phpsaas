@@ -1,3 +1,5 @@
+<?php require_once UTIL_FUNCTIONS; ?>
+
 <section class="newsletter_wrapper">
     <div class="container container--box">
         <div class="row">
@@ -58,7 +60,7 @@
     </div>
 </footer>
 
-<script src="<?php echo USER_JS ?>script.min.js"></script>
+<script src="<?php echo USER_JS ?>script.min.js?<?php echo assetQuery('js/script.min.js'); ?>"></script>
 
 </body>
 

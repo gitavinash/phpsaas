@@ -1,26 +1,6 @@
 <?php
 
-$assetForceRefreshToken = '';
-if (isset($_GET['rf'])) {
-    $assetForceRefreshToken = preg_replace('/[^0-9]/', '', (string) $_GET['rf']);
-}
-
-if (!defined('ASSET_FORCE_REFRESH_TOKEN')) {
-    define('ASSET_FORCE_REFRESH_TOKEN', $assetForceRefreshToken);
-}
-
-$assetVersion = static function ($relativePath) {
-    $filePath = USER_PATH . 'assets/' . ltrim($relativePath, '/');
-    return (string) (@filemtime($filePath) ?: time());
-};
-
-$assetQuery = static function ($relativePath) use ($assetVersion) {
-    $query = 'v=' . $assetVersion($relativePath);
-    if (defined('ASSET_FORCE_REFRESH_TOKEN') && ASSET_FORCE_REFRESH_TOKEN !== '') {
-        $query .= '&rf=' . ASSET_FORCE_REFRESH_TOKEN;
-    }
-    return $query;
-};
+require_once UTIL_FUNCTIONS;
 
 
 $activeSubscription = false;
@@ -78,13 +58,13 @@ if (isset($_COOKIE['user_data'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css?<?php echo $assetQuery('css/style.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.min.css?<?php echo $assetQuery('css/about.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.min.css?<?php echo $assetQuery('css/manage.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.min.css?<?php echo $assetQuery('css/subscribe.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.min.css?<?php echo $assetQuery('css/footer.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details.min.css?<?php echo $assetQuery('css/details.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>thankyou.css?<?php echo $assetQuery('css/thankyou.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css?<?php echo assetQuery('css/style.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.min.css?<?php echo assetQuery('css/about.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.min.css?<?php echo assetQuery('css/manage.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.min.css?<?php echo assetQuery('css/subscribe.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.min.css?<?php echo assetQuery('css/footer.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details.min.css?<?php echo assetQuery('css/details.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>thankyou.css?<?php echo assetQuery('css/thankyou.css'); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <?php require_once DEFAULT_META; ?>
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">

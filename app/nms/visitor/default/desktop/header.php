@@ -1,22 +1,6 @@
 <?php
 
-$assetForceRefreshToken = '';
-if (isset($_GET['rf'])) {
-    $assetForceRefreshToken = preg_replace('/[^0-9]/', '', (string) $_GET['rf']);
-}
-
-$assetVersion = static function ($relativePath) {
-    $filePath = USER_PATH . 'assets/' . ltrim($relativePath, '/');
-    return (string) (@filemtime($filePath) ?: time());
-};
-
-$assetQuery = static function ($relativePath) use ($assetVersion, $assetForceRefreshToken) {
-    $query = 'v=' . $assetVersion($relativePath);
-    if ($assetForceRefreshToken !== '') {
-        $query .= '&rf=' . $assetForceRefreshToken;
-    }
-    return $query;
-};
+require_once UTIL_FUNCTIONS;
 
 ?>
 <!DOCTYPE html>
@@ -26,9 +10,9 @@ $assetQuery = static function ($relativePath) use ($assetVersion, $assetForceRef
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css?<?php echo $assetQuery('css/bootstrap.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css?<?php echo $assetQuery('css/all.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css?<?php echo $assetQuery('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css?<?php echo assetQuery('bootstrap.min.css', ROOT . CSS_LIBRARY); ?>">
+    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css?<?php echo assetQuery('all.min.css', ROOT . CSS_LIBRARY); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css?<?php echo assetQuery('css/style.css'); ?>">
 
     <?php require_once DEFAULT_META; ?>
 
