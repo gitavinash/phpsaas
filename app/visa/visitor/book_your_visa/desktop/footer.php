@@ -111,16 +111,49 @@ if (BASE_URL == '/start-application/') {
 ?>
 
 <script>
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            const swVersion = '<?php echo (string) (@filemtime(ROOT . "/router/service-worker.php") ?: time()); ?>';
+
+            navigator.serviceWorker.register('/sw.js?v=' + swVersion).then(function(registration) {
                 console.log('Service Worker registered with scope:', registration.scope);
-            },
-            function(err) {
+
+                registration.update().catch(function() {});
+
+                setInterval(function() {
+                    registration.update().catch(function() {});
+                }, 60 * 1000);
+
+                if (registration.waiting) {
+                    registration.waiting.postMessage({
+                        type: 'SKIP_WAITING'
+                    });
+                }
+
+                registration.addEventListener('updatefound', function() {
+                    const newWorker = registration.installing;
+                    if (!newWorker) return;
+
+                    newWorker.addEventListener('statechange', function() {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            registration.waiting && registration.waiting.postMessage({
+                                type: 'SKIP_WAITING'
+                            });
+                        }
+                    });
+                });
+            }, function(err) {
                 console.log('Service Worker registration failed:', err);
             });
-    });
-}
+
+            let refreshing;
+            navigator.serviceWorker.addEventListener('controllerchange', function() {
+                if (refreshing) return;
+                refreshing = true;
+                window.location.reload();
+            });
+        });
+    }
 </script>
 </body>
 
