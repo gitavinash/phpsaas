@@ -47,7 +47,12 @@ function assetVersion($relativePath, $basePath = null)
     $filePath = rtrim((string) $basePath, '/') . '/' . ltrim((string) $relativePath, '/');
 
     if (is_file($filePath)) {
-        return (string) filemtime($filePath);
+        $contentHash = @md5_file($filePath);
+        if (is_string($contentHash) && $contentHash !== '') {
+            return substr($contentHash, 0, 12);
+        }
+
+        return (string) (@filemtime($filePath) ?: time());
     }
 
     return '1';

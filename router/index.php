@@ -137,6 +137,10 @@ switch ($urlStructure[0]) {
 		require_once 'service-worker.php';
 		break;
 
+	case 'force-refresh-assets':
+		require_once 'force-refresh-assets.php';
+		break;
+
 	// Image render
 
 	case 'viewmedia':

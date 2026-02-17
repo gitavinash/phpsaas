@@ -49,6 +49,8 @@ require_once UTIL_FUNCTIONS;
                 return;
             }
 
+            const swVersion = '<?php echo assetVersion('service-worker.php', ROOT . '/router'); ?>';
+
             window.addEventListener('load', async function() {
                 let pageNeedsReload = false;
 
@@ -87,7 +89,12 @@ require_once UTIL_FUNCTIONS;
                 if (pageNeedsReload && !sessionStorage.getItem('visitorSwCacheCleaned')) {
                     sessionStorage.setItem('visitorSwCacheCleaned', '1');
                     window.location.reload();
+                    return;
                 }
+
+                try {
+                    await navigator.serviceWorker.register('/sw.js?v=' + swVersion);
+                } catch (e) {}
             });
         })();
     </script>
