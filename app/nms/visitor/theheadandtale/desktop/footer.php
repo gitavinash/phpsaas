@@ -5,6 +5,10 @@ $assetVersion = static function ($relativePath) {
     return (string) (@filemtime($filePath) ?: time());
 };
 
+$assetRfSuffix = (defined('ASSET_FORCE_REFRESH_TOKEN') && ASSET_FORCE_REFRESH_TOKEN !== '')
+    ? '&rf=' . ASSET_FORCE_REFRESH_TOKEN
+    : '';
+
 if (ACTIVE_URL != '/thankyou_newsletter/') {
     echo "<section class='newsletter_wrapper'>
     <div class='container container--box'>
@@ -73,8 +77,8 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 
 <?php require_once NOTIFICATION . 'index.php'; ?>
 <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
-<script src="<?php echo USER_JS ?>script.js?v=<?php echo $assetVersion('js/script.js'); ?>"></script>
-<script src="<?php echo USER_JS ?>slider.min.js?v=<?php echo $assetVersion('js/slider.min.js'); ?>"></script>
+<script src="<?php echo USER_JS ?>script.js?v=<?php echo $assetVersion('js/script.js') . $assetRfSuffix; ?>"></script>
+<script src="<?php echo USER_JS ?>slider.min.js?v=<?php echo $assetVersion('js/slider.min.js') . $assetRfSuffix; ?>"></script>
 <script>
     const searchButton = document.getElementById('searchButton');
     const closeButton = document.getElementById('closeButton');

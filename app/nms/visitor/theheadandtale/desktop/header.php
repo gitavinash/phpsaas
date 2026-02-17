@@ -1,8 +1,46 @@
 <?php
 
+$assetRefreshCookie = 'asset_refresh_track';
+$assetRefreshNow = time();
+$assetRefreshWindowStart = $assetRefreshNow;
+$assetRefreshCount = 1;
+
+if (isset($_COOKIE[$assetRefreshCookie])) {
+    $parts = explode(':', $_COOKIE[$assetRefreshCookie]);
+    if (count($parts) === 2) {
+        $savedWindowStart = (int) $parts[0];
+        $savedCount = (int) $parts[1];
+
+        if (($assetRefreshNow - $savedWindowStart) <= 60) {
+            $assetRefreshWindowStart = $savedWindowStart;
+            $assetRefreshCount = $savedCount + 1;
+        }
+    }
+}
+
+setcookie(
+    $assetRefreshCookie,
+    $assetRefreshWindowStart . ':' . $assetRefreshCount,
+    $assetRefreshNow + 60,
+    '/'
+);
+
+$assetForceRefreshToken = ($assetRefreshCount >= 2) ? (string) $assetRefreshNow : '';
+if (!defined('ASSET_FORCE_REFRESH_TOKEN')) {
+    define('ASSET_FORCE_REFRESH_TOKEN', $assetForceRefreshToken);
+}
+
 $assetVersion = static function ($relativePath) {
     $filePath = USER_PATH . 'assets/' . ltrim($relativePath, '/');
     return (string) (@filemtime($filePath) ?: time());
+};
+
+$assetQuery = static function ($relativePath) use ($assetVersion) {
+    $query = 'v=' . $assetVersion($relativePath);
+    if (defined('ASSET_FORCE_REFRESH_TOKEN') && ASSET_FORCE_REFRESH_TOKEN !== '') {
+        $query .= '&rf=' . ASSET_FORCE_REFRESH_TOKEN;
+    }
+    return $query;
 };
 
 
@@ -61,13 +99,20 @@ if (isset($_COOKIE['user_data'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css?v=<?php echo $assetVersion('css/style.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.min.css?v=<?php echo $assetVersion('css/about.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.min.css?v=<?php echo $assetVersion('css/manage.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.min.css?v=<?php echo $assetVersion('css/subscribe.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.min.css?v=<?php echo $assetVersion('css/footer.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details.min.css?v=<?php echo $assetVersion('css/details.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>thankyou.css?v=<?php echo $assetVersion('css/thankyou.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>style.min.css?<?php echo $assetQuery('css/style.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>about.min.css?<?php echo $assetQuery('css/about.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>manage.min.css?<?php echo $assetQuery('css/manage.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>subscribe.min.css?<?php echo $assetQuery('css/subscribe.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>footer.min.css?<?php echo $assetQuery('css/footer.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>details.min.css?<?php echo $assetQuery('css/details.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>thankyou.css?<?php echo $assetQuery('css/thankyou.css'); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <?php require_once DEFAULT_META; ?>
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
@@ -109,6 +154,54 @@ if (isset($_COOKIE['user_data'])) {
             y = l.getElementsByTagName(r)[0];
             y.parentNode.insertBefore(t, y);
         })(window, document, "clarity", "script", "qicb9eq9ym");
+    </script>
+    <script>
+        (function() {
+            if (!('serviceWorker' in navigator)) {
+                return;
+            }
+
+            window.addEventListener('load', async function() {
+                let pageNeedsReload = false;
+
+                try {
+                    const regs = await navigator.serviceWorker.getRegistrations();
+                    for (const reg of regs) {
+                        const swUrl = (reg.active && reg.active.scriptURL) ||
+                            (reg.waiting && reg.waiting.scriptURL) ||
+                            (reg.installing && reg.installing.scriptURL) || '';
+
+                        if (swUrl.includes('/sw.js') && !swUrl.includes('/dashboard/sw.js')) {
+                            const removed = await reg.unregister();
+                            if (removed) {
+                                pageNeedsReload = true;
+                            }
+                        }
+                    }
+                } catch (e) {}
+
+                try {
+                    if ('caches' in window) {
+                        const cacheKeys = await caches.keys();
+                        const visitorCacheKeys = cacheKeys.filter(function(key) {
+                            return key.indexOf('-cache-') !== -1;
+                        });
+
+                        if (visitorCacheKeys.length) {
+                            await Promise.all(visitorCacheKeys.map(function(key) {
+                                return caches.delete(key);
+                            }));
+                            pageNeedsReload = true;
+                        }
+                    }
+                } catch (e) {}
+
+                if (pageNeedsReload && !sessionStorage.getItem('visitorSwCacheCleaned')) {
+                    sessionStorage.setItem('visitorSwCacheCleaned', '1');
+                    window.location.reload();
+                }
+            });
+        })();
     </script>
 </head>
 
