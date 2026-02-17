@@ -265,8 +265,7 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                     </figure>
                     <div class='related-content'>
                         <span class='related-tag'>{$news['category_title']}</span>
-                        <h3 class='related-head line-2'>{$news['title']}</h3>
-                        <p class='related-excerpt line-2'>" . truncateText($news['description'], 100) . "</p>
+                        <h3 class='related-head'>{$news['title']}</h3>
                         <time class='related-date' datetime='" . date("M d, Y", strtotime($news['link_published'])) . "'>" . date("M d, Y", strtotime($news['link_published'])) . "</time>
                     </div>
                 </a>
