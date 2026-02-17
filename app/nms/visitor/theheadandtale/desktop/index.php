@@ -253,12 +253,12 @@
                     }
 
                     // After 5th article: AI/Emerging Tech
-                    if ($maxArticles > 5) {
+                    if ($maxArticles > 6) {
                         renderAIEmergingTech($connection);
                     }
 
                     // Show articles 6-10
-                    for ($i = 5; $i <= 9 && $i < $maxArticles; $i++) {
+                    for ($i = 7; $i <= 11 && $i < $maxArticles; $i++) {
                         renderNewsCard($latestNewsData[$i]);
                     }
 
@@ -268,7 +268,7 @@
                     }
 
                     // Show articles 11-15
-                    for ($i = 10; $i <= 14 && $i < $maxArticles; $i++) {
+                    for ($i = 11; $i <= 15 && $i < $maxArticles; $i++) {
                         renderNewsCard($latestNewsData[$i]);
                     }
 
@@ -278,7 +278,7 @@
                     }
 
                     // Show articles 16-20
-                    for ($i = 15; $i < $maxArticles; $i++) {
+                    for ($i = 16; $i <= 20 && $i < $maxArticles; $i++) {
                         renderNewsCard($latestNewsData[$i]);
                     }
 
