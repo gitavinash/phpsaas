@@ -1,31 +1,10 @@
 <?php
 
-$assetRefreshCookie = 'asset_refresh_track';
-$assetRefreshNow = time();
-$assetRefreshWindowStart = $assetRefreshNow;
-$assetRefreshCount = 1;
-
-if (isset($_COOKIE[$assetRefreshCookie])) {
-    $parts = explode(':', $_COOKIE[$assetRefreshCookie]);
-    if (count($parts) === 2) {
-        $savedWindowStart = (int) $parts[0];
-        $savedCount = (int) $parts[1];
-
-        if (($assetRefreshNow - $savedWindowStart) <= 60) {
-            $assetRefreshWindowStart = $savedWindowStart;
-            $assetRefreshCount = $savedCount + 1;
-        }
-    }
+$assetForceRefreshToken = '';
+if (isset($_GET['rf'])) {
+    $assetForceRefreshToken = preg_replace('/[^0-9]/', '', (string) $_GET['rf']);
 }
 
-setcookie(
-    $assetRefreshCookie,
-    $assetRefreshWindowStart . ':' . $assetRefreshCount,
-    $assetRefreshNow + 60,
-    '/'
-);
-
-$assetForceRefreshToken = ($assetRefreshCount >= 2) ? (string) $assetRefreshNow : '';
 if (!defined('ASSET_FORCE_REFRESH_TOKEN')) {
     define('ASSET_FORCE_REFRESH_TOKEN', $assetForceRefreshToken);
 }
@@ -50,13 +29,20 @@ $assetQuery = static function ($relativePath) use ($assetVersion) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css?<?php echo $assetQuery('css/style.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.min.css?<?php echo $assetQuery('css/about.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.min.css?<?php echo $assetQuery('css/manage.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.min.css?<?php echo $assetQuery('css/subscribe.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.min.css?<?php echo $assetQuery('css/footer.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details.min.css?<?php echo $assetQuery('css/details.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>thankyou.css?<?php echo $assetQuery('css/thankyou.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>style.min.css?<?php echo $assetQuery('css/style.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>about.min.css?<?php echo $assetQuery('css/about.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>manage.min.css?<?php echo $assetQuery('css/manage.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>subscribe.min.css?<?php echo $assetQuery('css/subscribe.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>footer.min.css?<?php echo $assetQuery('css/footer.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>details.min.css?<?php echo $assetQuery('css/details.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo USER_STYLESHEET ?>thankyou.css?<?php echo $assetQuery('css/thankyou.css'); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <?php require_once DEFAULT_META; ?>
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
@@ -78,74 +64,101 @@ $assetQuery = static function ($relativePath) use ($assetVersion) {
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KN6V4VKJN4"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
 
-        gtag('config', 'G-KN6V4VKJN4');
+    gtag('config', 'G-KN6V4VKJN4');
     </script>
     <script type="text/javascript">
-        (function(c, l, a, r, i, t, y) {
-            c[a] = c[a] || function() {
-                (c[a].q = c[a].q || []).push(arguments)
-            };
-            t = l.createElement(r);
-            t.async = 1;
-            t.src = "https://www.clarity.ms/tag/" + i;
-            y = l.getElementsByTagName(r)[0];
-            y.parentNode.insertBefore(t, y);
-        })(window, document, "clarity", "script", "qicb9eq9ym");
+    (function(c, l, a, r, i, t, y) {
+        c[a] = c[a] || function() {
+            (c[a].q = c[a].q || []).push(arguments)
+        };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "qicb9eq9ym");
     </script>
     <script>
-        (function() {
-            if (!('serviceWorker' in navigator)) {
-                return;
+    (function() {
+        try {
+            const key = 'asset_refresh_hits_v1';
+            const now = Date.now();
+            const oneMinute = 60 * 1000;
+            const url = new URL(window.location.href);
+            const currentToken = Number(url.searchParams.get('rf') || 0);
+
+            let hits = JSON.parse(localStorage.getItem(key) || '[]');
+            if (!Array.isArray(hits)) {
+                hits = [];
             }
 
-            window.addEventListener('load', async function() {
-                let pageNeedsReload = false;
+            hits = hits.filter(function(ts) {
+                return (now - Number(ts)) <= oneMinute;
+            });
+            hits.push(now);
+            localStorage.setItem(key, JSON.stringify(hits.slice(-10)));
 
-                try {
-                    const regs = await navigator.serviceWorker.getRegistrations();
-                    for (const reg of regs) {
-                        const swUrl = (reg.active && reg.active.scriptURL) ||
-                            (reg.waiting && reg.waiting.scriptURL) ||
-                            (reg.installing && reg.installing.scriptURL) || '';
+            if (hits.length >= 2 && (currentToken === 0 || (now - currentToken) > oneMinute)) {
+                url.searchParams.set('rf', String(now));
+                window.location.replace(url.toString());
+            }
+        } catch (e) {}
+    })();
+    </script>
+    <script>
+    (function() {
+        if (!('serviceWorker' in navigator)) {
+            return;
+        }
 
-                        if (swUrl.includes('/sw.js') && !swUrl.includes('/dashboard/sw.js')) {
-                            const removed = await reg.unregister();
-                            if (removed) {
-                                pageNeedsReload = true;
-                            }
-                        }
-                    }
-                } catch (e) {}
+        window.addEventListener('load', async function() {
+            let pageNeedsReload = false;
 
-                try {
-                    if ('caches' in window) {
-                        const cacheKeys = await caches.keys();
-                        const visitorCacheKeys = cacheKeys.filter(function(key) {
-                            return key.indexOf('-cache-') !== -1;
-                        });
+            try {
+                const regs = await navigator.serviceWorker.getRegistrations();
+                for (const reg of regs) {
+                    const swUrl = (reg.active && reg.active.scriptURL) ||
+                        (reg.waiting && reg.waiting.scriptURL) ||
+                        (reg.installing && reg.installing.scriptURL) || '';
 
-                        if (visitorCacheKeys.length) {
-                            await Promise.all(visitorCacheKeys.map(function(key) {
-                                return caches.delete(key);
-                            }));
+                    if (swUrl.includes('/sw.js') && !swUrl.includes('/dashboard/sw.js')) {
+                        const removed = await reg.unregister();
+                        if (removed) {
                             pageNeedsReload = true;
                         }
                     }
-                } catch (e) {}
-
-                if (pageNeedsReload && !sessionStorage.getItem('visitorSwCacheCleaned')) {
-                    sessionStorage.setItem('visitorSwCacheCleaned', '1');
-                    window.location.reload();
                 }
-            });
-        })();
+            } catch (e) {}
+
+            try {
+                if ('caches' in window) {
+                    const cacheKeys = await caches.keys();
+                    const visitorCacheKeys = cacheKeys.filter(function(key) {
+                        return key.indexOf('-cache-') !== -1;
+                    });
+
+                    if (visitorCacheKeys.length) {
+                        await Promise.all(visitorCacheKeys.map(function(key) {
+                            return caches.delete(key);
+                        }));
+                        pageNeedsReload = true;
+                    }
+                }
+            } catch (e) {}
+
+            if (pageNeedsReload && !sessionStorage.getItem('visitorSwCacheCleaned')) {
+                sessionStorage.setItem('visitorSwCacheCleaned', '1');
+                window.location.reload();
+            }
+        });
+    })();
     </script>
 </head>
 
@@ -194,49 +207,49 @@ $assetQuery = static function ($relativePath) use ($assetVersion) {
                             </button>
                         </div>
                         <?php if (isset($_COOKIE['user_data'])) { ?>
-                            <button class="mobile-user-btn user--name" type="button" aria-label="Account">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-                                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6" />
-                                    <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" stroke="currentColor" stroke-width="1.6"
-                                        stroke-linecap="round" />
-                                </svg>
-                            </button>
-                            <?php if (isset($showLogoutBtn) && $showLogoutBtn == 1) { ?>
-                                <a href="/logout/" class="mobile-auth-link">Logout</a>
-                            <?php } ?>
+                        <button class="mobile-user-btn user--name" type="button" aria-label="Account">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6" />
+                                <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" stroke="currentColor" stroke-width="1.6"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </button>
+                        <?php if (isset($showLogoutBtn) && $showLogoutBtn == 1) { ?>
+                        <a href="/logout/" class="mobile-auth-link">Logout</a>
+                        <?php } ?>
                         <?php } else { ?>
-                            <a href="/subscribe/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
-                                class="mobile-auth-link">Subscribe</a>
-                            <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"><i
-                                    class='bx bx-user-circle'></i></a>
+                        <a href="/subscribe/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                            class="mobile-auth-link">Subscribe</a>
+                        <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"><i
+                                class='bx bx-user-circle'></i></a>
                         <?php } ?>
                     </div>
                     <?php
 
                     if (isset($_COOKIE['user_data'])) { ?>
 
-                        <div class="header_right">
-                            <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
-                            </p>
-                        </div>
+                    <div class="header_right">
+                        <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
+                        </p>
+                    </div>
 
-                        <!-- profile side--bar -->
-                        <div class="profile--sideBar">
-                            <div class="profile_container">
-                                <div class="profile_cancel">
-                                    <i class='bx bx-x'></i>
-                                </div>
-                                <div class="profile_header">
-                                    <!-- <div class="profile--img">
+                    <!-- profile side--bar -->
+                    <div class="profile--sideBar">
+                        <div class="profile_container">
+                            <div class="profile_cancel">
+                                <i class='bx bx-x'></i>
+                            </div>
+                            <div class="profile_header">
+                                <!-- <div class="profile--img">
                                         <img src="<?php echo PROFILE_IMAGE ?>" class="img-fluid" alt="user_img">
                                     </div> -->
-                                    <div class="user--content">
-                                        <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
-                                        <a href="#"><?php echo PROFILE_EMAIL ?></a>
-                                    </div>
+                                <div class="user--content">
+                                    <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
+                                    <a href="#"><?php echo PROFILE_EMAIL ?></a>
                                 </div>
+                            </div>
 
-                                <?php
+                            <?php
 
                                 if ($activeSubscription == true) {
 
@@ -265,20 +278,20 @@ $assetQuery = static function ($relativePath) use ($assetVersion) {
 
                                 ?>
 
-                            </div>
                         </div>
+                    </div>
 
                     <?php
                     } else { ?>
 
 
-                        <div class="header_right">
-                            <!-- <button class="subscribe">subscribe</button> -->
-                            <a href="/subscribe/" class="subscribe">subscribe</a>
-                            <!-- <button class="sign_in"></button> -->
-                            <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
-                                class="sign_in">sign in</a>
-                        </div>
+                    <div class="header_right">
+                        <!-- <button class="subscribe">subscribe</button> -->
+                        <a href="/subscribe/" class="subscribe">subscribe</a>
+                        <!-- <button class="sign_in"></button> -->
+                        <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                            class="sign_in">sign in</a>
+                    </div>
 
                     <?php
                     }
@@ -320,47 +333,47 @@ $assetQuery = static function ($relativePath) use ($assetVersion) {
                 </button>
             </div>
             <?php if (isset($_COOKIE['user_data'])) { ?>
-                <div class="mobile-user">
-                    <div class="mobile-user__name"><?php echo PROFILE_DISPLAY_NAME ?></div>
-                    <div class="mobile-user__email"><?php echo PROFILE_EMAIL ?></div>
-                    <div class="mobile-user__links">
-                        <?php
+            <div class="mobile-user">
+                <div class="mobile-user__name"><?php echo PROFILE_DISPLAY_NAME ?></div>
+                <div class="mobile-user__email"><?php echo PROFILE_EMAIL ?></div>
+                <div class="mobile-user__links">
+                    <?php
                         if (isset($activeSubscription) && $activeSubscription == true) {
                             echo "<a href='/manage-subscription/'>Manage Subscription</a>";
                         } else {
                             echo "<a href='/subscribe/'>Buy Subscription</a>";
                         }
                         ?>
-                    </div>
                 </div>
+            </div>
             <?php } else { ?>
-                <div class="mobile-auth">
-                    <a href="/subscribe/" class="mobile-auth__primary">Subscribe</a>
-                    <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
-                        class="mobile-auth__secondary">Sign in</a>
-                </div>
+            <div class="mobile-auth">
+                <a href="/subscribe/" class="mobile-auth__primary">Subscribe</a>
+                <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                    class="mobile-auth__secondary">Sign in</a>
+            </div>
             <?php } ?>
             <ul>
                 <?php
 
                 if (SITE_ID == 49) { ?>
-                    <li><a href="/deep-tales/" <?php echo ((BASE_URL == '/deep-tales/') ? 'class="active"' : '') ?>
-                            title="Deepdives">Deepdives</a></li>
-                    <li><a href="/explainer/" <?php echo ((BASE_URL == '/explainer/') ? 'class="active"' : '') ?>
-                            title="Explainer">Explainer</a></li>
-                    <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
-                            title="FIntech News">News</a></li>
-                    <li><a href="/ai-emerging-tech/" title="Report"
-                            <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
-                    </li>
-                    <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
-                            title="Money Trivia">Money Trivia</a></li>
-                    <li><a href="/money-and-machines/"
-                            <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
-                            title="Money & Machines">Money & Machines</a></li>
-                    <li><a href="https://stack.theheadandtale.com/" target="_blank" title="Report"
-                            <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>>Report<sup
-                                class="sup">NEW</sup></a></li>
+                <li><a href="/deep-tales/" <?php echo ((BASE_URL == '/deep-tales/') ? 'class="active"' : '') ?>
+                        title="Deepdives">Deepdives</a></li>
+                <li><a href="/explainer/" <?php echo ((BASE_URL == '/explainer/') ? 'class="active"' : '') ?>
+                        title="Explainer">Explainer</a></li>
+                <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
+                        title="FIntech News">News</a></li>
+                <li><a href="/ai-emerging-tech/" title="Report"
+                        <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
+                </li>
+                <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
+                        title="Money Trivia">Money Trivia</a></li>
+                <li><a href="/money-and-machines/"
+                        <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
+                        title="Money & Machines">Money & Machines</a></li>
+                <li><a href="https://stack.theheadandtale.com/" target="_blank" title="Report"
+                        <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>>Report<sup
+                            class="sup">NEW</sup></a></li>
                 <?php
                 }
 

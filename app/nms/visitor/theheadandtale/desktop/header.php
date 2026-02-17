@@ -1,31 +1,10 @@
 <?php
 
-$assetRefreshCookie = 'asset_refresh_track';
-$assetRefreshNow = time();
-$assetRefreshWindowStart = $assetRefreshNow;
-$assetRefreshCount = 1;
-
-if (isset($_COOKIE[$assetRefreshCookie])) {
-    $parts = explode(':', $_COOKIE[$assetRefreshCookie]);
-    if (count($parts) === 2) {
-        $savedWindowStart = (int) $parts[0];
-        $savedCount = (int) $parts[1];
-
-        if (($assetRefreshNow - $savedWindowStart) <= 60) {
-            $assetRefreshWindowStart = $savedWindowStart;
-            $assetRefreshCount = $savedCount + 1;
-        }
-    }
+$assetForceRefreshToken = '';
+if (isset($_GET['rf'])) {
+    $assetForceRefreshToken = preg_replace('/[^0-9]/', '', (string) $_GET['rf']);
 }
 
-setcookie(
-    $assetRefreshCookie,
-    $assetRefreshWindowStart . ':' . $assetRefreshCount,
-    $assetRefreshNow + 60,
-    '/'
-);
-
-$assetForceRefreshToken = ($assetRefreshCount >= 2) ? (string) $assetRefreshNow : '';
 if (!defined('ASSET_FORCE_REFRESH_TOKEN')) {
     define('ASSET_FORCE_REFRESH_TOKEN', $assetForceRefreshToken);
 }
@@ -154,6 +133,33 @@ if (isset($_COOKIE['user_data'])) {
             y = l.getElementsByTagName(r)[0];
             y.parentNode.insertBefore(t, y);
         })(window, document, "clarity", "script", "qicb9eq9ym");
+    </script>
+    <script>
+        (function() {
+            try {
+                const key = 'asset_refresh_hits_v1';
+                const now = Date.now();
+                const oneMinute = 60 * 1000;
+                const url = new URL(window.location.href);
+                const currentToken = Number(url.searchParams.get('rf') || 0);
+
+                let hits = JSON.parse(localStorage.getItem(key) || '[]');
+                if (!Array.isArray(hits)) {
+                    hits = [];
+                }
+
+                hits = hits.filter(function(ts) {
+                    return (now - Number(ts)) <= oneMinute;
+                });
+                hits.push(now);
+                localStorage.setItem(key, JSON.stringify(hits.slice(-10)));
+
+                if (hits.length >= 2 && (currentToken === 0 || (now - currentToken) > oneMinute)) {
+                    url.searchParams.set('rf', String(now));
+                    window.location.replace(url.toString());
+                }
+            } catch (e) {}
+        })();
     </script>
     <script>
         (function() {

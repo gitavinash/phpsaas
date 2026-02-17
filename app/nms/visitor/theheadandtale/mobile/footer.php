@@ -1,5 +1,14 @@
 <?php
 
+$assetVersion = static function ($relativePath) {
+    $filePath = USER_PATH . 'assets/' . ltrim($relativePath, '/');
+    return (string) (@filemtime($filePath) ?: time());
+};
+
+$assetRfSuffix = (defined('ASSET_FORCE_REFRESH_TOKEN') && ASSET_FORCE_REFRESH_TOKEN !== '')
+    ? '&rf=' . ASSET_FORCE_REFRESH_TOKEN
+    : '';
+
 if (ACTIVE_URL != '/thankyou_newsletter/') {
     echo "<section class='newsletter_wrapper'>
     <div class='container container--box'>
@@ -68,46 +77,46 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 
 <?php require_once NOTIFICATION . 'index.php'; ?>
 <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
-<script src="<?php echo USER_JS ?>script.js"></script>
-<script src="<?php echo USER_JS ?>slider.min.js"></script>
+<script src="<?php echo USER_JS ?>script.js?v=<?php echo $assetVersion('js/script.js') . $assetRfSuffix; ?>"></script>
+<script src="<?php echo USER_JS ?>slider.min.js?v=<?php echo $assetVersion('js/slider.min.js') . $assetRfSuffix; ?>"></script>
 <script>
-const searchButton = document.getElementById('searchButton');
-const closeButton = document.getElementById('closeButton');
-const searchContainer = document.querySelector('.search-container');
-const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const closeButton = document.getElementById('closeButton');
+    const searchContainer = document.querySelector('.search-container');
+    const searchInput = document.getElementById('searchInput');
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Check if the device is mobile
-    if (window.innerWidth <= 768) {
-        searchButton.click(); // Simulate a click on the search button
-    }
-});
+    document.addEventListener('DOMContentLoaded', () => {
+        // Check if the device is mobile
+        if (window.innerWidth <= 768) {
+            searchButton.click(); // Simulate a click on the search button
+        }
+    });
 
-// Expand the search area and apply autofocus on mobile
-searchButton.addEventListener('click', () => {
-    searchContainer.classList.add('expanded');
+    // Expand the search area and apply autofocus on mobile
+    searchButton.addEventListener('click', () => {
+        searchContainer.classList.add('expanded');
 
-    // Ensure the search input has enough time to expand
-    // setTimeout(() => {
-    //     if (window.innerWidth <= 768) {
-    //         searchInput.focus(); // Apply autofocus for mobile devices
-    //     }
-    // }, 200); // Wait a bit for the expansion animation to complete
-});
+        // Ensure the search input has enough time to expand
+        // setTimeout(() => {
+        //     if (window.innerWidth <= 768) {
+        //         searchInput.focus(); // Apply autofocus for mobile devices
+        //     }
+        // }, 200); // Wait a bit for the expansion animation to complete
+    });
 
-// Close the search area
-closeButton.addEventListener('click', () => {
-    searchContainer.classList.remove('expanded');
-    searchInput.value = ''; // Clear input
-});
+    // Close the search area
+    closeButton.addEventListener('click', () => {
+        searchContainer.classList.remove('expanded');
+        searchInput.value = ''; // Clear input
+    });
 
-// Redirect to /search/?q={value} when the "Enter" key is pressed
-searchInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' && searchInput.value.trim() !== '') {
-        const query = encodeURIComponent(searchInput.value.toLowerCase());
-        window.location.href = `/search/?q=${query}`;
-    }
-});
+    // Redirect to /search/?q={value} when the "Enter" key is pressed
+    searchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && searchInput.value.trim() !== '') {
+            const query = encodeURIComponent(searchInput.value.toLowerCase());
+            window.location.href = `/search/?q=${query}`;
+        }
+    });
 </script>
 </body>
 
