@@ -1,5 +1,10 @@
 <?php
 
+$assetVersion = static function ($relativePath) {
+    $filePath = USER_PATH . 'assets/' . ltrim($relativePath, '/');
+    return (string) (@filemtime($filePath) ?: time());
+};
+
 
 $activeSubscription = false;
 if (isset($_COOKIE['user_data'])) {
@@ -56,13 +61,13 @@ if (isset($_COOKIE['user_data'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.min.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.min.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.min.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.min.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details.min.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>thankyou.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css?v=<?php echo $assetVersion('css/style.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.min.css?v=<?php echo $assetVersion('css/about.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.min.css?v=<?php echo $assetVersion('css/manage.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.min.css?v=<?php echo $assetVersion('css/subscribe.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.min.css?v=<?php echo $assetVersion('css/footer.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details.min.css?v=<?php echo $assetVersion('css/details.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>thankyou.css?v=<?php echo $assetVersion('css/thankyou.css'); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <?php require_once DEFAULT_META; ?>
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
@@ -84,26 +89,26 @@ if (isset($_COOKIE['user_data'])) {
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KN6V4VKJN4"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
-    gtag('config', 'G-KN6V4VKJN4');
+        gtag('config', 'G-KN6V4VKJN4');
     </script>
     <script type="text/javascript">
-    (function(c, l, a, r, i, t, y) {
-        c[a] = c[a] || function() {
-            (c[a].q = c[a].q || []).push(arguments)
-        };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = "https://www.clarity.ms/tag/" + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-    })(window, document, "clarity", "script", "qicb9eq9ym");
+        (function(c, l, a, r, i, t, y) {
+            c[a] = c[a] || function() {
+                (c[a].q = c[a].q || []).push(arguments)
+            };
+            t = l.createElement(r);
+            t.async = 1;
+            t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0];
+            y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "qicb9eq9ym");
     </script>
 </head>
 
@@ -131,17 +136,17 @@ if (isset($_COOKIE['user_data'])) {
 
                     <div class="mobile-actions">
                         <?php if (isset($_COOKIE['user_data'])) { ?>
-                        <button class="mobile-user-btn" type="button" aria-label="Account">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-                                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6" />
-                                <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" stroke="currentColor" stroke-width="1.6"
-                                    stroke-linecap="round" />
-                            </svg>
-                        </button>
+                            <button class="mobile-user-btn" type="button" aria-label="Account">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6" />
+                                    <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" stroke="currentColor" stroke-width="1.6"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </button>
                         <?php } else { ?>
-                        <a href="/subscribe/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
-                            class="mobile-auth-link buySubscription">Subscribe</a>
-                        <!-- <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                            <a href="/subscribe/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                                class="mobile-auth-link buySubscription">Subscribe</a>
+                            <!-- <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
                             class="mobile-auth-link"><i class='bx bx-user-circle'></i></a> -->
                         <?php } ?>
                         <div class="search-container">
@@ -170,25 +175,25 @@ if (isset($_COOKIE['user_data'])) {
 
                     if (isset($_COOKIE['user_data'])) { ?>
 
-                    <div class="header_right">
-                        <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
-                        </p>
-                    </div>
+                        <div class="header_right">
+                            <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
+                            </p>
+                        </div>
 
-                    <!-- profile side--bar -->
-                    <div class="profile--sideBar">
-                        <div class="profile_container">
-                            <div class="profile_cancel">
-                                <i class='bx bx-x'></i>
-                            </div>
-                            <div class="profile_header">
-                                <!-- <div class="profile--img">
+                        <!-- profile side--bar -->
+                        <div class="profile--sideBar">
+                            <div class="profile_container">
+                                <div class="profile_cancel">
+                                    <i class='bx bx-x'></i>
+                                </div>
+                                <div class="profile_header">
+                                    <!-- <div class="profile--img">
                                         <img src="<?php echo PROFILE_IMAGE ?>" class="img-fluid" alt="user_img">
                                     </div> -->
-                                <div class="user--content">
-                                    <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
-                                    <a href="#"><?php echo PROFILE_EMAIL ?></a>
-                                    <?php
+                                    <div class="user--content">
+                                        <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
+                                        <a href="#"><?php echo PROFILE_EMAIL ?></a>
+                                        <?php
 
                                         if (isset($showLogoutBtn)) {
                                             echo (($showLogoutBtn == 1) ? '<a href="/logout/">Logout</a>' : '');
@@ -196,10 +201,10 @@ if (isset($_COOKIE['user_data'])) {
 
                                         ?>
 
+                                    </div>
                                 </div>
-                            </div>
 
-                            <?php
+                                <?php
 
                                 if ($activeSubscription == true) {
 
@@ -228,20 +233,20 @@ if (isset($_COOKIE['user_data'])) {
 
                                 ?>
 
+                            </div>
                         </div>
-                    </div>
 
                     <?php
                     } else { ?>
 
 
-                    <div class="header_right">
-                        <!-- <button class="subscribe">subscribe</button> -->
-                        <a href="/subscribe/" class="subscribe">subscribe</a>
-                        <!-- <button class="sign_in"></button> -->
-                        <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
-                            class="sign_in">sign in</a>
-                    </div>
+                        <div class="header_right">
+                            <!-- <button class="subscribe">subscribe</button> -->
+                            <a href="/subscribe/" class="subscribe">subscribe</a>
+                            <!-- <button class="sign_in"></button> -->
+                            <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                                class="sign_in">sign in</a>
+                        </div>
 
                     <?php
                     }
@@ -283,11 +288,11 @@ if (isset($_COOKIE['user_data'])) {
                 </button>
             </div>
             <?php if (isset($_COOKIE['user_data'])) { ?>
-            <div class="mobile-user">
-                <div class="mobile-user__name"><?php echo PROFILE_DISPLAY_NAME ?></div>
-                <div class="mobile-user__email"><?php echo PROFILE_EMAIL ?></div>
-                <div class="mobile-user__links">
-                    <?php
+                <div class="mobile-user">
+                    <div class="mobile-user__name"><?php echo PROFILE_DISPLAY_NAME ?></div>
+                    <div class="mobile-user__email"><?php echo PROFILE_EMAIL ?></div>
+                    <div class="mobile-user__links">
+                        <?php
                         if (isset($activeSubscription) && $activeSubscription == true) {
                             echo "<a href='/manage-subscription/' class='buySubscription'>Manage Subscription</a>";
                         } else {
@@ -298,40 +303,40 @@ if (isset($_COOKIE['user_data'])) {
                             echo "<a href='/logout/'>Logout</a>";
                         }
                         ?>
+                    </div>
                 </div>
-            </div>
             <?php } else { ?>
-            <div class="mobile-auth">
-                <a href="/subscribe/" class="mobile-auth__primary buySubscription">Subscribe</a>
-                <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
-                    class="mobile-auth__secondary">Sign in</a>
-            </div>
+                <div class="mobile-auth">
+                    <a href="/subscribe/" class="mobile-auth__primary buySubscription">Subscribe</a>
+                    <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                        class="mobile-auth__secondary">Sign in</a>
+                </div>
             <?php } ?>
             <ul>
                 <?php
 
                 if (SITE_ID == 49) { ?>
-                <li><a href="/deepdives/" <?php echo ((BASE_URL == '/deepdives/') ? 'class="active"' : '') ?>
-                        title="Deepdives">Deepdives</a></li>
-                <li><a href="/explainer/" <?php echo ((BASE_URL == '/explainer/') ? 'class="active"' : '') ?>
-                        title="Explainer">Explainer</a></li>
-                <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
-                        title="FIntech News">News</a></li>
-                <li><a href="/ai-emerging-tech/" title="AI/Emerging Tech"
-                        <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
-                </li>
-                <li><a href="/ipo-tales/" title="IPO Tales"
-                        <?php echo ((BASE_URL == '/ipo-tales/') ? 'class="active"' : '') ?>>IPO Tales</a>
-                </li>
-                <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
-                        title="Money Trivia">Money Trivia</a></li>
-                <li><a href="/money-and-machines/"
-                        <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
-                        title="Money & Machines">Money & Machines</a></li>
-                <li><a href="<?php echo ((DEVELOPMENT_MODE == true) ? 'http://stack.nms.local/' : 'https://stack.theheadandtale.com/') ?>"
-                        target="_blank" title="Report"
-                        <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>>Report<sup
-                            class="sup">NEW</sup></a></li>
+                    <li><a href="/deepdives/" <?php echo ((BASE_URL == '/deepdives/') ? 'class="active"' : '') ?>
+                            title="Deepdives">Deepdives</a></li>
+                    <li><a href="/explainer/" <?php echo ((BASE_URL == '/explainer/') ? 'class="active"' : '') ?>
+                            title="Explainer">Explainer</a></li>
+                    <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
+                            title="FIntech News">News</a></li>
+                    <li><a href="/ai-emerging-tech/" title="AI/Emerging Tech"
+                            <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
+                    </li>
+                    <li><a href="/ipo-tales/" title="IPO Tales"
+                            <?php echo ((BASE_URL == '/ipo-tales/') ? 'class="active"' : '') ?>>IPO Tales</a>
+                    </li>
+                    <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
+                            title="Money Trivia">Money Trivia</a></li>
+                    <li><a href="/money-and-machines/"
+                            <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
+                            title="Money & Machines">Money & Machines</a></li>
+                    <li><a href="<?php echo ((DEVELOPMENT_MODE == true) ? 'http://stack.nms.local/' : 'https://stack.theheadandtale.com/') ?>"
+                            target="_blank" title="Report"
+                            <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>>Report<sup
+                                class="sup">NEW</sup></a></li>
                 <?php
                 }
 
