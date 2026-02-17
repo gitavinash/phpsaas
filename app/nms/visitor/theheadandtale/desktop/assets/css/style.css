@@ -493,6 +493,7 @@ a.news_intro {
   -webkit-box-orient: unset;
   overflow: visible;
   text-overflow: unset;
+  text-decoration: none !important;
 }
 
 .news_box:first-child .news_intro p {
@@ -1779,6 +1780,7 @@ nav ul li a.partnerInsights {
   .news_box .news_intro h2 {
     font-size: 0.95rem;
     line-height: 1.45;
+    text-decoration: none !important;
     -webkit-line-clamp: unset;
   }
 
