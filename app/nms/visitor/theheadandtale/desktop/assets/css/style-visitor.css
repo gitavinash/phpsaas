@@ -422,6 +422,7 @@ section {
   display: flex;
   gap: 0;
   height: 100%;
+  text-decoration: none !important;
 }
 .news_box:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -537,6 +538,7 @@ a.news_intro {
 .featureArticle .news_box a {
   flex-direction: column;
   height: auto;
+  text-decoration: none !important;
 }
 
 .featureArticle .news_box .feature_image {
@@ -1755,6 +1757,7 @@ nav ul li a.partnerInsights {
   .news_box a {
     flex-direction: column;
     height: 100%;
+    text-decoration: none !important;
   }
 
   .news_box .feature_image {

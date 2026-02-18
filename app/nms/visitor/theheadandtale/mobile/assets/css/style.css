@@ -297,6 +297,7 @@ section {
 }
 .news_box a {
   color: inherit !important;
+  text-decoration: none !important;
 }
 .news_box:hover {
   color: var(--grey-color);
@@ -1260,7 +1261,9 @@ p.testimonial-quote span {
   border-radius: 999px;
   background: #ddd;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 .testimonial-dots button.active {
   background: red;
@@ -1398,7 +1401,9 @@ p.testimonial-quote span {
   background: var(--white-color, #fff);
   overflow: hidden;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; /* same family as .news_box */
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 .related-card:hover {
   transform: translateY(-2px);
@@ -1604,7 +1609,9 @@ p.testimonial-quote span {
   height: 92vh;
   display: flex;
   flex-direction: column;
-  transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1), bottom 0s 0.32s;
+  transition:
+    transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1),
+    bottom 0s 0.32s;
   transform: translateY(0); /* we animate bottom */
 }
 
@@ -1696,7 +1703,9 @@ p.testimonial-quote span {
 }
 .reviews-sheet.is-open .reviews-sheet__panel {
   bottom: 0;
-  transition: bottom 0s, transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition:
+    bottom 0s,
+    transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* Respect reduced motion */
@@ -1768,7 +1777,9 @@ body.no-scroll {
   box-shadow: rgba(149, 157, 165, 0.18) 0 8px 24px;
   padding: 16px 16px 18px;
   color: var(--black-color, #000);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 .t-card:hover {
   transform: translateY(-2px);
