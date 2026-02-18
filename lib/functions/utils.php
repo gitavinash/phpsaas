@@ -18,26 +18,6 @@ function getInitials($string)
     return $initials;
 }
 
-function getAssetForceRefreshToken()
-{
-    static $assetForceRefreshToken = null;
-
-    if ($assetForceRefreshToken !== null) {
-        return $assetForceRefreshToken;
-    }
-
-    $assetForceRefreshToken = '';
-    if (isset($_GET['rf'])) {
-        $assetForceRefreshToken = preg_replace('/[^0-9]/', '', (string) $_GET['rf']);
-    }
-
-    if (!defined('ASSET_FORCE_REFRESH_TOKEN')) {
-        define('ASSET_FORCE_REFRESH_TOKEN', $assetForceRefreshToken);
-    }
-
-    return $assetForceRefreshToken;
-}
-
 function assetVersion($relativePath, $basePath = null)
 {
     if ($basePath === null) {
@@ -56,18 +36,6 @@ function assetVersion($relativePath, $basePath = null)
     }
 
     return '1';
-}
-
-function assetQuery($relativePath, $basePath = null)
-{
-    $query = 'v=' . assetVersion($relativePath, $basePath);
-
-    $assetForceRefreshToken = getAssetForceRefreshToken();
-    if ($assetForceRefreshToken !== '') {
-        $query .= '&rf=' . $assetForceRefreshToken;
-    }
-
-    return $query;
 }
 
 function isEmailValid(string $email): bool

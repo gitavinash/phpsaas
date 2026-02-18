@@ -51,7 +51,7 @@ if (isset($_GET['redirect'])) {
             } catch (e) {}
 
             const targetUrl = new URL(redirectPath, window.location.origin);
-            targetUrl.searchParams.set('rf', String(Date.now()));
+            targetUrl.searchParams.delete('rf');
             window.location.replace(targetUrl.toString());
         })();
     </script>

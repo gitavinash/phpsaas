@@ -70,8 +70,8 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 
 <?php require_once NOTIFICATION . 'index.php'; ?>
 <script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js"></script>
-<script src="<?php echo USER_JS ?>script.js?<?php echo assetQuery('js/script.js'); ?>"></script>
-<script src="<?php echo USER_JS ?>slider.min.js?<?php echo assetQuery('js/slider.min.js'); ?>"></script>
+<script src="<?php echo USER_JS ?>script.js"></script>
+<script src="<?php echo USER_JS ?>slider.min.js"></script>
 <script>
     const searchButton = document.getElementById('searchButton');
     const closeButton = document.getElementById('closeButton');

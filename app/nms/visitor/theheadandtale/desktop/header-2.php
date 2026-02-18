@@ -10,19 +10,19 @@ require_once UTIL_FUNCTIONS;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="stylesheet"
-        href="<?php echo USER_STYLESHEET ?>style.min.css?<?php echo assetQuery('css/style.min.css'); ?>">
+        href="<?php echo USER_STYLESHEET ?>style.min.css">
     <link rel="stylesheet"
-        href="<?php echo USER_STYLESHEET ?>about.min.css?<?php echo assetQuery('css/about.min.css'); ?>">
+        href="<?php echo USER_STYLESHEET ?>about.min.css">
     <link rel="stylesheet"
-        href="<?php echo USER_STYLESHEET ?>manage.min.css?<?php echo assetQuery('css/manage.min.css'); ?>">
+        href="<?php echo USER_STYLESHEET ?>manage.min.css">
     <link rel="stylesheet"
-        href="<?php echo USER_STYLESHEET ?>subscribe.min.css?<?php echo assetQuery('css/subscribe.min.css'); ?>">
+        href="<?php echo USER_STYLESHEET ?>subscribe.min.css">
     <link rel="stylesheet"
-        href="<?php echo USER_STYLESHEET ?>footer.min.css?<?php echo assetQuery('css/footer.min.css'); ?>">
+        href="<?php echo USER_STYLESHEET ?>footer.min.css">
     <link rel="stylesheet"
-        href="<?php echo USER_STYLESHEET ?>details.min.css?<?php echo assetQuery('css/details.min.css'); ?>">
+        href="<?php echo USER_STYLESHEET ?>details.min.css">
     <link rel="stylesheet"
-        href="<?php echo USER_STYLESHEET ?>thankyou.css?<?php echo assetQuery('css/thankyou.css'); ?>">
+        href="<?php echo USER_STYLESHEET ?>thankyou.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <?php require_once DEFAULT_META; ?>
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
@@ -64,33 +64,6 @@ require_once UTIL_FUNCTIONS;
             y = l.getElementsByTagName(r)[0];
             y.parentNode.insertBefore(t, y);
         })(window, document, "clarity", "script", "qicb9eq9ym");
-    </script>
-    <script>
-        (function() {
-            try {
-                const key = 'asset_refresh_hits_v1';
-                const now = Date.now();
-                const oneMinute = 60 * 1000;
-                const url = new URL(window.location.href);
-                const currentToken = Number(url.searchParams.get('rf') || 0);
-
-                let hits = JSON.parse(localStorage.getItem(key) || '[]');
-                if (!Array.isArray(hits)) {
-                    hits = [];
-                }
-
-                hits = hits.filter(function(ts) {
-                    return (now - Number(ts)) <= oneMinute;
-                });
-                hits.push(now);
-                localStorage.setItem(key, JSON.stringify(hits.slice(-10)));
-
-                if (hits.length >= 2 && (currentToken === 0 || (now - currentToken) > oneMinute)) {
-                    url.searchParams.set('rf', String(now));
-                    window.location.replace(url.toString());
-                }
-            } catch (e) {}
-        })();
     </script>
     <script>
         (function() {

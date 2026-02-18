@@ -60,7 +60,7 @@
     </div>
 </footer>
 
-<script src="<?php echo USER_JS ?>script.min.js?<?php echo assetQuery('js/script.min.js'); ?>"></script>
+<script src="<?php echo USER_JS ?>script.min.js"></script>
 
 </body>
 

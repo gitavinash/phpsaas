@@ -10,39 +10,12 @@ require_once UTIL_FUNCTIONS;
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css?<?php echo assetQuery('bootstrap.min.css', ROOT . CSS_LIBRARY); ?>">
-    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css?<?php echo assetQuery('all.min.css', ROOT . CSS_LIBRARY); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css?<?php echo assetQuery('css/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo CSS_LIBRARY ?>all.min.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css">
 
     <?php require_once DEFAULT_META; ?>
 
-    <script>
-        (function() {
-            try {
-                const key = 'asset_refresh_hits_v1';
-                const now = Date.now();
-                const oneMinute = 60 * 1000;
-                const url = new URL(window.location.href);
-                const currentToken = Number(url.searchParams.get('rf') || 0);
-
-                let hits = JSON.parse(localStorage.getItem(key) || '[]');
-                if (!Array.isArray(hits)) {
-                    hits = [];
-                }
-
-                hits = hits.filter(function(ts) {
-                    return (now - Number(ts)) <= oneMinute;
-                });
-                hits.push(now);
-                localStorage.setItem(key, JSON.stringify(hits.slice(-10)));
-
-                if (hits.length >= 2 && (currentToken === 0 || (now - currentToken) > oneMinute)) {
-                    url.searchParams.set('rf', String(now));
-                    window.location.replace(url.toString());
-                }
-            } catch (e) {}
-        })();
-    </script>
     <script>
         (function() {
             if (!('serviceWorker' in navigator)) {

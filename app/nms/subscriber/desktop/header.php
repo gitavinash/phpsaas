@@ -12,12 +12,12 @@ exit();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css?<?php echo assetQuery('css/style.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about.css?<?php echo assetQuery('css/about.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage.css?<?php echo assetQuery('css/manage.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe.css?<?php echo assetQuery('css/subscribe.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer.css?<?php echo assetQuery('css/footer.css'); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details.css?<?php echo assetQuery('css/details.css'); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style-sub.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>about-sub.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>manage-sub.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>subscribe-sub.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>footer-sub.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>details-sub.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <?php require_once DEFAULT_META; ?>
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
@@ -38,29 +38,29 @@ exit();
 
                         if (isset($_COOKIE['user_data'])) { ?>
 
-                            <div class="header_right">
-                                <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
-                                </p>
-                            </div>
+                        <div class="header_right">
+                            <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
+                            </p>
+                        </div>
 
-                            <!-- profile side--bar -->
-                            <div class="profile--sideBar">
-                                <div class="profile_container">
-                                    <div class="profile_cancel">
-                                        <i class='bx bx-x'></i>
-                                    </div>
-                                    <div class="profile_header">
-                                        <!-- <div class="profile--img">
+                        <!-- profile side--bar -->
+                        <div class="profile--sideBar">
+                            <div class="profile_container">
+                                <div class="profile_cancel">
+                                    <i class='bx bx-x'></i>
+                                </div>
+                                <div class="profile_header">
+                                    <!-- <div class="profile--img">
                                         <img src="<?php echo PROFILE_IMAGE ?>" class="img-fluid" alt="user_img">
                                     </div> -->
-                                        <div class="user--content">
-                                            <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
-                                            <a href="#"><?php echo PROFILE_EMAIL ?></a>
-                                            <a href="/logout/">Logout</a>
-                                        </div>
+                                    <div class="user--content">
+                                        <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
+                                        <a href="#"><?php echo PROFILE_EMAIL ?></a>
+                                        <a href="/logout/">Logout</a>
                                     </div>
+                                </div>
 
-                                    <?php
+                                <?php
 
                                     if ($activeSubscription == true) {
 
@@ -89,19 +89,19 @@ exit();
 
                                     ?>
 
-                                </div>
                             </div>
+                        </div>
 
                         <?php
                         } else { ?>
 
 
-                            <div class="header_right">
-                                <!-- <button class="subscribe">subscribe</button> -->
-                                <a href="/subscribe/" class="subscribe">subscribe</a>
-                                <!-- <button class="sign_in"></button> -->
-                                <a href="/login/" class="sign_in">sign in</a>
-                            </div>
+                        <div class="header_right">
+                            <!-- <button class="subscribe">subscribe</button> -->
+                            <a href="/subscribe/" class="subscribe">subscribe</a>
+                            <!-- <button class="sign_in"></button> -->
+                            <a href="/login/" class="sign_in">sign in</a>
+                        </div>
 
                         <?php
                         }
