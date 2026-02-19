@@ -146,7 +146,7 @@ figcaption {
 }
 
 .details_box__content img {
-  max-width: 100%;
+  width: 100% !important;
 }
 .details_box__content p {
   font-family: "Noto Sans", sans-serif !important;
