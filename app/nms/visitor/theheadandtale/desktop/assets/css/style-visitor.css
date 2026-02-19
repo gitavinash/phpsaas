@@ -506,15 +506,22 @@ a.news_intro {
 }
 
 .news_box .news_intro p {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   line-height: 1.4;
-  color: #666;
+  color: #343232;
   margin: 0;
+}
+
+.news_box .news_intro p:last-child {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .news_box .news_intro p span {
   font-size: 0.75rem;
-  color: #999;
+  color: #626060;
   font-weight: 500;
 }
 
