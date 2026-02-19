@@ -56,6 +56,7 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
                 <option value="2023" <?php echo (($selectedYear == '2023') ? 'selected' : '') ?>>2023</option>
                 <option value="2024" <?php echo (($selectedYear == '2024') ? 'selected' : '') ?>>2024</option>
                 <option value="2025" <?php echo (($selectedYear == '2025') ? 'selected' : '') ?>>2025</option>
+                <option value="2026" <?php echo (($selectedYear == '2026') ? 'selected' : '') ?>>2026</option>
             </select>
             <select class="form-control" name="date" id="changeDater">
                 <option value="">Select date</option>

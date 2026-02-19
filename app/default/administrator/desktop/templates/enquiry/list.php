@@ -56,6 +56,7 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
                 <option value="2023" <?php echo (($selectedYear == '2023') ? 'selected' : '') ?>>2023</option>
                 <option value="2024" <?php echo (($selectedYear == '2024') ? 'selected' : '') ?>>2024</option>
                 <option value="2025" <?php echo (($selectedYear == '2025') ? 'selected' : '') ?>>2025</option>
+                <option value="2026" <?php echo (($selectedYear == '2026') ? 'selected' : '') ?>>2026</option>
             </select>
             <select class="form-control" name="date" id="changeDater">
                 <option value="">Select date</option>
@@ -107,16 +108,16 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
 
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-                    <tr>
-                        <td><?php echo date('d-M-Y H:s', strtotime($enquiry_time)) ?></td>
-                        <td><?php echo $enquiry_subject; ?></td>
-                        <td><?php echo $enquiry_first_name . ' ' . $enquiry_last_name; ?></td>
-                        <td><?php echo $enquiry_mobile; ?></td>
-                        <?php
+        <tr>
+            <td><?php echo date('d-M-Y H:s', strtotime($enquiry_time)) ?></td>
+            <td><?php echo $enquiry_subject; ?></td>
+            <td><?php echo $enquiry_first_name . ' ' . $enquiry_last_name; ?></td>
+            <td><?php echo $enquiry_mobile; ?></td>
+            <?php
 
                         if (SITE_ID != 35) { ?>
-                            <td><?php echo ucfirst($enquiry_message); ?></td>
-                        <?php
+            <td><?php echo ucfirst($enquiry_message); ?></td>
+            <?php
                         } else {
                             $missData = json_decode($enquiry_message, TRUE);
 
@@ -127,7 +128,7 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
                         }
 
                         ?>
-                        <!-- <td>
+            <!-- <td>
                 <?php
 
                     switch ($enquiry_status) {
@@ -148,7 +149,7 @@ $enquirySlot = (($selectedSlot == '') ? '' : "AND enquiry_time='{$selectedSlot}'
 
                 ?>
             </td> -->
-                    </tr>
+        </tr>
         <?php
 
                 }
