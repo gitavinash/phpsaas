@@ -19,8 +19,8 @@ if (isset($_COOKIE['isLogin'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Login | <?php echo SITE_NAME ?></title>
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>login.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style-visitor.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>login-visitor.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <!-- or -->
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
