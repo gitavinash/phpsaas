@@ -87,7 +87,7 @@ figcaption {
   font-family: var(--font-primary);
   max-width: max-content;
   position: relative;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .news_box__heading h6::after {

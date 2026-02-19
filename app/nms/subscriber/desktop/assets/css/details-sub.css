@@ -70,6 +70,7 @@ figcaption {
   font-size: 20px;
   max-width: max-content;
   position: relative;
+  font-weight: 400;
 }
 .news_box__heading h6::after {
   content: "";
