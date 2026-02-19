@@ -58,7 +58,7 @@ function render_plain_menu(array $items): string
         if ($label === '') {
             continue;
         }
-        $html .= '<li><a href="' . $url . '" class="block text-grey-700 hover:text-primary transition">' . $label . '</a></li>';
+        $html .= '<li><a href="' . $url . '" class="block text-grey-700 hover:text-opacity-5 transition">' . $label . '</a></li>';
     }
     return $html;
 }

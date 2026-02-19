@@ -257,3 +257,7 @@ footer {
   float: left !important;
   width: 100% !important;
 }
+
+.footerLegalLink li {
+  list-style: none;
+}

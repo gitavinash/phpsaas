@@ -2,13 +2,13 @@
 
 $id = base64_decode($id);
 
-if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "page, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE link_type='page' AND link_relation_id=page_id AND meta_relation_id=link_id AND page_id='{$id}' AND link_status!=301 AND link_type='page' LIMIT 1")) {
+if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "page INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=page_id AND link_site_id=" . SITE_ID . " AND link_type='page' AND link_status=200 LEFT JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE page_id='{$id}' AND page_site_id='" . SITE_ID . "'")) {
     if (mysqli_num_rows($pageDetails) != 0) {
         extract(mysqli_fetch_assoc($pageDetails));
 
         $pageSection = ((isset($page_section)) ? json_decode(base64_decode($page_section)) : '');
     } else {
-        exit(); ?>
+?>
 <script type="text/javascript">
 alert('Invalid action found');
 window.location.href = 'dashboard/page/?type=list&status=all';

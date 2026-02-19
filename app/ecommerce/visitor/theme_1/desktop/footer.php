@@ -77,15 +77,12 @@
                     rights reserved. | Developed by <a href='https://blumox.com'
                         class="text-white-500 hover:text-white text-sm transition">Blumox Technologies</a></p>
                 <div class="flex space-x-6">
-                    <a href="/terms-and-conditions/" class="text-white-500 hover:text-white text-sm transition">Terms
-                        and
-                        Conditions</a>
-                    <a href="/privacy-policy/" class="text-white-500 hover:text-white text-sm transition">Privacy
-                        Policy</a>
-                    <a href="/cancellation---refund/"
-                        class="text-white-500 hover:text-white text-sm transition">Cancellation & Refund</a>
-                    <a href="/shipping-policy/" class="text-white-500 hover:text-white text-sm transition">Shipping
-                        policy</a>
+                    <!-- Desktop Menu -->
+                    <nav class="hidden md:flex space-x-6 footerLegalLink">
+                        <?php
+                        generateMenu('SITE_NAV_LEGAL_FOOTER', 'plain', true);
+                        ?>
+                    </nav>
                 </div>
             </div>
         </div>

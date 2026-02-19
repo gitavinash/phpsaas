@@ -266,7 +266,9 @@ if ($recentProducts = mysqli_query($connection, "
     <div class="container mx-auto">
         <?php
         $homepageContent = getHomepageContent($connection);
-        echo $homepageContent['homepageContent'];
+        if ($homepageContent) {
+            echo $homepageContent['homepageContent'];
+        }
         ?>
     </div>
 </section>
