@@ -34,8 +34,10 @@ if ($checkUrl = mysqli_query($connection, "SELECT link_id, category_id, category
 
 					extract(mysqli_fetch_assoc($totalCategoryPost));
 					$totalResult = $total_result ?? 0;
-					$totalPages = ceil($totalResult / PER_PAGE_LIMIT) - 2;
-
+					$totalPages = ceil($totalResult / PER_PAGE_LIMIT);
+					if (isset($_GET['pg'])) {
+						$totalPages = $totalPages - (($currentPage == 1) ? 1 : 0);
+					}
 					define('TOTAL_PAGE', $totalPages);
 					define('TOTAL_RESULT', $totalResult);
 				}
