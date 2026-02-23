@@ -1,33 +1,32 @@
 <?php
 
-    if(isset($id)) {
+if (isset($id)) {
 
-        $id=base64_decode($id);
+    $id = base64_decode($id);
 
-        $productList=mysqli_query($connection, "SELECT product_id, product_title FROM ".TABLE_PREFIX."product INNER JOIN ".TABLE_PREFIX."link ON link_relation_id=product_id WHERE link_type='product' AND product_type='subscription' AND link_status=200 AND link_site_id=".APP_SITE_ID);
+    $productList = mysqli_query($connection, "SELECT product_id, product_title FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE link_type='product' AND product_type='subscription' AND link_status=200 AND link_site_id=" . APP_SITE_ID);
 
-        if(mysqli_num_rows($productList)!=0) {
+    if (mysqli_num_rows($productList) != 0) {
 
-            $productListData=array();
+        $productListData = array();
 
-            while($productLists=mysqli_fetch_assoc($productList)) {
+        while ($productLists = mysqli_fetch_assoc($productList)) {
 
-                extract($productLists);
+            extract($productLists);
 
-                $productListData[]=array(
-                    'product_id' => $product_id,
-                    'product_title' => $product_title
-                );
+            $productListData[] = array(
+                'product_id' => $product_id,
+                'product_title' => $product_title
+            );
+        }
 
-            }
+        if ($checkOrder = mysqli_query($connection, "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id INNER JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id WHERE order_id='{$id}' AND product_type='subscription' AND order_site_id=" . APP_SITE_ID)) {
 
-            if($checkOrder=mysqli_query($connection, "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id INNER JOIN ".TABLE_PREFIX."transaction ON transaction_order_id=order_id INNER JOIN ".TABLE_PREFIX."product ON product_id=order_product_id WHERE order_id='{$id}' AND product_type='subscription' AND order_site_id=".APP_SITE_ID)) {
+            if (mysqli_num_rows($checkOrder) != 0) {
 
-                if(mysqli_num_rows($checkOrder)!=0) {
-                    
-                    extract(mysqli_fetch_assoc($checkOrder));
-    
-                    ?>
+                extract(mysqli_fetch_assoc($checkOrder));
+
+?>
 
 <h2>Order Info</h2>
 
@@ -36,36 +35,35 @@
         <div class="box-1">
             <div class="box-2">
                 <?php
-                                    
-                                        // Fetch Product information from database
-    
-                                        $productData=explode(',', $order_product_id);
-                                        $productQtyData=explode(',', $order_product_qty);
-    
-                                        for($i=0; $i<sizeof($productData); $i++) {
 
-                                            echo "<input type='hidden' name='totalProducts' value='".sizeof($productData)."'>";
-    
-                                            if($checkProduct=mysqli_query($connection, "SELECT product_id, product_image, product_title, inventory_currency_symbol FROM isw_product INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_id='{$productData[$i]}' AND inventory_type='product' AND product_site_id=".APP_SITE_ID." AND inventory_site_id=".APP_SITE_ID)) {
-    
-                                                if(mysqli_num_rows($checkProduct)!=0) {
-    
-                                                    extract(mysqli_fetch_assoc($checkProduct)); ?>
+                                // Fetch Product information from database
+
+                                $productData = explode(',', $order_product_id);
+                                $productQtyData = explode(',', $order_product_qty);
+
+                                for ($i = 0; $i < sizeof($productData); $i++) {
+
+                                    echo "<input type='hidden' name='totalProducts' value='" . sizeof($productData) . "'>";
+
+                                    if ($checkProduct = mysqli_query($connection, "SELECT product_id, product_image, product_title, inventory_currency_symbol FROM isw_product INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_id='{$productData[$i]}' AND inventory_type='product' AND product_site_id=" . APP_SITE_ID . " AND inventory_site_id=" . APP_SITE_ID)) {
+
+                                        if (mysqli_num_rows($checkProduct) != 0) {
+
+                                            extract(mysqli_fetch_assoc($checkProduct)); ?>
 
                 <div class="form-group">
-                    <label>Product name ( Cart item no <?php echo $i+1 ?> )</label>
+                    <label>Product name ( Cart item no <?php echo $i + 1 ?> )</label>
                     <!-- <input type="text" class="form-control inside-shadow" value="<?php echo $productName ?>" > -->
                     <select name="product_id_<?php echo $i ?>" class="form-control inside-shadow">
                         <option value="">Select product</option>
                         <?php
-                                                                
-                                                                    for($j=0; $j<sizeof($productListData); $j++) {
-    
-                                                                        echo "<option value='{$productListData[$j]['product_id']}' ".(($productListData[$j]['product_id']==$productData[$i]) ? 'selected' : '' )." >{$productListData[$j]['product_title']}</option>";
-    
-                                                                    }
-    
-                                                                ?>
+
+                                                    for ($j = 0; $j < sizeof($productListData); $j++) {
+
+                                                        echo "<option value='{$productListData[$j]['product_id']}' " . (($productListData[$j]['product_id'] == $productData[$i]) ? 'selected' : '') . " >{$productListData[$j]['product_title']}</option>";
+                                                    }
+
+                                                    ?>
                     </select>
                 </div>
                 <div class="form-group">
@@ -75,21 +73,21 @@
                 </div>
 
                 <?php
-    
-                                                } else { ?>
+
+                                        } else { ?>
 
                 <div class="form-group">
-                    <label>Product name ( Cart item no <?php echo $i+1 ?> )</label>
+                    <label>Product name ( Cart item no <?php echo $i + 1 ?> )</label>
                     <!-- <input type="text" class="form-control inside-shadow" value="<?php echo $productName ?>" > -->
                     <select name="product_id_<?php echo $i ?>" class="form-control inside-shadow">
                         <option value="">Select product</option>
                         <?php
-                                                            
-                                                                for($j=0; $j<sizeof($productListData); $j++) {
-                                                                    echo "<option value='{$productListData[$j]['product_id']}' >{$productListData[$j]['product_title']}</option>";
-                                                                }
-    
-                                                            ?>
+
+                                                    for ($j = 0; $j < sizeof($productListData); $j++) {
+                                                        echo "<option value='{$productListData[$j]['product_id']}' >{$productListData[$j]['product_title']}</option>";
+                                                    }
+
+                                                    ?>
                     </select>
                 </div>
                 <div class="form-group">
@@ -97,14 +95,12 @@
                     <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow">
                 </div>
 
-                <?php    
-                                                }
-    
-                                            }
-    
+                <?php
                                         }
-    
-                                    ?>
+                                    }
+                                }
+
+                                ?>
                 <div class="box-2" style="padding:0">
                     <div class="form-group">
                         <label>First Name</label>
@@ -152,27 +148,23 @@
                     <label>State</label>
                     <select class="form-control inside-shadow" name="state" required>
                         <?php
-                                        
-                                            if($stateDetails=mysqli_query($connection, "SELECT state_id, state_name FROM ".TABLE_PREFIX."state WHERE state_country_id=101")) {
-    
-                                                if(mysqli_num_rows($stateDetails)!=0) {
-    
-                                                    echo "<option value='' >Select state</option>";
-    
-                                                    while($stateData=mysqli_fetch_assoc($stateDetails)) {
-    
-                                                        echo "<option value='{$stateData['state_id']}' ".(($stateData['state_id']==$state_id) ? 'selected' : '' )." >{$stateData['state_name']}</option>";
-    
-                                                    }
-    
-                                                } else {
-    
-                                                    echo "<option value=''>No city found</option>";
-    
+
+                                        if ($stateDetails = mysqli_query($connection, "SELECT state_id, state_name FROM " . TABLE_PREFIX . "state WHERE state_country_id=101")) {
+
+                                            if (mysqli_num_rows($stateDetails) != 0) {
+
+                                                echo "<option value='' >Select state</option>";
+
+                                                while ($stateData = mysqli_fetch_assoc($stateDetails)) {
+
+                                                    echo "<option value='{$stateData['state_id']}' " . (($stateData['state_id'] == $state_id) ? 'selected' : '') . " >{$stateData['state_name']}</option>";
                                                 }
-    
+                                            } else {
+
+                                                echo "<option value=''>No city found</option>";
                                             }
-    
+                                        }
+
                                         ?>
                     </select>
                 </div>
@@ -185,9 +177,10 @@
                     <label>Address yype</label>
                     <select name="address_type" class="form-control inside-shadow">
                         <option value="">Select address type</option>
-                        <option value="home" <?php echo (($address_type=='home') ? 'selected' : '' ) ?>>Home</option>
-                        <option value="work" <?php echo (($address_type=='work') ? 'selected' : '' ) ?>>Work</option>
-                        <option value="other" <?php echo (($address_type=='other') ? 'selected' : '' ) ?>>Other</option>
+                        <option value="home" <?php echo (($address_type == 'home') ? 'selected' : '') ?>>Home</option>
+                        <option value="work" <?php echo (($address_type == 'work') ? 'selected' : '') ?>>Work</option>
+                        <option value="other" <?php echo (($address_type == 'other') ? 'selected' : '') ?>>Other
+                        </option>
                     </select>
                 </div>
             </div>
@@ -199,21 +192,21 @@
                 <div class="form-group">
                     <label>Product price</label>
                     <input type='text' class='form-control inside-shadow'
-                        value='<?php echo (($order_product_price!='') ? $inventory_currency_symbol.' ' : '' ).$order_product_price ?>'
+                        value='<?php echo (($order_product_price != '') ? $inventory_currency_symbol . ' ' : '') . $order_product_price ?>'
                         readonly>
                 </div>
 
                 <div class="form-group">
                     <label>Delivery charge</label>
                     <input type='text' class='form-control inside-shadow'
-                        value='<?php echo (($order_delivery_charges!='') ? $inventory_currency_symbol.' ' : '' ).$order_delivery_charges ?>'
+                        value='<?php echo (($order_delivery_charges != '') ? $inventory_currency_symbol . ' ' : '') . $order_delivery_charges ?>'
                         readonly>
                 </div>
 
                 <div class="form-group">
                     <label>Order total</label>
                     <input type='text' class='form-control inside-shadow'
-                        value='<?php echo (($order_total_price!='') ? $inventory_currency_symbol.' ' : '' ).$order_total_price ?>'
+                        value='<?php echo (($order_total_price != '') ? $inventory_currency_symbol . ' ' : '') . $order_total_price ?>'
                         readonly>
                 </div>
 
@@ -231,44 +224,39 @@
                 </div>
 
                 <?php
-                                    
-                                        if($orderMeta=mysqli_query($connection, "SELECT * FROM ".TABLE_PREFIX."order_meta WHERE order_relation_id='{$id}' AND order_site_id='".APP_SITE_ID."'")) {
 
-                                            if(mysqli_num_rows($orderMeta)!=0) {
+                                if ($orderMeta = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$id}' AND order_site_id='" . APP_SITE_ID . "'")) {
 
-                                                while($orderMetaData=mysqli_fetch_assoc($orderMeta)) {
+                                    if (mysqli_num_rows($orderMeta) != 0) {
 
-                                                    extract($orderMetaData);
+                                        while ($orderMetaData = mysqli_fetch_assoc($orderMeta)) {
 
-                                                    if($order_meta_key=='message') {
+                                            extract($orderMetaData);
 
-                                                        echo "<div class='form-group'>
-                                                            <label>".ucwords($order_meta_key)."</label>
+                                            if ($order_meta_key == 'message') {
+
+                                                echo "<div class='form-group'>
+                                                            <label>" . ucwords($order_meta_key) . "</label>
                                                             <textarea class='form-control inside-shadow' style='min-height: 200px' readonly >{$order_meta_value}</textarea>
                                                         </div>";
+                                            } else {
 
-                                                    } else {
-
-                                                        echo "<div class='form-group'>
-                                                            <label>".ucwords($order_meta_key)."</label>
+                                                echo "<div class='form-group'>
+                                                            <label>" . ucwords($order_meta_key) . "</label>
                                                             <input type='text' class='form-control inside-shadow' value='{$order_meta_value}' readonly >
                                                         </div>";
-
-                                                    }
-
-                                                }
-
                                             }
-
                                         }
+                                    }
+                                }
 
-                                    ?>
+                                ?>
             </div>
 
             <div class="form-group">
                 <input type="hidden" name="type" value="order">
                 <input type="hidden" name="id" value="<?php echo $id ?>">
-                <a href="#" id="orderUpdateData" class="btn btn-blue">Update Data</a>
+                <!-- <a href="#" id="orderUpdateData" class="btn btn-blue">Update Data</a> -->
                 <a href="#" id="orderConfirmBtn" class="btn btn-green">Confirm</a>
                 <a href="#" id="orderWaitingBtn" class="btn btn-yellow">Waiting</a>
                 <a href="#" id="orderCancelBtn" class="btn btn-red">Cancel</a>
@@ -280,20 +268,15 @@
 </div>
 
 <?php
-                }
-    
-            } else {
-
-                echo 'no order found';
-
             }
-
         } else {
 
-            echo "Invalid data received";
+            echo 'no order found';
+        }
+    } else {
 
-        }       
-        
+        echo "Invalid data received";
     }
+}
 
 ?>
