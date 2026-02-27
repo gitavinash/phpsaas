@@ -10,13 +10,20 @@ function respondJson($payload, $statusCode = 200)
     exit();
 }
 
+function decodeJsonObject($jsonText)
+{
+    $decoded = json_decode($jsonText, true);
+    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+        return $decoded;
+    }
+
+    return null;
+}
+
 $rawTemplate = isset($site_mainfest_json) ? (string) $site_mainfest_json : '';
 
 if ($rawTemplate === '') {
-    respondJson([
-        'error' => true,
-        'message' => 'Manifest template is empty.'
-    ], 500);
+    respondJson([]);
 }
 
 // Normalize template storage format:
@@ -32,6 +39,8 @@ if (json_last_error() === JSON_ERROR_NONE) {
     }
 }
 
+$originalTemplate = $template;
+
 $replacements = [
     '%SITE_NAME%' => SITE_NAME,
     '%SITE_DESC%' => SITE_DESC,
@@ -44,11 +53,7 @@ foreach ($replacements as $placeholder => $value) {
     $jsonValue = json_encode((string) $value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
     if ($jsonValue === false) {
-        respondJson([
-            'error' => true,
-            'message' => 'Failed to encode replacement value.',
-            'placeholder' => $placeholder,
-        ], 500);
+        continue;
     }
 
     // Remove surrounding quotes so the replacement remains valid for quoted placeholders.
@@ -63,12 +68,27 @@ foreach ($replacements as $placeholder => $value) {
 
 $manifest = json_decode($template, true);
 
-if (json_last_error() !== JSON_ERROR_NONE || !is_array($manifest)) {
-    respondJson([
-        'error' => true,
-        'message' => 'Invalid manifest JSON after replacements.',
-        'json_error' => json_last_error_msg(),
-    ], 500);
+if (json_last_error() === JSON_ERROR_NONE && is_array($manifest)) {
+    respondJson($manifest);
 }
 
-respondJson($manifest);
+$originalManifest = decodeJsonObject($originalTemplate);
+if ($originalManifest !== null) {
+    respondJson($originalManifest);
+}
+
+$rawDecoded = json_decode($rawTemplate, true);
+if (json_last_error() === JSON_ERROR_NONE) {
+    if (is_array($rawDecoded)) {
+        respondJson($rawDecoded);
+    }
+
+    if (is_string($rawDecoded)) {
+        $rawStringManifest = decodeJsonObject($rawDecoded);
+        if ($rawStringManifest !== null) {
+            respondJson($rawStringManifest);
+        }
+    }
+}
+
+respondJson([]);
