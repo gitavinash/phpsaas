@@ -148,7 +148,7 @@
                 echo
                 "<li>
                                         <a href='/pe-vc-tales/' class='readMore'>
-                                           Previous editions...
+                                           Read more news...
                                         </a>
                                 </li>";
             } else {

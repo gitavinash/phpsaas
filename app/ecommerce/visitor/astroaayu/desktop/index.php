@@ -566,7 +566,7 @@ require_once 'header.php';
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <p>₹ 3100 Per Kundali</p>
+                            <p>₹ 5100 Per Kundali</p>
                         </div>
                     </div>
                 </div>

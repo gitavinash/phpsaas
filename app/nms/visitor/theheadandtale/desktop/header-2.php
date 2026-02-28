@@ -319,6 +319,12 @@ require_once UTIL_FUNCTIONS;
                 <li><a href="/ai-emerging-tech/" title="Report"
                         <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
                 </li>
+                <li><a href="/ipo-tales/" title="IPO Tales"
+                        <?php echo ((BASE_URL == '/ipo-tales/') ? 'class="active"' : '') ?>>IPO Tales</a>
+                </li>
+                <li><a href="/pe-vc-tales/" title="PE/VC Tales"
+                        <?php echo ((BASE_URL == '/pe-vc-tales/') ? 'class="active"' : '') ?>>PE/VC Tales</a>
+                </li>
                 <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
                         title="Money Trivia">Money Trivia</a></li>
                 <li><a href="/money-and-machines/"

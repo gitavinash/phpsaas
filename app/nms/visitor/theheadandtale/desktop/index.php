@@ -303,9 +303,9 @@
                         renderNewsCard($latestNewsData[$i]);
                     }
 
-                    // After 15th article: Money & Machines
+                    // After 15th article: PE/VC Tales
                     if ($maxArticles > 15) {
-                        renderMoneyMachines($connection);
+                        renderPEVCTales($connection);
                     }
 
 
