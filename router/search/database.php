@@ -185,7 +185,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
                         n.news_title       AS title,
                         n.news_image       AS image,
                         l2.link_url        AS url,
-                        COALESCE(l2.link_published, n.news_time) AS published_at,
+                        COALESCE(n.news_published, n.news_time) AS published_at,
                         n.news_id          AS relation_id,
                         'tag'              AS tag_type,
                         n.news_description AS description,
@@ -218,7 +218,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
                         n.news_title,
                         n.news_image,
                         l.link_url,
-                        COALESCE(l.link_published, n.news_time),
+                        COALESCE(n.news_published, n.news_time),
                         n.news_id,
                         NULL,
                         n.news_description,
@@ -309,7 +309,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             n.news_title       AS title,
             n.news_image       AS image,
             l2.link_url        AS url,
-            COALESCE(l2.link_published, n.news_time) AS published_at,
+            COALESCE(n.news_published, n.news_time) AS published_at,
             n.news_id          AS relation_id,
             'tag'              AS tag_type,
             n.news_description AS description,
@@ -342,7 +342,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             n.news_title,
             n.news_image,
             l.link_url,
-            COALESCE(l.link_published, n.news_time),
+            COALESCE(n.news_published, n.news_time),
             n.news_id,
             NULL,
             n.news_description,
@@ -367,7 +367,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             n.news_title,
             n.news_image,
             l.link_url,
-            COALESCE(l.link_published, n.news_time),
+            COALESCE(n.news_published, n.news_time),
             n.news_id,
             NULL,
             n.news_description,
@@ -607,7 +607,7 @@ if (!$rows) {
             [$wTag, $pTag] = $buildLike('t', ['tag_title'], $likePhrase, $likeTokens);
             $fbSql = "
                      SELECT DISTINCT 'news' AS item_type, n.news_title AS title, n.news_image AS image, l.link_url AS url,
-                                    n.news_time AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
+                                    COALESCE(n.news_published, n.news_time) AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
                      FROM " . TABLE_PREFIX . "news n
                      LEFT JOIN " . TABLE_PREFIX . "link l
                          ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
@@ -616,14 +616,14 @@ if (!$rows) {
                      WHERE n.news_site_id=?
                          AND n.news_status=1 AND n.news_is_public=1
                          AND ({$wTitle} OR {$wTag})
-                     ORDER BY n.news_time {$newsFallbackOrder}
+                     ORDER BY COALESCE(n.news_published, n.news_time) {$newsFallbackOrder}
                      LIMIT ? OFFSET ?";
             $fbParams = array_merge([$siteId, $siteId], $pTitle, $pTag, [$limit, $offset]);
         } else {
             [$w, $p] = $buildLike('n', ['news_title', 'news_highlight', 'news_description'], $likePhrase, $likeTokens);
             $fbSql = "
                      SELECT 'news' AS item_type, n.news_title AS title, n.news_image AS image, l.link_url AS url,
-                                    n.news_time AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
+                                    COALESCE(n.news_published, n.news_time) AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
                      FROM " . TABLE_PREFIX . "news n
                      LEFT JOIN " . TABLE_PREFIX . "link l
                          ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
