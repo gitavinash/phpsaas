@@ -40,7 +40,7 @@ function getServerFtMinLen(mysqli $conn): int
     return max(1, min($innodb, $myisam));
 }
 
-/** Build strict(+token*) and loose(token*) queries using server min token length */
+/** Build strict/loose boolean queries using server min token length */
 function buildBooleanQueriesWithMin(string $q, int $minLen): array
 {
     $q = trim(mb_strtolower($q));
@@ -55,13 +55,27 @@ function buildBooleanQueriesWithMin(string $q, int $minLen): array
     }
     if (!$validTokens && $q !== '') $validTokens[] = mb_substr($q, 0, 20);
 
-    $strict = implode(' ', array_map(fn($t) => '+' . $t . '*', $validTokens)); // all terms must appear
-    $loose  = implode(' ', array_map(fn($t) =>      $t . '*',  $validTokens)); // any term may appear
+    if (count($validTokens) > 1) {
+        $phrase = '"' . implode(' ', $validTokens) . '"';
+        $strict = $phrase;
+        $loose  = $phrase;
+    } else {
+        $strict = implode(' ', array_map(fn($t) => '+' . $t, $validTokens)); // exact token
+        $loose  = implode(' ', array_map(fn($t) =>      $t,  $validTokens)); // exact token
+    }
     return [$strict, $loose, $allTokens];
 }
 
 $minLen = getServerFtMinLen($connection);
 [$qAll, $qAny, $allTokens] = buildBooleanQueriesWithMin($raw, $minLen);
+
+$hasShortToken = false;
+foreach ($allTokens as $token) {
+    if (mb_strlen((string)$token) < $minLen) {
+        $hasShortToken = true;
+        break;
+    }
+}
 
 /**
  * Decide primary source by SITE_APP
@@ -566,12 +580,50 @@ if ($rows !== false) {
     }
 }
 
-/** ---------- Robust FALLBACK (tokenized LIKE) if no rows ---------- */
-if (!$rows) {
+/** ---------- Robust FALLBACK (tokenized LIKE) if no rows OR short news tokens ---------- */
+$shouldAugmentNewsWithLike = ($source === 'news' && $hasShortToken);
+if (!$rows || $shouldAugmentNewsWithLike) {
     $cleanRaw   = preg_replace('/[^\p{L}\p{N}\s]+/u', ' ', mb_strtolower($raw));
     $tokenArray = array_values(array_unique(array_filter(preg_split('/\s+/', trim($cleanRaw), -1, PREG_SPLIT_NO_EMPTY))));
+    $isSingleTokenSearch = (count($tokenArray) === 1);
+    $singleToken = $isSingleTokenSearch ? mb_strtolower((string)$tokenArray[0]) : '';
+    $useAcronymPattern = ($isSingleTokenSearch && mb_strlen($singleToken) >= 3);
+    $acronymPattern = $useAcronymPattern ? implode('% ', preg_split('//u', $singleToken, -1, PREG_SPLIT_NO_EMPTY)) . '%' : '';
+    $isAiToken = ($singleToken === 'ai');
     $likePhrase = '%' . mysqli_real_escape_string($connection, $raw) . '%';
     $likeTokens = array_map(fn($t) => '%' . mysqli_real_escape_string($connection, $t) . '%', $tokenArray);
+
+    $buildExactOrAcronymLike = function (string $alias, array $fields, string $token, string $acronymLike, bool $allowAcronym = false, bool $allowAiPhrase = false) {
+        $parts = [];
+        $params = [];
+        foreach ($fields as $f) {
+            $fieldChecks = [
+                "LOWER({$alias}.{$f}) = ?",
+                "LOWER({$alias}.{$f}) LIKE ?",
+                "LOWER({$alias}.{$f}) LIKE ?",
+                "LOWER({$alias}.{$f}) LIKE ?",
+                "LOWER({$alias}.{$f}) LIKE ?"
+            ];
+            $params[] = $token;
+            $params[] = $token . ' %';
+            $params[] = '% ' . $token;
+            $params[] = '% ' . $token . ' %';
+            $params[] = '%' . $token;
+
+            if ($allowAcronym && $acronymLike !== '') {
+                $fieldChecks[] = "LOWER({$alias}.{$f}) LIKE ?";
+                $params[] = $acronymLike;
+            }
+
+            if ($allowAiPhrase) {
+                $fieldChecks[] = "LOWER({$alias}.{$f}) LIKE ?";
+                $params[] = '%artificial intelligence%';
+            }
+
+            $parts[] = '(' . implode(' OR ', $fieldChecks) . ')';
+        }
+        return ['(' . implode(' OR ', $parts) . ')', $params];
+    };
 
     $buildLike = function (string $alias, array $fields, string $phrase, array $tokens) {
         $parts = [];
@@ -603,8 +655,13 @@ if (!$rows) {
         $fbParams = array_merge([$siteId], $p, [$limit, $offset]);
     } elseif ($source === 'news') {
         if ($isNmsNewsSearch) {
-            [$wTitle, $pTitle] = $buildLike('n', ['news_title'], $likePhrase, $likeTokens);
-            [$wTag, $pTag] = $buildLike('t', ['tag_title'], $likePhrase, $likeTokens);
+            if ($isSingleTokenSearch && $singleToken !== '') {
+                [$wTitle, $pTitle] = $buildExactOrAcronymLike('n', ['news_title'], $singleToken, $acronymPattern, $useAcronymPattern, $isAiToken);
+                [$wTag, $pTag] = $buildExactOrAcronymLike('t', ['tag_title'], $singleToken, $acronymPattern, $useAcronymPattern, $isAiToken);
+            } else {
+                [$wTitle, $pTitle] = $buildLike('n', ['news_title'], $likePhrase, $likeTokens);
+                [$wTag, $pTag] = $buildLike('t', ['tag_title'], $likePhrase, $likeTokens);
+            }
             $fbSql = "
                      SELECT DISTINCT 'news' AS item_type, n.news_title AS title, n.news_image AS image, l.link_url AS url,
                                     COALESCE(n.news_published, n.news_time) AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
@@ -620,7 +677,19 @@ if (!$rows) {
                      LIMIT ? OFFSET ?";
             $fbParams = array_merge([$siteId, $siteId], $pTitle, $pTag, [$limit, $offset]);
         } else {
-            [$w, $p] = $buildLike('n', ['news_title', 'news_highlight', 'news_description'], $likePhrase, $likeTokens);
+            if ($isSingleTokenSearch && $singleToken !== '') {
+                [$wExactTitle, $pExactTitle] = $buildExactOrAcronymLike('n', ['news_title'], $singleToken, $acronymPattern, $useAcronymPattern, $isAiToken);
+                if (mb_strlen($singleToken) <= 3) {
+                    $w = $wExactTitle;
+                    $p = $pExactTitle;
+                } else {
+                    [$wLikeContent, $pLikeContent] = $buildLike('n', ['news_highlight', 'news_description'], $likePhrase, $likeTokens);
+                    $w = "({$wExactTitle} OR {$wLikeContent})";
+                    $p = array_merge($pExactTitle, $pLikeContent);
+                }
+            } else {
+                [$w, $p] = $buildLike('n', ['news_title', 'news_highlight', 'news_description'], $likePhrase, $likeTokens);
+            }
             $fbSql = "
                      SELECT 'news' AS item_type, n.news_title AS title, n.news_image AS image, l.link_url AS url,
                                     COALESCE(n.news_published, n.news_time) AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
@@ -647,6 +716,11 @@ if (!$rows) {
         $fbParams = array_merge([$siteId], $p, [$limit, $offset]);
     }
 
+    $existingResultKeys = [];
+    foreach ($rows as $existingRow) {
+        $existingResultKeys[$existingRow['item_type'] . ':' . $existingRow['relation_id']] = true;
+    }
+
     $fb = mysqli_prepare($connection, $fbSql);
     if ($fb) {
         $fbTypes = '';
@@ -656,7 +730,11 @@ if (!$rows) {
         $fbr = mysqli_stmt_get_result($fb);
         while ($row = mysqli_fetch_assoc($fbr)) {
             $row['url'] = (!empty($row['url']) && $row['url'][0] === '/') ? $row['url'] : '/' . ltrim((string)($row['url'] ?? ''), '/');
-            $rows[] = $row;
+            $resultKey = $row['item_type'] . ':' . $row['relation_id'];
+            if (!isset($existingResultKeys[$resultKey])) {
+                $rows[] = $row;
+                $existingResultKeys[$resultKey] = true;
+            }
         }
     }
 }
