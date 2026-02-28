@@ -106,6 +106,37 @@
                 echo '</div>';
             }
 
+            // Helper function to render PE/VC Tales
+            function renderPEVCTales($connection)
+            {
+                echo '<div class="hightlightBox">';
+                echo '<h2>PE/VC Tales</h2>';
+
+                if ($checkFinTechArticles = mysqli_query($connection, "SELECT link_url, news_image, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=399 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY news_published DESC LIMIT 0, 5")) {
+                    echo "<ol>";
+                    if (mysqli_num_rows($checkFinTechArticles) != 0) {
+                        while ($finTechArticlesInfo = mysqli_fetch_assoc($checkFinTechArticles)) {
+                            extract($finTechArticlesInfo);
+                            echo "<li>
+                                <a href='{$link_url}' title='{$news_title}' target='_blank'>
+                                    <div class='img'><img src='{$news_image}'></div>
+                                    <div class='text'><h3>{$news_title}</h3></div>
+                                </a>
+                            </li>";
+                        }
+                        echo "<li>
+                                <a href='/pe-vc-tales/' class='readMore'>
+                                    Read more news...
+                                </a>
+                            </li>";
+                    } else {
+                        echo "<li><a title=''>No article found</a></li>";
+                    }
+                    echo "</ol>";
+                }
+                echo '</div>';
+            }
+
             // Helper function to render AI/Emerging Tech
             function renderAIEmergingTech($connection)
             {
@@ -277,9 +308,15 @@
                         renderMoneyMachines($connection);
                     }
 
+
                     // Show articles 16-20
                     for ($i = 16; $i <= 20 && $i < $maxArticles; $i++) {
                         renderNewsCard($latestNewsData[$i]);
+                    }
+
+                    // After 15th article: Money & Machines
+                    if ($maxArticles > 20) {
+                        renderMoneyMachines($connection);
                     }
 
                     // At the end: Editor's Pick
