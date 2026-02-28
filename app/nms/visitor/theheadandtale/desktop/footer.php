@@ -60,9 +60,6 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 
             <div class="copyright">
                 <p>Copyright <?php echo date('Y') ?> @ <?php echo SITE_NAME ?></p>
-                <p class="right">Designed and Developed by <a href="https://blumox.com"
-                        title="News website development company in new delhi">Blumox
-                        Technologies</a></p>
             </div>
         </div>
     </div>
@@ -73,151 +70,151 @@ if (ACTIVE_URL != '/thankyou_newsletter/') {
 <script src="<?php echo USER_JS ?>script.js"></script>
 <script src="<?php echo USER_JS ?>slider.min.js"></script>
 <script>
-    const searchButton = document.getElementById('searchButton');
-    const closeButton = document.getElementById('closeButton');
-    const searchContainer = document.querySelector('.search-container');
-    const searchInput = document.getElementById('searchInput');
-    const mobileMenuButton = document.getElementById('mobileMenuButton');
-    const mobileMenuClose = document.getElementById('mobileMenuClose');
-    const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
-    const siteNav = document.getElementById('siteNav');
-    const mobileNavSearchInput = document.getElementById('mobileNavSearchInput');
-    const mobileNavSearchButton = document.getElementById('mobileNavSearchButton');
-    const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
-    const mobileSearchInput = document.getElementById('mobileSearchInput');
-    const mobileSearchClose = document.getElementById('mobileSearchClose');
+const searchButton = document.getElementById('searchButton');
+const closeButton = document.getElementById('closeButton');
+const searchContainer = document.querySelector('.search-container');
+const searchInput = document.getElementById('searchInput');
+const mobileMenuButton = document.getElementById('mobileMenuButton');
+const mobileMenuClose = document.getElementById('mobileMenuClose');
+const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+const siteNav = document.getElementById('siteNav');
+const mobileNavSearchInput = document.getElementById('mobileNavSearchInput');
+const mobileNavSearchButton = document.getElementById('mobileNavSearchButton');
+const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+const mobileSearchInput = document.getElementById('mobileSearchInput');
+const mobileSearchClose = document.getElementById('mobileSearchClose');
 
-    const isMobile = () => window.innerWidth <= 768;
+const isMobile = () => window.innerWidth <= 768;
 
-    const openSearchOverlay = (value = '') => {
-        if (!isMobile() || !mobileSearchOverlay || !mobileSearchInput) {
-            return;
-        }
-        toggleNav(false);
-        document.body.classList.add('search-open');
-        mobileSearchOverlay.setAttribute('aria-hidden', 'false');
-        mobileSearchInput.value = value || '';
-        setTimeout(() => {
-            mobileSearchInput.focus();
-        }, 50);
-    };
-
-    const closeSearchOverlay = () => {
-        if (!mobileSearchOverlay) {
-            return;
-        }
-        document.body.classList.remove('search-open');
-        mobileSearchOverlay.setAttribute('aria-hidden', 'true');
-    };
-
-    const submitSearch = (input) => {
-        if (!input || input.value.trim() === '') {
-            return;
-        }
-        const query = encodeURIComponent(input.value.toLowerCase());
-        window.location.href = `/search/?q=${query}`;
-    };
-
-    const toggleNav = (open) => {
-        const shouldOpen = typeof open === 'boolean' ? open : !document.body.classList.contains('nav-open');
-        document.body.classList.toggle('nav-open', shouldOpen);
-        if (mobileMenuButton) {
-            mobileMenuButton.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
-        }
-    };
-
-    // Expand the search area and apply autofocus on mobile
-    if (searchButton) {
-        searchButton.addEventListener('click', () => {
-            if (isMobile()) {
-                openSearchOverlay(searchInput ? searchInput.value : '');
-                return;
-            }
-            const isExpanded = searchContainer.classList.contains('expanded');
-            if (isExpanded && searchInput && searchInput.value.trim() !== '') {
-                submitSearch(searchInput);
-                return;
-            }
-            searchContainer.classList.toggle('expanded', !isExpanded);
-            if (!isExpanded && searchInput) {
-                searchInput.focus();
-            }
-        });
+const openSearchOverlay = (value = '') => {
+    if (!isMobile() || !mobileSearchOverlay || !mobileSearchInput) {
+        return;
     }
+    toggleNav(false);
+    document.body.classList.add('search-open');
+    mobileSearchOverlay.setAttribute('aria-hidden', 'false');
+    mobileSearchInput.value = value || '';
+    setTimeout(() => {
+        mobileSearchInput.focus();
+    }, 50);
+};
 
-    // Close the search area
-    if (closeButton) {
-        closeButton.addEventListener('click', () => {
-            searchContainer.classList.remove('expanded');
-            searchInput.value = ''; // Clear input
-        });
+const closeSearchOverlay = () => {
+    if (!mobileSearchOverlay) {
+        return;
     }
+    document.body.classList.remove('search-open');
+    mobileSearchOverlay.setAttribute('aria-hidden', 'true');
+};
 
-    // Redirect to /search/?q={value} when the "Enter" key is pressed
-    if (searchInput) {
-        searchInput.addEventListener('focus', () => {
-            if (isMobile()) {
-                openSearchOverlay(searchInput.value);
-            }
-        });
-        searchInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                submitSearch(searchInput);
-            }
-        });
+const submitSearch = (input) => {
+    if (!input || input.value.trim() === '') {
+        return;
     }
+    const query = encodeURIComponent(input.value.toLowerCase());
+    window.location.href = `/search/?q=${query}`;
+};
 
-    if (mobileNavSearchInput) {
-        mobileNavSearchInput.addEventListener('focus', () => {
-            openSearchOverlay(mobileNavSearchInput.value);
-        });
-    }
-
-    if (mobileNavSearchButton) {
-        mobileNavSearchButton.addEventListener('click', () => {
-            openSearchOverlay(mobileNavSearchInput ? mobileNavSearchInput.value : '');
-        });
-    }
-
-    if (mobileSearchInput) {
-        mobileSearchInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                submitSearch(mobileSearchInput);
-            }
-        });
-    }
-
-    if (mobileSearchClose) {
-        mobileSearchClose.addEventListener('click', closeSearchOverlay);
-    }
-
-    if (mobileSearchOverlay) {
-        mobileSearchOverlay.addEventListener('click', (event) => {
-            if (event.target === mobileSearchOverlay) {
-                closeSearchOverlay();
-            }
-        });
-    }
-
+const toggleNav = (open) => {
+    const shouldOpen = typeof open === 'boolean' ? open : !document.body.classList.contains('nav-open');
+    document.body.classList.toggle('nav-open', shouldOpen);
     if (mobileMenuButton) {
-        mobileMenuButton.addEventListener('click', () => toggleNav());
+        mobileMenuButton.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
     }
+};
 
-    if (mobileMenuClose) {
-        mobileMenuClose.addEventListener('click', () => toggleNav(false));
-    }
+// Expand the search area and apply autofocus on mobile
+if (searchButton) {
+    searchButton.addEventListener('click', () => {
+        if (isMobile()) {
+            openSearchOverlay(searchInput ? searchInput.value : '');
+            return;
+        }
+        const isExpanded = searchContainer.classList.contains('expanded');
+        if (isExpanded && searchInput && searchInput.value.trim() !== '') {
+            submitSearch(searchInput);
+            return;
+        }
+        searchContainer.classList.toggle('expanded', !isExpanded);
+        if (!isExpanded && searchInput) {
+            searchInput.focus();
+        }
+    });
+}
 
-    if (mobileNavBackdrop) {
-        mobileNavBackdrop.addEventListener('click', () => toggleNav(false));
-    }
+// Close the search area
+if (closeButton) {
+    closeButton.addEventListener('click', () => {
+        searchContainer.classList.remove('expanded');
+        searchInput.value = ''; // Clear input
+    });
+}
 
-    if (siteNav) {
-        siteNav.addEventListener('click', (event) => {
-            if (event.target.tagName === 'A' && window.innerWidth <= 768) {
-                toggleNav(false);
-            }
-        });
-    }
+// Redirect to /search/?q={value} when the "Enter" key is pressed
+if (searchInput) {
+    searchInput.addEventListener('focus', () => {
+        if (isMobile()) {
+            openSearchOverlay(searchInput.value);
+        }
+    });
+    searchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            submitSearch(searchInput);
+        }
+    });
+}
+
+if (mobileNavSearchInput) {
+    mobileNavSearchInput.addEventListener('focus', () => {
+        openSearchOverlay(mobileNavSearchInput.value);
+    });
+}
+
+if (mobileNavSearchButton) {
+    mobileNavSearchButton.addEventListener('click', () => {
+        openSearchOverlay(mobileNavSearchInput ? mobileNavSearchInput.value : '');
+    });
+}
+
+if (mobileSearchInput) {
+    mobileSearchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            submitSearch(mobileSearchInput);
+        }
+    });
+}
+
+if (mobileSearchClose) {
+    mobileSearchClose.addEventListener('click', closeSearchOverlay);
+}
+
+if (mobileSearchOverlay) {
+    mobileSearchOverlay.addEventListener('click', (event) => {
+        if (event.target === mobileSearchOverlay) {
+            closeSearchOverlay();
+        }
+    });
+}
+
+if (mobileMenuButton) {
+    mobileMenuButton.addEventListener('click', () => toggleNav());
+}
+
+if (mobileMenuClose) {
+    mobileMenuClose.addEventListener('click', () => toggleNav(false));
+}
+
+if (mobileNavBackdrop) {
+    mobileNavBackdrop.addEventListener('click', () => toggleNav(false));
+}
+
+if (siteNav) {
+    siteNav.addEventListener('click', (event) => {
+        if (event.target.tagName === 'A' && window.innerWidth <= 768) {
+            toggleNav(false);
+        }
+    });
+}
 </script>
 </body>
 
