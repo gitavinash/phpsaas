@@ -36,21 +36,5 @@ echo json_encode([
       "purpose" => "any maskable"
     ]
   ],
-  "screenshots" => [
-    [
-      "src" => SITE_URL . "/lib/resource/ui/img/app/screenshot/desktop/aleya/dashboard.png",
-      "sizes" => "1600x900",
-      "type" => "image/png",
-      "form_factor" => "wide",
-      "label" => "Dashboard Overview"
-    ],
-    [
-      "src" => SITE_URL . "/lib/resource/ui/img/app/screenshot/mobile/aleya/dashboard.png",
-      "sizes" => "1080x1920",
-      "type" => "image/png",
-      "form_factor" => "narrow",
-      "label" => "Mobile View of Dashboard"
-    ]
-  ],
   "prefer_related_applications" => false
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
