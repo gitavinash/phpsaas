@@ -80,13 +80,20 @@ $appSourceMap = [
 ];
 
 $source = $appSourceMap[strtolower($app)] ?? 'post';
+$isNmsNewsSearch = ($app === 'nms');
+
+if ($isNmsNewsSearch && !isset($_GET['sort'])) {
+    $sortBy = 'published_at DESC';
+}
+
+$newsFallbackOrder = ($sortBy === 'published_at ASC') ? 'ASC' : 'DESC';
 
 
 /**
  * Build SQL, COUNT SQL, and params based on source
  * normalized columns: item_type, title, image, url, published_at, relation_id, tag_type, rel_score
  */
-function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAny, int $limit, int $offset, string $sortBy = 'RAND()'): array
+function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAny, int $limit, int $offset, string $sortBy = 'RAND()', bool $isNmsNewsSearch = false): array
 {
     switch ($source) {
         case 'product':
@@ -158,6 +165,131 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
 
         case 'news':
 
+            if ($isNmsNewsSearch) {
+                $sql = "
+        SELECT DISTINCT
+                item_type,
+                title,
+                image,
+                url,
+                published_at,
+                relation_id,
+                tag_type,
+                description,
+                rel_score,
+                priority
+        FROM (
+                /* 1️⃣ NEWS VIA TAG MATCH (HIGHEST PRIORITY) */
+                SELECT
+                        'news' AS item_type,
+                        n.news_title       AS title,
+                        n.news_image       AS image,
+                        l2.link_url        AS url,
+                        COALESCE(l2.link_published, n.news_time) AS published_at,
+                        n.news_id          AS relation_id,
+                        'tag'              AS tag_type,
+                        n.news_description AS description,
+                        100                AS rel_score,
+                        1                  AS priority
+                FROM " . TABLE_PREFIX . "tag t
+                JOIN " . TABLE_PREFIX . "link l1
+                    ON l1.link_id = t.tag_relation_id
+                 AND l1.link_status = 200
+                 AND l1.link_site_id = ?
+                JOIN " . TABLE_PREFIX . "news n
+                    ON n.news_id = l1.link_relation_id
+                 AND n.news_status = 1
+                 AND n.news_is_public = 1
+                 AND n.news_site_id = ?
+                LEFT JOIN " . TABLE_PREFIX . "link l2
+                    ON l2.link_relation_id = n.news_id
+                 AND l2.link_type = 'news'
+                 AND l2.link_status = 200
+                 AND l2.link_site_id = ?
+                WHERE t.tag_type = 'news'
+                    AND t.tag_site_id = ?
+                    AND MATCH(t.tag_title) AGAINST (? IN BOOLEAN MODE)
+
+                UNION ALL
+
+                /* 2️⃣ NEWS TITLE MATCH */
+                SELECT
+                        'news',
+                        n.news_title,
+                        n.news_image,
+                        l.link_url,
+                        COALESCE(l.link_published, n.news_time),
+                        n.news_id,
+                        NULL,
+                        n.news_description,
+                        MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE) * 5,
+                        2
+                FROM " . TABLE_PREFIX . "news n
+                LEFT JOIN " . TABLE_PREFIX . "link l
+                    ON l.link_relation_id = n.news_id
+                 AND l.link_type = 'news'
+                 AND l.link_status = 200
+                 AND l.link_site_id = ?
+                WHERE n.news_site_id = ?
+                    AND n.news_status = 1
+                    AND n.news_is_public = 1
+                    AND MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)
+        ) AS combined_results
+        ORDER BY {$sortBy}, priority ASC, rel_score DESC
+        LIMIT ? OFFSET ?
+        ";
+
+                $params = [
+                    // TAG → LINK → NEWS
+                    $siteId,
+                    $siteId,
+                    $siteId,
+                    $siteId,
+                    $qAll,
+
+                    // TITLE
+                    $qAll,
+                    $siteId,
+                    $siteId,
+                    $qAll,
+
+                    // PAGINATION
+                    $limit,
+                    $offset
+                ];
+
+                $countSql = "
+                SELECT COUNT(DISTINCT n.news_id) AS total
+                FROM " . TABLE_PREFIX . "news n
+                LEFT JOIN " . TABLE_PREFIX . "link l
+                    ON l.link_relation_id = n.news_id
+                 AND l.link_type = 'news'
+                 AND l.link_status = 200
+                 AND l.link_site_id = ?
+                LEFT JOIN " . TABLE_PREFIX . "tag t
+                    ON t.tag_relation_id = l.link_id
+                 AND t.tag_type = 'news'
+                 AND t.tag_site_id = ?
+                WHERE n.news_site_id = ?
+                    AND n.news_status = 1
+                    AND n.news_is_public = 1
+                    AND (
+                             MATCH(t.tag_title) AGAINST (? IN BOOLEAN MODE)
+                        OR MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE)
+                    )
+        ";
+
+                $countParams = [
+                    $siteId,
+                    $siteId,
+                    $siteId,
+                    $qAll,
+                    $qAll
+                ];
+
+                break;
+            }
+
             $sql = "
     SELECT DISTINCT
         item_type,
@@ -183,17 +315,17 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             n.news_description AS description,
             100                AS rel_score,
             1                  AS priority
-        FROM isw_tag t
-        JOIN isw_link l1
+        FROM " . TABLE_PREFIX . "tag t
+        JOIN " . TABLE_PREFIX . "link l1
           ON l1.link_id = t.tag_relation_id
          AND l1.link_status = 200
          AND l1.link_site_id = ?
-        JOIN isw_news n
+        JOIN " . TABLE_PREFIX . "news n
           ON n.news_id = l1.link_relation_id
          AND n.news_status = 1
          AND n.news_is_public = 1
          AND n.news_site_id = ?
-        LEFT JOIN isw_link l2
+        LEFT JOIN " . TABLE_PREFIX . "link l2
           ON l2.link_relation_id = n.news_id
          AND l2.link_type = 'news'
          AND l2.link_status = 200
@@ -216,8 +348,8 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             n.news_description,
             MATCH(n.news_title) AGAINST (? IN BOOLEAN MODE) * 5,
             2
-        FROM isw_news n
-        LEFT JOIN isw_link l
+        FROM " . TABLE_PREFIX . "news n
+        LEFT JOIN " . TABLE_PREFIX . "link l
           ON l.link_relation_id = n.news_id
          AND l.link_type = 'news'
          AND l.link_status = 200
@@ -242,8 +374,8 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             MATCH(n.news_highlight, n.news_description)
                 AGAINST (? IN BOOLEAN MODE),
             3
-        FROM isw_news n
-        LEFT JOIN isw_link l
+        FROM " . TABLE_PREFIX . "news n
+        LEFT JOIN " . TABLE_PREFIX . "link l
           ON l.link_relation_id = n.news_id
          AND l.link_type = 'news'
          AND l.link_status = 200
@@ -285,13 +417,13 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
 
             $countSql = "
         SELECT COUNT(DISTINCT n.news_id) AS total
-        FROM isw_news n
-        LEFT JOIN isw_link l
+        FROM " . TABLE_PREFIX . "news n
+        LEFT JOIN " . TABLE_PREFIX . "link l
           ON l.link_relation_id = n.news_id
          AND l.link_type = 'news'
          AND l.link_status = 200
          AND l.link_site_id = ?
-        LEFT JOIN isw_tag t
+        LEFT JOIN " . TABLE_PREFIX . "tag t
           ON t.tag_relation_id = l.link_id
          AND t.tag_type = 'news'
          AND t.tag_site_id = ?
@@ -388,7 +520,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
     return [$sql, $params, $countSql, $countParams];
 }
 
-[$sql, $params, $countSql, $countParams] = buildSqlBySource($source, $siteId, $qAll, $qAny, $limit, $offset, $sortBy);
+[$sql, $params, $countSql, $countParams] = buildSqlBySource($source, $siteId, $qAll, $qAny, $limit, $offset, $sortBy, $isNmsNewsSearch);
 
 /** Prepare + execute main query */
 $stmt = mysqli_prepare($connection, $sql);
@@ -470,18 +602,37 @@ if (!$rows) {
            LIMIT ? OFFSET ?";
         $fbParams = array_merge([$siteId], $p, [$limit, $offset]);
     } elseif ($source === 'news') {
-        [$w, $p] = $buildLike('n', ['news_title', 'news_highlight', 'news_description'], $likePhrase, $likeTokens);
-        $fbSql = "
-           SELECT 'news' AS item_type, n.news_title AS title, n.news_image AS image, l.link_url AS url,
-                  n.news_time AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
-           FROM " . TABLE_PREFIX . "news n
-           LEFT JOIN " . TABLE_PREFIX . "link l
-             ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
-           WHERE n.news_site_id=?
-             AND n.news_status=1 AND n.news_is_public=1
-             AND {$w}
-           LIMIT ? OFFSET ?";
-        $fbParams = array_merge([$siteId], $p, [$limit, $offset]);
+        if ($isNmsNewsSearch) {
+            [$wTitle, $pTitle] = $buildLike('n', ['news_title'], $likePhrase, $likeTokens);
+            [$wTag, $pTag] = $buildLike('t', ['tag_title'], $likePhrase, $likeTokens);
+            $fbSql = "
+                     SELECT DISTINCT 'news' AS item_type, n.news_title AS title, n.news_image AS image, l.link_url AS url,
+                                    n.news_time AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
+                     FROM " . TABLE_PREFIX . "news n
+                     LEFT JOIN " . TABLE_PREFIX . "link l
+                         ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
+                     LEFT JOIN " . TABLE_PREFIX . "tag t
+                         ON t.tag_relation_id=l.link_id AND t.tag_type='news' AND t.tag_site_id=?
+                     WHERE n.news_site_id=?
+                         AND n.news_status=1 AND n.news_is_public=1
+                         AND ({$wTitle} OR {$wTag})
+                     ORDER BY n.news_time {$newsFallbackOrder}
+                     LIMIT ? OFFSET ?";
+            $fbParams = array_merge([$siteId, $siteId], $pTitle, $pTag, [$limit, $offset]);
+        } else {
+            [$w, $p] = $buildLike('n', ['news_title', 'news_highlight', 'news_description'], $likePhrase, $likeTokens);
+            $fbSql = "
+                     SELECT 'news' AS item_type, n.news_title AS title, n.news_image AS image, l.link_url AS url,
+                                    n.news_time AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
+                     FROM " . TABLE_PREFIX . "news n
+                     LEFT JOIN " . TABLE_PREFIX . "link l
+                         ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
+                     WHERE n.news_site_id=?
+                         AND n.news_status=1 AND n.news_is_public=1
+                         AND {$w}
+                     LIMIT ? OFFSET ?";
+            $fbParams = array_merge([$siteId], $p, [$limit, $offset]);
+        }
     } else { // post
         [$w, $p] = $buildLike('p', ['post_title', 'post_highlight', 'post_description'], $likePhrase, $likeTokens);
         $fbSql = "
@@ -515,6 +666,14 @@ $hasNext  = ($page < max(1, (int)ceil($total / $limit)));
 $hasPrev  = ($page > 1);
 $nextPage = $hasNext ? ($page + 1) : null;
 $prevPage = $hasPrev ? ($page - 1) : null;
+
+if (!defined('TOTAL_PAGE')) {
+    define('TOTAL_PAGE', $pages);
+}
+
+if (!defined('TOTAL_RESULT')) {
+    define('TOTAL_RESULT', $total);
+}
 
 /** Hand off to the view */
 $search_path = USER_PATH . "search.php";
