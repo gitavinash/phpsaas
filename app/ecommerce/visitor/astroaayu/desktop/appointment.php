@@ -54,7 +54,7 @@
             <div class="text-center">
                 <h2 class="form_title">Appointment Form</h2>
                 <p class="color_red form_semi mt-0 mt-md-3">
-                    Consultation fee per kundli ₹ 3100 /- Only.<br /><br />
+                    Consultation fee per kundli ₹ 5100 /- Only.<br /><br />
                     To get a call back, you can fill the form given below👇
                 </p>
             </div>

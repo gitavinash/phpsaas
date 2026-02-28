@@ -26,7 +26,7 @@
                 WHERE 
                     link_type = 'news' 
                     AND link_status = 200 
-                    AND news_category IN (201, 202, 285, 386) 
+                    AND news_category IN (201, 202, 285, 386, 399) 
                     AND link_site_id = " . SITE_ID . "
                 ORDER BY 
                     link_is_featured DESC, 
