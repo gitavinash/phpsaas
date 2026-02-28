@@ -582,6 +582,7 @@ if ($rows !== false) {
 
 /** ---------- Robust FALLBACK (tokenized LIKE) if no rows OR short news tokens ---------- */
 $shouldAugmentNewsWithLike = ($source === 'news' && $hasShortToken);
+$shouldReplaceNewsWithLike = ($source === 'news' && $hasShortToken);
 if (!$rows || $shouldAugmentNewsWithLike) {
     $cleanRaw   = preg_replace('/[^\p{L}\p{N}\s]+/u', ' ', mb_strtolower($raw));
     $tokenArray = array_values(array_unique(array_filter(preg_split('/\s+/', trim($cleanRaw), -1, PREG_SPLIT_NO_EMPTY))));
@@ -602,6 +603,9 @@ if (!$rows || $shouldAugmentNewsWithLike) {
                 "LOWER({$alias}.{$f}) LIKE ?",
                 "LOWER({$alias}.{$f}) LIKE ?",
                 "LOWER({$alias}.{$f}) LIKE ?",
+                "LOWER({$alias}.{$f}) LIKE ?",
+                "LOWER({$alias}.{$f}) LIKE ?",
+                "LOWER({$alias}.{$f}) LIKE ?",
                 "LOWER({$alias}.{$f}) LIKE ?"
             ];
             $params[] = $token;
@@ -609,6 +613,9 @@ if (!$rows || $shouldAugmentNewsWithLike) {
             $params[] = '% ' . $token;
             $params[] = '% ' . $token . ' %';
             $params[] = '%' . $token;
+            $params[] = $token . ',%';
+            $params[] = '%,' . $token;
+            $params[] = '%,' . $token . ',%';
 
             if ($allowAcronym && $acronymLike !== '') {
                 $fieldChecks[] = "LOWER({$alias}.{$f}) LIKE ?";
@@ -657,10 +664,12 @@ if (!$rows || $shouldAugmentNewsWithLike) {
         if ($isNmsNewsSearch) {
             if ($isSingleTokenSearch && $singleToken !== '') {
                 [$wTitle, $pTitle] = $buildExactOrAcronymLike('n', ['news_title'], $singleToken, $acronymPattern, $useAcronymPattern, $isAiToken);
-                [$wTag, $pTag] = $buildExactOrAcronymLike('t', ['tag_title'], $singleToken, $acronymPattern, $useAcronymPattern, $isAiToken);
+                [$wTagLink, $pTagLink] = $buildExactOrAcronymLike('t', ['tag_title'], $singleToken, $acronymPattern, $useAcronymPattern, $isAiToken);
+                [$wTagNews, $pTagNews] = $buildExactOrAcronymLike('tn', ['tag_title'], $singleToken, $acronymPattern, $useAcronymPattern, $isAiToken);
             } else {
                 [$wTitle, $pTitle] = $buildLike('n', ['news_title'], $likePhrase, $likeTokens);
-                [$wTag, $pTag] = $buildLike('t', ['tag_title'], $likePhrase, $likeTokens);
+                [$wTagLink, $pTagLink] = $buildLike('t', ['tag_title'], $likePhrase, $likeTokens);
+                [$wTagNews, $pTagNews] = $buildLike('tn', ['tag_title'], $likePhrase, $likeTokens);
             }
             $fbSql = "
                      SELECT DISTINCT 'news' AS item_type, n.news_title AS title, n.news_image AS image, l.link_url AS url,
@@ -670,12 +679,28 @@ if (!$rows || $shouldAugmentNewsWithLike) {
                          ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
                      LEFT JOIN " . TABLE_PREFIX . "tag t
                          ON t.tag_relation_id=l.link_id AND t.tag_type='news' AND t.tag_site_id=?
+                     LEFT JOIN " . TABLE_PREFIX . "tag tn
+                         ON tn.tag_relation_id=n.news_id AND tn.tag_type='news' AND tn.tag_site_id=?
                      WHERE n.news_site_id=?
                          AND n.news_status=1 AND n.news_is_public=1
-                         AND ({$wTitle} OR {$wTag})
+                         AND ({$wTitle} OR {$wTagLink} OR {$wTagNews})
                      ORDER BY COALESCE(n.news_published, n.news_time) {$newsFallbackOrder}
                      LIMIT ? OFFSET ?";
-            $fbParams = array_merge([$siteId, $siteId], $pTitle, $pTag, [$limit, $offset]);
+            $fbParams = array_merge([$siteId, $siteId, $siteId], $pTitle, $pTagLink, $pTagNews, [$limit, $offset]);
+
+            $fbCountSql = "
+                     SELECT COUNT(DISTINCT n.news_id) AS total
+                     FROM " . TABLE_PREFIX . "news n
+                     LEFT JOIN " . TABLE_PREFIX . "link l
+                         ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
+                     LEFT JOIN " . TABLE_PREFIX . "tag t
+                         ON t.tag_relation_id=l.link_id AND t.tag_type='news' AND t.tag_site_id=?
+                     LEFT JOIN " . TABLE_PREFIX . "tag tn
+                         ON tn.tag_relation_id=n.news_id AND tn.tag_type='news' AND tn.tag_site_id=?
+                     WHERE n.news_site_id=?
+                         AND n.news_status=1 AND n.news_is_public=1
+                         AND ({$wTitle} OR {$wTagLink} OR {$wTagNews})";
+            $fbCountParams = array_merge([$siteId, $siteId, $siteId], $pTitle, $pTagLink, $pTagNews);
         } else {
             if ($isSingleTokenSearch && $singleToken !== '') {
                 [$wExactTitle, $pExactTitle] = $buildExactOrAcronymLike('n', ['news_title'], $singleToken, $acronymPattern, $useAcronymPattern, $isAiToken);
@@ -701,6 +726,16 @@ if (!$rows || $shouldAugmentNewsWithLike) {
                          AND {$w}
                      LIMIT ? OFFSET ?";
             $fbParams = array_merge([$siteId], $p, [$limit, $offset]);
+
+            $fbCountSql = "
+                     SELECT COUNT(DISTINCT n.news_id) AS total
+                     FROM " . TABLE_PREFIX . "news n
+                     LEFT JOIN " . TABLE_PREFIX . "link l
+                         ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
+                     WHERE n.news_site_id=?
+                         AND n.news_status=1 AND n.news_is_public=1
+                         AND {$w}";
+            $fbCountParams = array_merge([$siteId], $p);
         }
     } else { // post
         [$w, $p] = $buildLike('p', ['post_title', 'post_highlight', 'post_description'], $likePhrase, $likeTokens);
@@ -714,6 +749,10 @@ if (!$rows || $shouldAugmentNewsWithLike) {
              AND {$w}
            LIMIT ? OFFSET ?";
         $fbParams = array_merge([$siteId], $p, [$limit, $offset]);
+    }
+
+    if ($shouldReplaceNewsWithLike) {
+        $rows = [];
     }
 
     $existingResultKeys = [];
@@ -734,6 +773,21 @@ if (!$rows || $shouldAugmentNewsWithLike) {
             if (!isset($existingResultKeys[$resultKey])) {
                 $rows[] = $row;
                 $existingResultKeys[$resultKey] = true;
+            }
+        }
+    }
+
+    if ($shouldReplaceNewsWithLike && isset($fbCountSql, $fbCountParams)) {
+        $countStmt = mysqli_prepare($connection, $fbCountSql);
+        if ($countStmt) {
+            $countTypes = '';
+            foreach ($fbCountParams as $param) $countTypes .= is_int($param) ? 'i' : 's';
+            mysqli_stmt_bind_param($countStmt, $countTypes, ...$fbCountParams);
+            mysqli_stmt_execute($countStmt);
+            $countRes = mysqli_stmt_get_result($countStmt);
+            if ($countRes && ($countRow = mysqli_fetch_assoc($countRes))) {
+                $total = (int)($countRow['total'] ?? 0);
+                $pages = (int)ceil($total / $limit);
             }
         }
     }
