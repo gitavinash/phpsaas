@@ -3,43 +3,31 @@
 // Set the content type to application/json
 header("Content-type: application/json; charset=utf-8");
 
-function respondJson($payload, $statusCode = 200)
-{
-    http_response_code($statusCode);
-    echo json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    exit();
+$manifestPath = MANIFEST . strtolower(SITE_APP) . '.php';
+
+if (file_exists($manifestPath)) {
+
+    $manifestData = (string) file_get_contents($manifestPath);
+} else {
+
+    $manifestData = (string) DEFAULT_MAINFEST_JSON;
 }
 
-function decodeJsonObject($jsonText)
-{
-    $decoded = json_decode($jsonText, true);
-    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-        return $decoded;
-    }
-
-    return null;
+if ($manifestData === '') {
+    $manifestData = (string) DEFAULT_MAINFEST_JSON;
 }
 
-$rawTemplate = isset($site_mainfest_json) ? (string) $site_mainfest_json : '';
-
-if ($rawTemplate === '') {
-    respondJson([]);
-}
-
-// Normalize template storage format:
-// - If DB value is a JSON-encoded string, decode once to raw JSON text.
-// - If DB value is already JSON text, keep as-is.
-$template = $rawTemplate;
-$decodedTemplate = json_decode($rawTemplate, true);
+// Normalize storage format:
+// - JSON encoded string  => decode once to JSON text
+// - JSON object/array    => keep by re-encoding
+$decodedManifest = json_decode($manifestData, true);
 if (json_last_error() === JSON_ERROR_NONE) {
-    if (is_string($decodedTemplate)) {
-        $template = $decodedTemplate;
-    } elseif (is_array($decodedTemplate)) {
-        $template = json_encode($decodedTemplate, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    if (is_string($decodedManifest)) {
+        $manifestData = $decodedManifest;
+    } elseif (is_array($decodedManifest)) {
+        $manifestData = json_encode($decodedManifest, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
     }
 }
-
-$originalTemplate = $template;
 
 $replacements = [
     '%SITE_NAME%' => SITE_NAME,
@@ -49,46 +37,40 @@ $replacements = [
     '%SITE_ICON%' => SITE_ICON,
 ];
 
-foreach ($replacements as $placeholder => $value) {
-    $jsonValue = json_encode((string) $value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+// Replace placeholders in the raw manifest string
+$manifestData = str_replace(
+    array_keys($replacements),
+    array_values($replacements),
+    $manifestData
+);
 
-    if ($jsonValue === false) {
-        continue;
-    }
+// If replaced JSON is invalid, fallback to DEFAULT_MAINFEST_JSON
+$manifestArray = json_decode($manifestData, true);
+if (json_last_error() !== JSON_ERROR_NONE || !is_array($manifestArray)) {
+    $defaultRaw = (string) DEFAULT_MAINFEST_JSON;
+    $defaultDecoded = json_decode($defaultRaw, true);
 
-    // Remove surrounding quotes so the replacement remains valid for quoted placeholders.
-    $escapedValue = substr($jsonValue, 1, -1);
-
-    $template = str_replace(
-        ['"' . $placeholder . '"', $placeholder],
-        ['"' . $escapedValue . '"', $escapedValue],
-        $template
-    );
-}
-
-$manifest = json_decode($template, true);
-
-if (json_last_error() === JSON_ERROR_NONE && is_array($manifest)) {
-    respondJson($manifest);
-}
-
-$originalManifest = decodeJsonObject($originalTemplate);
-if ($originalManifest !== null) {
-    respondJson($originalManifest);
-}
-
-$rawDecoded = json_decode($rawTemplate, true);
-if (json_last_error() === JSON_ERROR_NONE) {
-    if (is_array($rawDecoded)) {
-        respondJson($rawDecoded);
-    }
-
-    if (is_string($rawDecoded)) {
-        $rawStringManifest = decodeJsonObject($rawDecoded);
-        if ($rawStringManifest !== null) {
-            respondJson($rawStringManifest);
-        }
+    if (json_last_error() === JSON_ERROR_NONE && is_string($defaultDecoded)) {
+        $manifestArray = json_decode($defaultDecoded, true);
+    } elseif (is_array($defaultDecoded)) {
+        $manifestArray = $defaultDecoded;
     }
 }
 
-respondJson([]);
+if (!is_array($manifestArray)) {
+    $manifestArray = [];
+}
+
+$output = json_encode(
+    $manifestArray,
+    JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
+);
+
+if ($output === false) {
+    echo '{}';
+    exit();
+}
+
+echo $output;
+
+exit();
