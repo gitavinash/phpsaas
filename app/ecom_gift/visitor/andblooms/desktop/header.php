@@ -183,8 +183,34 @@
 
                     <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Faux Flowers</a>
                     <a href="/category/cake/" class="text-gray-700 hover:text-primary transition">Cake & Hampers</a>
-                    <a href="/tag/valentine/?sort=newest"
-                        class="hover:text-[#D2042D] text-[#D2042D] transition font-semibold">Valentine Edition</a>
+                    <!-- <a href="/tag/valentine/?sort=newest"
+                        class="hover:text-[#D2042D] text-[#D2042D] transition font-semibold">Valentine Edition</a> -->
+                    <!-- Mega Menu -->
+                    <div class="relative group">
+                        <a href="#" class="text-gray-700 hover:text-primary transition">Occasions</a>
+                        <div
+                            class="absolute left-0 top-full mt-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 hover:visible hover:opacity-100 transition-all duration-150 bg-white border w-64 shadow-lg z-50">
+                            <ul class="p-4 space-y-2 text-sm text-gray-700">
+                                <!-- <li><a href="/tag/woman/" class="block hover:text-primary">Woman's Day</a></li> -->
+                                <li><a href="/tag/mother/" class="block hover:text-primary">Mother's Day</a></li>
+                                <li><a href="/tag/anniversary/" class="block hover:text-primary">Anniversary</a></li>
+                                <li><a href="/tag/birthday/" class="block hover:text-primary">Birthday</a></li>
+                                <li><a href="/tag/corporate-gift/" class="block hover:text-primary">Corporate
+                                        Gifting</a></li>
+                                <li><a href="/tag/congratulation/" class="block hover:text-primary">Congratulation</a>
+                                </li>
+                                <li><a href="/tag/get-well/" class="block hover:text-primary">Get Well</a></li>
+                                <li><a href="/tag/house-warming/" class="block hover:text-primary">House Warming</a>
+                                </li>
+                                <li><a href="/tag/i-m-sorry/" class="block hover:text-primary">I'M Sorry</a></li>
+                                <li><a href="/tag/just-because/" class="block hover:text-primary">Just Because</a></li>
+                                <li><a href="/tag/new-baby/" class="block hover:text-primary">New Baby</a></li>
+                                <li><a href="/tag/love/" class="block hover:text-primary">Love & Romance</a></li>
+                                <li><a href="/tag/retirement/" class="block hover:text-primary">Retirement</a></li>
+                                <li><a href="/tag/sympathy/" class="block hover:text-primary">Sympathy</a></li>
+                            </ul>
+                        </div>
+                    </div>
                     <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
                         class="text-gray-700 hover:text-primary transition">
                         Blooms of <?php echo date('F') ?>
@@ -312,7 +338,7 @@
                     <div class="mobile-menu-section">
                         <button
                             class="mobile-menu-link px-4 py-4 w-full text-gray-700 hover:bg-secondary transition flex items-center justify-between"
-                            data-toggle="luxury">
+                            data-toggle="occasions">
                             <span>Luxury Collections</span>
                             <i class="ri-chevron-down-line transition-transform"></i>
                         </button>
@@ -347,10 +373,78 @@
                     </a>
 
                     <!-- Valentine Edition (Highlighted) -->
-                    <a href="/tag/valentine/?sort=newest"
+                    <!-- <a href="/tag/valentine/?sort=newest"
                         class="mobile-menu-link px-4 py-4 bg-gradient-to-r from-primary/10 to-transparent border-l-4 border-primary text-primary font-semibold transition">
                         <i class="ri-heart-line mr-2"></i> Valentine Edition
-                    </a>
+                    </a> -->
+
+                    <!-- Occasions (Expandable) -->
+                    <div class="mobile-menu-section">
+                        <button
+                            class="mobile-menu-link px-4 py-4 w-full text-gray-700 hover:bg-secondary transition flex items-center justify-between"
+                            data-toggle="luxury">
+                            <span>Occasions</span>
+                            <i class="ri-chevron-down-line transition-transform"></i>
+                        </button>
+                        <div class="mobile-menu-submenu hidden bg-gray-50 pl-4">
+                            <!-- <a href="/tag/woman/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-woman-line mr-3 text-primary"></i> Woman's Day
+                            </a> -->
+                            <a href="/tag/mother/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-heart-line mr-3 text-primary"></i> Mother's Day
+                            </a>
+                            <a href="/tag/anniversary/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-ring-line mr-3 text-primary"></i> Anniversary
+                            </a>
+                            <a href="/tag/birthday/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-cake-line mr-3 text-primary"></i> Birthday
+                            </a>
+                            <a href="/tag/corporate-gift/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-briefcase-line mr-3 text-primary"></i> Corporate Gifting
+                            </a>
+                            <a href="/tag/congratulation/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-checkbox-circle-line mr-3 text-primary"></i> Congratulation
+                            </a>
+                            <a href="/tag/get-well/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-first-aid-kit-line mr-3 text-primary"></i> Get Well
+                            </a>
+                            <a href="/tag/house-warming/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-home-line mr-3 text-primary"></i> House Warming
+                            </a>
+                            <a href="/tag/i-m-sorry/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-emotion-sad-line mr-3 text-primary"></i> I'M Sorry
+                            </a>
+                            <a href="/tag/just-because/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-star-smile-line mr-3 text-primary"></i> Just Because
+                            </a>
+                            <a href="/tag/new-baby/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-baby-carriage-line mr-3 text-primary"></i> New Baby
+                            </a>
+                            <a href="/tag/love/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-heart-2-line mr-3 text-primary"></i> Love & Romance
+                            </a>
+                            <a href="/tag/retirement/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-time-line mr-3 text-primary"></i> Retirement
+                            </a>
+                            <a href="/tag/sympathy/"
+                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                                <i class="ri-leaf-line mr-3 text-primary"></i> Sympathy
+                            </a>
+                        </div>
+                    </div>
 
                     <!-- Blooms of Month -->
                     <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
@@ -434,7 +528,7 @@
             const closeMobileMenuButton = document.getElementById('close-mobile-menu');
             const mobileMenu = document.getElementById('mobile-menu');
             const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
-            const luxuryToggle = document.querySelector('[data-toggle="luxury"]');
+            const submenuToggles = document.querySelectorAll('[data-toggle]');
 
             if (!mobileMenuButton || !mobileMenu || !mobileMenuOverlay) {
                 console.error('Menu elements not found');
@@ -480,18 +574,18 @@
             closeMobileMenuButton.addEventListener('click', closeMenu);
             mobileMenuOverlay.addEventListener('click', closeMenu);
 
-            // Submenu toggle
-            if (luxuryToggle) {
-                const luxurySubmenu = luxuryToggle.nextElementSibling;
-                luxuryToggle.addEventListener('click', function(e) {
+            // Submenu toggles
+            submenuToggles.forEach(function(toggleBtn) {
+                const submenu = toggleBtn.nextElementSibling;
+                toggleBtn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    if (luxurySubmenu) {
-                        luxurySubmenu.classList.toggle('hidden');
+                    if (submenu) {
+                        submenu.classList.toggle('hidden');
                         const icon = this.querySelector('i');
                         if (icon) icon.classList.toggle('rotate-180');
                     }
                 });
-            }
+            });
 
             // Close menu on link click (not toggle buttons)
             document.querySelectorAll('.mobile-menu-link').forEach(link => {
