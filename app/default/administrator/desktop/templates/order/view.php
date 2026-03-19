@@ -72,19 +72,19 @@ if (isset($id)) {
 
 <style>
 .order-info-ui {
-    --oi-bg: #f4f7fb;
+    --oi-bg: #f8fafc;
     --oi-surface: #ffffff;
-    --oi-surface-soft: #f8fbff;
-    --oi-border: #dbe3ef;
-    --oi-text: #1f2a37;
-    --oi-muted: #5d6b82;
-    --oi-accent: #0c4a6e;
-    --oi-accent-soft: #dff1ff;
-    background: linear-gradient(135deg, #f7f9fc 0%, #eef3f9 100%);
+    --oi-surface-soft: #f9fafb;
+    --oi-border: #e5e7eb;
+    --oi-text: #111827;
+    --oi-muted: #6b7280;
+    --oi-accent: #0f172a;
+    --oi-accent-soft: #eff6ff;
+    background: var(--oi-bg);
     border: 1px solid var(--oi-border);
     border-radius: 14px;
-    box-shadow: 0 12px 26px rgba(31, 42, 55, 0.08);
-    padding: 12px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    padding: 16px;
     color: var(--oi-text);
 }
 
@@ -92,7 +92,7 @@ if (isset($id)) {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--oi-border);
 }
@@ -100,13 +100,13 @@ if (isset($id)) {
 .order-info-head h2 {
     margin: 0;
     color: var(--oi-accent);
-    letter-spacing: 0.2px;
+    letter-spacing: -0.02em;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 22px;
 }
 
 .order-info-subtitle {
-    margin: 6px 0 0;
+    margin: 5px 0 0;
     color: var(--oi-muted);
     font-size: 13px;
 }
@@ -114,16 +114,16 @@ if (isset($id)) {
 .order-overview {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
 .order-overview-card {
     background: var(--oi-surface);
-    border: 0;
+    border: 1px solid var(--oi-border);
     border-radius: 12px;
-    padding: 12px;
-    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.06);
+    padding: 14px;
+    box-shadow: none;
 }
 
 .order-overview-title {
@@ -138,7 +138,7 @@ if (isset($id)) {
 .order-meta-line {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
 }
 
 .order-chip {
@@ -146,10 +146,10 @@ if (isset($id)) {
     align-items: center;
     padding: 6px 10px;
     border-radius: 999px;
-    border: 1px solid #c4d7eb;
+    border: 1px solid #d1d5db;
     background: var(--oi-surface-soft);
-    color: #20405d;
-    font-size: 12px;
+    color: #374151;
+    font-size: 11px;
     font-weight: 600;
     line-height: 1;
     max-width: 100%;
@@ -157,46 +157,46 @@ if (isset($id)) {
 }
 
 .order-chip.order-chip-accent {
-    border-color: #b8d8ef;
+    border-color: #bfdbfe;
     background: var(--oi-accent-soft);
-    color: #0d3f62;
+    color: #1e40af;
 }
 
 .order-chip.order-chip-status-success {
-    background: #eaf8ef;
-    border-color: #b8e4c5;
-    color: #1f6b3a;
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+    color: #166534;
 }
 
 .order-chip.order-chip-status-warning {
-    background: #fff6e8;
-    border-color: #f2d7a5;
-    color: #916215;
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
 }
 
 .order-chip.order-chip-status-danger {
-    background: #fdeeee;
-    border-color: #efc2c2;
-    color: #9d2f2f;
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
 }
 
 .order-chip.order-chip-status-default {
-    background: #eef3f9;
-    border-color: #ccd9e8;
-    color: #34506e;
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    color: #4b5563;
 }
 
 .order-metric-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 10px;
 }
 
 .order-metric {
-    border: 0;
+    border: 1px solid var(--oi-border);
     border-radius: 10px;
-    background: #f4f8fd;
-    padding: 8px 10px;
+    background: #fff;
+    padding: 10px;
 }
 
 .order-metric-label {
@@ -204,14 +204,14 @@ if (isset($id)) {
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.7px;
-    color: var(--oi-muted);
+    color: #9ca3af;
 }
 
 .order-metric-value {
     margin-top: 4px;
     font-size: 14px;
     font-weight: 700;
-    color: #17324a;
+    color: #111827;
 }
 
 .order-info-shell {
@@ -236,10 +236,10 @@ if (isset($id)) {
     width: auto;
     float: none;
     background: var(--oi-surface);
-    border: 0;
+    border: 1px solid var(--oi-border);
     border-radius: 12px;
-    padding: 12px;
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    padding: 14px;
+    box-shadow: none;
 }
 
 .order-info-ui .box-2 .box-2 {
@@ -257,7 +257,7 @@ if (isset($id)) {
 
 .order-section-title {
     margin: 0 0 10px;
-    color: var(--oi-accent);
+    color: #111827;
     font-size: 14px;
     font-weight: 700;
     text-transform: none;
@@ -268,10 +268,11 @@ if (isset($id)) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 150px;
     gap: 10px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     padding: 10px;
     border-radius: 10px;
-    background: #ffffff;
+    background: #f9fafb;
+    border: 1px solid var(--oi-border);
 }
 
 .order-item-row .form-group {
@@ -295,7 +296,7 @@ if (isset($id)) {
 .order-info-ui .form-group label {
     display: block;
     margin-bottom: 6px;
-    color: var(--oi-muted);
+    color: #6b7280;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
@@ -305,15 +306,15 @@ if (isset($id)) {
 .order-info-ui .inside-shadow,
 .order-info-ui .form-control {
     border-radius: 8px;
-    border: 1px solid #cdd8e8;
+    border: 1px solid #d1d5db;
     box-shadow: none;
     min-height: 40px;
 }
 
 .order-info-ui .inside-shadow:focus,
 .order-info-ui .form-control:focus {
-    border-color: #85a9cb;
-    box-shadow: 0 0 0 3px rgba(12, 74, 110, 0.12);
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 .order-summary-image {
@@ -322,39 +323,39 @@ if (isset($id)) {
     height: 200px;
     object-fit: cover;
     border-radius: 10px;
-    border: 0;
+    border: 1px solid var(--oi-border);
     margin-bottom: 14px;
-    background: #fff;
+    background: #f3f4f6;
 }
 
 .order-collapsible {
-    border: 0;
+    border: 1px solid var(--oi-border);
     border-radius: 11px;
-    background: #f9fcff;
+    background: #fff;
     margin-bottom: 10px;
     overflow: hidden;
 }
 
 .order-collapsible.order-collapsible-edit {
-    background: #f8fbff;
+    background: #fff;
 }
 
 .order-collapsible.order-collapsible-summary {
-    background: #f8fcf4;
+    background: #fff;
 }
 
 .order-collapse-toggle {
     width: 100%;
     border: 0;
-    border-bottom: 1px solid rgba(173, 191, 214, 0.45);
-    background: #f1f6fd;
-    color: #21435f;
+    border-bottom: 1px solid var(--oi-border);
+    background: #f9fafb;
+    color: #1f2937;
     text-align: left;
     padding: 10px 12px;
     font-size: 12px;
     font-weight: 700;
     text-transform: none;
-    letter-spacing: 0.2px;
+    letter-spacing: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -362,18 +363,18 @@ if (isset($id)) {
 }
 
 .order-collapsible.order-collapsible-edit .order-collapse-toggle {
-    background: #eef5ff;
-    color: #1c3d5d;
+    background: #f9fafb;
+    color: #1f2937;
 }
 
 .order-collapsible.order-collapsible-summary .order-collapse-toggle {
-    background: #edf7e4;
-    color: #345224;
+    background: #f9fafb;
+    color: #1f2937;
 }
 
 .order-collapse-toggle-icon {
     font-size: 13px;
-    color: #5f7997;
+    color: #9ca3af;
     transition: transform 0.2s ease;
 }
 
@@ -385,7 +386,7 @@ if (isset($id)) {
     overflow: hidden;
     max-height: 0;
     opacity: 0;
-    padding: 0 14px;
+    padding: 0 12px;
     transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.22s ease;
 }
 
@@ -398,11 +399,11 @@ if (isset($id)) {
 .order-action-row {
     grid-column: 1 / -1;
     background: var(--oi-surface);
-    border: 0;
+    border: 1px solid var(--oi-border);
     border-radius: 12px;
     padding: 12px;
     margin-top: 4px;
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    box-shadow: none;
 }
 
 .order-action-row .btn {
@@ -411,13 +412,40 @@ if (isset($id)) {
     border-radius: 8px;
     min-width: 110px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: none;
+    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .order-action-row .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
+    transform: none;
+    box-shadow: none;
+}
+
+.order-action-row .btn-green {
+    background: #ecfdf5;
+    border: 1px solid #bbf7d0;
+}
+
+.order-action-row .btn-green:hover {
+    background: #dcfce7;
+}
+
+.order-action-row .btn-yellow {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+}
+
+.order-action-row .btn-yellow:hover {
+    background: #fef3c7;
+}
+
+.order-action-row .btn-red {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.order-action-row .btn-red:hover {
+    background: #fee2e2;
 }
 
 @media (max-width: 991px) {
