@@ -22,7 +22,15 @@ function update($connection, $data)
 
 		mysqli_query($connection, 'START TRANSACTION');
 
-		$updateCategory = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "category SET category_parent_id='{$categoryParentID}', category_title='{$name}', category_description='{$description}' WHERE category_site_id='" . APP_SITE_ID . "' AND category_id='{$categoryID}'");
+		/** Handle feature image upload */
+
+		$featureImage = isset($oldFeatureImage) ? $oldFeatureImage : '';
+
+		if (isset($_FILES['featureImage']) && $_FILES['featureImage']['error'] === 0) {
+			require MODULES . 'imageUploader.php'; // require (not require_once) so it always runs
+		}
+
+		$updateCategory = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "category SET category_parent_id='{$categoryParentID}', category_title='{$name}', category_description='{$description}', category_image='{$featureImage}' WHERE category_site_id='" . APP_SITE_ID . "' AND category_id='{$categoryID}'");
 
 		if ($oldURL != $url) {
 

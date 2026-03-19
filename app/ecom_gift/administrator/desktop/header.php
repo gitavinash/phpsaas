@@ -13,7 +13,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <title>
         <?php echo str_replace('_', ' ', ucwords(((ADMIN_BASE_URL == '/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL . ' ' . @$_GET['type'])) . ' | ' . SITE_NAME)); ?>
     </title>
-    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>ui/jquery-ui.css">
@@ -22,14 +22,19 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>image-uploader/css/image-uploader.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
 </head>
 
-<body>
+<body class="premium-admin">
 
     <header>
         <div class="left-side">
             <ul>
                 <li>
+                    <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open navigation">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
                 </li>
             </ul>
@@ -51,6 +56,13 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     </header>
 
     <aside>
+        <div class="nav-search-wrapper">
+            <label for="side-nav-search">Quick Navigation</label>
+            <div class="nav-search-input">
+                <i class="fas fa-search"></i>
+                <input type="text" id="side-nav-search" placeholder="Search dashboard menu">
+            </div>
+        </div>
         <nav class="side-nav">
             <ul>
                 <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
@@ -133,7 +145,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         </ul>
                     </div>
                 </li>
-                <!-- <li <?php echo ((ADMIN_BASE_URL == '/media/') ? 'class="active"' : '') ?>>
+                <li <?php echo ((ADMIN_BASE_URL == '/media/') ? 'class="active"' : '') ?>>
                     <a href="media/?type=list"><i class="fas fa-folder-open"></i> Media</a>
                     <div class="side-menu">
                         <ul>
@@ -153,8 +165,8 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
                         </ul>
                     </div>
-                </li> -->
-                <!-- <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
+                </li>
+                <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
                     <a href="coupon/?type=list&status=all"><i class="fas fa-tags"></i> Coupon</a>
                     <div class="side-menu">
                         <ul>
@@ -168,7 +180,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                             <li><a href="coupon/?type=add"><i class="fas fa-ticket-alt"></i> Add new coupon</a></li>
                         </ul>
                     </div>
-                </li> -->
+                </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/import/') ? 'class="active"' : '') ?>>
                     <a href="import/?type=product"><i class="fas fa-upload"></i> Import</a>
                     <div class="side-menu">
@@ -182,36 +194,23 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         </ul>
                     </div>
                 </li>
-                <!-- <li <?php echo ((ADMIN_BASE_URL == '/export/') ? 'class="active"' : '') ?> >
-						<a href="export/?type=product"><i class="fas fa-download"></i> Export</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="export/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
-								<li><a href="export/?type=users"><i class="fas fa-users"></i> Users</a></li>
-								<li><a href="export/?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="export/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
-								<li><a href="export/?type=users"><i class="fas fa-users"></i> Users</a></li>
-								<li><a href="export/?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
-							</ul>
-						</div>
-					</li> -->
-                <!-- <li <?php echo ((ADMIN_BASE_URL == '/import/') ? 'class="active"' : '') ?> >
-						<a href="setting/?type=configuration"><i class="fas fa-cog"></i> Import</a>
-						<div class="side-menu">
-							<ul>
-								<li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
-							</ul>
-						</div>
-						<div class="bottom-menu">
-							<ul>
-								<li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
-							</ul>
-						</div>
-					</li> -->
+                <!-- <li <?php echo ((ADMIN_BASE_URL == '/export/') ? 'class="active"' : '') ?>>
+                    <a href="export/?type=product"><i class="fas fa-download"></i> Export</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="export/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
+                            <li><a href="export/?type=users"><i class="fas fa-users"></i> Users</a></li>
+                            <li><a href="export/?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="export/?type=product"><i class="fas fa-cubes"></i> Products</a></li>
+                            <li><a href="export/?type=users"><i class="fas fa-users"></i> Users</a></li>
+                            <li><a href="export/?type=orders"><i class="fas fa-funnel-dollar"></i> Orders</a></li>
+                        </ul>
+                    </div>
+                </li> -->
                 <li <?php echo ((ADMIN_BASE_URL == '/appearance/') ? 'class="active"' : '') ?>>
                     <a href="appearance/?type=configuration"><i class="fas fa-paint-brush"></i> Appearance</a>
                     <div class="side-menu">
@@ -253,6 +252,47 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
             </ul>
         </nav>
     </aside>
+
+    <div class="mobile-nav-overlay" id="nav-overlay"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var menuSearch = document.getElementById('side-nav-search');
+        if (!menuSearch) {
+            return;
+        }
+
+        var menuRoot = document.querySelector('nav.side-nav > ul');
+        if (!menuRoot) {
+            return;
+        }
+
+        var menuItems = menuRoot.children;
+
+        menuSearch.addEventListener('input', function() {
+            var searchTerm = menuSearch.value.toLowerCase().trim();
+
+            for (var i = 0; i < menuItems.length; i++) {
+                var item = menuItems[i];
+                var topAnchor = item.firstElementChild;
+
+                if (!topAnchor || topAnchor.tagName !== 'A') {
+                    continue;
+                }
+
+                var searchableText = topAnchor.textContent.toLowerCase();
+                var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
+
+                for (var j = 0; j < subLinks.length; j++) {
+                    searchableText += ' ' + subLinks[j].textContent.toLowerCase();
+                }
+
+                item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -1) ?
+                    '' : 'none';
+            }
+        });
+    });
+    </script>
 
     <main>
 

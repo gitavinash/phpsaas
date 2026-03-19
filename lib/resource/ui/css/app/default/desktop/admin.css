@@ -375,7 +375,8 @@ main .container {
   float: left;
   display: block;
   padding: 0;
-  margin-bottom: -25px;
+  /* margin-bottom: -25px; */
+  margin-top: 10px;
 }
 
 .container td:hover .hover a {
@@ -419,8 +420,11 @@ main .container {
   font-size: 1rem;
   line-height: 1.5;
   border-radius: 0.25rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
   outline: none;
   margin-bottom: 10px;
   cursor: pointer;
@@ -508,7 +512,6 @@ main .container {
 .form-box {
   float: left;
   width: 100%;
-  margin: 20px 0px;
 }
 
 .form-box form {
@@ -1965,10 +1968,13 @@ ul.tabs li.active {
   cursor: grab;
   display: inline-block;
   margin-right: 8px;
-  background-image: radial-gradient(#fff 22%, transparent 22%),
+  background-image:
+    radial-gradient(#fff 22%, transparent 22%),
     radial-gradient(#fff 22%, transparent 22%);
   background-size: 6px 6px;
-  background-position: 0 0, 3px 3px;
+  background-position:
+    0 0,
+    3px 3px;
   background-repeat: repeat;
 }
 

@@ -1,6 +1,8 @@
 <?php
 
-$postStatus = mysqli_real_escape_string($connection, $_GET['status']);
+$listStatus = (isset($_GET['status']) ? $_GET['status'] : 'all');
+
+$postStatus = mysqli_real_escape_string($connection, $listStatus);
 $startFrom = (isset($_GET['page']) ? $_GET['page'] : 0);
 
 $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
@@ -12,11 +14,11 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
         <form method="GET">
             <input type="hidden" name="type" value="<?php echo $_GET['type']; ?>">
             <select class="form-control" name="status" id="changeStatus">
-                <option value="all" <?php echo (($_GET['status'] == 'all') ? 'selected' : '') ?>>All
+                <option value="all" <?php echo (($listStatus == 'all') ? 'selected' : '') ?>>All
                     <?php echo $postType ?></option>
-                <option value="0" <?php echo (($_GET['status'] == '0') ? 'selected' : '') ?>>Drafts
+                <option value="0" <?php echo (($listStatus == '0') ? 'selected' : '') ?>>Drafts
                     <?php echo $postType ?></option>
-                <option value="1" <?php echo (($_GET['status'] == '1') ? 'selected' : '') ?>>Published
+                <option value="1" <?php echo (($listStatus == '1') ? 'selected' : '') ?>>Published
                     <?php echo $postType ?></option>
             </select>
             <input type="submit" class="btn" value="Filter">
