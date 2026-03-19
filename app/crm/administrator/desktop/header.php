@@ -93,21 +93,6 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         </ul>
                     </div>
                 </li>
-                <li <?php echo ((ADMIN_BASE_URL == '/lead/') ? 'class="active"' : '') ?>>
-                    <a href="lead/?type=list&status=all"><i class="fas fa-bullhorn"></i> Manage Leads</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="lead/?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
-                            <li><a href="lead/"><i class="fas fa-plus"></i> Add new lead</a>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="lead/?type=list&status=all"><i class="fas fa-list"></i> All leads</a></li>
-                            <li><a href="lead/"><i class="fas fa-plus"></i> Add new lead</a>
-                        </ul>
-                    </div>
-                </li>
                 <?php
 
                 if (SITE_ID == 17) { ?>
