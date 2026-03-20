@@ -28,7 +28,7 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
 
     </div>
 </div>
-<table id="table">
+<table id="pageTable">
     <thead>
         <tr>
             <!-- <th style="width: 50px"></th> -->
@@ -40,7 +40,7 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT page_id, page_title ,link_url, link_status, link_published, profile_display_name FROM " . TABLE_PREFIX . "page, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "profile WHERE link_type='{$postType}' AND page_type='page' AND link_relation_id=page_id AND link_site_id='" . SITE_ID . "' AND profile_user_id='" . USER_ID . "' AND link_status!=301 $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
+        if ($dataList = mysqli_query($connection, "SELECT p.page_id, p.page_title, l.link_url, l.link_status, UNIX_TIMESTAMP(COALESCE(l.link_published, l.link_creation, l.link_modified)) AS published_ts, pr.profile_display_name FROM " . TABLE_PREFIX . "page p INNER JOIN (SELECT link_relation_id, MAX(link_id) AS latest_link_id FROM " . TABLE_PREFIX . "link WHERE link_type='{$postType}' AND link_site_id='" . SITE_ID . "' AND link_status!=301 GROUP BY link_relation_id) ll ON ll.link_relation_id=p.page_id INNER JOIN " . TABLE_PREFIX . "link l ON l.link_id=ll.latest_link_id INNER JOIN " . TABLE_PREFIX . "profile pr ON pr.profile_user_id='" . USER_ID . "' WHERE p.page_type='page' $postStatus ORDER BY published_ts DESC, p.page_id DESC LIMIT {$startFrom}, 10")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
@@ -58,9 +58,8 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
                 </div>
             </td>
             <td><?php echo $profile_display_name; ?></td>
-            <td data-order="<?php echo strtotime($link_published); ?>"
-                data-sort="<?php echo strtotime($link_published); ?>">
-                <?php echo date('d/m/Y H:i:s', strtotime($link_published)); ?></td>
+            <td data-order="<?php echo (int)$published_ts; ?>" data-sort="<?php echo (int)$published_ts; ?>">
+                <?php echo date('d/m/Y H:i:s', (int)$published_ts); ?></td>
         </tr>
         <?php
                 }
@@ -72,21 +71,15 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
 </table>
 <script>
 $(document).ready(function() {
-    var table;
-
-    if ($.fn.dataTable.isDataTable('#table')) {
-        table = $('#table').DataTable();
-    } else {
-        table = $('#table').DataTable({
-            "aaSorting": [
-                [2, "desc"]
-            ],
-            "order": [
-                [2, "desc"]
-            ]
-        });
-    }
-
-    table.order([2, 'desc']).draw();
+    $('#pageTable').DataTable({
+        "bDestroy": true,
+        "bStateSave": false,
+        "aaSorting": [
+            [2, "desc"]
+        ],
+        "order": [
+            [2, "desc"]
+        ]
+    });
 });
 </script>
