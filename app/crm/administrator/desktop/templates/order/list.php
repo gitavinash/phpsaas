@@ -402,7 +402,8 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                     </td>
                     <td><?php echo htmlspecialchars($paymentLabel); ?></td>
                     <td><span class="order-tag <?php echo $statusClass; ?>"><?php echo $order_status; ?></span></td>
-                    <td><?php echo date('d/m/Y h:i A', strtotime($order_generate)); ?></td>
+                    <td data-order="<?php echo strtotime($order_generate); ?>">
+                        <?php echo date('d/m/Y h:i A', strtotime($order_generate)); ?></td>
                     <td>
                         <a href="order/?type=view&id=<?php echo base64_encode($order_id); ?>" class="order-view-btn"><i
                                 class="fas fa-eye"></i> View</a>

@@ -88,6 +88,9 @@
 					<script type='text/javascript'>
 						$(document).ready(function() {
 							$('#table').DataTable({
+								"order": [
+									[4, "desc"]
+								],
 								"createdRow": function(row, data, dataIndex) {
 									if (data[6] == "Confirm") {
 										$(row).css({

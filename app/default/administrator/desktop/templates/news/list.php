@@ -44,27 +44,27 @@ $postStatus = (($postStatus == 'all') ? '' : "AND news_status='{$postStatus}'");
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-        <tr>
-            <td>
-                <p><a
-                        href="news/?type=edit&editor=true&id=<?php echo base64_encode($news_id);
+                    <tr>
+                        <td>
+                            <p><a
+                                    href="news/?type=edit&editor=true&id=<?php echo base64_encode($news_id);
                                                                             echo (($news_gallery != '') ? '&theme=gallery' : '') ?>"><?php echo $news_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
-                </p>
-                <div class="hover">
-                    <a
-                        href="news/?type=edit&editor=true&id=<?php echo base64_encode($news_id);
+                            </p>
+                            <div class="hover">
+                                <a
+                                    href="news/?type=edit&editor=true&id=<?php echo base64_encode($news_id);
                                                                             echo (($news_gallery != '') ? '&theme=gallery' : '') ?>"><i
-                            class="fas fa-pencil-alt"></i> Edit</a>
-                    <a href="#" id="<?php echo base64_encode($news_id); ?>_news" class="deleteBtn"><i
-                            class="fas fa-trash"></i> Delete</a>
-                    <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
-                </div>
-            </td>
-            <td><?php echo $category_title; ?></td>
-            <td><?php echo $profile_display_name; ?></td>
-            <td><?php echo (($news_paid == 1) ? 'Yes' : 'No') ?></td>
-            <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
-        </tr>
+                                        class="fas fa-pencil-alt"></i> Edit</a>
+                                <a href="#" id="<?php echo base64_encode($news_id); ?>_news" class="deleteBtn"><i
+                                        class="fas fa-trash"></i> Delete</a>
+                                <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
+                            </div>
+                        </td>
+                        <td><?php echo $category_title; ?></td>
+                        <td><?php echo $profile_display_name; ?></td>
+                        <td><?php echo (($news_paid == 1) ? 'Yes' : 'No') ?></td>
+                        <td data-order="<?php echo strtotime($link_creation); ?>"><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
+                    </tr>
         <?php
                 }
             }
@@ -73,3 +73,12 @@ $postStatus = (($postStatus == 'all') ? '' : "AND news_status='{$postStatus}'");
         ?>
     </tbody>
 </table>
+<script>
+    $(document).ready(function() {
+        $('#table').DataTable({
+            "order": [
+                [4, "desc"]
+            ]
+        });
+    });
+</script>
