@@ -1054,9 +1054,9 @@
 
                 <div class="footer-links">
                     <h4>Legal</h4>
-                    <a href="https://aleya.in/privacy-policy/">Privacy Policy</a>
-                    <a href="https://aleya.in/terms-and-conditions/">Terms of Use</a>
-                    <a href="https://aleya.in/refund-policy/">Refund Policy</a>
+                    <a href="/privacy-policy/" target="_blank">Privacy Policy</a>
+                    <a href="/terms-and-conditions/" target="_blank">Terms of Use</a>
+                    <a href="/refund-policy/" target="_blank">Refund Policy</a>
                 </div>
 
                 <div class="footer-contact">
