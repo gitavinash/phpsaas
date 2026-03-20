@@ -141,6 +141,7 @@ function initPricingToggle() {
   const labels = document.querySelectorAll(".toggle-label");
   const amounts = document.querySelectorAll(".pricing-card .amount");
   const periods = document.querySelectorAll(".pricing-card .period");
+  const billingNotes = document.querySelectorAll(".pricing-card .billing-note");
 
   if (!toggle) return;
 
@@ -181,8 +182,15 @@ function initPricingToggle() {
     // Update period labels (/mo or /yr)
     periods.forEach((period) => {
       const monthlyText = period.dataset.monthly || "/mo";
-      const yearlyText = period.dataset.yearly || "/yr";
+      const yearlyText = period.dataset.yearly || "/mo";
       period.textContent = isYearly ? yearlyText : monthlyText;
+    });
+
+    // Update billing cycle note
+    billingNotes.forEach((note) => {
+      note.textContent = isYearly
+        ? note.dataset.yearly || "billed annually"
+        : note.dataset.monthly || "billed monthly";
     });
   };
 

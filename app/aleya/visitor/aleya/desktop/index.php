@@ -614,9 +614,11 @@
                     <div class="card-price">
                         <span class="currency">₹</span>
                         <span class="amount" data-yearly="999" data-monthly="1249">999</span>
-                        <span class="period" data-monthly="/mo" data-yearly="/yr">/yr</span>
+                        <span class="period" data-monthly="/mo" data-yearly="/mo">/mo</span>
                         <span class="gst-label">+ 18% GST</span>
                     </div>
+                    <p class="billing-note" data-yearly="billed annually" data-monthly="billed monthly">billed annually
+                    </p>
                     <ul class="card-features">
                         <li>
                             <i class="fas fa-check"></i> Lead capture from FB & Google
@@ -642,9 +644,11 @@
                     <div class="card-price">
                         <span class="currency">₹</span>
                         <span class="amount" data-yearly="2499" data-monthly="3124">2499</span>
-                        <span class="period" data-monthly="/mo" data-yearly="/yr">/yr</span>
+                        <span class="period" data-monthly="/mo" data-yearly="/mo">/mo</span>
                         <span class="gst-label">+ 18% GST</span>
                     </div>
+                    <p class="billing-note" data-yearly="billed annually" data-monthly="billed monthly">billed annually
+                    </p>
                     <ul class="card-features">
                         <li><i class="fas fa-check"></i> Everything in CRM Starter</li>
                         <li><i class="fas fa-check"></i> AI lead scoring</li>

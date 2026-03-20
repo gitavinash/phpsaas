@@ -1665,6 +1665,14 @@ ol {
   font-size: 0.9rem;
 }
 
+.billing-note {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: -14px;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
 .card-features {
   margin-bottom: 20px;
 }
