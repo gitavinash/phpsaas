@@ -3,7 +3,7 @@
 $productStatus = mysqli_real_escape_string($connection, $_GET['status']);
 ?>
 <h2>All Subscribers</h2>
-<table id="table">
+<table id="table" data-default-order-column="1" data-default-order-dir="desc">
     <thead>
         <tr>
             <th style="width: 400px">Email</th>
@@ -13,7 +13,7 @@ $productStatus = mysqli_real_escape_string($connection, $_GET['status']);
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "newsletter WHERE newsletter_status=1 AND newsletter_site_id='" . SITE_ID . "' ORDER BY newsletter_email ASC")) {
+        if ($dataList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "newsletter WHERE newsletter_status=1 AND newsletter_site_id='" . SITE_ID . "' ORDER BY newsletter_time DESC, newsletter_id DESC")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
@@ -25,7 +25,9 @@ $productStatus = mysqli_real_escape_string($connection, $_GET['status']);
                             class="fas fa-trash"></i> Delete</a>
                 </div>
             </td>
-            <td><?php echo date('d F Y h:i A', strtotime($newsletter_time)); ?></td>
+            <td data-order="<?php echo strtotime($newsletter_time); ?>"
+                data-sort="<?php echo strtotime($newsletter_time); ?>">
+                <?php echo date('d F Y h:i A', strtotime($newsletter_time)); ?></td>
         </tr>
         <?php
                 }
@@ -35,3 +37,17 @@ $productStatus = mysqli_real_escape_string($connection, $_GET['status']);
         ?>
     </tbody>
 </table>
+<script>
+$(document).ready(function() {
+    $('#table').DataTable({
+        "bDestroy": true,
+        "bStateSave": false,
+        "aaSorting": [
+            [1, "desc"]
+        ],
+        "order": [
+            [1, "desc"]
+        ]
+    });
+});
+</script>

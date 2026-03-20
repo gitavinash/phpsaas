@@ -115,7 +115,11 @@
 
 					<script type='text/javascript'>
 						$(document).ready(function() {
-							$('#table').DataTable({
+							var $table = $('#table');
+							var defaultOrderColumn = parseInt($table.attr('data-default-order-column'), 10);
+							var defaultOrderDir = $table.attr('data-default-order-dir') || 'desc';
+							var tableOptions = {
+								"bDestroy": true,
 								"createdRow": function(row, data, dataIndex) {
 									if (data[6] == "Confirm") {
 										$(row).css({
@@ -143,8 +147,20 @@
 											"color": "#333"
 										})
 									}
-								},
-							});
+								}
+							};
+
+							if (!isNaN(defaultOrderColumn)) {
+								tableOptions.order = [
+									[defaultOrderColumn, defaultOrderDir]
+								];
+							} else {
+								tableOptions.order = [
+									[3, 'desc']
+								];
+							}
+
+							$table.DataTable(tableOptions);
 						});
 					</script>
 			<?php

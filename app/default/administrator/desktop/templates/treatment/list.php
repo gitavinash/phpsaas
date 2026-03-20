@@ -36,25 +36,30 @@ $serviceStatus = (($serviceStatus == 'all') ? '' : "AND service_status='{$servic
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT service_id, service_title, category_title, link_url, link_status, link_creation, profile_display_name FROM " . TABLE_PREFIX . "service, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "profile WHERE service_owner_id='" . USER_ID . "' AND link_type='service' AND service_type='{$postType}' AND link_relation_id=service_id AND link_site_id='" . SITE_ID . "' AND category_id=service_category AND profile_user_id='" . USER_ID . "' AND link_status!=301 $serviceStatus ORDER BY link_published DESC LIMIT {$startFrom}, 100")) {
+        if ($dataList = mysqli_query($connection, "SELECT service_id, service_title, category_title, link_url, link_status, link_published, profile_display_name FROM " . TABLE_PREFIX . "service, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "profile WHERE service_owner_id='" . USER_ID . "' AND link_type='service' AND service_type='{$postType}' AND link_relation_id=service_id AND link_site_id='" . SITE_ID . "' AND category_id=service_category AND profile_user_id='" . USER_ID . "' AND link_status!=301 $serviceStatus ORDER BY link_published DESC LIMIT {$startFrom}, 100")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-                    <tr style="height: 80px">
-                        <td>
-                            <p><a href="treatment/?type=edit&editor=true&id=<?php echo base64_encode($service_id); ?>"><?php echo $service_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
-                            </p>
-                            <div class="hover">
-                                <a href="treatment/?type=edit&editor=true&id=<?php echo base64_encode($service_id); ?>"><i class="fas fa-pencil-alt"></i> Edit</a>
-                                <a href="treatment/?type=treatment&id=<?php echo base64_encode($service_id); ?>"><i class="fas fa-trash"></i>
-                                    Delete</a>
-                                <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
-                            </div>
-                        </td>
-                        <td><?php echo $category_title; ?></td>
-                        <td><?php echo $profile_display_name; ?></td>
-                        <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
-                    </tr>
+        <tr style="height: 80px">
+            <td>
+                <p><a
+                        href="treatment/?type=edit&editor=true&id=<?php echo base64_encode($service_id); ?>"><?php echo $service_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
+                </p>
+                <div class="hover">
+                    <a href="treatment/?type=edit&editor=true&id=<?php echo base64_encode($service_id); ?>"><i
+                            class="fas fa-pencil-alt"></i> Edit</a>
+                    <a href="treatment/?type=treatment&id=<?php echo base64_encode($service_id); ?>"><i
+                            class="fas fa-trash"></i>
+                        Delete</a>
+                    <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
+                </div>
+            </td>
+            <td><?php echo $category_title; ?></td>
+            <td><?php echo $profile_display_name; ?></td>
+            <td data-order="<?php echo strtotime($link_published); ?>"
+                data-sort="<?php echo strtotime($link_published); ?>">
+                <?php echo date('d/m/Y H:i:s', strtotime($link_published)); ?></td>
+        </tr>
         <?php
                 }
             }
@@ -63,3 +68,23 @@ $serviceStatus = (($serviceStatus == 'all') ? '' : "AND service_status='{$servic
         ?>
     </tbody>
 </table>
+<script>
+$(document).ready(function() {
+    var table;
+
+    if ($.fn.dataTable.isDataTable('#table')) {
+        table = $('#table').DataTable();
+    } else {
+        table = $('#table').DataTable({
+            "aaSorting": [
+                [3, "desc"]
+            ],
+            "order": [
+                [3, "desc"]
+            ]
+        });
+    }
+
+    table.order([3, 'desc']).draw();
+});
+</script>

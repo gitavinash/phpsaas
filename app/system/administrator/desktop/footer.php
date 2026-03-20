@@ -1,43 +1,57 @@
 			</div>
 
-		</main>
+			</main>
 
-		<footer>
-			
-		</footer>
-		
-		<script src="<?php echo JS_LIBRARY ?>jquery.min.js" type="text/javascript" ></script>
-		<script src='<?php echo PLUGIN_LIBRARY ?>editor/editor.js' type='text/javascript' ></script>
-		<script src="<?php echo PLUGIN_LIBRARY ?>datatable/js/datatables.min.js" type="text/javascript" ></script>
-		<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript" ></script>
-		<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
+			<footer>
 
-		<?php
-		
-			if(isset($_GET['type'])) {
+			</footer>
 
-				if($_GET['type']=='edit' || $_GET['type']=='add') { ?>
+			<script src="<?php echo JS_LIBRARY ?>jquery.min.js" type="text/javascript"></script>
+			<script src='<?php echo PLUGIN_LIBRARY ?>editor/editor.js' type='text/javascript'></script>
+			<script src="<?php echo PLUGIN_LIBRARY ?>datatable/js/datatables.min.js" type="text/javascript"></script>
+			<script src="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.js" type="text/javascript"></script>
+			<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
+
+			<?php
+
+			if (isset($_GET['type'])) {
+
+				if ($_GET['type'] == 'edit' || $_GET['type'] == 'add') { ?>
 					<script type='text/javascript'>
-						$(window).bind('beforeunload', function(){
+						$(window).bind('beforeunload', function() {
 							return "Leaving this page will reset the wizard";
 						});
 					</script>
 				<?php
 				}
 
-				if($_GET['type']=='list') { ?>
+				if ($_GET['type'] == 'list') { ?>
 
 					<script type='text/javascript'>
-						$('#table').DataTable();
+						$(document).ready(function() {
+							var $table = $('#table');
+							var defaultOrderColumn = parseInt($table.attr('data-default-order-column'), 10);
+							var defaultOrderDir = $table.attr('data-default-order-dir') || 'asc';
+							var tableOptions = {
+								bDestroy: true
+							};
+
+							if (!isNaN(defaultOrderColumn)) {
+								tableOptions.order = [
+									[defaultOrderColumn, defaultOrderDir]
+								];
+							}
+
+							$table.DataTable(tableOptions);
+						});
 					</script>
 
-				<?php
+			<?php
 				}
-
 			}
 
-		?>
+			?>
 
-	</body>
+			</body>
 
-</html>
+			</html>

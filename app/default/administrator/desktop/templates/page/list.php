@@ -40,7 +40,7 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT page_id, page_title ,link_url, link_status, link_creation, profile_display_name FROM " . TABLE_PREFIX . "page, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "profile WHERE link_type='{$postType}' AND page_type='page' AND link_relation_id=page_id AND link_site_id='" . SITE_ID . "' AND profile_user_id='" . USER_ID . "' AND link_status!=301 $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
+        if ($dataList = mysqli_query($connection, "SELECT page_id, page_title ,link_url, link_status, link_published, profile_display_name FROM " . TABLE_PREFIX . "page, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "profile WHERE link_type='{$postType}' AND page_type='page' AND link_relation_id=page_id AND link_site_id='" . SITE_ID . "' AND profile_user_id='" . USER_ID . "' AND link_status!=301 $postStatus ORDER BY link_published DESC LIMIT {$startFrom}, 10")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
@@ -58,7 +58,9 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
                 </div>
             </td>
             <td><?php echo $profile_display_name; ?></td>
-            <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
+            <td data-order="<?php echo strtotime($link_published); ?>"
+                data-sort="<?php echo strtotime($link_published); ?>">
+                <?php echo date('d/m/Y H:i:s', strtotime($link_published)); ?></td>
         </tr>
         <?php
                 }
@@ -68,3 +70,23 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
         ?>
     </tbody>
 </table>
+<script>
+$(document).ready(function() {
+    var table;
+
+    if ($.fn.dataTable.isDataTable('#table')) {
+        table = $('#table').DataTable();
+    } else {
+        table = $('#table').DataTable({
+            "aaSorting": [
+                [2, "desc"]
+            ],
+            "order": [
+                [2, "desc"]
+            ]
+        });
+    }
+
+    table.order([2, 'desc']).draw();
+});
+</script>

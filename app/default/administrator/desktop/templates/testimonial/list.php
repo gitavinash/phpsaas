@@ -53,7 +53,9 @@ $postStatus = (($postStatus == 'all') ? '' : "AND category_status='{$postStatus}
                 </div>
             </td>
             <td><?php echo $profile_display_name; ?></td>
-            <td><?php echo date('d/m/Y', strtotime($category_time)); ?></td>
+            <td data-order="<?php echo strtotime($category_time); ?>"
+                data-sort="<?php echo strtotime($category_time); ?>">
+                <?php echo date('d/m/Y H:i:s', strtotime($category_time)); ?></td>
         </tr>
         <?php
                 }
@@ -63,3 +65,23 @@ $postStatus = (($postStatus == 'all') ? '' : "AND category_status='{$postStatus}
         ?>
     </tbody>
 </table>
+<script>
+$(document).ready(function() {
+    var table;
+
+    if ($.fn.dataTable.isDataTable('#table')) {
+        table = $('#table').DataTable();
+    } else {
+        table = $('#table').DataTable({
+            "aaSorting": [
+                [2, "desc"]
+            ],
+            "order": [
+                [2, "desc"]
+            ]
+        });
+    }
+
+    table.order([2, 'desc']).draw();
+});
+</script>
