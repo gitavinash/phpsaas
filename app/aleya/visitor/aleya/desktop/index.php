@@ -1020,7 +1020,7 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="#" class="footer-logo">
+                    <a href="index.php" class="footer-logo">
                         <img src="<?php echo USER_IMAGES ?>aleya_logo.png" alt="Aleya" class="logo" />
                     </a>
                     <p>
@@ -1048,10 +1048,8 @@
 
                 <div class="footer-links">
                     <h4>Company</h4>
-                    <a href="#">About Us</a>
-                    <a href="#">Careers</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Contact</a>
+                    <a href="/about-us/">About Us</a>
+                    <a href="/contact-us/">Contact</a>
                 </div>
 
                 <div class="footer-links">
