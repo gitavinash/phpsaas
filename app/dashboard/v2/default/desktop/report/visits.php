@@ -31,15 +31,50 @@ $query = "SELECT membership_id, membership_profile_name, membership_total_visit,
         WHERE visit_time BETWEEN '$from' AND '$to' AND membership_site_id=" . SITE_ID . "
         ORDER BY membership_profile_name ASC, membership_id DESC";
 
+$rows = [];
+$counted_memberships = [];
 if ($dataList = mysqli_query($connection, $query)) {
     while ($r = mysqli_fetch_assoc($dataList)) {
         $rows[] = $r;
+        $membership_id = (int)($r['membership_id'] ?? 0);
+        if ($membership_id > 0 && !isset($counted_memberships[$membership_id])) {
+            $counted_memberships[$membership_id] = true;
+        }
     }
 } else if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE === true) {
     echo "<pre>SQL Error: " . htmlspecialchars(mysqli_error($connection)) . "</pre>";
 }
+
+$total_visit_count = count($rows);
+$total_customer_count = count($counted_memberships);
 ?>
 <section>
+    <div class="box-1" style="margin-bottom:12px;">
+        <div style="display:flex;gap:12px;flex-wrap:nowrap;">
+            <div
+                style="flex:1;position:relative;overflow:hidden;background:#ffffff;background-image:linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(255,255,255,0) 55%);border:1px solid #e6ebf1;border-radius:12px;padding:12px 16px;min-width:0;box-shadow:0 2px 10px rgba(20, 33, 61, 0.06);">
+                <i class="fi fi-rr-chart-line-up"
+                    style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:56px;color:#111827;opacity:0.11;pointer-events:none;"></i>
+                <div
+                    style="font-size:11px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#6b7280;font-weight:600;position:relative;z-index:1;">
+                    Total Visits</div>
+                <div
+                    style="font-size:clamp(26px, 3.2vw, 34px);line-height:1.05;font-weight:800;color:#111827;margin-top:6px;text-align:right;position:relative;z-index:1;">
+                    <?php echo number_format($total_visit_count); ?></div>
+            </div>
+            <div
+                style="flex:1;position:relative;overflow:hidden;background:#ffffff;background-image:linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(255,255,255,0) 55%);border:1px solid #e6ebf1;border-radius:12px;padding:12px 16px;min-width:0;box-shadow:0 2px 10px rgba(20, 33, 61, 0.06);">
+                <i class="fi fi-rr-users"
+                    style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:56px;color:#111827;opacity:0.07;pointer-events:none;"></i>
+                <div
+                    style="font-size:11px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#6b7280;font-weight:600;position:relative;z-index:1;">
+                    No of Customers</div>
+                <div
+                    style="font-size:clamp(26px, 3.2vw, 34px);line-height:1.05;font-weight:800;color:#111827;margin-top:6px;text-align:right;position:relative;z-index:1;">
+                    <?php echo number_format($total_customer_count); ?></div>
+            </div>
+        </div>
+    </div>
     <div class="only-mobile membership-card-list step_2_box">
         <?php if (!empty($rows)): ?>
         <?php foreach ($rows as $data): ?>
@@ -55,7 +90,8 @@ if ($dataList = mysqli_query($connection, $query)) {
                 $visit_time = htmlspecialchars($data['visit_time'] ?? '', ENT_QUOTES, 'UTF-8');
                 $visit_duration = htmlspecialchars($data['visit_duration'] ?? '', ENT_QUOTES, 'UTF-8');
                 ?>
-        <article class="widget-setting-info membership-card" data-id="<?php echo $encoded_id; ?>">
+        <article class="widget-setting-info membership-card" data-id="<?php echo $encoded_id; ?>"
+            style="background-image:linear-gradient(140deg, rgba(17,24,39,0.04) 0%, rgba(255,255,255,0) 45%);border-radius:12px;">
             <div class="about-feature" style="max-width:100%;">
                 <h3 class="heading name-cap" style="margin:0;">
                     <?php echo $name; ?>

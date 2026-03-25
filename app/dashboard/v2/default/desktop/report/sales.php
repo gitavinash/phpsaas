@@ -30,19 +30,51 @@ $query = "SELECT membership_id, membership_profile_name, membership_total_visit,
         WHERE membership_created BETWEEN '$from' AND '$to' AND membership_site_id=" . SITE_ID . "
         ORDER BY membership_profile_name ASC, membership_id DESC";
 
+$rows = [];
+$total_memberships = 0;
+$total_sales_amount = 0;
 if ($dataList = mysqli_query($connection, $query)) {
     while ($r = mysqli_fetch_assoc($dataList)) {
         $rows[] = $r;
+        $total_memberships++;
+        $total_sales_amount += (float)($r['membership_price'] ?? 0);
     }
 } else if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE === true) {
     echo "<pre>SQL Error: " . htmlspecialchars(mysqli_error($connection)) . "</pre>";
 }
 ?>
 <section>
+    <div class="box-1" style="margin-bottom:12px;">
+        <div style="display:flex;gap:12px;flex-wrap:nowrap;">
+            <div
+                style="flex:1;position:relative;overflow:hidden;background:#ffffff;border:1px solid #e6ebf1;border-radius:12px;padding:12px 16px;min-width:0;box-shadow:0 2px 10px rgba(20, 33, 61, 0.06);">
+                <i class="fi fi-rr-shopping-bag"
+                    style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:56px;color:#111827;opacity:0.07;pointer-events:none;"></i>
+                <div
+                    style="font-size:11px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#6b7280;font-weight:600;position:relative;z-index:1;">
+                    Total Sales</div>
+                <div
+                    style="font-size:clamp(26px, 3.2vw, 34px);line-height:1.05;font-weight:800;color:#111827;margin-top:6px;position:relative;z-index:1;">
+                    <?php echo number_format($total_memberships); ?></div>
+            </div>
+            <div
+                style="flex:1;position:relative;overflow:hidden;background:#ffffff;border:1px solid #e6ebf1;border-radius:12px;padding:12px 16px;min-width:0;box-shadow:0 2px 10px rgba(20, 33, 61, 0.06);">
+                <i class="fi fi-rr-wallet"
+                    style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:56px;color:#111827;opacity:0.07;pointer-events:none;"></i>
+                <div
+                    style="font-size:11px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#6b7280;font-weight:600;position:relative;z-index:1;">
+                    Total Amount</div>
+                <div
+                    style="font-size:clamp(26px, 3.2vw, 34px);line-height:1.05;font-weight:800;color:#111827;margin-top:6px;position:relative;z-index:1;">
+                    ₹
+                    <?php echo number_format($total_sales_amount); ?></div>
+            </div>
+        </div>
+    </div>
     <div class="only-mobile membership-card-list step_2_box">
         <?php if (!empty($rows)): ?>
-        <?php foreach ($rows as $data): ?>
-        <?php
+            <?php foreach ($rows as $data): ?>
+                <?php
                 $id   = (int)$data['membership_id'];
                 $name = htmlspecialchars(ucwords($data['membership_profile_name'] ?? ''), ENT_QUOTES, 'UTF-8');
                 $mob  = htmlspecialchars($data['user_mobile'] ?? '', ENT_QUOTES, 'UTF-8');
@@ -52,77 +84,77 @@ if ($dataList = mysqli_query($connection, $query)) {
                 $status = htmlspecialchars($data['membership_status'] ?? '', ENT_QUOTES, 'UTF-8');
                 $encoded_id = base64_encode($id);
                 ?>
-        <article class="widget-setting-info membership-card" data-id="<?php echo $encoded_id; ?>">
-            <div class="about-feature" style="max-width:100%;">
-                <h3 class="heading name-cap" style="margin:0;">
-                    <div style="display: flex; justify-content: space-between; width: 100%;">
-                        <p><strong><?php echo $name; ?></strong>
-                            <span>#<?php echo $id; ?></span>
-                        </p>
-                        <p
-                            style="background-color: #d4edda; padding: 0px 12px; border-radius: 4px; font-weight: 700; line-height: 44px; font-size: 18px; text-align: center; min-width: 100px; color: #155724;">
-                            ₹ <?php echo number_format($data['membership_price']); ?></p>
-                    </div>
-                </h3>
+                <article class="widget-setting-info membership-card" data-id="<?php echo $encoded_id; ?>">
+                    <div class="about-feature" style="max-width:100%;">
+                        <h3 class="heading name-cap" style="margin:0;">
+                            <div style="display: flex; justify-content: space-between; width: 100%;">
+                                <p><strong><?php echo $name; ?></strong>
+                                    <span>#<?php echo $id; ?></span>
+                                </p>
+                                <p
+                                    style="background-color: #d4edda; padding: 0px 12px; border-radius: 4px; font-weight: 700; line-height: 44px; font-size: 18px; text-align: center; min-width: 100px; color: #155724;">
+                                    ₹ <?php echo number_format($data['membership_price']); ?></p>
+                            </div>
+                        </h3>
 
-                <hr>
+                        <hr>
 
-                <div class="row">
-                    <div class="box-12 info-stack">
-                        <p style="margin:0;">
-                            <strong>Mobile</strong><br>
-                            <span><?php echo $mob; ?></span>
-                        </p>
-                        <p style="margin:0;">
-                            <strong>Total Visits</strong><br>
-                            <span><?php echo $membership_visits; ?></span>
-                        </p>
-                        <p style="margin:0;">
-                            <strong>Avl. Visits</strong><br>
-                            <span><?php echo $membership_avl_visits; ?></span>
-                        </p>
-                    </div>
-                </div>
+                        <div class="row">
+                            <div class="box-12 info-stack">
+                                <p style="margin:0;">
+                                    <strong>Mobile</strong><br>
+                                    <span><?php echo $mob; ?></span>
+                                </p>
+                                <p style="margin:0;">
+                                    <strong>Total Visits</strong><br>
+                                    <span><?php echo $membership_visits; ?></span>
+                                </p>
+                                <p style="margin:0;">
+                                    <strong>Avl. Visits</strong><br>
+                                    <span><?php echo $membership_avl_visits; ?></span>
+                                </p>
+                            </div>
+                        </div>
 
-                <?php if ($amount_due > 0): ?>
-                <div class="membership-due-strip">
-                    <div style="font-size:13px;opacity:0.9;">Amount Due</div>
-                    <div style="font-size:24px; line-height:1.1; font-weight:800;">₹
-                        <?php echo number_format($amount_due); ?></div>
-                </div>
-                <?php endif; ?>
+                        <?php if ($amount_due > 0): ?>
+                            <div class="membership-due-strip">
+                                <div style="font-size:13px;opacity:0.9;">Amount Due</div>
+                                <div style="font-size:24px; line-height:1.1; font-weight:800;">₹
+                                    <?php echo number_format($amount_due); ?></div>
+                            </div>
+                        <?php endif; ?>
 
-                <!-- Actions -->
-                <div class="action-stack" style="margin-top:10px;">
-                    <div class="action-item">
-                        <a href="/dashboard/membership/update/?id=<?php echo $encoded_id; ?>"
-                            class="btn btn-blue dataTableBtn" title="Edit membership">
-                            <i class="fi-rr-pencil"></i> Edit
-                        </a>
-                    </div>
-                    <div class="action-item">
-                        <a href="#" class="btn btn-grey dataTableBtn visitHistoryButton"
-                            data-id="<?php echo $encoded_id; ?>" title="Visit History">
-                            <i class="fi-rr-time-past"></i> History
-                        </a>
-                    </div>
-                </div>
+                        <!-- Actions -->
+                        <div class="action-stack" style="margin-top:10px;">
+                            <div class="action-item">
+                                <a href="/dashboard/membership/update/?id=<?php echo $encoded_id; ?>"
+                                    class="btn btn-blue dataTableBtn" title="Edit membership">
+                                    <i class="fi-rr-pencil"></i> Edit
+                                </a>
+                            </div>
+                            <div class="action-item">
+                                <a href="#" class="btn btn-grey dataTableBtn visitHistoryButton"
+                                    data-id="<?php echo $encoded_id; ?>" title="Visit History">
+                                    <i class="fi-rr-time-past"></i> History
+                                </a>
+                            </div>
+                        </div>
 
-                <?php if ($amount_due > 0): ?>
-                <div class="action-stack" style="margin-top:10px;">
-                    <div class="action-item">
-                        <a href="#" class="btn btn-clear dataTableBtn clearDuesButton"
-                            data-id="<?php echo $encoded_id; ?>" title="Clear dues">
-                            <i class="fi-rr-check-circle"></i> Clear old dues
-                        </a>
+                        <?php if ($amount_due > 0): ?>
+                            <div class="action-stack" style="margin-top:10px;">
+                                <div class="action-item">
+                                    <a href="#" class="btn btn-clear dataTableBtn clearDuesButton"
+                                        data-id="<?php echo $encoded_id; ?>" title="Clear dues">
+                                        <i class="fi-rr-check-circle"></i> Clear old dues
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                </div>
-                <?php endif; ?>
-            </div>
-        </article>
-        <?php endforeach; ?>
+                </article>
+            <?php endforeach; ?>
         <?php else: ?>
-        <div class="empty-state"><i class="fi fi-rr-box-open"></i> No memberships found.</div>
+            <div class="empty-state"><i class="fi fi-rr-box-open"></i> No memberships found.</div>
         <?php endif; ?>
     </div>
 
