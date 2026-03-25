@@ -34,6 +34,31 @@ if (ACTIVE_URL == '/homepage/') {
 
 $tableNamePrefix = TABLE_PREFIX . strtolower(SITE_APP) . '_';
 
+function stripEditorToolkitMarkup($value)
+{
+	if (!is_string($value) || $value === '') {
+		return $value;
+	}
+
+	if (
+		stripos($value, 'rte-selection-tools') === false &&
+		stripos($value, 'rte-selection-') === false &&
+		stripos($value, 'toolbar-') === false &&
+		stripos($value, 'contenteditable=') === false
+	) {
+		return $value;
+	}
+
+	// Remove accidental editor UI blocks/styles if they leak into submitted HTML.
+	$value = preg_replace('/<div[^>]*class=["\'][^"\']*rte-selection-tools-floating[^"\']*["\'][^>]*>.*?<\/div>/is', '', $value);
+	$value = preg_replace('/<style[^>]*id=["\']rte-selection-tools-style["\'][^>]*>.*?<\/style>/is', '', $value);
+	$value = preg_replace('/<div[^>]*id=["\']toolbar-[^"\']+["\'][^>]*>.*?<\/div>/is', '', $value);
+	$value = preg_replace('/\scontenteditable=["\'][^"\']*["\']/i', '', $value);
+	$value = preg_replace('/\sclass=["\']\s*rte-selection-[^"\']*["\']/i', '', $value);
+
+	return $value;
+}
+
 /** Convert all request method type parameter into strings */
 
 if (sizeof($_REQUEST) != 0) {
@@ -42,13 +67,13 @@ if (sizeof($_REQUEST) != 0) {
 
 		if (!is_array($value)) {
 
-			$secure[$key] = mysqli_real_escape_string($connection, $value);
+			$secure[$key] = mysqli_real_escape_string($connection, stripEditorToolkitMarkup($value));
 		} else {
 
 			/** Convert string array to string  */
 
 			foreach ($value as $arrayKey => $arrayValue) {
-				$secure[$arrayKey] = mysqli_real_escape_string($connection, $arrayValue);
+				$secure[$arrayKey] = mysqli_real_escape_string($connection, stripEditorToolkitMarkup($arrayValue));
 			}
 		}
 	}
