@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Check site access
 
     if ($isValid) {
-        $checkUserQuery = "SELECT site_domain FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id = site_access_site_id WHERE user_mobile = '$mobile' AND user_status = 1";
+        $checkUserQuery = "SELECT site_domain FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id = site_access_site_id WHERE user_mobile = '$mobile' AND user_status = 1 AND site_access_type != 'subscriber'";
 
         if ($checkUser = mysqli_query($connection, $checkUserQuery)) {
             if (mysqli_num_rows($checkUser) > 0) {
