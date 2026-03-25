@@ -70,7 +70,7 @@ require_once 'header.php';
                 <form id="login" autocomplete="off">
                     <div class="form-group">
                         <input type="number" class="form-control input-with-label" name="otp" id="otpValue" required
-                            placeholder="123456" value="<?php echo ((isset($mobile)) ? $mobile : '') ?>">
+                            placeholder="123456" value="">
                     </div>
                     <a href="#" id="resendOTPBtn" class="disabled"
                         style="pointer-events: none; float: left; margin-bottom: 10px; text-decoration: none;">Resend
@@ -96,6 +96,30 @@ require_once 'header.php';
                 </form>
             </div>
         </div>
+        <script>
+            window.addEventListener('load', function() {
+                var params = new URLSearchParams(window.location.search);
+                if (!params.has('mobile')) {
+                    return;
+                }
+
+                var mobileParam = (params.get('mobile') || '').trim();
+                var mobileInput = document.getElementById('mobile');
+                var continueBtn = document.getElementById('mobileLoginContinueBtn');
+
+                if (!continueBtn) {
+                    return;
+                }
+
+                if (mobileInput && mobileParam !== '') {
+                    mobileInput.value = mobileParam;
+                }
+
+                setTimeout(function() {
+                    continueBtn.click();
+                }, 200);
+            });
+        </script>
         <?php
 
         require_once 'footer.php';
