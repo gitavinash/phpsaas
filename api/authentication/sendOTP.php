@@ -23,10 +23,6 @@ function sendOTP($connection, $data)
 
         $otpCode = $saltKey = substr(str_shuffle('0123456789'), 0, 6);
 
-        if ($mobile == '9990026008') {
-            $otpCode = '123456';
-        }
-
         $user_id = ((isset($user_id)) ? $user_id : 0);
 
         if ($sendOTP = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_code, otp_status, otp_expire) VALUES('{$user_id}', '" . SITE_ID . "', '{$mode}', '{$otpCode}', 0, '{$expireTime}')")) {
