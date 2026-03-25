@@ -7,10 +7,11 @@ $status = 'warning';
 $msg = 'Something went wrong';
 $data = array();
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Trim inputs
-    $mobile    = trim($mobile ?? '');
+    $mobile    = trim($_POST['mobile'] ?? '');
+    $isValid = true;
 
     // List of required fields
     $required = [
@@ -21,37 +22,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     foreach ($required as $field => $message) {
         if ($$field === '') {
             $status = 'warning';
+            $httpStatus = 400;
             $msg = $message;
+            $isValid = false;
             break;
         }
     }
 
     // Extra validations if not already failed
-    if (!isset($msg)) {
+    if ($isValid) {
         if (!preg_match('/^(\+91[\-\s]?)?[0]?(91)?[6-9]\d{9}$/', $mobile)) {
             $status = 'warning';
+            $httpStatus = 400;
             $msg = "Kindly enter a valid mobile number";
+            $isValid = false;
         }
     }
 
     // Check site access
 
-    $checkUserQuery = "SELECT site_domain FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id = site_access_site_id WHERE user_mobile = '$mobile' AND user_status = 1";
+    if ($isValid) {
+        $checkUserQuery = "SELECT site_domain FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id = site_access_site_id WHERE user_mobile = '$mobile' AND user_status = 1";
 
-    if ($checkUser = mysqli_query($connection, $checkUserQuery)) {
-        if (mysqli_num_rows($checkUser) > 0) {
-            $site = mysqli_fetch_assoc($checkUser);
-            $data['site_domain'] = $site['site_domain'];
-            $httpStatus = 200;
-            $status = 'success';
-            $msg = 'Site found';
+        if ($checkUser = mysqli_query($connection, $checkUserQuery)) {
+            if (mysqli_num_rows($checkUser) > 0) {
+                $site = mysqli_fetch_assoc($checkUser);
+                $data['site_domain'] = $site['site_domain'];
+                $httpStatus = 200;
+                $status = 'success';
+                $msg = 'Site found';
+            } else {
+                $httpStatus = 404;
+                $msg = 'No site access found for this mobile number';
+            }
         } else {
-            $httpStatus = 404;
-            $msg = 'No site access found for this mobile number';
+            $httpStatus = 500;
+            $msg = 'Database error: ' . mysqli_error($connection);
         }
-    } else {
-        $httpStatus = 500;
-        $msg = 'Database error: ' . mysqli_error($connection);
     }
 } else {
     $httpStatus = 400;
