@@ -24,16 +24,16 @@
                 if (isset($theme)) {
                     if ($theme == 'gallery') { ?>
 
-                        <!-- gallery description and other things -->
+                <!-- gallery description and other things -->
 
-                        <section style="margin-bottom:20px">
-                            <h3>Manage images</h3>
-                            <div class="productGallery generalTab">
-                                <div class="input-field">
-                                    <div class="input-images" style="padding-top: .5rem;"></div>
-                                </div>
-                            </div>
-                        </section>
+                <section style="margin-bottom:20px">
+                    <h3>Manage images</h3>
+                    <div class="productGallery generalTab">
+                        <div class="input-field">
+                            <div class="input-images" style="padding-top: .5rem;"></div>
+                        </div>
+                    </div>
+                </section>
                 <?php
                     }
                 }
@@ -140,12 +140,12 @@
                     <?php
                     if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
                         while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                            <div class="form-group">
-                                <input type="radio" name="category"
-                                    value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                                    <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
-                                <?php echo ucwords($category['category_title']); ?>
-                            </div>
+                    <div class="form-group">
+                        <input type="radio" name="category"
+                            value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                            <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
+                        <?php echo ucwords($category['category_title']); ?>
+                    </div>
                     <?php
                         }
                     }
@@ -180,10 +180,10 @@
                     <?php
                     if ($authorList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_type!='subscriber' AND site_access_site_id=" . SITE_ID)) {
                         while ($author = mysqli_fetch_assoc($authorList)) { ?>
-                            <div class="form-group">
-                                <input type="radio" name="authorId" value="<?php echo $author['user_id'] ?>">
-                                <?php echo ucwords($author['profile_display_name']); ?>
-                            </div>
+                    <div class="form-group">
+                        <input type="radio" name="authorId" value="<?php echo $author['user_id'] ?>">
+                        <?php echo ucwords($author['profile_display_name']); ?>
+                    </div>
                     <?php
                         }
                     }
@@ -192,7 +192,8 @@
                 <h2>Feature Image</h2>
                 <div class="form-group featureImageUploadBox upload-btn">
                     <span>Set Feature Image</span>
-                    <input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
+                    <input type="file" id="featureImage" name="featureImage"
+                        accept="image/x-png, image/gif, image/jpeg">
                     <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif
                         <strong>Recommended
                             file size maximum 500kb
@@ -206,63 +207,3 @@
         </form>
     </div>
 </div>
-<script>
-    (function() {
-        var formDirty = false;
-
-        // Mark dirty on any native input change
-        $("#formData").on("change input", "input, textarea, select", function() {
-            formDirty = true;
-        });
-
-        // Mark dirty when the RTE editor content changes
-        $(document).on("rte.change", function() {
-            formDirty = true;
-        });
-
-        // Observe iframe body mutations so editor typing marks dirty
-        $(document).on("rte.ready", function(e, iframe) {
-            try {
-                var observer = new MutationObserver(function() {
-                    formDirty = true;
-                });
-                observer.observe(iframe.contentWindow.document.body, {
-                    childList: true,
-                    subtree: true,
-                    characterData: true
-                });
-            } catch (_) {}
-        });
-
-        // Also watch for any keydown inside any iframe on the page (covers the RTE)
-        $("iframe").each(function() {
-            try {
-                $(this.contentWindow.document).on("keydown", function() {
-                    formDirty = true;
-                });
-            } catch (_) {}
-        });
-
-        // Intercept iframe load events so we can attach the listener after the editor boots
-        $(document).on("load", "iframe", function() {
-            try {
-                $(this.contentWindow.document).on("keydown mouseup", function() {
-                    formDirty = true;
-                });
-            } catch (_) {}
-        });
-
-        // Clear dirty flag when the user intentionally submits
-        $(document).on("click", "#publishPost, #draftPost", function() {
-            formDirty = false;
-        });
-
-        window.addEventListener("beforeunload", function(e) {
-            if (!formDirty) return;
-            var msg = "You have unsaved changes. Are you sure you want to leave?";
-            e.preventDefault();
-            e.returnValue = msg;
-            return msg;
-        });
-    }());
-</script>

@@ -53,8 +53,8 @@ function stripEditorToolkitMarkup($value)
 	$value = preg_replace('/<div[^>]*class=["\'][^"\']*rte-selection-tools-floating[^"\']*["\'][^>]*>.*?<\/div>/is', '', $value);
 	$value = preg_replace('/<style[^>]*id=["\']rte-selection-tools-style["\'][^>]*>.*?<\/style>/is', '', $value);
 	$value = preg_replace('/<div[^>]*id=["\']toolbar-[^"\']+["\'][^>]*>.*?<\/div>/is', '', $value);
+	$value = preg_replace('/<div[^>]*>\s*<span[^>]*>\s*Block\s*<\/span>[\s\S]*?<option[^>]*>\s*Heading\s*<\/option>[\s\S]*?<button[^>]*>\s*Left\s*<\/button>[\s\S]*?<button[^>]*>\s*Center\s*<\/button>[\s\S]*?<button[^>]*>\s*Right\s*<\/button>[\s\S]*?<button[^>]*>\s*Justify\s*<\/button>[\s\S]*?<\/div>/i', '', $value);
 	$value = preg_replace('/\scontenteditable=["\'][^"\']*["\']/i', '', $value);
-	$value = preg_replace('/\sclass=["\']\s*rte-selection-[^"\']*["\']/i', '', $value);
 
 	return $value;
 }
