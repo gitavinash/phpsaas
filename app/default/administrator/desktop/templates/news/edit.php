@@ -17,8 +17,20 @@ window.location.href = 'dashboard/news/?type=list&status=all';
 
 ?>
 <div class="product-add-ui">
+    <?php
+    $isScheduledNews = ((int) $news_status === 2);
+    $isDraftNews = (!$isScheduledNews && (((int) $news_status === 0) || $link_status == '206'));
+    ?>
     <h2>Update
-        <?php echo (($link_status == '206') ? 'Drafted ' : '') . ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?>
+        <?php
+        $newsLabelPrefix = '';
+        if ($isScheduledNews) {
+            $newsLabelPrefix = 'Scheduled ';
+        } elseif ($isDraftNews) {
+            $newsLabelPrefix = 'Drafted ';
+        }
+        echo $newsLabelPrefix . ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'));
+        ?>
         <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span>
     </h2>
 
@@ -183,9 +195,24 @@ window.location.href = 'dashboard/news/?type=list&status=all';
             </div>
             <div class="right-box">
                 <div class="action-box inside-shadow">
-                    <input type="button" id="updatePost" class="btn btn-green btn-block"
-                        value=" <?php echo (($news_status == 1) ? 'Update ' : 'Publish '); ?>news">
-                    <!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
+                    <?php if ($isDraftNews) { ?>
+                    <input type="button" id="updatePost" class="btn btn-green btn-block" value="Publish news">
+                    <input type="button" id="draftPost" class="btn btn-yellow btn-block" value="Update Draft">
+                    <?php } else { ?>
+                    <input type="button" id="updatePost" class="btn btn-green btn-block" value="Update news">
+                    <?php } ?>
+                    <?php if ($isScheduledNews) { ?>
+                    <div class="form-group schedule-post-box">
+                        <label>Schedule publish date &amp; time</label>
+                        <input type="datetime-local" id="scheduleAt" name="schedule_at"
+                            class="form-control inside-shadow" placeholder="Select date and time (YYYY-MM-DD HH:MM)"
+                            title="Select date and time" min="<?php echo date('Y-m-d\\TH:i'); ?>" autocomplete="off"
+                            inputmode="none"
+                            value="<?php echo (($news_status == 2 && !empty($link_published)) ? date('Y-m-d\TH:i', strtotime($link_published)) : ''); ?>">
+                        <small class="schedule-help">Select date and time (YYYY-MM-DD HH:MM)</small>
+                    </div>
+                    <input type="button" id="schedulePost" class="btn btn-blue btn-block" value="Update Schedule">
+                    <?php } ?>
                     <input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>">
                     <input type="hidden" name="newsType" value="<?php echo ((isset($theme)) ? $theme : 'news') ?>">
                     <input type="hidden" name="action" value="update">

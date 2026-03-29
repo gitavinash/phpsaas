@@ -124,7 +124,16 @@
             <div class="right-box">
                 <div class="action-box inside-shadow">
                     <input type="button" id="publishPost" class="btn btn-green btn-block" value="Publish">
-                    <!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
+                    <input type="button" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft">
+                    <div class="form-group schedule-post-box">
+                        <label>Schedule publish date &amp; time</label>
+                        <input type="datetime-local" id="scheduleAt" name="schedule_at"
+                            class="form-control inside-shadow" placeholder="Select date and time (YYYY-MM-DD HH:MM)"
+                            title="Select date and time" min="<?php echo date('Y-m-d\\TH:i'); ?>" autocomplete="off"
+                            inputmode="none">
+                        <small class="schedule-help">Select date and time (YYYY-MM-DD HH:MM)</small>
+                    </div>
+                    <input type="button" id="schedulePost" class="btn btn-blue btn-block" value="Schedule">
                     <input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>">
                     <input type="hidden" name="newsType" value="<?php echo ((isset($theme)) ? $theme : 'news') ?>">
                     <input type="hidden" name="action" value="publish">
@@ -138,15 +147,17 @@
                 <h2>Categories</h2>
                 <div class="action-box height-200 inside-shadow">
                     <?php
+                    $i = 0;
                     if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
                         while ($category = mysqli_fetch_assoc($categoryList)) { ?>
                     <div class="form-group">
                         <input type="radio" name="category"
                             value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                            <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
+                            <?php echo (($i == 1) ? 'checked' : '') ?>>
                         <?php echo ucwords($category['category_title']); ?>
                     </div>
                     <?php
+                            $i++;
                         }
                     }
                     ?>
@@ -178,10 +189,11 @@
                 <h2>Author</h2>
                 <div class="action-box height-200 inside-shadow">
                     <?php
-                    if ($authorList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_type!='subscriber' AND site_access_site_id=" . SITE_ID)) {
+                    if ($authorList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_type NOT IN ('subscriber', 'customer') AND site_access_site_id=" . SITE_ID)) {
                         while ($author = mysqli_fetch_assoc($authorList)) { ?>
                     <div class="form-group">
-                        <input type="radio" name="authorId" value="<?php echo $author['user_id'] ?>">
+                        <input type="checkbox" name="authorId" value="<?php echo $author['user_id'] ?>"
+                            <?php echo (($author['user_id'] == USER_ID) ? 'checked' : ''); ?>>
                         <?php echo ucwords($author['profile_display_name']); ?>
                     </div>
                     <?php

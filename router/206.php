@@ -1,27 +1,19 @@
 <?php
 
-    if(isset($_COOKIE['user_data'])) {
+if (isset($_COOKIE['user_data'])) {
 
-        /** Show draft only for login user */
+    /** Show draft only for login user */
 
-        $checkCategoryTemplate=USER_PATH.strtolower($category_title).'-'.$link_type.'.php';
+    $draftRouter = ROUTER . 'httpStatus/206/' . $link_type . '.php';
 
-        if(file_exists($checkCategoryTemplate)) {
+    if (file_exists($draftRouter)) {
 
-            /** Opening category post template */
-
-            require_once $checkCategoryTemplate;
-
-        } else {
-
-            /** Display content in default template */
-
-            require_once USER_PATH.$link_type.'.php';
-
-        }
-
+        require_once $draftRouter;
     } else {
 
-        require_once ERROR_403;
-
+        echo "{$link_type} router not found";
     }
+} else {
+
+    require_once ERROR_403;
+}
