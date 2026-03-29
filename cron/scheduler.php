@@ -1,7 +1,6 @@
 <?php
 
 $logFile = __DIR__ . '/scheduler.log';
-$logDomain = defined('SITE_DOMAIN') ? SITE_DOMAIN : 'unknown-domain';
 $logTimezone = new DateTimeZone('Asia/Kolkata');
 $logRunId = (new DateTime('now', $logTimezone))->format('Ymd_His') . '_' . substr(md5(uniqid('', true)), 0, 8);
 
@@ -28,17 +27,17 @@ function formatSchedulerContext(array $context)
 
 function writeSchedulerLog($level, $event, $context = [])
 {
-    global $logFile, $logDomain, $logRunId, $logTimezone;
+    global $logFile, $logRunId, $logTimezone;
 
     $timestamp = (new DateTime('now', $logTimezone))->format('Y-m-d H:i:s') . ' IST';
-    $prefix = '[' . $timestamp . '] [' . strtoupper($level) . '] [domain=' . $logDomain . '] [run=' . $logRunId . '] ' . $event;
+    $prefix = '[' . $timestamp . '] [' . strtoupper($level) . '] [run=' . $logRunId . '] ' . $event;
     $contextText = formatSchedulerContext((array) $context);
     $line = $prefix . (($contextText !== '') ? ' | ' . $contextText : '') . PHP_EOL;
 
     @file_put_contents($logFile, $line, FILE_APPEND);
 }
 
-writeSchedulerLog('info', 'Scheduler execution started');
+writeSchedulerLog('info', 'Scheduler started — checking for news due to publish');
 
 
 if (file_exists('lib/configuration/index.php')) {
@@ -47,12 +46,12 @@ if (file_exists('lib/configuration/index.php')) {
 
     require_once 'lib/configuration/index.php';
 } else {
-    writeSchedulerLog('error', 'Configuration file not found');
+    writeSchedulerLog('error', 'Aborted — configuration file not found at lib/configuration/index.php');
     exit("Configuration file not found\n");
 }
 
 if (!$connection) {
-    writeSchedulerLog('error', 'Database connection failed');
+    writeSchedulerLog('error', 'Aborted — database connection could not be established');
     exit("Database connection failed\n");
 }
 
@@ -60,7 +59,7 @@ $query = "SELECT news_id FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREF
 $scheduledNews = mysqli_query($connection, $query);
 
 if (!$scheduledNews) {
-    writeSchedulerLog('error', 'Scheduler query failed', [
+    writeSchedulerLog('error', 'Aborted — failed to fetch scheduled news from database', [
         'error' => mysqli_error($connection),
     ]);
     exit("Scheduler query failed\n");
@@ -81,20 +80,20 @@ while ($item = mysqli_fetch_assoc($scheduledNews)) {
     if ($updateNews && $updateLink) {
         mysqli_query($connection, "COMMIT");
         $successCount++;
-        writeSchedulerLog('info', 'Published scheduled news', [
+        writeSchedulerLog('info', 'News published successfully — status updated to live', [
             'news_id' => $newsId,
         ]);
     } else {
         mysqli_query($connection, "ROLLBACK");
         $failedCount++;
-        writeSchedulerLog('error', 'Failed to publish scheduled news', [
+        writeSchedulerLog('error', 'Failed to publish news — transaction rolled back', [
             'news_id' => $newsId,
             'error' => mysqli_error($connection),
         ]);
     }
 }
 
-writeSchedulerLog('info', 'Scheduler execution completed', [
+writeSchedulerLog('info', 'Scheduler finished — run summary', [
     'processed' => $processedCount,
     'success' => $successCount,
     'failed' => $failedCount,
