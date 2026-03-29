@@ -64,7 +64,7 @@ window.location.href = 'dashboard/news/?type=list&status=all';
 
                                     $imageList = json_decode($news_gallery, TRUE);
 
-                                    // $oldGalleryImages = array();
+                                    $oldGalleryImages = array();
 
                                     for ($i = 0; $i < sizeof($imageList); $i++) {
 
