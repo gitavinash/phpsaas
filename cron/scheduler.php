@@ -50,11 +50,6 @@ if (file_exists('lib/configuration/index.php')) {
     exit("Configuration file not found\n");
 }
 
-if (!$connection) {
-    writeSchedulerLog('error', 'Aborted — database connection could not be established');
-    exit("Database connection failed\n");
-}
-
 $query = "SELECT news_id FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id AND link_type='news' WHERE news_status=2 AND link_status=206 AND link_published <= NOW()";
 $scheduledNews = mysqli_query($connection, $query);
 
