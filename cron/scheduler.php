@@ -41,15 +41,26 @@ writeSchedulerLog('info', 'Scheduler started — checking for news due to publis
 
 $dbConnectionFile = __DIR__ . '/../config.php';
 
-if (file_exists($dbConnectionFile)) {
-
-    /** Including configuration file file  */
-
-    require_once $dbConnectionFile;
-} else {
-    writeSchedulerLog('error', 'Aborted — configuration file not found at ' . $dbConnectionFile);
+if (!file_exists($dbConnectionFile)) {
+    writeSchedulerLog('error', 'Aborted — configuration file not found', ['path' => $dbConnectionFile]);
     exit("Configuration file not found\n");
 }
+
+require_once $dbConnectionFile;
+
+if (empty($connection) || mysqli_connect_errno()) {
+    writeSchedulerLog('error', 'Aborted — database connection could not be established', [
+        'mysql_error' => mysqli_connect_error() ?? 'no connection object',
+    ]);
+    exit("Database connection failed\n");
+}
+
+if (!defined('TABLE_PREFIX')) {
+    writeSchedulerLog('error', 'Aborted — TABLE_PREFIX is not defined in config');
+    exit("TABLE_PREFIX not defined\n");
+}
+
+writeSchedulerLog('info', 'Configuration loaded — querying scheduled news');
 
 $query = "SELECT news_id FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id AND link_type='news' WHERE news_status=2 AND link_status=206 AND link_published <= NOW()";
 $scheduledNews = mysqli_query($connection, $query);
