@@ -39,6 +39,17 @@ function writeSchedulerLog($level, $event, $context = [])
 
 writeSchedulerLog('info', 'Scheduler execution started');
 
+
+if (file_exists('lib/configuration/index.php')) {
+
+    /** Including configuration file file  */
+
+    require_once 'lib/configuration/index.php';
+} else {
+    writeSchedulerLog('error', 'Configuration file not found');
+    exit("Configuration file not found\n");
+}
+
 if (!$connection) {
     writeSchedulerLog('error', 'Database connection failed');
     exit("Database connection failed\n");
