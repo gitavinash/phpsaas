@@ -40,7 +40,7 @@ function writeSchedulerLog($level, $event, $context = [])
 writeSchedulerLog('info', 'Scheduler started — checking for news due to publish');
 
 
-$dbConnectionFile = __DIR__ . '/config.php';
+$dbConnectionFile = dirname(__DIR__) . '/config.php';
 
 if (!file_exists($dbConnectionFile)) {
     writeSchedulerLog('error', 'Aborted — configuration file not found', ['path' => $dbConnectionFile]);
