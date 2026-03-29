@@ -2,7 +2,8 @@
 
 $logFile = __DIR__ . '/scheduler.log';
 $logDomain = defined('SITE_DOMAIN') ? SITE_DOMAIN : 'unknown-domain';
-$logRunId = date('Ymd_His') . '_' . substr(md5(uniqid('', true)), 0, 8);
+$logTimezone = new DateTimeZone('Asia/Kolkata');
+$logRunId = (new DateTime('now', $logTimezone))->format('Ymd_His') . '_' . substr(md5(uniqid('', true)), 0, 8);
 
 function formatSchedulerContext(array $context)
 {
@@ -27,9 +28,9 @@ function formatSchedulerContext(array $context)
 
 function writeSchedulerLog($level, $event, $context = [])
 {
-    global $logFile, $logDomain, $logRunId;
+    global $logFile, $logDomain, $logRunId, $logTimezone;
 
-    $timestamp = date('Y-m-d H:i:s');
+    $timestamp = (new DateTime('now', $logTimezone))->format('Y-m-d H:i:s') . ' IST';
     $prefix = '[' . $timestamp . '] [' . strtoupper($level) . '] [domain=' . $logDomain . '] [run=' . $logRunId . '] ' . $event;
     $contextText = formatSchedulerContext((array) $context);
     $line = $prefix . (($contextText !== '') ? ' | ' . $contextText : '') . PHP_EOL;
