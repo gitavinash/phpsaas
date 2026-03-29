@@ -314,8 +314,8 @@
                         renderNewsCard($latestNewsData[$i]);
                     }
 
-                    // After 15th article: Money & Machines
-                    if ($maxArticles > 20) {
+                    // After 20th article: Money & Machines
+                    if ($maxArticles > 15) {
                         renderMoneyMachines($connection);
                     }
 
