@@ -39,14 +39,15 @@ function writeSchedulerLog($level, $event, $context = [])
 
 writeSchedulerLog('info', 'Scheduler started — checking for news due to publish');
 
+$dbConnectionFile = __DIR__ . '/../config.php';
 
-if (file_exists('lib/configuration/index.php')) {
+if (file_exists($dbConnectionFile)) {
 
     /** Including configuration file file  */
 
-    require_once 'lib/configuration/index.php';
+    require_once $dbConnectionFile;
 } else {
-    writeSchedulerLog('error', 'Aborted — configuration file not found at lib/configuration/index.php');
+    writeSchedulerLog('error', 'Aborted — configuration file not found at ' . $dbConnectionFile);
     exit("Configuration file not found\n");
 }
 
