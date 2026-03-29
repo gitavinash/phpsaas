@@ -40,14 +40,23 @@ function writeSchedulerLog($level, $event, $context = [])
 writeSchedulerLog('info', 'Scheduler started — checking for news due to publish');
 
 
-$dbConnectionFile = dirname(__DIR__) . '/lib/modules/connection.php';
+$dbConnectionFile = dirname(__DIR__) . '/dbConfig.php';
 
 if (!file_exists($dbConnectionFile)) {
     writeSchedulerLog('error', 'Aborted — configuration file not found', ['path' => $dbConnectionFile]);
     exit("Configuration file not found\n");
+} else {
+    require_once $dbConnectionFile;
+    if ($connection = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME)) {
+        writeSchedulerLog('info', 'Database connection established successfully');
+    } else {
+        writeSchedulerLog('error', 'Aborted — database connection failed', [
+            'mysql_error' => mysqli_connect_error(),
+        ]);
+        exit("Database connection failed\n");
+    }
 }
 
-require_once $dbConnectionFile;
 
 if (empty($connection) || mysqli_connect_errno()) {
     writeSchedulerLog('error', 'Aborted — database connection could not be established', [

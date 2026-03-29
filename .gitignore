@@ -6,4 +6,5 @@ cache/
 node_modules
 custom.log
 error.log
+*.log
 .ftpquota
