@@ -212,6 +212,33 @@ function updateNewsWorkflow($connection, $data, $workflow = 'publish', $schedule
         }
     }
 
+    // Bulk insert authors with seq_no (credit order)
+    if (
+        isset($_POST['authorId'], $_POST['authorOrder']) &&
+        is_array($_POST['authorId']) && is_array($_POST['authorOrder']) &&
+        count($_POST['authorId']) > 0
+    ) {
+        $values = [];
+        // Map authorId to its order from authorOrder[]
+        for ($i = 0; $i < count($_POST['authorId']); $i++) {
+            $uid = mysqli_real_escape_string($connection, $_POST['authorId'][$i]);
+            // Find the corresponding order for this authorId
+            $seq = '';
+            if (isset($_POST['authorOrder'][$i])) {
+                $seq = mysqli_real_escape_string($connection, $_POST['authorOrder'][$i]);
+            }
+            if ($uid && $seq) {
+                $values[] = "('{$id}', 'news', '{$uid}', '{$seq}')";
+            }
+        }
+        if (!empty($values)) {
+            // Remove any previous authors for this post (for safety)
+            mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "authors WHERE rel_id='{$id}' AND rel_type='news'");
+            $sql = "INSERT INTO " . TABLE_PREFIX . "authors (rel_id, rel_type, profile_user_id, seq_no) VALUES " . implode(',', $values);
+            mysqli_query($connection, $sql);
+        }
+    }
+
     if ($addRedirect && $updateLink && $updatePost && $updateMeta && $tagData) {
         mysqli_query($connection, 'COMMIT');
 

@@ -4,6 +4,42 @@ require_once DATA_FUNCTIONS;
 require_once UTIL_FUNCTIONS;
 require_once 'header.php';
 
+$oldAuthorInfo = false;
+if ($authorInfo = mysqli_query($connection, "SELECT authors.profile_user_id as authorId, profile.profile_display_name as authorName FROM " . TABLE_PREFIX . "authors as authors INNER JOIN " . TABLE_PREFIX . "profile as profile ON profile.profile_user_id=authors.profile_user_id WHERE authors.rel_id={$link_relation_id} AND authors.rel_type='news' ORDER BY authors.seq_no ASC")) {
+    if (mysqli_num_rows($authorInfo) != 0) {
+        $allAuthors = [];
+        while ($row = mysqli_fetch_assoc($authorInfo)) {
+            $allAuthors[] = $row;
+        }
+    } else {
+        $oldAuthorInfo = true;
+    }
+}
+
+if ($oldAuthorInfo == true) {
+    $authorProfileLink = $news_owner_id . '-' . urlencode(strtolower(str_replace(' ', '-', $profile_display_name))) . '-articles';
+    $authorName = $profile_display_name;
+    $authorBio = (($news_owner_id == 9423) ? "<div class='user_content'>
+                <p>The author is Founder and Editor of The Head and Tale. She can be reached at
+                    <a href='mailto:arti.singh@theheadandtale.com'>arti.singh@theheadandtale.com</a><br />
+                    Tweets <a href='https://twitter.com/artijourno' target='_blank'
+                        style='font-style: italic'>@artijourno</a>
+                </p>
+            </div>" : ""); // Set author bio for the specific author if needed
+    $authorHeading = "By <a href='/author/{$authorProfileLink}/' target='_blank' alt='{$authorName} articles' title='{$authorName} articles' >{$authorName}</a>";
+} else {
+    $authorHeading = "By ";
+    $authorLinks = [];
+    foreach ($allAuthors as $author) {
+        $profileLink = $author['authorId'] . '-' . urlencode(strtolower(str_replace(' ', '-', $author['authorName']))) . '-articles';
+        $name = htmlspecialchars($author['authorName'], ENT_QUOTES, 'UTF-8');
+        $authorLinks[] = "<a href='/author/{$profileLink}/' target='_blank' alt='{$name} articles' title='{$name} articles'>{$name}</a>";
+    }
+    $authorHeading .= implode(', ', $authorLinks);
+    $authorBio = '';
+}
+
+
 $newsContent = strip_tags($news_description);
 $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130));
 ?>
@@ -35,7 +71,7 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
         <div class="news_box__container">
             <div class="news_box__heading">
                 <div class="news_box__heading--left">
-                    <h6><?php echo $profile_display_name ?></h6>
+                    <h6><?php echo $authorHeading ?></h6>
                 </div>
                 <div class="social_link">
                     <p>Share the story on</p>
@@ -160,6 +196,22 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                     color: #fff;
                     background-color: rgba(205, 0, 0, 0.8);
                 }
+
+                /* Make news_box__heading--left and social_link full width on mobile */
+                @media (max-width: 767px) {
+
+                    .news_box__heading--left,
+                    .social_link {
+                        width: 100% !important;
+                        display: block;
+                        text-align: right;
+                        margin-bottom: 10px;
+                    }
+
+                    .news_box__heading {
+                        flex-direction: column;
+                    }
+                }
                 </style>
                 <?php
 
@@ -178,16 +230,9 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
 
             <?php
 
-            if ($news_owner_id == 9423) { ?>
-            <div class="user_content">
-                <p>The author is Founder and Editor of The Head and Tale. She can be reached at
-                    <a href="mailto:arti.singh@theheadandtale.com">arti.singh@theheadandtale.com</a><br />
-                    Tweets <a href='https://twitter.com/artijourno' target="_blank"
-                        style="font-style: italic">@artijourno</a>
-                </p>
-            </div>
-            <?php
-            }
+            // Show author card
+
+            echo $authorBio;
 
             ?>
             <div class="tags">

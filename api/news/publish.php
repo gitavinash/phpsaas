@@ -59,7 +59,7 @@ function publish($connection, $data)
 
                         /* Insert data into link table */
 
-                        $newsOwnerId = ((isset($authorId)) ? (($authorId == '') ? USER_ID : $authorId) : USER_ID);
+                        $newsOwnerId = ((isset($authorId[0])) ? (($authorId[0] == '') ? USER_ID : $authorId[0]) : USER_ID);
 
                         $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "news(news_site_id, news_image, news_gallery, news_thumbnail, news_title, news_description, news_category, news_owner_id, news_paid, news_mrp, news_price, news_status, news_type, news_published) VALUES(" . SITE_ID . ", '{$featureImage}', '{$gallery}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', {$newsOwnerId}, '{$paid}', '{$amount}', '{$amount}', '1', 'news', NOW())");
                         $postID = mysqli_insert_id($connection);
@@ -86,6 +86,28 @@ function publish($connection, $data)
                         }
 
                         if ($addNewPost && $addNewLink && $addNewMeta && $addNewTags) {
+
+                            // Bulk insert authors with seq_no (credit order)
+                            if (
+                                isset($_POST['authorId'], $_POST['authorOrder']) &&
+                                is_array($_POST['authorId']) && is_array($_POST['authorOrder']) &&
+                                count($_POST['authorId']) === count($_POST['authorOrder']) && count($_POST['authorId']) > 0
+                            ) {
+                                $values = [];
+                                for ($i = 0; $i < count($_POST['authorId']); $i++) {
+                                    $uid = mysqli_real_escape_string($connection, $_POST['authorId'][$i]);
+                                    $seq = mysqli_real_escape_string($connection, $_POST['authorOrder'][$i]);
+                                    if ($uid && $seq) {
+                                        $values[] = "('{$postID}', 'news', '{$uid}', '{$seq}')";
+                                    }
+                                }
+                                if (!empty($values)) {
+                                    // Remove any previous authors for this post (for safety)
+                                    mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "authors WHERE rel_id='{$postID}' AND rel_type='news'");
+                                    $sql = "INSERT INTO " . TABLE_PREFIX . "authors (rel_id, rel_type, profile_user_id, seq_no) VALUES " . implode(',', $values);
+                                    mysqli_query($connection, $sql);
+                                }
+                            }
 
                             $status = 200;
                             $msg = 'News add successfully';

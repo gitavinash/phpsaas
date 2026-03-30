@@ -137,6 +137,27 @@ function schedule($connection, $data)
     }
 
     if ($addNewPost && $addNewLink && $addNewMeta && $addNewTags) {
+        // Bulk insert authors with seq_no (credit order)
+        if (
+            isset($_POST['authorId'], $_POST['authorOrder']) &&
+            is_array($_POST['authorId']) && is_array($_POST['authorOrder']) &&
+            count($_POST['authorId']) === count($_POST['authorOrder']) && count($_POST['authorId']) > 0
+        ) {
+            $values = [];
+            for ($i = 0; $i < count($_POST['authorId']); $i++) {
+                $uid = mysqli_real_escape_string($connection, $_POST['authorId'][$i]);
+                $seq = mysqli_real_escape_string($connection, $_POST['authorOrder'][$i]);
+                if ($uid && $seq) {
+                    $values[] = "('{$postID}', 'news', '{$uid}', '{$seq}')";
+                }
+            }
+            if (!empty($values)) {
+                // Remove any previous authors for this post (for safety)
+                mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "authors WHERE rel_id='{$postID}' AND rel_type='news'");
+                $sql = "INSERT INTO " . TABLE_PREFIX . "authors (rel_id, rel_type, profile_user_id, seq_no) VALUES " . implode(',', $values);
+                mysqli_query($connection, $sql);
+            }
+        }
         mysqli_query($connection, "COMMIT");
         echo json_encode([
             'status' => 200,
@@ -152,4 +173,26 @@ function schedule($connection, $data)
         'msg' => 'Something is wrong while scheduling news',
         'redirect' => '',
     ], TRUE);
+
+    // Bulk insert authors with seq_no (credit order)
+    if (
+        isset($_POST['authorId'], $_POST['authorOrder']) &&
+        is_array($_POST['authorId']) && is_array($_POST['authorOrder']) &&
+        count($_POST['authorId']) === count($_POST['authorOrder']) && count($_POST['authorId']) > 0
+    ) {
+        $values = [];
+        for ($i = 0; $i < count($_POST['authorId']); $i++) {
+            $uid = mysqli_real_escape_string($connection, $_POST['authorId'][$i]);
+            $seq = mysqli_real_escape_string($connection, $_POST['authorOrder'][$i]);
+            if ($uid && $seq) {
+                $values[] = "('{$postID}', 'news', '{$uid}', '{$seq}')";
+            }
+        }
+        if (!empty($values)) {
+            // Remove any previous authors for this post (for safety)
+            mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "authors WHERE rel_id='{$postID}' AND rel_type='news'");
+            $sql = "INSERT INTO " . TABLE_PREFIX . "authors (rel_id, rel_type, profile_user_id, seq_no) VALUES " . implode(',', $values);
+            mysqli_query($connection, $sql);
+        }
+    }
 }

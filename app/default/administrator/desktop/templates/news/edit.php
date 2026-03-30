@@ -297,21 +297,192 @@ window.location.href = 'dashboard/news/?type=list&status=all';
                 </div>
                 <div class="tagList" style="display: none;"></div>
 
-                <h2>Author</h2>
+                <h2>Authors</h2>
                 <div class="action-box height-200 inside-shadow">
-                    <?php
-                    if ($authorList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_type!='subscriber' AND site_access_site_id=" . SITE_ID)) {
-                        while ($author = mysqli_fetch_assoc($authorList)) { ?>
-                    <div class="form-group">
-                        <input type="checkbox" name="authorId" value="<?php echo $author['user_id'] ?>"
-                            <?php echo (($author['user_id'] == $news_owner_id) ? 'checked' : '') ?>>
-                        <?php echo ucwords($author['profile_display_name']); ?>
-                    </div>
-                    <?php
+                    <div id="author-sort-list">
+                        <?php
+                        // Fetch all authors and their order for this news
+                        $selectedAuthors = array();
+                        $authorOrder = array();
+                        // Fetch authors ordered by seq_no
+                        $authorQuery = mysqli_query($connection, "SELECT profile_user_id, seq_no FROM " . TABLE_PREFIX . "authors WHERE rel_id='{$news_id}' AND rel_type='news' ORDER BY seq_no ASC");
+                        if ($authorQuery && mysqli_num_rows($authorQuery) > 0) {
+                            while ($row = mysqli_fetch_assoc($authorQuery)) {
+                                $selectedAuthors[] = $row['profile_user_id'];
+                                $authorOrder[$row['profile_user_id']] = $row['seq_no'];
+                            }
                         }
-                    }
-                    ?>
+                        // Get all possible authors
+                        $allAuthors = array();
+                        if ($authorList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_type NOT IN ('subscriber', 'customer') AND site_access_site_id=" . SITE_ID . " ORDER BY profile_display_name ASC")) {
+                            while ($author = mysqli_fetch_assoc($authorList)) {
+                                $allAuthors[$author['user_id']] = $author;
+                            }
+                        }
+                        // Sort selected authors first by their order, then unselected
+                        $sortedAuthors = array();
+                        foreach ($selectedAuthors as $uid) {
+                            if (isset($allAuthors[$uid])) {
+                                $sortedAuthors[] = $allAuthors[$uid];
+                                unset($allAuthors[$uid]);
+                            }
+                        }
+                        foreach ($allAuthors as $author) {
+                            $sortedAuthors[] = $author;
+                        }
+                        $authorIndex = 1;
+                        foreach ($sortedAuthors as $author) {
+                            $uid = $author['user_id'];
+                            $checked = in_array($uid, $selectedAuthors) ? 'checked' : '';
+                            $orderVal = isset($authorOrder[$uid]) ? $authorOrder[$uid] : '';
+                        ?>
+                        <div class="form-group author-item author-row" data-index="<?php echo $authorIndex; ?>">
+                            <div class="author-left">
+                                <input type="checkbox" name="authorId[]" value="<?php echo $uid ?>"
+                                    id="author_<?php echo $uid ?>" <?php echo $checked; ?>>
+                                <label for="author_<?php echo $uid ?>"
+                                    class="author-label"><?php echo ucwords($author['profile_display_name']); ?></label>
+                            </div>
+                            <div class="author-right">
+                                <input type="number" class="author-order-input" name="authorOrder[]"
+                                    value="<?php echo $orderVal; ?>" min="1"
+                                    <?php echo ($checked ? '' : 'disabled'); ?>>
+                            </div>
+                        </div>
+                        <?php $authorIndex++;
+                        } ?>
+                    </div>
                 </div>
+                <style>
+                .author-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 3px 6px;
+                    border-radius: 3px;
+                    border-bottom: 1px solid #ececec;
+                    margin-bottom: 0;
+                    font-size: 15px;
+                    min-height: 32px;
+                    transition: background 0.18s;
+                }
+
+                .author-row:last-child {
+                    border-bottom: none;
+                }
+
+                .author-row:hover {
+                    background: #f7fafd;
+                }
+
+                .author-left {
+                    display: flex;
+                    align-items: center;
+                    gap: 7px;
+                }
+
+                .author-label {
+                    font-weight: 500;
+                    color: #222;
+                    margin-bottom: 0;
+                    font-size: 15px;
+                }
+
+                .author-right {
+                    min-width: 48px;
+                    text-align: right;
+                }
+
+                .author-order-input {
+                    width: 40px;
+                    text-align: right;
+                    border-radius: 3px;
+                    border: 1px solid #ccc;
+                    padding: 2px 4px;
+                    background: #fff;
+                    font-size: 15px;
+                }
+
+                @media (max-width: 600px) {
+                    .author-row {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        min-height: unset;
+                    }
+
+                    .author-right {
+                        text-align: left;
+                        margin-top: 3px;
+                    }
+                }
+                </style>
+                <script>
+                // Improved author order input: allow direct editing, validate for duplicates and positive integers
+                // and keep order unique among checked authors
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    const list = document.getElementById('author-sort-list');
+                    if (!list) return;
+                    const getCheckedItems = () => Array.from(list.querySelectorAll('.author-item')).filter(
+                        item => item.querySelector('input[type="checkbox"]').checked);
+                    // Update order inputs and validate
+                    function updateOrderInputs() {
+                        const checked = getCheckedItems();
+                        let usedOrders = new Set();
+                        checked.forEach((item, idx) => {
+                            const orderInput = item.querySelector('.author-order-input');
+                            let val = parseInt(orderInput.value);
+                            if (!val || usedOrders.has(val)) {
+                                // Assign next available
+                                let next = 1;
+                                while (usedOrders.has(next)) next++;
+                                val = next;
+                            }
+                            orderInput.value = val;
+                            orderInput.disabled = false;
+                            usedOrders.add(val);
+                        });
+                        // Unchecked authors: clear and disable order
+                        Array.from(list.querySelectorAll('.author-item')).forEach(item => {
+                            if (!item.querySelector('input[type="checkbox"]').checked) {
+                                const orderInput = item.querySelector('.author-order-input');
+                                orderInput.value = '';
+                                orderInput.disabled = true;
+                            }
+                        });
+                        // Check for duplicate order numbers
+                        const orders = checked.map(item => parseInt(item.querySelector('.author-order-input')
+                            .value));
+                        const hasDup = orders.some((v, i, arr) => arr.indexOf(v) !== i);
+                        checked.forEach(item => {
+                            const orderInput = item.querySelector('.author-order-input');
+                            if (hasDup) {
+                                orderInput.style.borderColor = 'red';
+                                orderInput.title = 'Duplicate order!';
+                            } else {
+                                orderInput.style.borderColor = '#ccc';
+                                orderInput.title = '';
+                            }
+                        });
+                    }
+                    // Initial state
+                    updateOrderInputs();
+                    list.addEventListener('change', function(e) {
+                        if (e.target.type === 'checkbox') {
+                            updateOrderInputs();
+                        }
+                    });
+                    // Allow manual editing of order input
+                    list.addEventListener('input', function(e) {
+                        if (e.target.classList.contains('author-order-input')) {
+                            // Only allow positive integers
+                            let v = e.target.value.replace(/[^0-9]/g, '');
+                            e.target.value = v;
+                            updateOrderInputs();
+                        }
+                    });
+                });
+                </script>
                 <h2>Feature Image</h2>
                 <div class="form-group featureImageUploadBox upload-btn"
                     style="display: <?php echo (($news_image != '') ? 'none' : 'block') ?>;">

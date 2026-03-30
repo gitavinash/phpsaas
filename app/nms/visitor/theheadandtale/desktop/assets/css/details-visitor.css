@@ -90,6 +90,11 @@ figcaption {
   font-weight: 400;
 }
 
+.news_box__heading h6 a {
+  text-decoration: none;
+  color: var(--black-color);
+}
+
 .news_box__heading h6::after {
   content: "";
   position: absolute;
