@@ -195,8 +195,14 @@ function updateNewsWorkflow($connection, $data, $workflow = 'publish', $schedule
         }
     }
 
-    $newsPublishedValue = ($workflow === 'schedule') ? "'{$scheduledAt}'" : 'NOW()';
-    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_gallery='{$newGallery}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_mrp='{$amount}', news_price='{$amount}', news_status='{$targetNewsStatus}', news_paid='{$paid}', news_published={$newsPublishedValue} WHERE news_id='{$id}'");
+    // Only update news_published to NOW() when publishing from draft (news_status 206)
+    if ($workflow === 'publish' && isset($postStatus) && (int)$postStatus === 2) {
+        // Publishing from draft (news_status 206)
+        $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_gallery='{$newGallery}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_mrp='{$amount}', news_price='{$amount}', news_status='{$targetNewsStatus}', news_paid='{$paid}', news_published=NOW() WHERE news_id='{$id}'");
+    } else {
+        // Normal publish or other workflow: do not change news_published
+        $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_gallery='{$newGallery}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_mrp='{$amount}', news_price='{$amount}', news_status='{$targetNewsStatus}', news_paid='{$paid}' WHERE news_id='{$id}'");
+    }
 
     $updateMeta = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "meta SET meta_title='{$meta_title}', meta_description='{$meta_desc}', meta_canonical='{$canonical}', meta_keyword='{$meta_key}', meta_relation_id='{$linkID}', fb_img='{$facebookImage}', fb_title='{$fb_title}', fb_desc='{$fb_desc}', tw_img='{$twitterImage}', tw_title='{$tw_title}', tw_desc='{$tw_desc}' WHERE meta_relation_id='{$link_id}'");
 
