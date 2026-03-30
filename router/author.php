@@ -1,12 +1,25 @@
+
+
 <?php
-
-
 // Pagination logic inspired by category.php
 $currentPage = 1;
 if (isset($_GET['pg']) && is_numeric($_GET['pg']) && $_GET['pg'] > 0) {
 	$currentPage = (int)$_GET['pg'];
 }
 $authorId = (int)$urlStructure[1];
+
+$authorInfo = null;
+// Fetch author info (profile, user tables)
+// No profile_bio in table, so do not select it
+$authorInfoQuery = "SELECT u.user_id, u.user_username, p.profile_display_name, p.profile_image
+FROM " . TABLE_PREFIX . "user u
+LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
+WHERE u.user_id = {$authorId} LIMIT 1";
+if ($authorInfoResult = mysqli_query($connection, $authorInfoQuery)) {
+	if (mysqli_num_rows($authorInfoResult) > 0) {
+		$authorInfo = mysqli_fetch_assoc($authorInfoResult);
+	}
+}
 
 
 // Count total result for pagination
