@@ -303,7 +303,7 @@ window.location.href = 'dashboard/news/?type=list&status=all';
                     if ($authorList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_type!='subscriber' AND site_access_site_id=" . SITE_ID)) {
                         while ($author = mysqli_fetch_assoc($authorList)) { ?>
                     <div class="form-group">
-                        <input type="radio" name="authorId" value="<?php echo $author['user_id'] ?>"
+                        <input type="checkbox" name="authorId" value="<?php echo $author['user_id'] ?>"
                             <?php echo (($author['user_id'] == $news_owner_id) ? 'checked' : '') ?>>
                         <?php echo ucwords($author['profile_display_name']); ?>
                     </div>
