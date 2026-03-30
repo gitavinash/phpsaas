@@ -250,6 +250,10 @@ switch ($urlStructure[0]) {
 		require_once 'tag.php';
 		break;
 
+	case 'author':
+		require_once 'author.php';
+		break;
+
 	case 'category':
 		require_once 'category.php';
 		break;
