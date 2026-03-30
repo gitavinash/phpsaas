@@ -33,12 +33,12 @@ require_once 'header.php';
                             @<?php echo htmlspecialchars($authorInfo['user_username']); ?>
                         </div>
                         <?php endif; ?>
-                        <div style="color:#ff6600;font-size:16px;font-weight:500;margin-top:2px;letter-spacing:0.2px;">
+                        <!-- <div style="color:#ff6600;font-size:16px;font-weight:500;margin-top:2px;letter-spacing:0.2px;">
                             <?php
-                                $newsCount = defined('TOTAL_RESULT') ? (int)TOTAL_RESULT : (isset($total_result) ? (int)$total_result : 0);
-                                echo $newsCount . ' Article' . ($newsCount === 1 ? '' : 's') . ' Published';
-                                ?>
-                        </div>
+                            $newsCount = defined('TOTAL_RESULT') ? (int)TOTAL_RESULT : (isset($total_result) ? (int)$total_result : 0);
+                            echo $newsCount . ' Article' . ($newsCount === 1 ? '' : 's') . ' Published';
+                            ?>
+                        </div> -->
                     </div>
                 </div>
                 <?php endif;
