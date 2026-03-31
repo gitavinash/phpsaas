@@ -53,7 +53,7 @@
 
       <!-- ONBOARDING FORM -->
       <div class="bg-white rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/50 p-8 sm:p-10 relative overflow-hidden">
-        <form id="onboarding-form" method="POST" action="onboarding-complete.php">
+        <form id="onboarding-form" method="POST" action="checkout.php">
           
           <!-- STEP 1: Store Vision -->
           <div id="step-1" class="onboarding-step space-y-6">

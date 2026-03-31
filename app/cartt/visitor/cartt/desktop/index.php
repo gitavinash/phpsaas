@@ -27,16 +27,18 @@ tailwind.config = {
 </head>
 <body class="bg-white text-slate-900 font-sans antialiased">
 
-<!-- ANNOUNCEMENT BAR -->
-<div class="bg-indigo-600 text-white text-[13px] font-semibold text-center py-2.5 px-4 relative z-[60] shadow-md">
-  <span class="inline-flex items-center gap-2 flex-wrap justify-center">
-    <span class="text-amber-300">&#127881; Limited Time Offer:</span> Get &#8377;5,000 Setup Fee Waived on Annual Plans!
-    <a href="#pricing" class="underline underline-offset-2 hover:text-indigo-200 transition-colors ml-1">View Pricing &rarr;</a>
-  </span>
-</div>
+<!-- HEADER WRAPPER -->
+<div class="fixed top-0 left-0 right-0 z-[60] flex flex-col w-full">
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="bg-indigo-600 text-white text-[13px] font-semibold text-center py-2.5 px-4 shadow-md w-full relative z-20">
+    <span class="inline-flex items-center gap-2 flex-wrap justify-center">
+      <span class="text-amber-300">&#127881; Limited Time Offer:</span> Get &#8377;5,000 Setup Fee Waived on Annual Plans!
+      <a href="#pricing" class="underline underline-offset-2 hover:text-indigo-200 transition-colors ml-1">View Pricing &rarr;</a>
+    </span>
+  </div>
 
-<!-- NAVBAR -->
-<header id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100">
+  <!-- NAVBAR -->
+  <header id="navbar" class="bg-white/95 backdrop-blur-md border-b border-slate-100 w-full relative z-10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <a href="#" class="flex items-center gap-2 flex-shrink-0">
@@ -47,12 +49,9 @@ tailwind.config = {
         <span class="hidden sm:inline-block text-xs text-slate-400 font-medium border-l border-slate-200 pl-2 ml-1">Build. Sell. Grow.</span>
       </a>
       <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-600">
-        <a href="#features"  class="hover:text-indigo-600 transition-colors">Features</a>
-        <a href="#plugins"   class="hover:text-indigo-600 transition-colors">Plugins</a>
-        <a href="#templates" class="hover:text-indigo-600 transition-colors">Templates</a>
-        <a href="#migration" class="hover:text-indigo-600 transition-colors">Migration</a>
-        <a href="#pricing"   class="hover:text-indigo-600 transition-colors">Pricing</a>
-        <a href="#faq"       class="hover:text-indigo-600 transition-colors">FAQ</a>
+        <a href="index.php#features" class="hover:text-indigo-600 transition-colors">Features</a>
+        <a href="index.php#pricing"  class="hover:text-indigo-600 transition-colors">Pricing</a>
+        <a href="migration.php"      class="hover:text-indigo-600 transition-colors">Migration</a>
       </nav>
       <div class="hidden lg:flex items-center gap-3">
         <a href="/login" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors px-3 py-2">Login</a>
@@ -68,12 +67,9 @@ tailwind.config = {
   </div>
   <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-100 bg-white px-4 pb-4 pt-2">
     <nav class="flex flex-col gap-1 text-sm font-medium text-slate-600 mb-4">
-      <a href="#features"  class="py-2 hover:text-indigo-600">Features</a>
-      <a href="#plugins"   class="py-2 hover:text-indigo-600">Plugins</a>
-      <a href="#templates" class="py-2 hover:text-indigo-600">Templates</a>
-      <a href="#migration" class="py-2 hover:text-indigo-600">Migration</a>
-      <a href="#pricing"   class="py-2 hover:text-indigo-600">Pricing</a>
-      <a href="#faq"       class="py-2 hover:text-indigo-600">FAQ</a>
+      <a href="index.php#features" class="py-2 hover:text-indigo-600 transition-colors">Features</a>
+      <a href="index.php#pricing"  class="py-2 hover:text-indigo-600 transition-colors">Pricing</a>
+      <a href="migration.php"      class="py-2 hover:text-indigo-600 transition-colors">Migration</a>
     </nav>
     <div class="flex flex-col gap-2">
       <a href="/login" class="text-center text-sm font-medium text-slate-600 border border-slate-200 py-2.5 rounded-xl">Login</a>
@@ -81,11 +77,12 @@ tailwind.config = {
     </div>
   </div>
 </header>
+</div>
 
 <main>
 
 <!-- HERO -->
-<section id="hero" class="relative pt-16 overflow-hidden bg-gradient-to-br from-slate-50 via-indigo-50/40 to-white min-h-screen flex items-center">
+<section id="hero" class="relative pt-28 overflow-hidden bg-gradient-to-br from-slate-50 via-indigo-50/40 to-white min-h-screen flex items-center">
   <!-- Ambient background blobs -->
   <div class="hero-blob w-[600px] h-[600px] bg-indigo-100/50 -top-40 -left-40"></div>
   <div class="hero-blob w-96 h-96 bg-emerald-100/30 bottom-0 right-0"></div>
@@ -324,118 +321,96 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ZIGZAG FEATURES (CONVERSION FLOW) -->
-<section id="features" class="py-28 bg-white overflow-hidden">
+<!-- PREMIUM BENTO FEATURES -->
+<section id="features" class="py-32 bg-white overflow-hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    <!-- Row 1: Problem & Initial Solution -->
-    <div class="flex flex-col lg:flex-row items-center gap-16 mb-28 reveal">
-      <div class="lg:w-1/2">
-        <span class="section-eyebrow">The Problem</span>
-        <h2 class="text-3xl sm:text-[2.5rem] font-black text-slate-900 leading-tight mb-6">Stop the Plugin Chaos. <br/><span class="text-indigo-600">Start Selling Lean.</span></h2>
-        <p class="text-[1.0625rem] text-slate-500 leading-relaxed mb-8">Most platforms require a patchwork of 20+ plugins just to handle basic Indian eCommerce needs. This slows down your store and drains your budget. Cartt is built differently.</p>
-        <ul class="space-y-4 mb-8">
-          <?php foreach(['Replace 20+ expensive monthly app subscriptions','Consolidate your stack into one native dashboard','Improve page speed by removing bloated scripts','Keep 100% control over your data and customer flow'] as $p): ?>
-          <li class="flex items-start gap-3 text-[15px] font-semibold text-slate-700">
-            <svg class="w-5 h-5 text-indigo-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-            <?=$p?>
-          </li>
+    <div class="text-center max-w-2xl mx-auto mb-20 reveal">
+      <span class="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-4 block">The Platform</span>
+      <h2 class="text-4xl sm:text-[3rem] font-black text-slate-900 tracking-tight leading-tight mb-6">
+        Everything you need.<br/>
+        <span class="text-indigo-600">Zero plugin chaos.</span>
+      </h2>
+      <p class="text-lg text-slate-500 leading-relaxed">We replaced the patchwork of 20+ plugins with one beautifully engineered dashboard optimized for Indian commerce.</p>
+    </div>
+
+    <!-- BENTO GRID -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 reveal reveal-stagger">
+      
+      <!-- BENTO 1: Large Feature -->
+      <div class="md:col-span-8 bg-slate-900 rounded-[2.5rem] p-10 lg:p-14 relative overflow-hidden group shadow-xl">
+        <div class="absolute -right-20 -bottom-20 w-[400px] h-[400px] bg-indigo-500/20 rounded-full blur-3xl group-hover:bg-indigo-500/30 transition-colors duration-700"></div>
+        <div class="relative z-10 max-w-lg mb-12">
+          <h3 class="text-3xl font-black text-white mb-4">Unified Commerce Dashboard</h3>
+          <p class="text-[16px] text-slate-400 leading-relaxed">Manage inventory, process orders, and track your cashflow from a single native interface. No more jumping between disjointed apps.</p>
+        </div>
+        <div class="relative z-10 bg-slate-800/80 backdrop-blur-xl rounded-3xl border border-white/10 p-6 shadow-2xl translate-y-6 group-hover:translate-y-2 transition-transform duration-700 lg:mr-10">
+           <!-- Mock Dashboard UI -->
+           <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+             <div class="text-[11px] font-black uppercase tracking-widest text-indigo-400">Live Metrics</div>
+             <div class="flex gap-2"><div class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]"></div><div class="w-2.5 h-2.5 rounded-full bg-amber-400"></div></div>
+           </div>
+           <div class="grid grid-cols-3 gap-4">
+             <div><div class="text-3xl font-black text-white">&#8377;84K</div><div class="text-[11px] font-bold text-slate-500 mt-2 uppercase tracking-wide">Sales</div></div>
+             <div><div class="text-3xl font-black text-white">347</div><div class="text-[11px] font-bold text-slate-500 mt-2 uppercase tracking-wide">Orders</div></div>
+             <div><div class="text-3xl font-black text-emerald-400">+24%</div><div class="text-[11px] font-bold text-slate-500 mt-2 uppercase tracking-wide">Conversion</div></div>
+           </div>
+        </div>
+      </div>
+
+      <!-- BENTO 2: Mobile PWA -->
+      <div class="md:col-span-4 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-[2.5rem] p-10 shadow-lg relative overflow-hidden group">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-30 relative z-0"></div>
+        <div class="relative z-10 flex flex-col h-full">
+          <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-6 text-white backdrop-blur-md border border-white/20 shadow-inner">
+            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="text-2xl font-black text-white mb-4 leading-tight">Lightning Fast <br/>Mobile PWA</h3>
+          <p class="text-[15px] text-indigo-100 leading-relaxed mb-8 font-medium">90% of Indian shoppers purchase on mobile. Deliver app-like speed without the download.</p>
+          <div class="mt-auto">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[11px] font-black text-white uppercase tracking-widest">Speed Score</span>
+              <span class="text-sm font-black text-emerald-300">99/100</span>
+            </div>
+            <div class="h-2 w-full bg-white/20 rounded-full overflow-hidden flex">
+              <div class="h-full bg-emerald-400 w-[99%] shadow-[0_0_10px_rgba(52,211,153,0.8)]"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BENTO 3: App Ecosystem -->
+      <div class="md:col-span-4 lg:col-span-5 bg-white rounded-[2.5rem] p-10 border border-slate-200 shadow-sm flex flex-col justify-center items-start group hover:shadow-xl transition-shadow duration-500">
+        <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6 text-emerald-600 border border-emerald-100 group-hover:bg-emerald-100 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h3 class="text-2xl font-black text-slate-900 mb-3">Native Indian Features</h3>
+        <p class="text-[15px] text-slate-500 mb-8 leading-relaxed">Built specifically for the nuances of local commerce, integrated directly into your core storefront without external dependencies.</p>
+        <div class="flex flex-wrap gap-2.5">
+          <?php foreach(['COD Options','OTP Verifications','Abandoned Carts','WhatsApp Flows','One-Tap Upsell'] as $a): ?>
+          <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[11px] font-bold px-3.5 py-2 rounded-full shadow-sm group-hover:border-indigo-200 group-hover:text-indigo-700 transition-colors"><?=$a?></span>
           <?php endforeach; ?>
-        </ul>
-        <a href="get-started.php" class="btn-primary">Get Started</a>
-      </div>
-      <div class="lg:w-1/2 relative">
-        <div class="absolute -inset-4 bg-indigo-100/50 rounded-[2.5rem] blur-2xl -z-10"></div>
-        <div class="card p-8 border-indigo-100 shadow-2xl shadow-indigo-100/40 relative">
-          <div class="flex items-center justify-between mb-8 pb-6 border-b border-slate-50">
-            <h4 class="font-bold text-slate-900">Plugin Overload</h4>
-            <span class="text-xs font-bold text-red-500 px-3 py-1 bg-red-50 rounded-full">Dangerous</span>
-          </div>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 opacity-60"><span class="text-sm font-medium text-slate-400 line-through">WhatsApp Flows</span> <span class="text-xs font-bold text-slate-400">$19/mo</span></div>
-            <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 opacity-60"><span class="text-sm font-medium text-slate-400 line-through">COD Fraud Guard</span> <span class="text-xs font-bold text-slate-400">$29/mo</span></div>
-            <div class="flex justify-between items-center bg-indigo-600 p-4 rounded-xl shadow-lg shadow-indigo-200"><span class="text-sm font-bold text-white">Cartt Unified Hub</span> <span class="text-xs font-bold text-indigo-100">INCLUDED</span></div>
-            <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 opacity-60"><span class="text-sm font-medium text-slate-400 line-through">Product Reviews</span> <span class="text-xs font-bold text-slate-400">$15/mo</span></div>
-          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Row 2: Core Platform (Zigzag Reverse) -->
-    <div class="flex flex-col lg:flex-row-reverse items-center gap-16 mb-28 reveal">
-      <div class="lg:w-1/2">
-        <span class="section-eyebrow">The Solution</span>
-        <h2 class="text-3xl sm:text-[2.5rem] font-black text-slate-900 leading-tight mb-6">Mobile-First Storefronts.<br/><span class="text-indigo-600">Built for Conversion.</span></h2>
-        <p class="text-[1.0625rem] text-slate-500 leading-relaxed mb-8">90% of Indian shoppers purchase from their phones. Cartt provides a high-performance storefront designed for mobile-first behavior, including one-tap checkouts and lightning-fast loading.</p>
-        <div class="grid sm:grid-cols-2 gap-6">
-          <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-indigo-200 transition-colors">
-            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:bg-indigo-600 transition-all"><svg class="w-5 h-5 text-indigo-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
-            <h4 class="font-bold text-[15px] mb-1">PWA Storefront</h4>
-            <p class="text-xs text-slate-500">Your store feels like a native app on every phone.</p>
-          </div>
-          <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-indigo-200 transition-colors">
-            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:bg-indigo-600 transition-all"><svg class="w-5 h-5 text-indigo-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
-            <h4 class="font-bold text-[15px] mb-1">One-Tap Checkout</h4>
-            <p class="text-xs text-slate-500">Enable high-conversion UPI and COD flows in one tap.</p>
+      <!-- BENTO 4: Growth Focus -->
+      <div class="md:col-span-8 lg:col-span-7 bg-slate-50 rounded-[2.5rem] p-10 lg:p-12 border border-slate-200 shadow-sm flex items-center justify-between overflow-hidden relative group hover:shadow-xl transition-shadow duration-500">
+        <div class="absolute -right-32 top-0 bottom-0 w-[400px] bg-amber-100/50 rounded-full blur-3xl group-hover:bg-indigo-100/50 transition-colors duration-700"></div>
+        <div class="relative z-10 max-w-sm">
+          <h3 class="text-2xl font-black text-slate-900 mb-4">Relentless Conversion</h3>
+          <p class="text-[15px] text-slate-500 leading-relaxed font-medium">Includes integrated tracking pixels, zero-friction checkouts, and dynamic upselling logic perfectly mapped to consumer behavior profiles.</p>
+        </div>
+        <div class="relative z-10 hidden sm:flex space-x-4 pr-4">
+          <div class="bg-white p-5 rounded-3xl shadow-lg transform -rotate-12 group-hover:rotate-0 transition-transform duration-500 border border-slate-100 group-hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] overflow-hidden min-w-[140px]">
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+              <div class="w-10 h-10 bg-slate-900 rounded-xl"></div>
+              <div><div class="w-16 h-2 bg-slate-200 rounded-full mb-1"></div><div class="w-8 h-2 bg-slate-100 rounded-full"></div></div>
+            </div>
+            <button class="w-full bg-slate-900 block rounded-[0.5rem] py-2.5 text-[10px] text-white font-bold uppercase tracking-widest text-center mt-3 shadow-md focus:outline-none">Buy Now</button>
           </div>
         </div>
       </div>
-      <div class="lg:w-1/2 relative">
-        <div class="absolute -inset-4 bg-emerald-100/40 rounded-[2.5rem] blur-2xl -z-10"></div>
-        <div class="bg-slate-900 rounded-3xl p-1 shadow-2xl overflow-hidden max-w-sm mx-auto">
-          <div class="bg-indigo-600 h-10 w-full flex items-center justify-center gap-2"><div class="w-2 h-2 rounded-full bg-white animate-pulse"></div><span class="text-[10px] font-bold text-white uppercase tracking-widest">Storefront Live</span></div>
-          <div class="p-6 bg-slate-50 space-y-4">
-             <div class="h-48 rounded-xl bg-slate-200 relative overflow-hidden">
-               <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-indigo-100/50 to-transparent"></div>
-             </div>
-             <div class="h-4 w-3/4 bg-slate-300 rounded-full"></div>
-             <div class="h-10 w-full bg-emerald-500 rounded-xl flex items-center justify-center text-white text-xs font-black">BUY NOW</div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Row 3: Growth & India-Specifics -->
-    <div class="flex flex-col lg:flex-row items-center gap-16 reveal">
-      <div class="lg:w-1/2">
-        <span class="section-eyebrow">Scale</span>
-        <h2 class="text-3xl sm:text-[2.5rem] font-black text-slate-900 leading-tight mb-6">Built for Indian Sellers.<br/><span class="text-indigo-600">Optimised for Growth.</span></h2>
-        <p class="text-[1.0625rem] text-slate-500 leading-relaxed mb-8">From WhatsApp order confirmations to advanced COD verification and logistics sync, Cartt gives you the local advantages that global platforms miss.</p>
-        <div class="space-y-4">
-          <div class="flex items-center gap-4 group">
-            <div class="w-12 h-12 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center shrink-0 border border-violet-100 group-hover:bg-violet-600 group-hover:text-white transition-all"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></div>
-            <div class="text-sm">
-              <div class="font-bold text-slate-900 text-sm">WhatsApp Native</div>
-              <p class="text-slate-500 text-xs">Automatically send order alerts and cart reminders on WhatsApp.</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-4 group">
-            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 group-hover:bg-amber-600 group-hover:text-white transition-all"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-            <div class="text-sm">
-              <div class="font-bold text-slate-900 text-sm">Advanced COD Guard</div>
-              <p class="text-slate-500 text-xs">Verify high-value COD orders using OTP and automated IVR.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="lg:w-1/2 relative">
-        <div class="absolute -inset-4 bg-amber-100/30 rounded-[2.5rem] blur-2xl -z-10"></div>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 transform -rotate-1 translate-y-4">
-            <div class="text-[10px] font-black text-slate-400 mb-4 uppercase tracking-[0.1em]">Recent Order</div>
-            <div class="flex items-center gap-3 mb-4">
-               <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center"><span class="text-indigo-600 text-xs font-bold">MB</span></div>
-               <div class="text-[11px] font-bold">Meera's Boutique</div>
-            </div>
-            <div class="text-sm font-black text-slate-900">₹2,499</div>
-          </div>
-          <div class="bg-indigo-600 p-6 rounded-2xl shadow-xl transform rotate-2">
-            <svg class="w-8 h-8 text-white mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <div class="text-[10px] font-black text-indigo-100 mb-1 uppercase tracking-[0.1em]">Status</div>
-            <div class="text-sm font-black text-white">COD Verified</div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -514,12 +489,12 @@ tailwind.config = {
         ['quote'=>"Finally a platform that understands Indian commerce. We launched our D2C brand in 2 days. The zero transaction fee is a game changer.",'author'=>"Rohan M.",'store'=>"Brews & Beans",'img'=>"https://i.pravatar.cc/100?img=11"],
         ['quote'=>"The mobile storefront feels faster than native apps. Cartt's one-click checkout helped us double our sales during the festive season.",'author'=>"Shruti D.",'store'=>"Aura Decor",'img'=>"https://i.pravatar.cc/100?img=9"]
       ] as $t): ?>
-      <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-        <div class="flex gap-1 text-amber-400 mb-6">
+      <div class="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
+        <div class="flex gap-1 text-amber-400 mb-6 flex-shrink-0">
           <?php for($i=0;$i<5;$i++): ?><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><?php endfor; ?>
         </div>
-        <p class="text-slate-700 text-[15px] font-medium leading-relaxed mb-8">"<?=$t['quote']?>"</p>
-        <div class="flex items-center gap-4">
+        <p class="text-slate-700 text-[15px] font-medium leading-relaxed mb-8 flex-grow">"<?=$t['quote']?>"</p>
+        <div class="flex items-center gap-4 mt-auto">
           <img src="<?=$t['img']?>" class="w-12 h-12 rounded-full object-cover bg-slate-100 ring-2 ring-slate-50" alt="<?=$t['author']?>">
           <div>
             <h4 class="font-bold text-slate-900 text-sm"><?=$t['author']?></h4>
@@ -534,20 +509,17 @@ tailwind.config = {
 
 
 <!-- PRICING -->
-<section id="pricing" class="py-28 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
-  <!-- Subtle ambient -->
-  <div class="hero-blob w-96 h-96 bg-indigo-100/30 -top-20 right-0"></div>
+<section id="pricing" class="py-32 bg-white relative overflow-hidden border-t border-slate-100">
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
     <!-- Section header -->
-    <div class="text-center max-w-2xl mx-auto mb-12 reveal">
-      <span class="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-4 block">Pricing</span>
-      <h2 class="text-3xl sm:text-[2.75rem] font-black text-slate-900 tracking-tight leading-tight mb-4">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <h2 class="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
         Simple Pricing.<br/>
-        <span class="gradient-text">        Keep 100% of Your Store Revenue.</span>
+        <span class="text-indigo-600">Keep 100% of Your Revenue.</span>
       </h2>
-            <p class="text-lg text-slate-500 leading-relaxed">Pay a flat monthly or annual fee. No transaction fees from Cartt.</p>
+      <p class="text-lg text-slate-500 leading-relaxed">Pay a flat annual fee. Zero transaction fees. Cancel anytime.</p>
     </div>
 
     <!-- Billing Toggle -->
@@ -587,117 +559,112 @@ tailwind.config = {
     </div>
 
     <!-- Pricing Cards -->
-    <div class="grid lg:grid-cols-3 gap-0 lg:gap-6 items-end reveal">
+    <div class="grid lg:grid-cols-3 gap-0 lg:gap-6 items-center reveal max-w-5xl mx-auto">
       <?php
-      $ck = '<svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>';
+      $ck = '<svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
       $plans = [
         [
           'name'=>'Launch', 'tag'=>null,
-          'for'=>'New sellers &amp; local businesses',
-          'yPrice'=>'&#8377;999', 'mPrice'=>'&#8377;1,299',
-          'yBilled'=>'&#8377;11,988 billed yearly', 'mNote'=>'billed monthly',
-          'ySave'=>'Save &#8377;3,600/yr', 'mSave'=>'Switch yearly — save &#8377;3,600',
-          'features'=>['Online storefront','Payments + COD','Order management','Essential plugins','Analytics integrations','Custom domain'],
-          'noteY'=>'&#8377;5000 Setup Support waived on yearly',
-          'noteM'=>'&#8377;5000 Setup Support fee applies monthly',
-          'cta'=>'Start for Free', 'featured'=>false
+          'for'=>'New businesses & entrepreneurs',
+          'yPrice'=>'₹999', 'mPrice'=>'₹1,299',
+          'yBilled'=>'₹11,988 billed yearly', 'mNote'=>'billed monthly',
+          'ySave'=>'Save ₹3,600/yr', 'mSave'=>'Switch yearly & save',
+          'features'=>['Online storefront','Payments + COD integration','Order management','Core plugins included','Custom domain'],
+          'noteY'=>'₹5000 Setup Waived',
+          'noteM'=>'₹5000 Setup fee applies',
+          'cta'=>'Start Free Trial', 'featured'=>false
         ],
         [
           'name'=>'Growth', 'tag'=>'Most Popular',
-          'for'=>'Growing brands &amp; active sellers',
-          'yPrice'=>'&#8377;1,999', 'mPrice'=>'&#8377;2,499',
-          'yBilled'=>'&#8377;23,988 billed yearly', 'mNote'=>'billed monthly',
-          'ySave'=>'Save &#8377;6,000/yr', 'mSave'=>'Switch yearly — save &#8377;6,000',
-          'features'=>['Everything in Launch','More included plugins','Bulk import tools','Migration support','Advanced customisation','Priority support'],
-          'noteY'=>'&#8377;5000 Setup Support waived on yearly',
-          'noteM'=>'&#8377;5000 Setup Support fee applies monthly',
-          'cta'=>'Start Growth Plan', 'featured'=>true
+          'for'=>'Growing Indian commerce brands',
+          'yPrice'=>'₹1,999', 'mPrice'=>'₹2,499',
+          'yBilled'=>'₹23,988 billed yearly', 'mNote'=>'billed monthly',
+          'ySave'=>'Save ₹6,000/yr', 'mSave'=>'Switch yearly & save',
+          'features'=>['Everything in Launch','Advanced marketing plugins','Bulk imports & exports','Free data migration','Priority support','Sales analytics'],
+          'noteY'=>'₹5000 Setup Waived',
+          'noteM'=>'₹5000 Setup fee applies',
+          'cta'=>'Start Free Trial', 'featured'=>true
         ],
         [
           'name'=>'Scale', 'tag'=>null,
-          'for'=>'D2C brands, SMEs &amp; serious sellers',
-          'yPrice'=>'&#8377;3,999', 'mPrice'=>'&#8377;4,999',
-          'yBilled'=>'&#8377;47,988 billed yearly', 'mNote'=>'billed monthly',
-          'ySave'=>'Save &#8377;12,000/yr', 'mSave'=>'Switch yearly — save &#8377;12,000',
-          'features'=>['Everything in Growth','Premium plugins','Advanced workflows','Higher admin control','Priority support','Premium onboarding'],
+          'for'=>'Large D2C brands & enterprises',
+          'yPrice'=>'₹3,999', 'mPrice'=>'₹4,999',
+          'yBilled'=>'₹47,988 billed yearly', 'mNote'=>'billed monthly',
+          'ySave'=>'Save ₹12,000/yr', 'mSave'=>'Switch yearly & save',
+          'features'=>['Everything in Growth','Premium VIP integrations','Agentic AI workflows','Multi-warehouse sync','Dedicated success manager'],
           'noteY'=>'Premium onboarding included',
           'noteM'=>'Premium onboarding included',
-          'cta'=>'Start Scale Plan', 'featured'=>false
+          'cta'=>'Contact Sales', 'featured'=>false
         ],
       ];
       foreach($plans as $p):
         $f = $p['featured'];
       ?>
       <?php if($f): ?>
-      <!-- GROWTH — FEATURED (elevated) -->
-      <div class="pricing-card pricing-featured rounded-3xl px-8 pt-10 pb-8 flex flex-col relative z-10 shadow-2xl lg:-my-6" style="box-shadow:0 32px 80px rgba(79,70,229,0.28),0 8px 24px rgba(79,70,229,0.15);">
+      <!-- GROWTH — FEATURED (DARK) -->
+      <div class="pricing-card pricing-featured bg-slate-900 rounded-[2rem] px-8 pt-10 pb-8 flex flex-col relative z-10 lg:-my-4 shadow-xl border border-slate-800">
         <!-- Most Popular badge -->
-        <div class="absolute -top-5 left-0 right-0 flex justify-center">
-          <span class="bg-gradient-to-r from-amber-400 to-orange-400 text-white text-[11px] font-black uppercase tracking-widest px-5 py-2 rounded-full shadow-lg shadow-amber-200">&#9733; Most Popular</span>
+        <div class="absolute -top-4 left-0 right-0 flex justify-center">
+          <span class="bg-indigo-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-5 py-2 rounded-full shadow-[0_0_20px_rgba(99,102,241,0.4)] border border-indigo-400">Most Popular</span>
         </div>
-        <div class="mb-5">
-          <div class="text-base font-black text-white/90 mb-0.5"><?=$p['name']?></div>
-          <div class="text-sm text-indigo-200"><?=$p['for']?></div>
+        <div class="mb-5 border-b border-white/10 pb-6">
+          <div class="text-[17px] font-black text-white mb-1"><?=$p['name']?></div>
+          <div class="text-[13px] text-slate-400"><?=$p['for']?></div>
         </div>
         <div class="mb-3">
           <div data-yearly class="block">
-            <div class="flex items-baseline gap-1.5"><span class="text-5xl font-black text-white tracking-tight"><?=$p['yPrice']?></span><span class="text-indigo-200 text-base font-semibold">/mo</span></div>
-            <div class="text-indigo-300 text-xs mt-1"><?=$p['yBilled']?></div>
+            <div class="flex items-baseline gap-1"><span class="text-5xl font-black text-white tracking-tight"><?=$p['yPrice']?></span><span class="text-slate-400 text-base font-medium">/mo</span></div>
+            <div class="text-slate-400 text-xs mt-1 font-medium"><?=$p['yBilled']?></div>
           </div>
           <div data-monthly class="hidden">
-            <div class="flex items-baseline gap-1.5"><span class="text-5xl font-black text-white tracking-tight"><?=$p['mPrice']?></span><span class="text-indigo-200 text-base font-semibold">/mo</span></div>
-            <div class="text-indigo-300 text-xs mt-1"><?=$p['mNote']?></div>
+            <div class="flex items-baseline gap-1"><span class="text-5xl font-black text-white tracking-tight"><?=$p['mPrice']?></span><span class="text-slate-400 text-base font-medium">/mo</span></div>
+            <div class="text-slate-400 text-xs mt-1 font-medium"><?=$p['mNote']?></div>
           </div>
         </div>
-        <div class="mb-6">
-          <span data-yearly-note class="inline-flex items-center gap-1.5 bg-white/15 text-white text-[11px] font-bold px-3 py-1.5 rounded-full"><?=$p['ySave']?></span>
-          <span data-monthly-note class="hidden inline-flex items-center gap-1.5 bg-white/10 text-indigo-200 text-[11px] font-semibold px-3 py-1.5 rounded-full"><?=$p['mSave']?></span>
+        <div class="mb-8">
+          <span data-yearly-note class="inline-flex items-center text-emerald-400 bg-emerald-400/10 text-[11px] font-bold px-2.5 py-1 rounded-full"><svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> <?=$p['ySave']?></span>
+          <span data-monthly-note class="hidden inline-flex items-center text-slate-400 bg-white/5 text-[11px] font-bold px-2.5 py-1 rounded-full"><?=$p['mSave']?></span>
         </div>
-        <ul class="space-y-3 mb-7 flex-1">
+        <ul class="space-y-4 mb-8 flex-1">
           <?php foreach($p['features'] as $feat): ?>
-          <li class="flex items-center gap-2.5 text-sm text-indigo-100"><span class="text-emerald-300"><?=$ck?></span><?=$feat?></li>
+          <li class="flex items-start gap-3 text-[14px] text-slate-300 font-medium">
+            <span class="text-indigo-400 mt-0.5"><?=$ck?></span><?=$feat?>
+          </li>
           <?php endforeach; ?>
         </ul>
-        <div class="text-xs text-indigo-300/80 pb-6 mb-6 border-b border-white/10">
-          <strong data-yearly-note class="text-emerald-300"><?=$p['noteY']?></strong>
-          <strong data-monthly-note class="hidden text-amber-300"><?=$p['noteM']?></strong>
-        </div>
-        <a href="get-started.php" class="group block text-center bg-white hover:bg-indigo-50 text-indigo-700 font-black py-4 rounded-2xl transition-all duration-200 text-sm shadow-xl shadow-indigo-900/20 hover:-translate-y-0.5">
+        <a href="get-started.php" class="block w-full text-center bg-white hover:bg-slate-100 text-slate-900 font-bold py-4 rounded-xl transition-all duration-200 text-[15px]">
           <?=$p['cta']?>
-          <svg class="w-4 h-4 inline-block ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
         </a>
       </div>
       <?php else: ?>
       <!-- Standard plan -->
-      <div class="pricing-card bg-white border border-slate-200 rounded-3xl px-7 pt-8 pb-7 flex flex-col shadow-sm hover:shadow-lg hover:border-indigo-100 transition-all duration-300 lg:first:rounded-r-xl lg:last:rounded-l-xl">
-        <div class="mb-5">
-          <div class="text-base font-black text-slate-900 mb-0.5"><?=$p['name']?></div>
-          <div class="text-sm text-slate-500"><?=$p['for']?></div>
+      <div class="pricing-card bg-white border border-slate-200 rounded-[2rem] px-8 pt-9 pb-8 flex flex-col shadow-sm hover:shadow-md transition-shadow">
+        <div class="mb-5 border-b border-slate-100 pb-6">
+          <div class="text-[17px] font-black text-slate-900 mb-1"><?=$p['name']?></div>
+          <div class="text-[13px] text-slate-500"><?=$p['for']?></div>
         </div>
         <div class="mb-3">
           <div data-yearly class="block">
-            <div class="flex items-baseline gap-1.5"><span class="text-4xl font-black text-slate-900 tracking-tight"><?=$p['yPrice']?></span><span class="text-slate-400 text-sm font-semibold">/mo</span></div>
-            <div class="text-slate-400 text-xs mt-1"><?=$p['yBilled']?></div>
+            <div class="flex items-baseline gap-1"><span class="text-4xl font-black text-slate-900 tracking-tight"><?=$p['yPrice']?></span><span class="text-slate-500 text-sm font-medium">/mo</span></div>
+            <div class="text-slate-500 text-xs mt-1 font-medium"><?=$p['yBilled']?></div>
           </div>
           <div data-monthly class="hidden">
-            <div class="flex items-baseline gap-1.5"><span class="text-4xl font-black text-slate-900 tracking-tight"><?=$p['mPrice']?></span><span class="text-slate-400 text-sm font-semibold">/mo</span></div>
-            <div class="text-slate-400 text-xs mt-1"><?=$p['mNote']?></div>
+            <div class="flex items-baseline gap-1"><span class="text-4xl font-black text-slate-900 tracking-tight"><?=$p['mPrice']?></span><span class="text-slate-500 text-sm font-medium">/mo</span></div>
+            <div class="text-slate-500 text-xs mt-1 font-medium"><?=$p['mNote']?></div>
           </div>
         </div>
-        <div class="mb-6">
-          <span data-yearly-note class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-100 text-[11px] font-bold px-3 py-1.5 rounded-full"><?=$p['ySave']?></span>
-          <span data-monthly-note class="hidden inline-flex items-center gap-1.5 bg-slate-100 text-slate-500 text-[11px] font-semibold px-3 py-1 rounded-full"><?=$p['mSave']?></span>
+        <div class="mb-8">
+          <span data-yearly-note class="inline-flex items-center text-emerald-700 bg-emerald-50 text-[11px] font-bold px-2.5 py-1 rounded-full border border-emerald-100"><?=$p['ySave']?></span>
+          <span data-monthly-note class="hidden inline-flex items-center text-slate-500 bg-slate-50 text-[11px] font-bold px-2.5 py-1 rounded-full border border-slate-100"><?=$p['mSave']?></span>
         </div>
-        <ul class="space-y-2.5 mb-6 flex-1">
+        <ul class="space-y-4 mb-8 flex-1">
           <?php foreach($p['features'] as $feat): ?>
-          <li class="flex items-center gap-2.5 text-sm text-slate-600"><span class="text-emerald-500"><?=$ck?></span><?=$feat?></li>
+          <li class="flex items-start gap-3 text-[14px] text-slate-600 font-medium">
+            <span class="text-indigo-600 mt-0.5"><?=$ck?></span><?=$feat?>
+          </li>
           <?php endforeach; ?>
         </ul>
-        <div class="text-xs text-slate-400 pb-5 mb-5 border-b border-slate-100">
-          <strong data-yearly-note class="text-emerald-600"><?=$p['noteY']?></strong>
-          <strong data-monthly-note class="hidden text-amber-600"><?=$p['noteM']?></strong>
-        </div>
-        <a href="get-started.php" class="group block text-center bg-slate-900 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all duration-200 text-sm hover:-translate-y-0.5">
+        <a href="get-started.php" class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-900 font-bold border border-slate-200 py-3.5 rounded-xl transition-all duration-200 text-[15px]">
           <?=$p['cta']?>
         </a>
       </div>
@@ -750,50 +717,45 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- FAQ -->
-<section id="faq" class="py-28 bg-white">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-14 reveal">
-      <span class="section-eyebrow">Support</span>
-      <h2 class="section-title">Frequently Asked Questions</h2>
-      <p class="section-sub">Quick answers to common questions about launching and growing with Cartt.</p>
-    </div>
-    <div class="space-y-4 reveal">
+<!-- FAQ ALEYA STYLE -->
+<section id="faq" class="py-32 bg-slate-50 border-t border-slate-100">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start reveal">
+      <div class="lg:col-span-4 lg:sticky lg:top-32">
+        <h2 class="text-3xl sm:text-[2.5rem] font-black text-slate-900 mb-4 tracking-tight leading-tight">Questions?<br/>We've got answers.</h2>
+        <p class="text-slate-500 mb-8 text-lg">Can't find what you're looking for?</p>
+        <a href="#contact" class="inline-flex text-[15px] font-bold text-slate-900 border-b-2 border-slate-900 hover:text-indigo-600 hover:border-indigo-600 transition-colors pb-0.5">Chat with us</a>
+      </div>
+      <div class="lg:col-span-8 space-y-4 text-left">
       <?php
       $faqs=[
-        ['q'=>'Do you charge transaction fees?','a'=>'No. Cartt does not charge per-transaction fees on any plan. You keep 100% of your revenue. Standard payment gateway processing fees (e.g., from Razorpay) still apply at industry rates.'],
+        ['q'=>'Do you charge transaction fees?','a'=>'No. Cartt does not charge per-transaction fees on any plan. You keep 100% of your revenue. Standard payment gateway processing fees (e.g., from Razorpay or PhonePe) still apply at industry rates.'],
         ['q'=>'Is my data secure with Cartt?','a'=>'Absolutely. We use industry-standard SSL encryption for all data transmissions. Your store data is hosted on secure, high-availability cloud infrastructure with regular backups and proactive security monitoring.'],
         ['q'=>'Can I use a custom domain?','a'=>'Yes. You can connect your own custom domain (e.g., www.yourstore.com) to any Cartt plan. We provide free SSL certificates for all custom domains connected to the platform.'],
         ['q'=>'Do I need coding skills to build a store?','a'=>'Not at all. Cartt is a no-code platform. You can customize your storefront, manage products, and configure plugins using our intuitive visual dashboard.'],
-        ['q'=>'Is the setup support fee mandatory?','a'=>'The ₹5,000 Store Launch Support is a managed service for those who want a white-glove setup. It is completely waived for all yearly plan subscribers.'],
-        ['q'=>'Can I integrate with 3rd-party logistics?','a'=>'Yes. Cartt supports native integrations with leading Indian logistics providers (Shiprocket, Delhivery, etc.) for automated shipping label generation and real-time tracking.'],
-        ['q'=>'What happens if I need help?','a'=>'We provide 24/7 email support for all plans. Growth and Scale plans include priority WhatsApp support and a dedicated account manager for the first 30 days.'],
+        ['q'=>'Can I integrate with 3rd-party logistics?','a'=>'Yes. Cartt supports native integrations with leading Indian logistics providers like Shiprocket, Delhivery, and XpressBees for automated shipping label generation and tracking.'],
+        ['q'=>'What happens after the 14-day free trial?','a'=>'If you choose not to upgrade, your store will be paused. You will not be automatically charged unless you explicitly subscribe to a paid plan. Your data is kept safe.'],
+        ['q'=>'Can I migrate an existing Shopify or WooCommerce store?','a'=>'Yes. We offer a dedicated white-glove migration service with zero downtime. All products, customers, and SEO URLs are securely transferred to Cartt.'],
+        ['q'=>'Does Cartt support Cash on Delivery (COD)?','a'=>'Absolutely. COD is native to Cartt, complete with automated OTP verification flows to significantly reduce RTOs (Return to Origin).'],
+        ['q'=>'What payment gateways are supported?','a'=>'We integrate seamlessly with Razorpay, PhonePe, Cashfree, and PayU, allowing you to accept UPI, credit/debit cards, and net banking right out of the box.'],
+        ['q'=>'Is hosting included in the pricing?','a'=>'Yes! Premium, enterprise-grade cloud hosting with unlimited bandwidth is included across all plans. You will never face surprise traffic server bills.'],
       ];
       foreach($faqs as $faq):
       ?>
-      <div class="faq-item border border-slate-200 rounded-2xl overflow-hidden transition-all duration-200">
-        <button class="faq-trigger w-full flex items-center justify-between gap-4 px-7 py-5 text-left hover:bg-slate-50/50 transition-colors">
-          <span class="font-bold text-slate-800 text-[15px] sm:text-base leading-snug"><?=$faq['q']?></span>
-          <div class="faq-icon">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v12m6-6H6"/></svg>
+      <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-6 px-7 text-left hover:text-indigo-600 transition-colors group">
+          <span class="font-bold text-slate-900 text-[18px] sm:text-lg leading-snug group-hover:text-indigo-600 transition-colors"><?=$faq['q']?></span>
+          <div class="text-slate-400 group-hover:text-indigo-600 transition-colors flex-shrink-0">
+            <svg class="w-6 h-6 faq-icon-svg transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
           </div>
         </button>
         <div class="faq-content overflow-hidden transition-all duration-300">
-          <div class="px-7 pb-6 text-[14px] sm:text-[15px] text-slate-500 leading-relaxed border-t border-slate-50 pt-4 mt-1">
+          <div class="pb-8 px-7 text-[16px] text-slate-500 leading-relaxed pr-8 pt-2">
             <?=$faq['a']?>
           </div>
         </div>
       </div>
       <?php endforeach; ?>
-    </div>
-
-    <!-- Still have questions? -->
-    <div class="mt-16 bg-indigo-50 rounded-3xl p-8 sm:p-10 text-center reveal">
-      <h3 class="text-xl font-bold text-indigo-900 mb-3">Still have questions?</h3>
-      <p class="text-indigo-700/70 mb-8 max-w-md mx-auto">Can't find the answer you're looking for? Reach out to our team for a personal consultation.</p>
-      <div class="flex flex-wrap justify-center gap-4">
-        <a href="get-started.php" class="bg-indigo-600 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all text-sm">Contact Support</a>
-        <a href="get-started.php" class="bg-white text-indigo-700 font-bold px-7 py-3.5 rounded-xl border border-indigo-100 shadow-sm hover:bg-indigo-50 transition-all text-sm">Book Setup Call</a>
       </div>
     </div>
   </div>
@@ -846,19 +808,21 @@ tailwind.config = {
         <p class="text-xs text-slate-600">Built in India &#127470;&#127475; for Indian sellers</p>
       </div>
       <div>
-        <h4 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4">Product</h4>
-        <ul class="space-y-2.5 text-sm">
-          <?php foreach(['Features','Plugins','Templates','Migration','Pricing','Changelog','Roadmap'] as $l): ?>
-          <li><a href="#" class="hover:text-white transition-colors"><?=$l?></a></li>
-          <?php endforeach; ?>
+        <h4 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-5">Product</h4>
+        <ul class="space-y-3 text-[14px]">
+          <li><a href="index.php#features" class="hover:text-white transition-colors">Features</a></li>
+          <li><a href="index.php#pricing" class="hover:text-white transition-colors">Pricing</a></li>
+          <li><a href="migration.php" class="hover:text-white transition-colors">Migration</a></li>
         </ul>
       </div>
       <div>
         <h4 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4">Solutions</h4>
-        <ul class="space-y-2.5 text-sm">
-          <?php foreach(['Fashion Stores','Beauty & Wellness','Electronics','Grocery','D2C Brands','Instagram Sellers','WhatsApp Commerce'] as $l): ?>
-          <li><a href="#" class="hover:text-white transition-colors"><?=$l?></a></li>
-          <?php endforeach; ?>
+        <ul class="space-y-2.5 text-[14px]">
+          <li><a href="fashion.php" class="hover:text-white transition-colors">Fashion Stores</a></li>
+          <li><a href="beauty.php" class="hover:text-white transition-colors">Beauty & Wellness</a></li>
+          <li><a href="electronics.php" class="hover:text-white transition-colors">Electronics</a></li>
+          <li><a href="grocery.php" class="hover:text-white transition-colors">Grocery</a></li>
+          <li><a href="d2c.php" class="hover:text-white transition-colors">D2C Brands</a></li>
         </ul>
       </div>
       <div>
@@ -879,7 +843,7 @@ tailwind.config = {
       </div>
     </div>
     <div class="border-t border-slate-800/60 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p class="text-xs text-slate-600">&copy; <?=date('Y')?> Cartt Technologies Pvt. Ltd. All rights reserved.</p>
+      <p class="text-xs text-slate-600">&copy; <?=date('Y')?> Cartt is a product of <a href="https://blumox.com" target="_blank" class="hover:text-indigo-400 transition-colors font-medium">Blumox Technologies</a>. All rights reserved.</p>
       <div class="flex gap-5 text-xs">
         <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
         <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
