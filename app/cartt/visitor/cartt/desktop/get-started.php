@@ -12,6 +12,13 @@
   <title>Get Started — Cartt | Launch Your Brand in India</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+  </style>
 </head>
 <body class="bg-slate-50 min-h-screen font-inter flex flex-col">
 
@@ -89,7 +96,7 @@
               foreach($categories as $cat):
               ?>
               <label class="category-card relative group cursor-pointer">
-                <input type="radio" name="category" value="<?=$cat['id']?>" class="peer absolute opacity-0">
+                <input type="radio" name="category" value="<?=$cat['id']?>" required class="peer absolute opacity-0">
                 <div class="p-6 bg-white border border-slate-200 rounded-3xl text-center transition-all peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 peer-checked:ring-4 peer-checked:ring-indigo-600/5 group-hover:border-indigo-200 shadow-sm">
                   <svg class="w-8 h-8 text-slate-400 mx-auto mb-3 transition-colors peer-checked:text-indigo-600 group-hover:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="<?=$cat['icon']?>"/></svg>
                   <span class="block text-xs font-bold text-slate-600 peer-checked:text-indigo-900"><?=$cat['label']?></span>
@@ -141,12 +148,25 @@
                   <input type="email" id="email" name="email" placeholder="you@company.com" required
                          class="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:border-indigo-500 transition-all outline-none font-medium shadow-sm">
                </div>
-               <div class="space-y-1.5">
+               <div class="space-y-1.5 relative">
                   <label for="password" class="text-xs font-bold text-slate-700 uppercase tracking-widest ml-1">Password</label>
-                  <input type="password" id="password" name="password" placeholder="••••••••" required
-                         class="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:border-indigo-500 transition-all outline-none font-medium shadow-sm">
+                  <div class="relative">
+                    <input type="password" id="password" name="password" placeholder="••••••••" required
+                           class="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:border-indigo-500 transition-all outline-none font-medium shadow-sm pr-12">
+                    <button type="button" id="toggle-password" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-indigo-600 transition-colors">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    </button>
+                  </div>
                </div>
             </div>
+            
+            <div class="flex items-center justify-center mt-3 mb-4">
+              <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 text-[11px] font-bold px-3 py-1.5 rounded-full border border-emerald-100">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                No credit card required &middot; 14-day free trial
+              </span>
+            </div>
+            
             <p class="text-[11px] text-slate-400 text-center leading-relaxed">By clicking 'Launch My Store', you agree to our Terms of Service and Privacy Policy.</p>
           </div>
 
@@ -188,7 +208,13 @@
       function updateUI() {
         // Show/hide steps
         document.querySelectorAll('.onboarding-step').forEach((el, idx) => {
-          el.classList.toggle('hidden', idx !== (currentStep - 1));
+          if (idx === (currentStep - 1)) {
+            el.classList.remove('hidden');
+            el.classList.add('fade-in');
+          } else {
+            el.classList.add('hidden');
+            el.classList.remove('fade-in');
+          }
         });
 
         // Update progress bar
@@ -207,7 +233,26 @@
         // Basic validation
         const currentInputs = document.querySelectorAll(`#step-${currentStep} input[required]`);
         let valid = true;
-        currentInputs.forEach(input => { if(!input.value) valid = false; });
+        let firstInvalid = null;
+        
+        const radioGroups = {};
+        currentInputs.forEach(input => {
+          if (input.type === 'radio') {
+            if(!radioGroups[input.name]) radioGroups[input.name] = [];
+            radioGroups[input.name].push(input);
+          } else if (!input.value) {
+            valid = false;
+            if(!firstInvalid) firstInvalid = input;
+          }
+        });
+
+        for (const name in radioGroups) {
+          const checked = radioGroups[name].some(r => r.checked);
+          if(!checked) {
+            valid = false;
+            if(!firstInvalid) firstInvalid = radioGroups[name][0];
+          }
+        }
         
         if(valid) {
           if(currentStep < totalSteps) {
@@ -215,7 +260,7 @@
             updateUI();
           }
         } else {
-          currentInputs[0].reportValidity();
+          if(firstInvalid) firstInvalid.reportValidity();
         }
       });
 
@@ -225,6 +270,15 @@
           updateUI();
         }
       });
+
+      // Password visibility toggle
+      const togglePwd = document.getElementById('toggle-password');
+      const pwdInput = document.getElementById('password');
+      if (togglePwd && pwdInput) {
+        togglePwd.addEventListener('click', () => {
+          pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
+        });
+      }
     });
   </script>
 

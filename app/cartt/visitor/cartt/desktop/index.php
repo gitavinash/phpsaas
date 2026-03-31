@@ -27,6 +27,14 @@ tailwind.config = {
 </head>
 <body class="bg-white text-slate-900 font-sans antialiased">
 
+<!-- ANNOUNCEMENT BAR -->
+<div class="bg-indigo-600 text-white text-[13px] font-semibold text-center py-2.5 px-4 relative z-[60] shadow-md">
+  <span class="inline-flex items-center gap-2 flex-wrap justify-center">
+    <span class="text-amber-300">&#127881; Limited Time Offer:</span> Get &#8377;5,000 Setup Fee Waived on Annual Plans!
+    <a href="#pricing" class="underline underline-offset-2 hover:text-indigo-200 transition-colors ml-1">View Pricing &rarr;</a>
+  </span>
+</div>
+
 <!-- NAVBAR -->
 <header id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -116,6 +124,29 @@ tailwind.config = {
             <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
             Book Free Setup Call
           </a>
+        </div>
+
+        <!-- Hero Trust Signals -->
+        <div class="flex items-center gap-4 mb-10">
+          <div class="flex -space-x-2">
+            <img class="w-8 h-8 rounded-full border-2 border-white shadow-sm" src="https://i.pravatar.cc/100?img=1" alt="User 1">
+            <img class="w-8 h-8 rounded-full border-2 border-white shadow-sm" src="https://i.pravatar.cc/100?img=2" alt="User 2">
+            <img class="w-8 h-8 rounded-full border-2 border-white shadow-sm" src="https://i.pravatar.cc/100?img=3" alt="User 3">
+            <img class="w-8 h-8 rounded-full border-2 border-white shadow-sm" src="https://i.pravatar.cc/100?img=4" alt="User 4">
+            <div class="w-8 h-8 rounded-full border-2 border-white shadow-sm bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-600">+</div>
+          </div>
+          <div>
+            <div class="flex gap-0.5 text-amber-400 mb-0.5">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <div class="text-[11px] font-semibold text-slate-500">
+              <strong class="text-slate-800">4.9/5</strong> from 100+ Indian sellers
+            </div>
+          </div>
         </div>
 
         <!-- Trust pills (icon + label) -->
@@ -462,6 +493,41 @@ tailwind.config = {
         </a>
         <p class="mt-5 text-sm font-medium text-indigo-300/60 tracking-wide uppercase italic">New plug-ins added every week</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="py-28 bg-slate-50 border-t border-slate-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <span class="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-4 block">Success Stories</span>
+      <h2 class="text-3xl sm:text-[2.5rem] font-black text-slate-900 tracking-tight leading-tight mb-5">
+        Join the brands growing with Cartt
+      </h2>
+      <p class="text-lg text-slate-500">Don't just take our word for it. Hear from sellers who escaped plugin chaos and grew their revenue.</p>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-6 reveal reveal-stagger">
+      <?php foreach([
+        ['quote'=>"Switching to Cartt saved us &#8377;15,000/mo in plugin fees. The native WhatsApp flows increased our COD conversions by 30%.",'author'=>"Aditi S.",'store'=>"Label Aditi",'img'=>"https://i.pravatar.cc/100?img=5"],
+        ['quote'=>"Finally a platform that understands Indian commerce. We launched our D2C brand in 2 days. The zero transaction fee is a game changer.",'author'=>"Rohan M.",'store'=>"Brews & Beans",'img'=>"https://i.pravatar.cc/100?img=11"],
+        ['quote'=>"The mobile storefront feels faster than native apps. Cartt's one-click checkout helped us double our sales during the festive season.",'author'=>"Shruti D.",'store'=>"Aura Decor",'img'=>"https://i.pravatar.cc/100?img=9"]
+      ] as $t): ?>
+      <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+        <div class="flex gap-1 text-amber-400 mb-6">
+          <?php for($i=0;$i<5;$i++): ?><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><?php endfor; ?>
+        </div>
+        <p class="text-slate-700 text-[15px] font-medium leading-relaxed mb-8">"<?=$t['quote']?>"</p>
+        <div class="flex items-center gap-4">
+          <img src="<?=$t['img']?>" class="w-12 h-12 rounded-full object-cover bg-slate-100 ring-2 ring-slate-50" alt="<?=$t['author']?>">
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm"><?=$t['author']?></h4>
+            <p class="text-xs text-slate-500 font-medium"><?=$t['store']?></p>
+          </div>
+        </div>
+      </div>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>
@@ -826,5 +892,14 @@ tailwind.config = {
 
 </main>
 <script src="<?php echo USER_JS ?>script.js"></script>
+
+<!-- MOBILE STICKY CTA -->
+<div class="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-slate-200 z-[60] shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+  <a href="get-started.php" class="flex items-center justify-center w-full gap-2 bg-indigo-600 active:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-colors text-sm">
+    Start Selling Now
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
 </body>
 </html>
