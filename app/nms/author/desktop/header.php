@@ -1,4 +1,10 @@
 <?php
+
+header("Location: /", true, 301);
+exit();
+
+?>
+<?php
 $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'));
 ?>
 <!DOCTYPE html>
