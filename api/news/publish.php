@@ -59,7 +59,7 @@ function publish($connection, $data)
 
                         /* Insert data into link table */
 
-                        $newsOwnerId = ((isset($authorId[0])) ? (($authorId[0] == '') ? USER_ID : $authorId[0]) : USER_ID);
+                        $newsOwnerId = ((isset($_POST['authorId'][0])) ? (($_POST['authorId'][0] == '') ? USER_ID : $_POST['authorId'][0]) : USER_ID);
 
                         $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "news(news_site_id, news_image, news_gallery, news_thumbnail, news_title, news_description, news_category, news_owner_id, news_paid, news_mrp, news_price, news_status, news_type, news_published) VALUES(" . SITE_ID . ", '{$featureImage}', '{$gallery}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', {$newsOwnerId}, '{$paid}', '{$amount}', '{$amount}', '1', 'news', NOW())");
                         $postID = mysqli_insert_id($connection);

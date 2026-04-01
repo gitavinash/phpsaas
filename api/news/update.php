@@ -108,7 +108,6 @@ function updateNewsWorkflow($connection, $data, $workflow = 'publish', $schedule
 
     $currentUserId = defined('USER_ID') ? USER_ID : 0;
     $featurePost = ((isset($featurePost)) ? 1 : 0);
-    $newsOwnerId = ((isset($authorId)) ? (($authorId == '') ? $currentUserId : $authorId) : $currentUserId);
 
     if (isset($image)) {
         $featureImage = (((isset($featureImage)) ? $featureImage : $oldFeatureImage));
@@ -166,6 +165,37 @@ function updateNewsWorkflow($connection, $data, $workflow = 'publish', $schedule
 
     mysqli_query($connection, 'START TRANSACTION');
 
+    // Bulk insert authors with seq_no (credit order)
+    if (
+        isset($_POST['authorId'], $_POST['authorOrder']) &&
+        is_array($_POST['authorId']) && is_array($_POST['authorOrder']) &&
+        count($_POST['authorId']) > 0
+    ) {
+        $values = [];
+        // Map authorId to its order from authorOrder[]
+        for ($i = 0; $i < count($_POST['authorId']); $i++) {
+            $uid = mysqli_real_escape_string($connection, $_POST['authorId'][$i]);
+            // Find the corresponding order for this authorId
+            $seq = '';
+            if (isset($_POST['authorOrder'][$i])) {
+                $seq = mysqli_real_escape_string($connection, $_POST['authorOrder'][$i]);
+            }
+            if ($uid && $seq) {
+                $values[] = "('{$id}', 'news', '{$uid}', '{$seq}')";
+            }
+        }
+        if (!empty($values)) {
+            // Remove any previous authors for this post (for safety)
+            mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "authors WHERE rel_id='{$id}' AND rel_type='news'");
+            $sql = "INSERT INTO " . TABLE_PREFIX . "authors (rel_id, rel_type, profile_user_id, seq_no) VALUES " . implode(',', $values);
+            mysqli_query($connection, $sql);
+        }
+    }
+
+    $newsOwnerId = isset($_POST['authorId']) && is_array($_POST['authorId']) && count($_POST['authorId']) > 0
+        ? mysqli_real_escape_string($connection, $_POST['authorId'][0])
+        : $currentUserId;
+
     $addRedirect = TRUE;
     $updateLink = FALSE;
 
@@ -215,33 +245,6 @@ function updateNewsWorkflow($connection, $data, $workflow = 'publish', $schedule
         if ($tagName !== '') {
             $tagName = strtolower($tagName);
             $tagData = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagName}', '{$id}', '{$currentUserId}', '" . SITE_ID . "', '{$postType}')");
-        }
-    }
-
-    // Bulk insert authors with seq_no (credit order)
-    if (
-        isset($_POST['authorId'], $_POST['authorOrder']) &&
-        is_array($_POST['authorId']) && is_array($_POST['authorOrder']) &&
-        count($_POST['authorId']) > 0
-    ) {
-        $values = [];
-        // Map authorId to its order from authorOrder[]
-        for ($i = 0; $i < count($_POST['authorId']); $i++) {
-            $uid = mysqli_real_escape_string($connection, $_POST['authorId'][$i]);
-            // Find the corresponding order for this authorId
-            $seq = '';
-            if (isset($_POST['authorOrder'][$i])) {
-                $seq = mysqli_real_escape_string($connection, $_POST['authorOrder'][$i]);
-            }
-            if ($uid && $seq) {
-                $values[] = "('{$id}', 'news', '{$uid}', '{$seq}')";
-            }
-        }
-        if (!empty($values)) {
-            // Remove any previous authors for this post (for safety)
-            mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "authors WHERE rel_id='{$id}' AND rel_type='news'");
-            $sql = "INSERT INTO " . TABLE_PREFIX . "authors (rel_id, rel_type, profile_user_id, seq_no) VALUES " . implode(',', $values);
-            mysqli_query($connection, $sql);
         }
     }
 

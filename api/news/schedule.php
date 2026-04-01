@@ -117,7 +117,8 @@ function schedule($connection, $data)
     mysqli_query($connection, "START TRANSACTION");
 
     $currentUserId = defined('USER_ID') ? USER_ID : 0;
-    $newsOwnerId = ((isset($authorId)) ? (($authorId == '') ? $currentUserId : $authorId) : $currentUserId);
+
+    $newsOwnerId = ((isset($_POST['authorId'][0])) ? (($_POST['authorId'][0] == '') ? USER_ID : $_POST['authorId'][0]) : USER_ID);
     $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "news(news_site_id, news_image, news_gallery, news_thumbnail, news_title, news_description, news_category, news_owner_id, news_paid, news_mrp, news_price, news_status, news_type, news_published) VALUES(" . SITE_ID . ", '{$featureImage}', '{$gallery}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', {$newsOwnerId}, '{$paid}', '{$amount}', '{$amount}', '2', 'news', '{$scheduleDateTime}')");
     $postID = mysqli_insert_id($connection);
 
