@@ -42,7 +42,7 @@ $statusFilter = (($postStatus == 'all') ? '' : "AND news_status='{$postStatus}'"
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT news_id, news_title, news_paid, news_gallery, news_status, category_title, link_url, link_status, link_published, profile_display_name FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id INNER JOIN " . TABLE_PREFIX . "profile ON news_owner_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "category ON news_category=category_id WHERE link_site_id=" . SITE_ID . " AND link_type='news' AND link_status!=301 {$statusFilter} ORDER BY UNIX_TIMESTAMP(link_published) DESC, news_id DESC")) {
+        if ($dataList = mysqli_query($connection, "SELECT news_id, news_title, news_paid, news_gallery, news_status, category_title, link_url, link_status, link_published, profile_display_name as authorName FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id INNER JOIN " . TABLE_PREFIX . "profile ON news_owner_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "category ON news_category=category_id WHERE link_site_id=" . SITE_ID . " AND link_type='news' AND link_status!=301 {$statusFilter} ORDER BY UNIX_TIMESTAMP(link_published) DESC, news_id DESC")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
@@ -73,7 +73,7 @@ $statusFilter = (($postStatus == 'all') ? '' : "AND news_status='{$postStatus}'"
                 </div>
             </td>
             <td><?php echo $category_title; ?></td>
-            <td><?php echo $profile_display_name; ?></td>
+            <td><?php echo $authorName; ?></td>
             <td><?php echo (($news_paid == 1) ? 'Yes' : 'No') ?></td>
             <td data-order="<?php echo strtotime($link_published); ?>"
                 data-sort="<?php echo strtotime($link_published); ?>">
