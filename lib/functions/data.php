@@ -24,43 +24,43 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
     $postTypeEsc = $conn->real_escape_string($postType);
     $siteId      = (int)SITE_ID;
 
-    // Step 1: collect related relation_ids by tag-title overlap (exclude seed)
-    $sqlIds = "
-        WITH seed AS (
-            SELECT DISTINCT tag_title
-            FROM isw_tag
-            WHERE tag_type = '{$postTypeEsc}'
-              AND tag_relation_id = {$postId}
-              AND tag_site_id = {$siteId}
-        )
-        SELECT DISTINCT t.tag_relation_id
-        FROM isw_tag t
-        JOIN seed s ON t.tag_title = s.tag_title
-        WHERE t.tag_type = '{$postTypeEsc}'
-          AND t.tag_site_id = {$siteId}
-          AND t.tag_relation_id <> {$postId}
-        ORDER BY t.tag_relation_id ASC
-        LIMIT {$pageLimit} OFFSET {$offset}
-    ";
+    // Step 1: Get all tag titles for the seed post
+    $sqlSeedTags = "SELECT DISTINCT tag_title FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_relation_id = {$postId} AND tag_site_id = {$siteId}";
+    $resSeedTags = mysqli_query($conn, $sqlSeedTags);
+    if (!$resSeedTags) {
+        return [];
+    }
+    $seedTags = [];
+    while ($row = mysqli_fetch_assoc($resSeedTags)) {
+        $seedTags[] = "'" . $conn->real_escape_string($row['tag_title']) . "'";
+    }
+    mysqli_free_result($resSeedTags);
 
-    $resIds = mysqli_query($conn, $sqlIds);
-    if (!$resIds) {
-        // echo mysqli_error($conn); // uncomment for debugging
+    // If no tags found for the seed post, return no result
+    if (empty($seedTags)) {
         return [];
     }
 
+    $tagsCsv = implode(',', $seedTags);
+
+    // Step 2: Find other posts/news with any of these tags (excluding the seed)
+    $sqlIds = "SELECT DISTINCT tag_relation_id FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_site_id = {$siteId} AND tag_relation_id <> {$postId} AND tag_title IN ({$tagsCsv}) ORDER BY tag_relation_id ASC LIMIT {$pageLimit} OFFSET {$offset}";
+    $resIds = mysqli_query($conn, $sqlIds);
+    if (!$resIds) {
+        return [];
+    }
     $ids = [];
     while ($r = mysqli_fetch_assoc($resIds)) {
         $ids[] = (int)$r['tag_relation_id'];
     }
     mysqli_free_result($resIds);
 
-    if (!$ids) {
+    // If no matching news/posts found, return no result
+    if (empty($ids)) {
         return [];
     }
 
-    // Step 2: fetch exact data for those IDs from {TABLE_PREFIX}{$postType} + link
-    // Build CSV and keep order via FIELD() so output order matches the IDs list
+    // Step 3: Fetch news/posts data for those IDs
     $idsCsv   = implode(',', $ids);
     $orderSql = "FIELD({$postTypeEsc}_id, {$idsCsv})";
 
@@ -98,7 +98,6 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
 
     $resData = mysqli_query($conn, $sqlData);
     if (!$resData) {
-        // echo mysqli_error($conn); // uncomment for debugging
         return [];
     }
 
@@ -108,19 +107,10 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
     }
     mysqli_free_result($resData);
 
+    // Step 4: Find the most used tag among the matched posts
     if (!empty($ids)) {
         $idsCsvForTag = implode(',', $ids);
-        $sqlKeyword = "
-            SELECT tag_title, COUNT(*) AS tag_count
-            FROM isw_tag
-            WHERE tag_type = '{$postTypeEsc}'
-              AND tag_site_id = {$siteId}
-              AND tag_relation_id IN ({$idsCsvForTag})
-            GROUP BY tag_title
-            ORDER BY tag_count DESC
-            LIMIT 1
-        ";
-
+        $sqlKeyword = "SELECT tag_title, COUNT(*) AS tag_count FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_site_id = {$siteId} AND tag_relation_id IN ({$idsCsvForTag}) GROUP BY tag_title ORDER BY tag_count DESC LIMIT 1";
         $resKeyword = mysqli_query($conn, $sqlKeyword);
         if ($resKeyword && $row = mysqli_fetch_assoc($resKeyword)) {
             $mostUsedKeyword = $row['tag_title'];
