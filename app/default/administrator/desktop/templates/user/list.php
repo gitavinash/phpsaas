@@ -82,6 +82,12 @@
     flex-shrink: 0;
 }
 
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+}
+
 .user-name {
     color: #0f172a;
     font-size: 13px;
@@ -181,10 +187,10 @@
 
                 $applyUserFilter = '';
                 if (SITE_ID == 49) {
-                    $applyUserFilter = "site_access_type!='subscriber' AND ";
+                    $applyUserFilter = "site_access_type NOT IN ('subscriber', 'customer') AND ";
                 }
 
-                if ($dataList = mysqli_query($connection, "SELECT user_id, user_username, user_email, user_status, site_access_type, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE {$applyUserFilter} site_access_site_id=" . SITE_ID)) {
+                if ($dataList = mysqli_query($connection, "SELECT user_id, user_username, user_email, user_status, site_access_type, profile_display_name, profile_image FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE {$applyUserFilter} site_access_site_id=" . SITE_ID)) {
                     if (mysqli_num_rows($dataList) != 0) {
                         while ($data = mysqli_fetch_assoc($dataList)) {
                             $hasUsers = true;
@@ -202,7 +208,8 @@
                 <tr>
                     <td>
                         <div class="user-cell">
-                            <span class="user-avatar"><?php echo htmlspecialchars($initials); ?></span>
+                            <span
+                                class="user-avatar"><?php echo (($profile_image != '') ? '<img src="' . $profile_image . '" alt="Profile Picture">' : htmlspecialchars($initials)); ?></span>
                             <div>
                                 <a class="user-name"
                                     href="user/?type=edit&editor=true&id=<?php echo base64_encode($user_id); ?>"><?php echo htmlspecialchars($user_username); ?></a>
