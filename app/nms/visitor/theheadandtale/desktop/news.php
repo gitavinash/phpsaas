@@ -26,9 +26,9 @@ if ($oldAuthorInfo == true) {
                         style='font-style: italic'>@artijourno</a>
                 </p>
             </div>" : ""); // Set author bio for the specific author if needed
-    $authorHeading = "By <a href='/author/{$authorProfileLink}/' target='_blank' alt='{$authorName} articles' title='{$authorName} articles' >{$authorName}</a>";
+    $authorHeading = "<a href='/author/{$authorProfileLink}/' target='_blank' alt='{$authorName} articles' title='{$authorName} articles' >{$authorName}</a>";
 } else {
-    $authorHeading = "By ";
+    $authorHeading = "";
     $authorLinks = [];
     foreach ($allAuthors as $author) {
         $profileLink = $author['authorId'] . '-' . urlencode(strtolower(str_replace(' ', '-', $author['authorName']))) . '-articles';
