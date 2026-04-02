@@ -54,7 +54,7 @@ if (
                     No Visits</option>
             </select>
         </div>
-        <div>
+        <!-- <div>
             <label for="payment_filter">Payment Status</label><br>
             <select name="payment_filter" id="payment_filter" class="form-control">
                 <option value="all"
@@ -67,7 +67,7 @@ if (
                     <?php if (isset($_GET['payment_filter']) && $_GET['payment_filter'] === 'clear') echo 'selected'; ?>>
                     Clear</option>
             </select>
-        </div>
+        </div> -->
         <!-- <div>
             <label for="recent_days">Recent Visits</label><br>
             <select name="recent_days" id="recent_days" class="form-control"
