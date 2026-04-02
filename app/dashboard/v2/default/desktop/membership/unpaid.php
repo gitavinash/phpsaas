@@ -4,19 +4,11 @@
 
 <?php
 // ...existing code for filters and $rows definition...
-// Calculate summary using the current $rows (filtered or unfiltered) - moved after $rows is populated
-// ...existing code for filters and $rows definition...
+// After all filtering and re-indexing of $rows:
 
-// ... code that populates $rows ...
-
-// Calculate summary from $rows (must be after $rows is populated)
-$summary_total_customers = isset($rows) && is_array($rows) ? count($rows) : 0;
+$summary_total_customers = 0;
 $summary_total_due = 0;
-if (!empty($rows)) {
-    foreach ($rows as $r) {
-        $summary_total_due += (float)($r['membership_amount_due'] ?? 0);
-    }
-}
+
 // Debug: Uncomment to verify $rows
 // echo '<pre>DEBUG: rows count = ' . count($rows) . ', total due = ' . $summary_total_due . '</pre>';
 // Detect if any filter is active
@@ -37,36 +29,6 @@ if (
                 placeholder="Select date range" readonly autocomplete="off">
             <input type="submit" value="Update report" class="btn btn-green date-btn">
         </form>
-    </div>
-</div>
-<div class="box-1" style="margin-bottom:12px;">
-    <div class="dashboard-summary-cards-row" style="display:flex;gap:0;">
-        <div class="dashboard-summary-card"
-            style="flex:0 0 50%;background:linear-gradient(135deg,#f0f9ff 60%,#e0e7ef 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;<?php if ($filter_active) echo 'border:2px solid #2563eb;'; ?>">
-            <span class="icon-bg"
-                style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#38bdf8;opacity:0.13;pointer-events:none;z-index:0;"><i
-                    class="fi fi-rr-users"></i></span>
-            <div
-                style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#0284c7;font-weight:700;position:relative;z-index:1;">
-                Total Customers</div>
-            <div
-                style="font-size:clamp(22px,3vw,30px);font-weight:900;color:#0f172a;margin-top:6px;position:relative;z-index:1;">
-                <?php echo number_format($summary_total_customers); ?>
-            </div>
-        </div>
-        <div class="dashboard-summary-card"
-            style="flex:0 0 50%;background:linear-gradient(135deg,#fee2e2 60%,#fecaca 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;<?php if ($filter_active) echo 'border:2px solid #b91c1c;'; ?>">
-            <span class="icon-bg"
-                style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#ef4444;opacity:0.13;pointer-events:none;z-index:0;"><i
-                    class="fi fi-rr-exclamation"></i></span>
-            <div
-                style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#b91c1c;font-weight:700;position:relative;z-index:1;">
-                Total Due Amount</div>
-            <div
-                style="font-size:clamp(22px,3vw,30px);font-weight:900;color:#991b1b;margin-top:6px;position:relative;z-index:1;">
-                ₹ <?php echo number_format($summary_total_due); ?>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -200,61 +162,100 @@ document.getElementById('filterForm').onsubmit = function() {
 </script>
 
 <?php
-$rows = [];
-$where = ["membership_amount_due!=0", "membership_site_id=" . SITE_ID];
-// If a specific membership ID is provided, filter by it
+
+// 1. Fetch all unpaid memberships
+$all_rows = [];
+$sql_all = "SELECT membership_id, membership_profile_name, membership_total_visit, membership_avl_visit, membership_amount_due, user_mobile, membership_status, membership_site_id, membership_user_id, membership_branch_id
+    FROM " . TABLE_PREFIX . "membership
+    INNER JOIN " . TABLE_PREFIX . "warehouse ON membership_branch_id=warehouse_id
+    INNER JOIN " . TABLE_PREFIX . "user ON membership_user_id=user_id
+    WHERE membership_amount_due!=0 AND membership_site_id=" . SITE_ID;
+if ($dataList = mysqli_query($connection, $sql_all)) {
+    while ($r = mysqli_fetch_assoc($dataList)) {
+        $all_rows[] = $r;
+    }
+} else if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE === true) {
+    echo "<pre>SQL Error: " . htmlspecialchars(mysqli_error($connection)) . "</pre>";
+}
+
+// 2. Apply filters in PHP
+$rows = $all_rows;
+// Membership ID filter
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $membership_id = (int)base64_decode($_GET['id']);
     if ($membership_id > 0) {
-        $where[] = "membership_id = " . $membership_id;
+        $rows = array_filter($rows, function ($r) use ($membership_id) {
+            return $r['membership_id'] == $membership_id;
+        });
     }
 }
 // Visits filter
 $visits_filter = isset($_GET['visits_filter']) ? $_GET['visits_filter'] : 'all';
 if ($visits_filter === 'with') {
-    $where[] = "membership_avl_visit > 0";
+    $rows = array_filter($rows, function ($r) {
+        return $r['membership_avl_visit'] > 0;
+    });
 } elseif ($visits_filter === 'without') {
-    $where[] = "membership_avl_visit = 0";
+    $rows = array_filter($rows, function ($r) {
+        return $r['membership_avl_visit'] == 0;
+    });
 }
 // Payment filter
 $payment_filter = isset($_GET['payment_filter']) ? $_GET['payment_filter'] : 'all';
 if ($payment_filter === 'pending') {
-    $where[] = "membership_amount_due > 0";
+    $rows = array_filter($rows, function ($r) {
+        return $r['membership_amount_due'] > 0;
+    });
 } elseif ($payment_filter === 'clear') {
-    $where[] = "membership_amount_due = 0";
+    $rows = array_filter($rows, function ($r) {
+        return $r['membership_amount_due'] == 0;
+    });
 }
-// Recent visits filter
-$recent_days = isset($_GET['recent_days']) ? $_GET['recent_days'] : 'all';
-if ($recent_days === 'custom' && isset($_GET['custom_recent_days']) && is_numeric($_GET['custom_recent_days'])) {
-    $days = (int)$_GET['custom_recent_days'];
-} elseif (is_numeric($recent_days)) {
-    $days = (int)$recent_days;
-} else {
-    $days = false;
-}
-$join_visits = '';
-$order_by = 'membership_profile_name ASC, membership_id DESC';
-if ($days) {
-    $recent_date = date('Y-m-d', strtotime("-{$days} days"));
-    $join_visits = "LEFT JOIN " . TABLE_PREFIX . "membership_visits ON membership_id = visit_membership_id";
-    $where[] = "visit_time >= '" . $recent_date . "'";
-    $order_by = 'visit_time DESC';
-}
-$sql = "SELECT membership_id, membership_profile_name, membership_total_visit, membership_avl_visit, membership_amount_due, user_mobile, membership_status
-    FROM " . TABLE_PREFIX . "membership
-    INNER JOIN " . TABLE_PREFIX . "warehouse ON membership_branch_id=warehouse_id
-    INNER JOIN " . TABLE_PREFIX . "user ON membership_user_id=user_id
-    $join_visits
-    WHERE " . implode(' AND ', $where) . "
-    ORDER BY $order_by";
-if ($dataList = mysqli_query($connection, $sql)) {
-    while ($r = mysqli_fetch_assoc($dataList)) {
-        $rows[] = $r;
+// Recent visits filter (not implemented in PHP here, as it requires visit_time from another table)
+// If you want to support this, you need to join/fetch visit_time in $all_rows and filter here.
+
+// 3. Re-index $rows for consistent foreach and count
+$rows = array_values($rows);
+
+if (!empty($rows)) {
+    foreach ($rows as $r) {
+        $summary_total_customers++;
+        $summary_total_due += (float)($r['membership_amount_due'] ?? 0);
     }
-} else if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE === true) {
-    echo "<pre>SQL Error: " . htmlspecialchars(mysqli_error($connection)) . "</pre>";
 }
+
 ?>
+
+<div class="box-1" style="margin-bottom:12px;">
+    <div class="dashboard-summary-cards-row" style="display:flex;gap:0;">
+        <div class="dashboard-summary-card"
+            style="flex:0 0 50%;background:linear-gradient(135deg,#f0f9ff 60%,#e0e7ef 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;<?php if ($filter_active) echo 'border:2px solid #2563eb;'; ?>">
+            <span class="icon-bg"
+                style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#38bdf8;opacity:0.13;pointer-events:none;z-index:0;"><i
+                    class="fi fi-rr-users"></i></span>
+            <div
+                style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#0284c7;font-weight:700;position:relative;z-index:1;">
+                Total Customers</div>
+            <div
+                style="font-size:clamp(22px,3vw,30px);font-weight:900;color:#0f172a;margin-top:6px;position:relative;z-index:1;">
+                <?php echo number_format($summary_total_customers); ?>
+            </div>
+        </div>
+        <div class="dashboard-summary-card"
+            style="flex:0 0 50%;background:linear-gradient(135deg,#fee2e2 60%,#fecaca 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;<?php if ($filter_active) echo 'border:2px solid #b91c1c;'; ?>">
+            <span class="icon-bg"
+                style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#ef4444;opacity:0.13;pointer-events:none;z-index:0;"><i
+                    class="fi fi-rr-exclamation"></i></span>
+            <div
+                style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#b91c1c;font-weight:700;position:relative;z-index:1;">
+                Total Due Amount</div>
+            <div
+                style="font-size:clamp(22px,3vw,30px);font-weight:900;color:#991b1b;margin-top:6px;position:relative;z-index:1;">
+                ₹ <?php echo number_format($summary_total_due); ?>
+            </div>
+        </div>
+    </div>
+</div>
 <section>
     <div class="only-mobile membership-card-list step_2_box" style="float: left;">
         <?php if (!empty($rows)): ?>

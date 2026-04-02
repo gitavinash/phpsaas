@@ -61,7 +61,7 @@ if ($dataList = mysqli_query($connection, $query)) {
                 <i class="fi fi-rr-users"
                     style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#38bdf8;opacity:0.13;pointer-events:none;z-index:0;"></i>
                 <div
-                    style="font-size:11px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#0284c7;font-weight:700;position:relative;z-index:1;">
+                    style="font-size:12px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#0284c7;font-weight:700;position:relative;z-index:1;">
                     Total Sales</div>
                 <div
                     style="font-size:clamp(28px,3.2vw,36px);line-height:1.05;font-weight:900;color:#0f172a;margin-top:8px;position:relative;z-index:1;">
@@ -72,7 +72,7 @@ if ($dataList = mysqli_query($connection, $query)) {
                 <i class="fi fi-rr-coins"
                     style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#facc15;opacity:0.13;pointer-events:none;z-index:0;"></i>
                 <div
-                    style="font-size:11px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#b45309;font-weight:700;position:relative;z-index:1;">
+                    style="font-size:12px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#b45309;font-weight:700;position:relative;z-index:1;">
                     Total Sales Amount</div>
                 <div
                     style="font-size:clamp(28px,3.2vw,36px);line-height:1.05;font-weight:900;color:#78350f;margin-top:8px;position:relative;z-index:1;">
@@ -83,7 +83,7 @@ if ($dataList = mysqli_query($connection, $query)) {
                 <i class="fi fi-rr-credit-card"
                     style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#22c55e;opacity:0.13;pointer-events:none;z-index:0;"></i>
                 <div
-                    style="font-size:11px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#15803d;font-weight:700;position:relative;z-index:1;">
+                    style="font-size:12px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#15803d;font-weight:700;position:relative;z-index:1;">
                     Payment Received</div>
                 <div
                     style="font-size:clamp(28px,3.2vw,36px);line-height:1.05;font-weight:900;color:#166534;margin-top:8px;position:relative;z-index:1;">
@@ -94,7 +94,7 @@ if ($dataList = mysqli_query($connection, $query)) {
                 <i class="fi fi-rr-exclamation"
                     style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#ef4444;opacity:0.13;pointer-events:none;z-index:0;"></i>
                 <div
-                    style="font-size:11px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#b91c1c;font-weight:700;position:relative;z-index:1;">
+                    style="font-size:12px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;color:#b91c1c;font-weight:700;position:relative;z-index:1;">
                     Due Amount</div>
                 <div
                     style="font-size:clamp(28px,3.2vw,36px);line-height:1.05;font-weight:900;color:#991b1b;margin-top:8px;position:relative;z-index:1;">

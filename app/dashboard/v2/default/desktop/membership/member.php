@@ -231,7 +231,7 @@
                         style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#38bdf8;opacity:0.13;pointer-events:none;z-index:0;"><i
                             class="fi fi-rr-users"></i></span>
                     <div
-                        style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#0284c7;font-weight:700;position:relative;z-index:1;">
+                        style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#0284c7;font-weight:700;position:relative;z-index:1;">
                         Total Sales</div>
                     <div
                         style="font-size:clamp(22px,3vw,30px);font-weight:900;color:#0f172a;margin-top:6px;position:relative;z-index:1;">
@@ -243,7 +243,7 @@
                         style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#facc15;opacity:0.13;pointer-events:none;z-index:0;"><i
                             class="fi fi-rr-coins"></i></span>
                     <div
-                        style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#b45309;font-weight:700;position:relative;z-index:1;">
+                        style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#b45309;font-weight:700;position:relative;z-index:1;">
                         Total Sales Amount</div>
                     <div
                         style="font-size:clamp(22px,3vw,30px);font-weight:900;color:#78350f;margin-top:6px;position:relative;z-index:1;">
@@ -256,7 +256,7 @@
                         style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#22c55e;opacity:0.13;pointer-events:none;z-index:0;"><i
                             class="fi fi-rr-credit-card"></i></span>
                     <div
-                        style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#15803d;font-weight:700;position:relative;z-index:1;">
+                        style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#15803d;font-weight:700;position:relative;z-index:1;">
                         Payment Received</div>
                     <div
                         style="font-size:clamp(22px,3vw,30px);font-weight:900;color:#166534;margin-top:6px;position:relative;z-index:1;">
@@ -269,7 +269,7 @@
                         style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#ef4444;opacity:0.13;pointer-events:none;z-index:0;"><i
                             class="fi fi-rr-exclamation"></i></span>
                     <div
-                        style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#b91c1c;font-weight:700;position:relative;z-index:1;">
+                        style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#b91c1c;font-weight:700;position:relative;z-index:1;">
                         Due Amount</div>
                     <div
                         style="font-size:clamp(22px,3vw,30px);font-weight:900;color:#991b1b;margin-top:6px;position:relative;z-index:1;">
