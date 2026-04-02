@@ -620,9 +620,12 @@ aside {
   background: #fff;
   z-index: 9;
   padding-bottom: 50px;
-  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
-    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+  box-shadow:
+    0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+    0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+    0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12);
 }
 
@@ -2310,7 +2313,8 @@ section.form
   justify-content: center;
   align-items: center;
   background: #fff; /* Optional, for contrast */
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+  box-shadow:
+    rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
   border-radius: 8px; /* Optional */
 }
@@ -2349,7 +2353,8 @@ section.form
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+  box-shadow:
+    rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
 
@@ -2753,7 +2758,9 @@ section.form
 .galleryImageBox:hover {
   background: #a7c1c7;
   color: #fff;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 0 0 1px #167a92;
+  box-shadow:
+    0 5px 10px rgba(0, 0, 0, 0.1),
+    0 0 0 1px #167a92;
 }
 
 .galleryImageBox img {
@@ -3203,7 +3210,9 @@ th {
 }
 .checkbox-wrapper-16 .checkbox-input:focus + .checkbox-tile {
   border-color: var(--brand-700);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 0 0 4px #167a92;
+  box-shadow:
+    0 5px 10px rgba(0, 0, 0, 0.1),
+    0 0 0 4px #167a92;
 }
 .checkbox-wrapper-16 .checkbox-input:focus + .checkbox-tile:before {
   transform: scale(1);
@@ -3473,7 +3482,9 @@ strong.stockInfoList {
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
   z-index: 9999;
   margin-bottom: 6px; /* space between element and tooltip */
   visibility: hidden;
@@ -3848,7 +3859,10 @@ textarea:focus,
   border: 1px solid var(--border-soft);
   color: var(--text-default);
   box-shadow: 0 1px 2px rgba(18, 18, 18, 0.06) !important;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
     transform 0.15s ease !important;
 }
 /* .btn:hover {
@@ -4083,7 +4097,9 @@ th.heading,
 .galleryImageBox:hover {
   background: var(--brand-300) !important;
   color: #fff !important;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--brand-600);
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.1),
+    0 0 0 1px var(--brand-600);
 }
 
 /* Checkbox tiles */
@@ -4263,4 +4279,40 @@ a:hover {
   padding: 5px 0px;
   font-size: 24px;
   letter-spacing: 1px;
+}
+
+@media (min-width: 600px) {
+  .dashboard-summary-cards-row {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .dashboard-summary-card {
+    flex: 0 0 calc(50% - 8px) !important;
+    max-width: calc(50% - 8px) !important;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 599px) {
+  .dashboard-summary-cards-row {
+    display: block !important;
+  }
+
+  .dashboard-summary-card {
+    width: 38% !important;
+    max-width: 50% !important;
+    margin-bottom: 16px;
+    float: left;
+    box-shadow: none !important;
+  }
+
+  .dashboard-summary-card:nth-child(odd) {
+    margin-right: 1%;
+  }
+
+  .dashboard-summary-card:nth-child(even) {
+    margin-left: 2%;
+  }
 }
