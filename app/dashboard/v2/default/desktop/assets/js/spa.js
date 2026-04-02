@@ -79,7 +79,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             resp.msg || "OTP resent successfully.",
-            "success"
+            "success",
           );
           // Start a fresh 30s disabled countdown
           startResendTimer(30);
@@ -98,7 +98,7 @@ $(document).ready(function () {
         popUpMessage(
           "center",
           (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed.",
-          (xhr.responseJSON && xhr.responseJSON.status) || "error"
+          (xhr.responseJSON && xhr.responseJSON.status) || "error",
         );
         $("#resendOTPBtn").prop("disabled", false);
         setBtnLabel($("#resendOTPBtn"), "Resend OTP");
@@ -122,6 +122,108 @@ $(document).ready(function () {
     }
   });
 
+  // Add sell
+
+  $("#addNewSell").on("click", function (e) {
+    e.preventDefault();
+    $("#addNewSell").hide();
+    // Get values
+    var name = $("#name").val().trim();
+    var warehouseId = $("#warehouseId").val().trim();
+    var mobile = $("#mobile").val().trim();
+    // Remove leading 0 if present
+    if (mobile.startsWith("0")) {
+      mobile = mobile.substring(1);
+    }
+    var packageType = $("#package").val()?.trim() || "";
+    var price = $("#price").val().trim();
+    var requirements = $("#requirements").val().trim();
+    const paymentMode = $("#paymentMode").val()?.trim() || "";
+
+    // ===== VALIDATION =====
+    if (name === "") {
+      popUpMessage("center", "Please enter customer name", "warning");
+      $("#addNewSell").show();
+      return;
+    }
+
+    if (mobile === "" || !/^[0-9]{10}$/.test(mobile)) {
+      popUpMessage(
+        "center",
+        "Please enter a valid 10-digit mobile number",
+        "warning",
+      );
+      $("#addNewSell").show();
+      return;
+    }
+
+    if (packageType === "") {
+      popUpMessage("center", "Please select a room type", "warning");
+      $("#addNewSell").show();
+      return;
+    }
+
+    if (paymentMode === "") {
+      popUpMessage("center", "Please select a payment mode", "warning");
+      $("#addNewSell").show();
+      return;
+    }
+
+    if (price === "" || parseFloat(price) <= 0) {
+      popUpMessage(
+        "center",
+        "Please enter a valid price greater than 0",
+        "warning",
+      );
+      $("#addNewSell").show();
+      return;
+    }
+
+    $.ajax({
+      url: "/api/sell/add/",
+      type: "POST",
+      data: {
+        warehouseId: warehouseId,
+        name: name,
+        mobile: mobile,
+        package: packageType,
+        price: price,
+        requirements: requirements,
+        paymentMode: paymentMode,
+      },
+      dataType: "JSON",
+      success: function (response) {
+        if (response.status === "success") {
+          // Reset form after success
+          $("#addNewSellForm")[0].reset();
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "success",
+          );
+          setTimeout(function () {
+            window.location.href = "/dashboard/";
+          }, 1500);
+        } else {
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "error",
+          );
+          $("#addNewSell").show();
+        }
+      },
+      error: function (xhr) {
+        $("#addNewSell").show();
+        var errorMsg = "An error occurred while saving sell.";
+        if (xhr.responseJSON && xhr.responseJSON.msg) {
+          errorMsg = xhr.responseJSON.msg;
+        }
+        popUpMessage("center", errorMsg, "error");
+      },
+    });
+  });
+
   $("#addMembership").on("click", function (e) {
     e.preventDefault();
     $("#addMembership").hide();
@@ -129,6 +231,9 @@ $(document).ready(function () {
     var name = $("#name").val().trim();
     var warehouseId = $("#warehouseId").val().trim();
     var mobile = $("#mobile").val().trim();
+    if (mobile.startsWith("0")) {
+      mobile = mobile.substring(1);
+    }
     var packageType = $("#package").val()?.trim() || "";
     var price = $("#price").val().trim();
     var dueAmount = $("#dueAmount").val().trim();
@@ -148,7 +253,7 @@ $(document).ready(function () {
       popUpMessage(
         "center",
         "Please enter a valid 10-digit mobile number",
-        "warning"
+        "warning",
       );
       $("#addMembership").show();
       return;
@@ -170,7 +275,7 @@ $(document).ready(function () {
       popUpMessage(
         "center",
         "Please enter a valid price greater than 0",
-        "warning"
+        "warning",
       );
       $("#addMembership").show();
       return;
@@ -186,7 +291,7 @@ $(document).ready(function () {
       popUpMessage(
         "center",
         "Due amount cannot exceed the total price",
-        "warning"
+        "warning",
       );
       $("#addMembership").show();
       return;
@@ -202,7 +307,7 @@ $(document).ready(function () {
       popUpMessage(
         "center",
         "Total available visit must be at least 1",
-        "warning"
+        "warning",
       );
       $("#addMembership").show();
       return;
@@ -231,14 +336,14 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             response.msg || "Something went wrong",
-            "success"
+            "success",
           );
           window.location.href = "/dashboard/membership/";
         } else {
           popUpMessage(
             "center",
             response.msg || "Something went wrong",
-            "error"
+            "error",
           );
           $("#addMembership").show();
         }
@@ -285,7 +390,7 @@ $(document).ready(function () {
       popUpMessage(
         "center",
         "Please enter a valid price greater than 0",
-        "warning"
+        "warning",
       );
       $("#updateMembership").show();
       return;
@@ -301,7 +406,7 @@ $(document).ready(function () {
       popUpMessage(
         "center",
         "Due amount cannot exceed the total price",
-        "warning"
+        "warning",
       );
       $("#updateMembership").show();
       return;
@@ -317,7 +422,7 @@ $(document).ready(function () {
       popUpMessage(
         "center",
         "Total available visit must be at below than Total Visits",
-        "warning"
+        "warning",
       );
       $("#updateMembership").show();
       return;
@@ -345,14 +450,14 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             response.msg || "Something went wrong",
-            "success"
+            "success",
           );
           window.location.href = "/dashboard/membership/member/";
         } else {
           popUpMessage(
             "center",
             response.msg || "Something went wrong",
-            "error"
+            "error",
           );
           $("#updateMembership").show();
         }
@@ -406,6 +511,9 @@ $(document).ready(function () {
     // Get values
     redeemVisit = $("#visits").val().trim();
     var mobile = $("#mobile").val().trim();
+    if (mobile.startsWith("0")) {
+      mobile = mobile.substring(1);
+    }
     var warehouseId = $("#warehouseId").val().trim();
 
     // Reset value
@@ -425,7 +533,7 @@ $(document).ready(function () {
       popUpMessage(
         "center",
         "Please enter a valid 10-digit mobile number",
-        "warning"
+        "warning",
       );
       $btn.show();
       $(".step_1_box").show();
@@ -608,7 +716,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             response.msg || "Something went wrong",
-            "error"
+            "error",
           );
           $(".step_1_box").show();
         }
@@ -617,7 +725,7 @@ $(document).ready(function () {
         popUpMessage(
           "center",
           (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed",
-          (xhr.responseJSON && xhr.responseJSON.status) || "error"
+          (xhr.responseJSON && xhr.responseJSON.status) || "error",
         );
         $(".step_1_box").show();
       },
@@ -688,7 +796,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             response.msg || "Something went wrong",
-            "error"
+            "error",
           );
           $(".step_2_box").show();
           $("#loader").hide();
@@ -698,7 +806,7 @@ $(document).ready(function () {
         popUpMessage(
           "center",
           (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed",
-          (xhr.responseJSON && xhr.responseJSON.status) || "error"
+          (xhr.responseJSON && xhr.responseJSON.status) || "error",
         );
         $(".step_2_box").show();
         $("#loader").hide();
@@ -761,7 +869,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             response.msg || "Payment collected successfully",
-            "success"
+            "success",
           );
 
           // update UI after success
@@ -773,7 +881,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             response.msg || "Something went wrong",
-            "error"
+            "error",
           );
         }
       },
@@ -781,7 +889,7 @@ $(document).ready(function () {
         popUpMessage(
           "center",
           (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed",
-          (xhr.responseJSON && xhr.responseJSON.status) || "error"
+          (xhr.responseJSON && xhr.responseJSON.status) || "error",
         );
         $("#loader").hide();
         showStep(7);
@@ -903,7 +1011,7 @@ $(document).ready(function () {
       popUpMessage(
         "center",
         "Please enter duration for all visits.",
-        "warning"
+        "warning",
       );
 
       $("#loader").hide();
@@ -926,7 +1034,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             response.msg || "Something went wrong",
-            "error"
+            "error",
           );
           $(".step_3_box").show();
           $(".step_4_box").hide();
@@ -937,7 +1045,7 @@ $(document).ready(function () {
         popUpMessage(
           "center",
           (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed",
-          (xhr.responseJSON && xhr.responseJSON.status) || "error"
+          (xhr.responseJSON && xhr.responseJSON.status) || "error",
         );
         $(".step_3_box").show();
         $("#loader").hide();
@@ -986,7 +1094,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             response.msg || "Something went wrong",
-            "error"
+            "error",
           );
           $(".step_4_box").show();
           $(".step_5_box").hide();
@@ -997,7 +1105,7 @@ $(document).ready(function () {
         popUpMessage(
           "center",
           (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed",
-          (xhr.responseJSON && xhr.responseJSON.status) || "error"
+          (xhr.responseJSON && xhr.responseJSON.status) || "error",
         );
         $(".step_4_box").show();
         $("#loader").hide();
@@ -1048,7 +1156,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             error.responseJSON.msg,
-            error.responseJSON.status
+            error.responseJSON.status,
           );
           $("#updateAmenities").show();
         },
@@ -1082,7 +1190,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             error.responseJSON.msg,
-            error.responseJSON.status
+            error.responseJSON.status,
           );
           $("#updateAmenities").show();
         },
@@ -1178,7 +1286,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             errorResponse.responseJSON.msg,
-            errorResponse.responseJSON.status
+            errorResponse.responseJSON.status,
           );
         },
       });
@@ -1268,7 +1376,7 @@ $(document).ready(function () {
           popUpMessage(
             "center",
             errorResponse.responseJSON.msg,
-            errorResponse.responseJSON.status
+            errorResponse.responseJSON.status,
           );
         },
       });

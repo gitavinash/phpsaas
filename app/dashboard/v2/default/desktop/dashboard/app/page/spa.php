@@ -74,11 +74,11 @@
 <!-- Reception: Check-in • Active rooms -->
 
 <div class="widget box-2 box-mb-5">
-    <a href="membership/sell/" class="actionBtn new-item-btn spa-link" data-route="/membership/sell/"
-        aria-label="Create membership">
+    <a href="walkin/sell/" class="actionBtn new-item-btn spa-link" data-route="/walkin/sell/"
+        aria-label="Manage active rooms">
         <div class="widget-info">
-            <i class="fi fi-rr-user-add plus-badge badge-blue" aria-hidden="true"></i>
-            Create membership
+            <i class="fi fi-rr-file-medical plus-badge badge-purple" aria-hidden="true"></i>
+            Walk-in customers
         </div>
     </a>
 </div>
@@ -89,6 +89,16 @@
         <div class="widget-info">
             <i class="fi fi-rr-entrance plus-badge badge-amber" aria-hidden="true"></i>
             Check-in
+        </div>
+    </a>
+</div>
+
+<div class="widget box-2 box-mb-5">
+    <a href="membership/sell/" class="actionBtn new-item-btn spa-link" data-route="/membership/sell/"
+        aria-label="Create membership">
+        <div class="widget-info">
+            <i class="fi fi-rr-user-add plus-badge badge-blue" aria-hidden="true"></i>
+            Create membership
         </div>
     </a>
 </div>

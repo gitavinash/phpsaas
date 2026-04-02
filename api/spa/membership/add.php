@@ -114,7 +114,7 @@ user_mobile='{$mobile}'")) {
                 $msg = 'Invalid user information found';
             }
         } else {
-            $msg = 'Invalid category information found';
+            $msg = 'Invalid room type found';
         }
     }
 } else {

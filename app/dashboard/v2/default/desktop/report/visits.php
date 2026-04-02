@@ -167,7 +167,7 @@ $total_customer_count = count($counted_memberships);
         </h2>
         <div class="showVisitorHistory"></div>
         <div class="stepNavigation">
-            <button type="button" style="width: 100%;" class="btn btn-primary backToStep2">
+            <button type="button" style="width: 100%; color: #fff;" class="btn btn-primary backToStep2">
                 <i class="fi-rr-arrow-left"></i> Back
             </button>
         </div>
