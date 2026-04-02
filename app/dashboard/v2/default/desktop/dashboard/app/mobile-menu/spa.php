@@ -20,27 +20,27 @@
                     <a href="membership/sell/" class="more-item spa-link" data-route="/membership/sell/">
                         <i class="fi fi-rr-receipt"></i><span>Sell Membership</span>
                     </a>
-                    <a href="membership/plan/add/" class="more-item spa-link" data-route="/membership/plan/add/">
+                    <!-- <a href="membership/plan/add/" class="more-item spa-link" data-route="/membership/plan/add/">
                         <i class="fi fi-rr-add"></i><span>New Plan</span>
                     </a>
                     <a href="membership/plan/" class="more-item spa-link" data-route="/membership/plan/">
                         <i class="fi fi-rr-category-alt"></i><span>Manage Plans</span>
-                    </a>
+                    </a> -->
                     <a href="membership/member/" class="more-item spa-link" data-route="/membership/member/">
                         <i class="fi fi-rr-users"></i><span>Members</span>
                     </a>
                     <a href="membership/renewals/" class="more-item spa-link" data-route="/membership/renewals/">
                         <i class="fi fi-rr-refresh"></i><span>Renewals</span>
                     </a>
-                    <a href="membership/payments/" class="more-item spa-link" data-route="/membership/payments/">
+                    <!-- <a href="membership/payments/" class="more-item spa-link" data-route="/membership/payments/">
                         <i class="fi fi-rr-credit-card"></i><span>Payments</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>
 
         <!-- THERAPISTS -->
-        <div class="more-section is-therapist">
+        <!-- <div class="more-section is-therapist">
             <h4>Therapists <small>Manage spa staff</small></h4>
             <div class="more-row">
                 <div class="more-grid">
@@ -58,31 +58,32 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- ROOMS & FACILITIES -->
         <div class="more-section is-rooms">
             <h4>Rooms & Facilities <small>Track spa rooms</small></h4>
             <div class="more-row">
                 <div class="more-grid">
-                    <a href="vendors/property/room/" class="more-item spa-link" data-route="/room/add/">
-                        <i class="fi fi-rr-door-open"></i><span>Add Room</span>
-                    </a>
-                    <a href="room/" class="more-item spa-link" data-route="/room/">
+                    <a href="vendors/property/room/" class="more-item spa-link" data-route="/room/">
                         <i class="fi fi-rr-bed"></i><span>Manage Rooms</span>
                     </a>
-                    <a href="room/availability/" class="more-item spa-link" data-route="/room/availability/">
+                    <!--
+                    <a href="vendors/property/room/" class="more-item spa-link" data-route="/room/add/">
+                        <i class="fi fi-rr-door-open"></i><span>Add Room</span>
+                    </a> -->
+                    <!-- <a href="room/availability/" class="more-item spa-link" data-route="/room/availability/">
                         <i class="fi fi-rr-calendar"></i><span>Room Availability</span>
                     </a>
                     <a href="room/booking/" class="more-item spa-link" data-route="/room/booking/">
                         <i class="fi fi-rr-calendar-check"></i><span>Room Bookings</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>
 
         <!-- SERVICES -->
-        <div class="more-section is-services">
+        <!-- <div class="more-section is-services">
             <h4>Services <small>Treatments & packages</small></h4>
             <div class="more-row">
                 <div class="more-grid">
@@ -97,25 +98,28 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- REPORTING -->
         <div class="more-section is-reports">
             <h4>Reports <small>Analytics & performance</small></h4>
             <div class="more-row">
                 <div class="more-grid">
-                    <a href="reports/sales/" class="more-item spa-link" data-route="/reports/sales/">
+                    <a href="report/sales/" class="more-item spa-link" data-route="/report/sales/">
                         <i class="fi fi-rr-chart-histogram"></i><span>Sales Report</span>
                     </a>
-                    <a href="reports/memberships/" class="more-item spa-link" data-route="/reports/memberships/">
+                    <a href="report/visits/" class="more-item spa-link" data-route="/report/visits/">
+                        <i class="fi fi-rr-walking"></i><span>Visits Report</span>
+                    </a>
+                    <a href="membership/member/" class="more-item spa-link" data-route="/membership/member/">
                         <i class="fi fi-rr-chart-pie-alt"></i><span>Membership Report</span>
                     </a>
-                    <a href="reports/therapists/" class="more-item spa-link" data-route="/reports/therapists/">
-                        <i class="fi fi-rr-chart-user"></i><span>Therapist Report</span>
+                    <!-- <a href="reports/therapists/" class="more-item spa-link" data-route="/reports/therapists/">
+                        <i class="fi fi-rr-chart-user"></i><span>Therapist Report</span> -->
                     </a>
-                    <a href="reports/rooms/" class="more-item spa-link" data-route="/reports/rooms/">
+                    <!-- <a href="reports/rooms/" class="more-item spa-link" data-route="/reports/rooms/">
                         <i class="fi fi-rr-chart-line-up"></i><span>Room Utilization</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>
@@ -143,15 +147,15 @@
             <h4>Settings <small>Configure your spa</small></h4>
             <div class="more-row">
                 <div class="more-grid">
-                    <a href="settings/general/" class="more-item spa-link" data-route="/settings/general/">
+                    <!-- <a href="settings/general/" class="more-item spa-link" data-route="/settings/general/">
                         <i class="fi-rr-settings"></i><span>General Settings</span>
-                    </a>
+                    </a> -->
                     <a href="user/list/" class="more-item spa-link" data-route="/settings/users/">
                         <i class="fi fi-rr-user"></i><span>Users</span>
                     </a>
-                    <a href="settings/roles/" class="more-item spa-link" data-route="/settings/roles/">
+                    <!-- <a href="settings/roles/" class="more-item spa-link" data-route="/settings/roles/">
                         <i class="fi fi-rr-lock"></i><span>Roles & Permissions</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>
@@ -216,10 +220,10 @@
         data-route="/membership/">
         <i class="fi fi-rr-id-badge"></i><span>Membership</span>
     </a>
-    <a href="room/active/"
-        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/room/active/') !== false) ? 'active' : ''; ?>"
-        data-route="/room/active/">
-        <i class="fi fi-rr-door-open"></i><span>Active Rooms</span>
+    <a href="membership/reports/"
+        class="bn-item spa-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/membership/reports/') !== false) ? 'active' : ''; ?>"
+        data-route="/membership/reports/">
+        <i class="fi fi-rr-chart-histogram"></i><span>Reports</span>
     </a>
     <button type="button" class="bn-item bn-more" id="moreOpen" aria-haspopup="dialog" aria-controls="morePanel">
         <i class="fi-rr-apps"></i><span>More</span>

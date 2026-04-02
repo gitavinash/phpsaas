@@ -65,7 +65,7 @@ user_mobile='{$mobile}'")) {
 
                 // Create a membership
 
-                $generateMembership = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership(membership_site_id, membership_user_id, membership_profile_name, membership_branch_id, membership_type, membership_type_id, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, membership_comment, membership_status, membership_created, membership_expire) VALUES('" . SITE_ID . "', '{$userID}', '{$name}', '{$warehouseId}', 'category', '{$package}', '{$visit}', '{$avlVisit}', '{$price}', '0', '{$requirements}', 2, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR))");
+                $generateMembership = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership(membership_site_id, membership_user_id, membership_profile_name, membership_branch_id, membership_type, membership_type_id, membership_total_visit, membership_avl_visit, membership_price, membership_amount_due, membership_comment, membership_status, membership_created, membership_expire) VALUES('" . SITE_ID . "', '{$userID}', '{$name}', '{$warehouseId}', 'category', '{$package}', '{$visit}', '{$avlVisit}', '{$price}', '0', 'Walk-in', 2, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR))");
 
                 $membershipId = mysqli_insert_id($connection);
                 $paymentAmount = $price;

@@ -136,19 +136,20 @@ if ($dataList = mysqli_query($connection, $query)) {
                     <div style="font-size:13px;opacity:0.9;">Amount Due</div>
                     <div style="font-size:24px; line-height:1.1; font-weight:800;">₹
                         <?php echo number_format($amount_due); ?></div>
-                </div><?php endif; ?>< !-- Actions -->
-                    <div class="action-stack" style="margin-top:10px;">
-                        <div class="action-item"><a href="/dashboard/membership/update/?id=<?php echo $encoded_id; ?>"
-                                class="btn btn-blue dataTableBtn" title="Edit membership"><i
-                                    class="fi-rr-pencil"></i>Edit </a></div>
-                        <div class="action-item"><a href="#" class="btn btn-grey dataTableBtn visitHistoryButton"
-                                data-id="<?php echo $encoded_id; ?>" title="Visit History"><i
-                                    class="fi-rr-time-past"></i>History </a></div>
-                    </div><?php if ($amount_due > 0): ?><div class="action-stack" style="margin-top:10px;">
-                        <div class="action-item"><a href="#" class="btn btn-clear dataTableBtn clearDuesButton"
-                                data-id="<?php echo $encoded_id; ?>" title="Clear dues"><i
-                                    class="fi-rr-check-circle"></i>Clear old dues </a></div>
-                    </div><?php endif; ?>
+                </div><?php endif; ?>
+                <!-- Actions -->
+                <div class="action-stack" style="margin-top:10px;">
+                    <div class="action-item"><a href="/dashboard/membership/update/?id=<?php echo $encoded_id; ?>"
+                            class="btn btn-blue dataTableBtn" title="Edit membership"><i class="fi-rr-pencil"></i>Edit
+                        </a></div>
+                    <div class="action-item"><a href="#" class="btn btn-grey dataTableBtn visitHistoryButton"
+                            data-id="<?php echo $encoded_id; ?>" title="Visit History"><i
+                                class="fi-rr-time-past"></i>History </a></div>
+                </div><?php if ($amount_due > 0): ?><div class="action-stack" style="margin-top:10px;">
+                    <div class="action-item"><a href="#" class="btn btn-clear dataTableBtn clearDuesButton"
+                            data-id="<?php echo $encoded_id; ?>" title="Clear dues"><i
+                                class="fi-rr-check-circle"></i>Clear old dues </a></div>
+                </div><?php endif; ?>
             </div>
         </article><?php endforeach; ?><?php else: ?><div class="empty-state"><i class="fi fi-rr-box-open"></i>No
             memberships found.</div><?php endif; ?>
@@ -156,8 +157,8 @@ if ($dataList = mysqli_query($connection, $query)) {
     <div class="step-open-box step_6_box historyBox" style="display:none">
         <h2 style="font-size:24px;font-weight:700;margin-bottom:12px; margin-left: 5px;">Visit Logs </h2>
         <div class="showVisitorHistory"></div>
-        <div class="stepNavigation"><button type="button" style="width: 100%;" class="btn btn-primary backToStep2"><i
-                    class="fi-rr-arrow-left"></i>Back </button></div>
+        <div class="stepNavigation"><button type="button" style="width: 100%; color: #fff;"
+                class="btn btn-primary backToStep2"><i class="fi-rr-arrow-left"></i>Back </button></div>
     </div>
     <div class="step-open-box step_7_box clearDueBox" style="display:none">
         <h2 style="font-size:24px;font-weight:700;margin-bottom:12px; margin-left: 5px;">Collect Due Payment </h2>
