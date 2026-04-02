@@ -188,22 +188,45 @@
         ?>
         <!-- Summary Info Cards -->
         <?php
-        // All-time business summary
-        $summary = [
-            'total_sales' => 0,
-            'total_sales_amount' => 0,
-            'total_payment_received' => 0,
-            'total_due_amount' => 0
-        ];
-        $summary_sql = "SELECT COUNT(*) as total_sales, SUM(membership_price) as total_sales_amount, SUM(membership_price-membership_amount_due) as total_payment_received, SUM(membership_amount_due) as total_due_amount FROM " . TABLE_PREFIX . "membership WHERE membership_site_id=" . SITE_ID;
-        if ($res = mysqli_query($connection, $summary_sql)) {
-            $summary = mysqli_fetch_assoc($res);
+        // Calculate summary based on filter
+        $filter_active = (
+            (isset($_GET['visits_filter']) && $_GET['visits_filter'] !== 'all') ||
+            (isset($_GET['payment_filter']) && $_GET['payment_filter'] !== 'all') ||
+            (isset($_GET['recent_days']) && $_GET['recent_days'] !== 'all' && $_GET['recent_days'] !== '')
+        );
+        if ($filter_active) {
+            // Calculate from filtered $rows
+            $summary = [
+                'total_sales' => count($rows),
+                'total_sales_amount' => 0,
+                'total_payment_received' => 0,
+                'total_due_amount' => 0
+            ];
+            foreach ($rows as $r) {
+                $price = (float)($r['membership_price'] ?? 0);
+                $due = (float)($r['membership_amount_due'] ?? 0);
+                $summary['total_sales_amount'] += $price;
+                $summary['total_due_amount'] += $due;
+                $summary['total_payment_received'] += ($price - $due);
+            }
+        } else {
+            // All-time business summary
+            $summary = [
+                'total_sales' => 0,
+                'total_sales_amount' => 0,
+                'total_payment_received' => 0,
+                'total_due_amount' => 0
+            ];
+            $summary_sql = "SELECT COUNT(*) as total_sales, SUM(membership_price) as total_sales_amount, SUM(membership_price-membership_amount_due) as total_payment_received, SUM(membership_amount_due) as total_due_amount FROM " . TABLE_PREFIX . "membership WHERE membership_site_id=" . SITE_ID;
+            if ($res = mysqli_query($connection, $summary_sql)) {
+                $summary = mysqli_fetch_assoc($res);
+            }
         }
         ?>
         <div class="box-1" style="margin-bottom:12px;">
             <div class="dashboard-summary-cards-row">
                 <div class="dashboard-summary-card"
-                    style="flex:0 0 calc(40% - 8px);background:linear-gradient(135deg,#f0f9ff 60%,#e0e7ef 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;">
+                    style="flex:0 0 calc(40% - 8px);background:linear-gradient(135deg,#f0f9ff 60%,#e0e7ef 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;<?php if ($filter_active) echo 'border:2px solid #2563eb;'; ?>">
                     <span class="icon-bg"
                         style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#38bdf8;opacity:0.13;pointer-events:none;z-index:0;"><i
                             class="fi fi-rr-users"></i></span>
@@ -215,7 +238,7 @@
                         <?php echo number_format($summary['total_sales']); ?> </div>
                 </div>
                 <div class="dashboard-summary-card"
-                    style="flex:0 0 calc(40% - 8px);background:linear-gradient(135deg,#fef9c3 60%,#fde68a 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;">
+                    style="flex:0 0 calc(40% - 8px);background:linear-gradient(135deg,#fef9c3 60%,#fde68a 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;<?php if ($filter_active) echo 'border:2px solid #facc15;'; ?>">
                     <span class="icon-bg"
                         style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#facc15;opacity:0.13;pointer-events:none;z-index:0;"><i
                             class="fi fi-rr-coins"></i></span>
@@ -228,7 +251,7 @@
                         <?php echo number_format($summary['total_sales_amount']); ?> </div>
                 </div>
                 <div class="dashboard-summary-card"
-                    style="flex:0 0 calc(40% - 8px);background:linear-gradient(135deg,#dcfce7 60%,#bbf7d0 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;">
+                    style="flex:0 0 calc(40% - 8px);background:linear-gradient(135deg,#dcfce7 60%,#bbf7d0 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;<?php if ($filter_active) echo 'border:2px solid #22c55e;'; ?>">
                     <span class="icon-bg"
                         style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#22c55e;opacity:0.13;pointer-events:none;z-index:0;"><i
                             class="fi fi-rr-credit-card"></i></span>
@@ -241,7 +264,7 @@
                         <?php echo number_format($summary['total_payment_received']); ?> </div>
                 </div>
                 <div class="dashboard-summary-card"
-                    style="flex:0 0 calc(40% - 8px);background:linear-gradient(135deg,#fee2e2 60%,#fecaca 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;">
+                    style="flex:0 0 calc(40% - 8px);background:linear-gradient(135deg,#fee2e2 60%,#fecaca 100%);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(20,33,61,0.06);position:relative;overflow:hidden;<?php if ($filter_active) echo 'border:2px solid #ef4444;'; ?>">
                     <span class="icon-bg"
                         style="position:absolute;right:-18px;top:-18px;font-size:80px;color:#ef4444;opacity:0.13;pointer-events:none;z-index:0;"><i
                             class="fi fi-rr-exclamation"></i></span>
