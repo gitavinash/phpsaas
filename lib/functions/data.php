@@ -32,68 +32,83 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
     }
     $seedTags = [];
     while ($row = mysqli_fetch_assoc($resSeedTags)) {
-        $seedTags[] = "'" . $conn->real_escape_string($row['tag_title']) . "'";
+        $seedTags[] = $row['tag_title'];
     }
     mysqli_free_result($resSeedTags);
 
-    // If no tags found for the seed post, return no result
     if (empty($seedTags)) {
         return [];
     }
 
-    $tagsCsv = implode(',', $seedTags);
-
-    // Step 2: Find other posts/news with any of these tags (excluding the seed)
-    $sqlIds = "SELECT DISTINCT tag_relation_id FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_site_id = {$siteId} AND tag_relation_id <> {$postId} AND tag_title IN ({$tagsCsv}) ORDER BY tag_relation_id ASC LIMIT {$pageLimit} OFFSET {$offset}";
-    $resIds = mysqli_query($conn, $sqlIds);
-    if (!$resIds) {
-        return [];
+    // Build LIKE conditions for all tags
+    // Build LIKE conditions for all tags (case-insensitive)
+    $likeConditions = [];
+    foreach ($seedTags as $tag) {
+        $escaped = $conn->real_escape_string($tag);
+        $likeConditions[] = "LOWER({$postTypeEsc}_title) LIKE '%" . mb_strtolower($escaped) . "%'";
     }
-    $ids = [];
-    while ($r = mysqli_fetch_assoc($resIds)) {
-        $ids[] = (int)$r['tag_relation_id'];
-    }
-    mysqli_free_result($resIds);
+    $likeSql = implode(' OR ', $likeConditions);
 
-    // If no matching news/posts found, return no result
-    if (empty($ids)) {
-        return [];
-    }
+    // Build IN clause for tag match
+    $inTags = array_map(function ($t) use ($conn) {
+        return "'" . $conn->real_escape_string($t) . "'";
+    }, $seedTags);
+    $inTagsCsv = implode(',', $inTags);
 
-    // Step 3: Fetch news/posts data for those IDs
-    $idsCsv   = implode(',', $ids);
-    $orderSql = "FIELD({$postTypeEsc}_id, {$idsCsv})";
+    // Get tag frequency for scoring
+    $tagFreq = [];
+    $sqlTagFreq = "SELECT tag_title, COUNT(*) AS freq FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_site_id = {$siteId} AND tag_title IN ({$inTagsCsv}) GROUP BY tag_title";
+    $resTagFreq = mysqli_query($conn, $sqlTagFreq);
+    if ($resTagFreq) {
+        while ($row = mysqli_fetch_assoc($resTagFreq)) {
+            $tagFreq[$row['tag_title']] = (int)$row['freq'];
+        }
+        mysqli_free_result($resTagFreq);
+    }
 
     $table = TABLE_PREFIX . $postTypeEsc;
     $link  = TABLE_PREFIX . "link";
     $profile  = TABLE_PREFIX . "profile";
+    $category = TABLE_PREFIX . "category";
+    $idField = $postTypeEsc . '_id';
+    $titleField = $postTypeEsc . '_title';
+    $descField = $postType . '_description';
+    $catField = $postType . '_category';
 
+    // Fetch all possible candidates (limit for performance)
     $sqlData = "
         SELECT 
-            {$postTypeEsc}_id   AS id,
+            {$idField}   AS id,
             {$postTypeEsc}_image AS image,
-            {$postTypeEsc}_title AS title,
-            {$postType}_description AS description,
+            {$titleField} AS title,
+            {$descField} AS description,
             link_url,
             link_published,
             profile_display_name,
             category_title
         FROM {$table}
         INNER JOIN {$link}
-            ON link_relation_id = {$postTypeEsc}_id
+            ON link_relation_id = {$idField}
            AND link_status = 200
            AND link_type   = '{$postTypeEsc}'
            AND link_site_id = {$siteId}
         INNER JOIN {$profile}
             ON link_owner_id=profile_user_id
-        INNER JOIN " . TABLE_PREFIX . "category
-            ON category_id={$postType}_category
+        INNER JOIN {$category}
+            ON category_id={$catField}
             AND category_type='{$postType}'
             AND category_site_id=" . SITE_ID . "
-        WHERE {$postTypeEsc}_id IN ({$idsCsv})
+        WHERE {$idField} <> {$postId}
           AND {$postTypeEsc}_status = 1
           AND {$postTypeEsc}_site_id = {$siteId}
-        ORDER BY {$orderSql}
+          AND (
+                {$idField} IN (
+                    SELECT tag_relation_id FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_site_id = {$siteId} AND tag_title IN ({$inTagsCsv})
+                )
+                OR ({$likeSql})
+          )
+        ORDER BY link_published DESC
+        LIMIT 100
     ";
 
     $resData = mysqli_query($conn, $sqlData);
@@ -103,24 +118,60 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
 
     $out = [];
     while ($row = mysqli_fetch_assoc($resData)) {
+        $score = 0;
+        $titleLower = mb_strtolower($row['title']);
+        $matchedTags = [];
+        foreach ($seedTags as $tag) {
+            $tagLower = mb_strtolower($tag);
+            $inTag = false;
+            // Tag match
+            $sqlHasTag = "SELECT 1 FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_site_id = {$siteId} AND tag_relation_id = " . (int)$row['id'] . " AND tag_title = '" . $conn->real_escape_string($tag) . "' LIMIT 1";
+            $hasTagRes = mysqli_query($conn, $sqlHasTag);
+            if ($hasTagRes && mysqli_fetch_assoc($hasTagRes)) {
+                $score += 10 + ($tagFreq[$tag] ?? 1); // boost by tag frequency
+                $inTag = true;
+                $matchedTags[] = $tag;
+            }
+            if ($hasTagRes) mysqli_free_result($hasTagRes);
+            // Title match
+            if (strpos($titleLower, $tagLower) !== false) {
+                $score += 5;
+                if (!$inTag) $matchedTags[] = $tag;
+            }
+        }
+        // Bonus if both tag and title match
+        if (count($matchedTags) > 1) $score += 5;
+        $row['score'] = $score;
+        $row['matched_tags'] = $matchedTags;
         $out[] = $row;
     }
     mysqli_free_result($resData);
 
-    // Step 4: Find the most used tag among the matched posts
-    if (!empty($ids)) {
-        $idsCsvForTag = implode(',', $ids);
-        $sqlKeyword = "SELECT tag_title, COUNT(*) AS tag_count FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_site_id = {$siteId} AND tag_relation_id IN ({$idsCsvForTag}) GROUP BY tag_title ORDER BY tag_count DESC LIMIT 1";
-        $resKeyword = mysqli_query($conn, $sqlKeyword);
-        if ($resKeyword && $row = mysqli_fetch_assoc($resKeyword)) {
-            $mostUsedKeyword = $row['tag_title'];
+    // Sort by score DESC, then by latest date
+    usort($out, function ($a, $b) {
+        if ($b['score'] === $a['score']) {
+            return strcmp($b['link_published'], $a['link_published']);
         }
-        mysqli_free_result($resKeyword);
+        return $b['score'] - $a['score'];
+    });
+
+    // Pagination
+    $paged = array_slice($out, $offset, $pageLimit);
+
+    // Find most used tag
+    $mostUsedKeyword = null;
+    $maxFreq = 0;
+    foreach ($tagFreq as $tag => $freq) {
+        if ($freq > $maxFreq) {
+            $mostUsedKeyword = $tag;
+            $maxFreq = $freq;
+        }
     }
 
     return array(
-        'articles' => $out,
-        'mostUserKeyword' => $mostUsedKeyword
+        'articles' => $paged,
+        'mostUserKeyword' => $mostUsedKeyword,
+        'allTags' => $seedTags
     );
 }
 
