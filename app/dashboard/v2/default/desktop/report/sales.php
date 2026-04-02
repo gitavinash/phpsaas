@@ -257,13 +257,18 @@ if ($dataList = mysqli_query($connection, $query)) {
     }
 
     .dashboard-summary-card {
-        width: 37% !important;
+        width: 38% !important;
         max-width: 50% !important;
         margin-bottom: 16px;
         float: left;
-        margin-left: 1%;
-        margin-right: 1%;
         box-shadow: none !important;
     }
-}
+
+    .dashboard-summary-card:nth-child(odd) {
+        margin-right: 1%;
+    }
+
+    .dashboard-summary-card:nth-child(even) {
+        margin-left: 1%;
+    }
 </style>
