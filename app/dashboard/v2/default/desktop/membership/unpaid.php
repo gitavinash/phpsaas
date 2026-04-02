@@ -4,7 +4,12 @@
 
 <?php
 // ...existing code for filters and $rows definition...
-// Calculate filtered summary (after $rows is defined)
+// Calculate summary using the current $rows (filtered or unfiltered) - moved after $rows is populated
+// ...existing code for filters and $rows definition...
+
+// ... code that populates $rows ...
+
+// Calculate summary from $rows (must be after $rows is populated)
 $summary_total_customers = isset($rows) && is_array($rows) ? count($rows) : 0;
 $summary_total_due = 0;
 if (!empty($rows)) {
@@ -12,6 +17,8 @@ if (!empty($rows)) {
         $summary_total_due += (float)($r['membership_amount_due'] ?? 0);
     }
 }
+// Debug: Uncomment to verify $rows
+// echo '<pre>DEBUG: rows count = ' . count($rows) . ', total due = ' . $summary_total_due . '</pre>';
 // Detect if any filter is active
 $filter_active = false;
 if (
@@ -99,7 +106,7 @@ if (
                     Clear</option>
             </select>
         </div>
-        <div>
+        <!-- <div>
             <label for="recent_days">Recent Visits</label><br>
             <select name="recent_days" id="recent_days" class="form-control"
                 onchange="document.getElementById('customRecentDays').style.display = (this.value === 'custom' ? 'block' : 'none');">
@@ -126,7 +133,7 @@ if (
                 placeholder="Enter days"
                 style="margin-top:6px;display:<?php echo (isset($_GET['recent_days']) && !in_array($_GET['recent_days'], ['all', '7', '15', '30', '60'])) ? 'block' : 'none'; ?>;"
                 value="<?php echo (isset($_GET['recent_days']) && !in_array($_GET['recent_days'], ['all', '7', '15', '30', '60'])) ? (int)$_GET['recent_days'] : ''; ?>">
-        </div>
+        </div> -->
         <div style="display:flex;gap:8px;">
             <button type="submit" class="btn btn-green" style="flex:1;">Apply</button>
             <button type="button" id="closeFilterModal" class="btn btn-grey" style="flex:1;">Close</button>
@@ -195,6 +202,13 @@ document.getElementById('filterForm').onsubmit = function() {
 <?php
 $rows = [];
 $where = ["membership_amount_due!=0", "membership_site_id=" . SITE_ID];
+// If a specific membership ID is provided, filter by it
+if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $membership_id = (int)base64_decode($_GET['id']);
+    if ($membership_id > 0) {
+        $where[] = "membership_id = " . $membership_id;
+    }
+}
 // Visits filter
 $visits_filter = isset($_GET['visits_filter']) ? $_GET['visits_filter'] : 'all';
 if ($visits_filter === 'with') {

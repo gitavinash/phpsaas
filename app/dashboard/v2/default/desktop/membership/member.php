@@ -44,7 +44,7 @@
                             Clear</option>
                     </select>
                 </div>
-                <div>
+                <!-- <div>
                     <label for="recent_days">Recent Visits</label><br>
                     <select name="recent_days" id="recent_days" class="form-control"
                         onchange="document.getElementById('customRecentDays').style.display = (this.value === 'custom' ? 'block' : 'none');">
@@ -71,7 +71,7 @@
                         max="365" placeholder="Enter days"
                         style="margin-top:6px;display:<?php echo (isset($_GET['recent_days']) && !in_array($_GET['recent_days'], ['all', '7', '15', '30', '60'])) ? 'block' : 'none'; ?>;"
                         value="<?php echo (isset($_GET['recent_days']) && !in_array($_GET['recent_days'], ['all', '7', '15', '30', '60'])) ? (int)$_GET['recent_days'] : ''; ?>">
-                </div>
+                </div> -->
                 <div style="display:flex;gap:8px;">
                     <button type="submit" class="btn btn-green" style="flex:1;">Apply</button>
                     <button type="button" id="closeFilterModal" class="btn btn-grey" style="flex:1;">Close</button>
