@@ -75,7 +75,7 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
     $descField = $postType . '_description';
     $catField = $postType . '_category';
 
-    // Fetch all possible candidates (limit for performance)
+    // Fetch a large pool of candidates to ensure at least 5 matches if possible
     $sqlData = "
         SELECT 
             {$idField}   AS id,
@@ -108,7 +108,7 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
                 OR ({$likeSql})
           )
         ORDER BY link_published DESC
-        LIMIT 100
+        LIMIT 200
     ";
 
     $resData = mysqli_query($conn, $sqlData);
@@ -155,8 +155,11 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
         return $b['score'] - $a['score'];
     });
 
-    // Pagination
-    $paged = array_slice($out, $offset, $pageLimit);
+
+    // Ensure at least 5 articles if possible
+    $minArticles = 5;
+    $finalLimit = max($pageLimit, $minArticles);
+    $paged = array_slice($out, $offset, $finalLimit);
 
     // Find most used tag
     $mostUsedKeyword = null;
