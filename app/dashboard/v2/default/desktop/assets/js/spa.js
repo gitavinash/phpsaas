@@ -776,8 +776,8 @@ $(document).ready(function () {
     <div class="visit-item" style="padding:12px 14px;margin-bottom:10px;background:#fff;border:1px solid #eef0f3;border-radius:10px;box-shadow:0 1px 0 rgba(0,0,0,.02);">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
         <div>
-          <div style="font-weight:700;font-size:14px;">${visit.visitTime}</div>
-          <div style="margin-top:4px;font-size:13px;opacity:.85;">
+          <div style="font-weight:700;font-size:13px;">${visit.visitTime}</div>
+          <div style="margin-top:4px;font-size:12px;opacity:.85;">
             Staff: <strong> ${staffLabel}
           </div>
         </div>
@@ -815,6 +815,93 @@ $(document).ready(function () {
         $("#loader").hide();
       },
     });
+  });
+
+  // Visit History on Membership list page
+
+  $(document).on("click", ".showMemerbershipHistoryButton", function (e) {
+    e.preventDefault();
+    const membershipId = $(this).data("id") || "";
+    if (!membershipId) {
+      popUpMessage("center", "Missing membership ID.", "error");
+      return;
+    }
+    $(".list-box").hide();
+    $("#loader").show();
+
+    $.ajax({
+      url: "/api/membership/history/?membershipId=" + membershipId,
+      type: "GET",
+      dataType: "JSON",
+      success: function (response) {
+        if (response.status === "success") {
+          var $visitsList = $(".showVisitorHistory");
+          $visitsList.empty();
+
+          $.each(response.visits, function (index, visit) {
+            let staffNames = [];
+
+            if (visit.staffOne && visit.staffOne != 0) {
+              staffNames.push(visit.staffOne);
+            }
+            if (visit.staffTwo && visit.staffTwo != 0) {
+              staffNames.push(visit.staffTwo);
+            }
+
+            let staffLabel =
+              staffNames.length > 0
+                ? staffNames.join(", ")
+                : "Information not found";
+
+            var visitHtml = `
+    <div class="visit-item" style="padding:12px 14px;margin-bottom:10px;background:#fff;border:1px solid #eef0f3;border-radius:10px;box-shadow:0 1px 0 rgba(0,0,0,.02);">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div>
+          <div style="font-weight:700;font-size:13px;">${visit.visitTime}</div>
+          <div style="margin-top:4px;font-size:12px;opacity:.85;">
+            Staff: <strong> ${staffLabel}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span style="display:inline-block;padding:3px 10px;border-radius:999px;background:#eef6ff;font-size:12px;">Room ${visit.roomNumber}</span>
+          <span style="display:inline-block;padding:3px 10px;border-radius:999px;background:#f1f5f9;font-size:12px;">${visit.duration} min</span>
+        </div>
+      </div>
+    </div>
+  `;
+            $visitsList.append(visitHtml);
+          });
+
+          $(".historyBoxMembership").show();
+        } else {
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "error",
+          );
+          $(".list-box").show();
+          $("#loader").hide();
+        }
+      },
+      error: function (xhr) {
+        popUpMessage(
+          "center",
+          (xhr.responseJSON && xhr.responseJSON.msg) || "Request failed",
+          (xhr.responseJSON && xhr.responseJSON.status) || "error",
+        );
+        $(".step_2_box").show();
+        $("#loader").hide();
+      },
+      complete: function () {
+        $("#loader").hide();
+      },
+    });
+  });
+
+  $(".showListBox").on("click", function (e) {
+    e.preventDefault();
+    $(".historyBoxMembership").hide();
+    $(".list-box").show();
   });
 
   // Clear dues

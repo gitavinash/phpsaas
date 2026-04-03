@@ -3,6 +3,9 @@
 </h2>
 
 <div class="main-box" style="padding: 0px;">
+    <div id="loader" style="display: none; text-align: center;">
+        <img src="<?php echo IMG_LIBRARY ?>circle-loader.gif" alt="Loading..." />
+    </div>
     <div class="shortcut">
         <a href="/dashboard/membership/sell/"><i class="fi fi-rr-plus"></i></a>
     </div>
@@ -29,6 +32,12 @@
                             <?php if (isset($_GET['visits_filter']) && $_GET['visits_filter'] === 'without') echo 'selected'; ?>>
                             No Visits</option>
                     </select>
+                </div>
+                <div>
+                    <label for="mobile_filter">Mobile Number</label><br>
+                    <input type="text" name="mobile_filter" id="mobile_filter" class="form-control"
+                        placeholder="Enter mobile number"
+                        value="<?php echo isset($_GET['mobile_filter']) ? htmlspecialchars($_GET['mobile_filter']) : ''; ?>">
                 </div>
                 <div>
                     <label for="payment_filter">Payment Status</label><br>
@@ -153,6 +162,13 @@
         } elseif ($payment_filter === 'clear') {
             $where[] = "membership_amount_due = 0";
         }
+        // Mobile filter
+        $mobile_filter = isset($_GET['mobile_filter']) ? trim($_GET['mobile_filter']) : '';
+        if ($mobile_filter !== '') {
+            // Escape input for SQL LIKE
+            $safe_mobile = mysqli_real_escape_string($connection, $mobile_filter);
+            $where[] = "user_mobile LIKE '%$safe_mobile%'";
+        }
         // Recent visits filter
         $recent_days = isset($_GET['recent_days']) ? $_GET['recent_days'] : 'all';
         if ($recent_days === 'custom' && isset($_GET['custom_recent_days']) && is_numeric($_GET['custom_recent_days'])) {
@@ -192,7 +208,8 @@
         $filter_active = (
             (isset($_GET['visits_filter']) && $_GET['visits_filter'] !== 'all') ||
             (isset($_GET['payment_filter']) && $_GET['payment_filter'] !== 'all') ||
-            (isset($_GET['recent_days']) && $_GET['recent_days'] !== 'all' && $_GET['recent_days'] !== '')
+            (isset($_GET['recent_days']) && $_GET['recent_days'] !== 'all' && $_GET['recent_days'] !== '') ||
+            (isset($_GET['mobile_filter']) && trim($_GET['mobile_filter']) !== '')
         );
         if ($filter_active) {
             // Calculate from filtered $rows
@@ -289,6 +306,7 @@
                     $membership_avl_visits  = htmlspecialchars($data['membership_avl_visit'] ?? '', ENT_QUOTES, 'UTF-8');
                     $membership_price = isset($data['membership_price']) ? $data['membership_price'] : 0;
                     $membership_due = isset($data['membership_amount_due']) ? $data['membership_amount_due'] : 0;
+                    $encoded_id = base64_encode($id);
                     ?>
 
             <article class="widget-setting-info membership-card" data-id="<?php echo $encoded_id; ?>">
@@ -340,7 +358,7 @@
                             </a>
                         </div>
                         <div class="action-item">
-                            <a href="#" class="btn btn-grey dataTableBtn visitHistoryButton"
+                            <a href="#" class="btn btn-grey dataTableBtn showMemerbershipHistoryButton"
                                 data-id="<?php echo $encoded_id; ?>" title="Visit History">
                                 <i class="fi-rr-time-past"></i> History
                             </a>
@@ -373,6 +391,18 @@
                         class="fi fi-rr-plus"></i> Add Membership</a>
             </div>
             <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="historyBoxMembership" style="display:none">
+        <h2 style="font-size:24px;font-weight:700;margin-bottom:12px; margin-left: 5px;">
+            Visit Logs
+        </h2>
+        <div class="showVisitorHistory"></div>
+        <div class="stepNavigation">
+            <button type="button" style="width: 100%; color: #fff;" class="btn btn-primary showListBox">
+                <i class="fi-rr-arrow-left"></i> Back
+            </button>
         </div>
     </div>
 </div>
