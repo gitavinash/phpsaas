@@ -43,17 +43,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $membershipStatus = (($avlVisit != 0) ? 1 : 2);
 
-    if ($checkMembership = mysqli_query($connection, "SELECT membership_id FROM " . TABLE_PREFIX . "membership WHERE
+    mysqli_query($connection, "START TRANSACTION");
+
+    if ($checkMembership = mysqli_query($connection, "SELECT membership_id, membership_avl_visit as oldAvailableVisits FROM " . TABLE_PREFIX . "membership WHERE
 membership_id='{$membershipId}' AND membership_site_id=" . SITE_ID)) {
         if (mysqli_num_rows($checkMembership) != 0) {
             extract(mysqli_fetch_assoc($checkMembership));
+
+            $deductVisit = $oldAvailableVisits - $avlVisit;
+
+            if ($deductVisit > 0) {
+                $visitValues = "";
+                for ($i = 0; $i < $deductVisit; $i++) {
+                    $visitValues .= "('{$membershipId}', '" . SITE_ID . "', '60', NOW(), 1, 'Deducted by Admin'),";
+                }
+                $visitValues = rtrim($visitValues, ',');
+                $insertVisit = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "membership_visits (visit_membership_id, visit_site_id, visit_duration, visit_time, visit_status, visit_comment) VALUES {$visitValues}");
+            } else {
+                $insertVisit = true;
+            }
+
+            $updateMembership = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "membership SET membership_profile_name='{$name}', membership_branch_id='{$warehouseId}', membership_type_id='{$package}', membership_type='category', membership_total_visit='{$visit}', membership_avl_visit='{$avlVisit}', membership_price='{$price}', membership_amount_due='{$dueAmount}', membership_comment='{$requirements}', membership_status='{$membershipStatus}' WHERE membership_id='{$membershipId}' AND membership_site_id=" . SITE_ID);
+
+
             // Update a membership
 
-            if ($updateMembership = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "membership SET membership_profile_name='{$name}', membership_branch_id='{$warehouseId}', membership_type_id='{$package}', membership_type='category', membership_total_visit='{$visit}', membership_avl_visit='{$avlVisit}', membership_price='{$price}', membership_amount_due='{$dueAmount}', membership_comment='{$requirements}', membership_status='{$membershipStatus}' WHERE membership_id='{$membershipId}' AND membership_site_id=" . SITE_ID)) {
+            if ($insertVisit && $updateMembership) {
+                mysqli_query($connection, "COMMIT");
                 $httpStatus = 201;
                 $status = 'success';
                 $msg = 'Membership package is update successfully';
             } else {
+                mysqli_query($connection, "ROLLBACK");
                 $msg = 'Something went wrong while trying to update a membership';
             }
         } else {

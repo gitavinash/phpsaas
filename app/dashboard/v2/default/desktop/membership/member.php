@@ -1,3 +1,36 @@
+<style>
+.pagination-bar {
+    float: left;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 24px 0 12px;
+}
+
+.pagination-left {
+    flex: 1;
+    text-align: left;
+}
+
+.pagination-center {
+    flex: 1;
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #2563eb;
+}
+
+.pagination-right {
+    flex: 1;
+    text-align: right;
+}
+
+.btn.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+</style>
 <h2 class="heading">Membership List
     <span>All membership list will be displayed here</span>
 </h2>
@@ -148,6 +181,10 @@
         <?php
         $rows = [];
         $where = ["membership_site_id=" . SITE_ID];
+        // Pagination setup
+        $per_page = 100;
+        $page = isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $per_page;
         // Visits filter
         $visits_filter = isset($_GET['visits_filter']) ? $_GET['visits_filter'] : 'all';
         if ($visits_filter === 'with') {
@@ -186,13 +223,27 @@
             $where[] = "visit_time >= '" . $recent_date . "'";
             $order_by = 'visit_time DESC';
         }
+        // Get total count for pagination
+        $count_sql = "SELECT COUNT(*) as total_count FROM " . TABLE_PREFIX . "membership
+            INNER JOIN " . TABLE_PREFIX . "warehouse ON membership_branch_id=warehouse_id
+            INNER JOIN " . TABLE_PREFIX . "user ON membership_user_id=user_id
+            $join_visits
+            WHERE " . implode(' AND ', $where);
+        $total_count = 0;
+        if ($count_res = mysqli_query($connection, $count_sql)) {
+            $count_row = mysqli_fetch_assoc($count_res);
+            $total_count = (int)($count_row['total_count'] ?? 0);
+        }
+
+        // Main paginated query
         $sql = "SELECT membership_id, membership_profile_name, membership_total_visit, membership_avl_visit, user_mobile, membership_status, membership_price, membership_amount_due
         FROM " . TABLE_PREFIX . "membership
         INNER JOIN " . TABLE_PREFIX . "warehouse ON membership_branch_id=warehouse_id
         INNER JOIN " . TABLE_PREFIX . "user ON membership_user_id=user_id
         $join_visits
         WHERE " . implode(' AND ', $where) . "
-        ORDER BY $order_by";
+        ORDER BY $order_by
+        LIMIT $per_page OFFSET $offset";
 
         if ($dataList = mysqli_query($connection, $sql)) {
             while ($r = mysqli_fetch_assoc($dataList)) {
@@ -392,19 +443,65 @@
             </div>
             <?php endif; ?>
         </div>
+
+        <!-- Pagination Controls at the very bottom -->
+        <?php
+        // Helper to build URL with updated page param
+        function buildPageUrl($page)
+        {
+            $params = $_GET;
+            $params['page'] = $page;
+            return strtok($_SERVER['REQUEST_URI'], '?') . '?' . http_build_query($params);
+        }
+        $has_next = ($page * $per_page) < $total_count;
+        $has_prev = $page > 1;
+        ?>
+    </div>
+</div>
+
+<div class="pagination-bar">
+
+    <!-- Back Button -->
+    <div class="pagination-left">
+        <?php if ($has_prev): ?>
+        <a href="<?php echo htmlspecialchars(buildPageUrl($page - 1)); ?>" class="btn btn-grey">&laquo; Back</a>
+        <?php else: ?>
+        <span class="btn btn-grey disabled">&laquo; Back</span>
+        <?php endif; ?>
     </div>
 
-    <div class="historyBoxMembership" style="display:none">
-        <h2 style="font-size:24px;font-weight:700;margin-bottom:12px; margin-left: 5px;">
-            Visit Logs
-        </h2>
-        <div class="showVisitorHistory"></div>
-        <div class="stepNavigation">
-            <button type="button" style="width: 100%; color: #fff;" class="btn btn-primary showListBox">
-                <i class="fi-rr-arrow-left"></i> Back
-            </button>
-        </div>
+    <!-- Total Records -->
+    <div class="pagination-center">
+        <?php
+        $start_record = $total_count > 0 ? ($offset + 1) : 0;
+        $end_record = min($offset + $per_page, $total_count);
+        ?>
+        Showing<br /><?php echo number_format($start_record); ?> - <?php echo number_format($end_record); ?> of
+        <?php echo number_format($total_count); ?>
     </div>
+
+    <!-- Next Button -->
+    <div class="pagination-right">
+        <?php if ($has_next): ?>
+        <a href="<?php echo htmlspecialchars(buildPageUrl($page + 1)); ?>" class="btn btn-blue">Next &raquo;</a>
+        <?php else: ?>
+        <span class="btn btn-blue disabled">Next &raquo;</span>
+        <?php endif; ?>
+    </div>
+
+</div>
+
+<div class="historyBoxMembership" style="display:none">
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:12px; margin-left: 5px;">
+        Visit Logs
+    </h2>
+    <div class="showVisitorHistory"></div>
+    <div class="stepNavigation">
+        <button type="button" style="width: 100%; color: #fff;" class="btn btn-primary showListBox">
+            <i class="fi-rr-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
 </div>
 
 <style>
