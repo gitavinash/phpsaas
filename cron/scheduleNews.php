@@ -28,29 +28,28 @@ function formatSchedulerContext(array $context)
 function writeSchedulerLog($level, $event, $context = [])
 {
     global $logFile, $logRunId, $logTimezone;
-
+    $filename = basename(__FILE__);
     $timestamp = (new DateTime('now', $logTimezone))->format('Y-m-d H:i:s') . ' IST';
-    $prefix = '[' . $timestamp . '] [' . strtoupper($level) . '] [run=' . $logRunId . '] ' . $event;
+    $prefix = '[' . $timestamp . "] [" . strtoupper($level) . "] [file={$filename}] [run={$logRunId}] " . $event;
     $contextText = formatSchedulerContext((array) $context);
-    $line = $prefix . ' [task=schedule-news]' . (($contextText !== '') ? ' | ' . $contextText : '') . PHP_EOL;
-
+    $line = $prefix . (($contextText !== '') ? ' | ' . $contextText : '') . PHP_EOL;
     @file_put_contents($logFile, $line, FILE_APPEND);
 }
 
-writeSchedulerLog('info', 'Scheduler started — checking for news due to publish');
+writeSchedulerLog('info', 'Started: checking for news due to publish');
 
 
 $dbConnectionFile = dirname(__DIR__) . '/dbConfig.php';
 
 if (!file_exists($dbConnectionFile)) {
-    writeSchedulerLog('error', 'Aborted — configuration file not found', ['path' => $dbConnectionFile]);
+    writeSchedulerLog('error', 'Aborted: configuration file not found', ['path' => $dbConnectionFile]);
     exit("Configuration file not found\n");
 } else {
     require_once $dbConnectionFile;
     if ($connection = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME)) {
-        writeSchedulerLog('info', 'Database connection established successfully');
+        writeSchedulerLog('info', 'Database connection established');
     } else {
-        writeSchedulerLog('error', 'Aborted — database connection failed', [
+        writeSchedulerLog('error', 'Aborted: database connection failed', [
             'mysql_error' => mysqli_connect_error(),
         ]);
         exit("Database connection failed\n");
@@ -59,24 +58,24 @@ if (!file_exists($dbConnectionFile)) {
 
 
 if (empty($connection) || mysqli_connect_errno()) {
-    writeSchedulerLog('error', 'Aborted — database connection could not be established', [
+    writeSchedulerLog('error', 'Aborted: database connection could not be established', [
         'mysql_error' => mysqli_connect_error() ?? 'no connection object',
     ]);
     exit("Database connection failed\n");
 }
 
 if (!defined('TABLE_PREFIX')) {
-    writeSchedulerLog('error', 'Aborted — TABLE_PREFIX is not defined in config');
+    writeSchedulerLog('error', 'Aborted: TABLE_PREFIX is not defined in config');
     exit("TABLE_PREFIX not defined\n");
 }
 
-writeSchedulerLog('info', 'Configuration loaded — querying scheduled news');
+writeSchedulerLog('info', 'Configuration loaded, querying scheduled news');
 
 $query = "SELECT news_id FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id AND link_type='news' WHERE news_status=2 AND link_status=206 AND link_published <= NOW()";
 $scheduledNews = mysqli_query($connection, $query);
 
 if (!$scheduledNews) {
-    writeSchedulerLog('error', 'Aborted — failed to fetch scheduled news from database', [
+    writeSchedulerLog('error', 'Aborted: failed to fetch scheduled news from database', [
         'error' => mysqli_error($connection),
     ]);
     exit("Scheduler query failed\n");
@@ -97,23 +96,28 @@ while ($item = mysqli_fetch_assoc($scheduledNews)) {
     if ($updateNews && $updateLink) {
         mysqli_query($connection, "COMMIT");
         $successCount++;
-        writeSchedulerLog('info', 'News published successfully — status updated to live', [
+        writeSchedulerLog('info', 'News published, status updated to live', [
             'news_id' => $newsId,
         ]);
     } else {
         mysqli_query($connection, "ROLLBACK");
         $failedCount++;
-        writeSchedulerLog('error', 'Failed to publish news — transaction rolled back', [
+        writeSchedulerLog('error', 'Failed to publish news, transaction rolled back', [
             'news_id' => $newsId,
             'error' => mysqli_error($connection),
         ]);
     }
 }
 
-writeSchedulerLog('info', 'Scheduler finished — run summary', [
-    'processed' => $processedCount,
-    'success' => $successCount,
-    'failed' => $failedCount,
-]);
+
+if ($processedCount === 0) {
+    writeSchedulerLog('info', 'No scheduled news found, no actions taken');
+} else {
+    writeSchedulerLog('info', 'Finished: run summary', [
+        'processed' => $processedCount,
+        'success' => $successCount,
+        'failed' => $failedCount,
+    ]);
+}
 
 mysqli_close($connection);
