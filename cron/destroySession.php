@@ -36,7 +36,7 @@ function writeSchedulerLog($level, $event, $context = [])
     @file_put_contents($logFile, $line, FILE_APPEND);
 }
 
-writeSchedulerLog('info', 'Started: checking for users with expired suspension');
+writeSchedulerLog('info', 'Started: destroySession.php - checking for users with expired suspension');
 writeSchedulerLog('info', 'Started: destroySession.php - checking for users with expired suspension');
 
 
@@ -48,16 +48,11 @@ if (!file_exists($dbConnectionFile)) {
 } else {
     require_once $dbConnectionFile;
     if ($connection = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME)) {
-        writeSchedulerLog('info', 'Database connection established');
         writeSchedulerLog('info', 'Database connection established in destroySession.php');
-        writeSchedulerLog('error', 'Aborted: configuration file not found in destroySession.php', ['path' => $dbConnectionFile]);
     } else {
-        writeSchedulerLog('error', 'Aborted: database connection failed', [
+        writeSchedulerLog('error', 'Aborted: database connection failed in destroySession.php', [
             'mysql_error' => mysqli_connect_error(),
         ]);
-                writeSchedulerLog('error', 'Aborted: database connection failed in destroySession.php', [
-                    'mysql_error' => mysqli_connect_error(),
-                ]);
         exit("Database connection failed\n");
     }
 }
@@ -66,20 +61,15 @@ if (!file_exists($dbConnectionFile)) {
 if (empty($connection) || mysqli_connect_errno()) {
     writeSchedulerLog('error', 'Aborted: database connection could not be established', [
         'mysql_error' => mysqli_connect_error() ?? 'no connection object',
-        writeSchedulerLog('error', 'Aborted: database connection could not be established in destroySession.php', [
-            'mysql_error' => mysqli_connect_error() ?? 'no connection object',
-        ]);
     ]);
     exit("Database connection failed\n");
 }
 
 if (!defined('TABLE_PREFIX')) {
-    writeSchedulerLog('error', 'Aborted: TABLE_PREFIX is not defined in config');
-        writeSchedulerLog('error', 'Aborted: TABLE_PREFIX is not defined in config (destroySession.php)');
+    writeSchedulerLog('error', 'Aborted: TABLE_PREFIX is not defined in config (destroySession.php)');
     exit("TABLE_PREFIX not defined\n");
 }
 
-writeSchedulerLog('info', 'Configuration loaded, querying users with expired suspension');
 writeSchedulerLog('info', 'Configuration loaded in destroySession.php, querying users with expired suspension');
 
 $query = "SELECT 
@@ -96,11 +86,8 @@ HAVING
 $scheduledUsers = mysqli_query($connection, $query);
 
 if (!$scheduledUsers) {
-    writeSchedulerLog('error', 'Aborted: failed to fetch users from database', [
+    writeSchedulerLog('error', 'Aborted: failed to fetch users from database in destroySession.php', [
         'error' => mysqli_error($connection),
-        writeSchedulerLog('error', 'Aborted: failed to fetch users from database in destroySession.php', [
-            'error' => mysqli_error($connection),
-        ]);
     ]);
     exit("Scheduler query failed\n");
 }
@@ -119,20 +106,13 @@ while ($item = mysqli_fetch_assoc($scheduledUsers)) {
     if ($destroySession) {
         mysqli_query($connection, "COMMIT");
         $successCount++;
-        writeSchedulerLog('info', 'User sessions destroyed, user unblocked', [
+        writeSchedulerLog('info', 'User sessions destroyed for user (unblocked)', [
             'user_id' => $userId,
-                writeSchedulerLog('info', 'User sessions destroyed for user (unblocked)', [
-                    'user_id' => $userId,
-                ]);
         ]);
     } else {
         mysqli_query($connection, "ROLLBACK");
         $failedCount++;
-        writeSchedulerLog('error', 'Failed to destroy user sessions, transaction rolled back', [
-                    writeSchedulerLog('error', 'Failed to destroy user sessions, transaction rolled back in destroySession.php', [
-                        'user_id' => $userId,
-                        'error' => mysqli_error($connection),
-                    ]);
+        writeSchedulerLog('error', 'Failed to destroy user sessions, transaction rolled back in destroySession.php', [
             'user_id' => $userId,
             'error' => mysqli_error($connection),
         ]);
@@ -141,18 +121,12 @@ while ($item = mysqli_fetch_assoc($scheduledUsers)) {
 
 
 if ($processedCount === 0) {
-    writeSchedulerLog('info', 'No users with expired suspension found, no actions taken');
     writeSchedulerLog('info', 'No users with expired suspension found, no sessions destroyed (destroySession.php)');
 } else {
-    writeSchedulerLog('info', 'Finished: run summary', [
-        'processed' => $processedCount,
-        'success' => $successCount,
-        'failed' => $failedCount,
-        writeSchedulerLog('info', 'Finished: destroySession.php run summary', [
-            'processed_users' => $processedCount,
-            'sessions_destroyed' => $successCount,
-            'failures' => $failedCount,
-        ]);
+    writeSchedulerLog('info', 'Finished: destroySession.php run summary', [
+        'processed_users' => $processedCount,
+        'sessions_destroyed' => $successCount,
+        'failures' => $failedCount,
     ]);
 }
 
