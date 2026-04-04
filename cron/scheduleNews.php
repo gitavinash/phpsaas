@@ -1,6 +1,6 @@
 <?php
 
-$logFile = __DIR__ . '/scheduler.log';
+$logFile = __DIR__ . '/cron.log';
 $logTimezone = new DateTimeZone('Asia/Kolkata');
 $logRunId = (new DateTime('now', $logTimezone))->format('Ymd_His') . '_' . substr(md5(uniqid('', true)), 0, 8);
 
@@ -32,7 +32,7 @@ function writeSchedulerLog($level, $event, $context = [])
     $timestamp = (new DateTime('now', $logTimezone))->format('Y-m-d H:i:s') . ' IST';
     $prefix = '[' . $timestamp . '] [' . strtoupper($level) . '] [run=' . $logRunId . '] ' . $event;
     $contextText = formatSchedulerContext((array) $context);
-    $line = $prefix . (($contextText !== '') ? ' | ' . $contextText : '') . PHP_EOL;
+    $line = $prefix . ' [task=schedule-news]' . (($contextText !== '') ? ' | ' . $contextText : '') . PHP_EOL;
 
     @file_put_contents($logFile, $line, FILE_APPEND);
 }
