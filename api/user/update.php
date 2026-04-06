@@ -57,7 +57,51 @@ function update($connection, $data)
 
                 $updateUserAccessQuery = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "site_access SET site_access_type='{$userRole}', site_access_meta='{$site_access_meta}' WHERE site_access_user_id='{$user_id}' AND site_access_site_id=" . SITE_ID);
 
-                if ($updateProfileQuery && $updateUserAccessQuery) {
+                // Social Media Links JSON (profile_meta table, key: social_links)
+                function clean_social_link($url)
+                {
+                    // Remove control characters and trim
+                    return trim(preg_replace('/[\x00-\x1F\x7F]/u', '', $url));
+                }
+                $social_links = array();
+                if (!empty($facebook_link)) $social_links['facebook'] = clean_social_link($facebook_link);
+                if (!empty($youtube_link)) $social_links['youtube'] = clean_social_link($youtube_link);
+                if (!empty($twitter_link)) $social_links['twitter'] = clean_social_link($twitter_link);
+                if (!empty($linkedin_link)) $social_links['linkedin'] = clean_social_link($linkedin_link);
+
+                $social_links_json = json_encode($social_links, TRUE);
+                $metaKey = 'social_links';
+                $socialMetaOk = true;
+                if (!empty($social_links)) {
+                    $checkMeta = mysqli_query($connection, "SELECT profile_meta_id FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$metaKey}'");
+                    if ($checkMeta && mysqli_num_rows($checkMeta) > 0) {
+                        // Update
+                        $socialMetaOk = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "profile_meta SET profile_meta_value='" . mysqli_real_escape_string($connection, $social_links_json) . "' WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$metaKey}'");
+                    } else {
+                        // Insert
+                        $socialMetaOk = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile_meta (profile_meta_profile_id, profile_meta_key, profile_meta_value) VALUES ('{$user_id}', '{$metaKey}', '" . mysqli_real_escape_string($connection, $social_links_json) . "')");
+                    }
+                } else {
+                    // If all links are empty, optionally remove the meta row
+                    $socialMetaOk = mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$metaKey}'");
+                }
+
+                // Optional: Fix existing bad JSON for this user (one-time repair)
+                /*
+                $fixQuery = mysqli_query($connection, "SELECT profile_meta_id, profile_meta_value FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$metaKey}'");
+                if ($fixQuery && mysqli_num_rows($fixQuery) > 0) {
+                    $fixRow = mysqli_fetch_assoc($fixQuery);
+                    $raw = $fixRow['profile_meta_value'];
+                    $clean = preg_replace('/[\x00-\x1F\x7F]/u', '', $raw);
+                    $arr = json_decode($clean, true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($arr)) {
+                        $fixedJson = json_encode($arr, JSON_UNESCAPED_SLASHES);
+                        mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "profile_meta SET profile_meta_value='" . mysqli_real_escape_string($connection, $fixedJson) . "' WHERE profile_meta_id='{$fixRow['profile_meta_id']}'");
+                    }
+                }
+                */
+
+                if ($updateProfileQuery && $updateUserAccessQuery && $socialMetaOk) {
                     $status = 'success';
                     $msg = 'User update successfully';
                     mysqli_query($connection, "COMMIT");

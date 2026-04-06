@@ -2,12 +2,31 @@
 
 $user_id = base64_decode($id);
 
+
+
 if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site_access_type, profile_first_name, profile_last_name, profile_image as profilePicture FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id = user_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id WHERE user_id = {$user_id};")) {
-
     if (mysqli_num_rows($checkUser) != 0) {
-
         extract(mysqli_fetch_assoc($checkUser));
-    } else { ?>
+        // Improved: Fetch social_links from profile_meta table
+        $facebook_link = $youtube_link = $twitter_link = $linkedin_link = '';
+        $metaKey = 'social_links';
+        $metaQuery = mysqli_query($connection, "SELECT profile_meta_value FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$metaKey}' LIMIT 1");
+        if ($metaQuery && mysqli_num_rows($metaQuery) > 0) {
+            $metaRow = mysqli_fetch_assoc($metaQuery);
+            $socialLinksArr = json_decode($metaRow['profile_meta_value'], true);
+            $facebook_link = !empty($socialLinksArr['facebook']) ? $socialLinksArr['facebook'] : '';
+            $youtube_link = !empty($socialLinksArr['youtube']) ? $socialLinksArr['youtube'] : '';
+            $twitter_link = !empty($socialLinksArr['twitter']) ? $socialLinksArr['twitter'] : '';
+            $linkedin_link = !empty($socialLinksArr['linkedin']) ? $socialLinksArr['linkedin'] : '';
+        } else {
+            // No social_links found, initialize empty array
+            $socialLinksArr = [];
+            if (DEVELOPMENT_MODE == true) {
+                echo "No social_links meta found for user_id: {$user_id}";
+            }
+        }
+    } else {
+?>
 <script type="text/javascript">
 alert('Invalid action found');
 window.location.href = 'dashboard/user/?type=list&status=all';
@@ -150,6 +169,35 @@ window.location.href = 'dashboard/user/?type=list&status=all';
                                 ?>
                             </select>
                         </div>
+                        <!-- Social Media Links Section -->
+                        <div class="form-group">
+                            <label style="font-size:15px; color:#2563eb; font-weight:600;">Social Media Links</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="facebook_link">Facebook</label>
+                            <input type="url" name="facebook_link" id="facebook_link" class="form-control inside-shadow"
+                                placeholder="Facebook profile/page URL"
+                                value="<?php echo isset($facebook_link) ? htmlspecialchars($facebook_link) : '' ?>" />
+                        </div>
+                        <div class="form-group">
+                            <label for="youtube_link">YouTube</label>
+                            <input type="url" name="youtube_link" id="youtube_link" class="form-control inside-shadow"
+                                placeholder="YouTube channel URL"
+                                value="<?php echo isset($youtube_link) ? htmlspecialchars($youtube_link) : '' ?>" />
+                        </div>
+                        <div class="form-group">
+                            <label for="twitter_link">Twitter</label>
+                            <input type="url" name="twitter_link" id="twitter_link" class="form-control inside-shadow"
+                                placeholder="Twitter profile URL"
+                                value="<?php echo isset($twitter_link) ? htmlspecialchars($twitter_link) : '' ?>" />
+                        </div>
+                        <div class="form-group">
+                            <label for="linkedin_link">LinkedIn</label>
+                            <input type="url" name="linkedin_link" id="linkedin_link" class="form-control inside-shadow"
+                                placeholder="LinkedIn profile/page URL"
+                                value="<?php echo isset($linkedin_link) ? htmlspecialchars($linkedin_link) : '' ?>" />
+                        </div>
+                        <!-- End Social Media Links Section -->
                         <div class="form-group">
                             <input type="hidden" name="type" value="user">
                             <input type="hidden" name="action" value="update">
