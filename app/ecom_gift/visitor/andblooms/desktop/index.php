@@ -1,7 +1,7 @@
 <?php
 
 if (SITE_VERSION == 'mobile') {
-    header("Location: /tag/valentine/?sort=newest", true, 301);
+    header("Location: /category/flower/", true, 301);
     exit;
 }
 
