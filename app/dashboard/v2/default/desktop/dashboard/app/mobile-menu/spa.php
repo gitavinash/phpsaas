@@ -39,6 +39,20 @@
             </div>
         </div>
 
+        <div class="more-section is-expenses">
+            <h4>Expenses <small>Quick actions</small></h4>
+            <div class="more-row">
+                <div class="more-grid">
+                    <a href="expenses/add/" class="more-item spa-link" data-route="/expenses/add/">
+                        <i class="fi fi-rr-file-medical"></i><span>Add Expense</span>
+                    </a>
+                    <a href="expenses/list/" class="more-item spa-link" data-route="/expenses/list/">
+                        <i class="fi fi-rr-list"></i><span>Expense List</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- THERAPISTS -->
         <!-- <div class="more-section is-therapist">
             <h4>Therapists <small>Manage spa staff</small></h4>
@@ -178,6 +192,19 @@
                     </a>
                     <a href="membership/member/" class="more-item spa-link" data-route="/membership/member/">
                         <i class="fi fi-rr-users"></i><span>Members</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="more-section is-expenses">
+            <h4>Expenses <small>Quick actions</small></h4>
+            <div class="more-row">
+                <div class="more-grid">
+                    <a href="expenses/add/" class="more-item spa-link" data-route="/expenses/add/">
+                        <i class="fi fi-rr-file-medical"></i><span>Add Expense</span>
+                    </a>
+                    <a href="expenses/list/" class="more-item spa-link" data-route="/expenses/list/">
+                        <i class="fi fi-rr-list"></i><span>Expense List</span>
                     </a>
                 </div>
             </div>

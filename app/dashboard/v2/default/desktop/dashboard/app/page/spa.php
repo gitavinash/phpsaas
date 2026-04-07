@@ -104,11 +104,11 @@
 </div>
 
 <div class="widget box-2 box-mb-5">
-    <a href="rooms/active/" class="actionBtn new-item-btn spa-link" data-route="/rooms/active/"
+    <a href="expenses/add/" class="actionBtn new-item-btn spa-link" data-route="/expenses/add/"
         aria-label="Manage active rooms">
         <div class="widget-info">
-            <i class="fi fi-rr-door-open plus-badge badge-green" aria-hidden="true"></i>
-            Active rooms
+            <i class="fi fi-rr-expense-bill plus-badge badge-purple" aria-hidden="true"></i>
+            Add New Expense
         </div>
     </a>
 </div>

@@ -170,11 +170,7 @@ $(document).ready(function () {
     }
 
     if (price === "" || parseFloat(price) <= 0) {
-      popUpMessage(
-        "center",
-        "Please enter a valid price greater than 0",
-        "warning",
-      );
+      popUpMessage("center", "Please enter a valid price.", "warning");
       $("#addNewSell").show();
       return;
     }
@@ -272,11 +268,7 @@ $(document).ready(function () {
     }
 
     if (price === "" || parseFloat(price) <= 0) {
-      popUpMessage(
-        "center",
-        "Please enter a valid price greater than 0",
-        "warning",
-      );
+      popUpMessage("center", "Please enter a valid price.", "warning");
       $("#addMembership").show();
       return;
     }
@@ -387,11 +379,7 @@ $(document).ready(function () {
     }
 
     if (price === "" || parseFloat(price) <= 0) {
-      popUpMessage(
-        "center",
-        "Please enter a valid price greater than 0",
-        "warning",
-      );
+      popUpMessage("center", "Please enter a valid price.", "warning");
       $("#updateMembership").show();
       return;
     }
@@ -465,6 +453,104 @@ $(document).ready(function () {
       error: function (xhr) {
         $("#updateMembership").show();
         var errorMsg = "An error occurred while saving membership.";
+        if (xhr.responseJSON && xhr.responseJSON.msg) {
+          errorMsg = xhr.responseJSON.msg;
+        }
+        popUpMessage("center", errorMsg, "error");
+      },
+    });
+  });
+
+  $("#addExpense").on("click", function (e) {
+    e.preventDefault();
+    $("#addExpense").hide();
+    // Get values
+    var warehouseId = $("#warehouseId").val().trim();
+    var description = $("#description").val().trim();
+    var amount = $("#amount").val().trim();
+    var category = $("#category").val().trim();
+    var paymentMode = $("#payment_mode").val().trim();
+    var date = $("#date").val().trim();
+    var time = $("#time").val().trim();
+
+    console.log("paymentMode:", paymentMode);
+
+    // ===== VALIDATION =====
+    if (description === "") {
+      popUpMessage("center", "Please enter a description", "warning");
+      $("#addExpense").show();
+      return;
+    }
+
+    if (amount === "" || parseFloat(amount) <= 0) {
+      popUpMessage("center", "Please enter a valid amount.", "warning");
+      $("#addExpense").show();
+      return;
+    }
+
+    if (category === "") {
+      popUpMessage("center", "Please enter a category", "warning");
+      $("#addExpense").show();
+      return;
+    }
+
+    if (paymentMode == "") {
+      popUpMessage("center", "Please select a payment mode", "warning");
+      $("#addExpense").show();
+      return;
+    }
+
+    if (date === "") {
+      popUpMessage("center", "Please select a date", "warning");
+      $("#addExpense").show();
+      return;
+    }
+
+    // Create FormData to handle file upload
+    var formData = new FormData();
+    formData.append("warehouseId", warehouseId);
+    formData.append("description", description);
+    formData.append("amount", amount);
+    formData.append("category", category);
+    formData.append("paymentMode", paymentMode);
+    formData.append("date", date);
+    formData.append("time", time);
+
+    // Append photo if selected
+    var photoInput = document.getElementById("photo");
+    if (photoInput && photoInput.files && photoInput.files[0]) {
+      formData.append("photo", photoInput.files[0]);
+    }
+
+    $.ajax({
+      url: "/api/expenses/add/",
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      dataType: "JSON",
+      success: function (response) {
+        if (response.status === "success") {
+          // Reset form after success
+          $("#addExpenseForm")[0].reset();
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "success",
+          );
+          window.location.href = "/dashboard/expenses/list/";
+        } else {
+          popUpMessage(
+            "center",
+            response.msg || "Something went wrong",
+            "error",
+          );
+          $("#addExpense").show();
+        }
+      },
+      error: function (xhr) {
+        $("#addExpense").show();
+        var errorMsg = "An error occurred while saving expense.";
         if (xhr.responseJSON && xhr.responseJSON.msg) {
           errorMsg = xhr.responseJSON.msg;
         }
