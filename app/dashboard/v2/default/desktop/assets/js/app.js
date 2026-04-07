@@ -364,7 +364,7 @@ $(document).ready(function (e) {
             popUpMessage(
               "center",
               response.responseJSON.msg,
-              response.responseJSON.status
+              response.responseJSON.status,
             );
           },
         });
@@ -504,7 +504,7 @@ $(document).ready(function (e) {
             },
           },
         },
-      }
+      },
     );
   }
 
@@ -523,7 +523,7 @@ $(document).ready(function (e) {
     animationDuration = 1000,
     showTopLabel = false,
     showXLable = false,
-    showYLable = false
+    showYLable = false,
   ) {
     var myChart = new Chart(
       document.getElementById(objectID).getContext("2d"),
@@ -580,7 +580,7 @@ $(document).ready(function (e) {
           responsive: true,
           maintainAspectRatio: false,
         },
-      }
+      },
     );
   }
 
@@ -591,7 +591,7 @@ $(document).ready(function (e) {
     start,
     end,
     duration,
-    percentage
+    percentage,
   ) {
     if (start === end) return;
     var range = end - start;
@@ -615,7 +615,7 @@ $(document).ready(function (e) {
     start,
     end,
     duration,
-    percentage
+    percentage,
   ) {
     if (start === end) return;
     var range = end - start;
@@ -655,7 +655,7 @@ $(document).ready(function (e) {
       (currentDataColor = "#239B56"),
       (previousDataLabel = "1st May 2021 - 8th May 2021"),
       (previousData = ["20", "24", "13", "13", "50", "40", "45"]),
-      (previousDataColor = "#D1F9D1")
+      (previousDataColor = "#D1F9D1"),
     );
   }
 
@@ -663,7 +663,7 @@ $(document).ready(function (e) {
     widgetId,
     apiData,
     primaryChartBackgroundColor = "#239B56",
-    secondaryChartBackgroundColor = "#D1F9D1"
+    secondaryChartBackgroundColor = "#D1F9D1",
   ) {
     console.log("dashboardWidgetWithChart called for:", widgetId, apiData);
 
@@ -688,10 +688,6 @@ $(document).ready(function (e) {
       diff = Math.min(diff, 100); // max 100
       startValue = Math.max(total - diff, 0);
     }
-
-    console.log("valueElementId:", valueElementId);
-    console.log("startValue:", startValue);
-    console.log("total:", total);
 
     const valueEl = document.getElementById(valueElementId);
     if (!valueEl) {
@@ -740,7 +736,7 @@ $(document).ready(function (e) {
       primaryChartBackgroundColor,
       previousDataLabel,
       previousData,
-      secondaryChartBackgroundColor
+      secondaryChartBackgroundColor,
     );
   }
 
@@ -750,7 +746,7 @@ $(document).ready(function (e) {
       data.totalLeads - 10,
       data.totalLeads,
       1,
-      86
+      86,
     );
   }
 
@@ -922,7 +918,7 @@ $(document).ready(function (e) {
           "totalSalesAmount",
           response,
           "#00657B",
-          "#38BDF8"
+          "#38BDF8",
         );
       },
       error: function (response) {
@@ -942,6 +938,29 @@ $(document).ready(function (e) {
       dataType: "json",
       success: function (response) {
         dashboardWidgetWithChart("totalVisits", response, "#4CAF50", "#81C784");
+      },
+      error: function (response) {
+        console.log("Error:", response);
+      },
+    });
+  }
+
+  // Total Expenses Charts
+
+  if ($("#totalExpenses").length) {
+    $.ajax({
+      type: "GET",
+      url:
+        "/api/report/expenses/?daterange=" +
+        encodeURIComponent(dateRangeParams),
+      dataType: "json",
+      success: function (response) {
+        dashboardWidgetWithChart(
+          "totalExpenses",
+          response,
+          "#FF5722",
+          "#FF9800",
+        );
       },
       error: function (response) {
         console.log("Error:", response);
@@ -1078,7 +1097,7 @@ $(document).ready(function (e) {
 
     function cb(start, end) {
       $(".dateRangePicker span").html(
-        start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY")
+        start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY"),
       );
     }
 
@@ -1105,7 +1124,7 @@ $(document).ready(function (e) {
             format: "DD-MMM-YYYY",
           },
         },
-        cb
+        cb,
       )
       .val(dateRangeValue);
 
@@ -1270,7 +1289,7 @@ $(document).ready(function (e) {
       if ($destination.find(`option[value="${quotationFor}"]`).length === 0) {
         // Add new option if not found
         $destination.append(
-          $("<option></option>").val(quotationFor).text(quotationFor)
+          $("<option></option>").val(quotationFor).text(quotationFor),
         );
       }
 
@@ -1455,7 +1474,7 @@ $(document).ready(function (e) {
         popUpMessage(
           "center",
           error.responseJSON.msg,
-          error.responseJSON.status
+          error.responseJSON.status,
         );
         $("#addAmenities").show();
       },
@@ -1591,23 +1610,23 @@ $(document).ready(function (e) {
           popUpMessage(
             "center",
             "Payment link sent to customer",
-            response.status
+            response.status,
           );
           $(".paymentLinkBox").hide();
           enableButtonWithCTA(
             "#sendPaymentLink",
-            "<i class='fi-rr-paper-plane'></i> Send payment link"
+            "<i class='fi-rr-paper-plane'></i> Send payment link",
           );
         },
         error: function (errorResponse) {
           enableButtonWithCTA(
             "#sendPaymentLink",
-            "<i class='fi-rr-paper-plane'></i> Send payment link"
+            "<i class='fi-rr-paper-plane'></i> Send payment link",
           );
           popUpMessage(
             "center",
             errorResponse.responseJSON.msg,
-            response.status
+            response.status,
           );
           console.log(`Error : `);
         },
@@ -1618,7 +1637,7 @@ $(document).ready(function (e) {
       popUpMessage("center", "Please enter valid amount", "warning");
       enableButtonWithCTA(
         "#sendPaymentLink",
-        "<i class='fi-rr-paper-plane'></i> Send payment link"
+        "<i class='fi-rr-paper-plane'></i> Send payment link",
       );
     }
   });
@@ -1741,7 +1760,7 @@ $(document).ready(function (e) {
       popUpMessage(
         "center",
         "File input not found. Please reload the page.",
-        "error"
+        "error",
       );
       return;
     }
@@ -1803,7 +1822,7 @@ $(document).ready(function (e) {
         popUpMessage(
           "center",
           response.responseJSON.msg,
-          response.responseJSON.status
+          response.responseJSON.status,
         );
       },
     });
@@ -2038,7 +2057,7 @@ $(document).ready(function (e) {
           var $fallback = $(
             '<div class="pageLoader" style="position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:99999">' +
               '<div style="width:44px;height:44px;border:4px solid #e5e7eb;border-top-color:#167a92;border-radius:50%;animation:_spin 1s linear infinite"></div>' +
-              "</div>"
+              "</div>",
           );
           $("body").append($fallback);
         }
