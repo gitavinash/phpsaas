@@ -242,7 +242,9 @@
   font-size: 12px;
   cursor: pointer;
   min-height: var(--bottom-nav-h);
-  transition: transform 0.12s ease, color 0.12s ease;
+  transition:
+    transform 0.12s ease,
+    color 0.12s ease;
 }
 .bn-item i {
   font-size: 22px;
@@ -446,7 +448,9 @@ body.more-open {
   border-radius: var(--r-lg);
   background: var(--surface);
   box-shadow: var(--shadow-1);
-  transition: transform 0.12s ease, box-shadow 0.12s ease,
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
     border-color 0.12s ease;
   width: 100%;
   box-sizing: border-box;
@@ -656,6 +660,8 @@ section.form .form-header h1 {
   text-align: center;
   padding: 2rem 1rem;
   color: #666;
+  float: left;
+  width: 100%;
 }
 .empty i {
   font-size: 22px;
