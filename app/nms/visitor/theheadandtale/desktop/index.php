@@ -262,7 +262,7 @@
                 echo '<div class="hightlightBox">';
                 echo '<h2>The Monthly Crypto Map</h2>';
 
-                if ($checkFinTechArticles = mysqli_query($connection,  "SELECT link_url, news_image, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=411 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY news_published DESC LIMIT 0, 1")) {
+                if ($checkFinTechArticles = mysqli_query($connection,  "SELECT link_url, news_image, news_title FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE news_category=411 AND link_type='news' AND link_status=200 AND link_site_id=" . SITE_ID . " ORDER BY news_published DESC LIMIT 0, 4")) {
                     echo "<ol>";
                     if (mysqli_num_rows($checkFinTechArticles) != 0) {
                         while ($finTechArticlesInfo = mysqli_fetch_assoc($checkFinTechArticles)) {
@@ -276,7 +276,7 @@
                         }
 
                         echo "<li>
-                                <a href='//the-monthly-crypto-map/' class='readMore'>
+                                <a href='/the-monthly-crypto-map/' class='readMore'>
                                     Read more news...
                                 </a>
                             </li>";
