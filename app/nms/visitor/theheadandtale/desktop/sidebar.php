@@ -181,4 +181,10 @@
         }
         ?>
     </div>
+
+    <?php
+    if (function_exists('renderMonthlyCryptoMap')) {
+        renderMonthlyCryptoMap($connection);
+    }
+    ?>
 </div>
