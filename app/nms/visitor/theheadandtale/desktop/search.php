@@ -112,7 +112,13 @@ function h($s)
 				?>
             </div>
 
-            <?php require_once 'sidebar.php'; ?>
+            <?php
+
+			if (SITE_ID == 49) {
+				require_once 'sidebar.php';
+			}
+
+			?>
         </div>
     </div>
 </section>
