@@ -39,7 +39,9 @@ require_once 'header.php';
             </div>
             <?php
 
-            require_once 'sidebar.php';
+            if (SITE_ID == 49) {
+                require_once 'sidebar.php';
+            }
 
             ?>
         </div>
