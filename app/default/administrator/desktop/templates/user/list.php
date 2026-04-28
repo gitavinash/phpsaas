@@ -186,7 +186,7 @@
                 $hasUsers = false;
 
                 $applyUserFilter = '';
-                if (SITE_ID == 49) {
+                if (SITE_APP == 'nms') {
                     $applyUserFilter = "site_access_type NOT IN ('subscriber', 'customer') AND ";
                 }
 

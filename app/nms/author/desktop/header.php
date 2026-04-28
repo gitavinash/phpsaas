@@ -1,4 +1,10 @@
 <?php
+
+if (SITE_ID == 49 || SITE_ID == 234) {
+    header("Location: /", TRUE, 301);
+    exit();
+}
+
 $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'));
 ?>
 <!DOCTYPE html>

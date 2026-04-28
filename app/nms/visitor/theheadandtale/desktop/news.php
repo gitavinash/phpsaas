@@ -122,6 +122,12 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                     }
                 }
 
+                $userAccessType = base64_decode($_COOKIE['user_type']);
+
+                if ($userAccessType == 'author' || $userAccessType == 'administrator') {
+                    $showFullNews = true;
+                }
+
                 echo "<div class='details_box__content {$news_paid} " . (($showFullNews == true) ? '' : 'text-gradient') . "'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
 
                 if ($showFullNews == true && !empty($news_gallery)) {
