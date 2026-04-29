@@ -221,10 +221,11 @@
             <!-- Right Icons -->
             <div class="flex items-center space-x-4">
                 <!-- Desktop Search -->
-                <div class="relative hidden md:block" style="max-width: 90%">
+                <div class="relative hidden md:block">
                     <form action="/search/" method="get">
                         <input type="text" name="q" placeholder="Search..."
-                            class="pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-primary w-64 text-sm">
+                            class="pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-primary w-64 text-sm"
+                            style="max-width: 100%">
                         <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                             <i class="ri-search-line"></i>
                         </div>
