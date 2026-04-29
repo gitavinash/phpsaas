@@ -221,7 +221,7 @@
             <!-- Right Icons -->
             <div class="flex items-center space-x-4">
                 <!-- Desktop Search -->
-                <div class="relative hidden md:block">
+                <div class="relative hidden md:block" style="max-width: 90%">
                     <form action="/search/" method="get">
                         <input type="text" name="q" placeholder="Search..."
                             class="pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-primary w-64 text-sm">
