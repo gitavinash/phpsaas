@@ -183,8 +183,6 @@
 
                     <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Faux Flowers</a>
                     <a href="/category/cake/" class="text-gray-700 hover:text-primary transition">Cake & Hampers</a>
-                    <!-- <a href="/tag/valentine/?sort=newest"
-                        class="hover:text-[#D2042D] text-[#D2042D] transition font-semibold">Valentine Edition</a> -->
                     <!-- Mega Menu -->
                     <div class="relative group">
                         <a href="#" class="text-gray-700 hover:text-primary transition">Occasions</a>
@@ -215,6 +213,8 @@
                         class="text-gray-700 hover:text-primary transition">
                         Blooms of <?php echo date('F') ?>
                     </a>
+                    <a href="/tag/mother/?sort=newest"
+                        class="hover:text-[#D2042D] text-[#D2042D] transition font-semibold">Mother's Day</a>
                 </nav>
             </div>
 
@@ -387,10 +387,6 @@
                             <i class="ri-chevron-down-line transition-transform"></i>
                         </button>
                         <div class="mobile-menu-submenu hidden bg-gray-50 pl-4">
-                            <!-- <a href="/tag/woman/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-woman-line mr-3 text-primary"></i> Woman's Day
-                            </a> -->
                             <a href="/tag/mother/"
                                 class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
                                 <i class="ri-heart-line mr-3 text-primary"></i> Mother's Day
@@ -451,6 +447,10 @@
                         class="mobile-menu-link px-4 py-4 text-gray-700 hover:bg-secondary transition flex items-center justify-between group">
                         <span>Blooms of <?php echo date('F') ?></span>
                         <i class="ri-arrow-right-s-line text-primary opacity-0 group-hover:opacity-100 transition"></i>
+                    </a>
+                    <a href="/tag/mother/"
+                        class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
+                        <i class="ri-woman-line mr-3 text-primary"></i> Mother's Day
                     </a>
                 </nav>
 
