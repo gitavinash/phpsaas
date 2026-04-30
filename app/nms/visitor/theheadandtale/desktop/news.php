@@ -126,6 +126,8 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
 
                 if ($userAccessType == 'author' || $userAccessType == 'administrator') {
                     $showFullNews = true;
+                    $showSignUpSection = false;
+                    $showSubscriptionSection = false;
                 }
 
                 echo "<div class='details_box__content {$news_paid} " . (($showFullNews == true) ? '' : 'text-gradient') . "'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
