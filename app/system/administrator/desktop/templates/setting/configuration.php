@@ -16,7 +16,7 @@
 
             <?php
 
-            if ($checkUser = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "site WHERE site_id=" . SITE_ID . " site_status=1")) {
+            if ($checkUser = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "site WHERE site_id=" . SITE_ID . " AND site_status=1")) {
                 if (mysqli_num_rows($checkUser) == 0) {
                     echo '<h1>invalid request found</h1>';
                 } else {
