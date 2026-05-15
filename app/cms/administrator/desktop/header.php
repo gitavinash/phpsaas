@@ -13,22 +13,28 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
     <title>
         <?php echo str_replace('_', ' ', ucwords(((ADMIN_BASE_URL == '/') ? 'Dashboard' : str_replace('/', ' ', ADMIN_BASE_URL . ' ' . @$_GET['type'])) . ' | ' . SITE_NAME)); ?>
     </title>
-    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo CSS_LIBRARY ?>all.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>ui/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>image-uploader/css/image-uploader.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/datatables.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
 </head>
 
-<body>
+<body class="premium-admin">
 
     <header>
         <div class="left-side">
             <ul>
                 <li>
+                    <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open navigation">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <div class="logo"><a href="/dashboard/"><img src="<?php echo SITE_LOGO ?>" alt=""></a></div>
                 </li>
             </ul>
@@ -743,6 +749,43 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
             </ul>
         </nav>
     </aside>
+
+    <div class="mobile-nav-overlay" id="nav-overlay"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var menuSearch = document.getElementById('side-nav-search');
+        var menuRoot = document.querySelector('nav.side-nav > ul');
+
+        if (menuSearch && menuRoot) {
+            var menuItems = menuRoot.children;
+
+            menuSearch.addEventListener('input', function() {
+                var searchTerm = menuSearch.value.toLowerCase().trim();
+
+                for (var i = 0; i < menuItems.length; i++) {
+                    var item = menuItems[i];
+                    var topAnchor = item.firstElementChild;
+
+                    if (!topAnchor || topAnchor.tagName !== 'A') {
+                        continue;
+                    }
+
+                    var searchableText = topAnchor.textContent.toLowerCase();
+                    var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
+
+                    for (var j = 0; j < subLinks.length; j++) {
+                        searchableText += ' ' + subLinks[j].textContent.toLowerCase();
+                    }
+
+                    item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -
+                            1) ? '' :
+                        'none';
+                }
+            });
+        }
+    });
+    </script>
 
     <main>
 
