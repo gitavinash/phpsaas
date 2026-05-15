@@ -16,7 +16,7 @@
 
             <?php
 
-            if ($checkUser = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "site WHERE site_status=1")) {
+            if ($checkUser = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "site WHERE site_id=" . SITE_ID . " site_status=1")) {
                 if (mysqli_num_rows($checkUser) == 0) {
                     echo '<h1>invalid request found</h1>';
                 } else {
@@ -25,129 +25,129 @@
 
             ?>
 
-            <div class="form-box" style="margin: 0 auto">
-                <div class="box-2">
-                    <h3>Manage Website Basic Configurations</h3>
-                    <form id="websiteData">
-                        <?php
+                    <div class="form-box" style="margin: 0 auto">
+                        <div class="box-2">
+                            <h3>Manage Website Basic Configurations</h3>
+                            <form id="websiteData">
+                                <?php
 
                                 if ($site_domain != '') { ?>
-                        <div class="form-group">
-                            <label>Website Domain <span>( Please do not change. If it is not necessary )</span></label>
-                            <input type="text" name="site_domain" value='<?php echo $site_domain ?>'
-                                class="form-control inside-shadow" placeholder="Website Domain" readonly>
-                        </div>
-                        <!-- <div class="form-group">
+                                    <div class="form-group">
+                                        <label>Website Domain <span>( Please do not change. If it is not necessary )</span></label>
+                                        <input type="text" name="site_domain" value='<?php echo $site_domain ?>'
+                                            class="form-control inside-shadow" placeholder="Website Domain" readonly>
+                                    </div>
+                                    <!-- <div class="form-group">
                                         <label>Actual Website URL*</label>
                                         <input type="text" name="site_url" value='<?php echo (($site_url == '') ? $site_domain : $site_url) ?>' class="form-control inside-shadow" placeholder="Website URL" readonly >
                                     </div> -->
-                        <?php
+                                <?php
                                 } else { ?>
-                        <div class="form-group">
-                            <label>Website Domain <span>( Please do not change. If it is not necessary )</span></label>
-                            <input type="text" name="site_domain" value='<?php echo $site_domain ?>'
-                                class="form-control inside-shadow" placeholder="Website Domain" readonly>
-                        </div>
-                        <?php
+                                    <div class="form-group">
+                                        <label>Website Domain <span>( Please do not change. If it is not necessary )</span></label>
+                                        <input type="text" name="site_domain" value='<?php echo $site_domain ?>'
+                                            class="form-control inside-shadow" placeholder="Website Domain" readonly>
+                                    </div>
+                                <?php
                                 }
 
                                 ?>
-                        <div class="form-group">
-                            <label>Website Name*</label>
-                            <input type="text" id="websiteName" value="<?php echo $site_name; ?>" name="site_name"
-                                class="form-control inside-shadow" placeholder="First Name" required>
+                                <div class="form-group">
+                                    <label>Website Name*</label>
+                                    <input type="text" id="websiteName" value="<?php echo $site_name; ?>" name="site_name"
+                                        class="form-control inside-shadow" placeholder="First Name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>About Website*</label>
+                                    <textarea name="site_description" id="websiteDescription"
+                                        style="height: 100px; background: none" class="form-control inside-shadow"
+                                        placeholder="About Website ( Recommendation Max 170 Characters )"><?php echo $site_description ?></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Website Keywords ( Use , to seprate Keywords )</label>
+                                    <textarea name="site_keyword" id="websiteKeyword" style="height: 100px; background: none"
+                                        class="form-control inside-shadow"
+                                        placeholder="Website Keywords ( Use , to seprate Keywords )"><?php echo $site_keyword ?></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Website Theme Color</label>
+                                    <div id="color-drop">
+                                        <input type="color" name="site_theme" value="<?php echo SITE_THEME_COLOUR ?>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Select website language*</label>
+                                    <select name="site_lang" id="siteLang" class="form-control inside-shadow" required>
+                                        <option value="">Select Language</option>
+                                        <option value="hi_IN" <?php echo (($site_lang == 'hi_IN') ? 'selected' : '') ?>>हिंदी
+                                        </option>
+                                        <option value="en" <?php echo (($site_lang == 'en') ? 'selected' : '') ?>>English
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-check" style="margin-bottom: 20px;">
+                                    <input type="checkbox" name="site_index" value="noindex, nofollow" class="form-check-input"
+                                        <?php echo (($site_index != '') ? 'checked' : '') ?>>
+                                    <label class="form-check-label">Allow Search Engine to index site</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" name="type" value="setting">
+                                    <input type="hidden" name="action" value="configuration">
+                                    <input type="hidden" name="website_id" value="<?php echo SITE_ID ?>">
+                                    <input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>">
+                                    <input type="submit" id="updateWebsite" class="btn btn-green" value="Update Website">
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label>About Website*</label>
-                            <textarea name="site_description" id="websiteDescription"
-                                style="height: 100px; background: none" class="form-control inside-shadow"
-                                placeholder="About Website ( Recommendation Max 170 Characters )"><?php echo $site_description ?></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Website Keywords ( Use , to seprate Keywords )</label>
-                            <textarea name="site_keyword" id="websiteKeyword" style="height: 100px; background: none"
-                                class="form-control inside-shadow"
-                                placeholder="Website Keywords ( Use , to seprate Keywords )"><?php echo $site_keyword ?></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Website Theme Color</label>
-                            <div id="color-drop">
-                                <input type="color" name="site_theme" value="<?php echo SITE_THEME_COLOUR ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Select website language*</label>
-                            <select name="site_lang" id="siteLang" class="form-control inside-shadow" required>
-                                <option value="">Select Language</option>
-                                <option value="hi_IN" <?php echo (($site_lang == 'hi_IN') ? 'selected' : '') ?>>हिंदी
-                                </option>
-                                <option value="en" <?php echo (($site_lang == 'en') ? 'selected' : '') ?>>English
-                                </option>
-                            </select>
-                        </div>
-                        <div class="form-check" style="margin-bottom: 20px;">
-                            <input type="checkbox" name="site_index" value="noindex, nofollow" class="form-check-input"
-                                <?php echo (($site_index != '') ? 'checked' : '') ?>>
-                            <label class="form-check-label">Allow Search Engine to index site</label>
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" name="type" value="setting">
-                            <input type="hidden" name="action" value="configuration">
-                            <input type="hidden" name="website_id" value="<?php echo SITE_ID ?>">
-                            <input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>">
-                            <input type="submit" id="updateWebsite" class="btn btn-green" value="Update Website">
-                        </div>
-                    </form>
-                </div>
 
-                <div class='box-2'>
+                        <div class='box-2'>
 
-                    <form id="updateSiteLogoForm">
-                        <h3>Website Logo</h3>
-                        <div class="siteLogoPreviewBox"
-                            style="display: <?php echo ((SITE_LOGO != '') ? 'block' : 'none') ?>;">
-                            <div class="img"><img src="<?php echo ((SITE_LOGO != '') ? SITE_LOGO : '') ?>"
-                                    id="siteLogoPath" alt=""></div>
-                            <input type="hidden" name="type" value="setting">
-                            <input type="hidden" name="action" value="logo">
-                            <input type="button" id="updateSiteLogo" class="btn btn-green btn-sm" style="display:none"
-                                value="Update Website Logo">
-                            <input type="button" id="siteLogoChangeImage" name="updateSiteLogo"
-                                class="btn btn-red btn-sm" value="Change Site Logo">
-                        </div>
-                        <div class="siteLogoUploadBox" id="siteLogo"
-                            style="display: <?php echo ((SITE_LOGO == '') ? 'block' : 'none') ?>;">
-                            <span>Add Website logo</span>
-                            <input type='file' id="siteLogoImage" name='siteLogo' />
-                            <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif</p>
-                        </div>
-                    </form>
+                            <form id="updateSiteLogoForm">
+                                <h3>Website Logo</h3>
+                                <div class="siteLogoPreviewBox"
+                                    style="display: <?php echo ((SITE_LOGO != '') ? 'block' : 'none') ?>;">
+                                    <div class="img"><img src="<?php echo ((SITE_LOGO != '') ? SITE_LOGO : '') ?>"
+                                            id="siteLogoPath" alt=""></div>
+                                    <input type="hidden" name="type" value="setting">
+                                    <input type="hidden" name="action" value="logo">
+                                    <input type="button" id="updateSiteLogo" class="btn btn-green btn-sm" style="display:none"
+                                        value="Update Website Logo">
+                                    <input type="button" id="siteLogoChangeImage" name="updateSiteLogo"
+                                        class="btn btn-red btn-sm" value="Change Site Logo">
+                                </div>
+                                <div class="siteLogoUploadBox" id="siteLogo"
+                                    style="display: <?php echo ((SITE_LOGO == '') ? 'block' : 'none') ?>;">
+                                    <span>Add Website logo</span>
+                                    <input type='file' id="siteLogoImage" name='siteLogo' />
+                                    <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif</p>
+                                </div>
+                            </form>
 
-                    <form id="updateSiteIconForm">
-                        <h3>Website Icon</h3>
-                        <div class="siteIconPreviewBox"
-                            style="display: <?php echo ((SITE_ICON != '') ? 'block' : 'none') ?>;">
-                            <div class="img"><img src="<?php echo ((SITE_ICON != '') ? SITE_ICON : '') ?>"
-                                    id="siteIconPath" alt=""></div>
-                            <input type="hidden" name="type" value="setting">
-                            <input type="hidden" name="action" value="icon">
-                            <input type="button" id="updateSiteIcon" class="btn btn-green btn-sm"
-                                value="Update Website Icon" style="display:none">
-                            <input type="button" id="siteIconChangeImage" name="updateSiteIcon"
-                                class="btn btn-red btn-sm" value="Change Site Icon">
-                        </div>
-                        <div class="siteIconUploadBox"
-                            style="display: <?php echo ((SITE_ICON == '') ? 'block' : 'none') ?>;">
-                            <span>Add Website Icon</span>
-                            <input type='file' id="siteIconImage" name='siteIcon' />
-                            <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif (
-                                Recommend Size : 512x512 )</p>
-                        </div>
-                    </form>
+                            <form id="updateSiteIconForm">
+                                <h3>Website Icon</h3>
+                                <div class="siteIconPreviewBox"
+                                    style="display: <?php echo ((SITE_ICON != '') ? 'block' : 'none') ?>;">
+                                    <div class="img"><img src="<?php echo ((SITE_ICON != '') ? SITE_ICON : '') ?>"
+                                            id="siteIconPath" alt=""></div>
+                                    <input type="hidden" name="type" value="setting">
+                                    <input type="hidden" name="action" value="icon">
+                                    <input type="button" id="updateSiteIcon" class="btn btn-green btn-sm"
+                                        value="Update Website Icon" style="display:none">
+                                    <input type="button" id="siteIconChangeImage" name="updateSiteIcon"
+                                        class="btn btn-red btn-sm" value="Change Site Icon">
+                                </div>
+                                <div class="siteIconUploadBox"
+                                    style="display: <?php echo ((SITE_ICON == '') ? 'block' : 'none') ?>;">
+                                    <span>Add Website Icon</span>
+                                    <input type='file' id="siteIconImage" name='siteIcon' />
+                                    <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif (
+                                        Recommend Size : 512x512 )</p>
+                                </div>
+                            </form>
 
-                </div>
+                        </div>
 
-            </div>
+                    </div>
 
 
             <?php
