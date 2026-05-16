@@ -76,12 +76,33 @@
                 <select id="menuPosition" class="form-control inside-shadow" style="max-width:260px;">
                     <?php
                     $defaults = ['Main Header', 'Footer 1', 'Footer 2', 'Footer 3', 'Footer 4'];
+                    $menuList = [];
                     foreach ($defaults as $p) {
-                        echo "<option>" . htmlspecialchars($p, ENT_QUOTES) . "</option>";
+                        $key = strtolower(str_replace(' ', '_', $p));
+                        $menuList[$key] = $p;
+                    }
+
+                    $sqlMenus = "SELECT site_configuration_key 
+                                 FROM " . TABLE_PREFIX . "site_configuration 
+                                 WHERE site_configuration_key LIKE 'site_nav_%' 
+                                   AND site_configuration_site_id = '" . SITE_ID . "'";
+                    if ($resMenus = mysqli_query($connection, $sqlMenus)) {
+                        while ($rowMenu = mysqli_fetch_assoc($resMenus)) {
+                            $key = str_replace('site_nav_', '', $rowMenu['site_configuration_key']);
+                            if (!isset($menuList[$key])) {
+                                $menuList[$key] = ucwords(str_replace('_', ' ', $key));
+                            }
+                        }
+                    }
+
+                    foreach ($menuList as $p) {
+                        echo "<option value=\"" . htmlspecialchars($p, ENT_QUOTES) . "\">" . htmlspecialchars($p, ENT_QUOTES) . "</option>";
                     }
                     ?>
                     <option value="__NEW__">➕ New menu…</option>
                 </select>
+                <button id="renameMenuPosition" class="btn btn-sm btn-blue" style="display:none;" type="button" title="Rename Menu">✎ Rename</button>
+                <button id="deleteMenuPosition" class="btn btn-sm btn-red" style="display:none;" type="button" title="Delete Menu">✕ Delete</button>
             </div>
 
             <div style="margin-bottom:8px;">

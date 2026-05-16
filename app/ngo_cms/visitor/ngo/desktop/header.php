@@ -36,22 +36,14 @@ if (defined('SETTING_COMPANY_PROFILE')) {
                 </a>
 
                 <div class="nav-right">
-                    <!-- <ul class="nav-menu" id="nav-menu"> -->
+                    <ul class="nav-menu" id="nav-menu">
+                        <?php
+                        generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true, 'nav-link');
+                        ?>
+                    </ul>
                     <?php
-                    generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true);
+                    generateMenu('SITE_NAV_HEADER_MENU_CTA', 'non_list', true, 'btn btn-secondary nav-btn');
                     ?>
-                    <li><a href="/" class="nav-link">Home</a></li>
-                    <li><a href="about.html" class="nav-link">About</a></li>
-                    <li><a href="services.html" class="nav-link">Services</a></li>
-                    <li><a href="events.html" class="nav-link">Events</a></li>
-                    <li><a href="gallery.html" class="nav-link">Gallery</a></li>
-                    <li><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li><a href="achievements.html" class="nav-link">Achievements</a></li>
-                    <li><a href="contact.html" class="nav-link">Contact</a></li>
-                    <li class="mobile-only"><a href="donation.html" class="nav-link"
-                            style="color: var(--secondary-color);">Donate</a></li>
-                    <!-- </ul> -->
-                    <a href="donation.html" class="btn btn-secondary nav-btn">Donate Now</a>
 
                     <div class="mobile-toggle" id="mobile-toggle">
                         <i class="fas fa-bars"></i>

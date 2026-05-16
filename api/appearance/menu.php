@@ -102,6 +102,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $raw = file_get_contents('php://input');
+    $decoded = json_decode($raw, true);
+    if (!is_array($decoded) || empty($decoded['position'])) {
+        $httpStatus = 400;
+        $status = 'error';
+        $msg = 'Invalid JSON or missing position';
+    } else {
+        $positionName = (string)$decoded['position'];
+        $menuName = 'site_nav_' . preg_replace('/\s+/', '_', strtolower(trim($positionName)));
+        $siteId = (int)SITE_ID;
+
+        $sqlDel = "DELETE FROM " . TABLE_PREFIX . "site_configuration
+                   WHERE site_configuration_key = ? 
+                     AND site_configuration_site_id = ?";
+        $stmt = $connection->prepare($sqlDel);
+        if ($stmt === false) {
+            $httpStatus = 500;
+            $status = 'error';
+            $msg = 'DB prepare failed: ' . $connection->error;
+        } else {
+            $stmt->bind_param('si', $menuName, $siteId);
+            if ($stmt->execute()) {
+                $httpStatus = 200;
+                $status = 'success';
+                $msg = 'Menu deleted successfully';
+            } else {
+                $httpStatus = 500;
+                $status = 'error';
+                $msg = 'DB execute failed: ' . $stmt->error;
+            }
+            $stmt->close();
+        }
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $raw = file_get_contents('php://input');
+    $decoded = json_decode($raw, true);
+    if (!is_array($decoded) || empty($decoded['old_position']) || empty($decoded['new_position'])) {
+        $httpStatus = 400;
+        $status = 'error';
+        $msg = 'Invalid JSON or missing positions';
+    } else {
+        $oldPositionName = (string)$decoded['old_position'];
+        $newPositionName = (string)$decoded['new_position'];
+        $oldMenuName = 'site_nav_' . preg_replace('/\s+/', '_', strtolower(trim($oldPositionName)));
+        $newMenuName = 'site_nav_' . preg_replace('/\s+/', '_', strtolower(trim($newPositionName)));
+        $siteId = (int)SITE_ID;
+
+        $sqlUpd = "UPDATE " . TABLE_PREFIX . "site_configuration
+                   SET site_configuration_key = ?
+                   WHERE site_configuration_key = ? 
+                     AND site_configuration_site_id = ?";
+        $stmt = $connection->prepare($sqlUpd);
+        if ($stmt === false) {
+            $httpStatus = 500;
+            $status = 'error';
+            $msg = 'DB prepare failed: ' . $connection->error;
+        } else {
+            $stmt->bind_param('ssi', $newMenuName, $oldMenuName, $siteId);
+            if ($stmt->execute()) {
+                $httpStatus = 200;
+                $status = 'success';
+                $msg = 'Menu renamed successfully';
+            } else {
+                $httpStatus = 500;
+                $status = 'error';
+                $msg = 'DB execute failed: ' . $stmt->error;
+            }
+            $stmt->close();
+        }
+    }
 } else {
     $httpStatus = 400;
     $status = 'error';

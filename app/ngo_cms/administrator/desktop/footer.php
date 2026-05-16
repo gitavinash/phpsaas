@@ -19,6 +19,8 @@
 			<script src="<?php echo PLUGIN_LIBRARY ?>select2/js/select2.min.js" type="text/javascript"></script>
 			<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
 			<script src="<?php echo ADMIN_JS ?>admin.min.js"></script>
+			<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+			<script src="<?php echo JS_LIBRARY ?>admin-menu-builder.min.js"></script>
 			<script>
 (function() {
     var body = document.body;
@@ -87,31 +89,31 @@
 
 			<?php
 
-			if (isset($_GET['responseMsg'])) { ?>
+            if (isset($_GET['responseMsg'])) { ?>
 
 			<script type='text/javascript'>
 alert("<?php echo $_GET['responseMsg'] ?>");
 			</script>
 
 			<?php
-			}
+            }
 
-			if (isset($_GET['type'])) {
+            if (isset($_GET['type'])) {
 
-				if ($_GET['type'] == 'edit' || $_GET['type'] == 'add') { ?>
+                if ($_GET['type'] == 'edit' || $_GET['type'] == 'add') { ?>
 			<script type='text/javascript'>
 $(window).bind('beforeunload', function() {
     return "Leaving this page will reset the wizard";
 });
 			</script>
 			<?php
-				}
-			}
+                }
+            }
 
 
-			if (isset($_GET['type'])) {
+            if (isset($_GET['type'])) {
 
-				if (in_array($_GET['type'], ['list', 'sessions', 'subscriber', 'all-subscriber'])) { ?>
+                if (in_array($_GET['type'], ['list', 'sessions', 'subscriber', 'all-subscriber'])) { ?>
 
 			<script type='text/javascript'>
 $(document).ready(function() {
@@ -165,10 +167,10 @@ $(document).ready(function() {
 			</script>
 			<?php
 
-				}
-			}
+                }
+            }
 
-			?>
+            ?>
 
 			</body>
 
