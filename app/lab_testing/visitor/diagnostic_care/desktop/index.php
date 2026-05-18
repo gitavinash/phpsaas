@@ -8,7 +8,7 @@ require_once 'header.php';
         <div class="row align-items-center">
             <div class="col-12 col-lg-7">
                 <h2 class="isfont-28 text-white my-3 is-font600">
-                    Book a Lab Test from the lab of your choice
+                    Book a Lab Test from the lab of your choice and save upto 50%, call now!
                 </h2>
                 <div class="hero-input d-flex align-items-center">
                     <i class="bx bx-search mx-3 isfont-24 ps-3 is-txt-color2"></i>
