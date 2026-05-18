@@ -20,9 +20,6 @@ switch ($link_status) {
                 extract(mysqli_fetch_assoc($postData));
                 if (file_exists(ROUTER . $link_status . '.php')) {
 
-                    echo "sds";
-                    exit();
-
                     /** Include status router file */
 
                     require_once ROUTER . $link_status . '.php';
