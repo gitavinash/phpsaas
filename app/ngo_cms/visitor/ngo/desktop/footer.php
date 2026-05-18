@@ -31,17 +31,33 @@
             <!-- Col 1: About & Social -->
             <div class="footer-col">
                 <a href="index.html" class="brand-logo" style="margin-bottom: 1.5rem;">
-                    <img src="assets/images/logo.png" alt="Dharam Prachar Jan Kalyan Samiti Logo"
-                        class="logo-img-footer">
+                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>" class="logo-img-footer">
                 </a>
-                <p>Dharam Prachar Jan Kalyan Samiti is a non-profit organization established in 2012 working for social
-                    welfare, education support, health awareness and upliftment of underprivileged communities.</p>
+                <p><?php echo SITE_DESC ?></p>
                 <div class="social-icons">
-                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    <?php
+
+                    if (!empty($companyFacebookProfile)) {
+                        echo "<a href='{$companyFacebookProfile}' class='social-icon'><i class='fab fa-facebook-f'></i></a>";
+                    }
+
+                    if (!empty($companyInstagramProfile)) {
+                        echo "<a href='{$companyInstagramProfile}' class='social-icon'><i class='fab fa-instagram'></i></a>";
+                    }
+
+                    if (!empty($companyYoutubeProfile)) {
+                        echo "<a href='{$companyYoutubeProfile}' class='social-icon'><i class='fab fa-youtube'></i></a>";
+                    }
+
+                    if (!empty($companyTwitterProfile)) {
+                        echo "<a href='{$companyTwitterProfile}' class='social-icon'><i class='fab fa-twitter'></i></a>";
+                    }
+
+                    if (!empty($companyLinkedInProfile)) {
+                        echo "<a href='{$companyLinkedInProfile}' class='social-icon'><i class='fab fa-linkedin-in'></i></a>";
+                    }
+
+                    ?>
                 </div>
             </div>
 
@@ -49,36 +65,47 @@
             <div class="footer-col">
                 <h3>Quick Links</h3>
                 <ul class="footer-links-mega">
-                    <li><a href="about.html">About DPJKS</a></li>
-                    <li><a href="services.html">Our Causes</a></li>
-                    <li><a href="donation.html">Donate Now</a></li>
-                    <li><a href="events.html" class="nav-link">Upcoming Events</a></li>
-                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                    <li><a href="terms-conditions.html">Terms & Conditions</a></li>
-                    <li><a href="refund-policy.html">Refund Policy</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
+                    <?php
+                    generateMenu('SITE_NAV_FOOTER_1', 'dropdown', true, '');
+                    ?>
                 </ul>
             </div>
 
             <!-- Col 3: Contact Info -->
             <div class="footer-col">
                 <h3>Contact Us</h3>
-                <div class="footer-contact-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Gram Hindupur Sabalpur, Shivrajpur,<br>Kanpur Nagar, Uttar Pradesh, India</span>
-                </div>
-                <div class="footer-contact-item">
-                    <i class="fas fa-phone-alt"></i>
-                    <span>+91 93051 47080</span>
-                </div>
-                <div class="footer-contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>gauravmishra2k22@gmail.com</span>
-                </div>
-                <div class="footer-contact-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Mon - Sat: 9:00 AM - 6:00 PM</span>
-                </div>
+                <?php
+
+                if (isset($companyAddress)) {
+                    echo "<div class='footer-contact-item'>
+                    <i class='fas fa-map-marker-alt'></i>
+                    <span>{$companyAddress}</span>
+                </div>";
+                }
+
+                if (isset($companyMobile)) {
+                    echo "<div class='footer-contact-item'>
+                    <i class='fas fa-phone-alt'></i>
+                    <span>{$companyMobile}</span>
+                </div>";
+                }
+
+                if (isset($companyEmail)) {
+                    echo "<div class='footer-contact-item'>
+                    <i class='fas fa-envelope'></i>
+                    <span>{$companyEmail}</span>
+                </div>";
+                }
+
+
+                if (isset($companyTiming)) {
+                    echo "<div class='footer-contact-item'>
+                    <i class='fas fa-clock'></i>
+                    <span>{$companyTiming}</span>
+                </div>";
+                }
+
+                ?>
             </div>
 
             <!-- Col 4: Newsletter -->
@@ -102,14 +129,15 @@
         </div>
 
         <div class="container footer-bottom">
-            <p>&copy; 2026 Dharam Prachar Jan Kalyan Samiti. All rights reserved. | Reg. No: K-46259</p>
+            <p>&copy; <?php echo date('Y') ?> <?php echo SITE_NAME ?>. All rights reserved.
+                <?php echo (isset($companyRegisterationNo) ? " | Reg. No: {$companyRegisterationNo}" : '') ?></p>
             <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">Designed and Developed by <a
                     href="https://blumox.com" target="_blank" style="color: inherit; text-decoration: underline;">Blumox
                     Technologies</a></p>
             <div class="footer-legal-links">
-                <a href="privacy-policy.html">Privacy Policy</a>
-                <a href="terms-conditions.html">Terms of Use</a>
-                <a href="refund-policy.html">Refund Policy</a>
+                <?php
+                generateMenu('SITE_NAV_FOOTER_2', 'dropdown', true, '');
+                ?>
             </div>
         </div>
     </footer>

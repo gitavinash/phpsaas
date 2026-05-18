@@ -17,26 +17,56 @@ if (count($sliderList) != 0) {
         $btnText = htmlspecialchars($slide['slider_cta']);
         $btnUrl = htmlspecialchars($slide['slide_link']);
 
+        // New properties
+        $align = isset($slide['slide_alignment']) ? $slide['slide_alignment'] : 'center';
+        $overlay = isset($slide['slide_overlay']) && $slide['slide_overlay'] == 1 ? 'bg-black/50' : '';
+        $cta1_bg = !empty($slide['cta1_bg_color']) ? $slide['cta1_bg_color'] : '#F5D154';
+        $cta1_text = !empty($slide['cta1_text_color']) ? $slide['cta1_text_color'] : '#1E293B';
+        $cta2_style = isset($slide['cta2_style']) ? $slide['cta2_style'] : 'outline';
+        $slide_subtitle = !empty($slide['slide_subtitle']) ? htmlspecialchars($slide['slide_subtitle']) : '';
+        
+        $cta2_bg = !empty($slide['cta2_bg_color']) ? $slide['cta2_bg_color'] : '#FFFFFF';
+        $cta2_text = !empty($slide['cta2_text_color']) ? $slide['cta2_text_color'] : '#000000';
+        $cta2_inline_style = $cta2_style === 'outline' 
+            ? "border: 2px solid {$cta2_text}; color: {$cta2_text}; background-color: transparent;" 
+            : "background-color: {$cta2_bg}; color: {$cta2_text}; border: 2px solid {$cta2_bg};";
+
+        $textAlignClass = $align === 'center' ? 'text-center mx-auto' : ($align === 'right' ? 'text-right ml-auto' : 'text-left mr-auto');
+        $flexAlignClass = $align === 'center' ? 'justify-center' : ($align === 'right' ? 'justify-end' : 'justify-start');
+
         // Assign slide class
         $slideClass = $slideIndex === 0 ? '' : 'translate-x-full';
 ?>
 <a href='<?php echo $btnUrl ?>' title='<?php echo $title ?>'>
-    <div class='slide absolute inset-0 bg-cover bg-left bg-no-repeat <?php echo $slideClass ?>'
+    <div class='slide absolute inset-0 bg-cover bg-center bg-no-repeat <?php echo $slideClass ?>'
         style='background-image: url(<?php echo $bgImage ?>)'>
-        <div class='absolute inset-0'></div>
+        <div class='absolute inset-0 <?php echo $overlay ?>'></div>
         <div class='absolute inset-0 flex items-center justify-center'>
-            <div class='text-center px-6 w-full'>
+            <div class='px-6 w-full max-w-7xl <?php echo $textAlignClass ?>'>
+                <?php if ($slide_subtitle): ?>
+                    <p class="text-white text-sm md:text-base font-semibold tracking-wider uppercase mb-3 opacity-90"><?php echo $slide_subtitle ?></p>
+                <?php endif; ?>
                 <h1 class='text-4xl md:text-6xl text-white font-medium mb-6 leading-tight'>
                     <?php echo nl2br($title) ?>
                 </h1>
-                <p class='text-white text-lg md:text-xl mb-8 max-w-2xl mx-auto'>
+                <p class='text-white text-lg md:text-xl mb-8 max-w-2xl <?php echo $align === 'center' ? 'mx-auto' : '' ?>'>
                     <?php echo nl2br($subtitle) ?>
                 </p>
                 <?php if (!empty($btnText) && !empty($btnUrl)): ?>
-                <a href='<?php echo $btnUrl ?>'
-                    class='inline-block bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap'>
-                    <?php echo $btnText ?>
-                </a>
+                <div class="flex <?php echo $flexAlignClass ?> gap-4">
+                    <a href='<?php echo $btnUrl ?>'
+                        class='inline-block px-8 py-3 !rounded-button hover:opacity-90 transition-all duration-300 whitespace-nowrap'
+                        style='background-color: <?php echo $cta1_bg ?>; color: <?php echo $cta1_text ?>;'>
+                        <?php echo $btnText ?>
+                    </a>
+                    <?php if (!empty($slide['slider_cta2']) && !empty($slide['slide_link2'])): ?>
+                    <a href="<?php echo htmlspecialchars($slide['slide_link2']) ?>"
+                        class="inline-block px-8 py-3 !rounded-button hover:opacity-90 transition-all duration-300 whitespace-nowrap"
+                        style="<?php echo $cta2_inline_style ?>">
+                        <?php echo htmlspecialchars($slide['slider_cta2']) ?>
+                    </a>
+                    <?php endif; ?>
+                </div>
                 <?php endif; ?>
             </div>
         </div>

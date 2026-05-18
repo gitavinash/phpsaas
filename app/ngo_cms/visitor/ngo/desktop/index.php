@@ -4,7 +4,14 @@ require_once 'header.php';
 
 ?>
 <!-- ======================== HERO ======================== -->
-<section class="hero">
+<section class="hero" style="background:
+    linear-gradient(
+      135deg,
+      rgba(13, 59, 102, 0.88) 0%,
+      rgba(13, 59, 102, 0.65) 100%
+    ),
+    url('<?php echo USER_IMAGES ?>/gallery/events/1000071350.jpg'),
+    no-repeat center center/cover;">
     <div class="container hero-content">
         <div class="hero-badge">
             <i class="fas fa-hands-helping" style="margin-right: 6px"></i>
@@ -20,8 +27,8 @@ require_once 'header.php';
             children, and building a cleaner, more compassionate community.
         </p>
         <div class="hero-btns">
-            <a href="donation.html" class="btn btn-secondary">Support Our Cause</a>
-            <a href="about.html" class="btn-outline-white">Our Journey</a>
+            <a href="/donation/" class="btn btn-secondary">Support Our Cause</a>
+            <a href="/about/" class="btn-outline-white">Our Journey</a>
         </div>
     </div>
 </section>
@@ -57,7 +64,7 @@ require_once 'header.php';
     <div class="container about-preview">
         <div class="about-img-wrap">
             <div class="about-img-main">
-                <img src="assets/images/gallery/events/1000071341.jpg" alt="DPJKS team serving community" />
+                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071341.jpg" alt="DPJKS team serving community" />
             </div>
             <div class="about-img-badge">
                 <span class="badge-num">2009</span>
@@ -91,7 +98,7 @@ require_once 'header.php';
                 <li><i class="fas fa-check"></i> Environmental Protection</li>
             </ul>
 
-            <a href="about.html" class="btn btn-primary">Read Our Full Story</a>
+            <a href="/about/" class="btn btn-primary">Read Our Full Story</a>
         </div>
     </div>
 </section>
@@ -111,7 +118,7 @@ require_once 'header.php';
         <div class="initiatives-grid">
             <!-- Initiative 1: Annadaan -->
             <div class="initiative-card">
-                <img src="assets/images/gallery/events/1000071337.jpg" alt="Annadaan - Food Distribution"
+                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071337.jpg" alt="Annadaan - Food Distribution"
                     class="initiative-img" />
                 <div class="initiative-body">
                     <div class="initiative-icon-wrap">
@@ -135,7 +142,7 @@ require_once 'header.php';
 
             <!-- Initiative 2: Tree Plantation -->
             <div class="initiative-card">
-                <img src="assets/images/gallery/events/1000071336.jpg" alt="Tree Plantation Drive"
+                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071336.jpg" alt="Tree Plantation Drive"
                     class="initiative-img" />
                 <div class="initiative-body">
                     <div class="initiative-icon-wrap">
@@ -158,8 +165,8 @@ require_once 'header.php';
 
             <!-- Initiative 3: Free Education -->
             <div class="initiative-card">
-                <img src="assets/images/gallery/education/1000071263.jpg" alt="Free Education for Poor Children"
-                    class="initiative-img" />
+                <img src="<?php echo USER_IMAGES ?>gallery/education/1000071263.jpg"
+                    alt="Free Education for Poor Children" class="initiative-img" />
                 <div class="initiative-body">
                     <div class="initiative-icon-wrap">
                         <i class="fas fa-graduation-cap"></i>
@@ -182,7 +189,7 @@ require_once 'header.php';
 
             <!-- Initiative 4: Cleanliness -->
             <div class="initiative-card">
-                <img src="assets/images/gallery/events/1000071345.jpg" alt="Cleanliness and Health Awareness"
+                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071345.jpg" alt="Cleanliness and Health Awareness"
                     class="initiative-img" />
                 <div class="initiative-body">
                     <div class="initiative-icon-wrap">
@@ -205,7 +212,7 @@ require_once 'header.php';
 
             <!-- Initiative 5: Disaster Relief -->
             <div class="initiative-card">
-                <img src="assets/images/gallery/events/1000071344.jpg" alt="Disaster and Seasonal Relief"
+                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071344.jpg" alt="Disaster and Seasonal Relief"
                     class="initiative-img" />
                 <div class="initiative-body">
                     <div class="initiative-icon-wrap">
@@ -228,7 +235,7 @@ require_once 'header.php';
 
             <!-- Initiative 6: Religious Harmony -->
             <div class="initiative-card">
-                <img src="assets/images/gallery/events/1000071343.jpg" alt="Religious and Social Harmony"
+                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071343.jpg" alt="Religious and Social Harmony"
                     class="initiative-img" />
                 <div class="initiative-body">
                     <div class="initiative-icon-wrap">
@@ -273,10 +280,10 @@ require_once 'header.php';
                     touched thousands of lives.
                 </p>
                 <div class="story-imgs" style="margin-bottom: 2rem">
-                    <img src="assets/images/gallery/events/1000071348.jpg" alt="DPJKS community work" />
-                    <img src="assets/images/gallery/events/1000071349.jpg" alt="DPJKS members serving" />
-                    <img src="assets/images/gallery/events/1000071351.jpg" alt="DPJKS events" />
-                    <img src="assets/images/gallery/events/1000071352.jpg" alt="DPJKS activities" />
+                    <img src="<?php echo USER_IMAGES ?>gallery/events/1000071348.jpg" alt="DPJKS community work" />
+                    <img src="<?php echo USER_IMAGES ?>gallery/events/1000071349.jpg" alt="DPJKS members serving" />
+                    <img src="<?php echo USER_IMAGES ?>gallery/events/1000071351.jpg" alt="DPJKS events" />
+                    <img src="<?php echo USER_IMAGES ?>gallery/events/1000071352.jpg" alt="DPJKS activities" />
                 </div>
                 <div class="story-quote">
                     <p>
@@ -445,13 +452,13 @@ require_once 'header.php';
                 </h4>
                 <h2>Activities & Programs</h2>
             </div>
-            <a href="events.html" class="btn btn-secondary">View All</a>
+            <a href="/events/" class="btn btn-secondary">View All</a>
         </div>
 
         <div class="home-events-grid">
             <!-- Featured -->
             <div class="featured-event">
-                <img src="assets/images/gallery/events/1000071342.jpg" alt="Annadaan - Daily Meal Program"
+                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071342.jpg" alt="Annadaan - Daily Meal Program"
                     class="featured-bg" />
                 <div class="featured-content">
                     <span class="event-badge">Daily Program</span>
@@ -465,7 +472,7 @@ require_once 'header.php';
                         receive a nutritious meal. Food is our first prayer — Anna Devo
                         Bhava.
                     </p>
-                    <a href="contact.html" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem">
+                    <a href="/contact/" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem">
                         Volunteer Now
                     </a>
                 </div>
@@ -481,7 +488,7 @@ require_once 'header.php';
                     <div class="recent-info">
                         <h4>Annadaan Program Launch</h4>
                         <p>Community Meal for 100+ People Daily</p>
-                        <a href="events.html" class="read-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        <a href="/events/" class="read-link">View Details <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -493,7 +500,7 @@ require_once 'header.php';
                     <div class="recent-info">
                         <h4>Public Welfare Meal Program</h4>
                         <p>Ongoing — Village Outreach Initiative</p>
-                        <a href="events.html" class="read-link">View <i class="fas fa-arrow-right"></i></a>
+                        <a href="/events/" class="read-link">View <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -505,7 +512,7 @@ require_once 'header.php';
                     <div class="recent-info">
                         <h4>Tree Plantation & Care Drive</h4>
                         <p>Kanpur Outskirts — Community Forestation</p>
-                        <a href="events.html" class="read-link">View <i class="fas fa-arrow-right"></i></a>
+                        <a href="/events/" class="read-link">View <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -517,7 +524,7 @@ require_once 'header.php';
                     <div class="recent-info">
                         <h4>Free Education Classes Continue</h4>
                         <p>Village School — 20–25 Children Enrolled</p>
-                        <a href="events.html" class="read-link">View <i class="fas fa-arrow-right"></i></a>
+                        <a href="/events/" class="read-link">View <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
