@@ -182,7 +182,7 @@ if ($checkProductCategory = mysqli_query($connection, "SELECT link_url, category
         while ($productCategoryDetails = mysqli_fetch_assoc($checkProductCategory)) {
             extract($productCategoryDetails);
             echo "<div class='clinic-card help-card'>
-                    <a href-'{$link_url}' title='{$category_title}'>
+                    <a href='{$link_url}' title='{$category_title}' style='text-decoration: none' >
                         <div class='card-icon'>
                             <img src='{$category_image}' alt='{$category_title}' />
                         </div>

@@ -1258,6 +1258,10 @@ nav ul li a:hover .badge {
   color: var(--charcoal);
 }
 
+.help-card a {
+  text-decoration: none;
+}
+
 .help-card p {
   font-size: 1.1rem;
   color: #666;
@@ -4135,8 +4139,8 @@ nav ul li a:hover .badge {
 }
 
 .service-feature-icon {
-  width: 56px;
-  height: 56px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   background: var(--hue-blue);
   color: var(--primary-blue);
@@ -4145,6 +4149,9 @@ nav ul li a:hover .badge {
   justify-content: center;
   flex-shrink: 0;
   font-size: 1.3rem;
+}
+.service-feature-icon img {
+  border-radius: 100%;
 }
 
 .service-feature-card h3 {

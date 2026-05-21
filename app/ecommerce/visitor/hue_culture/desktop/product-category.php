@@ -10,62 +10,40 @@ require_once 'header.php';
         <!-- Left Column: Text Content -->
         <div class="service-hero-content">
             <h1 class="hero-premium-headline">
-                The <span class="hero-premium-hues">Color Clinic</span>
+                <?php echo $category_title ?>
             </h1>
             <p class="service-hero-desc">
-                Our expert team employs scientific color analysis and refined
-                intuition to transform personal styling, interior environments, and
-                energetic alignments. We empower you to see and utilize color the
-                way the experts do.
+                <?php echo $category_description ?>
             </p>
         </div>
 
-        <!-- Right Column: 6 Small Cards Aligned Right -->
-        <div class="service-hero-right">
-            <div class="service-feature-grid">
-                <div class="service-feature-card primary">
-                    <div class="service-feature-icon">
-                        <i class="fa-solid fa-house"></i>
-                    </div>
-                    <h3 class="serif-normal">Spaces</h3>
-                </div>
 
-                <div class="service-feature-card">
-                    <div class="service-feature-icon">
-                        <i class="fa-solid fa-palette"></i>
-                    </div>
-                    <h3 class="serif-normal">Color Analysis</h3>
-                </div>
+        <?php
 
-                <div class="service-feature-card">
-                    <div class="service-feature-icon">
-                        <i class="fa-solid fa-shirt"></i>
-                    </div>
-                    <h3 class="serif-normal">Styling</h3>
-                </div>
+        if ($checkProductCategory = mysqli_query($connection, "SELECT link_url, category_title, category_image FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "category ON link_relation_id = category_id AND link_site_id=" . SITE_ID . " AND link_status=200 AND link_type='category' WHERE category_type='product' AND category_status=1 ORDER BY link_published ASC")) {
+            if (mysqli_num_rows($checkProductCategory) != 0) {
+                echo "<div class='service-hero-right'>
+            <div class='service-feature-grid'>";
 
-                <div class="service-feature-card">
-                    <div class="service-feature-icon">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
-                    <h3 class="serif-normal">Energy Palettes</h3>
-                </div>
+                while ($productCategoryDetails = mysqli_fetch_assoc($checkProductCategory)) {
+                    extract($productCategoryDetails);
+                    echo "<div class='service-feature-card" . (($link_url == BASE_URL) ? ' primary' : '') . "'>
+                        <a href='{$link_url}' title='{$category_title}' style='text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 12px;'>
+                            <div class='service-feature-icon'>
+                                <img src='{$category_image}' alt='{$category_title}'>
+                            </div>
+                            <h3 class='serif-normal'>{$category_title}</h3>
+                        </a>
+                    </div>";
+                }
 
-                <div class="service-feature-card">
-                    <div class="service-feature-icon">
-                        <i class="fa-solid fa-handshake"></i>
-                    </div>
-                    <h3 class="serif-normal">Collaborations</h3>
-                </div>
+                echo "</div>
+        </div>";
+            }
+        }
 
-                <div class="service-feature-card">
-                    <div class="service-feature-icon">
-                        <i class="fa-solid fa-shapes"></i>
-                    </div>
-                    <h3 class="serif-normal">Colorana</h3>
-                </div>
-            </div>
-        </div>
+        ?>
+
     </div>
 </section>
 
