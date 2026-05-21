@@ -6,18 +6,16 @@ require_once 'header.php';
 
 <!-- Hero Section -->
 <section class="hero"
-    style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('<?php echo USER_IMAGES ?>color-clinic-hero.jpeg') center/cover no-repeat; padding-top: 200px; padding-bottom: 150px; align-items: center; min-height: 70vh; display: flex; justify-content: center; text-align: center;">
+    style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('<?php echo $page_image ?>') center/cover no-repeat; padding-top: 200px; padding-bottom: 150px; align-items: center; min-height: 70vh; display: flex; justify-content: center; text-align: center;">
     <div class="container" style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
         <div class="hero-content reveal-on-load">
             <h1 class="hero-premium-headline"
                 style="margin-bottom: 20px; font-size: 4.5rem; color: var(--white); text-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-                Color Clinic
+                <?php echo $page_title ?>
             </h1>
             <p
                 style="font-size: 1.35rem; color: #fff; line-height: 1.6; text-shadow: 0 2px 10px rgba(0,0,0,0.5); margin: 0 auto; max-width: 700px;">
-                Our expert team employs scientific color analysis and refined intuition to transform personal styling,
-                interior environments, and energetic alignments. We empower you to see and utilize color the way the
-                experts do.
+                <?php echo $page_description ?>
             </p>
         </div>
     </div>
