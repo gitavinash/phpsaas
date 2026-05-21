@@ -1895,6 +1895,10 @@ nav ul li a:hover .badge {
   padding: 2.5rem;
 }
 
+.blog-content a {
+  text-decoration: none;
+}
+
 .blog-category {
   display: inline-block;
   font-size: 0.7rem;

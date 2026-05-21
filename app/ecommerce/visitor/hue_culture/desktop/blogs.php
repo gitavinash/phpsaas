@@ -40,15 +40,26 @@ SELECT
     post_image,
     post_title,
     link_url,
-    meta_description,
+    LEFT(
+            TRIM(
+                REGEXP_REPLACE(
+                    REPLACE(
+                        REPLACE(post_description, '&nbsp;', ' '),
+                        '\r\n',
+                        ' '
+                    ),
+                    '<[^>]*>',
+                    ''
+                )
+            ),
+            100
+        ) AS expert,
     category_title,
     link_published
 FROM " . TABLE_PREFIX . "link
 INNER JOIN " . TABLE_PREFIX . "post
     ON link_relation_id = post_id
     AND post_site_id = " . SITE_ID . "
-INNER JOIN " . TABLE_PREFIX . "meta
-    ON meta_relation_id = link_id
 INNER JOIN " . TABLE_PREFIX . "category
     ON category_id = post_category
 INNER JOIN " . TABLE_PREFIX . "profile
@@ -123,7 +134,7 @@ if ($featuredResult && mysqli_num_rows($featuredResult) > 0) {
                 </a>
 
                 <p class="blog-excerpt">
-                    <?= escape($featuredArticle['meta_description']); ?>
+                    <?= escape($featuredArticle['expert']); ?>
                 </p>
 
                 <div class="blog-meta">
@@ -170,14 +181,25 @@ SELECT
     post_image,
     post_title,
     link_url,
-    meta_description,
+    LEFT(
+            TRIM(
+                REGEXP_REPLACE(
+                    REPLACE(
+                        REPLACE(post_description, '&nbsp;', ' '),
+                        '\r\n',
+                        ' '
+                    ),
+                    '<[^>]*>',
+                    ''
+                )
+            ),
+            100
+        ) AS expert,
     category_title
 FROM " . TABLE_PREFIX . "link
 INNER JOIN " . TABLE_PREFIX . "post
     ON link_relation_id = post_id
     AND post_site_id = " . SITE_ID . "
-INNER JOIN " . TABLE_PREFIX . "meta
-    ON meta_relation_id = link_id
 INNER JOIN " . TABLE_PREFIX . "category
     ON category_id = post_category
 WHERE
@@ -250,7 +272,7 @@ if ($latestResult && mysqli_num_rows($latestResult) > 0) {
                         </h3>
 
                         <p class="blog-card-excerpt">
-                            <?= escape($article['meta_description']); ?>
+                            <?= escape($article['expert']); ?>
                         </p>
 
                     </div>

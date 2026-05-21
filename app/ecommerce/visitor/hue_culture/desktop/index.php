@@ -361,7 +361,20 @@ require_once 'header.php';
 
 <?php
 
-if ($checkArticles = mysqli_query($connection, "SELECT post_image, post_title, link_url, meta_description, category_title FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "post ON link_relation_id=post_id AND post_site_id=" . SITE_ID . " INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id INNER JOIN " . TABLE_PREFIX . "category ON category_id=post_category WHERE link_status=200 AND link_type='post' AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 3")) {
+if ($checkArticles = mysqli_query($connection, "SELECT post_image, post_title, link_url, LEFT(
+            TRIM(
+                REGEXP_REPLACE(
+                    REPLACE(
+                        REPLACE(post_description, '&nbsp;', ' '),
+                        '\r\n',
+                        ' '
+                    ),
+                    '<[^>]*>',
+                    ''
+                )
+            ),
+            100
+        ) AS expert, category_title FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "post ON link_relation_id=post_id AND post_site_id=" . SITE_ID . " INNER JOIN " . TABLE_PREFIX . "category ON category_id=post_category WHERE link_status=200 AND link_type='post' AND link_site_id=" . SITE_ID . " ORDER BY link_published DESC LIMIT 0, 3")) {
     if (mysqli_num_rows($checkArticles) != 0) {
 
         echo "<section class='blogs light-pink-bg'>
@@ -377,8 +390,9 @@ if ($checkArticles = mysqli_query($connection, "SELECT post_image, post_title, l
 
         while ($articleDetails = mysqli_fetch_assoc($checkArticles)) {
             extract($articleDetails);
-            echo "<a href='{$link_url}' title='{$post_title}'>
+            echo "
             <div class='blog-card'>
+            <a href='{$link_url}' title='{$post_title}'>
                 <div class='blog-img'>
                     <div class='img-placeholder' style='background-color: #f2efed'>
                         <img src='{$post_image}'' alt='{$post_title}'>
@@ -388,11 +402,11 @@ if ($checkArticles = mysqli_query($connection, "SELECT post_image, post_title, l
                     <span class='blog-category'>{$category_title}</span>
                     <h3>{$post_title}</h3>
                     <p>
-                        {$meta_description}
+                        {$expert}
                     </p>
                     <a href='{$link_url}' class='read-more'>Read Entry →</a>
                 </div>
-            </div></a>";
+            </a></div>";
         }
 
         echo "</div>
