@@ -1,3 +1,8 @@
+<?php
+
+require_once MENU_FUNCTIONS;
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -28,16 +33,13 @@
         </a>
         <nav>
             <ul>
-                <li><a href="hue-color-system/">Hue Color System</a></li>
-                <li><a href="color-clinic/">Color Clinic</a></li>
-                <li><a href="blogs/">Blogs</a></li>
-                <li><a href="training/">Training</a></li>
-                <li><a href="community/">Community</a></li>
-                <li><a href="/#portfolio">Portfolio</a></li>
+                <?php generateMenu('SITE_NAV_MAIN_HEADER', 'mobile', true); ?>
             </ul>
         </nav>
         <div class="header-cta">
-            <a href="contact/" class="btn green-bg">Contact Us</a>
+            <?php
+            generateMenu('SITE_NAV_HEADER_MENU_CTA', 'non_list', true, 'btn green-bg');
+            ?>
         </div>
         <div class="menu-toggle" id="menu-toggle">
             <span></span>

@@ -18,9 +18,9 @@
 			<script src="<?php echo PLUGIN_LIBRARY ?>image-uploader/js/image-uploader.min.js" type="text/javascript"></script>
 			<script src="<?php echo PLUGIN_LIBRARY ?>select2/js/select2.min.js" type="text/javascript"></script>
 			<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
-			<script src="<?php echo ADMIN_JS ?>admin.min.js"></script>
 			<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 			<script src="<?php echo JS_LIBRARY ?>admin-menu-builder.min.js"></script>
+			<script src="<?php echo ADMIN_JS ?>admin.min.js"></script>
 			<script>
 (function() {
     var body = document.body;

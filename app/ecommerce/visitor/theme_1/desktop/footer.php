@@ -31,7 +31,6 @@
                 <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
                 <ul class="space-y-3">
                     <?php generateMenu('SITE_NAV_FOOTER_1', 'mobile', true); ?>
-
                 </ul>
             </div>
             <div>

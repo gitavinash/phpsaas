@@ -29,24 +29,14 @@
             <div class="footer-col wide">
                 <h4>Color Clinic</h4>
                 <ul>
-                    <li><a href="service/#spaces">Spatial Hues</a></li>
-                    <li>
-                        <a href="service/#analysis">Personal Color Analysis</a>
-                    </li>
-                    <li><a href="service/#styling">Styling</a></li>
-                    <li><a href="service/#energy">Energy Aligned Palettes</a></li>
-                    <li><a href="service/#collaborations">Collaborations</a></li>
+                    <?php generateMenu('SITE_NAV_FOOTER_1', 'mobile', true); ?>
                 </ul>
             </div>
 
             <div class="footer-col wide">
                 <h4>Quick links</h4>
                 <ul>
-                    <li><a href="/#color-path">Hue Color System</a></li>
-                    <li><a href="service/">Color Clinic</a></li>
-                    <li><a href="blogs/">Blogs</a></li>
-                    <li><a href="training/">Training</a></li>
-                    <li><a href="community/">Community</a></li>
+                    <?php generateMenu('SITE_NAV_FOOTER_2', 'mobile', true); ?>
                 </ul>
             </div>
         </div>
@@ -62,10 +52,7 @@
                 </p>
             </div>
             <div class="footer-legal">
-                <a href="privacy/">Privacy Policy</a>
-                <a href="terms/">Terms Of Service</a>
-                <a href="terms/">Refund and Cancellation</a>
-                <a href="terms/">Shipping Policy</a>
+                <?php generateMenu('SITE_NAV_FOOTER_3', 'mobile', true); ?>
             </div>
         </div>
     </div>
@@ -76,16 +63,11 @@
     <div class="menu-close" id="menu-close">&times;</div>
     <nav>
         <ul>
+            <?php generateMenu('SITE_NAV_MAIN_HEADER', 'mobile', true); ?>
             <li>
-                <a href="#color-path" class="mobile-link">Hue Color System</a>
-            </li>
-            <li><a href="#color-clinic" class="mobile-link">Color Clinic</a></li>
-            <li><a href="blogs/" class="mobile-link">Blogs</a></li>
-            <li><a href="training/" class="mobile-link">Training</a></li>
-            <li><a href="community/" class="mobile-link">Community</a></li>
-            <li><a href="#portfolio" class="mobile-link">Portfolio</a></li>
-            <li>
-                <a href="contact/" class="btn-primary mobile-cta green-bg">Contact Us</a>
+                <?php
+                generateMenu('SITE_NAV_HEADER_MENU_CTA', 'non_list', true, 'btn-primary mobile-cta green-bg');
+                ?>
             </li>
         </ul>
     </nav>
