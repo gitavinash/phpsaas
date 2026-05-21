@@ -82,9 +82,24 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
             {$postTypeEsc}_image AS image,
             {$titleField} AS title,
             {$descField} AS description,
+            LEFT(
+            TRIM(
+                REGEXP_REPLACE(
+                    REPLACE(
+                        REPLACE({$descField}, '&nbsp;', ' '),
+                        '\r\n',
+                        ' '
+                    ),
+                    '<[^>]*>',
+                    ''
+                )
+            ),
+            200
+        ) AS expert,
             link_url,
             link_published,
             profile_display_name,
+            profile_image,
             category_title
         FROM {$table}
         INNER JOIN {$link}
@@ -157,7 +172,7 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
 
 
     // Ensure at least 5 articles if possible
-    $minArticles = 5;
+    $minArticles = 2;
     $finalLimit = max($pageLimit, $minArticles);
     $paged = array_slice($out, $offset, $finalLimit);
 
