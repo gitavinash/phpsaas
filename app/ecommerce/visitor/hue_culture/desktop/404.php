@@ -4,29 +4,6 @@ require_once 'header.php';
 
 ?>
 
-<!-- Full Screen Mobile Navigation -->
-<div class="mobile-nav" id="mobile-nav">
-    <div class="menu-close" id="menu-close">&times;</div>
-    <nav>
-        <ul>
-            <li><a href="about/" class="mobile-link">About Us</a></li>
-            <li>
-                <a href="/#color-path" class="mobile-link">Hue Color System</a>
-            </li>
-            <li><a href="service/" class="mobile-link">Color Clinic</a></li>
-            <li><a href="blogs/" class="mobile-link">Blogs</a></li>
-            <li><a href="training/" class="mobile-link">Training</a></li>
-            <li><a href="community/" class="mobile-link">Community</a></li>
-            <li>
-                <a href="/#portfolio" class="mobile-link">Portfolio</a>
-            </li>
-            <li>
-                <a href="contact/" class="btn-primary mobile-cta">Contact Us</a>
-            </li>
-        </ul>
-    </nav>
-</div>
-
 <!-- 404 Hero Section -->
 <section class="error-hero">
     <div class="container reveal-on-load">

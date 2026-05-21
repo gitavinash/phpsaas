@@ -33,7 +33,7 @@ require_once 'header.php';
             </p>
 
             <div class="hero-btns" style="display: flex; gap: 20px; align-items: center">
-                <a href="index.html#color-path" class="btn-primary pink-bg" style="
+                <a href="/" class="btn-primary pink-bg" style="
                 box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
                 width: fit-content;
                 transition: all 0.3s;
@@ -163,89 +163,45 @@ require_once 'header.php';
 </section>
 
 <!-- Color Clinic Section -->
-<section id="color-clinic" class="color-clinic white-bg">
-    <div class="container">
-        <div class="section-header reveal">
-            <h2 class="serif-normal">Color Clinic</h2>
-            <!-- <p class="section-desc">
+
+<?php
+
+
+
+if ($checkProductCategory = mysqli_query($connection, "SELECT link_url, category_title, category_image, category_description FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "category ON link_relation_id = category_id AND link_site_id=" . SITE_ID . " AND link_status=200 AND link_type='category' WHERE category_type='product' AND category_status=1 ORDER BY link_published ASC")) {
+    if (mysqli_num_rows($checkProductCategory) != 0) {
+        echo "<section id='color-clinic' class='color-clinic white-bg'>
+    <div class='container'>
+        <div class='section-header reveal'>
+            <h2 class='serif-normal'>Color Clinic</h2>
+            <!-- <p class='section-desc'>
             Solving your color dilemmas with professional, expert-led advice.
             Master the system to find your color journey.
           </p> -->
         </div>
+        <div class='clinic-grid reveal'>";
 
-        <div class="clinic-grid reveal">
-            <!-- Row 1: Icon Cards -->
-            <div class="clinic-card help-card">
-                <div class="card-icon">
-                    <img src="<?php echo USER_IMAGES ?>color-clinic/spaces.png" alt="Spaces" />
-                </div>
-                <h3>Spatial Hues</h3>
-                <p>
-                    Optimizing the flow and psychology of your environment through
-                    expert color placement and selection.
-                </p>
-            </div>
+        while ($productCategoryDetails = mysqli_fetch_assoc($checkProductCategory)) {
+            extract($productCategoryDetails);
+            echo "<div class='clinic-card help-card'>
+                    <a href-'{$link_url}' title='{$category_title}'>
+                        <div class='card-icon'>
+                            <img src='{$category_image}' alt='{$category_title}' />
+                        </div>
+                        <h3>{$category_title}</h3>
+                        <p>{$category_description}</p>
+                    </a>
+                </div>";
+        }
 
-            <div class="clinic-card help-card">
-                <div class="card-icon">
-                    <img src="<?php echo USER_IMAGES ?>color-clinic/personal-colour-analysis.png"
-                        alt="Personal Color Analysis" />
-                </div>
-                <h3>Personal Color Analysis</h3>
-                <p>
-                    Discover the hues that harmonize with your unique profile,
-                    bringing clarity and confidence to your palette.
-                </p>
-            </div>
+        echo "</div>
+</div>
+</div>
+</section>";
+    }
+}
 
-            <div class="clinic-card help-card">
-                <div class="card-icon">
-                    <img src="<?php echo USER_IMAGES ?>color-clinic/styling.png" alt="Styling" />
-                </div>
-                <h3>Styling</h3>
-                <p>
-                    Elevate your space with curated finishes and textures that align
-                    with your chosen color journey.
-                </p>
-            </div>
-
-            <!-- Row 2: Fixed Icon Cards -->
-            <div class="clinic-card help-card">
-                <div class="card-icon">
-                    <img src="<?php echo USER_IMAGES ?>color-clinic/energy.png" alt="Energy Aligned Palettes" />
-                </div>
-                <h3>Energy Aligned Palettes</h3>
-                <p>
-                    Identify undertones in your paint, flooring, tile, and fabrics in
-                    seconds. The essential first step for any home or project.
-                </p>
-            </div>
-
-            <div class="clinic-card help-card">
-                <div class="card-icon">
-                    <img src="<?php echo USER_IMAGES ?>color-clinic/collaborations.png" alt="Collaborations" />
-                </div>
-                <h3>Collaborations</h3>
-                <p>
-                    Identify undertones in your paint, flooring, tile, and fabrics in
-                    seconds. The essential first step for any home or project.
-                </p>
-            </div>
-
-            <div class="clinic-card help-card">
-                <div class="card-icon">
-                    <img src="<?php echo USER_IMAGES ?>color-clinic/color-dna.png" alt="Color DNA" />
-                </div>
-                <h3>Color DNA</h3>
-                <p>
-                    Learn how to choose timeless colours, find the perfect white, and
-                    coordinate finishes that flow throughout your home.
-                </p>
-            </div>
-        </div>
-    </div>
-    </div>
-</section>
+?>
 
 <!-- Testimonials Section -->
 <section class="testimonials blue-bg">

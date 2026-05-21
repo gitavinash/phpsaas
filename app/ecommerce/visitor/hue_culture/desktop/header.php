@@ -28,7 +28,7 @@
         </a>
         <nav>
             <ul>
-                <li><a href="about/">Hue Color System</a></li>
+                <li><a href="hue-color-system/">Hue Color System</a></li>
                 <li><a href="color-clinic/">Color Clinic</a></li>
                 <li><a href="blogs/">Blogs</a></li>
                 <li><a href="training/">Training</a></li>
