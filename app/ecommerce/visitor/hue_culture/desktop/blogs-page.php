@@ -84,12 +84,11 @@ $featuredResult = mysqli_query($connection, $featuredQuery);
         <span class="editorial-tag">Editorial</span>
 
         <h1 class="hero-premium-headline mb-20">
-            The Hue <span class="hero-premium-hues">Journal</span>
+            <?php echo $page_title ?>
         </h1>
 
         <p class="journal-desc reveal-on-load">
-            Explorations in color psychology, interior styling, and personal
-            alignment. Read the latest insights from our experts.
+            <?php echo $page_description ?>
         </p>
     </div>
 </section>
