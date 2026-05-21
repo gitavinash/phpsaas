@@ -4,12 +4,18 @@ require_once DATA_FUNCTIONS;
 require_once UTIL_FUNCTIONS;
 require_once 'header.php';
 
+if ($categorgyInfo = mysqli_query($connection, "SELECT link_url as categoryLinkURL FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "category ON category_id = link_relation_id WHERE category_id='{$postCategoryId}' AND link_type='category' AND link_site_id=" . SITE_ID)) {
+    if (mysqli_num_rows($categorgyInfo) > 0) {
+        extract(mysqli_fetch_assoc($categorgyInfo));
+    }
+}
+
 ?>
 
 <!-- Article Hero Section -->
 <section class="article-hero">
     <div class="container reveal-on-load">
-        <a href="blogs.html" class="article-category-badge"><?php echo $category_title; ?></a>
+        <a href="<?php echo $categoryLinkURL ?>" class="article-category-badge"><?php echo $category_title; ?></a>
 
         <h1 class="hero-premium-headline">
             <?php echo $post_title ?>
