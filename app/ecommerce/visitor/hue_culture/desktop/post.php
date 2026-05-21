@@ -29,7 +29,7 @@ require_once 'header.php';
 <!-- Article Cover Image -->
 <section class="article-cover-section">
     <div class="container reveal-on-load">
-        <img src="<?php echo $post_image ?>" alt="<?php echo $post_description ?>" class="article-cover-img" />
+        <img src="<?php echo $post_image ?>" alt="<?php echo $post_title ?>" class="article-cover-img" />
     </div>
 </section>
 
