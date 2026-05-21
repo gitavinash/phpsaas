@@ -377,7 +377,8 @@ if ($checkArticles = mysqli_query($connection, "SELECT post_image, post_title, l
 
         while ($articleDetails = mysqli_fetch_assoc($checkArticles)) {
             extract($articleDetails);
-            echo "<div class='blog-card'>
+            echo "<a href='{$link_url}' title='{$post_title}'>
+            <div class='blog-card'>
                 <div class='blog-img'>
                     <div class='img-placeholder' style='background-color: #f2efed'>
                         <img src='{$post_image}'' alt='{$post_title}'>
@@ -391,7 +392,7 @@ if ($checkArticles = mysqli_query($connection, "SELECT post_image, post_title, l
                     </p>
                     <a href='{$link_url}' class='read-more'>Read Entry →</a>
                 </div>
-            </div>";
+            </div></a>";
         }
 
         echo "</div>

@@ -23,7 +23,7 @@
     <header id="main-header">
         <a href="/">
             <div class="logo">
-                <img src="<?php echo USER_IMAGES ?>logo.png" alt="Hue Culture Logo" />
+                <img src="<?php echo USER_IMAGES ?>logo.png" alt="<?php echo SITE_NAME ?>" />
             </div>
         </a>
         <nav>
