@@ -166,8 +166,6 @@ require_once 'header.php';
 
 <?php
 
-
-
 if ($checkProductCategory = mysqli_query($connection, "SELECT link_url, category_title, category_image, category_description FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "category ON link_relation_id = category_id AND link_site_id=" . SITE_ID . " AND link_status=200 AND link_type='category' WHERE category_type='product' AND category_status=1 ORDER BY link_published ASC")) {
     if (mysqli_num_rows($checkProductCategory) != 0) {
         echo "<section id='color-clinic' class='color-clinic white-bg'>
