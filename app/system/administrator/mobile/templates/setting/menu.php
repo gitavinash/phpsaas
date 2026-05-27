@@ -101,8 +101,10 @@
                     ?>
                     <option value="__NEW__">➕ New menu…</option>
                 </select>
-                <button id="renameMenuPosition" class="btn btn-sm btn-blue" style="display:none;" type="button" title="Rename Menu">✎ Rename</button>
-                <button id="deleteMenuPosition" class="btn btn-sm btn-red" style="display:none;" type="button" title="Delete Menu">✕ Delete</button>
+                <button id="renameMenuPosition" class="btn btn-sm btn-blue" style="display:none;" type="button"
+                    title="Rename Menu">✎ Rename</button>
+                <button id="deleteMenuPosition" class="btn btn-sm btn-red" style="display:none;" type="button"
+                    title="Delete Menu">✕ Delete</button>
             </div>
 
             <div style="margin-bottom:8px;">
