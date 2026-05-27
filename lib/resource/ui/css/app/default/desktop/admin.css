@@ -1977,6 +1977,13 @@ ul.tabs li.active {
     0 0,
     3px 3px;
   background-repeat: repeat;
+  transition: background-color 0.2s;
+}
+.dd-handle:hover {
+  background: #005080;
+}
+.dd-handle:active {
+  cursor: grabbing !important;
 }
 
 /* tree lists */
@@ -1989,10 +1996,24 @@ ul.tabs li.active {
 
 .dd-list .dd-list {
   margin-left: 34px;
+  border-left: 2px dashed #00609e;
+  padding-left: 10px;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 .dd-ghost {
-  opacity: 0.35;
+  opacity: 0.45;
+  background-color: #f1f7fc !important;
+  border: 2px dashed #00609e !important;
+  border-radius: 6px;
+}
+
+.sortable-drag {
+  background: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(0, 96, 158, 0.18) !important;
+  transform: scale(1.02);
+  opacity: 0.95;
 }
 
 /* compact row look to match your admin */
@@ -2005,6 +2026,12 @@ ul.tabs li.active {
   border-radius: 6px;
   padding: 8px;
   margin-bottom: 6px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.mb-row:hover {
+  border-color: #00609e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 96, 158, 0.08);
 }
 
 .row-main {

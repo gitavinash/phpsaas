@@ -10,8 +10,12 @@
         </h3>
         <div id="categoryBoxContainer"
             style="display:block; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
-            <input type="text" id="categorySearchInput" class="form-control inside-shadow"
-                placeholder="Search categories..." style="margin-bottom:8px;" />
+            <div style="position:relative; width:100%; margin-bottom:8px;">
+                <input type="text" id="categorySearchInput" class="form-control inside-shadow"
+                    placeholder="Search categories..." style="padding-right:24px; margin-bottom:0;" />
+                <span class="clear-search" data-target="#categorySearchInput"
+                    style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; color:#94a3b8; display:none; font-weight:bold; font-size:14px; user-select:none; transition:color 0.2s;">✕</span>
+            </div>
             <ul id="categoryBox" class="menu-creator" style="height:200px!important; overflow:auto;">
                 <?php
                 $sql = "SELECT c.category_id, c.category_title, l.link_url
@@ -21,7 +25,8 @@
                    AND l.link_type='category'
                    AND l.link_status=200
                  WHERE c.category_site_id='" . SITE_ID . "'
-                 ORDER BY c.category_id DESC";
+                 GROUP BY l.link_relation_id
+                 ORDER BY c.category_id DESC ";
                 if ($res = mysqli_query($connection, $sql)) {
                     while ($row = mysqli_fetch_assoc($res)) {
                         $label = htmlspecialchars($row['category_title'], ENT_QUOTES);
@@ -40,8 +45,12 @@
         </h3>
         <div id="pageBoxContainer"
             style="display:none; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
-            <input type="text" id="pageSearchInput" class="form-control inside-shadow" placeholder="Search pages..."
-                style="margin-bottom:8px;" />
+            <div style="position:relative; width:100%; margin-bottom:8px;">
+                <input type="text" id="pageSearchInput" class="form-control inside-shadow" placeholder="Search pages..."
+                    style="padding-right:24px; margin-bottom:0;" />
+                <span class="clear-search" data-target="#pageSearchInput"
+                    style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; color:#94a3b8; display:none; font-weight:bold; font-size:14px; user-select:none; transition:color 0.2s;">✕</span>
+            </div>
             <ul id="pageBox" class="menu-creator" style="height:200px!important; overflow:auto;">
                 <?php
                 $sql = "SELECT p.page_id, p.page_title, l.link_url
@@ -70,8 +79,12 @@
         </h3>
         <div id="tagBoxContainer"
             style="display:none; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
-            <input type="text" id="tagSearchInput" class="form-control inside-shadow" placeholder="Search tags..."
-                style="margin-bottom:8px;" />
+            <div style="position:relative; width:100%; margin-bottom:8px;">
+                <input type="text" id="tagSearchInput" class="form-control inside-shadow" placeholder="Search tags..."
+                    style="padding-right:24px; margin-bottom:0;" />
+                <span class="clear-search" data-target="#tagSearchInput"
+                    style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; color:#94a3b8; display:none; font-weight:bold; font-size:14px; user-select:none; transition:color 0.2s;">✕</span>
+            </div>
             <ul id="tagBox" class="menu-creator" style="height:200px!important; overflow:auto;">
                 <?php
                 $sql = "SELECT tag_title, COUNT(*) as tag_count
@@ -83,7 +96,7 @@
                     while ($row = mysqli_fetch_assoc($res)) {
                         $label = ucwords(htmlspecialchars($row['tag_title'], ENT_QUOTES));
                         $slug  = str_replace(' ', '-', $row['tag_title']);
-                        $url   = '/tag/' . htmlspecialchars($slug, ENT_QUOTES);
+                        $url   = '/tag/' . htmlspecialchars($slug, ENT_QUOTES) . '/';
                         $count = (int)$row['tag_count'];
                         echo "<li class='dd-new-item' data-label='{$label}' data-url='{$url}' style='cursor:pointer; display:flex; justify-content:space-between; align-items:center;'><span>{$label}</span> <span class='badge' style='background:#00609e; color:#fff; border-radius:10px; padding:2px 8px; font-size:11px;'>{$count}</span></li>";
                     }

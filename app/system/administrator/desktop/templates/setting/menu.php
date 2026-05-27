@@ -9,7 +9,12 @@
             Categories <span class="arrow">▼</span>
         </h3>
         <div id="categoryBoxContainer" style="display:block; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
-            <input type="text" id="categorySearchInput" class="form-control inside-shadow" placeholder="Search categories..." style="margin-bottom:8px;" />
+            <div style="position:relative; width:100%; margin-bottom:8px;">
+                <input type="text" id="categorySearchInput" class="form-control inside-shadow"
+                    placeholder="Search categories..." style="padding-right:24px; margin-bottom:0;" />
+                <span class="clear-search" data-target="#categorySearchInput"
+                    style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; color:#94a3b8; display:none; font-weight:bold; font-size:14px; user-select:none; transition:color 0.2s;">✕</span>
+            </div>
             <ul id="categoryBox" class="menu-creator" style="height:200px!important; overflow:auto;">
                 <?php
                 $sql = "SELECT c.category_id, c.category_title, l.link_url
@@ -37,7 +42,12 @@
             Pages <span class="arrow">▶</span>
         </h3>
         <div id="pageBoxContainer" style="display:none; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
-            <input type="text" id="pageSearchInput" class="form-control inside-shadow" placeholder="Search pages..." style="margin-bottom:8px;" />
+            <div style="position:relative; width:100%; margin-bottom:8px;">
+                <input type="text" id="pageSearchInput" class="form-control inside-shadow" placeholder="Search pages..."
+                    style="padding-right:24px; margin-bottom:0;" />
+                <span class="clear-search" data-target="#pageSearchInput"
+                    style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; color:#94a3b8; display:none; font-weight:bold; font-size:14px; user-select:none; transition:color 0.2s;">✕</span>
+            </div>
             <ul id="pageBox" class="menu-creator" style="height:200px!important; overflow:auto;">
                 <?php
                 $sql = "SELECT p.page_id, p.page_title, l.link_url
@@ -65,7 +75,12 @@
             Tags <span class="arrow">▶</span>
         </h3>
         <div id="tagBoxContainer" style="display:none; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
-            <input type="text" id="tagSearchInput" class="form-control inside-shadow" placeholder="Search tags..." style="margin-bottom:8px;" />
+            <div style="position:relative; width:100%; margin-bottom:8px;">
+                <input type="text" id="tagSearchInput" class="form-control inside-shadow" placeholder="Search tags..."
+                    style="padding-right:24px; margin-bottom:0;" />
+                <span class="clear-search" data-target="#tagSearchInput"
+                    style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; color:#94a3b8; display:none; font-weight:bold; font-size:14px; user-select:none; transition:color 0.2s;">✕</span>
+            </div>
             <ul id="tagBox" class="menu-creator" style="height:200px!important; overflow:auto;">
                 <?php
                 $sql = "SELECT tag_title, COUNT(*) as tag_count
