@@ -1,3 +1,8 @@
+<?php
+
+require_once MENU_FUNCTIONS;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -165,56 +170,11 @@
 
                 <!-- Desktop Menu -->
                 <nav class="hidden md:flex space-x-6">
-                    <a href="/" class="text-gray-700 hover:text-primary transition">Home</a>
-                    <!-- Mega Menu -->
-                    <div class="relative group">
-                        <a href="/tag/luxury/" class="text-gray-700 hover:text-primary transition">Luxury
-                            Collections</a>
-                        <div
-                            class="absolute left-0 top-full mt-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 hover:visible hover:opacity-100 transition-all duration-150 bg-white border w-64 shadow-lg z-50">
-                            <ul class="p-4 space-y-2 text-sm text-gray-700">
-                                <li><a href="/category/flower/" class="block hover:text-primary">Fresh Flowers</a></li>
-                                <li><a href="/tag/everlasting/" class="block hover:text-primary">Everlasting Flowers</a>
-                                <li><a href="/category/fresh-plants/" class="block hover:text-primary">Fresh plants</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    <?php
 
-                    <a href="/category/planters/" class="text-gray-700 hover:text-primary transition">Faux Flowers</a>
-                    <a href="/category/cake/" class="text-gray-700 hover:text-primary transition">Cake & Hampers</a>
-                    <!-- Mega Menu -->
-                    <div class="relative group">
-                        <a href="#" class="text-gray-700 hover:text-primary transition">Occasions</a>
-                        <div
-                            class="absolute left-0 top-full mt-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 hover:visible hover:opacity-100 transition-all duration-150 bg-white border w-64 shadow-lg z-50">
-                            <ul class="p-4 space-y-2 text-sm text-gray-700">
-                                <!-- <li><a href="/tag/woman/" class="block hover:text-primary">Woman's Day</a></li> -->
-                                <li><a href="/tag/mother/" class="block hover:text-primary">Mother's Day</a></li>
-                                <li><a href="/tag/anniversary/" class="block hover:text-primary">Anniversary</a></li>
-                                <li><a href="/tag/birthday/" class="block hover:text-primary">Birthday</a></li>
-                                <li><a href="/tag/corporate-gift/" class="block hover:text-primary">Corporate
-                                        Gifting</a></li>
-                                <li><a href="/tag/congratulation/" class="block hover:text-primary">Congratulation</a>
-                                </li>
-                                <li><a href="/tag/get-well/" class="block hover:text-primary">Get Well</a></li>
-                                <li><a href="/tag/house-warming/" class="block hover:text-primary">House Warming</a>
-                                </li>
-                                <li><a href="/tag/i-m-sorry/" class="block hover:text-primary">I'M Sorry</a></li>
-                                <li><a href="/tag/just-because/" class="block hover:text-primary">Just Because</a></li>
-                                <li><a href="/tag/new-baby/" class="block hover:text-primary">New Baby</a></li>
-                                <li><a href="/tag/love/" class="block hover:text-primary">Love & Romance</a></li>
-                                <li><a href="/tag/retirement/" class="block hover:text-primary">Retirement</a></li>
-                                <li><a href="/tag/sympathy/" class="block hover:text-primary">Sympathy</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
-                        class="text-gray-700 hover:text-primary transition">
-                        Blooms of <?php echo date('F') ?>
-                    </a>
-                    <a href="/tag/mother/?sort=newest"
-                        class="hover:text-[#D2042D] text-[#D2042D] transition font-semibold">Mother's Day</a>
+                    generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true);
+
+                    ?>
                 </nav>
             </div>
 
@@ -449,9 +409,9 @@
                         <span>Blooms of <?php echo date('F') ?></span>
                         <i class="ri-arrow-right-s-line text-primary opacity-0 group-hover:opacity-100 transition"></i>
                     </a>
-                    <a href="/tag/mother/"
+                    <a href="/tag/father/"
                         class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                        <i class="ri-woman-line mr-3 text-primary"></i> Mother's Day
+                        <i class="ri-woman-line mr-3 text-primary"></i> Father's Day
                     </a>
                 </nav>
 
