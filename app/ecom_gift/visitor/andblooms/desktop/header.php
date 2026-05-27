@@ -2,6 +2,44 @@
 
 require_once MENU_FUNCTIONS;
 
+/**
+ * Renders the mobile menu tree recursively with a beautiful luxury design.
+ */
+function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
+{
+    foreach ($items as $item) {
+        $label = safe_html($item['label'] ?? '');
+        $url   = safe_html($item['url'] ?? '#');
+        $children = (isset($item['children']) && is_array($item['children'])) ? $item['children'] : [];
+        $children = array_values(array_filter($children, function ($child) {
+            return is_array($child) && !empty($child['label']);
+        }));
+
+        $isActive = is_menu_active($url);
+        $hasChildren = !empty($children);
+
+        if ($hasChildren) {
+            echo '<div class="border-b border-gray-100/60 py-0.5">';
+            echo '<details class="group">';
+            echo '<summary class="flex items-center justify-between px-6 py-3 font-medium text-gray-800 hover:text-primary transition font-sans text-base cursor-pointer list-none">';
+            echo '<span>' . $label . '</span>';
+            echo '<i class="ri-arrow-down-s-line text-xl transition-transform duration-300 group-open:rotate-180 text-gray-400"></i>';
+            echo '</summary>';
+            echo '<ul class="pl-6 pr-6 pb-3 space-y-2 border-l border-primary/20 ml-8 my-1">';
+            render_andblooms_mobile_menu_tree($children, $depth + 1);
+            echo '</ul>';
+            echo '</details>';
+            echo '</div>';
+        } else {
+            echo '<div class="border-b border-gray-100/60 py-0.5">';
+            echo '<a href="' . $url . '" class="block px-6 py-3 font-medium text-gray-700 hover:text-primary transition font-sans text-base' . ($isActive ? ' text-primary font-semibold bg-primary/5 pl-5 border-l-4 border-primary' : '') . '">';
+            echo $label;
+            echo '</a>';
+            echo '</div>';
+        }
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -269,213 +307,67 @@ require_once MENU_FUNCTIONS;
             </div>
         </div>
 
-        <!-- Mobile Menu Full Screen -->
-        <div class="md:hidden fixed inset-0 bg-white z-50 transition-transform duration-300 ease-in-out"
+        <!-- Mobile Menu full screen drawer -->
+        <div class="md:hidden fixed inset-0 bg-white z-[60] transition-transform duration-300 ease-in-out flex flex-col"
             id="mobile-menu" style="transform: translateX(-100%);">
             <!-- Header -->
-            <div class="flex items-center justify-between p-4 border-b border-gray-100">
-                <h2 class="text-lg font-semibold text-gray-800">Menu</h2>
-                <div class="flex items-center space-x-4">
-                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>" class="h-6">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+                <div class="flex flex-col">
+                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?> Logo" class="h-6">
+                </div>
+                <div class="flex items-center space-x-2">
                     <button id="close-mobile-menu"
-                        class="w-10 h-10 flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded-lg transition">
+                        class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-primary hover:bg-primary/5 rounded-full transition-all duration-300 focus:outline-none">
                         <i class="ri-close-line text-xl"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Overlay for smooth scroll -->
-            <div class="overflow-y-auto h-[calc(100vh-64px)]">
-                <!-- Navigation Links -->
-                <nav class="flex flex-col">
-                    <!-- Home -->
-                    <a href="/"
-                        class="mobile-menu-link px-4 py-4 text-gray-700 hover:bg-secondary transition flex items-center justify-between group">
-                        <span>Home</span>
-                        <i class="ri-arrow-right-s-line text-primary opacity-0 group-hover:opacity-100 transition"></i>
-                    </a>
+            <!-- Search Bar under Header -->
+            <div class="px-6 py-4 bg-secondary/30 border-b border-gray-100">
+                <form action="/search/" method="get" class="relative">
+                    <input type="text" name="q" id="mobile-search-input" placeholder="Search for luxury flowers..."
+                        class="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-200 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition bg-white font-sans text-gray-800 placeholder-gray-400">
+                    <button type="submit"
+                        class="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition focus:outline-none">
+                        <i class="ri-search-line text-base"></i>
+                    </button>
+                </form>
+            </div>
 
-                    <!-- Luxury Collections (Expandable) -->
-                    <div class="mobile-menu-section">
-                        <button
-                            class="mobile-menu-link px-4 py-4 w-full text-gray-700 hover:bg-secondary transition flex items-center justify-between"
-                            data-toggle="occasions">
-                            <span>Luxury Collections</span>
-                            <i class="ri-chevron-down-line transition-transform"></i>
-                        </button>
-                        <div class="mobile-menu-submenu hidden bg-gray-50 pl-4">
-                            <a href="/category/flower/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-flower-line mr-3 text-primary"></i> Fresh Flowers
-                            </a>
-                            <a href="/tag/everlasting/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-sparkling-2-line mr-3 text-primary"></i> Everlasting Flowers
-                            </a>
-                            <a href="/category/fresh-plants/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-leaf-line mr-3 text-primary"></i> Fresh Plants
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Faux Flowers -->
-                    <a href="/category/planters/"
-                        class="mobile-menu-link px-4 py-4 text-gray-700 hover:bg-secondary transition flex items-center justify-between group">
-                        <span>Faux Flowers</span>
-                        <i class="ri-arrow-right-s-line text-primary opacity-0 group-hover:opacity-100 transition"></i>
-                    </a>
-
-                    <!-- Cake & Hampers -->
-                    <a href="/category/cake/"
-                        class="mobile-menu-link px-4 py-4 text-gray-700 hover:bg-secondary transition flex items-center justify-between group">
-                        <span>Cake & Hampers</span>
-                        <i class="ri-arrow-right-s-line text-primary opacity-0 group-hover:opacity-100 transition"></i>
-                    </a>
-
-                    <!-- Valentine Edition (Highlighted) -->
-                    <!-- <a href="/tag/valentine/?sort=newest"
-                        class="mobile-menu-link px-4 py-4 bg-gradient-to-r from-primary/10 to-transparent border-l-4 border-primary text-primary font-semibold transition">
-                        <i class="ri-heart-line mr-2"></i> Valentine Edition
-                    </a> -->
-
-                    <!-- Occasions (Expandable) -->
-                    <div class="mobile-menu-section">
-                        <button
-                            class="mobile-menu-link px-4 py-4 w-full text-gray-700 hover:bg-secondary transition flex items-center justify-between"
-                            data-toggle="luxury">
-                            <span>Occasions</span>
-                            <i class="ri-chevron-down-line transition-transform"></i>
-                        </button>
-                        <div class="mobile-menu-submenu hidden bg-gray-50 pl-4">
-                            <a href="/tag/mother/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-heart-line mr-3 text-primary"></i> Mother's Day
-                            </a>
-                            <a href="/tag/anniversary/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-ring-line mr-3 text-primary"></i> Anniversary
-                            </a>
-                            <a href="/tag/birthday/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-cake-line mr-3 text-primary"></i> Birthday
-                            </a>
-                            <a href="/tag/corporate-gift/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-briefcase-line mr-3 text-primary"></i> Corporate Gifting
-                            </a>
-                            <a href="/tag/congratulation/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-checkbox-circle-line mr-3 text-primary"></i> Congratulation
-                            </a>
-                            <a href="/tag/get-well/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-first-aid-kit-line mr-3 text-primary"></i> Get Well
-                            </a>
-                            <a href="/tag/house-warming/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-home-line mr-3 text-primary"></i> House Warming
-                            </a>
-                            <a href="/tag/i-m-sorry/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-emotion-sad-line mr-3 text-primary"></i> I'M Sorry
-                            </a>
-                            <a href="/tag/just-because/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-star-smile-line mr-3 text-primary"></i> Just Because
-                            </a>
-                            <a href="/tag/new-baby/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-baby-carriage-line mr-3 text-primary"></i> New Baby
-                            </a>
-                            <a href="/tag/love/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-heart-2-line mr-3 text-primary"></i> Love & Romance
-                            </a>
-                            <a href="/tag/retirement/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-time-line mr-3 text-primary"></i> Retirement
-                            </a>
-                            <a href="/tag/sympathy/"
-                                class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                                <i class="ri-leaf-line mr-3 text-primary"></i> Sympathy
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Blooms of Month -->
-                    <a href="/tag/blooms-of-<?php echo strtolower(date('F')) ?>/"
-                        class="mobile-menu-link px-4 py-4 text-gray-700 hover:bg-secondary transition flex items-center justify-between group">
-                        <span>Blooms of <?php echo date('F') ?></span>
-                        <i class="ri-arrow-right-s-line text-primary opacity-0 group-hover:opacity-100 transition"></i>
-                    </a>
-                    <a href="/tag/father/"
-                        class="mobile-submenu-link px-4 py-3 block text-gray-700 hover:text-primary transition">
-                        <i class="ri-woman-line mr-3 text-primary"></i> Father's Day
-                    </a>
+            <!-- Scrollable Content -->
+            <div class="overflow-y-auto flex-grow flex flex-col justify-between">
+                <!-- Dynamic Navigation Links -->
+                <nav class="flex flex-col py-2">
+                    <?php
+                    $menuItems = get_object_from_constant('SITE_NAV_MAIN_HEADER');
+                    if (!empty($menuItems)) {
+                        render_andblooms_mobile_menu_tree($menuItems);
+                    } else {
+                        echo '<a href="/" class="block px-6 py-3 text-gray-700 hover:text-primary transition font-sans text-base">Home</a>';
+                    }
+                    ?>
                 </nav>
 
-                <!-- Search Bar at Bottom -->
-                <div class="mt-auto p-4 bg-gray-50 border-t border-gray-100">
-                    <div class="relative">
-                        <form action="/search/" method="get">
-                            <input type="text" name="q" id="mobile-search-input" placeholder="Search products..."
-                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm transition bg-white">
-                            <button type="submit"
-                                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition">
-                                <i class="ri-search-line"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
 
         <!-- Mobile Menu Overlay Backdrop -->
-        <div class="md:hidden fixed inset-0 z-40 transition-colors duration-300 ease-in-out pointer-events-none"
-            id="mobile-menu-overlay" style="background-color: rgba(0, 0, 0, 0);"></div>
+        <div class="md:hidden fixed inset-0 z-50 transition-all duration-300 ease-in-out pointer-events-none bg-black/0"
+            id="mobile-menu-overlay"></div>
     </header>
 
     <style>
-    /* Mobile Menu Animations */
-    .mobile-menu-link {
-        position: relative;
-        overflow: hidden;
+    #mobile-menu-overlay {
+        transition: background-color 300ms ease-in-out, backdrop-filter 300ms ease-in-out, -webkit-backdrop-filter 300ms ease-in-out;
     }
 
-    .mobile-menu-link::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to right, rgba(212, 148, 109, 0), rgba(212, 148, 109, 0.05), rgba(212, 148, 109, 0));
-        transform: translateX(-100%);
-        transition: transform 500ms ease-out;
+    summary::-webkit-details-marker {
+        display: none;
     }
 
-    .mobile-menu-link:hover::before {
-        transform: translateX(100%);
-    }
-
-    .mobile-submenu-link {
-        position: relative;
-        transition: all 200ms;
-    }
-
-    .mobile-submenu-link::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        background-color: #D4946D;
-        transform: scaleY(0);
-        transform-origin: top;
-        transition: transform 300ms;
-    }
-
-    .mobile-submenu-link:hover::before {
-        transform: scaleY(1);
+    summary {
+        list-style: none;
     }
     </style>
 
@@ -489,7 +381,6 @@ require_once MENU_FUNCTIONS;
             const closeMobileMenuButton = document.getElementById('close-mobile-menu');
             const mobileMenu = document.getElementById('mobile-menu');
             const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
-            const submenuToggles = document.querySelectorAll('[data-toggle]');
 
             if (!mobileMenuButton || !mobileMenu || !mobileMenuOverlay) {
                 console.error('Menu elements not found');
@@ -507,7 +398,11 @@ require_once MENU_FUNCTIONS;
                 mobileMenu.offsetHeight;
 
                 mobileMenu.style.transform = 'translateX(0)';
+
+                // Overlay enhancements
                 mobileMenuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+                mobileMenuOverlay.style.backdropFilter = 'blur(4px)';
+                mobileMenuOverlay.style.webkitBackdropFilter = 'blur(4px)';
                 mobileMenuOverlay.style.pointerEvents = 'auto';
                 document.body.style.overflow = 'hidden';
             }
@@ -520,13 +415,16 @@ require_once MENU_FUNCTIONS;
                 menuOpen = false;
 
                 mobileMenu.style.transform = 'translateX(-100%)';
+
                 mobileMenuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+                mobileMenuOverlay.style.backdropFilter = 'none';
+                mobileMenuOverlay.style.webkitBackdropFilter = 'none';
                 mobileMenuOverlay.style.pointerEvents = 'none';
                 document.body.style.overflow = '';
 
-                // Close all submenus
-                document.querySelectorAll('.mobile-menu-submenu').forEach(el => {
-                    el.classList.add('hidden');
+                // Close all dynamic details accordions when closing menu
+                document.querySelectorAll('#mobile-menu details').forEach(details => {
+                    details.removeAttribute('open');
                 });
             }
 
@@ -535,26 +433,11 @@ require_once MENU_FUNCTIONS;
             closeMobileMenuButton.addEventListener('click', closeMenu);
             mobileMenuOverlay.addEventListener('click', closeMenu);
 
-            // Submenu toggles
-            submenuToggles.forEach(function(toggleBtn) {
-                const submenu = toggleBtn.nextElementSibling;
-                toggleBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (submenu) {
-                        submenu.classList.toggle('hidden');
-                        const icon = this.querySelector('i');
-                        if (icon) icon.classList.toggle('rotate-180');
-                    }
+            // Close menu on link click (only direct navigation links, not accordion summaries)
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', function() {
+                    closeMenu();
                 });
-            });
-
-            // Close menu on link click (not toggle buttons)
-            document.querySelectorAll('.mobile-menu-link').forEach(link => {
-                if (!link.hasAttribute('data-toggle')) {
-                    link.addEventListener('click', function() {
-                        closeMenu();
-                    });
-                }
             });
 
             // Handle search input focus - scroll into view when keyboard appears
