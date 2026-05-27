@@ -31,32 +31,21 @@
             <div>
                 <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
                 <ul class="space-y-3">
-                    <li><a href="/" class="text-gray-400 hover:text-white transition">Home</a></li>
-                    <li><a href="/about-us/" class="text-gray-400 hover:text-white transition">About Us</a></li>
-                    <li><a href="/category/workshop/" class="text-gray-400 hover:text-white transition">Workshop</a>
-                    </li>
-                    <li><a href="/franchise/" class="text-gray-400 hover:text-white transition">Franchise</a></li>
-                    <li><a href="/contact-us/" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+                    <?php
 
+                    generateMenu('SITE_NAV_FOOTER_1', 'mobile', true, 'text-gray-400 hover:text-white transition');
+
+                    ?>
                 </ul>
             </div>
             <div>
                 <h3 class="text-lg font-semibold mb-6">Product categories</h3>
                 <ul class="space-y-3">
-                    <li><a href="/tag/luxury/" class="text-gray-400 hover:text-white transition">Luxury
-                            Collections</a></li>
-                    <li><a href="/category/flower/" class="text-gray-400 hover:text-white transition">Fresh
-                            Flowers</a>
-                    <li><a href="/category/and-blooms-express/" class="text-gray-400 hover:text-white transition">&
-                            Blooms Express</a>
-                    <li><a href="/category/artistic-artificial/"
-                            class="text-gray-400 hover:text-white transition">Artistic artificial</a>
-                    <li><a href="/category/cake/" class="text-gray-400 hover:text-white transition">Cake</a>
-                    <li><a href="/category/infinity-everlasting-flowers/"
-                            class="text-gray-400 hover:text-white transition">Infinity Everlasting Flowers</a>
-                    <li><a href="/category/planters/" class="text-gray-400 hover:text-white transition">Planters</a>
-                    <li><a href="/category/vases-and-ceramics/" class="text-gray-400 hover:text-white transition">Vases
-                            & Ceramics</a>
+                    <?php
+
+                    generateMenu('SITE_NAV_FOOTER_2', 'mobile', true, 'text-gray-400 hover:text-white transition');
+
+                    ?>
                 </ul>
             </div>
             <div>
@@ -93,15 +82,11 @@
                     rights reserved. | Developed by <a href='https://blumox.com'
                         class="text-gray-500 hover:text-white text-sm transition">Blumox Technologies</a></p>
                 <div class="flex space-x-6">
-                    <a href="/terms-and-conditions/" class="text-gray-500 hover:text-white text-sm transition">Terms
-                        and
-                        Conditions</a>
-                    <a href="/privacy-policy/" class="text-gray-500 hover:text-white text-sm transition">Privacy
-                        Policy</a>
-                    <a href="/cancellation---refund/"
-                        class="text-gray-500 hover:text-white text-sm transition">Cancellation & Refund</a>
-                    <a href="/shipping-policy/" class="text-gray-500 hover:text-white text-sm transition">Shipping
-                        policy</a>
+                    <?php
+
+                    generateMenu('SITE_NAV_FOOTER_3', 'non_list', true, 'text-gray-500 hover:text-white text-sm transition');
+
+                    ?>
                 </div>
             </div>
         </div>
