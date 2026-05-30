@@ -18,6 +18,19 @@
                 <textarea name="description" class="editor inside-shadow"></textarea>
             </div>
 
+
+                <!-- Product description and other things -->
+
+                <section style="margin-bottom:20px">
+                    <h3>Event gallery</h3>
+                    <div class="productGallery">
+                        <div class="input-field">
+                            <div class="input-images" style="padding-top: .5rem;"></div>
+                        </div>
+
+                    </div>
+                </section>
+
             <!-- SEO & social media marketing -->
 
             <section>
@@ -142,7 +155,7 @@
             </div>
             <h2>Time</h2>
             <div class="form-group">
-                <input type="text" name="eventTime" class="form-control inside-shadow">
+                <input type="time" name="eventTime" class="form-control inside-shadow">
             </div>
             <h2>Location</h2>
             <div class="form-group">

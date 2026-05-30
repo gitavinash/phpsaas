@@ -39,7 +39,7 @@
                         $fb_desc=(($fb_desc=='') ? $meta_desc : $fb_desc );
                         $tw_desc=(($tw_desc=='') ? $meta_desc : $tw_desc );
 
-                        if($checkURL=mysqli_query($connection, "SELECT link_relation_id FROM ".TABLE_PREFIX."link WHERE link_url='{$url}' AND link_site_id='".SITE_ID."'")) {
+                        if($checkURL=mysqli_query($connection, "SELECT link_relation_id FROM ".TABLE_PREFIX."link WHERE link_type='gallery' AND link_url='{$url}'  AND link_site_id='".SITE_ID."'")) {
 
                             if(mysqli_num_rows($checkURL)==0) {
 
@@ -68,7 +68,7 @@
                                     for($i=0; $i<sizeof($tags); $i++) {
 
                                         $tagsName=strtolower(preg_replace('~[^\p{M}\s\w,-]+~u', '', rtrim(ltrim($tags[$i], ' '), ' ')));
-                                        $tagData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$postID}', '".USER_ID."', '".SITE_ID."', '{$postType}')");
+                                        $tagData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$galleryID}', '".USER_ID."', '".SITE_ID."', '{$postType}')");
                                     }
 
                                 } else {
@@ -94,7 +94,7 @@
 
                             } else {
 
-                                $msg='Invalid activity';
+                                $msg='Please change url';
 
                             }
 

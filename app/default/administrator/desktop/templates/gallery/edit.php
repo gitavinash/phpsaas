@@ -54,10 +54,7 @@ window.location.href = 'dashboard/gallery/?type=list&status=all';
                 <!-- gallery description and other things -->
 
                 <section style="margin-bottom:20px">
-                    <h3>Gallery images</h3>
-                    <ul class='tabs'>
-                        <li id="productGallery">Gallery</li>
-                    </ul>
+                   <h3>Gallery images</h3>
                     <div class="productGallery generalTab">
                         <div class="input-field">
                             <div class="input-images" style="padding-top: .5rem;"></div>

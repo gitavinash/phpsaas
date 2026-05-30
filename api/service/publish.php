@@ -41,90 +41,90 @@ function publish($connection, $data)
 
             $service_section = json_encode(array(
                 'quote' => array(
-                    'quote' => $quote
+                    'quote' => ((isset($quote)) ? $quote : '')
                 ),
                 'treatment_steps' => array(
-                    'header' => $treatment_header,
-                    'description' => $treatment_description,
+                    'header' => ((isset($treatment_header)) ? $treatment_header : ''),
+                    'description' => ((isset($treatment_description)) ? $treatment_description : ''),
                     'steps' => array(
                         array(
-                            'image' => $treatmentImage_1,
-                            'header' => $treatmentImageHeader_1,
-                            'description' => $treatmentImageDescription_1
+                            'image' => ((isset($treatmentImage_1)) ? $treatmentImage_1 : ''),
+                            'header' => ((isset($treatmentImageHeader_1)) ? $treatmentImageHeader_1 : ''),
+                            'description' => ((isset($treatmentImageDescription_1)) ? $treatmentImageDescription_1 : '')
                         ),
                         array(
-                            'image' => $treatmentImage_2,
-                            'header' => $treatmentImageHeader_2,
-                            'description' => $treatmentImageDescription_2
+                            'image' => ((isset($treatmentImage_2)) ? $treatmentImage_2 : ''),
+                            'header' => ((isset($treatmentImageHeader_2)) ? $treatmentImageHeader_2 : ''),
+                            'description' => ((isset($treatmentImageDescription_2)) ? $treatmentImageDescription_2 : '')
                         ),
                         array(
-                            'image' => $treatmentImage_3,
-                            'header' => $treatmentImageHeader_3,
-                            'description' => $treatmentImageDescription_3
+                            'image' => ((isset($treatmentImage_3)) ? $treatmentImage_3 : ''),
+                            'header' => ((isset($treatmentImageHeader_3)) ? $treatmentImageHeader_3 : ''),
+                            'description' => ((isset($treatmentImageDescription_3)) ? $treatmentImageDescription_3 : '')
                         )
                     )
                 ),
                 'why_choose_us' => array(
-                    'image' => $whyChooseUs,
-                    'header' => $whyChooseTitle,
-                    'description' => $whyChooseDescription,
+                    'image' => ((isset($whyChooseUs)) ? $whyChooseUs : ''),
+                    'header' => ((isset($whyChooseTitle)) ? $whyChooseTitle : ''),
+                    'description' => ((isset($whyChooseDescription)) ? $whyChooseDescription : ''),
                     'steps' => array(
                         array(
-                            'icon' => $stepIcon_1,
-                            'description' => $stepHeader_1
+                            'icon' => ((isset($stepIcon_1)) ? $stepIcon_1 : ''),
+                            'description' => ((isset($stepHeader_1)) ? $stepHeader_1 : '')
                         ),
                         array(
-                            'icon' => $stepIcon_2,
-                            'description' => $stepHeader_2
+                            'icon' => ((isset($stepIcon_2)) ? $stepIcon_2 : ''),
+                            'description' => ((isset($stepHeader_2)) ? $stepHeader_2 : '')
                         ),
                         array(
-                            'icon' => $stepIcon_3,
-                            'description' => $stepHeader_3
+                            'icon' => ((isset($stepIcon_3)) ? $stepIcon_3 : ''),
+                            'description' => ((isset($stepHeader_3)) ? $stepHeader_3 : '')
                         ),
                     )
                 ),
                 'before_after' => array(
-                    'header' => $berforeAfterHeader,
-                    'subHeader' => $berforeAfterSubHeader,
-                    'description' => $berforeAfterDescription,
-                    'videoLink' => $berforeAfterVideLink,
+                    'header' => ((isset($berforeAfterHeader)) ? $berforeAfterHeader : ''),
+                    'subHeader' => ((isset($berforeAfterSubHeader)) ? $berforeAfterSubHeader : ''),
+                    'description' => ((isset($berforeAfterDescription)) ? $berforeAfterDescription : ''),
+                    'videoLink' => ((isset($berforeAfterVideLink)) ? $berforeAfterVideLink : ''),
                     'images' => array(
-                        'before' => $before,
-                        'after' => $after
+                        'before' => ((isset($before)) ? $before : ''),
+                        'after' => ((isset($after)) ? $after : '')
                     )
                 ),
                 'watch_video' => array(
-                    'image' => $watchVideoImage,
-                    'header' => $watchVideoHeader,
-                    'description' => $watchVideoDescription,
-                    'videoLink' => $watchVideoLink
+                    'image' => ((isset($watchVideoImage)) ? $watchVideoImage : ''),
+                    'header' => ((isset($watchVideoHeader)) ? $watchVideoHeader : ''),
+                    'description' => ((isset($watchVideoDescription)) ? $watchVideoDescription : ''),
+                    'videoLink' => ((isset($watchVideoLink)) ? $watchVideoLink : '')
                 ),
                 'our_commitment' => array(
-                    'image' => $commitmentImage,
-                    'header' => $commitmentHeader,
-                    'subHeader' => $commitmentSubHeader,
-                    'descripton' => $commitmentDescription
+                    'image' => ((isset($commitmentImage)) ? $commitmentImage : ''),
+                    'header' => ((isset($commitmentHeader)) ? $commitmentHeader : ''),
+                    'subHeader' => ((isset($commitmentSubHeader)) ? $commitmentSubHeader : ''),
+                    'descripton' => ((isset($commitmentDescription)) ? $commitmentDescription : '')
                 ),
                 'faq' => array(
                     0 => array(
-                        'question' => $faqQuestion1,
-                        'answer' => $faqAnswer1
+                        'question' => ((isset($faqQuestion1)) ? $faqQuestion1 : ''),
+                        'answer' => ((isset($faqAnswer1)) ? $faqAnswer1 : '')
                     ),
                     1 => array(
-                        'question' => $faqQuestion2,
-                        'answer' => $faqAnswer2
+                        'question' => ((isset($faqQuestion2)) ? $faqQuestion2 : ''),
+                        'answer' => ((isset($faqAnswer2)) ? $faqAnswer2 : '')
                     ),
                     2 => array(
-                        'question' => $faqQuestion3,
-                        'answer' => $faqAnswer3
+                        'question' => ((isset($faqQuestion3)) ? $faqQuestion3 : ''),
+                        'answer' => ((isset($faqAnswer3)) ? $faqAnswer3 : '')
                     ),
                     3 => array(
-                        'question' => $faqQuestion4,
-                        'answer' => $faqAnswer4
+                        'question' => ((isset($faqQuestion4)) ? $faqQuestion4 : ''),
+                        'answer' => ((isset($faqAnswer4)) ? $faqAnswer4 : '')
                     ),
                     4 => array(
-                        'question' => $faqQuestion5,
-                        'answer' => $faqAnswer5
+                        'question' => ((isset($faqQuestion5)) ? $faqQuestion5 : ''),
+                        'answer' => ((isset($faqAnswer5)) ? $faqAnswer5 : '')
                     )
                 )
             ), true);
@@ -189,7 +189,7 @@ function publish($connection, $data)
                         for ($i = 0; $i < sizeof($tags); $i++) {
 
                             $tagsName = strtolower(preg_replace('~[^\p{M}\s\w,-]+~u', '', rtrim(ltrim($tags[$i], ' '), ' ')));
-                            $addNewTags = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$productID}', '" . USER_ID . "', '" . SITE_ID . "', '{$postType}')");
+                            $addNewTags = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$serviceID}', '" . USER_ID . "', '" . SITE_ID . "', '{$postType}')");
                         }
                     } else {
 

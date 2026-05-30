@@ -41,6 +41,46 @@ window.location.href = 'dashboard/event/?type=list&status=all';
                 <textarea name="description"
                     class="editor inside-shadow"><?php echo html_entity_decode($event_description); ?></textarea>
             </div>
+
+
+                <!-- Product description and other things -->
+
+                <section style="margin-bottom:20px">
+                    <h3>Event gallery</h3>
+                    <div class="productGallery">
+                        <div class="input-field">
+                            <div class="input-images" style="padding-top: .5rem;"></div>
+                        </div>
+                        <?php
+
+                        if ($event_gallery != '') {
+
+                            $eventGalleryList = json_decode($event_gallery, TRUE);
+
+                            $oldGalleryImages = array();
+
+                            for ($i = 0; $i < sizeof($eventGalleryList); $i++) {
+
+                                $oldGalleryImages[] = array(
+                                    'id' => $i + 1,
+                                    'name' => $eventGalleryList[$i]['name'],
+                                    'src' => $eventGalleryList[$i]['path'],
+                                    'type' => $eventGalleryList[$i]['type'],
+                                );
+                            }
+
+                            $oldGalleryImages = json_encode($oldGalleryImages, TRUE);
+                        } else {
+
+                            $oldGalleryImages = json_encode('', TRUE);
+                        }
+
+                        echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
+
+                        ?>
+                    </div>
+                </section>
+
             <section>
                 <h3>Advance Options for digital marketing</h3>
                 <ul class='tabs'>
@@ -200,7 +240,7 @@ window.location.href = 'dashboard/event/?type=list&status=all';
             </div>
             <h2>Time</h2>
             <div class="form-group">
-                <input type="text" name="eventTime" value="<?php echo $event_start_time ?>"
+                <input type="time" name="eventTime" value="<?php echo (!empty($event_start_time) && $event_start_time != '00:00:00') ? date('H:i', strtotime($event_start_time)) : ''; ?>"
                     class="form-control inside-shadow">
             </div>
             <h2>Location</h2>

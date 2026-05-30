@@ -59,90 +59,90 @@ function update($connection, $data)
 
                     $updatedServiceSection = json_encode(array(
                         'quote' => array(
-                            'quote' => $quote
+                            'quote' => ((isset($quote)) ? $quote : '')
                         ),
                         'treatment_steps' => array(
-                            'header' => $treatment_header,
-                            'description' => $treatment_description,
+                            'header' => ((isset($treatment_header)) ? $treatment_header : ''),
+                            'description' => ((isset($treatment_description)) ? $treatment_description : ''),
                             'steps' => array(
                                 array(
-                                    'image' => ((isset($treatmentImage_1)) ? $treatmentImage_1 : $serviceSection['treatment_steps']['steps'][0]['image']),
-                                    'header' => $treatmentImageHeader_1,
-                                    'description' => $treatmentImageDescription_1
+                                    'image' => ((isset($treatmentImage_1)) ? $treatmentImage_1 : ((isset($serviceSection['treatment_steps']['steps'][0]['image'])) ? $serviceSection['treatment_steps']['steps'][0]['image'] : '')),
+                                    'header' => ((isset($treatmentImageHeader_1)) ? $treatmentImageHeader_1 : ''),
+                                    'description' => ((isset($treatmentImageDescription_1)) ? $treatmentImageDescription_1 : '')
                                 ),
                                 array(
-                                    'image' => ((isset($treatmentImage_2)) ? $treatmentImage_2 : $serviceSection['treatment_steps']['steps'][1]['image']),
-                                    'header' => $treatmentImageHeader_2,
-                                    'description' => $treatmentImageDescription_2
+                                    'image' => ((isset($treatmentImage_2)) ? $treatmentImage_2 : ((isset($serviceSection['treatment_steps']['steps'][1]['image'])) ? $serviceSection['treatment_steps']['steps'][1]['image'] : '')),
+                                    'header' => ((isset($treatmentImageHeader_2)) ? $treatmentImageHeader_2 : ''),
+                                    'description' => ((isset($treatmentImageDescription_2)) ? $treatmentImageDescription_2 : '')
                                 ),
                                 array(
-                                    'image' => ((isset($treatmentImage_3)) ? $treatmentImage_3 : $serviceSection['treatment_steps']['steps'][2]['image']),
-                                    'header' => $treatmentImageHeader_3,
-                                    'description' => $treatmentImageDescription_3
+                                    'image' => ((isset($treatmentImage_3)) ? $treatmentImage_3 : ((isset($serviceSection['treatment_steps']['steps'][2]['image'])) ? $serviceSection['treatment_steps']['steps'][2]['image'] : '')),
+                                    'header' => ((isset($treatmentImageHeader_3)) ? $treatmentImageHeader_3 : ''),
+                                    'description' => ((isset($treatmentImageDescription_3)) ? $treatmentImageDescription_3 : '')
                                 )
                             )
                         ),
                         'why_choose_us' => array(
-                            'image' => ((isset($whyChooseUs)) ? $whyChooseUs : $serviceSection['why_choose_us']['image']),
-                            'header' => $whyChooseTitle,
-                            'description' => $whyChooseDescription,
+                            'image' => ((isset($whyChooseUs)) ? $whyChooseUs : ((isset($serviceSection['why_choose_us']['image'])) ? $serviceSection['why_choose_us']['image'] : '')),
+                            'header' => ((isset($whyChooseTitle)) ? $whyChooseTitle : ''),
+                            'description' => ((isset($whyChooseDescription)) ? $whyChooseDescription : ''),
                             'steps' => array(
                                 array(
-                                    'icon' => ((isset($stepIcon_1)) ? $stepIcon_1 : $serviceSection['why_choose_us']['steps'][0]['icon']),
-                                    'description' => $stepHeader_1
+                                    'icon' => ((isset($stepIcon_1)) ? $stepIcon_1 : ((isset($serviceSection['why_choose_us']['steps'][0]['icon'])) ? $serviceSection['why_choose_us']['steps'][0]['icon'] : '')),
+                                    'description' => ((isset($stepHeader_1)) ? $stepHeader_1 : '')
                                 ),
                                 array(
-                                    'icon' => ((isset($stepIcon_2)) ? $stepIcon_2 : $serviceSection['why_choose_us']['steps'][1]['icon']),
-                                    'description' => $stepHeader_2
+                                    'icon' => ((isset($stepIcon_2)) ? $stepIcon_2 : ((isset($serviceSection['why_choose_us']['steps'][1]['icon'])) ? $serviceSection['why_choose_us']['steps'][1]['icon'] : '')),
+                                    'description' => ((isset($stepHeader_2)) ? $stepHeader_2 : '')
                                 ),
                                 array(
-                                    'icon' => ((isset($stepIcon_3)) ? $stepIcon_3 : $serviceSection['why_choose_us']['steps'][2]['icon']),
-                                    'description' => $stepHeader_3
+                                    'icon' => ((isset($stepIcon_3)) ? $stepIcon_3 : ((isset($serviceSection['why_choose_us']['steps'][2]['icon'])) ? $serviceSection['why_choose_us']['steps'][2]['icon'] : '')),
+                                    'description' => ((isset($stepHeader_3)) ? $stepHeader_3 : '')
                                 ),
                             )
                         ),
                         'before_after' => array(
-                            'header' => $berforeAfterHeader,
-                            'subHeader' => $berforeAfterSubHeader,
-                            'description' => $berforeAfterDescription,
-                            'videoLink' => $berforeAfterVideLink,
+                            'header' => ((isset($berforeAfterHeader)) ? $berforeAfterHeader : ''),
+                            'subHeader' => ((isset($berforeAfterSubHeader)) ? $berforeAfterSubHeader : ''),
+                            'description' => ((isset($berforeAfterDescription)) ? $berforeAfterDescription : ''),
+                            'videoLink' => ((isset($berforeAfterVideLink)) ? $berforeAfterVideLink : ''),
                             'images' => array(
-                                'before' => ((isset($before)) ? $before : $serviceSection['before_after']['images']['before']),
-                                'after' => ((isset($after)) ? $after : $serviceSection['before_after']['images']['after'])
+                                'before' => ((isset($before)) ? $before : ((isset($serviceSection['before_after']['images']['before'])) ? $serviceSection['before_after']['images']['before'] : '')),
+                                'after' => ((isset($after)) ? $after : ((isset($serviceSection['before_after']['images']['after'])) ? $serviceSection['before_after']['images']['after'] : ''))
                             )
                         ),
                         'watch_video' => array(
-                            'image' => ((isset($watchVideoImage)) ? $watchVideoImage : $serviceSection['watch_video']['image']),
-                            'header' => $watchVideoHeader,
-                            'description' => $watchVideoDescription,
-                            'videoLink' => $watchVideoLink
+                            'image' => ((isset($watchVideoImage)) ? $watchVideoImage : ((isset($serviceSection['watch_video']['image'])) ? $serviceSection['watch_video']['image'] : '')),
+                            'header' => ((isset($watchVideoHeader)) ? $watchVideoHeader : ''),
+                            'description' => ((isset($watchVideoDescription)) ? $watchVideoDescription : ''),
+                            'videoLink' => ((isset($watchVideoLink)) ? $watchVideoLink : '')
                         ),
                         'our_commitment' => array(
-                            'image' => ((isset($commitmentImage)) ? $commitmentImage : $serviceSection['our_commitment']['image']),
-                            'header' => $commitmentHeader,
-                            'subHeader' => $commitmentSubHeader,
-                            'descripton' => $commitmentDescription
+                            'image' => ((isset($commitmentImage)) ? $commitmentImage : ((isset($serviceSection['our_commitment']['image'])) ? $serviceSection['our_commitment']['image'] : '')),
+                            'header' => ((isset($commitmentHeader)) ? $commitmentHeader : ''),
+                            'subHeader' => ((isset($commitmentSubHeader)) ? $commitmentSubHeader : ''),
+                            'descripton' => ((isset($commitmentDescription)) ? $commitmentDescription : '')
                         ),
                         'faq' => array(
                             0 => array(
-                                'question' => $faqQuestion1,
-                                'answer' => $faqAnswer1
+                                'question' => ((isset($faqQuestion1)) ? $faqQuestion1 : ''),
+                                'answer' => ((isset($faqAnswer1)) ? $faqAnswer1 : '')
                             ),
                             1 => array(
-                                'question' => $faqQuestion2,
-                                'answer' => $faqAnswer2
+                                'question' => ((isset($faqQuestion2)) ? $faqQuestion2 : ''),
+                                'answer' => ((isset($faqAnswer2)) ? $faqAnswer2 : '')
                             ),
                             2 => array(
-                                'question' => $faqQuestion3,
-                                'answer' => $faqAnswer3
+                                'question' => ((isset($faqQuestion3)) ? $faqQuestion3 : ''),
+                                'answer' => ((isset($faqAnswer3)) ? $faqAnswer3 : '')
                             ),
                             3 => array(
-                                'question' => $faqQuestion4,
-                                'answer' => $faqAnswer4
+                                'question' => ((isset($faqQuestion4)) ? $faqQuestion4 : ''),
+                                'answer' => ((isset($faqAnswer4)) ? $faqAnswer4 : '')
                             ),
                             4 => array(
-                                'question' => $faqQuestion5,
-                                'answer' => $faqAnswer5
+                                'question' => ((isset($faqQuestion5)) ? $faqQuestion5 : ''),
+                                'answer' => ((isset($faqAnswer5)) ? $faqAnswer5 : '')
                             )
                         )
                     ), true);
@@ -162,7 +162,7 @@ function update($connection, $data)
                     $oldGallery = json_decode($service_gallery, TRUE);
 
                     // Match old gallery db from from value
-                    $newProductGallery = array();
+                    $newServiceGallery = array();
 
                     if (isset($_POST['oldGallery'])) {
 
@@ -170,7 +170,7 @@ function update($connection, $data)
 
                             $j = $_POST['oldGallery'][$i] - 1;
 
-                            $newProductGallery[] = $oldGallery[$j];
+                            $newServiceGallery[] = $oldGallery[$j];
                         }
                     }
 
@@ -178,10 +178,10 @@ function update($connection, $data)
 
                     if (isset($isGalleryUpdate)) {
 
-                        $newProductGallery = array_merge($newProductGallery, $images);
+                        $newServiceGallery = array_merge($newServiceGallery, $images);
                     }
 
-                    $newProductGallery = json_encode($newProductGallery, TRUE);
+                    $newServiceGallery = json_encode($newServiceGallery, TRUE);
 
 
                     /** Category */
@@ -237,7 +237,7 @@ function update($connection, $data)
                         }
                     }
 
-                    $updateservice = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "service SET service_image='{$featureImage}', service_thumbnail='{$thumbnailImage}', service_gallery='{$newProductGallery}', service_title='{$title}', service_description='{$description}', service_highlight='{$highlight}', service_category='{$category}', service_owner_id='" . USER_ID . "', service_status=1, service_type='{$postType}', service_section='{$updatedServiceSection}' WHERE service_id='{$id}'");
+                    $updateservice = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "service SET service_image='{$featureImage}', service_thumbnail='{$thumbnailImage}', service_gallery='{$newServiceGallery}', service_title='{$title}', service_description='{$description}', service_highlight='{$highlight}', service_category='{$category}', service_owner_id='" . USER_ID . "', service_status=1, service_type='{$postType}', service_section='{$updatedServiceSection}' WHERE service_id='{$id}'");
 
                     $updateInventtory = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "inventory SET inventory_sku='{$sku}', inventory_currency='INR', inventory_price='{$salePrice}', inventory_mrp='{$mrp}', inventory_tax_status='{$taxStatus}', inventory_tax_rate='{$taxRate}', inventory_in_stock='{$in_stock}', inventory_current_stock='{$currentStock}', inventory_backorder='{$backorder}', inventory_stock_notice='{$stock_warning}', inventory_weight='{$weight}', inventory_lenght='{$lenght}', inventory_width='{$width}', inventory_height='{$height}', inventory_status=1 WHERE inventory_relation_id='{$id}'");
 

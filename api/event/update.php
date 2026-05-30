@@ -13,7 +13,7 @@ function update($connection, $data)
 
         if (isset($category)) {
 
-            if ($checkPost = mysqli_query($connection, "SELECT link_id FROM " . TABLE_PREFIX . "event INNER JOIN " . TABLE_PREFIX . "link WHERE link_url='{$oldURL}' AND event_id='{$id}'")) {
+            if ($checkPost = mysqli_query($connection, "SELECT link_id, event_gallery FROM " . TABLE_PREFIX . "event INNER JOIN " . TABLE_PREFIX . "link WHERE link_url='{$oldURL}' AND event_id='{$id}'")) {
 
                 if (mysqli_num_rows($checkPost) != 0) {
 
@@ -26,8 +26,6 @@ function update($connection, $data)
                     if (isset($image)) {
 
                         /** when image is upload by user */
-
-
 
                         $featureImage = (((isset($featureImage)) ? $featureImage : $oldFeatureImage));
                         $thumbnailImage = (((isset($thumbnailImage)) ? $featureImage : $oldThumbnailImage));
@@ -51,6 +49,40 @@ function update($connection, $data)
 
                     $url = strtolower($categoryURL . preg_replace('~[^\p{M}\w-]+~u', '-', $url)) . '/';
                     $linkID = $link_id;
+
+                    if (isset($_FILES['gallery'])) {
+
+                        require_once MODULES . 'galleryUploader.php';
+
+                        if ($gallery != '') {
+
+                            $isGalleryUpdate = TRUE;
+                        }
+                    }
+
+                    $oldGallery = json_decode($event_gallery, TRUE);
+
+                    // Match old gallery db from from value
+                    $newEventGallery = array();
+
+                    if (isset($_POST['oldGallery'])) {
+
+                        for ($i = 0; $i < sizeof($_POST['oldGallery']); $i++) {
+
+                            $j = $_POST['oldGallery'][$i] - 1;
+
+                            $newEventGallery[] = $oldGallery[$j];
+                        }
+                    }
+
+                    /** Update old gallery */
+
+                    if (isset($isGalleryUpdate)) {
+
+                        $newEventGallery = array_merge($newEventGallery, $images);
+                    }
+
+                    $newEventGallery = json_encode($newEventGallery, TRUE);
 
                     mysqli_query($connection, "START TRANSACTION");
 
@@ -90,7 +122,7 @@ function update($connection, $data)
 
                     /** Update post table */
 
-                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "event SET event_image='{$featureImage}', event_thumbnail='{$thumbnailImage}', event_title='{$title}', event_description='{$description}', event_category='{$category}', event_start_date='{$eventDate}', event_start_time='{$eventTime}', event_location='{$eventLocation}', event_status='1' WHERE event_id='{$id}'");
+                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "event SET event_image='{$featureImage}', event_thumbnail='{$thumbnailImage}', event_title='{$title}', event_description='{$description}', event_category='{$category}', event_start_date='{$eventDate}', event_start_time='{$eventTime}', event_location='{$eventLocation}', event_status='1', event_gallery='{$newEventGallery}' WHERE event_id='{$id}'");
 
                     /** Update meta table */
 

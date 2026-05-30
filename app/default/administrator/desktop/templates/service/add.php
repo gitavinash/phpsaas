@@ -165,9 +165,9 @@
 
                         <div class="productGallery generalTab">
 
-                            <div class="input-field">
-                                <div class="input-images" style="padding-top: .5rem;"></div>
-                            </div>
+                           <div class="input-field">
+                            <div class="input-images" style="padding-top: .5rem;"></div>
+                        </div>
 
                         </div>
 
@@ -275,7 +275,7 @@
                         <li id="productGeneral" class='active'>General</li>
                         <li id="productInventory">Inventory</li>
                         <li id="productGallery">Gallery</li>
-                        <li id="productAdditionalDetails">Additional Details</li>
+                        <!-- <li id="productAdditionalDetails">Additional Details</li> -->
                     </ul>
                     <div class="productGeneral generalTab">
                         <div class="form-group">
@@ -327,11 +327,17 @@
                         </div>
                     </div>
                     <div class="productGallery generalTab" style="display: none;">
-                        <input type="file" id="gallery" class="galleryBtn" name="gallery[]" multiple>
-                    </div>
-                    <div class="productAdditionalDetails generalTab" style="display: none;">
+                        
+                <!-- Product description and other things -->
+
+                        <div class="input-field">
+                            <div class="input-images" style="padding-top: .5rem;"></div>
+                        </div>
 
                     </div>
+                    <!-- <div class="productAdditionalDetails generalTab" style="display: none;">
+
+                    </div> -->
                 </section>
             <?php
             }

@@ -7,10 +7,10 @@ if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
         extract(mysqli_fetch_assoc($pageDetails));
     } else {
         exit(); ?>
-<script type="text/javascript">
-alert('Invalid action found');
-window.location.href = 'dashboard/team/?type=list&status=all';
-</script>
+        <script type="text/javascript">
+            alert('Invalid action found');
+            window.location.href = 'dashboard/team/?type=list&status=all';
+        </script>
 <?php
     }
 }
@@ -41,6 +41,89 @@ window.location.href = 'dashboard/team/?type=list&status=all';
                 <textarea name="description"
                     class="editor inside-shadow"><?php echo html_entity_decode($page_description); ?></textarea>
             </div>
+            <section>
+                <h3>Advance Options for digital marketing</h3>
+                <ul class='tabs'>
+                    <li id="seo" class='active'>Search Engine Optimization</li>
+                    <li id="fb">Facebook</li>
+                    <li id="tw">Twitter</li>
+                </ul>
+                <div class="seo generalTab">
+                    <div class="form-group">
+                        <label>Meta Title</label>
+                        <input type="text" name="meta_title" value="<?php echo $meta_title; ?>" id="meta_title"
+                            class="form-control inside-shadow" placeholder="Meta title">
+                    </div>
+                    <div class="form-group">
+                        <label>Meta Description</label>
+                        <textarea name="meta_desc" id="meta_desc" class="form-control inside-shadow"
+                            placeholder="Meta Description"><?php echo $meta_description ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Meta Keywords</label>
+                        <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow"
+                            placeholder="Enter keywords of the event ( use , to seprate keywords )"><?php echo $meta_keyword ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Canonical URL</label>
+                        <input type="text" name="canonical" class="form-control inside-shadow"
+                            value="<?php echo $meta_canonical; ?>" id="canonical"
+                            placeholder="Actual URL of the team profile page">
+                    </div>
+                    <div class="form-group">
+                        <label>Allow search engines to show this event in search results?</label>
+                        <select name="robots" class="form-control inside-shadow">
+                            <option value="index, follow"
+                                <?php echo (($meta_robots == 'index, follow') ? 'selected' : '') ?>>Yes</option>
+                            <option value="noindex, nofollow"
+                                <?php echo (($meta_robots == 'noindex, nofollow') ? 'selected' : '') ?>>No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="fb generalTab" style="display: none;">
+                    <div class="facebookPreviewBox"
+                        style="display: <?php echo (($fb_img == '') ? 'none' : 'block') ?>;">
+                        <input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
+                        <div class="img"><img src="<?php echo $fb_img; ?>" id="facebookPath" alt=""></div>
+                        <p id="facebookChangeImage" class='changeImage'>Remove facebook feature image</p>
+                    </div>
+                    <div class="facebookUploadBox" style="display: <?php echo (($fb_img == '') ? 'block' : 'none') ?>;">
+                        <span>Set facebook feature image</span>
+                        <input type='file' id="facebookImage" name='facebookImage' />
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook Title</label>
+                        <input type="text" name="fb_title" class="form-control inside-shadow"
+                            value="<?php echo $fb_title ?>" placeholder="Facebook title">
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook Description</label>
+                        <textarea name="fb_desc" id="fb_desc" class="form-control inside-shadow"
+                            placeholder="Facebook Description"><?php echo $fb_desc ?></textarea>
+                    </div>
+                </div>
+                <div class="tw generalTab" style="display: none;">
+                    <div class="twitterPreviewBox" style="display: <?php echo (($tw_img == '') ? 'none' : 'block') ?>;">
+                        <input type="hidden" name="oldTwitterImage" value="<?php echo $tw_img ?>">
+                        <div class="img"><img src="<?php echo $tw_img ?>" id="twitterPath" alt=""></div>
+                        <p id="twitterChangeImage" class="changeImage">Remove twitter feature image</p>
+                    </div>
+                    <div class="twitterUploadBox" style="display: <?php echo (($fb_img == '') ? 'block' : 'none') ?>;">
+                        <span>Set Twitter feature image</span>
+                        <input type='file' id="twitterImage" name='twitterImage' />
+                    </div>
+                    <div class="form-group">
+                        <label>Twitter Title</label>
+                        <input type="text" name="tw_title" class="form-control inside-shadow"
+                            value="<?php echo $tw_title; ?>" placeholder="Twitter title">
+                    </div>
+                    <div class="form-group">
+                        <label>Twitter Description</label>
+                        <textarea name="tw_desc" id="tw_desc" class="form-control inside-shadow"
+                            placeholder="Twitter Description"><?php echo $tw_desc ?></textarea>
+                    </div>
+                </div>
+            </section>
         </div>
         <div class="right-box">
             <div class="action-box inside-shadow">
