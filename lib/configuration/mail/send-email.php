@@ -22,8 +22,6 @@ if (EMAIL_ENABLE == 1) {
         // $mail->SMTPDebug = 0; // or use 3 for even more verbose output
         // $mail->Debugoutput = 'html';
 
-        echo 'SMTP Password : ' . SMTP_PASSWORD;
-
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
