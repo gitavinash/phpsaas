@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
             if ($sendResult !== true) {
                 $response['status'] = 'warning';
-                $response['msg'] = 'OTP stored but failed to send' . ((DEVELOPMENT_MODE == true) ? $sendResult : '');
+                $response['msg'] = 'OTP stored but failed to send (' . SMTP_PASSWORD . ')' . ((DEVELOPMENT_MODE == true) ? $sendResult : '');
                 $response['error'] = $sendResult;
             }
 

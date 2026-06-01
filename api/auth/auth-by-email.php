@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $httpStatus = 200;
             } else {
                 $status = ((DEVELOPMENT_MODE == true)) ? 'success' : 'error';;
-                $msg = ((DEVELOPMENT_MODE == true)) ? $response['msg'] : 'Failed to send OTP (' . SMTP_PASSWORD . ')';
+                $msg = ((DEVELOPMENT_MODE == true)) ? $response['msg'] : 'Failed to send OTP';
             }
         } else {
             $status = 'error';
