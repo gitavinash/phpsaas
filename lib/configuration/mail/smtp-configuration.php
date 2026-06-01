@@ -19,7 +19,7 @@ if (defined('EMAIL_SMTP_DEFAULT')) {
     define('SMTP_SSL', 'true');
     define('SMTP_PORT', '587');
     define('SMTP_USERNAME', 'emailapikey');
-    define('SMTP_PASSWORD', 'PHtE6r0IRenjiGUs8hEGsaPtF86gZtssqO00LwgVtt1CW/YKHk0Eqt4olDK/rkgvUaQXFfKYzIs9ub+e5eyGdzrsMTkZWmqyqK3sx/VYSPOZsbq6x00YtV8cf0fcUIbrd99r1yHWvNjeNA==');
+    define('SMTP_PASSWORD', '');
     define('SMTP_EMAIL', 'donotreply@blumox.com');
     define('SMTP_NAME', 'SITE_NAME');
     define('REPLY_EMAIL', 'donotreply@blumox.com');
