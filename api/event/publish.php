@@ -63,7 +63,7 @@ function publish($connection, $data)
 
                             $eventDate = date('Y-m-d', strtotime($eventDate));
 
-                            $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "event(event_site_id, event_image, event_thumbnail, event_title, event_description, event_start_date, event_start_time, event_location, event_category, event_owner_id, event_status, event_type, event_gallery) VALUES(" . SITE_ID . ", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$eventDate}', '{$eventTime}', '{$eventLocation}', '{$category}', '" . USER_ID . "', '1', 'event', '{$gallery}')");
+                            $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "event(event_site_id, event_image, event_thumbnail, event_title, event_description, event_start_date, event_start_time, event_end_time, event_location, event_map, event_category, event_owner_id, event_status, event_type, event_gallery) VALUES(" . SITE_ID . ", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$eventDate}', '{$eventTime}', '{$eventEndTime}', '{$eventLocation}', '{$eventMap}', '{$category}', '" . USER_ID . "', '1', 'event', '{$gallery}')");
                             $postID = mysqli_insert_id($connection);
 
                             $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', 'event', '{$featurePost}', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");

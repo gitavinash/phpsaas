@@ -122,7 +122,7 @@ function update($connection, $data)
 
                     /** Update post table */
 
-                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "event SET event_image='{$featureImage}', event_thumbnail='{$thumbnailImage}', event_title='{$title}', event_description='{$description}', event_category='{$category}', event_start_date='{$eventDate}', event_start_time='{$eventTime}', event_location='{$eventLocation}', event_status='1', event_gallery='{$newEventGallery}' WHERE event_id='{$id}'");
+                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "event SET event_image='{$featureImage}', event_thumbnail='{$thumbnailImage}', event_title='{$title}', event_description='{$description}', event_category='{$category}', event_start_date='{$eventDate}', event_end_time='{$eventEndTime}', event_location='{$eventLocation}', event_map='{$eventMap}', event_status='1', event_gallery='{$newEventGallery}' WHERE event_id='{$id}'");
 
                     /** Update meta table */
 

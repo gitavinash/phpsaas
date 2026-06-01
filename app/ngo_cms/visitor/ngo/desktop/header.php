@@ -1,4 +1,7 @@
 <?php
+
+require_once DATA_FUNCTIONS;
+require_once UTIL_FUNCTIONS;
 require_once MENU_FUNCTIONS;
 
 if (defined('SETTING_COMPANY_PROFILE')) {
@@ -9,7 +12,7 @@ if (defined('SETTING_COMPANY_PROFILE')) {
 }
 ?>
 <!doctype html>
-<html lang="<?php echo SITE_LANG ?>">
+<html lang="<?php echo SITE_LANG; ?>">
 
 <head>
     <meta charset="UTF-8" />
@@ -22,7 +25,7 @@ if (defined('SETTING_COMPANY_PROFILE')) {
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <!-- CSS -->
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css" />
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET; ?>style.css?v=<?= time() ?>" />
     <?php require_once DEFAULT_META; ?>
 </head>
 
@@ -32,18 +35,14 @@ if (defined('SETTING_COMPANY_PROFILE')) {
             <div class="container nav-container">
                 <a href="/" class="brand-logo"
                     style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-                    <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>" class="logo-img">
+                    <img src="<?php echo SITE_LOGO; ?>" alt="<?php echo SITE_NAME; ?>" class="logo-img">
                 </a>
 
                 <div class="nav-right">
                     <ul class="nav-menu" id="nav-menu">
-                        <?php
-                        generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true, 'nav-link');
-                        ?>
+                        <?php generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true, 'nav-link'); ?>
                     </ul>
-                    <?php
-                    generateMenu('SITE_NAV_HEADER_MENU_CTA', 'non_list', true, 'btn btn-secondary nav-btn');
-                    ?>
+                    <?php generateMenu('SITE_NAV_HEADER_MENU_CTA', 'non_list', true, 'btn btn-secondary nav-btn'); ?>
 
                     <div class="mobile-toggle" id="mobile-toggle">
                         <i class="fas fa-bars"></i>

@@ -19,7 +19,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css?v=<?= time() ?>" />
     <style>
       .page-header {
         background:
@@ -944,6 +944,6 @@
     </section>
 
     <div id="footer-placeholder"></div>
-    <script src="js/main.js"></script>
+    <script src="<?php echo USER_JS ?>main.js?v=<?= time() ?>"></script>
   </body>
 </html>

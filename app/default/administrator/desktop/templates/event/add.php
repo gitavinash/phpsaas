@@ -19,17 +19,17 @@
             </div>
 
 
-                <!-- Product description and other things -->
+            <!-- Product description and other things -->
 
-                <section style="margin-bottom:20px">
-                    <h3>Event gallery</h3>
-                    <div class="productGallery">
-                        <div class="input-field">
-                            <div class="input-images" style="padding-top: .5rem;"></div>
-                        </div>
-
+            <section style="margin-bottom:20px">
+                <h3>Event gallery</h3>
+                <div class="productGallery">
+                    <div class="input-field">
+                        <div class="input-images" style="padding-top: .5rem;"></div>
                     </div>
-                </section>
+
+                </div>
+            </section>
 
             <!-- SEO & social media marketing -->
 
@@ -130,12 +130,12 @@
                 <?php
                 if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
                     while ($category = mysqli_fetch_assoc($categoryList)) { ?>
-                <div class="form-group">
-                    <input type="radio" name="category"
-                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                        <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
-                    <?php echo ucwords($category['category_title']); ?>
-                </div>
+                        <div class="form-group">
+                            <input type="radio" name="category"
+                                value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                                <?php echo (($category['category_id'] == 1) ? 'checked' : '') ?>>
+                            <?php echo ucwords($category['category_title']); ?>
+                        </div>
                 <?php
                     }
                 }
@@ -153,13 +153,21 @@
             <div class="form-group">
                 <input type="text" name="eventDate" class="form-control inside-shadow datepicker">
             </div>
-            <h2>Time</h2>
+            <h2>Start Time</h2>
             <div class="form-group">
                 <input type="time" name="eventTime" class="form-control inside-shadow">
             </div>
+            <h2>End Time</h2>
+            <div class="form-group">
+                <input type="time" name="eventEndTime" class="form-control inside-shadow">
+            </div>
             <h2>Location</h2>
             <div class="form-group">
-                <input type="text" name="eventLocation" class="form-control inside-shadow">
+                <input type="text" name="eventLocation" placeholder="Place name" class="form-control inside-shadow">
+            </div>
+            <h2>Embed Map</h2>
+            <div class="form-group">
+                <textarea name="eventMap" class="form-control inside-shadow" placeholder="Google maps embed code"></textarea>
             </div>
             <h2>Feature Image</h2>
             <div class="form-group featureImageUploadBox upload-btn">

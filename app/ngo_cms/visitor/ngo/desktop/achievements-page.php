@@ -15,7 +15,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css?v=<?= time() ?>" />
     <style>
       .page-header {
         background:
@@ -166,7 +166,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="js/main.js"></script>
+    <script src="<?php echo USER_JS ?>main.js?v=<?= time() ?>"></script>
     <script>
       // Highlight active link manually if needed, or rely on js/main.js
       // js/main.js handles it based on URL filename

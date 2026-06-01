@@ -3,15 +3,15 @@
 $event_id = base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
 
 if ($eventDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "event, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE link_type='event' AND link_relation_id=event_id AND meta_relation_id=link_id AND event_id='{$event_id}' AND link_status!=301 AND link_type='event' AND link_site_id=" . SITE_ID . " LIMIT 1")) {
-	if (mysqli_num_rows($eventDetails) != 0) {
-		extract(mysqli_fetch_assoc($eventDetails));
-	} else { ?>
-<script type="text/javascript">
-alert('Invalid action found');
-window.location.href = 'dashboard/event/?type=list&status=all';
-</script>
+    if (mysqli_num_rows($eventDetails) != 0) {
+        extract(mysqli_fetch_assoc($eventDetails));
+    } else { ?>
+        <script type="text/javascript">
+            alert('Invalid action found');
+            window.location.href = 'dashboard/event/?type=list&status=all';
+        </script>
 <?php
-	}
+    }
 }
 
 ?>
@@ -29,8 +29,8 @@ window.location.href = 'dashboard/event/?type=list&status=all';
             <div class="form-group">
                 <div class="url">
                     <?php
-					$url = explode('/', ltrim(rtrim($link_url, '/'), '/'));
-					?>
+                    $url = explode('/', ltrim(rtrim($link_url, '/'), '/'));
+                    ?>
                     <p><strong>Permalink</strong></p>
                     <p><span><?php echo SITE_DOMAIN . '/...'; ?>/</span></p>
                     <input type="text" id="url" class="form-control" value="<?php echo end($url); ?>" name="url">
@@ -43,43 +43,43 @@ window.location.href = 'dashboard/event/?type=list&status=all';
             </div>
 
 
-                <!-- Product description and other things -->
+            <!-- Product description and other things -->
 
-                <section style="margin-bottom:20px">
-                    <h3>Event gallery</h3>
-                    <div class="productGallery">
-                        <div class="input-field">
-                            <div class="input-images" style="padding-top: .5rem;"></div>
-                        </div>
-                        <?php
+            <section style="margin-bottom:20px">
+                <h3>Event gallery</h3>
+                <div class="productGallery">
+                    <div class="input-field">
+                        <div class="input-images" style="padding-top: .5rem;"></div>
+                    </div>
+                    <?php
 
-                        if ($event_gallery != '') {
+                    if ($event_gallery != '') {
 
-                            $eventGalleryList = json_decode($event_gallery, TRUE);
+                        $eventGalleryList = json_decode($event_gallery, TRUE);
 
-                            $oldGalleryImages = array();
+                        $oldGalleryImages = array();
 
-                            for ($i = 0; $i < sizeof($eventGalleryList); $i++) {
+                        for ($i = 0; $i < sizeof($eventGalleryList); $i++) {
 
-                                $oldGalleryImages[] = array(
-                                    'id' => $i + 1,
-                                    'name' => $eventGalleryList[$i]['name'],
-                                    'src' => $eventGalleryList[$i]['path'],
-                                    'type' => $eventGalleryList[$i]['type'],
-                                );
-                            }
-
-                            $oldGalleryImages = json_encode($oldGalleryImages, TRUE);
-                        } else {
-
-                            $oldGalleryImages = json_encode('', TRUE);
+                            $oldGalleryImages[] = array(
+                                'id' => $i + 1,
+                                'name' => $eventGalleryList[$i]['name'],
+                                'src' => $eventGalleryList[$i]['path'],
+                                'type' => $eventGalleryList[$i]['type'],
+                            );
                         }
 
-                        echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
+                        $oldGalleryImages = json_encode($oldGalleryImages, TRUE);
+                    } else {
 
-                        ?>
-                    </div>
-                </section>
+                        $oldGalleryImages = json_encode('', TRUE);
+                    }
+
+                    echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
+
+                    ?>
+                </div>
+            </section>
 
             <section>
                 <h3>Advance Options for digital marketing</h3>
@@ -188,43 +188,43 @@ window.location.href = 'dashboard/event/?type=list&status=all';
             <h2>Categories</h2>
             <div class="action-box height-200 inside-shadow">
                 <?php
-				if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
-					while ($category = mysqli_fetch_assoc($categoryList)) {
-						if ($category['category_id'] == ${$postType . '_category'}) { ?>
-                <div class="form-group">
-                    <input type="radio" name="category"
-                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                        <?php echo (($category['category_id'] == $event_category) ? 'checked' : '') ?>>
-                    <?php echo ucwords($category['category_title']); ?>
-                </div>
+                if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
+                    while ($category = mysqli_fetch_assoc($categoryList)) {
+                        if ($category['category_id'] == ${$postType . '_category'}) { ?>
+                            <div class="form-group">
+                                <input type="radio" name="category"
+                                    value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                                    <?php echo (($category['category_id'] == $event_category) ? 'checked' : '') ?>>
+                                <?php echo ucwords($category['category_title']); ?>
+                            </div>
+                        <?php
+                        } else { ?>
+                            <div class="form-group">
+                                <input type="radio" name="category"
+                                    value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>">
+                                <?php echo ucwords($category['category_title']); ?>
+                            </div>
                 <?php
-						} else { ?>
-                <div class="form-group">
-                    <input type="radio" name="category"
-                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>">
-                    <?php echo ucwords($category['category_title']); ?>
-                </div>
-                <?php
-						}
-					}
-				}
-				?>
+                        }
+                    }
+                }
+                ?>
             </div>
             <h2>Tags</h2>
             <?php
-			$tagpostID = (($event_parent_id == 0) ? $event_id : $event_parent_id);
+            $tagpostID = (($event_parent_id == 0) ? $event_id : $event_parent_id);
 
-			if ($tagList = mysqli_query($connection, "SELECT tag_title FROM " . TABLE_PREFIX . "tag WHERE tag_relation_id='{$tagpostID}' AND tag_site_id='" . SITE_ID . "' AND tag_type='post'")) {
-				if (mysqli_num_rows($tagList) != 0) {
-					while ($tagsName = mysqli_fetch_assoc($tagList)) {
-						$tags[] = $tagsName['tag_title'];
-					}
-					$tags = implode(',', $tags);
-				} else {
-					$tags = '';
-				}
-			}
-			?>
+            if ($tagList = mysqli_query($connection, "SELECT tag_title FROM " . TABLE_PREFIX . "tag WHERE tag_relation_id='{$tagpostID}' AND tag_site_id='" . SITE_ID . "' AND tag_type='post'")) {
+                if (mysqli_num_rows($tagList) != 0) {
+                    while ($tagsName = mysqli_fetch_assoc($tagList)) {
+                        $tags[] = $tagsName['tag_title'];
+                    }
+                    $tags = implode(',', $tags);
+                } else {
+                    $tags = '';
+                }
+            }
+            ?>
             <div class="action-box inside-shadow">
                 <div class="form-group">
                     <input type="text" class='tags' />
@@ -243,10 +243,19 @@ window.location.href = 'dashboard/event/?type=list&status=all';
                 <input type="time" name="eventTime" value="<?php echo (!empty($event_start_time) && $event_start_time != '00:00:00') ? date('H:i', strtotime($event_start_time)) : ''; ?>"
                     class="form-control inside-shadow">
             </div>
+            <h2>Time</h2>
+            <div class="form-group">
+                <input type="time" name="eventEndTime" value="<?php echo (!empty($event_end_time) && $event_end_time != '00:00:00') ? date('H:i', strtotime($event_start_time)) : ''; ?>"
+                    class="form-control inside-shadow">
+            </div>
             <h2>Location</h2>
             <div class="form-group">
                 <input type="text" name="eventLocation" value="<?php echo $event_location ?>"
                     class="form-control inside-shadow">
+            </div>
+            <h2>Embed Map</h2>
+            <div class="form-group">
+                <textarea name="eventMap" class="form-control inside-shadow" placeholder="Google maps embed code"><?php echo $event_map; ?></textarea>
             </div>
             <h2>Feature Image</h2>
             <div class="form-group featureImageUploadBox upload-btn"

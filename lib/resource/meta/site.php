@@ -2,7 +2,7 @@
 <!-- Site Default Configuration -->
 <link rel="icon" href="<?php echo SITE_ICON ?>">
 <title>
-    <?php echo ((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'}) : SITE_DESC . ' | ' . SITE_NAME) ?>
+    <?php echo ucfirst(((isset($meta_title)) ? (($meta_title != '') ? $meta_title : ${$link_type . '_title'}) : SITE_DESC . ' | ' . SITE_NAME)) ?>
 </title>
 
 <?php

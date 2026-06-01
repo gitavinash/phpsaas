@@ -1,8 +1,8 @@
 // Main JavaScript File
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadHeader();
-  loadFooter();
+  setActiveLink();
+  setupMobileMenu();
   setupLightbox();
 });
 
@@ -38,16 +38,14 @@ function setupMobileMenu() {
 
 // Lightbox Functionality
 function setupLightbox() {
-  const galleryImages = document.querySelectorAll(
-    ".gallery-strip img, .achievements-grid .achievement-card img",
-  );
-  if (galleryImages.length === 0) return;
+  if (window.lightboxInitialized) return;
+  window.lightboxInitialized = true;
 
   // Create Lightbox HTML if not exists
   if (!document.getElementById("lightbox")) {
     const lightboxHTML = `
             <div id="lightbox" class="lightbox">
-                <span class="lightbox-close" id="lb-close">&times;</span>
+                <span class="lightbox-close" id="lb-close"><i class="fas fa-times"></i></span>
                 <div class="lightbox-nav lb-prev" id="lb-prev"><i class="fas fa-chevron-left"></i></div>
                 <div class="lightbox-content">
                     <img src="" alt="" class="lightbox-img" id="lb-img">
@@ -66,38 +64,63 @@ function setupLightbox() {
   const prevBtn = document.getElementById("lb-prev");
   const nextBtn = document.getElementById("lb-next");
 
+  let activeImages = [];
   let currentIndex = 0;
 
-  // Open Lightbox
-  galleryImages.forEach((img, index) => {
-    img.addEventListener("click", () => {
-      currentIndex = index;
-      updateLightbox();
-      lightbox.style.display = "flex";
-      setTimeout(() => lightbox.classList.add("active"), 10);
-      document.body.style.overflow = "hidden"; // Disable scroll
-    });
+  // Event delegation for opening the lightbox
+  document.addEventListener("click", (e) => {
+    const img = e.target.closest(".gallery-strip img, .achievements-grid .achievement-card img");
+    if (img) {
+      activeImages = Array.from(document.querySelectorAll(
+        ".gallery-strip img, .achievements-grid .achievement-card img"
+      ));
+      currentIndex = activeImages.indexOf(img);
+      if (currentIndex !== -1) {
+        updateLightbox();
+        lightbox.style.display = "flex";
+        setTimeout(() => lightbox.classList.add("active"), 10);
+        document.body.style.overflow = "hidden"; // Disable scroll
+      }
+    }
   });
 
-  // Update Image & Caption
+  // Update Image & Caption with a smooth premium fade animation
   function updateLightbox() {
-    const img = galleryImages[currentIndex];
+    if (activeImages.length === 0) return;
+    const img = activeImages[currentIndex];
     const highResSrc = img.getAttribute("src");
-    const caption = img.getAttribute("data-caption") || img.getAttribute("alt");
+    const caption = img.getAttribute("data-caption") || img.getAttribute("alt") || "";
 
-    lbImg.src = highResSrc;
-    lbCaption.textContent = caption;
+    lbImg.style.opacity = "0";
+    lbImg.style.transform = "scale(0.96)";
+
+    setTimeout(() => {
+      lbImg.src = highResSrc;
+      lbCaption.textContent = caption;
+
+      lbImg.onload = () => {
+        lbImg.style.opacity = "1";
+        lbImg.style.transform = "scale(1)";
+      };
+
+      // Fallback in case of quick browser cache
+      setTimeout(() => {
+        lbImg.style.opacity = "1";
+        lbImg.style.transform = "scale(1)";
+      }, 50);
+    }, 200);
   }
 
-  // Navigation
+  // Navigation (Infinite loops automatically)
   function showNext() {
-    currentIndex = (currentIndex + 1) % galleryImages.length;
+    if (activeImages.length === 0) return;
+    currentIndex = (currentIndex + 1) % activeImages.length;
     updateLightbox();
   }
 
   function showPrev() {
-    currentIndex =
-      (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+    if (activeImages.length === 0) return;
+    currentIndex = (currentIndex - 1 + activeImages.length) % activeImages.length;
     updateLightbox();
   }
 
@@ -121,7 +144,7 @@ function setupLightbox() {
 
   closeBtn.addEventListener("click", closeLightbox);
 
-  // Close on clicking outside image
+  // Close on clicking outside the image content
   lightbox.addEventListener("click", (e) => {
     if (e.target === lightbox) {
       closeLightbox();
@@ -213,8 +236,8 @@ function loadGalleryAlbum() {
 
     // Update Images
     let imagesHTML = "";
-    album.images.forEach((img) => {
-      imagesHTML += `<img src="assets/images/gallery/${albumKey}/${img}" alt="${album.title} Image" onclick="setupLightbox()">`;
+    album.images.forEach((img, idx) => {
+      imagesHTML += `<img src="assets/images/gallery/${albumKey}/${img}" alt="${album.title} Image" data-caption="${album.title} - Photo ${idx + 1}">`;
     });
     galleryStrip.innerHTML = imagesHTML;
 
