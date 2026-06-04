@@ -1,8 +1,10 @@
 <?php
 
-if (!isset($order_id)) {
+if (!isset($id)) {
     echo "Something went wrong";
     exit();
+} else {
+    $order_id = $id;
 }
 
 $orderType == ((isset($orderType)) ? $orderType : 'subscription');
@@ -88,20 +90,20 @@ require_once 'header.php';
             <?php
 
             if ($orderType == 'news') { ?>
-            <h1>Thank You for Purchase!</h1>
-            <p>Thank you for choosing to read an article from The Head and Tale. We hope you enjoyed it!</p>
-            <p>We’re glad to have you with us and invite you to explore more of our thought-provoking content, exclusive
-                news, and in-depth reports. If you have any questions, feedback, or suggestions, please feel free to
-                contact us at <a href="mailto: info@theheadandtale.com">info@theheadandtale.com</a>.</p>
+                <h1>Thank You for Purchase!</h1>
+                <p>Thank you for choosing to read an article from The Head and Tale. We hope you enjoyed it!</p>
+                <p>We’re glad to have you with us and invite you to explore more of our thought-provoking content, exclusive
+                    news, and in-depth reports. If you have any questions, feedback, or suggestions, please feel free to
+                    contact us at <a href="mailto: info@theheadandtale.com">info@theheadandtale.com</a>.</p>
             <?php
             } else { ?>
-            <h1>Thank You for Subscribing!</h1>
-            <p>Welcome to The Head and Tale. Your subscription means the world to us.</p>
-            <p>As a valued subscriber, stay tuned for thought-provoking articles, exclusive news, reports, and
-                much more.</p>
-            <p>We appreciate your support and trust in us. If you have any questions, feedback, or suggestions,
-                please don't hesitate to reach out to us at <a href="mailto: info@theheadandtale.com">
-                    info@theheadandtale.com</a></p>
+                <h1>Thank You for Subscribing!</h1>
+                <p>Welcome to The Head and Tale. Your subscription means the world to us.</p>
+                <p>As a valued subscriber, stay tuned for thought-provoking articles, exclusive news, reports, and
+                    much more.</p>
+                <p>We appreciate your support and trust in us. If you have any questions, feedback, or suggestions,
+                    please don't hesitate to reach out to us at <a href="mailto: info@theheadandtale.com">
+                        info@theheadandtale.com</a></p>
             <?php
             }
 
