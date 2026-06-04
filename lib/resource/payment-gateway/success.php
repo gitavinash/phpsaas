@@ -221,6 +221,10 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
         }
     } else {
 
+        if (DEVELOPMENT_MODE == 1) {
+            echo $validTransactionCheckQuery;
+        }
+
         echo 'Invalid transaction details found';
         exit();
     }
