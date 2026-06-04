@@ -83,7 +83,7 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
                     exit();
                 } else {
 
-                    echo "Something went wrong";
+                    echo "Something went wrong while updating the status";
                     mysqli_query($connection, "ROLLBACK");
                 }
                 break;
@@ -108,7 +108,7 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
                     exit();
                 } else {
 
-                    echo "Something went wrong";
+                    echo "Something went wrong while updating the status of enquiry";
                     mysqli_query($connection, "ROLLBACK");
                 }
                 break;
