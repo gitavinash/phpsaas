@@ -221,7 +221,7 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
         }
     } else {
 
-        if (DEVELOPMENT_MODE == 1) {
+        if (DEVELOPMENT_MODE == true) {
             echo $validTransactionCheckQuery;
         }
 
