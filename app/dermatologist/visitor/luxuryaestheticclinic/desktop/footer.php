@@ -150,19 +150,19 @@
             <h4 class="footer-heading">Treatments</h4>
             <ul class="footer-links-list">
                 <li>
-                    <a href="services-face.html" class="footer-link">Allergan Botox</a>
+                    <a href="services-face/" class="footer-link">Allergan Botox</a>
                 </li>
                 <li>
-                    <a href="services-face.html" class="footer-link">Dermal Fillers</a>
+                    <a href="services-face/" class="footer-link">Dermal Fillers</a>
                 </li>
                 <li>
-                    <a href="treatment.html" class="footer-link">HydraFacial Glow</a>
+                    <a href="treatment/" class="footer-link">HydraFacial Glow</a>
                 </li>
                 <li>
-                    <a href="services-hair.html" class="footer-link">PRP Hair Therapy</a>
+                    <a href="services/" class="footer-link">PRP Hair Therapy</a>
                 </li>
                 <li>
-                    <a href="treatment-laser.html" class="footer-link">Soprano Titanium Laser</a>
+                    <a href="treatment/" class="footer-link">Soprano Titanium Laser</a>
                 </li>
             </ul>
         </div>
@@ -172,17 +172,17 @@
             <h4 class="footer-heading">Quick Links</h4>
             <ul class="footer-links-list">
                 <li><a href="#hero" class="footer-link">Home</a></li>
-                <li><a href="about.html" class="footer-link">About Us</a></li>
-                <li><a href="team.html" class="footer-link">Meet Our Team</a></li>
+                <li><a href="about/" class="footer-link">About Us</a></li>
+                <li><a href="team/" class="footer-link">Meet Our Team</a></li>
                 <li>
                     <a href="#before-after" class="footer-link">Before & After</a>
                 </li>
                 <li>
-                    <a href="blog.html" class="footer-link">Skincare Journals</a>
+                    <a href="blog/" class="footer-link">Skincare Journals</a>
                 </li>
-                <li><a href="faq.html" class="footer-link">Knowledge & FAQs</a></li>
+                <li><a href="faq/" class="footer-link">Knowledge & FAQs</a></li>
                 <li>
-                    <a href="contact.html" class="footer-link">Contact & Location</a>
+                    <a href="contact/" class="footer-link">Contact & Location</a>
                 </li>
             </ul>
         </div>
@@ -223,10 +223,10 @@
             medical precision.</span>
         <ul class="footer-bottom-links">
             <li>
-                <a href="faq.html#privacy" class="footer-bottom-link">Privacy Policy</a>
+                <a href="faq/#privacy" class="footer-bottom-link">Privacy Policy</a>
             </li>
             <li>
-                <a href="faq.html#terms" class="footer-bottom-link">Terms & Conditions</a>
+                <a href="faq/#terms" class="footer-bottom-link">Terms & Conditions</a>
             </li>
         </ul>
     </div>

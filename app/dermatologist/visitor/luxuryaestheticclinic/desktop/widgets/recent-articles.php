@@ -26,7 +26,7 @@
                 <h3 class="blog-card-title">
                     The Scientific Blueprint for Treating Deep Acne Scars
                 </h3>
-                <a href="blog-single.html?id=acne-blueprint" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
+                <a href="blog-single/?id=acne-blueprint" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
             </div>
         </div>
 
@@ -46,7 +46,7 @@
                 <h3 class="blog-card-title">
                     GFC vs PRP: Which Hair Therapy is Right for You?
                 </h3>
-                <a href="blog-single.html?id=gfc-vs-prp" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
+                <a href="blog-single/?id=gfc-vs-prp" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
             </div>
         </div>
 
@@ -66,7 +66,7 @@
                 <h3 class="blog-card-title">
                     Permanent Laser Hair Removal: Expectations & Care
                 </h3>
-                <a href="blog-single.html?id=laser-expectations" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
+                <a href="blog-single/?id=laser-expectations" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
             </div>
         </div>
 
@@ -86,7 +86,7 @@
                 <h3 class="blog-card-title">
                     A Dermatologist's Essential Guide to Retinol & Peptides
                 </h3>
-                <a href="blog-single.html?id=retinol-peptides" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
+                <a href="blog-single/?id=retinol-peptides" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
             </div>
         </div>
     </div>

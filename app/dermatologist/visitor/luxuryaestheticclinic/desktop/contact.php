@@ -9,7 +9,7 @@ require_once 'header.php';
   <div class="container inner-banner-content">
     <h1>GET IN TOUCH</h1>
     <div class="breadcrumb-path">
-      <a href="index.html">Home</a>
+      <a href="/">Home</a>
       <span><i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i></span>
       <span style="color: var(--color-primary-gold);">Contact Us</span>
     </div>

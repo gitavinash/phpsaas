@@ -177,7 +177,7 @@ require_once 'header.php';
       <!-- Search Widget -->
       <div class="sidebar-widget">
         <h4 class="widget-title">Clinical Portal Search</h4>
-        <form class="sidebar-search-form" action="search.html" method="GET" style="position: relative;">
+        <form class="sidebar-search-form" action="search/" method="GET" style="position: relative;">
           <input type="text" name="query" placeholder="Search treatments, concerns..." style="width: 100%; padding: 1.5rem 5rem 1.5rem 2rem; font-size: 1.4rem; border: 1px solid var(--color-gold-light); background-color: var(--color-bg-ivory); color: var(--color-text-dark); transition: var(--transition-fast); outline: none;">
           <button type="submit" style="position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--color-primary-gold); cursor: pointer;">
             <i data-lucide="search" style="width: 18px; height: 18px;"></i>
@@ -190,19 +190,19 @@ require_once 'header.php';
         <h4 class="widget-title">Medical Categories</h4>
         <ul class="sidebar-categories-list" style="list-style: none; padding: 0; margin: 0; font-size: 1.45rem;">
           <li style="border-bottom: 1px solid var(--color-bg-cream); padding: 1.2rem 0; display: flex; justify-content: space-between; align-items: center;">
-            <a href="category.html?type=skincare" style="color: var(--color-text-muted); font-weight: 500; transition: var(--transition-fast);">Skincare Science</a>
+            <a href="category/?type=skincare" style="color: var(--color-text-muted); font-weight: 500; transition: var(--transition-fast);">Skincare Science</a>
             <span style="font-size: 1.15rem; color: var(--color-primary-gold); background-color: var(--color-bg-cream); padding: 0.2rem 0.8rem; border-radius: 10px; font-weight: 600;">2 Articles</span>
           </li>
           <li style="border-bottom: 1px solid var(--color-bg-cream); padding: 1.2rem 0; display: flex; justify-content: space-between; align-items: center;">
-            <a href="category.html?type=hair-growth" style="color: var(--color-text-muted); font-weight: 500; transition: var(--transition-fast);">Hair Restoration</a>
+            <a href="category/?type=hair-growth" style="color: var(--color-text-muted); font-weight: 500; transition: var(--transition-fast);">Hair Restoration</a>
             <span style="font-size: 1.15rem; color: var(--color-primary-gold); background-color: var(--color-bg-cream); padding: 0.2rem 0.8rem; border-radius: 10px; font-weight: 600;">1 Article</span>
           </li>
           <li style="border-bottom: 1px solid var(--color-bg-cream); padding: 1.2rem 0; display: flex; justify-content: space-between; align-items: center;">
-            <a href="category.html?type=lasers" style="color: var(--color-text-muted); font-weight: 500; transition: var(--transition-fast);">Laser Aesthetics</a>
+            <a href="category/?type=lasers" style="color: var(--color-text-muted); font-weight: 500; transition: var(--transition-fast);">Laser Aesthetics</a>
             <span style="font-size: 1.15rem; color: var(--color-primary-gold); background-color: var(--color-bg-cream); padding: 0.2rem 0.8rem; border-radius: 10px; font-weight: 600;">1 Article</span>
           </li>
           <li style="padding: 1.2rem 0; display: flex; justify-content: space-between; align-items: center;">
-            <a href="category.html?type=anti-aging" style="color: var(--color-text-muted); font-weight: 500; transition: var(--transition-fast);">Anti-Aging Care</a>
+            <a href="category/?type=anti-aging" style="color: var(--color-text-muted); font-weight: 500; transition: var(--transition-fast);">Anti-Aging Care</a>
             <span style="font-size: 1.15rem; color: var(--color-primary-gold); background-color: var(--color-bg-cream); padding: 0.2rem 0.8rem; border-radius: 10px; font-weight: 600;">1 Article</span>
           </li>
         </ul>
@@ -212,7 +212,7 @@ require_once 'header.php';
       <div class="sidebar-widget">
         <h4 class="widget-title">Related Journals</h4>
         <div id="relatedPostsList">
-          <a class="related-post-item" href="blog-single.html">
+          <a class="related-post-item" href="blog-single/">
             <div class="related-post-thumb">
               <img src="assets/images/after_skin.png" alt="GFC vs PRP: Which Hair Therapy is Right for You?">
             </div>
@@ -221,7 +221,7 @@ require_once 'header.php';
               <h5 class="related-post-title">GFC vs PRP: Which Hair Therapy is Right for You?</h5>
             </div>
           </a>
-          <a class="related-post-item" href="blog-single.html">
+          <a class="related-post-item" href="blog-single/">
             <div class="related-post-thumb">
               <img src="assets/images/tech_showcase.png" alt="Permanent Laser Hair Removal: Expectations & Care">
             </div>
@@ -249,7 +249,7 @@ require_once 'header.php';
           private skin or scalp diagnostics mapping session.
         </p>
         <a
-          href="book-consultation.html"
+          href="book-consultation/"
           class="btn btn-primary"
           style="display: block">Schedule Evaluation</a>
       </div>

@@ -62,11 +62,11 @@
             <nav class="header-nav" aria-label="Main Navigation">
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="#hero" class="nav-link">Home</a></li>
-                    <li><a href="about.html" class="nav-link">About Us</a></li>
-                    <li><a href="team.html" class="nav-link">Our Team</a></li>
+                    <li><a href="about/" class="nav-link">About Us</a></li>
+                    <li><a href="team/" class="nav-link">Our Team</a></li>
                     <li><a href="#treatments" class="nav-link">Treatments</a></li>
                     <li><a href="#before-after" class="nav-link">Results</a></li>
-                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                    <li><a href="contact/" class="nav-link">Contact</a></li>
 
                     <!-- Mobile Drawer Contacts (only visible inside mobile navigation menu overlay) -->
                     <li class="mobile-menu-contacts">
@@ -113,7 +113,7 @@
                     <i data-lucide="message-square"></i>
                 </a>
                 <a
-                    href="book-consultation.html"
+                    href="book-consultation/"
                     class="btn btn-primary btn-book"
                     id="headerBook">Book Consultation</a>
             </div>

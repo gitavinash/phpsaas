@@ -9,9 +9,9 @@ require_once 'header.php';
   <div class="container inner-banner-content">
     <h1>OUR MEDICAL LEADERS</h1>
     <div class="breadcrumb-path">
-      <a href="index.html">Home</a>
+      <a href="/">Home</a>
       <span><i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i></span>
-      <a href="about.html">About Us</a>
+      <a href="about/">About Us</a>
       <span><i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i></span>
       <span style="color: var(--color-primary-gold);">Medical Experts</span>
     </div>

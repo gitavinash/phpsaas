@@ -8,9 +8,9 @@ require_once 'header.php';
   <div class="container inner-banner-content">
     <h1 id="categoryTitle">CLINICAL JOURNALS</h1>
     <div class="breadcrumb-path">
-      <a href="index.html">Home</a>
+      <a href="/">Home</a>
       <span><i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i></span>
-      <a href="blog.html">Journals</a>
+      <a href="blog/">Journals</a>
       <span><i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i></span>
       <span style="color: var(--color-primary-gold);" id="breadcrumbCategory">Clinical Category</span>
     </div>
@@ -35,7 +35,7 @@ require_once 'header.php';
           <p class="treatment-card-desc" style="font-size: 1.4rem; color: var(--color-text-muted); line-height: 1.6; margin-bottom: 2.5rem;">
             Deep acne scars require a multi-modal dermatological approach. Discover why combining micro-needling, subcision, and customized chemical peeling yields superior skin remodeling outcomes.
           </p>
-          <a href="blog-single.html" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px;"></i></a>
+          <a href="blog-single/" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px;"></i></a>
         </div>
       </div>
 
@@ -53,7 +53,7 @@ require_once 'header.php';
           <p class="treatment-card-desc" style="font-size: 1.4rem; color: var(--color-text-muted); line-height: 1.6; margin-bottom: 2.5rem;">
             Autologous blood therapies represent a massive leap in clinical trichology. Compare standard Platelet-Rich Plasma (PRP) with next-generation Growth Factor Concentrate (GFC) to see which offers faster density improvements.
           </p>
-          <a href="blog-single.html" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px;"></i></a>
+          <a href="blog-single/" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px;"></i></a>
         </div>
       </div>
 
@@ -71,7 +71,7 @@ require_once 'header.php';
           <p class="treatment-card-desc" style="font-size: 1.4rem; color: var(--color-text-muted); line-height: 1.6; margin-bottom: 2.5rem;">
             Unveil the truth about permanent laser hair reduction. Learn about Fitzpatrick skin typing, why cooling technology is critical, and standard pre/post session safety guidelines.
           </p>
-          <a href="blog-single.html" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px;"></i></a>
+          <a href="blog-single/" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px;"></i></a>
         </div>
       </div>
     </div>
@@ -93,7 +93,7 @@ require_once 'header.php';
         <h3>Customized Scalp Diagnostics</h3>
         <p>Experiencing hair fall or crown thinning? Learn about our medical autologous growth concentrate therapies administered by board-certified specialists.</p>
       </div>
-      <a href="services-hair.html" class="btn btn-primary">Explore Hair Solutions</a>
+      <a href="services/" class="btn btn-primary">Explore Hair Solutions</a>
     </div>
   </div>
 </section>

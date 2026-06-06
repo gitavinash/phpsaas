@@ -9,11 +9,11 @@ require_once 'header.php';
   <div class="container inner-banner-content">
     <h1>FACE TREATMENTS IN DELHI</h1>
     <div class="breadcrumb-path">
-      <a href="index.html">Home</a>
+      <a href="/">Home</a>
       <span><i
           data-lucide="chevron-right"
           style="width: 14px; height: 14px"></i></span>
-      <a href="index.html#treatments">Treatments</a>
+      <a href="/#treatments">Treatments</a>
       <span><i
           data-lucide="chevron-right"
           style="width: 14px; height: 14px"></i></span>
@@ -276,7 +276,7 @@ require_once 'header.php';
         </ul>
 
         <div class="row-actions">
-          <a href="treatment.html" class="btn btn-primary">Explore Details</a>
+          <a href="treatment/" class="btn btn-primary">Explore Details</a>
           <a
             href="https://wa.me/919999999999"
             class="btn btn-secondary"
@@ -867,7 +867,7 @@ require_once 'header.php';
         <h3 class="blog-card-title">
           The Scientific Blueprint for Treating Deep Acne Scars
         </h3>
-        <a href="blog-single.html?id=acne-blueprint" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="blog-single/?id=acne-blueprint" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
 
@@ -887,7 +887,7 @@ require_once 'header.php';
         <h3 class="blog-card-title">
           GFC vs PRP: Which Hair Therapy is Right for You?
         </h3>
-        <a href="blog-single.html?id=gfc-vs-prp" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="blog-single/?id=gfc-vs-prp" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
 
@@ -907,7 +907,7 @@ require_once 'header.php';
         <h3 class="blog-card-title">
           Permanent Laser Hair Removal: Expectations & Care
         </h3>
-        <a href="blog-single.html?id=laser-expectations" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="blog-single/?id=laser-expectations" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
 
@@ -927,7 +927,7 @@ require_once 'header.php';
         <h3 class="blog-card-title">
           A Dermatologist's Essential Guide to Retinol & Peptides
         </h3>
-        <a href="blog-single.html?id=retinol-peptides" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="blog-single/?id=retinol-peptides" class="btn-link">Read Article <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
   </div>
@@ -1076,19 +1076,19 @@ require_once 'header.php';
       <h4 class="footer-heading">Treatments</h4>
       <ul class="footer-links-list">
         <li>
-          <a href="services-face.html" class="footer-link">Allergan Botox</a>
+          <a href="services-face/" class="footer-link">Allergan Botox</a>
         </li>
         <li>
-          <a href="services-face.html" class="footer-link">Dermal Fillers</a>
+          <a href="services-face/" class="footer-link">Dermal Fillers</a>
         </li>
         <li>
-          <a href="treatment.html" class="footer-link">HydraFacial Glow</a>
+          <a href="treatment/" class="footer-link">HydraFacial Glow</a>
         </li>
         <li>
-          <a href="services-hair.html" class="footer-link">PRP Hair Therapy</a>
+          <a href="services/" class="footer-link">PRP Hair Therapy</a>
         </li>
         <li>
-          <a href="treatment-laser.html" class="footer-link">Laser Hair Removal</a>
+          <a href="treatment/" class="footer-link">Laser Hair Removal</a>
         </li>
       </ul>
     </div>
@@ -1097,18 +1097,18 @@ require_once 'header.php';
     <div>
       <h4 class="footer-heading">Quick Links</h4>
       <ul class="footer-links-list">
-        <li><a href="index.html#hero" class="footer-link">Home</a></li>
-        <li><a href="about.html" class="footer-link">About Us</a></li>
-        <li><a href="team.html" class="footer-link">Meet Our Team</a></li>
+        <li><a href="/#hero" class="footer-link">Home</a></li>
+        <li><a href="about/" class="footer-link">About Us</a></li>
+        <li><a href="team/" class="footer-link">Meet Our Team</a></li>
         <li>
-          <a href="index.html#before-after" class="footer-link">Before & After</a>
+          <a href="/#before-after" class="footer-link">Before & After</a>
         </li>
         <li>
-          <a href="blog.html" class="footer-link">Skincare Journals</a>
+          <a href="blog/" class="footer-link">Skincare Journals</a>
         </li>
-        <li><a href="faq.html" class="footer-link">Knowledge & FAQs</a></li>
+        <li><a href="faq/" class="footer-link">Knowledge & FAQs</a></li>
         <li>
-          <a href="contact.html" class="footer-link">Contact & Location</a>
+          <a href="contact/" class="footer-link">Contact & Location</a>
         </li>
       </ul>
     </div>
@@ -1149,10 +1149,10 @@ require_once 'header.php';
       medical precision.</span>
     <ul class="footer-bottom-links">
       <li>
-        <a href="faq.html#privacy" class="footer-bottom-link">Privacy Policy</a>
+        <a href="faq/#privacy" class="footer-bottom-link">Privacy Policy</a>
       </li>
       <li>
-        <a href="faq.html#terms" class="footer-bottom-link">Terms & Conditions</a>
+        <a href="faq/#terms" class="footer-bottom-link">Terms & Conditions</a>
       </li>
     </ul>
   </div>

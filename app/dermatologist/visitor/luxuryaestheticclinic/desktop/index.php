@@ -118,19 +118,19 @@ require_once 'header.php';
       <h3 class="category-title">Skin Rejuvenation</h3>
       <ul class="concern-links">
         <li>
-          <a href="services-face.html" class="concern-item-link">Active Acne & Breakouts <i data-lucide="arrow-right"></i></a>
+          <a href="services-face/" class="concern-item-link">Active Acne & Breakouts <i data-lucide="arrow-right"></i></a>
         </li>
         <li>
-          <a href="services-face.html" class="concern-item-link">Pigmentation & Melasma <i data-lucide="arrow-right"></i></a>
+          <a href="services-face/" class="concern-item-link">Pigmentation & Melasma <i data-lucide="arrow-right"></i></a>
         </li>
         <li>
-          <a href="services-face.html" class="concern-item-link">Acne Scars & Uneven Texture <i data-lucide="arrow-right"></i></a>
+          <a href="services-face/" class="concern-item-link">Acne Scars & Uneven Texture <i data-lucide="arrow-right"></i></a>
         </li>
         <li>
-          <a href="services-face.html" class="concern-item-link">Fine Lines, Wrinkles & Sagging <i data-lucide="arrow-right"></i></a>
+          <a href="services-face/" class="concern-item-link">Fine Lines, Wrinkles & Sagging <i data-lucide="arrow-right"></i></a>
         </li>
         <li>
-          <a href="services-face.html" class="concern-item-link">Open Pores & Dull Complexion <i data-lucide="arrow-right"></i></a>
+          <a href="services-face/" class="concern-item-link">Open Pores & Dull Complexion <i data-lucide="arrow-right"></i></a>
         </li>
       </ul>
     </div>
@@ -143,20 +143,20 @@ require_once 'header.php';
       <h3 class="category-title">Hair Restoration</h3>
       <ul class="concern-links">
         <li>
-          <a href="services-hair.html" class="concern-item-link">Severe Hair Fall & Shedding <i data-lucide="arrow-right"></i></a>
+          <a href="services/" class="concern-item-link">Severe Hair Fall & Shedding <i data-lucide="arrow-right"></i></a>
         </li>
         <li>
-          <a href="services-hair.html" class="concern-item-link">Pattern Baldness (Alopecia) <i data-lucide="arrow-right"></i></a>
+          <a href="services/" class="concern-item-link">Pattern Baldness (Alopecia) <i data-lucide="arrow-right"></i></a>
         </li>
         <li>
-          <a href="services-hair.html" class="concern-item-link">Thinning Crowns & Recedings <i data-lucide="arrow-right"></i></a>
+          <a href="services/" class="concern-item-link">Thinning Crowns & Recedings <i data-lucide="arrow-right"></i></a>
         </li>
         <li>
-          <a href="services-hair.html" class="concern-item-link">Chronic Dandruff & Scalp Health
+          <a href="services/" class="concern-item-link">Chronic Dandruff & Scalp Health
             <i data-lucide="arrow-right"></i></a>
         </li>
         <li>
-          <a href="services-hair.html" class="concern-item-link">Post-Transplant Recovery care <i data-lucide="arrow-right"></i></a>
+          <a href="services/" class="concern-item-link">Post-Transplant Recovery care <i data-lucide="arrow-right"></i></a>
         </li>
       </ul>
     </div>
@@ -335,7 +335,7 @@ require_once 'header.php';
           Bespoke 6-step vortex infusion cleaning, extracting impurities and
           saturating skin with rich hyaluronic peptides.
         </p>
-        <a href="treatment.html" class="btn-link">Explore Treatment
+        <a href="treatment/" class="btn-link">Explore Treatment
           <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
@@ -355,7 +355,7 @@ require_once 'header.php';
           Utilizes refined plasma growth factor concentrations injected
           directly to stimulate passive hair follicles.
         </p>
-        <a href="services-hair.html" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="services/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
 
@@ -374,7 +374,7 @@ require_once 'header.php';
           The next generation of scalp restoration using highly stable
           growth factors extracted directly from platelets.
         </p>
-        <a href="services-hair.html" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="services/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
 
@@ -393,7 +393,7 @@ require_once 'header.php';
           Precision micro-injections gently relaxing target hyperactive
           facial muscles to soften wrinkles and dynamic lines.
         </p>
-        <a href="services-face.html" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="services-face/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
 
@@ -412,7 +412,7 @@ require_once 'header.php';
           Restores structural volume and contours cheekbones, jawlines, and
           lips using medical-grade hyaluronic acid gels.
         </p>
-        <a href="services-face.html" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="services-face/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
 
@@ -433,7 +433,7 @@ require_once 'header.php';
           Precision thermal ultrasound energy contracting deep SMAS tissue
           layers to lift and tighten cheeks and jowls.
         </p>
-        <a href="services-face.html" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="services-face/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
 
@@ -452,7 +452,7 @@ require_once 'header.php';
           Advanced triple-wavelength cooling laser system destroying deep
           follicles painlessly for permanent hair reductions.
         </p>
-        <a href="treatment-laser.html" class="btn-link">Explore Details
+        <a href="treatment/" class="btn-link">Explore Details
           <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
@@ -472,7 +472,7 @@ require_once 'header.php';
           Expertly chosen botanical and clinical acid blends resurfacing top
           dead cell layers for massive radiance increases.
         </p>
-        <a href="services-face.html" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="services-face/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
   </div>

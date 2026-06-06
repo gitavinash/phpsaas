@@ -24,7 +24,7 @@ require_once 'header.php';
           class="btn btn-primary"
           id="aboutHeroBookBtn">Book Consultation</a>
         <a
-          href="index.html#treatments"
+          href="/#treatments"
           class="btn btn-secondary"
           id="aboutHeroTreatmentsBtn">Explore Treatments</a>
       </div>
@@ -139,7 +139,7 @@ require_once 'header.php';
           Allergan Botox and Juvederm fillers. Rejuvenate, contour, and
           restore naturally youthful skin symmetry.
         </p>
-        <a href="index.html#treatments" class="btn-link">Explore Face <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="/#treatments" class="btn-link">Explore Face <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
 
@@ -159,7 +159,7 @@ require_once 'header.php';
           Concentrate (GFC), and scientific QR678 scalp therapy to stop
           severe hair fall and trigger follicular density growth.
         </p>
-        <a href="services-hair.html" class="btn-link">Explore Hair <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="services/" class="btn-link">Explore Hair <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
 
@@ -179,7 +179,7 @@ require_once 'header.php';
           tissue tightening with Exilis 360 to smoothly contour and lift
           your natural body silhouette painlessly.
         </p>
-        <a href="index.html#treatments" class="btn-link">Explore Body <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href="/#treatments" class="btn-link">Explore Body <i data-lucide="arrow-right" style="width: 16px"></i></a>
       </div>
     </div>
   </div>
