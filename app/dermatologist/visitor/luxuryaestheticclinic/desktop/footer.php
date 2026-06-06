@@ -149,7 +149,7 @@
             <h4 class="footer-heading">Treatments</h4>
             <ul class="footer-links-list">
                 <?php
-                generateMenu('SITE_NAV_FOOTER_1', 'links', true);
+                generateMenu('SITE_NAV_FOOTER_1', 'links', true, 'footer-link');
                 ?>
             </ul>
         </div>
@@ -159,7 +159,7 @@
             <h4 class="footer-heading">Quick Links</h4>
             <ul class="footer-links-list">
                 <?php
-                generateMenu('SITE_NAV_FOOTER_2', 'links', true);
+                generateMenu('SITE_NAV_FOOTER_2', 'links', true, 'footer-link');
                 ?>
             </ul>
         </div>
@@ -200,7 +200,7 @@
             medical precision.</span>
         <ul class="footer-bottom-links">
             <?php
-            generateMenu('SITE_NAV_FOOTER_3', 'links', true);
+            generateMenu('SITE_NAV_FOOTER_3', 'links', true, 'footer-bottom-link');
             ?>
         </ul>
     </div>

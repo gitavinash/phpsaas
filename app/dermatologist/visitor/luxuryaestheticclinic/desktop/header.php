@@ -29,7 +29,7 @@ require_once MENU_FUNCTIONS;
                 <ul class="nav-menu" id="navMenu">
                     <?php
 
-                    generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true);
+                    generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true, 'nav-link');
 
                     ?>
                 </ul>
