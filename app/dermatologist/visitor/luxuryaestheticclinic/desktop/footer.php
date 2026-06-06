@@ -196,8 +196,7 @@
 
     <!-- Footer Bottom -->
     <div class="container footer-bottom">
-        <span class="copyright-text">&copy; 2026 Luxury Aesthetic Clinic. All Rights Reserved. Made with
-            medical precision.</span>
+        <span class="copyright-text">&copy; 2026 Luxury Aesthetic Clinic. All Rights Reserved. Design and Developed by <a href="https://blumox.com" target="_blank">Blumox Technologies</a></span>
         <ul class="footer-bottom-links">
             <?php
             generateMenu('SITE_NAV_FOOTER_3', 'links', true, 'footer-bottom-link');
