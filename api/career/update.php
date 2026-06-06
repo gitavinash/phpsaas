@@ -110,7 +110,7 @@ function update($connection, $data)
                 }
             } else {
 
-                $msg = 'Invalid activity found';
+                $msg = 'No career information found';
             }
         }
     } else {

@@ -96,7 +96,7 @@ function updateNewsWorkflow($connection, $data, $workflow = 'publish', $schedule
     if (mysqli_num_rows($checkPost) == 0) {
         echo json_encode([
             'status' => 500,
-            'msg' => 'Invalid activity found',
+            'msg' => 'No news data found',
             'redirect' => '',
         ], TRUE);
         return;

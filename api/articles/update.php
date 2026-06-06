@@ -103,7 +103,7 @@ function update($connection, $data)
                 }
             } else {
 
-                $msg = 'Invalid activity found';
+                $msg = 'No page information found';
             }
         }
     } else {

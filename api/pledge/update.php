@@ -100,7 +100,7 @@ function update($connection, $data)
                 }
             } else {
 
-                $msg = 'Invalid activity found';
+                $msg = 'No pledge information found';
             }
         }
     } else {

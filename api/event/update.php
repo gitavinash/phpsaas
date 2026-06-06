@@ -161,7 +161,7 @@ function update($connection, $data)
                     }
                 } else {
 
-                    $msg = 'Invalid activity found';
+                    $msg = 'No event data found';
                 }
             }
         } else {

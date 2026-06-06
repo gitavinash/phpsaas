@@ -21,7 +21,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX
     if (mysqli_num_rows($checkUser) != 0) {
         extract(mysqli_fetch_assoc($checkUser));
     } else {
-        echo "invalid activity found by unknown users";
+        echo "invalid purchase activity found by unknown users";
     }
 }
 

@@ -247,11 +247,11 @@ function publish($connection, $data)
                     }
                 } else {
 
-                    $msg = 'Invalid activity';
+                    $msg = 'Please change the treatment url, because this url is already exists.';
                 }
             } else {
 
-                $msg = 'Technical errro';
+                $msg = 'Technical error';
             }
         } else {
 
