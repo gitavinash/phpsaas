@@ -48,15 +48,17 @@ if (isset($_FILES)) {
 						if ($imageName == "featureImage") {
 
 							$thumbnailImage = str_replace(ROOT, '', $thumbnailUploadFile);
-							$regenerateImageWidth = IMAGE_THUMBNAIL_WIDTH;
-							$regenerateImageHeight = IMAGE_THUMBNAIL_HEIGHT;
+							$regenerateImageWidth =  (int)IMAGE_THUMBNAIL_WIDTH;
+							$regenerateImageHeight = (int) IMAGE_THUMBNAIL_HEIGHT;
 						} else {
 
-							$regenerateImageWidth = IMAGE_THUMBNAIL_WIDTH;
-							if ($imageHeight > 0) {
-								$regenerateImageHeight = (int) round(($imageWidth / $imageHeight) * IMAGE_THUMBNAIL_HEIGHT);
+							$regenerateImageWidth = (int) IMAGE_THUMBNAIL_WIDTH;
+							if ($imageWidth > 0 && $imageHeight > 0) {
+								$regenerateImageHeight = (int) round(
+									($imageHeight / $imageWidth) * $regenerateImageWidth
+								);
 							} else {
-								$regenerateImageHeight = IMAGE_THUMBNAIL_HEIGHT; // Set default height to avoid errors
+								$regenerateImageHeight = (int) IMAGE_THUMBNAIL_HEIGHT;
 							}
 						}
 

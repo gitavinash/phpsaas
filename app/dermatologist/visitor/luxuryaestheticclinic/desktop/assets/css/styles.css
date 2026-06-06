@@ -295,9 +295,10 @@ section {
 }
 
 .logo-link img {
-  height: 50px;
+  max-height: 50px;
   width: auto;
   transition: var(--transition-smooth);
+  max-width: 200px;
 }
 
 .main-header.scrolled .logo-link img {
@@ -2640,6 +2641,11 @@ section {
     --section-padding: 5rem 1.5rem;
   }
   
+.logo-link img {
+  max-height: 50px;
+  width: auto;
+  max-width: 180px;
+}
   .header-actions .btn-icon-round {
     display: none; /* Hide circular contact buttons in top header on mobile since we have the sticky bottom bar */
   }

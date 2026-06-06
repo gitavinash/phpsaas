@@ -8,7 +8,8 @@
             style="background:#eef2f6;color:#00609e;border:1px solid #e2e2e2;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
             Categories <span class="arrow">▼</span>
         </h3>
-        <div id="categoryBoxContainer" style="display:block; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
+        <div id="categoryBoxContainer"
+            style="display:block; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
             <div style="position:relative; width:100%; margin-bottom:8px;">
                 <input type="text" id="categorySearchInput" class="form-control inside-shadow"
                     placeholder="Search categories..." style="padding-right:24px; margin-bottom:0;" />
@@ -24,7 +25,8 @@
                    AND l.link_type='category'
                    AND l.link_status=200
                  WHERE c.category_site_id='" . SITE_ID . "'
-                 ORDER BY c.category_id DESC";
+                 GROUP BY l.link_relation_id
+                 ORDER BY c.category_id DESC ";
                 if ($res = mysqli_query($connection, $sql)) {
                     while ($row = mysqli_fetch_assoc($res)) {
                         $label = htmlspecialchars($row['category_title'], ENT_QUOTES);
@@ -41,7 +43,8 @@
             style="background:#eef2f6;color:#00609e;border:1px solid #e2e2e2;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
             Pages <span class="arrow">▶</span>
         </h3>
-        <div id="pageBoxContainer" style="display:none; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
+        <div id="pageBoxContainer"
+            style="display:none; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
             <div style="position:relative; width:100%; margin-bottom:8px;">
                 <input type="text" id="pageSearchInput" class="form-control inside-shadow" placeholder="Search pages..."
                     style="padding-right:24px; margin-bottom:0;" />
@@ -74,7 +77,8 @@
             style="background:#eef2f6;color:#00609e;border:1px solid #e2e2e2;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
             Tags <span class="arrow">▶</span>
         </h3>
-        <div id="tagBoxContainer" style="display:none; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
+        <div id="tagBoxContainer"
+            style="display:none; border:1px solid #e2e2e2; border-radius:4px; padding:8px; margin-bottom:10px;">
             <div style="position:relative; width:100%; margin-bottom:8px;">
                 <input type="text" id="tagSearchInput" class="form-control inside-shadow" placeholder="Search tags..."
                     style="padding-right:24px; margin-bottom:0;" />
@@ -90,9 +94,9 @@
                         ORDER BY tag_count DESC";
                 if ($res = mysqli_query($connection, $sql)) {
                     while ($row = mysqli_fetch_assoc($res)) {
-                        $label = htmlspecialchars($row['tag_title'], ENT_QUOTES);
+                        $label = ucwords(htmlspecialchars($row['tag_title'], ENT_QUOTES));
                         $slug  = str_replace(' ', '-', $row['tag_title']);
-                        $url   = '/tag/' . htmlspecialchars($slug, ENT_QUOTES);
+                        $url   = '/tag/' . htmlspecialchars($slug, ENT_QUOTES) . '/';
                         $count = (int)$row['tag_count'];
                         echo "<li class='dd-new-item' data-label='{$label}' data-url='{$url}' style='cursor:pointer; display:flex; justify-content:space-between; align-items:center;'><span>{$label}</span> <span class='badge' style='background:#00609e; color:#fff; border-radius:10px; padding:2px 8px; font-size:11px;'>{$count}</span></li>";
                     }
@@ -123,7 +127,7 @@
                 <label style="font-weight:600;">Menu Position:</label>
                 <select id="menuPosition" class="form-control inside-shadow" style="max-width:260px;">
                     <?php
-                    $defaults = ['Main Header', 'Footer 1', 'Footer 2', 'Footer 3', 'Footer 4'];
+                    $defaults = ['Main Header', 'Header Menu CTA', 'Footer 1', 'Footer 2', 'Footer 3', 'Footer 4'];
                     $menuList = [];
                     foreach ($defaults as $p) {
                         $key = strtolower(str_replace(' ', '_', $p));
@@ -149,8 +153,10 @@
                     ?>
                     <option value="__NEW__">➕ New menu…</option>
                 </select>
-                <button id="renameMenuPosition" class="btn btn-sm btn-blue" style="display:none;" type="button" title="Rename Menu">✎ Rename</button>
-                <button id="deleteMenuPosition" class="btn btn-sm btn-red" style="display:none;" type="button" title="Delete Menu">✕ Delete</button>
+                <button id="renameMenuPosition" class="btn btn-sm btn-blue" style="display:none;" type="button"
+                    title="Rename Menu">✎ Rename</button>
+                <button id="deleteMenuPosition" class="btn btn-sm btn-red" style="display:none;" type="button"
+                    title="Delete Menu">✕ Delete</button>
             </div>
 
             <div style="margin-bottom:8px;">

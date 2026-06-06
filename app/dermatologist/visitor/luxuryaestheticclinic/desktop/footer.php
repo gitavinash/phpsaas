@@ -122,24 +122,23 @@
         <!-- Col 1: About & Social -->
         <div>
             <img
-                src="https://luxuryaestheticclinic.com/coolsculpting/logo.png"
-                alt="Luxury Aesthetic Clinic"
+                src="<?php echo SITE_LOGO ?>"
+                alt="<?php echo SITE_NAME ?>"
                 class="footer-logo-img" />
             <p class="footer-about-text">
-                Delhi's premier dermatologist-led aesthetic clinic, combining
-                scientific precision with world-class hospitality.
+                <?php echo SITE_DESC ?>
             </p>
             <div class="footer-socials">
                 <a
-                    href="https://instagram.com"
+                    href="<?php echo ((isset($companyInstagramProfile)) ? $companyInstagramProfile : ''); ?>"
                     class="social-circle"
                     aria-label="Instagram"><i data-lucide="instagram" style="width: 16px"></i></a>
                 <a
-                    href="https://facebook.com"
+                    href="<?php echo ((isset($companyFacebookProfile)) ? $companyFacebookProfile : ''); ?>"
                     class="social-circle"
                     aria-label="Facebook"><i data-lucide="facebook" style="width: 16px"></i></a>
                 <a
-                    href="https://youtube.com"
+                    href="<?php echo ((isset($companyYoutubeProfile)) ? $companyYoutubeProfile : ''); ?>"
                     class="social-circle"
                     aria-label="YouTube"><i data-lucide="youtube" style="width: 16px"></i></a>
             </div>
@@ -149,21 +148,9 @@
         <div>
             <h4 class="footer-heading">Treatments</h4>
             <ul class="footer-links-list">
-                <li>
-                    <a href="services-face/" class="footer-link">Allergan Botox</a>
-                </li>
-                <li>
-                    <a href="services-face/" class="footer-link">Dermal Fillers</a>
-                </li>
-                <li>
-                    <a href="treatment/" class="footer-link">HydraFacial Glow</a>
-                </li>
-                <li>
-                    <a href="services/" class="footer-link">PRP Hair Therapy</a>
-                </li>
-                <li>
-                    <a href="treatment/" class="footer-link">Soprano Titanium Laser</a>
-                </li>
+                <?php
+                generateMenu('SITE_NAV_FOOTER_1', 'links', true);
+                ?>
             </ul>
         </div>
 
@@ -171,19 +158,9 @@
         <div>
             <h4 class="footer-heading">Quick Links</h4>
             <ul class="footer-links-list">
-                <li><a href="#hero" class="footer-link">Home</a></li>
-                <li><a href="about/" class="footer-link">About Us</a></li>
-                <li><a href="team/" class="footer-link">Meet Our Team</a></li>
-                <li>
-                    <a href="#before-after" class="footer-link">Before & After</a>
-                </li>
-                <li>
-                    <a href="blog/" class="footer-link">Skincare Journals</a>
-                </li>
-                <li><a href="faq/" class="footer-link">Knowledge & FAQs</a></li>
-                <li>
-                    <a href="contact/" class="footer-link">Contact & Location</a>
-                </li>
+                <?php
+                generateMenu('SITE_NAV_FOOTER_2', 'links', true);
+                ?>
             </ul>
         </div>
 
@@ -222,14 +199,21 @@
         <span class="copyright-text">&copy; 2026 Luxury Aesthetic Clinic. All Rights Reserved. Made with
             medical precision.</span>
         <ul class="footer-bottom-links">
-            <li>
-                <a href="faq/#privacy" class="footer-bottom-link">Privacy Policy</a>
-            </li>
-            <li>
-                <a href="faq/#terms" class="footer-bottom-link">Terms & Conditions</a>
-            </li>
+            <?php
+            generateMenu('SITE_NAV_FOOTER_3', 'links', true);
+            ?>
         </ul>
     </div>
+</footer>
+
+<!-- STICKY FLOATING CONTACT WIDGET -->
+<div class="sticky-contact-widget" id="stickyContact">
+    <a
+        href="tel:+919999999999"
+        class="sc-btn sc-btn-call"
+        aria-label="Call Clinic Now">
+        </ul>
+</div>
 </footer>
 
 <!-- STICKY FLOATING CONTACT WIDGET -->

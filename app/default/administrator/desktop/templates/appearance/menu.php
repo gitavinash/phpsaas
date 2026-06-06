@@ -127,7 +127,7 @@
                 <label style="font-weight:600;">Menu Position:</label>
                 <select id="menuPosition" class="form-control inside-shadow" style="max-width:260px;">
                     <?php
-                    $defaults = ['Main Header', 'Footer 1', 'Footer 2', 'Footer 3', 'Footer 4'];
+                    $defaults = ['Main Header', 'Header Menu CTA', 'Footer 1', 'Footer 2', 'Footer 3', 'Footer 4'];
                     $menuList = [];
                     foreach ($defaults as $p) {
                         $key = strtolower(str_replace(' ', '_', $p));
