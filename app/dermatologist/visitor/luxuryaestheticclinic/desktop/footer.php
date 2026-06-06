@@ -212,16 +212,6 @@
         href="tel:+919999999999"
         class="sc-btn sc-btn-call"
         aria-label="Call Clinic Now">
-        </ul>
-</div>
-</footer>
-
-<!-- STICKY FLOATING CONTACT WIDGET -->
-<div class="sticky-contact-widget" id="stickyContact">
-    <a
-        href="tel:+919999999999"
-        class="sc-btn sc-btn-call"
-        aria-label="Call Clinic Now">
         <i data-lucide="phone" style="width: 20px; height: 20px"></i>
         <span class="sc-label">Call Now</span>
     </a>
