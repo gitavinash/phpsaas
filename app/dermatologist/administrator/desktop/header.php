@@ -58,31 +58,14 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
     <aside>
         <nav class="side-nav">
             <ul>
+                <li class="nav-section-title">
+                    <span>Overview</span>
+                </li>
                 <li <?php echo (($postType == '') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
                             class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li <?php echo (($postType == 'gallery') ? 'class="active"' : '') ?>>
-                    <a href="gallery/?type=list&status=all"><i class="fas fa-images"></i> Gallery</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="gallery/?type=list&status=all"><i class="fas fa-list"></i> All galleries</a>
-                            </li>
-                            <li><a href="gallery/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    gallery</a>
-                            </li>
-                            <li><a href="gallery/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="gallery/?type=list&status=all"><i class="fas fa-list"></i> All galleries</a>
-                            </li>
-                            <li><a href="gallery/?type=add&editor=true"><i class="fas fa-plus"></i>Add
-                                    new gallery</a></li>
-                            <li><a href="gallery/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
+                <li class="nav-section-title">
+                    <span>Website Content</span>
                 </li>
-
                 <li <?php echo (($postType == 'page') ? 'class="active"' : '') ?>>
                     <a href="page/?type=list&status=all"><i class="fas fa-file"></i> Page</a>
                     <div class="side-menu">
@@ -98,7 +81,6 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
-
                 <li <?php echo (($postType == 'post') ? 'class="active"' : '') ?>>
                     <a href="post/?type=list&status=all"><i class="fas fa-file-alt"></i> Post</a>
                     <div class="side-menu">
@@ -116,75 +98,6 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
-
-                <li <?php echo (($postType == 'service') ? 'class="active"' : '') ?>>
-                    <a href="service/?type=list&status=all"><i class="fas fa-hand-holding-heart"></i> Services</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="service/?type=list&status=all"><i class="fas fa-list"></i> All services</a>
-                            </li>
-                            <li><a href="service/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    service</a></li>
-                            <li><a href="service/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="service/?type=list&status=all"><i class="fas fa-list"></i> All services</a>
-                            </li>
-                            <li><a href="service/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    service</a></li>
-                            <li><a href="service/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li <?php echo (($postType == 'testimonial') ? 'class="active"' : '') ?>>
-                    <a href="testimonial/?type=list&status=all"><i class="fas fa-comments"></i>
-                        Testimonials</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="testimonial/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    testimonials</a>
-                            </li>
-                            <li><a href="testimonial/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    testimonial</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="testimonial/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    testimonials</a>
-                            </li>
-                            <li><a href="testimonial/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    testimonial</a></li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li <?php echo (($postType == 'team') ? 'class="active"' : '') ?>>
-                    <a href="team/?type=list&status=all"><i class="fas fa-users"></i>
-                        Teams</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="team/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    teams</a>
-                            </li>
-                            <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    team</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="team/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    teams</a>
-                            </li>
-                            <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    team</a></li>
-                        </ul>
-                    </div>
-                </li>
-
                 <li <?php echo (($postType == 'questions') ? 'class="active"' : '') ?>>
                     <a href="questions/?type=list&status=all"><i class="fas fa-question"></i> Questions</a>
                     <div class="side-menu">
@@ -210,7 +123,141 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
-
+                <li class="nav-section-title">
+                    <span>Cataloge</span>
+                </li>
+                <li <?php echo (($postType == 'service') ? 'class="active"' : '') ?>>
+                    <a href="service/?type=list&status=all"><i class="fas fa-hand-holding-heart"></i> Services</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="service/?type=list&status=all"><i class="fas fa-list"></i> All services</a>
+                            </li>
+                            <li><a href="service/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    service</a></li>
+                            <li><a href="service/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="service/?type=list&status=all"><i class="fas fa-list"></i> All services</a>
+                            </li>
+                            <li><a href="service/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    service</a></li>
+                            <li><a href="service/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo (($postType == 'treatment') ? 'class="active"' : '') ?>>
+                    <a href="treatment/?type=list&status=all"><i class="fas fa-medkit"></i> Treatment</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="treatment/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    treatment</a>
+                            </li>
+                            <li><a href="treatment/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    treatment</a></li>
+                            <li><a href="treatment/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="treatment/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    treatment</a>
+                            </li>
+                            <li><a href="treatment/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    treatment</a></li>
+                            <li><a href="treatment/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo (($postType == 'package') ? 'class="active"' : '') ?>>
+                    <a href="package/?type=list&status=all"><i class="fas fa-cubes"></i> Packages</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="package/?type=list&status=all"><i class="fas fa-list"></i> All packages</a>
+                            </li>
+                            <li><a href="package/?type=add&editor=true"><i class="fas fa-plus"></i> Add New
+                                    package</a>
+                            </li>
+                            <li><a href="package/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="package/?type=list&status=all"><i class="fas fa-list"></i> All packages</a>
+                            </li>
+                            <li><a href="package/?type=add&editor=true"><i class="fas fa-plus"></i> Add New
+                                    package</a>
+                            </li>
+                            <li><a href="package/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo (($postType == 'offer') ? 'class="active"' : '') ?>>
+                    <a href="offer/?type=list&status=all"><i class="fas fa-percent"></i> Latest Offers</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="offer/?type=list&status=all"><i class="fas fa-list"></i> All offers</a>
+                            </li>
+                            <li><a href="offer/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    offer</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="offer/?type=list&status=all"><i class="fas fa-list"></i> All offers</a>
+                            </li>
+                            <li><a href="offer/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    offer</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-section-title">
+                    <span>Media</span>
+                </li>
+                <li <?php echo (($postType == 'media') ? 'class="active"' : '') ?>>
+                    <a href="media/?type=list"><i class="fas fa-folder-open"></i> Media Library</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="media/?type=list"><i class="fas fa-list"></i> All Media</a></li>
+                            <li><a href="media/?type=add"><i class="fas fa-plus"></i> Add New</a></li>
+                            <li><a href="media/?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
+                            <li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
+                            <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="media/?type=list"><i class="fas fa-list"></i> All Media</a></li>
+                            <li><a href="media/?type=add"><i class="fas fa-plus"></i> Add New</a></li>
+                            <li><a href="media/?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
+                            <li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
+                            <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo (($postType == 'gallery') ? 'class="active"' : '') ?>>
+                    <a href="gallery/?type=list&status=all"><i class="fas fa-images"></i> Gallery</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="gallery/?type=list&status=all"><i class="fas fa-list"></i> All galleries</a>
+                            </li>
+                            <li><a href="gallery/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    gallery</a>
+                            </li>
+                            <li><a href="gallery/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="gallery/?type=list&status=all"><i class="fas fa-list"></i> All galleries</a>
+                            </li>
+                            <li><a href="gallery/?type=add&editor=true"><i class="fas fa-plus"></i>Add
+                                    new gallery</a></li>
+                            <li><a href="gallery/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                </li>
                 <li <?php echo (($postType == 'youtube_gallery') ? 'class="active"' : '') ?>>
                     <a href="youtube_gallery/?type=list&status=all"><i class="fab fa-youtube"></i> Youtube
                         Gallery</a>
@@ -237,75 +284,56 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
-
-                <li <?php echo (($postType == 'treatment') ? 'class="active"' : '') ?>>
-                    <a href="treatment/?type=list&status=all"><i class="fas fa-medkit"></i> Treatment</a>
+                <li class="nav-section-title">
+                    <span>Engagement</span>
+                </li>
+                <li <?php echo (($postType == 'testimonial') ? 'class="active"' : '') ?>>
+                    <a href="testimonial/?type=list&status=all"><i class="fas fa-comments"></i>
+                        Testimonials</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="treatment/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    treatment</a>
+                            <li><a href="testimonial/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    testimonials</a>
                             </li>
-                            <li><a href="treatment/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    treatment</a></li>
-                            <li><a href="treatment/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="testimonial/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    testimonial</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="treatment/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    treatment</a>
+                            <li><a href="testimonial/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    testimonials</a>
                             </li>
-                            <li><a href="treatment/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    treatment</a></li>
-                            <li><a href="treatment/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="testimonial/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    testimonial</a></li>
                         </ul>
                     </div>
                 </li>
-
-                <li <?php echo (($postType == 'package') ? 'class="active"' : '') ?>>
-                    <a href="package/?type=list&status=all"><i class="fas fa-cubes"></i> Packages</a>
+                <li class="nav-section-title">
+                    <span>Organization</span>
+                </li>
+                <li <?php echo (($postType == 'team') ? 'class="active"' : '') ?>>
+                    <a href="team/?type=list&status=all"><i class="fas fa-users"></i>
+                        Teams</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="package/?type=list&status=all"><i class="fas fa-list"></i> All packages</a>
+                            <li><a href="team/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    teams</a>
                             </li>
-                            <li><a href="package/?type=add&editor=true"><i class="fas fa-plus"></i> Add New
-                                    package</a>
-                            </li>
-                            <li><a href="package/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+                            <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    team</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="package/?type=list&status=all"><i class="fas fa-list"></i> All packages</a>
+                            <li><a href="team/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    teams</a>
                             </li>
-                            <li><a href="package/?type=add&editor=true"><i class="fas fa-plus"></i> Add New
-                                    package</a>
-                            </li>
-                            <li><a href="package/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+                            <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    team</a></li>
                         </ul>
                     </div>
                 </li>
-
-                <li <?php echo (($postType == 'offer') ? 'class="active"' : '') ?>>
-                    <a href="offer/?type=list&status=all"><i class="fas fa-percent"></i> Latest Offers</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="offer/?type=list&status=all"><i class="fas fa-list"></i> All offers</a>
-                            </li>
-                            <li><a href="offer/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    offer</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="offer/?type=list&status=all"><i class="fas fa-list"></i> All offers</a>
-                            </li>
-                            <li><a href="offer/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    offer</a></li>
-                        </ul>
-                    </div>
-                </li>
-
                 <li <?php echo (($postType == 'career') ? 'class="active"' : '') ?>>
                     <a href="career/?type=list&status=all"><i class="fas fa-briefcase"></i> Careers</a>
                     <div class="side-menu">
@@ -325,49 +353,8 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
-
-                <li <?php echo (($postType == 'articles') ? 'class="active"' : '') ?>>
-                    <a href="articles/?type=list&status=all"><i class="fas fa-rss"></i> Media Articles</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="articles/?type=list&status=all"><i class="fas fa-list"></i> All Articles</a>
-                            </li>
-                            <li><a href="articles/?type=add&editor=true"><i class="fas fa-plus"></i> Add New
-                                    articles</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="articles/?type=list&status=all"><i class="fas fa-list"></i> All Articles</a>
-                            </li>
-                            <li><a href="articles/?type=add&editor=true"><i class="fas fa-plus"></i> Add New
-                                    articles</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li <?php echo (($postType == 'media') ? 'class="active"' : '') ?>>
-                    <a href="media/?type=list"><i class="fas fa-folder-open"></i> Media</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="media/?type=list"><i class="fas fa-list"></i> All Media</a></li>
-                            <li><a href="media/?type=add"><i class="fas fa-plus"></i> Add New</a></li>
-                            <li><a href="media/?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-                            <li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
-                            <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="media/?type=list"><i class="fas fa-list"></i> All Media</a></li>
-                            <li><a href="media/?type=add"><i class="fas fa-plus"></i> Add New</a></li>
-                            <li><a href="media/?type=list&media=image"><i class="fas fa-images"></i> Images</a></li>
-                            <li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
-                            <li><a href="media/?type=list&media=docs"><i class="fas fa-copy"></i> Documents</a></li>
-                        </ul>
-                    </div>
+                <li class="nav-section-title">
+                    <span>System</span>
                 </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/appearance/') ? 'class="active"' : '') ?>>
                     <a href="appearance/?type=configuration"><i class="fas fa-paint-brush"></i> Appearance</a>

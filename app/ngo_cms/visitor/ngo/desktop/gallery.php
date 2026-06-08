@@ -20,7 +20,7 @@ require_once 'header.php';
             margin-bottom: 1rem;
             display: inline-block;
           "><i class="fas fa-arrow-left"></i> Back to Gallery</a>
-    <h1 style="font-size: 3rem"><?php echo $gallery_title ?></h1>
+    <h1 style="font-size: 3rem"><?php echo ucwords($gallery_title) ?></h1>
   </div>
 </section>
 

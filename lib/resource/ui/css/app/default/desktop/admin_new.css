@@ -2369,7 +2369,10 @@ ul.tabs li.active {
   border-radius: 6px;
   padding: 8px;
   margin-bottom: 6px;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 .mb-row:hover {
   border-color: #00609e;
@@ -4075,4 +4078,21 @@ body.premium-admin main > h2 + .form-box .form-group textarea:focus {
 .fontSize {
   min-width: 90px !important;
   padding: 5px 10px !important;
+}
+
+.nav-section-title {
+  list-style: none;
+  margin: 0px;
+  padding: 8px 12px;
+  border-left: 3px solid #ffffff;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0 8px 8px 0;
+}
+
+.nav-section-title span {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #a9a9a9;
 }

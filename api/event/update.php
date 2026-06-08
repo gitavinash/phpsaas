@@ -122,7 +122,15 @@ function update($connection, $data)
 
                     /** Update post table */
 
-                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "event SET event_image='{$featureImage}', event_thumbnail='{$thumbnailImage}', event_title='{$title}', event_description='{$description}', event_category='{$category}', event_start_date='{$eventDate}', event_end_time='{$eventEndTime}', event_location='{$eventLocation}', event_map='{$eventMap}', event_status='1', event_gallery='{$newEventGallery}' WHERE event_id='{$id}'");
+                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "event SET event_image='{$featureImage}', event_thumbnail='{$thumbnailImage}', event_title='{$title}', event_description='{$description}', event_highlight='{$highlight}', event_category='{$category}', event_start_date='{$eventDate}', event_end_time='{$eventEndTime}', event_location='{$eventLocation}', event_map='{$eventMap}', event_status='1', event_gallery='{$newEventGallery}' WHERE event_id='{$id}'");
+
+                    // Update inventory table
+                    if (isset($salePrice) && isset($mrp)) {
+
+                        $updateInventory = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "inventory SET inventory_sku='{$sku}', inventory_price='{$salePrice}', inventory_mrp='{$mrp}', inventory_tax_status='{$taxStatus}', inventory_tax_rate='{$taxRate}', inventory_in_stock='{$in_stock}', inventory_current_stock='{$currentStock}' WHERE inventory_relation_id='{$id}' AND inventory_type='event' AND inventory_site_id='" . SITE_ID . "'");
+                    } else {
+                        $updateInventory = TRUE;
+                    }
 
                     /** Update meta table */
 
@@ -147,7 +155,7 @@ function update($connection, $data)
                         }
                     }
 
-                    if ($addRedirect && $updateLink && $updatePost && $updateMeta && $tagData) {
+                    if ($addRedirect && $updateLink && $updatePost && $updateMeta && $tagData && $updateInventory) {
 
                         mysqli_query($connection, 'COMMIT');
 

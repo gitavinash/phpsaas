@@ -63,6 +63,7 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                 <input type="text" id="side-nav-search" placeholder="Search dashboard menu">
             </div>
         </div>
+
         <nav class="side-nav">
             <ul>
                 <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
@@ -110,6 +111,23 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                                     Subscription</a></li>
                             <li><a href="subscription/?type=category"><i class="fas fa-tag"></i>Categories</a></li>
                             <!-- <li><a href="subscription/?type=tags"><i class="fas fa-tags"></i>Tags</a></li> -->
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo (($postType == 'event') ? 'class="active"' : '') ?>>
+                    <a href="event/?type=list&status=all"><i class="fas fa-gopuram"></i> Events/Workshop</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="event/?type=list&status=all"><i class="fas fa-list"></i> All events</a></li>
+                            <li><a href="event/?type=add"><i class="fas fa-plus"></i> Add New event</a></li>
+                            <li><a href="event/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="event/?type=list&status=all"><i class="fas fa-list"></i> All events</a></li>
+                            <li><a href="event/?type=add"><i class="fas fa-plus"></i> Add New event</a></li>
+                            <li><a href="event/?type=category"><i class="fas fa-tags"></i> Categories</a></li>
                         </ul>
                     </div>
                 </li>
@@ -256,42 +274,42 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <div class="mobile-nav-overlay" id="nav-overlay"></div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var menuSearch = document.getElementById('side-nav-search');
-        if (!menuSearch) {
-            return;
-        }
-
-        var menuRoot = document.querySelector('nav.side-nav > ul');
-        if (!menuRoot) {
-            return;
-        }
-
-        var menuItems = menuRoot.children;
-
-        menuSearch.addEventListener('input', function() {
-            var searchTerm = menuSearch.value.toLowerCase().trim();
-
-            for (var i = 0; i < menuItems.length; i++) {
-                var item = menuItems[i];
-                var topAnchor = item.firstElementChild;
-
-                if (!topAnchor || topAnchor.tagName !== 'A') {
-                    continue;
-                }
-
-                var searchableText = topAnchor.textContent.toLowerCase();
-                var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
-
-                for (var j = 0; j < subLinks.length; j++) {
-                    searchableText += ' ' + subLinks[j].textContent.toLowerCase();
-                }
-
-                item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -1) ?
-                    '' : 'none';
+        document.addEventListener('DOMContentLoaded', function() {
+            var menuSearch = document.getElementById('side-nav-search');
+            if (!menuSearch) {
+                return;
             }
+
+            var menuRoot = document.querySelector('nav.side-nav > ul');
+            if (!menuRoot) {
+                return;
+            }
+
+            var menuItems = menuRoot.children;
+
+            menuSearch.addEventListener('input', function() {
+                var searchTerm = menuSearch.value.toLowerCase().trim();
+
+                for (var i = 0; i < menuItems.length; i++) {
+                    var item = menuItems[i];
+                    var topAnchor = item.firstElementChild;
+
+                    if (!topAnchor || topAnchor.tagName !== 'A') {
+                        continue;
+                    }
+
+                    var searchableText = topAnchor.textContent.toLowerCase();
+                    var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
+
+                    for (var j = 0; j < subLinks.length; j++) {
+                        searchableText += ' ' + subLinks[j].textContent.toLowerCase();
+                    }
+
+                    item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -1) ?
+                        '' : 'none';
+                }
+            });
         });
-    });
     </script>
 
     <main>
