@@ -304,18 +304,27 @@ require_once 'header.php';
 
                     <div class="flex justify-between">
                         <span class="text-gray-500">Organizer</span>
-                        <span class="font-semibold"><?php echo $profile_display_name; ?></span>
+                        <span class="font-semibold"><?php echo ucwords($profile_display_name); ?></span>
                     </div>
 
                     <div class="flex justify-between">
                         <span class="text-gray-500">Venue</span>
-                        <span class="font-semibold"><?php echo $event_location; ?></span>
+                        <span class="font-semibold"><?php echo ucwords($event_location); ?></span>
                     </div>
 
-                    <div class="flex justify-between">
-                        <span class="text-gray-500">Available Seats</span>
-                        <span class="font-semibold"><?php echo $inventory_current_stock; ?></span>
-                    </div>
+                    <?php
+
+                    if ($inventory_current_stock != 0) { ?>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Available Seats</span>
+                            <span class="font-semibold"><?php echo $inventory_current_stock; ?></span>
+                        </div>
+                    <?php
+                    }
+
+                    ?>
+
+
 
                 </div>
 
