@@ -28,7 +28,7 @@ switch ($link_status) {
 
                     /** Check category template is avilable or not */
 
-                    $categoryTemplate = USER_PATH . strtolower(str_replace(' ', '-', $category_title)) . '-event.php';
+                    $categoryTemplate = USER_PATH . (isset($category_title) && !empty($category_title) ? strtolower(str_replace(' ', '-', $category_title)) : 'event') . '-event.php';
 
                     if (file_exists($categoryTemplate)) {
 

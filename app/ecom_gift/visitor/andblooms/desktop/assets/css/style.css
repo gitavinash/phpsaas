@@ -443,3 +443,14 @@ input:focus {
     right: 6px;
   }
 }
+
+.map-container {
+  width: 100%;
+}
+
+.map-container iframe {
+  width: 100% !important;
+  min-height: 450px;
+  border: 0;
+  display: block;
+}
