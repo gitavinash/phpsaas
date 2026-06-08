@@ -211,17 +211,19 @@ require_once 'header.php';
 
             </div>
 
-            <div class="flex items-center gap-3 mb-6">
+            <?php
 
-                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
-                    <?php echo $inventory_current_stock; ?> Seats Available
-                </span>
+            if ($inventory_current_stock != 0) { ?>
 
-                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-                    Workshop
-                </span>
+                <div class="flex items-center gap-3 mb-6">
 
-            </div>
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                        <?php echo $inventory_current_stock; ?> Seats Available
+                    </span>
+                </div>
+            <?php
+            }
+            ?>
 
             <div class="mb-8">
 
