@@ -99,7 +99,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                     </div>
                 </li>
                 <li <?php echo (($postType == 'questions') ? 'class="active"' : '') ?>>
-                    <a href="questions/?type=list&status=all"><i class="fas fa-question"></i> Questions</a>
+                    <a href="questions/?type=list&status=all"><i class="fas fa-question"></i> Questions (FAQ's)</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="questions/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
@@ -125,27 +125,6 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                 </li>
                 <li class="nav-section-title">
                     <span>Cataloge</span>
-                </li>
-                <li <?php echo (($postType == 'service') ? 'class="active"' : '') ?>>
-                    <a href="service/?type=list&status=all"><i class="fas fa-hand-holding-heart"></i> Services</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="service/?type=list&status=all"><i class="fas fa-list"></i> All services</a>
-                            </li>
-                            <li><a href="service/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    service</a></li>
-                            <li><a href="service/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="service/?type=list&status=all"><i class="fas fa-list"></i> All services</a>
-                            </li>
-                            <li><a href="service/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    service</a></li>
-                            <li><a href="service/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
-                        </ul>
-                    </div>
                 </li>
                 <li <?php echo (($postType == 'treatment') ? 'class="active"' : '') ?>>
                     <a href="treatment/?type=list&status=all"><i class="fas fa-medkit"></i> Treatment</a>

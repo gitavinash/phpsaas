@@ -79,6 +79,8 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                                     Order</a></li>
                             <li><a href="order/?type=list&status=2"><i class="fas fa-times"></i> Cancel Order</a>
                             </li>
+                            <li><a href="order/?type=import"><i class="fas fa-file-import"></i> Import Orders</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
@@ -90,6 +92,8 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                                     Order</a></li>
                             <li><a href="order/?type=list&status=2"><i class="fas fa-times"></i> Cancel Order</a>
                             </li>
+                            <li><a href="order/?type=import"><i class="fas fa-file-import"></i> Import Orders</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -97,34 +101,34 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
 
                 if (SITE_ID == 17) { ?>
 
-                <li <?php echo ((ADMIN_BASE_URL == '/subscription/') ? 'class="active"' : '') ?>>
-                    <a href="subscription/?type=list&status=all"><i class="fas fa-crown"></i> Manage
-                        Subscription</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="subscription/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    Subscription</a></li>
-                            <li><a href="subscription/?type=list&status=1"><i class="fas fa-check"></i> Confirm
-                                    Subscription</a></li>
-                            <li><a href="subscription/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
-                                    Subscription</a></li>
-                            <li><a href="subscription/?type=list&status=2"><i class="fas fa-times"></i> Cancel
-                                    Subscription</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="subscription/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    Subscription</a></li>
-                            <li><a href="subscription/?type=list&status=1"><i class="fas fa-check"></i> Confirm
-                                    Subscription</a></li>
-                            <li><a href="subscription/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
-                                    Subscription</a></li>
-                            <li><a href="subscription/?type=list&status=2"><i class="fas fa-times"></i> Cancel
-                                    Subscription</a></li>
-                        </ul>
-                    </div>
-                </li>
+                    <li <?php echo ((ADMIN_BASE_URL == '/subscription/') ? 'class="active"' : '') ?>>
+                        <a href="subscription/?type=list&status=all"><i class="fas fa-crown"></i> Manage
+                            Subscription</a>
+                        <div class="side-menu">
+                            <ul>
+                                <li><a href="subscription/?type=list&status=all"><i class="fas fa-list"></i> All
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=1"><i class="fas fa-check"></i> Confirm
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=2"><i class="fas fa-times"></i> Cancel
+                                        Subscription</a></li>
+                            </ul>
+                        </div>
+                        <div class="bottom-menu">
+                            <ul>
+                                <li><a href="subscription/?type=list&status=all"><i class="fas fa-list"></i> All
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=1"><i class="fas fa-check"></i> Confirm
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
+                                        Subscription</a></li>
+                                <li><a href="subscription/?type=list&status=2"><i class="fas fa-times"></i> Cancel
+                                        Subscription</a></li>
+                            </ul>
+                        </div>
+                    </li>
 
                 <?php
                 }
@@ -171,42 +175,42 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
     <div class="mobile-nav-overlay" id="nav-overlay"></div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var menuSearch = document.getElementById('side-nav-search');
-        if (!menuSearch) {
-            return;
-        }
-
-        var menuRoot = document.querySelector('nav.side-nav > ul');
-        if (!menuRoot) {
-            return;
-        }
-
-        var menuItems = menuRoot.children;
-
-        menuSearch.addEventListener('input', function() {
-            var searchTerm = menuSearch.value.toLowerCase().trim();
-
-            for (var i = 0; i < menuItems.length; i++) {
-                var item = menuItems[i];
-                var topAnchor = item.firstElementChild;
-
-                if (!topAnchor || topAnchor.tagName !== 'A') {
-                    continue;
-                }
-
-                var searchableText = topAnchor.textContent.toLowerCase();
-                var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
-
-                for (var j = 0; j < subLinks.length; j++) {
-                    searchableText += ' ' + subLinks[j].textContent.toLowerCase();
-                }
-
-                item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -1) ?
-                    '' : 'none';
+        document.addEventListener('DOMContentLoaded', function() {
+            var menuSearch = document.getElementById('side-nav-search');
+            if (!menuSearch) {
+                return;
             }
+
+            var menuRoot = document.querySelector('nav.side-nav > ul');
+            if (!menuRoot) {
+                return;
+            }
+
+            var menuItems = menuRoot.children;
+
+            menuSearch.addEventListener('input', function() {
+                var searchTerm = menuSearch.value.toLowerCase().trim();
+
+                for (var i = 0; i < menuItems.length; i++) {
+                    var item = menuItems[i];
+                    var topAnchor = item.firstElementChild;
+
+                    if (!topAnchor || topAnchor.tagName !== 'A') {
+                        continue;
+                    }
+
+                    var searchableText = topAnchor.textContent.toLowerCase();
+                    var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
+
+                    for (var j = 0; j < subLinks.length; j++) {
+                        searchableText += ' ' + subLinks[j].textContent.toLowerCase();
+                    }
+
+                    item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -1) ?
+                        '' : 'none';
+                }
+            });
         });
-    });
     </script>
 
     <main>
