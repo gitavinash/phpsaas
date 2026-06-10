@@ -14,6 +14,7 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="<?php echo SITE_ICON; ?>">
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY; ?>all.min.css">
+    <link rel="stylesheet" href="<?php echo CSS_LIBRARY; ?>uicons-regular-rounded.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY; ?>sweetalert/sweetalert.min.css">
     <link rel="stylesheet" href="<?php echo ADMIN_CSS_LIBRARY; ?>admin_new.css">
     <?php if (defined('USER_STYLESHEET') && USER_STYLESHEET): ?>
@@ -156,7 +157,15 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
         <!-- TOP BAR -->
         <div class="topbar">
             <div class="topbar-l">
-                <a href="/dashboard/<?php echo strtolower($type); ?>/?type=edit&editor=true&id=<?php echo $id ?>" class="btn-back" title="Back to Dashboard">
+                <?php
+                $url = '/dashboard/' . strtolower($type) . '/?type=' . (($id != '') ? 'edit' : 'add') . '&editor=true';
+
+                if (($id != '')) {
+                    $url .= '&id=' . urlencode($id);
+                }
+                ?>
+
+                <a href="<?php echo $url; ?>" class="btn-back" title="Back to Dashboard">
                     <i class="fi fi-rr-arrow-left" aria-hidden="true"></i>
                 </a>
                 <div class="page-info">
