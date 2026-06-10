@@ -56,6 +56,23 @@ $dashboardFilePath = ((isset($type)) ? 'templates' . ADMIN_BASE_URL . $type : ((
 
 $dashboardFile = $dashboardDirectory . $dashboardFilePath;
 
+// ==========================================================
+// SPECIAL OVERRIDE: Visual Page Builder — fullscreen editor
+// Serves ecit_view.php as a standalone HTML document,
+// bypassing the normal header/footer dashboard wrapping.
+// ==========================================================
+if (rtrim(ADMIN_BASE_URL, '/') === '/editor') {
+
+	$noCodeEditorFile = ROOT . '/app/default/' . USER_TYPE . '/' . SITE_VERSION . '/templates/editor/no_code_editor.php';
+	if (file_exists($noCodeEditorFile)) {
+		require_once $noCodeEditorFile;
+	} else {
+		require_once ERROR_404;
+		http_response_code(404);
+	}
+	exit();
+}
+
 if (!file_exists($dashboardFile)) {
 
 	// When dashboard theme need to call file from the default theme directory ( v1 )
@@ -63,9 +80,8 @@ if (!file_exists($dashboardFile)) {
 	$dashboardFile = ROOT . '/app/default/' . USER_TYPE . '/' . SITE_VERSION . '/' . $dashboardFilePath;
 
 	if (!file_exists($dashboardFile)) {
-
-		http_response_code(404);
 		$dashboardFile = $dashboardDirectory . '404.php';
+		http_response_code(404);
 	}
 }
 
