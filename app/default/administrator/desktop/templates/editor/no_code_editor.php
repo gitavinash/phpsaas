@@ -16,6 +16,9 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY; ?>all.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY; ?>sweetalert/sweetalert.min.css">
     <link rel="stylesheet" href="<?php echo ADMIN_CSS_LIBRARY; ?>admin_new.css">
+    <?php if (defined('USER_STYLESHEET') && USER_STYLESHEET): ?>
+        <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>styles.css" id="visitor-theme-stylesheet">
+    <?php endif; ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -34,8 +37,8 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
             height: 100%;
             overflow: hidden;
             font-family: 'Inter', system-ui, sans-serif;
-            background: #111113;
-            color: #dcdce8;
+            background: #f3f5fb;
+            color: #111827;
         }
 
         button,
@@ -68,6 +71,68 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
             --accent: <?php echo SITE_THEME_COLOUR; ?>;
             --accent-dim: <?php echo SITE_THEME_COLOUR; ?>22;
             --accent-mid: <?php echo SITE_THEME_COLOUR; ?>55;
+            --bg-0: #f8fafc;
+            --bg-1: #ffffff;
+            --bg-2: #f3f5f8;
+            --bg-3: #ffffff;
+            --bg-4: #e5e7eb;
+            --border: #d1d5db;
+            --text-0: #111827;
+            --text-1: #374151;
+            --text-2: #6b7280;
+            --text-3: #9ca3af;
+        }
+
+        body {
+            background: #f3f5fb;
+            color: #111827;
+        }
+
+        .builder {
+            background: var(--bg-0);
+        }
+
+        .topbar {
+            background: var(--bg-1);
+            color: #111827;
+            border-color: var(--border);
+        }
+
+        .topbar .page-info .title {
+            color: #111827;
+        }
+
+        .topbar .page-info .meta {
+            color: #6b7280;
+        }
+
+        .panel-l,
+        .panel-r {
+            background: var(--bg-1);
+        }
+
+        .workspace,
+        .canvas-area,
+        .canvas-frame {
+            background: var(--bg-0);
+        }
+
+        .btn-back {
+            color: var(--text-1);
+        }
+
+        .btn-back:hover {
+            color: var(--text-0);
+            background: var(--bg-2);
+        }
+
+        .p-tab {
+            color: #475569;
+        }
+
+        .p-tab.active {
+            color: var(--accent);
+            border-color: var(--accent);
         }
     </style>
 
@@ -92,7 +157,7 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
         <div class="topbar">
             <div class="topbar-l">
                 <a href="/dashboard/<?php echo strtolower($type); ?>/?type=edit&editor=true&id=<?php echo $id ?>" class="btn-back" title="Back to Dashboard">
-                    <i class="fi-rr-arrow-left"></i>
+                    <i class="fi fi-rr-arrow-left" aria-hidden="true"></i>
                 </a>
                 <div class="page-info">
                     <div class="title" id="pg-title">Loading…</div>
