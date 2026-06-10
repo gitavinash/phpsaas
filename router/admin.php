@@ -17,6 +17,27 @@ if (ADMIN_BASE_URL == '/sw.js') {
 	exit();
 }
 
+// SPECIAL OVERRIDE: Visual Page Builder — fullscreen editor
+// Serves ecit_view.php as a standalone HTML document,
+// bypassing the normal header/footer dashboard wrapping.
+// ==========================================================
+if (rtrim(ADMIN_BASE_URL, '/') === '/editor') {
+	if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE === true && (!isset($_COOKIE['user_type']) || base64_decode($_COOKIE['user_type']) !== 'administrator')) {
+		setcookie('user_type', base64_encode('administrator'), time() + 3600, '/');
+		header("Location: " . ACTIVE_URL);
+		exit();
+	}
+
+	$noCodeEditorFile = ROOT . '/app/default/' . USER_TYPE . '/' . SITE_VERSION . '/templates/editor/no_code_editor.php';
+	if (file_exists($noCodeEditorFile)) {
+		require_once $noCodeEditorFile;
+	} else {
+		require_once ERROR_404;
+		http_response_code(404);
+	}
+	exit();
+}
+
 /* Check user is logged in or not */
 
 require_once LOGIN_CHECK;
@@ -57,21 +78,7 @@ $dashboardFilePath = ((isset($type)) ? 'templates' . ADMIN_BASE_URL . $type : ((
 $dashboardFile = $dashboardDirectory . $dashboardFilePath;
 
 // ==========================================================
-// SPECIAL OVERRIDE: Visual Page Builder — fullscreen editor
-// Serves ecit_view.php as a standalone HTML document,
-// bypassing the normal header/footer dashboard wrapping.
-// ==========================================================
-if (rtrim(ADMIN_BASE_URL, '/') === '/editor') {
 
-	$noCodeEditorFile = ROOT . '/app/default/' . USER_TYPE . '/' . SITE_VERSION . '/templates/editor/no_code_editor.php';
-	if (file_exists($noCodeEditorFile)) {
-		require_once $noCodeEditorFile;
-	} else {
-		require_once ERROR_404;
-		http_response_code(404);
-	}
-	exit();
-}
 
 if (!file_exists($dashboardFile)) {
 

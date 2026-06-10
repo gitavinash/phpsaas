@@ -17,7 +17,8 @@ if (defined('USER_PATH') && file_exists(USER_PATH . 'footer.php')) {
     $theme_footer_file = DEFAULT_USER_PATH . 'footer.php';
 }
 
-function get_clean_header_html($file) {
+function get_clean_header_html($file)
+{
     if (!$file || !file_exists($file)) return '';
     ob_start();
     try {
@@ -36,7 +37,8 @@ function get_clean_header_html($file) {
     return trim($html);
 }
 
-function get_clean_footer_html($file) {
+function get_clean_footer_html($file)
+{
     if (!$file || !file_exists($file)) return '';
     ob_start();
     try {
@@ -108,7 +110,11 @@ $footer_html = get_clean_footer_html($theme_footer_file);
             document.addEventListener = function(type, listener, options) {
                 if (type === 'DOMContentLoaded' && (document.readyState === 'interactive' || document.readyState === 'complete')) {
                     try {
-                        listener({ type: 'DOMContentLoaded', target: document, currentTarget: document });
+                        listener({
+                            type: 'DOMContentLoaded',
+                            target: document,
+                            currentTarget: document
+                        });
                     } catch (e) {
                         console.error("Error in deferred DOMContentLoaded listener:", e);
                     }
@@ -164,6 +170,7 @@ $footer_html = get_clean_footer_html($theme_footer_file);
                 </div>
                 <button class="icon-btn" id="btn-undo" title="Undo · Ctrl+Z" disabled><i class="fi-rr-rotate-left"></i></button>
                 <button class="icon-btn" id="btn-redo" title="Redo · Ctrl+Y" disabled><i class="fi-rr-rotate-right"></i></button>
+                <button class="icon-btn" id="btn-help" title="Help &amp; Shortcuts"><i class="fi-rr-interrogation"></i></button>
                 <button class="btn-preview" id="btn-preview" title="Preview (P)"><i class="fi-rr-eye"></i> Preview</button>
                 <button class="btn-save" id="btn-save" title="Save · Ctrl+S"><i class="fi-rr-disk"></i> Save</button>
             </div>
@@ -188,39 +195,51 @@ $footer_html = get_clean_footer_html($theme_footer_file);
 
                     <div class="cat-label" data-lbl="layout">Layout</div>
                     <div class="sec-grid">
-                        <div class="sec-card" data-type="hero" data-cat="layout" data-kw="hero banner headline cta">
+                        <div class="sec-card" data-type="hero" data-cat="layout" data-kw="hero banner headline cta" title="Hero Banner: A prominent banner with a large heading, text, and Call-to-Action button.">
                             <i class="fi-rr-layout-fluid"></i><span>Hero Banner</span>
                         </div>
-                        <div class="sec-card" data-type="text_image" data-cat="layout" data-kw="text image two column split">
+                        <div class="sec-card" data-type="text_image" data-cat="layout" data-kw="text image two column split" title="Text &amp; Image: A flexible 2-column layout with text on one side and an image on the other.">
                             <i class="fi-rr-text-box-edit"></i><span>Text &amp; Image</span>
                         </div>
-                        <div class="sec-card" data-type="features" data-cat="layout" data-kw="features grid cards icons">
+                        <div class="sec-card" data-type="features" data-cat="layout" data-kw="features grid cards icons" title="Feature Grid: Showcase your key features or services in a clean column grid layout.">
                             <i class="fi-rr-grid"></i><span>Feature Grid</span>
                         </div>
-                        <div class="sec-card" data-type="spacer" data-cat="layout" data-kw="spacer divider gap hr">
+                        <div class="sec-card" data-type="why_choose_us" data-cat="layout" data-kw="why choose us benefits checks checklist features list highlights" title="Why Choose Us: Split section highlighting benefits with customizable icons.">
+                            <i class="fi-rr-list-check"></i><span>Why Choose Us</span>
+                        </div>
+                        <div class="sec-card" data-type="about_doctor" data-cat="layout" data-kw="about doctor profile bio physician team founder credentials" title="About Doctor: Profile banner detailing credentials and background of doctors or team members.">
+                            <i class="fi-rr-user-md"></i><span>About Doctor</span>
+                        </div>
+                        <div class="sec-card" data-type="services_list" data-cat="layout" data-kw="services grid treatments specialties cards list" title="Services Grid: Visual cards showcasing services, treatments, or specialties.">
+                            <i class="fi-rr-briefcase"></i><span>Services Grid</span>
+                        </div>
+                        <div class="sec-card" data-type="spacer" data-cat="layout" data-kw="spacer divider gap hr" title="Spacer: Add adjustable vertical spacing or divider lines between sections.">
                             <i class="fi-rr-resize"></i><span>Spacer / HR</span>
                         </div>
                     </div>
 
                     <div class="cat-label" data-lbl="content">Content</div>
                     <div class="sec-grid">
-                        <div class="sec-card" data-type="faq" data-cat="content" data-kw="faq accordion questions">
+                        <div class="sec-card" data-type="faq" data-cat="content" data-kw="faq accordion questions" title="FAQ Accordion: Interactive collapsable questions and answers.">
                             <i class="fi-rr-interrogation"></i><span>FAQ</span>
                         </div>
-                        <div class="sec-card" data-type="testimonials" data-cat="content" data-kw="testimonials reviews quotes">
+                        <div class="sec-card" data-type="testimonials" data-cat="content" data-kw="testimonials reviews quotes" title="Testimonials: Display quotes and positive reviews from your customers.">
                             <i class="fi-rr-comments"></i><span>Testimonials</span>
                         </div>
-                        <div class="sec-card" data-type="cta" data-cat="content" data-kw="call to action cta banner">
+                        <div class="sec-card" data-type="cta" data-cat="content" data-kw="call to action cta banner" title="Call to Action: A full-width colorful banner to grab user attention and drive clicks.">
                             <i class="fi-rr-megaphone"></i><span>Call to Action</span>
                         </div>
-                        <div class="sec-card" data-type="custom_html" data-cat="content" data-kw="custom html code raw embed">
+                        <div class="sec-card" data-type="contact_info" data-cat="content" data-kw="contact address telephone email map layout info" title="Contact &amp; Map: Address details, phone, email cards, and embed map.">
+                            <i class="fi-rr-envelope"></i><span>Contact &amp; Map</span>
+                        </div>
+                        <div class="sec-card" data-type="custom_html" data-cat="content" data-kw="custom html code raw embed" title="Custom HTML: Embed custom code, raw scripts, videos, or external iframe widgets.">
                             <i class="fi-rr-brackets-curly"></i><span>Custom HTML</span>
                         </div>
                     </div>
 
                     <div class="cat-label" data-lbl="dynamic">Dynamic</div>
                     <div class="sec-grid">
-                        <div class="sec-card" data-type="recent_articles" data-cat="dynamic" data-kw="recent articles blog posts feed">
+                        <div class="sec-card" data-type="recent_articles" data-cat="dynamic" data-kw="recent articles blog posts feed" title="Recent Articles: Dynamically display the latest posts from your blog feed.">
                             <i class="fi-rr-rss"></i><span>Recent Articles</span>
                         </div>
                     </div>
@@ -273,6 +292,38 @@ $footer_html = get_clean_footer_html($theme_footer_file);
 
         </div><!-- /.workspace -->
     </div><!-- /.builder -->
+
+    <!-- HELP MODAL -->
+    <div class="help-modal" id="help-modal">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h3><i class="fi-rr-interrogation"></i> Editor Guide &amp; Shortcuts</h3>
+                <button class="close-help" id="close-help">&times;</button>
+            </div>
+            <div class="help-modal-body">
+                <div class="help-section">
+                    <h4><i class="fi-rr-mouse-pointer"></i> Visual Builder Basics</h4>
+                    <ul>
+                        <li><strong>Click to Select:</strong> Click on any section or block inside the canvas to edit its styles and settings in the right properties panel.</li>
+                        <li><strong>Direct Text Edit:</strong> Click and type directly on any heading, paragraph, or button text inside the canvas.</li>
+                        <li><strong>Image &amp; Link Edit:</strong> Click on any image or link inside the canvas to open its dedicated quick editor in the right sidebar.</li>
+                        <li><strong>Responsive Previews:</strong> Click the computer, tablet, and smartphone icons at the top center to toggle viewport widths.</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h4><i class="fi-rr-keyboard"></i> Keyboard Shortcuts</h4>
+                    <div class="shortcut-list">
+                        <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>S</kbd> <span>Save layout</span></div>
+                        <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>Z</kbd> <span>Undo change</span></div>
+                        <div class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>Y</kbd> <span>Redo change</span></div>
+                        <div class="shortcut-item"><kbd>P</kbd> <span>Toggle Preview</span></div>
+                        <div class="shortcut-item"><kbd>Esc</kbd> <span>Deselect all</span></div>
+                        <div class="shortcut-item"><kbd>D</kbd>/<kbd>T</kbd>/<kbd>M</kbd> <span>Device width</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ─── Scripts ───────────────────────────────────────────── -->
     <script src="<?php echo PLUGIN_LIBRARY; ?>sweetalert/sweetalert.min.js"></script>
