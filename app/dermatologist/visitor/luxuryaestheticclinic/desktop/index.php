@@ -5,74 +5,11 @@ require_once 'header.php';
 ?>
 <!-- 2. HERO SECTION -->
 <section class="hero" id="hero">
-  <div class="container hero-grid">
-    <!-- Hero Left: Headlines & Trust -->
-    <div class="hero-content">
-      <span class="section-tag">Celebrity-Grade Clinic</span>
-      <h1>Luxury Skin, Hair & <span>Body Treatments</span> in Delhi</h1>
-      <p class="hero-subheadline">
-        Advanced dermatologist-led clinical treatments powered by
-        world-class FDA-approved technologies. Experience personalized
-        skincare tailored for naturally radiant, beautiful results.
-      </p>
-
-      <!-- Trust Checkpoints -->
-      <ul class="hero-trust-list">
-        <li class="hero-trust-item">
-          <i data-lucide="check-circle-2"></i> ✓ 1,500+ Happy Patients
-        </li>
-        <li class="hero-trust-item">
-          <i data-lucide="check-circle-2"></i> ✓ FDA Approved Tech
-        </li>
-        <li class="hero-trust-item">
-          <i data-lucide="check-circle-2"></i> ✓ Expert Dermatologists
-        </li>
-        <li class="hero-trust-item">
-          <i data-lucide="check-circle-2"></i> ✓ Custom Treatment Plans
-        </li>
-      </ul>
-
-      <!-- CTAs -->
-      <div class="hero-actions">
-        <a href="#consultation" class="btn btn-primary" id="heroBookBtn">Book Consultation</a>
-        <a
-          href="https://wa.me/919999999999"
-          class="btn btn-whatsapp"
-          id="heroWhatsAppBtn"
-          target="_blank"
-          rel="noopener">
-          <i
-            data-lucide="message-square"
-            style="width: 16px; margin-right: 8px"></i>
-          WhatsApp Expert
-        </a>
-      </div>
-    </div>
-
-    <!-- Hero Right: Images & Floating Stats -->
-    <div class="hero-media-wrapper">
-      <div class="hero-image-container">
-        <img
-          src="assets/images/hero_clinic.png"
-          alt="Luxury Aesthetic Clinic Premium Interiors"
-          class="hero-img" />
-      </div>
-
-      <!-- Floating Stats Cards -->
-      <div class="floating-card card-1 reveal reveal-stagger">
-        <span class="fc-number" data-count="1500">1,500+</span>
-        <span class="fc-label">Patients Treated</span>
-      </div>
-      <div class="floating-card card-2 reveal reveal-stagger">
-        <span class="fc-number" data-count="10">10+</span>
-        <span class="fc-label">Years Experience</span>
-      </div>
-      <div class="floating-card card-3 reveal reveal-stagger">
-        <span class="fc-number" data-count="500">500+</span>
-        <span class="fc-label">5-Star Reviews</span>
-      </div>
-    </div>
-  </div>
+  <?php
+  $sliderList = getSlider($connection);
+  print_r($sliderList);
+  exit();
+  ?>
 </section>
 
 <!-- 3. TRUST & AUTHORITY BAR -->

@@ -404,42 +404,6 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
     </aside>
 
     <div class="mobile-nav-overlay" id="nav-overlay"></div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var menuSearch = document.getElementById('side-nav-search');
-            var menuRoot = document.querySelector('nav.side-nav > ul');
-
-            if (menuSearch && menuRoot) {
-                var menuItems = menuRoot.children;
-
-                menuSearch.addEventListener('input', function() {
-                    var searchTerm = menuSearch.value.toLowerCase().trim();
-
-                    for (var i = 0; i < menuItems.length; i++) {
-                        var item = menuItems[i];
-                        var topAnchor = item.firstElementChild;
-
-                        if (!topAnchor || topAnchor.tagName !== 'A') {
-                            continue;
-                        }
-
-                        var searchableText = topAnchor.textContent.toLowerCase();
-                        var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
-
-                        for (var j = 0; j < subLinks.length; j++) {
-                            searchableText += ' ' + subLinks[j].textContent.toLowerCase();
-                        }
-
-                        item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -
-                                1) ? '' :
-                            'none';
-                    }
-                });
-            }
-        });
-    </script>
-
     <main>
 
         <div class="container">

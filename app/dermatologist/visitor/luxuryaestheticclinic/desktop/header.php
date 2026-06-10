@@ -1,5 +1,6 @@
 <?php
 require_once MENU_FUNCTIONS;
+require_once DATA_FUNCTIONS;
 ?>
 <!doctype html>
 <html lang="en">

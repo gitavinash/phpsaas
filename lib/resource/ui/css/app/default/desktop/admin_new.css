@@ -2611,6 +2611,8 @@ body.premium-admin aside {
     var(--ui-sidebar-soft) 100%
   );
   z-index: 998;
+  height: auto !important;
+  min-height: calc(100vh - 62px);
 }
 
 body.premium-admin .nav-search-wrapper {
@@ -4089,6 +4091,7 @@ body.premium-admin main > h2 + .form-box .form-group textarea:focus {
   border-left: 3px solid #ffffff;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 0 8px 8px 0;
+  margin: 10px 0px !important;
 }
 
 .nav-section-title span {
