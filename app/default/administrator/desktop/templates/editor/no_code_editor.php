@@ -2,6 +2,57 @@
 // Variables may be pre-set by router's extract($secure), but ensure they're defined
 $id   = isset($_GET['id'])   ? trim($_GET['id'])   : '';
 $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET['type'])) : '';
+
+$theme_header_file = '';
+if (defined('USER_PATH') && file_exists(USER_PATH . 'header.php')) {
+    $theme_header_file = USER_PATH . 'header.php';
+} elseif (defined('DEFAULT_USER_PATH') && file_exists(DEFAULT_USER_PATH . 'header.php')) {
+    $theme_header_file = DEFAULT_USER_PATH . 'header.php';
+}
+
+$theme_footer_file = '';
+if (defined('USER_PATH') && file_exists(USER_PATH . 'footer.php')) {
+    $theme_footer_file = USER_PATH . 'footer.php';
+} elseif (defined('DEFAULT_USER_PATH') && file_exists(DEFAULT_USER_PATH . 'footer.php')) {
+    $theme_footer_file = DEFAULT_USER_PATH . 'footer.php';
+}
+
+function get_clean_header_html($file) {
+    if (!$file || !file_exists($file)) return '';
+    ob_start();
+    try {
+        $checkCart = false;
+        include $file;
+    } catch (Throwable $e) {
+        // Ignore
+    }
+    $html = ob_get_clean();
+    if (preg_match('/<body[^>]*>([\s\S]*)$/i', $html, $matchBody)) {
+        $html = $matchBody[1];
+    }
+    if (preg_match('/([\s\S]*?)<main[^>]*>/i', $html, $matchMain)) {
+        $html = $matchMain[1];
+    }
+    return trim($html);
+}
+
+function get_clean_footer_html($file) {
+    if (!$file || !file_exists($file)) return '';
+    ob_start();
+    try {
+        include $file;
+    } catch (Throwable $e) {
+        // Ignore
+    }
+    $html = ob_get_clean();
+    $html = ltrim(preg_replace('/^<\/main[^>]*>/i', '', trim($html)));
+    $html = preg_replace('/<\/body\s*>/i', '', $html);
+    $html = preg_replace('/<\/html\s*>/i', '', $html);
+    return trim($html);
+}
+
+$header_html = get_clean_header_html($theme_header_file);
+$footer_html = get_clean_footer_html($theme_footer_file);
 ?>
 <!DOCTYPE html>
 
@@ -10,12 +61,16 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web page builder | <?php echo SITE_NAME; ?></title>
+    <title><?php echo (($id == '') ? 'Add new ' : 'Edit ') . $type ?> | <?php echo SITE_NAME; ?></title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="<?php echo SITE_ICON; ?>">
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY; ?>all.min.css">
     <link rel="stylesheet" href="<?php echo CSS_LIBRARY; ?>uicons-regular-rounded.min.css">
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY; ?>sweetalert/sweetalert.min.css">
+    <link rel="stylesheet" href="/config.min.css">
+    <?php if (defined('DEFAULT_USER_STYLESHEET')): ?>
+        <link rel="stylesheet" href="<?php echo DEFAULT_USER_STYLESHEET ?>checkout.min.css">
+    <?php endif; ?>
     <link rel="stylesheet" href="<?php echo ADMIN_CSS_LIBRARY; ?>admin_new.css">
     <?php if (defined('USER_STYLESHEET') && USER_STYLESHEET): ?>
         <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>styles.css" id="visitor-theme-stylesheet">
@@ -23,50 +78,8 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY; ?>no_code_editor/no_code.css">
     <style>
-        /* ── Builder-only base resets (scoped to this standalone page) ── */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0
-        }
-
-        html,
-        body {
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Inter', system-ui, sans-serif;
-            background: #f3f5fb;
-            color: #111827;
-        }
-
-        button,
-        input,
-        select,
-        textarea {
-            font-family: inherit
-        }
-
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #303038;
-            border-radius: 6px
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #454550
-        }
-
         /* Dynamic accent variables — overrides static fallback in admin_new.css */
         :root {
             --accent: <?php echo SITE_THEME_COLOUR; ?>;
@@ -83,65 +96,27 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
             --text-2: #6b7280;
             --text-3: #9ca3af;
         }
-
-        body {
-            background: #f3f5fb;
-            color: #111827;
-        }
-
-        .builder {
-            background: var(--bg-0);
-        }
-
-        .topbar {
-            background: var(--bg-1);
-            color: #111827;
-            border-color: var(--border);
-        }
-
-        .topbar .page-info .title {
-            color: #111827;
-        }
-
-        .topbar .page-info .meta {
-            color: #6b7280;
-        }
-
-        .panel-l,
-        .panel-r {
-            background: var(--bg-1);
-        }
-
-        .workspace,
-        .canvas-area,
-        .canvas-frame {
-            background: var(--bg-0);
-        }
-
-        .btn-back {
-            color: var(--text-1);
-        }
-
-        .btn-back:hover {
-            color: var(--text-0);
-            background: var(--bg-2);
-        }
-
-        .p-tab {
-            color: #475569;
-        }
-
-        .p-tab.active {
-            color: var(--accent);
-            border-color: var(--accent);
-        }
     </style>
-
 </head>
 
 <body>
 
     <script>
+        // Monkey-patch document.addEventListener to execute DOMContentLoaded callbacks immediately if the document is already loaded
+        (function() {
+            const originalAddEventListener = document.addEventListener;
+            document.addEventListener = function(type, listener, options) {
+                if (type === 'DOMContentLoaded' && (document.readyState === 'interactive' || document.readyState === 'complete')) {
+                    try {
+                        listener({ type: 'DOMContentLoaded', target: document, currentTarget: document });
+                    } catch (e) {
+                        console.error("Error in deferred DOMContentLoaded listener:", e);
+                    }
+                }
+                return originalAddEventListener.apply(this, arguments);
+            };
+        })();
+
         window.BUILDER_CONFIG = {
             id: "<?php echo htmlspecialchars($id); ?>",
             type: "<?php echo htmlspecialchars($type); ?>",
@@ -217,7 +192,7 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
                             <i class="fi-rr-layout-fluid"></i><span>Hero Banner</span>
                         </div>
                         <div class="sec-card" data-type="text_image" data-cat="layout" data-kw="text image two column split">
-                            <i class="fi-rr-columns"></i><span>Text &amp; Image</span>
+                            <i class="fi-rr-text-box-edit"></i><span>Text &amp; Image</span>
                         </div>
                         <div class="sec-card" data-type="features" data-cat="layout" data-kw="features grid cards icons">
                             <i class="fi-rr-grid"></i><span>Feature Grid</span>
@@ -239,7 +214,7 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
                             <i class="fi-rr-megaphone"></i><span>Call to Action</span>
                         </div>
                         <div class="sec-card" data-type="custom_html" data-cat="content" data-kw="custom html code raw embed">
-                            <i class="fi-rr-code"></i><span>Custom HTML</span>
+                            <i class="fi-rr-brackets-curly"></i><span>Custom HTML</span>
                         </div>
                     </div>
 
@@ -257,15 +232,29 @@ $type = isset($_GET['type']) ? mysqli_real_escape_string($connection, trim($_GET
             <!-- CANVAS -->
             <div class="canvas-area" id="canvas-area">
                 <div class="canvas-ruler">
-                    <div class="canvas-label" id="canvas-label">Desktop — 1200px</div>
+                    <div class="canvas-label" id="canvas-label"><i class="fi-rr-computer"></i> <span>Desktop — 1200px</span></div>
                 </div>
                 <div class="canvas-frame" id="canvas">
-                    <div class="skeleton-wrap" id="skel">
-                        <div class="skel" style="height:220px"></div>
-                        <div class="skel" style="height:56px;width:55%"></div>
-                        <div class="skel" style="height:100px"></div>
-                        <div class="skel" style="height:56px;width:70%"></div>
+                    <?php if (!empty($header_html)): ?>
+                        <div id="builder-header">
+                            <?php echo $header_html; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <div id="canvas-sections">
+                        <div class="skeleton-wrap" id="skel">
+                            <div class="skel" style="height:220px"></div>
+                            <div class="skel" style="height:56px;width:55%"></div>
+                            <div class="skel" style="height:100px"></div>
+                            <div class="skel" style="height:56px;width:70%"></div>
+                        </div>
                     </div>
+
+                    <?php if (!empty($footer_html)): ?>
+                        <div id="builder-footer">
+                            <?php echo $footer_html; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 

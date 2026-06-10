@@ -276,22 +276,40 @@ function testimonialsList($conn, $limit = 5, $featuredOnly = 0)
 
 function getSlider($conn, $sliderName = '')
 {
+    $sliderFilter = !empty($sliderName)
+        ? "slider_title='" . strtolower(str_replace(' ', '_', $sliderName)) . "' AND "
+        : '';
 
-    $sliderFilter = (($sliderName != '') ? "slider_title='" . strtolower(str_replace(' ', '_', $sliderName)) . "' AND " : '');
-    $query = "SELECT * FROM " . TABLE_PREFIX . "slide WHERE {$sliderFilter} slide_status=1 AND slider_device='" . SITE_VERSION . "' AND slide_site_id=" . SITE_ID . " ORDER BY slide_update DESC";
+    $devices = [SITE_VERSION];
 
-    $resData = mysqli_query($conn, $query);
-    if (!$resData) {
-        return [];
+    if (SITE_VERSION !== 'desktop') {
+        $devices[] = 'desktop';
     }
 
-    $out = [];
-    while ($row = mysqli_fetch_assoc($resData)) {
-        $out[] = $row;
-    }
-    mysqli_free_result($resData);
+    foreach ($devices as $device) {
+        $query = "SELECT *
+                  FROM " . TABLE_PREFIX . "slide
+                  WHERE {$sliderFilter}
+                        slide_status = 1
+                        AND slider_device = '{$device}'
+                        AND slide_site_id = " . SITE_ID . "
+                  ORDER BY slide_update DESC";
 
-    return $out;
+        $resData = mysqli_query($conn, $query);
+
+        if ($resData && mysqli_num_rows($resData) > 0) {
+            $out = [];
+
+            while ($row = mysqli_fetch_assoc($resData)) {
+                $out[] = $row;
+            }
+
+            mysqli_free_result($resData);
+            return $out;
+        }
+    }
+
+    return [];
 }
 
 function getHomepageContent($conn)
