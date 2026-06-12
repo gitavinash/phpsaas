@@ -104,7 +104,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="questions/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
                             </li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=questions" target="_blank"><i
+                            <li><a href="questions/?type=add&editor=true" target="_blank"><i
                                         class="fas fa-plus"></i>Add
                                     new
                                     Questions</a></li>
@@ -115,7 +115,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         <ul>
                             <li><a href="questions/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
                             </li>
-                            <li><a href="/start-a-discussion/?ref=dashboard&postType=questions" target="_blank"><i
+                            <li><a href="questions/?type=add&editor=true" target="_blank"><i
                                         class="fas fa-plus"></i>Add
                                     new
                                     Questions</a></li>

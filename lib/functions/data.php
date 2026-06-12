@@ -464,3 +464,131 @@ function getCategoryDiscussion($conn, $categoryId = 0, $categoryType = 'discussi
 
     return $out;
 }
+
+function getLatestArticles($conn, $limit = 4, $characterLimit = 250)
+{
+    $query = "SELECT 
+        post_id AS id,
+        post_title AS title,
+        LEFT(
+            TRIM(
+                REGEXP_REPLACE(post_description, '<[^>]*>', '')
+            ),
+            {$characterLimit}
+        ) AS description,
+        post_image AS image,
+        profile_display_name AS author,
+        profile_image AS author_image,
+        category_title AS category,
+        category_link.link_url AS category_url,
+        link.link_url,
+        link.link_published
+
+    FROM " . TABLE_PREFIX . "post
+
+    INNER JOIN " . TABLE_PREFIX . "link AS link
+        ON link.link_relation_id = post_id
+       AND link.link_status = 200
+       AND link.link_type = 'post'
+       AND link.link_site_id = " . SITE_ID . "
+
+    INNER JOIN " . TABLE_PREFIX . "category
+        ON category_id = post_category
+       AND category_type = 'post'
+       AND category_site_id = " . SITE_ID . "
+
+    LEFT JOIN " . TABLE_PREFIX . "link AS category_link
+        ON category_link.link_relation_id = category_id
+       AND category_link.link_type = 'category'
+       AND category_link.link_status = 200
+       AND category_link.link_site_id = " . SITE_ID . "
+
+    INNER JOIN " . TABLE_PREFIX . "profile
+        ON link.link_owner_id = profile_user_id
+
+    WHERE post_status = 1
+      AND post_site_id = " . SITE_ID . "
+
+    ORDER BY link.link_published DESC
+    LIMIT {$limit}";
+
+    $resData = mysqli_query($conn, $query);
+    if (!$resData) {
+        return [];
+    }
+
+    $out = [];
+    while ($row = mysqli_fetch_assoc($resData)) {
+        $out[] = $row;
+    }
+
+    mysqli_free_result($resData);
+
+    return $out;
+}
+
+function getData($conn, $dataType = 'page', $childDataType = 'page', $limit = 10, $featuredOnly = false, $characterLimit = 250)
+{
+    $showOnlyFeatured = $featuredOnly ? " AND link.link_is_featured = 1 " : '';
+
+    $query = "SELECT 
+        {$dataType}_id AS id,
+        {$dataType}_title AS title,
+        LEFT(
+            TRIM(
+                REGEXP_REPLACE({$dataType}_description, '<[^>]*>', '')
+            ),
+            {$characterLimit}
+        ) AS description,
+        {$dataType}_image AS image,
+        profile_display_name AS author,
+        profile_image AS author_image,
+        category_title AS category,
+        category_link.link_url AS category_url,
+        link.link_url,
+        link.link_published
+
+    FROM " . TABLE_PREFIX . "{$dataType}
+
+    INNER JOIN " . TABLE_PREFIX . "link AS link
+        ON link.link_relation_id = {$dataType}_id
+       AND link.link_status = 200
+       AND link.link_type = '{$dataType}'
+       AND link.link_site_id = " . SITE_ID . "
+       {$showOnlyFeatured}
+
+    INNER JOIN " . TABLE_PREFIX . "category
+        ON category_id = {$dataType}_category
+       AND category_type = '{$dataType}'
+       AND category_site_id = " . SITE_ID . "
+
+    LEFT JOIN " . TABLE_PREFIX . "link AS category_link
+        ON category_link.link_relation_id = category_id
+       AND category_link.link_type = 'category'
+       AND category_link.link_status = 200
+       AND category_link.link_site_id = " . SITE_ID . "
+
+    INNER JOIN " . TABLE_PREFIX . "profile
+        ON link.link_owner_id = profile_user_id
+
+    WHERE {$dataType}_status = 1
+    AND {$dataType}_type='{$childDataType}'
+      AND {$dataType}_site_id = " . SITE_ID . "
+
+    ORDER BY link.link_published DESC
+    LIMIT {$limit}";
+
+    $resData = mysqli_query($conn, $query);
+    if (!$resData) {
+        return [];
+    }
+
+    $out = [];
+    while ($row = mysqli_fetch_assoc($resData)) {
+        $out[] = $row;
+    }
+
+    mysqli_free_result($resData);
+
+    return $out;
+}

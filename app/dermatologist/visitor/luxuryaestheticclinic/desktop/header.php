@@ -1,6 +1,12 @@
 <?php
 require_once MENU_FUNCTIONS;
 require_once DATA_FUNCTIONS;
+
+$statsForPatients = '1,500';
+$statsForYears = 15;
+$statsForTreatments = 20;
+$statsForHappyClients = 500;
+
 ?>
 <!doctype html>
 <html lang="en">

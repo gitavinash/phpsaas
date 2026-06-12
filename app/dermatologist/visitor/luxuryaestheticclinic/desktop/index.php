@@ -53,119 +53,11 @@ require_once 'header.php';
   ?>
 </section>
 
-<!-- 3. TRUST & AUTHORITY BAR -->
-<section class="trust-bar" id="trust-bar">
-  <div class="container trust-bar-grid">
-    <div class="counter-item reveal reveal-stagger">
-      <span class="counter-number" data-target="1500" data-suffix="+">0</span>
-      <span class="counter-label">Happy Patients</span>
-    </div>
-    <div class="counter-item reveal reveal-stagger">
-      <span class="counter-number" data-target="10" data-suffix="+">0</span>
-      <span class="counter-label">Years Experience</span>
-    </div>
-    <div class="counter-item reveal reveal-stagger">
-      <span class="counter-number" data-target="20" data-suffix="+">0</span>
-      <span class="counter-label">Advanced Treatments</span>
-    </div>
-    <div class="counter-item reveal reveal-stagger">
-      <span class="counter-number" data-target="500" data-suffix="+">0</span>
-      <span class="counter-label">Verified Reviews</span>
-    </div>
-  </div>
-</section>
+<?php
 
-<!-- 5. CONCERNS WE TREAT -->
-<section class="concerns-section" id="concerns">
-  <div class="container text-center concerns-header reveal">
-    <span class="section-tag">Targeted Clinical Solutions</span>
-    <h2>Aesthetic Concerns We Treat</h2>
-    <p class="max-width-600">
-      Every treatment starts with a deep clinical analysis of your skin,
-      hair, or body goals. Select your primary concern area to discover
-      clinical remedies:
-    </p>
-  </div>
+require_once 'widgets/trust-bar.php';
 
-  <div class="container concerns-grid">
-    <!-- Category 1: Skin -->
-    <div class="concern-category-card reveal reveal-stagger">
-      <div class="category-icon-wrapper">
-        <i data-lucide="sparkles" style="width: 32px; height: 32px"></i>
-      </div>
-      <h3 class="category-title">Skin Rejuvenation</h3>
-      <ul class="concern-links">
-        <li>
-          <a href="services-face/" class="concern-item-link">Active Acne & Breakouts <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services-face/" class="concern-item-link">Pigmentation & Melasma <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services-face/" class="concern-item-link">Acne Scars & Uneven Texture <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services-face/" class="concern-item-link">Fine Lines, Wrinkles & Sagging <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services-face/" class="concern-item-link">Open Pores & Dull Complexion <i data-lucide="arrow-right"></i></a>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Category 2: Hair -->
-    <div class="concern-category-card reveal reveal-stagger">
-      <div class="category-icon-wrapper">
-        <i data-lucide="scissors" style="width: 32px; height: 32px"></i>
-      </div>
-      <h3 class="category-title">Hair Restoration</h3>
-      <ul class="concern-links">
-        <li>
-          <a href="services/" class="concern-item-link">Severe Hair Fall & Shedding <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services/" class="concern-item-link">Pattern Baldness (Alopecia) <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services/" class="concern-item-link">Thinning Crowns & Recedings <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services/" class="concern-item-link">Chronic Dandruff & Scalp Health
-            <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services/" class="concern-item-link">Post-Transplant Recovery care <i data-lucide="arrow-right"></i></a>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Category 3: Body -->
-    <div class="concern-category-card reveal reveal-stagger">
-      <div class="category-icon-wrapper">
-        <i data-lucide="smile" style="width: 32px; height: 32px"></i>
-      </div>
-      <h3 class="category-title">Body Contouring</h3>
-      <ul class="concern-links">
-        <li>
-          <a href="#treatments" class="concern-item-link">Stubborn Localized Fat pockets <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="#treatments" class="concern-item-link">Stretch Marks & Scarring <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="#treatments" class="concern-item-link">Skin Laxity & Sagging Areas <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="#treatments" class="concern-item-link">Cellulite Reduction & Smoothness
-            <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="#treatments" class="concern-item-link">Full Body Sculpting & Contours <i data-lucide="arrow-right"></i></a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
+?>
 
 <!-- 9. WHY CHOOSE LUXURY AESTHETIC CLINIC -->
 <section class="why-choose-section" id="why-us">
@@ -286,175 +178,137 @@ require_once 'header.php';
   </div>
 </section>
 
-<!-- 6. MOST POPULAR TREATMENTS -->
-<section class="treatments-section" id="treatments">
-  <div class="container text-center reveal">
-    <span class="section-tag">Our Signature Enhancements</span>
-    <h2>Most Popular Clinic Treatments</h2>
+<!-- 5. CONCERNS WE TREAT -->
+<section class="concerns-section" id="concerns">
+  <div class="container text-center concerns-header reveal">
+    <span class="section-tag">Targeted Clinical Solutions</span>
+    <h2>Aesthetic Concerns We Treat</h2>
     <p class="max-width-600">
+      Every treatment starts with a deep clinical analysis of your skin,
+      hair, or body goals. Select your primary concern area to discover
+      clinical remedies:
+    </p>
+  </div>
+
+  <div class="container concerns-grid">
+    <!-- Category 1: Skin -->
+    <div class="concern-category-card reveal reveal-stagger">
+      <div class="category-icon-wrapper">
+        <i data-lucide="sparkles" style="width: 32px; height: 32px"></i>
+      </div>
+      <h3 class="category-title">Skin Rejuvenation</h3>
+      <ul class="concern-links">
+        <li>
+          <a href="services-face/" class="concern-item-link">Active Acne & Breakouts <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="services-face/" class="concern-item-link">Pigmentation & Melasma <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="services-face/" class="concern-item-link">Acne Scars & Uneven Texture <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="services-face/" class="concern-item-link">Fine Lines, Wrinkles & Sagging <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="services-face/" class="concern-item-link">Open Pores & Dull Complexion <i data-lucide="arrow-right"></i></a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Category 2: Hair -->
+    <div class="concern-category-card reveal reveal-stagger">
+      <div class="category-icon-wrapper">
+        <i data-lucide="scissors" style="width: 32px; height: 32px"></i>
+      </div>
+      <h3 class="category-title">Hair Restoration</h3>
+      <ul class="concern-links">
+        <li>
+          <a href="services/" class="concern-item-link">Severe Hair Fall & Shedding <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="services/" class="concern-item-link">Pattern Baldness (Alopecia) <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="services/" class="concern-item-link">Thinning Crowns & Recedings <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="services/" class="concern-item-link">Chronic Dandruff & Scalp Health
+            <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="services/" class="concern-item-link">Post-Transplant Recovery care <i data-lucide="arrow-right"></i></a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Category 3: Body -->
+    <div class="concern-category-card reveal reveal-stagger">
+      <div class="category-icon-wrapper">
+        <i data-lucide="smile" style="width: 32px; height: 32px"></i>
+      </div>
+      <h3 class="category-title">Body Contouring</h3>
+      <ul class="concern-links">
+        <li>
+          <a href="#treatments" class="concern-item-link">Stubborn Localized Fat pockets <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="#treatments" class="concern-item-link">Stretch Marks & Scarring <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="#treatments" class="concern-item-link">Skin Laxity & Sagging Areas <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="#treatments" class="concern-item-link">Cellulite Reduction & Smoothness
+            <i data-lucide="arrow-right"></i></a>
+        </li>
+        <li>
+          <a href="#treatments" class="concern-item-link">Full Body Sculpting & Contours <i data-lucide="arrow-right"></i></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 6. MOST POPULAR TREATMENTS -->
+
+<?php
+$treatements = getData($connection, 'service', 'treatment', 8, true); // Fetch 8 treatments
+if (!empty($treatements)) {
+  echo "<section class='treatments-section' id='treatments'>
+  <div class='container text-center reveal'>
+    <span class='section-tag'>Our Signature Enhancements</span>
+    <h2>Most Popular Clinic Treatments</h2>
+    <p class='max-width-600'>
       Clinical excellence paired with cutting-edge medical advances. Explore
       our most requested therapies for dramatic, lasting results:
     </p>
   </div>
 
-  <div class="container treatments-grid">
-    <!-- Treatment 1: HydraFacial -->
-    <div class="treatment-card reveal reveal-stagger">
-      <div class="treatment-img-container">
-        <span class="treatment-badge">Skin Glow</span>
+  <div class='container treatments-grid'>";
+  foreach ($treatements as $treatment) {
+    extract($treatment);
+    echo "<div class='treatment-card reveal reveal-stagger'>
+      <div class='treatment-img-container'>
+        <span class='treatment-badge'>Skin Glow</span>
         <img
-          src="assets/images/hero_clinic.png"
-          alt="HydraFacial Treatment Session"
-          class="treatment-img" />
+          src='{$image}'
+          alt='{$title}'
+          class='treatment-img' />
       </div>
-      <div class="treatment-card-content">
-        <h3 class="treatment-card-title">Synergistic HydraFacial</h3>
-        <p class="treatment-card-desc">
-          Bespoke 6-step vortex infusion cleaning, extracting impurities and
-          saturating skin with rich hyaluronic peptides.
+      <div class='treatment-card-content'>
+        <h3 class='treatment-card-title'>{$title}</h3>
+        <p class='treatment-card-desc'>
+          {$description}
         </p>
-        <a href="treatment/" class="btn-link">Explore Treatment
-          <i data-lucide="arrow-right" style="width: 16px"></i></a>
+        <a href='{$link_url}' class='btn-link'>Explore Treatment
+          <i data-lucide='arrow-right' style='width: 16px'></i></a>
       </div>
-    </div>
-
-    <!-- Treatment 2: PRP Hair Therapy -->
-    <div class="treatment-card reveal reveal-stagger">
-      <div class="treatment-img-container">
-        <span class="treatment-badge">Hair Care</span>
-        <img
-          src="assets/images/before_skin.png"
-          alt="PRP Hair Therapy Treatment Session"
-          class="treatment-img" />
-      </div>
-      <div class="treatment-card-content">
-        <h3 class="treatment-card-title">PRP Platelet Rich Therapy</h3>
-        <p class="treatment-card-desc">
-          Utilizes refined plasma growth factor concentrations injected
-          directly to stimulate passive hair follicles.
-        </p>
-        <a href="services/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
-      </div>
-    </div>
-
-    <!-- Treatment 3: GFC Hair Treatment -->
-    <div class="treatment-card reveal reveal-stagger">
-      <div class="treatment-img-container">
-        <span class="treatment-badge">Advanced Hair</span>
-        <img
-          src="assets/images/after_skin.png"
-          alt="GFC Hair Treatment Session"
-          class="treatment-img" />
-      </div>
-      <div class="treatment-card-content">
-        <h3 class="treatment-card-title">GFC Growth Factor Concentrate</h3>
-        <p class="treatment-card-desc">
-          The next generation of scalp restoration using highly stable
-          growth factors extracted directly from platelets.
-        </p>
-        <a href="services/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
-      </div>
-    </div>
-
-    <!-- Treatment 4: Botox -->
-    <div class="treatment-card reveal reveal-stagger">
-      <div class="treatment-img-container">
-        <span class="treatment-badge">Anti-Aging</span>
-        <img
-          src="assets/images/dr_founder.png"
-          alt="Botox Injections Session"
-          class="treatment-img" />
-      </div>
-      <div class="treatment-card-content">
-        <h3 class="treatment-card-title">FDA-Approved Allergan Botox</h3>
-        <p class="treatment-card-desc">
-          Precision micro-injections gently relaxing target hyperactive
-          facial muscles to soften wrinkles and dynamic lines.
-        </p>
-        <a href="services-face/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
-      </div>
-    </div>
-
-    <!-- Treatment 5: Dermal Fillers -->
-    <div class="treatment-card reveal reveal-stagger">
-      <div class="treatment-img-container">
-        <span class="treatment-badge">Contours</span>
-        <img
-          src="assets/images/dr_founder.png"
-          alt="Juvederm Dermal Fillers Session"
-          class="treatment-img" />
-      </div>
-      <div class="treatment-card-content">
-        <h3 class="treatment-card-title">Juvederm Dermal Fillers</h3>
-        <p class="treatment-card-desc">
-          Restores structural volume and contours cheekbones, jawlines, and
-          lips using medical-grade hyaluronic acid gels.
-        </p>
-        <a href="services-face/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
-      </div>
-    </div>
-
-    <!-- Treatment 6: HIFU Ultra Therapy -->
-    <div class="treatment-card reveal reveal-stagger">
-      <div class="treatment-img-container">
-        <span class="treatment-badge">Non-Surgical Lift</span>
-        <img
-          src="assets/images/tech_showcase.png"
-          alt="HIFU Treatment Session"
-          class="treatment-img" />
-      </div>
-      <div class="treatment-card-content">
-        <h3 class="treatment-card-title">
-          High-Intensity Focused Ultrasound
-        </h3>
-        <p class="treatment-card-desc">
-          Precision thermal ultrasound energy contracting deep SMAS tissue
-          layers to lift and tighten cheeks and jowls.
-        </p>
-        <a href="services-face/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
-      </div>
-    </div>
-
-    <!-- Treatment 7: Laser Hair Removal -->
-    <div class="treatment-card reveal reveal-stagger">
-      <div class="treatment-img-container">
-        <span class="treatment-badge">Smoothness</span>
-        <img
-          src="assets/images/tech_showcase.png"
-          alt="Triple Wavelength Laser Hair Removal"
-          class="treatment-img" />
-      </div>
-      <div class="treatment-card-content">
-        <h3 class="treatment-card-title">Soprano Titanium Laser Care</h3>
-        <p class="treatment-card-desc">
-          Advanced triple-wavelength cooling laser system destroying deep
-          follicles painlessly for permanent hair reductions.
-        </p>
-        <a href="treatment/" class="btn-link">Explore Details
-          <i data-lucide="arrow-right" style="width: 16px"></i></a>
-      </div>
-    </div>
-
-    <!-- Treatment 8: Chemical Peels -->
-    <div class="treatment-card reveal reveal-stagger">
-      <div class="treatment-img-container">
-        <span class="treatment-badge">Resurfacing</span>
-        <img
-          src="assets/images/hero_clinic.png"
-          alt="Chemical Peel Session"
-          class="treatment-img" />
-      </div>
-      <div class="treatment-card-content">
-        <h3 class="treatment-card-title">Premium Medi-Peels</h3>
-        <p class="treatment-card-desc">
-          Expertly chosen botanical and clinical acid blends resurfacing top
-          dead cell layers for massive radiance increases.
-        </p>
-        <a href="services-face/" class="btn-link">Explore Hub <i data-lucide="arrow-right" style="width: 16px"></i></a>
-      </div>
-    </div>
-  </div>
-</section>
+    </div>";
+  }
+  echo "</div></section>";
+}
+?>
 
 <!-- 7. BEFORE & AFTER TRANSFORMATIONS -->
 <section class="transformations-section" id="before-after">
@@ -791,6 +645,7 @@ require_once 'header.php';
     </div>
   </div>
 </section>
+
 <?php
 
 require_once 'widgets/recent-articles.php';
