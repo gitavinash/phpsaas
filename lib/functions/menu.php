@@ -8,14 +8,18 @@ require_once UTIL_FUNCTIONS;
 function is_menu_active(string $menuUrl): bool
 {
     $currentUri = trim(
-        parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),
+        (string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH),
         '/'
     );
 
-    $menuPath = trim(
-        parse_url($menuUrl, PHP_URL_PATH),
-        '/'
-    );
+    if (!empty($menuUrl)) {
+        $menuPath = trim(
+            (string) parse_url($menuUrl, PHP_URL_PATH),
+            '/'
+        );
+    } else {
+        $menuPath = '';
+    }
 
     // homepage
     if ($menuPath === '' && $currentUri === '') {

@@ -49,13 +49,13 @@ $eventDate = !empty($event_start_date)
     ? date('d M Y', strtotime($event_start_date))
     : '';
 
-$eventTime = !empty($event_start_time)
+$eventTime = (($event_start_time != '00:00:00')
     ? date('h:i A', strtotime($event_start_time))
-    : '';
+    : '');
 
-$eventEndTime = !empty($event_end_time)
+$eventEndTime = (($event_end_time != '00:00:00')
     ? date('h:i A', strtotime($event_end_time))
-    : '';
+    : '');
 
 require_once 'header.php';
 
@@ -182,7 +182,7 @@ require_once 'header.php';
                             TIME
                         </div>
                         <div class="font-semibold">
-                            <?php echo $eventTime; ?>
+                            <?php echo $eventTime . ((!empty($eventEndTime)) ? ' - ' . $eventEndTime : ''); ?>
                         </div>
                     </div>
                 <?php

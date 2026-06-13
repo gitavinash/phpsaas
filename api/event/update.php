@@ -1,6 +1,6 @@
 <?php
 
-/* Update Post */
+/* Update Event */
 
 require_once LOGIN_CHECK;
 
@@ -15,15 +15,15 @@ function update($connection, $data)
 
         if (isset($category)) {
 
-            if ($checkPost = mysqli_query($connection, "SELECT link_id, event_gallery FROM " . TABLE_PREFIX . "event INNER JOIN " . TABLE_PREFIX . "link WHERE link_url='{$oldURL}' AND event_id='{$id}'")) {
+            if ($checkEvent = mysqli_query($connection, "SELECT link_id, event_gallery FROM " . TABLE_PREFIX . "event INNER JOIN " . TABLE_PREFIX . "link WHERE link_url='{$oldURL}' AND event_id='{$id}'")) {
 
-                if (mysqli_num_rows($checkPost) != 0) {
+                if (mysqli_num_rows($checkEvent) != 0) {
 
-                    extract(mysqli_fetch_assoc($checkPost));
+                    extract(mysqli_fetch_assoc($checkEvent));
 
                     require_once MODULES . 'imageUploader.php';
 
-                    $featurePost = ((isset($featurePost)) ? 1 : 0);
+                    $featureEvent = ((isset($featureEvent)) ? 1 : 0);
 
                     if (isset($image)) {
 
@@ -90,7 +90,7 @@ function update($connection, $data)
 
                     if ($oldURL != $url) {
 
-                        if ($checkURL = mysqli_query($connection, "SELECT link_url FROM " . TABLE_PREFIX . "link WHERE link_url='{$url}' AND link_type='post' AND link_site_id='" . SITE_ID . "'")) {
+                        if ($checkURL = mysqli_query($connection, "SELECT link_url FROM " . TABLE_PREFIX . "link WHERE link_url='{$url}' AND link_type='event' AND link_site_id='" . SITE_ID . "'")) {
 
                             if (mysqli_num_rows($checkURL) == 0) {
 
@@ -98,15 +98,15 @@ function update($connection, $data)
 
                                 $addRedirect = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "link SET link_status=301 WHERE link_url='{$oldURL}' AND link_site_id='" . SITE_ID . "'");
 
-                                /** Add new active url of the post */
+                                /** Add new active url of the event */
 
-                                $updateLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_is_featured) VALUES('{$url}', '{$id}', 200, '{$postType}', '" . USER_ID . "', '" . SITE_ID . "', NOW(), NOW(), '{$featurePost}')");
+                                $updateLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_is_featured) VALUES('{$url}', '{$id}', 200, '{$postType}', '" . USER_ID . "', '" . SITE_ID . "', NOW(), NOW(), '{$featureEvent}')");
                                 $linkID = mysqli_insert_id($connection);
                             } else {
 
                                 $addRedirect = FALSE;
                                 $status = 'warning';
-                                $msg = "Please change post url. Because its already in used";
+                                $msg = "Please change event url. Because its already in used";
                             }
                         }
                     } else {
@@ -115,16 +115,16 @@ function update($connection, $data)
 
                         if ($postStatus == 0) {
 
-                            $updateLink = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "link SET link_status=200, link_published=NOW(), link_modified=NOW(), link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='{$postType}' AND link_url='{$oldURL}' AND link_site_id='" . SITE_ID . "'");
+                            $updateLink = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "link SET link_status=200, link_published=NOW(), link_modified=NOW(), link_is_featured='{$featureEvent}' WHERE link_relation_id='{$id}' AND link_type='{$postType}' AND link_url='{$oldURL}' AND link_site_id='" . SITE_ID . "'");
                         } else {
 
-                            $updateLink = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "link SET link_status=200, link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='{$postType}' AND link_url='{$oldURL}' AND link_site_id='" . SITE_ID . "'");
+                            $updateLink = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "link SET link_status=200, link_is_featured='{$featureEvent}' WHERE link_relation_id='{$id}' AND link_type='{$postType}' AND link_url='{$oldURL}' AND link_site_id='" . SITE_ID . "'");
                         }
                     }
 
-                    /** Update post table */
+                    /** Update event table */
 
-                    $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "event SET event_image='{$featureImage}', event_thumbnail='{$thumbnailImage}', event_title='{$title}', event_description='{$description}', event_highlight='{$highlight}', event_category='{$category}', event_start_date='{$eventDate}', event_end_time='{$eventEndTime}', event_location='{$eventLocation}', event_map='{$eventMap}', event_status='1', event_gallery='{$newEventGallery}' WHERE event_id='{$id}'");
+                    $updateEvent = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "event SET event_image='{$featureImage}', event_thumbnail='{$thumbnailImage}', event_title='{$title}', event_description='{$description}', event_highlight='{$highlight}', event_category='{$category}', event_start_date='{$eventDate}', event_start_time='{$eventTime}', event_end_time='{$eventEndTime}', event_location='{$eventLocation}', event_map='{$eventMap}', event_status='1', event_gallery='{$newEventGallery}' WHERE event_id='{$id}'");
 
                     // Update inventory table
                     if (isset($salePrice) && isset($mrp)) {
@@ -157,7 +157,7 @@ function update($connection, $data)
                         }
                     }
 
-                    if ($addRedirect && $updateLink && $updatePost && $updateMeta && $tagData && $updateInventory) {
+                    if ($addRedirect && $updateLink && $updateEvent && $updateMeta && $tagData && $updateInventory) {
 
                         mysqli_query($connection, 'COMMIT');
 
@@ -165,9 +165,12 @@ function update($connection, $data)
                         $msg = 'Event is update successfully';
                         $redirect = '/dashboard/' . $postType . '/?type=edit&editor=true&id=' . base64_encode($id);
                     } else {
-
-                        echo $addRedirect . ' && ' . $updateLink . ' && ' . $updatePost . ' && ' . $updateMeta . ' && ' . $tagData;
-                        mysqli_query($connection, 'ROLLBACK');
+                        if (DEVELOPMENT_MODE == true) {
+                            echo $addRedirect . ' && ' . $updateLink . ' && ' . $updateEvent . ' && ' . $updateMeta . ' && ' . $tagData;
+                            mysqli_query($connection, 'ROLLBACK');
+                        } else {
+                            echo "Something went wrong updaing event";
+                        }
                     }
                 } else {
 
@@ -180,7 +183,7 @@ function update($connection, $data)
         }
     } else {
 
-        $msg = 'Please enter post title';
+        $msg = 'Please enter event title';
     }
 
     $result = array(

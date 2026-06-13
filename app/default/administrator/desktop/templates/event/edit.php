@@ -311,14 +311,14 @@ if ($eventDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                     <input type="text" name="eventDate" value="<?php echo (!empty($event_start_date) && $event_start_date != '0000-00-00') ? date('d-m-Y', strtotime($event_start_date)) : ''; ?>"
                         class="form-control inside-shadow datepicker">
                 </div>
-                <h2>Time</h2>
+                <h2>Start Time <?php echo $event_start_time ?></h2>
                 <div class="form-group">
-                    <input type="time" name="eventTime" value="<?php echo (!empty($event_start_time) && $event_start_time != '00:00:00') ? date('H:i', strtotime($event_start_time)) : ''; ?>"
+                    <input type="time" name="eventTime" value="<?php echo ($event_start_time != '00:00:00') ? date('H:i', strtotime($event_start_time)) : 'sdsd'; ?>"
                         class="form-control inside-shadow">
                 </div>
-                <h2>Time</h2>
+                <h2>End Time <?php echo $event_end_time ?></h2>
                 <div class="form-group">
-                    <input type="time" name="eventEndTime" value="<?php echo (!empty($event_end_time) && $event_end_time != '00:00:00') ? date('H:i', strtotime($event_start_time)) : ''; ?>"
+                    <input type="time" name="eventEndTime" value="<?php echo (!empty($event_end_time) && $event_end_time != '00:00:00') ? date('H:i', strtotime($event_end_time)) : 'as'; ?>"
                         class="form-control inside-shadow">
                 </div>
                 <h2>Location</h2>
