@@ -9,6 +9,8 @@ function update($connection, $data)
 
     extract($data);
 
+    $eventDate = date('Y-m-d', strtotime($eventDate));
+
     if ($title != '') {
 
         if (isset($category)) {
