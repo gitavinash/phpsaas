@@ -1,3 +1,21 @@
+<section class="bg-[#1f2937] text-white py-20 mt-20">
+    <div class="container mx-auto px-6 text-center">
+
+        <h2 class="text-4xl md:text-5xl font-bold mb-6">
+            Make Father's Day Special
+        </h2>
+
+        <p class="max-w-2xl mx-auto text-gray-300 mb-8">
+            Discover meaningful gifts and create memories that last forever.
+        </p>
+
+        <a href="/tag/fathers-day/"
+            class="inline-block bg-[#D4946D] hover:bg-[#bf7d54] px-8 py-4 rounded-full transition">
+            Shop Collection
+        </a>
+
+    </div>
+</section>
 <!-- Footer -->
 <footer class="bg-gray-900 text-white pt-16 pb-8">
     <div class="container mx-auto px-4">
@@ -106,256 +124,256 @@ if (ACTIVE_URL == '/checkout/') {
 }
 ?>
 <script>
-$(document).ready(function() {
-    // Mobile menu is now handled in header.php
+    $(document).ready(function() {
+        // Mobile menu is now handled in header.php
 
-    // 2. Quantity Control
-    const $decrease = $('#decrease-quantity');
-    const $increase = $('#increase-quantity');
-    const $quantityInput = $('#quantity');
+        // 2. Quantity Control
+        const $decrease = $('#decrease-quantity');
+        const $increase = $('#increase-quantity');
+        const $quantityInput = $('#quantity');
 
-    if ($decrease.length && $increase.length && $quantityInput.length) {
-        $decrease.on('click', function() {
-            const val = parseInt($quantityInput.val());
-            if (val > 1) $quantityInput.val(val - 1);
-        });
+        if ($decrease.length && $increase.length && $quantityInput.length) {
+            $decrease.on('click', function() {
+                const val = parseInt($quantityInput.val());
+                if (val > 1) $quantityInput.val(val - 1);
+            });
 
-        $increase.on('click', function() {
-            const val = parseInt($quantityInput.val());
-            $quantityInput.val(val + 1);
-        });
+            $increase.on('click', function() {
+                const val = parseInt($quantityInput.val());
+                $quantityInput.val(val + 1);
+            });
 
-        $quantityInput.on('change', function() {
-            const val = parseInt($(this).val());
-            if (val < 1 || isNaN(val)) {
-                $(this).val(1);
-            }
-        });
-    }
-
-    // 3. Checkbox Styling (chocolate, card, vase)
-    const $checkboxLabels = $('label[for="chocolate"], label[for="card"], label[for="vase"]');
-
-    $checkboxLabels.each(function() {
-        $(this).on('click', function(e) {
-            const forAttr = $(this).attr('for');
-            const $checkbox = $('#' + forAttr);
-            const $checkIcon = $(this).find('.ri-check-line');
-            const $customCheckbox = $(this).find('.checkbox-custom');
-
-            $checkbox.prop('checked', !$checkbox.prop('checked'));
-
-            if ($checkbox.prop('checked')) {
-                $customCheckbox.addClass('bg-primary border-primary');
-                $checkIcon.removeClass('hidden');
-            } else {
-                $customCheckbox.removeClass('bg-primary border-primary');
-                $checkIcon.addClass('hidden');
-            }
-
-            e.preventDefault();
-        });
-    });
-
-    // 4. Tab Control
-    const $tabButtons = $('.tab-button');
-    const $tabContents = $('.tab-content');
-
-    if ($tabButtons.length) {
-        $tabButtons.on('click', function() {
-            const tabName = $(this).data('tab');
-
-            $tabButtons.removeClass('border-primary text-primary')
-                .addClass('border-transparent text-gray-500');
-
-            $(this).removeClass('border-transparent text-gray-500')
-                .addClass('border-primary text-primary');
-
-            $tabContents.removeClass('active');
-            $('#' + tabName + '-content').addClass('active');
-        });
-    }
-
-    // 5. Header Scroll + Mobile Slide Menu + Hero Slider
-    const $header = $('header');
-    const $menuButton = $('#menuButton');
-    const $closeMenu = $('#closeMenu');
-    const $mobileMenu = $('#mobileMenu');
-    const $mobileMenuOverlay = $('#mobileMenuOverlay');
-    const $mobileShopButton = $('#mobileShopButton');
-    const $mobileShopContent = $('#mobileShopContent');
-    const $slider = $('#heroSlider');
-    const $slides = $('.slide');
-    const $dots = $('.slider-dot');
-    const $prevBtn = $('.slider-nav-btn.prev');
-    const $nextBtn = $('.slider-nav-btn.next');
-
-    let currentSlide = 0;
-    let slideInterval;
-
-    function updateSlides() {
-        $slides.each(function(index) {
-            if (index === currentSlide) {
-                $(this).css('transform', 'translateX(0)');
-            } else if (index < currentSlide) {
-                $(this).css('transform', 'translateX(-100%)');
-            } else {
-                $(this).css('transform', 'translateX(100%)');
-            }
-        });
-
-        $dots.each(function(index) {
-            $(this).toggleClass('bg-opacity-100', index === currentSlide)
-                .toggleClass('bg-opacity-50', index !== currentSlide);
-        });
-    }
-
-    function nextSlide() {
-        currentSlide = (currentSlide + 1) % $slides.length;
-        updateSlides();
-    }
-
-    function prevSlide() {
-        currentSlide = (currentSlide - 1 + $slides.length) % $slides.length;
-        updateSlides();
-    }
-
-    function startSlideShow() {
-        slideInterval = setInterval(nextSlide, 5000);
-    }
-
-    function stopSlideShow() {
-        clearInterval(slideInterval);
-    }
-
-    $prevBtn.on('click', function() {
-        stopSlideShow();
-        prevSlide();
-        startSlideShow();
-    });
-
-    $nextBtn.on('click', function() {
-        stopSlideShow();
-        nextSlide();
-        startSlideShow();
-    });
-
-    $dots.on('click', function() {
-        stopSlideShow();
-        currentSlide = $(this).index();
-        updateSlides();
-        startSlideShow();
-    });
-
-    $slider.on('mouseenter', stopSlideShow).on('mouseleave', startSlideShow);
-
-    startSlideShow();
-
-    $(window).on('scroll', function() {
-        if ($(this).scrollTop() > 50) {
-            $header.removeClass('header-transparent').addClass('header-solid');
-        } else {
-            $header.addClass('header-transparent').removeClass('header-solid');
+            $quantityInput.on('change', function() {
+                const val = parseInt($(this).val());
+                if (val < 1 || isNaN(val)) {
+                    $(this).val(1);
+                }
+            });
         }
-    });
 
-    function openMobileMenu() {
-        $mobileMenu.removeClass('translate-x-full');
-        $mobileMenuOverlay.removeClass('hidden');
-        $('body').css('overflow', 'hidden');
-    }
+        // 3. Checkbox Styling (chocolate, card, vase)
+        const $checkboxLabels = $('label[for="chocolate"], label[for="card"], label[for="vase"]');
 
-    function closeMobileMenu() {
-        $mobileMenu.addClass('translate-x-full');
-        $mobileMenuOverlay.addClass('hidden');
-        $('body').css('overflow', '');
-    }
+        $checkboxLabels.each(function() {
+            $(this).on('click', function(e) {
+                const forAttr = $(this).attr('for');
+                const $checkbox = $('#' + forAttr);
+                const $checkIcon = $(this).find('.ri-check-line');
+                const $customCheckbox = $(this).find('.checkbox-custom');
 
-    $menuButton.on('click', openMobileMenu);
-    $closeMenu.on('click', closeMobileMenu);
-    $mobileMenuOverlay.on('click', closeMobileMenu);
+                $checkbox.prop('checked', !$checkbox.prop('checked'));
 
-    $mobileShopButton.on('click', function() {
-        $mobileShopContent.toggleClass('hidden');
-        const $icon = $(this).find('i');
-        const isRotated = $icon.css('transform') === 'matrix(-1, 0, 0, -1, 0, 0)';
-        $icon.css('transform', isRotated ? '' : 'rotate(180deg)');
-    });
+                if ($checkbox.prop('checked')) {
+                    $customCheckbox.addClass('bg-primary border-primary');
+                    $checkIcon.removeClass('hidden');
+                } else {
+                    $customCheckbox.removeClass('bg-primary border-primary');
+                    $checkIcon.addClass('hidden');
+                }
 
-    // 6. Product Zoom and Thumbnail Switcher
-    $('.thumbnail img').on('click', function() {
-        const newSrc = $(this).attr('src');
-        $('#mainProductImage').attr('src', newSrc);
-        $('#zoomOverlay').css('background-image', 'url(' + newSrc + ')');
+                e.preventDefault();
+            });
+        });
 
-        $('.thumbnail img').parent().removeClass('border-primary');
-        $(this).parent().addClass('border-primary');
-    });
+        // 4. Tab Control
+        const $tabButtons = $('.tab-button');
+        const $tabContents = $('.tab-content');
 
-    $('#zoomOverlay').css('background-image', 'url(' + $('#mainProductImage').attr('src') + ')');
+        if ($tabButtons.length) {
+            $tabButtons.on('click', function() {
+                const tabName = $(this).data('tab');
 
-    $('.product-image-container').on('mouseenter', function() {
-        $('#zoomOverlay').addClass('active');
-    }).on('mouseleave', function() {
-        $('#zoomOverlay').removeClass('active');
-    }).on('mousemove', function(e) {
-        const $this = $(this);
-        const offset = $this.offset();
-        const x = e.pageX - offset.left;
-        const y = e.pageY - offset.top;
-        const width = $this.width();
-        const height = $this.height();
+                $tabButtons.removeClass('border-primary text-primary')
+                    .addClass('border-transparent text-gray-500');
 
-        const xPercent = (x / width) * 100;
-        const yPercent = (y / height) * 100;
+                $(this).removeClass('border-transparent text-gray-500')
+                    .addClass('border-primary text-primary');
 
-        $('#zoomOverlay').css('background-position', xPercent + '% ' + yPercent + '%');
-    });
-
-    // 7. Urgency Timer for Same-Day Delivery
-    function updateUrgencyTimer() {
-        const now = new Date();
-        const cutoffTime = new Date();
-        cutoffTime.setHours(11, 0, 0, 0); // 11 AM cutoff
-
-        const timerEl = document.getElementById('urgency-timer');
-        if (!timerEl) return;
-
-        if (now < cutoffTime) {
-            const diff = cutoffTime - now;
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            timerEl.textContent = `${hours}h ${minutes}m`;
-        } else {
-            timerEl.parentElement.innerHTML =
-                '<i class="ri-information-line text-orange-600 text-lg mr-1"></i><span class="text-sm text-gray-700">Next-day delivery available</span>';
+                $tabContents.removeClass('active');
+                $('#' + tabName + '-content').addClass('active');
+            });
         }
-    }
 
-    // Update timer immediately and every minute
-    updateUrgencyTimer();
-    setInterval(updateUrgencyTimer, 60000);
-});
+        // 5. Header Scroll + Mobile Slide Menu + Hero Slider
+        const $header = $('header');
+        const $menuButton = $('#menuButton');
+        const $closeMenu = $('#closeMenu');
+        const $mobileMenu = $('#mobileMenu');
+        const $mobileMenuOverlay = $('#mobileMenuOverlay');
+        const $mobileShopButton = $('#mobileShopButton');
+        const $mobileShopContent = $('#mobileShopContent');
+        const $slider = $('#heroSlider');
+        const $slides = $('.slide');
+        const $dots = $('.slider-dot');
+        const $prevBtn = $('.slider-nav-btn.prev');
+        const $nextBtn = $('.slider-nav-btn.next');
+
+        let currentSlide = 0;
+        let slideInterval;
+
+        function updateSlides() {
+            $slides.each(function(index) {
+                if (index === currentSlide) {
+                    $(this).css('transform', 'translateX(0)');
+                } else if (index < currentSlide) {
+                    $(this).css('transform', 'translateX(-100%)');
+                } else {
+                    $(this).css('transform', 'translateX(100%)');
+                }
+            });
+
+            $dots.each(function(index) {
+                $(this).toggleClass('bg-opacity-100', index === currentSlide)
+                    .toggleClass('bg-opacity-50', index !== currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % $slides.length;
+            updateSlides();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + $slides.length) % $slides.length;
+            updateSlides();
+        }
+
+        function startSlideShow() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function stopSlideShow() {
+            clearInterval(slideInterval);
+        }
+
+        $prevBtn.on('click', function() {
+            stopSlideShow();
+            prevSlide();
+            startSlideShow();
+        });
+
+        $nextBtn.on('click', function() {
+            stopSlideShow();
+            nextSlide();
+            startSlideShow();
+        });
+
+        $dots.on('click', function() {
+            stopSlideShow();
+            currentSlide = $(this).index();
+            updateSlides();
+            startSlideShow();
+        });
+
+        $slider.on('mouseenter', stopSlideShow).on('mouseleave', startSlideShow);
+
+        startSlideShow();
+
+        $(window).on('scroll', function() {
+            if ($(this).scrollTop() > 50) {
+                $header.removeClass('header-transparent').addClass('header-solid');
+            } else {
+                $header.addClass('header-transparent').removeClass('header-solid');
+            }
+        });
+
+        function openMobileMenu() {
+            $mobileMenu.removeClass('translate-x-full');
+            $mobileMenuOverlay.removeClass('hidden');
+            $('body').css('overflow', 'hidden');
+        }
+
+        function closeMobileMenu() {
+            $mobileMenu.addClass('translate-x-full');
+            $mobileMenuOverlay.addClass('hidden');
+            $('body').css('overflow', '');
+        }
+
+        $menuButton.on('click', openMobileMenu);
+        $closeMenu.on('click', closeMobileMenu);
+        $mobileMenuOverlay.on('click', closeMobileMenu);
+
+        $mobileShopButton.on('click', function() {
+            $mobileShopContent.toggleClass('hidden');
+            const $icon = $(this).find('i');
+            const isRotated = $icon.css('transform') === 'matrix(-1, 0, 0, -1, 0, 0)';
+            $icon.css('transform', isRotated ? '' : 'rotate(180deg)');
+        });
+
+        // 6. Product Zoom and Thumbnail Switcher
+        $('.thumbnail img').on('click', function() {
+            const newSrc = $(this).attr('src');
+            $('#mainProductImage').attr('src', newSrc);
+            $('#zoomOverlay').css('background-image', 'url(' + newSrc + ')');
+
+            $('.thumbnail img').parent().removeClass('border-primary');
+            $(this).parent().addClass('border-primary');
+        });
+
+        $('#zoomOverlay').css('background-image', 'url(' + $('#mainProductImage').attr('src') + ')');
+
+        $('.product-image-container').on('mouseenter', function() {
+            $('#zoomOverlay').addClass('active');
+        }).on('mouseleave', function() {
+            $('#zoomOverlay').removeClass('active');
+        }).on('mousemove', function(e) {
+            const $this = $(this);
+            const offset = $this.offset();
+            const x = e.pageX - offset.left;
+            const y = e.pageY - offset.top;
+            const width = $this.width();
+            const height = $this.height();
+
+            const xPercent = (x / width) * 100;
+            const yPercent = (y / height) * 100;
+
+            $('#zoomOverlay').css('background-position', xPercent + '% ' + yPercent + '%');
+        });
+
+        // 7. Urgency Timer for Same-Day Delivery
+        function updateUrgencyTimer() {
+            const now = new Date();
+            const cutoffTime = new Date();
+            cutoffTime.setHours(11, 0, 0, 0); // 11 AM cutoff
+
+            const timerEl = document.getElementById('urgency-timer');
+            if (!timerEl) return;
+
+            if (now < cutoffTime) {
+                const diff = cutoffTime - now;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                timerEl.textContent = `${hours}h ${minutes}m`;
+            } else {
+                timerEl.parentElement.innerHTML =
+                    '<i class="ri-information-line text-orange-600 text-lg mr-1"></i><span class="text-sm text-gray-700">Next-day delivery available</span>';
+            }
+        }
+
+        // Update timer immediately and every minute
+        updateUrgencyTimer();
+        setInterval(updateUrgencyTimer, 60000);
+    });
 </script>
 <script>
-let orders = [];
-let index = 0;
+    let orders = [];
+    let index = 0;
 
-async function fetchOrders() {
-    const res = await fetch("/api/order/recent/");
-    const json = await res.json();
-    if (json.status === "success") {
-        orders = json.data;
+    async function fetchOrders() {
+        const res = await fetch("/api/order/recent/");
+        const json = await res.json();
+        if (json.status === "success") {
+            orders = json.data;
+        }
     }
-}
 
-function showPopup() {
-    if (!orders.length) return;
+    function showPopup() {
+        if (!orders.length) return;
 
-    const item = orders[index];
-    const popup = document.getElementById("orderPopup");
+        const item = orders[index];
+        const popup = document.getElementById("orderPopup");
 
-    popup.innerHTML = `
+        popup.innerHTML = `
         <a class="order-toast-link" href="${item.link_url}" aria-label="View ${item.product_title}">
             <div class="order-toast">
                 <img class="toast-img" src="${item.product_image}" alt="${item.product_title}">
@@ -385,19 +403,19 @@ function showPopup() {
         </a>
     `;
 
-    popup.style.display = "block";
+        popup.style.display = "block";
 
-    setTimeout(() => {
-        popup.style.display = "none";
-    }, 6000);
+        setTimeout(() => {
+            popup.style.display = "none";
+        }, 6000);
 
-    index = (index + 1) % orders.length;
-}
+        index = (index + 1) % orders.length;
+    }
 
-// init
-fetchOrders();
-setInterval(showPopup, 10000);
-setInterval(fetchOrders, 100000);
+    // init
+    fetchOrders();
+    setInterval(showPopup, 10000);
+    setInterval(fetchOrders, 100000);
 </script>
 
 
