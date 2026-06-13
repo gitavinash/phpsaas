@@ -113,7 +113,7 @@ if ($couponDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX .
                         <div class="form-group">
                             <label>Expiry date*</label>
                             <input type="text" class="datepicker form-control inside-shadow"
-                                value="<?php echo date('d/m/Y', strtotime($coupon_expire)) ?>" name="expiryDate"
+                                value="<?php echo (!empty($coupon_expire) && $coupon_expire != '0000-00-00') ? date('d-m-Y', strtotime($coupon_expire)) : ''; ?>" name="expiryDate"
                                 placeholder="Ignore for lifetime">
                         </div>
                     </div>

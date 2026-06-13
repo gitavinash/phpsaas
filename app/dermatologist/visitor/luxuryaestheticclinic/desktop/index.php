@@ -179,96 +179,96 @@ require_once 'widgets/trust-bar.php';
 </section>
 
 <!-- 5. CONCERNS WE TREAT -->
-<section class="concerns-section" id="concerns">
-  <div class="container text-center concerns-header reveal">
-    <span class="section-tag">Targeted Clinical Solutions</span>
+
+<?php
+
+$treatementList = getCategoriesWithPosts($connection, 'service', 'treatment', true, 3, 5);
+
+$icons = [
+  'sparkles',
+  'scissors',
+  'smile',
+  'heart',
+  'star',
+  'gem',
+  'shield',
+  'flower'
+];
+
+$iconIndex = 0;
+
+if (!empty($treatementList)) {
+  echo "
+<section class='concerns-section' id='concerns'>
+  <div class='container text-center concerns-header reveal'>
+    <span class='section-tag'>Targeted Clinical Solutions</span>
     <h2>Aesthetic Concerns We Treat</h2>
-    <p class="max-width-600">
+    <p class='max-width-600'>
       Every treatment starts with a deep clinical analysis of your skin,
       hair, or body goals. Select your primary concern area to discover
       clinical remedies:
     </p>
   </div>
 
-  <div class="container concerns-grid">
-    <!-- Category 1: Skin -->
+  <div class='container concerns-grid'>";
+
+  foreach ($treatementList as $category):
+
+    $icon = $icons[$iconIndex % count($icons)];
+    $iconIndex++;
+?>
+
     <div class="concern-category-card reveal reveal-stagger">
-      <div class="category-icon-wrapper">
-        <i data-lucide="sparkles" style="width: 32px; height: 32px"></i>
-      </div>
-      <h3 class="category-title">Skin Rejuvenation</h3>
+
+      <!-- <div class="category-icon-wrapper">
+        <i data-lucide="<?php echo $icon; ?>" style="width:32px;height:32px"></i>
+      </div> -->
+
+      <h3 class="category-title">
+        <a href="<?php echo $category['category_url']; ?>">
+          <?php echo ucwords($category['category_title']); ?>
+        </a>
+      </h3>
+
       <ul class="concern-links">
-        <li>
-          <a href="services-face/" class="concern-item-link">Active Acne & Breakouts <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services-face/" class="concern-item-link">Pigmentation & Melasma <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services-face/" class="concern-item-link">Acne Scars & Uneven Texture <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services-face/" class="concern-item-link">Fine Lines, Wrinkles & Sagging <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services-face/" class="concern-item-link">Open Pores & Dull Complexion <i data-lucide="arrow-right"></i></a>
-        </li>
+
+        <?php if (!empty($category['services'])): ?>
+
+          <?php foreach ($category['services'] as $service): ?>
+
+            <li>
+              <a
+                href="<?php echo $service['service_url']; ?>"
+                class="concern-item-link" title="<?php echo ucwords($service['service_title']); ?>">
+
+                <?php echo ucwords($service['service_title']); ?>
+
+                <i data-lucide=" arrow-right"></i>
+              </a>
+            </li>
+
+          <?php endforeach; ?>
+
+        <?php else: ?>
+
+          <li>
+            <span class="concern-item-link disabled">
+              Treatments Coming Soon
+            </span>
+          </li>
+
+        <?php endif; ?>
+
       </ul>
+
     </div>
 
-    <!-- Category 2: Hair -->
-    <div class="concern-category-card reveal reveal-stagger">
-      <div class="category-icon-wrapper">
-        <i data-lucide="scissors" style="width: 32px; height: 32px"></i>
-      </div>
-      <h3 class="category-title">Hair Restoration</h3>
-      <ul class="concern-links">
-        <li>
-          <a href="services/" class="concern-item-link">Severe Hair Fall & Shedding <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services/" class="concern-item-link">Pattern Baldness (Alopecia) <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services/" class="concern-item-link">Thinning Crowns & Recedings <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services/" class="concern-item-link">Chronic Dandruff & Scalp Health
-            <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="services/" class="concern-item-link">Post-Transplant Recovery care <i data-lucide="arrow-right"></i></a>
-        </li>
-      </ul>
-    </div>
+<?php endforeach;
 
-    <!-- Category 3: Body -->
-    <div class="concern-category-card reveal reveal-stagger">
-      <div class="category-icon-wrapper">
-        <i data-lucide="smile" style="width: 32px; height: 32px"></i>
-      </div>
-      <h3 class="category-title">Body Contouring</h3>
-      <ul class="concern-links">
-        <li>
-          <a href="#treatments" class="concern-item-link">Stubborn Localized Fat pockets <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="#treatments" class="concern-item-link">Stretch Marks & Scarring <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="#treatments" class="concern-item-link">Skin Laxity & Sagging Areas <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="#treatments" class="concern-item-link">Cellulite Reduction & Smoothness
-            <i data-lucide="arrow-right"></i></a>
-        </li>
-        <li>
-          <a href="#treatments" class="concern-item-link">Full Body Sculpting & Contours <i data-lucide="arrow-right"></i></a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
+  echo "</div>
+</section>";
+}
+?>
 
 <!-- 6. MOST POPULAR TREATMENTS -->
 
@@ -290,7 +290,7 @@ if (!empty($treatements)) {
     extract($treatment);
     echo "<div class='treatment-card reveal reveal-stagger'>
       <div class='treatment-img-container'>
-        <span class='treatment-badge'>Skin Glow</span>
+        <span class='treatment-badge'>{$category}</span>
         <img
           src='{$image}'
           alt='{$title}'
@@ -308,95 +308,167 @@ if (!empty($treatements)) {
   }
   echo "</div></section>";
 }
+
+$beforeAfterData = getGalleryWithCategories(
+  $connection,
+  'gallery',
+  'gallery',
+  true,
+  5,
+  1
+);
+
+if (!empty($beforeAfterData)) :
 ?>
 
-<!-- 7. BEFORE & AFTER TRANSFORMATIONS -->
-<section class="transformations-section" id="before-after">
-  <div class="container text-center reveal">
-    <span class="section-tag">Clinical Proof & Results</span>
-    <h2>Real Transformations, Beautiful Success</h2>
-    <p class="max-width-600">
-      Review real, untouched before and after treatment records. Slide to
-      evaluate skin texture transformations achieved by our customized
-      clinical programs:
-    </p>
-  </div>
+  <section class="transformations-section" id="before-after">
 
-  <!-- Filter tabs -->
-  <div class="container transform-filter-container reveal">
-    <button class="filter-btn active" data-category="skin">
-      Skin Pigmentation
-    </button>
-    <button class="filter-btn" data-category="hair">
-      Hair Restoration
-    </button>
-    <button class="filter-btn" data-category="body">Body Contouring</button>
-  </div>
-
-  <div class="container transform-container-grid">
-    <!-- Left side: The Drag Slider -->
-    <div class="before-after-wrapper reveal">
-      <!-- After Image (Base Background) -->
-      <div class="slider-img slider-img-after">
-        <img
-          src="assets/images/after_skin.png"
-          alt="Flawless Glowing Skin - After Treatment" />
-        <span class="slider-badge badge-after">After</span>
-      </div>
-
-      <!-- Before Image (Resize Wrapper) -->
-      <div class="slider-img slider-img-before">
-        <img
-          src="assets/images/before_skin.png"
-          alt="Hyperpigmentation & Textures - Before Treatment" />
-        <span class="slider-badge badge-before">Before</span>
-      </div>
-
-      <!-- Drag Handle Line & Slider button -->
-      <div class="slider-handle">
-        <button
-          class="slider-handle-button"
-          aria-label="Drag slider to compare before and after">
-          <i
-            data-lucide="chevron-left"
-            style="width: 16px; height: 16px"></i>
-          <i
-            data-lucide="chevron-right"
-            style="width: 16px; height: 16px"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Right side: Transformation details card -->
-    <div class="transform-details-card reveal">
-      <span class="section-tag gold-accent">Featured Treatment Journey</span>
-      <h3 class="transform-title">
-        Advanced Pigmentation & Melasma Therapy
-      </h3>
-      <p class="transform-details-desc">
-        Targeted medical-grade laser treatment specifically breaking down
-        deep dermal melanin. Yields smooth, even-toned skin with zero
-        scarring and minimal down-time.
+    <div class="container text-center reveal active">
+      <span class="section-tag">Clinical Proof & Results</span>
+      <h2>Real Transformations, Beautiful Success</h2>
+      <p class="max-width-600">
+        Review real, untouched before and after treatment records.
+        Slide to evaluate skin texture transformations achieved by our
+        customized clinical programs.
       </p>
-
-      <div class="transform-metrics">
-        <div class="metric-item">
-          <h4 class="metric-item-num">3 Sessions</h4>
-          <span class="metric-item-lbl">Treatment Span</span>
-        </div>
-        <div class="metric-item">
-          <h4 class="metric-item-num">FDA Approved Laser</h4>
-          <span class="metric-item-lbl">Clinical Technology</span>
-        </div>
-      </div>
-
-      <div style="margin-top: 4.5rem">
-        <a href="#consultation" class="btn btn-primary">Achieve Similar Results</a>
-      </div>
     </div>
-  </div>
-</section>
 
+    <div class="container transform-filter-container reveal active">
+
+      <?php foreach ($beforeAfterData as $index => $category) :
+
+        if (empty($category['gallerys'])) {
+          continue;
+        }
+      ?>
+
+        <button
+          type="button"
+          class="filter-btn <?= ($index === 0 ? 'active' : ''); ?>"
+          data-category="category_<?= $category['category_id']; ?>">
+
+          <?= htmlspecialchars($category['category_title']); ?>
+
+        </button>
+
+      <?php endforeach; ?>
+
+    </div>
+
+    <?php foreach ($beforeAfterData as $index => $category) :
+
+      if (empty($category['gallerys'])) {
+        continue;
+      }
+
+      $item = $category['gallerys'][0];
+
+      $galleryImageList = json_decode($item['gallery_image_list'], true);
+      $beforeImage = $galleryImageList[0]['path'];
+      $afterImage = $galleryImageList[1]['path'];
+
+    ?>
+
+      <div
+        class="container transform-container-grid transformation-panel <?= ($index === 0 ? 'active' : ''); ?>"
+        data-category="category_<?= $category['category_id']; ?>">
+
+        <div class="before-after-wrapper reveal active">
+
+          <div class="slider-img slider-img-after">
+            <img
+              src="<?= $beforeImage ?>"
+              alt="<?= htmlspecialchars($item['gallery_title']); ?> After">
+
+            <span class="slider-badge badge-after">
+              After
+            </span>
+          </div>
+
+          <div class="slider-img slider-img-before">
+            <img
+              src="<?= $afterImage ?>"
+              alt="<?= htmlspecialchars($item['gallery_title']); ?> Before">
+
+            <span class="slider-badge badge-before">
+              Before
+            </span>
+          </div>
+
+          <div class="slider-handle">
+            <button
+              type="button"
+              class="slider-handle-button">
+
+              <i data-lucide="chevron-left"></i>
+              <i data-lucide="chevron-right"></i>
+
+            </button>
+          </div>
+
+        </div>
+
+        <div class="transform-details-card reveal active">
+
+          <span class="section-tag gold-accent">
+            Featured Treatment Journey
+          </span>
+
+          <h3 class="transform-title">
+            <?= htmlspecialchars($item['gallery_title']); ?>
+          </h3>
+
+          <?php if (!empty($item['gallery_description'])) : ?>
+            <p class="transform-details-desc">
+              <?= htmlspecialchars($item['gallery_description']); ?>
+            </p>
+          <?php endif; ?>
+
+          <div class="transform-metrics">
+
+            <?php if (!empty($item['gallery_duration'])) : ?>
+              <div class="metric-item">
+                <h4 class="metric-item-num">
+                  <?= htmlspecialchars($item['gallery_duration']); ?>
+                </h4>
+                <span class="metric-item-lbl">
+                  Treatment Span
+                </span>
+              </div>
+            <?php endif; ?>
+
+            <?php if (!empty($item['gallery_technology'])) : ?>
+              <div class="metric-item">
+                <h4 class="metric-item-num">
+                  <?= htmlspecialchars($item['gallery_technology']); ?>
+                </h4>
+                <span class="metric-item-lbl">
+                  Clinical Technology
+                </span>
+              </div>
+            <?php endif; ?>
+
+          </div>
+
+          <div style="margin-top:4.5rem">
+            <a
+              href="<?= htmlspecialchars($item['gallery_url']); ?>"
+              class="btn btn-primary">
+
+              Achieve Similar Results
+
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    <?php endforeach; ?>
+
+  </section>
+
+<?php endif; ?>
 <!-- 8. INSTAGRAM REELS & YOUTUBE SHORTS -->
 <section class="social-proof-section" id="social-proof">
   <div class="container text-center reveal">

@@ -529,7 +529,7 @@ function getLatestArticles($conn, $limit = 4, $characterLimit = 250)
 
 function getData($conn, $dataType = 'page', $childDataType = 'page', $limit = 10, $featuredOnly = false, $characterLimit = 250)
 {
-    $showOnlyFeatured = $featuredOnly ? " AND link.link_is_featured = 1 " : '';
+    $showOnlyFeatured = $featuredOnly ? " link.link_is_featured DESC " : ' link.link_is_featured ASC ';
 
     $query = "SELECT 
         {$dataType}_id AS id,
@@ -555,11 +555,10 @@ function getData($conn, $dataType = 'page', $childDataType = 'page', $limit = 10
        AND link.link_status = 200
        AND link.link_type = '{$dataType}'
        AND link.link_site_id = " . SITE_ID . "
-       {$showOnlyFeatured}
 
     INNER JOIN " . TABLE_PREFIX . "category
         ON category_id = {$dataType}_category
-       AND category_type = '{$dataType}'
+       AND category_type = '{$childDataType}'
        AND category_site_id = " . SITE_ID . "
 
     LEFT JOIN " . TABLE_PREFIX . "link AS category_link
@@ -575,7 +574,7 @@ function getData($conn, $dataType = 'page', $childDataType = 'page', $limit = 10
     AND {$dataType}_type='{$childDataType}'
       AND {$dataType}_site_id = " . SITE_ID . "
 
-    ORDER BY link.link_published DESC
+    ORDER BY {$showOnlyFeatured}, link.link_published DESC
     LIMIT {$limit}";
 
     $resData = mysqli_query($conn, $query);
@@ -591,4 +590,273 @@ function getData($conn, $dataType = 'page', $childDataType = 'page', $limit = 10
     mysqli_free_result($resData);
 
     return $out;
+}
+
+function getCategoriesWithPosts(
+    mysqli $conn,
+    string $tableName = 'post',
+    string $dataType = 'post',
+    bool $featuredOnly = false,
+    int $categoryLimit = 3,
+    int $postLimit = 5
+) {
+    $featuredCategory = $featuredOnly
+        ? "cl.link_is_featured DESC"
+        : "cl.link_is_featured ASC";
+
+    $featuredContent = $featuredOnly
+        ? "pl.link_is_featured DESC"
+        : "pl.link_is_featured ASC";
+
+    // Get categories first
+    $categoryQuery = "
+        SELECT
+            c.category_id,
+            c.category_title,
+            cl.link_url AS category_url
+
+        FROM " . TABLE_PREFIX . "category c
+
+        INNER JOIN " . TABLE_PREFIX . "link cl
+            ON cl.link_relation_id = c.category_id
+           AND cl.link_type = 'category'
+           AND cl.link_status = 200
+           AND cl.link_site_id = " . SITE_ID . "
+
+        WHERE c.category_type = '{$dataType}'
+          AND c.category_site_id = " . SITE_ID . "
+
+        ORDER BY {$featuredCategory}, c.category_title ASC
+        LIMIT {$categoryLimit}
+    ";
+
+    $categoryResult = mysqli_query($conn, $categoryQuery);
+
+    if (!$categoryResult) {
+        return [];
+    }
+
+    $categories = [];
+    $categoryIds = [];
+
+    while ($row = mysqli_fetch_assoc($categoryResult)) {
+
+        $categoryId = (int)$row['category_id'];
+
+        $categories[$categoryId] = [
+            'category_id'    => $categoryId,
+            'category_title' => $row['category_title'],
+            'category_url'   => $row['category_url'],
+            $tableName . 's' => []
+        ];
+
+        $categoryIds[] = $categoryId;
+    }
+
+    mysqli_free_result($categoryResult);
+
+    if (empty($categoryIds)) {
+        return [];
+    }
+
+    $categoryIdsSql = implode(',', array_map('intval', $categoryIds));
+
+    // Get all content for selected categories
+    $contentQuery = "
+        SELECT
+            p.{$tableName}_category AS category_id,
+
+            p.{$tableName}_id AS content_id,
+            p.{$tableName}_title AS content_title,
+            p.{$tableName}_image AS content_image,
+            p.{$tableName}_description AS content_description,
+
+            pl.link_url AS content_url,
+            pl.link_published
+
+        FROM " . TABLE_PREFIX . "{$tableName} p
+
+        INNER JOIN " . TABLE_PREFIX . "link pl
+            ON pl.link_relation_id = p.{$tableName}_id
+           AND pl.link_type = '{$tableName}'
+           AND pl.link_status = 200
+           AND pl.link_site_id = " . SITE_ID . "
+
+        WHERE p.{$tableName}_status = 1
+          AND p.{$tableName}_site_id = " . SITE_ID . "
+          AND p.{$tableName}_category IN ({$categoryIdsSql})
+
+        ORDER BY
+            {$featuredContent},
+            p.{$tableName}_category, 
+            pl.link_published DESC
+    ";
+
+    $contentResult = mysqli_query($conn, $contentQuery);
+
+    if (!$contentResult) {
+        return array_values($categories);
+    }
+
+    while ($row = mysqli_fetch_assoc($contentResult)) {
+
+        $categoryId = (int)$row['category_id'];
+
+        if (!isset($categories[$categoryId])) {
+            continue;
+        }
+
+        if (count($categories[$categoryId][$tableName . 's']) >= $postLimit) {
+            continue;
+        }
+
+        $categories[$categoryId][$tableName . 's'][] = [
+            $tableName . '_id'    => (int)$row['content_id'],
+            $tableName . '_title' => $row['content_title'],
+            $tableName . '_image' => $row['content_image'],
+            $tableName . '_description' => $row['content_description'],
+            $tableName . '_url'   => $row['content_url'],
+            'link_published'      => $row['link_published']
+        ];
+    }
+
+    mysqli_free_result($contentResult);
+
+    return array_values($categories);
+}
+
+
+function getGalleryWithCategories(
+    mysqli $conn,
+    string $tableName = 'post',
+    string $dataType = 'post',
+    bool $featuredOnly = false,
+    int $categoryLimit = 3,
+    int $postLimit = 5
+) {
+    $featuredCategory = $featuredOnly
+        ? "cl.link_is_featured DESC"
+        : "cl.link_is_featured ASC";
+
+    $featuredContent = $featuredOnly
+        ? "pl.link_is_featured DESC"
+        : "pl.link_is_featured ASC";
+
+    // Get categories first
+    $categoryQuery = "
+        SELECT
+            c.category_id,
+            c.category_title,
+            cl.link_url AS category_url
+
+        FROM " . TABLE_PREFIX . "category c
+
+        INNER JOIN " . TABLE_PREFIX . "link cl
+            ON cl.link_relation_id = c.category_id
+           AND cl.link_type = 'category'
+           AND cl.link_status = 200
+           AND cl.link_site_id = " . SITE_ID . "
+
+        WHERE c.category_type = '{$dataType}'
+          AND c.category_site_id = " . SITE_ID . "
+
+        ORDER BY {$featuredCategory}, c.category_title ASC
+        LIMIT {$categoryLimit}
+    ";
+
+    $categoryResult = mysqli_query($conn, $categoryQuery);
+
+    if (!$categoryResult) {
+        return [];
+    }
+
+    $categories = [];
+    $categoryIds = [];
+
+    while ($row = mysqli_fetch_assoc($categoryResult)) {
+
+        $categoryId = (int)$row['category_id'];
+
+        $categories[$categoryId] = [
+            'category_id'    => $categoryId,
+            'category_title' => $row['category_title'],
+            'category_url'   => $row['category_url'],
+            $tableName . 's' => []
+        ];
+
+        $categoryIds[] = $categoryId;
+    }
+
+    mysqli_free_result($categoryResult);
+
+    if (empty($categoryIds)) {
+        return [];
+    }
+
+    $categoryIdsSql = implode(',', array_map('intval', $categoryIds));
+
+    // Get all content for selected categories
+    $contentQuery = "
+        SELECT
+            p.{$tableName}_category AS category_id,
+
+            p.{$tableName}_id AS content_id,
+            p.{$tableName}_title AS content_title,
+            p.{$tableName}_image AS content_image,
+            p.{$tableName}_description AS content_description,
+            p.{$tableName}_image_list AS content_image_list,
+
+            pl.link_url AS content_url,
+            pl.link_published
+
+        FROM " . TABLE_PREFIX . "{$tableName} p
+
+        INNER JOIN " . TABLE_PREFIX . "link pl
+            ON pl.link_relation_id = p.{$tableName}_id
+           AND pl.link_type = '{$tableName}'
+           AND pl.link_status = 200
+           AND pl.link_site_id = " . SITE_ID . "
+
+        WHERE p.{$tableName}_status = 1
+          AND p.{$tableName}_site_id = " . SITE_ID . "
+          AND p.{$tableName}_category IN ({$categoryIdsSql})
+
+        ORDER BY
+            {$featuredContent},
+            p.{$tableName}_category, 
+            pl.link_published DESC
+    ";
+
+    $contentResult = mysqli_query($conn, $contentQuery);
+
+    if (!$contentResult) {
+        return array_values($categories);
+    }
+
+    while ($row = mysqli_fetch_assoc($contentResult)) {
+
+        $categoryId = (int)$row['category_id'];
+
+        if (!isset($categories[$categoryId])) {
+            continue;
+        }
+
+        if (count($categories[$categoryId][$tableName . 's']) >= $postLimit) {
+            continue;
+        }
+
+        $categories[$categoryId][$tableName . 's'][] = [
+            $tableName . '_id'    => (int)$row['content_id'],
+            $tableName . '_title' => $row['content_title'],
+            $tableName . '_image' => $row['content_image'],
+            $tableName . '_description' => $row['content_description'],
+            $tableName . '_image_list' => $row['content_image_list'],
+            $tableName . '_url'   => $row['content_url'],
+            'link_published'      => $row['link_published']
+        ];
+    }
+
+    mysqli_free_result($contentResult);
+
+    return array_values($categories);
 }

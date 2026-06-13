@@ -1,135 +1,120 @@
 <?php
 
-    function publish($connection, $data) {
+function publish($connection, $data)
+{
 
-        extract($data);
-        
-        if($title!='') {
+    extract($data);
 
-            if(isset($category)) {
+    if ($title != '') {
 
-                require_once MODULES.'imageUploader.php';
+        if (isset($category)) {
 
-                if(isset($image['featureImage'])) {
+            require_once MODULES . 'imageUploader.php';
 
-                    $featurePost=((isset($featurePost)) ? 1 : 0 );
-                    $post_status=((isset($post_status)) ? $post_status : 0 );
-                    $link_status=((isset($link_status)) ? $link_status : 200 );
-                    $postType=((isset($postType)) ? $postType : 'gallery' );
-        
-                    $facebookImage=(((isset($facebookImage)) ? $facebookImage : $featureImage ));
-                    $twitterImage=(((isset($twitterImage)) ? $twitterImage : $featureImage ));
+            if (isset($image['featureImage'])) {
 
-                    if(isset($_FILES['gallery'])) {
-        
-                        require_once MODULES.'galleryUploader.php';
+                $featurePost = ((isset($featurePost)) ? 1 : 0);
+                $post_status = ((isset($post_status)) ? $post_status : 0);
+                $link_status = ((isset($link_status)) ? $link_status : 200);
+                $postType = ((isset($postType)) ? $postType : 'gallery');
 
-                        /** Category */
+                $facebookImage = (((isset($facebookImage)) ? $facebookImage : $featureImage));
+                $twitterImage = (((isset($twitterImage)) ? $twitterImage : $featureImage));
 
-                        $category=explode('_', $category);
-                        $categoryURL=$category[1];
-                        $category=$category[0];
+                if (isset($_FILES['gallery'])) {
 
-                        /** gallery page url */
+                    require_once MODULES . 'galleryUploader.php';
 
-                        $url=strtolower($categoryURL.preg_replace('~[^\p{M}\w-]+~u', '-', $url)).'/';
-                        
-                        /* define facebook and twitter meta desciption */
+                    /** Category */
 
-                        $fb_desc=(($fb_desc=='') ? $meta_desc : $fb_desc );
-                        $tw_desc=(($tw_desc=='') ? $meta_desc : $tw_desc );
+                    $category = explode('_', $category);
+                    $categoryURL = $category[1];
+                    $category = $category[0];
 
-                        if($checkURL=mysqli_query($connection, "SELECT link_relation_id FROM ".TABLE_PREFIX."link WHERE link_type='gallery' AND link_url='{$url}'  AND link_site_id='".SITE_ID."'")) {
+                    /** gallery page url */
 
-                            if(mysqli_num_rows($checkURL)==0) {
+                    $url = strtolower($categoryURL . preg_replace('~[^\p{M}\w-]+~u', '-', $url)) . '/';
 
-                                require_once EDITOR_CONTENT_FILTER;
+                    /* define facebook and twitter meta desciption */
 
-                                /** Start uploading the gallery */
+                    $fb_desc = (($fb_desc == '') ? $meta_desc : $fb_desc);
+                    $tw_desc = (($tw_desc == '') ? $meta_desc : $tw_desc);
 
-                                mysqli_query($connection, "START TRANSACTION");
+                    if ($checkURL = mysqli_query($connection, "SELECT link_relation_id FROM " . TABLE_PREFIX . "link WHERE link_type='gallery' AND link_url='{$url}'  AND link_site_id='" . SITE_ID . "'")) {
 
-                                /* Insert data into link table */
+                        if (mysqli_num_rows($checkURL) == 0) {
 
-                                $addNewGallery=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."gallery(gallery_image, gallery_thumbnail, gallery_title, gallery_description, gallery_image_list, gallery_category, gallery_owner_id, gallery_status, gallery_type) VALUES('{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$gallery}', '{$category}', '".USER_ID."', '1', 'gallery')");
-                                $galleryID=mysqli_insert_id($connection);
+                            require_once EDITOR_CONTENT_FILTER;
 
-                                $addNewLink=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$galleryID}', '{$link_status}', '{$postType}', '{$featurePost}', '".USER_ID."', '".SITE_ID."', NOW() ,NOW())");
-                                $linkID=mysqli_insert_id($connection);
+                            /** Start uploading the gallery */
 
-                                $addNewMeta=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."meta(meta_relation_id, meta_site_id,  meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', ".APP_SITE_ID.", '{$meta_title}', '{$postType}', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
+                            mysqli_query($connection, "START TRANSACTION");
 
-                                /* Insert tags into tag table */
+                            /* Insert data into link table */
 
-                                if($tags!='') {
+                            $addNewGallery = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "gallery(gallery_image, gallery_site_id, gallery_thumbnail, gallery_title, gallery_description, gallery_image_list, gallery_category, gallery_owner_id, gallery_status, gallery_type) VALUES('{$featureImage}', " . SITE_ID . ",'{$thumbnailImage}', '{$title}', '{$description}', '{$gallery}', '{$category}', '" . USER_ID . "', '1', 'gallery')");
+                            $galleryID = mysqli_insert_id($connection);
 
-                                    $tags=explode(',', $tags);
+                            $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$galleryID}', '{$link_status}', '{$postType}', '{$featurePost}', '" . USER_ID . "', '" . SITE_ID . "', NOW() ,NOW())");
+                            $linkID = mysqli_insert_id($connection);
 
-                                    for($i=0; $i<sizeof($tags); $i++) {
+                            $addNewMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "meta(meta_relation_id, meta_site_id,  meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', " . APP_SITE_ID . ", '{$meta_title}', '{$postType}', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
 
-                                        $tagsName=strtolower(preg_replace('~[^\p{M}\s\w,-]+~u', '', rtrim(ltrim($tags[$i], ' '), ' ')));
-                                        $tagData=mysqli_query($connection, "INSERT INTO ".TABLE_PREFIX."tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$galleryID}', '".USER_ID."', '".SITE_ID."', '{$postType}')");
-                                    }
+                            /* Insert tags into tag table */
 
-                                } else {
+                            if ($tags != '') {
 
-                                    $tagData=TRUE;
+                                $tags = explode(',', $tags);
 
+                                for ($i = 0; $i < sizeof($tags); $i++) {
+
+                                    $tagsName = strtolower(preg_replace('~[^\p{M}\s\w,-]+~u', '', rtrim(ltrim($tags[$i], ' '), ' ')));
+                                    $tagData = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "tag(tag_title, tag_relation_id, tag_owner_id, tag_site_id, tag_type) VALUES('{$tagsName}', '{$galleryID}', '" . USER_ID . "', '" . SITE_ID . "', '{$postType}')");
                                 }
-
-                                if($addNewGallery && $addNewLink && $addNewMeta) {
-
-                                    $status=200;
-                                    $msg='Gallery add successfully';
-                                    $redirect='/dashboard/gallery/?type=edit&editor=true&id='.base64_encode($galleryID);
-                                    mysqli_query($connection, "COMMIT");
-
-                                } else {
-
-                                    $msg='Something is wrong while adding new gallery';
-
-                                    mysqli_query($connection, "ROLLBACK");
-
-                                }
-
                             } else {
 
-                                $msg='Please change url';
-
+                                $tagData = TRUE;
                             }
 
+                            if ($addNewGallery && $addNewLink && $addNewMeta) {
+
+                                $status = 200;
+                                $msg = 'Gallery add successfully';
+                                $redirect = '/dashboard/gallery/?type=edit&editor=true&id=' . base64_encode($galleryID);
+                                mysqli_query($connection, "COMMIT");
+                            } else {
+
+                                $msg = 'Something is wrong while adding new gallery';
+
+                                mysqli_query($connection, "ROLLBACK");
+                            }
                         } else {
 
-                            $msg='Technical errro';
-
+                            $msg = 'Please change url';
                         }
-            
+                    } else {
+
+                        $msg = 'Technical errro';
                     }
-
-                } else {
-
-                    $msg='Please select gallery feature image.';
-
                 }
-
             } else {
 
-                $msg='Please select category';
-
+                $msg = 'Please select gallery feature image.';
             }
-
         } else {
 
-            $msg='Please enter gallery name';
-
+            $msg = 'Please select category';
         }
+    } else {
 
-        $result = array(
-            'status' => ((isset($status)) ? $status : 'error' ),
-            'msg' => ((isset($msg)) ? $msg : 'Invalid response' ),
-            'redirect' => ((isset($redirect)) ? $redirect : '' )
-        );
-    
-        echo json_encode($result, TRUE);
-
+        $msg = 'Please enter gallery name';
     }
+
+    $result = array(
+        'status' => ((isset($status)) ? $status : 'error'),
+        'msg' => ((isset($msg)) ? $msg : 'Invalid response'),
+        'redirect' => ((isset($redirect)) ? $redirect : '')
+    );
+
+    echo json_encode($result, TRUE);
+}

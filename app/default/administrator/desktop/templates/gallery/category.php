@@ -1,10 +1,10 @@
 <?php
 
-$id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0));
+$categoryId = ((isset($id)) ? base64_decode($id) : 0);
 
-if ($id != 0) {
+if ($categoryId != 0) {
 
-	if ($categoryData = mysqli_query($connection, "SELECT category_parent_id, category_title, category_description, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_id=link_relation_id AND meta_relation_id=link_id AND category_id='{$id}' AND link_type='category' AND category_type='{$postType}' AND link_status=200")) {
+	if ($categoryData = mysqli_query($connection, "SELECT category_parent_id, category_title, category_description, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_id=link_relation_id AND meta_relation_id=link_id AND category_id='{$categoryId}' AND link_type='category' AND category_type='{$postType}' AND link_status=200")) {
 
 		if (mysqli_num_rows($categoryData) != 0) {
 
@@ -41,7 +41,7 @@ if ($id != 0) {
 					<select name="category" class="form-control inside-shadow">
 						<option value="0">Select Parent Category</option>
 						<?php
-						if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . APP_SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_id!='{$id}' AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "'")) {
+						if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . APP_SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND category_id!='{$categoryId}' AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "'")) {
 							while ($category = mysqli_fetch_assoc($categoryList)) { ?>
 								<option value="<?php echo $category['category_id'] . '_' . str_replace(SITE_DOMAIN . '/category', '', $category['link_url']); ?>" <?php echo (($category['category_id'] == $category_parent_id) ? 'selected' : '') ?>> <?php echo ucwords($category['category_title']); ?></option>
 						<?php
@@ -63,11 +63,11 @@ if ($id != 0) {
 					?>
 					<input type="hidden" name="postType" id="type" value="<?php echo $postType ?>">
 					<input type="hidden" name="action" value="publish">
-					<input type="hidden" name="categoryID" id="category_id" value="<?php echo $id; ?>">
+					<input type="hidden" name="categoryID" id="category_id" value="<?php echo $categoryId; ?>">
 					<input type="submit" id="submitCategory" class="btn btn-green" value="<?php echo (isset($_GET['id']) ? 'Update' : 'Add'); ?> Category">
 					<?php
 					if (isset($_GET['id'])) {
-						echo "<a href='{$postType}/?type=taxonomy&editor=true&id={$id}&taxonomy=category' class='btn btn-blue'>Advance Edit</a>";
+						echo "<a href='{$postType}/?type=taxonomy&editor=true&id={$categoryId}&taxonomy=category' class='btn btn-blue'>Advance Edit</a>";
 					}
 					?>
 				</div>

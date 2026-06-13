@@ -195,7 +195,7 @@ window.location.href = 'dashboard/event/?type=list&status=all';
             <div class="tagList" style="display: none;"></div>
             <h2>Date</h2>
             <div class="form-group">
-                <input type="text" name="eventDate" value="<?php echo $event_start_date ?>"
+                <input type="text" name="eventDate" value="<?php echo (!empty($event_start_date) && $event_start_date != '0000-00-00') ? date('d-m-Y', strtotime($event_start_date)) : ''; ?>"
                     class="form-control inside-shadow datepicker">
             </div>
             <h2>Time</h2>
