@@ -335,7 +335,9 @@ if (!empty($beforeAfterData)) :
 
     <div class="container transform-filter-container reveal active">
 
-      <?php foreach ($beforeAfterData as $index => $category) :
+      <?php
+      $isFirst = true;
+      foreach ($beforeAfterData as $index => $category) :
 
         if (empty($category['gallerys'])) {
           continue;
@@ -344,18 +346,22 @@ if (!empty($beforeAfterData)) :
 
         <button
           type="button"
-          class="filter-btn <?= ($index === 0 ? 'active' : ''); ?>"
+          class="filter-btn <?= ($isFirst ? 'active' : ''); ?>"
           data-category="category_<?= $category['category_id']; ?>">
 
           <?= htmlspecialchars($category['category_title']); ?>
 
         </button>
 
-      <?php endforeach; ?>
+      <?php
+        $isFirst = false;
+      endforeach; ?>
 
     </div>
 
-    <?php foreach ($beforeAfterData as $index => $category) :
+    <?php
+    $isFirst = true;
+    foreach ($beforeAfterData as $index => $category) :
 
       if (empty($category['gallerys'])) {
         continue;
@@ -370,7 +376,7 @@ if (!empty($beforeAfterData)) :
     ?>
 
       <div
-        class="container transform-container-grid transformation-panel <?= ($index === 0 ? 'active' : ''); ?>"
+        class="container transform-container-grid transformation-panel <?= ($isFirst ? 'active' : ''); ?>"
         data-category="category_<?= $category['category_id']; ?>">
 
         <div class="before-after-wrapper reveal active">
@@ -410,61 +416,63 @@ if (!empty($beforeAfterData)) :
 
         <div class="transform-details-card reveal active">
 
-          <span class="section-tag gold-accent">
-            Featured Treatment Journey
-          </span>
+          <?php if (!empty($item['gallery_description']) && strip_tags($item['gallery_description']) !== $item['gallery_description']) : ?>
 
-          <h3 class="transform-title">
-            <?= htmlspecialchars($item['gallery_title']); ?>
-          </h3>
+            <?= $item['gallery_description']; ?>
 
-          <?php if (!empty($item['gallery_description'])) : ?>
-            <p class="transform-details-desc">
-              <?= htmlspecialchars($item['gallery_description']); ?>
-            </p>
+          <?php else : ?>
+
+            <?php if (!empty($item['gallery_description'])) : ?>
+              <p class="transform-details-desc">
+                <?= htmlspecialchars($item['gallery_description']); ?>
+              </p>
+            <?php endif; ?>
+
+            <div class="transform-metrics">
+
+              <?php if (!empty($item['gallery_duration'])) : ?>
+                <div class="metric-item">
+                  <h4 class="metric-item-num">
+                    <?= htmlspecialchars($item['gallery_duration']); ?>
+                  </h4>
+                  <span class="metric-item-lbl">
+                    Treatment Span
+                  </span>
+                </div>
+              <?php endif; ?>
+
+              <?php if (!empty($item['gallery_technology'])) : ?>
+                <div class="metric-item">
+                  <h4 class="metric-item-num">
+                    <?= htmlspecialchars($item['gallery_technology']); ?>
+                  </h4>
+                  <span class="metric-item-lbl">
+                    Clinical Technology
+                  </span>
+                </div>
+              <?php endif; ?>
+
+            </div>
+
+            <div style="margin-top:4.5rem">
+              <a
+                href="<?= htmlspecialchars($item['gallery_url']); ?>"
+                class="btn btn-primary">
+
+                Achieve Similar Results
+
+              </a>
+            </div>
+
           <?php endif; ?>
-
-          <div class="transform-metrics">
-
-            <?php if (!empty($item['gallery_duration'])) : ?>
-              <div class="metric-item">
-                <h4 class="metric-item-num">
-                  <?= htmlspecialchars($item['gallery_duration']); ?>
-                </h4>
-                <span class="metric-item-lbl">
-                  Treatment Span
-                </span>
-              </div>
-            <?php endif; ?>
-
-            <?php if (!empty($item['gallery_technology'])) : ?>
-              <div class="metric-item">
-                <h4 class="metric-item-num">
-                  <?= htmlspecialchars($item['gallery_technology']); ?>
-                </h4>
-                <span class="metric-item-lbl">
-                  Clinical Technology
-                </span>
-              </div>
-            <?php endif; ?>
-
-          </div>
-
-          <div style="margin-top:4.5rem">
-            <a
-              href="<?= htmlspecialchars($item['gallery_url']); ?>"
-              class="btn btn-primary">
-
-              Achieve Similar Results
-
-            </a>
-          </div>
 
         </div>
 
       </div>
 
-    <?php endforeach; ?>
+    <?php
+      $isFirst = false;
+    endforeach; ?>
 
   </section>
 

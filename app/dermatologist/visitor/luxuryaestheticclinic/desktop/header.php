@@ -17,7 +17,7 @@ $statsForHappyClients = 500;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <?php require_once DEFAULT_META ?>
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>styles.css" />
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>styles.css?v=<?php echo time(); ?>" />
 </head>
 
 <body>
@@ -33,13 +33,27 @@ $statsForHappyClients = 500;
 
             <!-- Desktop/Mobile Navigation Menu -->
             <nav class="header-nav" aria-label="Main Navigation">
+                <!-- Desktop Menu -->
                 <ul class="nav-menu" id="navMenu">
                     <?php
-
                     generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true, 'nav-link');
-
                     ?>
                 </ul>
+
+                <!-- Mobile Menu (Drawer Wrapper) -->
+                <div class="nav-drawer-mobile" id="navDrawerMobile">
+                    <ul class="nav-menu-mobile">
+                        <?php
+                        generateMenu('SITE_NAV_MAIN_HEADER', 'mobile', true, 'nav-link-mobile');
+                        ?>
+                    </ul>
+                    <!-- Action Buttons (Mobile Drawer Contacts) -->
+                    <div class="mobile-menu-contacts">
+                        <?php
+                        generateMenu('SITE_NAV_HEADER_MENU_CTA', 'icons', true, 'btn btn-primary btn-book');
+                        ?>
+                    </div>
+                </div>
             </nav>
 
             <!-- Action Buttons (Desktop Minimalist Concierge Icons + CTA) -->

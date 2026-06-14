@@ -237,32 +237,6 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
-                <li <?php echo (($postType == 'youtube_gallery') ? 'class="active"' : '') ?>>
-                    <a href="youtube_gallery/?type=list&status=all"><i class="fab fa-youtube"></i> Youtube
-                        Gallery</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="youtube_gallery/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    galleries</a>
-                            </li>
-                            <li><a href="youtube_gallery/?type=add&editor=true"><i class="fas fa-plus"></i>Add
-                                    image gallery</a></li>
-                            <li><a href="youtube_gallery/?type=category"><i class="fas fa-tags"></i>Categories</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="youtube_gallery/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    galleries</a>
-                            </li>
-                            <li><a href="youtube_gallery/?type=add&editor=true"><i class="fas fa-plus"></i>Add
-                                    new gallery</a></li>
-                            <li><a href="youtube_gallery/?type=category"><i class="fas fa-tags"></i>Categories</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
                 <li class="nav-section-title">
                     <span>Engagement</span>
                 </li>
@@ -285,6 +259,51 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             </li>
                             <li><a href="testimonial/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     testimonial</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo (($postType == 'social_proof') ? 'class="active"' : '') ?>>
+                    <a href="social_proof/?type=list&status=all">
+                        <i class="fas fa-play-circle"></i> Social Video Hub
+                    </a>
+
+                    <div class="side-menu">
+                        <ul>
+                            <li>
+                                <a href="social_proof/?type=list&status=all">
+                                    <i class="fas fa-list"></i> All Videos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="social_proof/?type=add&editor=true">
+                                    <i class="fas fa-plus"></i> Add New Video
+                                </a>
+                            </li>
+                            <li>
+                                <a href="social_proof/?type=category">
+                                    <i class="fas fa-tags"></i> Video Categories
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bottom-menu">
+                        <ul>
+                            <li>
+                                <a href="social_proof/?type=list&status=all">
+                                    <i class="fas fa-list"></i> All Videos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="social_proof/?type=add&editor=true">
+                                    <i class="fas fa-plus"></i> Add New Video
+                                </a>
+                            </li>
+                            <li>
+                                <a href="social_proof/?type=category">
+                                    <i class="fas fa-tags"></i> Video Categories
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

@@ -24,8 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
 /* 1. MOBILE MENU TOGGLE */
 function initMobileMenu() {
   const toggleBtn = document.querySelector(".mobile-nav-toggle");
-  const navMenu = document.querySelector(".nav-menu");
-  const navLinks = document.querySelectorAll(".nav-link");
+  const navMenu = document.querySelector(".nav-drawer-mobile");
+  const navLinks = document.querySelectorAll("a.nav-link-mobile");
 
   if (!toggleBtn || !navMenu) return;
 
@@ -136,127 +136,98 @@ function initCounters() {
   counters.forEach((counter) => observer.observe(counter));
 }
 
-/* 5. DYNAMIC BEFORE & AFTER SLIDER */
+/* 5. DYNAMIC BEFORE & AFTER SLIDER & TAB SWITCHING */
 function initBeforeAfterSlider() {
-  const slider = document.querySelector(".before-after-wrapper");
-  if (!slider) return;
+  const sliders = document.querySelectorAll(".before-after-wrapper");
+  const filterBtns = document.querySelectorAll(".filter-btn");
+  const panels = document.querySelectorAll(".transformation-panel");
 
-  const beforeImg = slider.querySelector(".slider-img-before");
-  const handle = slider.querySelector(".slider-handle");
+  // Initialize dragging and clicking events for all sliders on the page
+  sliders.forEach((slider) => {
+    const beforeImg = slider.querySelector(".slider-img-before");
+    const handle = slider.querySelector(".slider-handle");
 
-  if (!beforeImg || !handle) return;
+    if (!beforeImg || !handle) return;
 
-  let isDragging = false;
+    let isDragging = false;
 
-  const setPosition = (x) => {
-    const rect = slider.getBoundingClientRect();
-    let positionX = x - rect.left;
+    const setPosition = (x) => {
+      const rect = slider.getBoundingClientRect();
+      let positionX = x - rect.left;
 
-    // Boundary constraints
-    if (positionX < 0) positionX = 0;
-    if (positionX > rect.width) positionX = rect.width;
+      // Boundary constraints
+      if (positionX < 0) positionX = 0;
+      if (positionX > rect.width) positionX = rect.width;
 
-    const percentage = (positionX / rect.width) * 100;
+      const percentage = (positionX / rect.width) * 100;
 
-    beforeImg.style.width = `${percentage}%`;
-    handle.style.left = `${percentage}%`;
-  };
+      beforeImg.style.width = `${percentage}%`;
+      handle.style.left = `${percentage}%`;
+    };
 
-  // Event Handlers for Mouse
-  const startDrag = () => {
-    isDragging = true;
-  };
-  const stopDrag = () => {
-    isDragging = false;
-  };
-
-  const onDrag = (e) => {
-    if (!isDragging) return;
-    setPosition(e.clientX);
-  };
-
-  // Event Handlers for Touch
-  const onTouchDrag = (e) => {
-    if (e.touches.length === 0) return;
-    setPosition(e.touches[0].clientX);
-  };
-
-  // Register Events
-  handle.addEventListener("mousedown", startDrag);
-  window.addEventListener("mouseup", stopDrag);
-  window.addEventListener("mousemove", onDrag);
-
-  handle.addEventListener("touchstart", startDrag);
-  window.addEventListener("touchend", stopDrag);
-  window.addEventListener("touchmove", onTouchDrag);
-
-  // Allow clicking on slider to snap position
-  slider.addEventListener("click", (e) => {
-    if (e.target !== handle && !handle.contains(e.target)) {
+    // Event Handlers for Mouse
+    const startDrag = (e) => {
+      isDragging = true;
+      e.preventDefault(); // Prevent text selection
+    };
+    const stopDrag = () => {
+      isDragging = false;
+    };
+    const onDrag = (e) => {
+      if (!isDragging) return;
       setPosition(e.clientX);
-    }
+    };
+
+    // Event Handlers for Touch (Mobile)
+    const onTouchDrag = (e) => {
+      if (!isDragging || e.touches.length === 0) return;
+      setPosition(e.touches[0].clientX);
+    };
+
+    // Register Events
+    handle.addEventListener("mousedown", startDrag);
+    window.addEventListener("mouseup", stopDrag);
+    window.addEventListener("mousemove", onDrag);
+
+    handle.addEventListener("touchstart", (e) => {
+      isDragging = true;
+    }, { passive: true });
+    window.addEventListener("touchend", stopDrag);
+    window.addEventListener("touchmove", onTouchDrag, { passive: true });
+
+    // Allow clicking on slider to snap position
+    slider.addEventListener("click", (e) => {
+      if (e.target !== handle && !handle.contains(e.target)) {
+        setPosition(e.clientX);
+      }
+    });
   });
 
-  // BEFORE & AFTER CATEGORY FILTER FUNCTIONALITY
-  const filterBtns = document.querySelectorAll(".filter-btn");
-  const sampleData = {
-    skin: {
-      before: "assets/images/before_skin.png",
-      after: "assets/images/after_skin.png",
-      title: "Advanced Pigmentation & Melasma Therapy",
-      metricVal1: "3 Sessions",
-      metricVal2: "FDA Approved Laser",
-      desc: "Targeted medical-grade laser treatment specifically breaking down deep dermal melanin. Yields smooth, even-toned skin with zero scarring and minimal down-time.",
-    },
-    hair: {
-      before: "assets/images/before_skin.png", // Fallback skin textures but styled beautifully
-      after: "assets/images/after_skin.png",
-      title: "PRP & GFC Hair Restoration Treatment",
-      metricVal1: "6 Sessions",
-      metricVal2: "94% Hair Density Increase",
-      desc: "Autologous Growth Factor Concentrate therapy targeting active hair follicles. Delivers massive nutrient density directly to the scalp for clinical hair thickness regrowth.",
-    },
-    body: {
-      before: "assets/images/before_skin.png",
-      after: "assets/images/after_skin.png",
-      title: "CoolSculpting & Fat Reduction",
-      metricVal1: "2 Sessions",
-      metricVal2: "24% Fat Layer Reduction",
-      desc: "Cryolipolysis technology precision freezing targeted fat cells in stubborn body regions. Safely processed out by the immune system for structural contouring.",
-    },
-  };
-
+  // Tabbing / filter switching functionality
   filterBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       filterBtns.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
 
-      const category = btn.getAttribute("data-category");
-      const data = sampleData[category];
+      const targetCategory = btn.getAttribute("data-category");
 
-      if (data) {
-        // Update images
-        slider.querySelector(".slider-img-after img").src = data.after;
-        beforeImg.querySelector("img").src = data.before;
-
-        // Reset slider center
-        beforeImg.style.width = "50%";
-        handle.style.left = "50%";
-
-        // Update Text
-        const detailCard = document.querySelector(".transform-details-card");
-        if (detailCard) {
-          detailCard.querySelector(".transform-title").textContent = data.title;
-          detailCard.querySelector(".transform-details-desc").textContent =
-            data.desc;
-
-          const metrics = detailCard.querySelectorAll(".metric-item-num");
-          if (metrics.length >= 2) {
-            metrics[0].textContent = data.metricVal1;
-            metrics[1].textContent = data.metricVal2;
-          }
+      panels.forEach((panel) => {
+        if (panel.getAttribute("data-category") === targetCategory) {
+          panel.classList.add("active");
+          // Re-trigger layout alignment inside the panel just in case
+          const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+                obs.unobserve(entry.target);
+              }
+            });
+          });
+          panel.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+        } else {
+          panel.classList.remove("active");
         }
-      }
+      });
     });
   });
 }
@@ -546,37 +517,4 @@ function initConsultationForm() {
     }, 2000);
   });
 }
-document.querySelectorAll(".before-after-wrapper").forEach((slider) => {
-  const beforeImage = slider.querySelector(".slider-img-before");
-  const handle = slider.querySelector(".slider-handle");
 
-  if (!beforeImage || !handle) {
-    return;
-  }
-
-  let isDragging = false;
-
-  const moveSlider = (x) => {
-    const rect = slider.getBoundingClientRect();
-
-    let position = ((x - rect.left) / rect.width) * 100;
-
-    position = Math.max(0, Math.min(100, position));
-
-    beforeImage.style.width = position + "%";
-    handle.style.left = position + "%";
-  };
-
-  handle.addEventListener("mousedown", () => {
-    isDragging = true;
-  });
-
-  document.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
-    moveSlider(e.clientX);
-  });
-
-  document.addEventListener("mouseup", () => {
-    isDragging = false;
-  });
-});

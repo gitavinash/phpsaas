@@ -1,6 +1,6 @@
 <?php
 
-$id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0));
+$id = base64_decode(mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? $_GET['id'] : 0)));
 
 if ($id != 0) {
 
@@ -10,8 +10,8 @@ if ($id != 0) {
 
             extract(mysqli_fetch_assoc($categoryData));
         } else {
-
-            exit();
+            echo "Invalid catehory found";
+            et();
         }
     }
 } else {

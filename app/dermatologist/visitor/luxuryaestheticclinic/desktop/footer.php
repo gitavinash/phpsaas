@@ -233,7 +233,7 @@
 </script>
 
 <!-- JavaScript Operations -->
-<script src="<?php echo USER_JS ?>main.js"></script>
+<script src="<?php echo USER_JS ?>main.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>
