@@ -48,8 +48,13 @@ function update($connection, $data)
                     $linkID = $link_id;
 
                     $mediaRelation = explode('_', $link_url_ref);
-                    $mediaRelationId = $mediaRelation[0];
-                    $mediaRelationType = strtolower($mediaRelation[1]);
+                    if (count($mediaRelation) >= 2) {
+                        $mediaRelationId = $mediaRelation[0];
+                        $mediaRelationType = strtolower($mediaRelation[1]);
+                    } else {
+                        $mediaRelationId = 0;
+                        $mediaRelationType = '';
+                    }
 
                     mysqli_query($connection, "START TRANSACTION");
 

@@ -59,8 +59,13 @@ function publish($connection, $data)
                         $link_status = 200;
 
                         $mediaRelation = explode('_', $link_url_ref);
-                        $mediaRelationId = $mediaRelation[0];
-                        $mediaRelationType = strtolower($mediaRelation[1]);
+                        if (count($mediaRelation) >= 2) {
+                            $mediaRelationId = $mediaRelation[0];
+                            $mediaRelationType = strtolower($mediaRelation[1]);
+                        } else {
+                            $mediaRelationId = 0;
+                            $mediaRelationType = '';
+                        }
 
                         $mediaPlatform = explode('.', preg_replace('/^www\./', '', parse_url($video_url, PHP_URL_HOST)))[0];
 
