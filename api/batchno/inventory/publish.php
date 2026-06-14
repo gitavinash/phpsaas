@@ -16,7 +16,6 @@ if ($name != '') {
 
     // Extract the single upload image string to variables
 
-    $featurePost = ((isset($featurePost)) ? 1 : 0);
     $postType = 'product';
     $currentStock = ((isset($totalItem)) ? $totalItem : 0);
 

@@ -13,7 +13,7 @@ function publish($connection, $data)
 
             // Extract the single upload image string to variables
 
-            $featurePost = ((isset($featurePost)) ? 1 : 0);
+
             $postType = ((isset($postType)) ? $postType : $type);
             $currentStock = ((isset($currentStock)) ? $currentStock : 0);
 

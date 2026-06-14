@@ -91,7 +91,7 @@ function schedule($connection, $data)
         $gallery = '';
     }
 
-    $featurePost = ((isset($featurePost)) ? 1 : 0);
+
     $facebookImage = (((isset($facebookImage)) ? $facebookImage : $featureImage));
     $twitterImage = (((isset($twitterImage)) ? $twitterImage : $featureImage));
 

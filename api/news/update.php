@@ -107,7 +107,7 @@ function updateNewsWorkflow($connection, $data, $workflow = 'publish', $schedule
     require_once MODULES . 'imageUploader.php';
 
     $currentUserId = defined('USER_ID') ? USER_ID : 0;
-    $featurePost = ((isset($featurePost)) ? 1 : 0);
+
 
     if (isset($image)) {
         $featureImage = (((isset($featureImage)) ? $featureImage : $oldFeatureImage));

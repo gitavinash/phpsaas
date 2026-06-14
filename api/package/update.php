@@ -21,7 +21,7 @@ function update($connection, $data)
 
                     require_once MODULES . 'imageUploader.php';
 
-                    $featurePost = ((isset($featurePost)) ? 1 : 0);
+
 
                     if (isset($image)) {
 

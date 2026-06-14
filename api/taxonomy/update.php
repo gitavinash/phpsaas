@@ -11,7 +11,7 @@ function update($connection, $data)
 
     $taxonomyMsgType = ucwords(((isset($postType)) ? $postType : 'brand'));
 
-    $featurePost = ((isset($featurePost)) ? 1 : 0);
+
 
     if (isset($image)) {
 

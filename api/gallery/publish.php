@@ -13,7 +13,7 @@ function publish($connection, $data)
 
             if (isset($image['featureImage'])) {
 
-                $featurePost = ((isset($featurePost)) ? 1 : 0);
+
                 $post_status = ((isset($post_status)) ? $post_status : 0);
                 $link_status = ((isset($link_status)) ? $link_status : 200);
                 $postType = ((isset($postType)) ? $postType : 'gallery');

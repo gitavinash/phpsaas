@@ -51,7 +51,7 @@ function update($connection, $data)
                         $twitterImage = (((isset($twitterImage)) ? $twitterImage : $oldTwitterImage));
                     }
 
-                    $featurePost = ((isset($featurePost)) ? 1 : 0);
+
                     $in_stock = ((isset($in_stock)) ? 1 : 0);
                     $backorder = ((isset($backorder)) ? 1 : 0);
                     $postType = ((isset($postType)) ? $postType : $type);
