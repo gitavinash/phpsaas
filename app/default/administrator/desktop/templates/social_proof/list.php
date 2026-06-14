@@ -1,9 +1,9 @@
 <?php
 
-$postStatus = mysqli_real_escape_string($connection, $_GET['status']);
+$socialProofStatus = mysqli_real_escape_string($connection, $_GET['status']);
 $startFrom = (isset($_GET['post']) ? $_GET['post'] : 0);
 
-$postStatus = (($postStatus == 'all') ? '' : "AND sp_status='{$postStatus}'");
+$socialProofStatus = (($socialProofStatus == 'all') ? '' : "AND sp_status='{$socialProofStatus}'");
 
 ?>
 <h2>All Galleries</h2>
@@ -39,17 +39,17 @@ $postStatus = (($postStatus == 'all') ? '' : "AND sp_status='{$postStatus}'");
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT sp_id AS post_id, sp_title AS post_title, category_title, sp_video_url AS link_url, sp_status AS link_status, sp_time AS link_creation, profile_display_name FROM " . TABLE_PREFIX . "social_proof, " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "profile WHERE sp_owner_id='" . USER_ID . "' AND sp_site_id='" . SITE_ID . "' AND category_id=sp_category AND profile_user_id='" . USER_ID . "' $postStatus ORDER BY sp_time DESC LIMIT {$startFrom}, 1000")) {
+        if ($dataList = mysqli_query($connection, "SELECT sp_id, sp_title, category_title, link_url, link_status, link_creation, profile_display_name FROM " . TABLE_PREFIX . "social_proof, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "profile WHERE sp_owner_id='" . USER_ID . "' AND link_type='social_proof' AND link_relation_id=sp_id AND link_site_id='" . SITE_ID . "' AND category_id=sp_category AND profile_user_id=link_owner_id AND link_status!=301 $socialProofStatus ORDER BY link_published DESC LIMIT {$startFrom}, 1000")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
                     <tr>
                         <td>
-                            <p><a href="social_proof/?type=edit&editor=true&id=<?php echo base64_encode($post_id); ?>"><?php echo $post_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
+                            <p><a href="social_proof/?type=edit&editor=true&id=<?php echo base64_encode($sp_id); ?>"><?php echo $sp_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
                             </p>
                             <div class="hover">
-                                <a href="social_proof/?type=edit&editor=true&id=<?php echo base64_encode($post_id); ?>"><i class="fas fa-pencil-alt"></i> Edit</a>
-                                <a href="#" id="<?php echo base64_encode($post_id) ?>_socialproof" class="deleteBtn"><i class="fas fa-trash"></i> Delete</a>
+                                <a href="social_proof/?type=edit&editor=true&id=<?php echo base64_encode($sp_id); ?>"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                <a href="#" id="<?php echo base64_encode($sp_id) ?>_socialproof" class="deleteBtn"><i class="fas fa-trash"></i> Delete</a>
                                 <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
                             </div>
                         </td>
