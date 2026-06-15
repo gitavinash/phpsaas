@@ -21,7 +21,7 @@
 
     <!-- Banner with Breadcrumb -->
     <!-- Father's Day Hero -->
-    <section class="relative min-h-[600px] mt-16 overflow-hidden">
+    <section class="relative min-h-[125px] md:min-h-[600px] mt-16 overflow-hidden">
         <?php if (!empty($tag_image)) { ?>
             <div class="absolute inset-0 bg-cover bg-center"
                 style="background-image:url('<?= $tag_image ?>')"></div>
@@ -35,7 +35,7 @@
     <section class="bg-[#faf7f3] py-12 border-b">
         <div class="container mx-auto px-6">
 
-            <div class="grid md:grid-cols-3 gap-8 text-center">
+            <div class="grid grid-cols-3 gap-4 text-center">
 
                 <div>
                     <div class="text-4xl mb-3">🎁</div>
