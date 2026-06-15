@@ -184,6 +184,52 @@ $postType = rtrim(ltrim(ADMIN_BASE_URL, '/'), '/');
                         </ul>
                     </div>
                 </li>
+
+                <li <?php echo (($postType == 'social_proof') ? 'class="active"' : '') ?>>
+                    <a href="social_proof/?type=list&status=all">
+                        <i class="fas fa-play-circle"></i> Social Video Hub
+                    </a>
+
+                    <div class="side-menu">
+                        <ul>
+                            <li>
+                                <a href="social_proof/?type=list&status=all">
+                                    <i class="fas fa-list"></i> All Videos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="social_proof/?type=add&editor=true">
+                                    <i class="fas fa-plus"></i> Add New Video
+                                </a>
+                            </li>
+                            <li>
+                                <a href="social_proof/?type=category">
+                                    <i class="fas fa-tags"></i> Video Categories
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bottom-menu">
+                        <ul>
+                            <li>
+                                <a href="social_proof/?type=list&status=all">
+                                    <i class="fas fa-list"></i> All Videos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="social_proof/?type=add&editor=true">
+                                    <i class="fas fa-plus"></i> Add New Video
+                                </a>
+                            </li>
+                            <li>
+                                <a href="social_proof/?type=category">
+                                    <i class="fas fa-tags"></i> Video Categories
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 <li <?php echo ((ADMIN_BASE_URL == '/coupon/') ? 'class="active"' : '') ?>>
                     <a href="coupon/?type=list&status=all"><i class="fas fa-tags"></i> Coupon</a>
                     <div class="side-menu">
