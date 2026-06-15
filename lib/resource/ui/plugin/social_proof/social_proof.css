@@ -1,0 +1,213 @@
+/* 
+========================================================================
+   SOCIAL PROOF PLUGIN STYLESHEET
+   Description: Responsive slider layout, custom HTML5 video overlays, 
+                and detailed related reference cards inside popup modal.
+========================================================================
+*/
+
+:root {
+  /* System fallback variables for theme adaptation */
+  --sp-color-bg: var(--color-bg-cream, #f9f6f0);
+  --sp-color-card-bg: var(--color-white, #ffffff);
+  --sp-color-accent: var(--color-primary-gold, #C5A880);
+  --sp-color-accent-hover: var(--color-gold-hover, #A88F65);
+  --sp-color-border: var(--border-gold-light, rgba(197, 168, 128, 0.2));
+  --sp-color-text: var(--color-text-dark, #1c1814);
+  --sp-color-text-muted: var(--color-text-muted, #7c7267);
+  --sp-font-sans: var(--font-sans, system-ui, -apple-system, sans-serif);
+  --sp-font-serif: var(--font-serif, Georgia, serif);
+  --sp-shadow: var(--shadow-premium, 0 15px 35px rgba(0,0,0,0.05));
+  --sp-shadow-hover: var(--shadow-hover, 0 20px 40px rgba(0,0,0,0.1));
+}
+
+.social-proof-section {
+  background-color: var(--sp-color-bg);
+  overflow: hidden;
+}
+
+.carousel-outer {
+  position: relative;
+  margin-top: 5rem;
+  padding: 0 5rem;
+}
+
+.carousel-container {
+  overflow: hidden;
+  cursor: grab;
+}
+
+.carousel-container:active {
+  cursor: grabbing;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 3rem;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.social-card {
+  flex: 0 0 calc(25% - 2.25rem); /* 4 cards visible on desktop */
+  min-width: 280px;
+  background-color: var(--sp-color-card-bg);
+  border: 1px solid var(--sp-color-border);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 480px;
+  box-shadow: var(--sp-shadow);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.social-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--sp-shadow-hover);
+}
+
+.social-video-thumb {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.social-video-thumb::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.15) 60%,
+    transparent 100%
+  );
+  z-index: 2;
+}
+
+.social-video-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s ease;
+}
+
+.social-card:hover .social-video-img {
+  transform: scale(1.05);
+}
+
+.social-card-ref {
+  margin-top: 1.2rem;
+}
+
+.ref-link {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(197, 168, 128, 0.15);
+  border: 1px solid rgba(197, 168, 128, 0.3);
+  color: #fff;
+  padding: 0.6rem 1.4rem;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.ref-link:hover {
+  background: var(--sp-color-accent);
+  border-color: var(--sp-color-accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.social-card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 3rem;
+  z-index: 10;
+  color: #fff;
+}
+
+.social-card-title {
+  font-family: var(--sp-font-sans);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Carousel Control Buttons */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: var(--sp-color-card-bg);
+  border: 1px solid var(--sp-color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sp-color-accent);
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.3s ease;
+}
+
+.carousel-btn:hover {
+  background-color: var(--sp-color-accent);
+  color: #fff;
+  box-shadow: var(--sp-shadow);
+}
+
+.btn-prev {
+  left: 0;
+}
+
+.btn-next {
+  right: 0;
+}
+
+.social-cta-box {
+  margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+}
+
+/* Responsiveness Media Queries */
+@media (max-width: 1200px) {
+  .social-card {
+    flex: 0 0 calc(33.333% - 2rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .social-card {
+    flex: 0 0 calc(50% - 1.5rem);
+  }
+}
+
+@media (max-width: 576px) {
+  .social-card {
+    flex: 0 0 100%;
+  }
+  .social-cta-box {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .social-cta-box .btn {
+    width: 100%;
+    max-width: 320px;
+  }
+}

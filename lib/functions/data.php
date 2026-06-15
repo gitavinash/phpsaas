@@ -592,6 +592,101 @@ function getData($conn, $dataType = 'page', $childDataType = 'page', $limit = 10
     return $out;
 }
 
+
+function getSocialProofsData($conn, $type = '', $limit = 10, $featuredOnly = false, $characterLimit = 250)
+{
+    $showOnlyFeatured = $featuredOnly ? " link.link_is_featured DESC " : ' link.link_is_featured ASC ';
+
+    $typeCondition = '';
+
+    if (!empty($type) && $type !== 'social_proof') {
+        $type = mysqli_real_escape_string($conn, $type);
+        $typeCondition = " AND sp.sp_type = '{$type}' ";
+    }
+
+    $query = "
+SELECT
+    sp.sp_id AS id,
+    sp.sp_title AS title,
+
+    LEFT(
+        TRIM(
+            REGEXP_REPLACE(
+                COALESCE(sp.sp_description, ''),
+                '<[^>]*>',
+                ''
+            )
+        ),
+        " . (int)$characterLimit . "
+    ) AS description,
+
+    sp.sp_image AS image,
+
+    profile.profile_display_name AS author,
+    profile.profile_image AS author_image,
+
+    link.link_url,
+    link.link_published,
+    link.link_is_featured,
+
+    sp.sp_ref_type,
+    sp.sp_ref_id,
+    sp.sp_type,
+    sp.sp_video_url,
+
+    ref_link.link_url AS ref_url,
+    s.service_title AS ref_title,
+    s.service_image AS ref_image,
+    LEFT(TRIM(REGEXP_REPLACE(COALESCE(s.service_description, ''), '<[^>]*>', '')), 120) AS ref_description
+
+FROM " . TABLE_PREFIX . "social_proof sp
+
+INNER JOIN " . TABLE_PREFIX . "link link
+    ON link.link_relation_id = sp.sp_id
+    AND link.link_type = 'social_proof'
+    AND link.link_status = 200
+    AND link.link_site_id = " . SITE_ID . "
+
+INNER JOIN " . TABLE_PREFIX . "profile profile
+    ON profile.profile_user_id = link.link_owner_id
+
+LEFT JOIN " . TABLE_PREFIX . "link ref_link
+    ON ref_link.link_relation_id = sp.sp_ref_id
+    AND ref_link.link_type = sp.sp_ref_type COLLATE utf8mb4_unicode_ci
+    AND ref_link.link_status = 200
+    AND ref_link.link_site_id = " . SITE_ID . "
+
+LEFT JOIN " . TABLE_PREFIX . "service s
+    ON s.service_id = sp.sp_ref_id
+    AND sp.sp_ref_type = 'service'
+    AND s.service_site_id = " . SITE_ID . "
+
+WHERE
+    sp.sp_status = 1
+    AND sp.sp_site_id = " . SITE_ID . "
+    {$typeCondition}
+
+ORDER BY
+    link.link_is_featured " . ($featuredOnly ? 'DESC' : 'ASC') . ",
+    link.link_published DESC
+
+LIMIT " . (int)$limit;
+
+    $resData = mysqli_query($conn, $query);
+    if (!$resData) {
+        return [];
+    }
+
+    $out = [];
+    while ($row = mysqli_fetch_assoc($resData)) {
+        $out[] = $row;
+    }
+
+    mysqli_free_result($resData);
+
+    return $out;
+}
+
 function getCategoriesWithPosts(
     mysqli $conn,
     string $tableName = 'post',
@@ -623,7 +718,7 @@ function getCategoriesWithPosts(
            AND cl.link_status = 200
            AND cl.link_site_id = " . SITE_ID . "
 
-        WHERE c.category_type = '{$dataType}'
+        WHERE c.category_type = 'sp_'
           AND c.category_site_id = " . SITE_ID . "
 
         ORDER BY {$featuredCategory}, c.category_title ASC
@@ -757,7 +852,7 @@ function getGalleryWithCategories(
            AND cl.link_status = 200
            AND cl.link_site_id = " . SITE_ID . "
 
-        WHERE c.category_type = '{$dataType}'
+        WHERE c.category_type = 'sp_'
           AND c.category_site_id = " . SITE_ID . "
 
         ORDER BY {$featuredCategory}, c.category_title ASC

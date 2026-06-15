@@ -28,9 +28,13 @@ define('DEFAULT_INSTAGRAM_THUMBNAIL', SITE_URL . '/assets/images/default-instagr
 |--------------------------------------------------------------------------
 */
 
-function fetchUrl($url)
+function fetchUrl($url, $userAgent = '')
 {
     $ch = curl_init();
+
+    if ($userAgent === '') {
+        $userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0 Safari/537.36';
+    }
 
     curl_setopt_array($ch, [
         CURLOPT_URL            => $url,
@@ -41,7 +45,7 @@ function fetchUrl($url)
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_SSL_VERIFYHOST => false,
         CURLOPT_ENCODING       => '',
-        CURLOPT_USERAGENT      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0 Safari/537.36',
+        CURLOPT_USERAGENT      => $userAgent,
         CURLOPT_HTTPHEADER     => [
             'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language: en-US,en;q=0.9'
@@ -53,6 +57,92 @@ function fetchUrl($url)
     curl_close($ch);
 
     return $response ?: '';
+}
+
+function decodeInstagramValue($value)
+{
+    for ($i = 0; $i < 2; $i++) {
+        $decoded = json_decode('"' . $value . '"');
+        if (!is_string($decoded)) {
+            break;
+        }
+        $value = $decoded;
+    }
+
+    return html_entity_decode(
+        str_replace(['\\/', '\\u0026', '\\u0025'], ['/', '&', '%'], $value),
+        ENT_QUOTES,
+        'UTF-8'
+    );
+}
+
+function getInstagramEmbeddedValue($html, $marker, $offset = 0)
+{
+    $start = strpos($html, $marker, $offset);
+    if ($start === false) {
+        return '';
+    }
+
+    $start += strlen($marker);
+    $length = strlen($html);
+
+    for ($i = $start; $i < $length; $i++) {
+        if ($html[$i] !== '"') {
+            continue;
+        }
+
+        $slashCount = 0;
+        for ($j = $i - 1; $j >= $start && $html[$j] === '\\'; $j--) {
+            $slashCount++;
+        }
+
+        if ($slashCount === 1) {
+            return decodeInstagramValue(substr($html, $start, $i - $start - 1));
+        }
+    }
+
+    return '';
+}
+
+function getInstagramEmbedMetadata($shortcode, $type)
+{
+    $embedType = ($type === 'p') ? 'p' : 'reel';
+    $embedUrl = "https://www.instagram.com/{$embedType}/{$shortcode}/embed/captioned/";
+    $html = fetchUrl(
+        $embedUrl,
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Instagram 333.0.0.0.0'
+    );
+
+    if ($html === '') {
+        return [];
+    }
+
+    $captionMarker = 'edge_media_to_caption\\":{\\"edges\\":[{\\"node\\":{\\"text\\":\\"';
+    $displayUrlMarker = 'display_url\\":\\"';
+    $ownerMarker = 'owner\\":{';
+    $ownerPosition = strpos($html, $ownerMarker);
+
+    return [
+        'caption' => trim(getInstagramEmbeddedValue($html, $captionMarker)),
+        'thumbnail' => getInstagramEmbeddedValue($html, $displayUrlMarker),
+        'username' => $ownerPosition === false
+            ? ''
+            : trim(getInstagramEmbeddedValue($html, 'username\\":\\"', $ownerPosition))
+    ];
+}
+
+function getInstagramTitleFromCaption($caption, $username, $defaultTitle)
+{
+    $caption = trim($caption);
+    if ($caption !== '') {
+        $lines = preg_split('/\R+/', $caption);
+        $title = trim($lines[0] ?? '');
+        if ($title !== '') {
+            return function_exists('mb_substr') ? mb_substr($title, 0, 180) : substr($title, 0, 180);
+        }
+    }
+
+    return $username !== '' ? '@' . $username . ' on Instagram' : $defaultTitle;
 }
 
 function getInstagramMediaUrl($shortcode)
@@ -256,22 +346,36 @@ if (
     $thumbnail = getInstagramMediaUrl($shortcode);
     $description = '';
 
+    $embedMetadata = getInstagramEmbedMetadata($shortcode, $type);
+    if (!empty($embedMetadata)) {
+        $description = $embedMetadata['caption'] ?? '';
+        $title = getInstagramTitleFromCaption(
+            $description,
+            $embedMetadata['username'] ?? '',
+            $defaultTitle
+        );
+
+        if (!empty($embedMetadata['thumbnail'])) {
+            $thumbnail = $embedMetadata['thumbnail'];
+        }
+    }
+
     $html = fetchUrl($instagramUrl);
 
     if (!empty($html)) {
 
         $metaTitle = getMetaContent($html, 'og:title');
-        if (!empty($metaTitle)) {
+        if (!empty($metaTitle) && $title === $defaultTitle) {
             $title = $metaTitle;
         }
 
         $metaDescription = getMetaContent($html, 'og:description');
-        if (!empty($metaDescription)) {
+        if (!empty($metaDescription) && $description === '') {
             $description = $metaDescription;
         }
 
         $metaImage = getMetaContent($html, 'og:image');
-        if (!empty($metaImage)) {
+        if (!empty($metaImage) && empty($embedMetadata['thumbnail'])) {
             $thumbnail = $metaImage;
         }
 

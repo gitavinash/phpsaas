@@ -499,135 +499,87 @@ if (!empty($beforeAfterData)) :
 
     <div class="carousel-container">
       <div class="carousel-track">
-        <!-- Card 1 -->
-        <div class="social-card">
-          <div class="social-video-thumb">
-            <img
-              src="assets/images/hero_clinic.png"
-              alt="Patient Skin Journey Video Thumbnail"
-              class="social-video-img" />
-            <div class="social-icon-badge instagram-icon">
-              <i
-                data-lucide="instagram"
-                style="width: 18px; height: 18px"></i>
-            </div>
-            <button class="play-button-overlay" aria-label="Play video">
-              <i
-                data-lucide="play"
-                style="width: 24px; height: 24px; fill: currentColor"></i>
-            </button>
-          </div>
-          <div class="social-card-content">
-            <span class="social-card-tag">Skin Transformation</span>
-            <h4 class="social-card-title">
-              Ananya's 3-Month Acne Scar Removal Journey
-            </h4>
-          </div>
-        </div>
 
-        <!-- Card 2 -->
-        <div class="social-card">
-          <div class="social-video-thumb">
-            <img
-              src="assets/images/dr_founder.png"
-              alt="Doctor Skincare Tips Video Thumbnail"
-              class="social-video-img" />
-            <div class="social-icon-badge youtube-icon">
-              <i
-                data-lucide="youtube"
-                style="width: 18px; height: 18px"></i>
-            </div>
-            <button class="play-button-overlay" aria-label="Play video">
-              <i
-                data-lucide="play"
-                style="width: 24px; height: 24px; fill: currentColor"></i>
-            </button>
-          </div>
-          <div class="social-card-content">
-            <span class="social-card-tag">Expert Advice</span>
-            <h4 class="social-card-title">
-              Top 3 Anti-Aging Active Ingredients - Dr. Reed
-            </h4>
-          </div>
-        </div>
+        <?php
+        if (!function_exists('getLocalVideoUrl')) {
+            function getLocalVideoUrl($url) {
+                if (empty($url)) return '';
+                if (strpos($url, '.mp4') !== false || strpos($url, '/upload/') !== false) {
+                    return $url;
+                }
+                
+                $id = '';
+                if (strpos($url, 'youtube.com') !== false || strpos($url, 'youtu.be') !== false) {
+                    if (preg_match('/(?:shorts\/|v=|be\/|embed\/)([^?&#]+)/', $url, $matches)) {
+                        $id = $matches[1];
+                    }
+                } elseif (strpos($url, 'instagram.com') !== false) {
+                    if (preg_match('/(?:reel|reels|p)\/([^\\/?#&]+)/', $url, $matches)) {
+                        $id = $matches[1];
+                    }
+                }
+                
+                if (!empty($id)) {
+                    return "/upload/hb.local/social_proof/" . $id . ".mp4";
+                }
+                
+                return $url;
+            }
+        }
 
-        <!-- Card 3 -->
-        <div class="social-card">
-          <div class="social-video-thumb">
-            <img
-              src="assets/images/tech_showcase.png"
-              alt="Laser Hair Removal Demo Thumbnail"
-              class="social-video-img" />
-            <div class="social-icon-badge instagram-icon">
-              <i
-                data-lucide="instagram"
-                style="width: 18px; height: 18px"></i>
+        $socialProoofs = getSocialProofsData($connection, 'social_proof', 5, true);
+        if (!empty($socialProoofs)) {
+          foreach ($socialProoofs as $proof) {
+            $proofTitle = htmlspecialchars($proof['title']);
+            $proofImage = htmlspecialchars($proof['image']);
+            $proofType = strtolower($proof['sp_type'] ?? 'instagram');
+            $proofUrl = htmlspecialchars($proof['link_url']);
+            $videoUrl = htmlspecialchars($proof['sp_video_url'] ?? '');
+            $resolvedVideoUrl = getLocalVideoUrl($videoUrl);
+        ?>
+            <div class="social-card"
+              data-video-url="<?= $resolvedVideoUrl ?>"
+              data-video-type="<?= $proofType ?>"
+              data-title="<?= $proofTitle ?>"
+              data-description="<?= htmlspecialchars($proof['description'] ?? '') ?>"
+              data-ref-type="<?= htmlspecialchars($proof['sp_ref_type'] ?? '') ?>"
+              data-ref-url="<?= htmlspecialchars($proof['ref_url'] ?? '') ?>"
+              data-ref-title="<?= htmlspecialchars($proof['ref_title'] ?? '') ?>"
+              data-ref-image="<?= htmlspecialchars($proof['ref_image'] ?? '') ?>"
+              data-ref-description="<?= htmlspecialchars($proof['ref_description'] ?? '') ?>">
+              <div class="social-video-thumb">
+                <video
+                  src="<?= $resolvedVideoUrl ?>"
+                  poster="<?= $proofImage ?>"
+                  class="social-video-img"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; border: none; cursor: pointer;"></video>
+              </div>
+              <div class="social-card-content">
+                <h4 class="social-card-title">
+                  <a href="<?= $proofUrl ?>" style="color: inherit; text-decoration: none;">
+                    <?= $proofTitle ?>
+                  </a>
+                </h4>
+                <?php if (!empty($proof['ref_url'])): 
+                    $refName = !empty($proof['ref_title']) ? htmlspecialchars($proof['ref_title']) : 'Related Details';
+                ?>
+                  <div class="social-card-ref">
+                    <a href="<?= htmlspecialchars($proof['ref_url']) ?>" class="ref-link">
+                      <i data-lucide="sparkles" style="width: 12px; height: 12px; margin-right: 6px; vertical-align: middle;"></i>
+                      <span><?= $refName ?></span>
+                    </a>
+                  </div>
+                <?php endif; ?>
+              </div>
             </div>
-            <button class="play-button-overlay" aria-label="Play video">
-              <i
-                data-lucide="play"
-                style="width: 24px; height: 24px; fill: currentColor"></i>
-            </button>
-          </div>
-          <div class="social-card-content">
-            <span class="social-card-tag">Treatment Demo</span>
-            <h4 class="social-card-title">
-              Soprano Titanium Painless Laser Demonstration
-            </h4>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="social-card">
-          <div class="social-video-thumb">
-            <img
-              src="assets/images/after_skin.png"
-              alt="Hydrafacial Session Walkthrough"
-              class="social-video-img" />
-            <div class="social-icon-badge instagram-icon">
-              <i
-                data-lucide="instagram"
-                style="width: 18px; height: 18px"></i>
-            </div>
-            <button class="play-button-overlay" aria-label="Play video">
-              <i
-                data-lucide="play"
-                style="width: 24px; height: 24px; fill: currentColor"></i>
-            </button>
-          </div>
-          <div class="social-card-content">
-            <span class="social-card-tag">Patient Vlogs</span>
-            <h4 class="social-card-title">
-              Celebrity Hydrating Facial Experience at Clinic
-            </h4>
-          </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="social-card">
-          <div class="social-video-thumb">
-            <img
-              src="assets/images/before_skin.png"
-              alt="PRP Scalp Injections Demo"
-              class="social-video-img" />
-            <div class="social-icon-badge youtube-icon">
-              <i
-                data-lucide="youtube"
-                style="width: 18px; height: 18px"></i>
-            </div>
-            <button class="play-button-overlay" aria-label="Play video">
-              <i
-                data-lucide="play"
-                style="width: 24px; height: 24px; fill: currentColor"></i>
-            </button>
-          </div>
-          <div class="social-card-content">
-            <span class="social-card-tag">Hair Growth</span>
-            <h4 class="social-card-title">
-              Understanding Growth Factor Concentrate Therapy
-            </h4>
-          </div>
-        </div>
+        <?php
+          }
+        };
+        ?>
       </div>
     </div>
   </div>
