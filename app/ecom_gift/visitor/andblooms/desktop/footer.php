@@ -116,6 +116,8 @@
 
 <script type="text/javascript" src="<?php echo PLUGIN_LIBRARY ?>datepicker/datepicker.min.js"></script>
 <script src="<?php echo PLUGIN_LIBRARY ?>select2/js/select2.min.js" type="text/javascript"></script>
+<!-- Social Proof Plugin -->
+<script src="<?php echo PLUGIN_LIBRARY ?>social_proof/social_proof.js?v=<?php echo time(); ?>"></script>
 <script type="text/javascript" src="<?php echo USER_JS ?>app.min.js"></script>
 <?php
 

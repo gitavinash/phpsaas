@@ -76,7 +76,7 @@ function decodeInstagramValue($value)
     );
 }
 
-function getInstagramEmbeddedValue($html, $marker, $offset = 0)
+function getInstagramEmbeddedValue($html, $marker, $offset = 0, $escapedContainer = true)
 {
     $start = strpos($html, $marker, $offset);
     if ($start === false) {
@@ -96,8 +96,52 @@ function getInstagramEmbeddedValue($html, $marker, $offset = 0)
             $slashCount++;
         }
 
-        if ($slashCount === 1) {
-            return decodeInstagramValue(substr($html, $start, $i - $start - 1));
+        if (($escapedContainer && $slashCount === 1) || (!$escapedContainer && $slashCount % 2 === 0)) {
+            $valueLength = $i - $start - ($escapedContainer ? 1 : 0);
+            return decodeInstagramValue(substr($html, $start, $valueLength));
+        }
+    }
+
+    return '';
+}
+
+function getInstagramValueByKey($html, $key, $offset = 0)
+{
+    $markers = [
+        [$key . '\\":\\"', true],
+        ['"' . $key . '":"', false]
+    ];
+
+    foreach ($markers as $marker) {
+        $value = getInstagramEmbeddedValue($html, $marker[0], $offset, $marker[1]);
+        if ($value !== '') {
+            return $value;
+        }
+    }
+
+    return '';
+}
+
+function getInstagramCaption($html)
+{
+    $markers = [
+        ['edge_media_to_caption\\":{\\"edges\\":[{\\"node\\":{\\"text\\":\\"', true],
+        ['"edge_media_to_caption":{"edges":[{"node":{"text":"', false],
+        ['caption\\":{\\"text\\":\\"', true],
+        ['"caption":{"text":"', false]
+    ];
+
+    foreach ($markers as $marker) {
+        $caption = trim(getInstagramEmbeddedValue($html, $marker[0], 0, $marker[1]));
+        if ($caption !== '') {
+            return $caption;
+        }
+    }
+
+    foreach (['og:description', 'description'] as $property) {
+        $caption = trim(getMetaContent($html, $property));
+        if ($caption !== '') {
+            return $caption;
         }
     }
 
@@ -107,28 +151,52 @@ function getInstagramEmbeddedValue($html, $marker, $offset = 0)
 function getInstagramEmbedMetadata($shortcode, $type)
 {
     $embedType = ($type === 'p') ? 'p' : 'reel';
-    $embedUrl = "https://www.instagram.com/{$embedType}/{$shortcode}/embed/captioned/";
-    $html = fetchUrl(
-        $embedUrl,
-        'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Instagram 333.0.0.0.0'
-    );
+    $candidateUrls = [
+        "https://www.instagram.com/{$embedType}/{$shortcode}/embed/captioned/",
+        "https://www.instagram.com/{$embedType}/{$shortcode}/embed/",
+        "https://www.instagram.com/{$embedType}/{$shortcode}/?__a=1&__d=dis"
+    ];
+    $userAgents = [
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Instagram 333.0.0.0.0',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/137.0 Safari/537.36'
+    ];
+    $metadata = ['caption' => '', 'thumbnail' => '', 'username' => ''];
 
-    if ($html === '') {
-        return [];
+    foreach ($candidateUrls as $candidateUrl) {
+        foreach ($userAgents as $userAgent) {
+            $html = fetchUrl($candidateUrl, $userAgent);
+            if ($html === '') {
+                continue;
+            }
+
+            if ($metadata['caption'] === '') {
+                $metadata['caption'] = getInstagramCaption($html);
+            }
+            if ($metadata['thumbnail'] === '') {
+                $metadata['thumbnail'] = getInstagramValueByKey($html, 'display_url');
+                if ($metadata['thumbnail'] === '') {
+                    $metadata['thumbnail'] = getInstagramValueByKey($html, 'thumbnail_url');
+                }
+                if ($metadata['thumbnail'] === '') {
+                    $metadata['thumbnail'] = getMetaContent($html, 'og:image');
+                }
+            }
+            if ($metadata['username'] === '') {
+                $ownerPosition = strpos($html, 'owner\\":{');
+                $metadata['username'] = trim(getInstagramValueByKey(
+                    $html,
+                    'username',
+                    $ownerPosition === false ? 0 : $ownerPosition
+                ));
+            }
+
+            if ($metadata['caption'] !== '' && $metadata['thumbnail'] !== '' && $metadata['username'] !== '') {
+                return $metadata;
+            }
+        }
     }
 
-    $captionMarker = 'edge_media_to_caption\\":{\\"edges\\":[{\\"node\\":{\\"text\\":\\"';
-    $displayUrlMarker = 'display_url\\":\\"';
-    $ownerMarker = 'owner\\":{';
-    $ownerPosition = strpos($html, $ownerMarker);
-
-    return [
-        'caption' => trim(getInstagramEmbeddedValue($html, $captionMarker)),
-        'thumbnail' => getInstagramEmbeddedValue($html, $displayUrlMarker),
-        'username' => $ownerPosition === false
-            ? ''
-            : trim(getInstagramEmbeddedValue($html, 'username\\":\\"', $ownerPosition))
-    ];
+    return $metadata;
 }
 
 function getInstagramTitleFromCaption($caption, $username, $defaultTitle)

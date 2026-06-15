@@ -50,29 +50,102 @@ function decodeEscapedUrl($url)
     return html_entity_decode(str_replace(['\\/', '\\u0026', '\\u0025'], ['/', '&', '%'], $url), ENT_QUOTES, 'UTF-8');
 }
 
+function getEscapedJsonValue($content, $key)
+{
+    $markers = [
+        '"' . $key . '":"',
+        $key . '\\":\\"'
+    ];
+
+    foreach ($markers as $marker) {
+        $start = strpos($content, $marker);
+        if ($start === false) {
+            continue;
+        }
+
+        $start += strlen($marker);
+        $escapedContainer = strpos($marker, '\\"') !== false;
+        $length = strlen($content);
+
+        for ($i = $start; $i < $length; $i++) {
+            if ($content[$i] !== '"') {
+                continue;
+            }
+
+            $slashCount = 0;
+            for ($j = $i - 1; $j >= $start && $content[$j] === '\\'; $j--) {
+                $slashCount++;
+            }
+
+            if (($escapedContainer && $slashCount === 1) || (!$escapedContainer && $slashCount % 2 === 0)) {
+                $valueLength = $i - $start - ($escapedContainer ? 1 : 0);
+                return decodeEscapedUrl(substr($content, $start, $valueLength));
+            }
+        }
+    }
+
+    return '';
+}
+
+function getVideoSourceFromContent($content)
+{
+    foreach (['video_url', 'contentUrl', 'content_url'] as $key) {
+        $source = getEscapedJsonValue($content, $key);
+        if (filter_var($source, FILTER_VALIDATE_URL)) {
+            return $source;
+        }
+    }
+
+    $patterns = [
+        '/<meta[^>]+property=["\']og:video(?::url|:secure_url)?["\'][^>]+content=["\']([^"\']+)["\']/i',
+        '/<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:video(?::url|:secure_url)?["\']/i'
+    ];
+
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $content, $matches)) {
+            $source = decodeEscapedUrl($matches[1]);
+            if (filter_var($source, FILTER_VALIDATE_URL)) {
+                return $source;
+            }
+        }
+    }
+
+    return '';
+}
+
 function getInstagramVideoSource($url)
 {
     if (!preg_match('~instagram\.com/(?:reel|reels|p|tv)/([A-Za-z0-9_-]+)~i', $url, $matches)) {
         return '';
     }
 
-    $embedUrl = 'https://www.instagram.com/reel/' . $matches[1] . '/embed/captioned/';
-    $html = fetchRemoteContent($embedUrl, [
-        'userAgent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Instagram 333.0.0.0.0'
-    ]);
+    $shortcode = $matches[1];
+    $type = 'reel';
+    if (preg_match('~instagram\.com/(p|tv)/~i', $url, $typeMatch)) {
+        $type = strtolower($typeMatch[1]);
+    }
 
-    if ($html !== '') {
-        if (preg_match('/"video_url"\s*:\s*"((?:\\\\.|[^"])*)"/i', $html, $videoMatch)) {
-            return decodeEscapedUrl($videoMatch[1]);
-        }
+    $candidateUrls = [
+        "https://www.instagram.com/{$type}/{$shortcode}/embed/captioned/",
+        "https://www.instagram.com/{$type}/{$shortcode}/embed/",
+        "https://www.instagram.com/{$type}/{$shortcode}/?__a=1&__d=dis",
+        "https://www.instagram.com/{$type}/{$shortcode}/"
+    ];
+    $userAgents = [
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Instagram 333.0.0.0.0',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/137.0 Safari/537.36'
+    ];
 
-        $marker = 'video_url\\":\\"';
-        $start = strpos($html, $marker);
-        if ($start !== false) {
-            $start += strlen($marker);
-            $end = strpos($html, '\\"', $start);
-            if ($end !== false) {
-                return decodeEscapedUrl(substr($html, $start, $end - $start));
+    foreach ($candidateUrls as $candidateUrl) {
+        foreach ($userAgents as $userAgent) {
+            $content = fetchRemoteContent($candidateUrl, ['userAgent' => $userAgent]);
+            if ($content === '') {
+                continue;
+            }
+
+            $source = getVideoSourceFromContent($content);
+            if ($source !== '') {
+                return $source;
             }
         }
     }
@@ -90,50 +163,78 @@ function getYoutubeVideoSource($url)
     $pageUrl = 'https://www.youtube.com/watch?v=' . $videoId;
     $html = fetchRemoteContent($pageUrl);
 
-    if (
-        $html === ''
-        || !preg_match('/"INNERTUBE_API_KEY":"([^"]+)"/', $html, $apiKeyMatch)
-        || !preg_match('/"INNERTUBE_CLIENT_VERSION":"([^"]+)"/', $html, $clientVersionMatch)
-    ) {
+    if ($html === '') {
         return '';
     }
 
-    $payload = json_encode([
-        'context' => [
-            'client' => [
-                'clientName' => 'ANDROID',
-                'clientVersion' => '20.10.38',
-                'androidSdkVersion' => 34,
-                'hl' => 'en',
-                'gl' => 'IN'
-            ]
-        ],
-        'videoId' => $videoId,
-        'contentCheckOk' => true,
-        'racyCheckOk' => true
-    ]);
+    if (preg_match('/"INNERTUBE_API_KEY":"([^"]+)"/', $html, $apiKeyMatch)) {
+        $apiKey = $apiKeyMatch[1];
+    } else {
+        $apiKey = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8';
+    }
 
-    $playerResponse = fetchRemoteContent(
-        'https://www.youtube.com/youtubei/v1/player?key=' . rawurlencode($apiKeyMatch[1]),
+    $clients = [
         [
+            'name' => 'ANDROID',
+            'version' => '20.10.38',
             'userAgent' => 'com.google.android.youtube/20.10.38 (Linux; U; Android 14)',
-            'headers' => ['Content-Type: application/json'],
-            'postData' => $payload
+            'extra' => ['androidSdkVersion' => 34]
+        ],
+        [
+            'name' => 'IOS',
+            'version' => '20.10.4',
+            'userAgent' => 'com.google.ios.youtube/20.10.4 (iPhone16,2; U; CPU iOS 18_3 like Mac OS X)',
+            'extra' => ['deviceMake' => 'Apple', 'deviceModel' => 'iPhone16,2', 'osName' => 'iPhone', 'osVersion' => '18.3.1.22D72']
+        ],
+        [
+            'name' => 'TVHTML5_SIMPLY_EMBEDDED_PLAYER',
+            'version' => '2.0',
+            'userAgent' => 'Mozilla/5.0 (SMART-TV; Linux; Tizen 6.0) AppleWebKit/537.36',
+            'extra' => []
         ]
-    );
-    $playerData = json_decode($playerResponse, true);
+    ];
 
-    if (($playerData['playabilityStatus']['status'] ?? '') !== 'OK') {
-        return '';
-    }
+    foreach ($clients as $client) {
+        $clientContext = array_merge([
+            'clientName' => $client['name'],
+            'clientVersion' => $client['version'],
+            'hl' => 'en',
+            'gl' => 'IN'
+        ], $client['extra']);
 
-    foreach ($playerData['streamingData']['formats'] ?? [] as $format) {
-        if (
-            isset($format['url'])
-            && strpos($format['mimeType'] ?? '', 'video/mp4') === 0
-            && strpos($format['mimeType'] ?? '', 'mp4a') !== false
-        ) {
-            return $format['url'];
+        $payload = [
+            'context' => ['client' => $clientContext],
+            'videoId' => $videoId,
+            'contentCheckOk' => true,
+            'racyCheckOk' => true
+        ];
+
+        if ($client['name'] === 'TVHTML5_SIMPLY_EMBEDDED_PLAYER') {
+            $payload['context']['thirdParty'] = ['embedUrl' => 'https://www.youtube.com/'];
+        }
+
+        $playerResponse = fetchRemoteContent(
+            'https://www.youtube.com/youtubei/v1/player?key=' . rawurlencode($apiKey),
+            [
+                'userAgent' => $client['userAgent'],
+                'headers' => ['Content-Type: application/json', 'Origin: https://www.youtube.com'],
+                'postData' => json_encode($payload)
+            ]
+        );
+        $playerData = json_decode($playerResponse, true);
+
+        if (($playerData['playabilityStatus']['status'] ?? '') !== 'OK') {
+            continue;
+        }
+
+        foreach ($playerData['streamingData']['formats'] ?? [] as $format) {
+            if (
+                isset($format['url'])
+                && strpos($format['mimeType'] ?? '', 'video/mp4') === 0
+                && strpos($format['mimeType'] ?? '', 'mp4a') !== false
+            ) {
+                return $format['url'];
+            }
         }
     }
 
@@ -157,22 +258,10 @@ function getRemoteVideoSource($url)
         return '';
     }
 
-    $patterns = [
-        '/<meta[^>]+property=["\']og:video(?::url|:secure_url)?["\'][^>]+content=["\']([^"\']+)["\']/i',
-        '/<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:video(?::url|:secure_url)?["\']/i',
-        '/"video_url"\s*:\s*"((?:\\\\.|[^"])*)"/i'
-    ];
-
-    foreach ($patterns as $pattern) {
-        if (preg_match($pattern, $html, $matches)) {
-            return decodeEscapedUrl($matches[1]);
-        }
-    }
-
-    return '';
+    return getVideoSourceFromContent($html);
 }
 
-function downloadSocialProofVideo($videoUrl)
+function downloadSocialProofVideo($videoUrl, $attempt = 0)
 {
     $videoUrl = trim($videoUrl);
     $scheme = strtolower((string) parse_url($videoUrl, PHP_URL_SCHEME));
@@ -245,6 +334,10 @@ function downloadSocialProofVideo($videoUrl)
 
     if ($downloaded === false || $httpCode < 200 || $httpCode >= 400 || $fileSize === 0 || !$isVideo) {
         @unlink($tempFile);
+        if ($attempt === 0) {
+            usleep(250000);
+            return downloadSocialProofVideo($videoUrl, 1);
+        }
         return false;
     }
 

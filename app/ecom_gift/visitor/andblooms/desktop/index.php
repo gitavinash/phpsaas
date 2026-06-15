@@ -350,6 +350,113 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
     </div>
 </section>
 
+<?php
+// ─── SOCIAL PROOF CAROUSEL ───────────────────────────────────────────────────
+if (!function_exists('getLocalVideoUrl')) {
+    function getLocalVideoUrl($url) {
+        if (empty($url)) return '';
+        if (strpos($url, '.mp4') !== false || strpos($url, '/upload/') !== false) {
+            return $url;
+        }
+        $id = '';
+        if (strpos($url, 'youtube.com') !== false || strpos($url, 'youtu.be') !== false) {
+            if (preg_match('/(?:shorts\/|v=|be\/|embed\/)([^?&#]+)/', $url, $matches)) {
+                $id = $matches[1];
+            }
+        } elseif (strpos($url, 'instagram.com') !== false) {
+            if (preg_match('/(?:reel|reels|p)\/([^\/?#&]+)/', $url, $matches)) {
+                $id = $matches[1];
+            }
+        }
+        if (!empty($id)) {
+            return '/upload/' . SITE_DOMAIN . '/social_proof/' . $id . '.mp4';
+        }
+        return $url;
+    }
+}
+
+$socialProofs = getSocialProofsData($connection, 'social_proof', 8, true);
+if (!empty($socialProofs)):
+?>
+<!-- Social Proof Section -->
+<section class="social-proof-section" id="social-proof" style="padding: 5rem 0;">
+    <div class="container mx-auto px-6 text-center" style="margin-bottom: 4rem;">
+        <p style="font-size:1.1rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--sp-color-accent, #D4946D); font-weight:600; margin-bottom:1rem;">Watch Us In Action</p>
+        <h2 style="font-size:clamp(2.4rem,4vw,3.6rem); font-weight:600; color:#1f2937; margin-bottom:1.2rem;">Real Moments &amp; Fresh Inspirations</h2>
+        <p style="max-width:560px; margin:0 auto; color:#6b7280; font-size:1.05rem; line-height:1.7;">Step inside our studio — behind-the-scenes arrangement stories, customer unboxings, and bloom guides straight from the AndBlooms team.</p>
+    </div>
+
+    <div class="carousel-outer" style="position:relative; padding:0 5rem; margin-top:0;">
+        <button class="carousel-btn btn-prev" aria-label="Slide left">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="carousel-btn btn-next" aria-label="Slide right">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <?php foreach ($socialProofs as $proof):
+                    $proofTitle       = htmlspecialchars($proof['title'] ?? '');
+                    $proofImage       = htmlspecialchars($proof['image'] ?? '');
+                    $proofType        = strtolower($proof['sp_type'] ?? 'instagram');
+                    $proofUrl         = htmlspecialchars($proof['link_url'] ?? '#');
+                    $videoUrl         = htmlspecialchars($proof['sp_video_url'] ?? '');
+                    $resolvedVideoUrl = getLocalVideoUrl($videoUrl);
+                ?>
+                <div class="social-card"
+                    data-video-url="<?= $resolvedVideoUrl ?>"
+                    data-video-type="<?= $proofType ?>"
+                    data-title="<?= $proofTitle ?>"
+                    data-description="<?= htmlspecialchars($proof['description'] ?? '') ?>"
+                    data-ref-type="<?= htmlspecialchars($proof['sp_ref_type'] ?? '') ?>"
+                    data-ref-url="<?= htmlspecialchars($proof['ref_url'] ?? '') ?>"
+                    data-ref-title="<?= htmlspecialchars($proof['ref_title'] ?? '') ?>"
+                    data-ref-image="<?= htmlspecialchars($proof['ref_image'] ?? '') ?>"
+                    data-ref-description="<?= htmlspecialchars($proof['ref_description'] ?? '') ?>">
+
+                    <div class="social-video-thumb">
+                        <video
+                            src="<?= $resolvedVideoUrl ?>"
+                            poster="<?= $proofImage ?>"
+                            class="social-video-img"
+                            autoplay loop muted playsinline
+                            style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;border:none;cursor:pointer;">
+                        </video>
+                    </div>
+
+                    <div class="social-card-content">
+                        <h4 class="social-card-title">
+                            <a href="<?= $proofUrl ?>" style="color:inherit;text-decoration:none;"><?= $proofTitle ?></a>
+                        </h4>
+                        <?php if (!empty($proof['ref_url'])):
+                            $refName = !empty($proof['ref_title']) ? htmlspecialchars($proof['ref_title']) : 'View Product';
+                        ?>
+                        <div class="social-card-ref">
+                            <a href="<?= htmlspecialchars($proof['ref_url']) ?>" class="ref-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle;"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+                                <span><?= $refName ?></span>
+                            </a>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="social-cta-box" style="margin-top:4rem; display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap; padding:0 1.5rem;">
+        <a href="https://instagram.com/andblooms" class="inline-block bg-[#D4946D] text-white px-8 py-3 rounded-full hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap" target="_blank" rel="noopener">
+            Follow on Instagram
+        </a>
+        <a href="https://youtube.com/@andblooms" class="inline-block border border-[#D4946D] text-[#D4946D] px-8 py-3 rounded-full hover:bg-[#D4946D] hover:text-white transition-all duration-300 whitespace-nowrap" target="_blank" rel="noopener">
+            Subscribe on YouTube
+        </a>
+    </div>
+</section>
+<?php endif; ?>
+
 <!-- Recent Products -->
 <section class="py-20 px-6">
     <div class="container mx-auto">

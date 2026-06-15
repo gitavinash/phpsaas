@@ -1,6 +1,7 @@
 <?php
 
 require_once MENU_FUNCTIONS;
+require_once DATA_FUNCTIONS;
 
 /**
  * Renders the mobile menu tree recursively with a beautiful luxury design.
@@ -49,28 +50,28 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: '#D4946D',
-                    secondary: '#F8F5F2'
-                },
-                borderRadius: {
-                    'none': '0px',
-                    'sm': '4px',
-                    DEFAULT: '8px',
-                    'md': '12px',
-                    'lg': '16px',
-                    'xl': '20px',
-                    '2xl': '24px',
-                    '3xl': '32px',
-                    'full': '9999px',
-                    'button': '8px'
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D4946D',
+                        secondary: '#F8F5F2'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
                 }
             }
         }
-    }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -80,6 +81,8 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
+    <!-- Social Proof Plugin -->
+    <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>social_proof/social_proof.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
     <?php require_once DEFAULT_META; ?>
     <meta name="google-site-verification" content="HT7OlsigSJmSLCG9PCz7JmCbyRGmzUeJapljsV4KRIg" />
@@ -87,39 +90,39 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-69G2SPCWHX"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', 'G-69G2SPCWHX');
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-69G2SPCWHX');
     </script>
 
     <!-- Global site tag (gtag.js) - Google Ads: 628904231 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-628904231"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
-    gtag('config', 'AW-628904231');
+        gtag('config', 'AW-628904231');
     </script>
 
     <script type="text/javascript">
-    (function(c, l, a, r, i, t, y) {
-        c[a] = c[a] || function() {
-            (c[a].q = c[a].q || []).push(arguments)
-        };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = "https://www.clarity.ms/tag/" + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-    })(window, document, "clarity", "script", "dw3u1ggui2");
+        (function(c, l, a, r, i, t, y) {
+            c[a] = c[a] || function() {
+                (c[a].q = c[a].q || []).push(arguments)
+            };
+            t = l.createElement(r);
+            t.async = 1;
+            t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0];
+            y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "dw3u1ggui2");
     </script>
 
     <?php
@@ -132,14 +135,14 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
 
     ?>
 
-    <script>
-    gtag('event', 'conversion', {
-        'send_to': 'AW-628904231/OgMhCLfdtdIBEKei8asC',
-        'value': 1,
-        'currency': 'INR',
-        'transaction_id': ''
-    });
-    </script>
+                <script>
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-628904231/OgMhCLfdtdIBEKei8asC',
+                        'value': 1,
+                        'currency': 'INR',
+                        'transaction_id': ''
+                    });
+                </script>
     <?php
 
             }
@@ -150,26 +153,26 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
 
     <!-- Meta Pixel Code -->
     <script>
-    ! function(f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function() {
-            n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s)
-    }(window, document, 'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '577779820444463');
-    fbq('track', 'PageView');
+        ! function(f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function() {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '577779820444463');
+        fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none"
             src="https://www.facebook.com/tr?id=577779820444463&ev=PageView&noscript=1" /></noscript>
@@ -177,20 +180,20 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
 
     <!-- Google Tag Manager -->
     <script>
-    (function(w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({
-            'gtm.start': new Date().getTime(),
-            event: 'gtm.js'
-        });
-        var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s),
-            dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-K46P78T');
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-K46P78T');
     </script>
     <!-- End Google Tag Manager -->
     <?php require_once GOOGLE_RECAPTCHA_GENERATOR; ?>
@@ -244,58 +247,58 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
                         <i class="ri-shopping-bag-line text-xl"></i>
                     </a>
                     <?php if ($cartItems > 0) { ?>
-                    <span id="cartItems"
-                        class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-medium"><?php echo $cartItems ?></span>
+                        <span id="cartItems"
+                            class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-medium"><?php echo $cartItems ?></span>
 
-                    <!-- Cart Dropdown Preview -->
-                    <div
-                        class="absolute right-0 top-full mt-3 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
-                        <!-- Header -->
-                        <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-primary/5 to-transparent">
-                            <div class="flex items-center justify-between">
-                                <h3 class="font-semibold text-gray-800 flex items-center">
-                                    <i class="ri-shopping-bag-3-line text-primary mr-2"></i>
-                                    Your Cart
-                                </h3>
-                                <span
-                                    class="bg-primary text-white text-xs px-2 py-1 rounded-full"><?php echo $cartItems ?>
-                                    item<?php echo $cartItems > 1 ? 's' : '' ?></span>
+                        <!-- Cart Dropdown Preview -->
+                        <div
+                            class="absolute right-0 top-full mt-3 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
+                            <!-- Header -->
+                            <div class="p-4 border-b border-gray-100 bg-gradient-to-r from-primary/5 to-transparent">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-semibold text-gray-800 flex items-center">
+                                        <i class="ri-shopping-bag-3-line text-primary mr-2"></i>
+                                        Your Cart
+                                    </h3>
+                                    <span
+                                        class="bg-primary text-white text-xs px-2 py-1 rounded-full"><?php echo $cartItems ?>
+                                        item<?php echo $cartItems > 1 ? 's' : '' ?></span>
+                                </div>
+                            </div>
+
+                            <!-- Quick Message -->
+                            <div class="p-4 text-center bg-secondary/50">
+                                <p class="text-sm text-gray-600">
+                                    <i class="ri-checkbox-circle-line text-green-500 mr-1"></i>
+                                    You have <strong class="text-primary"><?php echo $cartItems ?></strong>
+                                    item<?php echo $cartItems > 1 ? 's' : '' ?> in your cart
+                                </p>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="p-4 space-y-2">
+                                <a href="/checkout/"
+                                    class="block w-full bg-primary text-white text-center py-3 rounded-lg font-medium hover:bg-opacity-90 transition shadow-sm">
+                                    <i class="ri-shopping-cart-2-line mr-2"></i>
+                                    View Cart & Checkout
+                                </a>
+                                <button onclick="this.closest('.cart-dropdown-trigger').querySelector('a').click()"
+                                    class="block w-full bg-gray-100 text-gray-700 text-center py-2.5 rounded-lg font-medium hover:bg-gray-200 transition text-sm">
+                                    Continue Shopping
+                                </button>
+                            </div>
+
+                            <!-- Footer Note -->
+                            <div class="px-4 pb-4 text-center">
+                                <p class="text-xs text-gray-500">
+                                    <i class="ri-secure-payment-line text-primary"></i>
+                                    Secure checkout • Same day delivery
+                                </p>
                             </div>
                         </div>
-
-                        <!-- Quick Message -->
-                        <div class="p-4 text-center bg-secondary/50">
-                            <p class="text-sm text-gray-600">
-                                <i class="ri-checkbox-circle-line text-green-500 mr-1"></i>
-                                You have <strong class="text-primary"><?php echo $cartItems ?></strong>
-                                item<?php echo $cartItems > 1 ? 's' : '' ?> in your cart
-                            </p>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="p-4 space-y-2">
-                            <a href="/checkout/"
-                                class="block w-full bg-primary text-white text-center py-3 rounded-lg font-medium hover:bg-opacity-90 transition shadow-sm">
-                                <i class="ri-shopping-cart-2-line mr-2"></i>
-                                View Cart & Checkout
-                            </a>
-                            <button onclick="this.closest('.cart-dropdown-trigger').querySelector('a').click()"
-                                class="block w-full bg-gray-100 text-gray-700 text-center py-2.5 rounded-lg font-medium hover:bg-gray-200 transition text-sm">
-                                Continue Shopping
-                            </button>
-                        </div>
-
-                        <!-- Footer Note -->
-                        <div class="px-4 pb-4 text-center">
-                            <p class="text-xs text-gray-500">
-                                <i class="ri-secure-payment-line text-primary"></i>
-                                Secure checkout • Same day delivery
-                            </p>
-                        </div>
-                    </div>
                     <?php } else { ?>
-                    <span id="cartItems"
-                        class="absolute -top-1 -right-1 bg-gray-300 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                        <span id="cartItems"
+                            class="absolute -top-1 -right-1 bg-gray-300 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
                     <?php } ?>
                 </div>
 
@@ -358,107 +361,107 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
     </header>
 
     <style>
-    #mobile-menu-overlay {
-        transition: background-color 300ms ease-in-out, backdrop-filter 300ms ease-in-out, -webkit-backdrop-filter 300ms ease-in-out;
-    }
+        #mobile-menu-overlay {
+            transition: background-color 300ms ease-in-out, backdrop-filter 300ms ease-in-out, -webkit-backdrop-filter 300ms ease-in-out;
+        }
 
-    summary::-webkit-details-marker {
-        display: none;
-    }
+        summary::-webkit-details-marker {
+            display: none;
+        }
 
-    summary {
-        list-style: none;
-    }
+        summary {
+            list-style: none;
+        }
     </style>
 
     <script>
-    // Initialize mobile menu
-    (function() {
-        let menuOpen = false;
+        // Initialize mobile menu
+        (function() {
+            let menuOpen = false;
 
-        function initMobileMenu() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            function initMobileMenu() {
+                const mobileMenuButton = document.getElementById('mobile-menu-button');
+                const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
 
-            if (!mobileMenuButton || !mobileMenu || !mobileMenuOverlay) {
-                console.error('Menu elements not found');
-                return;
-            }
+                if (!mobileMenuButton || !mobileMenu || !mobileMenuOverlay) {
+                    console.error('Menu elements not found');
+                    return;
+                }
 
-            function openMenu(e) {
-                if (e) e.preventDefault();
-                if (menuOpen) return;
+                function openMenu(e) {
+                    if (e) e.preventDefault();
+                    if (menuOpen) return;
 
-                console.log('Opening menu');
-                menuOpen = true;
+                    console.log('Opening menu');
+                    menuOpen = true;
 
-                // Force reflow to ensure transition works
-                mobileMenu.offsetHeight;
+                    // Force reflow to ensure transition works
+                    mobileMenu.offsetHeight;
 
-                mobileMenu.style.transform = 'translateX(0)';
+                    mobileMenu.style.transform = 'translateX(0)';
 
-                // Overlay enhancements
-                mobileMenuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
-                mobileMenuOverlay.style.backdropFilter = 'blur(4px)';
-                mobileMenuOverlay.style.webkitBackdropFilter = 'blur(4px)';
-                mobileMenuOverlay.style.pointerEvents = 'auto';
-                document.body.style.overflow = 'hidden';
-            }
+                    // Overlay enhancements
+                    mobileMenuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+                    mobileMenuOverlay.style.backdropFilter = 'blur(4px)';
+                    mobileMenuOverlay.style.webkitBackdropFilter = 'blur(4px)';
+                    mobileMenuOverlay.style.pointerEvents = 'auto';
+                    document.body.style.overflow = 'hidden';
+                }
 
-            function closeMenu(e) {
-                if (e) e.preventDefault();
-                if (!menuOpen) return;
+                function closeMenu(e) {
+                    if (e) e.preventDefault();
+                    if (!menuOpen) return;
 
-                console.log('Closing menu');
-                menuOpen = false;
+                    console.log('Closing menu');
+                    menuOpen = false;
 
-                mobileMenu.style.transform = 'translateX(-100%)';
+                    mobileMenu.style.transform = 'translateX(-100%)';
 
-                mobileMenuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
-                mobileMenuOverlay.style.backdropFilter = 'none';
-                mobileMenuOverlay.style.webkitBackdropFilter = 'none';
-                mobileMenuOverlay.style.pointerEvents = 'none';
-                document.body.style.overflow = '';
+                    mobileMenuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+                    mobileMenuOverlay.style.backdropFilter = 'none';
+                    mobileMenuOverlay.style.webkitBackdropFilter = 'none';
+                    mobileMenuOverlay.style.pointerEvents = 'none';
+                    document.body.style.overflow = '';
 
-                // Close all dynamic details accordions when closing menu
-                document.querySelectorAll('#mobile-menu details').forEach(details => {
-                    details.removeAttribute('open');
+                    // Close all dynamic details accordions when closing menu
+                    document.querySelectorAll('#mobile-menu details').forEach(details => {
+                        details.removeAttribute('open');
+                    });
+                }
+
+                // Attach event listeners
+                mobileMenuButton.addEventListener('click', openMenu);
+                closeMobileMenuButton.addEventListener('click', closeMenu);
+                mobileMenuOverlay.addEventListener('click', closeMenu);
+
+                // Close menu on link click (only direct navigation links, not accordion summaries)
+                document.querySelectorAll('#mobile-menu a').forEach(link => {
+                    link.addEventListener('click', function() {
+                        closeMenu();
+                    });
                 });
+
+                // Handle search input focus - scroll into view when keyboard appears
+                const mobileSearchInput = document.getElementById('mobile-search-input');
+                if (mobileSearchInput) {
+                    mobileSearchInput.addEventListener('focus', function() {
+                        setTimeout(() => {
+                            this.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }, 300); // Delay to allow keyboard to appear
+                    });
+                }
             }
 
-            // Attach event listeners
-            mobileMenuButton.addEventListener('click', openMenu);
-            closeMobileMenuButton.addEventListener('click', closeMenu);
-            mobileMenuOverlay.addEventListener('click', closeMenu);
-
-            // Close menu on link click (only direct navigation links, not accordion summaries)
-            document.querySelectorAll('#mobile-menu a').forEach(link => {
-                link.addEventListener('click', function() {
-                    closeMenu();
-                });
-            });
-
-            // Handle search input focus - scroll into view when keyboard appears
-            const mobileSearchInput = document.getElementById('mobile-search-input');
-            if (mobileSearchInput) {
-                mobileSearchInput.addEventListener('focus', function() {
-                    setTimeout(() => {
-                        this.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
-                    }, 300); // Delay to allow keyboard to appear
-                });
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initMobileMenu);
+            } else {
+                initMobileMenu();
             }
-        }
-
-        // Wait for DOM to be ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initMobileMenu);
-        } else {
-            initMobileMenu();
-        }
-    })();
+        })();
     </script>

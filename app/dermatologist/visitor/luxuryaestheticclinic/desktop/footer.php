@@ -234,6 +234,8 @@
 
 <!-- JavaScript Operations -->
 <script src="<?php echo USER_JS ?>main.js?v=<?php echo time(); ?>"></script>
+<!-- Social Proof Plugin -->
+<script src="<?php echo PLUGIN_LIBRARY ?>social_proof/social_proof.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>
