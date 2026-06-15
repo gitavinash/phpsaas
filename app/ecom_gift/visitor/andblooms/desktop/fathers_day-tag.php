@@ -29,11 +29,7 @@
             <div class="absolute inset-0 bg-gradient-to-r from-[#1f2937] via-[#374151] to-[#111827]"></div>
         <?php } ?>
 
-        <div class="absolute inset-0 bg-black/60"></div>
-
-        <div class="container mx-auto px-6 relative z-10">
-            <?php echo $tag_description ?>
-        </div>
+        <div class="absolute inset-0"></div>
     </section>
 
     <section class="bg-[#faf7f3] py-12 border-b">
