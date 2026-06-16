@@ -3,26 +3,57 @@
     <div class="container consult-grid">
         <!-- Left Content Column -->
         <div class="consult-info reveal">
-            <span class="section-tag">Elevate Your Self Care</span>
-            <h2>Begin Your Journey to Radiant Skin</h2>
+            <!-- <span class="section-tag">Elevate Your Self Care</span> -->
+            <h2>Book Your Free Consultation</h2>
             <p class="consult-info-desc">
-                Schedule a private clinical evaluation with Dr. Elizabeth Reed and
-                discover a bespoke roadmap to your ultimate skin, hair, and body
-                confidence.
+                Experience the best aesthetic care in South Delhi. Book your free consultation today — call us or send a WhatsApp message.
             </p>
 
             <ul class="consult-trust-points">
                 <li class="consult-trust-item">
-                    <i data-lucide="lock" style="width: 20px"></i> 100% Confidential
-                    Scientific Evaluation
+                    <span class="consult-trust-icon-box">
+                        <i data-lucide="lock"></i>
+                    </span>
+                    <div class="consult-trust-content">
+                        <span class="consult-trust-label">100% Confidential</span>
+                        <span class="consult-trust-tagline">Botox in Delhi</span>
+                    </div>
                 </li>
                 <li class="consult-trust-item">
-                    <i data-lucide="award" style="width: 20px"></i> Zero Hard-sell
-                    Upsell Policy
+                    <span class="consult-trust-icon-box">
+                        <i data-lucide="heart-handshake"></i>
+                    </span>
+                    <div class="consult-trust-content">
+                        <span class="consult-trust-label">Zero Hard-sell</span>
+                        <span class="consult-trust-tagline">HydraFacial South Delhi</span>
+                    </div>
                 </li>
                 <li class="consult-trust-item">
-                    <i data-lucide="check-circle" style="width: 20px"></i> Safe
-                    FDA-Approved Medical Care
+                    <span class="consult-trust-icon-box">
+                        <i data-lucide="sparkles"></i>
+                    </span>
+                    <div class="consult-trust-content">
+                        <span class="consult-trust-label">Clinically Safe</span>
+                        <span class="consult-trust-tagline">Lip Filler in Delhi</span>
+                    </div>
+                </li>
+                <li class="consult-trust-item">
+                    <span class="consult-trust-icon-box">
+                        <i data-lucide="droplet"></i>
+                    </span>
+                    <div class="consult-trust-content">
+                        <span class="consult-trust-label">Proven Hair Therapy</span>
+                        <span class="consult-trust-tagline">GFC Hair Treatment Delhi</span>
+                    </div>
+                </li>
+                <li class="consult-trust-item">
+                    <span class="consult-trust-icon-box">
+                        <i data-lucide="shield-check"></i>
+                    </span>
+                    <div class="consult-trust-content">
+                        <span class="consult-trust-label">FDA-Approved Safety</span>
+                        <span class="consult-trust-tagline">Dermal Fillers South Delhi</span>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -39,7 +70,8 @@
                             type="text"
                             id="formName"
                             class="form-input"
-                            placeholder=" "
+                            placeholder="Full name"
+                            name="full_name"
                             required />
                         <label for="formName" class="form-label">Full Name *</label>
                     </div>
@@ -48,7 +80,8 @@
                             type="tel"
                             id="formPhone"
                             class="form-input"
-                            placeholder=" "
+                            placeholder="Mobile"
+                            name="mobile"
                             required />
                         <label for="formPhone" class="form-label">Phone Number *</label>
                     </div>
@@ -61,12 +94,13 @@
                             type="email"
                             id="formEmail"
                             class="form-input"
-                            placeholder=" " />
+                            placeholder="Email"
+                            name="email" />
                         <label for="formEmail" class="form-label">Email Address</label>
                     </div>
                     <div class="form-group">
-                        <select id="formConcern" class="form-select" required>
-                            <option value="" disabled selected hidden></option>
+                        <select id="formConcern" class="form-select" required name="concern">
+                            <option value="" disabled selected hidden>Select Your Concern</option>
                             <option value="Skin Pigmentation">
                                 Skin Pigmentation / Glow
                             </option>
@@ -86,7 +120,7 @@
                     <textarea
                         id="formMessage"
                         class="form-textarea"
-                        placeholder=" "></textarea>
+                        placeholder="Message" name="message"></textarea>
                     <label for="formMessage" class="form-label">Brief Message (Optional)</label>
                 </div>
 

@@ -1843,13 +1843,60 @@ section {
 .consult-trust-item {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  font-size: 1.5rem;
-  font-weight: 600;
+  gap: 1.8rem;
+  transition: transform 0.3s ease;
 }
 
-.consult-trust-item svg {
+.consult-trust-item:hover {
+  transform: translateX(4px);
+}
+
+.consult-trust-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(197, 168, 128, 0.08); /* Transparent gold background tint */
+  border: 1px solid rgba(197, 168, 128, 0.2);
   color: var(--color-primary-gold);
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.consult-trust-item:hover .consult-trust-icon-box {
+  background-color: var(--color-primary-gold);
+  color: var(--color-white);
+  border-color: var(--color-primary-gold);
+  box-shadow: 0 4px 12px rgba(197, 168, 128, 0.25);
+  transform: scale(1.05);
+}
+
+.consult-trust-icon-box svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2px;
+}
+
+.consult-trust-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.consult-trust-label {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+.consult-trust-tagline {
+  font-family: var(--font-sans);
+  font-size: 1.3rem;
+  color: var(--color-text-muted);
+  font-weight: 400;
 }
 
 /* Premium Form Design */

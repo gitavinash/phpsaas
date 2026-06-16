@@ -947,16 +947,31 @@ require_once 'header.php';
 
       <ul class="consult-trust-points">
         <li class="consult-trust-item">
-          <i data-lucide="lock" style="width: 20px"></i> 100% Confidential
-          Facial Assessment
+          <span class="consult-trust-icon-box">
+            <i data-lucide="lock"></i>
+          </span>
+          <div class="consult-trust-content">
+            <span class="consult-trust-label">100% Confidential</span>
+            <span class="consult-trust-tagline">Facial Assessment</span>
+          </div>
         </li>
         <li class="consult-trust-item">
-          <i data-lucide="award" style="width: 20px"></i> Expert
-          Dermatologist Supervision
+          <span class="consult-trust-icon-box">
+            <i data-lucide="user-check"></i>
+          </span>
+          <div class="consult-trust-content">
+            <span class="consult-trust-label">Expert Supervision</span>
+            <span class="consult-trust-tagline">Dermatologist-led Care</span>
+          </div>
         </li>
         <li class="consult-trust-item">
-          <i data-lucide="check-circle" style="width: 20px"></i>
-          FDA-Approved Clinical Protocols
+          <span class="consult-trust-icon-box">
+            <i data-lucide="shield-check"></i>
+          </span>
+          <div class="consult-trust-content">
+            <span class="consult-trust-label">FDA-Approved</span>
+            <span class="consult-trust-tagline">Clinical Protocols</span>
+          </div>
         </li>
       </ul>
     </div>
