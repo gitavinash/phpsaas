@@ -42,7 +42,7 @@
                         }
 
                         if (!empty($id)) {
-                            return "/upload/hb.local/social_proof/" . $id . ".mp4";
+                            return "/upload/" . SITE_DOMAIN . "/social_proof/" . $id . ".mp4";
                         }
 
                         return $url;
