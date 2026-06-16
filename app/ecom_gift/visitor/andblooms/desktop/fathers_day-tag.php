@@ -4,7 +4,7 @@
     $tagIds = array_map(fn($t) => $t['tag_relation_id'], $tagPost);
     $resultTags = implode(',', $tagIds);
 
-    $sortBy = 'link_published ASC';
+    $sortBy = 'link_published DESC';
     // $sortBy = 'RAND()';
     if (isset($_GET['sort'])) {
         switch ($_GET['sort']) {
