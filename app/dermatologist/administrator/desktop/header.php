@@ -127,7 +127,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                     <span>Cataloge</span>
                 </li>
                 <li <?php echo (($postType == 'treatment') ? 'class="active"' : '') ?>>
-                    <a href="treatment/?type=list&status=all"><i class="fas fa-medkit"></i> Treatment</a>
+                    <a href="treatment/?type=list&status=all"><i class="fas fa-medkit"></i> Services/Treatments</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="treatment/?type=list&status=all"><i class="fas fa-list"></i> All
@@ -146,6 +146,29 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="treatment/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     treatment</a></li>
                             <li><a href="treatment/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li <?php echo (($postType == 'technology') ? 'class="active"' : '') ?>>
+                    <a href="technology/?type=list&status=all"><i class="fas fa-robot"></i> Technology</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="technology/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    treatment</a>
+                            </li>
+                            <li><a href="technology/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    treatment</a></li>
+                            <li><a href="technology/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="technology/?type=list&status=all"><i class="fas fa-list"></i> All
+                                    treatment</a>
+                            </li>
+                            <li><a href="technology/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
+                                    treatment</a></li>
+                            <li><a href="technology/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                 </li>

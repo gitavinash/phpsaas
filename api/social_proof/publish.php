@@ -392,6 +392,7 @@ function publish($connection, $data)
 
         if (isset($category)) {
 
+            $mediaInserts = [];
             $skipUpload = false;
 
             if (isset($remote_image)) {
@@ -406,6 +407,19 @@ function publish($connection, $data)
                 $image['featureImage'] = $remote_image;
                 $featureImage = $remote_image;
                 $thumbnailImage = $remote_image;
+            }
+
+            if ($skipUpload && !empty($featureImage)) {
+
+                $imagePath = (string) parse_url($featureImage, PHP_URL_PATH);
+                $imageExtension = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+
+                $mediaInserts[] = [
+                    'url'   => mysqli_real_escape_string($connection, $featureImage),
+                    'title' => mysqli_real_escape_string($connection, $title),
+                    'type'  => 'image',
+                    'ext'   => $imageExtension ?: 'jpg'
+                ];
             }
 
             if (isset($image['featureImage'])) {
@@ -463,6 +477,15 @@ function publish($connection, $data)
                             } else {
                                 $video_url = mysqli_real_escape_string($connection, $downloadedVideo['url']);
                                 $downloadedVideoFile = $downloadedVideo['file'];
+
+                                // add video in mediaInsert array
+
+                                $mediaInserts[] = [
+                                    'url'   => $video_url,
+                                    'title' => mysqli_real_escape_string($connection, $title),
+                                    'type'  => 'video',
+                                    'ext'   => strtolower(pathinfo($downloadedVideoFile, PATHINFO_EXTENSION))
+                                ];
                             }
                         }
 
@@ -478,6 +501,21 @@ function publish($connection, $data)
 
                             $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$socialProofId}', '{$link_status}', 'social_proof', '{$featurePost}', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");
                             $linkID = mysqli_insert_id($connection);
+
+                            $addNewMedia = true;
+
+                            foreach ($mediaInserts as $media) {
+
+                                $result = mysqli_query(
+                                    $connection,
+                                    "INSERT INTO " . TABLE_PREFIX . "media(media_url,media_title,media_type,media_ext,media_owner_id,media_status,media_site_id) VALUES('{$media['url']}','{$media['title']}','{$media['type']}','{$media['ext']}','" . USER_ID . "',1,'" . SITE_ID . "')"
+                                );
+
+                                if (!$result) {
+                                    $addNewMedia = false;
+                                    break;
+                                }
+                            }
 
                             $addNewMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "meta(meta_relation_id, meta_site_id,  meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', " . SITE_ID . ", '{$meta_title}', 'social_proof', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
 
@@ -497,7 +535,7 @@ function publish($connection, $data)
                                 $addNewTags = TRUE;
                             }
 
-                            if ($addNewSocialProof && $addNewLink && $addNewMeta && $addNewTags) {
+                            if ($addNewSocialProof && $addNewLink && $addNewMeta && $addNewTags && $addNewMedia) {
 
                                 $status = 200;
                                 $msg = 'Social Proof add successfully';

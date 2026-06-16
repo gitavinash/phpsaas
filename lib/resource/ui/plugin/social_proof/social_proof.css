@@ -89,11 +89,24 @@
   z-index: 2;
 }
 
+.social-video-poster {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 3;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
 .social-video-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 1s ease;
+  transition: transform 1s ease, opacity 0.4s ease;
+  opacity: 0;
 }
 
 .social-card:hover .social-video-img {
@@ -197,10 +210,31 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .social-card {
     flex: 0 0 100%;
+    min-width: 0;
+    margin-left: 5px;
   }
+  .carousel-outer {
+    padding: 0 2rem;
+    margin-top: 3rem;
+  }
+  .carousel-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  .btn-prev {
+    left: 0.5rem;
+  }
+  .btn-next {
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
   .social-cta-box {
     flex-direction: column;
     align-items: center;

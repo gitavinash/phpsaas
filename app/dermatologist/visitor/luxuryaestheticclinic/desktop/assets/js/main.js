@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initFAQAccordion();
   initExperienceLightbox();
   initConsultationForm();
+  initTechShowcase();
 });
 
 /* 1. MOBILE MENU TOGGLE */
@@ -450,6 +451,38 @@ function initConsultationForm() {
       // Reset inputs state
       inputs.forEach((input) => input.classList.remove("has-value"));
     }, 2000);
+  });
+}
+
+/* 12. TECHNOLOGY SHOWCASE TAB SWITCHER */
+function initTechShowcase() {
+  const cards = document.querySelectorAll(".tech-mini-card");
+  const img = document.querySelector(".tech-image-container img.tech-img");
+
+  if (cards.length === 0 || !img) return;
+
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      if (card.classList.contains("active")) return;
+
+      const newImageSrc = card.getAttribute("data-image");
+      if (!newImageSrc) return;
+
+      // Deactivate other tabs
+      cards.forEach((c) => c.classList.remove("active"));
+      // Activate clicked tab
+      card.classList.add("active");
+
+      // Smooth fade-out and fade-in transition
+      img.style.opacity = "0";
+      setTimeout(() => {
+        img.src = newImageSrc;
+        img.alt = card.querySelector(".tech-mini-title")?.textContent || "Advanced FDA Approved Technology";
+        img.onload = () => {
+          img.style.opacity = "1";
+        };
+      }, 250);
+    });
   });
 }
 
