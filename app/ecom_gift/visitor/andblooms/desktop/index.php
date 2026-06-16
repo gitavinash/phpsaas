@@ -11,11 +11,11 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
 
     if (mysqli_num_rows($checkSlider) != 0) {
 ?>
-<!-- Hero Section -->
-<section
-    class="relative h-screen w-full overflow-hidden z-[50] max-h-[380px] md:max-h-[550px] float-left mt-[4.5em] mb-[2em]">
-    <div class="slider-container relative w-full h-full transition-transform duration-500" id="heroSlider">
-        <?php
+        <!-- Hero Section -->
+        <section
+            class="relative h-screen w-full overflow-hidden z-[50] max-h-[380px] md:max-h-[550px] float-left mt-[4.5em] mb-[2em]">
+            <div class="slider-container relative w-full h-full transition-transform duration-500" id="heroSlider">
+                <?php
                 $slideIndex = 0;
                 while ($slide = mysqli_fetch_assoc($checkSlider)) {
                     $bgImage = htmlspecialchars($slide['slide_image']);
@@ -24,86 +24,86 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
                     $btnText = htmlspecialchars($slide['slider_cta']);
                     $btnUrl = htmlspecialchars($slide['slide_link']);
 
-        // New properties
-        $align = isset($slide['slide_alignment']) ? $slide['slide_alignment'] : 'center';
-        $overlay = isset($slide['slide_overlay']) && $slide['slide_overlay'] == 1 ? 'bg-black/50' : '';
-        $cta1_bg = !empty($slide['cta1_bg_color']) ? $slide['cta1_bg_color'] : '#F5D154';
-        $cta1_text = !empty($slide['cta1_text_color']) ? $slide['cta1_text_color'] : '#1E293B';
-        $cta2_style = isset($slide['cta2_style']) ? $slide['cta2_style'] : 'outline';
-        $slide_subtitle = !empty($slide['slide_subtitle']) ? htmlspecialchars($slide['slide_subtitle']) : '';
-        
-        $cta2_bg = !empty($slide['cta2_bg_color']) ? $slide['cta2_bg_color'] : '#FFFFFF';
-        $cta2_text = !empty($slide['cta2_text_color']) ? $slide['cta2_text_color'] : '#000000';
-        $cta2_inline_style = $cta2_style === 'outline' 
-            ? "border: 2px solid {$cta2_text}; color: {$cta2_text}; background-color: transparent;" 
-            : "background-color: {$cta2_bg}; color: {$cta2_text}; border: 2px solid {$cta2_bg};";
+                    // New properties
+                    $align = isset($slide['slide_alignment']) ? $slide['slide_alignment'] : 'center';
+                    $overlay = isset($slide['slide_overlay']) && $slide['slide_overlay'] == 1 ? 'bg-black/50' : '';
+                    $cta1_bg = !empty($slide['cta1_bg_color']) ? $slide['cta1_bg_color'] : '#F5D154';
+                    $cta1_text = !empty($slide['cta1_text_color']) ? $slide['cta1_text_color'] : '#1E293B';
+                    $cta2_style = isset($slide['cta2_style']) ? $slide['cta2_style'] : 'outline';
+                    $slide_subtitle = !empty($slide['slide_subtitle']) ? htmlspecialchars($slide['slide_subtitle']) : '';
 
-        $textAlignClass = $align === 'center' ? 'text-center mx-auto' : ($align === 'right' ? 'text-right ml-auto' : 'text-left mr-auto');
-        $flexAlignClass = $align === 'center' ? 'justify-center' : ($align === 'right' ? 'justify-end' : 'justify-start');
+                    $cta2_bg = !empty($slide['cta2_bg_color']) ? $slide['cta2_bg_color'] : '#FFFFFF';
+                    $cta2_text = !empty($slide['cta2_text_color']) ? $slide['cta2_text_color'] : '#000000';
+                    $cta2_inline_style = $cta2_style === 'outline'
+                        ? "border: 2px solid {$cta2_text}; color: {$cta2_text}; background-color: transparent;"
+                        : "background-color: {$cta2_bg}; color: {$cta2_text}; border: 2px solid {$cta2_bg};";
 
-        // Assign slide class
-        $slideClass = $slideIndex === 0 ? '' : 'translate-x-full';
-?>
-<a href="<?php echo $btnUrl ?>" title="<?php echo $title ?>">
-    <div class="slide absolute inset-0 bg-cover bg-center bg-no-repeat <?php echo $slideClass ?>"
-        style="background-image: url('<?php echo $bgImage ?>')">
-        <div class="absolute inset-0 <?php echo $overlay ?>"></div>
-        <div class="absolute inset-0 flex items-center justify-center">
-            <div class="px-6 w-full max-w-7xl <?php echo $textAlignClass ?>">
-                <?php if ($slide_subtitle): ?>
-                    <p class="text-white text-sm md:text-base font-semibold tracking-wider uppercase mb-3 opacity-90"><?php echo $slide_subtitle ?></p>
-                <?php endif; ?>
-                <h1 class="text-4xl md:text-6xl text-white font-medium mb-6 leading-tight">
-                    <?php echo nl2br($title) ?>
-                </h1>
-                <p class="text-white text-lg md:text-xl mb-8 max-w-2xl <?php echo $align === 'center' ? 'mx-auto' : '' ?>">
-                    <?php echo nl2br($subtitle) ?>
-                </p>
-                <?php if (!empty($btnText) && !empty($btnUrl)): ?>
-                <div class="flex <?php echo $flexAlignClass ?> gap-4">
-                    <a href="<?php echo $btnUrl ?>"
-                        class="inline-block px-8 py-3 !rounded-button hover:opacity-90 transition-all duration-300 whitespace-nowrap"
-                        style="background-color: <?php echo $cta1_bg ?>; color: <?php echo $cta1_text ?>;">
-                        <?php echo $btnText ?>
+                    $textAlignClass = $align === 'center' ? 'text-center mx-auto' : ($align === 'right' ? 'text-right ml-auto' : 'text-left mr-auto');
+                    $flexAlignClass = $align === 'center' ? 'justify-center' : ($align === 'right' ? 'justify-end' : 'justify-start');
+
+                    // Assign slide class
+                    $slideClass = $slideIndex === 0 ? '' : 'translate-x-full';
+                ?>
+                    <a href="<?php echo $btnUrl ?>" title="<?php echo $title ?>">
+                        <div class="slide absolute inset-0 bg-cover bg-center bg-no-repeat <?php echo $slideClass ?>"
+                            style="background-image: url('<?php echo $bgImage ?>')">
+                            <div class="absolute inset-0 <?php echo $overlay ?>"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="px-6 w-full max-w-7xl <?php echo $textAlignClass ?>">
+                                    <?php if ($slide_subtitle): ?>
+                                        <p class="text-white text-sm md:text-base font-semibold tracking-wider uppercase mb-3 opacity-90"><?php echo $slide_subtitle ?></p>
+                                    <?php endif; ?>
+                                    <h1 class="text-4xl md:text-6xl text-white font-medium mb-6 leading-tight">
+                                        <?php echo nl2br($title) ?>
+                                    </h1>
+                                    <p class="text-white text-lg md:text-xl mb-8 max-w-2xl <?php echo $align === 'center' ? 'mx-auto' : '' ?>">
+                                        <?php echo nl2br($subtitle) ?>
+                                    </p>
+                                    <?php if (!empty($btnText) && !empty($btnUrl)): ?>
+                                        <div class="flex <?php echo $flexAlignClass ?> gap-4">
+                                            <a href="<?php echo $btnUrl ?>"
+                                                class="inline-block px-8 py-3 !rounded-button hover:opacity-90 transition-all duration-300 whitespace-nowrap"
+                                                style="background-color: <?php echo $cta1_bg ?>; color: <?php echo $cta1_text ?>;">
+                                                <?php echo $btnText ?>
+                                            </a>
+                                            <?php if (!empty($slide['slider_cta2']) && !empty($slide['slide_link2'])): ?>
+                                                <a href="<?php echo htmlspecialchars($slide['slide_link2']) ?>"
+                                                    class="inline-block px-8 py-3 !rounded-button hover:opacity-90 transition-all duration-300 whitespace-nowrap"
+                                                    style="<?php echo $cta2_inline_style ?>">
+                                                    <?php echo htmlspecialchars($slide['slider_cta2']) ?>
+                                                </a>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
                     </a>
-                    <?php if (!empty($slide['slider_cta2']) && !empty($slide['slide_link2'])): ?>
-                    <a href="<?php echo htmlspecialchars($slide['slide_link2']) ?>"
-                        class="inline-block px-8 py-3 !rounded-button hover:opacity-90 transition-all duration-300 whitespace-nowrap"
-                        style="<?php echo $cta2_inline_style ?>">
-                        <?php echo htmlspecialchars($slide['slider_cta2']) ?>
-                    </a>
-                    <?php endif; ?>
-                </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</a>
-        <?php
+                <?php
                     $slideIndex++;
                 }
                 ?>
-    </div>
+            </div>
 
-    <!-- Navigation & Dots -->
-    <div class="absolute bottom-8 left-0 right-0 flex justify-center items-center space-x-6">
-        <button
-            class="slider-nav-btn prev w-10 h-10 flex items-center justify-center text-white hover:text-primary transition-colors">
-            <i class="ri-arrow-left-s-line text-2xl"></i>
-        </button>
-        <div class="flex space-x-2">
-            <?php for ($i = 0; $i < $slideIndex; $i++): ?>
-            <button
-                class="slider-dot w-3 h-3 rounded-full bg-white <?php $i === 0 ? 'bg-opacity-100' : 'bg-opacity-50' ?>"
-                data-index="<?php $i ?>"></button>
-            <?php endfor; ?>
-        </div>
-        <button
-            class="slider-nav-btn next w-10 h-10 flex items-center justify-center text-white hover:text-primary transition-colors">
-            <i class="ri-arrow-right-s-line text-2xl"></i>
-        </button>
-    </div>
-</section>
+            <!-- Navigation & Dots -->
+            <div class="absolute bottom-8 left-0 right-0 flex justify-center items-center space-x-6">
+                <button
+                    class="slider-nav-btn prev w-10 h-10 flex items-center justify-center text-white hover:text-primary transition-colors">
+                    <i class="ri-arrow-left-s-line text-2xl"></i>
+                </button>
+                <div class="flex space-x-2">
+                    <?php for ($i = 0; $i < $slideIndex; $i++): ?>
+                        <button
+                            class="slider-dot w-3 h-3 rounded-full bg-white <?php $i === 0 ? 'bg-opacity-100' : 'bg-opacity-50' ?>"
+                            data-index="<?php $i ?>"></button>
+                    <?php endfor; ?>
+                </div>
+                <button
+                    class="slider-nav-btn next w-10 h-10 flex items-center justify-center text-white hover:text-primary transition-colors">
+                    <i class="ri-arrow-right-s-line text-2xl"></i>
+                </button>
+            </div>
+        </section>
 <?php
     }
 }
@@ -353,7 +353,8 @@ if ($checkSlider = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
 <?php
 // ─── SOCIAL PROOF CAROUSEL ───────────────────────────────────────────────────
 if (!function_exists('getLocalVideoUrl')) {
-    function getLocalVideoUrl($url) {
+    function getLocalVideoUrl($url)
+    {
         if (empty($url)) return '';
         if (strpos($url, '.mp4') !== false || strpos($url, '/upload/') !== false) {
             return $url;
@@ -378,83 +379,89 @@ if (!function_exists('getLocalVideoUrl')) {
 $socialProofs = getSocialProofsData($connection, 'social_proof', 8, true);
 if (!empty($socialProofs)):
 ?>
-<!-- Social Proof Section -->
-<section class="social-proof-section" id="social-proof" style="padding: 5rem 0;">
-    <div class="container mx-auto px-6 text-center" style="margin-bottom: 4rem;">
-        <p style="font-size:1.1rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--sp-color-accent, #D4946D); font-weight:600; margin-bottom:1rem;">Watch Us In Action</p>
-        <h2 style="font-size:clamp(2.4rem,4vw,3.6rem); font-weight:600; color:#1f2937; margin-bottom:1.2rem;">Real Moments &amp; Fresh Inspirations</h2>
-        <p style="max-width:560px; margin:0 auto; color:#6b7280; font-size:1.05rem; line-height:1.7;">Step inside our studio — behind-the-scenes arrangement stories, customer unboxings, and bloom guides straight from the AndBlooms team.</p>
-    </div>
+    <!-- Social Proof Section -->
+    <section class="social-proof-section" id="social-proof" style="padding: 5rem 0;">
+        <div class="container mx-auto px-6 text-center" style="margin-bottom: 4rem;">
+            <p style="font-size:1.1rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--sp-color-accent, #D4946D); font-weight:600; margin-bottom:1rem;">Watch Us In Action</p>
+            <h2 style="font-size:clamp(2.4rem,4vw,3.6rem); font-weight:600; color:#1f2937; margin-bottom:1.2rem;">Real Moments &amp; Fresh Inspirations</h2>
+            <p style="max-width:560px; margin:0 auto; color:#6b7280; font-size:1.05rem; line-height:1.7;">Step inside our studio — behind-the-scenes arrangement stories, customer unboxings, and bloom guides straight from the AndBlooms team.</p>
+        </div>
 
-    <div class="carousel-outer" style="position:relative; padding:0 5rem; margin-top:0;">
-        <button class="carousel-btn btn-prev" aria-label="Slide left">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
-        <button class="carousel-btn btn-next" aria-label="Slide right">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
+        <div class="carousel-outer" style="position:relative; padding:0 5rem; margin-top:0;">
+            <button class="carousel-btn btn-prev" aria-label="Slide left">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button class="carousel-btn btn-next" aria-label="Slide right">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
 
-        <div class="carousel-container">
-            <div class="carousel-track">
-                <?php foreach ($socialProofs as $proof):
-                    $proofTitle       = htmlspecialchars($proof['title'] ?? '');
-                    $proofImage       = htmlspecialchars($proof['image'] ?? '');
-                    $proofType        = strtolower($proof['sp_type'] ?? 'instagram');
-                    $proofUrl         = htmlspecialchars($proof['link_url'] ?? '#');
-                    $videoUrl         = htmlspecialchars($proof['sp_video_url'] ?? '');
-                    $resolvedVideoUrl = getLocalVideoUrl($videoUrl);
-                ?>
-                <div class="social-card"
-                    data-video-url="<?= $resolvedVideoUrl ?>"
-                    data-video-type="<?= $proofType ?>"
-                    data-title="<?= $proofTitle ?>"
-                    data-description="<?= htmlspecialchars($proof['description'] ?? '') ?>"
-                    data-ref-type="<?= htmlspecialchars($proof['sp_ref_type'] ?? '') ?>"
-                    data-ref-url="<?= htmlspecialchars($proof['ref_url'] ?? '') ?>"
-                    data-ref-title="<?= htmlspecialchars($proof['ref_title'] ?? '') ?>"
-                    data-ref-image="<?= htmlspecialchars($proof['ref_image'] ?? '') ?>"
-                    data-ref-description="<?= htmlspecialchars($proof['ref_description'] ?? '') ?>">
+            <div class="carousel-container">
+                <div class="carousel-track">
+                    <?php foreach ($socialProofs as $proof):
+                        $proofTitle       = htmlspecialchars($proof['title'] ?? '');
+                        $proofImage       = htmlspecialchars($proof['image'] ?? '');
+                        $proofType        = strtolower($proof['sp_type'] ?? 'instagram');
+                        $proofUrl         = htmlspecialchars($proof['link_url'] ?? '#');
+                        $videoUrl         = htmlspecialchars($proof['sp_video_url'] ?? '');
+                        $resolvedVideoUrl = getLocalVideoUrl($videoUrl);
+                    ?>
+                        <div class="social-card"
+                            data-video-url="<?= $resolvedVideoUrl ?>"
+                            data-video-type="<?= $proofType ?>"
+                            data-title="<?= $proofTitle ?>"
+                            data-description="<?= htmlspecialchars($proof['description'] ?? '') ?>"
+                            data-ref-type="<?= htmlspecialchars($proof['sp_ref_type'] ?? '') ?>"
+                            data-ref-url="<?= htmlspecialchars($proof['ref_url'] ?? '') ?>"
+                            data-ref-title="<?= htmlspecialchars($proof['ref_title'] ?? '') ?>"
+                            data-ref-image="<?= htmlspecialchars($proof['ref_image'] ?? '') ?>"
+                            data-ref-description="<?= htmlspecialchars($proof['ref_description'] ?? '') ?>">
 
-                    <div class="social-video-thumb">
-                        <video
-                            src="<?= $resolvedVideoUrl ?>"
-                            poster="<?= $proofImage ?>"
-                            class="social-video-img"
-                            autoplay loop muted playsinline
-                            style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;border:none;cursor:pointer;">
-                        </video>
-                    </div>
+                            <div class="social-video-thumb">
+                                <video
+                                    src="<?= $resolvedVideoUrl ?>"
+                                    poster="<?= $proofImage ?>"
+                                    class="social-video-img"
+                                    autoplay loop muted playsinline
+                                    style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;border:none;cursor:pointer;">
+                                </video>
+                            </div>
 
-                    <div class="social-card-content">
-                        <h4 class="social-card-title">
-                            <a href="<?= $proofUrl ?>" style="color:inherit;text-decoration:none;"><?= $proofTitle ?></a>
-                        </h4>
-                        <?php if (!empty($proof['ref_url'])):
-                            $refName = !empty($proof['ref_title']) ? htmlspecialchars($proof['ref_title']) : 'View Product';
-                        ?>
-                        <div class="social-card-ref">
-                            <a href="<?= htmlspecialchars($proof['ref_url']) ?>" class="ref-link">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle;"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
-                                <span><?= $refName ?></span>
-                            </a>
+                            <div class="social-card-content">
+                                <h4 class="social-card-title">
+                                    <?= $proofTitle ?>
+                                </h4>
+                                <?php if (!empty($proof['ref_url'])):
+                                    $refName = !empty($proof['ref_title']) ? htmlspecialchars($proof['ref_title']) : 'View Product';
+                                ?>
+                                    <div class="social-card-ref">
+                                        <a href="<?= htmlspecialchars($proof['ref_url']) ?>" class="ref-link">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle;">
+                                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+                                            </svg>
+                                            <span><?= $refName ?></span>
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                        <?php endif; ?>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
             </div>
         </div>
-    </div>
 
-    <div class="social-cta-box" style="margin-top:4rem; display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap; padding:0 1.5rem;">
-        <a href="https://instagram.com/andblooms" class="inline-block bg-[#D4946D] text-white px-8 py-3 rounded-full hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap" target="_blank" rel="noopener">
-            Follow on Instagram
-        </a>
-        <a href="https://youtube.com/@andblooms" class="inline-block border border-[#D4946D] text-[#D4946D] px-8 py-3 rounded-full hover:bg-[#D4946D] hover:text-white transition-all duration-300 whitespace-nowrap" target="_blank" rel="noopener">
-            Subscribe on YouTube
-        </a>
-    </div>
-</section>
+        <div class="social-cta-box" style="margin-top:4rem; display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap; padding:0 1.5rem;">
+            <a href="https://instagram.com/andblooms" class="inline-block bg-[#D4946D] text-white px-8 py-3 rounded-full hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap" target="_blank" rel="noopener">
+                Follow on Instagram
+            </a>
+            <a href="https://youtube.com/@andblooms" class="inline-block border border-[#D4946D] text-[#D4946D] px-8 py-3 rounded-full hover:bg-[#D4946D] hover:text-white transition-all duration-300 whitespace-nowrap" target="_blank" rel="noopener">
+                Subscribe on YouTube
+            </a>
+        </div>
+    </section>
 <?php endif; ?>
 
 <!-- Recent Products -->

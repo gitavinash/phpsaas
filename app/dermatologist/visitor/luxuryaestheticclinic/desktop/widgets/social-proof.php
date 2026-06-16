@@ -82,9 +82,7 @@
                             </div>
                             <div class="social-card-content">
                                 <h4 class="social-card-title">
-                                    <a href="<?= $proofUrl ?>" style="color: inherit; text-decoration: none;">
-                                        <?= $proofTitle ?>
-                                    </a>
+                                    <?= $proofTitle ?>
                                 </h4>
                                 <?php if (!empty($proof['ref_url'])):
                                     $refName = !empty($proof['ref_title']) ? htmlspecialchars($proof['ref_title']) : 'Related Details';
