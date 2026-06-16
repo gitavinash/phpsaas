@@ -98,28 +98,28 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
-                <li <?php echo (($postType == 'questions') ? 'class="active"' : '') ?>>
-                    <a href="questions/?type=list&status=all"><i class="fas fa-question"></i> Questions (FAQ's)</a>
+                <li <?php echo (($postType == 'question') ? 'class="active"' : '') ?>>
+                    <a href="question/?type=list&status=all"><i class="fas fa-question"></i> Questions (FAQ's)</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="questions/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
+                            <li><a href="question/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
                             </li>
-                            <li><a href="questions/?type=add&editor=true" target="_blank"><i
+                            <li><a href="question/?type=add&editor=true"><i
                                         class="fas fa-plus"></i>Add
                                     new
                                     Questions</a></li>
-                            <li><a href="questions/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="question/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="questions/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
+                            <li><a href="question/?type=list&status=all"><i class="fas fa-list"></i> All Questionss</a>
                             </li>
-                            <li><a href="questions/?type=add&editor=true" target="_blank"><i
+                            <li><a href="question/?type=add&editor=true"><i
                                         class="fas fa-plus"></i>Add
                                     new
                                     Questions</a></li>
-                            <li><a href="questions/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
+                            <li><a href="question/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                 </li>

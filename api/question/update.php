@@ -13,7 +13,7 @@ function update($connection, $data)
 
         if (isset($category)) {
 
-            if ($checkPost = mysqli_query($connection, "SELECT link_id FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "link WHERE link_url='{$oldURL}' AND post_id='{$id}'")) {
+            if ($checkPost = mysqli_query($connection, "SELECT link_id FROM " . TABLE_PREFIX . "post INNER JOIN " . TABLE_PREFIX . "link WHERE link_url='{$oldURL}' AND post_id='{$id}' AND post_type='question' AND link_site_id=" . SITE_ID)) {
 
                 if (mysqli_num_rows($checkPost) != 0) {
 
@@ -118,7 +118,7 @@ function update($connection, $data)
 
                         $status = 200;
                         $msg = 'Post is update successfully';
-                        $redirect = '/dashboard/' . $postType . '/?type=edit&editor=true&id=' . base64_encode($id);
+                        $redirect = '/dashboard/question/?type=edit&editor=true&id=' . base64_encode($id);
                     } else {
 
                         $msg = "Somthing is wrong while updating {$postType}";

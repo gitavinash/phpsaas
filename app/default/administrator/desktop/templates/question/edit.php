@@ -2,13 +2,13 @@
 
 $post_id = base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
 
-if ($thoughtDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "post, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE link_type='post' AND link_relation_id=post_id AND meta_relation_id=link_id AND post_id='{$post_id}' AND link_status!=301 AND post_type='thought' AND link_site_id=" . SITE_ID . " LIMIT 1")) {
+if ($thoughtDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "post, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE link_type='post' AND link_relation_id=post_id AND meta_relation_id=link_id AND post_id='{$post_id}' AND link_status!=301 AND post_type='question' AND link_site_id=" . SITE_ID . " LIMIT 1")) {
 	if (mysqli_num_rows($thoughtDetails) != 0) {
 		extract(mysqli_fetch_assoc($thoughtDetails));
 	} else { ?>
 		<script type="text/javascript">
 			alert('Invalid action found');
-			window.location.href = 'dashboard/thought/?type=list&status=all';
+			window.location.href = 'dashboard/questions/?type=list&status=all';
 		</script>
 <?php
 	}

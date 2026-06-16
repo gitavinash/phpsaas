@@ -17,13 +17,12 @@ function publish($connection, $data)
 
                 // Extract the single upload image string to variables
 
-                $featurePost = ((isset($featurePost)) ? 1 : 0);
-
                 $facebookImage = (((isset($facebookImage)) ? $facebookImage : $featureImage));
                 $twitterImage = (((isset($twitterImage)) ? $twitterImage : $featureImage));
             } else {
 
-                $featurePost = '';
+                $featureImage = '';
+                $thumbnailImage = '';
                 $facebookImage = '';
                 $twitterImage = '';
             }
@@ -34,7 +33,7 @@ function publish($connection, $data)
             $categoryURL = $category[1];
             $category = $category[0];
 
-            /** post page url */
+            /** question page url */
 
             $url = strtolower($categoryURL . preg_replace('~[^\p{M}\w-]+~u', '-', $url)) . '/';
 
@@ -51,13 +50,13 @@ function publish($connection, $data)
 
                     $link_status = 200;
 
-                    /** Start uploading the post */
+                    /** Start uploading the question */
 
                     mysqli_query($connection, "START TRANSACTION");
 
                     /* Insert data into link table */
 
-                    $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "post(post_site_id, post_image, post_thumbnail, post_title, post_description, post_category, post_owner_id, post_status, post_type) VALUES(" . SITE_ID . ", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', '" . USER_ID . "', '1', 'post')");
+                    $addNewQuestion = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "post(post_site_id, post_image, post_thumbnail, post_title, post_description, post_category, post_owner_id, post_status, post_type) VALUES(" . SITE_ID . ", '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', '" . USER_ID . "', '1', 'question')");
                     $postID = mysqli_insert_id($connection);
 
                     $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', 'post', '{$featurePost}', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");
@@ -81,15 +80,15 @@ function publish($connection, $data)
                         $addNewTags = TRUE;
                     }
 
-                    if ($addNewPost && $addNewLink && $addNewMeta && $addNewTags) {
+                    if ($addNewQuestion && $addNewLink && $addNewMeta && $addNewTags) {
 
                         $status = 200;
-                        $msg = 'Post add successfully';
-                        $redirect = '/dashboard/post/?type=edit&editor=true&id=' . base64_encode($postID);
+                        $msg = 'Question add successfully';
+                        $redirect = '/dashboard/question/?type=edit&editor=true&id=' . base64_encode($postID);
                         mysqli_query($connection, "COMMIT");
                     } else {
 
-                        $msg = 'Something is wrong while adding new post';
+                        $msg = 'Something is wrong while adding new question';
 
                         mysqli_query($connection, "ROLLBACK");
                     }
@@ -107,7 +106,7 @@ function publish($connection, $data)
         }
     } else {
 
-        $msg = 'Please enter post name';
+        $msg = 'Please enter question';
     }
 
     $result = array(
