@@ -41,7 +41,7 @@ function category($connection, $data)
                 }
             } else {
 
-                $msg = 'No category found';
+                $msg = 'No brand category found';
             }
         } else {
 

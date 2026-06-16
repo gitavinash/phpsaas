@@ -31,7 +31,7 @@ function testimonial($connection, $data)
                 }
             } else {
 
-                $msg = 'No category found';
+                $msg = 'No testimonial category found';
             }
         } else {
 

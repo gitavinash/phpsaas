@@ -57,7 +57,7 @@ if (isset($id)) {
             }
         } else {
 
-            $msg = 'No category found';
+            $msg = 'No inventory category found';
         }
     } else {
 
