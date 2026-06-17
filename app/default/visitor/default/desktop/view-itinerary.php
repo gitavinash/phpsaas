@@ -120,7 +120,6 @@ if ($checkQuote = mysqli_query($connection, $query)) {
         } else {
         }
     } else {
-        echo $query;
         die("Quotation not found or inactive.");
     }
 } else {
