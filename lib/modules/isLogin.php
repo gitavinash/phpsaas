@@ -1,10 +1,10 @@
 <?php
 
-if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE === true && isset($_COOKIE['user_type']) && base64_decode($_COOKIE['user_type']) === 'administrator') {
-    if (!defined('USER_ID')) define('USER_ID', 1);
-    if (!defined('SITE_DASHBOARD_VERSION')) define('SITE_DASHBOARD_VERSION', 2);
-    return;
-}
+// if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE === true && isset($_COOKIE['user_type']) && base64_decode($_COOKIE['user_type']) === 'administrator') {
+// 	if (!defined('USER_ID')) define('USER_ID', 1);
+// 	if (!defined('SITE_DASHBOARD_VERSION')) define('SITE_DASHBOARD_VERSION', 2);
+// 	return;
+// }
 
 $isMobile = ((isset($redirectToMobileAuth)) ? 'authby=mobile' : '');
 

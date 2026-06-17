@@ -18,7 +18,7 @@ if (ADMIN_BASE_URL == '/sw.js') {
 }
 
 // SPECIAL OVERRIDE: Visual Page Builder — fullscreen editor
-// Serves ecit_view.php as a standalone HTML document,
+// Serves edit.php as a standalone HTML document,
 // bypassing the normal header/footer dashboard wrapping.
 // ==========================================================
 if (rtrim(ADMIN_BASE_URL, '/') === '/editor') {
