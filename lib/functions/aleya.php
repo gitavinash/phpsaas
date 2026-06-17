@@ -58,7 +58,7 @@ function getQuotationDetails($connection, $quotationId)
         ON tph.tph_package_id = tp.tour_package_id
     WHERE q.quotation_id = '{$quotationId}' 
         AND q.quotation_type = 'tour_package' 
-        AND q.quotation_status IN (0,1) 
+        AND q.quotation_status IN (0,1,2) 
         AND q.quotation_site_id = " . SITE_ID . "
     GROUP BY q.quotation_id
 ";
