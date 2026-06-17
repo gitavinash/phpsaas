@@ -32,51 +32,51 @@ if (SITE_ID == 53) {
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
     <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
 
-    body {
-        font-family: 'Inter', sans-serif;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
 
-    .itinerary-day:not(:last-child) {
-        border-bottom: 1px solid #e5e7eb;
-    }
+        .itinerary-day:not(:last-child) {
+            border-bottom: 1px solid #e5e7eb;
+        }
 
-    .pdf-page {
-        page-break-before: always;
-        break-before: page;
-    }
+        .pdf-page {
+            page-break-before: always;
+            break-before: page;
+        }
 
-    .avoid-break {
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
+        .avoid-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
     </style>
     <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: '#E76317',
-                    secondary: '#FB923C'
-                },
-                borderRadius: {
-                    'none': '0px',
-                    'sm': '4px',
-                    DEFAULT: '8px',
-                    'md': '12px',
-                    'lg': '16px',
-                    'xl': '20px',
-                    '2xl': '24px',
-                    '3xl': '32px',
-                    'full': '9999px',
-                    'button': '8px'
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#E76317',
+                        secondary: '#FB923C'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
                 }
             }
         }
-    }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
@@ -125,10 +125,10 @@ if (SITE_ID == 53) {
                                 <?php
 
                                 if (!empty($travel_date)) { ?>
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-calendar-line"></i>
-                                    <span><?php echo ((isset($travel_date)) ? (($travel_date != '') ? date('d F, Y', strtotime($travel_date)) : '') : '') ?></span>
-                                </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="ri-calendar-line"></i>
+                                        <span><?php echo ((isset($travel_date)) ? (($travel_date != '') ? date('d F, Y', strtotime($travel_date)) : '') : '') ?></span>
+                                    </div>
                                 <?php } ?>
                                 <div class="flex items-center gap-2">
                                     <i class="ri-time-line"></i>
@@ -158,15 +158,15 @@ if (SITE_ID == 53) {
                 <h3 class="font-medium mb-2">What's Included:</h3>
                 <ul class="grid grid-cols-2 gap-2 text-sm">
                     <?php foreach ($inclusions as $inclusion) { ?>
-                    <?php $inclusion = trim($inclusion); ?>
-                    <?php if (!empty($inclusion)) { ?>
-                    <li class="flex items-center">
-                        <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
-                            <i class="ri-check-line"></i>
-                        </div>
-                        <span><?php echo htmlspecialchars(ucfirst($inclusion)); ?></span>
-                    </li>
-                    <?php } ?>
+                        <?php $inclusion = trim($inclusion); ?>
+                        <?php if (!empty($inclusion)) { ?>
+                            <li class="flex items-center">
+                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
+                                    <i class="ri-check-line"></i>
+                                </div>
+                                <span><?php echo htmlspecialchars(ucfirst($inclusion)); ?></span>
+                            </li>
+                        <?php } ?>
                     <?php } ?>
                 </ul>
             </div>
@@ -174,15 +174,15 @@ if (SITE_ID == 53) {
                 <h3 class="font-medium mb-2">Not Included in Package:</h3>
                 <ul class="grid grid-cols-2 gap-2 text-sm">
                     <?php foreach ($exclusions as $exclusion) { ?>
-                    <?php $exclusion = trim($exclusion); ?>
-                    <?php if (!empty($exclusion)) { ?>
-                    <li class="flex items-center">
-                        <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
-                            <i class="ri-close-line"></i>
-                        </div>
-                        <span><?php echo htmlspecialchars(ucfirst($exclusion)); ?></span>
-                    </li>
-                    <?php } ?>
+                        <?php $exclusion = trim($exclusion); ?>
+                        <?php if (!empty($exclusion)) { ?>
+                            <li class="flex items-center">
+                                <div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
+                                    <i class="ri-close-line"></i>
+                                </div>
+                                <span><?php echo htmlspecialchars(ucfirst($exclusion)); ?></span>
+                            </li>
+                        <?php } ?>
                     <?php } ?>
                 </ul>
             </div>
@@ -327,14 +327,14 @@ if (SITE_ID == 53) {
                             </div>
 
                             <?php if ($isDiscount): ?>
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-gift-line text-green-600"></i>
-                                    <span>Special Discount</span>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center gap-2">
+                                        <i class="ri-gift-line text-green-600"></i>
+                                        <span>Special Discount</span>
+                                    </div>
+                                    <span class="font-medium text-green-600">-
+                                        ₹<?php echo number_format($total_discount, 2); ?></span>
                                 </div>
-                                <span class="font-medium text-green-600">-
-                                    ₹<?php echo number_format($total_discount, 2); ?></span>
-                            </div>
                             <?php endif; ?>
                         </div>
                         <div class="flex items-center justify-between mb-6">
@@ -346,14 +346,14 @@ if (SITE_ID == 53) {
                                 </div>
 
                                 <?php if ($isDiscount): ?>
-                                <div class="flex items-center justify-end gap-3 mt-2">
-                                    <span class="text-base text-gray-500 line-through">
-                                        ₹<?php echo number_format($mrp_gst_total, 2); ?>
-                                    </span>
-                                    <span class="px-3 py-1 bg-green-500 text-white rounded-full text-sm font-semibold">
-                                        Save <?php echo $discount_percent; ?>%
-                                    </span>
-                                </div>
+                                    <div class="flex items-center justify-end gap-3 mt-2">
+                                        <span class="text-base text-gray-500 line-through">
+                                            ₹<?php echo number_format($mrp_gst_total, 2); ?>
+                                        </span>
+                                        <span class="px-3 py-1 bg-green-500 text-white rounded-full text-sm font-semibold">
+                                            Save <?php echo $discount_percent; ?>%
+                                        </span>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -456,51 +456,51 @@ if (SITE_ID == 53) {
     </div>
     </div> -->
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const element = document.getElementById("pdf-content");
+        document.addEventListener("DOMContentLoaded", function() {
+            const element = document.getElementById("pdf-content");
 
-        if (!element) return;
+            if (!element) return;
 
-        const opt = {
-            filename: '<?php echo $pdfFileName ?>',
-            margin: [0.5, 0.4, 0.5, 0.4],
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2,
-                useCORS: true,
-                allowTaint: false,
-                scrollY: 0,
-            },
-            jsPDF: {
-                unit: 'in',
-                format: 'a4', // A4 portrait
-                orientation: 'portrait'
-            },
-            pagebreak: {
-                mode: ['css', 'legacy'],
-                before: '.pdf-page',
-                avoid: ['.avoid-break']
-            }
-        };
+            const opt = {
+                filename: '<?php echo $pdfFileName ?>',
+                margin: [0.5, 0.4, 0.5, 0.4],
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: false,
+                    scrollY: 0,
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4', // A4 portrait
+                    orientation: 'portrait'
+                },
+                pagebreak: {
+                    mode: ['css', 'legacy'],
+                    before: '.pdf-page',
+                    avoid: ['.avoid-break']
+                }
+            };
 
-        const cloned = element.cloneNode(true);
-        cloned.style.background = "white";
+            const cloned = element.cloneNode(true);
+            cloned.style.background = "white";
 
-        const wrapper = document.createElement("div");
-        wrapper.style.width = "100%";
-        wrapper.style.maxWidth = "1000px";
-        wrapper.style.margin = "0 auto";
-        wrapper.style.padding = "0";
-        wrapper.appendChild(cloned);
-        document.body.appendChild(wrapper);
+            const wrapper = document.createElement("div");
+            wrapper.style.width = "100%";
+            wrapper.style.maxWidth = "1000px";
+            wrapper.style.margin = "0 auto";
+            wrapper.style.padding = "0";
+            wrapper.appendChild(cloned);
+            document.body.appendChild(wrapper);
 
-        html2pdf().set(opt).from(cloned).save().then(() => {
-            document.body.removeChild(wrapper);
+            html2pdf().set(opt).from(cloned).save().then(() => {
+                document.body.removeChild(wrapper);
+            });
         });
-    });
     </script>
 
 </body>
