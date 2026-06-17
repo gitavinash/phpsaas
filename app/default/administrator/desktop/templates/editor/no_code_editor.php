@@ -195,51 +195,51 @@ $footer_html = get_clean_footer_html($theme_footer_file);
 
                     <div class="cat-label" data-lbl="layout">Layout</div>
                     <div class="sec-grid">
-                        <div class="sec-card" data-type="hero" data-cat="layout" data-kw="hero banner headline cta" title="Hero Banner: A prominent banner with a large heading, text, and Call-to-Action button.">
+                        <div class="sec-card" draggable="true" data-type="hero" data-cat="layout" data-kw="hero banner headline cta" title="Hero Banner: A prominent banner with a large heading, text, and Call-to-Action button.">
                             <i class="fi-rr-layout-fluid"></i><span>Hero Banner</span>
                         </div>
-                        <div class="sec-card" data-type="text_image" data-cat="layout" data-kw="text image two column split" title="Text &amp; Image: A flexible 2-column layout with text on one side and an image on the other.">
+                        <div class="sec-card" draggable="true" data-type="text_image" data-cat="layout" data-kw="text image two column split" title="Text &amp; Image: A flexible 2-column layout with text on one side and an image on the other.">
                             <i class="fi-rr-text-box-edit"></i><span>Text &amp; Image</span>
                         </div>
-                        <div class="sec-card" data-type="features" data-cat="layout" data-kw="features grid cards icons" title="Feature Grid: Showcase your key features or services in a clean column grid layout.">
+                        <div class="sec-card" draggable="true" data-type="features" data-cat="layout" data-kw="features grid cards icons" title="Feature Grid: Showcase your key features or services in a clean column grid layout.">
                             <i class="fi-rr-grid"></i><span>Feature Grid</span>
                         </div>
-                        <div class="sec-card" data-type="why_choose_us" data-cat="layout" data-kw="why choose us benefits checks checklist features list highlights" title="Why Choose Us: Split section highlighting benefits with customizable icons.">
+                        <div class="sec-card" draggable="true" data-type="why_choose_us" data-cat="layout" data-kw="why choose us benefits checks checklist features list highlights" title="Why Choose Us: Split section highlighting benefits with customizable icons.">
                             <i class="fi-rr-list-check"></i><span>Why Choose Us</span>
                         </div>
-                        <div class="sec-card" data-type="about_doctor" data-cat="layout" data-kw="about doctor profile bio physician team founder credentials" title="About Doctor: Profile banner detailing credentials and background of doctors or team members.">
+                        <div class="sec-card" draggable="true" data-type="about_doctor" data-cat="layout" data-kw="about doctor profile bio physician team founder credentials" title="About Doctor: Profile banner detailing credentials and background of doctors or team members.">
                             <i class="fi-rr-user-md"></i><span>About Doctor</span>
                         </div>
-                        <div class="sec-card" data-type="services_list" data-cat="layout" data-kw="services grid treatments specialties cards list" title="Services Grid: Visual cards showcasing services, treatments, or specialties.">
+                        <div class="sec-card" draggable="true" data-type="services_list" data-cat="layout" data-kw="services grid treatments specialties cards list" title="Services Grid: Visual cards showcasing services, treatments, or specialties.">
                             <i class="fi-rr-briefcase"></i><span>Services Grid</span>
                         </div>
-                        <div class="sec-card" data-type="spacer" data-cat="layout" data-kw="spacer divider gap hr" title="Spacer: Add adjustable vertical spacing or divider lines between sections.">
+                        <div class="sec-card" draggable="true" data-type="spacer" data-cat="layout" data-kw="spacer divider gap hr" title="Spacer: Add adjustable vertical spacing or divider lines between sections.">
                             <i class="fi-rr-resize"></i><span>Spacer / HR</span>
                         </div>
                     </div>
 
                     <div class="cat-label" data-lbl="content">Content</div>
                     <div class="sec-grid">
-                        <div class="sec-card" data-type="faq" data-cat="content" data-kw="faq accordion questions" title="FAQ Accordion: Interactive collapsable questions and answers.">
+                        <div class="sec-card" draggable="true" data-type="faq" data-cat="content" data-kw="faq accordion questions" title="FAQ Accordion: Interactive collapsable questions and answers.">
                             <i class="fi-rr-interrogation"></i><span>FAQ</span>
                         </div>
-                        <div class="sec-card" data-type="testimonials" data-cat="content" data-kw="testimonials reviews quotes" title="Testimonials: Display quotes and positive reviews from your customers.">
+                        <div class="sec-card" draggable="true" data-type="testimonials" data-cat="content" data-kw="testimonials reviews quotes" title="Testimonials: Display quotes and positive reviews from your customers.">
                             <i class="fi-rr-comments"></i><span>Testimonials</span>
                         </div>
-                        <div class="sec-card" data-type="cta" data-cat="content" data-kw="call to action cta banner" title="Call to Action: A full-width colorful banner to grab user attention and drive clicks.">
+                        <div class="sec-card" draggable="true" data-type="cta" data-cat="content" data-kw="call to action cta banner" title="Call to Action: A full-width colorful banner to grab user attention and drive clicks.">
                             <i class="fi-rr-megaphone"></i><span>Call to Action</span>
                         </div>
-                        <div class="sec-card" data-type="contact_info" data-cat="content" data-kw="contact address telephone email map layout info" title="Contact &amp; Map: Address details, phone, email cards, and embed map.">
+                        <div class="sec-card" draggable="true" data-type="contact_info" data-cat="content" data-kw="contact address telephone email map layout info" title="Contact &amp; Map: Address details, phone, email cards, and embed map.">
                             <i class="fi-rr-envelope"></i><span>Contact &amp; Map</span>
                         </div>
-                        <div class="sec-card" data-type="custom_html" data-cat="content" data-kw="custom html code raw embed" title="Custom HTML: Embed custom code, raw scripts, videos, or external iframe widgets.">
+                        <div class="sec-card" draggable="true" data-type="custom_html" data-cat="content" data-kw="custom html code raw embed" title="Custom HTML: Embed custom code, raw scripts, videos, or external iframe widgets.">
                             <i class="fi-rr-brackets-curly"></i><span>Custom HTML</span>
                         </div>
                     </div>
 
                     <div class="cat-label" data-lbl="dynamic">Dynamic</div>
                     <div class="sec-grid">
-                        <div class="sec-card" data-type="recent_articles" data-cat="dynamic" data-kw="recent articles blog posts feed" title="Recent Articles: Dynamically display the latest posts from your blog feed.">
+                        <div class="sec-card" draggable="true" data-type="recent_articles" data-cat="dynamic" data-kw="recent articles blog posts feed" title="Recent Articles: Dynamically display the latest posts from your blog feed.">
                             <i class="fi-rr-rss"></i><span>Recent Articles</span>
                         </div>
                     </div>
@@ -280,6 +280,11 @@ $footer_html = get_clean_footer_html($theme_footer_file);
             <!-- RIGHT PANEL -->
             <div class="panel-r" id="panel-r">
                 <div class="panel-r-head">
+                    <div class="props-tabs" id="props-tabs" style="display: none;">
+                        <button class="props-tab active" data-tab="themes" title="Layout Templates"><i class="fi-rr-layout-fluid"></i> Layouts</button>
+                        <button class="props-tab" data-tab="design" title="Custom CSS Design"><i class="fi-rr-palette"></i> Design</button>
+                        <button class="props-tab" data-tab="content" title="Section Block Content"><i class="fi-rr-document-signed"></i> Content</button>
+                    </div>
                     <h2 id="props-title">Properties</h2>
                 </div>
                 <div class="panel-r-body" id="props-body">

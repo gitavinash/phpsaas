@@ -163,10 +163,13 @@ function load($connection, $data)
 // ── Dispatcher ──────────────────────────────────────────────────────────
 // The API router includes this file; we must call the function ourselves.
 
-$action = isset($_GET['action']) ? trim($_GET['action']) : 'load';
+if (rtrim(str_replace('/api/', '', BASE_URL), '/') === 'builder/load') {
+    $action = isset($_GET['action']) ? trim($_GET['action']) : 'load';
 
-if ($action === 'load') {
-    load($connection, $_GET);
-} else {
-    echo json_encode(['status' => 400, 'msg' => 'Unknown action']);
+    if ($action === 'load') {
+        load($connection, $_GET);
+    } else {
+        echo json_encode(['status' => 400, 'msg' => 'Unknown action']);
+    }
 }
+

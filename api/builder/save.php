@@ -41,6 +41,92 @@ function compile_widget_client_script() {
 ';
 }
 
+function compile_block_to_html($block, &$has_widgets) {
+    $block_type = $block['type'] ?? 'static_html';
+    $block_html = "";
+    
+    switch ($block_type) {
+        case 'static_html':
+            $block_html .= "        " . ($block['content'] ?? '') . "\n";
+            break;
+            
+        case 'heading':
+            $tag = htmlspecialchars($block['tag'] ?? 'h2');
+            $text = ($block['text'] ?? 'Heading');
+            $align = htmlspecialchars($block['align'] ?? 'left');
+            $color = htmlspecialchars($block['color'] ?? '#333333');
+            $size = htmlspecialchars($block['size'] ?? '');
+            
+            $heading_style = "text-align: {$align}; color: {$color}; margin: 0; font-family: 'Manrope', sans-serif;";
+            if ($size !== '') {
+                $heading_style .= " font-size: {$size};";
+            }
+            
+            $block_html .= "        <{$tag} style=\"{$heading_style}\">{$text}</{$tag}>\n";
+            break;
+            
+        case 'rich_text':
+        case 'paragraph':
+            $text = ($block['text'] ?? 'Paragraph text goes here...');
+            $align = htmlspecialchars($block['align'] ?? 'left');
+            $color = htmlspecialchars($block['color'] ?? '#555555');
+            $size = htmlspecialchars($block['size'] ?? '16px');
+            
+            $p_style = "text-align: {$align}; color: {$color}; font-size: {$size}; line-height: 1.6; margin: 0; font-family: 'Roboto', sans-serif;";
+            $block_html .= "        <div style=\"{$p_style}\">{$text}</div>\n";
+            break;
+            
+        case 'image':
+            $src = htmlspecialchars($block['src'] ?? '');
+            $alt = htmlspecialchars($block['alt'] ?? 'Image');
+            $align = htmlspecialchars($block['align'] ?? 'center');
+            $radius = intval($block['radius'] ?? '0');
+            $link = htmlspecialchars($block['link'] ?? '');
+            
+            $img_html = "<img src=\"{$src}\" alt=\"{$alt}\" style=\"max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: {$radius}px;\" />";
+            if ($link !== '') {
+                $img_html = "<a href=\"{$link}\">{$img_html}</a>";
+            }
+            
+            $block_html .= "        <div style=\"text-align: {$align};\">{$img_html}</div>\n";
+            break;
+            
+        case 'button':
+            $text = htmlspecialchars($block['text'] ?? 'Click Here');
+            $link = htmlspecialchars($block['link'] ?? '#');
+            $align = htmlspecialchars($block['align'] ?? 'center');
+            $bg = htmlspecialchars($block['bg_color'] ?? '#007bff');
+            $color = htmlspecialchars($block['color'] ?? '#ffffff');
+            $radius = intval($block['radius'] ?? '4');
+            $py = intval($block['padding_y'] ?? '12');
+            $px = intval($block['padding_x'] ?? '24');
+            
+            $btn_style = "display: inline-block; padding: {$py}px {$px}px; background-color: {$bg}; color: {$color}; border-radius: {$radius}px; text-decoration: none; font-weight: 600; text-align: center; border: none; font-family: 'Manrope', sans-serif; transition: opacity 0.2s;";
+            $block_html .= "        <div style=\"text-align: {$align};\">\n";
+            $block_html .= "          <a href=\"{$link}\" style=\"{$btn_style}\">{$text}</a>\n";
+            $block_html .= "        </div>\n";
+            break;
+            
+        case 'spacer':
+            $height = intval($block['height'] ?? '30');
+            $block_html .= "        <div class=\"builder-spacer\" style=\"height: {$height}px; width: 100%;\"></div>\n";
+            break;
+            
+        case 'widget':
+            $widget_type = htmlspecialchars($block['widget_type'] ?? 'recent_articles');
+            $widget_settings = $block['settings'] ?? [];
+            $settings_json = htmlspecialchars(json_encode($widget_settings));
+            
+            $block_html .= "        <div class=\"builder-widget\" data-widget=\"{$widget_type}\" data-settings=\"{$settings_json}\" style=\"width: 100%;\">\n";
+            $block_html .= "          <div class=\"widget-placeholder\" style=\"padding: 20px; border: 1px dashed #ccc; text-align: center; color: #888; background-color: #f9f9f9;\">Loading widget content...</div>\n";
+            $block_html .= "        </div>\n";
+            $has_widgets = true;
+            break;
+    }
+    
+    return $block_html;
+}
+
 function compile_layout_to_html($sections) {
     $html = "";
     $has_widgets = false;
@@ -62,100 +148,108 @@ function compile_layout_to_html($sections) {
         $style .= "padding-top: {$padding_top}px; padding-bottom: {$padding_bottom}px; ";
         $style .= "margin-top: {$margin_top}px; margin-bottom: {$margin_bottom}px; ";
         
-        $html .= "<section id=\"{$sec_id}\" class=\"builder-section\" style=\"{$style}\">\n";
+        $sec_type = htmlspecialchars($section['type'] ?? 'full_width_section');
+        $layout_style = htmlspecialchars($settings['layout_style'] ?? 'style_1');
+        
+        $html .= "<section id=\"{$sec_id}\" class=\"builder-section {$sec_type} {$layout_style}\" style=\"{$style}\">\n";
         $html .= "  <div class=\"builder-container\" style=\"max-width: 1200px; margin: 0 auto; padding: 0 15px; box-sizing: border-box;\">\n";
         $html .= "    <div class=\"builder-row\" style=\"display: flex; flex-wrap: wrap; margin-right: -15px; margin-left: -15px;\">\n";
         
         $blocks = $section['blocks'] ?? [];
-        foreach ($blocks as $block) {
-            $block_type = $block['type'] ?? 'static_html';
-            $block_width = intval($block['width'] ?? 100);
-            $flex_basis = $block_width;
+        
+        if ($sec_type === 'hero_section' && $layout_style === 'style_5') {
+            // Slider layout!
+            $html .= "      <div class=\"builder-widget\" data-widget=\"hero_slider\" style=\"width: 100%;\">\n";
+            $html .= "        <div class=\"widget-placeholder\" style=\"padding: 20px; border: 1px dashed #ccc; text-align: center; color: #888; background-color: #f9f9f9;\">Loading slider content...</div>\n";
+            $html .= "      </div>\n";
+            $has_widgets = true;
+        } else if (
+            ($sec_type === 'hero_section' && ($layout_style === 'style_2' || $layout_style === 'style_3')) ||
+            ($sec_type === 'text_image_section' && ($layout_style === 'style_1' || $layout_style === 'style_2' || $layout_style === 'style_4')) ||
+            ($sec_type === 'why_choose_us_section' && ($layout_style === 'style_1' || $layout_style === 'style_2')) ||
+            ($sec_type === 'about_doctor_section' && ($layout_style === 'style_1' || $layout_style === 'style_2')) ||
+            ($sec_type === 'contact_section' && ($layout_style === 'style_1' || $layout_style === 'style_2'))
+        ) {
+            // Split layout!
+            $isMediaBlock = function($block) {
+                $type = $block['type'] ?? 'static_html';
+                $content = $block['content'] ?? '';
+                return $type === 'image' || ($type === 'static_html' && (strpos($content, 'map-container') !== false || strpos($content, 'iframe') !== false));
+            };
             
-            $col_style = "flex: 0 0 {$block_width}%; max-width: {$block_width}%; padding: 15px; box-sizing: border-box; width: 100%;";
-            
-            $html .= "      <div class=\"builder-col\" style=\"{$col_style}\">\n";
-            
-            switch ($block_type) {
-                case 'static_html':
-                    $html .= "        " . ($block['content'] ?? '') . "\n";
-                    break;
-                    
-                case 'heading':
-                    $tag = htmlspecialchars($block['tag'] ?? 'h2');
-                    $text = ($block['text'] ?? 'Heading');
-                    $align = htmlspecialchars($block['align'] ?? 'left');
-                    $color = htmlspecialchars($block['color'] ?? '#333333');
-                    $size = htmlspecialchars($block['size'] ?? '');
-                    
-                    $heading_style = "text-align: {$align}; color: {$color}; margin: 0; font-family: 'Manrope', sans-serif;";
-                    if ($size !== '') {
-                        $heading_style .= " font-size: {$size};";
-                    }
-                    
-                    $html .= "        <{$tag} style=\"{$heading_style}\">{$text}</{$tag}>\n";
-                    break;
-                    
-                case 'rich_text':
-                case 'paragraph':
-                    $text = ($block['text'] ?? 'Paragraph text goes here...');
-                    $align = htmlspecialchars($block['align'] ?? 'left');
-                    $color = htmlspecialchars($block['color'] ?? '#555555');
-                    $size = htmlspecialchars($block['size'] ?? '16px');
-                    
-                    $p_style = "text-align: {$align}; color: {$color}; font-size: {$size}; line-height: 1.6; margin: 0; font-family: 'Roboto', sans-serif;";
-                    $html .= "        <div style=\"{$p_style}\">{$text}</div>\n";
-                    break;
-                    
-                case 'image':
-                    $src = htmlspecialchars($block['src'] ?? '');
-                    $alt = htmlspecialchars($block['alt'] ?? 'Image');
-                    $align = htmlspecialchars($block['align'] ?? 'center');
-                    $radius = intval($block['radius'] ?? '0');
-                    $link = htmlspecialchars($block['link'] ?? '');
-                    
-                    $img_html = "<img src=\"{$src}\" alt=\"{$alt}\" style=\"max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: {$radius}px;\" />";
-                    if ($link !== '') {
-                        $img_html = "<a href=\"{$link}\">{$img_html}</a>";
-                    }
-                    
-                    $html .= "        <div style=\"text-align: {$align};\">{$img_html}</div>\n";
-                    break;
-                    
-                case 'button':
-                    $text = htmlspecialchars($block['text'] ?? 'Click Here');
-                    $link = htmlspecialchars($block['link'] ?? '#');
-                    $align = htmlspecialchars($block['align'] ?? 'center');
-                    $bg = htmlspecialchars($block['bg_color'] ?? '#007bff');
-                    $color = htmlspecialchars($block['color'] ?? '#ffffff');
-                    $radius = intval($block['radius'] ?? '4');
-                    $py = intval($block['padding_y'] ?? '12');
-                    $px = intval($block['padding_x'] ?? '24');
-                    
-                    $btn_style = "display: inline-block; padding: {$py}px {$px}px; background-color: {$bg}; color: {$color}; border-radius: {$radius}px; text-decoration: none; font-weight: 600; text-align: center; border: none; font-family: 'Manrope', sans-serif; transition: opacity 0.2s;";
-                    $html .= "        <div style=\"text-align: {$align};\">\n";
-                    $html .= "          <a href=\"{$link}\" style=\"{$btn_style}\">{$text}</a>\n";
-                    $html .= "        </div>\n";
-                    break;
-                    
-                case 'spacer':
-                    $height = intval($block['height'] ?? '30');
-                    $html .= "        <div class=\"builder-spacer\" style=\"height: {$height}px; width: 100%;\"></div>\n";
-                    break;
-                    
-                case 'widget':
-                    $widget_type = htmlspecialchars($block['widget_type'] ?? 'recent_articles');
-                    $widget_settings = $block['settings'] ?? [];
-                    $settings_json = htmlspecialchars(json_encode($widget_settings));
-                    
-                    $html .= "        <div class=\"builder-widget\" data-widget=\"{$widget_type}\" data-settings=\"{$settings_json}\" style=\"width: 100%;\">\n";
-                    $html .= "          <div class=\"widget-placeholder\" style=\"padding: 20px; border: 1px dashed #ccc; text-align: center; color: #888; background-color: #f9f9f9;\">Loading widget content...</div>\n";
-                    $html .= "        </div>\n";
-                    $has_widgets = true;
-                    break;
+            $cBlocks = [];
+            $mBlocks = [];
+            foreach ($blocks as $block) {
+                if ($isMediaBlock($block)) {
+                    $mBlocks[] = $block;
+                } else {
+                    $cBlocks[] = $block;
+                }
             }
             
+            $leftWidth = 50;
+            $rightWidth = 50;
+            if ($sec_type === 'about_doctor_section') {
+                $leftWidth = ($layout_style === 'style_1') ? 40 : 45;
+                $rightWidth = ($layout_style === 'style_1') ? 60 : 55;
+            }
+            
+            $isReverse = 
+              ($sec_type === 'hero_section' && $layout_style === 'style_3') ||
+              ($sec_type === 'text_image_section' && $layout_style === 'style_2') ||
+              ($sec_type === 'why_choose_us_section' && $layout_style === 'style_2') ||
+              ($sec_type === 'about_doctor_section' && ($layout_style === 'style_1' || $layout_style === 'style_2')) ||
+              ($sec_type === 'contact_section' && $layout_style === 'style_2');
+              
+            // Left Col wrapper
+            $col_style_left = "flex: 0 0 {$leftWidth}%; max-width: {$leftWidth}%; padding: 15px; box-sizing: border-box; width: 100%; display: flex; flex-direction: column; gap: 15px;";
+            // Right Col wrapper
+            $col_style_right = "flex: 0 0 {$rightWidth}%; max-width: {$rightWidth}%; padding: 15px; box-sizing: border-box; width: 100%; display: flex; flex-direction: column; gap: 15px;";
+            
+            if ($sec_type === 'text_image_section' && $layout_style === 'style_4') {
+                $col_style_left .= " background: var(--bg-1, #ffffff); border: 1px solid var(--border, #e2e8f0); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); border-radius: 12px; padding: 30px;";
+            }
+            
+            $html .= "      <div class=\"builder-col-split left-col\" style=\"{$col_style_left}\">\n";
+            if ($isReverse) {
+                foreach ($mBlocks as $block) {
+                    $html .= compile_block_to_html($block, $has_widgets);
+                }
+            } else {
+                foreach ($cBlocks as $block) {
+                    $html .= compile_block_to_html($block, $has_widgets);
+                }
+            }
             $html .= "      </div>\n";
+            
+            $html .= "      <div class=\"builder-col-split right-col\" style=\"{$col_style_right}\">\n";
+            if ($isReverse) {
+                foreach ($cBlocks as $block) {
+                    $html .= compile_block_to_html($block, $has_widgets);
+                }
+            } else {
+                foreach ($mBlocks as $block) {
+                    $html .= compile_block_to_html($block, $has_widgets);
+                }
+            }
+            $html .= "      </div>\n";
+        } else {
+            // Flat Layout Flow
+            foreach ($blocks as $block) {
+                $block_width = intval($block['width'] ?? 100);
+                if ($sec_type === 'features_section' && $layout_style === 'style_2') {
+                    $block_width = (($block['type'] ?? '') === 'heading' && ($block['tag'] ?? '') === 'h2') ? 100 : 25;
+                } else if ($sec_type === 'services_section' && $layout_style === 'style_2') {
+                    $block_width = (($block['type'] ?? '') === 'heading') ? 100 : 50;
+                } else if ($sec_type === 'testimonials_section' && $layout_style === 'style_2') {
+                    $block_width = (($block['type'] ?? '') === 'heading') ? 100 : 33;
+                }
+                
+                $col_style = "flex: 0 0 {$block_width}%; max-width: {$block_width}%; padding: 15px; box-sizing: border-box; width: 100%;";
+                $html .= "      <div class=\"builder-col\" style=\"{$col_style}\">\n";
+                $html .= compile_block_to_html($block, $has_widgets);
+                $html .= "      </div>\n";
+            }
         }
         
         $html .= "    </div>\n";
