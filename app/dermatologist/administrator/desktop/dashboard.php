@@ -286,712 +286,712 @@ $_formTarget = rtrim($_formTarget, '?&');
 ?>
 
 <style>
-#egDash {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    padding: 4px 0 48px;
-    color: #111827;
-    float: left;
-    width: 100%;
-}
-
-#egDash * {
-    box-sizing: border-box;
-}
-
-#egDash .dh-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
-#egDash .dh-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 0;
-    letter-spacing: -0.02em;
-}
-
-#egDash .dh-sub {
-    font-size: 13px;
-    color: #6b7280;
-    margin-top: 3px;
-}
-
-#egDash .dh-actions {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-}
-
-#egDash .dh-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    text-decoration: none;
-    border: 1px solid #e5e7eb;
-    background: #fff;
-    color: #374151;
-    transition: all .15s;
-    white-space: nowrap;
-}
-
-#egDash .dh-btn:hover {
-    background: #f9fafb;
-    color: #111827;
-}
-
-#egDash .dh-btn.primary {
-    background: #2563eb;
-    border-color: #2563eb;
-    color: #fff;
-}
-
-#egDash .dh-btn.primary:hover {
-    background: #1d4ed8;
-    border-color: #1d4ed8;
-}
-
-#egDash .df-bar {
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, .06);
-    border-radius: 14px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-#egDash .df-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: #9ca3af;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    white-space: nowrap;
-    margin-right: 2px;
-}
-
-#egDash .df-presets {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    flex: 1;
-}
-
-#egDash .df-preset {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 13px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: #4b5563;
-    background: #f3f4f6;
-    border: 1px solid transparent;
-    transition: all .15s;
-    white-space: nowrap;
-    line-height: 1;
-}
-
-#egDash .df-preset:hover {
-    background: #e5e7eb;
-    color: #111827;
-}
-
-#egDash .df-preset.active {
-    background: #0f172a;
-    color: #fff;
-    border-color: #0f172a;
-}
-
-#egDash .df-divider {
-    width: 1px;
-    height: 24px;
-    background: #e5e7eb;
-    flex-shrink: 0;
-}
-
-#egDash .df-custom {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-}
-
-#egDash .df-date {
-    font-size: 12px;
-    padding: 6px 10px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    background: #f9fafb;
-    color: #374151;
-    outline: none;
-    transition: border-color .15s;
-    width: 138px;
-}
-
-#egDash .df-date:focus {
-    border-color: #2563eb;
-    background: #fff;
-}
-
-#egDash .df-sep {
-    font-size: 12px;
-    color: #9ca3af;
-    font-weight: 500;
-}
-
-#egDash .df-apply {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: 8px;
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: background .15s;
-    white-space: nowrap;
-}
-
-#egDash .df-apply:hover {
-    background: #1d4ed8;
-}
-
-#egDash .df-active-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    color: #1d4ed8;
-    border-radius: 99px;
-    white-space: nowrap;
-    margin-left: auto;
-}
-
-#egDash .dc {
-    background: #fff;
-    border-radius: 14px;
-    border: 1px solid rgba(0, 0, 0, .06);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .04), 0 0 0 1px rgba(0, 0, 0, .02);
-}
-
-#egDash .kpi-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-#egDash .kpi-card {
-    background: #fff;
-    border-radius: 14px;
-    border: 1px solid rgba(0, 0, 0, .06);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#egDash .kpi-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 8px;
-}
-
-#egDash .kpi-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-#egDash .kpi-icon.blue {
-    background: #eff6ff;
-    color: #2563eb;
-}
-
-#egDash .kpi-icon.green {
-    background: #f0fdf4;
-    color: #059669;
-}
-
-#egDash .kpi-icon.amber {
-    background: #fffbeb;
-    color: #d97706;
-}
-
-#egDash .kpi-icon.violet {
-    background: #f5f3ff;
-    color: #7c3aed;
-}
-
-#egDash .kpi-badge {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 99px;
-    white-space: nowrap;
-    margin-top: 2px;
-}
-
-#egDash .kpi-badge.up {
-    background: #f0fdf4;
-    color: #059669;
-}
-
-#egDash .kpi-badge.down {
-    background: #fef2f2;
-    color: #dc2626;
-}
-
-#egDash .kpi-badge.neu {
-    background: #f3f4f6;
-    color: #6b7280;
-}
-
-#egDash .kpi-value {
-    font-size: 30px;
-    font-weight: 700;
-    color: #0f172a;
-    letter-spacing: -0.03em;
-    line-height: 1;
-}
-
-#egDash .kpi-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: #6b7280;
-    margin-top: -2px;
-}
-
-#egDash .kpi-meta {
-    font-size: 11px;
-    color: #9ca3af;
-    padding-top: 10px;
-    border-top: 1px solid #f3f4f6;
-}
-
-#egDash .chart-row {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-#egDash .panel-head {
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #f3f4f6;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-#egDash .panel-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #111827;
-    margin: 0;
-    white-space: nowrap;
-}
-
-#egDash .panel-period {
-    font-size: 11px;
-    font-weight: 600;
-    color: #6b7280;
-    background: #f3f4f6;
-    padding: 4px 10px;
-    border-radius: 6px;
-}
-
-#egDash .panel-link {
-    font-size: 12px;
-    color: #2563eb;
-    font-weight: 500;
-    text-decoration: none;
-}
-
-#egDash .panel-body {
-    padding: 18px 20px 20px;
-}
-
-#egDash .panel-body-flush {
-    padding: 0 6px 10px;
-}
-
-#egDash .chart-wrap {
-    position: relative;
-    height: 240px;
-}
-
-#egDash .chart-wrap-sm {
-    position: relative;
-    height: 220px;
-}
-
-#egDash .bottom-row {
-    display: grid;
-    grid-template-columns: 1.35fr 1fr;
-    gap: 16px;
-}
-
-#egDash .right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-#egDash .table-wrap {
-    overflow-x: auto;
-    border-radius: 10px;
-}
-
-#egDash .dt {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 540px;
-}
-
-#egDash .dt thead th {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    color: #9ca3af;
-    padding: 12px 12px 10px;
-    text-align: left;
-    border-bottom: 1px solid #f3f4f6;
-    background: #f8fafc;
-}
-
-#egDash .dt tbody td {
-    font-size: 13px;
-    color: #374151;
-    padding: 11px 12px;
-    border-bottom: 1px solid #f9fafb;
-    vertical-align: middle;
-}
-
-#egDash .dt tbody tr:nth-child(2n) td {
-    background: #fcfdff;
-}
-
-#egDash .dt tbody tr:last-child td {
-    border-bottom: none;
-}
-
-#egDash .dt tbody tr:hover td {
-    background: #f3f7ff;
-}
-
-#egDash .content-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #111827;
-    text-decoration: none;
-    line-height: 1.35;
-}
-
-#egDash .content-title:hover {
-    color: #2563eb;
-}
-
-#egDash .content-sub {
-    font-size: 11px;
-    color: #9ca3af;
-    margin-top: 2px;
-}
-
-#egDash .chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 9px;
-    border-radius: 99px;
-    font-size: 11px;
-    font-weight: 600;
-    white-space: nowrap;
-    line-height: 1.4;
-}
-
-#egDash .chip-live {
-    background: #ecfdf5;
-    color: #047857;
-}
-
-#egDash .chip-draft {
-    background: #f8fafc;
-    color: #64748b;
-    border: 1px solid #e2e8f0;
-}
-
-#egDash .chip-archived {
-    background: #fff7ed;
-    color: #c2410c;
-}
-
-#egDash .chip-pending {
-    background: #eff6ff;
-    color: #1d4ed8;
-}
-
-#egDash .chip-page {
-    background: #eff6ff;
-    color: #1d4ed8;
-}
-
-#egDash .chip-post {
-    background: #f0fdf4;
-    color: #047857;
-}
-
-#egDash .chip-gallery {
-    background: #fff7ed;
-    color: #c2410c;
-}
-
-#egDash .chip-media {
-    background: #f5f3ff;
-    color: #6d28d9;
-}
-
-#egDash .time-cell {
-    font-size: 11px;
-    color: #9ca3af;
-    white-space: nowrap;
-}
-
-#egDash .mini-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-}
-
-#egDash .mini-card {
-    border: 1px solid #eef2f7;
-    border-radius: 12px;
-    padding: 14px;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-}
-
-#egDash .mini-value {
-    font-size: 22px;
-    font-weight: 700;
-    color: #0f172a;
-    line-height: 1;
-}
-
-#egDash .mini-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    margin-top: 10px;
-}
-
-#egDash .mini-meta {
-    font-size: 11px;
-    color: #94a3b8;
-    margin-top: 4px;
-}
-
-#egDash .media-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#egDash .media-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid #f8fafc;
-}
-
-#egDash .media-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-#egDash .media-item:first-child {
-    padding-top: 0;
-}
-
-#egDash .media-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    flex-shrink: 0;
-}
-
-#egDash .media-icon.image {
-    background: #eff6ff;
-    color: #2563eb;
-}
-
-#egDash .media-icon.video {
-    background: #fff7ed;
-    color: #ea580c;
-}
-
-#egDash .media-icon.file {
-    background: #f3f4f6;
-    color: #4b5563;
-}
-
-#egDash .media-copy {
-    min-width: 0;
-    flex: 1;
-}
-
-#egDash .media-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: #111827;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-#egDash .media-meta {
-    font-size: 11px;
-    color: #94a3b8;
-    margin-top: 2px;
-}
-
-#egDash .empty-state {
-    padding: 28px 12px;
-    text-align: center;
-    color: #9ca3af;
-    font-size: 13px;
-}
-
-#egDash .qa-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-}
-
-#egDash .qa-a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #1f2937;
-    text-decoration: none;
-    transition: all .15s;
-    text-align: left;
-    line-height: 1.25;
-    min-height: 58px;
-}
-
-#egDash .qa-a:hover {
-    background: #eef4ff;
-    border-color: #bfdbfe;
-    color: #1d4ed8;
-    transform: translateY(-1px);
-}
-
-#egDash .qa-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: #eaf2ff;
-    color: #2563eb;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-#egDash .qa-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    min-width: 0;
-}
-
-#egDash .qa-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: inherit;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-#egDash .qa-meta {
-    font-size: 11px;
-    color: #6b7280;
-    font-weight: 500;
-}
-
-@media (max-width: 1200px) {
-    #egDash .kpi-row {
-        grid-template-columns: repeat(2, 1fr);
+    #egDash {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        padding: 4px 0 48px;
+        color: #111827;
+        float: left;
+        width: 100%;
     }
 
-    #egDash .chart-row {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 900px) {
-    #egDash .bottom-row {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 700px) {
-
-    #egDash .kpi-row,
-    #egDash .mini-grid,
-    #egDash .qa-grid {
-        grid-template-columns: 1fr;
+    #egDash * {
+        box-sizing: border-box;
     }
 
     #egDash .dh-head {
-        flex-direction: column;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    #egDash .dh-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+        letter-spacing: -0.02em;
+    }
+
+    #egDash .dh-sub {
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 3px;
+    }
+
+    #egDash .dh-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+    }
+
+    #egDash .dh-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        color: #374151;
+        transition: all .15s;
+        white-space: nowrap;
+    }
+
+    #egDash .dh-btn:hover {
+        background: #f9fafb;
+        color: #111827;
+    }
+
+    #egDash .dh-btn.primary {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: #fff;
+    }
+
+    #egDash .dh-btn.primary:hover {
+        background: #1d4ed8;
+        border-color: #1d4ed8;
+    }
+
+    #egDash .df-bar {
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, .06);
+        border-radius: 14px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    #egDash .df-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        white-space: nowrap;
+        margin-right: 2px;
+    }
+
+    #egDash .df-presets {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        flex: 1;
+    }
+
+    #egDash .df-preset {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 13px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #4b5563;
+        background: #f3f4f6;
+        border: 1px solid transparent;
+        transition: all .15s;
+        white-space: nowrap;
+        line-height: 1;
+    }
+
+    #egDash .df-preset:hover {
+        background: #e5e7eb;
+        color: #111827;
+    }
+
+    #egDash .df-preset.active {
+        background: #0f172a;
+        color: #fff;
+        border-color: #0f172a;
     }
 
     #egDash .df-divider {
-        display: none;
+        width: 1px;
+        height: 24px;
+        background: #e5e7eb;
+        flex-shrink: 0;
     }
-}
+
+    #egDash .df-custom {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    #egDash .df-date {
+        font-size: 12px;
+        padding: 6px 10px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #f9fafb;
+        color: #374151;
+        outline: none;
+        transition: border-color .15s;
+        width: 138px;
+    }
+
+    #egDash .df-date:focus {
+        border-color: #2563eb;
+        background: #fff;
+    }
+
+    #egDash .df-sep {
+        font-size: 12px;
+        color: #9ca3af;
+        font-weight: 500;
+    }
+
+    #egDash .df-apply {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 8px;
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        transition: background .15s;
+        white-space: nowrap;
+    }
+
+    #egDash .df-apply:hover {
+        background: #1d4ed8;
+    }
+
+    #egDash .df-active-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #1d4ed8;
+        border-radius: 99px;
+        white-space: nowrap;
+        margin-left: auto;
+    }
+
+    #egDash .dc {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid rgba(0, 0, 0, .06);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, .04), 0 0 0 1px rgba(0, 0, 0, .02);
+    }
+
+    #egDash .kpi-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    #egDash .kpi-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid rgba(0, 0, 0, .06);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #egDash .kpi-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    #egDash .kpi-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    #egDash .kpi-icon.blue {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+
+    #egDash .kpi-icon.green {
+        background: #f0fdf4;
+        color: #059669;
+    }
+
+    #egDash .kpi-icon.amber {
+        background: #fffbeb;
+        color: #d97706;
+    }
+
+    #egDash .kpi-icon.violet {
+        background: #f5f3ff;
+        color: #7c3aed;
+    }
+
+    #egDash .kpi-badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 99px;
+        white-space: nowrap;
+        margin-top: 2px;
+    }
+
+    #egDash .kpi-badge.up {
+        background: #f0fdf4;
+        color: #059669;
+    }
+
+    #egDash .kpi-badge.down {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+    #egDash .kpi-badge.neu {
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+
+    #egDash .kpi-value {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.03em;
+        line-height: 1;
+    }
+
+    #egDash .kpi-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #6b7280;
+        margin-top: -2px;
+    }
+
+    #egDash .kpi-meta {
+        font-size: 11px;
+        color: #9ca3af;
+        padding-top: 10px;
+        border-top: 1px solid #f3f4f6;
+    }
+
+    #egDash .chart-row {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    #egDash .panel-head {
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #f3f4f6;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    #egDash .panel-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    #egDash .panel-period {
+        font-size: 11px;
+        font-weight: 600;
+        color: #6b7280;
+        background: #f3f4f6;
+        padding: 4px 10px;
+        border-radius: 6px;
+    }
+
+    #egDash .panel-link {
+        font-size: 12px;
+        color: #2563eb;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #egDash .panel-body {
+        padding: 18px 20px 20px;
+    }
+
+    #egDash .panel-body-flush {
+        padding: 0 6px 10px;
+    }
+
+    #egDash .chart-wrap {
+        position: relative;
+        height: 240px;
+    }
+
+    #egDash .chart-wrap-sm {
+        position: relative;
+        height: 220px;
+    }
+
+    #egDash .bottom-row {
+        display: grid;
+        grid-template-columns: 1.35fr 1fr;
+        gap: 16px;
+    }
+
+    #egDash .right-col {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    #egDash .table-wrap {
+        overflow-x: auto;
+        border-radius: 10px;
+    }
+
+    #egDash .dt {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 540px;
+    }
+
+    #egDash .dt thead th {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: #9ca3af;
+        padding: 12px 12px 10px;
+        text-align: left;
+        border-bottom: 1px solid #f3f4f6;
+        background: #f8fafc;
+    }
+
+    #egDash .dt tbody td {
+        font-size: 13px;
+        color: #374151;
+        padding: 11px 12px;
+        border-bottom: 1px solid #f9fafb;
+        vertical-align: middle;
+    }
+
+    #egDash .dt tbody tr:nth-child(2n) td {
+        background: #fcfdff;
+    }
+
+    #egDash .dt tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    #egDash .dt tbody tr:hover td {
+        background: #f3f7ff;
+    }
+
+    #egDash .content-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #111827;
+        text-decoration: none;
+        line-height: 1.35;
+    }
+
+    #egDash .content-title:hover {
+        color: #2563eb;
+    }
+
+    #egDash .content-sub {
+        font-size: 11px;
+        color: #9ca3af;
+        margin-top: 2px;
+    }
+
+    #egDash .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 9px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+        line-height: 1.4;
+    }
+
+    #egDash .chip-live {
+        background: #ecfdf5;
+        color: #047857;
+    }
+
+    #egDash .chip-draft {
+        background: #f8fafc;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
+    }
+
+    #egDash .chip-archived {
+        background: #fff7ed;
+        color: #c2410c;
+    }
+
+    #egDash .chip-pending {
+        background: #eff6ff;
+        color: #1d4ed8;
+    }
+
+    #egDash .chip-page {
+        background: #eff6ff;
+        color: #1d4ed8;
+    }
+
+    #egDash .chip-post {
+        background: #f0fdf4;
+        color: #047857;
+    }
+
+    #egDash .chip-gallery {
+        background: #fff7ed;
+        color: #c2410c;
+    }
+
+    #egDash .chip-media {
+        background: #f5f3ff;
+        color: #6d28d9;
+    }
+
+    #egDash .time-cell {
+        font-size: 11px;
+        color: #9ca3af;
+        white-space: nowrap;
+    }
+
+    #egDash .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    #egDash .mini-card {
+        border: 1px solid #eef2f7;
+        border-radius: 12px;
+        padding: 14px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    #egDash .mini-value {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1;
+    }
+
+    #egDash .mini-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        margin-top: 10px;
+    }
+
+    #egDash .mini-meta {
+        font-size: 11px;
+        color: #94a3b8;
+        margin-top: 4px;
+    }
+
+    #egDash .media-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #egDash .media-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f8fafc;
+    }
+
+    #egDash .media-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    #egDash .media-item:first-child {
+        padding-top: 0;
+    }
+
+    #egDash .media-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        flex-shrink: 0;
+    }
+
+    #egDash .media-icon.image {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+
+    #egDash .media-icon.video {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    #egDash .media-icon.file {
+        background: #f3f4f6;
+        color: #4b5563;
+    }
+
+    #egDash .media-copy {
+        min-width: 0;
+        flex: 1;
+    }
+
+    #egDash .media-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #111827;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #egDash .media-meta {
+        font-size: 11px;
+        color: #94a3b8;
+        margin-top: 2px;
+    }
+
+    #egDash .empty-state {
+        padding: 28px 12px;
+        text-align: center;
+        color: #9ca3af;
+        font-size: 13px;
+    }
+
+    #egDash .qa-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    #egDash .qa-a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #1f2937;
+        text-decoration: none;
+        transition: all .15s;
+        text-align: left;
+        line-height: 1.25;
+        min-height: 58px;
+    }
+
+    #egDash .qa-a:hover {
+        background: #eef4ff;
+        border-color: #bfdbfe;
+        color: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    #egDash .qa-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: #eaf2ff;
+        color: #2563eb;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    #egDash .qa-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        min-width: 0;
+    }
+
+    #egDash .qa-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: inherit;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #egDash .qa-meta {
+        font-size: 11px;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    @media (max-width: 1200px) {
+        #egDash .kpi-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        #egDash .chart-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 900px) {
+        #egDash .bottom-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 700px) {
+
+        #egDash .kpi-row,
+        #egDash .mini-grid,
+        #egDash .qa-grid {
+            grid-template-columns: 1fr;
+        }
+
+        #egDash .dh-head {
+            flex-direction: column;
+        }
+
+        #egDash .df-divider {
+            display: none;
+        }
+    }
 </style>
 
 <div id="egDash">
@@ -1043,10 +1043,10 @@ $_formTarget = rtrim($_formTarget, '?&');
         <div class="df-divider"></div>
         <form method="get" action="<?php echo htmlspecialchars($_formTarget); ?>" class="df-custom">
             <?php foreach ($_GET as $_key => $_value): ?>
-            <?php if (!in_array($_key, array('dp', 'df', 'dt'), true)): ?>
-            <input type="hidden" name="<?php echo htmlspecialchars($_key); ?>"
-                value="<?php echo htmlspecialchars($_value); ?>">
-            <?php endif; ?>
+                <?php if (!in_array($_key, array('dp', 'df', 'dt'), true)): ?>
+                    <input type="hidden" name="<?php echo htmlspecialchars($_key); ?>"
+                        value="<?php echo htmlspecialchars($_value); ?>">
+                <?php endif; ?>
             <?php endforeach; ?>
             <input type="hidden" name="dp" value="custom">
             <input type="date" name="df" class="df-date" value="<?php echo htmlspecialchars($_df); ?>" min="2018-01-01"
@@ -1185,36 +1185,36 @@ $_formTarget = rtrim($_formTarget, '?&');
                         </thead>
                         <tbody>
                             <?php if (!empty($recentContent)): ?>
-                            <?php foreach ($recentContent as $item): ?>
-                            <?php
+                                <?php foreach ($recentContent as $item): ?>
+                                    <?php
                                     list($statusText, $statusClass) = nmsStatusMeta($item['link_status']);
                                     $encodedId = base64_encode($item['item_id']);
                                     $editPath = $item['module_type'] . '/?type=edit&editor=true&id=' . $encodedId;
                                     ?>
-                            <tr>
-                                <td>
-                                    <a href="<?php echo htmlspecialchars($editPath); ?>" class="content-title">
-                                        <?php echo htmlspecialchars($item['item_title']); ?>
-                                    </a>
-                                    <div class="content-sub"><?php echo htmlspecialchars($item['link_url']); ?></div>
-                                </td>
-                                <td><span
-                                        class="chip chip-<?php echo htmlspecialchars($item['module_type']); ?>"><?php echo htmlspecialchars(ucwords($item['module_type'])); ?></span>
-                                </td>
-                                <td><span
-                                        class="chip chip-<?php echo htmlspecialchars($statusClass); ?>"><?php echo htmlspecialchars($statusText); ?></span>
-                                </td>
-                                <td class="time-cell">
-                                    <?php echo !empty($item['link_published']) ? date('d M, h:i A', strtotime($item['link_published'])) : '-'; ?>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
+                                    <tr>
+                                        <td>
+                                            <a href="<?php echo htmlspecialchars($editPath); ?>" class="content-title">
+                                                <?php echo htmlspecialchars($item['item_title']); ?>
+                                            </a>
+                                            <div class="content-sub"><?php echo htmlspecialchars($item['link_url']); ?></div>
+                                        </td>
+                                        <td><span
+                                                class="chip chip-<?php echo htmlspecialchars($item['module_type']); ?>"><?php echo htmlspecialchars(ucwords($item['module_type'])); ?></span>
+                                        </td>
+                                        <td><span
+                                                class="chip chip-<?php echo htmlspecialchars($statusClass); ?>"><?php echo htmlspecialchars($statusText); ?></span>
+                                        </td>
+                                        <td class="time-cell">
+                                            <?php echo !empty($item['link_published']) ? date('d M, h:i A', strtotime($item['link_published'])) : '-'; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             <?php else: ?>
-                            <tr>
-                                <td colspan="4">
-                                    <div class="empty-state">No recent content found.</div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="empty-state">No recent content found.</div>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -1258,33 +1258,70 @@ $_formTarget = rtrim($_formTarget, '?&');
                     <h3 class="panel-title">Recent Media</h3>
                     <a href="media/?type=list" class="panel-link">Open library</a>
                 </div>
+
                 <div class="panel-body">
                     <?php if (!empty($recentMedia)): ?>
-                    <div class="media-list">
-                        <?php foreach ($recentMedia as $media): ?>
-                        <?php
-                                $mediaType = strtolower(trim($media['media_type'])) !== '' ? strtolower(trim($media['media_type'])) : 'file';
-                                $mediaClass = in_array($mediaType, array('image', 'video'), true) ? $mediaType : 'file';
-                                $mediaLabel = strtoupper(substr($mediaClass, 0, 1));
-                                $mediaTitle = trim($media['media_title']) !== '' ? $media['media_title'] : 'Untitled media';
+                        <div class="media-list">
+
+                            <?php foreach ($recentMedia as $media): ?>
+                                <?php
+                                $rawType = strtolower(trim($media['media_type'] ?? ''));
+                                $type = explode('/', $rawType)[0];
+
+                                $mediaType = match ($type) {
+                                    'image' => 'image',
+                                    'video' => 'video',
+                                    'audio' => 'audio',
+                                    default => 'file',
+                                };
+
+                                $mediaTitle = trim($media['media_title']) ?: 'Untitled media';
+
+                                $icons = [
+                                    'image' => 'fa fa-image',
+                                    'video' => 'fa fa-video',
+                                    'audio' => 'fa fa-music',
+                                    'file'  => 'fa fa-file',
+                                ];
+
+                                $iconPath = $icons[$mediaType] ?? $icons['file'];
                                 ?>
-                        <div class="media-item">
-                            <div class="media-icon <?php echo htmlspecialchars($mediaClass); ?>">
-                                <?php echo htmlspecialchars($mediaLabel); ?></div>
-                            <div class="media-copy">
-                                <div class="media-title"><?php echo htmlspecialchars($mediaTitle); ?></div>
-                                <div class="media-meta">
-                                    <?php echo htmlspecialchars(ucwords($mediaClass)); ?>
-                                    <?php if (!empty($media['uploaded_at'])): ?>
-                                    · <?php echo date('d M Y', strtotime($media['uploaded_at'])); ?>
-                                    <?php endif; ?>
+
+                                <div class="media-item">
+
+                                    <!-- LEFT ICON -->
+                                    <div class="media-icon <?php echo $mediaType; ?>">
+                                        <i class="<?php echo $iconPath; ?>"></i>
+                                    </div>
+
+                                    <!-- CONTENT -->
+                                    <div class="media-content">
+
+                                        <div class="media-top">
+                                            <div class="media-title">
+
+                                                <a href="<?php echo htmlspecialchars($media['media_url']); ?>"
+                                                    target="_blank">
+                                                    <?php echo htmlspecialchars($mediaTitle); ?> <i class="fa fa-external-link-alt"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="media-meta">
+                                            <?php echo ucfirst($mediaType); ?>
+                                            <?php if (!empty($media['uploaded_at'])): ?>
+                                                · <?php echo date('d M Y', strtotime($media['uploaded_at'])); ?>
+                                            <?php endif; ?>
+                                        </div>
+
+                                    </div>
                                 </div>
-                            </div>
+
+                            <?php endforeach; ?>
+
                         </div>
-                        <?php endforeach; ?>
-                    </div>
                     <?php else: ?>
-                    <div class="empty-state">No media uploaded yet.</div>
+                        <div class="empty-state">No media uploaded yet.</div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -1385,195 +1422,195 @@ $_formTarget = rtrim($_formTarget, '?&');
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" crossorigin="anonymous"></script>
 <script>
-(function() {
-    var activityLabels = <?php echo json_encode($activityChart['labels']); ?>;
-    var pageData = <?php echo json_encode($activityChart['page']); ?>;
-    var newsData = <?php echo json_encode($activityChart['post']); ?>;
-    var galleryData = <?php echo json_encode($activityChart['gallery']); ?>;
-    var mediaData = <?php echo json_encode($activityChart['media']); ?>;
+    (function() {
+        var activityLabels = <?php echo json_encode($activityChart['labels']); ?>;
+        var pageData = <?php echo json_encode($activityChart['page']); ?>;
+        var newsData = <?php echo json_encode($activityChart['post']); ?>;
+        var galleryData = <?php echo json_encode($activityChart['gallery']); ?>;
+        var mediaData = <?php echo json_encode($activityChart['media']); ?>;
 
-    var mixLabels = ['Pages', 'Blog', 'Galleries', 'Media'];
-    var mixData = [<?php echo (int) $periodPages; ?>, <?php echo (int) $periodPost; ?>,
-        <?php echo (int) $periodGalleries; ?>, <?php echo (int) $periodMedia; ?>
-    ];
+        var mixLabels = ['Pages', 'Blog', 'Galleries', 'Media'];
+        var mixData = [<?php echo (int) $periodPages; ?>, <?php echo (int) $periodPost; ?>,
+            <?php echo (int) $periodGalleries; ?>, <?php echo (int) $periodMedia; ?>
+        ];
 
-    var activityCtx = document.getElementById('nmsActivityChart');
-    if (activityCtx) {
-        new Chart(activityCtx, {
-            type: 'line',
-            data: {
-                labels: activityLabels,
-                datasets: [{
-                        label: 'Pages',
-                        data: pageData,
-                        borderColor: '#2563eb',
-                        backgroundColor: 'rgba(37,99,235,0.10)',
-                        fill: true,
-                        tension: 0.35,
-                        borderWidth: 2,
-                        pointRadius: 2,
-                        pointHoverRadius: 4
-                    },
-                    {
-                        label: 'Blog',
-                        data: newsData,
-                        borderColor: '#059669',
-                        backgroundColor: 'rgba(5,150,105,0.08)',
-                        fill: true,
-                        tension: 0.35,
-                        borderWidth: 2,
-                        pointRadius: 2,
-                        pointHoverRadius: 4
-                    },
-                    {
-                        label: 'Galleries',
-                        data: galleryData,
-                        borderColor: '#ea580c',
-                        backgroundColor: 'rgba(234,88,12,0.08)',
-                        fill: true,
-                        tension: 0.35,
-                        borderWidth: 2,
-                        pointRadius: 2,
-                        pointHoverRadius: 4
-                    },
-                    {
-                        label: 'Media',
-                        data: mediaData,
-                        borderColor: '#7c3aed',
-                        backgroundColor: 'rgba(124,58,237,0.08)',
-                        fill: true,
-                        tension: 0.35,
-                        borderWidth: 2,
-                        pointRadius: 2,
-                        pointHoverRadius: 4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+        var activityCtx = document.getElementById('nmsActivityChart');
+        if (activityCtx) {
+            new Chart(activityCtx, {
+                type: 'line',
+                data: {
+                    labels: activityLabels,
+                    datasets: [{
+                            label: 'Pages',
+                            data: pageData,
+                            borderColor: '#2563eb',
+                            backgroundColor: 'rgba(37,99,235,0.10)',
+                            fill: true,
+                            tension: 0.35,
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            pointHoverRadius: 4
+                        },
+                        {
+                            label: 'Blog',
+                            data: newsData,
+                            borderColor: '#059669',
+                            backgroundColor: 'rgba(5,150,105,0.08)',
+                            fill: true,
+                            tension: 0.35,
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            pointHoverRadius: 4
+                        },
+                        {
+                            label: 'Galleries',
+                            data: galleryData,
+                            borderColor: '#ea580c',
+                            backgroundColor: 'rgba(234,88,12,0.08)',
+                            fill: true,
+                            tension: 0.35,
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            pointHoverRadius: 4
+                        },
+                        {
+                            label: 'Media',
+                            data: mediaData,
+                            borderColor: '#7c3aed',
+                            backgroundColor: 'rgba(124,58,237,0.08)',
+                            fill: true,
+                            tension: 0.35,
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            pointHoverRadius: 4
+                        }
+                    ]
                 },
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            boxWidth: 8,
-                            color: '#475569',
-                            font: {
-                                size: 11,
-                                weight: '600'
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                color: '#475569',
+                                font: {
+                                    size: 11,
+                                    weight: '600'
+                                }
                             }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleColor: '#94a3b8',
+                            bodyColor: '#f1f5f9',
+                            padding: 10,
+                            cornerRadius: 8
                         }
                     },
-                    tooltip: {
-                        backgroundColor: '#0f172a',
-                        titleColor: '#94a3b8',
-                        bodyColor: '#f1f5f9',
-                        padding: 10,
-                        cornerRadius: 8
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        border: {
-                            display: false
-                        },
-                        grid: {
-                            color: '#f1f5f9'
-                        },
-                        ticks: {
-                            precision: 0,
-                            color: '#94a3b8',
-                            font: {
-                                size: 11
-                            }
-                        }
-                    },
-                    x: {
-                        border: {
-                            display: false
-                        },
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            color: '#94a3b8',
-                            maxRotation: 0,
-                            font: {
-                                size: 11
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    var mixCtx = document.getElementById('nmsMixChart');
-    if (mixCtx) {
-        var filteredLabels = [];
-        var filteredData = [];
-        var filteredColors = [];
-        var mixColors = ['#2563eb', '#10b981', '#f97316', '#8b5cf6'];
-
-        for (var i = 0; i < mixData.length; i++) {
-            if (mixData[i] > 0) {
-                filteredLabels.push(mixLabels[i]);
-                filteredData.push(mixData[i]);
-                filteredColors.push(mixColors[i]);
-            }
-        }
-
-        if (!filteredData.length) {
-            filteredLabels = ['No content in period'];
-            filteredData = [1];
-            filteredColors = ['#e5e7eb'];
-        }
-
-        new Chart(mixCtx, {
-            type: 'doughnut',
-            data: {
-                labels: filteredLabels,
-                datasets: [{
-                    data: filteredData,
-                    backgroundColor: filteredColors,
-                    borderWidth: 0,
-                    hoverOffset: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '68%',
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: {
-                                size: 11
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            border: {
+                                display: false
                             },
-                            color: '#374151',
-                            boxWidth: 10,
-                            padding: 12,
-                            usePointStyle: true,
-                            pointStyleWidth: 10
+                            grid: {
+                                color: '#f1f5f9'
+                            },
+                            ticks: {
+                                precision: 0,
+                                color: '#94a3b8',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        x: {
+                            border: {
+                                display: false
+                            },
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                maxRotation: 0,
+                                font: {
+                                    size: 11
+                                }
+                            }
                         }
-                    },
-                    tooltip: {
-                        backgroundColor: '#0f172a',
-                        titleColor: '#94a3b8',
-                        bodyColor: '#f1f5f9',
-                        padding: 10,
-                        cornerRadius: 8
                     }
                 }
+            });
+        }
+
+        var mixCtx = document.getElementById('nmsMixChart');
+        if (mixCtx) {
+            var filteredLabels = [];
+            var filteredData = [];
+            var filteredColors = [];
+            var mixColors = ['#2563eb', '#10b981', '#f97316', '#8b5cf6'];
+
+            for (var i = 0; i < mixData.length; i++) {
+                if (mixData[i] > 0) {
+                    filteredLabels.push(mixLabels[i]);
+                    filteredData.push(mixData[i]);
+                    filteredColors.push(mixColors[i]);
+                }
             }
-        });
-    }
-}());
+
+            if (!filteredData.length) {
+                filteredLabels = ['No content in period'];
+                filteredData = [1];
+                filteredColors = ['#e5e7eb'];
+            }
+
+            new Chart(mixCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: filteredLabels,
+                    datasets: [{
+                        data: filteredData,
+                        backgroundColor: filteredColors,
+                        borderWidth: 0,
+                        hoverOffset: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '68%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 11
+                                },
+                                color: '#374151',
+                                boxWidth: 10,
+                                padding: 12,
+                                usePointStyle: true,
+                                pointStyleWidth: 10
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleColor: '#94a3b8',
+                            bodyColor: '#f1f5f9',
+                            padding: 10,
+                            cornerRadius: 8
+                        }
+                    }
+                }
+            });
+        }
+    }());
 </script>
