@@ -25,7 +25,7 @@ if (isset($agentId)) {
 
 $userList = array();
 
-if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, user_mobile, user_email, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_site_id=" . SITE_ID)) {
+if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, user_mobile, user_email, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_staus=1 AND site_access_site_id=" . SITE_ID)) {
     if (mysqli_num_rows($userInfoList) != 0) {
         while ($data = mysqli_fetch_assoc($userInfoList)) {
             extract($data);
@@ -181,80 +181,80 @@ LIMIT 0, 1000";
                                 extract($passangerData['personsData'][0]);
 
                     ?>
-                    <tr>
-                        <td><?php echo ucwords($first_name) ?></td>
-                        <td><?php echo $mobile; ?></td>
-                        <td><?php echo ucwords($visa_country_title); ?></td>
-                        <td><?php echo ucwords($visa_package_visa_type); ?> VISA</td>
-                        <td>
-                            <?php echo date('d M Y, H:i A', strtotime($visa_application_time)); ?></td>
-                        <?php
+                                <tr>
+                                    <td><?php echo ucwords($first_name) ?></td>
+                                    <td><?php echo $mobile; ?></td>
+                                    <td><?php echo ucwords($visa_country_title); ?></td>
+                                    <td><?php echo ucwords($visa_package_visa_type); ?> VISA</td>
+                                    <td>
+                                        <?php echo date('d M Y, H:i A', strtotime($visa_application_time)); ?></td>
+                                    <?php
 
                                     if ($site_access_type != 'agent') { ?>
-                        <td>
-                            <form method="POST">
-                                <?php
+                                        <td>
+                                            <form method="POST">
+                                                <?php
                                                 if ($site_access_type != 'agent' && $visa_application_status == 0 && $agent_display_name == null) { ?>
-                                <select class="selectJS form-control" name="userId" required>
-                                    <option value="">Select user</option>
-                                    <?php
+                                                    <select class="selectJS form-control" name="userId" required>
+                                                        <option value="">Select user</option>
+                                                        <?php
 
                                                         for ($i = 0; $i < sizeof($userList); $i++) {
                                                             echo "<option value='" . base64_encode($userList[$i]['id'] . '_' . $userList[$i]['name']) . "'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
                                                         }
 
                                                         ?>
-                                </select>
-                                <input type="hidden" name="leadId"
-                                    value="<?php echo base64_encode($visa_application_id) ?>">
-                                <input type="hidden" name="action" value="assign">
-                                <input type="hidden" name="type" value="visa_applications">
-                                <input type="submit" value="Assign lead to user"
-                                    class="btn dataTableSubmitBtn dataTableBtn">
-                                <?php
+                                                    </select>
+                                                    <input type="hidden" name="leadId"
+                                                        value="<?php echo base64_encode($visa_application_id) ?>">
+                                                    <input type="hidden" name="action" value="assign">
+                                                    <input type="hidden" name="type" value="visa_applications">
+                                                    <input type="submit" value="Assign lead to user"
+                                                        class="btn dataTableSubmitBtn dataTableBtn">
+                                                <?php
                                                 } else {
                                                     echo $agent_display_name;
                                                 }
                                                 ?>
-                            </form>
-                        </td>
-                        <?php
+                                            </form>
+                                        </td>
+                                    <?php
                                     }
 
                                     if (SITE_APP != 'astro_client') { ?>
-                        <td>
-                            <strong><?php echo $visa_application_notes_meta_type ?></strong><br /><?php echo $visa_application_notes_meta_value ?>
-                        </td>
-                        <?php
+                                        <td>
+                                            <strong><?php echo $visa_application_notes_meta_type ?></strong><br /><?php echo $visa_application_notes_meta_value ?>
+                                        </td>
+                                    <?php
                                     }
 
                                     ?>
-                        </td>
-                        <td><?php echo $leadCurrentStatus ?></td>
-                        <td>
-                            <a href='visa_applications/view/?id=<?php echo base64_encode($visa_application_id) ?>'
-                                target='_blank' class='tableActionIconBtn' title='View package'
-                                data-title='View package'><i class="fi-rr-eye bgWhite"></i></a>
-                            <?php
+                                    </td>
+                                    <td><?php echo $leadCurrentStatus ?></td>
+                                    <td>
+                                        <a href='visa_applications/view/?id=<?php echo base64_encode($visa_application_id) ?>'
+                                            target='_blank' class='tableActionIconBtn' title='View package'
+                                            data-title='View package'><i class="fi-rr-eye bgWhite"></i></a>
+                                        <?php
 
                                         if ($visa_application_status == 0 && $site_access_type != 'agent') { ?>
 
-                            <a href='#' target='_blank' class='tableActionIconBtn duplicateLead'
-                                title='Mark as Duplicate' id="<?php echo base64_encode($visa_application_id) ?>"
-                                data-title='Mark as Duplicate'><i class="fi-rr-clipoard-wrong bgYellow"></i></a>
+                                            <a href='#' target='_blank' class='tableActionIconBtn duplicateLead'
+                                                title='Mark as Duplicate' id="<?php echo base64_encode($visa_application_id) ?>"
+                                                data-title='Mark as Duplicate'><i class="fi-rr-clipoard-wrong bgYellow"></i></a>
 
-                            <?php
+                                        <?php
                                         }
 
                                         if ($site_access_type == 'administrator') { ?>
-                            <a href='#' target='_blank' class='tableActionIconBtn deleteButton' title='Delete lead'
-                                data-type='visa_applications' data-id="<?php echo $visa_application_id ?>"
-                                data-title='Delete lead'><i class="fi-rr-trash bgRed"></i></a>
-                            <?php                                        }
+                                            <a href='#' target='_blank' class='tableActionIconBtn deleteButton' title='Delete lead'
+                                                data-type='visa_applications' data-id="<?php echo $visa_application_id ?>"
+                                                data-title='Delete lead'><i class="fi-rr-trash bgRed"></i></a>
+                                        <?php                                        }
 
                                         ?>
-                        </td>
-                    </tr>
+                                    </td>
+                                </tr>
                     <?php
                             }
                         }
