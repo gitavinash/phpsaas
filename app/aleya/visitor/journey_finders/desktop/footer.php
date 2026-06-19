@@ -163,7 +163,6 @@
         });
     });
 </script>
-<?php require_once PWA_REGISTER   ?>
 
 </body>
 
