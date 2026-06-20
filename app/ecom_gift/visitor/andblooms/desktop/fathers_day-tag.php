@@ -351,7 +351,7 @@
 
     <div class="container mx-auto px-4">
 
-        <div class="fd-trust-strip">
+        <!-- <div class="fd-trust-strip">
             <div class="fd-trust-item">
                 <span>🚚</span>
                 <small>Same Day Delivery</small>
@@ -368,7 +368,7 @@
                 <span>⭐</span>
                 <small>Father's Day Special</small>
             </div>
-        </div>
+        </div> -->
 
         <div class="fd-promo-banner">
 
