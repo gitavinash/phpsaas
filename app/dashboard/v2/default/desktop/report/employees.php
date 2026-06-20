@@ -35,7 +35,7 @@ INNER JOIN
 INNER JOIN 
     " . TABLE_PREFIX . "profile ON profile_user_id=user_id 
 WHERE 
-    site_access_site_id = " . SITE_ID . "
+    site_access_status=1 AND site_access_site_id = " . SITE_ID . "
 ORDER BY 
     CASE WHEN site_access_type = 'administrator' THEN 0 ELSE 1 END, 
     user_id")) {
