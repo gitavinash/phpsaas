@@ -224,6 +224,17 @@
             }
         }
 
+        .fd-trust-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            background: #fff;
+            padding: 18px;
+            border-radius: 16px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, .06);
+            margin: 100px 0px 25px 0;
+        }
+
         /* Father's Day Landing Page */
 
         .fd-trust-item {
@@ -251,6 +262,8 @@
         .fd-promo-banner img {
             width: 100%;
             display: block;
+            max-height: 380px;
+            object-fit: cover;
         }
 
         .fd-collection-header {
@@ -281,8 +294,35 @@
 
         .fd-save-text {
             color: #16a34a;
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .fd-banner-cta {
+            text-align: center;
+            margin-top: -10px;
+            margin-bottom: 35px;
+        }
+
+        .fd-banner-cta a {
+            background: #3D6B33;
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 999px;
+            text-decoration: none;
+            display: inline-block;
             font-weight: 600;
+        }
+
+        .fd-banner-cta a:hover {
+            color: #fff;
+        }
+
+        .fd-sale-note {
+            color: #D4946D;
+            font-weight: 600;
+            margin-top: 8px;
         }
 
         @media(max-width:767px) {
@@ -337,6 +377,11 @@
                 alt="Father's Day Special">
 
         </div>
+        <div class="fd-banner-cta">
+            <a href="#giftCollection">
+                Shop Father's Day Gifts
+            </a>
+        </div>
 
     </div>
 
@@ -348,6 +393,9 @@
             <span class="fd-small-label">
                 Father's Day Collection
             </span>
+            <div class="fd-sale-note">
+                🎁 Limited Time Father's Day Specials
+            </div>
 
             <h2>
                 Find The Perfect Gift For Dad
@@ -394,12 +442,12 @@
                         <a href="<?php echo  $link_url ?>">
                             <div class="relative overflow-hidden rounded-lg mb-4 custom-img-wrapper">
                                 <img src="<?php echo  $product_image ?>" alt="<?php echo  $product_title ?>"
-                                    class="w-full h-[350px] object-cover group-hover:scale-105 transition-transform duration-300 custom-product-img">
+                                    class="w-full h-[280px] object-cover group-hover:scale-105 transition-transform duration-300 custom-product-img">
                                 <?php if ($inventory_in_stock == 0): ?>
                                     <div class="absolute top-3 left-3 bg-red-600 text-white text-xs px-3 py-1 rounded custom-badge-left">Out of Stock
                                     </div>
                                 <?php elseif (strtotime($link_published) > strtotime('-1 month')): ?>
-                                    <div class="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded custom-badge-left">New</div>
+                                    <div class="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded custom-badge-left">Dad's Favorite</div>
                                 <?php endif; ?>
                                 <?php if ($discount > 0): ?>
                                     <div class="absolute top-3 right-3 bg-green-600 text-white text-xs px-3 py-1 rounded custom-badge-right">
@@ -423,8 +471,7 @@
                             <?php
                             if ($inventory_in_stock > 0) { ?>
                                 <button data-info='<?php echo $product_id . '_' . $inventory_price . '_1'; ?>'
-                                    class="quickAddToCart bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors custom-add-to-cart">Add
-                                    to Cart</button>
+                                    class="quickAddToCart bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-opacity-90 transition-colors custom-add-to-cart">Add to Cart</button>
                             <?php
                             }
                             ?>
