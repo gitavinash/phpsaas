@@ -464,9 +464,6 @@
                                 <?php if ($discount > 0): ?>
                                     <div class="text-gray-400 text-sm line-through custom-mrp">
                                         <?php echo  $inventory_currency_symbol . ' ' . $inventory_mrp ?></div>
-                                    <div class="fd-save-text">
-                                        Save <?php echo $inventory_currency_symbol . ' ' . $savedAmount; ?>
-                                    </div>
                                 <?php endif; ?>
                             </div>
                             <?php
