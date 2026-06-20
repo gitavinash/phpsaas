@@ -110,7 +110,7 @@
             <div class="container">
                 <div class="title-section">
                     <span class="line-left">|</span>
-                    <h1> <?php echo $tour_package_title ?> </h1>
+                    <h1> <?php echo $itinerary_title ?> </h1>
                     <span class="line-right">|</span>
                 </div>
 

@@ -60,8 +60,7 @@ function getQuotationDetails($connection, $quotationId)
         AND q.quotation_type = 'tour_package' 
         AND q.quotation_status IN (0,1,2) 
         AND q.quotation_site_id = " . SITE_ID . "
-    GROUP BY q.quotation_id
-";
+    GROUP BY q.quotation_id";
 
     if ($checkQuote = mysqli_query($connection, $query)) {
         if (mysqli_num_rows($checkQuote) > 0) {
@@ -145,6 +144,7 @@ function getQuotationDetails($connection, $quotationId)
                 'quotation_time' => $quotation_time,
                 'gallery_image' => $gallery_image,
                 'gallery_image_list' => $gallery_image_list,
+                'itinerary_title' => $quotationDescription['title'],
                 'itineraries' => $quotationDescription['itinerary'],
                 'inclusions' => explode(',', $quotationDescription['inclusions']),
                 'exclusions' => explode(',', $quotationDescription['exclusions']),
