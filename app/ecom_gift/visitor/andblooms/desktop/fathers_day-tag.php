@@ -23,8 +23,6 @@
         }
     }
 
-    $tag_title = ucwords($tag_title);
-
     // Execute query first to get products
     $query = "SELECT link_url, link_published, product_id, product_title, product_image, inventory_currency_symbol, inventory_price, inventory_mrp, inventory_in_stock 
           FROM " . TABLE_PREFIX . "link 
@@ -225,46 +223,141 @@
                 text-align: center !important;
             }
         }
+
+        /* Father's Day Landing Page */
+
+        .fd-trust-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fd-trust-item span {
+            font-size: 24px;
+        }
+
+        .fd-trust-item small {
+            font-size: 13px;
+            color: #374151;
+        }
+
+        .fd-promo-banner {
+            overflow: hidden;
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+
+        .fd-promo-banner img {
+            width: 100%;
+            display: block;
+        }
+
+        .fd-collection-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .fd-small-label {
+            color: #D4946D;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .fd-collection-header h2 {
+            font-size: 38px;
+            margin: 10px 0;
+        }
+
+        .fd-collection-header p {
+            color: #6b7280;
+        }
+
+        .fd-product-count {
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .fd-save-text {
+            color: #16a34a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        @media(max-width:767px) {
+
+            .fd-trust-strip {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                padding: 12px;
+                font-size: 13px;
+            }
+
+            .fd-collection-header h2 {
+                font-size: 28px;
+            }
+
+            .fd-promo-banner {
+                border-radius: 12px;
+            }
+
+            .fd-promo-banner img {
+                max-height: 220px;
+                object-fit: cover;
+            }
+        }
     </style>
 
-    <!-- Banner with Breadcrumb -->
-    <div class="relative h-[280px] w-full mb-8 mt-16 overflow-hidden custom-banner">
-        <?php
-        $bannerImage = $tag_image;
-        $bannerFromProduct = false;
-        if (empty($tag_image) && $result && mysqli_num_rows($result) > 0) {
-            mysqli_data_seek($result, 0);
-            $firstProduct = mysqli_fetch_assoc($result);
-            $bannerImage = $firstProduct['product_image'];
-            $bannerFromProduct = true;
-            mysqli_data_seek($result, 0);
-        }
-        ?>
-        <?php if (!empty($bannerImage)) { ?>
-            <?php
-            $bannerStyle = "background-image: url('{$bannerImage}');";
-            if ($bannerFromProduct) {
-                $bannerStyle .= ' filter: blur(05px); transform: scale(1.05);';
-            }
-            ?>
-            <div style="<?= $bannerStyle ?>" class="absolute inset-0 bg-cover bg-center"></div>
-        <?php } else { ?>
-            <div class="absolute inset-0 bg-gradient-to-r from-[#D4946D] via-[#e0b89c] to-[#d4946d]"></div>
-        <?php } ?>
-        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div class="container mx-auto px-4 h-full flex flex-col justify-center items-center text-center relative z-10 custom-banner-content">
-            <div class="flex items-center text-sm text-white/80 mb-6 custom-banner-breadcrumb">
-                <a href="/" class="hover:text-white">Home</a>
-                <span class="mx-2">/</span>
-                <span class="text-white"><?php echo  $tag_title ?></span>
+    <div class="container mx-auto px-4">
+
+        <div class="fd-trust-strip">
+            <div class="fd-trust-item">
+                <span>🚚</span>
+                <small>Same Day Delivery</small>
             </div>
-            <h1 class="font-serif text-4xl md:text-5xl text-white mb-4 custom-banner-title"><?php echo  $tag_title ?></h1>
-            <p class="text-white text-lg max-w-2xl custom-banner-desc"><?php echo  $tag_description ?></p>
+            <div class="fd-trust-item">
+                <span>🎁</span>
+                <small>Gift Ready Packaging</small>
+            </div>
+            <div class="fd-trust-item">
+                <span>💚</span>
+                <small>Fresh Blooms</small>
+            </div>
+            <div class="fd-trust-item">
+                <span>⭐</span>
+                <small>Father's Day Special</small>
+            </div>
         </div>
+
+        <div class="fd-promo-banner">
+
+            <img
+                src="<?php echo $tag_image ?>"
+                alt="Father's Day Special">
+
+        </div>
+
     </div>
 
     <!-- Product Grid -->
     <div class="container mx-auto px-4 py-8">
+
+        <div id="giftCollection" class="fd-collection-header">
+
+            <span class="fd-small-label">
+                Father's Day Collection
+            </span>
+
+            <h2>
+                Find The Perfect Gift For Dad
+            </h2>
+
+            <p>
+                Celebrate the man who has always been there with thoughtful flowers and gifts.
+            </p>
+
+        </div>
         <div class="flex justify-end mb-6 custom-sort-container">
             <form method="GET" class="custom-sort-form">
                 <select name="sort" onchange="this.form.submit()"
@@ -295,6 +388,7 @@
                     $discount = ($inventory_price != 0 && $inventory_price < $inventory_mrp)
                         ? round((($inventory_mrp - $inventory_price) / $inventory_mrp) * 100)
                         : 0;
+                    $savedAmount = $inventory_mrp - $price;
             ?>
                     <div class="product-card group custom-product-card">
                         <a href="<?php echo  $link_url ?>">
@@ -321,6 +415,9 @@
                                 <?php if ($discount > 0): ?>
                                     <div class="text-gray-400 text-sm line-through custom-mrp">
                                         <?php echo  $inventory_currency_symbol . ' ' . $inventory_mrp ?></div>
+                                    <div class="fd-save-text">
+                                        Save <?php echo $inventory_currency_symbol . ' ' . $savedAmount; ?>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                             <?php

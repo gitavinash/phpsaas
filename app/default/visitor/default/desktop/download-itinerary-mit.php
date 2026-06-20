@@ -311,7 +311,7 @@
                             <div class="tour_card_header">
                                 <div>
                                     <h3 class="tour_package_title">
-                                        <?php echo $tour_package_title ?> - Quotation
+                                        <?php echo $itinerary_title ?> - Quotation
                                     </h3>
                                     <p class="tour_package_meta">
                                         <?php

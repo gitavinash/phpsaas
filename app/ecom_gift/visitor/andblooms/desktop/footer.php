@@ -1,21 +1,3 @@
-<section class="bg-[#1f2937] text-white py-20 mt-20">
-    <div class="container mx-auto px-6 text-center">
-
-        <h2 class="text-4xl md:text-5xl font-bold mb-6">
-            Make Father's Day Special
-        </h2>
-
-        <p class="max-w-2xl mx-auto text-gray-300 mb-8">
-            Discover meaningful gifts and create memories that last forever.
-        </p>
-
-        <a href="/tag/fathers-day/"
-            class="inline-block bg-[#D4946D] hover:bg-[#bf7d54] px-8 py-4 rounded-full transition">
-            Shop Collection
-        </a>
-
-    </div>
-</section>
 <!-- Footer -->
 <footer class="bg-gray-900 text-white pt-16 pb-8">
     <div class="container mx-auto px-4">
