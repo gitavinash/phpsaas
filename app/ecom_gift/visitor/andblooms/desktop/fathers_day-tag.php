@@ -257,6 +257,7 @@
             overflow: hidden;
             border-radius: 20px;
             margin-bottom: 40px;
+            margin-top: 100px;
         }
 
         .fd-promo-banner img {
