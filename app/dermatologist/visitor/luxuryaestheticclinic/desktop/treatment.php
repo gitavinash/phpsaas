@@ -5,7 +5,7 @@ require_once 'header.php';
 ?>
 
 <!-- 2. CLINICAL HEADER BANNER & BREADCRUMBS -->
-<section class="inner-page-banner" id="banner">
+<section class="inner-page-banner" id="banner" style="background-image: url(<?php echo $service_image ?>);">
   <div class="container inner-banner-content">
     <h1>LASER HAIR REMOVAL</h1>
     <div class="breadcrumb-path">

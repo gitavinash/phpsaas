@@ -379,7 +379,10 @@ section {
   visibility: hidden;
   pointer-events: none;
   transform: translateY(15px);
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+  transition:
+    opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.4s;
 }
 
 .nav-menu .nav-link:hover + .absolute,
@@ -434,7 +437,9 @@ section {
   color: var(--color-text-muted);
   padding: 0.2rem 0;
   display: block;
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Remove bottom underline for submenu links */
@@ -462,7 +467,9 @@ section {
   height: 5px;
   border-right: 1.5px solid var(--color-text-dark);
   border-bottom: 1.5px solid var(--color-text-dark);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .nav-menu .relative.group:hover > .nav-link::before {
@@ -1405,7 +1412,9 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: var(--transition-smooth), opacity 0.25s ease;
+  transition:
+    var(--transition-smooth),
+    opacity 0.25s ease;
 }
 
 .tech-media-column:hover .tech-img {
@@ -1858,7 +1867,12 @@ section {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: rgba(197, 168, 128, 0.08); /* Transparent gold background tint */
+  background-color: rgba(
+    197,
+    168,
+    128,
+    0.08
+  ); /* Transparent gold background tint */
   border: 1px solid rgba(197, 168, 128, 0.2);
   color: var(--color-primary-gold);
   flex-shrink: 0;
@@ -2437,7 +2451,6 @@ section {
     gap: 2.5rem;
   }
 
-
   .footer-top-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 5rem;
@@ -2690,7 +2703,6 @@ section {
     margin: 0 auto;
   }
 
-
   .experience-grid {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(4, 200px);
@@ -2794,7 +2806,6 @@ section {
   .before-after-wrapper {
     height: 350px;
   }
-
 
   .tech-cards-grid {
     grid-template-columns: 1fr;
@@ -3047,16 +3058,29 @@ section {
 }
 
 /* 1. CINEMATIC HERO display */
+
 .inner-page-banner {
+  position: relative;
   padding-top: 18rem;
   padding-bottom: 9rem;
-  background-image:
-    linear-gradient(rgba(28, 24, 20, 0.75), rgba(28, 24, 20, 0.85)),
-    url("https://placehold.co/1920x600/1C1814/C5A880?text=Skincare+Journals+Sanctuary");
   background-size: cover;
   background-position: center center;
   text-align: center;
   color: var(--color-text-light);
+  overflow: hidden;
+}
+
+.inner-page-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(80, 80, 80, 0.55); /* Grey overlay */
+  z-index: 1;
+}
+
+.inner-banner-content {
+  position: relative;
+  z-index: 2;
 }
 
 .inner-banner-content h1 {
@@ -3064,11 +3088,12 @@ section {
   font-family: var(--font-serif);
   margin-bottom: 2rem;
   letter-spacing: 0.02em;
-  color: var(--color-white);
+  color: #fff;
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.25;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .post-meta-strip {
@@ -3884,27 +3909,6 @@ section {
   }
 }
 
-/* Blog Page */
-
-/* 1. CLINICAL BANNER & BREADCRUMBS */
-.inner-page-banner {
-  padding-top: 18rem;
-  padding-bottom: 9rem;
-  background-image:
-    linear-gradient(rgba(28, 24, 20, 0.75), rgba(28, 24, 20, 0.85)),
-    url("https://placehold.co/1920x600/1C1814/C5A880?text=Skincare+Journals+Sanctuary");
-  background-size: cover;
-  background-position: center center;
-  text-align: center;
-  color: var(--color-text-light);
-}
-.inner-banner-content h1 {
-  font-size: 5.6rem;
-  font-family: var(--font-serif);
-  margin-bottom: 2rem;
-  letter-spacing: 0.03em;
-  color: var(--color-white);
-}
 .breadcrumb-path {
   display: inline-flex;
   align-items: center;
@@ -4052,13 +4056,6 @@ section {
     grid-template-columns: 1fr;
     max-width: 450px;
     margin: 0 auto;
-  }
-  .inner-page-banner {
-    padding-top: 14rem;
-    padding-bottom: 7rem;
-  }
-  .inner-banner-content h1 {
-    font-size: 3.8rem;
   }
   .filter-pills-list {
     gap: 1rem;
@@ -4213,27 +4210,6 @@ section {
   }
 }
 
-/* Category page */
-
-/* 1. CLINICAL BANNER & BREADCRUMBS */
-.inner-page-banner {
-  padding-top: 18rem;
-  padding-bottom: 9rem;
-  background-image:
-    linear-gradient(rgba(28, 24, 20, 0.75), rgba(28, 24, 20, 0.85)),
-    url("https://placehold.co/1920x600/1C1814/C5A880?text=Skincare+Journals+Sanctuary");
-  background-size: cover;
-  background-position: center center;
-  text-align: center;
-  color: var(--color-text-light);
-}
-.inner-banner-content h1 {
-  font-size: 5.6rem;
-  font-family: var(--font-serif);
-  margin-bottom: 2rem;
-  letter-spacing: 0.03em;
-  color: var(--color-white);
-}
 .breadcrumb-path {
   display: inline-flex;
   align-items: center;
@@ -4323,13 +4299,6 @@ section {
   .category-cta-content p {
     margin-bottom: 2rem;
   }
-  .inner-page-banner {
-    padding-top: 14rem;
-    padding-bottom: 7rem;
-  }
-  .inner-banner-content h1 {
-    font-size: 3.8rem;
-  }
 }
 
 /* PAGINATION STYLING */
@@ -4376,30 +4345,6 @@ section {
   border-color: var(--color-gold-light);
 }
 
-/* Search page */
-
-/* 1. CLINICAL BANNER & BREADCRUMBS */
-.inner-page-banner {
-  padding-top: 18rem;
-  padding-bottom: 9rem;
-  background-image:
-    linear-gradient(rgba(28, 24, 20, 0.75), rgba(28, 24, 20, 0.85)),
-    url("https://placehold.co/1920x600/1C1814/C5A880?text=Clinic+Search+Sanctuary");
-  background-size: cover;
-  background-position: center center;
-  text-align: center;
-  color: var(--color-text-light);
-}
-.inner-banner-content h1 {
-  font-size: 4.8rem;
-  font-family: var(--font-serif);
-  margin-bottom: 2rem;
-  letter-spacing: 0.02em;
-  color: var(--color-white);
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
 .search-subtitle {
   font-size: 1.6rem;
   color: var(--color-secondary-gold);
@@ -4614,13 +4559,6 @@ section {
   }
 }
 @media (max-width: 767px) {
-  .inner-page-banner {
-    padding-top: 14rem;
-    padding-bottom: 7rem;
-  }
-  .inner-banner-content h1 {
-    font-size: 3.2rem;
-  }
   .search-result-card {
     padding: 3rem;
   }
@@ -4724,25 +4662,6 @@ section {
   border-color: var(--color-gold-light);
 }
 
-/* 1. CLINICAL BANNER & BREADCRUMBS */
-.inner-page-banner {
-  padding-top: 18rem;
-  padding-bottom: 9rem;
-  background-image:
-    linear-gradient(rgba(28, 24, 20, 0.75), rgba(28, 24, 20, 0.85)),
-    url("https://placehold.co/1920x600/1C1814/C5A880?text=Face+Aesthetics+Sanctuary");
-  background-size: cover;
-  background-position: center center;
-  text-align: center;
-  color: var(--color-text-light);
-}
-.inner-banner-content h1 {
-  font-size: 5.6rem;
-  font-family: var(--font-serif);
-  margin-bottom: 2rem;
-  letter-spacing: 0.03em;
-  color: var(--color-white);
-}
 .breadcrumb-path {
   display: inline-flex;
   align-items: center;
@@ -5258,13 +5177,6 @@ section {
   }
   .journey-text-box {
     padding: 3rem 2.5rem;
-  }
-  .inner-page-banner {
-    padding-top: 14rem;
-    padding-bottom: 7rem;
-  }
-  .inner-banner-content h1 {
-    font-size: 3.8rem;
   }
   .quote-box {
     padding: 3.5rem;
