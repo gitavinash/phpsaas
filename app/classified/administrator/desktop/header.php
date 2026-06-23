@@ -347,6 +347,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                                 </li>
                                 <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                         team</a></li>
+                                <li><a href="team/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                             </ul>
                         </div>
                         <div class="bottom-menu">
@@ -356,6 +357,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                                 </li>
                                 <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                         team</a></li>
+                                <li><a href="team/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                             </ul>
                         </div>
                     </li>
@@ -474,22 +476,6 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                                     </li>
                                     <li><a href="career/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                             career</a></li>
-                                </ul>
-                            </div>
-                        </li>
-
-                        <li <?php echo (($postType == 'team') ? 'class="active"' : '') ?>>
-                            <a href="team/?type=list"><i class="fas fa-users"></i> Team</a>
-                            <div class="side-menu">
-                                <ul>
-                                    <li><a href="team/?type=list&status=all"><i class="fas fa-list"></i> All teams</a></li>
-                                    <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add New team</a></li>
-                                </ul>
-                            </div>
-                            <div class="bottom-menu">
-                                <ul>
-                                    <li><a href="team/?type=list&status=all"><i class="fas fa-list"></i> All teams</a></li>
-                                    <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add New team</a></li>
                                 </ul>
                             </div>
                         </li>

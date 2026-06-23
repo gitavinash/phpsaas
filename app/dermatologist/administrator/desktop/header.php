@@ -343,6 +343,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             </li>
                             <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     team</a></li>
+                            <li><a href="team/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
@@ -352,6 +353,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             </li>
                             <li><a href="team/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
                                     team</a></li>
+                            <li><a href="team/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                 </li>

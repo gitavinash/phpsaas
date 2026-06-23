@@ -1,15 +1,14 @@
 <?php
 
-$id = base64_decode($id);
+$post_id = base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
 
-if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "page, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE link_type='page' AND link_relation_id=page_id AND meta_relation_id=link_id AND page_id='{$id}' AND link_status!=301 AND link_type='page' LIMIT 1")) {
-    if (mysqli_num_rows($pageDetails) != 0) {
-        extract(mysqli_fetch_assoc($pageDetails));
-    } else {
-        exit(); ?>
+if ($postDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "post, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE link_type='post' AND link_relation_id=post_id AND meta_relation_id=link_id AND post_id='{$post_id}' AND link_status!=301 AND link_type='post' AND post_type='team' AND link_site_id=" . SITE_ID . " LIMIT 1")) {
+    if (mysqli_num_rows($postDetails) != 0) {
+        extract(mysqli_fetch_assoc($postDetails));
+    } else { ?>
         <script type="text/javascript">
             alert('Invalid action found');
-            window.location.href = 'dashboard/team/?type=list&status=all';
+            window.location.href = 'dashboard/post/?type=list&status=all';
         </script>
 <?php
     }
@@ -17,15 +16,16 @@ if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
 
 ?>
 <div class="product-add-ui">
-    <h2>Update team <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add
-                New</a></span></h2>
+    <h2>Update <?php echo (($link_status == '206') ? 'Drafted ' : '') . ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?>
+        <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span>
+    </h2>
 
     <div class="form-box">
         <form method="post" id="formData" enctype="multipart/form-data">
             <div class="left-box">
                 <div class="form-group">
                     <input type="text" class="form-control inside-shadow" name="title" placeholder="Title"
-                        value="<?php echo $page_title ?>" required="">
+                        value="<?php echo $post_title ?>" required="">
                 </div>
                 <div class="form-group">
                     <div class="url">
@@ -33,14 +33,14 @@ if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
                         $url = explode('/', ltrim(rtrim($link_url, '/'), '/'));
                         ?>
                         <p><strong>Permalink</strong></p>
-                        <p><span><?php echo SITE_DOMAIN ?>/</span></p>
+                        <p><span><?php echo SITE_DOMAIN . '/...'; ?>/</span></p>
                         <input type="text" id="url" class="form-control" value="<?php echo end($url); ?>" name="url">
                         <input type="hidden" name='oldURL' value='<?php echo $link_url ?>'>
                     </div>
                 </div>
                 <div class="form-group fullscreen-editor">
                     <textarea name="description"
-                        class="editor inside-shadow"><?php echo html_entity_decode($page_description); ?></textarea>
+                        class="editor inside-shadow"><?php echo html_entity_decode($post_description); ?></textarea>
                 </div>
                 <section>
                     <h3>Advance Options for digital marketing</h3>
@@ -63,16 +63,16 @@ if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
                         <div class="form-group">
                             <label>Meta Keywords</label>
                             <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow"
-                                placeholder="Enter keywords of the event ( use , to seprate keywords )"><?php echo $meta_keyword ?></textarea>
+                                placeholder="Enter keywords of the post ( use , to seprate keywords )"><?php echo $meta_keyword ?></textarea>
                         </div>
                         <div class="form-group">
                             <label>Canonical URL</label>
                             <input type="text" name="canonical" class="form-control inside-shadow"
                                 value="<?php echo $meta_canonical; ?>" id="canonical"
-                                placeholder="Actual URL of the team profile page">
+                                placeholder="Actual URL of the <?php echo $postType ?>">
                         </div>
                         <div class="form-group">
-                            <label>Allow search engines to show this event in search results?</label>
+                            <label>Allow search engines to show this post in search results?</label>
                             <select name="robots" class="form-control inside-shadow">
                                 <option value="index, follow"
                                     <?php echo (($meta_robots == 'index, follow') ? 'selected' : '') ?>>Yes</option>
@@ -82,8 +82,7 @@ if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
                         </div>
                     </div>
                     <div class="fb generalTab" style="display: none;">
-                        <div class="facebookPreviewBox"
-                            style="display: <?php echo (($fb_img == '') ? 'none' : 'block') ?>;">
+                        <div class="facebookPreviewBox" style="display: <?php echo (($fb_img == '') ? 'none' : 'block') ?>;">
                             <input type="hidden" name="oldFacebookImage" value="<?php echo $fb_img ?>">
                             <div class="img"><img src="<?php echo $fb_img; ?>" id="facebookPath" alt=""></div>
                             <p id="facebookChangeImage" class='changeImage'>Remove facebook feature image</p>
@@ -129,28 +128,83 @@ if ($pageDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
             <div class="right-box">
                 <div class="action-box inside-shadow">
                     <input type="button" id="updatePost" class="btn btn-green btn-block"
-                        value=" <?php echo (($page_status == 1) ? 'Update ' : 'Publish '); ?>post">
+                        value=" <?php echo (($post_status == 1) ? 'Update ' : 'Publish '); ?>post">
                     <!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
                     <input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>">
                     <input type="hidden" name="action" value="update">
-                    <input type="hidden" name='postStatus' value='<?php echo $page_status ?>'>
-                    <input type="hidden" name="id" value="<?php echo $id ?>">
-                    <input type="hidden" name="postType" value="<?php echo $page_type ?>">
+                    <input type="hidden" name='postStatus' value='<?php echo $post_status ?>'>
+                    <input type="hidden" name="id" value="<?php echo $post_id ?>">
+                    <input type="hidden" name="postType" value="<?php echo $post_type ?>">
                     <a href='<?php echo SITE_URL . $link_url; ?>' class='btn btn-block btn-blue' target='_blank'>View live
-                        team</a>
+                        post</a>
                 </div>
+                <div class="form-group">
+                    <h2>Featured</h2>
+                    <div class="action-box inside-shadow" style="padding: 10px">
+                        <input type="checkbox" value="1" name='featurePost'
+                            <?php echo (($link_is_featured == '1') ? 'checked' : '') ?>> Mark as feature
+                    </div>
+                </div>
+                <h2>Categories</h2>
+                <div class="action-box height-200 inside-shadow">
+                    <?php
+                    if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
+                        while ($category = mysqli_fetch_assoc($categoryList)) {
+                            if ($category['category_id'] == $post_category) { ?>
+                                <div class="form-group">
+                                    <input type="radio" name="category"
+                                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                                        <?php echo (($category['category_id'] == $post_category) ? 'checked' : '') ?>>
+                                    <?php echo ucwords($category['category_title']); ?>
+                                </div>
+                            <?php
+                            } else { ?>
+                                <div class="form-group">
+                                    <input type="radio" name="category"
+                                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>">
+                                    <?php echo ucwords($category['category_title']); ?>
+                                </div>
+                    <?php
+                            }
+                        }
+                    }
+                    ?>
+                </div>
+                <h2>Tags</h2>
+                <?php
+                $tagpostID = (($post_parent_id == 0) ? $post_id : $post_parent_id);
+
+                if ($tagList = mysqli_query($connection, "SELECT tag_title FROM " . TABLE_PREFIX . "tag WHERE tag_relation_id='{$tagpostID}' AND tag_site_id='" . SITE_ID . "' AND tag_type='post'")) {
+                    if (mysqli_num_rows($tagList) != 0) {
+                        while ($tagsName = mysqli_fetch_assoc($tagList)) {
+                            $tags[] = $tagsName['tag_title'];
+                        }
+                        $tags = implode(',', $tags);
+                    } else {
+                        $tags = '';
+                    }
+                }
+                ?>
+                <div class="action-box inside-shadow">
+                    <div class="form-group">
+                        <input type="text" class='tags' />
+                        <input type="hidden" id="tagValue" value="<?php echo $tags; ?>">
+                        <input type="hidden" id='tags' name="tags" value=''>
+                    </div>
+                </div>
+                <div class="tagList" style="display: none;"></div>
                 <h2>Feature Image</h2>
                 <div class="form-group featureImageUploadBox upload-btn"
-                    style="display: <?php echo (($page_image != '') ? 'none' : 'block') ?>;">
+                    style="display: <?php echo (($post_image != '') ? 'none' : 'block') ?>;">
                     <span>Set Feature Image</span>
-                    <input type="hidden" name="oldFeatureImage" value="<?php echo $page_image ?>">
+                    <input type="hidden" name="oldFeatureImage" value="<?php echo $post_image ?>">
                     <input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
                     <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload
                             limit is 300 MB</strong></p>
                 </div>
                 <div class="img-preview featureImagePreviewBox action-box"
-                    style="display: <?php echo (($page_image != '') ? 'block' : 'none') ?>;">
-                    <img src="//<?php echo SITE_DOMAIN . $page_image ?>" id="featureImagePath" alt="">
+                    style="display: <?php echo (($post_image != '') ? 'block' : 'none') ?>;">
+                    <img src="//<?php echo SITE_DOMAIN . $post_image ?>" id="featureImagePath" alt="">
                     <p id="featureChangeImage" class="btn btn-red btn-sm">Remove feature image</p>
                 </div>
             </div>
