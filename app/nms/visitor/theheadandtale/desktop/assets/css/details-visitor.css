@@ -175,6 +175,15 @@ figcaption {
 .details_box__img {
   margin: 2rem 0;
 }
+
+.details_box__content iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  margin: 2rem 0;
+  display: block;
+}
+
 /* .user_content {
   display: flex;
   justify-content: space-between;

@@ -42,6 +42,7 @@ if ($oldAuthorInfo == true) {
 
 $newsContent = strip_tags($news_description);
 $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130));
+
 ?>
 <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.css">
 <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.css">
@@ -132,6 +133,91 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
 
                 echo "<div class='details_box__content {$news_paid} " . (($showFullNews == true) ? '' : 'text-gradient') . "'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
 
+                $newsAudioSource = ((isset($news_audio) && !empty($news_audio)) ? $news_audio : '');
+
+                if (!empty($newsAudioSource)) {
+
+                    $audioTitle   = htmlspecialchars($news_title, ENT_QUOTES, 'UTF-8');
+                    $audioSource  = htmlspecialchars($newsAudioSource, ENT_QUOTES, 'UTF-8');
+                    $audioArtwork = htmlspecialchars($news_image, ENT_QUOTES, 'UTF-8');
+                    $audioSubscriptionCta = '/subscription/';
+
+                    $audioAttributes = $showFullNews
+                        ? 'preload="auto"'
+                        : 'preload="metadata"';
+
+                    $audioControlsHtml = $showFullNews
+                        ? "<button type='button'
+                            class='news-audio-player__button news-audio-player__button--primary news-audio-player__button--icon'
+                            data-audio-toggle
+                            aria-label='Play audio'>
+                        <i class='bx bx-play news-audio-player__icon'
+                           data-audio-toggle-icon
+                           aria-hidden='true'></i>
+                    </button>
+
+                    <button type='button'
+                            class='news-audio-player__button news-audio-player__button--icon'
+                            data-audio-mute
+                            aria-label='Mute audio'>
+                        <i class='bx bx-volume-full news-audio-player__icon'
+                           data-audio-mute-icon
+                           aria-hidden='true'></i>
+                    </button>
+
+                    <span class='news-audio-player__time' data-audio-current>00:00</span>
+
+                    <input type='range'
+                           class='news-audio-player__seek'
+                           min='0'
+                           max='100'
+                           step='0.1'
+                           value='0'
+                           data-audio-seek
+                           aria-label='Seek audio playback'>
+
+                    <span class='news-audio-player__time' data-audio-total>00:00</span>"
+                        : "<a href='{$audioSubscriptionCta}' class='news-audio-player__subscribe' aria-label='Subscribe now to play this audio'>Subscribe now to play this audio</a>";
+
+                    $audioElementHtml = $showFullNews
+                        ? "<audio {$audioAttributes} data-news-audio-player data-default-audio-source='{$defaultAudioSource}'>
+            <source src='{$audioSource}' type='audio/mpeg'>
+            Your browser does not support the audio element.
+        </audio>"
+                        : '';
+
+                    echo "
+    <div class='news-audio-player' data-sticky-audio-player>
+        <div class='news-audio-player__main'>
+
+            <div class='news-audio-player__artwork'>
+                <img src='{$audioArtwork}' alt='{$audioTitle}' data-audio-artwork>
+            </div>
+
+            <div class='news-audio-player__body'>
+
+                <div class='news-audio-player__header'>
+                    <h4 class='news-audio-player__title' data-audio-title>
+                        <span class='news-audio-player__title-text'>{$audioTitle}</span>
+                    </h4>
+
+                    <span class='news-audio-player__status'>
+                        " . ($showFullNews ? 'Full Access' : 'Preview') . "
+                    </span>
+                </div>
+
+                <div class='news-audio-player__controls'>
+                    {$audioControlsHtml}
+                </div>
+
+            </div>
+
+        </div>
+
+        {$audioElementHtml}
+    </div>";
+                }
+
                 if ($showFullNews == true && !empty($news_gallery)) {
                     $galleryImages = json_decode($news_gallery, true);
 
@@ -153,73 +239,376 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
 
                 ?>
                 <style>
-                .news-gallery {
-                    margin: 30px 0;
-                }
+                    .news-gallery {
+                        margin: 30px 0;
+                    }
 
-                .news-gallery__slide {
-                    margin: 0;
-                    text-align: center;
-                }
+                    .news-gallery__slide {
+                        margin: 0;
+                        text-align: center;
+                    }
 
-                .news-gallery__slide img {
-                    max-width: 100%;
-                    height: auto;
-                    display: block;
-                    margin-bottom: 10px;
-                }
-
-                .news-gallery__caption {
-                    font-size: 14px;
-                    color: #ee2a1a;
-                    margin-top: 8px;
-                    font-style: italic;
-                    line-height: 24px;
-                    padding: 10px 0px;
-                }
-
-                .slick-prev,
-                .slick-next {
-                    z-index: 1;
-                    width: 50px;
-                    height: 50px;
-                    color: aliceblue;
-                    background-color: rgba(205, 0, 0, 0.6);
-                    color: white;
-                    font-size: 20px;
-                    border: none;
-                    cursor: pointer;
-                    opacity: 1 !important;
-                    visibility: visible !important;
-                    display: block !important;
-                }
-
-                .slick-prev:before,
-                .slick-next:before {
-                    content: none !important;
-                }
-
-                .slick-prev:hover,
-                .slick-next:hover {
-                    color: #fff;
-                    background-color: rgba(205, 0, 0, 0.8);
-                }
-
-                /* Make news_box__heading--left and social_link full width on mobile */
-                @media (max-width: 767px) {
-
-                    .news_box__heading--left,
-                    .social_link {
-                        width: 100% !important;
+                    .news-gallery__slide img {
+                        max-width: 100%;
+                        height: auto;
                         display: block;
-                        text-align: right;
                         margin-bottom: 10px;
                     }
 
-                    .news_box__heading {
-                        flex-direction: column;
+                    .news-gallery__caption {
+                        font-size: 14px;
+                        color: #ee2a1a;
+                        margin-top: 8px;
+                        font-style: italic;
+                        line-height: 24px;
+                        padding: 10px 0px;
                     }
-                }
+
+                    .news-audio-player {
+                        position: fixed;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        z-index: 999;
+                        width: 100%;
+                        margin: 0;
+                        padding: 16px 20px 14px;
+                        border-radius: 18px 18px 0 0;
+                        background: linear-gradient(180deg, rgba(255, 248, 246, 0.98) 0%, rgba(255, 255, 255, 0.96) 100%);
+                        border: 1px solid rgba(238, 42, 26, 0.12);
+                        border-bottom: 0;
+                        box-shadow: 0 12px 30px rgba(28, 20, 18, 0.08);
+                        backdrop-filter: blur(14px);
+                        box-sizing: border-box;
+                    }
+
+                    .news-audio-player__main {
+                        display: flex;
+                        align-items: center;
+                        gap: 16px;
+                    }
+
+                    .news-audio-player__artwork {
+                        width: 68px;
+                        height: 68px;
+                        flex-shrink: 0;
+                        border-radius: 16px;
+                        overflow: hidden;
+                        background: rgba(238, 42, 26, 0.08);
+                        box-shadow: 0 8px 20px rgba(28, 20, 18, 0.12);
+                    }
+
+                    .news-audio-player__artwork img {
+                        width: 100%;
+                        height: 100%;
+                        display: block;
+                        object-fit: cover;
+                    }
+
+                    .news-audio-player__body {
+                        min-width: 0;
+                        flex: 1;
+                    }
+
+                    body.has-sticky-news-audio {
+                        padding-bottom: 150px;
+                    }
+
+                    .news-audio-player__header {
+                        display: flex;
+                        align-items: flex-start;
+                        justify-content: space-between;
+                        gap: 12px;
+                        margin-bottom: 12px;
+                    }
+
+                    .news-audio-player__title-wrap {
+                        min-width: 0;
+                        flex: 1;
+                        overflow: hidden;
+                    }
+
+                    .news-audio-player__title {
+                        margin: 0;
+                        font-size: 18px;
+                        line-height: 1.2;
+                        color: #171717;
+                        white-space: nowrap;
+                        overflow: hidden;
+                    }
+
+                    .news-audio-player__title-text {
+                        display: inline-block;
+                        font-weight: 600;
+                        color: #2c2c2c;
+                    }
+
+                    .news-audio-player__title.is-marquee .news-audio-player__title-text {
+                        animation-name: news-audio-marquee;
+                        animation-duration: var(--marquee-duration, 8s);
+                        animation-timing-function: linear;
+                        animation-iteration-count: infinite;
+                        animation-fill-mode: both;
+                        will-change: transform;
+                    }
+
+                    .news-audio-player__status {
+                        flex-shrink: 0;
+                        padding: 6px 10px;
+                        border-radius: 999px;
+                        background: rgba(238, 42, 26, 0.1);
+                        color: #ee2a1a;
+                        font-size: 12px;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        letter-spacing: 0.08em;
+                    }
+
+                    .news-audio-player__controls {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    .news-audio-player__subscribe {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        min-height: 38px;
+                        padding: 0 18px;
+                        border-radius: 999px;
+                        background: #ee2a1a;
+                        color: #fff;
+                        font-size: 13px;
+                        font-weight: 700;
+                        text-decoration: none;
+                        white-space: nowrap;
+                    }
+
+                    .news-audio-player__subscribe:hover {
+                        background: #d92616;
+                        color: #fff;
+                    }
+
+                    .news-audio-player__button {
+                        min-width: 64px;
+                        height: 38px;
+                        padding: 0 14px;
+                        border: 0;
+                        border-radius: 999px;
+                        background: rgba(238, 42, 26, 0.1);
+                        color: #8f1f14;
+                        font-size: 13px;
+                        font-weight: 700;
+                        cursor: pointer;
+                        transition: background 0.2s ease, color 0.2s ease;
+                    }
+
+                    .news-audio-player__button--icon {
+                        width: 42px;
+                        min-width: 42px;
+                        padding: 0;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .news-audio-player__icon {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 18px;
+                        height: 18px;
+                        font-size: 20px;
+                        line-height: 1;
+                    }
+
+                    .news-audio-player__button:hover {
+                        background: rgba(238, 42, 26, 0.16);
+                    }
+
+                    .news-audio-player__button--primary {
+                        background: #ee2a1a;
+                        color: #fff;
+                    }
+
+                    .news-audio-player__button--primary:hover {
+                        background: #d92616;
+                    }
+
+                    .news-audio-player__time {
+                        min-width: 42px;
+                        color: #5c5c5c;
+                        font-size: 12px;
+                        font-weight: 700;
+                        font-variant-numeric: tabular-nums;
+                        text-align: center;
+                    }
+
+                    .news-audio-player__seek {
+                        flex: 1;
+                        min-width: 110px;
+                        margin: 0;
+                        appearance: none;
+                        height: 6px;
+                        border-radius: 999px;
+                        outline: none;
+                        background: linear-gradient(to right, #ee2a1a 0%, #ee2a1a var(--seek-progress, 0%), rgba(238, 42, 26, 0.18) var(--seek-progress, 0%), rgba(238, 42, 26, 0.18) 100%);
+                    }
+
+                    .news-audio-player__seek::-webkit-slider-thumb {
+                        appearance: none;
+                        width: 16px;
+                        height: 16px;
+                        border-radius: 50%;
+                        background: #ee2a1a;
+                        box-shadow: 0 0 0 3px rgba(238, 42, 26, 0.18);
+                        cursor: pointer;
+                    }
+
+                    .news-audio-player__seek::-moz-range-thumb {
+                        width: 16px;
+                        height: 16px;
+                        border: 0;
+                        border-radius: 50%;
+                        background: #ee2a1a;
+                        box-shadow: 0 0 0 3px rgba(238, 42, 26, 0.18);
+                        cursor: pointer;
+                    }
+
+                    .news-audio-player__seek::-moz-range-track {
+                        height: 6px;
+                        border-radius: 999px;
+                        background: transparent;
+                    }
+
+                    .news-audio-player audio {
+                        width: 100%;
+                        display: none;
+                    }
+
+                    @keyframes news-audio-marquee {
+
+                        0%,
+                        12% {
+                            transform: translateX(0);
+                        }
+
+                        88%,
+                        100% {
+                            transform: translateX(calc(-1 * var(--marquee-shift, 0px)));
+                        }
+                    }
+
+                    .slick-prev,
+                    .slick-next {
+                        z-index: 1;
+                        width: 50px;
+                        height: 50px;
+                        color: aliceblue;
+                        background-color: rgba(205, 0, 0, 0.6);
+                        color: white;
+                        font-size: 20px;
+                        border: none;
+                        cursor: pointer;
+                        opacity: 1 !important;
+                        visibility: visible !important;
+                        display: block !important;
+                    }
+
+                    .slick-prev:before,
+                    .slick-next:before {
+                        content: none !important;
+                    }
+
+                    .slick-prev:hover,
+                    .slick-next:hover {
+                        color: #fff;
+                        background-color: rgba(205, 0, 0, 0.8);
+                    }
+
+                    /* Make news_box__heading--left and social_link full width on mobile */
+                    @media (max-width: 767px) {
+
+                        body.has-sticky-news-audio {
+                            padding-bottom: 184px;
+                        }
+
+                        .news-audio-player {
+                            padding: 14px 12px 12px;
+                            border-radius: 16px 16px 0 0;
+                        }
+
+                        .news-audio-player__main {
+                            gap: 12px;
+                        }
+
+                        .news-audio-player__artwork {
+                            width: 56px;
+                            height: 56px;
+                            border-radius: 14px;
+                        }
+
+                        .news-audio-player__header {
+                            align-items: flex-start;
+                        }
+
+                        .news-audio-player__status {
+                            font-size: 11px;
+                            padding: 5px 8px;
+                        }
+
+                        .news-audio-player__controls {
+                            flex-wrap: wrap;
+                            gap: 8px;
+                        }
+
+                        .news-audio-player__subscribe {
+                            min-height: 34px;
+                            padding: 0 14px;
+                            font-size: 12px;
+                        }
+
+                        .news-audio-player__button {
+                            height: 34px;
+                            padding: 0 12px;
+                            font-size: 12px;
+                        }
+
+                        .news-audio-player__button--icon {
+                            width: 38px;
+                            min-width: 38px;
+                            padding: 0;
+                        }
+
+                        .news-audio-player__icon {
+                            width: 16px;
+                            height: 16px;
+                            font-size: 18px;
+                        }
+
+                        .news-audio-player__time {
+                            min-width: 38px;
+                        }
+
+                        .news-audio-player__seek {
+                            order: 3;
+                            width: 100%;
+                            min-width: 100%;
+                        }
+
+                        .news_box__heading--left,
+                        .social_link {
+                            width: 100% !important;
+                            display: block;
+                            text-align: right;
+                            margin-bottom: 10px;
+                        }
+
+                        .news_box__heading {
+                            flex-direction: column;
+                        }
+                    }
                 </style>
                 <?php
 
@@ -340,28 +729,206 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
 <script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
 <script src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js"></script>
 <script>
-(function($) {
-    $(function() {
-        const $gallery = $('.news-gallery');
+    (function($) {
+        $(function() {
+            const $gallery = $('.news-gallery');
+            const stickyAudioPlayer = document.querySelector('[data-sticky-audio-player]');
+            const audio = document.querySelector('[data-news-audio-player]');
+            const audioTitle = document.querySelector('[data-audio-title]');
+            const audioTitleText = audioTitle ? audioTitle.querySelector('.news-audio-player__title-text') : null;
+            const audioToggle = document.querySelector('[data-audio-toggle]');
+            const audioMute = document.querySelector('[data-audio-mute]');
+            const audioSeek = document.querySelector('[data-audio-seek]');
+            const audioCurrent = document.querySelector('[data-audio-current]');
+            const audioTotal = document.querySelector('[data-audio-total]');
+            const audioArtwork = document.querySelector('[data-audio-artwork]');
+            const audioToggleIcon = document.querySelector('[data-audio-toggle-icon]');
+            const audioMuteIcon = document.querySelector('[data-audio-mute-icon]');
 
-        if (!$gallery.length || typeof $.fn.slick !== 'function') {
-            return;
-        }
+            const syncMarqueeTitle = function() {
+                if (!audioTitle || !audioTitleText) {
+                    return;
+                }
 
-        const slideCount = $gallery.children().length;
+                audioTitle.classList.remove('is-marquee');
+                audioTitle.style.removeProperty('--marquee-shift');
 
-        $gallery.slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            dots: true,
-            arrows: true,
-            adaptiveHeight: true,
-            infinite: slideCount > 1,
-            prevArrow: '<button type="button" class="slick-prev" aria-label="Previous slide">&#8249;</button>',
-            nextArrow: '<button type="button" class="slick-next" aria-label="Next slide">&#8250;</button>'
+                const overflowWidth = Math.ceil(audioTitleText.scrollWidth - audioTitle.clientWidth);
+                if (overflowWidth > 0) {
+                    const travelSeconds = Math.max(4, overflowWidth / 40);
+                    const totalSeconds = travelSeconds + 1;
+                    audioTitle.style.setProperty('--marquee-shift', overflowWidth + 'px');
+                    audioTitle.style.setProperty('--marquee-duration', totalSeconds + 's');
+                    audioTitle.classList.add('is-marquee');
+                }
+            };
+
+            if (stickyAudioPlayer) {
+                document.body.classList.add('has-sticky-news-audio');
+                window.addEventListener('load', syncMarqueeTitle);
+                window.addEventListener('resize', syncMarqueeTitle);
+                syncMarqueeTitle();
+            }
+
+            if (audio) {
+
+                const formatDuration = function(totalSeconds) {
+                    if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
+                        return '00:00';
+                    }
+
+                    const hours = Math.floor(totalSeconds / 3600);
+                    const minutes = Math.floor((totalSeconds % 3600) / 60);
+                    const seconds = Math.floor(totalSeconds % 60);
+
+                    if (hours > 0) {
+                        return [hours, minutes, seconds].map(function(unit, index) {
+                            return index === 0 ? String(unit) : String(unit).padStart(2, '0');
+                        }).join(':');
+                    }
+
+                    return [minutes, seconds].map(function(unit) {
+                        return String(unit).padStart(2, '0');
+                    }).join(':');
+                };
+
+                const applyFallbackSource = function() {
+                    const defaultSource = audio.getAttribute('data-default-audio-source');
+                    const sourceNode = audio.querySelector('source');
+
+                    if (!defaultSource || !sourceNode || sourceNode.getAttribute('src') === defaultSource) {
+                        return;
+                    }
+
+                    sourceNode.setAttribute('src', defaultSource);
+                    audio.load();
+                };
+
+                const syncButtonState = function() {
+                    if (audioToggle) {
+                        audioToggle.setAttribute('aria-label', audio.paused ? 'Play audio' : 'Pause audio');
+                    }
+
+                    if (audioToggleIcon) {
+                        audioToggleIcon.className = audio.paused ?
+                            'bx bx-play news-audio-player__icon' :
+                            'bx bx-pause news-audio-player__icon';
+                    }
+
+                    if (audioMute) {
+                        audioMute.setAttribute('aria-label', audio.muted ? 'Unmute audio' : 'Mute audio');
+                    }
+
+                    if (audioMuteIcon) {
+                        audioMuteIcon.className = audio.muted ?
+                            'bx bx-volume-mute news-audio-player__icon' :
+                            'bx bx-volume-full news-audio-player__icon';
+                    }
+                };
+
+                const syncSeekState = function() {
+                    if (!audioSeek) {
+                        return;
+                    }
+
+                    const progress = audio.duration > 0 ?
+                        (audio.currentTime / audio.duration) * 100 :
+                        0;
+
+                    audioSeek.value = progress;
+                    audioSeek.style.setProperty('--seek-progress', progress + '%');
+                };
+
+                const syncTimeState = function() {
+                    if (audioCurrent) {
+                        audioCurrent.textContent = formatDuration(audio.currentTime);
+                    }
+
+                    if (audioTotal) {
+                        audioTotal.textContent = formatDuration(audio.duration);
+                    }
+
+                    syncSeekState();
+                };
+
+                audio.addEventListener('error', applyFallbackSource);
+                const sourceNode = audio.querySelector('source');
+                if (sourceNode) {
+                    sourceNode.addEventListener('error', applyFallbackSource);
+                }
+
+                if (audioArtwork) {
+                    audioArtwork.addEventListener('error', function() {
+                        const fallbackImage = audioArtwork.getAttribute('data-fallback-image');
+                        if (fallbackImage && audioArtwork.getAttribute('src') !== fallbackImage) {
+                            audioArtwork.setAttribute('src', fallbackImage);
+                        }
+                    });
+                }
+
+                if (audioToggle) {
+                    audioToggle.addEventListener('click', function() {
+                        if (audio.paused) {
+                            audio.play();
+                        } else {
+                            audio.pause();
+                        }
+                    });
+                }
+
+                if (audioMute) {
+                    audioMute.addEventListener('click', function() {
+                        audio.muted = !audio.muted;
+                        syncButtonState();
+                    });
+                }
+
+                if (audioSeek) {
+                    audioSeek.addEventListener('input', function() {
+                        const progress = Number(audioSeek.value) || 0;
+                        audioSeek.style.setProperty('--seek-progress', progress + '%');
+
+                        if (audio.duration > 0) {
+                            audio.currentTime = (progress / 100) * audio.duration;
+                            syncTimeState();
+                        }
+                    });
+                }
+
+                audio.addEventListener('loadedmetadata', syncTimeState);
+                audio.addEventListener('durationchange', syncTimeState);
+                audio.addEventListener('timeupdate', syncTimeState);
+                audio.addEventListener('play', syncButtonState);
+                audio.addEventListener('pause', syncButtonState);
+                audio.addEventListener('volumechange', syncButtonState);
+                audio.addEventListener('ended', syncButtonState);
+
+                syncButtonState();
+                syncTimeState();
+
+                if (audio.error) {
+                    applyFallbackSource();
+                }
+            }
+
+            if (!$gallery.length || typeof $.fn.slick !== 'function') {
+                return;
+            }
+
+            const slideCount = $gallery.children().length;
+
+            $gallery.slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true,
+                adaptiveHeight: true,
+                infinite: slideCount > 1,
+                prevArrow: '<button type="button" class="slick-prev" aria-label="Previous slide">&#8249;</button>',
+                nextArrow: '<button type="button" class="slick-next" aria-label="Next slide">&#8250;</button>'
+            });
         });
-    });
-})(window.jQuery);
+    })(window.jQuery);
 </script>
 <?php
 
