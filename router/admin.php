@@ -21,7 +21,7 @@ if (ADMIN_BASE_URL == '/sw.js') {
 // Serves edit.php as a standalone HTML document,
 // bypassing the normal header/footer dashboard wrapping.
 // ==========================================================
-if (rtrim(ADMIN_BASE_URL, '/') === '/editor') {
+if (preg_match('#^/editor(?:/|$)#', rtrim(ADMIN_BASE_URL, '/'))) {
 	if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE === true && (!isset($_COOKIE['user_type']) || base64_decode($_COOKIE['user_type']) !== 'administrator')) {
 		setcookie('user_type', base64_encode('administrator'), time() + 3600, '/');
 		header("Location: " . ACTIVE_URL);

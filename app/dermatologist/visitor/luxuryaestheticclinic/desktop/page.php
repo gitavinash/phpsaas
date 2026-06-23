@@ -3,24 +3,47 @@
 require_once 'header.php';
 
 ?>
-<!-- Page Header -->
-<section class="inner-page-header" style="background: var(--bg-2, #f8fafc); padding: 60px 0 40px; border-bottom: 1px solid var(--border, #e2e8f0); margin-bottom: 40px;">
-    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 15px; box-sizing: border-box;">
-        <h1 style="font-size: 36px; font-weight: 800; color: var(--text-0, #1e293b); margin: 0 0 10px; font-family: 'Manrope', sans-serif;"><?php echo ucwords($page_title) ?></h1>
-        <div class="breadcrumbs" style="font-size: 14px; color: var(--text-2, #64748b); font-family: 'Manrope', sans-serif;">
-            <a href="/" style="color: var(--accent); text-decoration: none; font-weight: 500;">Home</a> 
-            <span style="margin: 0 8px;">&rsaquo;</span> 
-            <span><?php echo ucwords($page_title) ?></span>
+
+<!-- 2. CLINICAL HEADER BANNER & BREADCRUMBS -->
+<section class="inner-page-banner" id="banner" style="background-image: url(<?php echo $page_image ?>);">
+    <div class="container inner-banner-content">
+        <h1><?php echo $page_title; ?></h1>
+        <div class="breadcrumb-path">
+            <a href="/">Home</a>
+            <span><i
+                    data-lucide="chevron-right"
+                    style="width: 14px; height: 14px"></i></span>
+            <span style="color: var(--color-primary-gold)"><?php echo $page_title; ?></span>
         </div>
     </div>
 </section>
 
-<!-- Page Content -->
-<main class="page-content-wrapper" style="font-family: 'Manrope', sans-serif;">
-    <?php echo $page_description; ?>
-</main>
+<!-- 3. CINEMATIC VIDEO SHOWCASE -->
+<section class="cinematic-video-section" id="cinematicVideo">
+    <div class="container text-center reveal">
+        <span class="section-tag">Clinical Excellence Tour</span>
+        <h2>Experience Our Scientific Care</h2>
+        <p class="max-width-600" style="margin-bottom: 4rem">
+            Take a virtual journey inside our private South Delhi suites and watch
+            verified patient growth journeys in action:
+        </p>
 
+        <div class="video-container-box">
+            <div class="widescreen-frame">
+                <iframe
+                    allowfullscreen
+                    allow="autoplay"
+                    title="Laser Session Video Vlog"
+                    src="https://player.vimeo.com/video/1133358154?color=C5A880&amp;title=0&amp;portrait=0&amp;byline=0"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 12. CONSULTATION FORM SECTION (Reused lead capture) -->
 <?php
+
+require_once 'widgets/recent-articles.php';
 
 require_once 'footer.php';
 

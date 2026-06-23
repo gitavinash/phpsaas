@@ -34,8 +34,8 @@ require_once 'header.php';
     <div class="about-hero-img-wrapper reveal">
       <div class="about-hero-img-container">
         <img
-          src="https://placehold.co/1200x800/FAF7F2/C5A880?text=Luxury+Aesthetic+Oasis"
-          alt="Luxury Aesthetics Premium Lounge interior"
+          src="<?php echo $page_image ?>"
+          alt="<?php echo $page_title ?>"
           class="about-hero-img" />
       </div>
     </div>
@@ -185,32 +185,9 @@ require_once 'header.php';
   </div>
 </section>
 
-<!-- 6. CLINICAL METRICS (Stats Bar) -->
-<section class="trust-bar" id="stats">
-  <div class="container trust-bar-grid">
-    <div class="counter-item reveal reveal-stagger">
-      <span class="counter-number" data-target="15" data-suffix="+">0</span>
-      <span class="counter-label">Expert Dermatologists</span>
-    </div>
-    <div class="counter-item reveal reveal-stagger">
-      <span class="counter-number" data-target="2000" data-suffix="+">0</span>
-      <span class="counter-label">Happy Patients</span>
-    </div>
-    <div class="counter-item reveal reveal-stagger">
-      <span class="counter-number" data-target="20" data-suffix="">0</span>
-      <span class="counter-label">Private Treatment Rooms</span>
-    </div>
-    <div class="counter-item reveal reveal-stagger">
-      <span class="counter-number" data-target="10" data-suffix="+">0</span>
-      <span class="counter-label">Years of Excellence</span>
-    </div>
-  </div>
-</section>
 <?php
 
-require_once 'widgets/social-proof.php';
-
-require_once 'widgets/recent-articles.php';
+require_once 'widgets/trust-bar.php';
 
 require_once 'footer.php';
 
