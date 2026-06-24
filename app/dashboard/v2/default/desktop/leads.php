@@ -65,7 +65,7 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="leads/list/?leadStatus=5">
+        <a href="leads/list/?leadStatus=4">
             <div class="widget-setting-info">
                 <div class="feature-icon" style="background: #FFCCCC;">
                     <i class="fi-rr-cross" style="color: #333;"></i>
