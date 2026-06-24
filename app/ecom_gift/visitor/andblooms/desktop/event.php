@@ -1,8 +1,5 @@
 <?php
 
-echo $event_id;
-exit();
-
 $whatsappUrl = 'https://wa.me/919910744119?text=' . ((isset($link_type)) ? (($link_type == 'event') ? urlencode('i want to know about ' . $event_title . ' ' . SITE_URL . ACTIVE_URL) : 'Hello') : 'Hello');
 
 // First, fetch the tag for this event
