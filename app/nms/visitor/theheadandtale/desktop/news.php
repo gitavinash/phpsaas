@@ -180,7 +180,7 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                         : "<a href='{$audioSubscriptionCta}' class='news-audio-player__subscribe' aria-label='Subscribe now to play this audio'>Subscribe now to play this audio</a>";
 
                     $audioElementHtml = $showFullNews
-                        ? "<audio {$audioAttributes} data-news-audio-player data-default-audio-source='{$defaultAudioSource}'>
+                        ? "<audio {$audioAttributes} data-news-audio-player data-default-audio-source='{$newsAudioSource}'>
             <source src='{$audioSource}' type='audio/mpeg'>
             Your browser does not support the audio element.
         </audio>"
