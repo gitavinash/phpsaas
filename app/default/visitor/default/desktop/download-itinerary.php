@@ -25,7 +25,7 @@ if (SITE_ID == 53) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title><?php echo $tour_package_title . ' | ' . SITE_NAME ?></title>
+    <title><?php echo $itinerary_title . ' | ' . SITE_NAME ?></title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -108,7 +108,7 @@ if (SITE_ID == 53) {
         </div>
         <!-- Hero Section -->
         <div class="relative h-[400px] overflow-hidden">
-            <img src="<?php echo $gallery_image ?>" alt="<?php echo $tour_package_title ?>"
+            <img src="<?php echo $gallery_image ?>" alt="<?php echo $itinerary_title ?>"
                 class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
             <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
@@ -116,7 +116,7 @@ if (SITE_ID == 53) {
                     <div class="flex justify-between items-end">
                         <div>
                             <h1 class="text-4xl font-bold mb-3 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
-                                <?php echo $tour_package_title ?></h1>
+                                <?php echo $itinerary_title ?></h1>
                             <div class="flex items-center gap-6 text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
                                 <div class="flex items-center gap-2">
                                     <i class="ri-map-pin-line"></i>
@@ -151,7 +151,7 @@ if (SITE_ID == 53) {
         <!-- Tour Overview -->
         <div class="p-6 border-b border-gray-200">
             <h2 class="text-xl font-semibold mb-4">Tour Overview</h2>
-            <p class="mb-8"><?php echo $tour_package_overview ?></p>
+            <p class="mb-8"><?php echo $$itinerary_overview ?></p>
         </div>
         <div class="p-6 border-b border-gray-200 pdf-page">
             <div class="bg-blue-50 p-4 rounded-lg mb-4 mt-8">
@@ -287,7 +287,7 @@ if (SITE_ID == 53) {
                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden mb-5">
                     <div class="bg-primary/10 p-4 border-b border-gray-200">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-gray-800"><?php echo $tour_package_title ?> -
+                            <h3 class="text-xl font-semibold text-gray-800"><?php echo $itinerary_title ?> -
                                 Quotation
                             </h3>
                             <div class="px-3 py-1 bg-primary text-white rounded-full text-sm font-medium">Best Value

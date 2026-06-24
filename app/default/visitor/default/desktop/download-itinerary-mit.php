@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download PDF of <?php echo $tour_package_title . ' Quotation | ' . SITE_NAME ?></title>
+    <title>Download PDF of <?php echo $itinerary_title . ' Quotation | ' . SITE_NAME ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
@@ -101,7 +101,7 @@
 
         <section class="page">
             <header class="hero">
-                <img src="<?php echo $tour_package_image ?>" alt="<?php echo $tour_package_title ?>">
+                <img src="<?php echo $tour_package_image ?>" alt="<?php echo $itinerary_title ?>">
                 <div class="refid">
                     Ref. id: <?php echo $quoteId ?>
                 </div>
@@ -154,7 +154,7 @@
                         <h2>Tour Overview</h2>
                     </div>
 
-                    <p class="paragraph"><?php echo $tour_package_overview ?></p>
+                    <p class="paragraph"><?php echo $itinerary_overview ?></p>
 
                 </div>
             </div>

@@ -145,6 +145,7 @@ function getQuotationDetails($connection, $quotationId)
                 'gallery_image' => $gallery_image,
                 'gallery_image_list' => $gallery_image_list,
                 'itinerary_title' => $quotationDescription['title'],
+                'itinerary_overview' => $quotationDescription['overview'],
                 'itineraries' => $quotationDescription['itinerary'],
                 'inclusions' => explode(',', $quotationDescription['inclusions']),
                 'exclusions' => explode(',', $quotationDescription['exclusions']),
