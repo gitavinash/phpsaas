@@ -39,7 +39,7 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="leads/list/?leadStatus=0">
+        <a href="leads/list/?leadStatus=2">
             <div class="widget-setting-info">
                 <div class="feature-icon" style="background: #F2F3F4;">
                     <i class="fi-rr-hourglass-end" style="color: #333;"></i>
@@ -52,7 +52,7 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="leads/list/?leadStatus=2">
+        <a href="leads/list/?leadStatus=3">
             <div class="widget-setting-info">
                 <div class="feature-icon" style="background: #FED699;">
                     <i class="fi-rr-comment" style="color: #333;"></i>
@@ -65,7 +65,7 @@
         </a>
     </div>
     <div class="widget box-2-5">
-        <a href="leads/list/?leadStatus=3">
+        <a href="leads/list/?leadStatus=5">
             <div class="widget-setting-info">
                 <div class="feature-icon" style="background: #FFCCCC;">
                     <i class="fi-rr-cross" style="color: #333;"></i>
