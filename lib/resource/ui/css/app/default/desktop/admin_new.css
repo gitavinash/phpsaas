@@ -604,6 +604,7 @@ textarea.form-control {
   padding: 10px 30px;
   border-radius: 4px;
   color: #fff;
+  cursor: pointer;
 }
 
 .form-group label {
@@ -1321,6 +1322,24 @@ li.imageBox img {
   list-style: none;
   margin: 0 auto;
   padding: 0;
+}
+
+.audioFileUploadBox {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.audioFileUploadBox span {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  background: #00609e;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  line-height: 20px;
+  text-align: center;
 }
 
 .featureImageUploadBox {

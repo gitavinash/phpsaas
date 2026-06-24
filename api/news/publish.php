@@ -11,6 +11,30 @@ function publish($connection, $data)
 
         if (isset($category)) {
 
+
+            $news_audio = '';
+
+            if (isset($_FILES['audioFile']) && $_FILES['audioFile']['error'] === UPLOAD_ERR_OK) {
+                $_FILES['files'] = array(
+                    'name' => array($_FILES['audioFile']['name']),
+                    'type' => array($_FILES['audioFile']['type']),
+                    'tmp_name' => array($_FILES['audioFile']['tmp_name']),
+                    'error' => array($_FILES['audioFile']['error']),
+                    'size' => array($_FILES['audioFile']['size'])
+                );
+
+                require_once MODULES . 'fileUploader.php';
+
+                if (!empty($files)) {
+                    $uploadedFiles = json_decode($files, true);
+                    if (is_array($uploadedFiles) && isset($uploadedFiles[0]['path'])) {
+                        $news_audio = $uploadedFiles[0]['path'];
+                    }
+                }
+
+                unset($_FILES['files']);
+            }
+
             require_once MODULES . 'imageUploader.php';
 
             if (isset($image['featureImage'])) {
@@ -61,7 +85,7 @@ function publish($connection, $data)
 
                         $newsOwnerId = ((isset($_POST['authorId'][0])) ? (($_POST['authorId'][0] == '') ? USER_ID : $_POST['authorId'][0]) : USER_ID);
 
-                        $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "news(news_site_id, news_image, news_gallery, news_thumbnail, news_title, news_description, news_category, news_owner_id, news_paid, news_mrp, news_price, news_status, news_type, news_published) VALUES(" . SITE_ID . ", '{$featureImage}', '{$gallery}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', {$newsOwnerId}, '{$paid}', '{$amount}', '{$amount}', '1', 'news', NOW())");
+                        $addNewPost = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "news(news_site_id, news_image, news_gallery, news_thumbnail, news_title, news_description, news_category, news_owner_id, news_paid, news_mrp, news_price, news_audio, news_status, news_type, news_published) VALUES(" . SITE_ID . ", '{$featureImage}', '{$gallery}', '{$thumbnailImage}', '{$title}', '{$description}', '{$category}', {$newsOwnerId}, '{$paid}', '{$amount}', '{$amount}', '{$news_audio}', '1', 'news', NOW())");
                         $postID = mysqli_insert_id($connection);
 
                         $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_is_featured, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$postID}', '{$link_status}', 'news', '{$featurePost}', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");

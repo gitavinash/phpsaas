@@ -5,9 +5,23 @@ require_once LOGIN_CHECK;
 if (isset($_FILES["files"])) {
 
 	/** Supported file extensions */
-	$validFileExtension = array('png', 'gif', 'jpg', 'jpeg', 'pdf', 'doc', 'docx', 'xlsx');
-	/** Supported image types for compression */
-	$validFileType = array(PNG_IMAGE, GIF_IMAGE, JPG_IMAGE, JPEG_IMAGE);
+	$validFileExtension = array(
+		'pdf',
+		'doc',
+		'docx',
+		'xlsx',
+		'mp3',
+		'wav',
+		'm4a',
+		'aac',
+		'ogg',
+		'webm',
+		'mp4',
+		'mov',
+		'avi',
+		'mkv',
+		'mpeg'
+	);
 
 	/** Multiple file upload manager */
 	for ($i = 0; $i < count($_FILES["files"]["name"]); $i++) {
@@ -30,7 +44,7 @@ if (isset($_FILES["files"])) {
 				if (!is_dir($uploadPath)) {
 					mkdir($uploadPath, 0755, true);
 				}
-				
+
 				/** For non-image files (PDF, DOC, etc.) */
 				$originalUploadDir = $uploadPath;
 				if (!is_dir($originalUploadDir)) mkdir($originalUploadDir, 0755, true);
@@ -39,7 +53,7 @@ if (isset($_FILES["files"])) {
 				if (!move_uploaded_file($_FILES["files"]['tmp_name'][$i], $originalUploadFile)) {
 					$msg = 'Unable to move file';
 				}
-				
+
 				/** Insert the file details into the database */
 				mysqli_query($connection, 'START TRANSACTION');
 
@@ -61,7 +75,7 @@ if (isset($_FILES["files"])) {
 					'type' => $filetype
 				);
 			} else {
-				echo 'Invalid file extension';
+				echo 'Invalid file type';
 			}
 		}
 	}

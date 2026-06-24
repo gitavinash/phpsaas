@@ -104,6 +104,31 @@ function updateNewsWorkflow($connection, $data, $workflow = 'publish', $schedule
 
     extract(mysqli_fetch_assoc($checkPost));
 
+    $news_audio = '';
+
+    if (isset($_FILES['audioFile']) && $_FILES['audioFile']['error'] === UPLOAD_ERR_OK) {
+        $_FILES['files'] = array(
+            'name' => array($_FILES['audioFile']['name']),
+            'type' => array($_FILES['audioFile']['type']),
+            'tmp_name' => array($_FILES['audioFile']['tmp_name']),
+            'error' => array($_FILES['audioFile']['error']),
+            'size' => array($_FILES['audioFile']['size'])
+        );
+
+        require_once MODULES . 'fileUploader.php';
+
+        if (!empty($files)) {
+            $uploadedFiles = json_decode($files, true);
+            if (is_array($uploadedFiles) && isset($uploadedFiles[0]['path'])) {
+                $news_audio = $uploadedFiles[0]['path'];
+            }
+        }
+
+        unset($_FILES['files']);
+    }
+
+    $news_audio = (($news_audio == '') ? $oldAudioFile : $news_audio);
+
     require_once MODULES . 'imageUploader.php';
 
     $currentUserId = defined('USER_ID') ? USER_ID : 0;
@@ -228,10 +253,10 @@ function updateNewsWorkflow($connection, $data, $workflow = 'publish', $schedule
     // Only update news_published to NOW() when publishing from draft (news_status 206)
     if ($workflow === 'publish' && isset($postStatus) && (int)$postStatus === 2) {
         // Publishing from draft (news_status 206)
-        $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_gallery='{$newGallery}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_mrp='{$amount}', news_price='{$amount}', news_status='{$targetNewsStatus}', news_paid='{$paid}', news_published=NOW() WHERE news_id='{$id}'");
+        $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_gallery='{$newGallery}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_mrp='{$amount}', news_price='{$amount}', news_status='{$targetNewsStatus}', news_paid='{$paid}', news_published=NOW(), news_audio='{$news_audio}' WHERE news_id='{$id}'");
     } else {
         // Normal publish or other workflow: do not change news_published
-        $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_gallery='{$newGallery}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_mrp='{$amount}', news_price='{$amount}', news_status='{$targetNewsStatus}', news_paid='{$paid}' WHERE news_id='{$id}'");
+        $updatePost = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "news SET news_image='{$featureImage}', news_thumbnail='{$thumbnailImage}', news_gallery='{$newGallery}', news_owner_id='{$newsOwnerId}', news_title='{$title}', news_description='{$description}', news_category='{$category}', news_mrp='{$amount}', news_price='{$amount}', news_status='{$targetNewsStatus}', news_paid='{$paid}', news_audio='{$news_audio}' WHERE news_id='{$id}'");
     }
 
     $updateMeta = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "meta SET meta_title='{$meta_title}', meta_description='{$meta_desc}', meta_canonical='{$canonical}', meta_keyword='{$meta_key}', meta_relation_id='{$linkID}', fb_img='{$facebookImage}', fb_title='{$fb_title}', fb_desc='{$fb_desc}', tw_img='{$twitterImage}', tw_title='{$tw_title}', tw_desc='{$tw_desc}' WHERE meta_relation_id='{$link_id}'");

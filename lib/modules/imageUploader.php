@@ -11,6 +11,8 @@ if (isset($_FILES)) {
 		if ($imageName != 'gallery') {
 
 			if ($imageValue['error'] == 0) {
+				$uploadMediaPath = '';
+				$uploadMediaLink = '';
 
 				$validFileExtension = array('png', 'gif', 'jpg', 'jpeg');
 				$validFileType = array(PNG_IMAGE, GIF_IMAGE, JPG_IMAGE, JPEG_IMAGE);
@@ -19,6 +21,10 @@ if (isset($_FILES)) {
 				$filetype = $imageValue['type'];
 				$extension = explode('.', $filename);
 				$fileExtension = end($extension);
+
+				if (!in_array($fileExtension, $validFileExtension) || !in_array($filetype, $validFileType)) {
+					continue;
+				}
 
 				if (in_array($fileExtension, $validFileExtension)) {
 					if (in_array($filetype, $validFileType)) {
@@ -211,17 +217,16 @@ if (isset($_FILES)) {
 							$msg = 'Unable to move file';
 						}
 					}
-				} else {
-
-					echo 'File not uploaded';
 				}
 
-				$image[$imageName] = $uploadMediaPath;
-				$image[$imageName . '_url'] = $uploadMediaLink;
+				if ($uploadMediaPath !== '' && $uploadMediaLink !== '') {
+					$image[$imageName] = $uploadMediaPath;
+					$image[$imageName . '_url'] = $uploadMediaLink;
 
-				// Extract the single upload image string to variables
+					// Extract the single upload image string to variables
 
-				extract($image);
+					extract($image);
+				}
 			}
 		}
 	}

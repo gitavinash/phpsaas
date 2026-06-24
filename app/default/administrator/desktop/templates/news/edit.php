@@ -7,10 +7,10 @@ if ($postDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
         extract(mysqli_fetch_assoc($postDetails));
     } else {
 ?>
-<script type="text/javascript">
-alert('Invalid action found');
-window.location.href = 'dashboard/news/?type=list&status=all';
-</script>
+        <script type="text/javascript">
+            alert('Invalid action found');
+            window.location.href = 'dashboard/news/?type=list&status=all';
+        </script>
 <?php
     }
 }
@@ -63,15 +63,15 @@ window.location.href = 'dashboard/news/?type=list&status=all';
                     if ($theme == 'gallery') { ?>
 
 
-                <!-- gallery description and other things -->
+                        <!-- gallery description and other things -->
 
-                <section style="margin-bottom:20px">
-                    <h3>Manage images</h3>
-                    <div class="productGallery generalTab">
-                        <div class="input-field">
-                            <div class="input-images" style="padding-top: .5rem;"></div>
-                        </div>
-                        <?php
+                        <section style="margin-bottom:20px">
+                            <h3>Manage images</h3>
+                            <div class="productGallery generalTab">
+                                <div class="input-field">
+                                    <div class="input-images" style="padding-top: .5rem;"></div>
+                                </div>
+                                <?php
                                 if ($news_gallery != '') {
 
                                     $imageList = json_decode($news_gallery, TRUE);
@@ -97,9 +97,9 @@ window.location.href = 'dashboard/news/?type=list&status=all';
                                 echo "<script> var oldGalleryImages = {$oldGalleryImages}</script>";
 
                                 ?>
-                    </div>
+                            </div>
 
-                </section>
+                        </section>
                 <?php
                     }
                 }
@@ -196,22 +196,22 @@ window.location.href = 'dashboard/news/?type=list&status=all';
             <div class="right-box">
                 <div class="action-box inside-shadow">
                     <?php if ($isDraftNews) { ?>
-                    <input type="button" id="updatePost" class="btn btn-green btn-block" value="Publish news">
-                    <input type="button" id="draftPost" class="btn btn-yellow btn-block" value="Update Draft">
+                        <input type="button" id="updatePost" class="btn btn-green btn-block" value="Publish news">
+                        <input type="button" id="draftPost" class="btn btn-yellow btn-block" value="Update Draft">
                     <?php } else { ?>
-                    <input type="button" id="updatePost" class="btn btn-green btn-block" value="Update news">
+                        <input type="button" id="updatePost" class="btn btn-green btn-block" value="Update news">
                     <?php } ?>
                     <?php if ($isScheduledNews) { ?>
-                    <div class="form-group schedule-post-box">
-                        <label>Schedule publish date &amp; time</label>
-                        <input type="datetime-local" id="scheduleAt" name="schedule_at"
-                            class="form-control inside-shadow" placeholder="Select date and time (YYYY-MM-DD HH:MM)"
-                            title="Select date and time" min="<?php echo date('Y-m-d\\TH:i'); ?>" autocomplete="off"
-                            inputmode="none"
-                            value="<?php echo (($news_status == 2 && !empty($link_published)) ? date('Y-m-d\TH:i', strtotime($link_published)) : ''); ?>">
-                        <small class="schedule-help">Select date and time (YYYY-MM-DD HH:MM)</small>
-                    </div>
-                    <input type="button" id="schedulePost" class="btn btn-blue btn-block" value="Update Schedule">
+                        <div class="form-group schedule-post-box">
+                            <label>Schedule publish date &amp; time</label>
+                            <input type="datetime-local" id="scheduleAt" name="schedule_at"
+                                class="form-control inside-shadow" placeholder="Select date and time (YYYY-MM-DD HH:MM)"
+                                title="Select date and time" min="<?php echo date('Y-m-d\\TH:i'); ?>" autocomplete="off"
+                                inputmode="none"
+                                value="<?php echo (($news_status == 2 && !empty($link_published)) ? date('Y-m-d\TH:i', strtotime($link_published)) : ''); ?>">
+                            <small class="schedule-help">Select date and time (YYYY-MM-DD HH:MM)</small>
+                        </div>
+                        <input type="button" id="schedulePost" class="btn btn-blue btn-block" value="Update Schedule">
                     <?php } ?>
                     <input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>">
                     <input type="hidden" name="newsType" value="<?php echo ((isset($theme)) ? $theme : 'news') ?>">
@@ -222,6 +222,58 @@ window.location.href = 'dashboard/news/?type=list&status=all';
                     <a href='<?php echo SITE_URL . $link_url; ?>' class='btn btn-block btn-blue' target='_blank'>View
                         live
                         news</a>
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const audioFileInput = document.getElementById('audioFile');
+                        const audioFileTrigger = document.getElementById('audioFileTrigger');
+                        const audioFileName = document.getElementById('audioFileName');
+
+                        if (!audioFileInput || !audioFileTrigger || !audioFileName) {
+                            return;
+                        }
+
+                        const updateAudioFileState = function() {
+                            const selectedFile = audioFileInput.files && audioFileInput.files[0] ? audioFileInput.files[0] : null;
+
+                            if (selectedFile) {
+                                audioFileName.textContent = selectedFile.name;
+                                audioFileName.style.display = 'block';
+                                audioFileTrigger.textContent = 'Change Audio File';
+                                return;
+                            }
+
+                            audioFileName.textContent = '';
+                            audioFileName.style.display = 'none';
+                            audioFileTrigger.textContent = 'Select Audio File';
+                        };
+
+                        audioFileTrigger.addEventListener('click', function() {
+                            audioFileInput.click();
+                        });
+
+                        audioFileTrigger.addEventListener('keydown', function(event) {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                audioFileInput.click();
+                            }
+                        });
+
+                        audioFileInput.addEventListener('change', updateAudioFileState);
+
+                        updateAudioFileState();
+                    });
+                </script>
+                <div class="form-group inside-shadow">
+                    <h2>Audio File</h2>
+                    <div class="form-group audioFileUploadBox upload-btn">
+                        <span id="audioFileTrigger" role="button" tabindex="0">Select Audio File</span>
+                        <input type="file" id="audioFile" name="audioFile" style="display: none;"
+                            accept="audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/mp4,audio/x-m4a,audio/aac,audio/ogg,audio/webm">
+                        <p id="audioFileName" style="margin-top: 20px; display: none;"></p>
+                    </div>
+                    <input type="hidden" name="oldAudioFile" value="<?php echo $news_audio; ?>">
+                    <p style=" margin-top: 20px;float: left;font-size: 14px;"><?php echo (($news_audio != '') ? "<a href='$news_audio' style='color: #333 !important' target='_blank' rel='noopener noreferrer'>Listen to audio <i class='fas fa-external-link-alt' style='margin-left: 5px;'></i></a>" : 'No audio file selected'); ?></p>
                 </div>
                 <div class="form-group">
                     <h2>Featured</h2>
@@ -236,19 +288,19 @@ window.location.href = 'dashboard/news/?type=list&status=all';
                     if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
                         while ($category = mysqli_fetch_assoc($categoryList)) {
                             if ($category['category_id'] == ${$postType . '_category'}) { ?>
-                    <div class="form-group">
-                        <input type="radio" name="category"
-                            value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                            <?php echo (($category['category_id'] == $news_category) ? 'checked' : '') ?>>
-                        <?php echo ucwords($category['category_title']); ?>
-                    </div>
-                    <?php
+                                <div class="form-group">
+                                    <input type="radio" name="category"
+                                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
+                                        <?php echo (($category['category_id'] == $news_category) ? 'checked' : '') ?>>
+                                    <?php echo ucwords($category['category_title']); ?>
+                                </div>
+                            <?php
                             } else { ?>
-                    <div class="form-group">
-                        <input type="radio" name="category"
-                            value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>">
-                        <?php echo ucwords($category['category_title']); ?>
-                    </div>
+                                <div class="form-group">
+                                    <input type="radio" name="category"
+                                        value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>">
+                                    <?php echo ucwords($category['category_title']); ?>
+                                </div>
                     <?php
                             }
                         }
@@ -336,152 +388,152 @@ window.location.href = 'dashboard/news/?type=list&status=all';
                             $checked = in_array($uid, $selectedAuthors) ? 'checked' : '';
                             $orderVal = isset($authorOrder[$uid]) ? $authorOrder[$uid] : '';
                         ?>
-                        <div class="form-group author-item author-row" data-index="<?php echo $authorIndex; ?>">
-                            <div class="author-left">
-                                <input type="checkbox" name="authorId[]" value="<?php echo $uid ?>"
-                                    id="author_<?php echo $uid ?>" <?php echo $checked; ?>>
-                                <label for="author_<?php echo $uid ?>"
-                                    class="author-label"><?php echo ucwords($author['profile_display_name']); ?></label>
+                            <div class="form-group author-item author-row" data-index="<?php echo $authorIndex; ?>">
+                                <div class="author-left">
+                                    <input type="checkbox" name="authorId[]" value="<?php echo $uid ?>"
+                                        id="author_<?php echo $uid ?>" <?php echo $checked; ?>>
+                                    <label for="author_<?php echo $uid ?>"
+                                        class="author-label"><?php echo ucwords($author['profile_display_name']); ?></label>
+                                </div>
+                                <div class="author-right">
+                                    <input type="number" class="author-order-input" name="authorOrder[]"
+                                        value="<?php echo $orderVal; ?>" min="1"
+                                        <?php echo ($checked ? '' : 'disabled'); ?>>
+                                </div>
                             </div>
-                            <div class="author-right">
-                                <input type="number" class="author-order-input" name="authorOrder[]"
-                                    value="<?php echo $orderVal; ?>" min="1"
-                                    <?php echo ($checked ? '' : 'disabled'); ?>>
-                            </div>
-                        </div>
                         <?php $authorIndex++;
                         } ?>
                     </div>
                 </div>
                 <style>
-                .author-row {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 3px 6px;
-                    border-radius: 3px;
-                    border-bottom: 1px solid #ececec;
-                    margin-bottom: 0;
-                    font-size: 15px;
-                    min-height: 32px;
-                    transition: background 0.18s;
-                }
-
-                .author-row:last-child {
-                    border-bottom: none;
-                }
-
-                .author-row:hover {
-                    background: #f7fafd;
-                }
-
-                .author-left {
-                    display: flex;
-                    align-items: center;
-                    gap: 7px;
-                }
-
-                .author-label {
-                    font-weight: 500;
-                    color: #222;
-                    margin-bottom: 0;
-                    font-size: 15px;
-                }
-
-                .author-right {
-                    min-width: 48px;
-                    text-align: right;
-                }
-
-                .author-order-input {
-                    width: 40px;
-                    text-align: right;
-                    border-radius: 3px;
-                    border: 1px solid #ccc;
-                    padding: 2px 4px;
-                    background: #fff;
-                    font-size: 15px;
-                }
-
-                @media (max-width: 600px) {
                     .author-row {
-                        flex-direction: column;
-                        align-items: flex-start;
-                        min-height: unset;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 3px 6px;
+                        border-radius: 3px;
+                        border-bottom: 1px solid #ececec;
+                        margin-bottom: 0;
+                        font-size: 15px;
+                        min-height: 32px;
+                        transition: background 0.18s;
+                    }
+
+                    .author-row:last-child {
+                        border-bottom: none;
+                    }
+
+                    .author-row:hover {
+                        background: #f7fafd;
+                    }
+
+                    .author-left {
+                        display: flex;
+                        align-items: center;
+                        gap: 7px;
+                    }
+
+                    .author-label {
+                        font-weight: 500;
+                        color: #222;
+                        margin-bottom: 0;
+                        font-size: 15px;
                     }
 
                     .author-right {
-                        text-align: left;
-                        margin-top: 3px;
+                        min-width: 48px;
+                        text-align: right;
                     }
-                }
+
+                    .author-order-input {
+                        width: 40px;
+                        text-align: right;
+                        border-radius: 3px;
+                        border: 1px solid #ccc;
+                        padding: 2px 4px;
+                        background: #fff;
+                        font-size: 15px;
+                    }
+
+                    @media (max-width: 600px) {
+                        .author-row {
+                            flex-direction: column;
+                            align-items: flex-start;
+                            min-height: unset;
+                        }
+
+                        .author-right {
+                            text-align: left;
+                            margin-top: 3px;
+                        }
+                    }
                 </style>
                 <script>
-                // Improved author order input: allow direct editing, validate for duplicates and positive integers
-                // and keep order unique among checked authors
+                    // Improved author order input: allow direct editing, validate for duplicates and positive integers
+                    // and keep order unique among checked authors
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    const list = document.getElementById('author-sort-list');
-                    if (!list) return;
-                    const getCheckedItems = () => Array.from(list.querySelectorAll('.author-item')).filter(
-                        item => item.querySelector('input[type="checkbox"]').checked);
-                    // Update order inputs and validate
-                    function updateOrderInputs() {
-                        const checked = getCheckedItems();
-                        let usedOrders = new Set();
-                        checked.forEach((item, idx) => {
-                            const orderInput = item.querySelector('.author-order-input');
-                            let val = parseInt(orderInput.value);
-                            if (!val || usedOrders.has(val)) {
-                                // Assign next available
-                                let next = 1;
-                                while (usedOrders.has(next)) next++;
-                                val = next;
-                            }
-                            orderInput.value = val;
-                            orderInput.disabled = false;
-                            usedOrders.add(val);
-                        });
-                        // Unchecked authors: clear and disable order
-                        Array.from(list.querySelectorAll('.author-item')).forEach(item => {
-                            if (!item.querySelector('input[type="checkbox"]').checked) {
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const list = document.getElementById('author-sort-list');
+                        if (!list) return;
+                        const getCheckedItems = () => Array.from(list.querySelectorAll('.author-item')).filter(
+                            item => item.querySelector('input[type="checkbox"]').checked);
+                        // Update order inputs and validate
+                        function updateOrderInputs() {
+                            const checked = getCheckedItems();
+                            let usedOrders = new Set();
+                            checked.forEach((item, idx) => {
                                 const orderInput = item.querySelector('.author-order-input');
-                                orderInput.value = '';
-                                orderInput.disabled = true;
+                                let val = parseInt(orderInput.value);
+                                if (!val || usedOrders.has(val)) {
+                                    // Assign next available
+                                    let next = 1;
+                                    while (usedOrders.has(next)) next++;
+                                    val = next;
+                                }
+                                orderInput.value = val;
+                                orderInput.disabled = false;
+                                usedOrders.add(val);
+                            });
+                            // Unchecked authors: clear and disable order
+                            Array.from(list.querySelectorAll('.author-item')).forEach(item => {
+                                if (!item.querySelector('input[type="checkbox"]').checked) {
+                                    const orderInput = item.querySelector('.author-order-input');
+                                    orderInput.value = '';
+                                    orderInput.disabled = true;
+                                }
+                            });
+                            // Check for duplicate order numbers
+                            const orders = checked.map(item => parseInt(item.querySelector('.author-order-input')
+                                .value));
+                            const hasDup = orders.some((v, i, arr) => arr.indexOf(v) !== i);
+                            checked.forEach(item => {
+                                const orderInput = item.querySelector('.author-order-input');
+                                if (hasDup) {
+                                    orderInput.style.borderColor = 'red';
+                                    orderInput.title = 'Duplicate order!';
+                                } else {
+                                    orderInput.style.borderColor = '#ccc';
+                                    orderInput.title = '';
+                                }
+                            });
+                        }
+                        // Initial state
+                        updateOrderInputs();
+                        list.addEventListener('change', function(e) {
+                            if (e.target.type === 'checkbox') {
+                                updateOrderInputs();
                             }
                         });
-                        // Check for duplicate order numbers
-                        const orders = checked.map(item => parseInt(item.querySelector('.author-order-input')
-                            .value));
-                        const hasDup = orders.some((v, i, arr) => arr.indexOf(v) !== i);
-                        checked.forEach(item => {
-                            const orderInput = item.querySelector('.author-order-input');
-                            if (hasDup) {
-                                orderInput.style.borderColor = 'red';
-                                orderInput.title = 'Duplicate order!';
-                            } else {
-                                orderInput.style.borderColor = '#ccc';
-                                orderInput.title = '';
+                        // Allow manual editing of order input
+                        list.addEventListener('input', function(e) {
+                            if (e.target.classList.contains('author-order-input')) {
+                                // Only allow positive integers
+                                let v = e.target.value.replace(/[^0-9]/g, '');
+                                e.target.value = v;
+                                updateOrderInputs();
                             }
                         });
-                    }
-                    // Initial state
-                    updateOrderInputs();
-                    list.addEventListener('change', function(e) {
-                        if (e.target.type === 'checkbox') {
-                            updateOrderInputs();
-                        }
                     });
-                    // Allow manual editing of order input
-                    list.addEventListener('input', function(e) {
-                        if (e.target.classList.contains('author-order-input')) {
-                            // Only allow positive integers
-                            let v = e.target.value.replace(/[^0-9]/g, '');
-                            e.target.value = v;
-                            updateOrderInputs();
-                        }
-                    });
-                });
                 </script>
                 <h2>Feature Image</h2>
                 <div class="form-group featureImageUploadBox upload-btn"
