@@ -182,6 +182,7 @@ figcaption {
   height: auto;
   margin: 2rem 0;
   display: block;
+  min-height: 400px;
 }
 
 /* .user_content {
@@ -500,6 +501,14 @@ figcaption {
     justify-content: center;
     align-items: center;
     width: 100%;
+  }
+  .details_box__content iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    margin: 2rem 0;
+    display: block;
+    min-height: 180px;
   }
 }
 @media (max-width: 576px) {
