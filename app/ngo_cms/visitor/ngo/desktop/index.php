@@ -2,36 +2,78 @@
 
 require_once 'header.php';
 
+$sliderList = getSlider($connection);
+
+if (!empty($sliderList)) {
+    foreach ($sliderList as $slide) {
+        $slideImage = $slide['slide_image'] ?? '';
+        $slideSubtitle = $slide['slide_subtitle'] ?? '';
+        $slideTitle = $slide['slide_title'] ?? '';
+        $slideDescription = $slide['slide_description'] ?? '';
+        $slideLink = $slide['slide_link'] ?? '';
+        $slideLinkText = $slide['slider_cta'] ?? ($slide['slide_link_text'] ?? '');
+        $slideLink2 = $slide['slide_link2'] ?? '';
+        $slideLink2Text = $slide['slider_cta2'] ?? ($slide['slide_link2_text'] ?? '');
+        $slideAlignment = strtolower(trim($slide['slide_alignment'] ?? 'center'));
+        $slideOverlay = strtolower(trim((string)($slide['slide_overlay'] ?? 'on')));
+
+        if (!in_array($slideAlignment, ['left', 'center', 'right'], true)) {
+            $slideAlignment = 'center';
+        }
+
+        $contentStyle = 'text-align: center; margin: 0 auto; max-width: 860px; width: 100%; padding: 0 1.25rem; box-sizing: border-box;';
+        $descriptionStyle = 'margin: 0 auto 2.5rem;';
+        $buttonWrapStyle = 'justify-content: center;';
+
+        if ($slideAlignment === 'left') {
+            $contentStyle = 'text-align: left; margin: 0 auto 0 0; max-width: 860px; width: 100%; padding: 0 1.25rem; box-sizing: border-box;';
+            $descriptionStyle = 'margin: 0 0 2.5rem 0;';
+            $buttonWrapStyle = 'justify-content: flex-start;';
+        } elseif ($slideAlignment === 'right') {
+            $contentStyle = 'text-align: right; margin: 0 0 0 auto; max-width: 860px; width: 100%; padding: 0 1.25rem; box-sizing: border-box;';
+            $descriptionStyle = 'margin: 0 0 2.5rem auto;';
+            $buttonWrapStyle = 'justify-content: flex-end;';
+        }
+
+        $overlayEnabled = in_array($slideOverlay, ['on', '1', 'yes', 'true'], true);
+        $heroBackgroundStyle = $overlayEnabled
+            ? "background: linear-gradient(135deg, rgba(13, 59, 102, 0.88) 0%, rgba(13, 59, 102, 0.65) 100%), url({$slideImage}); background-size: cover; background-position: center; background-repeat: no-repeat;"
+            : "background: url({$slideImage}); background-size: cover; background-position: center; background-repeat: no-repeat;";
+
+        $cta1Style = strtolower(trim($slide['cta1_style'] ?? 'solid'));
+        $cta1BgColor = $slide['cta1_bg_color'] ?? '#f4d35e';
+        $cta1TextColor = $slide['cta1_text_color'] ?? '#0d3b66';
+        $cta2Style = strtolower(trim($slide['cta2_style'] ?? 'outline'));
+        $cta2BgColor = $slide['cta2_bg_color'] ?? 'rgba(255,255,255,0.8)';
+        $cta2TextColor = $slide['cta2_text_color'] ?? '#ffffff';
+
+        $cta1Background = ($cta1Style === 'solid') ? $cta1BgColor : 'transparent';
+        $cta2Background = ($cta2Style === 'solid') ? $cta2BgColor : 'transparent';
+
+        echo "<section class='hero' style='{$heroBackgroundStyle}'>
+    <div class='container hero-content' style='{$contentStyle}'>
+        <div class='hero-badge'>
+            {$slideSubtitle}
+        </div>
+        <h1>{$slideTitle}</h1>
+        <p style='{$descriptionStyle}'>
+            {$slideDescription}
+        </p>";
+
+        if (!empty($slideLink) && !empty($slideLinkText)) {
+            echo "<div class='hero-btns' style='{$buttonWrapStyle}'>
+                    <a href='{$slideLink}' class='btn btn-secondary' style='background-color: {$cta1Background}; color: {$cta1TextColor}; border: 2px solid {$cta1BgColor};'>{$slideLinkText}</a>
+                    " . (!empty($slideLink2) ? "<a href='{$slideLink2}' class='btn-outline-white' style='background-color: {$cta2Background}; color: {$cta2TextColor}; border: 2px solid {$cta2BgColor};'>{$slideLink2Text}</a>" : "") . "
+                </div>";
+        }
+
+        echo "</div>
+</section>";
+    }
+}
+
 ?>
-<!-- ======================== HERO ======================== -->
-<section class="hero" style="background:
-    linear-gradient(
-      135deg,
-      rgba(13, 59, 102, 0.88) 0%,
-      rgba(13, 59, 102, 0.65) 100%
-    ),
-    url('<?php echo USER_IMAGES ?>/gallery/events/1000071350.jpg'),
-    no-repeat center center/cover;">
-    <div class="container hero-content">
-        <div class="hero-badge">
-            <i class="fas fa-hands-helping" style="margin-right: 6px"></i>
-            Serving Religion, Society & Humanity
-        </div>
-        <h1>
-            Seva, Samarpan,<br />
-            <span>Sankalp</span>
-        </h1>
-        <p>
-            Dharam Prachar Jan Kalyan Samiti has been walking the path of selfless
-            service since 2009 — feeding the hungry, planting life, educating
-            children, and building a cleaner, more compassionate community.
-        </p>
-        <div class="hero-btns">
-            <a href="/donation/" class="btn btn-secondary">Support Our Cause</a>
-            <a href="/about/" class="btn-outline-white">Our Journey</a>
-        </div>
-    </div>
-</section>
+
 
 <!-- ======================== STATS ======================== -->
 <div class="container">
