@@ -7,7 +7,7 @@ require_once 'header.php'; ?>
 <section
   class="detail-hero"
   style="
-        background-image: url(&quot;assets/images/gallery/education/1000071271.jpg&quot;);
+        background-image: url(<?php echo $post_image; ?>);
       ">
   <div class="container detail-hero-content">
     <span
@@ -42,24 +42,24 @@ require_once 'header.php'; ?>
     <div class="share-buttons">
       <strong style="margin-right: 1rem">Share this story:</strong>
       <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo SITE_URL .
-          $link_url; ?>" class="share-btn" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                                                              $link_url; ?>" class="share-btn" target="_blank"><i class="fab fa-facebook-f"></i></a>
       <a href="http://twitter.com/share?text=<?php echo urlencode($post_title); ?>&url=<?php echo SITE_URL .
-    $link_url; ?>" class="share-btn" target="_blank"><i class="fab fa-x"></i></a>
+                                                                                          $link_url; ?>" class="share-btn" target="_blank"><i class="fab fa-x"></i></a>
       <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo SITE_URL .
-          $link_url; ?>&title=<?php echo urlencode(
-    $post_title,
-); ?>" class="share-btn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                                                                      $link_url; ?>&title=<?php echo urlencode(
+                                $post_title,
+                              ); ?>" class="share-btn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
       <a href="https://wa.me/?text=<?php echo urlencode($post_title) .
-          ' ' .
-          SITE_URL .
-          $link_url; ?>" class="share-btn" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                                      ' ' .
+                                      SITE_URL .
+                                      $link_url; ?>" class="share-btn" target="_blank"><i class="fab fa-whatsapp"></i></a>
     </div>
 
     <div class="author-box">
       <img
         src="<?php echo !empty($profile_image)
-            ? $profile_image
-            : 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'; ?>"
+                ? $profile_image
+                : 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'; ?>"
         alt="<?php echo ucwords($profile_display_name); ?>"
         style="width: 80px; height: 80px; border-radius: 50%" />
       <div>
@@ -72,7 +72,7 @@ require_once 'header.php'; ?>
   </article>
 
   <!-- Sidebar -->
-  
+
   <?php require_once 'blog-sidebar.php'; ?>
 
 </div>
@@ -82,7 +82,7 @@ require_once 'header.php'; ?>
 $articleList = similarArticles($connection, $post_id, 'post', 2);
 
 if (count($articleList) > 0) {
-    echo "
+  echo "
 <section class='section-padding' style='background: #f4f4f4'>
   <div class='container'>
     <h2 style='margin-bottom: 2rem'>You Might Also Like</h2>
@@ -90,8 +90,8 @@ if (count($articleList) > 0) {
       class='home-events-grid'
       style='grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))'>";
 
-    foreach ($articleList['articles'] as $article) {
-        echo "
+  foreach ($articleList['articles'] as $article) {
+    echo "
         <div
           style='
                 background: white;
@@ -124,9 +124,9 @@ if (count($articleList) > 0) {
           </div>
         </div>
       ";
-    }
+  }
 
-    echo "</div>
+  echo "</div>
   </div>
 </section>";
 }

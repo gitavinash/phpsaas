@@ -820,7 +820,6 @@ function getCategoriesWithPosts(
     return array_values($categories);
 }
 
-
 function getGalleryWithCategories(
     mysqli $conn,
     string $tableName = 'post',
@@ -954,4 +953,129 @@ function getGalleryWithCategories(
     mysqli_free_result($contentResult);
 
     return array_values($categories);
+}
+
+function getEvents($conn, $categoryId = '', $futureEvents = false, $limit = 5, $sortTypes = 'event_start_date', $sortBy = 'ASC', $characterLimit = 250)
+{
+
+    $futureEventsCondition = (($futureEvents) ? " AND event_start_date >= NOW() " : "");
+
+    $applySorting = "ORDER BY {$sortTypes} {$sortBy} ";
+
+    $query = "SELECT 
+        event_id AS id,
+        event_title AS title,
+        LEFT(
+            TRIM(
+                REGEXP_REPLACE(event_description, '<[^>]*>', '')
+            ),
+            {$characterLimit}
+        ) AS description,
+        event_image AS image,
+        event_location AS location,
+        event_start_date AS event_date,
+        profile_display_name AS author,
+        profile_image AS author_image,
+        category_title AS category,
+        category_link.link_url AS category_url,
+        link.link_url,
+        link.link_published
+
+    FROM " . TABLE_PREFIX . "event
+
+    INNER JOIN " . TABLE_PREFIX . "link AS link
+        ON link.link_relation_id = event_id
+       AND link.link_status = 200
+       AND link.link_type = 'event'
+       AND link.link_site_id = " . SITE_ID . "
+
+    INNER JOIN " . TABLE_PREFIX . "category
+        ON category_id = event_category
+       AND category_type = 'event'
+       AND category_site_id = " . SITE_ID . "
+
+    LEFT JOIN " . TABLE_PREFIX . "link AS category_link
+        ON category_link.link_relation_id = category_id
+       AND category_link.link_type = 'category'
+       AND category_link.link_status = 200
+       AND category_link.link_site_id = " . SITE_ID . "
+
+    INNER JOIN " . TABLE_PREFIX . "profile
+        ON link.link_owner_id = profile_user_id
+
+    WHERE event_status = 1
+      AND event_site_id = " . SITE_ID . "
+      " . (!empty($categoryId) ? "AND event_category = " . (int)$categoryId : "") . "
+      " . $futureEventsCondition . "
+    {$applySorting}
+    LIMIT {$limit}";
+
+    $resData = mysqli_query($conn, $query);
+    if (!$resData) {
+        return [];
+    }
+
+    $out = [];
+    while ($row = mysqli_fetch_assoc($resData)) {
+        $out[] = $row;
+    }
+
+    mysqli_free_result($resData);
+
+    return $out;
+}
+
+function getTestimonials($conn, $latest = true, $limit = 5, $characterLimit = 250)
+{
+
+    $latestTestimonialsCondition = $latest ? "ORDER BY category_time DESC" : "ORDER BY category_time ASC";
+
+    $query = "SELECT category_title as title, category_image as profile_image, LEFT(
+            TRIM(
+                REGEXP_REPLACE(category_description, '<[^>]*>', '')
+            ),
+            {$characterLimit}
+        ) AS description FROM " . TABLE_PREFIX . "category WHERE category_type='testimonial' AND category_status = 1 AND category_site_id=" . SITE_ID . " {$latestTestimonialsCondition} LIMIT {$limit}";
+
+    $resData = mysqli_query($conn, $query);
+    if (!$resData) {
+        return [];
+    }
+
+    $out = [];
+    while ($row = mysqli_fetch_assoc($resData)) {
+        $out[] = $row;
+    }
+
+    mysqli_free_result($resData);
+
+    return $out;
+}
+
+
+function getCategories($conn, $type = 'post', $latest = true, $limit = 5, $characterCondition = true, $characterLimit = 250)
+{
+
+    $latestCategoriesCondition = $latest ? "ORDER BY category_time DESC" : "ORDER BY category_time ASC";
+
+    $query = "SELECT category_title as title, category_image as profile_image, " . (($characterCondition == true) ? "LEFT(
+            TRIM(
+                REGEXP_REPLACE(category_description, '<[^>]*>', '')
+            ),
+            {$characterLimit}
+        ) AS description" :  " category_description as description ") . ", link_url FROM " . TABLE_PREFIX . "category LEFT JOIN " . TABLE_PREFIX . "link ON category_id=link_relation_id AND link_site_id=" . SITE_ID . " AND link_type='category' AND link_status=200 WHERE category_type='{$type}' AND category_status = 1 AND category_site_id=" . SITE_ID . " {$latestCategoriesCondition} LIMIT {$limit}";
+
+    $resData = mysqli_query($conn, $query);
+    if (!$resData) {
+        return [];
+    }
+
+    $out = [];
+    while ($row = mysqli_fetch_assoc($resData)) {
+        $out[] = $row;
+    }
+
+    mysqli_free_result($resData);
+
+    return $out;
 }

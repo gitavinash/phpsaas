@@ -21,16 +21,16 @@ if (!empty($sliderList)) {
             $slideAlignment = 'center';
         }
 
-        $contentStyle = 'text-align: center; margin: 0 auto; max-width: 860px; width: 100%; padding: 0 1.25rem; box-sizing: border-box;';
+        $contentStyle = 'text-align: center; margin: 0 auto; max-width: 860px; width: 100%; box-sizing: border-box;';
         $descriptionStyle = 'margin: 0 auto 2.5rem;';
         $buttonWrapStyle = 'justify-content: center;';
 
         if ($slideAlignment === 'left') {
-            $contentStyle = 'text-align: left; margin: 0 auto 0 0; max-width: 860px; width: 100%; padding: 0 1.25rem; box-sizing: border-box;';
+            $contentStyle = 'text-align: left; margin: 0 auto 0 0; max-width: 860px; width: 100%; box-sizing: border-box;';
             $descriptionStyle = 'margin: 0 0 2.5rem 0;';
             $buttonWrapStyle = 'justify-content: flex-start;';
         } elseif ($slideAlignment === 'right') {
-            $contentStyle = 'text-align: right; margin: 0 0 0 auto; max-width: 860px; width: 100%; padding: 0 1.25rem; box-sizing: border-box;';
+            $contentStyle = 'text-align: right; margin: 0 0 0 auto; max-width: 860px; width: 100%; box-sizing: border-box;';
             $descriptionStyle = 'margin: 0 0 2.5rem auto;';
             $buttonWrapStyle = 'justify-content: flex-end;';
         }
@@ -51,14 +51,15 @@ if (!empty($sliderList)) {
         $cta2Background = ($cta2Style === 'solid') ? $cta2BgColor : 'transparent';
 
         echo "<section class='hero' style='{$heroBackgroundStyle}'>
-    <div class='container hero-content' style='{$contentStyle}'>
-        <div class='hero-badge'>
-            {$slideSubtitle}
-        </div>
-        <h1>{$slideTitle}</h1>
-        <p style='{$descriptionStyle}'>
-            {$slideDescription}
-        </p>";
+    <div class='container'>
+        <div class='hero-content' style='{$contentStyle}'>
+            <div class='hero-badge'>
+                {$slideSubtitle}
+            </div>
+            <h1>{$slideTitle}</h1>
+            <p style='{$descriptionStyle}'>
+                {$slideDescription}
+            </p>";
 
         if (!empty($slideLink) && !empty($slideLinkText)) {
             echo "<div class='hero-btns' style='{$buttonWrapStyle}'>
@@ -68,6 +69,7 @@ if (!empty($sliderList)) {
         }
 
         echo "</div>
+    </div>
 </section>";
     }
 }
@@ -145,10 +147,14 @@ if (!empty($sliderList)) {
     </div>
 </section>
 
-<!-- ======================== INITIATIVES ======================== -->
-<section class="section-padding initiatives-section">
-    <div class="container">
-        <div class="section-intro">
+<?php
+
+$initiativesList = getCategories($connection, 'service', true, 6, false);
+
+if (!empty($initiativesList)) {
+    echo "<section class='section-padding initiatives-section'>
+    <div class='container'>
+        <div class='section-intro'>
             <h2>Our Core Initiatives</h2>
             <p>
                 We believe service must be tangible. Here are the programs through
@@ -157,149 +163,33 @@ if (!empty($sliderList)) {
             </p>
         </div>
 
-        <div class="initiatives-grid">
-            <!-- Initiative 1: Annadaan -->
-            <div class="initiative-card">
-                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071337.jpg" alt="Annadaan - Food Distribution"
-                    class="initiative-img" />
-                <div class="initiative-body">
-                    <div class="initiative-icon-wrap">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <h3>Annadaan — Food is God</h3>
-                    <p>
-                        We firmly believe that <em>Anna (food) is life</em>. During the
-                        COVID-19 lockdown, when countless families went hungry, DPJKS
-                        stepped forward to distribute food to the needy. Our community
-                        meal program, started on <strong>19 January 2023</strong>, now
-                        serves approximately
-                        <strong>100 people every single day</strong>.
-                    </p>
-                    <div class="initiative-highlight">
-                        <i class="fas fa-calendar-check" style="margin-right: 6px; color: var(--accent-color)"></i>
-                        Running continuously since January 2023
-                    </div>
-                </div>
-            </div>
+        <div class='initiatives-grid'>";
 
-            <!-- Initiative 2: Tree Plantation -->
-            <div class="initiative-card">
-                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071336.jpg" alt="Tree Plantation Drive"
-                    class="initiative-img" />
-                <div class="initiative-body">
-                    <div class="initiative-icon-wrap">
-                        <i class="fas fa-seedling"></i>
-                    </div>
-                    <h3>Nature is God — Protect It</h3>
-                    <p>
-                        We see nature not just as environment, but as a divine gift. Our
-                        members personally plant trees, water them, monitor their
-                        growth, and spread awareness about why harming nature is harming
-                        ourselves. Tree plantation is not an event for us — it is an
-                        ongoing commitment.
-                    </p>
-                    <div class="initiative-highlight">
-                        <i class="fas fa-tree" style="margin-right: 6px; color: var(--accent-color)"></i>
-                        Regular plantation drives with post-care monitoring
-                    </div>
-                </div>
-            </div>
+    foreach ($initiativesList as $initiative) {
+        extract($initiative);
 
-            <!-- Initiative 3: Free Education -->
-            <div class="initiative-card">
-                <img src="<?php echo USER_IMAGES ?>gallery/education/1000071263.jpg"
-                    alt="Free Education for Poor Children" class="initiative-img" />
-                <div class="initiative-body">
-                    <div class="initiative-icon-wrap">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3>Free Education Initiative</h3>
-                    <p>
-                        No child should be denied education because of poverty.
-                        Recognizing that many children from poor families were unable to
-                        attend school, we started a free education program in our
-                        village. We currently support <strong>20–25 children</strong>,
-                        have appointed a dedicated teacher, and pay a monthly salary of
-                        <strong>₹3,000</strong> from our own funds.
-                    </p>
-                    <div class="initiative-highlight">
-                        <i class="fas fa-child" style="margin-right: 6px; color: var(--accent-color)"></i>
-                        20–25 children enrolled, dedicated teacher appointed
+        echo "<a href='{$link_url}' title='{$title}'>
+            <div class='initiative-card'>
+                <img src='{$link_url}' alt='{$title}'
+                    class='initiative-img' />
+                <div class='initiative-body'>
+                    <h3>{$title}</h3>
+                    <div class='initiative-description'>
+                        {$description}
                     </div>
                 </div>
             </div>
+        </a>";
+    }
 
-            <!-- Initiative 4: Cleanliness -->
-            <div class="initiative-card">
-                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071345.jpg" alt="Cleanliness and Health Awareness"
-                    class="initiative-img" />
-                <div class="initiative-body">
-                    <div class="initiative-icon-wrap">
-                        <i class="fas fa-broom"></i>
-                    </div>
-                    <h3>Cleanliness & Health Awareness</h3>
-                    <p>
-                        Cleanliness is the foundation of good health and social dignity.
-                        We run awareness drives in our community to promote sanitation,
-                        hygiene, and proper waste management. We actively work to solve
-                        local cleanliness problems and educate people on their
-                        connection to community development.
-                    </p>
-                    <div class="initiative-highlight">
-                        <i class="fas fa-heartbeat" style="margin-right: 6px; color: var(--accent-color)"></i>
-                        Community hygiene drives and sanitation awareness
-                    </div>
-                </div>
-            </div>
-
-            <!-- Initiative 5: Disaster Relief -->
-            <div class="initiative-card">
-                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071344.jpg" alt="Disaster and Seasonal Relief"
-                    class="initiative-img" />
-                <div class="initiative-body">
-                    <div class="initiative-icon-wrap">
-                        <i class="fas fa-hand-holding-heart"></i>
-                    </div>
-                    <h3>Disaster & Seasonal Support</h3>
-                    <p>
-                        When storms rage, rains flood, or summers scorch, DPJKS
-                        volunteers are among the first to respond. Our members have been
-                        witnessed helping affected individuals during severe weather
-                        events, distributing essentials and moral support to those most
-                        vulnerable.
-                    </p>
-                    <div class="initiative-highlight">
-                        <i class="fas fa-shield-alt" style="margin-right: 6px; color: var(--accent-color)"></i>
-                        Relief during storms, floods, and extreme heat
-                    </div>
-                </div>
-            </div>
-
-            <!-- Initiative 6: Religious Harmony -->
-            <div class="initiative-card">
-                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071343.jpg" alt="Religious and Social Harmony"
-                    class="initiative-img" />
-                <div class="initiative-body">
-                    <div class="initiative-icon-wrap">
-                        <i class="fas fa-praying-hands"></i>
-                    </div>
-                    <h3>Dharm & Samajik Samanvay</h3>
-                    <p>
-                        Beyond material service, DPJKS works to spread the message of
-                        religious harmony, social cohesion, and unity. We believe a
-                        strong, peaceful society is built on mutual respect, and every
-                        one of our programs reinforces this principle — serving all
-                        without discrimination of religion, caste, or class.
-                    </p>
-                    <div class="initiative-highlight">
-                        <i class="fas fa-users" style="margin-right: 6px; color: var(--accent-color)"></i>
-                        Serving all — no discrimination of religion or caste
-                    </div>
-                </div>
-            </div>
-        </div>
+    echo "</div>
     </div>
-</section>
+</section>";
+}
+
+
+?>
+
 
 <!-- ======================== OUR STORY / TIMELINE ======================== -->
 <section class="section-padding story-section">
@@ -474,110 +364,94 @@ if (!empty($sliderList)) {
     </div>
 </section>
 
-<!-- ======================== EVENTS ======================== -->
-<section class="section-padding" style="background: #f9f9f9">
-    <div class="container">
-        <div style="
+<?php
+
+// Events
+
+$eventsList = getEvents($connection, '', true, 5);
+
+if (!empty($eventsList)) {
+    echo "<section class='section-padding' style='background: #f9f9f9'>
+    <div class='container'>
+        <div style='
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
             margin-bottom: 3rem;
-          ">
+          '>
             <div>
-                <h4 style="
+                <h4 style='
                 color: var(--accent-color);
                 text-transform: uppercase;
                 letter-spacing: 1px;
                 font-size: 0.85rem;
-              ">
+              '>
                     Get Involved
                 </h4>
                 <h2>Activities & Programs</h2>
             </div>
-            <a href="/events/" class="btn btn-secondary">View All</a>
+            <a href='/events/' class='btn btn-secondary'>View All</a>
         </div>
 
-        <div class="home-events-grid">
-            <!-- Featured -->
-            <div class="featured-event">
-                <img src="<?php echo USER_IMAGES ?>gallery/events/1000071342.jpg" alt="Annadaan - Daily Meal Program"
-                    class="featured-bg" />
-                <div class="featured-content">
-                    <span class="event-badge">Daily Program</span>
-                    <h3>Annadaan — Community Meal Service</h3>
-                    <p style="margin-bottom: 1rem; opacity: 0.9">
-                        <i class="fas fa-map-marker-alt" style="margin-right: 8px"></i>
-                        Gram Hindupur Sabalpur, Shivrajpur, Kanpur
+        <div class='home-events-grid'>";
+
+    $i = 1;
+
+    foreach ($eventsList as $eventInfo) {
+        extract($eventInfo);
+        if ($i == 1) {
+            echo "<div class='featured-event'>
+                <img src='{$image}' alt='{$title}'
+                    class='featured-bg' />
+                <div class='featured-content'>
+                    <span class='event-badge'>{$category}</span>
+                    <h3>{$title}</h3>
+                    <p style='margin-bottom: 1rem; opacity: 0.9'>
+                        <i class='fas fa-map-marker-alt' style='margin-right: 8px'></i>
+                        {$location}
                     </p>
-                    <p style="margin-bottom: 1.5rem">
-                        Every day, our volunteers ensure approximately 100 people
-                        receive a nutritious meal. Food is our first prayer — Anna Devo
-                        Bhava.
+                    <p style='margin-bottom: 1.5rem'>
+                        {$description}
                     </p>
-                    <a href="/contact/" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem">
+                    <a href='{$link_url}' title='{$title}' class='btn btn-primary' style='padding: 0.6rem 1.2rem; font-size: 0.9rem'>
                         Volunteer Now
                     </a>
                 </div>
-            </div>
+            </div>";
 
-            <!-- Recent Activities -->
-            <div class="recent-events-list">
-                <div class="recent-event-card">
-                    <div class="recent-date-box">
-                        <span class="rd-num">19</span>
-                        <span class="rd-month">Jan</span>
+            echo "<div class='recent-events-list'>";
+            $i++;
+            continue;
+        }
+
+        echo "<div class='recent-event-card'>
+                    <div class='recent-date-box'>
+                        <span class='rd-num'>" . date('d', strtotime($event_date)) . "</span>
+                        <span class='rd-month'>" . date('M', strtotime($event_date)) . "</span>
                     </div>
-                    <div class="recent-info">
-                        <h4>Annadaan Program Launch</h4>
-                        <p>Community Meal for 100+ People Daily</p>
-                        <a href="/events/" class="read-link">View Details <i class="fas fa-arrow-right"></i></a>
+                    <div class='recent-info'>
+                        <h4>{$title}</h4>
+                        <p>{$location}</p>
+                        <a href='{$link_url}' title='{$title}' class='read-link'>View <i class='fas fa-arrow-right'></i></a>
                     </div>
                 </div>
+            ";
+    }
+    echo "</div>";
 
-                <div class="recent-event-card">
-                    <div class="recent-date-box">
-                        <span class="rd-num">29</span>
-                        <span class="rd-month">Jan</span>
-                    </div>
-                    <div class="recent-info">
-                        <h4>Public Welfare Meal Program</h4>
-                        <p>Ongoing — Village Outreach Initiative</p>
-                        <a href="/events/" class="read-link">View <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="recent-event-card">
-                    <div class="recent-date-box">
-                        <span class="rd-num">12</span>
-                        <span class="rd-month">Feb</span>
-                    </div>
-                    <div class="recent-info">
-                        <h4>Tree Plantation & Care Drive</h4>
-                        <p>Kanpur Outskirts — Community Forestation</p>
-                        <a href="/events/" class="read-link">View <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="recent-event-card">
-                    <div class="recent-date-box">
-                        <span class="rd-num">05</span>
-                        <span class="rd-month">Mar</span>
-                    </div>
-                    <div class="recent-info">
-                        <h4>Free Education Classes Continue</h4>
-                        <p>Village School — 20–25 Children Enrolled</p>
-                        <a href="/events/" class="read-link">View <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    echo "</div>
     </div>
-</section>
+</section>";
+}
 
-<!-- ======================== TESTIMONIALS ======================== -->
-<section class="section-padding" style="background: white">
-    <div class="container">
-        <div class="section-intro">
+// Testimonials
+
+$testimonialsList = getTestimonials($connection, true, 3);
+
+if (!empty($testimonialsList)) {
+    echo "<section class='section-padding' style='background: white'>
+    <div class='container'>
+        <div class='section-intro'>
             <h2>Voices of Impact</h2>
             <p>
                 Hear from those whose lives have been touched by our work and the
@@ -585,62 +459,35 @@ if (!empty($sliderList)) {
             </p>
         </div>
 
-        <div class="testimonials-modern">
-            <div class="testi-card">
-                <i class="fas fa-quote-right quote-icon"></i>
-                <p class="testi-content">
-                    "During the COVID lockdown, we had no food for three days. DPJKS
-                    volunteers came to our door with meals and kind words. I will
-                    never forget that act of humanity. Food truly is God."
-                </p>
-                <div class="testi-author">
-                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Savita Devi"
-                        class="author-avatar" />
-                    <div class="author-info">
-                        <h4>Savita Devi</h4>
-                        <span>Beneficiary, Annadaan Program</span>
-                    </div>
-                </div>
-            </div>
+        <div class='testimonials-modern'>";
 
-            <div class="testi-card">
-                <i class="fas fa-quote-right quote-icon"></i>
-                <p class="testi-content">
-                    "My daughter was unable to go to school because we could not
-                    afford it. DPJKS started free classes in our village. She is
-                    learning to read and write now. I am grateful beyond words."
+    foreach ($testimonialsList as $testimonial) {
+        extract($testimonial);
+        $authorInfo = explode(',', $title);
+        $authorName = $authorInfo[0];
+        $authorRole = ((isset($authorInfo[1])) ? trim($authorInfo[1]) : '');
+        echo "<div class='testi-card'>
+                <i class='fas fa-quote-right quote-icon'></i>
+                <p class='testi-content'>
+                    {$description}
                 </p>
-                <div class="testi-author">
-                    <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Ramesh Kumar"
-                        class="author-avatar" />
-                    <div class="author-info">
-                        <h4>Ramesh Kumar</h4>
-                        <span>Parent, Free Education Program</span>
+                <div class='testi-author'>
+                    <img src='{$profile_image}' alt='{$authorName}'
+                        class='author-avatar' />
+                    <div class='author-info'>
+                        <h4>{$authorName}</h4>
+                        <span>{$authorRole}</span>
                     </div>
                 </div>
-            </div>
+            </div>";
+    }
 
-            <div class="testi-card">
-                <i class="fas fa-quote-right quote-icon"></i>
-                <p class="testi-content">
-                    "I took the oath to serve selflessly, and two years later, I can
-                    say it was the best decision of my life. Seeing our tree saplings
-                    grow and our children learn — this is the real reward."
-                </p>
-                <div class="testi-author">
-                    <img src="https://randomuser.me/api/portraits/men/47.jpg" alt="Suresh Mishra"
-                        class="author-avatar" />
-                    <div class="author-info">
-                        <h4>Suresh Mishra</h4>
-                        <span>DPJKS Executive Member & Volunteer</span>
-                    </div>
-                </div>
-            </div>
+    echo "
         </div>
     </div>
-</section>
+</section>";
+}
 
-<?php
 
 require_once 'footer.php';
 

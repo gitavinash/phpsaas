@@ -17,7 +17,7 @@ if ($eventDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
 ?>
 <div class="product-add-ui">
     <h2>Update <?php echo (($link_status == '206') ? 'Drafted ' : '') . ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?>
-        <span><a href="<?php echo $eventType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span>
+        <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span>
     </h2>
 
     <div class="form-box">
