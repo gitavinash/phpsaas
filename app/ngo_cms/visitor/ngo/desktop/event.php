@@ -19,7 +19,7 @@ require_once 'header.php';
             color: var(--primary-color);
           "><?php echo ucfirst($category_title) ?></span>
     <h1 style="font-size: 3.5rem; margin-top: 1rem">
-      <?php echo $event_title ?>
+      <?php echo ucwords($event_title) ?>
     </h1>
   </div>
 </section>
