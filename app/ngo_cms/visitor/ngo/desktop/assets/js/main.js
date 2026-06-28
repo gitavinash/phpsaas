@@ -69,11 +69,15 @@ function setupLightbox() {
 
   // Event delegation for opening the lightbox
   document.addEventListener("click", (e) => {
-    const img = e.target.closest(".gallery-strip img, .achievements-grid .achievement-card img");
+    const img = e.target.closest(
+      ".gallery-strip img, .achievements-grid .achievement-card img, .content-gallery .event-gallery-image",
+    );
     if (img) {
-      activeImages = Array.from(document.querySelectorAll(
-        ".gallery-strip img, .achievements-grid .achievement-card img"
-      ));
+      activeImages = Array.from(
+        document.querySelectorAll(
+          ".gallery-strip img, .achievements-grid .achievement-card img, .content-gallery .event-gallery-image",
+        ),
+      );
       currentIndex = activeImages.indexOf(img);
       if (currentIndex !== -1) {
         updateLightbox();
@@ -89,7 +93,8 @@ function setupLightbox() {
     if (activeImages.length === 0) return;
     const img = activeImages[currentIndex];
     const highResSrc = img.getAttribute("src");
-    const caption = img.getAttribute("data-caption") || img.getAttribute("alt") || "";
+    const caption =
+      img.getAttribute("data-caption") || img.getAttribute("alt") || "";
 
     lbImg.style.opacity = "0";
     lbImg.style.transform = "scale(0.96)";
@@ -120,7 +125,8 @@ function setupLightbox() {
 
   function showPrev() {
     if (activeImages.length === 0) return;
-    currentIndex = (currentIndex - 1 + activeImages.length) % activeImages.length;
+    currentIndex =
+      (currentIndex - 1 + activeImages.length) % activeImages.length;
     updateLightbox();
   }
 

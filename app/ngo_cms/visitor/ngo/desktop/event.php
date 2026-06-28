@@ -76,6 +76,34 @@ require_once 'header.php';
   <!-- Main Content -->
   <div class="content-area">
     <?php echo $event_description ?>
+    <?php
+    $eventGallery = json_decode((string)$event_gallery, true);
+    $eventGallery = is_array($eventGallery) ? $eventGallery : [];
+    ?>
+
+    <?php if (!empty($eventGallery)) { ?>
+      <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Event Gallery</h3>
+      <div class="content-gallery">
+        <?php
+        foreach ($eventGallery as $index => $galleryImage) {
+          $imagePath = isset($galleryImage['path']) ? trim($galleryImage['path']) : '';
+          if ($imagePath === '') {
+            continue;
+          }
+
+          $imageTitle = isset($galleryImage['title']) ? trim($galleryImage['title']) : '';
+          $imageCaption = $imageTitle !== '' ? $imageTitle : $event_title . ' - Image ' . ($index + 1);
+          $safePath = htmlspecialchars($imagePath, ENT_QUOTES, 'UTF-8');
+          $safeCaption = htmlspecialchars($imageCaption, ENT_QUOTES, 'UTF-8');
+
+          echo '<figure class="event-gallery-item">';
+          echo '<img src="' . $safePath . '" alt="' . $safeCaption . '" data-caption="' . $safeCaption . '" class="event-gallery-image" loading="lazy" />';
+          echo '<figcaption class="event-gallery-caption">' . $safeCaption . '</figcaption>';
+          echo '</figure>';
+        }
+        ?>
+      </div>
+    <?php } ?>
   </div>
 
   <!-- Sidebar -->
