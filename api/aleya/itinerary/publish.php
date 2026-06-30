@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     if ($updateOldQuotation = mysqli_query($connection, $updateQuery)) {
 
-                        if ($updateLog =  mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry_notes(enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) VALUES({$refId}, " . USER_ID . ", 'itinerary', '')")) {
+                        if ($updateLog =  mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry_notes(enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) VALUES({$refId}, " . USER_ID . ", 'itinerary', '{$quotationId}')")) {
 
                             $httpStatus = 201;
                             $msg = "Itinerary published successfully";

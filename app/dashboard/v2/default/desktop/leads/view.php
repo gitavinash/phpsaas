@@ -20,14 +20,14 @@ if ($site_access_type == 'digital_marketing') {
                 extract(json_decode($enquiry_message, true));
                 $date_of_travel = date('d-m-Y', strtotime($date_of_travel));
 ?>
-<script type="text/javascript">
-localStorage.setItem('noOfAdults', '<?php echo $number_of_adults ?>');
-localStorage.setItem('noOfChildren', '<?php echo $number_of_childrens ?>');
-localStorage.setItem('noOfInfants', '<?php echo $number_of_infants ?>');
-localStorage.setItem('tourDuration', '<?php echo $number_of_days ?>');
-localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
-</script>
-<?php
+                <script type="text/javascript">
+                    localStorage.setItem('noOfAdults', '<?php echo $number_of_adults ?>');
+                    localStorage.setItem('noOfChildren', '<?php echo $number_of_childrens ?>');
+                    localStorage.setItem('noOfInfants', '<?php echo $number_of_infants ?>');
+                    localStorage.setItem('tourDuration', '<?php echo $number_of_days ?>');
+                    localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
+                </script>
+    <?php
             }
         } else {
             echo "Invalid request";
@@ -39,51 +39,51 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
     }
 
     ?>
-<h2 class="heading">Lead details<span>Complete information of lead</span></h2>
-<div class="box-1">
+    <h2 class="heading">Lead details<span>Complete information of lead</span></h2>
+    <div class="box-1">
 
-    <div class="widget box-7-5 no-padding">
-        <div class="main-box">
-            <section>
-                <div class="widget no-padding box-1">
-                    <div class="leadProfileCard">
-                        <div class="img">
-                            <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo strtolower(((trim($enquiry_first_name[0]) != '') ? $enquiry_first_name[0] : 'unknown')) ?>.png"
-                                alt="" srcset="">
-                        </div>
-                        <div class="info">
-                            <h2 class="heading"
-                                <?php echo (($enquiry_status == 4 || $enquiry_status == 5) ? "style='color:#f44336'" : "") ?>>
-                                <?php echo $customerFullName = ucwords($enquiry_first_name . ' ' . $enquiry_last_name . (($enquiry_status == 4) ? ' ( Closed ) ' : (($enquiry_status == 5) ? '( Duplicate )' : ''))) ?>
-                            </h2>
-                            <p>
-                                <?php
+        <div class="widget box-7-5 no-padding">
+            <div class="main-box">
+                <section>
+                    <div class="widget no-padding box-1">
+                        <div class="leadProfileCard">
+                            <div class="img">
+                                <img src="<?php echo IMG_LIBRARY ?>profile_icon/<?php echo strtolower(((trim($enquiry_first_name[0]) != '') ? $enquiry_first_name[0] : 'unknown')) ?>.png"
+                                    alt="" srcset="">
+                            </div>
+                            <div class="info">
+                                <h2 class="heading"
+                                    <?php echo (($enquiry_status == 4 || $enquiry_status == 5) ? "style='color:#f44336'" : "") ?>>
+                                    <?php echo $customerFullName = ucwords($enquiry_first_name . ' ' . $enquiry_last_name . (($enquiry_status == 4) ? ' ( Closed ) ' : (($enquiry_status == 5) ? '( Duplicate )' : ''))) ?>
+                                </h2>
+                                <p>
+                                    <?php
 
                                     if (isset($date_of_birth)) {
                                         echo "<span><strong>Date of Birth:</strong> " . date('d M Y', strtotime($date_of_birth)) . "</span>";
                                     }
 
                                     ?>
-                                <span><strong>Last Update:
-                                    </strong><?php echo date('d-m-Y h:i A', strtotime($enquiry_update)) ?></span>
-                            </p>
-                        </div>
-                        <div class="verifications">
+                                    <span><strong>Last Update:
+                                        </strong><?php echo date('d-m-Y h:i A', strtotime($enquiry_update)) ?></span>
+                                </p>
+                            </div>
+                            <div class="verifications">
 
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
-        <div class="main-box">
-            <section>
-                <div class="widget no-padding box-1">
-                    <div class="btn-group leadActions">
-                        <a id="leadDetailsBtn" class="btn detailsBtn btn-green"><i class="fi-rr-file-circle-info"></i>
-                            Details</a>
-                        <a id="noteDetailsBtn" class="btn detailsBtn"><i class="fi-rr-time-past"></i> Follow up
-                            history</a>
-                        <?php
+                </section>
+            </div>
+            <div class="main-box">
+                <section>
+                    <div class="widget no-padding box-1">
+                        <div class="btn-group leadActions">
+                            <a id="leadDetailsBtn" class="btn detailsBtn btn-green"><i class="fi-rr-file-circle-info"></i>
+                                Details</a>
+                            <a id="noteDetailsBtn" class="btn detailsBtn"><i class="fi-rr-time-past"></i> Follow up
+                                history</a>
+                            <?php
                             if (SITE_APP == 'astro_client') {
                                 echo "<a id='upayDetailsBtn' class='btn detailsBtn'><i class='fi-rr-story-book'></i> Upay
                             history</a>";
@@ -94,18 +94,18 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                             }
 
                             if ($enquiry_status != 5) { ?>
-                        <a id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px"><i
-                                class="fi-rr-edit"></i> Edit
-                            lead</a>
-                        <?php
+                                <a id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px"><i
+                                        class="fi-rr-edit"></i> Edit
+                                    lead</a>
+                            <?php
                             }
                             ?>
+                        </div>
                     </div>
-                </div>
-                <div class="widget openBtnBox no-padding box-1" id="leadDetailsBox">
-                    <div class="leadInfo">
-                        <table>
-                            <?php
+                    <div class="widget openBtnBox no-padding box-1" id="leadDetailsBox">
+                        <div class="leadInfo">
+                            <table>
+                                <?php
 
                                 if ($enquiry_first_name != '') {
                                     echo "<tr>
@@ -257,13 +257,13 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                                 }
 
                                 ?>
-                        </table>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                <div class="widget openBtnBox no-padding box-1" id="noteDetailsBox">
-                    <div class="leadInfo">
-                        <div class="historyBox">
-                            <?php
+                    <div class="widget openBtnBox no-padding box-1" id="noteDetailsBox">
+                        <div class="leadInfo">
+                            <div class="historyBox">
+                                <?php
 
                                 if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_id, enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type!='upay' AND  enquiry_notes_meta_type!='payment' ORDER BY enquiry_notes_update DESC")) {
                                     if (mysqli_num_rows($leadHistory) != 0) {
@@ -307,7 +307,7 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                                                     $icon = 'paper-plane';
                                                     $msg = "<a>" . ucwords($enquiry_notes_meta_type) . "</a> sent by " . $profile_display_name;
                                                     if ($enquiry_notes_meta_value != '') {
-                                                        $commentBox = "<div class='comment'><p>{$enquiry_notes_meta_value}</p></div>";
+                                                        $commentBox = "<div class='comment'><p><a href='/download-itinerary/" . base64_encode($enquiry_notes_meta_value) . "/' target='_blank'>View Itinerary <i class='fi fi-rr-arrow-up-right-from-square'></i></a></p></div>";
                                                     }
                                                     break;
 
@@ -343,16 +343,16 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                                 }
 
                                 ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <?php
+                    <?php
 
                     if (SITE_APP_ID == 24) { ?>
-                <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox" style='display:none'>
-                    <div class="leadInfo">
-                        <div class="historyBox">
-                            <?php
+                        <div class="widget openBtnBox no-padding box-1" id="upayDetailsBox" style='display:none'>
+                            <div class="leadInfo">
+                                <div class="historyBox">
+                                    <?php
 
                                     if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_id,  enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='upay' ORDER BY enquiry_notes_update DESC")) {
                                         if (mysqli_num_rows($leadHistory) != 0) {
@@ -435,17 +435,17 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                                     }
 
                                     ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <?php
+                    <?php
                     }
 
                     ?>
-                <div class="widget openBtnBox no-padding box-1" id="paymentDetailsBox">
-                    <div class="leadInfo">
-                        <div class="historyBox">
-                            <?php
+                    <div class="widget openBtnBox no-padding box-1" id="paymentDetailsBox">
+                        <div class="leadInfo">
+                            <div class="historyBox">
+                                <?php
 
                                 if ($leadHistory = mysqli_query($connection, "SELECT enquiry_notes_id, enquiry_notes_meta_type, enquiry_notes_meta_value, profile_display_name, enquiry_notes_update FROM " . TABLE_PREFIX . "enquiry_notes INNER JOIN " . TABLE_PREFIX . "profile ON enquiry_notes_user_id=profile_user_id WHERE enquiry_notes_ref_id='{$leadId}' AND enquiry_notes_meta_type='payment' ORDER BY enquiry_notes_update DESC")) {
                                     if (mysqli_num_rows($leadHistory) != 0) {
@@ -521,16 +521,16 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                                 }
 
                                 ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="widget openBtnBox no-padding box-1" id="leadEditBox">
-                    <div class="leadInfo">
-                        <h3 class="heading">Update <?php echo ucfirst(strtolower($enquiry_subject)) ?> - lead details
-                        </h3>
-                        <table>
-                            <form action="#" id="updateLeadForm" autocomplete="off">
-                                <?php
+                    <div class="widget openBtnBox no-padding box-1" id="leadEditBox">
+                        <div class="leadInfo">
+                            <h3 class="heading">Update <?php echo ucfirst(strtolower($enquiry_subject)) ?> - lead details
+                            </h3>
+                            <table>
+                                <form action="#" id="updateLeadForm" autocomplete="off">
+                                    <?php
 
                                     $leadFormPath = $dashboardDirectory . '/dashboard/app/form/' . SITE_APP;
                                     $leadForm = $leadFormPath . '/edit-lead.php';
@@ -542,7 +542,7 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                                     require_once $leadForm;
 
                                     ?>
-                                <!-- <tr>
+                                    <!-- <tr>
                                     <td class="box-3">
                                     </td>
                                     <td class="box-7">
@@ -551,18 +551,18 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                                             value="Update lead">
                                     </td>
                                 </tr> -->
-                            </form>
-                        </table>
+                                </form>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
         </div>
-    </div>
-    <div class="widget no-padding box-2-5" id="fixedDiv">
+        <div class="widget no-padding box-2-5" id="fixedDiv">
 
-        <div class="main-box">
-            <section class="leadQuickLinks">
-                <?php
+            <div class="main-box">
+                <section class="leadQuickLinks">
+                    <?php
                     if ($enquiry_status != 5) {
                         if ($enquiry_status != 4) {
                             if (SITE_APP_ID == 22 && ($enquiry_status == 2 || $enquiry_status == 1)) {
@@ -577,10 +577,10 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                                     : '');
                             }
                     ?>
-                <a href="#" class="btn btn-orange-follow" id="followUpBtn">
-                    <i class="fi-rr-alarm-clock"></i> Set Follow-ups
-                </a>
-                <?php
+                            <a href="#" class="btn btn-orange-follow" id="followUpBtn">
+                                <i class="fi-rr-alarm-clock"></i> Set Follow-ups
+                            </a>
+                            <?php
                             if (SITE_APP == 'astro_client') {
                                 echo "<a href='' class='btn btn-teal-payment' id='upayBtn'>
                             <i class='fi-rr-story-book'></i> Add Upay
@@ -594,84 +594,84 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                               </a>';
                                 }
                             ?>
-                <a href="#" class="btn btn-gold-voucher" id="voucherBtn">
-                    <i class="fi-rr-ticket"></i> Send Vouchers
-                </a>
-                <?php
+                                <a href="#" class="btn btn-gold-voucher" id="voucherBtn">
+                                    <i class="fi-rr-ticket"></i> Send Vouchers
+                                </a>
+                            <?php
                             }
                             ?>
-                <a href="#" class="btn btn-purple-links" id="paymentBtn">
-                    <i class="fi-rr-indian-rupee-sign"></i> Send payment links
-                </a>
-                <a href='' class='btn btn-teal-payment' id='updatePaymentBtn'>
-                    <i class='fi-rr-notes'></i> Update payment records
-                </a>
-                <?php
+                            <a href="#" class="btn btn-purple-links" id="paymentBtn">
+                                <i class="fi-rr-indian-rupee-sign"></i> Send payment links
+                            </a>
+                            <a href='' class='btn btn-teal-payment' id='updatePaymentBtn'>
+                                <i class='fi-rr-notes'></i> Update payment records
+                            </a>
+                            <?php
                             if ($enquiry_status != 1) {
                                 echo '<a href="" class="btn btn-red-close" id="noteBtn">
                             <i class="fi-rr-circle-xmark"></i> Close this lead
                           </a>';
                             }
                         } else { ?>
-                <form method="POST">
-                    <!-- Design a form to assign lead to intern -->
-                </form>
-                <?php }
+                            <form method="POST">
+                                <!-- Design a form to assign lead to intern -->
+                            </form>
+                    <?php }
                     } ?>
-            </section>
+                </section>
+            </div>
+
         </div>
 
-    </div>
-
-    <div class="popUp notesBox">
-        <div class="smallPopUpBox">
-            <div class="widget box-7">
-                <div class="contentArea">
-                    <form method="POST" action="#">
-                        <section class="form">
-                            <div class="step-open-box step_1_box">
-                                <div class="form-header">
-                                    <h4 class="heading">Conclusion & Summary</h4>
+        <div class="popUp notesBox">
+            <div class="smallPopUpBox">
+                <div class="widget box-7">
+                    <div class="contentArea">
+                        <form method="POST" action="#">
+                            <section class="form">
+                                <div class="step-open-box step_1_box">
+                                    <div class="form-header">
+                                        <h4 class="heading">Conclusion & Summary</h4>
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="selectJS form-control" id="notesTitle" name="title">
+                                            <option value=""></option>
+                                            <option value="Not interested">Not Interested</option>
+                                            <option value="Purchased Elsewhere">Purchased Elsewhere</option>
+                                            <option value="Unqualified Lead">Unqualified Lead</option>
+                                            <option value="Fake Enquiry">Fake Enquiry</option>
+                                            <option value="Client is not Picking call">Client is not Picking call</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                        <label for="">Title <sup>*</sup></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*"
+                                            class="form-control" required></textarea>
+                                        <label class="form-lable" id="noteMsgLabel">Message</label>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <select class="selectJS form-control" id="notesTitle" name="title">
-                                        <option value=""></option>
-                                        <option value="Not interested">Not Interested</option>
-                                        <option value="Purchased Elsewhere">Purchased Elsewhere</option>
-                                        <option value="Unqualified Lead">Unqualified Lead</option>
-                                        <option value="Fake Enquiry">Fake Enquiry</option>
-                                        <option value="Client is not Picking call">Client is not Picking call</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                    <label for="">Title <sup>*</sup></label>
-                                </div>
-                                <div class="form-group">
-                                    <textarea type="text" name="noteMsg" id="noteMsg" placeholder="Message*"
-                                        class="form-control" required></textarea>
-                                    <label class="form-lable" id="noteMsgLabel">Message</label>
-                                </div>
-                            </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div class="widget box-3">
-                <div class="actionArea bgRed">
-                    <a class="btn popUpBtn" id="updateNotes"><i class="fi-rr-check"></i> Mark as closed</a>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</span>
+                <div class="widget box-3">
+                    <div class="actionArea bgRed">
+                        <a class="btn popUpBtn" id="updateNotes"><i class="fi-rr-check"></i> Mark as closed</a>
+                        <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                            Cancel</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="popUp paymentLinkBox">
-        <div class="smallPopUpBox">
-            <div class="widget box-7">
-                <div class="contentArea">
-                    <form method="POST" action="#">
-                        <section class="form">
-                            <div class="step-open-box step_1_box">
-                                <?php
+        <div class="popUp paymentLinkBox">
+            <div class="smallPopUpBox">
+                <div class="widget box-7">
+                    <div class="contentArea">
+                        <form method="POST" action="#">
+                            <section class="form">
+                                <div class="step-open-box step_1_box">
+                                    <?php
 
                                     if ($checkQuote = mysqli_query($connection, "SELECT quotation_id, quotation_price FROM " . TABLE_PREFIX . "quotation WHERE quotation_ref_id='{$enquiry_id}' AND quotation_ref_type='enquiry' AND quotation_status=0 AND quotation_site_id=" . SITE_ID . " ORDER BY quotation_id DESC LIMIT 0, 1")) {
                                         if (mysqli_num_rows($checkQuote) != 0) {
@@ -683,369 +683,369 @@ localStorage.setItem('dateOfTravel', '<?php echo $date_of_travel ?>');
                                     }
 
                                     ?>
-                                <div class="form-header">
-                                    <h4 class="heading">Send payment link</h4>
-                                </div>
-                                <div class="sendPaymentLinkBox">
-                                    <input type="hidden" id="quotationId" name="quotation_id"
-                                        value="<?php echo $quotation_id ?>">
-                                    <div class="form-group-box">
-                                        <div class="box-1">
-                                            <div class="form-group">
-                                                <div class="input-box">
-                                                    <input type="radio" class="paymentLink" id="fullPaymentBtn"
-                                                        name="paymentLink" value="<?php echo $quotation_price ?>" />
-                                                    <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
-                                                        Full
-                                                        Payment - ₹ <?php echo $quotation_price ?></label>
+                                    <div class="form-header">
+                                        <h4 class="heading">Send payment link</h4>
+                                    </div>
+                                    <div class="sendPaymentLinkBox">
+                                        <input type="hidden" id="quotationId" name="quotation_id"
+                                            value="<?php echo $quotation_id ?>">
+                                        <div class="form-group-box">
+                                            <div class="box-1">
+                                                <div class="form-group">
+                                                    <div class="input-box">
+                                                        <input type="radio" class="paymentLink" id="fullPaymentBtn"
+                                                            name="paymentLink" value="<?php echo $quotation_price ?>" />
+                                                        <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
+                                                            Full
+                                                            Payment - ₹ <?php echo $quotation_price ?></label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="box-1">
-                                            <div class="form-group">
-                                                <div class="input-box">
-                                                    <input type="radio" class="paymentLink" id="minPaymentLink"
-                                                        name="paymentLink"
-                                                        value="<?php echo ($quotation_price * (defined('MINIMUM_PAYMENT') ? MINIMUM_PAYMENT : 30) / 100); ?>"
-                                                        checked />
-                                                    <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
-                                                        Minimum payment - ₹
-                                                        <?php echo number_format(($quotation_price * (defined('MINIMUM_PAYMENT') ? MINIMUM_PAYMENT : 30) / 100), 2); ?>
-                                                    </label>
+                                            <div class="box-1">
+                                                <div class="form-group">
+                                                    <div class="input-box">
+                                                        <input type="radio" class="paymentLink" id="minPaymentLink"
+                                                            name="paymentLink"
+                                                            value="<?php echo ($quotation_price * (defined('MINIMUM_PAYMENT') ? MINIMUM_PAYMENT : 30) / 100); ?>"
+                                                            checked />
+                                                        <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
+                                                            Minimum payment - ₹
+                                                            <?php echo number_format(($quotation_price * (defined('MINIMUM_PAYMENT') ? MINIMUM_PAYMENT : 30) / 100), 2); ?>
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="box-1">
-                                            <div class="form-group">
-                                                <div class="input-box">
-                                                    <input type="radio" class="paymentLink" id="customPaymentLink"
-                                                        name="paymentLink" value="0" />
-                                                    <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
-                                                        Custom
-                                                        amount</label>
+                                            <div class="box-1">
+                                                <div class="form-group">
+                                                    <div class="input-box">
+                                                        <input type="radio" class="paymentLink" id="customPaymentLink"
+                                                            name="paymentLink" value="0" />
+                                                        <label class="radio-button"><i class="fi-rr-indian-rupee-sign"></i>
+                                                            Custom
+                                                            amount</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="box-1" id="minPaymentLinkBox" style="display:none">
-                                            <div class="form-group">
-                                                <input type="number" onwheel="this.blur()" id="paymentValue"
-                                                    name="paymentLink" />
-                                                <label class="form-lable" id="paymentAmount">Enter
-                                                    amount<sup>*</sup></label>
+                                            <div class="box-1" id="minPaymentLinkBox" style="display:none">
+                                                <div class="form-group">
+                                                    <input type="number" onwheel="this.blur()" id="paymentValue"
+                                                        name="paymentLink" />
+                                                    <label class="form-lable" id="paymentAmount">Enter
+                                                        amount<sup>*</sup></label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div class="widget box-3">
-                <div class="actionArea">
-                    <a class="btn popUpBtn" id="sendPaymentLink"><i class="fi-rr-paper-plane"></i> Send payment
-                        link</a>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="popUp updatePaymentBox">
-        <div class="smallPopUpBox">
-            <div class="widget box-7">
-                <div class="contentArea">
-                    <form method="POST" action="#" id="updatePaymentForm">
-                        <section class="form">
-                            <div class="step-open-box step_1_box">
-                                <form method="POST" action="#" id="addPaymentRecordForm">
-                                    <section class="form">
-                                        <div class="step-open-box step_1_box">
-                                            <div class="form-header">
-                                                <h4 class="heading">Update payment details</h4>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="number" onwheel="this.blur()" id="paymentAmount"
-                                                    name="amount" />
-                                                <label class="form-lable" id="paymentAmount">Enter
-                                                    amount<sup>*</sup></label>
-                                            </div>
-                                            <div class="form-group">
-                                                <select class="selectJS form-control" id="paymentRecordTitle"
-                                                    name="payment_method">
-                                                    <option value=""></option>
-                                                    <?php echo ((SITE_APP == 'astro_client') ? "<option value='free'>Free</option>" : '') ?>
-                                                    <option value="cash">Cash</option>
-                                                    <option value="upi">UPI</option>
-                                                    <option value="net_banking">Net banking</option>
-                                                    <option value="credit_card">Credit Card</option>
-                                                    <option value="debit_card">Debit Card</option>
-                                                    <option value="wallet">Wallet</option>
-                                                    <option value="other">Other</option>
-                                                </select>
-                                                <label class="form-lable">Payment method <sup>*</sup></label>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="text" class="datepicker"
-                                                    placeholder="<?php echo date('d-m-Y'); ?>" id="paymentDate"
-                                                    name="payment_date" />
-                                                <label class="form-lable">Payment Date</label>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="text" placeholder="85NDR1ZD840V" id="paymentRefNumber"
-                                                    name="reference_number" />
-                                                <label class="form-lable">Reference number</label>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="file" id="fileUpload" name="files"
-                                                    accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx">
-                                                <label class="form-lable" id="paymentPhoto">Upload photo</label>
-                                            </div>
-                                            <div class="form-group">
-                                                <textarea type="text" name="payment_notes" id="noteMsg"
-                                                    placeholder="Payment details" class="form-control"
-                                                    required></textarea>
-                                                <label class="form-lable">Payment
-                                                    details</label>
-                                            </div>
-                                        </div>
-                                </form>
-                            </div>
-                    </form>
-                </div>
-            </div>
-            <div class="widget box-3">
-                <div class="actionArea">
-                    <a class="btn popUpBtn" id="upatePaymentRecord"><i class="fi-rr-check"></i> Update
-                        records</a>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</a>
+                <div class="widget box-3">
+                    <div class="actionArea">
+                        <a class="btn popUpBtn" id="sendPaymentLink"><i class="fi-rr-paper-plane"></i> Send payment
+                            link</a>
+                        <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                            Cancel</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="popUp followUpBox">
-        <div class="smallPopUpBox">
-            <div class="widget box-7">
-                <div class="contentArea">
-                    <form method="POST" action="#">
-                        <section class="form">
-                            <div class="step-open-box step_1_box">
-                                <div class="form-header">
-                                    <h4 class="heading">Add Follow-Up Reminder</h4>
+        <div class="popUp updatePaymentBox">
+            <div class="smallPopUpBox">
+                <div class="widget box-7">
+                    <div class="contentArea">
+                        <form method="POST" action="#" id="updatePaymentForm">
+                            <section class="form">
+                                <div class="step-open-box step_1_box">
+                                    <form method="POST" action="#" id="addPaymentRecordForm">
+                                        <section class="form">
+                                            <div class="step-open-box step_1_box">
+                                                <div class="form-header">
+                                                    <h4 class="heading">Update payment details</h4>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="number" onwheel="this.blur()" id="paymentAmount"
+                                                        name="amount" />
+                                                    <label class="form-lable" id="paymentAmount">Enter
+                                                        amount<sup>*</sup></label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <select class="selectJS form-control" id="paymentRecordTitle"
+                                                        name="payment_method">
+                                                        <option value=""></option>
+                                                        <?php echo ((SITE_APP == 'astro_client') ? "<option value='free'>Free</option>" : '') ?>
+                                                        <option value="cash">Cash</option>
+                                                        <option value="upi">UPI</option>
+                                                        <option value="net_banking">Net banking</option>
+                                                        <option value="credit_card">Credit Card</option>
+                                                        <option value="debit_card">Debit Card</option>
+                                                        <option value="wallet">Wallet</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                    <label class="form-lable">Payment method <sup>*</sup></label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="datepicker"
+                                                        placeholder="<?php echo date('d-m-Y'); ?>" id="paymentDate"
+                                                        name="payment_date" />
+                                                    <label class="form-lable">Payment Date</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" placeholder="85NDR1ZD840V" id="paymentRefNumber"
+                                                        name="reference_number" />
+                                                    <label class="form-lable">Reference number</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="file" id="fileUpload" name="files"
+                                                        accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx">
+                                                    <label class="form-lable" id="paymentPhoto">Upload photo</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <textarea type="text" name="payment_notes" id="noteMsg"
+                                                        placeholder="Payment details" class="form-control"
+                                                        required></textarea>
+                                                    <label class="form-lable">Payment
+                                                        details</label>
+                                                </div>
+                                            </div>
+                                    </form>
                                 </div>
-                                <div class="form-group">
-                                    <select class="selectJS form-control" id="reason" name="reason">
-                                        <option value=""></option>
-                                        <option value="Busy">Busy</option>
-                                        <option value="Mobile is not reachable">Mobile is not reachable</option>
-                                        <option value="Client is not Picking call">Client is not Picking call</option>
-                                        <option value="Interested">Interested</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <label>Reason <sup>*</sup></label>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="datepickerForFutureDateWithTime" name="followupTime"
-                                        id="followUpTime">
-                                    <label class="form-lable">Follow up time</label>
-                                </div>
-                                <div class="form-group">
-                                    <textarea type="text" name="comment" id="comment"
-                                        placeholder="Add your comment"></textarea>
-                                    <label class="form-lable" id="commentLable">Any comment</label>
-                                </div>
-                            </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div class="widget box-3">
-                <div class="actionArea">
-                    <span class="btn popUpBtn" id="addFollowUp"><i class="fi-rr-check"></i> Set reminder</span>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</span>
+                <div class="widget box-3">
+                    <div class="actionArea">
+                        <a class="btn popUpBtn" id="upatePaymentRecord"><i class="fi-rr-check"></i> Update
+                            records</a>
+                        <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                            Cancel</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <?php
+        <div class="popUp followUpBox">
+            <div class="smallPopUpBox">
+                <div class="widget box-7">
+                    <div class="contentArea">
+                        <form method="POST" action="#">
+                            <section class="form">
+                                <div class="step-open-box step_1_box">
+                                    <div class="form-header">
+                                        <h4 class="heading">Add Follow-Up Reminder</h4>
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="selectJS form-control" id="reason" name="reason">
+                                            <option value=""></option>
+                                            <option value="Busy">Busy</option>
+                                            <option value="Mobile is not reachable">Mobile is not reachable</option>
+                                            <option value="Client is not Picking call">Client is not Picking call</option>
+                                            <option value="Interested">Interested</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        <label>Reason <sup>*</sup></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="datepickerForFutureDateWithTime" name="followupTime"
+                                            id="followUpTime">
+                                        <label class="form-lable">Follow up time</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea type="text" name="comment" id="comment"
+                                            placeholder="Add your comment"></textarea>
+                                        <label class="form-lable" id="commentLable">Any comment</label>
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="widget box-3">
+                    <div class="actionArea">
+                        <span class="btn popUpBtn" id="addFollowUp"><i class="fi-rr-check"></i> Set reminder</span>
+                        <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                            Cancel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php
 
         if (SITE_APP == 'astro_client') { ?>
 
-    <div class="popUp upayBox">
-        <div class="smallPopUpBox">
-            <div class="widget box-7">
-                <div class="contentArea">
-                    <form method="POST" action="#" id="addUpayForm">
-                        <section class="form">
-                            <div class="step-open-box step_1_box">
-                                <div class="form-header">
-                                    <h4 class="heading">Add new upay</h4>
-                                </div>
-                                <div class="form-group">
-                                    <textarea type="text" name="upayText" class="editor editUpayEditor" id="upayComment"
-                                        placeholder="Add your comment"></textarea>
-                                    <label class="form-lable" id="commentLable">Any comment</label>
-                                </div>
-                                <div class="form-group">
-                                    <div id="dropZone">
-                                        <span class="defaultText">Drag & Drop files here or click to upload</span>
+            <div class="popUp upayBox">
+                <div class="smallPopUpBox">
+                    <div class="widget box-7">
+                        <div class="contentArea">
+                            <form method="POST" action="#" id="addUpayForm">
+                                <section class="form">
+                                    <div class="step-open-box step_1_box">
+                                        <div class="form-header">
+                                            <h4 class="heading">Add new upay</h4>
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea type="text" name="upayText" class="editor editUpayEditor" id="upayComment"
+                                                placeholder="Add your comment"></textarea>
+                                            <label class="form-lable" id="commentLable">Any comment</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <div id="dropZone">
+                                                <span class="defaultText">Drag & Drop files here or click to upload</span>
+                                            </div>
+                                            <input type="file" id="fileInput" name="files[]" accept=".pdf, .jpg, .jpeg, .png"
+                                                multiple />
+                                        </div>
                                     </div>
-                                    <input type="file" id="fileInput" name="files[]" accept=".pdf, .jpg, .jpeg, .png"
-                                        multiple />
-                                </div>
-                            </div>
-                    </form>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="widget box-3">
+                        <div class="actionArea">
+                            <span class="btn popUpBtn" id="addUpayBtn"><i class="fi-rr-check"></i> Save Upay</span>
+                            <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                                Cancel</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="widget box-3">
-                <div class="actionArea">
-                    <span class="btn popUpBtn" id="addUpayBtn"><i class="fi-rr-check"></i> Save Upay</span>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</span>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="popUp editUpayBox">
-        <div class="smallPopUpBox">
-            <div class="widget box-7">
-                <div class="contentArea">
-                    <form method="POST" action="#" id="editUpayForm">
-                        <section class="form">
-                            <div class="step-open-box step_1_box">
-                                <div class="form-header">
-                                    <h4 class="heading">Edit upay</h4>
-                                </div>
-                                <div class="form-group">
-                                    <textarea type="text" name="upayText" class="editor upayEditor" id="editUpayComment"
-                                        placeholder="Add your comment"></textarea>
-                                    <label class="form-lable" id="commentLable">Any comment</label>
-                                    <p class="copyToClipboard"><a href="https://onlinehtmleditor.dev/"
-                                            id="upayContentValue" target="_blank">Click here to format the content</a>
-                                    </p>
-                                </div>
-                                <!-- <div class="form-group">
+            <div class="popUp editUpayBox">
+                <div class="smallPopUpBox">
+                    <div class="widget box-7">
+                        <div class="contentArea">
+                            <form method="POST" action="#" id="editUpayForm">
+                                <section class="form">
+                                    <div class="step-open-box step_1_box">
+                                        <div class="form-header">
+                                            <h4 class="heading">Edit upay</h4>
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea type="text" name="upayText" class="editor upayEditor" id="editUpayComment"
+                                                placeholder="Add your comment"></textarea>
+                                            <label class="form-lable" id="commentLable">Any comment</label>
+                                            <p class="copyToClipboard"><a href="https://onlinehtmleditor.dev/"
+                                                    id="upayContentValue" target="_blank">Click here to format the content</a>
+                                            </p>
+                                        </div>
+                                        <!-- <div class="form-group">
                                     <div id="editDropZone">
                                         <span class="editDefaultText">Drag & Drop files here or click to upload</span>
                                     </div>
                                     <input type="file" id="editFileInput" name="files[]"
                                         accept=".pdf, .jpg, .jpeg, .png" multiple />
                                 </div> -->
-                            </div>
-                    </form>
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="widget box-3">
+                        <div class="actionArea">
+                            <span class="btn popUpBtn" id="updateUpayBtn" data-id=""><i class="fi-rr-check"></i> Update
+                                Upay</span>
+                            <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                                Cancel</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="widget box-3">
-                <div class="actionArea">
-                    <span class="btn popUpBtn" id="updateUpayBtn" data-id=""><i class="fi-rr-check"></i> Update
-                        Upay</span>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php
+        <?php
         }
 
         ?>
 
-    <div class="popUp itineraryBox">
-        <div class="fullScreenPopUpBox">
-            <div class="widget box-8">
-                <div class="contentArea">
-                    <div id="itinerarySeachBox">
-                        <h4 class="heading" style="margin-bottom: 2rem">Search Itinenary</h4>
-                        <div class="box-1">
-                            <div class="box-5">
-                                <h4>Select destination<sup>*</sup></h4>
-                                <select class="internationalCityAutoComplete form-control" id="itineraryDestination">
-                                </select>
-                            </div>
-                            <div class="box-5">
-                                <h4>Travel Style</h4>
-                                <select class="selectJS form-control" name="travelStyle" id="itineraryStyle">
-                                    <option value="select">Select travel style</option>
-                                    <option value="adventure">Adventure Travel</option>
-                                    <option value="cultural">Cultural Travel</option>
-                                    <option value="luxury">Luxury Travel</option>
-                                    <option value="solo">Solo Travel</option>
-                                    <option value="group">Group Travel</option>
-                                    <option value="eco">Eco/Responsible Travel</option>
-                                    <option value="honeymoon">Honeymoon Travel</option>
-                                    <option value="couple">Couple Travel</option>
-                                    <option value="family">Family Travel</option>
-                                    <option value="wellness">Wellness/Retreat Travel</option>
-                                    <option value="budget">Budget Travel</option>
-                                    <option value="roadtrip">Road Trip</option>
-                                    <option value="cruise">Cruise Travel</option>
-                                    <option value="backpacking">Backpacking Travel</option>
-                                    <option value="religious">Religious Travel</option>
-                                    <option value="heritage">Heritage Travel</option>
-                                </select>
-                            </div>
+        <div class="popUp itineraryBox">
+            <div class="fullScreenPopUpBox">
+                <div class="widget box-8">
+                    <div class="contentArea">
+                        <div id="itinerarySeachBox">
+                            <h4 class="heading" style="margin-bottom: 2rem">Search Itinenary</h4>
                             <div class="box-1">
-                                <a href="#" class="btn btn-green" id="fetchItinerary"
-                                    style="float: right; padding:0.5rem 2rem; margin-top:10px">Find</a>
+                                <div class="box-5">
+                                    <h4>Select destination<sup>*</sup></h4>
+                                    <select class="internationalCityAutoComplete form-control" id="itineraryDestination">
+                                    </select>
+                                </div>
+                                <div class="box-5">
+                                    <h4>Travel Style</h4>
+                                    <select class="selectJS form-control" name="travelStyle" id="itineraryStyle">
+                                        <option value="select">Select travel style</option>
+                                        <option value="adventure">Adventure Travel</option>
+                                        <option value="cultural">Cultural Travel</option>
+                                        <option value="luxury">Luxury Travel</option>
+                                        <option value="solo">Solo Travel</option>
+                                        <option value="group">Group Travel</option>
+                                        <option value="eco">Eco/Responsible Travel</option>
+                                        <option value="honeymoon">Honeymoon Travel</option>
+                                        <option value="couple">Couple Travel</option>
+                                        <option value="family">Family Travel</option>
+                                        <option value="wellness">Wellness/Retreat Travel</option>
+                                        <option value="budget">Budget Travel</option>
+                                        <option value="roadtrip">Road Trip</option>
+                                        <option value="cruise">Cruise Travel</option>
+                                        <option value="backpacking">Backpacking Travel</option>
+                                        <option value="religious">Religious Travel</option>
+                                        <option value="heritage">Heritage Travel</option>
+                                    </select>
+                                </div>
+                                <div class="box-1">
+                                    <a href="#" class="btn btn-green" id="fetchItinerary"
+                                        style="float: right; padding:0.5rem 2rem; margin-top:10px">Find</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="loader" style="display: none; text-align: center;">
-                        <img src="<?php echo IMG_LIBRARY ?>circle-loader.gif" alt="Loading..." />
-                    </div>
-                    <div class="form-group" id="itineraryListBox" style="display: none;">
-                        <h4 class="heading" style="margin-bottom: 2rem">Select Itinenary<sup>*</sup></h4>
-                        <select class="selectJS form-control" id="itineraryList"></select>
-                        <div class="box-1">
-                            <a href="#" class="btn btn-green" id="showItinerary"
-                                style="float: left; padding:0.5rem 2rem; margin-top:10px">Show Itinerary</a>
+                        <div id="loader" style="display: none; text-align: center;">
+                            <img src="<?php echo IMG_LIBRARY ?>circle-loader.gif" alt="Loading..." />
+                        </div>
+                        <div class="form-group" id="itineraryListBox" style="display: none;">
+                            <h4 class="heading" style="margin-bottom: 2rem">Select Itinenary<sup>*</sup></h4>
+                            <select class="selectJS form-control" id="itineraryList"></select>
+                            <div class="box-1">
+                                <a href="#" class="btn btn-green" id="showItinerary"
+                                    style="float: left; padding:0.5rem 2rem; margin-top:10px">Show Itinerary</a>
+                            </div>
+                        </div>
+                        <div class="form-group" id="editorBox" style="display: none;">
+                            <textarea name="itinerary" id="itineraryEditorBox"></textarea>
                         </div>
                     </div>
-                    <div class="form-group" id="editorBox" style="display: none;">
-                        <textarea name="itinerary" id="itineraryEditorBox"></textarea>
+                </div>
+                <div class="widget box-2">
+                    <div class="actionArea">
+                        <input type="hidden" id="itinenaryId" value="">
+                        <input type="hidden" id="itinenaryMrp" value="">
+                        <input type="hidden" id="itinenaryRefId" value="<?php echo $enquiry_id ?>">
+                        <input type="hidden" id="itinenaryRefType" value="enquiry">
+                        <input type="hidden" id="itinenaryType" value="tour_package">
+                        <a class="btn popUpBtn hidden" id="sendItinerary"><i class="fi-rr-paper-plane"></i> Send
+                            itinerary</a>
+                        <a href="#" class="btn popUpBtn hidden" id="downloadItinerary" target="_blank"><i
+                                class="fi-rr-file-pdf"></i> Download itinerary</a>
+                        <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                            Cancel</a>
                     </div>
                 </div>
             </div>
-            <div class="widget box-2">
-                <div class="actionArea">
-                    <input type="hidden" id="itinenaryId" value="">
-                    <input type="hidden" id="itinenaryMrp" value="">
-                    <input type="hidden" id="itinenaryRefId" value="<?php echo $enquiry_id ?>">
-                    <input type="hidden" id="itinenaryRefType" value="enquiry">
-                    <input type="hidden" id="itinenaryType" value="tour_package">
-                    <a class="btn popUpBtn hidden" id="sendItinerary"><i class="fi-rr-paper-plane"></i> Send
-                        itinerary</a>
-                    <a href="#" class="btn popUpBtn hidden" id="downloadItinerary" target="_blank"><i
-                            class="fi-rr-file-pdf"></i> Download itinerary</a>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</a>
-                </div>
-            </div>
         </div>
-    </div>
 
-    <div class="popUp voucherBox">
-        <div class="fullScreenPopUpBox">
-            <div class="widget box-8">
-                <div class="contentArea">
-                    <h4 class="heading"><?php echo $enquiry_subject ?> Vouchers</span></h2>
+        <div class="popUp voucherBox">
+            <div class="fullScreenPopUpBox">
+                <div class="widget box-8">
+                    <div class="contentArea">
+                        <h4 class="heading"><?php echo $enquiry_subject ?> Vouchers</span></h2>
+                    </div>
                 </div>
-            </div>
-            <div class="widget box-2">
-                <div class="actionArea">
-                    <a class="btn popUpBtn"><i class="fi-rr-paper-plane"></i> Send vouchers</a>
-                    <a class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload vouchers</a>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</a>
+                <div class="widget box-2">
+                    <div class="actionArea">
+                        <a class="btn popUpBtn"><i class="fi-rr-paper-plane"></i> Send vouchers</a>
+                        <a class="btn popUpBtn"><i class="fi-rr-file-pdf"></i> Donwload vouchers</a>
+                        <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
+                            Cancel</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php
 }
 ?>
