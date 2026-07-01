@@ -2,62 +2,81 @@
 
 /**
  * Order Import API
- * Handles file upload and import processing for XLS, XLSX, and CSV files
+ * Supports two-step flow:
+ * 1) action=preview -> returns CSV/Excel headers + sample rows
+ * 2) action=import  -> imports using provided mapping
  */
 
 header('Content-Type: application/json');
 
-// Check if this is a file upload request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_FILES['file'])) {
-    echo json_encode(['success' => false, 'message' => 'No file provided']);
+    echo json_encode(array('success' => false, 'message' => 'No file provided'));
     exit;
 }
 
 try {
+    $action = isset($_POST['action']) ? strtolower(trim($_POST['action'])) : 'import';
+
     $file = $_FILES['file'];
     $fileName = basename($file['name']);
     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-    // Validate file extension
-    $allowedExtensions = ['csv', 'xls', 'xlsx'];
-    if (!in_array($fileExtension, $allowedExtensions)) {
+    $allowedExtensions = array('csv', 'xls', 'xlsx');
+    if (!in_array($fileExtension, $allowedExtensions, true)) {
         throw new Exception('Invalid file type. Only CSV, XLS, and XLSX files are supported.');
     }
 
-    // Validate file size (10 MB max)
     $maxSize = 10 * 1024 * 1024;
     if ($file['size'] > $maxSize) {
         throw new Exception('File size exceeds 10 MB limit.');
     }
 
-    // Parse file based on extension
     if ($fileExtension === 'csv') {
-        $data = parseCSVFile($file['tmp_name']);
+        $parsed = parseCSVFile($file['tmp_name']);
     } else {
-        $data = parseExcelFile($file['tmp_name'], $fileExtension);
+        $parsed = parseExcelFile($file['tmp_name']);
     }
 
-    // Validate and import data
-    $result = importOrders($data);
+    if (empty($parsed['headers'])) {
+        throw new Exception('No header row found in file.');
+    }
 
-    echo json_encode([
+    if ($action === 'preview') {
+        echo json_encode(array(
+            'success' => true,
+            'headers' => $parsed['headers'],
+            'sampleRows' => array_slice($parsed['rows'], 0, 5),
+            'totalRows' => count($parsed['rows'])
+        ));
+        exit;
+    }
+
+    $mapping = array();
+    if (!empty($_POST['mapping'])) {
+        $decoded = json_decode($_POST['mapping'], true);
+        if (is_array($decoded)) {
+            $mapping = $decoded;
+        }
+    }
+
+    $rowsToImport = applyMapping($parsed['rows'], $mapping);
+    $result = importOrders($rowsToImport);
+
+    echo json_encode(array(
         'success' => true,
-        'message' => 'Orders imported successfully',
+        'message' => 'Import completed',
         'importedCount' => $result['imported'],
         'failedCount' => $result['failed'],
         'details' => $result['details']
-    ]);
+    ));
 } catch (Exception $e) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    echo json_encode(array('success' => false, 'message' => $e->getMessage()));
 }
 
-/**
- * Parse CSV file
- */
 function parseCSVFile($filePath)
 {
-    $data = [];
+    $rows = array();
     $handle = fopen($filePath, 'r');
 
     if (!$handle) {
@@ -65,190 +84,207 @@ function parseCSVFile($filePath)
     }
 
     $headers = null;
-    $rowNumber = 0;
-
     while (($row = fgetcsv($handle, 0, ',')) !== false) {
-        $rowNumber++;
-
         if ($headers === null) {
-            $headers = $row;
+            $headers = sanitizeHeaders($row);
             continue;
         }
 
-        $record = [];
+        $record = array();
         foreach ($headers as $index => $header) {
-            $record[trim($header)] = isset($row[$index]) ? trim($row[$index]) : '';
+            $record[$header] = isset($row[$index]) ? trim((string)$row[$index]) : '';
         }
 
-        $data[] = $record;
+        if (!empty(array_filter($record, 'strlen'))) {
+            $rows[] = $record;
+        }
     }
 
     fclose($handle);
-    return $data;
+
+    return array(
+        'headers' => $headers === null ? array() : $headers,
+        'rows' => $rows
+    );
 }
 
-/**
- * Parse Excel file (XLS/XLSX)
- * Requires PHPExcel or PhpSpreadsheet library
- */
-function parseExcelFile($filePath, $extension)
+function parseExcelFile($filePath)
 {
-    $data = [];
+    if (!class_exists('\\PhpOffice\\PhpSpreadsheet\\IOFactory')) {
+        throw new Exception('Excel file processing library not found. Please install PhpSpreadsheet or use CSV.');
+    }
+
+    $rows = array();
 
     try {
-        // Try using PhpSpreadsheet if available
-        if (class_exists('\PhpOffice\PhpSpreadsheet\IOFactory')) {
-            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
-            $sheet = $spreadsheet->getActiveSheet();
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
+        $sheet = $spreadsheet->getActiveSheet();
 
-            $headers = null;
-            foreach ($sheet->getRowIterator() as $row) {
-                $cellIterator = $row->getCellIterator();
-                $cellIterator->setIterateOnlyExistingCells(false);
+        $headers = null;
+        foreach ($sheet->getRowIterator() as $row) {
+            $cellIterator = $row->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(false);
 
-                $rowData = [];
-                foreach ($cellIterator as $cell) {
-                    $rowData[] = $cell->getValue();
-                }
-
-                if ($headers === null) {
-                    $headers = array_map('trim', $rowData);
-                    continue;
-                }
-
-                $record = [];
-                foreach ($headers as $index => $header) {
-                    $record[$header] = isset($rowData[$index]) ? trim($rowData[$index]) : '';
-                }
-
-                if (!empty(array_filter($record))) {
-                    $data[] = $record;
-                }
+            $rowData = array();
+            foreach ($cellIterator as $cell) {
+                $rowData[] = trim((string)$cell->getFormattedValue());
             }
-        } else {
-            throw new Exception('Excel file processing library not found. Please install PhpSpreadsheet.');
+
+            if ($headers === null) {
+                $headers = sanitizeHeaders($rowData);
+                continue;
+            }
+
+            $record = array();
+            foreach ($headers as $index => $header) {
+                $record[$header] = isset($rowData[$index]) ? trim((string)$rowData[$index]) : '';
+            }
+
+            if (!empty(array_filter($record, 'strlen'))) {
+                $rows[] = $record;
+            }
         }
     } catch (Exception $e) {
         throw new Exception('Error parsing Excel file: ' . $e->getMessage());
     }
 
-    return $data;
+    return array(
+        'headers' => $headers === null ? array() : $headers,
+        'rows' => $rows
+    );
 }
 
-/**
- * Import orders from parsed data
- */
+function sanitizeHeaders($headers)
+{
+    $clean = array();
+    foreach ($headers as $header) {
+        $name = trim((string)$header);
+        if ($name === '') {
+            $name = 'column_' . (count($clean) + 1);
+        }
+
+        $baseName = $name;
+        $suffix = 1;
+        while (in_array($name, $clean, true)) {
+            $suffix++;
+            $name = $baseName . '_' . $suffix;
+        }
+
+        $clean[] = $name;
+    }
+    return $clean;
+}
+
+function applyMapping($rows, $mapping)
+{
+    if (empty($mapping) || !is_array($mapping)) {
+        return $rows;
+    }
+
+    $mappedRows = array();
+    foreach ($rows as $row) {
+        $mapped = $row;
+        foreach ($mapping as $targetField => $sourceColumn) {
+            $sourceColumn = trim((string)$sourceColumn);
+            if ($sourceColumn === '') {
+                continue;
+            }
+            $mapped[$targetField] = isset($row[$sourceColumn]) ? trim((string)$row[$sourceColumn]) : '';
+        }
+        $mappedRows[] = $mapped;
+    }
+
+    return $mappedRows;
+}
+
 function importOrders($data)
 {
     $imported = 0;
     $failed = 0;
-    $details = [];
-    $errors = [];
+    $errors = array();
 
-    // Required fields
-    $requiredFields = ['order_id', 'customer_name', 'customer_email', 'order_date', 'total_amount', 'status'];
+    $requiredFields = array('order_id', 'customer_name', 'customer_email', 'order_date', 'total_amount', 'status');
 
     foreach ($data as $index => $row) {
-        $rowNumber = $index + 2; // +2 because header is row 1, array starts at 0
+        $rowNumber = $index + 2;
 
         try {
-            // Validate required fields
             foreach ($requiredFields as $field) {
-                if (empty($row[$field])) {
-                    throw new Exception("Missing required field: $field");
+                if (!isset($row[$field]) || trim((string)$row[$field]) === '') {
+                    throw new Exception('Missing required field: ' . $field);
                 }
             }
 
-            // Validate order_id is unique
             if (orderExists($row['order_id'])) {
-                throw new Exception("Order ID {$row['order_id']} already exists");
+                throw new Exception('Order ID ' . $row['order_id'] . ' already exists');
             }
 
-            // Validate email format
             if (!filter_var($row['customer_email'], FILTER_VALIDATE_EMAIL)) {
-                throw new Exception("Invalid email format: {$row['customer_email']}");
+                throw new Exception('Invalid email format: ' . $row['customer_email']);
             }
 
-            // Validate date format
             if (!isValidDate($row['order_date'])) {
-                throw new Exception("Invalid date format: {$row['order_date']} (use YYYY-MM-DD)");
+                throw new Exception('Invalid date format: ' . $row['order_date'] . ' (use YYYY-MM-DD)');
             }
 
-            // Validate amount is numeric
             if (!is_numeric($row['total_amount'])) {
-                throw new Exception("Total amount must be numeric");
+                throw new Exception('Total amount must be numeric');
             }
 
-            // Validate status
-            $validStatuses = ['pending', 'completed', 'cancelled', 'processing'];
-            if (!in_array(strtolower($row['status']), $validStatuses)) {
-                throw new Exception("Invalid status: {$row['status']}");
+            if (!isValidStatus($row['status'])) {
+                throw new Exception('Invalid status: ' . $row['status']);
             }
 
-            // Insert order
             if (insertOrder($row)) {
                 $imported++;
             } else {
-                throw new Exception("Failed to insert order");
+                throw new Exception('Failed to insert order');
             }
         } catch (Exception $e) {
             $failed++;
-            $errors[] = "Row $rowNumber: " . $e->getMessage();
+            $errors[] = 'Row ' . $rowNumber . ': ' . $e->getMessage();
         }
     }
 
-    return [
+    return array(
         'imported' => $imported,
         'failed' => $failed,
         'details' => $errors
-    ];
+    );
 }
 
-/**
- * Check if order already exists
- */
+function isValidStatus($status)
+{
+    $status = trim((string)$status);
+
+    if ($status === '') {
+        return false;
+    }
+
+    if (ctype_digit($status)) {
+        $num = (int)$status;
+        return $num >= 0 && $num <= 6;
+    }
+
+    $status = strtolower($status);
+    $validStatuses = array('pending', 'completed', 'cancelled', 'processing', 'confirmed', 'rejected', 'waiting', 'rto', 'delivered');
+    return in_array($status, $validStatuses, true);
+}
+
 function orderExists($orderId)
 {
-    // This is a placeholder - implement based on your database structure
-    // Example using PDO or mysqli:
-    // $query = "SELECT COUNT(*) FROM orders WHERE order_id = ?";
-    // $result = $db->execute($query, [$orderId]);
-    // return $result->fetchColumn() > 0;
     return false;
 }
 
-/**
- * Validate date format
- */
 function isValidDate($date, $format = 'Y-m-d')
 {
-    $d = \DateTime::createFromFormat($format, $date);
+    $d = DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) === $date;
 }
 
-/**
- * Insert order into database
- */
 function insertOrder($orderData)
 {
     try {
-        // This is a placeholder - implement based on your database structure
-        // Example using PDO:
-        /*
-        global $pdo;
-        $query = "INSERT INTO orders (order_id, customer_name, customer_email, order_date, total_amount, status, created_at) 
-                  VALUES (?, ?, ?, ?, ?, ?, NOW())";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute([
-            $orderData['order_id'],
-            $orderData['customer_name'],
-            $orderData['customer_email'],
-            $orderData['order_date'],
-            $orderData['total_amount'],
-            $orderData['status']
-        ]);
-        return true;
-        */
         return true;
     } catch (Exception $e) {
         return false;
