@@ -1682,6 +1682,7 @@ section.form .btn {
   font-family: "Fira Sans", sans-serif;
   font-size: 18px;
   cursor: pointer;
+  background: var(--brand-700);
 }
 
 section.form .btn:focus {
