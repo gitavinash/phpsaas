@@ -355,7 +355,6 @@
                     $mob  = htmlspecialchars($data['user_mobile'] ?? '', ENT_QUOTES, 'UTF-8');
                     $membership_visits  = htmlspecialchars($data['membership_total_visit'] ?? '', ENT_QUOTES, 'UTF-8');
                     $membership_avl_visits  = htmlspecialchars($data['membership_avl_visit'] ?? '', ENT_QUOTES, 'UTF-8');
-                    $membership_avl_visit_count = (int)($data['membership_avl_visit'] ?? 0);
                     $membership_price = isset($data['membership_price']) ? $data['membership_price'] : 0;
                     $membership_due = isset($data['membership_amount_due']) ? $data['membership_amount_due'] : 0;
                     $encoded_id = base64_encode($id);
@@ -415,15 +414,13 @@
                                         <i class="fi-rr-time-past"></i> History
                                     </a>
                                 </div>
-                                <?php if ($membership_avl_visit_count === 0): ?>
-                                    <div class="action-item">
-                                        <a href="#" data-type="spa/membership" data-id="<?php echo $id; ?>"
-                                            title="Delete membership" data-title="Delete membership"
-                                            class="btn btn-red dataTableBtn deleteButton">
-                                            <i class="fi fi-rr-trash bgRed"></i> Delete
-                                        </a>
-                                    </div>
-                                <?php endif; ?>
+                                <div class="action-item">
+                                    <a href="#" data-type="spa/membership" data-id="<?php echo $id; ?>"
+                                        title="Delete membership" data-title="Delete membership"
+                                        class="btn btn-red dataTableBtn deleteButton">
+                                        <i class="fi fi-rr-trash bgRed"></i> Delete
+                                    </a>
+                                </div>
                             </div>
 
                             <?php if ($membership_due > 0): ?>
