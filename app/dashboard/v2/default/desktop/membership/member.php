@@ -1,35 +1,35 @@
 <style>
-.pagination-bar {
-    float: left;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 24px 0 12px;
-}
+    .pagination-bar {
+        float: left;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 24px 0 12px;
+    }
 
-.pagination-left {
-    flex: 1;
-    text-align: left;
-}
+    .pagination-left {
+        flex: 1;
+        text-align: left;
+    }
 
-.pagination-center {
-    flex: 1;
-    text-align: center;
-    font-size: 1.1em;
-    font-weight: 500;
-    color: #2563eb;
-}
+    .pagination-center {
+        flex: 1;
+        text-align: center;
+        font-size: 1.1em;
+        font-weight: 500;
+        color: #2563eb;
+    }
 
-.pagination-right {
-    flex: 1;
-    text-align: right;
-}
+    .pagination-right {
+        flex: 1;
+        text-align: right;
+    }
 
-.btn.disabled {
-    opacity: 0.5;
-    pointer-events: none;
-}
+    .btn.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
 </style>
 <h2 class="heading">Membership List
     <span>All membership list will be displayed here</span>
@@ -121,62 +121,62 @@
             </form>
         </div>
         <style>
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.7);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.2s;
-        }
-
-        .loading-spinner {
-            width: 56px;
-            height: 56px;
-            border: 6px solid #2563eb;
-            border-top: 6px solid #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
+            .loading-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(255, 255, 255, 0.7);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: opacity 0.2s;
             }
 
-            100% {
-                transform: rotate(360deg);
+            .loading-spinner {
+                width: 56px;
+                height: 56px;
+                border: 6px solid #2563eb;
+                border-top: 6px solid #fff;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
             }
-        }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
         </style>
         <div id="loadingOverlay" class="loading-overlay" style="display:none;">
             <div class="loading-spinner"></div>
         </div>
         <script>
-        document.getElementById('openFilterModal').onclick = function() {
-            document.getElementById('filterModal').style.display = 'block';
-        };
-        document.getElementById('closeFilterModal').onclick = function() {
-            document.getElementById('filterModal').style.display = 'none';
-        };
-        // Hide modal on outside click
-        window.addEventListener('click', function(e) {
-            var modal = document.getElementById('filterModal');
-            var btn = document.getElementById('openFilterModal');
-            if (modal.style.display === 'block' && !modal.contains(e.target) && e.target !== btn && !btn
-                .contains(e.target)) {
-                modal.style.display = 'none';
-            }
-        });
-        // Show loading overlay on filter apply
-        document.getElementById('filterForm').onsubmit = function() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        };
+            document.getElementById('openFilterModal').onclick = function() {
+                document.getElementById('filterModal').style.display = 'block';
+            };
+            document.getElementById('closeFilterModal').onclick = function() {
+                document.getElementById('filterModal').style.display = 'none';
+            };
+            // Hide modal on outside click
+            window.addEventListener('click', function(e) {
+                var modal = document.getElementById('filterModal');
+                var btn = document.getElementById('openFilterModal');
+                if (modal.style.display === 'block' && !modal.contains(e.target) && e.target !== btn && !btn
+                    .contains(e.target)) {
+                    modal.style.display = 'none';
+                }
+            });
+            // Show loading overlay on filter apply
+            document.getElementById('filterForm').onsubmit = function() {
+                document.getElementById('loadingOverlay').style.display = 'flex';
+            };
         </script>
         <?php
         $rows = [];
@@ -348,99 +348,109 @@
         </div>
         <div class="only-mobile membership-card-list" style="float: left;">
             <?php if (!empty($rows)): ?>
-            <?php foreach ($rows as $data): ?>
-            <?php
+                <?php foreach ($rows as $data): ?>
+                    <?php
                     $id   = (int)$data['membership_id'];
                     $name = htmlspecialchars(ucwords($data['membership_profile_name'] ?? ''), ENT_QUOTES, 'UTF-8');
                     $mob  = htmlspecialchars($data['user_mobile'] ?? '', ENT_QUOTES, 'UTF-8');
                     $membership_visits  = htmlspecialchars($data['membership_total_visit'] ?? '', ENT_QUOTES, 'UTF-8');
                     $membership_avl_visits  = htmlspecialchars($data['membership_avl_visit'] ?? '', ENT_QUOTES, 'UTF-8');
+                    $membership_avl_visit_count = (int)($data['membership_avl_visit'] ?? 0);
                     $membership_price = isset($data['membership_price']) ? $data['membership_price'] : 0;
                     $membership_due = isset($data['membership_amount_due']) ? $data['membership_amount_due'] : 0;
                     $encoded_id = base64_encode($id);
                     ?>
 
-            <article class="widget-setting-info membership-card" data-id="<?php echo $encoded_id; ?>">
-                <div class="about-feature" style="max-width:100%;">
-                    <h3 class="heading name-cap" style="margin:0;">
-                        <div style="display: flex; justify-content: space-between; width: 100%;">
-                            <p><strong><?php echo $name; ?></strong>
-                                <span>#<?php echo $id; ?></span>
-                            </p>
-                            <p
-                                style="background-color: #d4edda; padding: 0px 12px; border-radius: 4px; font-weight: 700; line-height: 44px; font-size: 18px; text-align: center; min-width: 100px; color: #155724;">
-                                ₹ <?php echo number_format($membership_price); ?></p>
-                        </div>
-                    </h3>
+                    <article class="widget-setting-info membership-card" data-id="<?php echo $encoded_id; ?>">
+                        <div class="about-feature" style="max-width:100%;">
+                            <h3 class="heading name-cap" style="margin:0;">
+                                <div style="display: flex; justify-content: space-between; width: 100%;">
+                                    <p><strong><?php echo $name; ?></strong>
+                                        <span>#<?php echo $id; ?></span>
+                                    </p>
+                                    <p
+                                        style="background-color: #d4edda; padding: 0px 12px; border-radius: 4px; font-weight: 700; line-height: 44px; font-size: 18px; text-align: center; min-width: 100px; color: #155724;">
+                                        ₹ <?php echo number_format($membership_price); ?></p>
+                                </div>
+                            </h3>
 
-                    <hr>
+                            <hr>
 
-                    <div class="row">
-                        <div class="box-12 info-stack">
-                            <p style="margin:0;">
-                                <strong>Mobile</strong><br>
-                                <span><?php echo $mob; ?></span>
-                            </p>
-                            <p style="margin:0;">
-                                <strong>Total Visits</strong><br>
-                                <span><?php echo $membership_visits; ?></span>
-                            </p>
-                            <p style="margin:0;">
-                                <strong>Avl. Visits</strong><br>
-                                <span><?php echo $membership_avl_visits; ?></span>
-                            </p>
-                        </div>
-                    </div>
+                            <div class="row">
+                                <div class="box-12 info-stack">
+                                    <p style="margin:0;">
+                                        <strong>Mobile</strong><br>
+                                        <span><?php echo $mob; ?></span>
+                                    </p>
+                                    <p style="margin:0;">
+                                        <strong>Total Visits</strong><br>
+                                        <span><?php echo $membership_visits; ?></span>
+                                    </p>
+                                    <p style="margin:0;">
+                                        <strong>Avl. Visits</strong><br>
+                                        <span><?php echo $membership_avl_visits; ?></span>
+                                    </p>
+                                </div>
+                            </div>
 
-                    <?php if ($membership_due > 0): ?>
-                    <div class="membership-due-strip">
-                        <div style="font-size:13px;opacity:0.9;">Amount Due</div>
-                        <div style="font-size:24px; line-height:1.1; font-weight:800;">₹
-                            <?php echo number_format($membership_due); ?></div>
-                    </div>
-                    <?php endif; ?>
+                            <?php if ($membership_due > 0): ?>
+                                <div class="membership-due-strip">
+                                    <div style="font-size:13px;opacity:0.9;">Amount Due</div>
+                                    <div style="font-size:24px; line-height:1.1; font-weight:800;">₹
+                                        <?php echo number_format($membership_due); ?></div>
+                                </div>
+                            <?php endif; ?>
 
-                    <!-- Actions -->
-                    <div class="action-stack" style="margin-top:10px;">
-                        <div class="action-item">
-                            <a href="/dashboard/membership/update/?id=<?php echo $encoded_id; ?>"
-                                class="btn btn-blue dataTableBtn" title="Edit membership">
-                                <i class="fi-rr-pencil"></i> Edit
-                            </a>
-                        </div>
-                        <div class="action-item">
-                            <a href="#" class="btn btn-grey dataTableBtn showMemerbershipHistoryButton"
-                                data-id="<?php echo $encoded_id; ?>" title="Visit History">
-                                <i class="fi-rr-time-past"></i> History
-                            </a>
-                        </div>
-                    </div>
+                            <!-- Actions -->
+                            <div class="action-stack" style="margin-top:10px;">
+                                <div class="action-item">
+                                    <a href="/dashboard/membership/update/?id=<?php echo $encoded_id; ?>"
+                                        class="btn btn-blue dataTableBtn" title="Edit membership">
+                                        <i class="fi-rr-pencil"></i> Edit
+                                    </a>
+                                </div>
+                                <div class="action-item">
+                                    <a href="#" class="btn btn-grey dataTableBtn showMemerbershipHistoryButton"
+                                        data-id="<?php echo $encoded_id; ?>" title="Visit History">
+                                        <i class="fi-rr-time-past"></i> History
+                                    </a>
+                                </div>
+                                <?php if ($membership_avl_visit_count === 0): ?>
+                                    <div class="action-item">
+                                        <a href="#" data-type="spa/membership" data-id="<?php echo $id; ?>"
+                                            title="Delete membership" data-title="Delete membership"
+                                            class="btn btn-red dataTableBtn deleteButton">
+                                            <i class="fi fi-rr-trash bgRed"></i> Delete
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
 
-                    <?php if ($membership_due > 0): ?>
-                    <div class="action-stack" style="margin-top:10px;">
-                        <div class="action-item">
-                            <a href="#" class="btn btn-clear dataTableBtn clearDuesButton"
-                                data-id="<?php echo $encoded_id; ?>" title="Clear dues">
-                                <i class="fi-rr-check-circle"></i> Clear old dues
-                            </a>
+                            <?php if ($membership_due > 0): ?>
+                                <div class="action-stack" style="margin-top:10px;">
+                                    <div class="action-item">
+                                        <a href="#" class="btn btn-clear dataTableBtn clearDuesButton"
+                                            data-id="<?php echo $encoded_id; ?>" title="Clear dues">
+                                            <i class="fi-rr-check-circle"></i> Clear old dues
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
-                    </div>
-                    <?php endif; ?>
-                </div>
-            </article>
-            <?php endforeach; ?>
+                    </article>
+                <?php endforeach; ?>
             <?php else: ?>
-            <div class="empty-state"
-                style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 0 32px 0;opacity:0.85;">
-                <div style="font-size:54px;color:#38bdf8;margin-bottom:12px;"><i class="fi fi-rr-box-open"></i></div>
-                <div style="font-size:1.3rem;font-weight:600;color:#334155;margin-bottom:6px;">No memberships found
+                <div class="empty-state"
+                    style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 0 32px 0;opacity:0.85;">
+                    <div style="font-size:54px;color:#38bdf8;margin-bottom:12px;"><i class="fi fi-rr-box-open"></i></div>
+                    <div style="font-size:1.3rem;font-weight:600;color:#334155;margin-bottom:6px;">No memberships found
+                    </div>
+                    <div style="font-size:1rem;color:#64748b;margin-bottom:18px;">Try adjusting your filters or add a new
+                        membership to get started.</div>
+                    <a href="/dashboard/membership/sell/" class="btn btn-blue"
+                        style="padding:8px 22px;font-size:1rem;border-radius:6px;margin-top:8px;"><i
+                            class="fi fi-rr-plus"></i> Add Membership</a>
                 </div>
-                <div style="font-size:1rem;color:#64748b;margin-bottom:18px;">Try adjusting your filters or add a new
-                    membership to get started.</div>
-                <a href="/dashboard/membership/sell/" class="btn btn-blue"
-                    style="padding:8px 22px;font-size:1rem;border-radius:6px;margin-top:8px;"><i
-                        class="fi fi-rr-plus"></i> Add Membership</a>
-            </div>
             <?php endif; ?>
         </div>
 
@@ -464,9 +474,9 @@
     <!-- Back Button -->
     <div class="pagination-left">
         <?php if ($has_prev): ?>
-        <a href="<?php echo htmlspecialchars(buildPageUrl($page - 1)); ?>" class="btn btn-grey">&laquo; Back</a>
+            <a href="<?php echo htmlspecialchars(buildPageUrl($page - 1)); ?>" class="btn btn-grey">&laquo; Back</a>
         <?php else: ?>
-        <span class="btn btn-grey disabled">&laquo; Back</span>
+            <span class="btn btn-grey disabled">&laquo; Back</span>
         <?php endif; ?>
     </div>
 
@@ -483,9 +493,9 @@
     <!-- Next Button -->
     <div class="pagination-right">
         <?php if ($has_next): ?>
-        <a href="<?php echo htmlspecialchars(buildPageUrl($page + 1)); ?>" class="btn btn-blue">Next &raquo;</a>
+            <a href="<?php echo htmlspecialchars(buildPageUrl($page + 1)); ?>" class="btn btn-blue">Next &raquo;</a>
         <?php else: ?>
-        <span class="btn btn-blue disabled">Next &raquo;</span>
+            <span class="btn btn-blue disabled">Next &raquo;</span>
         <?php endif; ?>
     </div>
 
@@ -505,46 +515,46 @@
 </div>
 
 <style>
-.membership-card-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-
-.membership-card-list .membership-card {
-    flex: 0 0 calc(40% - 8px);
-    max-width: calc(40% - 8px);
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #f0f9ff 60%, #e0e7ef 100%);
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba(20, 33, 61, 0.06);
-    border: 1px solid #e6ebf1;
-    padding: 16px 18px;
-}
-
-.membership-card-list .membership-card .icon-bg {
-    position: absolute;
-    right: -18px;
-    top: -18px;
-    font-size: 80px;
-    color: #38bdf8;
-    opacity: 0.13;
-    pointer-events: none;
-    z-index: 0;
-}
-
-@media (max-width: 700px) {
     .membership-card-list {
-        flex-direction: column;
-        gap: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
     }
 
     .membership-card-list .membership-card {
-        flex: 1 1 100%;
-        max-width: 100%;
+        flex: 0 0 calc(40% - 8px);
+        max-width: calc(40% - 8px);
         margin-bottom: 16px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f0f9ff 60%, #e0e7ef 100%);
+        border-radius: 14px;
+        box-shadow: 0 2px 8px rgba(20, 33, 61, 0.06);
+        border: 1px solid #e6ebf1;
+        padding: 16px 18px;
     }
-}
+
+    .membership-card-list .membership-card .icon-bg {
+        position: absolute;
+        right: -18px;
+        top: -18px;
+        font-size: 80px;
+        color: #38bdf8;
+        opacity: 0.13;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    @media (max-width: 700px) {
+        .membership-card-list {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .membership-card-list .membership-card {
+            flex: 1 1 100%;
+            max-width: 100%;
+            margin-bottom: 16px;
+        }
+    }
 </style>
