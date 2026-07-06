@@ -1053,17 +1053,45 @@ function getTestimonials($conn, $latest = true, $limit = 5, $characterLimit = 25
 }
 
 
-function getCategories($conn, $type = 'post', $latest = true, $limit = 5, $characterCondition = true, $characterLimit = 250)
+function getCategories(mysqli $conn, string $type = 'post', bool $latest = true, int $limit = 5, bool $characterCondition = true, int $characterLimit = 250): array
 {
+    $type = strtolower(trim($type));
+    if (!preg_match('/^[a-z0-9_]+$/', $type)) {
+        $type = 'post';
+    }
 
-    $latestCategoriesCondition = $latest ? "ORDER BY category_time DESC" : "ORDER BY category_time ASC";
-
-    $query = "SELECT category_title as title, category_image as profile_image, " . (($characterCondition == true) ? "LEFT(
+    $latestCategoriesCondition = $latest ? "ORDER BY c.category_time DESC" : "ORDER BY c.category_time ASC";
+    $descriptionQuery = $characterCondition
+        ? "LEFT(
             TRIM(
-                REGEXP_REPLACE(category_description, '<[^>]*>', '')
+                REGEXP_REPLACE(c.category_description, '<[^>]*>', '')
             ),
             {$characterLimit}
-        ) AS description" :  " category_description as description ") . ", link_url FROM " . TABLE_PREFIX . "category LEFT JOIN " . TABLE_PREFIX . "link ON category_id=link_relation_id AND link_site_id=" . SITE_ID . " AND link_type='category' AND link_status=200 WHERE category_type='{$type}' AND category_status = 1 AND category_site_id=" . SITE_ID . " {$latestCategoriesCondition} LIMIT {$limit}";
+        ) AS description"
+        : "c.category_description AS description";
+
+    $query = "SELECT
+            c.category_title AS title,
+            c.category_image AS profile_image,
+            {$descriptionQuery},
+            l.link_url,
+            COUNT(t.{$type}_id) AS article_count
+        FROM " . TABLE_PREFIX . "category c
+        LEFT JOIN " . TABLE_PREFIX . "link l
+            ON c.category_id = l.link_relation_id
+           AND l.link_site_id = " . SITE_ID . "
+           AND l.link_type = 'category'
+           AND l.link_status = 200
+        LEFT JOIN " . TABLE_PREFIX . "{$type} t
+            ON t.{$type}_category = c.category_id
+           AND t.{$type}_status = 1
+           AND t.{$type}_site_id = " . SITE_ID . "
+        WHERE c.category_type = '{$type}'
+          AND c.category_status = 1
+          AND c.category_site_id = " . SITE_ID . "
+        GROUP BY c.category_id, c.category_title, c.category_image, c.category_description, l.link_url
+        {$latestCategoriesCondition}
+        LIMIT {$limit}";
 
     $resData = mysqli_query($conn, $query);
     if (!$resData) {
@@ -1072,10 +1100,26 @@ function getCategories($conn, $type = 'post', $latest = true, $limit = 5, $chara
 
     $out = [];
     while ($row = mysqli_fetch_assoc($resData)) {
+        $row['article_count'] = (int)$row['article_count'];
         $out[] = $row;
     }
 
     mysqli_free_result($resData);
 
     return $out;
+}
+
+
+function timeToRead($content, $wordsPerMinute = 200)
+{
+    $plainText = trim(strip_tags((string) $content));
+
+    if ($plainText === '') {
+        return '1 min read';
+    }
+
+    $wordCount = str_word_count($plainText);
+    $readMins = max(1, (int) ceil($wordCount / max(1, (int) $wordsPerMinute)));
+
+    return (($readMins == 1) ? '1 min read' : $readMins . ' mins read');
 }

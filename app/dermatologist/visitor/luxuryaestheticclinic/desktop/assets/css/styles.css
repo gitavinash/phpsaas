@@ -367,7 +367,7 @@ section {
   position: absolute;
   left: -20px;
   top: 100%;
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
