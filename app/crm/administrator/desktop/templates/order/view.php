@@ -70,473 +70,474 @@ if (isset($id)) {
 
 ?>
 
-<style>
-.order-info-ui {
-    --oi-bg: #f8fafc;
-    --oi-surface: #ffffff;
-    --oi-surface-soft: #f9fafb;
-    --oi-border: #e5e7eb;
-    --oi-text: #111827;
-    --oi-muted: #6b7280;
-    --oi-accent: #0f172a;
-    --oi-accent-soft: #eff6ff;
-    background: var(--oi-bg);
-    border: 1px solid var(--oi-border);
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-    padding: 16px;
-    color: var(--oi-text);
-}
+                <style>
+                    .order-info-ui {
+                        --oi-bg: #f8fafc;
+                        --oi-surface: #ffffff;
+                        --oi-surface-soft: #f9fafb;
+                        --oi-border: #e5e7eb;
+                        --oi-text: #111827;
+                        --oi-muted: #6b7280;
+                        --oi-accent: #0f172a;
+                        --oi-accent-soft: #eff6ff;
+                        background: var(--oi-bg);
+                        border: 1px solid var(--oi-border);
+                        border-radius: 14px;
+                        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+                        padding: 16px;
+                        color: var(--oi-text);
+                    }
 
-.order-info-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--oi-border);
-}
+                    .order-info-head {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        margin-bottom: 16px;
+                        padding-bottom: 12px;
+                        border-bottom: 1px solid var(--oi-border);
+                    }
 
-.order-info-head h2 {
-    margin: 0;
-    color: var(--oi-accent);
-    letter-spacing: -0.02em;
-    font-weight: 700;
-    font-size: 22px;
-}
+                    .order-info-head h2 {
+                        margin: 0;
+                        color: var(--oi-accent);
+                        letter-spacing: -0.02em;
+                        font-weight: 700;
+                        font-size: 22px;
+                    }
 
-.order-info-subtitle {
-    margin: 5px 0 0;
-    color: var(--oi-muted);
-    font-size: 13px;
-}
+                    .order-info-subtitle {
+                        margin: 5px 0 0;
+                        color: var(--oi-muted);
+                        font-size: 13px;
+                    }
 
-.order-overview {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
-}
+                    .order-overview {
+                        display: grid;
+                        grid-template-columns: 2fr 1fr;
+                        gap: 12px;
+                        margin-bottom: 12px;
+                    }
 
-.order-overview-card {
-    background: var(--oi-surface);
-    border: 1px solid var(--oi-border);
-    border-radius: 12px;
-    padding: 14px;
-    box-shadow: none;
-}
+                    .order-overview-card {
+                        background: var(--oi-surface);
+                        border: 1px solid var(--oi-border);
+                        border-radius: 12px;
+                        padding: 14px;
+                        box-shadow: none;
+                    }
 
-.order-overview-title {
-    margin: 0 0 8px;
-    color: var(--oi-muted);
-    text-transform: uppercase;
-    font-size: 11px;
-    letter-spacing: 0.8px;
-    font-weight: 700;
-}
+                    .order-overview-title {
+                        margin: 0 0 8px;
+                        color: var(--oi-muted);
+                        text-transform: uppercase;
+                        font-size: 11px;
+                        letter-spacing: 0.8px;
+                        font-weight: 700;
+                    }
 
-.order-meta-line {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
+                    .order-meta-line {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 6px;
+                    }
 
-.order-chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 10px;
-    border-radius: 999px;
-    border: 1px solid #d1d5db;
-    background: var(--oi-surface-soft);
-    color: #374151;
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 1;
-    max-width: 100%;
-    white-space: normal;
-}
+                    .order-chip {
+                        display: inline-flex;
+                        align-items: center;
+                        padding: 6px 10px;
+                        border-radius: 999px;
+                        border: 1px solid #d1d5db;
+                        background: var(--oi-surface-soft);
+                        color: #374151;
+                        font-size: 11px;
+                        font-weight: 600;
+                        line-height: 1;
+                        max-width: 100%;
+                        white-space: normal;
+                    }
 
-.order-chip.order-chip-accent {
-    border-color: #bfdbfe;
-    background: var(--oi-accent-soft);
-    color: #1e40af;
-}
+                    .order-chip.order-chip-accent {
+                        border-color: #bfdbfe;
+                        background: var(--oi-accent-soft);
+                        color: #1e40af;
+                    }
 
-.order-chip.order-chip-status-success {
-    background: #ecfdf5;
-    border-color: #bbf7d0;
-    color: #166534;
-}
+                    .order-chip.order-chip-status-success {
+                        background: #ecfdf5;
+                        border-color: #bbf7d0;
+                        color: #166534;
+                    }
 
-.order-chip.order-chip-status-warning {
-    background: #fffbeb;
-    border-color: #fde68a;
-    color: #92400e;
-}
+                    .order-chip.order-chip-status-warning {
+                        background: #fffbeb;
+                        border-color: #fde68a;
+                        color: #92400e;
+                    }
 
-.order-chip.order-chip-status-danger {
-    background: #fef2f2;
-    border-color: #fecaca;
-    color: #991b1b;
-}
+                    .order-chip.order-chip-status-danger {
+                        background: #fef2f2;
+                        border-color: #fecaca;
+                        color: #991b1b;
+                    }
 
-.order-chip.order-chip-status-default {
-    background: #f3f4f6;
-    border-color: #d1d5db;
-    color: #4b5563;
-}
+                    .order-chip.order-chip-status-default {
+                        background: #f3f4f6;
+                        border-color: #d1d5db;
+                        color: #4b5563;
+                    }
 
-.order-metric-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-}
+                    .order-metric-grid {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 10px;
+                    }
 
-.order-metric {
-    border: 1px solid var(--oi-border);
-    border-radius: 10px;
-    background: #fff;
-    padding: 10px;
-}
+                    .order-metric {
+                        border: 1px solid var(--oi-border);
+                        border-radius: 10px;
+                        background: #fff;
+                        padding: 10px;
+                    }
 
-.order-metric-label {
-    margin: 0;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-    color: #9ca3af;
-}
+                    .order-metric-label {
+                        margin: 0;
+                        font-size: 10px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.7px;
+                        color: #9ca3af;
+                    }
 
-.order-metric-value {
-    margin-top: 4px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #111827;
-}
+                    .order-metric-value {
+                        margin-top: 4px;
+                        font-size: 14px;
+                        font-weight: 700;
+                        color: #111827;
+                    }
 
-.order-info-shell {
-    background: transparent;
-    border-radius: 12px;
-    padding: 0;
-    border: 0;
-}
+                    .order-info-shell {
+                        background: transparent;
+                        border-radius: 12px;
+                        padding: 0;
+                        border: 0;
+                    }
 
-.order-info-ui .box-1 {
-    display: grid;
-    grid-template-columns: 1.6fr 1fr;
-    gap: 12px;
-    float: none;
-}
+                    .order-info-ui .box-1 {
+                        display: grid;
+                        grid-template-columns: 1.6fr 1fr;
+                        gap: 12px;
+                        float: none;
+                    }
 
-.order-info-ui .box-1>.box-2 {
-    min-width: 0;
-}
+                    .order-info-ui .box-1>.box-2 {
+                        min-width: 0;
+                    }
 
-.order-info-ui .box-2 {
-    width: auto;
-    float: none;
-    background: var(--oi-surface);
-    border: 1px solid var(--oi-border);
-    border-radius: 12px;
-    padding: 14px;
-    box-shadow: none;
-}
+                    .order-info-ui .box-2 {
+                        width: auto;
+                        float: none;
+                        background: var(--oi-surface);
+                        border: 1px solid var(--oi-border);
+                        border-radius: 12px;
+                        padding: 14px;
+                        box-shadow: none;
+                    }
 
-.order-info-ui .box-2 .box-2 {
-    border: 0;
-    box-shadow: none;
-    background: transparent;
-    border-radius: 0;
-}
+                    .order-info-ui .box-2 .box-2 {
+                        border: 0;
+                        box-shadow: none;
+                        background: transparent;
+                        border-radius: 0;
+                    }
 
-.order-summary-sticky {
-    position: sticky;
-    top: 16px;
-    align-self: start;
-}
+                    .order-summary-sticky {
+                        position: sticky;
+                        top: 16px;
+                        align-self: start;
+                    }
 
-.order-section-title {
-    margin: 0 0 10px;
-    color: #111827;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: none;
-    letter-spacing: 0.2px;
-}
+                    .order-section-title {
+                        margin: 0 0 10px;
+                        color: #111827;
+                        font-size: 14px;
+                        font-weight: 700;
+                        text-transform: none;
+                        letter-spacing: 0.2px;
+                    }
 
-.order-item-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 150px;
-    gap: 10px;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    background: #f9fafb;
-    border: 1px solid var(--oi-border);
-}
+                    .order-item-row {
+                        display: grid;
+                        grid-template-columns: minmax(0, 1fr) 150px;
+                        gap: 10px;
+                        margin-bottom: 10px;
+                        padding: 10px;
+                        border-radius: 10px;
+                        background: #f9fafb;
+                        border: 1px solid var(--oi-border);
+                    }
 
-.order-item-row .form-group {
-    margin-bottom: 0;
-}
+                    .order-item-row .form-group {
+                        margin-bottom: 0;
+                    }
 
-.order-customer-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-}
+                    .order-customer-grid {
+                        display: grid;
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                        gap: 10px;
+                    }
 
-.order-customer-grid .form-group {
-    margin-bottom: 0;
-}
+                    .order-customer-grid .form-group {
+                        margin-bottom: 0;
+                    }
 
-.order-info-ui .form-group {
-    margin-bottom: 12px;
-}
+                    .order-info-ui .form-group {
+                        margin-bottom: 12px;
+                    }
 
-.order-info-ui .form-group label {
-    display: block;
-    margin-bottom: 6px;
-    color: #6b7280;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
+                    .order-info-ui .form-group label {
+                        display: block;
+                        margin-bottom: 6px;
+                        color: #6b7280;
+                        font-size: 12px;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        letter-spacing: 0.3px;
+                    }
 
-.order-info-ui .inside-shadow,
-.order-info-ui .form-control {
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    box-shadow: none;
-    min-height: 40px;
-}
+                    .order-info-ui .inside-shadow,
+                    .order-info-ui .form-control {
+                        border-radius: 8px;
+                        border: 1px solid #d1d5db;
+                        box-shadow: none;
+                        min-height: 40px;
+                    }
 
-.order-info-ui .inside-shadow:focus,
-.order-info-ui .form-control:focus {
-    border-color: #93c5fd;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-}
+                    .order-info-ui .inside-shadow:focus,
+                    .order-info-ui .form-control:focus {
+                        border-color: #93c5fd;
+                        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+                    }
 
-.order-summary-image {
-    width: 100%;
-    max-width: 230px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-    border: 1px solid var(--oi-border);
-    margin-bottom: 14px;
-    background: #f3f4f6;
-}
+                    .order-summary-image {
+                        width: 100%;
+                        max-width: 230px;
+                        height: 200px;
+                        object-fit: cover;
+                        border-radius: 10px;
+                        border: 1px solid var(--oi-border);
+                        margin-bottom: 14px;
+                        background: #f3f4f6;
+                    }
 
-.order-collapsible {
-    border: 1px solid var(--oi-border);
-    border-radius: 11px;
-    background: #fff;
-    margin-bottom: 10px;
-    overflow: hidden;
-}
+                    .order-collapsible {
+                        border: 1px solid var(--oi-border);
+                        border-radius: 11px;
+                        background: #fff;
+                        margin-bottom: 10px;
+                        overflow: hidden;
+                    }
 
-.order-collapsible.order-collapsible-edit {
-    background: #fff;
-}
+                    .order-collapsible.order-collapsible-edit {
+                        background: #fff;
+                    }
 
-.order-collapsible.order-collapsible-summary {
-    background: #fff;
-}
+                    .order-collapsible.order-collapsible-summary {
+                        background: #fff;
+                    }
 
-.order-collapse-toggle {
-    width: 100%;
-    border: 0;
-    border-bottom: 1px solid var(--oi-border);
-    background: #f9fafb;
-    color: #1f2937;
-    text-align: left;
-    padding: 10px 12px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: none;
-    letter-spacing: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-}
+                    .order-collapse-toggle {
+                        width: 100%;
+                        border: 0;
+                        border-bottom: 1px solid var(--oi-border);
+                        background: #f9fafb;
+                        color: #1f2937;
+                        text-align: left;
+                        padding: 10px 12px;
+                        font-size: 12px;
+                        font-weight: 700;
+                        text-transform: none;
+                        letter-spacing: 0;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        cursor: pointer;
+                    }
 
-.order-collapsible.order-collapsible-edit .order-collapse-toggle {
-    background: #f9fafb;
-    color: #1f2937;
-}
+                    .order-collapsible.order-collapsible-edit .order-collapse-toggle {
+                        background: #f9fafb;
+                        color: #1f2937;
+                    }
 
-.order-collapsible.order-collapsible-summary .order-collapse-toggle {
-    background: #f9fafb;
-    color: #1f2937;
-}
+                    .order-collapsible.order-collapsible-summary .order-collapse-toggle {
+                        background: #f9fafb;
+                        color: #1f2937;
+                    }
 
-.order-collapse-toggle-icon {
-    font-size: 13px;
-    color: #9ca3af;
-    transition: transform 0.2s ease;
-}
+                    .order-collapse-toggle-icon {
+                        font-size: 13px;
+                        color: #9ca3af;
+                        transition: transform 0.2s ease;
+                    }
 
-.order-collapsible.is-open .order-collapse-toggle-icon {
-    transform: rotate(180deg);
-}
+                    .order-collapsible.is-open .order-collapse-toggle-icon {
+                        transform: rotate(180deg);
+                    }
 
-.order-collapse-body {
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    padding: 0 12px;
-    transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.22s ease;
-}
+                    .order-collapse-body {
+                        overflow: hidden;
+                        max-height: 0;
+                        opacity: 0;
+                        padding: 0 12px;
+                        transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.22s ease;
+                    }
 
-.order-collapsible.is-open .order-collapse-body {
-    max-height: 4000px;
-    opacity: 1;
-    padding: 12px;
-}
+                    .order-collapsible.is-open .order-collapse-body {
+                        max-height: 4000px;
+                        opacity: 1;
+                        padding: 12px;
+                    }
 
-.order-action-row {
-    grid-column: 1 / -1;
-    background: var(--oi-surface);
-    border: 1px solid var(--oi-border);
-    border-radius: 12px;
-    padding: 12px;
-    margin-top: 4px;
-    box-shadow: none;
-}
+                    .order-action-row {
+                        grid-column: 1 / -1;
+                        background: var(--oi-surface);
+                        border: 1px solid var(--oi-border);
+                        border-radius: 12px;
+                        padding: 12px;
+                        margin-top: 4px;
+                        box-shadow: none;
+                        width: 58.5%;
+                    }
 
-.order-action-row .btn {
-    margin-right: 8px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    min-width: 110px;
-    text-align: center;
-    box-shadow: none;
-    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
-}
+                    .order-action-row .btn {
+                        margin-right: 8px;
+                        margin-bottom: 8px;
+                        border-radius: 8px;
+                        min-width: 110px;
+                        text-align: center;
+                        box-shadow: none;
+                        transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+                    }
 
-.order-action-row .btn:hover {
-    transform: none;
-    box-shadow: none;
-}
+                    .order-action-row .btn:hover {
+                        transform: none;
+                        box-shadow: none;
+                    }
 
-.order-action-row .btn-green {
-    background: #ecfdf5;
-    border: 1px solid #bbf7d0;
-}
+                    .order-action-row .btn-green {
+                        background: #ecfdf5;
+                        border: 1px solid #bbf7d0;
+                    }
 
-.order-action-row .btn-green:hover {
-    background: #dcfce7;
-}
+                    .order-action-row .btn-green:hover {
+                        background: #dcfce7;
+                    }
 
-.order-action-row .btn-yellow {
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-}
+                    .order-action-row .btn-yellow {
+                        background: #fffbeb;
+                        border: 1px solid #fde68a;
+                    }
 
-.order-action-row .btn-yellow:hover {
-    background: #fef3c7;
-}
+                    .order-action-row .btn-yellow:hover {
+                        background: #fef3c7;
+                    }
 
-.order-action-row .btn-red {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-}
+                    .order-action-row .btn-red {
+                        background: #fef2f2;
+                        border: 1px solid #fecaca;
+                    }
 
-.order-action-row .btn-red:hover {
-    background: #fee2e2;
-}
+                    .order-action-row .btn-red:hover {
+                        background: #fee2e2;
+                    }
 
-@media (max-width: 991px) {
-    .order-overview {
-        grid-template-columns: 1fr;
-    }
+                    @media (max-width: 991px) {
+                        .order-overview {
+                            grid-template-columns: 1fr;
+                        }
 
-    .order-metric-grid {
-        grid-template-columns: 1fr;
-    }
+                        .order-metric-grid {
+                            grid-template-columns: 1fr;
+                        }
 
-    .order-item-row {
-        grid-template-columns: 1fr;
-    }
+                        .order-item-row {
+                            grid-template-columns: 1fr;
+                        }
 
-    .order-customer-grid {
-        grid-template-columns: 1fr;
-    }
+                        .order-customer-grid {
+                            grid-template-columns: 1fr;
+                        }
 
-    .order-info-ui .box-1 {
-        grid-template-columns: 1fr;
-    }
+                        .order-info-ui .box-1 {
+                            grid-template-columns: 1fr;
+                        }
 
-    .order-info-ui .box-2 {
-        padding: 10px;
-    }
+                        .order-info-ui .box-2 {
+                            padding: 10px;
+                        }
 
-    .order-summary-sticky {
-        position: static;
-    }
+                        .order-summary-sticky {
+                            position: static;
+                        }
 
-    .order-action-row .btn {
-        width: 100%;
-        margin-right: 0;
-    }
-}
-</style>
+                        .order-action-row .btn {
+                            width: 100%;
+                            margin-right: 0;
+                        }
+                    }
+                </style>
 
-<div class="order-info-ui" data-order-id="<?php echo $id ?>">
-    <div class="order-info-head">
-        <div>
-            <h2>Order Info</h2>
-            <p class="order-info-subtitle">Review, update, and process this order in one place.</p>
-        </div>
-    </div>
+                <div class="order-info-ui" data-order-id="<?php echo $id ?>">
+                    <div class="order-info-head">
+                        <div>
+                            <h2>Order Info</h2>
+                            <p class="order-info-subtitle">Review, update, and process this order in one place.</p>
+                        </div>
+                    </div>
 
-    <div class="order-overview">
-        <div class="order-overview-card">
-            <p class="order-overview-title">Order Snapshot</p>
-            <div class="order-meta-line">
-                <span class="order-chip order-chip-accent">Order ID: <?php echo $id ?></span>
-                <span class="order-chip <?php echo $orderStatusChipClass ?>">Status:
-                    <?php echo $orderStatusText ?></span>
-                <span class="order-chip">Payment: <?php echo ucwords($order_payment_mode) ?></span>
-                <span class="order-chip">Created: <?php echo $order_generate ?></span>
-            </div>
-        </div>
-        <div class="order-overview-card">
-            <p class="order-overview-title">Quick Metrics</p>
-            <div class="order-metric-grid">
-                <div class="order-metric">
-                    <p class="order-metric-label">Items</p>
-                    <div class="order-metric-value"><?php echo sizeof(explode(',', $order_product_id)) ?></div>
-                </div>
-                <div class="order-metric">
-                    <p class="order-metric-label">Delivery</p>
-                    <div class="order-metric-value">
-                        <?php echo (($order_delivery_charges != '') ? $order_delivery_charges : '0') ?></div>
-                </div>
-                <div class="order-metric">
-                    <p class="order-metric-label">Total</p>
-                    <div class="order-metric-value">
-                        <?php echo (($order_total_price != '') ? $order_total_price : '0') ?></div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <div class="order-overview">
+                        <div class="order-overview-card">
+                            <p class="order-overview-title">Order Snapshot</p>
+                            <div class="order-meta-line">
+                                <span class="order-chip order-chip-accent">Order ID: <?php echo $id ?></span>
+                                <span class="order-chip <?php echo $orderStatusChipClass ?>">Status:
+                                    <?php echo $orderStatusText ?></span>
+                                <span class="order-chip">Payment: <?php echo ucwords($order_payment_mode) ?></span>
+                                <span class="order-chip">Created: <?php echo $order_generate ?></span>
+                            </div>
+                        </div>
+                        <div class="order-overview-card">
+                            <p class="order-overview-title">Quick Metrics</p>
+                            <div class="order-metric-grid">
+                                <div class="order-metric">
+                                    <p class="order-metric-label">Items</p>
+                                    <div class="order-metric-value"><?php echo sizeof(explode(',', $order_product_id)) ?></div>
+                                </div>
+                                <div class="order-metric">
+                                    <p class="order-metric-label">Delivery</p>
+                                    <div class="order-metric-value">
+                                        <?php echo (($order_delivery_charges != '') ? $order_delivery_charges : '0') ?></div>
+                                </div>
+                                <div class="order-metric">
+                                    <p class="order-metric-label">Total</p>
+                                    <div class="order-metric-value">
+                                        <?php echo (($order_total_price != '') ? $order_total_price : '0') ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    <div class="form-box order-info-shell">
-        <form id="orderData">
-            <div class="box-1">
-                <div class="box-2">
-                    <div class="order-collapsible order-collapsible-edit is-open">
-                        <button type="button" class="order-collapse-toggle" data-target="orderEditCustomerPanel"
-                            aria-expanded="true">
-                            Order + Customer Details
-                            <span class="order-collapse-toggle-icon">▾</span>
-                        </button>
-                        <div class="order-collapse-body" id="orderEditCustomerPanel">
-                            <h3 class="order-section-title">Order Items</h3>
-                            <?php
+                    <div class="form-box order-info-shell">
+                        <form id="orderData">
+                            <div class="box-1">
+                                <div class="box-2">
+                                    <div class="order-collapsible order-collapsible-edit is-open">
+                                        <button type="button" class="order-collapse-toggle" data-target="orderEditCustomerPanel"
+                                            aria-expanded="true">
+                                            Order + Customer Details
+                                            <span class="order-collapse-toggle-icon">▾</span>
+                                        </button>
+                                        <div class="order-collapse-body" id="orderEditCustomerPanel">
+                                            <h3 class="order-section-title">Order Items</h3>
+                                            <?php
 
                                             // Fetch Product information from database
 
@@ -553,29 +554,29 @@ if (isset($id)) {
 
                                                         extract(mysqli_fetch_assoc($checkProduct)); ?>
 
-                            <div class="order-item-row">
-                                <div class="form-group">
-                                    <label>Product name (Cart item <?php echo $i + 1 ?>)</label>
-                                    <input type="hidden" name="product_id_<?php echo $i ?>"
-                                        value="<?php echo $productData[$i] ?>">
-                                    <input type="text" class="form-control inside-shadow"
-                                        value="<?php echo htmlspecialchars($product_title, ENT_QUOTES) ?>" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label>Qty</label>
-                                    <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow"
-                                        value="<?php echo str_replace(' ', '', $productQtyData[$i]) ?>">
-                                </div>
-                            </div>
+                                                        <div class="order-item-row">
+                                                            <div class="form-group">
+                                                                <label>Product name (Cart item <?php echo $i + 1 ?>)</label>
+                                                                <input type="hidden" name="product_id_<?php echo $i ?>"
+                                                                    value="<?php echo $productData[$i] ?>">
+                                                                <input type="text" class="form-control inside-shadow"
+                                                                    value="<?php echo htmlspecialchars($product_title, ENT_QUOTES) ?>" readonly>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Qty</label>
+                                                                <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow"
+                                                                    value="<?php echo str_replace(' ', '', $productQtyData[$i]) ?>">
+                                                            </div>
+                                                        </div>
 
-                            <?php
+                                                    <?php
 
                                                     } else { ?>
 
-                            <div class="order-item-row">
-                                <div class="form-group">
-                                    <label>Product name (Cart item <?php echo $i + 1 ?>)</label>
-                                    <?php
+                                                        <div class="order-item-row">
+                                                            <div class="form-group">
+                                                                <label>Product name (Cart item <?php echo $i + 1 ?>)</label>
+                                                                <?php
                                                                 $fallbackProductTitle = 'Unknown Product';
 
                                                                 for ($j = 0; $j < sizeof($productListData); $j++) {
@@ -585,72 +586,72 @@ if (isset($id)) {
                                                                     }
                                                                 }
                                                                 ?>
-                                    <input type="hidden" name="product_id_<?php echo $i ?>"
-                                        value="<?php echo $productData[$i] ?>">
-                                    <input type="text" class="form-control inside-shadow"
-                                        value="<?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES) ?>"
-                                        readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label>Qty</label>
-                                    <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow">
-                                </div>
-                            </div>
+                                                                <input type="hidden" name="product_id_<?php echo $i ?>"
+                                                                    value="<?php echo $productData[$i] ?>">
+                                                                <input type="text" class="form-control inside-shadow"
+                                                                    value="<?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES) ?>"
+                                                                    readonly>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Qty</label>
+                                                                <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow">
+                                                            </div>
+                                                        </div>
 
-                            <?php
+                                            <?php
                                                     }
                                                 }
                                             }
 
                                             ?>
-                            <h3 class="order-section-title">Customer Details</h3>
+                                            <h3 class="order-section-title">Customer Details</h3>
 
-                            <div class="order-customer-grid">
-                                <div class="form-group">
-                                    <label>First Name</label>
-                                    <input type="text" name="first_name" class="form-control inside-shadow"
-                                        value="<?php echo $profile_first_name ?>">
-                                </div>
-                                <div class="form-group">
-                                    <label>Last Name</label>
-                                    <input type="text" name="last_name" class="form-control inside-shadow"
-                                        value="<?php echo $profile_last_name ?>">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="text" name="email" class="form-control inside-shadow"
-                                    value="<?php echo $user_email ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>Mobile No.</label>
-                                <input type="text" name="mobile" class="form-control inside-shadow"
-                                    value="<?php echo $user_mobile ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>House No.</label>
-                                <input type="text" name="address_house_no" class="form-control inside-shadow"
-                                    value="<?php echo $address_house_no ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>Address</label>
-                                <input type="text" name="address_area" class="form-control inside-shadow"
-                                    value="<?php echo $address_area ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>Landmark</label>
-                                <input type="text" class="form-control inside-shadow" name="address_landmark"
-                                    value="<?php echo $address_landmark ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>City</label>
-                                <input type="text" class="form-control inside-shadow" name="city"
-                                    value="<?php echo $city_name ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>State</label>
-                                <select class="form-control inside-shadow" name="state" required>
-                                    <?php
+                                            <div class="order-customer-grid">
+                                                <div class="form-group">
+                                                    <label>First Name</label>
+                                                    <input type="text" name="first_name" class="form-control inside-shadow"
+                                                        value="<?php echo $profile_first_name ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Last Name</label>
+                                                    <input type="text" name="last_name" class="form-control inside-shadow"
+                                                        value="<?php echo $profile_last_name ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <input type="text" name="email" class="form-control inside-shadow"
+                                                    value="<?php echo $user_email ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Mobile No.</label>
+                                                <input type="text" name="mobile" class="form-control inside-shadow"
+                                                    value="<?php echo $user_mobile ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>House No.</label>
+                                                <input type="text" name="address_house_no" class="form-control inside-shadow"
+                                                    value="<?php echo $address_house_no ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Address</label>
+                                                <input type="text" name="address_area" class="form-control inside-shadow"
+                                                    value="<?php echo $address_area ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Landmark</label>
+                                                <input type="text" class="form-control inside-shadow" name="address_landmark"
+                                                    value="<?php echo $address_landmark ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>City</label>
+                                                <input type="text" class="form-control inside-shadow" name="city"
+                                                    value="<?php echo $city_name ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>State</label>
+                                                <select class="form-control inside-shadow" name="state" required>
+                                                    <?php
 
                                                     if ($stateDetails = mysqli_query($connection, "SELECT state_id, state_name FROM " . TABLE_PREFIX . "state WHERE state_country_id=101")) {
 
@@ -669,80 +670,80 @@ if (isset($id)) {
                                                     }
 
                                                     ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Pin Code</label>
-                                <input type="text" class="form-control inside-shadow" name="address_pin_code"
-                                    value="<?php echo $address_pin_code ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>Address Type</label>
-                                <select name="address_type" class="form-control inside-shadow">
-                                    <option value="">Select address type</option>
-                                    <option value="home" <?php echo (($address_type == 'home') ? 'selected' : '') ?>>
-                                        Home
-                                    </option>
-                                    <option value="work" <?php echo (($address_type == 'work') ? 'selected' : '') ?>>
-                                        Work
-                                    </option>
-                                    <option value="other" <?php echo (($address_type == 'other') ? 'selected' : '') ?>>
-                                        Other
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Pin Code</label>
+                                                <input type="text" class="form-control inside-shadow" name="address_pin_code"
+                                                    value="<?php echo $address_pin_code ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Address Type</label>
+                                                <select name="address_type" class="form-control inside-shadow">
+                                                    <option value="">Select address type</option>
+                                                    <option value="home" <?php echo (($address_type == 'home') ? 'selected' : '') ?>>
+                                                        Home
+                                                    </option>
+                                                    <option value="work" <?php echo (($address_type == 'work') ? 'selected' : '') ?>>
+                                                        Work
+                                                    </option>
+                                                    <option value="other" <?php echo (($address_type == 'other') ? 'selected' : '') ?>>
+                                                        Other
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                <div class="box-2 order-summary-sticky">
-                    <div class="order-collapsible order-collapsible-summary is-open">
-                        <button type="button" class="order-collapse-toggle" data-target="orderPaymentReceiverPanel"
-                            aria-expanded="true">
-                            Payment + Receiver Details
-                            <span class="order-collapse-toggle-icon">▾</span>
-                        </button>
-                        <div class="order-collapse-body" id="orderPaymentReceiverPanel">
-                            <h3 class="order-section-title">Payment & Receiver</h3>
+                                <div class="box-2 order-summary-sticky">
+                                    <div class="order-collapsible order-collapsible-summary is-open">
+                                        <button type="button" class="order-collapse-toggle" data-target="orderPaymentReceiverPanel"
+                                            aria-expanded="true">
+                                            Payment + Receiver Details
+                                            <span class="order-collapse-toggle-icon">▾</span>
+                                        </button>
+                                        <div class="order-collapse-body" id="orderPaymentReceiverPanel">
+                                            <h3 class="order-section-title">Payment & Receiver</h3>
 
-                            <img src="<?php echo $product_image ?>" class="order-summary-image" alt="">
+                                            <img src="<?php echo $product_image ?>" class="order-summary-image" alt="">
 
-                            <div class="form-group">
-                                <label>Product price</label>
-                                <input type='text' class='form-control inside-shadow'
-                                    value='<?php echo (($order_product_price != '') ? $inventory_currency_symbol . ' ' : '') . $order_product_price ?>'
-                                    readonly>
-                            </div>
+                                            <div class="form-group">
+                                                <label>Product price</label>
+                                                <input type='text' class='form-control inside-shadow'
+                                                    value='<?php echo (($order_product_price != '') ? $inventory_currency_symbol . ' ' : '') . $order_product_price ?>'
+                                                    readonly>
+                                            </div>
 
-                            <div class="form-group">
-                                <label>Delivery charge</label>
-                                <input type='text' class='form-control inside-shadow'
-                                    value='<?php echo (($order_delivery_charges != '') ? $inventory_currency_symbol . ' ' : '') . $order_delivery_charges ?>'
-                                    readonly>
-                            </div>
+                                            <div class="form-group">
+                                                <label>Delivery charge</label>
+                                                <input type='text' class='form-control inside-shadow'
+                                                    value='<?php echo (($order_delivery_charges != '') ? $inventory_currency_symbol . ' ' : '') . $order_delivery_charges ?>'
+                                                    readonly>
+                                            </div>
 
-                            <div class="form-group">
-                                <label>Order total</label>
-                                <input type='text' class='form-control inside-shadow'
-                                    value='<?php echo (($order_total_price != '') ? $inventory_currency_symbol . ' ' : '') . $order_total_price ?>'
-                                    readonly>
-                            </div>
+                                            <div class="form-group">
+                                                <label>Order total</label>
+                                                <input type='text' class='form-control inside-shadow'
+                                                    value='<?php echo (($order_total_price != '') ? $inventory_currency_symbol . ' ' : '') . $order_total_price ?>'
+                                                    readonly>
+                                            </div>
 
-                            <h3 class="order-section-title">Receiver Details</h3>
+                                            <h3 class="order-section-title">Receiver Details</h3>
 
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input type='text' class='form-control inside-shadow'
-                                    value='<?php echo $address_name ?>' readonly>
-                            </div>
+                                            <div class="form-group">
+                                                <label>Name</label>
+                                                <input type='text' class='form-control inside-shadow'
+                                                    value='<?php echo $address_name ?>' readonly>
+                                            </div>
 
-                            <div class="form-group">
-                                <label>Contact no.</label>
-                                <input type='text' class='form-control inside-shadow'
-                                    value='<?php echo $address_mobile ?>' readonly>
-                            </div>
+                                            <div class="form-group">
+                                                <label>Contact no.</label>
+                                                <input type='text' class='form-control inside-shadow'
+                                                    value='<?php echo $address_mobile ?>' readonly>
+                                            </div>
 
-                            <?php
+                                            <?php
 
                                             if ($orderMeta = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$id}' AND order_site_id='" . APP_SITE_ID . "'")) {
 
@@ -770,88 +771,88 @@ if (isset($id)) {
                                             }
 
                                             ?>
-                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group order-action-row">
+                                    <input type="hidden" name="type" value="order">
+                                    <input type="hidden" name="id" value="<?php echo $id ?>">
+                                    <!-- <a href="#" id="orderUpdateData" class="btn btn-blue">Update Data</a> -->
+                                    <a href="#" id="orderConfirmBtn" class="btn btn-green">Confirm</a>
+                                    <a href="#" id="orderWaitingBtn" class="btn btn-yellow">Waiting</a>
+                                    <a href="#" id="orderCancelBtn" class="btn btn-red">Cancel</a>
+                                    <a href="#" id="orderReturnBtn" class="btn btn-red">Return</a>
+                                    <a href="#" id="orderDeliverBtn" class="btn btn-green">Delivered</a>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
-                <div class="form-group order-action-row">
-                    <input type="hidden" name="type" value="order">
-                    <input type="hidden" name="id" value="<?php echo $id ?>">
-                    <!-- <a href="#" id="orderUpdateData" class="btn btn-blue">Update Data</a> -->
-                    <a href="#" id="orderConfirmBtn" class="btn btn-green">Confirm</a>
-                    <a href="#" id="orderWaitingBtn" class="btn btn-yellow">Waiting</a>
-                    <a href="#" id="orderCancelBtn" class="btn btn-red">Cancel</a>
-                    <a href="#" id="orderReturnBtn" class="btn btn-red">Return</a>
-                    <a href="#" id="orderDeliverBtn" class="btn btn-green">Delivered</a>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+                <script>
+                    (function() {
+                        var root = document.querySelector('.order-info-ui');
 
-<script>
-(function() {
-    var root = document.querySelector('.order-info-ui');
+                        if (!root) {
+                            return;
+                        }
 
-    if (!root) {
-        return;
-    }
+                        var orderId = root.getAttribute('data-order-id') || 'default';
+                        var storagePrefix = 'order-ui-collapse-' + orderId + '-';
+                        var toggleList = root.querySelectorAll('.order-collapse-toggle');
 
-    var orderId = root.getAttribute('data-order-id') || 'default';
-    var storagePrefix = 'order-ui-collapse-' + orderId + '-';
-    var toggleList = root.querySelectorAll('.order-collapse-toggle');
+                        function saveState(key, value) {
+                            try {
+                                localStorage.setItem(key, value);
+                            } catch (e) {
+                                // Ignore storage errors silently.
+                            }
+                        }
 
-    function saveState(key, value) {
-        try {
-            localStorage.setItem(key, value);
-        } catch (e) {
-            // Ignore storage errors silently.
-        }
-    }
+                        function readState(key) {
+                            try {
+                                return localStorage.getItem(key);
+                            } catch (e) {
+                                return null;
+                            }
+                        }
 
-    function readState(key) {
-        try {
-            return localStorage.getItem(key);
-        } catch (e) {
-            return null;
-        }
-    }
+                        function applyState(panel, toggle, isOpen) {
+                            panel.classList.toggle('is-open', isOpen);
+                            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                        }
 
-    function applyState(panel, toggle, isOpen) {
-        panel.classList.toggle('is-open', isOpen);
-        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    }
+                        for (var i = 0; i < toggleList.length; i++) {
+                            (function(toggle) {
+                                var targetId = toggle.getAttribute('data-target');
+                                var panel = toggle.parentNode;
+                                var storageKey = storagePrefix + targetId;
+                                var savedValue = readState(storageKey);
 
-    for (var i = 0; i < toggleList.length; i++) {
-        (function(toggle) {
-            var targetId = toggle.getAttribute('data-target');
-            var panel = toggle.parentNode;
-            var storageKey = storagePrefix + targetId;
-            var savedValue = readState(storageKey);
+                                if (savedValue !== null) {
+                                    applyState(panel, toggle, savedValue === 'open');
+                                }
 
-            if (savedValue !== null) {
-                applyState(panel, toggle, savedValue === 'open');
-            }
+                                toggle.addEventListener('click', function() {
+                                    var targetId = this.getAttribute('data-target');
+                                    var body = root.querySelector('#' + targetId);
 
-            toggle.addEventListener('click', function() {
-                var targetId = this.getAttribute('data-target');
-                var body = root.querySelector('#' + targetId);
+                                    if (!body) {
+                                        return;
+                                    }
 
-                if (!body) {
-                    return;
-                }
+                                    var panel = this.parentNode;
+                                    var isOpen = panel.classList.contains('is-open');
+                                    var nextOpen = !isOpen;
 
-                var panel = this.parentNode;
-                var isOpen = panel.classList.contains('is-open');
-                var nextOpen = !isOpen;
-
-                applyState(panel, this, nextOpen);
-                saveState(storagePrefix + targetId, nextOpen ? 'open' : 'closed');
-            });
-        })(toggleList[i]);
-    }
-})();
-</script>
+                                    applyState(panel, this, nextOpen);
+                                    saveState(storagePrefix + targetId, nextOpen ? 'open' : 'closed');
+                                });
+                            })(toggleList[i]);
+                        }
+                    })();
+                </script>
 
 <?php
             }
