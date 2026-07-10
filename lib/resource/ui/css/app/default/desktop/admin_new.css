@@ -4320,6 +4320,11 @@ body.premium-admin main > h2 + .form-box .form-group textarea:focus {
   color: #4c5f71;
 }
 
+.order-badge img {
+  float: left;
+  width: 100% !important;
+}
+
 .order-meta {
   min-width: 0;
 }
