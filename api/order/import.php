@@ -396,6 +396,8 @@ function importOrders($data, $tableMeta)
             $batchKey = $userId . '|' . $addressId . '|' . $deliveryDate;
             $batchDuplicateGuard[$batchKey] = true;
 
+            $row['product'] = isset($row['product']) ? trim((string)$row['product']) : '';
+
             $orderRows[] = buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate);
         } catch (Exception $e) {
             mysqli_query($connection, 'ROLLBACK TO SAVEPOINT ' . $savepoint);
@@ -672,6 +674,7 @@ function resolveStateId($state)
 function buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate)
 {
     $product = trim((string)$row['product']);
+    $remarks = isset($row['remarks']) ? trim((string)$row['remarks']) : '';
     $extraMeta = array();
     if (!empty($row['__unmatched_meta']) && is_array($row['__unmatched_meta'])) {
         $extraMeta = $row['__unmatched_meta'];
@@ -681,6 +684,7 @@ function buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate)
         'order_site_id' => (int)SITE_ID,
         'order_user_id' => (int)$userId,
         'order_cart_session_id' => 'IMPORT_' . date('YmdHis') . '_' . $rowNumber,
+        'order_generate' => date('Y-m-d H:i:s'),
         'order_address_id' => (int)$addressId,
         'order_product_id' => $product,
         'order_product_type' => 'product',
@@ -691,9 +695,9 @@ function buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate)
         'order_total_price' => '0',
         'order_coupon' => '',
         'order_gift' => '0',
-        'order_msg' => $deliveryDate,
+        'order_msg' => $remarks,
         'order_status' => '0',
-        'order_payment_mode' => 'import',
+        'order_payment_mode' => '',
         '__extra_meta' => $extraMeta
     );
 }
@@ -710,6 +714,7 @@ function bulkInsertOrders($orders)
         'order_site_id',
         'order_user_id',
         'order_cart_session_id',
+        'order_generate',
         'order_address_id',
         'order_product_id',
         'order_product_type',
@@ -830,7 +835,8 @@ function getOrderTableColumns()
         array('key' => 'state', 'label' => 'State', 'required' => true),
         array('key' => 'product', 'label' => 'Product', 'required' => false),
         array('key' => 'delivery_date', 'label' => 'Delivery Date', 'required' => false),
-        array('key' => 'order_status', 'label' => 'Order Status', 'required' => false)
+        array('key' => 'order_status', 'label' => 'Order Status', 'required' => false),
+        array('key' => 'remarks', 'label' => 'Remarks', 'required' => false)
     );
 }
 
