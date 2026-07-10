@@ -18,36 +18,6 @@ $orderStatus = mysqli_real_escape_string($connection, $statusParam);
 $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}'");
 
 ?>
-<style>
-    .modern-order-list .order-badge {
-        width: 54px;
-        height: 54px;
-        border-radius: 14px;
-        overflow: hidden;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: #f8fafc;
-        border: 1px solid #dbe3f0;
-        color: #475569;
-        font-size: 12px;
-        font-weight: 700;
-        flex: 0 0 auto;
-    }
-
-    .modern-order-list .order-badge img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    .modern-order-list .order-badge .order-badge-fallback {
-        padding: 0 6px;
-        text-align: center;
-        line-height: 1.1;
-    }
-</style>
 
 <div class="modern-order-list">
     <h2>All Orders</h2>
@@ -166,15 +136,14 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
 
                             $productBadgeLabel = 'N/A';
                             $productImageSrc = '';
+                            $productNameLabel = 'N/A';
                             $hasProduct = (trim((string)$order_product_id) !== '' && trim((string)$order_product_id) !== '0');
                             if ($hasProduct) {
+                                if (trim((string)$product_title) !== '') {
+                                    $productNameLabel = trim((string)$product_title);
+                                }
                                 if (trim((string)$product_image) !== '') {
                                     $productImageSrc = trim((string)$product_image);
-                                }
-                                if (trim((string)$product_title) !== '') {
-                                    $productBadgeLabel = trim((string)$product_title);
-                                } else {
-                                    $productBadgeLabel = 'Product';
                                 }
                             }
 
@@ -184,9 +153,9 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                                     <div class="order-cell">
                                         <div class="order-badge">
                                             <?php if ($productImageSrc != '') { ?>
-                                                <img src="<?php echo htmlspecialchars($productImageSrc); ?>" alt="<?php echo htmlspecialchars($productBadgeLabel); ?>">
+                                                <img src="<?php echo htmlspecialchars($productImageSrc); ?>" alt="Product image">
                                             <?php } else { ?>
-                                                <span class="order-badge-fallback"><?php echo $hasProduct ? htmlspecialchars($productBadgeLabel) : 'N/A'; ?></span>
+                                                <span class="order-badge-fallback">N/A</span>
                                             <?php } ?>
                                         </div>
                                         <div class="order-meta">
@@ -197,6 +166,9 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                                                         <?php echo htmlspecialchars($profile_display_name); ?></span>
                                                 </a>
                                             </p>
+                                            <div class="order-product-name">
+                                                Product: <?php echo htmlspecialchars($productNameLabel); ?>
+                                            </div>
                                             <div class="order-tags">
                                                 <span class="order-tag"><?php echo htmlspecialchars($address_mobile); ?></span>
                                                 <span
