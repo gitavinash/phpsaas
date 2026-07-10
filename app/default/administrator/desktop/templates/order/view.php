@@ -3,10 +3,11 @@
 if (isset($id)) {
 
     $id = base64_decode($id);
+    $isApp32 = ((int)SITE_APP_ID === 32);
 
     $productList = mysqli_query($connection, "SELECT product_id, product_title FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE link_type='product' AND product_type='product' AND link_status=200 AND link_site_id=" . APP_SITE_ID);
 
-    if (mysqli_num_rows($productList) != 0) {
+    if ((mysqli_num_rows($productList) != 0) || $isApp32) {
 
         $productListData = array();
 
@@ -20,7 +21,44 @@ if (isset($id)) {
             );
         }
 
-        if ($checkOrder = mysqli_query($connection, "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id INNER JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id INNER JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id WHERE order_id='{$id}' AND product_type='product' AND order_site_id=" . APP_SITE_ID)) {
+        $vendorListData = array();
+        if ($isApp32) {
+            $vendorSql = "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1 AND (LOWER(user_type_name) LIKE '%vendor%' OR LOWER(user_type_code) LIKE '%vendor%' OR LOWER(user_type_name) LIKE '%supplier%' OR LOWER(user_type_code) LIKE '%supplier%' OR LOWER(user_type_name) LIKE '%seller%' OR LOWER(user_type_code) LIKE '%seller%') ORDER BY user_type_name ASC";
+            if ($vendorList = mysqli_query($connection, $vendorSql)) {
+                if (mysqli_num_rows($vendorList) != 0) {
+                    while ($vendorData = mysqli_fetch_assoc($vendorList)) {
+                        $vendorListData[] = $vendorData;
+                    }
+                }
+            }
+
+            if (empty($vendorListData)) {
+                $fallbackVendorSql = "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1 ORDER BY user_type_name ASC";
+                if ($fallbackVendorList = mysqli_query($connection, $fallbackVendorSql)) {
+                    if (mysqli_num_rows($fallbackVendorList) != 0) {
+                        while ($vendorData = mysqli_fetch_assoc($fallbackVendorList)) {
+                            $vendorListData[] = $vendorData;
+                        }
+                    }
+                }
+            }
+        }
+
+        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id INNER JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
+
+        if ($isApp32) {
+            $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id AND product_type='product' LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=order_product_id AND inventory_type='product' AND inventory_site_id=" . APP_SITE_ID . " AND product_site_id=" . APP_SITE_ID;
+        } else {
+            $checkOrderSql .= " INNER JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id";
+        }
+
+        $checkOrderSql .= " WHERE order_id='{$id}' AND order_site_id=" . APP_SITE_ID;
+
+        if (!$isApp32) {
+            $checkOrderSql .= " AND product_type='product'";
+        }
+
+        if ($checkOrder = mysqli_query($connection, $checkOrderSql)) {
 
             if (mysqli_num_rows($checkOrder) != 0) {
 
@@ -277,6 +315,31 @@ if (isset($id)) {
 
                     .order-item-row .form-group {
                         margin-bottom: 0;
+                    }
+
+                    .order-product-thumb {
+                        width: 92px;
+                        height: 92px;
+                        border-radius: 12px;
+                        overflow: hidden;
+                        border: 1px solid var(--oi-border);
+                        background: #f8fafc;
+                        margin-bottom: 8px;
+                    }
+
+                    .order-product-thumb img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        display: block;
+                    }
+
+                    .order-help-text {
+                        display: block;
+                        margin-top: 6px;
+                        font-size: 11px;
+                        color: var(--oi-muted);
+                        line-height: 1.4;
                     }
 
                     .order-customer-grid {
@@ -541,64 +604,105 @@ if (isset($id)) {
 
                                             // Fetch Product information from database
 
-                                            $productData = explode(',', $order_product_id);
-                                            $productQtyData = explode(',', $order_product_qty);
+                                            $productData = array_filter(array_map('trim', explode(',', (string)$order_product_id)), 'strlen');
+                                            $productQtyData = array_map('trim', explode(',', (string)$order_product_qty));
 
-                                            for ($i = 0; $i < sizeof($productData); $i++) {
+                                            if ($isApp32 && empty($productData)) { ?>
+                                                <div class="order-item-row">
+                                                    <div class="form-group" style="width: 100%;">
+                                                        <label>Assign Product</label>
+                                                        <select name="assigned_product_id" class="form-control inside-shadow">
+                                                            <option value="">Select product</option>
+                                                            <?php for ($p = 0; $p < sizeof($productListData); $p++) { ?>
+                                                                <option value="<?php echo htmlspecialchars($productListData[$p]['product_id']); ?>">
+                                                                    <?php echo htmlspecialchars($productListData[$p]['product_title']); ?>
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                        <small class="order-help-text">This order does not have a product assigned yet.</small>
+                                                    </div>
+                                                </div>
 
-                                                echo "<input type='hidden' name='totalProducts' value='" . sizeof($productData) . "'>";
+                                                <div class="order-item-row">
+                                                    <div class="form-group" style="width: 100%;">
+                                                        <label>Vendor Selection</label>
+                                                        <select name="assigned_vendor" class="form-control inside-shadow">
+                                                            <option value="">Select vendor</option>
+                                                            <?php if (!empty($vendorListData)) { ?>
+                                                                <?php foreach ($vendorListData as $vendorData) { ?>
+                                                                    <option value="<?php echo htmlspecialchars($vendorData['user_type_code']); ?>">
+                                                                        <?php echo htmlspecialchars($vendorData['user_type_name']); ?>
+                                                                    </option>
+                                                                <?php } ?>
+                                                            <?php } else { ?>
+                                                                <option value="">No vendor found</option>
+                                                            <?php } ?>
+                                                        </select>
+                                                        <small class="order-help-text">Choose the vendor before processing this order.</small>
+                                                    </div>
+                                                </div>
+                                                <?php } else {
+                                                for ($i = 0; $i < sizeof($productData); $i++) {
 
-                                                if ($checkProduct = mysqli_query($connection, "SELECT product_id, product_image, product_title, inventory_currency_symbol FROM isw_product INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_id='{$productData[$i]}' AND inventory_type='product' AND product_site_id=" . APP_SITE_ID . " AND inventory_site_id=" . APP_SITE_ID)) {
+                                                    echo "<input type='hidden' name='totalProducts' value='" . sizeof($productData) . "'>";
 
-                                                    if (mysqli_num_rows($checkProduct) != 0) {
+                                                    if ($checkProduct = mysqli_query($connection, "SELECT product_id, product_image, product_title, inventory_currency_symbol FROM isw_product INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_id='{$productData[$i]}' AND inventory_type='product' AND product_site_id=" . APP_SITE_ID . " AND inventory_site_id=" . APP_SITE_ID)) {
 
-                                                        extract(mysqli_fetch_assoc($checkProduct)); ?>
+                                                        if (mysqli_num_rows($checkProduct) != 0) {
 
-                                                        <div class="order-item-row">
-                                                            <div class="form-group">
-                                                                <label>Product name (Cart item <?php echo $i + 1 ?>)</label>
-                                                                <input type="hidden" name="product_id_<?php echo $i ?>"
-                                                                    value="<?php echo $productData[$i] ?>">
-                                                                <input type="text" class="form-control inside-shadow"
-                                                                    value="<?php echo htmlspecialchars($product_title, ENT_QUOTES) ?>" readonly>
+                                                            extract(mysqli_fetch_assoc($checkProduct)); ?>
+
+                                                            <div class="order-item-row">
+                                                                <div class="form-group">
+                                                                    <label>Product name (Cart item <?php echo $i + 1 ?>)</label>
+                                                                    <?php if (trim((string)$product_image) != '') { ?>
+                                                                        <div class="order-product-thumb">
+                                                                            <img src="<?php echo htmlspecialchars($product_image, ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($product_title, ENT_QUOTES); ?>">
+                                                                        </div>
+                                                                    <?php } ?>
+                                                                    <input type="hidden" name="product_id_<?php echo $i ?>"
+                                                                        value="<?php echo $productData[$i] ?>">
+                                                                    <input type="text" class="form-control inside-shadow"
+                                                                        value="<?php echo htmlspecialchars($product_title, ENT_QUOTES) ?>" readonly>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Qty</label>
+                                                                    <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow"
+                                                                        value="<?php echo isset($productQtyData[$i]) ? str_replace(' ', '', $productQtyData[$i]) : '' ?>">
+                                                                </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label>Qty</label>
-                                                                <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow"
-                                                                    value="<?php echo str_replace(' ', '', $productQtyData[$i]) ?>">
-                                                            </div>
-                                                        </div>
 
-                                                    <?php
+                                                        <?php
 
-                                                    } else { ?>
+                                                        } else { ?>
 
-                                                        <div class="order-item-row">
-                                                            <div class="form-group">
-                                                                <label>Product name (Cart item <?php echo $i + 1 ?>)</label>
-                                                                <?php
-                                                                $fallbackProductTitle = 'Unknown Product';
+                                                            <div class="order-item-row">
+                                                                <div class="form-group">
+                                                                    <label>Product name (Cart item <?php echo $i + 1 ?>)</label>
+                                                                    <?php
+                                                                    $fallbackProductTitle = 'Unknown Product';
 
-                                                                for ($j = 0; $j < sizeof($productListData); $j++) {
-                                                                    if ((string)$productListData[$j]['product_id'] == (string)$productData[$i]) {
-                                                                        $fallbackProductTitle = $productListData[$j]['product_title'];
-                                                                        break;
+                                                                    for ($j = 0; $j < sizeof($productListData); $j++) {
+                                                                        if ((string)$productListData[$j]['product_id'] == (string)$productData[$i]) {
+                                                                            $fallbackProductTitle = $productListData[$j]['product_title'];
+                                                                            break;
+                                                                        }
                                                                     }
-                                                                }
-                                                                ?>
-                                                                <input type="hidden" name="product_id_<?php echo $i ?>"
-                                                                    value="<?php echo $productData[$i] ?>">
-                                                                <input type="text" class="form-control inside-shadow"
-                                                                    value="<?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES) ?>"
-                                                                    readonly>
+                                                                    ?>
+                                                                    <input type="hidden" name="product_id_<?php echo $i ?>"
+                                                                        value="<?php echo $productData[$i] ?>">
+                                                                    <input type="text" class="form-control inside-shadow"
+                                                                        value="<?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES) ?>"
+                                                                        readonly>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Qty</label>
+                                                                    <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow">
+                                                                </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label>Qty</label>
-                                                                <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow">
-                                                            </div>
-                                                        </div>
 
                                             <?php
+                                                        }
                                                     }
                                                 }
                                             }

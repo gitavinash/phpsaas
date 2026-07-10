@@ -11,7 +11,7 @@ if (!in_array($sortParam, $allowedSorts, true)) {
 
 $sortDirection = ($sortParam === 'oldest') ? 'ASC' : 'DESC';
 $orderByClause = "ORDER BY order_generate {$sortDirection}, order_id {$sortDirection}";
-$siteId = ((SITE_APP_ID == 32) ? SITE_ID : APP_SITE_ID);
+$siteId = "IN (" . APP_SITE_ID . ", " . SITE_ID . ")";
 $isApp32 = ((int)SITE_APP_ID === 32);
 
 $orderStatus = mysqli_real_escape_string($connection, $statusParam);
@@ -71,7 +71,7 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                 <?php
                 $hasOrders = false;
 
-                $query = "SELECT profile_user_id, profile_display_name, profile_mobile, order_id, order_product_id, order_product_qty, inventory_currency_symbol, order_product_price, order_delivery_charges, order_currency, order_total_price, order_payment_mode, order_generate, order_status, address_mobile, product_title, product_image FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "address ON address_id=order_address_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=order_user_id LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=order_product_id AND inventory_site_id='" . $siteId . "' LEFT JOIN " . TABLE_PREFIX . "product ON order_product_id=product_id" . ($isApp32 ? "" : " AND product_type='product'") . " WHERE order_site_id='" . $siteId . "' " . ($isApp32 ? "" : "AND order_product_id!='' AND product_type='product' ") . "{$orderStatus} {$orderByClause} LIMIT 0, 1000";
+                $query = "SELECT profile_user_id, profile_display_name, profile_mobile, order_id, order_product_id, order_product_qty, inventory_currency_symbol, order_product_price, order_delivery_charges, order_currency, order_total_price, order_payment_mode, order_generate, order_status, address_mobile, product_title, product_image FROM " . TABLE_PREFIX . "order LEFT JOIN " . TABLE_PREFIX . "address ON address_id=order_address_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=order_user_id LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=order_product_id AND inventory_site_id " . $siteId . " LEFT JOIN " . TABLE_PREFIX . "product ON order_product_id=product_id" . ($isApp32 ? "" : " AND product_type='product'") . " WHERE order_site_id " . $siteId . " " . ($isApp32 ? "" : "AND order_product_id!='' AND product_type='product' ") . "{$orderStatus} {$orderByClause} LIMIT 0, 1000";
 
                 if ($dataList = mysqli_query($connection, $query)) {
 
@@ -175,11 +175,11 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                                                     class="order-tag <?php echo $statusClass; ?>"><?php echo $order_status; ?></span>
                                                 <span class="order-tag"><?php echo htmlspecialchars($paymentLabel); ?></span>
                                             </div>
-                                            <div class="hover">
+                                            <!-- <div class="hover">
                                                 <a href="order/?type=view&id=<?php echo base64_encode($order_id); ?>"><i
                                                         class="fas fa-eye"></i>
                                                     View</a>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </td>
