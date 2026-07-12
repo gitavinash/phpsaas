@@ -3,9 +3,11 @@
 if (isset($id)) {
 
     $id = base64_decode($id);
+
+    $siteId = " IN (" . APP_SITE_ID . ", " . SITE_ID . ")";
     $isApp32 = ((int)SITE_APP_ID === 32);
 
-    $productList = mysqli_query($connection, "SELECT product_id, product_title FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE link_type='product' AND product_type='product' AND link_status=200 AND link_site_id=" . APP_SITE_ID);
+    $productList = mysqli_query($connection, "SELECT product_id, product_title, product_image FROM " . TABLE_PREFIX . "product INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=product_id WHERE link_type='product' AND product_type='product' AND link_status=200 AND link_site_id" . $siteId);
 
     if ((mysqli_num_rows($productList) != 0) || $isApp32) {
 
@@ -17,46 +19,70 @@ if (isset($id)) {
 
             $productListData[] = array(
                 'product_id' => $product_id,
-                'product_title' => $product_title
+                'product_title' => $product_title,
+                'product_image' => $product_image
             );
         }
 
         $vendorListData = array();
-        if ($isApp32) {
-            $vendorSql = "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1 AND (LOWER(user_type_name) LIKE '%vendor%' OR LOWER(user_type_code) LIKE '%vendor%' OR LOWER(user_type_name) LIKE '%supplier%' OR LOWER(user_type_code) LIKE '%supplier%' OR LOWER(user_type_name) LIKE '%seller%' OR LOWER(user_type_code) LIKE '%seller%') ORDER BY user_type_name ASC";
-            if ($vendorList = mysqli_query($connection, $vendorSql)) {
-                if (mysqli_num_rows($vendorList) != 0) {
-                    while ($vendorData = mysqli_fetch_assoc($vendorList)) {
+        $vendorSql = "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1 AND (LOWER(user_type_name) LIKE '%vendor%' OR LOWER(user_type_code) LIKE '%vendor%' OR LOWER(user_type_name) LIKE '%supplier%' OR LOWER(user_type_code) LIKE '%supplier%' OR LOWER(user_type_name) LIKE '%seller%' OR LOWER(user_type_code) LIKE '%seller%') ORDER BY user_type_name ASC";
+        if ($vendorList = mysqli_query($connection, $vendorSql)) {
+            if (mysqli_num_rows($vendorList) != 0) {
+                while ($vendorData = mysqli_fetch_assoc($vendorList)) {
+                    $vendorListData[] = $vendorData;
+                }
+            }
+        }
+
+        if (empty($vendorListData)) {
+            $fallbackVendorSql = "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1 ORDER BY user_type_name ASC";
+            if ($fallbackVendorList = mysqli_query($connection, $fallbackVendorSql)) {
+                if (mysqli_num_rows($fallbackVendorList) != 0) {
+                    while ($vendorData = mysqli_fetch_assoc($fallbackVendorList)) {
                         $vendorListData[] = $vendorData;
                     }
                 }
             }
+        }
 
-            if (empty($vendorListData)) {
-                $fallbackVendorSql = "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1 ORDER BY user_type_name ASC";
-                if ($fallbackVendorList = mysqli_query($connection, $fallbackVendorSql)) {
-                    if (mysqli_num_rows($fallbackVendorList) != 0) {
-                        while ($vendorData = mysqli_fetch_assoc($fallbackVendorList)) {
-                            $vendorListData[] = $vendorData;
-                        }
-                    }
+        // Fetch assigned vendor from order_meta
+        $assignedVendorCode = '';
+        $assignedVendorName = '';
+        $vendorUsers = array();
+
+        $vendorMetaQuery = mysqli_query($connection, "SELECT order_meta_value FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$id}' AND order_meta_key='assigned_vendor' AND order_site_id" . $siteId . " LIMIT 1");
+        if ($vendorMetaQuery && mysqli_num_rows($vendorMetaQuery) > 0) {
+            $vendorMeta = mysqli_fetch_assoc($vendorMetaQuery);
+            $assignedVendorCode = $vendorMeta['order_meta_value'];
+
+            foreach ($vendorListData as $v) {
+                if ($v['user_type_code'] == $assignedVendorCode) {
+                    $assignedVendorName = $v['user_type_name'];
+                    break;
+                }
+            }
+            if (empty($assignedVendorName)) {
+                $assignedVendorName = ucwords(str_replace('_', ' ', $assignedVendorCode));
+            }
+
+            // Fetch users under this vendor type
+            $vendorUsersSql = "SELECT profile_display_name, profile_mobile, user_email FROM " . TABLE_PREFIX . "user 
+                               INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id 
+                               INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id 
+                               WHERE site_access_type='{$assignedVendorCode}' AND site_access_site_id" . $siteId;
+            if ($vendorUsersRes = mysqli_query($connection, $vendorUsersSql)) {
+                while ($vu = mysqli_fetch_assoc($vendorUsersRes)) {
+                    $vendorUsers[] = $vu;
                 }
             }
         }
 
-        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id INNER JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
+        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
 
-        if ($isApp32) {
-            $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id AND product_type='product' LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=order_product_id AND inventory_type='product' AND inventory_site_id=" . APP_SITE_ID . " AND product_site_id=" . APP_SITE_ID;
-        } else {
-            $checkOrderSql .= " INNER JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id";
-        }
+        $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id AND product_type='product' AND product_site_id" . $siteId;
+        $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=order_product_id AND inventory_type='product' AND inventory_site_id" . $siteId;
 
-        $checkOrderSql .= " WHERE order_id='{$id}' AND order_site_id=" . APP_SITE_ID;
-
-        if (!$isApp32) {
-            $checkOrderSql .= " AND product_type='product'";
-        }
+        $checkOrderSql .= " WHERE order_id='{$id}' AND order_site_id" . $siteId;
 
         if ($checkOrder = mysqli_query($connection, $checkOrderSql)) {
 
@@ -66,24 +92,13 @@ if (isset($id)) {
 
                 $orderStatusValue = trim((string)$transaction_status);
                 $numericStatusMap = array(
+                    '' => 'Pending',
                     '0' => 'Pending',
                     '1' => 'Confirmed',
                     '2' => 'Waiting',
                     '3' => 'Cancelled',
                     '4' => 'Returned',
                     '5' => 'Delivered',
-                    '100' => 'Pending',
-                    '101' => 'Confirmed',
-                    '102' => 'Waiting',
-                    '103' => 'Cancelled',
-                    '104' => 'Returned',
-                    '105' => 'Delivered',
-                    '200' => 'Confirmed',
-                    '201' => 'Waiting',
-                    '202' => 'Processing',
-                    '203' => 'Cancelled',
-                    '204' => 'Returned',
-                    '205' => 'Delivered'
                 );
 
                 if (isset($numericStatusMap[$orderStatusValue])) {
@@ -96,799 +111,435 @@ if (isset($id)) {
 
                 $orderStatusRaw = strtolower(trim((string)$orderStatusText));
                 $orderStatusRaw = str_replace(array(' ', '-'), '_', $orderStatusRaw);
-                $orderStatusChipClass = 'order-chip-status-default';
+                $orderStatusChipClass = 'badge-default';
 
                 if (in_array($orderStatusRaw, array('delivered', 'complete', 'completed', 'success', 'confirmed', 'confirm'))) {
-                    $orderStatusChipClass = 'order-chip-status-success';
+                    $orderStatusChipClass = 'badge-delivered';
                 } elseif (in_array($orderStatusRaw, array('waiting', 'pending', 'processing', 'on_hold', 'in_progress'))) {
-                    $orderStatusChipClass = 'order-chip-status-warning';
+                    $orderStatusChipClass = 'badge-pending';
                 } elseif (in_array($orderStatusRaw, array('cancel', 'cancelled', 'return', 'returned', 'failed', 'rejected'))) {
-                    $orderStatusChipClass = 'order-chip-status-danger';
+                    $orderStatusChipClass = 'badge-cancelled';
                 }
 
 ?>
-
-                <style>
-                    .order-info-ui {
-                        --oi-bg: #f8fafc;
-                        --oi-surface: #ffffff;
-                        --oi-surface-soft: #f9fafb;
-                        --oi-border: #e5e7eb;
-                        --oi-text: #111827;
-                        --oi-muted: #6b7280;
-                        --oi-accent: #0f172a;
-                        --oi-accent-soft: #eff6ff;
-                        background: var(--oi-bg);
-                        border: 1px solid var(--oi-border);
-                        border-radius: 14px;
-                        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-                        padding: 16px;
-                        color: var(--oi-text);
-                    }
-
-                    .order-info-head {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        margin-bottom: 16px;
-                        padding-bottom: 12px;
-                        border-bottom: 1px solid var(--oi-border);
-                    }
-
-                    .order-info-head h2 {
-                        margin: 0;
-                        color: var(--oi-accent);
-                        letter-spacing: -0.02em;
-                        font-weight: 700;
-                        font-size: 22px;
-                    }
-
-                    .order-info-subtitle {
-                        margin: 5px 0 0;
-                        color: var(--oi-muted);
-                        font-size: 13px;
-                    }
-
-                    .order-overview {
-                        display: grid;
-                        grid-template-columns: 2fr 1fr;
-                        gap: 12px;
-                        margin-bottom: 12px;
-                    }
-
-                    .order-overview-card {
-                        background: var(--oi-surface);
-                        border: 1px solid var(--oi-border);
-                        border-radius: 12px;
-                        padding: 14px;
-                        box-shadow: none;
-                    }
-
-                    .order-overview-title {
-                        margin: 0 0 8px;
-                        color: var(--oi-muted);
-                        text-transform: uppercase;
-                        font-size: 11px;
-                        letter-spacing: 0.8px;
-                        font-weight: 700;
-                    }
-
-                    .order-meta-line {
-                        display: flex;
-                        flex-wrap: wrap;
-                        gap: 6px;
-                    }
-
-                    .order-chip {
-                        display: inline-flex;
-                        align-items: center;
-                        padding: 6px 10px;
-                        border-radius: 999px;
-                        border: 1px solid #d1d5db;
-                        background: var(--oi-surface-soft);
-                        color: #374151;
-                        font-size: 11px;
-                        font-weight: 600;
-                        line-height: 1;
-                        max-width: 100%;
-                        white-space: normal;
-                    }
-
-                    .order-chip.order-chip-accent {
-                        border-color: #bfdbfe;
-                        background: var(--oi-accent-soft);
-                        color: #1e40af;
-                    }
-
-                    .order-chip.order-chip-status-success {
-                        background: #ecfdf5;
-                        border-color: #bbf7d0;
-                        color: #166534;
-                    }
-
-                    .order-chip.order-chip-status-warning {
-                        background: #fffbeb;
-                        border-color: #fde68a;
-                        color: #92400e;
-                    }
-
-                    .order-chip.order-chip-status-danger {
-                        background: #fef2f2;
-                        border-color: #fecaca;
-                        color: #991b1b;
-                    }
-
-                    .order-chip.order-chip-status-default {
-                        background: #f3f4f6;
-                        border-color: #d1d5db;
-                        color: #4b5563;
-                    }
-
-                    .order-metric-grid {
-                        display: grid;
-                        grid-template-columns: repeat(3, 1fr);
-                        gap: 10px;
-                    }
-
-                    .order-metric {
-                        border: 1px solid var(--oi-border);
-                        border-radius: 10px;
-                        background: #fff;
-                        padding: 10px;
-                    }
-
-                    .order-metric-label {
-                        margin: 0;
-                        font-size: 10px;
-                        text-transform: uppercase;
-                        letter-spacing: 0.7px;
-                        color: #9ca3af;
-                    }
-
-                    .order-metric-value {
-                        margin-top: 4px;
-                        font-size: 14px;
-                        font-weight: 700;
-                        color: #111827;
-                    }
-
-                    .order-info-shell {
-                        background: transparent;
-                        border-radius: 12px;
-                        padding: 0;
-                        border: 0;
-                    }
-
-                    .order-info-ui .box-1 {
-                        display: grid;
-                        grid-template-columns: 1.6fr 1fr;
-                        gap: 12px;
-                        float: none;
-                    }
-
-                    .order-info-ui .box-1>.box-2 {
-                        min-width: 0;
-                    }
-
-                    .order-info-ui .box-2 {
-                        width: auto;
-                        float: none;
-                        background: var(--oi-surface);
-                        border: 1px solid var(--oi-border);
-                        border-radius: 12px;
-                        padding: 14px;
-                        box-shadow: none;
-                    }
-
-                    .order-info-ui .box-2 .box-2 {
-                        border: 0;
-                        box-shadow: none;
-                        background: transparent;
-                        border-radius: 0;
-                    }
-
-                    .order-summary-sticky {
-                        position: sticky;
-                        top: 16px;
-                        align-self: start;
-                    }
-
-                    .order-section-title {
-                        margin: 0 0 10px;
-                        color: #111827;
-                        font-size: 14px;
-                        font-weight: 700;
-                        text-transform: none;
-                        letter-spacing: 0.2px;
-                    }
-
-                    .order-item-row {
-                        display: grid;
-                        grid-template-columns: minmax(0, 1fr) 150px;
-                        gap: 10px;
-                        margin-bottom: 10px;
-                        padding: 10px;
-                        border-radius: 10px;
-                        background: #f9fafb;
-                        border: 1px solid var(--oi-border);
-                    }
-
-                    .order-item-row .form-group {
-                        margin-bottom: 0;
-                    }
-
-                    .order-product-thumb {
-                        width: 92px;
-                        height: 92px;
-                        border-radius: 12px;
-                        overflow: hidden;
-                        border: 1px solid var(--oi-border);
-                        background: #f8fafc;
-                        margin-bottom: 8px;
-                    }
-
-                    .order-product-thumb img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        display: block;
-                    }
-
-                    .order-help-text {
-                        display: block;
-                        margin-top: 6px;
-                        font-size: 11px;
-                        color: var(--oi-muted);
-                        line-height: 1.4;
-                    }
-
-                    .order-customer-grid {
-                        display: grid;
-                        grid-template-columns: repeat(2, minmax(0, 1fr));
-                        gap: 10px;
-                    }
-
-                    .order-customer-grid .form-group {
-                        margin-bottom: 0;
-                    }
-
-                    .order-info-ui .form-group {
-                        margin-bottom: 12px;
-                    }
-
-                    .order-info-ui .form-group label {
-                        display: block;
-                        margin-bottom: 6px;
-                        color: #6b7280;
-                        font-size: 12px;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                        letter-spacing: 0.3px;
-                    }
-
-                    .order-info-ui .inside-shadow,
-                    .order-info-ui .form-control {
-                        border-radius: 8px;
-                        border: 1px solid #d1d5db;
-                        box-shadow: none;
-                        min-height: 40px;
-                    }
-
-                    .order-info-ui .inside-shadow:focus,
-                    .order-info-ui .form-control:focus {
-                        border-color: #93c5fd;
-                        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-                    }
-
-                    .order-summary-image {
-                        width: 100%;
-                        max-width: 230px;
-                        height: 200px;
-                        object-fit: cover;
-                        border-radius: 10px;
-                        border: 1px solid var(--oi-border);
-                        margin-bottom: 14px;
-                        background: #f3f4f6;
-                    }
-
-                    .order-collapsible {
-                        border: 1px solid var(--oi-border);
-                        border-radius: 11px;
-                        background: #fff;
-                        margin-bottom: 10px;
-                        overflow: hidden;
-                    }
-
-                    .order-collapsible.order-collapsible-edit {
-                        background: #fff;
-                    }
-
-                    .order-collapsible.order-collapsible-summary {
-                        background: #fff;
-                    }
-
-                    .order-collapse-toggle {
-                        width: 100%;
-                        border: 0;
-                        border-bottom: 1px solid var(--oi-border);
-                        background: #f9fafb;
-                        color: #1f2937;
-                        text-align: left;
-                        padding: 10px 12px;
-                        font-size: 12px;
-                        font-weight: 700;
-                        text-transform: none;
-                        letter-spacing: 0;
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        cursor: pointer;
-                    }
-
-                    .order-collapsible.order-collapsible-edit .order-collapse-toggle {
-                        background: #f9fafb;
-                        color: #1f2937;
-                    }
-
-                    .order-collapsible.order-collapsible-summary .order-collapse-toggle {
-                        background: #f9fafb;
-                        color: #1f2937;
-                    }
-
-                    .order-collapse-toggle-icon {
-                        font-size: 13px;
-                        color: #9ca3af;
-                        transition: transform 0.2s ease;
-                    }
-
-                    .order-collapsible.is-open .order-collapse-toggle-icon {
-                        transform: rotate(180deg);
-                    }
-
-                    .order-collapse-body {
-                        overflow: hidden;
-                        max-height: 0;
-                        opacity: 0;
-                        padding: 0 12px;
-                        transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.22s ease;
-                    }
-
-                    .order-collapsible.is-open .order-collapse-body {
-                        max-height: 4000px;
-                        opacity: 1;
-                        padding: 12px;
-                    }
-
-                    .order-action-row {
-                        grid-column: 1 / -1;
-                        background: var(--oi-surface);
-                        border: 1px solid var(--oi-border);
-                        border-radius: 12px;
-                        padding: 12px;
-                        margin-top: 4px;
-                        box-shadow: none;
-                        width: 58.5%;
-                    }
-
-                    .order-action-row .btn {
-                        margin-right: 8px;
-                        margin-bottom: 8px;
-                        border-radius: 8px;
-                        min-width: 110px;
-                        text-align: center;
-                        box-shadow: none;
-                        transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
-                    }
-
-                    .order-action-row .btn:hover {
-                        transform: none;
-                        box-shadow: none;
-                    }
-
-                    .order-action-row .btn-green {
-                        background: #ecfdf5;
-                        border: 1px solid #bbf7d0;
-                    }
-
-                    .order-action-row .btn-green:hover {
-                        background: #dcfce7;
-                    }
-
-                    .order-action-row .btn-yellow {
-                        background: #fffbeb;
-                        border: 1px solid #fde68a;
-                    }
-
-                    .order-action-row .btn-yellow:hover {
-                        background: #fef3c7;
-                    }
-
-                    .order-action-row .btn-red {
-                        background: #fef2f2;
-                        border: 1px solid #fecaca;
-                    }
-
-                    .order-action-row .btn-red:hover {
-                        background: #fee2e2;
-                    }
-
-                    @media (max-width: 991px) {
-                        .order-overview {
-                            grid-template-columns: 1fr;
-                        }
-
-                        .order-metric-grid {
-                            grid-template-columns: 1fr;
-                        }
-
-                        .order-item-row {
-                            grid-template-columns: 1fr;
-                        }
-
-                        .order-customer-grid {
-                            grid-template-columns: 1fr;
-                        }
-
-                        .order-info-ui .box-1 {
-                            grid-template-columns: 1fr;
-                        }
-
-                        .order-info-ui .box-2 {
-                            padding: 10px;
-                        }
-
-                        .order-summary-sticky {
-                            position: static;
-                        }
-
-                        .order-action-row .btn {
-                            width: 100%;
-                            margin-right: 0;
-                        }
-                    }
-                </style>
-
                 <div class="order-info-ui" data-order-id="<?php echo $id ?>">
-                    <div class="order-info-head">
+
+                    <div class="premium-header">
+                        <div class="premium-header-left">
+                            <h2>Order #<?php echo $id ?></h2>
+                            <p class="order-info-subtitle">Review, update customer profile, and process the lifecycle of this order.</p>
+                        </div>
                         <div>
-                            <h2>Order Info</h2>
-                            <p class="order-info-subtitle">Review, update, and process this order in one place.</p>
+                            <span class="premium-badge <?php echo $orderStatusChipClass ?>">
+                                <i class="fas fa-circle" style="font-size: 8px; margin-right: 5px;"></i> <?php echo $orderStatusText ?>
+                            </span>
                         </div>
                     </div>
 
-                    <div class="order-overview">
-                        <div class="order-overview-card">
-                            <p class="order-overview-title">Order Snapshot</p>
-                            <div class="order-meta-line">
-                                <span class="order-chip order-chip-accent">Order ID: <?php echo $id ?></span>
-                                <span class="order-chip <?php echo $orderStatusChipClass ?>">Status:
-                                    <?php echo $orderStatusText ?></span>
-                                <span class="order-chip">Payment: <?php echo ucwords($order_payment_mode) ?></span>
-                                <span class="order-chip">Created: <?php echo $order_generate ?></span>
-                            </div>
+                    <div class="premium-stats-bar">
+                        <div class="premium-stat-item">
+                            <span class="premium-stat-label">Payment Mode</span>
+                            <span class="premium-stat-value"><?php echo ucwords((($order_payment_mode != '') ? $order_payment_mode : 'N/A')) ?></span>
                         </div>
-                        <div class="order-overview-card">
-                            <p class="order-overview-title">Quick Metrics</p>
-                            <div class="order-metric-grid">
-                                <div class="order-metric">
-                                    <p class="order-metric-label">Items</p>
-                                    <div class="order-metric-value"><?php echo sizeof(explode(',', $order_product_id)) ?></div>
-                                </div>
-                                <div class="order-metric">
-                                    <p class="order-metric-label">Delivery</p>
-                                    <div class="order-metric-value">
-                                        <?php echo (($order_delivery_charges != '') ? $order_delivery_charges : '0') ?></div>
-                                </div>
-                                <div class="order-metric">
-                                    <p class="order-metric-label">Total</p>
-                                    <div class="order-metric-value">
-                                        <?php echo (($order_total_price != '') ? $order_total_price : '0') ?></div>
-                                </div>
-                            </div>
+                        <div class="premium-stat-item">
+                            <span class="premium-stat-label">Items Count</span>
+                            <span class="premium-stat-value"><?php echo sizeof(explode(',', $order_product_id)) ?> items</span>
+                        </div>
+                        <div class="premium-stat-item">
+                            <span class="premium-stat-label">Created Date</span>
+                            <span class="premium-stat-value"><?php echo $order_generate ?></span>
+                        </div>
+                        <div class="premium-stat-item" style="border-right: none;">
+                            <span class="premium-stat-label">Total Amount</span>
+                            <span class="premium-stat-value"><?php echo (($order_total_price != '') ? $inventory_currency_symbol . ' ' . $order_total_price : '0') ?></span>
                         </div>
                     </div>
 
-                    <div class="form-box order-info-shell">
+                    <div class="order-info-shell">
                         <form id="orderData">
-                            <div class="box-1">
-                                <div class="box-2">
-                                    <div class="order-collapsible order-collapsible-edit is-open">
-                                        <button type="button" class="order-collapse-toggle" data-target="orderEditCustomerPanel"
-                                            aria-expanded="true">
-                                            Order + Customer Details
-                                            <span class="order-collapse-toggle-icon">▾</span>
-                                        </button>
-                                        <div class="order-collapse-body" id="orderEditCustomerPanel">
-                                            <h3 class="order-section-title">Order Items</h3>
-                                            <?php
+                            <div class="premium-grid">
+                                <!-- LEFT PANEL: Items and Billing info -->
+                                <div class="premium-grid-left">
 
-                                            // Fetch Product information from database
+                                    <!-- Card 1: Order Items -->
+                                    <div class="premium-card">
+                                        <h3 class="premium-card-title"><i class="fas fa-shopping-basket"></i> Order Items</h3>
 
-                                            $productData = array_filter(array_map('trim', explode(',', (string)$order_product_id)), 'strlen');
-                                            $productQtyData = array_map('trim', explode(',', (string)$order_product_qty));
+                                        <?php
+                                        $productData = array_filter(array_map('trim', explode(',', (string)$order_product_id)), 'strlen');
+                                        $productQtyData = array_map('trim', explode(',', (string)$order_product_qty));
 
-                                            if ($isApp32 && empty($productData)) { ?>
-                                                <div class="order-item-row">
-                                                    <div class="form-group" style="width: 100%;">
-                                                        <label>Assign Product</label>
-                                                        <select name="assigned_product_id" class="form-control inside-shadow">
-                                                            <option value="">Select product</option>
-                                                            <?php for ($p = 0; $p < sizeof($productListData); $p++) { ?>
-                                                                <option value="<?php echo htmlspecialchars($productListData[$p]['product_id']); ?>">
-                                                                    <?php echo htmlspecialchars($productListData[$p]['product_title']); ?>
-                                                                </option>
-                                                            <?php } ?>
-                                                        </select>
-                                                        <small class="order-help-text">This order does not have a product assigned yet.</small>
-                                                    </div>
+                                        if (empty($productData)) { ?>
+                                            <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
+                                                <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
+                                                <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
+                                                    <strong>No Product Assigned</strong><br>
+                                                    Please assign a product to this order.
                                                 </div>
+                                            </div>
 
-                                                <div class="order-item-row">
-                                                    <div class="form-group" style="width: 100%;">
-                                                        <label>Vendor Selection</label>
-                                                        <select name="assigned_vendor" class="form-control inside-shadow">
-                                                            <option value="">Select vendor</option>
-                                                            <?php if (!empty($vendorListData)) { ?>
-                                                                <?php foreach ($vendorListData as $vendorData) { ?>
-                                                                    <option value="<?php echo htmlspecialchars($vendorData['user_type_code']); ?>">
-                                                                        <?php echo htmlspecialchars($vendorData['user_type_name']); ?>
-                                                                    </option>
-                                                                <?php } ?>
-                                                            <?php } else { ?>
-                                                                <option value="">No vendor found</option>
-                                                            <?php } ?>
-                                                        </select>
-                                                        <small class="order-help-text">Choose the vendor before processing this order.</small>
-                                                    </div>
+                                            <!-- Product Edit/Re-assign Mode -->
+                                            <div id="productEditMode" style="display: block;">
+                                                <div class="premium-form-group">
+                                                    <select name="assigned_product_id" class="premium-form-control selectJS" style="width: 100%;">
+                                                        <option value="">Select product</option>
+                                                        <?php foreach ($productListData as $productInfo) {
+                                                            echo "<option value='" . htmlspecialchars($productInfo['product_id'], ENT_QUOTES) . "' data-image='" . htmlspecialchars($productInfo['product_image'] ?? '', ENT_QUOTES) . "'>" . htmlspecialchars($productInfo['product_title'], ENT_QUOTES) . "</option>";
+                                                        } ?>
+                                                    </select>
                                                 </div>
-                                                <?php } else {
-                                                for ($i = 0; $i < sizeof($productData); $i++) {
+                                                <div style="margin-top: 12px; display: flex; gap: 8px;">
+                                                    <button type="button" class="btn-premium-action btn-save" id="saveProductEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> Apply</button>
+                                                    <button type="button" class="btn-premium-action btn-cancel" id="cancelProductEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px; background-color: var(--neutral-300) !important; color: var(--neutral-700) !important;"><i class="fas fa-times"></i> Cancel</button>
+                                                </div>
+                                            </div>
+                                            <?php } else {
+                                            for ($i = 0; $i < sizeof($productData); $i++) {
+                                                echo "<input type='hidden' name='totalProducts' value='" . sizeof($productData) . "'>";
 
-                                                    echo "<input type='hidden' name='totalProducts' value='" . sizeof($productData) . "'>";
+                                                if ($checkProduct = mysqli_query($connection, "SELECT product_id, product_image, product_title, inventory_currency_symbol FROM isw_product INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_id='{$productData[$i]}' AND inventory_type='product' AND product_site_id"  . $siteId . " AND inventory_site_id" . $siteId)) {
+                                                    if (mysqli_num_rows($checkProduct) != 0) {
+                                                        extract(mysqli_fetch_assoc($checkProduct)); ?>
 
-                                                    if ($checkProduct = mysqli_query($connection, "SELECT product_id, product_image, product_title, inventory_currency_symbol FROM isw_product INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_id='{$productData[$i]}' AND inventory_type='product' AND product_site_id=" . APP_SITE_ID . " AND inventory_site_id=" . APP_SITE_ID)) {
-
-                                                        if (mysqli_num_rows($checkProduct) != 0) {
-
-                                                            extract(mysqli_fetch_assoc($checkProduct)); ?>
-
-                                                            <div class="order-item-row">
-                                                                <div class="form-group">
-                                                                    <label>Product name (Cart item <?php echo $i + 1 ?>)</label>
-                                                                    <?php if (trim((string)$product_image) != '') { ?>
-                                                                        <div class="order-product-thumb">
-                                                                            <img src="<?php echo htmlspecialchars($product_image, ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($product_title, ENT_QUOTES); ?>">
-                                                                        </div>
-                                                                    <?php } ?>
-                                                                    <input type="hidden" name="product_id_<?php echo $i ?>"
-                                                                        value="<?php echo $productData[$i] ?>">
-                                                                    <input type="text" class="form-control inside-shadow"
-                                                                        value="<?php echo htmlspecialchars($product_title, ENT_QUOTES) ?>" readonly>
+                                                        <div class="order-item-row" data-index="<?php echo $i ?>">
+                                                            <!-- View mode -->
+                                                            <div class="order-item-view-container">
+                                                                <div class="order-item-view-left">
+                                                                    <div class="order-item-thumb-wrapper">
+                                                                        <?php if (trim((string)$product_image) != '') { ?>
+                                                                            <img class="view-item-image" src="<?php echo htmlspecialchars($product_image, ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($product_title, ENT_QUOTES); ?>">
+                                                                        <?php } else { ?>
+                                                                            <div class="view-item-image-placeholder select-product-option-no-img">📦</div>
+                                                                        <?php } ?>
+                                                                    </div>
+                                                                    <div class="order-item-details">
+                                                                        <div class="order-item-title view-item-title"><?php echo htmlspecialchars($product_title, ENT_QUOTES) ?></div>
+                                                                        <div class="order-item-qty">Qty: <span class="view-item-qty"><?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '0' ?></span></div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label>Qty</label>
-                                                                    <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow"
-                                                                        value="<?php echo isset($productQtyData[$i]) ? str_replace(' ', '', $productQtyData[$i]) : '' ?>">
+                                                                <div class="order-item-edit-btn-wrapper">
+                                                                    <button type="button" class="btn-premium-action btn-edit edit-item-btn"><i class="fas fa-edit"></i> Edit</button>
                                                                 </div>
                                                             </div>
 
-                                                        <?php
-
-                                                        } else { ?>
-
-                                                            <div class="order-item-row">
-                                                                <div class="form-group">
-                                                                    <label>Product name (Cart item <?php echo $i + 1 ?>)</label>
-                                                                    <?php
-                                                                    $fallbackProductTitle = 'Unknown Product';
-
-                                                                    for ($j = 0; $j < sizeof($productListData); $j++) {
-                                                                        if ((string)$productListData[$j]['product_id'] == (string)$productData[$i]) {
-                                                                            $fallbackProductTitle = $productListData[$j]['product_title'];
-                                                                            break;
-                                                                        }
-                                                                    }
-                                                                    ?>
-                                                                    <input type="hidden" name="product_id_<?php echo $i ?>"
-                                                                        value="<?php echo $productData[$i] ?>">
-                                                                    <input type="text" class="form-control inside-shadow"
-                                                                        value="<?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES) ?>"
-                                                                        readonly>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label>Qty</label>
-                                                                    <input type="text" name="qty_<?php echo $i ?>" class="form-control inside-shadow">
+                                                            <!-- Edit mode -->
+                                                            <div class="order-item-edit-container" style="display: none;">
+                                                                <input type="hidden" name="product_id_<?php echo $i ?>" class="item-product-id-input" value="<?php echo $productData[$i] ?>">
+                                                                <div class="order-item-edit-grid">
+                                                                    <div class="premium-form-group">
+                                                                        <label>Select Product</label>
+                                                                        <select class="premium-form-control select-product-dropdown" style="width: 100%;">
+                                                                            <?php for ($p = 0; $p < sizeof($productListData); $p++) { ?>
+                                                                                <option value="<?php echo htmlspecialchars($productListData[$p]['product_id'], ENT_QUOTES); ?>"
+                                                                                    data-image="<?php echo htmlspecialchars($productListData[$p]['product_image'] ?? '', ENT_QUOTES); ?>"
+                                                                                    <?php echo ((string)$productListData[$p]['product_id'] == (string)$productData[$i]) ? 'selected' : ''; ?>>
+                                                                                    <?php echo htmlspecialchars($productListData[$p]['product_title'], ENT_QUOTES); ?>
+                                                                                </option>
+                                                                            <?php } ?>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="premium-form-group">
+                                                                        <label>Qty</label>
+                                                                        <input type="text" name="qty_<?php echo $i ?>" class="premium-form-control edit-qty-input"
+                                                                            value="<?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '' ?>">
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" class="btn-premium-action btn-save save-item-btn" style="width: 100%;"><i class="fas fa-check"></i> Save</button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-
-                                            <?php
+                                                        </div>
+                                                    <?php } else {
+                                                        $fallbackProductTitle = 'Unknown Product';
+                                                        $fallbackProductImage = '';
+                                                        for ($j = 0; $j < sizeof($productListData); $j++) {
+                                                            if ((string)$productListData[$j]['product_id'] == (string)$productData[$i]) {
+                                                                $fallbackProductTitle = $productListData[$j]['product_title'];
+                                                                $fallbackProductImage = isset($productListData[$j]['product_image']) ? $productListData[$j]['product_image'] : '';
+                                                                break;
+                                                            }
                                                         }
-                                                    }
+                                                    ?>
+                                                        <div class="order-item-row" data-index="<?php echo $i ?>">
+                                                            <!-- View mode -->
+                                                            <div class="order-item-view-container">
+                                                                <div class="order-item-view-left">
+                                                                    <div class="order-item-thumb-wrapper">
+                                                                        <?php if (trim((string)$fallbackProductImage) != '') { ?>
+                                                                            <img class="view-item-image" src="<?php echo htmlspecialchars($fallbackProductImage, ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES); ?>">
+                                                                        <?php } else { ?>
+                                                                            <div class="view-item-image-placeholder select-product-option-no-img">📦</div>
+                                                                        <?php } ?>
+                                                                    </div>
+                                                                    <div class="order-item-details">
+                                                                        <div class="order-item-title view-item-title"><?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES) ?></div>
+                                                                        <div class="order-item-qty">Qty: <span class="view-item-qty"><?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '0' ?></span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="order-item-edit-btn-wrapper">
+                                                                    <button type="button" class="btn-premium-action btn-edit edit-item-btn"><i class="fas fa-edit"></i> Edit</button>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Edit mode -->
+                                                            <div class="order-item-edit-container" style="display: none;">
+                                                                <input type="hidden" name="product_id_<?php echo $i ?>" class="item-product-id-input" value="<?php echo $productData[$i] ?>">
+                                                                <div class="order-item-edit-grid">
+                                                                    <div class="premium-form-group">
+                                                                        <label>Select Product</label>
+                                                                        <select class="premium-form-control select-product-dropdown" style="width: 100%;">
+                                                                            <?php for ($p = 0; $p < sizeof($productListData); $p++) { ?>
+                                                                                <option value="<?php echo htmlspecialchars($productListData[$p]['product_id'], ENT_QUOTES); ?>"
+                                                                                    data-image="<?php echo htmlspecialchars($productListData[$p]['product_image'] ?? '', ENT_QUOTES); ?>"
+                                                                                    <?php echo ((string)$productListData[$p]['product_id'] == (string)$productData[$i]) ? 'selected' : ''; ?>>
+                                                                                    <?php echo htmlspecialchars($productListData[$p]['product_title'], ENT_QUOTES); ?>
+                                                                                </option>
+                                                                            <?php } ?>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="premium-form-group">
+                                                                        <label>Qty</label>
+                                                                        <input type="text" name="qty_<?php echo $i ?>" class="premium-form-control edit-qty-input"
+                                                                            value="<?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '' ?>">
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" class="btn-premium-action btn-save save-item-btn" style="width: 100%;"><i class="fas fa-check"></i> Save</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                        <?php }
                                                 }
                                             }
+                                        }
+                                        ?>
+                                    </div>
 
-                                            ?>
-                                            <h3 class="order-section-title">Customer Details</h3>
-
-                                            <div class="order-customer-grid">
-                                                <div class="form-group">
-                                                    <label>First Name</label>
-                                                    <input type="text" name="first_name" class="form-control inside-shadow"
-                                                        value="<?php echo $profile_first_name ?>">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Last Name</label>
-                                                    <input type="text" name="last_name" class="form-control inside-shadow"
-                                                        value="<?php echo $profile_last_name ?>">
-                                                </div>
+                                    <!-- Card 2: Customer Shipping Details -->
+                                    <div class="premium-card">
+                                        <h3 class="premium-card-title"><i class="fas fa-user-circle"></i> Customer & Shipping Details</h3>
+                                        <div class="premium-form-grid">
+                                            <div class="premium-form-group">
+                                                <label>First Name</label>
+                                                <input type="text" name="first_name" class="premium-form-control" value="<?php echo $profile_first_name ?>">
                                             </div>
-                                            <div class="form-group">
-                                                <label>Email</label>
-                                                <input type="text" name="email" class="form-control inside-shadow"
-                                                    value="<?php echo $user_email ?>">
+                                            <div class="premium-form-group">
+                                                <label>Last Name</label>
+                                                <input type="text" name="last_name" class="premium-form-control" value="<?php echo $profile_last_name ?>">
                                             </div>
-                                            <div class="form-group">
-                                                <label>Mobile No.</label>
-                                                <input type="text" name="mobile" class="form-control inside-shadow"
-                                                    value="<?php echo $user_mobile ?>">
+                                            <div class="premium-form-group">
+                                                <label>Email Address</label>
+                                                <input type="text" name="email" class="premium-form-control" value="<?php echo $user_email ?>">
                                             </div>
-                                            <div class="form-group">
-                                                <label>House No.</label>
-                                                <input type="text" name="address_house_no" class="form-control inside-shadow"
-                                                    value="<?php echo $address_house_no ?>">
+                                            <div class="premium-form-group">
+                                                <label>Mobile Number</label>
+                                                <input type="text" name="mobile" class="premium-form-control" value="<?php echo $user_mobile ?>">
                                             </div>
-                                            <div class="form-group">
-                                                <label>Address</label>
-                                                <input type="text" name="address_area" class="form-control inside-shadow"
-                                                    value="<?php echo $address_area ?>">
+                                            <div class="premium-form-group">
+                                                <label>House No. / Suite</label>
+                                                <input type="text" name="address_house_no" class="premium-form-control" value="<?php echo $address_house_no ?>">
                                             </div>
-                                            <div class="form-group">
+                                            <div class="premium-form-group">
+                                                <label>Address Line</label>
+                                                <input type="text" name="address_area" class="premium-form-control" value="<?php echo $address_area ?>">
+                                            </div>
+                                            <div class="premium-form-group">
                                                 <label>Landmark</label>
-                                                <input type="text" class="form-control inside-shadow" name="address_landmark"
-                                                    value="<?php echo $address_landmark ?>">
+                                                <input type="text" name="address_landmark" class="premium-form-control" value="<?php echo $address_landmark ?>">
                                             </div>
-                                            <div class="form-group">
+                                            <div class="premium-form-group">
                                                 <label>City</label>
-                                                <input type="text" class="form-control inside-shadow" name="city"
-                                                    value="<?php echo $city_name ?>">
+                                                <input type="text" name="city" class="premium-form-control" value="<?php echo $city_name ?>">
                                             </div>
-                                            <div class="form-group">
+                                            <div class="premium-form-group">
                                                 <label>State</label>
-                                                <select class="form-control inside-shadow" name="state" required>
+                                                <select class="premium-form-control" name="state" required>
                                                     <?php
-
                                                     if ($stateDetails = mysqli_query($connection, "SELECT state_id, state_name FROM " . TABLE_PREFIX . "state WHERE state_country_id=101")) {
-
                                                         if (mysqli_num_rows($stateDetails) != 0) {
-
                                                             echo "<option value='' >Select state</option>";
-
                                                             while ($stateData = mysqli_fetch_assoc($stateDetails)) {
-
                                                                 echo "<option value='{$stateData['state_id']}' " . (($stateData['state_id'] == $state_id) ? 'selected' : '') . " >{$stateData['state_name']}</option>";
                                                             }
                                                         } else {
-
-                                                            echo "<option value=''>No city found</option>";
+                                                            echo "<option value=''>No state found</option>";
                                                         }
                                                     }
-
                                                     ?>
                                                 </select>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="premium-form-group">
                                                 <label>Pin Code</label>
-                                                <input type="text" class="form-control inside-shadow" name="address_pin_code"
-                                                    value="<?php echo $address_pin_code ?>">
+                                                <input type="text" name="address_pin_code" class="premium-form-control" value="<?php echo $address_pin_code ?>">
                                             </div>
-                                            <div class="form-group">
+                                            <div class="premium-form-group full-width">
                                                 <label>Address Type</label>
-                                                <select name="address_type" class="form-control inside-shadow">
+                                                <select name="address_type" class="premium-form-control">
                                                     <option value="">Select address type</option>
-                                                    <option value="home" <?php echo (($address_type == 'home') ? 'selected' : '') ?>>
-                                                        Home
-                                                    </option>
-                                                    <option value="work" <?php echo (($address_type == 'work') ? 'selected' : '') ?>>
-                                                        Work
-                                                    </option>
-                                                    <option value="other" <?php echo (($address_type == 'other') ? 'selected' : '') ?>>
-                                                        Other
-                                                    </option>
+                                                    <option value="home" <?php echo (($address_type == 'home') ? 'selected' : '') ?>>Home</option>
+                                                    <option value="work" <?php echo (($address_type == 'work') ? 'selected' : '') ?>>Work</option>
+                                                    <option value="other" <?php echo (($address_type == 'other') ? 'selected' : '') ?>>Other</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="box-2 order-summary-sticky">
-                                    <div class="order-collapsible order-collapsible-summary is-open">
-                                        <button type="button" class="order-collapse-toggle" data-target="orderPaymentReceiverPanel"
-                                            aria-expanded="true">
-                                            Payment + Receiver Details
-                                            <span class="order-collapse-toggle-icon">▾</span>
-                                        </button>
-                                        <div class="order-collapse-body" id="orderPaymentReceiverPanel">
-                                            <h3 class="order-section-title">Payment & Receiver</h3>
+                                <!-- RIGHT PANEL: Billing summary and Receiver Info -->
+                                <div class="premium-grid-right">
 
-                                            <img src="<?php echo $product_image ?>" class="order-summary-image" alt="">
-
-                                            <div class="form-group">
-                                                <label>Product price</label>
-                                                <input type='text' class='form-control inside-shadow'
-                                                    value='<?php echo (($order_product_price != '') ? $inventory_currency_symbol . ' ' : '') . $order_product_price ?>'
-                                                    readonly>
+                                    <!-- Card 3: Payment Summary -->
+                                    <div class="premium-card">
+                                        <h3 class="premium-card-title"><i class="fas fa-credit-card"></i> Payment Summary</h3>
+                                        <div class="billing-summary">
+                                            <div class="billing-line">
+                                                <span>Subtotal</span>
+                                                <span style="font-weight: 600; color: var(--neutral-900);"><?php echo (($order_product_price != '') ? $inventory_currency_symbol . ' ' . $order_product_price : '-') ?></span>
                                             </div>
-
-                                            <div class="form-group">
-                                                <label>Delivery charge</label>
-                                                <input type='text' class='form-control inside-shadow'
-                                                    value='<?php echo (($order_delivery_charges != '') ? $inventory_currency_symbol . ' ' : '') . $order_delivery_charges ?>'
-                                                    readonly>
+                                            <div class="billing-line">
+                                                <span>Delivery Charge</span>
+                                                <span style="font-weight: 600; color: var(--neutral-900);"><?php echo (($order_delivery_charges != '') ? $inventory_currency_symbol . ' ' . $order_delivery_charges : '-') ?></span>
                                             </div>
-
-                                            <div class="form-group">
-                                                <label>Order total</label>
-                                                <input type='text' class='form-control inside-shadow'
-                                                    value='<?php echo (($order_total_price != '') ? $inventory_currency_symbol . ' ' : '') . $order_total_price ?>'
-                                                    readonly>
+                                            <div class="billing-line total">
+                                                <span>Order Total</span>
+                                                <span><?php echo (($order_total_price != '') ? $inventory_currency_symbol . ' ' . $order_total_price : '-') ?></span>
                                             </div>
-
-                                            <h3 class="order-section-title">Receiver Details</h3>
-
-                                            <div class="form-group">
-                                                <label>Name</label>
-                                                <input type='text' class='form-control inside-shadow'
-                                                    value='<?php echo $address_name ?>' readonly>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label>Contact no.</label>
-                                                <input type='text' class='form-control inside-shadow'
-                                                    value='<?php echo $address_mobile ?>' readonly>
-                                            </div>
-
-                                            <?php
-
-                                            if ($orderMeta = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$id}' AND order_site_id='" . APP_SITE_ID . "'")) {
-
-                                                if (mysqli_num_rows($orderMeta) != 0) {
-
-                                                    while ($orderMetaData = mysqli_fetch_assoc($orderMeta)) {
-
-                                                        extract($orderMetaData);
-
-                                                        if ($order_meta_key == 'message') {
-
-                                                            echo "<div class='form-group'>
-                                                            <label>" . ucwords($order_meta_key) . "</label>
-                                                            <textarea class='form-control inside-shadow' style='min-height: 200px' readonly >{$order_meta_value}</textarea>
-                                                        </div>";
-                                                        } else {
-
-                                                            echo "<div class='form-group'>
-                                                            <label>" . ucwords($order_meta_key) . "</label>
-                                                            <input type='text' class='form-control inside-shadow' value='{$order_meta_value}' readonly >
-                                                        </div>";
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            ?>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group order-action-row">
-                                    <input type="hidden" name="type" value="order">
-                                    <input type="hidden" name="id" value="<?php echo $id ?>">
-                                    <!-- <a href="#" id="orderUpdateData" class="btn btn-blue">Update Data</a> -->
-                                    <a href="#" id="orderConfirmBtn" class="btn btn-green">Confirm</a>
-                                    <a href="#" id="orderWaitingBtn" class="btn btn-yellow">Waiting</a>
-                                    <a href="#" id="orderCancelBtn" class="btn btn-red">Cancel</a>
-                                    <a href="#" id="orderReturnBtn" class="btn btn-red">Return</a>
-                                    <a href="#" id="orderDeliverBtn" class="btn btn-green">Delivered</a>
+                                    <!-- Card: Fulfillment Partner / Vendor Details -->
+                                    <div class="premium-card">
+                                        <h3 class="premium-card-title"><i class="fas fa-truck"></i> Fulfillment Partner</h3>
+
+                                        <?php if (!empty($assignedVendorCode)) { ?>
+                                            <!-- Vendor Assigned View Mode -->
+                                            <div id="vendorViewMode">
+                                                <div class="premium-form-group" style="margin-bottom: 16px;">
+                                                    <label>Assigned Partner Role</label>
+                                                    <div style="font-weight: 700; font-size: 15px; color: var(--neutral-900); padding: 4px 0;">
+                                                        <?php echo htmlspecialchars($assignedVendorName, ENT_QUOTES); ?>
+                                                    </div>
+                                                </div>
+
+                                                <?php if (!empty($vendorUsers)) { ?>
+                                                    <div class="premium-form-group" style="margin-bottom: 16px;">
+                                                        <label>Assigned Contacts</label>
+                                                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+                                                            <?php foreach ($vendorUsers as $vu) { ?>
+                                                                <div style="background: var(--neutral-50); border: 1px solid var(--neutral-200); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 4px;">
+                                                                    <div style="font-weight: 600; font-size: 13px; color: var(--neutral-900);"><?php echo htmlspecialchars($vu['profile_display_name'], ENT_QUOTES); ?></div>
+                                                                    <?php if (!empty($vu['user_email'])) { ?>
+                                                                        <div style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 6px;"><i class="far fa-envelope"></i> <?php echo htmlspecialchars($vu['user_email'], ENT_QUOTES); ?></div>
+                                                                    <?php } ?>
+                                                                    <?php if (!empty($vu['profile_mobile'])) { ?>
+                                                                        <div style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 6px;"><i class="fas fa-phone-alt"></i> <?php echo htmlspecialchars($vu['profile_mobile'], ENT_QUOTES); ?></div>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            <?php } ?>
+                                                        </div>
+                                                    </div>
+                                                <?php } else { ?>
+                                                    <div class="premium-form-group" style="margin-bottom: 16px;">
+                                                        <label>Assigned Contacts</label>
+                                                        <div style="font-size: 13px; color: #64748b; font-style: italic; margin-top: 4px;">
+                                                            No contact users registered for this partner role.
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
+
+                                                <div style="margin-top: 14px; border-top: 1px dashed var(--neutral-200); padding-top: 12px;">
+                                                    <button type="button" class="btn-premium-action btn-edit" id="changeVendorBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-exchange-alt"></i> Change Partner</button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Vendor Edit/Re-assign Mode -->
+                                            <div id="vendorEditMode" style="display: none;">
+                                                <div class="premium-form-group">
+                                                    <label>Select Fulfillment Partner</label>
+                                                    <select name="assigned_vendor" class="premium-form-control" style="width: 100%;">
+                                                        <option value="">Select partner</option>
+                                                        <?php foreach ($vendorListData as $vendor) { ?>
+                                                            <option value="<?php echo htmlspecialchars($vendor['user_type_code'], ENT_QUOTES); ?>"
+                                                                <?php echo ($vendor['user_type_code'] == $assignedVendorCode) ? 'selected' : ''; ?>>
+                                                                <?php echo htmlspecialchars($vendor['user_type_name'], ENT_QUOTES); ?>
+                                                            </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                                <div style="margin-top: 12px; display: flex; gap: 8px;">
+                                                    <button type="button" class="btn-premium-action btn-save" id="saveVendorEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> Apply</button>
+                                                    <button type="button" class="btn-premium-action btn-cancel" id="cancelVendorEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px; background-color: var(--neutral-300) !important; color: var(--neutral-700) !important;"><i class="fas fa-times"></i> Cancel</button>
+                                                </div>
+                                            </div>
+
+                                        <?php } else { ?>
+                                            <!-- No Vendor Assigned Mode -->
+                                            <div class="premium-form-group">
+                                                <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
+                                                    <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
+                                                    <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
+                                                        <strong>No Partner Assigned</strong><br>
+                                                        Please assign a fulfillment partner to process this order.
+                                                    </div>
+                                                </div>
+                                                <label>Select Fulfillment Partner</label>
+                                                <select name="assigned_vendor" class="premium-form-control" style="width: 100%;">
+                                                    <option value="">Select partner</option>
+                                                    <?php foreach ($vendorListData as $vendor) { ?>
+                                                        <option value="<?php echo htmlspecialchars($vendor['user_type_code'], ENT_QUOTES); ?>">
+                                                            <?php echo htmlspecialchars($vendor['user_type_name'], ENT_QUOTES); ?>
+                                                        </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+
+                                    <!-- Card 4: Receiver Details -->
+                                    <div class="premium-card">
+                                        <h3 class="premium-card-title"><i class="fas fa-map-marker-alt"></i> Receiver Details</h3>
+                                        <div class="premium-form-group" style="margin-bottom: 16px;">
+                                            <label>Receiver Name</label>
+                                            <input type="text" class="premium-form-control" value="<?php echo $address_name ?>" readonly>
+                                        </div>
+                                        <div class="premium-form-group" style="margin-bottom: 16px;">
+                                            <label>Contact Number</label>
+                                            <input type="text" class="premium-form-control" value="<?php echo $address_mobile ?>" readonly>
+                                        </div>
+
+                                        <?php
+                                        if ($orderMeta = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$id}' AND order_site_id" . $siteId)) {
+                                            if (mysqli_num_rows($orderMeta) != 0) {
+                                                while ($orderMetaData = mysqli_fetch_assoc($orderMeta)) {
+                                                    extract($orderMetaData);
+                                                    if ($order_meta_key == 'message') { ?>
+                                                        <div class="premium-form-group" style="margin-bottom: 16px;">
+                                                            <label><?php echo ucwords(str_replace('_', ' ', $order_meta_key)) ?></label>
+                                                            <textarea class="premium-form-control" readonly><?php echo $order_meta_value ?></textarea>
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <div class="premium-form-group" style="margin-bottom: 16px;">
+                                                            <label><?php echo ucwords(str_replace('_', ' ', $order_meta_key)) ?></label>
+                                                            <input type="text" class="premium-form-control" value="<?php echo $order_meta_value ?>" readonly>
+                                                        </div>
+                                        <?php }
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <!-- Floating Actions Bar at bottom of cards -->
+                            <div class="premium-action-row">
+                                <input type="hidden" name="type" value="order">
+                                <input type="hidden" name="id" value="<?php echo $id ?>">
+                                <a href="#" id="orderConfirmBtn" class="btn-premium-action btn-confirm"><i class="fas fa-check"></i> Confirm</a>
+                                <a href="#" id="orderWaitingBtn" class="btn-premium-action btn-waiting"><i class="fas fa-clock"></i> Waiting</a>
+                                <a href="#" id="orderCancelBtn" class="btn-premium-action btn-cancel"><i class="fas fa-times"></i> Cancel</a>
+                                <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return"><i class="fas fa-undo"></i> Return</a>
+                                <a href="#" id="orderDeliverBtn" class="btn-premium-action btn-delivered"><i class="fas fa-shipping-fast"></i> Delivered</a>
                             </div>
                         </form>
                     </div>
@@ -954,6 +605,279 @@ if (isset($id)) {
                                     saveState(storagePrefix + targetId, nextOpen ? 'open' : 'closed');
                                 });
                             })(toggleList[i]);
+                        }
+                    })();
+                </script>
+
+                <script>
+                    (function() {
+                        // event delegation using vanilla JS
+                        document.addEventListener('click', function(e) {
+                            // 1. Edit Button Click
+                            var editBtn = e.target.closest('.edit-item-btn');
+                            if (editBtn) {
+                                e.preventDefault();
+                                var row = editBtn.closest('.order-item-row');
+                                if (row) {
+                                    var viewContainer = row.querySelector('.order-item-view-container');
+                                    var editContainer = row.querySelector('.order-item-edit-container');
+                                    if (viewContainer && editContainer) {
+                                        viewContainer.style.display = 'none';
+                                        editContainer.style.display = 'block';
+
+                                        // Initialize Select2 using jQuery (if loaded)
+                                        if (typeof jQuery !== 'undefined') {
+                                            var $select = jQuery(row).find('.select-product-dropdown');
+                                            initSelect2($select);
+                                        } else {
+                                            var checkInterval = setInterval(function() {
+                                                if (typeof jQuery !== 'undefined') {
+                                                    clearInterval(checkInterval);
+                                                    var $select = jQuery(row).find('.select-product-dropdown');
+                                                    initSelect2($select);
+                                                }
+                                            }, 50);
+                                        }
+                                    }
+                                }
+                                return;
+                            }
+
+                            // 2. Save Button Click
+                            var saveBtn = e.target.closest('.save-item-btn');
+                            if (saveBtn) {
+                                e.preventDefault();
+                                var row = saveBtn.closest('.order-item-row');
+                                if (row) {
+                                    var viewContainer = row.querySelector('.order-item-view-container');
+                                    var editContainer = row.querySelector('.order-item-edit-container');
+                                    if (viewContainer && editContainer) {
+                                        var selectEl = editContainer.querySelector('.select-product-dropdown');
+                                        var qtyInput = editContainer.querySelector('.edit-qty-input');
+                                        var productIdInput = editContainer.querySelector('.item-product-id-input');
+
+                                        if (selectEl && qtyInput && productIdInput) {
+                                            var selectedOption = selectEl.options[selectEl.selectedIndex];
+                                            var newProductId = selectEl.value;
+
+                                            if (!newProductId || newProductId.trim() === '') {
+                                                if (typeof Swal !== 'undefined') {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Product Required',
+                                                        text: 'Please select a product before saving.',
+                                                        timer: 2000,
+                                                        showConfirmButton: false
+                                                    });
+                                                } else {
+                                                    alert('Please select a product before saving.');
+                                                }
+                                                return;
+                                            }
+
+                                            var newProductTitle = selectedOption ? selectedOption.text.trim() : '';
+                                            var newProductImage = selectedOption ? selectedOption.getAttribute('data-image') : '';
+                                            var newQty = qtyInput.value;
+
+                                            // Sync backend inputs
+                                            productIdInput.value = newProductId;
+
+                                            // Update view title and qty
+                                            var viewTitle = viewContainer.querySelector('.view-item-title');
+                                            var viewQty = viewContainer.querySelector('.view-item-qty');
+                                            if (viewTitle) viewTitle.textContent = newProductTitle;
+                                            if (viewQty) viewQty.textContent = newQty;
+
+                                            // Update view image
+                                            var thumbWrapper = viewContainer.querySelector('.order-item-thumb-wrapper');
+                                            if (thumbWrapper) {
+                                                thumbWrapper.innerHTML = '';
+                                                if (newProductImage && newProductImage.trim() !== '') {
+                                                    var img = document.createElement('img');
+                                                    img.className = 'view-item-image';
+                                                    img.src = newProductImage;
+                                                    img.alt = newProductTitle;
+                                                    thumbWrapper.appendChild(img);
+                                                } else {
+                                                    var placeholder = document.createElement('div');
+                                                    placeholder.className = 'view-item-image-placeholder select-product-option-no-img';
+                                                    placeholder.textContent = '📦';
+                                                    thumbWrapper.appendChild(placeholder);
+                                                }
+                                            }
+                                        }
+
+                                        editContainer.style.display = 'none';
+                                        viewContainer.style.display = 'flex';
+                                    }
+                                }
+                            }
+
+                            // 3. Change Vendor Button Click
+                            var changeVendorBtn = e.target.closest('#changeVendorBtn');
+                            if (changeVendorBtn) {
+                                e.preventDefault();
+                                var viewMode = document.getElementById('vendorViewMode');
+                                var editMode = document.getElementById('vendorEditMode');
+                                if (viewMode && editMode) {
+                                    viewMode.style.display = 'none';
+                                    editMode.style.display = 'block';
+                                }
+                                return;
+                            }
+
+                            // 4. Cancel Vendor Edit Button Click
+                            var cancelVendorEditBtn = e.target.closest('#cancelVendorEditBtn');
+                            if (cancelVendorEditBtn) {
+                                e.preventDefault();
+                                var viewMode = document.getElementById('vendorViewMode');
+                                var editMode = document.getElementById('vendorEditMode');
+                                if (viewMode && editMode) {
+                                    editMode.style.display = 'none';
+                                    viewMode.style.display = 'block';
+                                }
+                                return;
+                            }
+
+                            // 5. Save Vendor Edit Button Click
+                            var saveVendorEditBtn = e.target.closest('#saveVendorEditBtn');
+                            if (saveVendorEditBtn) {
+                                e.preventDefault();
+                                var updateBtn = document.getElementById('orderUpdateData');
+                                if (updateBtn) {
+                                    updateBtn.click();
+                                }
+                                return;
+                            }
+
+                            // 6. Save Product Edit Button Click
+                            var saveProductEditBtn = e.target.closest('#saveProductEditBtn');
+                            if (saveProductEditBtn) {
+                                e.preventDefault();
+                                var updateBtn = document.getElementById('orderUpdateData');
+                                if (updateBtn) {
+                                    updateBtn.click();
+                                }
+                                return;
+                            }
+
+                            // 7. Cancel Product Edit Button Click
+                            var cancelProductEditBtn = e.target.closest('#cancelProductEditBtn');
+                            if (cancelProductEditBtn) {
+                                e.preventDefault();
+                                if (typeof jQuery !== 'undefined') {
+                                    var $select = jQuery('#productEditMode .selectJS');
+                                    if ($select.length && $select.val() !== '') {
+                                        $select.val('').trigger('change');
+                                    }
+                                }
+                                return;
+                            }
+                        });
+
+                        // Helper functions for Select2
+                        function ensureSelect2(callback) {
+                            if (typeof jQuery === 'undefined') {
+                                return; // cannot load without jQuery
+                            }
+                            var $ = jQuery;
+                            if (!$.fn.select2) {
+                                var cssUrl = "<?php echo SITE_URL . '/' . PLUGIN_LIBRARY; ?>select2/css/select2.min.css";
+                                var jsUrl = "<?php echo SITE_URL . '/' . PLUGIN_LIBRARY; ?>select2/js/select2.min.js";
+
+                                if ($('link[href="' + cssUrl + '"]').length === 0) {
+                                    $("head").append('<link rel="stylesheet" href="' + cssUrl + '">');
+                                }
+
+                                $.getScript(jsUrl, function() {
+                                    callback();
+                                });
+                            } else {
+                                callback();
+                            }
+                        }
+
+                        function formatProductOption(state) {
+                            if (!state.id || !state.element) {
+                                return state.text;
+                            }
+                            var imgUrl = state.element.getAttribute('data-image');
+                            var imgHtml = '';
+                            if (imgUrl && imgUrl.trim() !== '') {
+                                imgHtml = '<img class="select-product-option-img" src="' + imgUrl + '" />';
+                            } else {
+                                imgHtml = '<div class="select-product-option-no-img">📦</div>';
+                            }
+                            return '<div class="select-product-option-wrapper">' + imgHtml + '<span class="select-product-option-text">' + state.text + '</span></div>';
+                        }
+
+                        function initSelect2($selects) {
+                            ensureSelect2(function() {
+                                if (typeof jQuery !== 'undefined' && jQuery.fn.select2) {
+                                    $selects.select2({
+                                        templateResult: formatProductOption,
+                                        templateSelection: formatProductOption,
+                                        escapeMarkup: function(m) {
+                                            return m;
+                                        },
+                                        width: '100%'
+                                    });
+                                }
+                            });
+                        }
+
+                        // Product selection validation for main action buttons
+                        function validateProductSelection() {
+                            var productInputs = document.querySelectorAll('.item-product-id-input');
+                            for (var i = 0; i < productInputs.length; i++) {
+                                if (!productInputs[i].value || productInputs[i].value.trim() === '') {
+                                    return false;
+                                }
+                            }
+                            var assignedProductSelect = document.querySelector('select[name="assigned_product_id"]');
+                            if (assignedProductSelect && (!assignedProductSelect.value || assignedProductSelect.value.trim() === '')) {
+                                return false;
+                            }
+                            return true;
+                        }
+
+                        var actionButtons = ['#orderUpdateData', '#orderConfirmBtn', '#orderWaitingBtn', '#orderDeliverBtn'];
+                        actionButtons.forEach(function(selector) {
+                            var btn = document.querySelector(selector);
+                            if (btn) {
+                                btn.addEventListener('click', function(e) {
+                                    if (!validateProductSelection()) {
+                                        e.preventDefault();
+                                        e.stopImmediatePropagation();
+                                        if (typeof Swal !== 'undefined') {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Product Required',
+                                                text: 'Please select a product before updating the order.',
+                                                timer: 2500,
+                                                showConfirmButton: false
+                                            });
+                                        } else {
+                                            alert('Please select a product before updating the order.');
+                                        }
+                                    }
+                                }, true); // capture phase
+                            }
+                        });
+
+                        // Initialize Select2 on load for any pre-opened edit container dropdowns or product edit mode select
+                        var visibleSelects = document.querySelectorAll('.order-item-edit-container[style*="display: block"] .select-product-dropdown, #productEditMode .selectJS');
+                        if (visibleSelects.length > 0) {
+                            if (typeof jQuery !== 'undefined') {
+                                initSelect2(jQuery(visibleSelects));
+                            } else {
+                                var initInterval = setInterval(function() {
+                                    if (typeof jQuery !== 'undefined') {
+                                        clearInterval(initInterval);
+                                        initSelect2(jQuery(visibleSelects));
+                                    }
+                                }, 50);
+                            }
                         }
                     })();
                 </script>

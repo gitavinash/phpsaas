@@ -472,6 +472,10 @@ function getOrCreateUserByMobile($mobile, $row)
     $emailEscaped = mysqli_real_escape_string($connection, $email);
     $displayNameEscaped = mysqli_real_escape_string($connection, $displayName);
 
+    $completeName = explode(' ', $displayNameEscaped, 2);
+    $profileFirstName = isset($completeName[0]) ? $completeName[0] : '';
+    $profileLastName = isset($completeName[1]) ? $completeName[1] : '';
+
     $insertUser = mysqli_query(
         $connection,
         "INSERT INTO " . TABLE_PREFIX . "user(user_username, user_email, user_mobile, user_password, user_salt_key, user_status, user_reg_time, user_reg_ip) VALUES('{$usernameEscaped}', '{$emailEscaped}', '{$mobileEscaped}', '{$encPassword}', '{$saltKey}', 1, NOW(), 'import')"
@@ -485,7 +489,7 @@ function getOrCreateUserByMobile($mobile, $row)
 
     $insertProfile = mysqli_query(
         $connection,
-        "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userId}', '{$displayNameEscaped}', '', '{$mobileEscaped}', '{$displayNameEscaped}', '{$emailEscaped}')"
+        "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$userId}', '{$profileFirstName}', '{$profileLastName}', '{$mobileEscaped}', '{$displayNameEscaped}', '{$emailEscaped}')"
     );
 
     if (!$insertProfile) {
@@ -827,6 +831,8 @@ function isValidStatus($status)
 function getOrderTableColumns()
 {
     return array(
+        array('key' => 'name', 'label' => 'Name', 'required' => true),
+        array('key' => 'email', 'label' => 'Email', 'required' => false),
         array('key' => 'name', 'label' => 'Name', 'required' => true),
         array('key' => 'user_mobile', 'label' => 'Mobile No.', 'required' => true),
         array('key' => 'address', 'label' => 'Address', 'required' => true),
