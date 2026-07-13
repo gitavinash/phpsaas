@@ -396,6 +396,21 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
+                <li <?php echo (($postType == 'widget') ? 'class="active"' : '') ?>>
+                    <a href="widget/?type=list&status=all"><i class="fas fa-puzzle-piece"></i> Widgets</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="widget/?type=list&status=all"><i class="fas fa-list"></i> All Widgets</a></li>
+                            <li><a href="widget/?type=add&editor=true"><i class="fas fa-plus"></i>Add new Widgets</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="widget/?type=list&status=all"><i class="fas fa-list"></i> All Widgets</a></li>
+                            <li><a href="widget/?type=add&editor=true"><i class="fas fa-plus"></i>Add new Widgets</a></li>
+                        </ul>
+                    </div>
+                </li>
                 <li <?php echo (($postType == 'setting') ? 'class="active"' : '') ?>>
                     <a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
                     <div class="side-menu">
