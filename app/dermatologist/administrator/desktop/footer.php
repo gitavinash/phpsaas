@@ -19,8 +19,8 @@
 			<script src="<?php echo PLUGIN_LIBRARY ?>select2/js/select2.min.js" type="text/javascript"></script>
 			<script src="<?php echo ADMIN_JS_LIBRARY ?>script.min.js"></script>
 			<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-			<script src="<?php echo JS_LIBRARY ?>admin-menu-builder.min.js"></script>
-			<script src="<?php echo JS_LIBRARY ?>admin-new.min.js"></script>
+			<script src="<?php echo JS_LIBRARY ?>admin_menu_builder.min.js"></script>
+			<script src="<?php echo JS_LIBRARY ?>admin_new.min.js"></script>
 			</body>
 
 			</html>

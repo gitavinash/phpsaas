@@ -6,6 +6,8 @@ $startFrom = (isset($_GET['product']) ? $_GET['product'] : 0);
 $productStatus = (($productStatus == 'all') ? '' : "AND product_status='{$productStatus}'");
 
 ?>
+<link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.css">
+<script src="<?php echo JS_LIBRARY ?>admin_new.js"></script>
 <h2>All Packages Tests</h2>
 <div class="options-bar">
     <div class="left-box">
@@ -26,15 +28,17 @@ $productStatus = (($productStatus == 'all') ? '' : "AND product_status='{$produc
 
     </div>
 </div>
-<table id="table">
+<table id="table" data-default-order-column="6" data-page-length="10">
     <thead>
         <tr>
-            <th style="width: 400px">Title</th>
-            <th style="width: 150px">Category</th>
-            <th style="width: 150px">Brand</th>
-            <th style="width: 75px">Selling Price</th>
-            <th style="width: 75px">MRP</th>
-            <th style="width: 100px">Publish date</th>
+            <th style="width: 350px">Package</th>
+            <th style="width: 120px">Category</th>
+            <th style="width: 120px">Brand</th>
+            <th style="width: 100px">Stock</th>
+            <th style="width: 120px">Selling Price</th>
+            <th style="width: 120px">MRP</th>
+            <th style="width: 110px">Publish date</th>
+            <th style="width: 120px">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -44,21 +48,57 @@ $productStatus = (($productStatus == 'all') ? '' : "AND product_status='{$produc
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
+                    <?php
+                    $stockLabel = ((int)$inventory_in_stock === 1) ? 'In Stock' : 'Out of Stock';
+                    $statusLabel = ($link_status == '200') ? 'Published' : 'Draft';
+                    $statusClass = ($link_status == '200') ? 'status-live' : 'status-draft';
+
+                    $discountLabel = '';
+                    if ((float)$inventory_mrp > 0 && (float)$inventory_price > 0 && (float)$inventory_mrp > (float)$inventory_price) {
+                        $discountPercent = round((((float)$inventory_mrp - (float)$inventory_price) / (float)$inventory_mrp) * 100);
+                        $discountLabel = $discountPercent . '% off';
+                    }
+                    ?>
                     <tr style="height: 80px">
                         <td>
-                            <p><a href="packages/?type=edit&editor=true&id=<?php echo base64_encode($product_id); ?>"><?php echo $product_title . (($link_status != '200') ? '<strong> — Draft </strong>' : ''); ?></a>
-                            </p>
-                            <div class="hover">
-                                <a href="packages/?type=edit&editor=true&id=<?php echo base64_encode($product_id); ?>"><i class="fas fa-pencil-alt"></i> Edit</a>
-                                <a href="#" id="<?php echo base64_encode($product_id) ?>_product" class="deleteBtn"><i class="fas fa-trash"></i> Delete</a>
-                                <a href="<?php echo $link_url; ?>" target='_blank'><i class="fas fa-eye"></i> View</a>
+                            <div class="list-cell">
+                                <div class="list-meta">
+                                    <p><a class="list-title-link" href="packages/?type=edit&editor=true&id=<?php echo base64_encode($product_id); ?>"><?php echo $product_title; ?></a>
+                                    </p>
+                                    <div class="list-tags">
+                                        <span class="list-tag <?php echo $statusClass; ?>"><?php echo $statusLabel; ?></span>
+                                        <span class="list-tag"><?php echo $stockLabel; ?></span>
+                                        <?php if ($discountLabel != '') { ?>
+                                            <span class="list-tag"><?php echo $discountLabel; ?></span>
+                                        <?php } ?>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                         <td><?php echo $category_title; ?></td>
                         <td><?php echo $brand_name; ?></td>
-                        <td><?php echo $inventory_currency_symbol . ' ' . (($inventory_price != '') ? $inventory_price : 0); ?></td>
-                        <td><?php echo $inventory_currency_symbol . ' ' . (($inventory_mrp != '') ? $inventory_mrp : 0);; ?></td>
-                        <td><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
+                        <td><?php echo $stockLabel; ?></td>
+                        <td>
+                            <div class="price-main">
+                                <?php echo $inventory_currency_symbol . ' ' . (($inventory_price != '') ? $inventory_price : 0); ?>
+                            </div>
+                            <?php if ($discountLabel != '') { ?>
+                                <div class="price-sub"><?php echo $discountLabel; ?></div>
+                            <?php } ?>
+                        </td>
+                        <td>
+                            <div class="price-main">
+                                <?php echo $inventory_currency_symbol . ' ' . (($inventory_mrp != '') ? $inventory_mrp : 0); ?>
+                            </div>
+                        </td>
+                        <td data-order="<?php echo strtotime($link_creation); ?>"><?php echo date('d/m/Y', strtotime($link_creation)); ?></td>
+                        <td>
+                            <div class="action-btns">
+                                <a href="packages/?type=edit&editor=true&id=<?php echo base64_encode($product_id); ?>" class="action-btn btn-edit" title="Edit"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                <a href="<?php echo $link_url; ?>" target="_blank" class="action-btn btn-view" title="View"><i class="fas fa-eye"></i> View</a>
+                                <a href="#" id="<?php echo base64_encode($product_id) ?>_product" class="action-btn btn-delete deleteBtn" title="Delete"><i class="fas fa-trash"></i> Delete</a>
+                            </div>
+                        </td>
                     </tr>
         <?php
                 }
