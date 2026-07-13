@@ -22,7 +22,7 @@ function publish($connection, $data)
         $facebookImage = (((isset($facebookImage)) ? $facebookImage : $featureImage));
         $twitterImage = (((isset($twitterImage)) ? $twitterImage : $featureImage));
 
-        /** page page url */
+        /** Team member url */
 
         $url = '/team/' . strtolower(preg_replace('~[^\p{M}\w-]+~u', '-', $url)) . '/';
 
@@ -39,25 +39,25 @@ function publish($connection, $data)
 
                 $link_status = 200;
 
-                /** Start uploading the page */
+                /** Start uploading the team member */
 
                 mysqli_query($connection, "START TRANSACTION");
 
                 /* Insert data into link table */
 
-                $addNewPage = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "page(page_site_id, page_image, page_thumbnail, page_title, page_description, page_owner_id, page_status, page_type) VALUES('" . SITE_ID . "', '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '" . USER_ID . "', '1', 'team')");
-                $pageID = mysqli_insert_id($connection);
+                $addNewTeamMember = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "post(post_site_id, post_image, post_thumbnail, post_title, post_description, post_owner_id, post_status, post_type, post_category) VALUES('" . SITE_ID . "', '{$featureImage}', '{$thumbnailImage}', '{$title}', '{$description}', '" . USER_ID . "', '1', 'team', '{$category}')");
+                $memberId = mysqli_insert_id($connection);
 
-                $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$pageID}', '{$link_status}', 'page', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");
+                $addNewLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published) VALUES('{$url}', '{$memberId}', '{$link_status}', 'post', " . USER_ID . ", '" . SITE_ID . "', NOW() ,NOW())");
                 $linkID = mysqli_insert_id($connection);
 
-                $addNewMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "meta(meta_relation_id, meta_site_id,  meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', " . APP_SITE_ID . ", '{$meta_title}', 'page', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
+                $addNewMeta = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "meta(meta_relation_id, meta_site_id,  meta_title, meta_type, meta_description, meta_keyword, meta_canonical, meta_robots, fb_img, fb_title, fb_desc, tw_img, tw_title, tw_desc) VALUES('{$linkID}', " . APP_SITE_ID . ", '{$meta_title}', 'post', '{$meta_desc}', '{$meta_key}', '{$canonical}', '{$robots}', '{$facebookImage}', '{$fb_title}', '{$fb_desc}', '{$twitterImage}', '{$tw_title}', '{$tw_desc}')");
 
-                if ($addNewPage && $addNewLink && $addNewMeta) {
+                if ($addNewTeamMember && $addNewLink && $addNewMeta) {
 
                     $status = 200;
-                    $msg = 'Team add successfully';
-                    $redirect = '/dashboard/team/?type=edit&editor=true&id=' . base64_encode($pageID);
+                    $msg = 'Team member add successfully';
+                    $redirect = '/dashboard/team/?type=edit&editor=true&id=' . base64_encode($memberId);
                     mysqli_query($connection, "COMMIT");
                 } else {
 
@@ -74,7 +74,7 @@ function publish($connection, $data)
         }
     } else {
 
-        $msg = 'Please enter page name';
+        $msg = 'Please enter team member name';
     }
 
     $result = array(

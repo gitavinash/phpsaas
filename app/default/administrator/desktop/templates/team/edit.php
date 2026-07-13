@@ -16,7 +16,7 @@ if ($postDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
 
 ?>
 <div class="product-add-ui">
-    <h2>Update <?php echo (($link_status == '206') ? 'Drafted ' : '') . ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?>
+    <h2><?php echo (($link_status == '206') ? 'Drafted ' : 'Update') . 'Team Member'; ?>
         <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span>
     </h2>
 
@@ -128,7 +128,7 @@ if ($postDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
             <div class="right-box">
                 <div class="action-box inside-shadow">
                     <input type="button" id="updatePost" class="btn btn-green btn-block"
-                        value=" <?php echo (($post_status == 1) ? 'Update ' : 'Publish '); ?>post">
+                        value=" <?php echo (($post_status == 1) ? 'Update ' : 'Publish '); ?> Team Member">
                     <!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
                     <input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>">
                     <input type="hidden" name="action" value="update">

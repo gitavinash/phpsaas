@@ -1,5 +1,5 @@
 <div class="product-add-ui">
-    <h2>Add new <?php echo $postType ?></h2>
+    <h2>Add new team member</h2>
 
     <div class="form-box">
         <form method="POST" id="formData" enctype="multipart/form-data">
