@@ -1,19 +1,19 @@
 <?php
 
-$service_id = base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
+$treatment_id = base64_decode(mysqli_real_escape_string($connection, $_GET['id']));
 
-if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "service, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE link_type='service' AND link_relation_id=service_id AND meta_relation_id=link_id AND service_id='{$service_id}' AND link_status!=301 AND link_type='service' AND service_type='treatment' AND link_site_id=" . SITE_ID . " LIMIT 1")) {
+if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "treatment, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE link_relation_id=treatment_id AND meta_relation_id=link_id AND treatment_id='{$treatment_id}' AND link_status!=301 AND link_type='treatment' AND treatment_type='treatment' AND link_site_id=" . SITE_ID . " LIMIT 1")) {
     if (mysqli_num_rows($serviceDetails) != 0) {
         extract(mysqli_fetch_assoc($serviceDetails));
 
-        $serviceSection = json_decode(base64_decode($service_section));
+        $serviceSection = json_decode(base64_decode($treatment_section));
         if ($serviceSection == '') {
-            $serviceSection = json_decode(($service_section));
+            $serviceSection = json_decode(($treatment_section));
         }
     } else { ?>
         <script type="text/javascript">
             alert('Invalid action found');
-            window.location.href = 'dashboard/service/?type=list&status=all';
+            window.location.href = 'dashboard/treatment/?type=list&status=all';
         </script>
 <?php
     }
@@ -26,11 +26,11 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
     </h2>
 
     <div class="form-box">
-        <form method="service" id="formData" enctype="multipart/form-data">
+        <form method="POST" id="formData" enctype="multipart/form-data">
             <div class="left-box">
                 <div class="form-group">
                     <input type="text" class="form-control inside-shadow" name="title" placeholder="Title"
-                        value="<?php echo $service_title ?>" required="">
+                        value="<?php echo $treatment_title ?>" required="">
                 </div>
                 <div class="form-group">
                     <div class="url">
@@ -51,7 +51,7 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                     <div class="form-group">
                         <div class="form-group fullscreen-editor">
                             <textarea name="description"
-                                class="editor inside-shadow"><?php echo $service_description ?></textarea>
+                                class="editor inside-shadow"><?php echo $treatment_description ?></textarea>
                         </div>
                     </div>
 
@@ -651,9 +651,9 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                                 </div>
                                 <?php
 
-                                if ($service_gallery != '') {
+                                if ($treatment_gallery != '') {
 
-                                    $serviceGalleryList = json_decode($service_gallery, TRUE);
+                                    $serviceGalleryList = json_decode($treatment_gallery, TRUE);
 
                                     $oldGalleryImages = array();
 
@@ -754,7 +754,7 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
 
                     <div class="form-group fullscreen-editor">
                         <textarea name="description"
-                            class="editor inside-shadow"><?php echo html_entity_decode($service_description); ?></textarea>
+                            class="editor inside-shadow"><?php echo html_entity_decode($treatment_description); ?></textarea>
                     </div>
                     <section>
                         <h3>Advance Options for digital marketing</h3>
@@ -777,7 +777,7 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                             <div class="form-group">
                                 <label>Meta Keywords</label>
                                 <textarea name="meta_key" id="meta_keywords" class="form-control inside-shadow"
-                                    placeholder="Enter keywords of the service ( use , to seprate keywords )"><?php echo $meta_keyword ?></textarea>
+                                    placeholder="Enter keywords of the treatment ( use , to seprate keywords )"><?php echo $meta_keyword ?></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Canonical URL</label>
@@ -786,7 +786,7 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                                     placeholder="Actual URL of the <?php echo $postType ?>">
                             </div>
                             <div class="form-group">
-                                <label>Allow search engines to show this service in search results?</label>
+                                <label>Allow search engines to show this treatment in search results?</label>
                                 <select name="robots" class="form-control inside-shadow">
                                     <option value="index, follow"
                                         <?php echo (($meta_robots == 'index, follow') ? 'selected' : '') ?>>Yes</option>
@@ -932,13 +932,13 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
             <div class="right-box">
                 <div class="action-box inside-shadow">
                     <input type="button" id="updatePost" class="btn btn-green btn-block"
-                        value=" <?php echo (($service_status == 1) ? 'Update ' : 'Publish '); ?>service">
+                        value=" <?php echo (($treatment_status == 1) ? 'Update ' : 'Publish '); ?>treatment">
                     <!-- <input type="submit" id="draftPost" class="btn btn-yellow btn-block" value="Save Draft"> -->
                     <input type="hidden" name="type" value="<?php echo rtrim(ltrim(ADMIN_BASE_URL, '/'), '/'); ?>">
                     <input type="hidden" name="action" value="update">
-                    <input type="hidden" name='serviceStatus' value='<?php echo $service_status ?>'>
-                    <input type="hidden" name="id" value="<?php echo $service_id ?>">
-                    <input type="hidden" name="postType" value="<?php echo $service_type ?>">
+                    <input type="hidden" name='serviceStatus' value='<?php echo $treatment_status ?>'>
+                    <input type="hidden" name="id" value="<?php echo $treatment_id ?>">
+                    <input type="hidden" name="postType" value="<?php echo $treatment_type ?>">
                     <a href='<?php echo SITE_URL . $link_url; ?>' class='btn btn-block btn-blue' target='_blank'>View live
                         treatment</a>
                 </div>
@@ -954,11 +954,11 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                     <?php
                     if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link, " . TABLE_PREFIX . "meta WHERE category_site_id='" . SITE_ID . "' AND meta_relation_id=link_id AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='" . rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') . "' AND link_site_id=" . SITE_ID)) {
                         while ($category = mysqli_fetch_assoc($categoryList)) {
-                            if ($category['category_id'] == ${'service_category'}) { ?>
+                            if ($category['category_id'] == ${'treatment_category'}) { ?>
                                 <div class="form-group">
                                     <input type="radio" name="category"
                                         value="<?php echo $category['category_id'] . '_' . str_replace('/category', '', $category['link_url']); ?>"
-                                        <?php echo (($category['category_id'] == $service_category) ? 'checked' : '') ?>>
+                                        <?php echo (($category['category_id'] == $treatment_category) ? 'checked' : '') ?>>
                                     <?php echo ucwords($category['category_title']); ?>
                                 </div>
                             <?php
@@ -976,9 +976,9 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                 </div>
                 <h2>Tags</h2>
                 <?php
-                $tagserviceID = (($service_parent_id == 0) ? $service_id : $service_parent_id);
+                $tagserviceID = (($treatment_parent_id == 0) ? $treatment_id : $treatment_parent_id);
 
-                if ($tagList = mysqli_query($connection, "SELECT tag_title FROM " . TABLE_PREFIX . "tag WHERE tag_relation_id='{$tagserviceID}' AND tag_site_id='" . SITE_ID . "' AND tag_type='service'")) {
+                if ($tagList = mysqli_query($connection, "SELECT tag_title FROM " . TABLE_PREFIX . "tag WHERE tag_relation_id='{$tagserviceID}' AND tag_site_id='" . SITE_ID . "' AND tag_type='treatment'")) {
                     if (mysqli_num_rows($tagList) != 0) {
                         while ($tagsName = mysqli_fetch_assoc($tagList)) {
                             $tags[] = $tagsName['tag_title'];
@@ -999,16 +999,16 @@ if ($serviceDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX 
                 <div class="tagList" style="display: none;"></div>
                 <h2>Feature Image</h2>
                 <div class="form-group featureImageUploadBox upload-btn"
-                    style="display: <?php echo (($service_image != '') ? 'none' : 'block') ?>;">
+                    style="display: <?php echo (($treatment_image != '') ? 'none' : 'block') ?>;">
                     <span>Set Feature Image</span>
-                    <input type="hidden" name="oldFeatureImage" value="<?php echo $service_image ?>">
+                    <input type="hidden" name="oldFeatureImage" value="<?php echo $treatment_image ?>">
                     <input type="file" id="featureImage" name="featureImage" accept="image/x-png, image/gif, image/jpeg">
                     <p><strong>Only these file formats are supported:</strong> .png, .jpg, .jpeg, .gif<strong>Maximum upload
                             limit is 300 MB</strong></p>
                 </div>
                 <div class="img-preview featureImagePreviewBox action-box"
-                    style="display: <?php echo (($service_image != '') ? 'block' : 'none') ?>;">
-                    <img src="//<?php echo SITE_DOMAIN . $service_image ?>" id="featureImagePath" alt="">
+                    style="display: <?php echo (($treatment_image != '') ? 'block' : 'none') ?>;">
+                    <img src="//<?php echo SITE_DOMAIN . $treatment_image ?>" id="featureImagePath" alt="">
                     <p id="featureChangeImage" class="btn btn-red btn-sm">Remove feature image</p>
                 </div>
             </div>

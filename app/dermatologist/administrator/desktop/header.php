@@ -126,25 +126,25 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                 <li class="nav-section-title">
                     <span>Cataloge</span>
                 </li>
-                <li <?php echo (($postType == 'treatment') ? 'class="active"' : '') ?>>
-                    <a href="treatment/?type=list&status=all"><i class="fas fa-medkit"></i> Services/Treatments</a>
+                <li <?php echo (($postType == 'service') ? 'class="active"' : '') ?>>
+                    <a href="treatment/?type=list&status=all"><i class="fas fa-medkit"></i> Treatments</a>
                     <div class="side-menu">
                         <ul>
                             <li><a href="treatment/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    treatment</a>
+                                    Treatments</a>
                             </li>
                             <li><a href="treatment/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    treatment</a></li>
+                                    Treatment</a></li>
                             <li><a href="treatment/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
                             <li><a href="treatment/?type=list&status=all"><i class="fas fa-list"></i> All
-                                    treatment</a>
+                                    Treatments</a>
                             </li>
                             <li><a href="treatment/?type=add&editor=true"><i class="fas fa-plus"></i>Add new
-                                    treatment</a></li>
+                                    Treatment</a></li>
                             <li><a href="treatment/?type=category"><i class="fas fa-tags"></i>Categories</a></li>
                         </ul>
                     </div>

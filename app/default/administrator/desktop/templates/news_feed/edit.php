@@ -20,7 +20,7 @@ if ($postDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "
 	<h2>Update <?php echo (($link_status == '206') ? 'Drafted ' : '') . ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> <span><a href="<?php echo $postType ?>/?type=add&editor=true" class='btn btn-blue btn-sm'>Add New</a></span></h2>
 
 	<div class="form-box">
-		<form method="news" id="formData" enctype="multipart/form-data">
+		<form method="POST" id="formData" enctype="multipart/form-data">
 			<div class="left-box">
 				<div class="form-group">
 					<input type="text" class="form-control inside-shadow" name="title" placeholder="Title" value="<?php echo $news_title ?>" required="">

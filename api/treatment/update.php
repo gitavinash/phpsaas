@@ -9,11 +9,11 @@ function update($connection, $data)
 
         if (isset($category)) {
 
-            if ($checkservice = mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID, service_section, service_gallery FROM " . TABLE_PREFIX . "service INNER JOIN " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='service' AND service_id='{$id}'")) {
+            if ($checkTreatment = mysqli_query($connection, "SELECT link_id, meta_relation_id as oldLinkID, treatment_section, treatment_gallery FROM " . TABLE_PREFIX . "treatment INNER JOIN " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id WHERE link_url='{$oldURL}' AND meta_type='treatment' AND treatment_id='{$id}'")) {
 
-                if (mysqli_num_rows($checkservice) != 0) {
+                if (mysqli_num_rows($checkTreatment) != 0) {
 
-                    extract(mysqli_fetch_assoc($checkservice));
+                    extract(mysqli_fetch_assoc($checkTreatment));
 
                     require_once MODULES . 'imageUploader.php';
 
@@ -50,144 +50,6 @@ function update($connection, $data)
                     $width = ((isset($width)) ? $width : '');
                     $height = ((isset($height)) ? $height : '');
 
-                    $updatedServiceSection = json_encode(array(
-                        'feature_video' => array(
-                            'url' => $featureVideo
-                        ),
-                        'quote' => array(
-                            'quote' => $quote
-                        ),
-                        'treatment_option' => array(
-                            0 => array(
-                                'image' => ((isset($treatmentOptionFeatureImage_1)) ? $treatmentOptionFeatureImage_1 : $serviceSection['treatment_option'][0]['image']),
-                                'header' => $treatmentOptionHeader_1,
-                                'indications' => $treatmentOptionIndications_1,
-                                'process' => $treatmentOptionProcess_1,
-                                'duration' => $treatmentOptionDuration_1,
-                                'sitting' => $treatmentOptionSitting_1,
-                                'bookNow' => $treatmentOptionBookNow_1,
-                                'watchVideo' => $treatmentOptionWatchVideo_1,
-                            ),
-                            1 => array(
-                                'image' => ((isset($treatmentOptionFeatureImage_2)) ? $treatmentOptionFeatureImage_2 : $serviceSection['treatment_option'][1]['image']),
-                                'header' => $treatmentOptionHeader_2,
-                                'indications' => $treatmentOptionIndications_2,
-                                'process' => $treatmentOptionProcess_2,
-                                'duration' => $treatmentOptionDuration_2,
-                                'sitting' => $treatmentOptionSitting_2,
-                                'bookNow' => $treatmentOptionBookNow_2,
-                                'watchVideo' => $treatmentOptionWatchVideo_2,
-                            ),
-                            2 => array(
-                                'image' => (((isset($treatmentOptionFeatureImage_3))) ? $treatmentOptionFeatureImage_3 : $serviceSection['treatment_option'][2]['image']),
-                                'header' => $treatmentOptionHeader_3,
-                                'indications' => $treatmentOptionIndications_3,
-                                'process' => $treatmentOptionProcess_3,
-                                'duration' => $treatmentOptionDuration_3,
-                                'sitting' => $treatmentOptionSitting_3,
-                                'bookNow' => $treatmentOptionBookNow_3,
-                                'watchVideo' => $treatmentOptionWatchVideo_3,
-                            ),
-                            3 => array(
-                                'image' => (((isset($treatmentOptionFeatureImage_4))) ? $treatmentOptionFeatureImage_4 : $serviceSection['treatment_option'][3]['image']),
-                                'header' => $treatmentOptionHeader_4,
-                                'indications' => $treatmentOptionIndications_4,
-                                'process' => $treatmentOptionProcess_4,
-                                'duration' => $treatmentOptionDuration_4,
-                                'sitting' => $treatmentOptionSitting_4,
-                                'bookNow' => $treatmentOptionBookNow_4,
-                                'watchVideo' => $treatmentOptionWatchVideo_4,
-                            ),
-                            4 => array(
-                                'image' => (((isset($treatmentOptionFeatureImage_5))) ? $treatmentOptionFeatureImage_5 : $serviceSection['treatment_option'][4]['image']),
-                                'header' => $treatmentOptionHeader_5,
-                                'indications' => $treatmentOptionIndications_5,
-                                'process' => $treatmentOptionProcess_5,
-                                'duration' => $treatmentOptionDuration_5,
-                                'sitting' => $treatmentOptionSitting_5,
-                                'bookNow' => $treatmentOptionBookNow_5,
-                                'watchVideo' => $treatmentOptionWatchVideo_5,
-                            ),
-                            5 => array(
-                                'image' => (((isset($treatmentOptionFeatureImage_6))) ? $treatmentOptionFeatureImage_6 : $serviceSection['treatment_option'][5]['image']),
-                                'header' => $treatmentOptionHeader_6,
-                                'indications' => $treatmentOptionIndications_6,
-                                'process' => $treatmentOptionProcess_6,
-                                'duration' => $treatmentOptionDuration_6,
-                                'sitting' => $treatmentOptionSitting_6,
-                                'bookNow' => $treatmentOptionBookNow_6,
-                                'watchVideo' => $treatmentOptionWatchVideo_6,
-                            ),
-                            6 => array(
-                                'image' => (((isset($treatmentOptionFeatureImage_7))) ? $treatmentOptionFeatureImage_7 : $serviceSection['treatment_option'][6]['image']),
-                                'header' => $treatmentOptionHeader_7,
-                                'indications' => $treatmentOptionIndications_7,
-                                'process' => $treatmentOptionProcess_7,
-                                'duration' => $treatmentOptionDuration_7,
-                                'sitting' => $treatmentOptionSitting_7,
-                                'bookNow' => $treatmentOptionBookNow_7,
-                                'watchVideo' => $treatmentOptionWatchVideo_7,
-                            ),
-                            7 => array(
-                                'image' => (((isset($treatmentOptionFeatureImage_8))) ? $treatmentOptionFeatureImage_8 : $serviceSection['treatment_option'][7]['image']),
-                                'header' => $treatmentOptionHeader_8,
-                                'indications' => $treatmentOptionIndications_8,
-                                'process' => $treatmentOptionProcess_8,
-                                'duration' => $treatmentOptionDuration_8,
-                                'sitting' => $treatmentOptionSitting_8,
-                                'bookNow' => $treatmentOptionBookNow_8,
-                                'watchVideo' => $treatmentOptionWatchVideo_8,
-                            ),
-                            8 => array(
-                                'image' => (((isset($treatmentOptionFeatureImage_9))) ? $treatmentOptionFeatureImage_9 : $serviceSection['treatment_option'][8]['image']),
-                                'header' => $treatmentOptionHeader_9,
-                                'indications' => $treatmentOptionIndications_9,
-                                'process' => $treatmentOptionProcess_9,
-                                'duration' => $treatmentOptionDuration_9,
-                                'sitting' => $treatmentOptionSitting_9,
-                                'bookNow' => $treatmentOptionBookNow_9,
-                                'watchVideo' => $treatmentOptionWatchVideo_9,
-                            ),
-                            9 => array(
-                                'image' => (((isset($treatmentOptionFeatureImage_10))) ? $treatmentOptionFeatureImage_10 : $serviceSection['treatment_option'][9]['image']),
-                                'header' => $treatmentOptionHeader_10,
-                                'indications' => $treatmentOptionIndications_10,
-                                'process' => $treatmentOptionProcess_10,
-                                'duration' => $treatmentOptionDuration_10,
-                                'sitting' => $treatmentOptionSitting_10,
-                                'bookNow' => $treatmentOptionBookNow_10,
-                                'watchVideo' => $treatmentOptionWatchVideo_10,
-                            ),
-                        ),
-                        'before_after' => array(
-                            'header' => $berforeAfterHeader,
-                            'subHeader' => $berforeAfterSubHeader,
-                            'description' => $berforeAfterDescription,
-                            'videoLink' => $berforeAfterVideLink,
-                        ),
-                        'why_choose_us' => array(
-                            'image' => (((isset($whyChooseUs))) ? $whyChooseUs : $serviceSection['why_choose_us']['image']),
-                            'header' => $whyChooseTitle,
-                            'description' => $whyChooseDescription,
-                            'steps' => array(
-                                array(
-                                    'icon' => (((isset($stepIcon_1))) ? $stepIcon_1 : $serviceSection['why_choose_us']['steps'][0]['icon']),
-                                    'description' => $stepHeader_1
-                                ),
-                                array(
-                                    'icon' => (((isset($stepIcon_2))) ? $stepIcon_2 : $serviceSection['why_choose_us']['steps'][1]['icon']),
-                                    'description' => $stepHeader_2
-                                ),
-                                array(
-                                    'icon' => (((isset($stepIcon_3))) ? $stepIcon_3 : $serviceSection['why_choose_us']['steps'][2]['icon']),
-                                    'description' => $stepHeader_3
-                                ),
-                            )
-                        ),
-                    ), true);
-
-
-
                     if (isset($_FILES['gallery'])) {
 
                         require_once MODULES . 'galleryUploader.php';
@@ -198,7 +60,7 @@ function update($connection, $data)
                         }
                     }
 
-                    $oldGallery = json_decode($service_gallery, TRUE);
+                    $oldGallery = json_decode($treatment_gallery, TRUE);
 
                     // Match old gallery db from from value
                     $newProductGallery = array();
@@ -221,8 +83,6 @@ function update($connection, $data)
                     }
 
                     $newProductGallery = json_encode($newProductGallery, TRUE);
-
-                    $updatedServiceSection = base64_encode($updatedServiceSection);
 
                     if (isset($_FILES['gallery'])) {
 
@@ -253,17 +113,17 @@ function update($connection, $data)
 
                     if ($oldURL != $url) {
 
-                        if ($checkURL = mysqli_query($connection, "SELECT link_url FROM " . TABLE_PREFIX . "link WHERE link_url='{$url}' AND link_type='service' AND link_site_id='" . SITE_ID . "'")) {
+                        if ($checkURL = mysqli_query($connection, "SELECT link_url FROM " . TABLE_PREFIX . "link WHERE link_url='{$url}' AND link_type='treatment' AND link_site_id='" . SITE_ID . "'")) {
 
                             if (mysqli_num_rows($checkURL) == 0) {
 
                                 /** Add 301 redirect */
 
-                                $addRedirect = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "link SET link_status=301 WHERE link_url='{$oldURL}' AND link_type='service' AND link_site_id='" . SITE_ID . "'");
+                                $addRedirect = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "link SET link_status=301 WHERE link_url='{$oldURL}' AND link_type='treatment' AND link_site_id='" . SITE_ID . "'");
 
                                 /** Add new active url of the post */
 
-                                $updateLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_is_featured) VALUES('{$url}', '{$id}', 200, 'service', '" . USER_ID . "', '" . SITE_ID . "', NOW(), NOW(), '{$featurePost}')");
+                                $updateLink = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "link(link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_is_featured) VALUES('{$url}', '{$id}', 200, 'treatment', '" . USER_ID . "', '" . SITE_ID . "', NOW(), NOW(), '{$featurePost}')");
                                 $link_id = mysqli_insert_id($connection);
                             } else {
 
@@ -276,10 +136,10 @@ function update($connection, $data)
 
                         $addRedirect = TRUE;
 
-                        $updateLink = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "link SET link_status=200, link_published=NOW(), link_modified=NOW(), link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='service' AND link_url='{$oldURL}' AND link_site_id='" . SITE_ID . "'");
+                        $updateLink = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "link SET link_status=200, link_published=NOW(), link_modified=NOW(), link_is_featured='{$featurePost}' WHERE link_relation_id='{$id}' AND link_type='treatment' AND link_url='{$oldURL}' AND link_site_id='" . SITE_ID . "'");
                     }
 
-                    $updateservice = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "service SET service_image='{$featureImage}', service_thumbnail='{$thumbnailImage}', service_gallery='{$newProductGallery}', service_title='{$title}', service_description='{$description}', service_highlight='{$highlight}', service_category='{$category}', service_owner_id='" . USER_ID . "', service_status=1, service_type='treatment' WHERE service_id='{$id}'");
+                    $updateservice = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "treatment SET treatment_image='{$featureImage}', treatment_thumbnail='{$thumbnailImage}', treatment_gallery='{$newProductGallery}', treatment_title='{$title}', treatment_description='{$description}', treatment_highlight='{$highlight}', treatment_category='{$category}', treatment_owner_id='" . USER_ID . "', treatment_status=1, treatment_type='treatment' WHERE treatment_id='{$id}'");
 
                     $updateInventtory = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "inventory SET inventory_sku='{$sku}', inventory_currency='INR', inventory_price='{$salePrice}', inventory_mrp='{$mrp}', inventory_tax_status='{$taxStatus}', inventory_tax_rate='{$taxRate}', inventory_in_stock='{$in_stock}', inventory_current_stock='{$currentStock}', inventory_backorder='{$backorder}', inventory_stock_notice='{$stock_warning}', inventory_weight='{$weight}', inventory_lenght='{$lenght}', inventory_width='{$width}', inventory_height='{$height}', inventory_status=1 WHERE inventory_relation_id='{$id}'");
 

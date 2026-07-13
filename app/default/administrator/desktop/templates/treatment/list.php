@@ -3,7 +3,7 @@
 $serviceStatus = mysqli_real_escape_string($connection, $_GET['status']);
 $startFrom = (isset($_GET['service']) ? $_GET['service'] : 0);
 
-$serviceStatus = (($serviceStatus == 'all') ? '' : "AND service_status='{$serviceStatus}'");
+$serviceStatus = (($serviceStatus == 'all') ? '' : "AND treatment_status='{$serviceStatus}'");
 
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.css">
@@ -40,32 +40,32 @@ $serviceStatus = (($serviceStatus == 'all') ? '' : "AND service_status='{$servic
         <?php
 
         if ($dataList = mysqli_query($connection, "SELECT
-    s.service_id,
-    s.service_title,
+    s.treatment_id,
+    s.treatment_title,
     c.category_title,
     l.link_url,
     l.link_status,
     l.link_published,
     p.profile_display_name
 
-FROM " . TABLE_PREFIX . "service s
+FROM " . TABLE_PREFIX . "treatment s
 
 INNER JOIN " . TABLE_PREFIX . "link l
-    ON l.link_relation_id = s.service_id
-   AND l.link_type = 'service'
+    ON l.link_relation_id = s.treatment_id
+   AND l.link_type = 'treatment'
    AND l.link_site_id = " . SITE_ID . "
    AND l.link_status != 301
 
 LEFT JOIN " . TABLE_PREFIX . "category c
-    ON c.category_id = s.service_category
+    ON c.category_id = s.treatment_category
 
 LEFT JOIN " . TABLE_PREFIX . "profile p
     ON p.profile_user_id = l.link_owner_id
 
 WHERE
-    s.service_type = 'treatment'
-    AND s.service_site_id = " . SITE_ID . "
-    AND s.service_status = 1
+    s.treatment_type = 'treatment'
+    AND s.treatment_site_id = " . SITE_ID . "
+    AND s.treatment_status = 1
 
 ORDER BY
     l.link_published DESC")) {
@@ -81,7 +81,7 @@ ORDER BY
                             <div class="list-cell">
                                 <div class="list-meta">
                                     <p><a class="list-title-link"
-                                            href="treatment/?type=edit&editor=true&id=<?php echo base64_encode($service_id); ?>"><?php echo $service_title; ?></a>
+                                            href="treatment/?type=edit&editor=true&id=<?php echo base64_encode($treatment_id); ?>"><?php echo $treatment_title; ?></a>
                                     </p>
                                     <div class="list-tags">
                                         <span class="list-tag <?php echo $statusClass; ?>"><?php echo $statusLabel; ?></span>
@@ -96,9 +96,9 @@ ORDER BY
                             <?php echo date('d/m/Y H:i:s', strtotime($link_published)); ?></td>
                         <td>
                             <div class="action-btns">
-                                <a href="treatment/?type=edit&editor=true&id=<?php echo base64_encode($service_id); ?>" class="action-btn btn-edit" title="Edit"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                <a href="treatment/?type=edit&editor=true&id=<?php echo base64_encode($treatment_id); ?>" class="action-btn btn-edit" title="Edit"><i class="fas fa-pencil-alt"></i> Edit</a>
                                 <a href="<?php echo $link_url; ?>" target='_blank' class="action-btn btn-view" title="View"><i class="fas fa-eye"></i> View</a>
-                                <a href="treatment/?type=treatment&id=<?php echo base64_encode($service_id); ?>" class="action-btn btn-delete" title="Delete"><i class="fas fa-trash"></i> Delete</a>
+                                <a href="treatment/?type=treatment&id=<?php echo base64_encode($treatment_id); ?>" class="action-btn btn-delete" title="Delete"><i class="fas fa-trash"></i> Delete</a>
                             </div>
                         </td>
                     </tr>

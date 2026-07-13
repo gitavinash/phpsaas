@@ -27,7 +27,7 @@ if ($technologyDetails = mysqli_query($connection, "SELECT * FROM " . TABLE_PREF
     </h2>
 
     <div class="form-box">
-        <form method="technology" id="formData" enctype="multipart/form-data">
+        <form method="POST" id="formData" enctype="multipart/form-data">
             <div class="left-box">
                 <div class="form-group">
                     <input type="text" class="form-control inside-shadow" name="title" placeholder="Title"
