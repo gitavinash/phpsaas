@@ -1961,7 +1961,7 @@ section {
 
 .form-label {
   position: absolute;
-  top: 1.6rem;
+  top: -0.5rem;
   left: 0;
   font-size: 1.3rem;
   color: var(--color-text-muted);

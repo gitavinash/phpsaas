@@ -169,18 +169,21 @@ if (isset($id)) {
                                         $productData = array_filter(array_map('trim', explode(',', (string)$order_product_id)), 'strlen');
                                         $productQtyData = array_map('trim', explode(',', (string)$order_product_qty));
 
-                                        if (empty($productData)) { ?>
-                                            <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
-                                                <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
-                                                <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
-                                                    <strong>No Product Assigned</strong><br>
-                                                    Please assign a product to this order.
-                                                </div>
+                                        $hasProducts = !empty($productData);
+                                        ?>
+                                        <div id="noProductWarning" style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: <?php echo $hasProducts ? 'none' : 'flex'; ?>; gap: 8px; align-items: flex-start;">
+                                            <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
+                                            <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
+                                                <strong>No Product Assigned</strong><br>
+                                                Please assign a product to this order.
                                             </div>
+                                        </div>
 
-                                            <!-- Product Edit/Re-assign Mode -->
-                                            <div id="productEditMode" style="display: block;">
+                                        <!-- Product Edit/Re-assign Mode -->
+                                        <div id="productEditMode" style="display: <?php echo $hasProducts ? 'none' : 'block'; ?>;">
+                                            <div style="display: grid; grid-template-columns: 1fr 100px; gap: 12px; align-items: flex-end; width: 100%;">
                                                 <div class="premium-form-group">
+                                                    <label>Select Product</label>
                                                     <select name="assigned_product_id" class="premium-form-control selectJS" style="width: 100%;">
                                                         <option value="">Select product</option>
                                                         <?php foreach ($productListData as $productInfo) {
@@ -188,131 +191,151 @@ if (isset($id)) {
                                                         } ?>
                                                     </select>
                                                 </div>
-                                                <div style="margin-top: 12px; display: flex; gap: 8px;">
-                                                    <button type="button" class="btn-premium-action btn-save" id="saveProductEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> Apply</button>
-                                                    <button type="button" class="btn-premium-action btn-cancel" id="cancelProductEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px; background-color: var(--neutral-300) !important; color: var(--neutral-700) !important;"><i class="fas fa-times"></i> Cancel</button>
+                                                <div class="premium-form-group">
+                                                    <label>Qty</label>
+                                                    <input type="text" name="assigned_qty" id="assignedQtyInput" class="premium-form-control" value="1">
                                                 </div>
                                             </div>
-                                            <?php } else {
-                                            for ($i = 0; $i < sizeof($productData); $i++) {
-                                                echo "<input type='hidden' name='totalProducts' value='" . sizeof($productData) . "'>";
+                                            <div style="margin-top: 12px; display: flex; gap: 8px;">
+                                                <button type="button" class="btn-premium-action btn-save" id="saveProductEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> Assign product</button>
+                                                <button type="button" class="btn-premium-action btn-cancel" id="cancelProductEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px; background-color: var(--neutral-300) !important; color: var(--neutral-700) !important;"><i class="fas fa-times"></i> Cancel</button>
+                                            </div>
+                                        </div>
 
-                                                if ($checkProduct = mysqli_query($connection, "SELECT product_id, product_image, product_title, inventory_currency_symbol FROM isw_product INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_id='{$productData[$i]}' AND inventory_type='product' AND product_site_id"  . $siteId . " AND inventory_site_id" . $siteId)) {
-                                                    if (mysqli_num_rows($checkProduct) != 0) {
-                                                        extract(mysqli_fetch_assoc($checkProduct)); ?>
+                                        <div id="orderItemsListContainer" style="display: <?php echo $hasProducts ? 'block' : 'none'; ?>;">
+                                            <?php
+                                            if ($hasProducts) {
+                                                for ($i = 0; $i < sizeof($productData); $i++) {
+                                                    echo "<input type='hidden' name='totalProducts' value='" . sizeof($productData) . "'>";
 
-                                                        <div class="order-item-row" data-index="<?php echo $i ?>">
-                                                            <!-- View mode -->
-                                                            <div class="order-item-view-container">
-                                                                <div class="order-item-view-left">
-                                                                    <div class="order-item-thumb-wrapper">
-                                                                        <?php if (trim((string)$product_image) != '') { ?>
-                                                                            <img class="view-item-image" src="<?php echo htmlspecialchars($product_image, ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($product_title, ENT_QUOTES); ?>">
-                                                                        <?php } else { ?>
-                                                                            <div class="view-item-image-placeholder select-product-option-no-img">📦</div>
-                                                                        <?php } ?>
-                                                                    </div>
-                                                                    <div class="order-item-details">
-                                                                        <div class="order-item-title view-item-title"><?php echo htmlspecialchars($product_title, ENT_QUOTES) ?></div>
-                                                                        <div class="order-item-qty">Qty: <span class="view-item-qty"><?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '0' ?></span></div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="order-item-edit-btn-wrapper">
-                                                                    <button type="button" class="btn-premium-action btn-edit edit-item-btn"><i class="fas fa-edit"></i> Edit</button>
-                                                                </div>
-                                                            </div>
+                                                    if ($checkProduct = mysqli_query($connection, "SELECT product_id, product_image, product_title, inventory_currency_symbol FROM isw_product INNER JOIN isw_inventory ON inventory_relation_id=product_id WHERE product_id='{$productData[$i]}' AND inventory_type='product' AND product_site_id"  . $siteId . " AND inventory_site_id" . $siteId)) {
+                                                        if (mysqli_num_rows($checkProduct) != 0) {
+                                                            extract(mysqli_fetch_assoc($checkProduct)); ?>
 
-                                                            <!-- Edit mode -->
-                                                            <div class="order-item-edit-container" style="display: none;">
-                                                                <input type="hidden" name="product_id_<?php echo $i ?>" class="item-product-id-input" value="<?php echo $productData[$i] ?>">
-                                                                <div class="order-item-edit-grid">
-                                                                    <div class="premium-form-group">
-                                                                        <label>Select Product</label>
-                                                                        <select class="premium-form-control select-product-dropdown" style="width: 100%;">
-                                                                            <?php for ($p = 0; $p < sizeof($productListData); $p++) { ?>
-                                                                                <option value="<?php echo htmlspecialchars($productListData[$p]['product_id'], ENT_QUOTES); ?>"
-                                                                                    data-image="<?php echo htmlspecialchars($productListData[$p]['product_image'] ?? '', ENT_QUOTES); ?>"
-                                                                                    <?php echo ((string)$productListData[$p]['product_id'] == (string)$productData[$i]) ? 'selected' : ''; ?>>
-                                                                                    <?php echo htmlspecialchars($productListData[$p]['product_title'], ENT_QUOTES); ?>
-                                                                                </option>
+                                                            <div class="order-item-row" data-index="<?php echo $i ?>">
+                                                                <!-- View mode -->
+                                                                <div class="order-item-view-container">
+                                                                    <div class="order-item-view-left">
+                                                                        <div class="order-item-thumb-wrapper">
+                                                                            <?php if (trim((string)$product_image) != '') { ?>
+                                                                                <img class="view-item-image" src="<?php echo htmlspecialchars($product_image, ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($product_title, ENT_QUOTES); ?>">
+                                                                            <?php } else { ?>
+                                                                                <div class="view-item-image-placeholder select-product-option-no-img">📦</div>
                                                                             <?php } ?>
-                                                                        </select>
+                                                                        </div>
+                                                                        <div class="order-item-details">
+                                                                            <div class="order-item-title view-item-title"><?php echo htmlspecialchars($product_title, ENT_QUOTES) ?></div>
+                                                                            <div class="order-item-qty">Qty: <span class="view-item-qty"><?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '0' ?></span></div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="premium-form-group">
-                                                                        <label>Qty</label>
-                                                                        <input type="text" name="qty_<?php echo $i ?>" class="premium-form-control edit-qty-input"
-                                                                            value="<?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '' ?>">
+                                                                    <div class="order-item-edit-btn-wrapper" style="display: flex; gap: 8px;">
+                                                                        <button type="button" class="btn-premium-action btn-edit edit-item-btn"><i class="fas fa-edit"></i> Edit</button>
+                                                                        <button type="button" class="btn-premium-action btn-cancel remove-item-btn" style="background-color: #ef4444 !important; color: #fff !important;"><i class="fas fa-trash-alt"></i> Remove</button>
                                                                     </div>
-                                                                    <div>
-                                                                        <button type="button" class="btn-premium-action btn-save save-item-btn" style="width: 100%;"><i class="fas fa-check"></i> Save</button>
+                                                                </div>
+
+                                                                <!-- Edit mode -->
+                                                                <div class="order-item-edit-container" style="display: none;">
+                                                                    <input type="hidden" name="product_id_<?php echo $i ?>" class="item-product-id-input" value="<?php echo $productData[$i] ?>">
+                                                                    <div class="order-item-edit-grid">
+                                                                        <div class="premium-form-group">
+                                                                            <label>Select Product</label>
+                                                                            <select class="premium-form-control select-product-dropdown" style="width: 100%;">
+                                                                                <?php for ($p = 0; $p < sizeof($productListData); $p++) { ?>
+                                                                                    <option value="<?php echo htmlspecialchars($productListData[$p]['product_id'], ENT_QUOTES); ?>"
+                                                                                        data-image="<?php echo htmlspecialchars($productListData[$p]['product_image'] ?? '', ENT_QUOTES); ?>"
+                                                                                        <?php echo ((string)$productListData[$p]['product_id'] == (string)$productData[$i]) ? 'selected' : ''; ?>>
+                                                                                        <?php echo htmlspecialchars($productListData[$p]['product_title'], ENT_QUOTES); ?>
+                                                                                    </option>
+                                                                                <?php } ?>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="premium-form-group">
+                                                                            <label>Qty</label>
+                                                                            <input type="text" name="qty_<?php echo $i ?>" class="premium-form-control edit-qty-input"
+                                                                                value="<?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '' ?>">
+                                                                        </div>
+                                                                        <div style="display: flex; gap: 8px; align-items: flex-end; height: 100%;">
+                                                                            <button type="button" class="btn-premium-action btn-save save-item-btn" style="flex: 1; height: 38px;"><i class="fas fa-check"></i> Assign vendor</button>
+                                                                            <button type="button" class="btn-premium-action btn-cancel cancel-item-btn" style="height: 38px; background-color: var(--neutral-300) !important; color: var(--neutral-700) !important;"><i class="fas fa-times"></i> Cancel</button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    <?php } else {
-                                                        $fallbackProductTitle = 'Unknown Product';
-                                                        $fallbackProductImage = '';
-                                                        for ($j = 0; $j < sizeof($productListData); $j++) {
-                                                            if ((string)$productListData[$j]['product_id'] == (string)$productData[$i]) {
-                                                                $fallbackProductTitle = $productListData[$j]['product_title'];
-                                                                $fallbackProductImage = isset($productListData[$j]['product_image']) ? $productListData[$j]['product_image'] : '';
-                                                                break;
+                                                        <?php } else {
+                                                            $fallbackProductTitle = 'Unknown Product';
+                                                            $fallbackProductImage = '';
+                                                            for ($j = 0; $j < sizeof($productListData); $j++) {
+                                                                if ((string)$productListData[$j]['product_id'] == (string)$productData[$i]) {
+                                                                    $fallbackProductTitle = $productListData[$j]['product_title'];
+                                                                    $fallbackProductImage = isset($productListData[$j]['product_image']) ? $productListData[$j]['product_image'] : '';
+                                                                    break;
+                                                                }
                                                             }
-                                                        }
-                                                    ?>
-                                                        <div class="order-item-row" data-index="<?php echo $i ?>">
-                                                            <!-- View mode -->
-                                                            <div class="order-item-view-container">
-                                                                <div class="order-item-view-left">
-                                                                    <div class="order-item-thumb-wrapper">
-                                                                        <?php if (trim((string)$fallbackProductImage) != '') { ?>
-                                                                            <img class="view-item-image" src="<?php echo htmlspecialchars($fallbackProductImage, ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES); ?>">
-                                                                        <?php } else { ?>
-                                                                            <div class="view-item-image-placeholder select-product-option-no-img">📦</div>
-                                                                        <?php } ?>
-                                                                    </div>
-                                                                    <div class="order-item-details">
-                                                                        <div class="order-item-title view-item-title"><?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES) ?></div>
-                                                                        <div class="order-item-qty">Qty: <span class="view-item-qty"><?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '0' ?></span></div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="order-item-edit-btn-wrapper">
-                                                                    <button type="button" class="btn-premium-action btn-edit edit-item-btn"><i class="fas fa-edit"></i> Edit</button>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Edit mode -->
-                                                            <div class="order-item-edit-container" style="display: none;">
-                                                                <input type="hidden" name="product_id_<?php echo $i ?>" class="item-product-id-input" value="<?php echo $productData[$i] ?>">
-                                                                <div class="order-item-edit-grid">
-                                                                    <div class="premium-form-group">
-                                                                        <label>Select Product</label>
-                                                                        <select class="premium-form-control select-product-dropdown" style="width: 100%;">
-                                                                            <?php for ($p = 0; $p < sizeof($productListData); $p++) { ?>
-                                                                                <option value="<?php echo htmlspecialchars($productListData[$p]['product_id'], ENT_QUOTES); ?>"
-                                                                                    data-image="<?php echo htmlspecialchars($productListData[$p]['product_image'] ?? '', ENT_QUOTES); ?>"
-                                                                                    <?php echo ((string)$productListData[$p]['product_id'] == (string)$productData[$i]) ? 'selected' : ''; ?>>
-                                                                                    <?php echo htmlspecialchars($productListData[$p]['product_title'], ENT_QUOTES); ?>
-                                                                                </option>
+                                                        ?>
+                                                            <div class="order-item-row" data-index="<?php echo $i ?>">
+                                                                <!-- View mode -->
+                                                                <div class="order-item-view-container" style="display: none !important;">
+                                                                    <div class="order-item-view-left">
+                                                                        <div class="order-item-thumb-wrapper">
+                                                                            <?php if (trim((string)$fallbackProductImage) != '') { ?>
+                                                                                <img class="view-item-image" src="<?php echo htmlspecialchars($fallbackProductImage, ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES); ?>">
+                                                                            <?php } else { ?>
+                                                                                <div class="view-item-image-placeholder select-product-option-no-img">📦</div>
                                                                             <?php } ?>
-                                                                        </select>
+                                                                        </div>
+                                                                        <div class="order-item-details">
+                                                                            <div class="order-item-title view-item-title"><?php echo htmlspecialchars($fallbackProductTitle, ENT_QUOTES) ?></div>
+                                                                            <div class="order-item-qty">Qty: <span class="view-item-qty"><?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '0' ?></span></div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="premium-form-group">
-                                                                        <label>Qty</label>
-                                                                        <input type="text" name="qty_<?php echo $i ?>" class="premium-form-control edit-qty-input"
-                                                                            value="<?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '' ?>">
+                                                                    <div class="order-item-edit-btn-wrapper" style="display: flex; gap: 8px;">
+                                                                        <button type="button" class="btn-premium-action btn-edit edit-item-btn"><i class="fas fa-edit"></i> Edit</button>
+                                                                        <button type="button" class="btn-premium-action btn-cancel remove-item-btn" style="background-color: #ef4444 !important; color: #fff !important;"><i class="fas fa-trash-alt"></i> Remove</button>
                                                                     </div>
-                                                                    <div>
-                                                                        <button type="button" class="btn-premium-action btn-save save-item-btn" style="width: 100%;"><i class="fas fa-check"></i> Save</button>
+                                                                </div>
+
+                                                                <!-- Edit mode -->
+                                                                <div class="order-item-edit-container" style="display: block;">
+                                                                    <input type="hidden" name="product_id_<?php echo $i ?>" class="item-product-id-input" value="<?php echo $productData[$i] ?>">
+                                                                    <div class="order-item-edit-grid">
+                                                                        <div class="premium-form-group">
+                                                                            <label>Select Product</label>
+                                                                            <select class="premium-form-control select-product-dropdown" style="width: 100%;">
+                                                                                <?php for ($p = 0; $p < sizeof($productListData); $p++) { ?>
+                                                                                    <option value="<?php echo htmlspecialchars($productListData[$p]['product_id'], ENT_QUOTES); ?>"
+                                                                                        data-image="<?php echo htmlspecialchars($productListData[$p]['product_image'] ?? '', ENT_QUOTES); ?>"
+                                                                                        <?php echo ((string)$productListData[$p]['product_id'] == (string)$productData[$i]) ? 'selected' : ''; ?>>
+                                                                                        <?php echo htmlspecialchars($productListData[$p]['product_title'], ENT_QUOTES); ?>
+                                                                                    </option>
+                                                                                <?php } ?>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="premium-form-group">
+                                                                            <label>Qty</label>
+                                                                            <input type="text" name="qty_<?php echo $i ?>" class="premium-form-control edit-qty-input"
+                                                                                value="<?php echo isset($productQtyData[$i]) ? htmlspecialchars(str_replace(' ', '', $productQtyData[$i]), ENT_QUOTES) : '' ?>">
+                                                                        </div>
+                                                                        <div style="display: flex; gap: 8px; align-items: flex-end; height: 100%;">
+                                                                            <button type="button" class="btn-premium-action btn-save save-item-btn" style="flex: 1; height: 38px;"><i class="fas fa-check"></i> Assign Product</button>
+                                                                            <button type="button" class="btn-premium-action btn-cancel cancel-item-btn" style="height: 38px; background-color: var(--neutral-300) !important; color: var(--neutral-700) !important;"><i class="fas fa-times"></i> Cancel</button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                        <?php }
+                                            <?php }
+                                                    }
                                                 }
                                             }
-                                        }
-                                        ?>
+                                            ?>
+                                        </div>
+
+                                        <!-- Add Product Button Wrapper -->
+                                        <div id="addProductBtnWrapper" style="margin-top: 16px; border-top: 1px dashed var(--neutral-300); padding-top: 16px; display: <?php echo $hasProducts ? 'flex' : 'none'; ?>; justify-content: flex-end;">
+                                            <button type="button" class="btn-premium-action" id="addProductBtn" style="height: 36px; font-size: 12px; padding: 0 14px; background-color: var(--primary) !important; color: #fff !important; display: flex; align-items: center; gap: 6px; border-radius: 6px; border: none; cursor: pointer; transition: all 0.2s;">
+                                                <i class="fas fa-plus"></i> Add Product
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <!-- Card 2: Customer Shipping Details -->
@@ -447,8 +470,9 @@ if (isset($id)) {
                                                     </div>
                                                 <?php } ?>
 
-                                                <div style="margin-top: 14px; border-top: 1px dashed var(--neutral-200); padding-top: 12px;">
+                                                <div style="margin-top: 14px; border-top: 1px dashed var(--neutral-200); padding-top: 12px; display: flex; gap: 8px;">
                                                     <button type="button" class="btn-premium-action btn-edit" id="changeVendorBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-exchange-alt"></i> Change Partner</button>
+                                                    <button type="button" class="btn-premium-action btn-cancel" id="removeVendorBtn" style="height: 32px; font-size: 12px; padding: 0 10px; background-color: #ef4444 !important; color: #fff !important;"><i class="fas fa-trash-alt"></i> Remove Partner</button>
                                                 </div>
                                             </div>
 
@@ -474,23 +498,28 @@ if (isset($id)) {
 
                                         <?php } else { ?>
                                             <!-- No Vendor Assigned Mode -->
-                                            <div class="premium-form-group">
-                                                <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
-                                                    <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
-                                                    <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
-                                                        <strong>No Partner Assigned</strong><br>
-                                                        Please assign a fulfillment partner to process this order.
+                                            <div id="vendorEditMode" style="display: block;">
+                                                <div class="premium-form-group">
+                                                    <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
+                                                        <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
+                                                        <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
+                                                            <strong>No Partner Assigned</strong><br>
+                                                            Please assign a fulfillment partner to process this order.
+                                                        </div>
                                                     </div>
+                                                    <label>Select Fulfillment Partner</label>
+                                                    <select name="assigned_vendor" class="premium-form-control" style="width: 100%;">
+                                                        <option value="">Select partner</option>
+                                                        <?php foreach ($vendorListData as $vendor) { ?>
+                                                            <option value="<?php echo htmlspecialchars($vendor['user_type_code'], ENT_QUOTES); ?>">
+                                                                <?php echo htmlspecialchars($vendor['user_type_name'], ENT_QUOTES); ?>
+                                                            </option>
+                                                        <?php } ?>
+                                                    </select>
                                                 </div>
-                                                <label>Select Fulfillment Partner</label>
-                                                <select name="assigned_vendor" class="premium-form-control" style="width: 100%;">
-                                                    <option value="">Select partner</option>
-                                                    <?php foreach ($vendorListData as $vendor) { ?>
-                                                        <option value="<?php echo htmlspecialchars($vendor['user_type_code'], ENT_QUOTES); ?>">
-                                                            <?php echo htmlspecialchars($vendor['user_type_name'], ENT_QUOTES); ?>
-                                                        </option>
-                                                    <?php } ?>
-                                                </select>
+                                                <div style="margin-top: 12px;">
+                                                    <button type="button" class="btn-premium-action btn-save" id="saveVendorEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> Assign Partner</button>
+                                                </div>
                                             </div>
                                         <?php } ?>
                                     </div>
@@ -610,7 +639,252 @@ if (isset($id)) {
                 </script>
 
                 <script>
+                    window.allProductsList = <?php echo json_encode($productListData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+                </script>
+
+                <script>
                     (function() {
+                        var root = document.querySelector('.order-info-ui');
+                        var orderId = root ? (root.getAttribute('data-order-id') || 'default') : 'default';
+
+                        // helper function to save order data via AJAX
+                        function saveOrderData(callback) {
+                            if (typeof jQuery === 'undefined') {
+                                if (callback) callback(false);
+                                return;
+                            }
+                            var $ = jQuery;
+                            var formData = $('#orderData').serializeArray();
+                            formData.push({
+                                name: 'action',
+                                value: 'update'
+                            });
+
+                            $.ajax({
+                                type: 'POST',
+                                dataType: 'json',
+                                data: formData,
+                                success: function(response) {
+                                    if (response.status == 200) {
+                                        if (typeof Swal !== 'undefined') {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                type: 'success',
+                                                title: 'Success',
+                                                text: response.msg || 'Order updated successfully.',
+                                                timer: 1500,
+                                                showConfirmButton: false
+                                            });
+                                        } else {
+                                            alert(response.msg || 'Order updated successfully.');
+                                        }
+                                        if (callback) callback(true);
+                                    } else {
+                                        if (typeof Swal !== 'undefined') {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                type: 'error',
+                                                title: 'Error',
+                                                text: response.msg || 'Something went wrong.',
+                                                timer: 2000,
+                                                showConfirmButton: false
+                                            });
+                                        } else {
+                                            alert(response.msg || 'Something went wrong.');
+                                        }
+                                        if (callback) callback(false);
+                                    }
+                                },
+                                error: function() {
+                                    if (typeof Swal !== 'undefined') {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            type: 'error',
+                                            title: 'Error',
+                                            text: 'Failed to update order.',
+                                            timer: 2000,
+                                            showConfirmButton: false
+                                        });
+                                    } else {
+                                        alert('Failed to update order.');
+                                    }
+                                    if (callback) callback(false);
+                                }
+                            });
+                        }
+
+                        // Helper function to re-index all inputs and manage totalProducts
+                        function reindexProducts() {
+                            var rows = document.querySelectorAll('.order-item-row');
+                            if (rows.length === 0) {
+                                var totalInput = document.querySelector('input[name="totalProducts"]');
+                                if (totalInput) totalInput.remove();
+
+                                var warningBlock = document.getElementById('noProductWarning');
+                                if (warningBlock) warningBlock.style.display = 'flex';
+                                var productEditMode = document.getElementById('productEditMode');
+                                if (productEditMode) productEditMode.style.display = 'block';
+
+                                var container = document.getElementById('orderItemsListContainer');
+                                if (container) container.style.display = 'none';
+                                var addBtnWrapper = document.getElementById('addProductBtnWrapper');
+                                if (addBtnWrapper) addBtnWrapper.style.display = 'none';
+                                return;
+                            }
+
+                            rows.forEach(function(row, index) {
+                                row.setAttribute('data-index', index);
+
+                                var idInput = row.querySelector('.item-product-id-input');
+                                if (idInput) {
+                                    idInput.name = 'product_id_' + index;
+                                }
+
+                                var qtyInput = row.querySelector('.edit-qty-input');
+                                if (qtyInput) {
+                                    qtyInput.name = 'qty_' + index;
+                                }
+                            });
+
+                            var totalInput = document.querySelector('input[name="totalProducts"]');
+                            if (!totalInput) {
+                                totalInput = document.createElement('input');
+                                totalInput.type = 'hidden';
+                                totalInput.name = 'totalProducts';
+                                var form = document.getElementById('orderData');
+                                if (form) {
+                                    form.appendChild(totalInput);
+                                }
+                            }
+                            totalInput.value = rows.length;
+
+                            var allTotals = document.querySelectorAll('input[name="totalProducts"]');
+                            if (allTotals.length > 1) {
+                                for (var idx = 1; idx < allTotals.length; idx++) {
+                                    allTotals[idx].remove();
+                                }
+                            }
+                            updateProductDropdownOptions();
+                        }
+
+                        // Helper function to dynamically filter out already selected products from dropdowns
+                        function updateProductDropdownOptions() {
+                            var selectedIds = [];
+                            document.querySelectorAll('.item-product-id-input').forEach(function(input) {
+                                if (input.value && input.value.trim() !== '') {
+                                    selectedIds.push(String(input.value));
+                                }
+                            });
+
+                            var unassignedSelect = document.querySelector('#productEditMode select[name="assigned_product_id"]');
+
+                            document.querySelectorAll('.order-item-row').forEach(function(row) {
+                                var selectEl = row.querySelector('.select-product-dropdown');
+                                if (selectEl) {
+                                    var currentVal = String(selectEl.value || '');
+                                    for (var i = 0; i < selectEl.options.length; i++) {
+                                        var opt = selectEl.options[i];
+                                        if (opt.value && opt.value.trim() !== '') {
+                                            var optVal = String(opt.value);
+                                            if (selectedIds.indexOf(optVal) !== -1 && optVal !== currentVal) {
+                                                opt.disabled = true;
+                                            } else {
+                                                opt.disabled = false;
+                                            }
+                                        }
+                                    }
+                                    if (typeof jQuery !== 'undefined' && jQuery(selectEl).data('select2')) {
+                                        initSelect2(jQuery(selectEl));
+                                    }
+                                }
+                            });
+
+                            if (unassignedSelect) {
+                                var currentVal = String(unassignedSelect.value || '');
+                                for (var i = 0; i < unassignedSelect.options.length; i++) {
+                                    var opt = unassignedSelect.options[i];
+                                    if (opt.value && opt.value.trim() !== '') {
+                                        var optVal = String(opt.value);
+                                        if (selectedIds.indexOf(optVal) !== -1 && optVal !== currentVal) {
+                                            opt.disabled = true;
+                                        } else {
+                                            opt.disabled = false;
+                                        }
+                                    }
+                                }
+                                if (typeof jQuery !== 'undefined' && jQuery(unassignedSelect).data('select2')) {
+                                    initSelect2(jQuery(unassignedSelect));
+                                }
+                            }
+                        }
+
+                        // Helper function to create row HTML elements dynamically
+                        function createProductRowHtml(index, productId, productTitle, productImage, qty) {
+                            var row = document.createElement('div');
+                            row.className = 'order-item-row';
+                            row.setAttribute('data-index', index);
+
+                            var imageHtml = '';
+                            if (productImage && productImage.trim() !== '') {
+                                imageHtml = '<img class="view-item-image" src="' + productImage + '" alt="' + productTitle + '">';
+                            } else {
+                                imageHtml = '<div class="view-item-image-placeholder select-product-option-no-img">📦</div>';
+                            }
+
+                            var optionsHtml = '<option value="">Select product</option>';
+                            if (window.allProductsList) {
+                                window.allProductsList.forEach(function(prod) {
+                                    var selected = (String(prod.product_id) === String(productId)) ? 'selected' : '';
+                                    optionsHtml += '<option value="' + prod.product_id + '" data-image="' + (prod.product_image || '') + '" ' + selected + '>' + prod.product_title + '</option>';
+                                });
+                            }
+
+                            var viewStyle = '';
+                            var editStyle = 'style="display: none;"';
+                            if (!productId) {
+                                viewStyle = 'style="display: none !important;"';
+                                editStyle = 'style="display: block;"';
+                            }
+
+                            row.innerHTML =
+                                '<div class="order-item-view-container" ' + viewStyle + '>' +
+                                '    <div class="order-item-view-left">' +
+                                '        <div class="order-item-thumb-wrapper">' +
+                                imageHtml +
+                                '        </div>' +
+                                '        <div class="order-item-details">' +
+                                '            <div class="order-item-title view-item-title">' + productTitle + '</div>' +
+                                '            <div class="order-item-qty">Qty: <span class="view-item-qty">' + qty + '</span></div>' +
+                                '        </div>' +
+                                '    </div>' +
+                                '    <div class="order-item-edit-btn-wrapper" style="display: flex; gap: 8px;">' +
+                                '        <button type="button" class="btn-premium-action btn-edit edit-item-btn"><i class="fas fa-edit"></i> Edit</button>' +
+                                '        <button type="button" class="btn-premium-action btn-cancel remove-item-btn" style="background-color: #ef4444 !important; color: #fff !important;"><i class="fas fa-trash-alt"></i> Remove</button>' +
+                                '    </div>' +
+                                '</div>' +
+                                '<div class="order-item-edit-container" ' + editStyle + '>' +
+                                '    <input type="hidden" name="product_id_' + index + '" class="item-product-id-input" value="' + productId + '">' +
+                                '    <div class="order-item-edit-grid">' +
+                                '        <div class="premium-form-group">' +
+                                '            <label>Select Product</label>' +
+                                '            <select class="premium-form-control select-product-dropdown" style="width: 100%;">' +
+                                optionsHtml +
+                                '            </select>' +
+                                '        </div>' +
+                                '        <div class="premium-form-group">' +
+                                '            <label>Qty</label>' +
+                                '            <input type="text" name="qty_' + index + '" class="premium-form-control edit-qty-input" value="' + qty + '">' +
+                                '        </div>' +
+                                '        <div style="display: flex; gap: 8px; align-items: flex-end; height: 100%;">' +
+                                '            <button type="button" class="btn-premium-action btn-save save-item-btn" style="flex: 1; height: 38px;"><i class="fas fa-check"></i> Assign Product</button>' +
+                                '            <button type="button" class="btn-premium-action btn-cancel cancel-item-btn" style="height: 38px; background-color: var(--neutral-300) !important; color: var(--neutral-700) !important;"><i class="fas fa-times"></i> Cancel</button>' +
+                                '        </div>' +
+                                '    </div>' +
+                                '</div>';
+
+                            return row;
+                        }
+
                         // event delegation using vanilla JS
                         document.addEventListener('click', function(e) {
                             // 1. Edit Button Click
@@ -622,7 +896,7 @@ if (isset($id)) {
                                     var viewContainer = row.querySelector('.order-item-view-container');
                                     var editContainer = row.querySelector('.order-item-edit-container');
                                     if (viewContainer && editContainer) {
-                                        viewContainer.style.display = 'none';
+                                        viewContainer.style.setProperty('display', 'none', 'important');
                                         editContainer.style.display = 'block';
 
                                         // Initialize Select2 using jQuery (if loaded)
@@ -664,6 +938,7 @@ if (isset($id)) {
                                                 if (typeof Swal !== 'undefined') {
                                                     Swal.fire({
                                                         icon: 'error',
+                                                        type: 'error',
                                                         title: 'Product Required',
                                                         text: 'Please select a product before saving.',
                                                         timer: 2000,
@@ -678,39 +953,232 @@ if (isset($id)) {
                                             var newProductTitle = selectedOption ? selectedOption.text.trim() : '';
                                             var newProductImage = selectedOption ? selectedOption.getAttribute('data-image') : '';
                                             var newQty = qtyInput.value;
+                                            var oldProductId = productIdInput.value;
 
-                                            // Sync backend inputs
-                                            productIdInput.value = newProductId;
+                                            // Call API endpoint to save / assign product
+                                            $.ajax({
+                                                type: 'POST',
+                                                url: '/api/order/assign_product/',
+                                                data: {
+                                                    id: orderId,
+                                                    product_id: newProductId,
+                                                    qty: newQty,
+                                                    old_product_id: oldProductId
+                                                },
+                                                dataType: 'json',
+                                                success: function(response) {
+                                                    if (response.status == 200) {
+                                                        // Sync backend inputs
+                                                        productIdInput.value = newProductId;
 
-                                            // Update view title and qty
-                                            var viewTitle = viewContainer.querySelector('.view-item-title');
-                                            var viewQty = viewContainer.querySelector('.view-item-qty');
-                                            if (viewTitle) viewTitle.textContent = newProductTitle;
-                                            if (viewQty) viewQty.textContent = newQty;
+                                                        // Update view title and qty
+                                                        var viewTitle = viewContainer.querySelector('.view-item-title');
+                                                        var viewQty = viewContainer.querySelector('.view-item-qty');
+                                                        if (viewTitle) viewTitle.textContent = newProductTitle;
+                                                        if (viewQty) viewQty.textContent = newQty;
 
-                                            // Update view image
-                                            var thumbWrapper = viewContainer.querySelector('.order-item-thumb-wrapper');
-                                            if (thumbWrapper) {
-                                                thumbWrapper.innerHTML = '';
-                                                if (newProductImage && newProductImage.trim() !== '') {
-                                                    var img = document.createElement('img');
-                                                    img.className = 'view-item-image';
-                                                    img.src = newProductImage;
-                                                    img.alt = newProductTitle;
-                                                    thumbWrapper.appendChild(img);
-                                                } else {
-                                                    var placeholder = document.createElement('div');
-                                                    placeholder.className = 'view-item-image-placeholder select-product-option-no-img';
-                                                    placeholder.textContent = '📦';
-                                                    thumbWrapper.appendChild(placeholder);
+                                                        // Update view image
+                                                        var thumbWrapper = viewContainer.querySelector('.order-item-thumb-wrapper');
+                                                        if (thumbWrapper) {
+                                                            thumbWrapper.innerHTML = '';
+                                                            if (newProductImage && newProductImage.trim() !== '') {
+                                                                var img = document.createElement('img');
+                                                                img.className = 'view-item-image';
+                                                                img.src = newProductImage;
+                                                                img.alt = newProductTitle;
+                                                                thumbWrapper.appendChild(img);
+                                                            } else {
+                                                                var placeholder = document.createElement('div');
+                                                                placeholder.className = 'view-item-image-placeholder select-product-option-no-img';
+                                                                placeholder.textContent = '📦';
+                                                                thumbWrapper.appendChild(placeholder);
+                                                            }
+                                                        }
+
+                                                        editContainer.style.display = 'none';
+                                                        viewContainer.removeAttribute('style');
+
+                                                        // Re-index all inputs
+                                                        reindexProducts();
+
+                                                        if (typeof Swal !== 'undefined') {
+                                                            Swal.fire({
+                                                                icon: 'success',
+                                                                type: 'success',
+                                                                title: 'Success',
+                                                                text: response.msg || 'Product assigned successfully.',
+                                                                timer: 1500,
+                                                                showConfirmButton: false
+                                                            });
+                                                        }
+                                                    } else {
+                                                        if (typeof Swal !== 'undefined') {
+                                                            Swal.fire({
+                                                                icon: 'error',
+                                                                type: 'error',
+                                                                title: 'Error',
+                                                                text: response.msg || 'Something went wrong.',
+                                                                timer: 2000,
+                                                                showConfirmButton: false
+                                                            });
+                                                        } else {
+                                                            alert(response.msg || 'Something went wrong.');
+                                                        }
+                                                    }
+                                                },
+                                                error: function() {
+                                                    if (typeof Swal !== 'undefined') {
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            type: 'error',
+                                                            title: 'Error',
+                                                            text: 'Failed to assign product.',
+                                                            timer: 2000,
+                                                            showConfirmButton: false
+                                                        });
+                                                    } else {
+                                                        alert('Failed to assign product.');
+                                                    }
                                                 }
+                                            });
+                                        }
+                                    }
+                                }
+                                return;
+                            }
+
+                            // 2.5 Cancel Item Edit Button Click
+                            var cancelBtn = e.target.closest('.cancel-item-btn');
+                            if (cancelBtn) {
+                                e.preventDefault();
+                                var row = cancelBtn.closest('.order-item-row');
+                                if (row) {
+                                    var productIdInput = row.querySelector('.item-product-id-input');
+                                    if (productIdInput && !productIdInput.value) {
+                                        // It's a new unsaved row - remove it completely
+                                        row.remove();
+                                        reindexProducts();
+                                        return;
+                                    }
+
+                                    var viewContainer = row.querySelector('.order-item-view-container');
+                                    var editContainer = row.querySelector('.order-item-edit-container');
+                                    if (viewContainer && editContainer) {
+                                        var selectEl = editContainer.querySelector('.select-product-dropdown');
+                                        var qtyInput = editContainer.querySelector('.edit-qty-input');
+
+                                        // Reset select and quantity to current values
+                                        if (selectEl && qtyInput && productIdInput) {
+                                            selectEl.value = productIdInput.value;
+                                            if (typeof jQuery !== 'undefined' && jQuery(selectEl).data('select2')) {
+                                                jQuery(selectEl).trigger('change');
+                                            }
+                                            var viewQty = viewContainer.querySelector('.view-item-qty');
+                                            if (viewQty) {
+                                                qtyInput.value = viewQty.textContent.trim();
                                             }
                                         }
 
                                         editContainer.style.display = 'none';
-                                        viewContainer.style.display = 'flex';
+                                        viewContainer.removeAttribute('style');
+                                        updateProductDropdownOptions();
                                     }
                                 }
+                                return;
+                            }
+
+                            // 2.6 Remove Product Button Click
+                            var removeBtn = e.target.closest('.remove-item-btn');
+                            if (removeBtn) {
+                                e.preventDefault();
+                                var row = removeBtn.closest('.order-item-row');
+                                if (row) {
+                                    var performRemoval = function() {
+                                        var productIdInput = row.querySelector('.item-product-id-input');
+                                        var productId = productIdInput ? productIdInput.value : '';
+
+                                        if (productId && productId.trim() !== '') {
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: '/api/order/remove_product/',
+                                                data: {
+                                                    id: orderId,
+                                                    product_id: productId
+                                                },
+                                                dataType: 'json',
+                                                success: function(response) {
+                                                    if (response.status == 200) {
+                                                        row.remove();
+                                                        reindexProducts();
+
+                                                        if (typeof Swal !== 'undefined') {
+                                                            Swal.fire({
+                                                                icon: 'success',
+                                                                type: 'success',
+                                                                title: 'Success',
+                                                                text: response.msg || 'Product removed successfully.',
+                                                                timer: 1500,
+                                                                showConfirmButton: false
+                                                            });
+                                                        }
+                                                    } else {
+                                                        if (typeof Swal !== 'undefined') {
+                                                            Swal.fire({
+                                                                icon: 'error',
+                                                                type: 'error',
+                                                                title: 'Error',
+                                                                text: response.msg || 'Something went wrong.',
+                                                                timer: 2000,
+                                                                showConfirmButton: false
+                                                            });
+                                                        } else {
+                                                            alert(response.msg || 'Something went wrong.');
+                                                        }
+                                                    }
+                                                },
+                                                error: function() {
+                                                    if (typeof Swal !== 'undefined') {
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            type: 'error',
+                                                            title: 'Error',
+                                                            text: 'Failed to remove product.',
+                                                            timer: 2000,
+                                                            showConfirmButton: false
+                                                        });
+                                                    } else {
+                                                        alert('Failed to remove product.');
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            row.remove();
+                                            reindexProducts();
+                                        }
+                                    };
+
+                                    if (typeof Swal !== 'undefined') {
+                                        Swal.fire({
+                                            title: 'Are you sure?',
+                                            text: 'Do you want to remove this product from the order?',
+                                            icon: 'warning',
+                                            type: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#ef4444',
+                                            cancelButtonColor: '#6b7280',
+                                            confirmButtonText: 'Yes, remove it!'
+                                        }).then(function(result) {
+                                            if (result.value) {
+                                                performRemoval();
+                                            }
+                                        });
+                                    } else {
+                                        if (confirm('Are you sure you want to remove this product from the order?')) {
+                                            performRemoval();
+                                        }
+                                    }
+                                }
+                                return;
                             }
 
                             // 3. Change Vendor Button Click
@@ -743,9 +1211,164 @@ if (isset($id)) {
                             var saveVendorEditBtn = e.target.closest('#saveVendorEditBtn');
                             if (saveVendorEditBtn) {
                                 e.preventDefault();
-                                var updateBtn = document.getElementById('orderUpdateData');
-                                if (updateBtn) {
-                                    updateBtn.click();
+                                var selectEl = document.querySelector('#vendorEditMode select[name="assigned_vendor"]');
+                                if (selectEl) {
+                                    var vendorCode = selectEl.value;
+                                    if (!vendorCode || vendorCode.trim() === '') {
+                                        if (typeof Swal !== 'undefined') {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                type: 'error',
+                                                title: 'Vendor Required',
+                                                text: 'Please select a partner.',
+                                                timer: 2000,
+                                                showConfirmButton: false
+                                            });
+                                        } else {
+                                            alert('Please select a partner.');
+                                        }
+                                        return;
+                                    }
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/api/order/assign_vendor/',
+                                        data: {
+                                            id: orderId,
+                                            assigned_vendor: vendorCode
+                                        },
+                                        dataType: 'json',
+                                        success: function(response) {
+                                            if (response.status == 200) {
+                                                if (typeof Swal !== 'undefined') {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        type: 'success',
+                                                        title: 'Success',
+                                                        text: response.msg || 'Vendor assigned successfully.',
+                                                        timer: 1500,
+                                                        showConfirmButton: false
+                                                    });
+                                                } else {
+                                                    alert(response.msg || 'Vendor assigned successfully.');
+                                                }
+                                                setTimeout(function() {
+                                                    window.location.reload();
+                                                }, 1500);
+                                            } else {
+                                                if (typeof Swal !== 'undefined') {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        type: 'error',
+                                                        title: 'Error',
+                                                        text: response.msg || 'Something went wrong.',
+                                                        timer: 2000,
+                                                        showConfirmButton: false
+                                                    });
+                                                } else {
+                                                    alert(response.msg || 'Something went wrong.');
+                                                }
+                                            }
+                                        },
+                                        error: function() {
+                                            if (typeof Swal !== 'undefined') {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    type: 'error',
+                                                    title: 'Error',
+                                                    text: 'Failed to assign vendor.',
+                                                    timer: 2000,
+                                                    showConfirmButton: false
+                                                });
+                                            } else {
+                                                alert('Failed to assign vendor.');
+                                            }
+                                        }
+                                    });
+                                }
+                                return;
+                            }
+
+                            // 5.5 Remove Vendor Button Click
+                            var removeVendorBtn = e.target.closest('#removeVendorBtn');
+                            if (removeVendorBtn) {
+                                e.preventDefault();
+                                var performVendorRemoval = function() {
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: '/api/order/remove_vendor/',
+                                        data: {
+                                            id: orderId
+                                        },
+                                        dataType: 'json',
+                                        success: function(response) {
+                                            if (response.status == 200) {
+                                                if (typeof Swal !== 'undefined') {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        type: 'success',
+                                                        title: 'Success',
+                                                        text: response.msg || 'Vendor removed successfully.',
+                                                        timer: 1500,
+                                                        showConfirmButton: false
+                                                    });
+                                                } else {
+                                                    alert(response.msg || 'Vendor removed successfully.');
+                                                }
+                                                setTimeout(function() {
+                                                    window.location.reload();
+                                                }, 1500);
+                                            } else {
+                                                if (typeof Swal !== 'undefined') {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        type: 'error',
+                                                        title: 'Error',
+                                                        text: response.msg || 'Something went wrong.',
+                                                        timer: 2000,
+                                                        showConfirmButton: false
+                                                    });
+                                                } else {
+                                                    alert(response.msg || 'Something went wrong.');
+                                                }
+                                            }
+                                        },
+                                        error: function() {
+                                            if (typeof Swal !== 'undefined') {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    type: 'error',
+                                                    title: 'Error',
+                                                    text: 'Failed to remove vendor.',
+                                                    timer: 2000,
+                                                    showConfirmButton: false
+                                                });
+                                            } else {
+                                                alert('Failed to remove vendor.');
+                                            }
+                                        }
+                                    });
+                                };
+
+                                if (typeof Swal !== 'undefined') {
+                                    Swal.fire({
+                                        title: 'Are you sure?',
+                                        text: 'Do you want to remove the fulfillment partner from this order?',
+                                        icon: 'warning',
+                                        type: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#ef4444',
+                                        cancelButtonColor: '#6b7280',
+                                        confirmButtonText: 'Yes, remove it!'
+                                    }).then(function(result) {
+                                        if (result.value) {
+                                            performVendorRemoval();
+                                        }
+                                    });
+                                } else {
+                                    if (confirm('Are you sure you want to remove the fulfillment partner from this order?')) {
+                                        performVendorRemoval();
+                                    }
                                 }
                                 return;
                             }
@@ -754,9 +1377,106 @@ if (isset($id)) {
                             var saveProductEditBtn = e.target.closest('#saveProductEditBtn');
                             if (saveProductEditBtn) {
                                 e.preventDefault();
-                                var updateBtn = document.getElementById('orderUpdateData');
-                                if (updateBtn) {
-                                    updateBtn.click();
+                                var selectEl = document.querySelector('#productEditMode select[name="assigned_product_id"]');
+                                var qtyInput = document.getElementById('assignedQtyInput');
+                                if (selectEl) {
+                                    var selectedOption = selectEl.options[selectEl.selectedIndex];
+                                    var selectedId = selectEl.value;
+
+                                    if (!selectedId || selectedId.trim() === '') {
+                                        if (typeof Swal !== 'undefined') {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                type: 'error',
+                                                title: 'Product Required',
+                                                text: 'Please select a product to assign.',
+                                                timer: 2000,
+                                                showConfirmButton: false
+                                            });
+                                        } else {
+                                            alert('Please select a product to assign.');
+                                        }
+                                        return;
+                                    }
+
+                                    var title = selectedOption ? selectedOption.text.trim() : '';
+                                    var image = selectedOption ? selectedOption.getAttribute('data-image') : '';
+                                    var qty = qtyInput ? qtyInput.value : '1';
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/api/order/assign_product/',
+                                        data: {
+                                            id: orderId,
+                                            product_id: selectedId,
+                                            qty: qty
+                                        },
+                                        dataType: 'json',
+                                        success: function(response) {
+                                            if (response.status == 200) {
+                                                var container = document.getElementById('orderItemsListContainer');
+                                                if (container) {
+                                                    var newRow = createProductRowHtml(0, selectedId, title, image, qty);
+                                                    container.appendChild(newRow);
+
+                                                    reindexProducts();
+
+                                                    if (typeof Swal !== 'undefined') {
+                                                        Swal.fire({
+                                                            icon: 'success',
+                                                            type: 'success',
+                                                            title: 'Success',
+                                                            text: response.msg || 'Product assigned successfully.',
+                                                            timer: 1500,
+                                                            showConfirmButton: false
+                                                        });
+                                                    }
+
+                                                    var warningBlock = document.getElementById('noProductWarning');
+                                                    if (warningBlock) warningBlock.style.display = 'none';
+                                                    var editMode = document.getElementById('productEditMode');
+                                                    if (editMode) editMode.style.display = 'none';
+
+                                                    container.style.display = 'block';
+                                                    var addBtnWrapper = document.getElementById('addProductBtnWrapper');
+                                                    if (addBtnWrapper) addBtnWrapper.style.display = 'flex';
+
+                                                    selectEl.value = '';
+                                                    if (qtyInput) qtyInput.value = '1';
+                                                    if (typeof jQuery !== 'undefined' && jQuery(selectEl).data('select2')) {
+                                                        jQuery(selectEl).trigger('change');
+                                                    }
+                                                }
+                                            } else {
+                                                if (typeof Swal !== 'undefined') {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        type: 'error',
+                                                        title: 'Error',
+                                                        text: response.msg || 'Something went wrong.',
+                                                        timer: 2000,
+                                                        showConfirmButton: false
+                                                    });
+                                                } else {
+                                                    alert(response.msg || 'Something went wrong.');
+                                                }
+                                            }
+                                        },
+                                        error: function() {
+                                            if (typeof Swal !== 'undefined') {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    type: 'error',
+                                                    title: 'Error',
+                                                    text: 'Failed to assign product.',
+                                                    timer: 2000,
+                                                    showConfirmButton: false
+                                                });
+                                            } else {
+                                                alert('Failed to assign product.');
+                                            }
+                                        }
+                                    });
                                 }
                                 return;
                             }
@@ -771,9 +1491,35 @@ if (isset($id)) {
                                         $select.val('').trigger('change');
                                     }
                                 }
+                                var qtyInput = document.getElementById('assignedQtyInput');
+                                if (qtyInput) {
+                                    qtyInput.value = '1';
+                                }
                                 return;
                             }
                         });
+
+                        // Add Product Button Click
+                        var addProductBtn = document.getElementById('addProductBtn');
+                        if (addProductBtn) {
+                            addProductBtn.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                var container = document.getElementById('orderItemsListContainer');
+                                if (container) {
+                                    var nextIndex = document.querySelectorAll('.order-item-row').length;
+                                    var newRow = createProductRowHtml(nextIndex, '', '', '', '1');
+
+                                    container.appendChild(newRow);
+
+                                    var $newSelect = jQuery(newRow).find('.select-product-dropdown');
+                                    if (typeof initSelect2 === 'function') {
+                                        initSelect2($newSelect);
+                                    }
+
+                                    reindexProducts();
+                                }
+                            });
+                        }
 
                         // Helper functions for Select2
                         function ensureSelect2(callback) {
@@ -801,6 +1547,9 @@ if (isset($id)) {
                             if (!state.id || !state.element) {
                                 return state.text;
                             }
+                            if (state.element.disabled) {
+                                return null;
+                            }
                             var imgUrl = state.element.getAttribute('data-image');
                             var imgHtml = '';
                             if (imgUrl && imgUrl.trim() !== '') {
@@ -814,6 +1563,12 @@ if (isset($id)) {
                         function initSelect2($selects) {
                             ensureSelect2(function() {
                                 if (typeof jQuery !== 'undefined' && jQuery.fn.select2) {
+                                    $selects.each(function() {
+                                        var $el = jQuery(this);
+                                        if ($el.data('select2')) {
+                                            $el.select2('destroy');
+                                        }
+                                    });
                                     $selects.select2({
                                         templateResult: formatProductOption,
                                         templateSelection: formatProductOption,
@@ -825,6 +1580,7 @@ if (isset($id)) {
                                 }
                             });
                         }
+
 
                         // Product selection validation for main action buttons
                         function validateProductSelection() {
@@ -852,6 +1608,7 @@ if (isset($id)) {
                                         if (typeof Swal !== 'undefined') {
                                             Swal.fire({
                                                 icon: 'error',
+                                                type: 'error',
                                                 title: 'Product Required',
                                                 text: 'Please select a product before updating the order.',
                                                 timer: 2500,
@@ -865,15 +1622,24 @@ if (isset($id)) {
                             }
                         });
 
+                        // Listen to changes on product dropdowns
+                        document.addEventListener('change', function(e) {
+                            if (e.target.classList.contains('select-product-dropdown') || e.target.classList.contains('selectJS')) {
+                                updateProductDropdownOptions();
+                            }
+                        });
+
                         // Initialize Select2 on load for any pre-opened edit container dropdowns or product edit mode select
                         var visibleSelects = document.querySelectorAll('.order-item-edit-container[style*="display: block"] .select-product-dropdown, #productEditMode .selectJS');
                         if (visibleSelects.length > 0) {
                             if (typeof jQuery !== 'undefined') {
+                                updateProductDropdownOptions();
                                 initSelect2(jQuery(visibleSelects));
                             } else {
                                 var initInterval = setInterval(function() {
                                     if (typeof jQuery !== 'undefined') {
                                         clearInterval(initInterval);
+                                        updateProductDropdownOptions();
                                         initSelect2(jQuery(visibleSelects));
                                     }
                                 }, 50);
