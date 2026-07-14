@@ -18,6 +18,7 @@ $statsForHappyClients = 500;
     <?php require_once DEFAULT_META ?>
     <!-- Stylesheets -->
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>styles.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <!-- Social Proof Plugin -->
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>social_proof/social_proof.css?v=<?php echo time(); ?>" />
 </head>

@@ -18,17 +18,25 @@ if (ACTIVE_URL != '/contact-us/') {
             </p>
             <div class="footer-socials">
                 <a
-                    href="<?php echo ((isset($companyInstagramProfile)) ? $companyInstagramProfile : ''); ?>"
+                    href="<?php echo isset($companyInstagramProfile) ? $companyInstagramProfile : ''; ?>"
                     class="social-circle"
-                    aria-label="Instagram"><i data-lucide="instagram" style="width: 16px"></i></a>
+                    aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+
                 <a
-                    href="<?php echo ((isset($companyFacebookProfile)) ? $companyFacebookProfile : ''); ?>"
+                    href="<?php echo isset($companyFacebookProfile) ? $companyFacebookProfile : ''; ?>"
                     class="social-circle"
-                    aria-label="Facebook"><i data-lucide="facebook" style="width: 16px"></i></a>
+                    aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+
                 <a
-                    href="<?php echo ((isset($companyYoutubeProfile)) ? $companyYoutubeProfile : ''); ?>"
+                    href="<?php echo isset($companyYoutubeProfile) ? $companyYoutubeProfile : ''; ?>"
                     class="social-circle"
-                    aria-label="YouTube"><i data-lucide="youtube" style="width: 16px"></i></a>
+                    aria-label="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
             </div>
         </div>
 
