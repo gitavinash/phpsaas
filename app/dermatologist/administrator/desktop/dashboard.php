@@ -1571,7 +1571,8 @@ $_formTarget = rtrim($_formTarget, '?&');
                 <div class="panel-head">
                     <h3 class="panel-title">Quick Actions</h3>
                 </div>
-                <div class="panel-body">                    <div class="qa-grid">
+                <div class="panel-body">
+                    <div class="qa-grid">
                         <a href="treatment/?type=add&amp;editor=true" class="qa-a">
                             <span class="qa-icon">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1644,7 +1645,7 @@ $_formTarget = rtrim($_formTarget, '?&');
                                 <span class="qa-meta">Add patient feedback</span>
                             </span>
                         </a>
-                    </div>>
+                    </div>
                 </div>
             </div>
         </div>
