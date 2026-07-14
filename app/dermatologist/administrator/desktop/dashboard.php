@@ -26,7 +26,7 @@ function nmsSanitizeDate($value, $fallback)
 
 function nmsActivityDaily($connection, $prefix, $siteId, $from, $to)
 {
-    $types = array('page', 'post', 'gallery', 'media');
+    $types = array('treatment', 'technology', 'post', 'page');
     $labels = array();
     $maps = array();
 
@@ -51,7 +51,7 @@ function nmsActivityDaily($connection, $prefix, $siteId, $from, $to)
     $query = "SELECT DATE(link_published) published_on, link_type, COUNT(*) total
 			  FROM {$prefix}link
 			  WHERE link_site_id={$siteId}
-				AND link_type IN ('page', 'post', 'gallery', 'media')
+				AND link_type IN ('treatment', 'technology', 'post', 'page')
 				AND link_status!=301
 				AND DATE(link_published) BETWEEN '{$from}' AND '{$to}'
 			  GROUP BY DATE(link_published), link_type";
@@ -66,16 +66,16 @@ function nmsActivityDaily($connection, $prefix, $siteId, $from, $to)
 
     return array(
         'labels' => $labels,
-        'page' => array_values($maps['page']),
+        'treatment' => array_values($maps['treatment']),
+        'technology' => array_values($maps['technology']),
         'post' => array_values($maps['post']),
-        'gallery' => array_values($maps['gallery']),
-        'media' => array_values($maps['media']),
+        'page' => array_values($maps['page']),
     );
 }
 
 function nmsActivityMonthly($connection, $prefix, $siteId, $from, $to)
 {
-    $types = array('page', 'post', 'gallery', 'media');
+    $types = array('treatment', 'technology', 'post', 'page');
     $labels = array();
     $maps = array();
 
@@ -100,7 +100,7 @@ function nmsActivityMonthly($connection, $prefix, $siteId, $from, $to)
     $query = "SELECT DATE_FORMAT(link_published, '%Y-%m') published_on, link_type, COUNT(*) total
 			  FROM {$prefix}link
 			  WHERE link_site_id={$siteId}
-				AND link_type IN ('page', 'post', 'gallery', 'media')
+				AND link_type IN ('treatment', 'technology', 'post', 'page')
 				AND link_status!=301
 				AND link_published BETWEEN '{$from} 00:00:00' AND '{$to} 23:59:59'
 			  GROUP BY DATE_FORMAT(link_published, '%Y-%m'), link_type";
@@ -115,10 +115,10 @@ function nmsActivityMonthly($connection, $prefix, $siteId, $from, $to)
 
     return array(
         'labels' => $labels,
-        'page' => array_values($maps['page']),
+        'treatment' => array_values($maps['treatment']),
+        'technology' => array_values($maps['technology']),
         'post' => array_values($maps['post']),
-        'gallery' => array_values($maps['gallery']),
-        'media' => array_values($maps['media']),
+        'page' => array_values($maps['page']),
     );
 }
 
@@ -198,47 +198,103 @@ $_baseUrl .= 'dp=';
 
 $_linkDateWhere = "DATE(link_published) BETWEEN '{$_df}' AND '{$_dt}'";
 
-$kpiPages = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}page p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id WHERE l.link_type='page' AND l.link_site_id={$_dashSid} AND l.link_status!=301");
-$kpiPagesLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}page p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id WHERE l.link_type='page' AND l.link_site_id={$_dashSid} AND l.link_status=200");
-$kpiPagesDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}page p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id WHERE l.link_type='page' AND l.link_site_id={$_dashSid} AND l.link_status=206");
+$kpiPages = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}page p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id WHERE l.link_type='page' AND p.page_type='page' AND l.link_site_id={$_dashSid} AND l.link_status!=301");
+$kpiPagesLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}page p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id WHERE l.link_type='page' AND p.page_type='page' AND l.link_site_id={$_dashSid} AND l.link_status=200");
+$kpiPagesDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}page p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id WHERE l.link_type='page' AND p.page_type='page' AND l.link_site_id={$_dashSid} AND l.link_status=206");
 
-$kpiPost = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post n INNER JOIN {$_tpfx}link l ON l.link_relation_id=n.post_id WHERE l.link_type='post' AND l.link_site_id={$_dashSid} AND l.link_status!=301");
-$kpiPostLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post n INNER JOIN {$_tpfx}link l ON l.link_relation_id=n.post_id WHERE l.link_type='post' AND l.link_site_id={$_dashSid} AND l.link_status=200");
-$kpiPostDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post n INNER JOIN {$_tpfx}link l ON l.link_relation_id=n.post_id WHERE l.link_type='post' AND l.link_site_id={$_dashSid} AND l.link_status=206");
+// Blogs
+$kpiBlogPosts = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='post' AND l.link_site_id={$_dashSid} AND l.link_status!=301");
+$kpiBlogPostsLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='post' AND l.link_site_id={$_dashSid} AND l.link_status=200");
+$kpiBlogPostsDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='post' AND l.link_site_id={$_dashSid} AND l.link_status=206");
 
+// Gallery
 $kpiGallery = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}gallery g INNER JOIN {$_tpfx}link l ON l.link_relation_id=g.gallery_id WHERE l.link_type='gallery' AND l.link_site_id={$_dashSid} AND l.link_status!=301");
 $kpiGalleryLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}gallery g INNER JOIN {$_tpfx}link l ON l.link_relation_id=g.gallery_id WHERE l.link_type='gallery' AND l.link_site_id={$_dashSid} AND l.link_status=200");
 $kpiGalleryDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}gallery g INNER JOIN {$_tpfx}link l ON l.link_relation_id=g.gallery_id WHERE l.link_type='gallery' AND l.link_site_id={$_dashSid} AND l.link_status=206");
 
+// Media
 $kpiMedia = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}media WHERE media_site_id={$_dashSid}");
 $kpiMediaImages = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}media WHERE media_site_id={$_dashSid} AND media_type='image'");
 $kpiMediaVideos = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}media WHERE media_site_id={$_dashSid} AND media_type='video'");
+
+// Treatments
+$kpiTreatments = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}treatment s INNER JOIN {$_tpfx}link l ON l.link_relation_id=s.treatment_id AND l.link_type='treatment' WHERE s.treatment_site_id={$_dashSid} AND l.link_status!=301");
+$kpiTreatmentsLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}treatment s INNER JOIN {$_tpfx}link l ON l.link_relation_id=s.treatment_id AND l.link_type='treatment' WHERE s.treatment_site_id={$_dashSid} AND l.link_status=200");
+$kpiTreatmentsDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}treatment s INNER JOIN {$_tpfx}link l ON l.link_relation_id=s.treatment_id AND l.link_type='treatment' WHERE s.treatment_site_id={$_dashSid} AND l.link_status=206");
+
+// Technology
+$kpiTechnology = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}technology t INNER JOIN {$_tpfx}link l ON l.link_relation_id=t.technology_id AND l.link_type='technology' WHERE t.technology_site_id={$_dashSid} AND l.link_status!=301");
+$kpiTechnologyLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}technology t INNER JOIN {$_tpfx}link l ON l.link_relation_id=t.technology_id AND l.link_type='technology' WHERE t.technology_site_id={$_dashSid} AND l.link_status=200");
+$kpiTechnologyDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}technology t INNER JOIN {$_tpfx}link l ON l.link_relation_id=t.technology_id AND l.link_type='technology' WHERE t.technology_site_id={$_dashSid} AND l.link_status=206");
+
+// Packages
+$kpiPackages = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='package' AND l.link_site_id={$_dashSid} AND l.link_status!=301");
+$kpiPackagesLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='package' AND l.link_site_id={$_dashSid} AND l.link_status=200");
+$kpiPackagesDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='package' AND l.link_site_id={$_dashSid} AND l.link_status=206");
+
+// Offers
+$kpiOffers = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}page p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id WHERE l.link_type='page' AND p.page_type='offer' AND l.link_site_id={$_dashSid} AND l.link_status!=301");
+$kpiOffersLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}page p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id WHERE l.link_type='page' AND p.page_type='offer' AND l.link_site_id={$_dashSid} AND l.link_status=200");
+$kpiOffersDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}page p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id WHERE l.link_type='page' AND p.page_type='offer' AND l.link_site_id={$_dashSid} AND l.link_status=206");
+
+// Questions (FAQ)
+$kpiQuestions = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='question' AND l.link_site_id={$_dashSid} AND l.link_status!=301");
+$kpiQuestionsLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='question' AND l.link_site_id={$_dashSid} AND l.link_status=200");
+$kpiQuestionsDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='question' AND l.link_site_id={$_dashSid} AND l.link_status=206");
+
+// Testimonials
+$kpiTestimonials = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}category WHERE category_type='testimonial' AND category_site_id={$_dashSid}");
+$kpiTestimonialsLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}category WHERE category_type='testimonial' AND category_site_id={$_dashSid} AND category_status=1");
+$kpiTestimonialsDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}category WHERE category_type='testimonial' AND category_site_id={$_dashSid} AND category_status=0");
+
+// Social Proof
+$kpiSocialProof = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}social_proof sp INNER JOIN {$_tpfx}link l ON l.link_relation_id=sp.sp_id WHERE l.link_type='social_proof' AND l.link_site_id={$_dashSid} AND l.link_status!=301");
+$kpiSocialProofLive = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}social_proof sp INNER JOIN {$_tpfx}link l ON l.link_relation_id=sp.sp_id WHERE l.link_type='social_proof' AND l.link_site_id={$_dashSid} AND l.link_status=200");
+$kpiSocialProofDraft = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}social_proof sp INNER JOIN {$_tpfx}link l ON l.link_relation_id=sp.sp_id WHERE l.link_type='social_proof' AND l.link_site_id={$_dashSid} AND l.link_status=206");
 
 $teamUsers = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}site_access WHERE site_access_site_id={$_dashSid}");
 $activeUsers = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}user u INNER JOIN {$_tpfx}site_access sa ON sa.site_access_user_id=u.user_id WHERE sa.site_access_site_id={$_dashSid} AND u.user_status=1");
 $newsletterContacts = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}newsletter WHERE newsletter_site_id={$_dashSid} AND newsletter_status=1");
 
-$periodPages = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}link WHERE link_type='page' AND link_site_id={$_dashSid} AND link_status!=301 AND {$_linkDateWhere}");
-$periodPost = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}link WHERE link_type='post' AND link_site_id={$_dashSid} AND link_status!=301 AND {$_linkDateWhere}");
-$periodGalleries = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}link WHERE link_type='gallery' AND link_site_id={$_dashSid} AND link_status!=301 AND {$_linkDateWhere}");
-$periodMedia = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}link WHERE link_type='media' AND link_site_id={$_dashSid} AND link_status!=301 AND {$_linkDateWhere}");
+// Period counters for doughnut chart
+$periodTreatments = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}treatment s INNER JOIN {$_tpfx}link l ON l.link_relation_id=s.treatment_id AND l.link_type='treatment' WHERE s.treatment_site_id={$_dashSid} AND l.link_status!=301 AND {$_linkDateWhere}");
+$periodTechnology = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}technology t INNER JOIN {$_tpfx}link l ON l.link_relation_id=t.technology_id AND l.link_type='technology' WHERE t.technology_site_id={$_dashSid} AND l.link_status!=301 AND {$_linkDateWhere}");
+$periodPackages = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='package' AND l.link_site_id={$_dashSid} AND l.link_status!=301 AND {$_linkDateWhere}");
+$periodOffers = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}page p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id WHERE l.link_type='page' AND p.page_type='offer' AND l.link_site_id={$_dashSid} AND l.link_status!=301 AND {$_linkDateWhere}");
+$periodBlogPosts = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='post' AND l.link_site_id={$_dashSid} AND l.link_status!=301 AND {$_linkDateWhere}");
+$periodQuestions = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}post p INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id WHERE l.link_type='post' AND p.post_type='question' AND l.link_site_id={$_dashSid} AND l.link_status!=301 AND {$_linkDateWhere}");
+$periodSocialProof = nmsDbScalar($connection, "SELECT COUNT(*) total FROM {$_tpfx}social_proof sp INNER JOIN {$_tpfx}link l ON l.link_relation_id=sp.sp_id WHERE l.link_type='social_proof' AND l.link_site_id={$_dashSid} AND l.link_status!=301 AND {$_linkDateWhere}");
 
-$publishedContent = $kpiPagesLive + $kpiPostLive + $kpiGalleryLive;
-$draftContent = $kpiPagesDraft + $kpiPostDraft + $kpiGalleryDraft;
+$publishedContent = $kpiTreatmentsLive + $kpiTechnologyLive + $kpiPackagesLive + $kpiOffersLive + $kpiQuestionsLive + $kpiBlogPostsLive + $kpiSocialProofLive;
+$draftContent = $kpiTreatmentsDraft + $kpiTechnologyDraft + $kpiPackagesDraft + $kpiOffersDraft + $kpiQuestionsDraft + $kpiBlogPostsDraft + $kpiSocialProofDraft;
 
 $recentContent = array();
 $_recentContentQuery = "SELECT * FROM (
-		SELECT p.page_id AS item_id, p.page_title AS item_title, 'page' AS module_type, l.link_status, l.link_published, l.link_url
-		FROM {$_tpfx}page p
-		INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id
-		WHERE l.link_type='page' AND l.link_site_id={$_dashSid} AND l.link_status!=301
+		SELECT s.treatment_id AS item_id, s.treatment_title AS item_title, 'treatment' AS module_type, l.link_status, l.link_published, l.link_url
+		FROM {$_tpfx}treatment s
+		INNER JOIN {$_tpfx}link l ON l.link_relation_id=s.treatment_id
+		WHERE l.link_type='treatment' AND l.link_site_id={$_dashSid} AND l.link_status!=301
 
 		UNION ALL
 
-		SELECT n.post_id AS item_id, n.post_title AS item_title, 'post' AS module_type, l.link_status, l.link_published, l.link_url
-		FROM {$_tpfx}post n
-		INNER JOIN {$_tpfx}link l ON l.link_relation_id=n.post_id
-		WHERE l.link_type='post' AND l.link_site_id={$_dashSid} AND l.link_status!=301
+		SELECT t.technology_id AS item_id, t.technology_title AS item_title, 'technology' AS module_type, l.link_status, l.link_published, l.link_url
+		FROM {$_tpfx}technology t
+		INNER JOIN {$_tpfx}link l ON l.link_relation_id=t.technology_id
+		WHERE l.link_type='technology' AND l.link_site_id={$_dashSid} AND l.link_status!=301
+
+		UNION ALL
+
+		SELECT p.post_id AS item_id, p.post_title AS item_title, p.post_type AS module_type, l.link_status, l.link_published, l.link_url
+		FROM {$_tpfx}post p
+		INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.post_id
+		WHERE l.link_type='post' AND p.post_type IN ('post', 'package', 'question') AND l.link_site_id={$_dashSid} AND l.link_status!=301
+
+		UNION ALL
+
+		SELECT p.page_id AS item_id, p.page_title AS item_title, p.page_type AS module_type, l.link_status, l.link_published, l.link_url
+		FROM {$_tpfx}page p
+		INNER JOIN {$_tpfx}link l ON l.link_relation_id=p.page_id
+		WHERE l.link_type='page' AND p.page_type IN ('page', 'offer') AND l.link_site_id={$_dashSid} AND l.link_status!=301
 
 		UNION ALL
 
@@ -246,6 +302,19 @@ $_recentContentQuery = "SELECT * FROM (
 		FROM {$_tpfx}gallery g
 		INNER JOIN {$_tpfx}link l ON l.link_relation_id=g.gallery_id
 		WHERE l.link_type='gallery' AND l.link_site_id={$_dashSid} AND l.link_status!=301
+
+		UNION ALL
+
+		SELECT sp.sp_id AS item_id, sp.sp_title AS item_title, 'social_proof' AS module_type, l.link_status, l.link_published, l.link_url
+		FROM {$_tpfx}social_proof sp
+		INNER JOIN {$_tpfx}link l ON l.link_relation_id=sp.sp_id
+		WHERE l.link_type='social_proof' AND l.link_site_id={$_dashSid} AND l.link_status!=301
+
+		UNION ALL
+
+		SELECT category_id AS item_id, category_title AS item_title, 'testimonial' AS module_type, (CASE WHEN category_status=1 THEN 200 ELSE 206 END) AS link_status, category_time AS link_published, '' AS link_url
+		FROM {$_tpfx}category
+		WHERE category_type='testimonial' AND category_site_id={$_dashSid}
 	) recent_content
 	ORDER BY link_published DESC
 	LIMIT 10";
@@ -496,6 +565,7 @@ $_formTarget = rtrim($_formTarget, '?&');
         grid-template-columns: repeat(4, 1fr);
         gap: 16px;
         margin-bottom: 20px;
+        clear: both;
     }
 
     #egDash .kpi-card {
@@ -544,6 +614,64 @@ $_formTarget = rtrim($_formTarget, '?&');
     #egDash .kpi-icon.violet {
         background: #f5f3ff;
         color: #7c3aed;
+    }
+
+    #egDash .kpi-icon.cyan {
+        background: #ecfeff;
+        color: #0891b2;
+    }
+
+    #egDash .kpi-icon.rose {
+        background: #fff1f2;
+        color: #e11d48;
+    }
+
+    #egDash .kpi-icon.orange {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    #egDash .kpi-icon.teal {
+        background: #f0fdf4;
+        color: #0f766e;
+    }
+
+    #egDash a.kpi-card {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #egDash a.kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border-color: #cbd5e1;
+    }
+
+    #egDash .section-title {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #64748b;
+        margin: 24px 0 12px 2px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        clear: both;
+    }
+
+    #egDash .section-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #e2e8f0;
+    }
+
+    #egDash .section-title:first-of-type {
+        margin-top: 8px;
     }
 
     #egDash .kpi-badge {
@@ -759,21 +887,67 @@ $_formTarget = rtrim($_formTarget, '?&');
     #egDash .chip-page {
         background: #eff6ff;
         color: #1d4ed8;
+        border: 1px solid #dbeafe;
     }
 
     #egDash .chip-post {
         background: #f0fdf4;
         color: #047857;
+        border: 1px solid #dcfce7;
     }
 
     #egDash .chip-gallery {
         background: #fff7ed;
         color: #c2410c;
+        border: 1px solid #ffedd5;
     }
 
     #egDash .chip-media {
         background: #f5f3ff;
         color: #6d28d9;
+        border: 1px solid #e9d5ff;
+    }
+
+    #egDash .chip-treatment {
+        background: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #dbeafe;
+    }
+
+    #egDash .chip-technology {
+        background: #ecfeff;
+        color: #0891b2;
+        border: 1px solid #cffafe;
+    }
+
+    #egDash .chip-package {
+        background: #f5f3ff;
+        color: #6d28d9;
+        border: 1px solid #e9d5ff;
+    }
+
+    #egDash .chip-offer {
+        background: #fff1f2;
+        color: #e11d48;
+        border: 1px solid #ffe4e6;
+    }
+
+    #egDash .chip-question {
+        background: #fef9c3;
+        color: #a16207;
+        border: 1px solid #fef08a;
+    }
+
+    #egDash .chip-testimonial {
+        background: #f0fdf4;
+        color: #166534;
+        border: 1px solid #dcfce7;
+    }
+
+    #egDash .chip-social_proof {
+        background: #fff7ed;
+        color: #c2410c;
+        border: 1px solid #ffedd5;
     }
 
     #egDash .time-cell {
@@ -1068,80 +1242,147 @@ $_formTarget = rtrim($_formTarget, '?&');
         </span>
     </div>
 
+    <h3 class="section-title">Catalog Overview</h3>
     <div class="kpi-row">
-        <div class="kpi-card">
+        <a href="treatment/?type=list&amp;status=all" class="kpi-card">
             <div class="kpi-top">
                 <div class="kpi-icon blue">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <line x1="8" y1="13" x2="16" y2="13" />
-                        <line x1="8" y1="17" x2="13" y2="17" />
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                     </svg>
                 </div>
-                <span class="kpi-badge <?php echo $kpiPagesDraft > 0 ? 'down' : 'up'; ?>">
-                    <?php echo number_format($kpiPagesLive); ?> live
+                <span class="kpi-badge <?php echo $kpiTreatmentsDraft > 0 ? 'down' : 'up'; ?>">
+                    <?php echo number_format($kpiTreatmentsLive); ?> live
                 </span>
             </div>
-            <div class="kpi-value"><?php echo number_format($kpiPages); ?></div>
-            <div class="kpi-label">Pages</div>
-            <div class="kpi-meta">Drafts: <?php echo number_format($kpiPagesDraft); ?></div>
-        </div>
+            <div class="kpi-value"><?php echo number_format($kpiTreatments); ?></div>
+            <div class="kpi-label">Treatments</div>
+            <div class="kpi-meta">Drafts: <?php echo number_format($kpiTreatmentsDraft); ?></div>
+        </a>
 
-        <div class="kpi-card">
+        <a href="technology/?type=list&amp;status=all" class="kpi-card">
             <div class="kpi-top">
-                <div class="kpi-icon green">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                <div class="kpi-icon cyan">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" />
+                        <rect x="9" y="9" width="6" height="6" />
+                        <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3" />
                     </svg>
                 </div>
-                <span class="kpi-badge <?php echo $kpiPostDraft > 0 ? 'down' : 'up'; ?>">
-                    <?php echo number_format($kpiPostLive); ?> live
+                <span class="kpi-badge <?php echo $kpiTechnologyDraft > 0 ? 'down' : 'up'; ?>">
+                    <?php echo number_format($kpiTechnologyLive); ?> live
                 </span>
             </div>
-            <div class="kpi-value"><?php echo number_format($kpiPost); ?></div>
-            <div class="kpi-label">Blog posts</div>
-            <div class="kpi-meta">Drafts: <?php echo number_format($kpiPostDraft); ?></div>
-        </div>
+            <div class="kpi-value"><?php echo number_format($kpiTechnology); ?></div>
+            <div class="kpi-label">Technology</div>
+            <div class="kpi-meta">Drafts: <?php echo number_format($kpiTechnologyDraft); ?></div>
+        </a>
 
-        <div class="kpi-card">
-            <div class="kpi-top">
-                <div class="kpi-icon amber">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7" />
-                        <rect x="14" y="3" width="7" height="7" />
-                        <rect x="14" y="14" width="7" height="7" />
-                        <rect x="3" y="14" width="7" height="7" />
-                    </svg>
-                </div>
-                <span class="kpi-badge <?php echo $kpiGalleryDraft > 0 ? 'neu' : 'up'; ?>">
-                    <?php echo number_format($kpiGalleryLive); ?> live
-                </span>
-            </div>
-            <div class="kpi-value"><?php echo number_format($kpiGallery); ?></div>
-            <div class="kpi-label">Galleries</div>
-            <div class="kpi-meta">Drafts: <?php echo number_format($kpiGalleryDraft); ?></div>
-        </div>
-
-        <div class="kpi-card">
+        <a href="package/?type=list&amp;status=all" class="kpi-card">
             <div class="kpi-top">
                 <div class="kpi-icon violet">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="17 8 12 3 7 8" />
-                        <line x1="12" y1="3" x2="12" y2="15" />
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                        <line x1="12" y1="22.08" x2="12" y2="12" />
                     </svg>
                 </div>
-                <span class="kpi-badge neu"><?php echo number_format($kpiMediaImages); ?> images</span>
+                <span class="kpi-badge <?php echo $kpiPackagesDraft > 0 ? 'down' : 'up'; ?>">
+                    <?php echo number_format($kpiPackagesLive); ?> live
+                </span>
             </div>
-            <div class="kpi-value"><?php echo number_format($kpiMedia); ?></div>
-            <div class="kpi-label">Media Files</div>
-            <div class="kpi-meta">Videos: <?php echo number_format($kpiMediaVideos); ?></div>
-        </div>
+            <div class="kpi-value"><?php echo number_format($kpiPackages); ?></div>
+            <div class="kpi-label">Packages</div>
+            <div class="kpi-meta">Drafts: <?php echo number_format($kpiPackagesDraft); ?></div>
+        </a>
+
+        <a href="offer/?type=list&amp;status=all" class="kpi-card">
+            <div class="kpi-top">
+                <div class="kpi-icon rose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                        <line x1="7" y1="7" x2="7.01" y2="7" />
+                    </svg>
+                </div>
+                <span class="kpi-badge <?php echo $kpiOffersDraft > 0 ? 'down' : 'up'; ?>">
+                    <?php echo number_format($kpiOffersLive); ?> live
+                </span>
+            </div>
+            <div class="kpi-value"><?php echo number_format($kpiOffers); ?></div>
+            <div class="kpi-label">Latest Offers</div>
+            <div class="kpi-meta">Drafts: <?php echo number_format($kpiOffersDraft); ?></div>
+        </a>
+    </div>
+
+    <h3 class="section-title">Engagement &amp; Trust</h3>
+    <div class="kpi-row">
+        <a href="question/?type=list&amp;status=all" class="kpi-card">
+            <div class="kpi-top">
+                <div class="kpi-icon amber">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                </div>
+                <span class="kpi-badge <?php echo $kpiQuestionsDraft > 0 ? 'down' : 'up'; ?>">
+                    <?php echo number_format($kpiQuestionsLive); ?> live
+                </span>
+            </div>
+            <div class="kpi-value"><?php echo number_format($kpiQuestions); ?></div>
+            <div class="kpi-label">Questions (FAQ's)</div>
+            <div class="kpi-meta">Drafts: <?php echo number_format($kpiQuestionsDraft); ?></div>
+        </a>
+
+        <a href="testimonial/?type=list&amp;status=all" class="kpi-card">
+            <div class="kpi-top">
+                <div class="kpi-icon green">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                </div>
+                <span class="kpi-badge <?php echo $kpiTestimonialsDraft > 0 ? 'down' : 'up'; ?>">
+                    <?php echo number_format($kpiTestimonialsLive); ?> live
+                </span>
+            </div>
+            <div class="kpi-value"><?php echo number_format($kpiTestimonials); ?></div>
+            <div class="kpi-label">Testimonials</div>
+            <div class="kpi-meta">Drafts: <?php echo number_format($kpiTestimonialsDraft); ?></div>
+        </a>
+
+        <a href="social_proof/?type=list&amp;status=all" class="kpi-card">
+            <div class="kpi-top">
+                <div class="kpi-icon orange">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="23 7 16 12 23 17 23 7" />
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                    </svg>
+                </div>
+                <span class="kpi-badge <?php echo $kpiSocialProofDraft > 0 ? 'down' : 'up'; ?>">
+                    <?php echo number_format($kpiSocialProofLive); ?> live
+                </span>
+            </div>
+            <div class="kpi-value"><?php echo number_format($kpiSocialProof); ?></div>
+            <div class="kpi-label">Social Video Hub</div>
+            <div class="kpi-meta">Drafts: <?php echo number_format($kpiSocialProofDraft); ?></div>
+        </a>
+
+        <a href="post/?type=list&amp;status=all" class="kpi-card">
+            <div class="kpi-top">
+                <div class="kpi-icon teal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                    </svg>
+                </div>
+                <span class="kpi-badge <?php echo $kpiBlogPostsDraft > 0 ? 'down' : 'up'; ?>">
+                    <?php echo number_format($kpiBlogPostsLive); ?> live
+                </span>
+            </div>
+            <div class="kpi-value"><?php echo number_format($kpiBlogPosts); ?></div>
+            <div class="kpi-label">Blog Posts</div>
+            <div class="kpi-meta">Drafts: <?php echo number_format($kpiBlogPostsDraft); ?></div>
+        </a>
     </div>
 
     <div class="chart-row">
@@ -1199,7 +1440,7 @@ $_formTarget = rtrim($_formTarget, '?&');
                                             <div class="content-sub"><?php echo htmlspecialchars($item['link_url']); ?></div>
                                         </td>
                                         <td><span
-                                                class="chip chip-<?php echo htmlspecialchars($item['module_type']); ?>"><?php echo htmlspecialchars(ucwords($item['module_type'])); ?></span>
+                                                class="chip chip-<?php echo htmlspecialchars($item['module_type']); ?>"><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $item['module_type']))); ?></span>
                                         </td>
                                         <td><span
                                                 class="chip chip-<?php echo htmlspecialchars($statusClass); ?>"><?php echo htmlspecialchars($statusText); ?></span>
@@ -1330,90 +1571,80 @@ $_formTarget = rtrim($_formTarget, '?&');
                 <div class="panel-head">
                     <h3 class="panel-title">Quick Actions</h3>
                 </div>
-                <div class="panel-body">
-                    <div class="qa-grid">
-                        <a href="page/?type=add&amp;editor=true" class="qa-a">
+                <div class="panel-body">                    <div class="qa-grid">
+                        <a href="treatment/?type=add&amp;editor=true" class="qa-a">
                             <span class="qa-icon">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="12" y1="5" x2="12" y2="19" />
-                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                                 </svg>
                             </span>
                             <span class="qa-copy">
-                                <span class="qa-title">Add Page</span>
-                                <span class="qa-meta">Create a new page</span>
+                                <span class="qa-title">Add Treatment</span>
+                                <span class="qa-meta">Define clinic service</span>
+                            </span>
+                        </a>
+                        <a href="technology/?type=add&amp;editor=true" class="qa-a">
+                            <span class="qa-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="4" width="16" height="16" rx="2" />
+                                    <rect x="9" y="9" width="6" height="6" />
+                                    <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3" />
+                                </svg>
+                            </span>
+                            <span class="qa-copy">
+                                <span class="qa-title">Add Technology</span>
+                                <span class="qa-meta">Add clinic equipment</span>
+                            </span>
+                        </a>
+                        <a href="package/?type=add&amp;editor=true" class="qa-a">
+                            <span class="qa-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                                </svg>
+                            </span>
+                            <span class="qa-copy">
+                                <span class="qa-title">Add Package</span>
+                                <span class="qa-meta">Create bundled offer</span>
+                            </span>
+                        </a>
+                        <a href="offer/?type=add&amp;editor=true" class="qa-a">
+                            <span class="qa-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                                    <line x1="7" y1="7" x2="7.01" y2="7" />
+                                </svg>
+                            </span>
+                            <span class="qa-copy">
+                                <span class="qa-title">Add Offer</span>
+                                <span class="qa-meta">Create promotion tag</span>
                             </span>
                         </a>
                         <a href="post/?type=add&amp;editor=true" class="qa-a">
                             <span class="qa-icon">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                                 </svg>
                             </span>
                             <span class="qa-copy">
-                                <span class="qa-title">Add new blog</span>
-                                <span class="qa-meta">Publish a fresh update</span>
+                                <span class="qa-title">Add Blog Post</span>
+                                <span class="qa-meta">Write fresh article</span>
                             </span>
                         </a>
-                        <a href="gallery/?type=add&amp;editor=true" class="qa-a">
+                        <a href="testimonial/?type=add&amp;editor=true" class="qa-a">
                             <span class="qa-icon">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                    <circle cx="8.5" cy="8.5" r="1.5" />
-                                    <polyline points="21 15 16 10 5 21" />
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                                 </svg>
                             </span>
                             <span class="qa-copy">
-                                <span class="qa-title">Add Gallery</span>
-                                <span class="qa-meta">Create a visual collection</span>
+                                <span class="qa-title">Add Review</span>
+                                <span class="qa-meta">Add patient feedback</span>
                             </span>
                         </a>
-                        <a href="media/?type=list" class="qa-a">
-                            <span class="qa-icon">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path
-                                        d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                                </svg>
-                            </span>
-                            <span class="qa-copy">
-                                <span class="qa-title">Media Library</span>
-                                <span class="qa-meta">Browse uploaded files</span>
-                            </span>
-                        </a>
-                        <a href="user/?type=list&amp;status=all" class="qa-a">
-                            <span class="qa-icon">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                    <circle cx="9" cy="7" r="4" />
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg>
-                            </span>
-                            <span class="qa-copy">
-                                <span class="qa-title">Manage Users</span>
-                                <span class="qa-meta">Review team access</span>
-                            </span>
-                        </a>
-                        <a href="setting/?type=configuration" class="qa-a">
-                            <span class="qa-icon">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="3" />
-                                    <path
-                                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.36.52.56 1.14.6 1.77.04.63-.09 1.26-.37 1.82.28.56.41 1.19.37 1.82A3.7 3.7 0 0 1 19.4 15z" />
-                                </svg>
-                            </span>
-                            <span class="qa-copy">
-                                <span class="qa-title">Settings</span>
-                                <span class="qa-meta">Open configuration</span>
-                            </span>
-                        </a>
-                    </div>
+                    </div>>
                 </div>
             </div>
         </div>
@@ -1424,14 +1655,20 @@ $_formTarget = rtrim($_formTarget, '?&');
 <script>
     (function() {
         var activityLabels = <?php echo json_encode($activityChart['labels']); ?>;
+        var treatmentData = <?php echo json_encode($activityChart['treatment']); ?>;
+        var technologyData = <?php echo json_encode($activityChart['technology']); ?>;
+        var postData = <?php echo json_encode($activityChart['post']); ?>;
         var pageData = <?php echo json_encode($activityChart['page']); ?>;
-        var newsData = <?php echo json_encode($activityChart['post']); ?>;
-        var galleryData = <?php echo json_encode($activityChart['gallery']); ?>;
-        var mediaData = <?php echo json_encode($activityChart['media']); ?>;
 
-        var mixLabels = ['Pages', 'Blog', 'Galleries', 'Media'];
-        var mixData = [<?php echo (int) $periodPages; ?>, <?php echo (int) $periodPost; ?>,
-            <?php echo (int) $periodGalleries; ?>, <?php echo (int) $periodMedia; ?>
+        var mixLabels = ['Treatments', 'Technology', 'Packages', 'Offers', 'Blog Posts', 'FAQs', 'Social Videos'];
+        var mixData = [
+            <?php echo (int) $periodTreatments; ?>,
+            <?php echo (int) $periodTechnology; ?>,
+            <?php echo (int) $periodPackages; ?>,
+            <?php echo (int) $periodOffers; ?>,
+            <?php echo (int) $periodBlogPosts; ?>,
+            <?php echo (int) $periodQuestions; ?>,
+            <?php echo (int) $periodSocialProof; ?>
         ];
 
         var activityCtx = document.getElementById('nmsActivityChart');
@@ -1441,8 +1678,8 @@ $_formTarget = rtrim($_formTarget, '?&');
                 data: {
                     labels: activityLabels,
                     datasets: [{
-                            label: 'Pages',
-                            data: pageData,
+                            label: 'Treatments',
+                            data: treatmentData,
                             borderColor: '#2563eb',
                             backgroundColor: 'rgba(37,99,235,0.10)',
                             fill: true,
@@ -1452,10 +1689,10 @@ $_formTarget = rtrim($_formTarget, '?&');
                             pointHoverRadius: 4
                         },
                         {
-                            label: 'Blog',
-                            data: newsData,
-                            borderColor: '#059669',
-                            backgroundColor: 'rgba(5,150,105,0.08)',
+                            label: 'Technology',
+                            data: technologyData,
+                            borderColor: '#0891b2',
+                            backgroundColor: 'rgba(8,145,178,0.08)',
                             fill: true,
                             tension: 0.35,
                             borderWidth: 2,
@@ -1463,10 +1700,10 @@ $_formTarget = rtrim($_formTarget, '?&');
                             pointHoverRadius: 4
                         },
                         {
-                            label: 'Galleries',
-                            data: galleryData,
-                            borderColor: '#ea580c',
-                            backgroundColor: 'rgba(234,88,12,0.08)',
+                            label: 'Blogs/Posts',
+                            data: postData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16,185,129,0.08)',
                             fill: true,
                             tension: 0.35,
                             borderWidth: 2,
@@ -1474,8 +1711,8 @@ $_formTarget = rtrim($_formTarget, '?&');
                             pointHoverRadius: 4
                         },
                         {
-                            label: 'Media',
-                            data: mediaData,
+                            label: 'Pages',
+                            data: pageData,
                             borderColor: '#7c3aed',
                             backgroundColor: 'rgba(124,58,237,0.08)',
                             fill: true,
@@ -1556,7 +1793,7 @@ $_formTarget = rtrim($_formTarget, '?&');
             var filteredLabels = [];
             var filteredData = [];
             var filteredColors = [];
-            var mixColors = ['#2563eb', '#10b981', '#f97316', '#8b5cf6'];
+            var mixColors = ['#2563eb', '#0891b2', '#7c3aed', '#e11d48', '#10b981', '#a16207', '#ea580c'];
 
             for (var i = 0; i < mixData.length; i++) {
                 if (mixData[i] > 0) {

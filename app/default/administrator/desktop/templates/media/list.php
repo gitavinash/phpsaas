@@ -1,5 +1,8 @@
-<h2><?php echo ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> Library <span><a href="media/?type=add"
-            class="add-btn">Add New</a></span></h2>
+<h2><?php echo ucwords(rtrim(ltrim(ADMIN_BASE_URL, '/'), '/')); ?> Library</h2>
+<a href="media/?type=add" class="floating-add-btn" title="Add New Media">
+    <i class="fas fa-plus"></i>
+    <span>Add Media</span>
+</a>
 <style>
 .media-grid {
     list-style: none;

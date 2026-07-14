@@ -9,6 +9,10 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
 <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.css">
 <script src="<?php echo JS_LIBRARY ?>admin_new.js"></script>
 <h2>All careers</h2>
+<a href="career/?type=add&editor=true" class="floating-add-btn" title="Add New Career">
+    <i class="fas fa-plus"></i>
+    <span>Add Career</span>
+</a>
 <div class="options-bar">
     <div class="left-box">
         <form method="GET">

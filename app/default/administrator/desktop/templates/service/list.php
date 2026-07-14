@@ -9,6 +9,10 @@ $serviceStatus = (($serviceStatus == 'all') ? '' : "AND service_status='{$servic
 <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.css">
 <script src="<?php echo JS_LIBRARY ?>admin_new.js"></script>
 <h2>All services</h2>
+<a href="service/?type=add&editor=true" class="floating-add-btn" title="Add New Service">
+    <i class="fas fa-plus"></i>
+    <span>Add Service</span>
+</a>
 <div class="options-bar">
     <div class="left-box">
         <form method="GET">

@@ -4,6 +4,10 @@
 
 <div class="modern-user-list">
     <h2>All <?php echo ucwords($postType . 's'); ?></h2>
+    <a href="user/?type=add" class="floating-add-btn" title="Add New User">
+        <i class="fas fa-plus"></i>
+        <span>Add User</span>
+    </a>
     <div class="panel">
         <table id="table" data-default-order-column="0" data-page-length="10">
             <thead>

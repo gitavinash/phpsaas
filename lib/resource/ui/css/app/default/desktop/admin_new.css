@@ -6112,3 +6112,58 @@ textarea.premium-form-control {
   color: #6d7b88;
   font-size: 12px;
 }
+
+/* Floating Action Button styles */
+.floating-add-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #006cd1 0%, #004b93 100%);
+  color: #fff !important;
+  padding: 12px 20px;
+  border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(0, 108, 209, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none !important;
+  z-index: 9999;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.floating-add-btn i {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.floating-add-btn:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(0, 108, 209, 0.5);
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+.floating-add-btn:hover i {
+  transform: rotate(90deg);
+}
+
+.floating-add-btn:active {
+  transform: translateY(-2px) scale(0.98);
+  box-shadow: 0 5px 15px rgba(0, 108, 209, 0.3);
+}
+
+@media (max-width: 768px) {
+  .floating-add-btn {
+    bottom: 20px;
+    right: 20px;
+    padding: 12px;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    justify-content: center;
+  }
+  .floating-add-btn span {
+    display: none;
+  }
+}

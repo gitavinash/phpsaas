@@ -9,6 +9,10 @@ $postStatus = (($postStatus == 'all') ? '' : "AND category_status='{$postStatus}
 <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.css">
 <script src="<?php echo JS_LIBRARY ?>admin_new.js"></script>
 <h2>All Widgets</h2>
+<a href="widget/?type=add&editor=true" class="floating-add-btn" title="Add New Widget">
+    <i class="fas fa-plus"></i>
+    <span>Add Widget</span>
+</a>
 <div class="options-bar">
     <div class="left-box">
         <form method="GET">

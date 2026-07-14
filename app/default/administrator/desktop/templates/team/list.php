@@ -9,6 +9,10 @@ $postStatus = (($postStatus == 'all') ? '' : "AND post_status='{$postStatus}'");
 <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.css">
 <script src="<?php echo JS_LIBRARY ?>admin_new.js"></script>
 <h2>All <?php echo ucwords($postType . 's') ?></h2>
+<a href="team/?type=add&editor=true" class="floating-add-btn" title="Add New Team Member">
+    <i class="fas fa-plus"></i>
+    <span>Add Team Member</span>
+</a>
 <div class="options-bar">
     <div class="left-box">
         <form method="GET">
