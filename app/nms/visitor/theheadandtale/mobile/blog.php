@@ -162,7 +162,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="company_logo">
-                            <a href="index.html"><img src="assets/images/main_logo.png" class="img-fluid"
+                            <a href="/"><img src="assets/images/main_logo.png" class="img-fluid"
                                     alt="logo"></a>
                         </div>
                     </div>

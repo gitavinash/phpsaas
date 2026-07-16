@@ -30,7 +30,7 @@
         <div class="container footer-grid">
             <!-- Col 1: About & Social -->
             <div class="footer-col">
-                <a href="index.html" class="brand-logo" style="margin-bottom: 1.5rem;">
+                <a href="/" class="brand-logo" style="margin-bottom: 1.5rem;">
                     <img src="<?php echo SITE_LOGO ?>" alt="<?php echo SITE_NAME ?>" class="logo-img-footer">
                 </a>
                 <p><?php echo SITE_DESC ?></p>

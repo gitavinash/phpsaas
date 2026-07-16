@@ -8,7 +8,7 @@ require_once 'header.php';
   <div class="container inner-banner-content">
     <h1><?php echo $category_title ?></h1>
     <div class="breadcrumb-path">
-      <a href="index.html">Home</a>
+      <a href="/">Home</a>
       <span><i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i></span>
       <a>Treatments</a>
       <span><i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i></span>
