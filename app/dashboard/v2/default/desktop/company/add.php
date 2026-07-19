@@ -90,7 +90,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <p><strong>Country feature image</strong></p>
+                            <p><strong>Company feature image</strong></p>
                             <div id="dropZone">
                                 <span class="defaultText">Drag & Drop files here or click to upload</span>
                             </div>

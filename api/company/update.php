@@ -8,25 +8,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $msg = '';
     $country = ((isset($country)) ? $country : '101');
     $companyType = ((isset($companyType)) ? (($companyType != 'select') ? $companyType : '') : '');
+    $address = ((isset($address)) ? $address : '');
+    $city = ((isset($city)) ? $city : '');
+    $state = ((isset($state)) ? $state : '');
+    $pinCode = ((isset($pinCode)) ? $pinCode : '');
+    $companyCode = ((isset($companyCode)) ? $companyCode : '');
 
     if ($name == '') {
         $msg = 'Kindly enter company name';
-    }
-
-    if ($address == '') {
-        $msg = 'Kindly enter company address';
-    }
-
-    if ($city == '') {
-        $msg = 'Kindly enter company city';
-    }
-
-    if ($state == '') {
-        $msg = 'Kindly select company state';
-    }
-
-    if ($pinCode == '') {
-        $msg = 'Kindly enter company pin code';
     }
 
     if ($email == '') {
@@ -50,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         if ($featureImage == '') {
-            $featureImage = $oldFeatureImage;
+            $featureImage = ((isset($oldFeatureImage)) ? $oldFeatureImage : '');
         }
 
         mysqli_query($connection, "START TRANSACTION");
@@ -60,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $addAddress = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "address(address_site_id, address_user_id, address_name, address_area, address_city_id, address_state_id, address_country_id, address_pin_code, address_type, address_status) VALUES(" . SITE_ID . ", " . USER_ID . ", '{$name}', '{$address}', '{$city}', '{$state}', '{$country}', '{$pinCode}', 'work', 1)");
                 $addressId = mysqli_insert_id($connection);
 
-                $updateCompany = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "company SET company_code='{$companyCode}', company_address_id='{$addressId}', company_logo='{$featureImage}', company_title='{$name}', company_description='{$description}', company_gst='{$gst}', company_pan='{$pan}', company_cin='{$cin}', company_email='{$email}', company_mobile='{$mobile}', company_type='{$companyType}' WHERE company_id='{$companyId}'");
+                $updateCompany = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "company SET company_code='{$companyCode}', company_address_id='{$addressId}'" . (($featureImage != '') ? ", company_logo = '{$featureImage}'" : '') . ", company_title='{$name}', company_description='{$description}', company_gst='{$gst}', company_pan='{$pan}', company_cin='{$cin}', company_email='{$email}', company_mobile='{$mobile}', company_type='{$companyType}' WHERE company_id='{$companyId}'");
 
                 if ($addAddress && $updateCompany) {
                     $status = 'success';

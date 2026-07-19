@@ -1,14 +1,14 @@
 <?php
 
 if (!isset($id)) { ?>
-<script>
-window.location.href = '/dashboard/company/list/';
-</script>
+    <script>
+        window.location.href = '/dashboard/company/list/';
+    </script>
 <?php
 } else if ($id == '') { ?>
-<script>
-window.location.href = '/dashboard/company/list/';
-</script>
+    <script>
+        window.location.href = '/dashboard/company/list/';
+    </script>
 <?php
 }
 
@@ -142,7 +142,7 @@ if ($checkCompany = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . 
                         </div>
                         <div class="form-group">
                             <span style="display: none;" id="oldGallery"><?php echo $company_logo ?></span>
-                            <p><strong>Country feature image</strong></p>
+                            <p><strong>Company feature image</strong></p>
                             <div id="dropZone">
                                 <span class="defaultText">Drag & Drop files here or click to upload</span>
                             </div>

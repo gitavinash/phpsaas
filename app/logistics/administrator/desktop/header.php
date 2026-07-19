@@ -133,74 +133,37 @@ $isUserRoleMenuActive = function ($expectedRole = '') use ($adminRole) {
                         </ul>
                     </div>
                 </li>
-                <?php
-
-                if (SITE_ID == 17) { ?>
-
-                    <li <?php echo $isActiveBase('/subscription/') ?>>
-                        <a href="subscription/?type=list&status=all"><i class="fas fa-crown"></i> Manage
-                            Subscription</a>
-                        <div class="side-menu">
-                            <ul>
-                                <li><a <?php echo $isSubActive('/subscription/', 'list', 'all') ?> href="subscription/?type=list&status=all"><i class="fas fa-list"></i> All
-                                        Subscription</a></li>
-                                <li><a <?php echo $isSubActive('/subscription/', 'list', '1') ?> href="subscription/?type=list&status=1"><i class="fas fa-check"></i> Confirm
-                                        Subscription</a></li>
-                                <li><a <?php echo $isSubActive('/subscription/', 'list', '0') ?> href="subscription/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
-                                        Subscription</a></li>
-                                <li><a <?php echo $isSubActive('/subscription/', 'list', '2') ?> href="subscription/?type=list&status=2"><i class="fas fa-times"></i> Cancel
-                                        Subscription</a></li>
-                            </ul>
-                        </div>
-                        <div class="bottom-menu">
-                            <ul>
-                                <li><a <?php echo $isSubActive('/subscription/', 'list', 'all') ?> href="subscription/?type=list&status=all"><i class="fas fa-list"></i> All
-                                        Subscription</a></li>
-                                <li><a <?php echo $isSubActive('/subscription/', 'list', '1') ?> href="subscription/?type=list&status=1"><i class="fas fa-check"></i> Confirm
-                                        Subscription</a></li>
-                                <li><a <?php echo $isSubActive('/subscription/', 'list', '0') ?> href="subscription/?type=list&status=0"><i class="fas fa-exclamation"></i> Pending
-                                        Subscription</a></li>
-                                <li><a <?php echo $isSubActive('/subscription/', 'list', '2') ?> href="subscription/?type=list&status=2"><i class="fas fa-times"></i> Cancel
-                                        Subscription</a></li>
-                            </ul>
-                        </div>
-                    </li>
-
-                <?php
-                }
-
-                ?>
                 <li class="nav-section-title"><span>People</span></li>
-                <li <?php echo $isActiveBase('/customer/') ?>>
-                    <a href="customer/?type=list&status=all"><i class="fas fa-users"></i> Customer Directory</a>
+                <li <?php echo $isActiveBase('/company/') ?>>
+                    <a href="company/?type=list&status=all"><i class="fas fa-building"></i> Company Directory</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a <?php echo $isSubActive('/customer/', 'list', 'all') ?> href="customer/?type=list&status=all"><i class="fas fa-list"></i> All Customers</a>
+                            <li><a <?php echo $isSubActive('/company/', 'list', 'all') ?> href="company/?type=list&status=all"><i class="fas fa-list"></i> All Companies</a>
                             </li>
-                            <!-- <li><a href="customer/?type=add"><i class="fas fa-plus"></i>  Add new customer</a></li> -->
+                            <li><a href="company/?type=add"><i class="fas fa-plus"></i> Add new company</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a <?php echo $isSubActive('/customer/', 'list', 'all') ?> href="customer/?type=list&status=all"><i class="fas fa-list"></i> All Customers</a>
+                            <li><a <?php echo $isSubActive('/company/', 'list', 'all') ?> href="company/?type=list&status=all"><i class="fas fa-list"></i> All Companies</a>
                             </li>
-                            <!-- <li><a href="customer/?type=add"><i class="fas fa-plus"></i>  Add new customer</a></li> -->
+                            <li><a href="company/?type=add"><i class="fas fa-plus"></i> Add new company</a></li>
                         </ul>
                     </div>
                 </li>
 
                 <li <?php echo $isUserRoleMenuActive('vendor') ?>>
-                    <a href="user/?type=list&status=all&role=vendor"><i class="fas fa-store"></i> Vendor Management</a>
+                    <a href="vendor/?type=list&status=all"><i class="fas fa-store"></i> Vendor Management</a>
                     <div class="side-menu">
                         <ul>
-                            <li><a href="user/?type=list&status=all&role=vendor"><i class="fas fa-list"></i> All Vendors</a></li>
-                            <li><a href="user/?type=add&role=vendor"><i class="fas fa-plus"></i> Add New Vendor</a></li>
+                            <li><a href="vendor/?type=list&status=all"><i class="fas fa-list"></i> All Vendors</a></li>
+                            <li><a href="vendor/?type=add"><i class="fas fa-plus"></i> Add New Vendor</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <li><a href="user/?type=list&status=all&role=vendor"><i class="fas fa-list"></i> All Vendors</a></li>
-                            <li><a href="user/?type=add&role=vendor"><i class="fas fa-plus"></i> Add New Vendor</a></li>
+                            <li><a href="vendor/?type=list&status=all"><i class="fas fa-list"></i> All Vendors</a></li>
+                            <li><a href="vendor/?type=add"><i class="fas fa-plus"></i> Add New Vendor</a></li>
                         </ul>
                     </div>
                 </li>
@@ -227,86 +190,6 @@ $isUserRoleMenuActive = function ($expectedRole = '') use ($adminRole) {
     </aside>
 
     <div class="mobile-nav-overlay" id="nav-overlay"></div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var menuSearch = document.getElementById('side-nav-search');
-            if (!menuSearch) {
-                return;
-            }
-
-            var menuRoot = document.querySelector('nav.side-nav > ul');
-            if (!menuRoot) {
-                return;
-            }
-
-            var menuItems = menuRoot.children;
-
-            function normalizeText(value) {
-                return value.toLowerCase().trim();
-            }
-
-            document.addEventListener('keydown', function(event) {
-                if (event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey) {
-                    var target = event.target;
-                    var isTypingField = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
-                    if (!isTypingField) {
-                        event.preventDefault();
-                        menuSearch.focus();
-                        menuSearch.select();
-                    }
-                }
-
-                if (event.key === 'Escape' && document.activeElement === menuSearch) {
-                    menuSearch.value = '';
-                    menuSearch.dispatchEvent(new Event('input'));
-                    menuSearch.blur();
-                }
-            });
-
-            menuSearch.addEventListener('input', function() {
-                var searchTerm = normalizeText(menuSearch.value);
-
-                for (var i = 0; i < menuItems.length; i++) {
-                    var item = menuItems[i];
-                    var topAnchor = item.firstElementChild;
-
-                    if (!topAnchor || topAnchor.tagName !== 'A') {
-                        continue;
-                    }
-
-                    var searchableText = normalizeText(topAnchor.textContent);
-                    var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
-                    var hasSubMatch = false;
-                    var isTopMatch = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -1);
-
-                    for (var j = 0; j < subLinks.length; j++) {
-                        var link = subLinks[j];
-                        var subText = normalizeText(link.textContent);
-                        var isSubMatch = (searchTerm === '' || subText.indexOf(searchTerm) !== -1);
-
-                        searchableText += ' ' + subText;
-
-                        link.classList.remove('nav-hit');
-
-                        if (searchTerm !== '' && isSubMatch) {
-                            hasSubMatch = true;
-                            link.classList.add('nav-hit');
-                        }
-
-                        if (searchTerm === '' || isTopMatch || isSubMatch) {
-                            link.parentElement.style.display = '';
-                        } else {
-                            link.parentElement.style.display = 'none';
-                        }
-                    }
-
-                    item.style.display = (searchTerm === '' || isTopMatch || hasSubMatch || searchableText.indexOf(searchTerm) !== -1) ? '' : 'none';
-                }
-            });
-        });
-    </script>
-
     <main>
 
         <div class="container">

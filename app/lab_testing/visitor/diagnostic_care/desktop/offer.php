@@ -56,7 +56,7 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
                         <i class="fa fa-bars"></i>
                     </button>
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="/">
                         <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/logo.png"
                             class="logo logo-display" alt="Logo">
                         <img src="https://diagnosticcare.in/app/lab_testing/visitor/diagnostic_care/desktop/assets/images/logo.png"
