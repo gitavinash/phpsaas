@@ -21,6 +21,7 @@ try {
     }
 
     $action = isset($_POST['action']) ? strtolower(trim($_POST['action'])) : 'import';
+    $companyId = isset($_POST['companyId']) ? (int)$_POST['companyId'] : 0;
 
     $file = $_FILES['file'];
     $uploadError = isset($file['error']) ? (int)$file['error'] : UPLOAD_ERR_NO_FILE;
@@ -73,7 +74,7 @@ try {
 
     $tableMeta = getOrderTableColumns();
     $rowsToImport = applyMapping($parsed['rows'], $mapping, $tableMeta);
-    $result = importOrders($rowsToImport, $tableMeta);
+    $result = importOrders($rowsToImport, $tableMeta, $companyId);
 
     echo json_encode(array(
         'success' => true,
@@ -341,7 +342,7 @@ function normalizeImportedMetaKey($key)
     return 'import_' . substr($key, 0, 64);
 }
 
-function importOrders($data, $tableMeta)
+function importOrders($data, $tableMeta, $companyId = 0)
 {
     global $connection;
 
@@ -398,7 +399,7 @@ function importOrders($data, $tableMeta)
 
             $row['product'] = isset($row['product']) ? trim((string)$row['product']) : '';
 
-            $orderRows[] = buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate);
+            $orderRows[] = buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate, $companyId);
         } catch (Exception $e) {
             mysqli_query($connection, 'ROLLBACK TO SAVEPOINT ' . $savepoint);
             $failed++;
@@ -675,13 +676,138 @@ function resolveStateId($state)
     return 0;
 }
 
-function buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate)
+function getProductPathFromUrl($url)
 {
+    $url = trim((string)$url);
+    if ($url === '') {
+        return '';
+    }
+    // Parse URL to get the path
+    $path = parse_url($url, PHP_URL_PATH);
+    if (!$path) {
+        $path = $url;
+    }
+
+    // Normalize: ensure it starts with / and ends with /
+    $path = '/' . trim($path, '/') . '/';
+
+    if ($path === '//') {
+        return '';
+    }
+    return $path;
+}
+
+function buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate, $companyId = 0)
+{
+    global $connection;
+
     $product = trim((string)$row['product']);
     $remarks = isset($row['remarks']) ? trim((string)$row['remarks']) : '';
     $extraMeta = array();
     if (!empty($row['__unmatched_meta']) && is_array($row['__unmatched_meta'])) {
         $extraMeta = $row['__unmatched_meta'];
+    }
+
+    $productId = $product; // fallback to raw product value
+    $productPrice = '0';
+    $currency = 'INR';
+    $found = false;
+
+    // 1. Try URL lookup first
+    $productPath = getProductPathFromUrl($product);
+    if ($productPath !== '' && strpos($productPath, '/product/') === 0) {
+        $pathNoTrailingSlash = rtrim($productPath, '/');
+        $pathEscaped = mysqli_real_escape_string($connection, $productPath);
+        $pathNoTrailingSlashEscaped = mysqli_real_escape_string($connection, $pathNoTrailingSlash);
+
+        $query = "
+            SELECT p.product_id, p.product_title, i.inventory_price, i.inventory_currency
+            FROM " . TABLE_PREFIX . "link l
+            JOIN " . TABLE_PREFIX . "product p ON l.link_relation_id = p.product_id
+            JOIN " . TABLE_PREFIX . "inventory i ON i.inventory_relation_id = p.product_id
+            WHERE (l.link_url = '{$pathEscaped}' OR l.link_url = '{$pathNoTrailingSlashEscaped}')
+              AND l.link_site_id = " . APP_SITE_ID . "
+              AND l.link_type = 'product'
+            LIMIT 1
+        ";
+        $res = mysqli_query($connection, $query);
+        if ($res && mysqli_num_rows($res) > 0) {
+            $prodDetails = mysqli_fetch_assoc($res);
+            $productId = (string)$prodDetails['product_id'];
+            $productPrice = (string)$prodDetails['inventory_price'];
+            if (!empty($prodDetails['inventory_currency'])) {
+                $currency = $prodDetails['inventory_currency'];
+            }
+            $found = true;
+        }
+    }
+
+    // 2. Try lookup by Title if not resolved yet
+    if (!$found && $product !== '') {
+        $productEscaped = mysqli_real_escape_string($connection, $product);
+        $query = "
+            SELECT p.product_id, p.product_title, i.inventory_price, i.inventory_currency
+            FROM " . TABLE_PREFIX . "product p
+            JOIN " . TABLE_PREFIX . "inventory i ON i.inventory_relation_id = p.product_id
+            WHERE p.product_title = '{$productEscaped}'
+              AND p.product_site_id = " . APP_SITE_ID . "
+            LIMIT 1
+        ";
+        $res = mysqli_query($connection, $query);
+        if ($res && mysqli_num_rows($res) > 0) {
+            $prodDetails = mysqli_fetch_assoc($res);
+            $productId = (string)$prodDetails['product_id'];
+            $productPrice = (string)$prodDetails['inventory_price'];
+            if (!empty($prodDetails['inventory_currency'])) {
+                $currency = $prodDetails['inventory_currency'];
+            }
+            $found = true;
+        }
+    }
+
+    // 3. Try lookup by SKU if not resolved yet
+    if (!$found && $product !== '') {
+        $productEscaped = mysqli_real_escape_string($connection, $product);
+        $query = "
+            SELECT p.product_id, p.product_title, i.inventory_price, i.inventory_currency
+            FROM " . TABLE_PREFIX . "product p
+            JOIN " . TABLE_PREFIX . "inventory i ON i.inventory_relation_id = p.product_id
+            WHERE i.inventory_sku = '{$productEscaped}'
+              AND p.product_site_id = " . APP_SITE_ID . "
+            LIMIT 1
+        ";
+        $res = mysqli_query($connection, $query);
+        if ($res && mysqli_num_rows($res) > 0) {
+            $prodDetails = mysqli_fetch_assoc($res);
+            $productId = (string)$prodDetails['product_id'];
+            $productPrice = (string)$prodDetails['inventory_price'];
+            if (!empty($prodDetails['inventory_currency'])) {
+                $currency = $prodDetails['inventory_currency'];
+            }
+            $found = true;
+        }
+    }
+
+    // 4. Default fallback product lookup if not found yet (and product value is not blank)
+    if (!$found && $product !== '') {
+        $query = "
+            SELECT p.product_id, p.product_title, i.inventory_price, i.inventory_currency
+            FROM " . TABLE_PREFIX . "product p
+            JOIN " . TABLE_PREFIX . "inventory i ON i.inventory_relation_id = p.product_id
+            WHERE p.product_site_id = " . APP_SITE_ID . "
+            ORDER BY p.product_id ASC
+            LIMIT 1
+        ";
+        $res = mysqli_query($connection, $query);
+        if ($res && mysqli_num_rows($res) > 0) {
+            $prodDetails = mysqli_fetch_assoc($res);
+            $productId = (string)$prodDetails['product_id'];
+            $productPrice = (string)$prodDetails['inventory_price'];
+            if (!empty($prodDetails['inventory_currency'])) {
+                $currency = $prodDetails['inventory_currency'];
+            }
+            $found = true;
+        }
     }
 
     return array(
@@ -690,16 +816,18 @@ function buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate)
         'order_cart_session_id' => 'IMPORT_' . date('YmdHis') . '_' . $rowNumber,
         'order_generate' => date('Y-m-d H:i:s'),
         'order_address_id' => (int)$addressId,
-        'order_product_id' => $product,
+        'order_product_id' => $productId,
         'order_product_type' => 'product',
         'order_product_qty' => '1',
-        'order_product_price' => '0',
-        'order_currency' => 'INR',
+        'order_product_price' => $productPrice,
+        'order_currency' => $currency,
         'order_delivery_charges' => '0',
-        'order_total_price' => '0',
+        'order_total_price' => $productPrice,
         'order_coupon' => '',
         'order_gift' => '0',
         'order_msg' => $remarks,
+        'order_ref_by' => $companyId > 0 ? (int)$companyId : 0,
+        'order_ref_type' => $companyId > 0 ? 'company' : '',
         'order_status' => '0',
         'order_payment_mode' => '',
         '__extra_meta' => $extraMeta
@@ -730,6 +858,8 @@ function bulkInsertOrders($orders)
         'order_coupon',
         'order_gift',
         'order_msg',
+        'order_ref_by',
+        'order_ref_type',
         'order_status',
         'order_payment_mode'
     );
@@ -833,7 +963,6 @@ function getOrderTableColumns()
     return array(
         array('key' => 'name', 'label' => 'Name', 'required' => true),
         array('key' => 'email', 'label' => 'Email', 'required' => false),
-        array('key' => 'name', 'label' => 'Name', 'required' => true),
         array('key' => 'user_mobile', 'label' => 'Mobile No.', 'required' => true),
         array('key' => 'address', 'label' => 'Address', 'required' => true),
         array('key' => 'city', 'label' => 'City', 'required' => true),
