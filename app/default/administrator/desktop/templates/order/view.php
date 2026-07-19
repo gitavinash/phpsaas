@@ -24,60 +24,7 @@ if (isset($id)) {
             );
         }
 
-        $vendorListData = array();
-        $vendorSql = "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1 AND (LOWER(user_type_name) LIKE '%vendor%' OR LOWER(user_type_code) LIKE '%vendor%' OR LOWER(user_type_name) LIKE '%supplier%' OR LOWER(user_type_code) LIKE '%supplier%' OR LOWER(user_type_name) LIKE '%seller%' OR LOWER(user_type_code) LIKE '%seller%') ORDER BY user_type_name ASC";
-        if ($vendorList = mysqli_query($connection, $vendorSql)) {
-            if (mysqli_num_rows($vendorList) != 0) {
-                while ($vendorData = mysqli_fetch_assoc($vendorList)) {
-                    $vendorListData[] = $vendorData;
-                }
-            }
-        }
-
-        if (empty($vendorListData)) {
-            $fallbackVendorSql = "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1 ORDER BY user_type_name ASC";
-            if ($fallbackVendorList = mysqli_query($connection, $fallbackVendorSql)) {
-                if (mysqli_num_rows($fallbackVendorList) != 0) {
-                    while ($vendorData = mysqli_fetch_assoc($fallbackVendorList)) {
-                        $vendorListData[] = $vendorData;
-                    }
-                }
-            }
-        }
-
-        // Fetch assigned vendor from order_meta
-        $assignedVendorCode = '';
-        $assignedVendorName = '';
-        $vendorUsers = array();
-
-        $vendorMetaQuery = mysqli_query($connection, "SELECT order_meta_value FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$id}' AND order_meta_key='assigned_vendor' AND order_site_id" . $siteId . " LIMIT 1");
-        if ($vendorMetaQuery && mysqli_num_rows($vendorMetaQuery) > 0) {
-            $vendorMeta = mysqli_fetch_assoc($vendorMetaQuery);
-            $assignedVendorCode = $vendorMeta['order_meta_value'];
-
-            foreach ($vendorListData as $v) {
-                if ($v['user_type_code'] == $assignedVendorCode) {
-                    $assignedVendorName = $v['user_type_name'];
-                    break;
-                }
-            }
-            if (empty($assignedVendorName)) {
-                $assignedVendorName = ucwords(str_replace('_', ' ', $assignedVendorCode));
-            }
-
-            // Fetch users under this vendor type
-            $vendorUsersSql = "SELECT profile_display_name, profile_mobile, user_email FROM " . TABLE_PREFIX . "user 
-                               INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id 
-                               INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id 
-                               WHERE site_access_type='{$assignedVendorCode}' AND site_access_site_id" . $siteId;
-            if ($vendorUsersRes = mysqli_query($connection, $vendorUsersSql)) {
-                while ($vu = mysqli_fetch_assoc($vendorUsersRes)) {
-                    $vendorUsers[] = $vu;
-                }
-            }
-        }
-
-        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
+        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_vendor_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
 
         $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id AND product_type='product' AND product_site_id" . $siteId;
         $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=order_product_id AND inventory_type='product' AND inventory_site_id" . $siteId;
@@ -433,73 +380,12 @@ if (isset($id)) {
                                     <!-- Card: Fulfillment Partner / Vendor Details -->
                                     <div class="premium-card">
                                         <h3 class="premium-card-title"><i class="fas fa-truck"></i> Fulfillment Partner</h3>
+                                        <!-- No Vendor Assigned Mode -->
+                                        <div id="vendorEditMode" style="display: block;">
+                                            <div class="premium-form-group">
+                                                <?php
 
-                                        <?php if (!empty($assignedVendorCode)) { ?>
-                                            <!-- Vendor Assigned View Mode -->
-                                            <div id="vendorViewMode">
-                                                <div class="premium-form-group" style="margin-bottom: 16px;">
-                                                    <label>Assigned Partner Role</label>
-                                                    <div style="font-weight: 700; font-size: 15px; color: var(--neutral-900); padding: 4px 0;">
-                                                        <?php echo htmlspecialchars($assignedVendorName, ENT_QUOTES); ?>
-                                                    </div>
-                                                </div>
-
-                                                <?php if (!empty($vendorUsers)) { ?>
-                                                    <div class="premium-form-group" style="margin-bottom: 16px;">
-                                                        <label>Assigned Contacts</label>
-                                                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
-                                                            <?php foreach ($vendorUsers as $vu) { ?>
-                                                                <div style="background: var(--neutral-50); border: 1px solid var(--neutral-200); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 4px;">
-                                                                    <div style="font-weight: 600; font-size: 13px; color: var(--neutral-900);"><?php echo htmlspecialchars($vu['profile_display_name'], ENT_QUOTES); ?></div>
-                                                                    <?php if (!empty($vu['user_email'])) { ?>
-                                                                        <div style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 6px;"><i class="far fa-envelope"></i> <?php echo htmlspecialchars($vu['user_email'], ENT_QUOTES); ?></div>
-                                                                    <?php } ?>
-                                                                    <?php if (!empty($vu['profile_mobile'])) { ?>
-                                                                        <div style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 6px;"><i class="fas fa-phone-alt"></i> <?php echo htmlspecialchars($vu['profile_mobile'], ENT_QUOTES); ?></div>
-                                                                    <?php } ?>
-                                                                </div>
-                                                            <?php } ?>
-                                                        </div>
-                                                    </div>
-                                                <?php } else { ?>
-                                                    <div class="premium-form-group" style="margin-bottom: 16px;">
-                                                        <label>Assigned Contacts</label>
-                                                        <div style="font-size: 13px; color: #64748b; font-style: italic; margin-top: 4px;">
-                                                            No contact users registered for this partner role.
-                                                        </div>
-                                                    </div>
-                                                <?php } ?>
-
-                                                <div style="margin-top: 14px; border-top: 1px dashed var(--neutral-200); padding-top: 12px; display: flex; gap: 8px;">
-                                                    <button type="button" class="btn-premium-action btn-edit" id="changeVendorBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-exchange-alt"></i> Change Partner</button>
-                                                    <button type="button" class="btn-premium-action btn-cancel" id="removeVendorBtn" style="height: 32px; font-size: 12px; padding: 0 10px; background-color: #ef4444 !important; color: #fff !important;"><i class="fas fa-trash-alt"></i> Remove Partner</button>
-                                                </div>
-                                            </div>
-
-                                            <!-- Vendor Edit/Re-assign Mode -->
-                                            <div id="vendorEditMode" style="display: none;">
-                                                <div class="premium-form-group">
-                                                    <label>Select Fulfillment Partner</label>
-                                                    <select name="assigned_vendor" class="premium-form-control" style="width: 100%;">
-                                                        <option value="">Select partner</option>
-                                                        <?php foreach ($vendorListData as $vendor) { ?>
-                                                            <option value="<?php echo htmlspecialchars($vendor['user_type_code'], ENT_QUOTES); ?>"
-                                                                <?php echo ($vendor['user_type_code'] == $assignedVendorCode) ? 'selected' : ''; ?>>
-                                                                <?php echo htmlspecialchars($vendor['user_type_name'], ENT_QUOTES); ?>
-                                                            </option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                                <div style="margin-top: 12px; display: flex; gap: 8px;">
-                                                    <button type="button" class="btn-premium-action btn-save" id="saveVendorEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> Apply</button>
-                                                    <button type="button" class="btn-premium-action btn-cancel" id="cancelVendorEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px; background-color: var(--neutral-300) !important; color: var(--neutral-700) !important;"><i class="fas fa-times"></i> Cancel</button>
-                                                </div>
-                                            </div>
-
-                                        <?php } else { ?>
-                                            <!-- No Vendor Assigned Mode -->
-                                            <div id="vendorEditMode" style="display: block;">
-                                                <div class="premium-form-group">
+                                                if ($order_vendor_id == 0) { ?>
                                                     <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
                                                         <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
                                                         <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
@@ -507,21 +393,32 @@ if (isset($id)) {
                                                             Please assign a fulfillment partner to process this order.
                                                         </div>
                                                     </div>
-                                                    <label>Select Fulfillment Partner</label>
-                                                    <select name="assigned_vendor" class="premium-form-control" style="width: 100%;">
-                                                        <option value="">Select partner</option>
-                                                        <?php foreach ($vendorListData as $vendor) { ?>
-                                                            <option value="<?php echo htmlspecialchars($vendor['user_type_code'], ENT_QUOTES); ?>">
-                                                                <?php echo htmlspecialchars($vendor['user_type_name'], ENT_QUOTES); ?>
-                                                            </option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                                <div style="margin-top: 12px;">
-                                                    <button type="button" class="btn-premium-action btn-save" id="saveVendorEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> Assign Partner</button>
-                                                </div>
+                                                <?php
+                                                }
+
+                                                ?>
+                                                <label><?php echo ($order_vendor_id == 0) ? 'Select' : 'Change'; ?> Fulfillment Partner</label>
+                                                <select name="assigned_vendor" class="premium-form-control" style="width: 100%;">
+                                                    <option value="">Select partner</option>
+                                                    <?php
+
+                                                    if ($checkVendor = mysqli_query($connection, "SELECT vendor_title, vendor_id FROM " . TABLE_PREFIX . "vendor WHERE vendor_site_id=" . SITE_ID)) {
+                                                        if (mysqli_num_rows($checkVendor) != 0) {
+                                                            while ($vendorData = mysqli_fetch_assoc($checkVendor)) {
+                                                                echo "<option value='{$vendorData['vendor_id']}' " . ($order_vendor_id == $vendorData['vendor_id'] ? "selected" : "") . ">{$vendorData['vendor_title']}</option>";
+                                                            }
+                                                        } else {
+                                                            echo "<option value=''>No partner found</option>";
+                                                        }
+                                                    }
+
+                                                    ?>
+                                                </select>
                                             </div>
-                                        <?php } ?>
+                                            <div style="margin-top: 12px;">
+                                                <button type="button" class="btn-premium-action btn-save" id="saveVendorEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> <?php echo ($order_vendor_id == 0) ? 'Assign' : 'Change'; ?> Partner</button>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Card 4: Receiver Details -->
