@@ -51,11 +51,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $addVendor = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "vendor(vendor_code, vendor_site_id, vendor_user_id, vendor_address_id, vendor_logo, vendor_title, vendor_description, vendor_gst, vendor_pan, vendor_cin, vendor_email, vendor_mobile, vendor_type, vendor_status) VALUES('{$vendorCode}', " . SITE_ID . ", " . USER_ID . ", '{$addressId}', '{$featureImage}', '{$name}', '{$description}', '{$gst}', '{$pan}', '{$cin}', '{$email}', '{$mobile}', '{$vendorType}', 1)");
         $vendorId = mysqli_insert_id($connection);
 
-        if ($addAddress && $addVendor) {
+        $addUser = true;
+        $isNewUser = false;
+        if ((int)SITE_APP_ID === 32) {
+            $checkUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}' OR user_mobile='{$mobile}' LIMIT 1");
+            if (mysqli_num_rows($checkUser) > 0) {
+                $userData = mysqli_fetch_assoc($checkUser);
+                $newUserId = $userData['user_id'];
+                
+                $checkAccess = mysqli_query($connection, "SELECT site_access_id FROM " . TABLE_PREFIX . "site_access WHERE site_access_user_id='{$newUserId}' AND site_access_site_id=" . SITE_ID . " AND site_access_type='vendor' LIMIT 1");
+                if (mysqli_num_rows($checkAccess) == 0) {
+                    $addUser = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES(" . SITE_ID . ", '{$newUserId}', 'vendor', 1, '')");
+                } else {
+                    $addUser = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "site_access SET site_access_status=1 WHERE site_access_user_id='{$newUserId}' AND site_access_site_id=" . SITE_ID . " AND site_access_type='vendor'");
+                }
+            } else {
+                $password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12);
+                $saltKey = hash('sha256', uniqid(mt_rand(), true) . $email . substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?'), 0, 12) . time());
+                $enc_password = hash('sha256', $saltKey . $password);
+                $username = strtolower(str_replace(' ', '', $name));
+                $checkUsername = mysqli_query($connection, "SELECT user_username FROM " . TABLE_PREFIX . "user WHERE user_username='{$username}'");
+                if (mysqli_num_rows($checkUsername) != 0) {
+                    $username = strtolower(str_replace(' ', '', $name)) . time();
+                }
+
+                $insertUser = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user(user_username, user_email, user_mobile, user_password, user_salt_key, user_status, user_reg_time, user_reg_ip) VALUES('{$username}', '{$email}', '{$mobile}', '{$enc_password}', '{$saltKey}', 1, NOW(), '" . IP . "')");
+                if ($insertUser) {
+                    $newUserId = mysqli_insert_id($connection);
+                    $insertProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$newUserId}', '{$name}', '', '{$mobile}', '{$name}', '{$email}')");
+                    $insertAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES(" . SITE_ID . ", '{$newUserId}', 'vendor', 1, '')");
+                    
+                    $addUser = $insertProfile && $insertAccess;
+                    if ($addUser) {
+                        $isNewUser = true;
+                    }
+                } else {
+                    $addUser = false;
+                }
+            }
+        }
+
+        if ($addAddress && $addVendor && $addUser) {
             $status = 'success';
             $httpStatus = 201;
             $msg = 'New vendor is created successfully';
             mysqli_query($connection, "COMMIT");
+
+            if ((int)SITE_APP_ID === 32 && $isNewUser === true) {
+                $siteName = SITE_NAME;
+                $siteDomain = SITE_DOMAIN;
+                $siteQuery = mysqli_query($connection, "SELECT site_name, site_domain FROM " . TABLE_PREFIX . "site INNER JOIN " . TABLE_PREFIX . "site_setting ON site_setting_site_id=site_id WHERE site_id=" . SITE_ID . " LIMIT 1");
+                if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
+                    $siteData = mysqli_fetch_assoc($siteQuery);
+                    $siteName = $siteData['site_name'];
+                    $siteDomain = $siteData['site_domain'];
+                }
+                $profile_display_name = $name;
+
+                require_once EMAIL_TEMPLATE . 'welcome-vendor.php';
+            }
         } else {
             $status = 'error';
             $msg = 'Something went wrong while trying to create new vendor';
