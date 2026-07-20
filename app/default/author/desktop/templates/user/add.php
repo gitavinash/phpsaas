@@ -42,9 +42,9 @@
                         <?php
                         if ($roleList = mysqli_query($connection, "SELECT user_type_name, user_type_code FROM " . TABLE_PREFIX . "user_type WHERE user_type_app_id='" . SITE_APP_ID . "' AND user_type_status=1")) {
                             while ($roleData = mysqli_fetch_assoc($roleList)) { ?>
-                        <option value="<?php echo $roleData['user_type_code']; ?>"
-                            <?php echo (($roleData['user_type_code'] == '') ? 'selected' : '') ?>>
-                            <?php echo $roleData['user_type_name']; ?></option>
+                                <option value="<?php echo $roleData['user_type_code']; ?>"
+                                    <?php echo (($roleData['user_type_code'] == '') ? 'selected' : '') ?>>
+                                    <?php echo $roleData['user_type_name']; ?></option>
                         <?php
                             }
                         }
@@ -54,7 +54,7 @@
                 <div class="form-group">
                     <input type="hidden" name="type" value="user">
                     <input type="hidden" name="action" value="publish">
-                    <input type="submit" class="btn btn-green" value="Add user">
+                    <input type="submit" class="btn btn-green" value="Add new user">
                 </div>
             </form>
         </div>

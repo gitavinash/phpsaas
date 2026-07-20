@@ -185,6 +185,25 @@ $isUserRoleMenuActive = function ($expectedRole = '') use ($adminRole) {
                         </ul>
                     </div>
                 </li>
+
+                <li class="nav-section-title"><span>Settings</span></li>
+                <li <?php echo (($postType == 'setting') ? 'class="active"' : '') ?>>
+                    <a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
+                    <div class="side-menu">
+                        <ul>
+                            <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
+                            </li>
+                            <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-menu">
+                        <ul>
+                            <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
+                            </li>
+                            <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </nav>
     </aside>

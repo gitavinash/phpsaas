@@ -40,16 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         mysqli_query($connection, "START TRANSACTION");
 
-        if ($address != "") {
-            $addAddress = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "address(address_site_id, address_user_id, address_name, address_area, address_city_id, address_state_id, address_country_id, address_pin_code, address_type, address_status) VALUES(" . SITE_ID . ", " . USER_ID . ", '{$name}', '{$address}', '{$city}', '{$state}', '{$country}', '{$pinCode}', 'work', 1)");
-            $addressId = mysqli_insert_id($connection);
-        } else {
-            $addAddress = true;
-            $addressId = 0;
-        }
-
-        $addVendor = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "vendor(vendor_code, vendor_site_id, vendor_user_id, vendor_address_id, vendor_logo, vendor_title, vendor_description, vendor_gst, vendor_pan, vendor_cin, vendor_email, vendor_mobile, vendor_type, vendor_status) VALUES('{$vendorCode}', " . SITE_ID . ", " . USER_ID . ", '{$addressId}', '{$featureImage}', '{$name}', '{$description}', '{$gst}', '{$pan}', '{$cin}', '{$email}', '{$mobile}', '{$vendorType}', 1)");
-        $vendorId = mysqli_insert_id($connection);
 
         $addUser = true;
         $isNewUser = false;
@@ -58,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (mysqli_num_rows($checkUser) > 0) {
                 $userData = mysqli_fetch_assoc($checkUser);
                 $newUserId = $userData['user_id'];
-                
+
                 $checkAccess = mysqli_query($connection, "SELECT site_access_id FROM " . TABLE_PREFIX . "site_access WHERE site_access_user_id='{$newUserId}' AND site_access_site_id=" . SITE_ID . " AND site_access_type='vendor' LIMIT 1");
                 if (mysqli_num_rows($checkAccess) == 0) {
                     $addUser = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES(" . SITE_ID . ", '{$newUserId}', 'vendor', 1, '')");
@@ -80,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $newUserId = mysqli_insert_id($connection);
                     $insertProfile = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile(profile_user_id, profile_first_name, profile_last_name, profile_mobile, profile_display_name, profile_email) VALUES('{$newUserId}', '{$name}', '', '{$mobile}', '{$name}', '{$email}')");
                     $insertAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES(" . SITE_ID . ", '{$newUserId}', 'vendor', 1, '')");
-                    
+
                     $addUser = $insertProfile && $insertAccess;
                     if ($addUser) {
                         $isNewUser = true;
@@ -90,6 +80,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }
         }
+
+        if ($address != "") {
+            $addAddress = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "address(address_site_id, address_user_id, address_name, address_area, address_city_id, address_state_id, address_country_id, address_pin_code, address_type, address_status) VALUES(" . SITE_ID . ", '{$newUserId}', '{$name}', '{$address}', '{$city}', '{$state}', '{$country}', '{$pinCode}', 'work', 1)");
+            $addressId = mysqli_insert_id($connection);
+        } else {
+            $addAddress = true;
+            $addressId = 0;
+        }
+
+        $addVendor = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "vendor(vendor_code, vendor_site_id, vendor_user_id, vendor_address_id, vendor_logo, vendor_title, vendor_description, vendor_gst, vendor_pan, vendor_cin, vendor_email, vendor_mobile, vendor_type, vendor_status) VALUES('{$vendorCode}', " . SITE_ID . ", '{$newUserId}', '{$addressId}', '{$featureImage}', '{$name}', '{$description}', '{$gst}', '{$pan}', '{$cin}', '{$email}', '{$mobile}', '{$vendorType}', 1)");
+        $vendorId = mysqli_insert_id($connection);
 
         if ($addAddress && $addVendor && $addUser) {
             $status = 'success';

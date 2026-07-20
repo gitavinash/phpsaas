@@ -44,7 +44,7 @@
                 <input type="hidden" name="website_user_id" value="<?php echo USER_ID ?>">
                 <input type="hidden" name="type" value="user">
                 <input type="hidden" name="action" value="add">
-                <input type="submit" class="btn btn-green" value="Add User">
+                <input type="submit" class="btn btn-green" value="Add new user">
             </div>
         </div>
     </form>

@@ -16,6 +16,8 @@ if (!file_exists($themeLoginFile)) {
         $fileName = ((isset($authby)) ? strtolower($authby) : 'email') . '-login';
     }
 
+    $fileName = ((isset($authby)) ? strtolower($authby) : 'email') . '-login';
+
     $themeLoginFile = str_replace('/default/', '/' . USER_TYPE . '/', ADMIN_PATH) . $fileName . '.php';
 
     if (!file_exists($themeLoginFile)) {

@@ -20,7 +20,7 @@
             <div>
                 <label for="companyId" style="display: block; font-size: 12px; font-weight: 700; color: var(--oi-text); margin-bottom: 4px;">Select Company (Optional)</label>
                 <select id="companyId" name="companyId">
-                    <option value="">-- No Company --</option>
+                    <option value=""> -- No Company -- </option>
                     <?php
                     if ($checkCompany = mysqli_query($connection, "SELECT company_id, company_title FROM " . TABLE_PREFIX . "company WHERE company_status=1 AND company_site_id=" . SITE_ID)) {
                         while ($companyInfo = mysqli_fetch_assoc($checkCompany)) {
@@ -415,7 +415,8 @@
                 clearBtn.type = 'button';
                 clearBtn.textContent = 'x';
                 clearBtn.title = 'Clear mapping';
-                clearBtn.addEventListener('click', function() {
+                clearBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     clearMappingKey(target.key);
                 });
 

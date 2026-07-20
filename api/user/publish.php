@@ -46,6 +46,12 @@ function publish($connection, $data)
         ), TRUE);
     }
 
+    if ($userRole == 'delivery_agent') {
+        $site_access_meta_value = json_encode(array(
+            'vendor' => VENDOR_ID,
+        ), TRUE);
+    }
+
     // User registraion process
 
     if ($msg == '') {
@@ -85,7 +91,7 @@ function publish($connection, $data)
 
                         /* Insert data into user table */
 
-                        $insertUser = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user(user_username, user_email, user_mobile, user_password, user_salt_key, user_status, user_reg_time, user_reg_ip) VALUES('{$username}', '{$email}', '{$mobile}', '{$enc_password}', '$saltKey', 1, NOW(), '" . IP . "')");
+                        $insertUser = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "user(user_parent_id, user_username, user_email, user_mobile, user_password, user_salt_key, user_status, user_reg_time, user_reg_ip) VALUES(" . USER_ID . ",'{$username}', '{$email}', '{$mobile}', '{$enc_password}', '$saltKey', 1, NOW(), '" . IP . "')");
                         $userID = mysqli_insert_id($connection);
 
                         $insertSiteAccess = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES(" . SITE_ID . ", '{$userID}', '{$userRole}', 1, '{$site_access_meta_value}')");

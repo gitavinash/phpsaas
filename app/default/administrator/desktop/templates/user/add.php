@@ -27,16 +27,6 @@
                             name="email" required />
                     </div>
                     <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" class="form-control inside-shadow" id="password" placeholder="Password*"
-                            name="password" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm password</label>
-                        <input type="password" class="form-control inside-shadow" id="confirmPassword"
-                            placeholder="Confirm Password*" name="confirm_password" required />
-                    </div>
-                    <div class="form-group">
                         <label>User role</label>
                         <select name="userRole" class="form-control inside-shadow">
                             <option value="0">Select user role</option>
@@ -55,7 +45,7 @@
                     <div class="form-group">
                         <input type="hidden" name="type" value="user">
                         <input type="hidden" name="action" value="publish">
-                        <input type="submit" class="btn btn-green" value="Add user">
+                        <input type="submit" class="btn btn-green" value="Add new user">
                     </div>
                 </form>
             </div>
