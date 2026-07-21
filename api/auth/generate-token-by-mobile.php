@@ -2,6 +2,10 @@
 
 mysqli_query($connection, "START TRANSACTION");
 
+if (DEVELOPMENT_MODE == true) {
+    echo "SELECT user_id, user_email, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status, site_access_meta FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_id='{$user_id}' LIMIT 1";
+}
+
 if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status, site_access_meta FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_id='{$user_id}' LIMIT 1")) {
 
     if (mysqli_num_rows($checkUser) != 0) {
@@ -47,9 +51,7 @@ if ($checkUser = mysqli_query($connection, "SELECT user_id, user_email, user_sal
         $site_access_meta = '';
         $user_type = ((isset($reg_type)) ? $reg_type : 'customer');
         $insertSiteAccessQuery = "INSERT INTO " . TABLE_PREFIX . "site_access(site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) VALUES('" . SITE_ID . "', '{$newUserId}', '{$user_type}', 1, '')";
-        if (!$createNewSiteAccess = mysqli_query($connection, $insertSiteAccessQuery)) {
-            echo "SELECT user_id, user_email, user_salt_key, user_status, user_type_code as user_type, site_app_id, profile_display_name, profile_image, site_access_site_id, site_access_status, site_access_meta FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_id=site_access_site_id INNER JOIN " . TABLE_PREFIX . "user_type ON user_type_code=site_access_type AND site_access_site_id=" . SITE_ID . " WHERE user_id='{$user_id}' LIMIT 1";
-        }
+        $createNewSiteAccess = mysqli_query($connection, $insertSiteAccessQuery);
 
         if ($createNewUser && $createNewSiteAccess && $createNewUserProfile) {
             mysqli_query($connection, "COMMIT");
