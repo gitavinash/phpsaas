@@ -121,7 +121,7 @@ LIMIT
                                     <td><?php echo ucwords($request_title) ?></td>
                                     <td><?php echo $profile_display_name; ?></td>
                                     <td>
-                                        <?php echo date('d M Y, H:i A', strtotime($request_time)); ?></td>
+                                        <?php echo date('d M Y, h:i A', strtotime($request_time)); ?></td>
                                     <td><?php echo $requestCurrentStatus; ?></td>
                                     <td>
                                         <a href='/dashboard/request/view/?id=<?php echo base64_encode($request_id) ?>' class='tableActionIconBtn' title='View request' data-title='View request'><i class='fi fi-rr-eye bgWhite'></i></a>

@@ -109,137 +109,22 @@ if (isset($id)) {
                             <span class="premium-stat-label">Items Count</span>
                             <span class="premium-stat-value"><?php echo sizeof(explode(',', $order_product_id)) ?> items</span>
                         </div>
-                        <div class="premium-stat-item">
-                            <span class="premium-stat-label">Receiving Date</span>
-                            <span class="premium-stat-value"><?php echo $order_generate ?></span>
-                        </div>
                         <div class="premium-stat-item" style="border-right: none;">
                             <span class="premium-stat-label">Delivery Date</span>
-                            <span class="premium-stat-value"></span>
+                            <span class="premium-stat-value"><?php echo date('Y-m-d', strtotime($order_generate)); ?></span>
+                        </div>
+                        <div class="premium-stat-item">
+                            <span class="premium-stat-label">Delivery Time</span>
+                            <span class="premium-stat-value"><?php echo date('h:i:s A', strtotime($order_generate)); ?></span>
                         </div>
                     </div>
 
                     <div class="order-info-shell">
                         <form id="orderData">
                             <div class="premium-grid">
-                                <!-- LEFT PANEL: Items and Billing info -->
-                                <div class="premium-grid-left">
-
-                                    <!-- Card 2: Customer Shipping Details -->
-                                    <div class="premium-card">
-                                        <h3 class="premium-card-title"><i class="fas fa-user-circle"></i> Customer & Shipping Details</h3>
-                                        <div class="premium-form-grid">
-                                            <div class="premium-form-group">
-                                                <label>First Name</label>
-                                                <input type="text" name="first_name" class="premium-form-control" value="<?php echo $profile_first_name ?>">
-                                            </div>
-                                            <div class="premium-form-group">
-                                                <label>Last Name</label>
-                                                <input type="text" name="last_name" class="premium-form-control" value="<?php echo $profile_last_name ?>">
-                                            </div>
-                                            <div class="premium-form-group">
-                                                <label>Email Address</label>
-                                                <input type="text" name="email" class="premium-form-control" value="<?php echo $user_email ?>">
-                                            </div>
-                                            <div class="premium-form-group">
-                                                <label>Mobile Number</label>
-                                                <input type="text" name="mobile" class="premium-form-control" value="<?php echo $user_mobile ?>">
-                                            </div>
-                                            <div class="premium-form-group">
-                                                <label>House No. / Suite</label>
-                                                <input type="text" name="address_house_no" class="premium-form-control" value="<?php echo $address_house_no ?>">
-                                            </div>
-                                            <div class="premium-form-group">
-                                                <label>Address Line</label>
-                                                <input type="text" name="address_area" class="premium-form-control" value="<?php echo $address_area ?>">
-                                            </div>
-                                            <div class="premium-form-group">
-                                                <label>Landmark</label>
-                                                <input type="text" name="address_landmark" class="premium-form-control" value="<?php echo $address_landmark ?>">
-                                            </div>
-                                            <div class="premium-form-group">
-                                                <label>City</label>
-                                                <input type="text" name="city" class="premium-form-control" value="<?php echo $city_name ?>">
-                                            </div>
-                                            <div class="premium-form-group">
-                                                <label>State</label>
-                                                <select class="premium-form-control" name="state" required>
-                                                    <?php
-                                                    if ($stateDetails = mysqli_query($connection, "SELECT state_id, state_name FROM " . TABLE_PREFIX . "state WHERE state_country_id=101")) {
-                                                        if (mysqli_num_rows($stateDetails) != 0) {
-                                                            echo "<option value='' >Select state</option>";
-                                                            while ($stateData = mysqli_fetch_assoc($stateDetails)) {
-                                                                echo "<option value='{$stateData['state_id']}' " . (($stateData['state_id'] == $state_id) ? 'selected' : '') . " >{$stateData['state_name']}</option>";
-                                                            }
-                                                        } else {
-                                                            echo "<option value=''>No state found</option>";
-                                                        }
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                            <div class="premium-form-group">
-                                                <label>Pin Code</label>
-                                                <input type="text" name="address_pin_code" class="premium-form-control" value="<?php echo $address_pin_code ?>">
-                                            </div>
-                                            <div class="premium-form-group full-width">
-                                                <label>Address Type</label>
-                                                <select name="address_type" class="premium-form-control">
-                                                    <option value="">Select address type</option>
-                                                    <option value="home" <?php echo (($address_type == 'home') ? 'selected' : '') ?>>Home</option>
-                                                    <option value="work" <?php echo (($address_type == 'work') ? 'selected' : '') ?>>Work</option>
-                                                    <option value="other" <?php echo (($address_type == 'other') ? 'selected' : '') ?>>Other</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <!-- RIGHT PANEL: Billing summary and Receiver Info -->
                                 <div class="premium-grid-right">
-
-
-                                    <!-- Card: Fulfillment Partner / Vendor Details -->
-                                    <div class="premium-card">
-                                        <h3 class="premium-card-title"><i class="fas fa-truck"></i> Delivery Partner</h3>
-                                        <div id="vendorEditMode" style="display: block;">
-                                            <div class="premium-form-group">
-                                                <?php
-
-                                                if ($orderAssignTo == 0) { ?>
-                                                    <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
-                                                        <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
-                                                        <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
-                                                            <strong>No Delivery Partner Assigned</strong><br>
-                                                            Please assign a delivery partner to process this order.
-                                                        </div>
-                                                    </div>
-                                                <?php
-                                                }
-
-                                                ?>
-                                                <label><?php echo ($orderAssignTo == 0) ? 'Select' : 'Change'; ?> Delivery Partner</label>
-                                                <select name="assigned_vendor" class="premium-form-control" style="width: 100%;">
-                                                    <option value="">Select delivery partner</option>
-                                                    <?php
-
-                                                    if ($checkDeliveryAgent = mysqli_query($connection, "SELECT user_id, profile_display_name FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=site_access_user_id INNER JOIN " . TABLE_PREFIX . "user ON user_id=site_access_user_id AND user_parent_id=" . USER_ID . " WHERE site_access_type='delivery_agent' AND site_access_status=1 AND site_access_site_id=" . SITE_ID)) {
-                                                        if (mysqli_num_rows($checkDeliveryAgent) != 0) {
-                                                            while ($deliveryAgentData = mysqli_fetch_assoc($checkDeliveryAgent)) {
-                                                                echo "<option value='{$deliveryAgentData['user_id']}' " . ($orderAssignTo == $deliveryAgentData['user_id'] ? "selected" : "") . ">{$deliveryAgentData['profile_display_name']}</option>";
-                                                            }
-                                                        }
-                                                    }
-
-                                                    ?>
-                                                </select>
-                                            </div>
-                                            <div style="margin-top: 12px;">
-                                                <button type="button" class="btn-premium-action btn-save" id="saveDeliveryPartnerBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> <?php echo ($orderAssignTo == 0) ? 'Assign' : 'Change'; ?> Delivery Partner</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
 
                                     <!-- Card 4: Receiver Details -->
                                     <div class="premium-card">
@@ -281,15 +166,536 @@ if (isset($id)) {
                             <div class="premium-action-row">
                                 <input type="hidden" name="type" value="order">
                                 <input type="hidden" name="id" value="<?php echo $id ?>">
-                                <a href="#" id="orderConfirmBtn" class="btn-premium-action btn-confirm"><i class="fas fa-check"></i> Confirm</a>
-                                <a href="#" id="orderWaitingBtn" class="btn-premium-action btn-waiting"><i class="fas fa-clock"></i> Waiting</a>
-                                <a href="#" id="orderCancelBtn" class="btn-premium-action btn-cancel"><i class="fas fa-times"></i> Cancel</a>
-                                <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return"><i class="fas fa-undo"></i> Return</a>
+                                <a href="#" id="orderRescheduleBtn" class="btn-premium-action btn-reschedule"><i class="fas fa-calendar-plus"></i> Reschedule</a>
+                                <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return-action"><i class="fas fa-undo"></i> Return</a>
                                 <a href="#" id="orderDeliverBtn" class="btn-premium-action btn-delivered"><i class="fas fa-shipping-fast"></i> Delivered</a>
                             </div>
                         </form>
                     </div>
                 </div>
+
+                <!-- Order Action Modal -->
+                <div id="orderActionModal" class="order-action-modal">
+                    <div class="order-action-modal-backdrop"></div>
+                    <div class="order-action-modal-content">
+                        <div class="order-action-modal-header">
+                            <h3 id="modalTitle">Process Order Action</h3>
+                            <button type="button" class="close-modal-btn" aria-label="Close modal">&times;</button>
+                        </div>
+                        <form id="orderActionForm" enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="<?php echo $id; ?>">
+                            <input type="hidden" name="action_type" id="actionTypeInput" value="">
+
+                            <div class="premium-form-group">
+                                <label for="actionComment">Comment <span class="required">*</span></label>
+                                <textarea id="actionComment" name="comment" class="premium-form-control" placeholder="Enter comments here..." required></textarea>
+                            </div>
+
+                            <div class="premium-form-group">
+                                <label for="actionPhoto">Upload Photo</label>
+                                <div class="photo-upload-container">
+                                    <input type="file" id="actionPhoto" name="photo" accept="image/*" class="premium-form-control-file">
+                                    <div class="photo-preview-box" id="photoPreviewBox">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Select or capture photo</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="order-action-modal-footer">
+                                <button type="button" class="btn-premium-action btn-secondary close-modal-btn">Cancel</button>
+                                <button type="submit" class="btn-premium-action btn-primary" id="submitActionBtn">Confirm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Toast Notification Container -->
+                <div id="orderToastNotification" class="order-toast-notification"></div>
+
+                <style>
+                    /* Custom Button Styles */
+                    .btn-reschedule {
+                        background-color: #3b82f6 !important;
+                    }
+                    .btn-reschedule:hover {
+                        background-color: #2563eb !important;
+                    }
+                    .btn-return-action {
+                        background-color: #f43f5e !important;
+                    }
+                    .btn-return-action:hover {
+                        background-color: #e11d48 !important;
+                    }
+
+                    /* Custom Modal Styles */
+                    .order-action-modal {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        z-index: 10000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    }
+
+                    .order-action-modal.is-active {
+                        opacity: 1;
+                        pointer-events: auto;
+                    }
+
+                    .order-action-modal-backdrop {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(15, 23, 42, 0.6);
+                        backdrop-filter: blur(8px);
+                        -webkit-backdrop-filter: blur(8px);
+                    }
+
+                    .order-action-modal-content {
+                        position: relative;
+                        background: #ffffff;
+                        width: 90%;
+                        max-width: 500px;
+                        border-radius: 16px;
+                        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                        transform: scale(0.9);
+                        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                        z-index: 1;
+                        overflow: hidden;
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                    }
+
+                    .order-action-modal.is-active .order-action-modal-content {
+                        transform: scale(1);
+                    }
+
+                    .order-action-modal-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 20px 24px;
+                        border-bottom: 1px solid #f1f5f9;
+                    }
+
+                    .order-action-modal-header h3 {
+                        margin: 0;
+                        font-size: 1.25rem;
+                        font-weight: 700;
+                        color: #0f172a;
+                        transition: color 0.3s;
+                    }
+
+                    .order-action-modal-header .close-modal-btn {
+                        background: transparent;
+                        border: none;
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                        color: #64748b;
+                        padding: 0;
+                        line-height: 1;
+                        transition: color 0.2s;
+                    }
+
+                    .order-action-modal-header .close-modal-btn:hover {
+                        color: #0f172a;
+                    }
+
+                    .order-action-modal form {
+                        padding: 24px;
+                        margin: 0;
+                    }
+
+                    .order-action-modal .premium-form-group {
+                        margin-bottom: 20px;
+                    }
+
+                    .order-action-modal .premium-form-group label {
+                        display: block;
+                        margin-bottom: 8px;
+                        font-weight: 600;
+                        color: #334155;
+                        font-size: 0.9rem;
+                    }
+
+                    .order-action-modal .premium-form-group label .required {
+                        color: #ef4444;
+                    }
+
+                    .order-action-modal textarea.premium-form-control {
+                        width: 100%;
+                        min-height: 100px;
+                        padding: 12px;
+                        border: 1px solid #cbd5e1;
+                        border-radius: 8px;
+                        font-size: 0.95rem;
+                        resize: vertical;
+                        outline: none;
+                        transition: border-color 0.2s, box-shadow 0.2s;
+                        background: #f8fafc;
+                    }
+
+                    .order-action-modal textarea.premium-form-control:focus {
+                        border-color: #3b82f6;
+                        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+                        background: #ffffff;
+                    }
+
+                    .photo-upload-container {
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .premium-form-control-file {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0;
+                        cursor: pointer;
+                        z-index: 2;
+                    }
+
+                    .photo-preview-box {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        border: 2px dashed #cbd5e1;
+                        border-radius: 12px;
+                        padding: 24px;
+                        background: #f8fafc;
+                        text-align: center;
+                        transition: background 0.2s, border-color 0.2s;
+                        cursor: pointer;
+                        min-height: 140px;
+                    }
+
+                    .photo-preview-box i {
+                        font-size: 2rem;
+                        color: #94a3b8;
+                        margin-bottom: 8px;
+                        transition: color 0.2s;
+                    }
+
+                    .photo-preview-box span {
+                        font-size: 0.85rem;
+                        color: #64748b;
+                        font-weight: 500;
+                    }
+
+                    .photo-upload-container:hover .photo-preview-box {
+                        background: #f1f5f9;
+                        border-color: #94a3b8;
+                    }
+
+                    .photo-upload-container:hover .photo-preview-box i {
+                        color: #64748b;
+                    }
+
+                    .photo-preview-box.has-image {
+                        border-style: solid;
+                        border-color: #3b82f6;
+                        background-size: cover;
+                        background-position: center;
+                        min-height: 160px;
+                    }
+
+                    .photo-preview-box.has-image i,
+                    .photo-preview-box.has-image span {
+                        background: rgba(15, 23, 42, 0.75);
+                        color: #ffffff;
+                        padding: 4px 10px;
+                        border-radius: 6px;
+                        backdrop-filter: blur(4px);
+                    }
+
+                    .order-action-modal-footer {
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 12px;
+                        margin-top: 24px;
+                        border-top: 1px solid #f1f5f9;
+                        padding-top: 16px;
+                    }
+
+                    .order-action-modal-footer .btn-premium-action {
+                        padding: 10px 20px;
+                        font-size: 0.95rem;
+                        font-weight: 600;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        border: none;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .order-action-modal-footer .btn-secondary {
+                        background: #f1f5f9;
+                        color: #475569;
+                    }
+
+                    .order-action-modal-footer .btn-secondary:hover {
+                        background: #e2e8f0;
+                        color: #0f172a;
+                    }
+
+                    .order-action-modal-footer .btn-primary {
+                        background: #3b82f6;
+                        color: #ffffff;
+                    }
+
+                    .order-action-modal-footer .btn-primary:hover {
+                        background: #2563eb;
+                    }
+
+                    .order-action-modal-footer .btn-primary:disabled {
+                        background: #93c5fd;
+                        cursor: not-allowed;
+                    }
+
+                    /* Theme Colors based on action type */
+                    .order-action-modal.action-reschedule h3 {
+                        color: #2563eb;
+                    }
+
+                    .order-action-modal.action-reschedule .btn-primary {
+                        background: #2563eb;
+                    }
+
+                    .order-action-modal.action-reschedule .btn-primary:hover {
+                        background: #1d4ed8;
+                    }
+
+                    .order-action-modal.action-return h3 {
+                        color: #dc2626;
+                    }
+
+                    .order-action-modal.action-return .btn-primary {
+                        background: #dc2626;
+                    }
+
+                    .order-action-modal.action-return .btn-primary:hover {
+                        background: #b91c1c;
+                    }
+
+                    .order-action-modal.action-deliver h3 {
+                        color: #059669;
+                    }
+
+                    .order-action-modal.action-deliver .btn-primary {
+                        background: #059669;
+                    }
+
+                    .order-action-modal.action-deliver .btn-primary:hover {
+                        background: #047857;
+                    }
+
+                    .order-toast-notification {
+                        position: fixed;
+                        bottom: 24px;
+                        right: 24px;
+                        z-index: 10001;
+                        padding: 16px 24px;
+                        border-radius: 12px;
+                        background: #0f172a;
+                        color: #ffffff;
+                        font-weight: 600;
+                        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                        transform: translateY(100px);
+                        opacity: 0;
+                        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+                    }
+
+                    .order-toast-notification.is-visible {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+
+                    .order-toast-notification.success {
+                        background: #10b981;
+                    }
+
+                    .order-toast-notification.error {
+                        background: #ef4444;
+                    }
+                </style>
+
+                <script>
+                    (function() {
+                        var modal = document.getElementById('orderActionModal');
+                        var form = document.getElementById('orderActionForm');
+                        var actionTypeInput = document.getElementById('actionTypeInput');
+                        var modalTitle = document.getElementById('modalTitle');
+                        var submitBtn = document.getElementById('submitActionBtn');
+                        var closeBtns = modal.querySelectorAll('.close-modal-btn');
+                        var fileInput = document.getElementById('actionPhoto');
+                        var previewBox = document.getElementById('photoPreviewBox');
+                        var toast = document.getElementById('orderToastNotification');
+
+                        // Map button IDs to action type and modal UI configurations
+                        var configs = {
+                            'orderRescheduleBtn': {
+                                action: 'reschulde',
+                                title: 'Confirm Reschedule',
+                                btnText: 'Confirm Reschedule',
+                                colorClass: 'action-reschedule'
+                            },
+                            'orderReturnBtn': {
+                                action: 'return',
+                                title: 'Confirm Return',
+                                btnText: 'Confirm Return',
+                                colorClass: 'action-return'
+                            },
+                            'orderDeliverBtn': {
+                                action: 'deliverd',
+                                title: 'Confirm Delivery',
+                                btnText: 'Confirm Delivery',
+                                colorClass: 'action-deliver'
+                            }
+                        };
+
+                        // Close modal function
+                        function closeModal() {
+                            modal.classList.remove('is-active');
+                            form.reset();
+                            previewBox.classList.remove('has-image');
+                            previewBox.style.backgroundImage = '';
+                            previewBox.querySelector('i').style.display = '';
+                            previewBox.querySelector('span').textContent = 'Select or capture photo';
+                        }
+
+                        // Bind triggers
+                        Object.keys(configs).forEach(function(btnId) {
+                            var btn = document.getElementById(btnId);
+                            if (btn) {
+                                btn.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    var config = configs[btnId];
+                                    actionTypeInput.value = config.action;
+                                    modalTitle.textContent = config.title;
+                                    submitBtn.textContent = config.btnText;
+
+                                    // Set theme color class on modal
+                                    modal.className = 'order-action-modal ' + config.colorClass;
+                                    modal.classList.add('is-active');
+
+                                    // Focus on comment textarea
+                                    setTimeout(function() {
+                                        document.getElementById('actionComment').focus();
+                                    }, 100);
+                                });
+                            }
+                        });
+
+                        // Bind close buttons
+                        closeBtns.forEach(function(btn) {
+                            btn.addEventListener('click', closeModal);
+                        });
+
+                        // Close on clicking backdrop
+                        modal.querySelector('.order-action-modal-backdrop').addEventListener('click', closeModal);
+
+                        // Close on Escape key
+                        document.addEventListener('keydown', function(e) {
+                            if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+                                closeModal();
+                            }
+                        });
+
+                        // File input thumbnail preview
+                        fileInput.addEventListener('change', function() {
+                            var file = this.files[0];
+                            if (file) {
+                                var reader = new FileReader();
+                                reader.onload = function(e) {
+                                    previewBox.classList.add('has-image');
+                                    previewBox.style.backgroundImage = 'url(' + e.target.result + ')';
+                                    previewBox.querySelector('i').style.display = 'none';
+                                    previewBox.querySelector('span').textContent = file.name;
+                                };
+                                reader.readAsDataURL(file);
+                            } else {
+                                previewBox.classList.remove('has-image');
+                                previewBox.style.backgroundImage = '';
+                                previewBox.querySelector('i').style.display = '';
+                                previewBox.querySelector('span').textContent = 'Select or capture photo';
+                            }
+                        });
+
+                        // Toast show helper
+                        function showToast(message, status) {
+                            toast.textContent = message;
+                            toast.className = 'order-toast-notification ' + (status === 'success' ? 'success' : 'error');
+                            toast.classList.add('is-visible');
+                            setTimeout(function() {
+                                toast.classList.remove('is-visible');
+                            }, 3000);
+                        }
+
+                        // Form submission
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+
+                            var action = actionTypeInput.value;
+                            var comment = document.getElementById('actionComment').value.trim();
+
+                            if (!comment) {
+                                showToast('Comment is required.', 'error');
+                                return;
+                            }
+
+                            // Disable submit button and show loading text
+                            submitBtn.disabled = true;
+                            var originalBtnText = submitBtn.textContent;
+                            submitBtn.textContent = 'Processing...';
+
+                            var formData = new FormData(form);
+
+                            // Fetch post to /api/order/{action_type}/
+                            fetch('/api/order/' + action + '/', {
+                                    method: 'POST',
+                                    body: formData
+                                })
+                                .then(function(response) {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(function(data) {
+                                    if (data.status === 200 || data.status === 'success') {
+                                        showToast(data.msg || 'Action processed successfully!', 'success');
+                                        setTimeout(function() {
+                                            window.location.reload();
+                                        }, 1500);
+                                    } else {
+                                        showToast(data.msg || 'Failed to process action.', 'error');
+                                        submitBtn.disabled = false;
+                                        submitBtn.textContent = originalBtnText;
+                                    }
+                                })
+                                .catch(function(error) {
+                                    console.error('Error submitting order action:', error);
+                                    showToast('Something went wrong. Please try again.', 'error');
+                                    submitBtn.disabled = false;
+                                    submitBtn.textContent = originalBtnText;
+                                });
+                        });
+                    })();
+                </script>
+
 
                 <script>
                     (function() {

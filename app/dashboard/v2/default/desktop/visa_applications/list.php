@@ -187,7 +187,7 @@ LIMIT 0, 1000";
                                     <td><?php echo ucwords($visa_country_title); ?></td>
                                     <td><?php echo ucwords($visa_package_visa_type); ?> VISA</td>
                                     <td>
-                                        <?php echo date('d M Y, H:i A', strtotime($visa_application_time)); ?></td>
+                                        <?php echo date('d M Y, h:i A', strtotime($visa_application_time)); ?></td>
                                     <?php
 
                                     if ($site_access_type != 'agent') { ?>

@@ -9,58 +9,58 @@ require_once 'header.php';
             <div class="left-container">
                 <!-- Author Card at Top -->
                 <?php if (isset($authorInfo) && $authorInfo) { ?>
-                <div class="author-info-card"
-                    style="display:flex;align-items:center;padding:28px 36px;background:#fff;border-radius:16px;box-shadow:0 6px 24px 0 rgba(0,0,0,0.07);gap:32px;min-height:120px;">
-                    <div style="flex-shrink:0;">
-                        <?php if (!empty($authorInfo['profile_image'])) { ?>
-                        <img src="<?php echo htmlspecialchars($authorInfo['profile_image']); ?>"
-                            alt="<?php echo htmlspecialchars($authorInfo['profile_display_name'] ?? $authorInfo['user_username']); ?>"
-                            style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid #e0e0e0;background:#f3f3f3;box-shadow:0 2px 8px 0 rgba(0,0,0,0.06);">
-                        <?php } else { ?>
-                        <div
-                            style="width:104px;height:104px;border-radius:50%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:2.7rem;color:#aaa;box-shadow:0 2px 8px 0 rgba(0,0,0,0.06);">
-                            <span><?php echo strtoupper(substr($authorInfo['profile_display_name'] ?? $authorInfo['user_username'], 0, 1)); ?></span>
+                    <div class="author-info-card"
+                        style="display:flex;align-items:center;padding:28px 36px;background:#fff;border-radius:16px;box-shadow:0 6px 24px 0 rgba(0,0,0,0.07);gap:32px;min-height:120px;">
+                        <div style="flex-shrink:0;">
+                            <?php if (!empty($authorInfo['profile_image'])) { ?>
+                                <img src="<?php echo htmlspecialchars($authorInfo['profile_image']); ?>"
+                                    alt="<?php echo htmlspecialchars($authorInfo['profile_display_name'] ?? $authorInfo['user_username']); ?>"
+                                    style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid #e0e0e0;background:#f3f3f3;box-shadow:0 2px 8px 0 rgba(0,0,0,0.06);">
+                            <?php } else { ?>
+                                <div
+                                    style="width:104px;height:104px;border-radius:50%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:2.7rem;color:#aaa;box-shadow:0 2px 8px 0 rgba(0,0,0,0.06);">
+                                    <span><?php echo strtoupper(substr($authorInfo['profile_display_name'] ?? $authorInfo['user_username'], 0, 1)); ?></span>
+                                </div>
+                            <?php } ?>
                         </div>
-                        <?php } ?>
-                    </div>
-                    <div>
-                        <h2
-                            style="margin:0 0 8px 0;font-size:2.2rem;line-height:1.1;font-weight:600;color:#222;word-break:break-word;">
-                            <?php echo htmlspecialchars($authorInfo['profile_display_name'] ?? $authorInfo['user_username']); ?>
-                        </h2>
-                        <style>
-                        .author-social-row {
-                            display: flex;
-                            gap: 18px;
-                            margin-top: 12px;
-                            flex-wrap: nowrap;
-                            justify-content: flex-start;
-                        }
+                        <div>
+                            <h2
+                                style="margin:0 0 8px 0;font-size:2.2rem;line-height:1.1;font-weight:600;color:#222;word-break:break-word;">
+                                <?php echo htmlspecialchars($authorInfo['profile_display_name'] ?? $authorInfo['user_username']); ?>
+                            </h2>
+                            <style>
+                                .author-social-row {
+                                    display: flex;
+                                    gap: 18px;
+                                    margin-top: 12px;
+                                    flex-wrap: nowrap;
+                                    justify-content: flex-start;
+                                }
 
-                        .author-social-row a {
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            width: 36px;
-                            height: 36px;
-                            border-radius: 50%;
-                            /* background: #f0f0f0;
+                                .author-social-row a {
+                                    display: inline-flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    width: 36px;
+                                    height: 36px;
+                                    border-radius: 50%;
+                                    /* background: #f0f0f0;
                             color: #666; */
-                            text-decoration: none;
-                            font-weight: 600;
-                            transition: background 0.2s;
-                        }
+                                    text-decoration: none;
+                                    font-weight: 600;
+                                    transition: background 0.2s;
+                                }
 
-                        .author-social-row a svg {
-                            filter: grayscale(1);
-                            transition: filter 0.2s;
-                        }
+                                .author-social-row a svg {
+                                    filter: grayscale(1);
+                                    transition: filter 0.2s;
+                                }
 
-                        .author-social-row a:hover svg {
-                            filter: none;
-                        }
-                        </style>
-                        <?php
+                                .author-social-row a:hover svg {
+                                    filter: none;
+                                }
+                            </style>
+                            <?php
                             // Social media icons (replace username)
                             $socials = [
                                 'facebook' => '<svg width="20" height="20" fill="#1877f3" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0"/></svg>',
@@ -95,8 +95,8 @@ require_once 'header.php';
                                 echo '</div>';
                             }
                             ?>
+                        </div>
                     </div>
-                </div>
                 <?php } ?>
                 <?php
 
@@ -115,7 +115,7 @@ require_once 'header.php';
                     </div>
                     <div class='news_intro'>
                         <h2>{$news_title}</h2>
-                        <p><span>" . (!empty($news_published) ? date('d M Y, H:i A', strtotime($news_published)) : '') .
+                        <p><span>" . (!empty($news_published) ? date('d M Y, h:i A', strtotime($news_published)) : '') .
                             "</span></p>
                         <p>{$meta_description}</p>
                     </div>

@@ -19,14 +19,14 @@ function h($s)
 ?>
 
 <section>
-    <div class="row">
-        <div class="container">
-            <div class="left-container">
-                <div class="categoryHeading">
-                    <h1><span>Search for: </span><?php echo h(ucwords($searchKeyword)); ?></h1>
-                </div>
+	<div class="row">
+		<div class="container">
+			<div class="left-container">
+				<div class="categoryHeading">
+					<h1><span>Search for: </span><?php echo h(ucwords($searchKeyword)); ?></h1>
+				</div>
 
-                <?php
+				<?php
 				if (is_array($queryPost) && count($queryPost) > 0) {
 
 					if (!isset($newsListType)) {
@@ -59,7 +59,7 @@ function h($s)
                                 <div class='news_intro'>
                                     <h2>" . h($news_title) . "</h2>
                                     <p><span>"
-								. ($news_published ? date('d M Y, H:i A', strtotime($news_published)) : '') .
+								. ($news_published ? date('d M Y, h:i A', strtotime($news_published)) : '') .
 								"</span></p>
                                     <p>" . h($shortDescription) . "</p>
                                 </div>
@@ -99,28 +99,28 @@ function h($s)
 					}
 				} else { ?>
 
-                <!-- No Result found -->
-                <section class='categoryHeading'>
-                    <h1><span>No news found</span></h1>
-                </section>
+					<!-- No Result found -->
+					<section class='categoryHeading'>
+						<h1><span>No news found</span></h1>
+					</section>
 
-                <?php } ?>
+				<?php } ?>
 
-                <?php
+				<?php
 				// Pagination include (unchanged)
 				require_once 'pagination.php';
 				?>
-            </div>
+			</div>
 
-            <?php
+			<?php
 
 			if (SITE_ID == 49) {
 				require_once 'sidebar.php';
 			}
 
 			?>
-        </div>
-    </div>
+		</div>
+	</div>
 </section>
 
 <?php require_once 'footer.php'; ?>

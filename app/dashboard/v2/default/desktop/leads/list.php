@@ -228,7 +228,7 @@ ORDER BY
                                     <td><?php echo ucwords($enquiry_first_name) ?></td>
                                     <td><?php echo $enquiry_subject; ?></td>
                                     <td>
-                                        <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
+                                        <?php echo date('d M Y, h:i A', strtotime($enquiry_time)); ?></td>
                                     <td><?php echo ucwords($enquiry_source) ?></td>
                                     <td><?php echo ucwords($leadCurrentStatus) ?></td>
                                 <?php
@@ -246,7 +246,7 @@ ORDER BY
                                     ?>
                                     <td><?php echo $enquiry_subject; ?></td>
                                     <td>
-                                        <?php echo date('d M Y, H:i A', strtotime($enquiry_time)); ?></td>
+                                        <?php echo date('d M Y, h:i A', strtotime($enquiry_time)); ?></td>
                                     <?php
 
                                     if ($site_access_type != 'agent') {
