@@ -830,7 +830,8 @@ function buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate, $co
         'order_ref_type' => $companyId > 0 ? 'company' : '',
         'order_status' => '0',
         'order_payment_mode' => '',
-        '__extra_meta' => $extraMeta
+        '__extra_meta' => $extraMeta,
+        'deliveryDate' => $deliveryDate
     );
 }
 
@@ -899,7 +900,7 @@ function bulkInsertOrderMetaForDeliveryDate($orders, $firstInsertId)
 
     foreach ($orders as $index => $order) {
         $orderId = $currentOrderId + $index;
-        $deliveryDate = isset($order['order_msg']) ? trim((string)$order['order_msg']) : '';
+        $deliveryDate = isset($order['deliveryDate']) ? trim((string)$order['deliveryDate']) : '';
 
         if ($deliveryDate === '') {
             $deliveryDate = '';

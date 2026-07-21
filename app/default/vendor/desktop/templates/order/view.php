@@ -114,7 +114,7 @@ if (isset($id)) {
                         </div>
                         <div class="premium-stat-item" style="border-right: none;">
                             <span class="premium-stat-label">Delivery Date</span>
-                            <span class="premium-stat-value"></span>
+                            <span class="premium-stat-value"><?php echo date('Y-m-d', strtotime($orderDeliveryDate)); ?></span>
                         </div>
                     </div>
 

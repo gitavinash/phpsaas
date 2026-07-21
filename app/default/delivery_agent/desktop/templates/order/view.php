@@ -82,7 +82,6 @@ if (isset($id)) {
                     }
                 }
 
-                $orderAssignTo = ((isset($orderAssignTo)) ? $orderAssignTo : 0);
                 $orderDeliveryDate = ((isset($orderDeliveryDate)) ? $orderDeliveryDate : '');
 
 ?>
@@ -111,11 +110,11 @@ if (isset($id)) {
                         </div>
                         <div class="premium-stat-item" style="border-right: none;">
                             <span class="premium-stat-label">Delivery Date</span>
-                            <span class="premium-stat-value"><?php echo date('Y-m-d', strtotime($order_generate)); ?></span>
+                            <span class="premium-stat-value"><?php echo date('Y-m-d', strtotime($orderDeliveryDate)); ?></span>
                         </div>
                         <div class="premium-stat-item">
-                            <span class="premium-stat-label">Delivery Time</span>
-                            <span class="premium-stat-value"><?php echo date('h:i:s A', strtotime($order_generate)); ?></span>
+                            <span class="premium-stat-label">Delivered At</span>
+                            <span class="premium-stat-value"></span>
                         </div>
                     </div>
 
@@ -218,12 +217,15 @@ if (isset($id)) {
                     .btn-reschedule {
                         background-color: #3b82f6 !important;
                     }
+
                     .btn-reschedule:hover {
                         background-color: #2563eb !important;
                     }
+
                     .btn-return-action {
                         background-color: #f43f5e !important;
                     }
+
                     .btn-return-action:hover {
                         background-color: #e11d48 !important;
                     }
