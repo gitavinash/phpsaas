@@ -102,33 +102,33 @@ require_once 'header.php';
 ?>
 
 <style>
-@media (min-width: 768px) {
-    .product-media-sticky {
-        position: sticky;
-        top: 6.5rem;
-        align-self: flex-start;
-    }
+    @media (min-width: 768px) {
+        .product-media-sticky {
+            position: sticky;
+            top: 6.5rem;
+            align-self: flex-start;
+        }
 
-    .desktop-sticky-cta {
-        position: fixed;
-        bottom: 1.5rem;
-        z-index: 60;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(0.5rem);
-        transition: opacity 0.2s ease, transform 0.2s ease;
-    }
+        .desktop-sticky-cta {
+            position: fixed;
+            bottom: 1.5rem;
+            z-index: 60;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(0.5rem);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
 
-    .desktop-sticky-cta.is-active {
-        opacity: 1;
-        pointer-events: auto;
-        transform: translateY(0);
-    }
+        .desktop-sticky-cta.is-active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
 
-    .desktop-default-cta.is-hidden {
-        display: none;
+        .desktop-default-cta.is-hidden {
+            display: none;
+        }
     }
-}
 </style>
 
 <main class="container mx-auto px-4 py-8 pt-24 md:pb-32">
@@ -203,12 +203,12 @@ require_once 'header.php';
                 if ($inventory_price == $inventory_mrp || $inventory_mrp == 0) {
                     echo "<span class='text-2xl font-bold text-gray-900'>{$inventory_currency_symbol} {$inventory_price}</span>";
                 } else { ?>
-                <span
-                    class="text-2xl font-bold text-gray-900"><?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></span>
-                <span
-                    class="text-gray-500 line-through ml-2"><?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></span>
-                <span class="bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded ml-2">SAVE
-                    <?php echo $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0); ?>%</span>
+                    <span
+                        class="text-2xl font-bold text-gray-900"><?php echo $inventory_currency_symbol . ' ' . $inventory_price ?></span>
+                    <span
+                        class="text-gray-500 line-through ml-2"><?php echo $inventory_currency_symbol . ' ' . $inventory_mrp ?></span>
+                    <span class="bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded ml-2">SAVE
+                        <?php echo $discountPersantage = round((1 - $inventory_price / $inventory_mrp) * 100, 0); ?>%</span>
                 <?php
                 }
 
@@ -230,13 +230,13 @@ require_once 'header.php';
             </div>
 
             <!-- Stock & Urgency Indicators -->
-            <div class="flex flex-col sm:flex-row gap-3 mb-4">
+            <!-- <div class="flex flex-col sm:flex-row gap-3 mb-4">
                 <div class="flex items-center gap-2 bg-green-50 rounded-lg px-4 py-2">
                     <i class="ri-checkbox-circle-fill text-green-600 text-lg"></i>
                     <span
                         class="text-sm font-semibold text-green-700"><?php echo $inventory_in_stock == 1 ? 'In Stock' : 'Out of Stock'; ?></span>
                 </div>
-            </div>
+            </div> -->
 
             <div class="flex flex-col sm:flex-row gap-3 mb-4">
                 <div class="flex items-center gap-2 bg-green-50 rounded-lg px-4 py-2">
@@ -250,17 +250,17 @@ require_once 'header.php';
             <?php
 
             if ($product_highlight != '') { ?>
-            <h3 class="text-xl font-semibold mb-4">Product Highlight</h3>
-            <p class="text-gray-600 mb-6"><?php echo $product_highlight ?></p>
+                <h3 class="text-xl font-semibold mb-4">Product Highlight</h3>
+                <p class="text-gray-600 mb-6"><?php echo $product_highlight ?></p>
             <?php
             }
 
             if ($inventory_weight != '' || $inventory_lenght != '' || $inventory_height != '' || $inventory_width != '') { ?>
-            <p class="font-semibold mb-4"><strong>Product Details</strong></p>
-            <?php if ($inventory_weight != '') { ?>
-            <p class="text-gray-600 mb-6"><strong>Weight:</strong> <?php echo $inventory_weight ?></p>
-            <?php } ?>
-            <?php
+                <p class="font-semibold mb-4"><strong>Product Details</strong></p>
+                <?php if ($inventory_weight != '') { ?>
+                    <p class="text-gray-600 mb-6"><strong>Weight:</strong> <?php echo $inventory_weight ?></p>
+                <?php } ?>
+                <?php
                 $dimensions = array();
                 if ($inventory_lenght != '') {
                     $dimensions[] = 'Length: ' . $inventory_lenght . ' CM';
@@ -272,9 +272,9 @@ require_once 'header.php';
                     $dimensions[] = 'Width: ' . $inventory_width . ' CM';
                 }
                 if (!empty($dimensions)) { ?>
-            <p class="mb-4"><strong>Dimensions:</strong> <?php echo implode(' | ', $dimensions) ?>
-            </p>
-            <?php } ?>
+                    <p class="mb-4"><strong>Dimensions:</strong> <?php echo implode(' | ', $dimensions) ?>
+                    </p>
+                <?php } ?>
             <?php }
 
             // Display attributes/variations as image cards
@@ -333,21 +333,37 @@ require_once 'header.php';
 
             ?>
 
-            <div class="hidden sm:flex flex-col sm:flex-row gap-4 mb-8 desktop-default-cta">
-                <p style="display:none" id="productInfo"
-                    value="<?php echo $product_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
-                </p>
-                <button id="addToCart"
-                    class="flex-1 bg-primary text-white py-3 px-6 rounded-button font-medium hover:bg-opacity-90 transition flex items-center justify-center whitespace-nowrap">
-                    <i class="ri-shopping-cart-line mr-2"></i>
-                    Add to Cart
-                </button>
-                <a href="<?php echo $whatsappUrl ?>" target="_blank" rel="noopener noreferrer"
-                    class="flex items-center justify-center px-6 py-3 rounded-button font-medium text-green-800 bg-green-100 border border-green-300 hover:bg-green-200 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-400 transition whitespace-nowrap">
-                    <i class="ri-whatsapp-line mr-2 text-xl"></i>
-                    Order on WhatsApp
-                </a>
-            </div>
+            <?php
+
+            if ($inventory_in_stock == 1) { ?>
+                <div class="hidden sm:flex flex-col sm:flex-row gap-4 mb-8 desktop-default-cta">
+                    <p style="display:none" id="productInfo"
+                        value="<?php echo $product_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
+                    </p>
+                    <button id="addToCart"
+                        class="flex-1 bg-primary text-white py-3 px-6 rounded-button font-medium hover:bg-opacity-90 transition flex items-center justify-center whitespace-nowrap">
+                        <i class="ri-shopping-cart-line mr-2"></i>
+                        Add to Cart
+                    </button>
+                    <a href="<?php echo $whatsappUrl ?>" target="_blank" rel="noopener noreferrer"
+                        class="flex items-center justify-center px-6 py-3 rounded-button font-medium text-green-800 bg-green-100 border border-green-300 hover:bg-green-200 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-400 transition whitespace-nowrap">
+                        <i class="ri-whatsapp-line mr-2 text-xl"></i>
+                        Order on WhatsApp
+                    </a>
+                </div>
+            <?php
+            } else { ?>
+                <div class="hidden sm:flex flex-col sm:flex-row gap-4 mb-8 desktop-default-cta">
+                    <button id="outOfStock"
+                        class="flex-1 bg-gray-400 text-white py-3 px-6 rounded-button font-medium cursor-not-allowed flex items-center justify-center whitespace-nowrap">
+                        <i class="ri-shopping-cart-line mr-2"></i>
+                        Out of Stock
+                    </button>
+                </div>
+            <?php
+            }
+
+            ?>
 
             <!-- Mobile Fixed CTA Buttons -->
             <div
@@ -378,73 +394,73 @@ require_once 'header.php';
                     }
                 }
             ?>
-            <div
-                class="bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg sm:rounded-xl p-3 sm:p-5 md:p-6 mb-4 sm:mb-6 border border-pink-100">
-                <div class="mb-3 sm:mb-4">
-                    <h3
-                        class="text-sm sm:text-base md:text-lg font-bold text-gray-800 mb-0.5 sm:mb-1 flex items-center">
-                        <i class="ri-gift-line text-primary text-base sm:text-lg md:text-xl mr-1.5 sm:mr-2"></i>
-                        Complete Your Gift
-                    </h3>
-                    <p class="text-[10px] sm:text-xs md:text-sm text-gray-600">Make it extra special with these
-                        add-ons
-                    </p>
-                </div>
-                <?php if (!empty($addonCategories)) { ?>
-                <div class="mb-3 sm:mb-4 flex flex-wrap gap-2">
-                    <button
-                        class="addon-filter-btn active text-[10px] sm:text-xs md:text-sm px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full border-2 border-primary text-primary font-semibold transition-all"
-                        data-category="all">All</button>
-                    <?php foreach ($addonCategories as $cat) { ?>
-                    <button
-                        class="addon-filter-btn text-[10px] sm:text-xs md:text-sm px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full border-2 border-gray-300 text-gray-700 hover:border-primary hover:text-primary font-semibold transition-all"
-                        data-category="<?php echo strtolower(str_replace(' ', '-', $cat)); ?>"><?php echo ucwords($cat); ?></button>
+                <div
+                    class="bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg sm:rounded-xl p-3 sm:p-5 md:p-6 mb-4 sm:mb-6 border border-pink-100">
+                    <div class="mb-3 sm:mb-4">
+                        <h3
+                            class="text-sm sm:text-base md:text-lg font-bold text-gray-800 mb-0.5 sm:mb-1 flex items-center">
+                            <i class="ri-gift-line text-primary text-base sm:text-lg md:text-xl mr-1.5 sm:mr-2"></i>
+                            Complete Your Gift
+                        </h3>
+                        <p class="text-[10px] sm:text-xs md:text-sm text-gray-600">Make it extra special with these
+                            add-ons
+                        </p>
+                    </div>
+                    <?php if (!empty($addonCategories)) { ?>
+                        <div class="mb-3 sm:mb-4 flex flex-wrap gap-2">
+                            <button
+                                class="addon-filter-btn active text-[10px] sm:text-xs md:text-sm px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full border-2 border-primary text-primary font-semibold transition-all"
+                                data-category="all">All</button>
+                            <?php foreach ($addonCategories as $cat) { ?>
+                                <button
+                                    class="addon-filter-btn text-[10px] sm:text-xs md:text-sm px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full border-2 border-gray-300 text-gray-700 hover:border-primary hover:text-primary font-semibold transition-all"
+                                    data-category="<?php echo strtolower(str_replace(' ', '-', $cat)); ?>"><?php echo ucwords($cat); ?></button>
+                            <?php } ?>
+                        </div>
                     <?php } ?>
-                </div>
-                <?php } ?>
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4">
-                    <?php foreach ($addonProducts as $addon) {
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4">
+                        <?php foreach ($addonProducts as $addon) {
                             extract($addon);
                             $discountPercent = ($inventory_mrp > 0 && $inventory_price < $inventory_mrp)
                                 ? round((1 - $inventory_price / $inventory_mrp) * 100, 0) : 0;
                         ?>
-                    <div class="addon-product-card bg-white rounded-md sm:rounded-lg overflow-hidden border border-gray-200 hover:border-primary hover:shadow-lg transition-all duration-300 group flex flex-col"
-                        data-category="<?php echo strtolower(str_replace(' ', '-', $addon['category_title'])); ?>">
-                        <a href="<?php echo $link_url ?>" title="<?php echo ucwords($product_title) ?>"
-                            class="block flex flex-col h-full">
-                            <div class="relative w-full aspect-square overflow-hidden">
-                                <img src="<?php echo $product_image ?>" alt="<?php echo ucwords($product_title) ?>"
-                                    class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
-                                <?php if ($discountPercent > 0) { ?>
-                                <span
-                                    class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-red-500 text-white text-[9px] sm:text-[10px] md:text-xs font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded shadow-md z-10">
-                                    -<?php echo $discountPercent ?>%
-                                </span>
-                                <?php } ?>
+                            <div class="addon-product-card bg-white rounded-md sm:rounded-lg overflow-hidden border border-gray-200 hover:border-primary hover:shadow-lg transition-all duration-300 group flex flex-col"
+                                data-category="<?php echo strtolower(str_replace(' ', '-', $addon['category_title'])); ?>">
+                                <a href="<?php echo $link_url ?>" title="<?php echo ucwords($product_title) ?>"
+                                    class="block flex flex-col h-full">
+                                    <div class="relative w-full aspect-square overflow-hidden">
+                                        <img src="<?php echo $product_image ?>" alt="<?php echo ucwords($product_title) ?>"
+                                            class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
+                                        <?php if ($discountPercent > 0) { ?>
+                                            <span
+                                                class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-red-500 text-white text-[9px] sm:text-[10px] md:text-xs font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded shadow-md z-10">
+                                                -<?php echo $discountPercent ?>%
+                                            </span>
+                                        <?php } ?>
+                                    </div>
+                                    <div class="p-2 sm:p-2.5 md:p-3 flex flex-col flex-1">
+                                        <h4
+                                            class="font-medium text-gray-800 text-[10px] sm:text-[11px] md:text-xs leading-snug mb-1.5 sm:mb-2 line-clamp-2 min-h-[2.5rem] sm:min-h-[2.75rem]">
+                                            <?php echo ucwords($product_title) ?></h4>
+                                        <div class="flex items-baseline flex-wrap gap-1 sm:gap-1.5 mb-2 sm:mb-2.5">
+                                            <span
+                                                class="text-xs sm:text-sm md:text-base font-bold text-gray-900"><?php echo $inventory_currency_symbol . $inventory_price ?></span>
+                                            <?php if ($inventory_mrp > 0 && $inventory_price < $inventory_mrp) { ?>
+                                                <span
+                                                    class="text-[9px] sm:text-[10px] md:text-xs text-gray-500 line-through"><?php echo $inventory_currency_symbol . $inventory_mrp ?></span>
+                                            <?php } ?>
+                                        </div>
+                                        <button data-info="<?php echo $product_id . '_' . $inventory_price . '_1' ?>"
+                                            class="w-full addAddOnProductToCart py-1.5 sm:py-2 md:py-2.5 text-[10px] sm:text-[11px] md:text-xs bg-primary text-white rounded-md sm:rounded-lg font-semibold hover:bg-opacity-90 hover:shadow-md active:scale-95 transition-all duration-300 flex items-center justify-center gap-1 mt-auto">
+                                            <i class="ri-add-circle-line text-xs sm:text-sm md:text-base"></i>
+                                            <span>Add</span>
+                                        </button>
+                                    </div>
+                                </a>
                             </div>
-                            <div class="p-2 sm:p-2.5 md:p-3 flex flex-col flex-1">
-                                <h4
-                                    class="font-medium text-gray-800 text-[10px] sm:text-[11px] md:text-xs leading-snug mb-1.5 sm:mb-2 line-clamp-2 min-h-[2.5rem] sm:min-h-[2.75rem]">
-                                    <?php echo ucwords($product_title) ?></h4>
-                                <div class="flex items-baseline flex-wrap gap-1 sm:gap-1.5 mb-2 sm:mb-2.5">
-                                    <span
-                                        class="text-xs sm:text-sm md:text-base font-bold text-gray-900"><?php echo $inventory_currency_symbol . $inventory_price ?></span>
-                                    <?php if ($inventory_mrp > 0 && $inventory_price < $inventory_mrp) { ?>
-                                    <span
-                                        class="text-[9px] sm:text-[10px] md:text-xs text-gray-500 line-through"><?php echo $inventory_currency_symbol . $inventory_mrp ?></span>
-                                    <?php } ?>
-                                </div>
-                                <button data-info="<?php echo $product_id . '_' . $inventory_price . '_1' ?>"
-                                    class="w-full addAddOnProductToCart py-1.5 sm:py-2 md:py-2.5 text-[10px] sm:text-[11px] md:text-xs bg-primary text-white rounded-md sm:rounded-lg font-semibold hover:bg-opacity-90 hover:shadow-md active:scale-95 transition-all duration-300 flex items-center justify-center gap-1 mt-auto">
-                                    <i class="ri-add-circle-line text-xs sm:text-sm md:text-base"></i>
-                                    <span>Add</span>
-                                </button>
-                            </div>
-                        </a>
+                        <?php } ?>
                     </div>
-                    <?php } ?>
                 </div>
-            </div>
             <?php } ?>
 
             <!-- Premium Trust Badges - Horizontal Layout -->
@@ -545,17 +561,17 @@ require_once 'header.php';
 
                             if (strtolower($category_title) != 'planters' && strtolower($category_title) != 'cake') {
                     ?>
-                    <ul>
-                        <li>The image displayed is indicative. Actual product may vary in design & shape
-                        </li>
-                        <li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
-                        <li>The chosen delivery time is an estimate.</li>
-                        <li>Since flowers are perishable in nature, we will be able to attempt delivery of
-                            your
-                            order once.</li>
-                        <li>Occasionally, substitution of flowers is necessary due unavailability issues.
-                        </li>
-                    </ul>
+                                <ul>
+                                    <li>The image displayed is indicative. Actual product may vary in design & shape
+                                    </li>
+                                    <li>Flowers may deliver in Bud, Semi Bloomed or Fully Bloomed stage.</li>
+                                    <li>The chosen delivery time is an estimate.</li>
+                                    <li>Since flowers are perishable in nature, we will be able to attempt delivery of
+                                        your
+                                        order once.</li>
+                                    <li>Occasionally, substitution of flowers is necessary due unavailability issues.
+                                    </li>
+                                </ul>
 
                     <?php
 
@@ -578,16 +594,16 @@ require_once 'header.php';
                         } else {
                             if (strtolower($category_title) != 'planters' && strtolower($category_title) != 'cake') {
                     ?>
-                    <ul>
-                        <li>Start by removing the bouquet wrapper.</li>
-                        <li>Cut the stems by one or two inches from the bottom to ensure better water
-                            intake.
-                        </li>
-                        <li>Choose a vase and fill it with water.</li>
-                        <li>Remove the leaves below the water level to prevent bacterial growth.</li>
-                        <li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
-                        <li>Make sure to place the vase in indirect sunlight.</li>
-                    </ul>
+                                <ul>
+                                    <li>Start by removing the bouquet wrapper.</li>
+                                    <li>Cut the stems by one or two inches from the bottom to ensure better water
+                                        intake.
+                                    </li>
+                                    <li>Choose a vase and fill it with water.</li>
+                                    <li>Remove the leaves below the water level to prevent bacterial growth.</li>
+                                    <li>Add two tablespoon of Lemon Juice and sugar into the water.</li>
+                                    <li>Make sure to place the vase in indirect sunlight.</li>
+                                </ul>
 
                     <?php
                             }
@@ -606,11 +622,11 @@ require_once 'header.php';
 
     if (isset($tagList)) { ?>
 
-    <div class="mb-16">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6">You May Also Like</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="mb-16">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">You May Also Like</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-            <?php
+                <?php
 
                 if ($getProductList = mysqli_query($connection, "SELECT DISTINCT 
     p.product_id, 
@@ -656,8 +672,8 @@ WHERE p.product_status = 1
 
                 ?>
 
+            </div>
         </div>
-    </div>
 
     <?php
     }
@@ -665,19 +681,19 @@ WHERE p.product_status = 1
 
 
     <?php if (!empty($productTags)) { ?>
-    <div class="mt-5 text-sm text-gray-600">
-        <div class="mb-2 font-medium text-gray-700">Tags</div>
-        <div class="flex flex-wrap gap-2">
-            <?php foreach ($productTags as $tagTitle) { ?>
-            <span
-                class="px-3 py-1 rounded-full border border-gray-100 bg-gray-50 text-gray-700 hover:border-primary hover:text-primary transition">
-                <?php
+        <div class="mt-5 text-sm text-gray-600">
+            <div class="mb-2 font-medium text-gray-700">Tags</div>
+            <div class="flex flex-wrap gap-2">
+                <?php foreach ($productTags as $tagTitle) { ?>
+                    <span
+                        class="px-3 py-1 rounded-full border border-gray-100 bg-gray-50 text-gray-700 hover:border-primary hover:text-primary transition">
+                        <?php
                         $tagName = htmlspecialchars($tagTitle, ENT_QUOTES, 'UTF-8');
                         echo "<a href='/tag/" . str_replace(' ', '-', strtolower($tagName))     . "/' target='_blank'>" . ucwords($tagName) . "</a>" ?>
-            </span>
-            <?php } ?>
+                    </span>
+                <?php } ?>
+            </div>
         </div>
-    </div>
     <?php } ?>
     </div>
 
@@ -729,79 +745,79 @@ WHERE p.product_status = 1
     </a>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const filterBtns = document.querySelectorAll('.addon-filter-btn');
-    const productCards = document.querySelectorAll('.addon-product-card');
-    const mediaSticky = document.querySelector('.product-media-sticky');
-    const desktopStickyCta = document.querySelector('.desktop-sticky-cta');
-    const desktopDefaultCta = document.querySelector('.desktop-default-cta');
-    const productDetails = document.querySelector('.product-details');
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterBtns = document.querySelectorAll('.addon-filter-btn');
+        const productCards = document.querySelectorAll('.addon-product-card');
+        const mediaSticky = document.querySelector('.product-media-sticky');
+        const desktopStickyCta = document.querySelector('.desktop-sticky-cta');
+        const desktopDefaultCta = document.querySelector('.desktop-default-cta');
+        const productDetails = document.querySelector('.product-details');
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const selectedCategory = this.getAttribute('data-category');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedCategory = this.getAttribute('data-category');
 
-            // Update active button
-            filterBtns.forEach(b => b.classList.remove('active', 'border-primary',
-                'text-primary'));
-            filterBtns.forEach(b => b.classList.add('border-gray-300', 'text-gray-700'));
-            this.classList.add('active', 'border-primary', 'text-primary');
-            this.classList.remove('border-gray-300', 'text-gray-700');
+                // Update active button
+                filterBtns.forEach(b => b.classList.remove('active', 'border-primary',
+                    'text-primary'));
+                filterBtns.forEach(b => b.classList.add('border-gray-300', 'text-gray-700'));
+                this.classList.add('active', 'border-primary', 'text-primary');
+                this.classList.remove('border-gray-300', 'text-gray-700');
 
-            // Filter products
-            productCards.forEach(card => {
-                if (selectedCategory === 'all') {
-                    card.style.display = '';
-                } else {
-                    const cardCategory = card.getAttribute('data-category');
-                    card.style.display = cardCategory === selectedCategory ? '' :
-                        'none';
-                }
+                // Filter products
+                productCards.forEach(card => {
+                    if (selectedCategory === 'all') {
+                        card.style.display = '';
+                    } else {
+                        const cardCategory = card.getAttribute('data-category');
+                        card.style.display = cardCategory === selectedCategory ? '' :
+                            'none';
+                    }
+                });
             });
         });
+
+        if (mediaSticky && desktopStickyCta && productDetails) {
+            const updateStickyCta = () => {
+                if (window.innerWidth < 768) {
+                    desktopStickyCta.classList.remove('is-active');
+                    desktopStickyCta.style.left = '';
+                    desktopStickyCta.style.width = '';
+                    if (desktopDefaultCta) {
+                        desktopDefaultCta.classList.remove('is-hidden');
+                    }
+                    return;
+                }
+
+                const stickyTop = parseFloat(getComputedStyle(mediaSticky).top) || 0;
+                const mediaRect = mediaSticky.getBoundingClientRect();
+                const mediaHeight = mediaSticky.offsetHeight;
+                const isStuck = mediaRect.top <= stickyTop + 1 &&
+                    mediaRect.bottom >= stickyTop + mediaHeight - 1;
+
+                if (isStuck) {
+                    const detailsRect = productDetails.getBoundingClientRect();
+                    desktopStickyCta.style.left = `${detailsRect.left}px`;
+                    desktopStickyCta.style.width = `${detailsRect.width}px`;
+                    desktopStickyCta.classList.add('is-active');
+                    if (desktopDefaultCta) {
+                        desktopDefaultCta.classList.add('is-hidden');
+                    }
+                } else {
+                    desktopStickyCta.classList.remove('is-active');
+                    if (desktopDefaultCta) {
+                        desktopDefaultCta.classList.remove('is-hidden');
+                    }
+                }
+            };
+
+            updateStickyCta();
+            window.addEventListener('scroll', updateStickyCta, {
+                passive: true
+            });
+            window.addEventListener('resize', updateStickyCta);
+        }
     });
-
-    if (mediaSticky && desktopStickyCta && productDetails) {
-        const updateStickyCta = () => {
-            if (window.innerWidth < 768) {
-                desktopStickyCta.classList.remove('is-active');
-                desktopStickyCta.style.left = '';
-                desktopStickyCta.style.width = '';
-                if (desktopDefaultCta) {
-                    desktopDefaultCta.classList.remove('is-hidden');
-                }
-                return;
-            }
-
-            const stickyTop = parseFloat(getComputedStyle(mediaSticky).top) || 0;
-            const mediaRect = mediaSticky.getBoundingClientRect();
-            const mediaHeight = mediaSticky.offsetHeight;
-            const isStuck = mediaRect.top <= stickyTop + 1 &&
-                mediaRect.bottom >= stickyTop + mediaHeight - 1;
-
-            if (isStuck) {
-                const detailsRect = productDetails.getBoundingClientRect();
-                desktopStickyCta.style.left = `${detailsRect.left}px`;
-                desktopStickyCta.style.width = `${detailsRect.width}px`;
-                desktopStickyCta.classList.add('is-active');
-                if (desktopDefaultCta) {
-                    desktopDefaultCta.classList.add('is-hidden');
-                }
-            } else {
-                desktopStickyCta.classList.remove('is-active');
-                if (desktopDefaultCta) {
-                    desktopDefaultCta.classList.remove('is-hidden');
-                }
-            }
-        };
-
-        updateStickyCta();
-        window.addEventListener('scroll', updateStickyCta, {
-            passive: true
-        });
-        window.addEventListener('resize', updateStickyCta);
-    }
-});
 </script>
 <?php
 
