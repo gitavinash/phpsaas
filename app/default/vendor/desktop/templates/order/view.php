@@ -24,7 +24,7 @@ if (isset($id)) {
             );
         }
 
-        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_vendor_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
+        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_vendor_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol, order_assign_to FROM isw_order INNER JOIN isw_address ON order_address_id=address_id INNER JOIN isw_user ON order_user_id=user_id INNER JOIN isw_profile ON profile_user_id=user_id INNER JOIN isw_city ON city_id=address_city_id INNER JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
 
         $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id AND product_type='product' AND product_site_id" . $siteId;
         $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=order_product_id AND inventory_type='product' AND inventory_site_id" . $siteId;
@@ -82,7 +82,6 @@ if (isset($id)) {
                     }
                 }
 
-                $orderAssignTo = ((isset($orderAssignTo)) ? $orderAssignTo : 0);
                 $orderDeliveryDate = ((isset($orderDeliveryDate)) ? $orderDeliveryDate : '');
 
 ?>
@@ -102,7 +101,7 @@ if (isset($id)) {
 
                     <div class="premium-stats-bar">
                         <div class="premium-stat-item">
-                            <span class="premium-stat-label">Payment Mode</span>
+                            <span class="premium-stat-label">Product</span>
                             <span class="premium-stat-value"><?php echo ucwords((($product_title != '') ? $product_title : 'N/A')) ?></span>
                         </div>
                         <div class="premium-stat-item">
@@ -202,11 +201,11 @@ if (isset($id)) {
                                     <!-- Card: Fulfillment Partner / Vendor Details -->
                                     <div class="premium-card">
                                         <h3 class="premium-card-title"><i class="fas fa-truck"></i> Delivery Partner</h3>
-                                        <div id="vendorEditMode" style="display: block;">
+                                        <div id="deliveryAgentEditMode" style="display: block;">
                                             <div class="premium-form-group">
                                                 <?php
 
-                                                if ($orderAssignTo == 0) { ?>
+                                                if ($order_assign_to == 0) { ?>
                                                     <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
                                                         <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
                                                         <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
@@ -218,15 +217,15 @@ if (isset($id)) {
                                                 }
 
                                                 ?>
-                                                <label><?php echo ($orderAssignTo == 0) ? 'Select' : 'Change'; ?> Delivery Partner</label>
-                                                <select name="assigned_vendor" class="premium-form-control" style="width: 100%;">
+                                                <label><?php echo ($order_assign_to == 0) ? 'Select' : 'Change'; ?> Delivery Partner</label>
+                                                <select name="assigned_delivery_agent" class="premium-form-control" style="width: 100%;">
                                                     <option value="">Select delivery partner</option>
                                                     <?php
 
                                                     if ($checkDeliveryAgent = mysqli_query($connection, "SELECT user_id, profile_display_name FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=site_access_user_id INNER JOIN " . TABLE_PREFIX . "user ON user_id=site_access_user_id AND user_parent_id=" . USER_ID . " WHERE site_access_type='delivery_agent' AND site_access_status=1 AND site_access_site_id=" . SITE_ID)) {
                                                         if (mysqli_num_rows($checkDeliveryAgent) != 0) {
                                                             while ($deliveryAgentData = mysqli_fetch_assoc($checkDeliveryAgent)) {
-                                                                echo "<option value='{$deliveryAgentData['user_id']}' " . ($orderAssignTo == $deliveryAgentData['user_id'] ? "selected" : "") . ">{$deliveryAgentData['profile_display_name']}</option>";
+                                                                echo "<option value='{$deliveryAgentData['user_id']}' " . ($order_assign_to == $deliveryAgentData['user_id'] ? "selected" : "") . ">{$deliveryAgentData['profile_display_name']}</option>";
                                                             }
                                                         }
                                                     }
@@ -235,7 +234,7 @@ if (isset($id)) {
                                                 </select>
                                             </div>
                                             <div style="margin-top: 12px;">
-                                                <button type="button" class="btn-premium-action btn-save" id="saveDeliveryPartnerBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> <?php echo ($orderAssignTo == 0) ? 'Assign' : 'Change'; ?> Delivery Partner</button>
+                                                <button type="button" class="btn-premium-action btn-save" id="saveDeliveryPartnerBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> <?php echo ($order_assign_to == 0) ? 'Assign' : 'Change'; ?> Delivery Partner</button>
                                             </div>
                                         </div>
                                     </div>
@@ -357,6 +356,100 @@ if (isset($id)) {
 
                 <script>
                     window.allProductsList = <?php echo json_encode($productListData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+                </script>
+                <script>
+                    (function() {
+                        var root = document.querySelector('.order-info-ui');
+
+                        if (!root) {
+                            return;
+                        }
+
+                        var orderId = root.getAttribute('data-order-id') || 'default';
+                        document.addEventListener('click', function(e) {
+                            // 5. Save Delivery Partner Edit Button Click
+                            var saveDeliveryPartnerBtn = e.target.closest('#saveDeliveryPartnerBtn');
+                            if (saveDeliveryPartnerBtn) {
+                                e.preventDefault();
+                                var selectEl = document.querySelector('#deliveryAgentEditMode select[name="assigned_delivery_agent"]');
+                                if (selectEl) {
+                                    var vendorCode = selectEl.value;
+                                    if (!vendorCode || vendorCode.trim() === '') {
+                                        if (typeof Swal !== 'undefined') {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                type: 'error',
+                                                title: 'Delivery Partner Required',
+                                                text: 'Please select a delivery partner.',
+                                                timer: 2000,
+                                                showConfirmButton: false
+                                            });
+                                        } else {
+                                            alert('Please select a delivery partner.');
+                                        }
+                                        return;
+                                    }
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/api/order/assign_delivery_agent/',
+                                        data: {
+                                            id: orderId,
+                                            assigned_delivery_agent: vendorCode
+                                        },
+                                        dataType: 'json',
+                                        success: function(response) {
+                                            if (response.status == 200) {
+                                                if (typeof Swal !== 'undefined') {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        type: 'success',
+                                                        title: 'Success',
+                                                        text: response.msg || 'Delivery Agent assigned successfully.',
+                                                        timer: 1500,
+                                                        showConfirmButton: false
+                                                    });
+                                                } else {
+                                                    alert(response.msg || 'Delivery Agent assigned successfully.');
+                                                }
+                                                setTimeout(function() {
+                                                    window.location.reload();
+                                                }, 1500);
+                                            } else {
+                                                if (typeof Swal !== 'undefined') {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        type: 'error',
+                                                        title: 'Error',
+                                                        text: response.msg || 'Something went wrong.',
+                                                        timer: 2000,
+                                                        showConfirmButton: false
+                                                    });
+                                                } else {
+                                                    alert(response.msg || 'Something went wrong.');
+                                                }
+                                            }
+                                        },
+                                        error: function() {
+                                            if (typeof Swal !== 'undefined') {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    type: 'error',
+                                                    title: 'Error',
+                                                    text: 'Failed to assign delivery agent.',
+                                                    timer: 2000,
+                                                    showConfirmButton: false
+                                                });
+                                            } else {
+                                                alert('Failed to assign delivery agent.');
+                                            }
+                                        }
+                                    });
+                                }
+                                return;
+                            }
+                        });
+                    })();
                 </script>
 
 <?php
