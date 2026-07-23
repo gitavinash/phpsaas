@@ -42,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $otpCode = '111111';
         }
 
+        $otpComment = mysqli_real_escape_string($connection, $otpComment);
+
         $sql = "INSERT INTO " . TABLE_PREFIX . "otp(otp_user_id, otp_site_id, otp_mode, otp_destination, otp_code, otp_comment, otp_status, otp_time, otp_expire) VALUES ('{$user_id}', " . SITE_ID . ", '{$otpMode}', '{$otpDestination}', '{$otpCode}', '{$otpComment}', 0, NOW(), DATE_ADD(NOW(), INTERVAL 10 MINUTE))";
         $insertOTP = mysqli_query($connection, $sql);
 
