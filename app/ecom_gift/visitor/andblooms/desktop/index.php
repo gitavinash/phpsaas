@@ -380,23 +380,24 @@ $socialProofs = getSocialProofsData($connection, 'social_proof', 8, true);
 if (!empty($socialProofs)):
 ?>
     <!-- Social Proof Section -->
-    <section class="social-proof-section" id="social-proof" style="padding: 5rem 0;">
-        <div class="container mx-auto px-6 text-center" style="margin-bottom: 4rem;">
-            <p style="font-size:1.1rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--sp-color-accent, #D4946D); font-weight:600; margin-bottom:1rem;">Watch Us In Action</p>
-            <h2 style="font-size:clamp(2.4rem,4vw,3.6rem); font-weight:600; color:#1f2937; margin-bottom:1.2rem;">Real Moments &amp; Fresh Inspirations</h2>
-            <p style="max-width:560px; margin:0 auto; color:#6b7280; font-size:1.05rem; line-height:1.7;">Step inside our studio — behind-the-scenes arrangement stories, customer unboxings, and bloom guides straight from the AndBlooms team.</p>
+    <style>
+    :root {
+      --sp-font-serif: "Playfair Display", Georgia, serif;
+      --sp-font-sans: "Montserrat", sans-serif;
+      --sp-title-size: 1.25rem;
+    }
+    </style>
+    <section class="social-proof-section py-20" id="social-proof">
+        <div class="container mx-auto px-6 text-center mb-16">
+            <span class="text-sm font-semibold uppercase tracking-widest text-[#D4946D] mb-4 block">Watch Us In Action</span>
+            <h2 class="serif text-3xl md:text-5xl text-gray-800 mb-6 font-medium">Real Moments &amp; Fresh Inspirations</h2>
+            <p class="max-w-2xl mx-auto text-gray-500 text-lg leading-relaxed">Step inside our studio — behind-the-scenes arrangement stories, customer unboxings, and bloom guides straight from the AndBlooms team.</p>
         </div>
 
-        <div class="carousel-outer" style="position:relative; padding:0 5rem; margin-top:0;">
+        <div class="carousel-outer">
             <button class="carousel-btn btn-prev" aria-label="Slide left">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
             </button>
             <button class="carousel-btn btn-next" aria-label="Slide right">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
             </button>
 
             <div class="carousel-container">
@@ -421,11 +422,12 @@ if (!empty($socialProofs)):
                             data-ref-description="<?= htmlspecialchars($proof['ref_description'] ?? '') ?>">
 
                             <div class="social-video-thumb">
+                                <img src="<?= $proofImage ?>" alt="<?= $proofTitle ?>" class="social-video-poster" />
                                 <video
-                                    src="<?= $resolvedVideoUrl ?>"
+                                    data-src="<?= $resolvedVideoUrl ?>"
                                     poster="<?= $proofImage ?>"
                                     class="social-video-img"
-                                    autoplay loop muted playsinline
+                                    loop muted playsinline
                                     style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;border:none;cursor:pointer;">
                                 </video>
                             </div>
@@ -434,12 +436,13 @@ if (!empty($socialProofs)):
                                 <h4 class="social-card-title">
                                     <?= $proofTitle ?>
                                 </h4>
+                                <p class="social-card-desc"><?= htmlspecialchars($proof['description'] ?? '') ?></p>
                                 <?php if (!empty($proof['ref_url'])):
                                     $refName = !empty($proof['ref_title']) ? htmlspecialchars($proof['ref_title']) : 'View Product';
                                 ?>
                                     <div class="social-card-ref">
                                         <a href="<?= htmlspecialchars($proof['ref_url']) ?>" class="ref-link">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:middle;">
                                                 <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
                                             </svg>
                                             <span><?= $refName ?></span>
@@ -453,8 +456,8 @@ if (!empty($socialProofs)):
             </div>
         </div>
 
-        <div class="social-cta-box" style="margin-top:4rem; display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap; padding:0 1.5rem;">
-            <a href="https://instagram.com/andblooms" class="inline-block bg-[#D4946D] text-white px-8 py-3 rounded-full hover:bg-opacity-90 transition-all duration-300 whitespace-nowrap" target="_blank" rel="noopener">
+        <div class="social-cta-box">
+            <a href="https://instagram.com/andblooms" class="inline-block bg-[#D4946D] text-white px-8 py-3 rounded-full hover:bg-[#b87b54] transition-all duration-300 whitespace-nowrap" target="_blank" rel="noopener">
                 Follow on Instagram
             </a>
             <a href="https://youtube.com/@andblooms" class="inline-block border border-[#D4946D] text-[#D4946D] px-8 py-3 rounded-full hover:bg-[#D4946D] hover:text-white transition-all duration-300 whitespace-nowrap" target="_blank" rel="noopener">

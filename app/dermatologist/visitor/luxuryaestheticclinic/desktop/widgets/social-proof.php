@@ -1,4 +1,11 @@
 <!-- 8. INSTAGRAM REELS & YOUTUBE SHORTS -->
+<style>
+:root {
+  --sp-font-serif: var(--font-serif, "Cormorant Garamond", Georgia, serif);
+  --sp-font-sans: var(--font-sans, "Plus Jakarta Sans", sans-serif);
+  --sp-title-size: 2.2rem;
+}
+</style>
 <section class="social-proof-section" id="social-proof">
     <div class="container text-center reveal">
         <span class="section-tag">Watch Us In Action</span>
@@ -84,6 +91,7 @@
                                 <h4 class="social-card-title">
                                     <?= $proofTitle ?>
                                 </h4>
+                                <p class="social-card-desc"><?= htmlspecialchars($proof['description'] ?? '') ?></p>
                                 <?php if (!empty($proof['ref_url'])):
                                     $refName = !empty($proof['ref_title']) ? htmlspecialchars($proof['ref_title']) : 'Related Details';
                                 ?>
@@ -95,6 +103,7 @@
                                     </div>
                                 <?php endif; ?>
                             </div>
+
                         </div>
                 <?php
                     }
