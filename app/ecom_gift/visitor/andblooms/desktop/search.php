@@ -67,7 +67,7 @@ $tag_description = ''; // optional
         </div>
         <h1 class="font-serif text-4xl md:text-5xl text-white mb-4"><?php echo $tag_title; ?></h1>
         <?php if ($tag_description): ?>
-        <p class="text-white text-lg max-w-2xl"><?php echo $tag_description; ?></p>
+            <p class="text-white text-lg max-w-2xl"><?php echo $tag_description; ?></p>
         <?php endif; ?>
     </div>
 </div>
@@ -78,11 +78,11 @@ $tag_description = ''; // optional
         <form method="GET">
             <select name="sort" onchange="updateSort(this)" class="border border-gray-300 rounded px-4 py-2 shadow-sm">
                 <script>
-                function updateSort(select) {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    urlParams.set('sort', select.value);
-                    window.location.search = urlParams.toString();
-                }
+                    function updateSort(select) {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        urlParams.set('sort', select.value);
+                        window.location.search = urlParams.toString();
+                    }
                 </script>
                 <option value="#">Sort by</option>
                 <option value="price_low" <?php echo (($_GET['sort'] ?? '') === 'price_low') ? 'selected' : ''; ?>>Price
@@ -115,6 +115,7 @@ $tag_description = ''; // optional
         ON i.inventory_relation_id = p.product_id
        AND i.inventory_type = 'product'
        AND i.inventory_site_id = " . SITE_ID . "
+       AND i.inventory_in_stock = 1
       WHERE p.product_id IN ($idList)
         AND NOT EXISTS (
           SELECT 1 FROM " . TABLE_PREFIX . "link l2
@@ -146,58 +147,58 @@ $tag_description = ''; // optional
                     ? (int)round((($inventory_mrp - $inventory_price) / max($inventory_mrp, 1)) * 100)
                     : 0;
         ?>
-        <div class="product-card group">
-            <a href="<?php echo htmlspecialchars($link_url, ENT_QUOTES, 'UTF-8'); ?>">
-                <div class="relative overflow-hidden rounded-lg mb-4">
-                    <img src="<?php echo htmlspecialchars($product_image, ENT_QUOTES, 'UTF-8'); ?>"
-                        alt="<?php echo htmlspecialchars($product_title, ENT_QUOTES, 'UTF-8'); ?>"
-                        class="w-full h-[350px] object-cover group-hover:scale-105 transition-transform duration-300">
-                    <?php if ($inventory_in_stock === 0): ?>
-                    <div class="absolute top-3 left-3 bg-red-600 text-white text-xs px-3 py-1 rounded">Out of Stock
-                    </div>
-                    <?php elseif (strtotime($link_published) > strtotime('-1 month')): ?>
-                    <div class="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded">New</div>
-                    <?php endif; ?>
-                    <?php if ($discount > 0): ?>
-                    <div class="absolute top-3 right-3 bg-green-600 text-white text-xs px-3 py-1 rounded">
-                        <?php echo $discount; ?>% OFF</div>
-                    <?php endif; ?>
-                    <?php if ($link_published > date('Y-m-d', strtotime('-7 days'))): ?>
-                    <div class="absolute bottom-3 right-3 bg-[#D4946D] text-white text-xs px-3 py-1 rounded">New</div>
-                    <?php endif; ?>
-                </div>
-            </a>
-            <h3 class="font-serif text-lg mb-2"><?php echo htmlspecialchars($product_title, ENT_QUOTES, 'UTF-8'); ?>
-            </h3>
-            <div class="flex justify-between items-center">
-                <div>
-                    <span class="text-primary font-semibold">
-                        <?php echo htmlspecialchars($inventory_currency_symbol, ENT_QUOTES, 'UTF-8') . ' ' . number_format($price, 2); ?>
-                    </span>
-                    <?php if ($discount > 0): ?>
-                    <div class="text-gray-400 text-sm line-through">
-                        <?php echo htmlspecialchars($inventory_currency_symbol, ENT_QUOTES, 'UTF-8') . ' ' . number_format($inventory_mrp, 2); ?>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <?php
+                <div class="product-card group">
+                    <a href="<?php echo htmlspecialchars($link_url, ENT_QUOTES, 'UTF-8'); ?>">
+                        <div class="relative overflow-hidden rounded-lg mb-4">
+                            <img src="<?php echo htmlspecialchars($product_image, ENT_QUOTES, 'UTF-8'); ?>"
+                                alt="<?php echo htmlspecialchars($product_title, ENT_QUOTES, 'UTF-8'); ?>"
+                                class="w-full h-[350px] object-cover group-hover:scale-105 transition-transform duration-300">
+                            <?php if ($inventory_in_stock === 0): ?>
+                                <div class="absolute top-3 left-3 bg-red-600 text-white text-xs px-3 py-1 rounded">Out of Stock
+                                </div>
+                            <?php elseif (strtotime($link_published) > strtotime('-1 month')): ?>
+                                <div class="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded">New</div>
+                            <?php endif; ?>
+                            <?php if ($discount > 0): ?>
+                                <div class="absolute top-3 right-3 bg-green-600 text-white text-xs px-3 py-1 rounded">
+                                    <?php echo $discount; ?>% OFF</div>
+                            <?php endif; ?>
+                            <?php if ($link_published > date('Y-m-d', strtotime('-7 days'))): ?>
+                                <div class="absolute bottom-3 right-3 bg-[#D4946D] text-white text-xs px-3 py-1 rounded">New</div>
+                            <?php endif; ?>
+                        </div>
+                    </a>
+                    <h3 class="font-serif text-lg mb-2"><?php echo htmlspecialchars($product_title, ENT_QUOTES, 'UTF-8'); ?>
+                    </h3>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-primary font-semibold">
+                                <?php echo htmlspecialchars($inventory_currency_symbol, ENT_QUOTES, 'UTF-8') . ' ' . number_format($price, 2); ?>
+                            </span>
+                            <?php if ($discount > 0): ?>
+                                <div class="text-gray-400 text-sm line-through">
+                                    <?php echo htmlspecialchars($inventory_currency_symbol, ENT_QUOTES, 'UTF-8') . ' ' . number_format($inventory_mrp, 2); ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php
 
                         if ($inventory_in_stock > 0) { ?>
-                <button data-info="<?php echo $product_id . '_' . (float)$inventory_price . '_1'; ?>"
-                    class="quickAddToCart bg-primary text-white px-4 py-2 rounded-button hover:bg-opacity-90 transition">
-                    Add to Cart
-                </button>
-                <?php
+                            <button data-info="<?php echo $product_id . '_' . (float)$inventory_price . '_1'; ?>"
+                                class="quickAddToCart bg-primary text-white px-4 py-2 rounded-button hover:bg-opacity-90 transition">
+                                Add to Cart
+                            </button>
+                        <?php
                         }
 
                         ?>
-            </div>
-        </div>
-        <?php endwhile;
+                    </div>
+                </div>
+            <?php endwhile;
         else: ?>
-        <div class="col-span-full text-center py-20">
-            <h2 class="text-xl font-semibold text-gray-600">No products found for this search.</h2>
-        </div>
+            <div class="col-span-full text-center py-20">
+                <h2 class="text-xl font-semibold text-gray-600">No products found for this search.</h2>
+            </div>
         <?php endif; ?>
     </div>
 </div>
