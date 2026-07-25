@@ -353,11 +353,7 @@ if (isset($id)) {
                             <div class="premium-action-row">
                                 <input type="hidden" name="type" value="order">
                                 <input type="hidden" name="id" value="<?php echo $id ?>">
-                                <a href="#" id="orderConfirmBtn" class="btn-premium-action btn-confirm"><i class="fas fa-check"></i> Confirm</a>
-                                <a href="#" id="orderWaitingBtn" class="btn-premium-action btn-waiting"><i class="fas fa-clock"></i> Waiting</a>
-                                <a href="#" id="orderCancelBtn" class="btn-premium-action btn-cancel"><i class="fas fa-times"></i> Cancel</a>
-                                <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return"><i class="fas fa-undo"></i> Return</a>
-                                <a href="#" id="orderDeliverBtn" class="btn-premium-action btn-delivered"><i class="fas fa-shipping-fast"></i> Delivered</a>
+                                <a href="/dashboard/order/?type=list&status=all" class="btn-premium-action btn-confirm"><i class="fas fa-arrow-left"></i> Back</a>
                             </div>
                         </form>
                     </div>

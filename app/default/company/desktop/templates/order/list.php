@@ -196,6 +196,8 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                                 <td>
                                     <a href="order/?type=view&id=<?php echo base64_encode($order_id); ?>" class="order-view-btn"><i
                                             class="fas fa-eye"></i> View</a>
+                                    <a href="/tracking/?orderid=OD<?php echo $order_id; ?>" target="_blank" class="order-view-btn"><i
+                                            class="fas fa-route"></i> Track</a>
                                 </td>
                             </tr>
                 <?php
