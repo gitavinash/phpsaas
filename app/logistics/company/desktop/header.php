@@ -114,8 +114,6 @@ $isUserRoleMenuActive = function ($expectedRole = '') use ($adminRole) {
                             <li><a <?php echo $isSubActive('/order/', 'list', '5') ?> href="order/?type=list&status=5"><i class="fas fa-undo"></i> RTO Orders</a></li>
                             <li><a <?php echo $isSubActive('/order/', 'list', '2') ?> href="order/?type=list&status=2"><i class="fas fa-times"></i> Cancelled Orders</a>
                             </li>
-                            <li><a <?php echo $isSubActive('/order/', 'import') ?> href="order/?type=import"><i class="fas fa-file-import"></i> Import Orders</a>
-                            </li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
@@ -127,8 +125,6 @@ $isUserRoleMenuActive = function ($expectedRole = '') use ($adminRole) {
                             <li><a <?php echo $isSubActive('/order/', 'list', '6') ?> href="order/?type=list&status=6"><i class="fas fa-truck"></i> Delivered Orders</a></li>
                             <li><a <?php echo $isSubActive('/order/', 'list', '5') ?> href="order/?type=list&status=5"><i class="fas fa-undo"></i> RTO Orders</a></li>
                             <li><a <?php echo $isSubActive('/order/', 'list', '2') ?> href="order/?type=list&status=2"><i class="fas fa-times"></i> Cancelled Orders</a>
-                            </li>
-                            <li><a <?php echo $isSubActive('/order/', 'import') ?> href="order/?type=import"><i class="fas fa-file-import"></i> Import Orders</a>
                             </li>
                         </ul>
                     </div>
