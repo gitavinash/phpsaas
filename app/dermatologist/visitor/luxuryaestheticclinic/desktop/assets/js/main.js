@@ -8,6 +8,7 @@
 */
 
 document.addEventListener("DOMContentLoaded", () => {
+  initHeroSwiper();
   initMobileMenu();
   initStickyHeader();
   initScrollReveals();
@@ -20,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initConsultationForm();
   initTechShowcase();
 });
+
 
 /* 1. MOBILE MENU TOGGLE */
 function initMobileMenu() {
@@ -50,12 +52,17 @@ function initStickyHeader() {
   const handleScroll = () => {
     if (window.scrollY > 50) {
       header.classList.add("scrolled");
+      header.classList.remove("hero-mode");
     } else {
       header.classList.remove("scrolled");
+      // Only restore hero-mode if the hero slider section is in the page
+      if (document.querySelector(".hero-slider-section")) {
+        header.classList.add("hero-mode");
+      }
     }
   };
 
-  window.addEventListener("scroll", handleScroll);
+  window.addEventListener("scroll", handleScroll, { passive: true });
   handleScroll(); // Initial run in case of reload mid-scroll
 }
 
@@ -484,5 +491,75 @@ function initTechShowcase() {
       }, 250);
     });
   });
+}
+
+
+/* HERO FULL-SCREEN BACKGROUND SLIDER (Swiper.js) */
+function initHeroSwiper() {
+  const swiperEl = document.querySelector(".hero-swiper");
+  if (!swiperEl) return;
+
+  // Ensure Swiper library is loaded
+  if (typeof Swiper === "undefined") {
+    setTimeout(initHeroSwiper, 150);
+    return;
+  }
+
+  // Count actual slides to configure loop mode
+  const slideCount = swiperEl.querySelectorAll(".hero-slide").length;
+  const shouldLoop = slideCount > 1;
+
+  const heroSwiper = new Swiper(".hero-swiper", {
+    // Core config
+    loop: shouldLoop,
+    speed: 900,
+    effect: "fade",
+    fadeEffect: {
+      crossFade: true,
+    },
+
+    // Autoplay (only if multiple slides)
+    autoplay: shouldLoop
+      ? {
+          delay: 5500,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        }
+      : false,
+
+    // Custom navigation
+    navigation: {
+      nextEl: ".hero-swiper-next",
+      prevEl: ".hero-swiper-prev",
+    },
+
+    // Pill-style pagination
+    pagination: {
+      el: ".hero-swiper-pagination",
+      clickable: true,
+      bulletClass: "swiper-pagination-bullet",
+      bulletActiveClass: "swiper-pagination-bullet-active",
+    },
+
+    // Accessibility
+    a11y: {
+      prevSlideMessage: "Previous slide",
+      nextSlideMessage: "Next slide",
+    },
+
+    // Keyboard navigation
+    keyboard: {
+      enabled: true,
+    },
+  });
+
+  // Hide scroll hint after first interaction / scroll
+  const scrollHint = document.querySelector(".hero-scroll-hint");
+  if (scrollHint) {
+    window.addEventListener("scroll", () => {
+      scrollHint.style.opacity = "0";
+      scrollHint.style.transition = "opacity 0.5s ease";
+    }, { once: true, passive: true });
+  }
 }
 

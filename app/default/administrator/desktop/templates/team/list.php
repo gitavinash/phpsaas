@@ -80,8 +80,6 @@ $postStatus = (($postStatus == 'all') ? '' : "AND post_status='{$postStatus}'");
                     </tr>
         <?php
                 }
-            } else {
-                echo $teamListQuery;
             }
         }
 

@@ -4,7 +4,7 @@ require_once 'header.php';
 
 ?>
 <!-- 2. CLINICAL HEADER BANNER & BREADCRUMBS -->
-<section class="inner-page-banner" id="banner">
+<section class="inner-page-banner" id="banner" style="background-image: url('<?php echo $category_image ?>');">
   <div class="container inner-banner-content">
     <h1><?php echo $category_title ?></h1>
     <div class="breadcrumb-path">
