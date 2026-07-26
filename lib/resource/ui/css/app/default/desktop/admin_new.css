@@ -3656,6 +3656,393 @@ body.premium-admin .container .dataTables_wrapper .dataTables_processing {
   }
 }
 
+/* ============================================================
+   MOBILE-FIRST HEADER & NAV IMPROVEMENTS
+   Applied only at ≤680px – no desktop styles affected
+   ============================================================ */
+
+@media (max-width: 680px) {
+
+  /* ──────────────────────────────────────────
+     HEADER: strict flex row
+     [☰  Logo]  ···············  [Avatar]
+     left-side flex-left, right-side flex-right
+  ────────────────────────────────────────── */
+  body.premium-admin header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+    box-sizing: border-box;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid #e8edf4;
+    box-shadow: 0 2px 10px rgba(15,23,42,0.07);
+    z-index: 1000;
+  }
+
+  /* Left: hamburger + logo side-by-side */
+  body.premium-admin header .left-side {
+    float: none !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 52px;
+    gap: 6px;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+  }
+
+  body.premium-admin header .left-side ul {
+    float: none !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    height: 52px;
+  }
+
+  body.premium-admin header .left-side ul li {
+    float: none !important;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    height: 52px;
+  }
+
+  /* Right: profile avatar */
+  body.premium-admin header .right-side {
+    float: none !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 52px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  body.premium-admin header .right-side > ul {
+    float: none !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    height: 52px;
+  }
+
+  body.premium-admin header .right-side > ul > li {
+    float: none !important;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    position: relative;
+  }
+
+  /* ── Logo – compact, vertically centred ── */
+  body.premium-admin header img {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  body.premium-admin header .logo {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    line-height: 1;
+  }
+
+  body.premium-admin header .logo a {
+    display: flex;
+    align-items: center;
+  }
+
+  /* ── Hamburger – larger tap target ── */
+  body.premium-admin .nav-toggle {
+    display: inline-flex !important;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 16px;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #0f172a;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ── Right-side profile: avatar only, no text ── */
+  body.premium-admin .right-side > ul > li > a {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    font-size: 0;        /* hide "Welcome, Name" text */
+    gap: 0;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    line-height: 1;
+  }
+
+  /* Keep the avatar circle */
+  body.premium-admin .right-side ul li .profile-img {
+    float: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 1px 6px rgba(15,23,42,0.12);
+  }
+
+  body.premium-admin .right-side ul li .profile-img img {
+    float: none !important;
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ── Profile dropdown → bottom-anchored action sheet on mobile ── */
+  body.premium-admin .right-side > ul > li:hover > ul,
+  body.premium-admin .right-side > ul > li:focus-within > ul {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    padding: 16px 12px 20px;
+    box-shadow: 0 -6px 28px rgba(15, 23, 42, 0.14);
+    z-index: 1100;
+  }
+
+  body.premium-admin .right-side > ul > li:hover > ul li {
+    width: 100%;
+  }
+
+  body.premium-admin .right-side > ul > li:hover > ul li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 14px 12px;
+    border-radius: 10px;
+    color: #0f172a;
+    background: #f8fafc;
+    margin-bottom: 6px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body.premium-admin .right-side > ul > li:hover > ul li a i {
+    width: 20px;
+    text-align: center;
+    color: #64748b;
+  }
+
+  /* ── Sidebar ── */
+  body.premium-admin aside {
+    top: 52px;
+    height: calc(100vh - 52px) !important;
+    width: 280px;
+    padding: 10px 8px 80px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ── Nav search in sidebar ── */
+  body.premium-admin .nav-search-wrapper {
+    margin-bottom: 10px;
+    padding: 0 4px;
+  }
+
+  body.premium-admin .nav-search-wrapper label {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  body.premium-admin .nav-search-input {
+    border-radius: 10px;
+  }
+
+  body.premium-admin .nav-search-input input {
+    font-size: 14px;
+    padding: 9px 10px 9px 36px;
+  }
+
+  /* ── Sidebar nav – full scrollable height, large touch targets ── */
+  body.premium-admin nav.side-nav {
+    height: auto;
+    overflow: visible;
+  }
+
+  body.premium-admin nav.side-nav ul li a {
+    padding: 12px 10px 12px 14px;
+    font-size: 14px;
+    line-height: 1.3;
+    border-radius: 10px;
+    margin-bottom: 2px;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body.premium-admin nav.side-nav ul li a i {
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  body.premium-admin nav.side-nav ul li.active:after {
+    display: none; /* arrow indicator looks odd in slide-in drawer */
+  }
+
+  /* Sub-menu within drawer: inline expand, not side-flyout */
+  body.premium-admin nav.side-nav ul li:hover > .side-menu ul,
+  body.premium-admin nav.side-nav ul li:active > .side-menu ul {
+    left: 0;
+    width: 100%;
+    position: relative;
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    margin-top: 2px;
+    padding: 4px 0;
+  }
+
+  body.premium-admin nav.side-nav ul li:hover > .side-menu ul:after {
+    display: none;
+  }
+
+  body.premium-admin nav.side-nav ul li.active > .bottom-menu ul {
+    border-radius: 8px;
+    margin-top: 2px;
+    padding: 4px 0;
+  }
+
+  body.premium-admin nav.side-nav ul li.active > .bottom-menu ul li a {
+    padding: 10px 10px 10px 36px;
+    font-size: 13px;
+    min-height: 40px;
+  }
+
+  /* ── Mobile overlay – full screen under header ── */
+  body.premium-admin .mobile-nav-overlay {
+    inset: 52px 0 0 0;
+  }
+
+  /* ── Main content – account for shorter header ── */
+  body.premium-admin main {
+    padding: 60px 8px 10px;
+  }
+
+  body.premium-admin main .container {
+    padding: 12px;
+    border-radius: 10px;
+  }
+}
+
+/* ── Extra-small phones (≤ 480px) ── */
+@media (max-width: 480px) {
+
+  body.premium-admin header {
+    height: 50px;
+    padding: 0 8px;
+  }
+
+  body.premium-admin header .left-side,
+  body.premium-admin header .right-side {
+    height: 50px;
+  }
+
+  body.premium-admin header .left-side ul,
+  body.premium-admin header .right-side > ul {
+    height: 50px;
+  }
+
+  body.premium-admin header .left-side ul li {
+    height: 50px;
+  }
+
+  body.premium-admin header img {
+    height: 24px;
+  }
+
+  body.premium-admin .nav-toggle {
+    width: 38px;
+    height: 38px;
+  }
+
+  body.premium-admin .right-side ul li .profile-img,
+  body.premium-admin .right-side ul li .profile-img img {
+    width: 32px;
+    height: 32px;
+  }
+
+  body.premium-admin aside {
+    top: 50px;
+    height: calc(100vh - 50px) !important;
+    width: 260px;
+  }
+
+  body.premium-admin .mobile-nav-overlay {
+    inset: 50px 0 0 0;
+  }
+
+  body.premium-admin main {
+    padding: 58px 6px 10px;
+  }
+
+  body.premium-admin nav.side-nav ul li a {
+    font-size: 13px;
+    padding: 11px 8px 11px 12px;
+    min-height: 44px;
+  }
+
+  /* Profile action sheet fills screen width edge-to-edge */
+  body.premium-admin .right-side > ul > li:hover > ul,
+  body.premium-admin .right-side > ul > li:focus-within > ul {
+    padding: 14px 8px 24px;
+  }
+
+  body.premium-admin .right-side > ul > li:hover > ul li a {
+    font-size: 14px;
+    padding: 13px 10px;
+  }
+}
+
 .product-add-ui h2 {
   font-size: 24px;
   letter-spacing: -0.01em;

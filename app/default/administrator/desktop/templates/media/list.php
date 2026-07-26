@@ -310,7 +310,7 @@
             askDeleteConfirmation(function() {
                 var params = 'action=' + encodeURIComponent('delete') + '&id=' + encodeURIComponent(mediaId);
 
-                fetch('/api/media.php', {
+                fetch('/api/media/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -448,7 +448,7 @@
                 '&alt=' + encodeURIComponent(alt) +
                 '&description=' + encodeURIComponent(description);
 
-            fetch('/api/media.php', {
+            fetch('/api/media/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
