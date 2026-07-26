@@ -126,7 +126,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                 <li class="nav-section-title">
                     <span>Cataloge</span>
                 </li>
-                <li <?php echo (($postType == 'service') ? 'class="active"' : '') ?>>
+                <li <?php echo (($postType == 'treatment') ? 'class="active"' : '') ?>>
                     <a href="treatment/?type=list&status=all"><i class="fas fa-medkit"></i> Treatments</a>
                     <div class="side-menu">
                         <ul>
