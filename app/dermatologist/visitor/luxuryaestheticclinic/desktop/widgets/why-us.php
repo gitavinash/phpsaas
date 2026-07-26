@@ -1,7 +1,12 @@
 <?php
-// Bypassed DB rendering to enforce new minimal editorial layout
-?>
 
+if ($checkConsultationWidget = mysqli_query($connection, "SELECT category_description FROM " . TABLE_PREFIX . "category WHERE category_title LIKE '%why us%' AND category_status = '1' AND category_site_id =" . SITE_ID)) {
+
+  if (mysqli_num_rows($checkConsultationWidget) != 0) {
+    extract(mysqli_fetch_assoc($checkConsultationWidget));
+    echo $category_description;
+  } else {
+    echo "
 <section class='why-choose-section' id='why-us'>
   <div class='container'>
     <div class='why-editorial-grid'>
@@ -67,3 +72,6 @@
     </div>
   </div>
 </section>
+";
+  }
+}
