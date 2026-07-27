@@ -7,11 +7,11 @@ require_once 'header.php';
 <!-- 2. CLINICAL HEADER BANNER & BREADCRUMBS -->
 <section class="inner-page-banner" id="banner">
   <div class="container inner-banner-content">
-    <h1></h1>
+    <h1><?php echo $page_title ?></h1>
     <div class="breadcrumb-path">
       <a href="/">Home</a>
       <span><i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i></span>
-      <span style="color: var(--color-primary-gold);">Clinical FAQs</span>
+      <span style="color: var(--color-primary-gold);"><?php echo $page_title ?></span>
     </div>
   </div>
 </section>
