@@ -25,7 +25,7 @@ require_once 'header.php';
 
     <?php
 
-    $categoryTreatmentQuery = "SELECT treatment_title, treatment_image, link_url, meta_description FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "treatment ON treatment_id = link_relation_id AND treatment_category='{$category_id}' INNER JOIN " . TABLE_PREFIX . "meta ON link_relation_id=meta_id WHERE link_status!=301 AND link_site_id=" . SITE_ID . " ORDER BY treatment_title ASC, link_published DESC";
+    $categoryTreatmentQuery = "SELECT treatment_title, treatment_image, link_url, meta_description FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "treatment ON treatment_id = link_relation_id AND treatment_category='{$category_id}' LEFT JOIN " . TABLE_PREFIX . "meta ON link_relation_id=meta_id WHERE link_status!=301 AND link_site_id=" . SITE_ID . " ORDER BY treatment_title ASC, link_published DESC";
 
     if ($treatmentData = mysqli_query($connection, $categoryTreatmentQuery)) {
       if (mysqli_num_rows($treatmentData) > 0) {
