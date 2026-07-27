@@ -790,6 +790,10 @@ require_once 'header.php';
             background-color: var(--hue-pink) !important;
         }
 
+        .brand-hero .btn-filled {
+            background-color: #ba6041 !important;
+        }
+
         .hero-premium-headline {
             font-size: 2.2rem !important;
             margin-bottom: 20px !important;
