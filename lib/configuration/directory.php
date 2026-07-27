@@ -280,3 +280,7 @@ define('EDITOR_CONTENT_FILTER', MODULES . 'editor/content.php');
 // Google reCaptcha
 
 define('GOOGLE_RECAPTCHA_GENERATOR', RECAPTCHA . 'google/generate-recaptcha.php');
+
+// Log
+
+define('LOG_FILE', ROOT . '/logs/cron.log');
