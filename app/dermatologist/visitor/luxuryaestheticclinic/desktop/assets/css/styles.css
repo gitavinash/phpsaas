@@ -342,7 +342,7 @@ section {
 }
 
 .main-header.scrolled .logo-link img {
-  height: 42px;
+  /* height: 42px; */
 }
 
 .nav-menu {
@@ -1282,8 +1282,9 @@ section {
   text-decoration: none;
   /* subtle border replaced by shadow */
   box-shadow: 0 4px 24px rgba(28, 24, 20, 0.08);
-  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .treatment-card:hover {
@@ -1427,10 +1428,12 @@ section {
 }
 
 /* Old classes kept for compat */
-.treatment-card-content { display: none; }
-.treatment-card-desc    { display: none; }
-
-
+.treatment-card-content {
+  display: none;
+}
+.treatment-card-desc {
+  display: none;
+}
 
 /* 7. BEFORE & AFTER TRANSFORMATIONS */
 .transformations-section {
@@ -3169,9 +3172,23 @@ section {
     font-size: 2.8rem;
   }
 
+  /* Fix hero section background on mobile */
+  .hero-slide {
+    animation: none !important;
+    background-size: cover !important;
+    background-position: center !important;
+  }
+
+  /* Optimize trust-bar for mobile */
+  .trust-bar {
+    padding: 3.5rem 0 !important;
+  }
   .trust-bar-grid {
-    grid-template-columns: 1fr;
-    gap: 4rem;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 3rem 1.5rem !important;
+  }
+  .counter-number {
+    font-size: 2.8rem !important;
   }
 
   .counter-item::after {
