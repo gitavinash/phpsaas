@@ -179,13 +179,13 @@ if (is_dir(ROOT . $tempDashboardDir)) {
 
 /* Visitor directory managment */
 
-$userDirectory = '/app/' . SITE_APP . '/visitor/' . SITE_THEME . '/' . SITE_VERSION . '/';
+$userDirectory = ROOT . '/app/' . SITE_APP . '/visitor/' . SITE_THEME . '/' . SITE_VERSION . '/';
 
 if (is_dir($userDirectory)) {
 
 	/** specific device theme or version of request for visitor website */
 
-	define('USER_DIR', $userDirectory);
+	define('USER_DIR', str_replace(ROOT, '', $userDirectory));
 } else {
 
 	/** define other version to only desktop theme for visitor website */
@@ -270,8 +270,11 @@ define('ADMIN_ERROR_502', ADMIN_PATH . '502.php');
 
 /** Site Logo and Icon */
 
-define('SITE_ICON', SITE_URL . '/' . ((isset($site_icon)) ? (($site_icon == '') ? IMG_LIBRARY . 'favicon.png' : $site_icon) : IMG_LIBRARY . 'favicon.png'));
-define('SITE_LOGO', SITE_URL . '/' . ((isset($site_logo)) ? (($site_logo == '') ? IMG_LIBRARY . 'logo.png' : $site_logo)  : IMG_LIBRARY . 'logo.png'));
+$iconPath = (isset($site_icon) && $site_icon != '') ? $site_icon : (defined('APP_LIBRARY') ? APP_LIBRARY . 'assets/images/favicon.png' : IMG_LIBRARY . 'favicon.png');
+$logoPath = (isset($site_logo) && $site_logo != '') ? $site_logo : (defined('APP_LIBRARY') ? APP_LIBRARY . 'assets/images/logo.png' : IMG_LIBRARY . 'logo.png');
+
+define('SITE_ICON', SITE_URL . '/' . ltrim($iconPath, '/'));
+define('SITE_LOGO', SITE_URL . '/' . ltrim($logoPath, '/'));
 
 /** Editor */
 

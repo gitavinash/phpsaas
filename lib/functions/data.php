@@ -19,17 +19,22 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
     $pageLimit  = max(1, (int)$pageLimit);
     $pageNumber = max(0, (int)$pageNumber);
     $offset     = $pageNumber * $pageLimit;
-    $mostUsedKeyword = null;
 
     $postTypeEsc = $conn->real_escape_string($postType);
     $siteId      = (int)SITE_ID;
 
     // Step 1: Get all tag titles for the seed post
-    $sqlSeedTags = "SELECT DISTINCT tag_title FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_relation_id = {$postId} AND tag_site_id = {$siteId}";
+    $sqlSeedTags = "SELECT DISTINCT tag_title 
+                    FROM isw_tag 
+                    WHERE tag_type = '{$postTypeEsc}' 
+                      AND tag_relation_id = {$postId} 
+                      AND tag_site_id = {$siteId}";
+
     $resSeedTags = mysqli_query($conn, $sqlSeedTags);
     if (!$resSeedTags) {
         return [];
     }
+
     $seedTags = [];
     while ($row = mysqli_fetch_assoc($resSeedTags)) {
         $seedTags[] = $row['tag_title'];
@@ -40,24 +45,21 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
         return [];
     }
 
-    // Build LIKE conditions for all tags
-    // Build LIKE conditions for all tags (case-insensitive)
-    $likeConditions = [];
-    foreach ($seedTags as $tag) {
-        $escaped = $conn->real_escape_string($tag);
-        $likeConditions[] = "LOWER({$postTypeEsc}_title) LIKE '%" . mb_strtolower($escaped) . "%'";
-    }
-    $likeSql = implode(' OR ', $likeConditions);
-
-    // Build IN clause for tag match
+    // Step 2: Build IN clause for exact DB tag matching
     $inTags = array_map(function ($t) use ($conn) {
         return "'" . $conn->real_escape_string($t) . "'";
     }, $seedTags);
     $inTagsCsv = implode(',', $inTags);
 
-    // Get tag frequency for scoring
+    // Step 3: Get tag frequency for scoring
     $tagFreq = [];
-    $sqlTagFreq = "SELECT tag_title, COUNT(*) AS freq FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_site_id = {$siteId} AND tag_title IN ({$inTagsCsv}) GROUP BY tag_title";
+    $sqlTagFreq = "SELECT tag_title, COUNT(*) AS freq 
+                   FROM isw_tag 
+                   WHERE tag_type = '{$postTypeEsc}' 
+                     AND tag_site_id = {$siteId} 
+                     AND tag_title IN ({$inTagsCsv}) 
+                   GROUP BY tag_title";
+
     $resTagFreq = mysqli_query($conn, $sqlTagFreq);
     if ($resTagFreq) {
         while ($row = mysqli_fetch_assoc($resTagFreq)) {
@@ -66,64 +68,150 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
         mysqli_free_result($resTagFreq);
     }
 
-    $table = TABLE_PREFIX . $postTypeEsc;
-    $link  = TABLE_PREFIX . "link";
+    $table    = TABLE_PREFIX . $postTypeEsc;
+    $link     = TABLE_PREFIX . "link";
     $profile  = TABLE_PREFIX . "profile";
     $category = TABLE_PREFIX . "category";
-    $idField = $postTypeEsc . '_id';
-    $titleField = $postTypeEsc . '_title';
-    $descField = $postType . '_description';
-    $catField = $postType . '_category';
 
-    // Fetch a large pool of candidates to ensure at least 5 matches if possible
+    $idField    = $postTypeEsc . '_id';
+    $titleField = $postTypeEsc . '_title';
+    $descField  = $postType . '_description';
+    $catField   = $postType . '_category';
+
+    // Step 4: Dynamically construct SQL calculation rules
+    $poolLikeConditions  = [];
+    $whenClauses         = [];
+    $titleScoreExprs     = [];
+    $matchCountExprs     = [];
+    $matchedTagsCsvExprs = [];
+
+    foreach ($seedTags as $tag) {
+        $tagEsc   = $conn->real_escape_string($tag);
+        $tagLower = mb_strtolower($tagEsc);
+        $freq     = $tagFreq[$tag] ?? 1;
+
+        // 1. LIKE conditions for candidate pool WHERE clause (evaluated on 'main' alias)
+        $poolLikeConditions[] = "LOWER(main.{$titleField}) LIKE '%{$tagLower}%'";
+
+        // 2. CTE dynamic score
+        $whenClauses[] = "WHEN '{$tagEsc}' THEN " . (10 + $freq);
+
+        // 3. Title matching score (evaluated on 'cp' alias in ScoredResults)
+        $inTitle = "(LOWER(cp.title) LIKE '%{$tagLower}%')";
+        $titleScoreExprs[] = "IF({$inTitle}, 5, 0)";
+
+        // 4. Safely check if tag exists in either DB tags OR title
+        $inDb = "(tm.db_tags IS NOT NULL AND LOCATE('|||{$tagEsc}|||', CONCAT('|||', tm.db_tags, '|||')) > 0)";
+        $isMatched = "({$inDb} OR {$inTitle})";
+
+        // Track unique matches
+        $matchCountExprs[] = "IF({$isMatched}, 1, 0)";
+        $matchedTagsCsvExprs[] = "IF({$isMatched}, '{$tagEsc}', NULL)";
+    }
+
+    $poolLikeSql       = implode(' OR ', $poolLikeConditions);
+    $whenSql           = implode(' ', $whenClauses);
+    $titleScoreSql     = implode(' + ', $titleScoreExprs);
+    $matchCountSql     = implode(' + ', $matchCountExprs);
+    $matchedTagsCsvSql = "CONCAT_WS('|||', " . implode(', ', $matchedTagsCsvExprs) . ")";
+
+    // Highly optimized subquery to locate tags for the candidate pool limit
+    $existsTagSql = "EXISTS (
+        SELECT 1 
+        FROM isw_tag t 
+        WHERE t.tag_relation_id = main.{$idField} 
+          AND t.tag_type = '{$postTypeEsc}' 
+          AND t.tag_site_id = {$siteId} 
+          AND t.tag_title IN ({$inTagsCsv})
+    )";
+
+    $minArticles = 2;
+    $finalLimit  = max($pageLimit, $minArticles);
+
+    // Step 5: Unified super-query resolving the UI sorting bug
     $sqlData = "
+        WITH CandidatePool AS (
+            -- Phase 1: Only look at the 200 most recent articles to prevent surfacing old data
+            SELECT 
+                main.{$idField} AS id,
+                main.{$postTypeEsc}_image AS image,
+                main.{$titleField} AS title,
+                main.{$descField} AS description,
+                l.link_url,
+                l.link_published,
+                p.profile_display_name,
+                p.profile_image,
+                c.category_title
+            FROM {$table} main
+            INNER JOIN {$link} l
+                ON l.link_relation_id = main.{$idField}
+               AND l.link_status = 200
+               AND l.link_type = '{$postTypeEsc}'
+               AND l.link_site_id = {$siteId}
+            INNER JOIN {$profile} p
+                ON l.link_owner_id = p.profile_user_id
+            INNER JOIN {$category} c
+                ON c.category_id = main.{$catField}
+               AND c.category_type = '{$postType}'
+               AND c.category_site_id = {$siteId}
+            WHERE main.{$idField} <> {$postId}
+              AND main.{$postTypeEsc}_status = 1
+              AND main.{$postTypeEsc}_site_id = {$siteId}
+              AND (
+                  {$existsTagSql}
+                  OR ({$poolLikeSql})
+              )
+            ORDER BY l.link_published DESC
+            LIMIT 200
+        ),
+        TagMatches AS (
+            -- Phase 2: Calculate matches efficiently against the small 200-item pool
+            SELECT 
+                t.tag_relation_id,
+                SUM(CASE t.tag_title {$whenSql} ELSE 0 END) AS tag_score,
+                GROUP_CONCAT(t.tag_title SEPARATOR '|||') AS db_tags
+            FROM isw_tag t
+            INNER JOIN CandidatePool cp ON t.tag_relation_id = cp.id
+            WHERE t.tag_type = '{$postTypeEsc}' 
+              AND t.tag_site_id = {$siteId} 
+              AND t.tag_title IN ({$inTagsCsv})
+            GROUP BY t.tag_relation_id
+        ),
+        ScoredResults AS (
+            -- Phase 3: Pick the highest-scoring matches out of the candidate pool
+            SELECT 
+                cp.id,
+                cp.image,
+                cp.title,
+                cp.description,
+                cp.link_url,
+                cp.link_published,
+                cp.profile_display_name,
+                cp.profile_image,
+                cp.category_title,
+                (COALESCE(tm.tag_score, 0) + ({$titleScoreSql}) + IF(({$matchCountSql}) > 1, 5, 0)) AS score,
+                ({$matchedTagsCsvSql}) AS matched_tags_csv
+            FROM CandidatePool cp
+            LEFT JOIN TagMatches tm ON cp.id = tm.tag_relation_id
+            ORDER BY score DESC, cp.link_published DESC
+            LIMIT {$offset}, {$finalLimit}
+        )
+        -- Phase 4: Guarantee UI chronolgy. Re-sort the finalized page purely by date.
         SELECT 
-            {$idField}   AS id,
-            {$postTypeEsc}_image AS image,
-            {$titleField} AS title,
-            {$descField} AS description,
-            LEFT(
-            TRIM(
-                REGEXP_REPLACE(
-                    REPLACE(
-                        REPLACE({$descField}, '&nbsp;', ' '),
-                        '\r\n',
-                        ' '
-                    ),
-                    '<[^>]*>',
-                    ''
-                )
-            ),
-            200
-        ) AS expert,
-            link_url,
-            link_published,
-            profile_display_name,
-            profile_image,
-            category_title
-        FROM {$table}
-        INNER JOIN {$link}
-            ON link_relation_id = {$idField}
-           AND link_status = 200
-           AND link_type   = '{$postTypeEsc}'
-           AND link_site_id = {$siteId}
-        INNER JOIN {$profile}
-            ON link_owner_id=profile_user_id
-        INNER JOIN {$category}
-            ON category_id={$catField}
-            AND category_type='{$postType}'
-            AND category_site_id=" . SITE_ID . "
-        WHERE {$idField} <> {$postId}
-          AND {$postTypeEsc}_status = 1
-          AND {$postTypeEsc}_site_id = {$siteId}
-          AND (
-                {$idField} IN (
-                    SELECT tag_relation_id FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_site_id = {$siteId} AND tag_title IN ({$inTagsCsv})
-                )
-                OR ({$likeSql})
-          )
-        ORDER BY link_published DESC
-        LIMIT 200
+            sr.id,
+            sr.image,
+            sr.title,
+            sr.description,
+            LEFT(TRIM(REGEXP_REPLACE(REPLACE(REPLACE(sr.description, '&nbsp;', ' '), '\r\n', ' '), '<[^>]*>', '')), 200) AS expert,
+            sr.link_url,
+            sr.link_published,
+            sr.profile_display_name,
+            sr.profile_image,
+            sr.category_title,
+            sr.score,
+            sr.matched_tags_csv
+        FROM ScoredResults sr
+        ORDER BY sr.link_published DESC
     ";
 
     $resData = mysqli_query($conn, $sqlData);
@@ -131,50 +219,16 @@ function similarArticles($conn, $postId, $postType = 'post', $pageLimit = 10, $p
         return [];
     }
 
-    $out = [];
+    $paged = [];
     while ($row = mysqli_fetch_assoc($resData)) {
-        $score = 0;
-        $titleLower = mb_strtolower($row['title']);
-        $matchedTags = [];
-        foreach ($seedTags as $tag) {
-            $tagLower = mb_strtolower($tag);
-            $inTag = false;
-            // Tag match
-            $sqlHasTag = "SELECT 1 FROM isw_tag WHERE tag_type = '{$postTypeEsc}' AND tag_site_id = {$siteId} AND tag_relation_id = " . (int)$row['id'] . " AND tag_title = '" . $conn->real_escape_string($tag) . "' LIMIT 1";
-            $hasTagRes = mysqli_query($conn, $sqlHasTag);
-            if ($hasTagRes && mysqli_fetch_assoc($hasTagRes)) {
-                $score += 10 + ($tagFreq[$tag] ?? 1); // boost by tag frequency
-                $inTag = true;
-                $matchedTags[] = $tag;
-            }
-            if ($hasTagRes) mysqli_free_result($hasTagRes);
-            // Title match
-            if (strpos($titleLower, $tagLower) !== false) {
-                $score += 5;
-                if (!$inTag) $matchedTags[] = $tag;
-            }
-        }
-        // Bonus if both tag and title match
-        if (count($matchedTags) > 1) $score += 5;
-        $row['score'] = $score;
-        $row['matched_tags'] = $matchedTags;
-        $out[] = $row;
+        // Expand SQL's concatenated matches back to an array
+        $row['matched_tags'] = !empty($row['matched_tags_csv']) ? explode('|||', $row['matched_tags_csv']) : [];
+        unset($row['matched_tags_csv']);
+
+        $row['score'] = (int)$row['score'];
+        $paged[] = $row;
     }
     mysqli_free_result($resData);
-
-    // Sort by score DESC, then by latest date
-    usort($out, function ($a, $b) {
-        if ($b['score'] === $a['score']) {
-            return strcmp($b['link_published'], $a['link_published']);
-        }
-        return $b['score'] - $a['score'];
-    });
-
-
-    // Ensure at least 5 articles if possible
-    $minArticles = 2;
-    $finalLimit = max($pageLimit, $minArticles);
-    $paged = array_slice($out, $offset, $finalLimit);
 
     // Find most used tag
     $mostUsedKeyword = null;
@@ -1109,7 +1163,6 @@ function getCategories(mysqli $conn, string $type = 'post', bool $latest = true,
     return $out;
 }
 
-
 function timeToRead($content, $wordsPerMinute = 200)
 {
     $plainText = trim(strip_tags((string) $content));
@@ -1122,4 +1175,252 @@ function timeToRead($content, $wordsPerMinute = 200)
     $readMins = max(1, (int) ceil($wordCount / max(1, (int) $wordsPerMinute)));
 
     return (($readMins == 1) ? '1 min read' : $readMins . ' mins read');
+}
+
+function publishedTimeAgo($publishedDate)
+{
+    $timestamp = strtotime($publishedDate);
+
+    if (!$timestamp) {
+        return '';
+    }
+
+    $diff = time() - $timestamp;
+
+    if ($diff < 60) {
+        return 'Just now';
+    }
+
+    if ($diff < 3600) {
+        $mins = floor($diff / 60);
+        return $mins . ' min' . ($mins > 1 ? 's' : '') . ' ago';
+    }
+
+    if ($diff < 86400) {
+        $hours = floor($diff / 3600);
+        return $hours . ' hour' . ($hours > 1 ? 's' : '') . ' ago';
+    }
+
+    if ($diff < 604800) {
+        $days = floor($diff / 86400);
+        return $days . ' day' . ($days > 1 ? 's' : '') . ' ago';
+    }
+
+    if ($diff < 2592000) {
+        $weeks = floor($diff / 604800);
+        return $weeks . ' week' . ($weeks > 1 ? 's' : '') . ' ago';
+    }
+
+    if ($diff < 31536000) {
+        $months = floor($diff / 2592000);
+        return $months . ' month' . ($months > 1 ? 's' : '') . ' ago';
+    }
+
+    $years = floor($diff / 31536000);
+    return $years . ' year' . ($years > 1 ? 's' : '') . ' ago';
+}
+
+
+function newsAuthorInfo(
+    mysqli $connection,
+    int $relationId,
+    array $defaultAuthor
+): array {
+
+    $authors = [];
+
+    $query = "SELECT
+                    authors.profile_user_id,
+                    profile.profile_display_name,
+                    profile.profile_image
+              FROM " . TABLE_PREFIX . "authors AS authors
+              INNER JOIN " . TABLE_PREFIX . "profile AS profile
+                    ON profile.profile_user_id = authors.profile_user_id
+              WHERE authors.rel_id = {$relationId}
+                AND authors.rel_type = 'news'
+              ORDER BY authors.seq_no ASC";
+
+    if ($result = mysqli_query($connection, $query)) {
+
+        while ($row = mysqli_fetch_assoc($result)) {
+
+            $name = trim($row['profile_display_name']);
+
+            $authors[] = [
+                'id'        => (int)$row['profile_user_id'],
+                'name'      => $name,
+                'character' => strtoupper(mb_substr($name, 0, 1)),
+                'image'     => $row['profile_image'],
+                'link'      => '/author/' .
+                    $row['profile_user_id'] . '-' .
+                    urlencode(strtolower(str_replace(' ', '-', $name))) .
+                    '-articles/'
+            ];
+        }
+    }
+
+    // No mapped author, use default author
+    if (empty($authors)) {
+
+        $name = trim($defaultAuthor['name']);
+
+        $authors[] = [
+            'id'        => $defaultAuthor['id'],
+            'name'      => $name,
+            'character' => strtoupper(mb_substr($name, 0, 1)),
+            'image'     => $defaultAuthor['image'] ?? '',
+            'link'      => '/author/' .
+                $defaultAuthor['id'] . '-' .
+                urlencode(strtolower(str_replace(' ', '-', $name))) .
+                '-articles/'
+        ];
+    }
+
+    return [
+        'primary' => [
+            'id'        => $authors[0]['id'],
+            'name'      => $authors[0]['name'],
+            'character' => $authors[0]['character'],
+            'image'     => $authors[0]['image'],
+            'bio'       => $defaultAuthor['bio'] ?? '',
+            'link'      => $authors[0]['link']
+        ],
+        'authors' => $authors
+    ];
+}
+
+function removeInlineStyles($html, $removeFirstP = false)
+{
+    if (empty(trim($html))) {
+        return '';
+    }
+
+    // Suppress warnings for malformed HTML 
+    libxml_use_internal_errors(true);
+    $dom = new DOMDocument();
+
+    // Prepend XML encoding declaration to force UTF-8 parsing safely
+    $htmlWrapped = '<?xml encoding="UTF-8"><div id="temp_wrapper">' . $html . '</div>';
+
+    $dom->loadHTML($htmlWrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $xpath = new DOMXPath($dom);
+
+    // 1. Remove inline styles and classes
+    $nodes = $xpath->query('//*[@style or @class or @face]');
+    foreach ($nodes as $node) {
+        $node->removeAttribute('style');
+        $node->removeAttribute('class');
+        $node->removeAttribute('face');
+    }
+
+    // 2. SMART CONVERT/UNWRAP: Convert layout tags, but don't cause nested <p> errors
+    $tagsToConvert = ['div', 'article', 'section', 'aside', 'header', 'footer'];
+    $blockTags = ['p', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'blockquote'];
+
+    foreach ($tagsToConvert as $tag) {
+        $elements = $dom->getElementsByTagName($tag);
+        for ($i = $elements->length - 1; $i >= 0; $i--) {
+            $node = $elements->item($i);
+
+            if ($node->getAttribute('id') === 'temp_wrapper') {
+                continue;
+            }
+
+            // Check if this layout tag contains other block-level elements (like a <p>)
+            $hasBlockChildren = false;
+            foreach ($blockTags as $bTag) {
+                if ($node->getElementsByTagName($bTag)->length > 0) {
+                    $hasBlockChildren = true;
+                    break;
+                }
+            }
+
+            if ($hasBlockChildren) {
+                // If it already holds block tags, just UNWRAP it (remove the div but keep contents)
+                $fragment = $dom->createDocumentFragment();
+                while ($node->childNodes->length > 0) {
+                    $fragment->appendChild($node->childNodes->item(0));
+                }
+                $node->parentNode->replaceChild($fragment, $node);
+            } else {
+                // If it only holds text, CONVERT it into a <p> tag
+                $pNode = $dom->createElement('p');
+                while ($node->childNodes->length > 0) {
+                    $pNode->appendChild($node->childNodes->item(0));
+                }
+                $node->parentNode->replaceChild($pNode, $node);
+            }
+        }
+    }
+
+    // 3. Unwrap useless inline formatting tags (span, font, o:p)
+    $tagsToUnwrap = ['span', 'font', 'o:p'];
+    foreach ($tagsToUnwrap as $tag) {
+        $elements = $dom->getElementsByTagName($tag);
+        for ($i = $elements->length - 1; $i >= 0; $i--) {
+            $node = $elements->item($i);
+            $fragment = $dom->createDocumentFragment();
+            while ($node->childNodes->length > 0) {
+                $fragment->appendChild($node->childNodes->item(0));
+            }
+            $node->parentNode->replaceChild($fragment, $node);
+        }
+    }
+
+    // 4. Remove empty <p> tags at the DOM level
+    $paragraphs = $dom->getElementsByTagName('p');
+    for ($i = $paragraphs->length - 1; $i >= 0; $i--) {
+        $p = $paragraphs->item($i);
+        // Clean invisible spaces, zero-width spaces, and normal spaces to check if it's truly empty
+        $text = str_replace(["\xC2\xA0", "\xE2\x80\x8B", " "], '', $p->textContent);
+
+        if (trim($text) === '' && $p->getElementsByTagName('img')->length === 0 && $p->getElementsByTagName('iframe')->length === 0) {
+            $p->parentNode->removeChild($p);
+        }
+    }
+
+    // 5. UNWRAP THE FIRST <p> TAG IF REQUESTED
+    if ($removeFirstP) {
+        $firstP = $dom->getElementsByTagName('p')->item(0);
+        if ($firstP) {
+            $fragment = $dom->createDocumentFragment();
+            while ($firstP->childNodes->length > 0) {
+                $fragment->appendChild($firstP->childNodes->item(0));
+            }
+            $firstP->parentNode->replaceChild($fragment, $firstP);
+        }
+    }
+
+    // 6. Extract the cleaned HTML back out of our temporary wrapper
+    $wrapper = $dom->getElementById('temp_wrapper');
+    $clean_html = '';
+    if ($wrapper) {
+        foreach ($wrapper->childNodes as $child) {
+            $clean_html .= $dom->saveHTML($child);
+        }
+    }
+
+    // 7. AGGRESSIVE FAILSAFE: Strip any literal empty <p> tags left in the string
+    // This loops until it has destroyed every <p></p>, <p>&nbsp;</p>, <p><br></p>, or <p>  </p>
+    do {
+        $clean_html = preg_replace('/<p[^>]*>(?:\s|&nbsp;|\xC2\xA0|\xE2\x80\x8B|<br\s*\/?>)*<\/p>/iu', '', $clean_html, -1, $count);
+    } while ($count > 0);
+
+    // Clear memory of parsing errors
+    libxml_clear_errors();
+
+    return trim($clean_html);
+}
+
+function trimParagraph($content, $characterLimit = 150)
+{
+    $description = trim(strip_tags($content));
+
+    if (mb_strlen($description) > $characterLimit) {
+        $description = mb_substr($description, 0, $characterLimit);
+        $description = mb_substr($description, 0, mb_strrpos($description, ' '));
+        $description .= '...';
+    }
+
+    return $description;
 }

@@ -1,7 +1,7 @@
 <?php
 
 require_once UTIL_FUNCTIONS;
-
+require_once DATA_FUNCTIONS;
 
 $activeSubscription = false;
 if (isset($_COOKIE['user_data'])) {
@@ -86,81 +86,81 @@ if (isset($_COOKIE['user_data'])) {
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KN6V4VKJN4"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
-    gtag('config', 'G-KN6V4VKJN4');
+        gtag('config', 'G-KN6V4VKJN4');
     </script>
     <script type="text/javascript">
-    (function(c, l, a, r, i, t, y) {
-        c[a] = c[a] || function() {
-            (c[a].q = c[a].q || []).push(arguments)
-        };
-        t = l.createElement(r);
-        t.async = 1;
-        t.src = "https://www.clarity.ms/tag/" + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-    })(window, document, "clarity", "script", "qicb9eq9ym");
+        (function(c, l, a, r, i, t, y) {
+            c[a] = c[a] || function() {
+                (c[a].q = c[a].q || []).push(arguments)
+            };
+            t = l.createElement(r);
+            t.async = 1;
+            t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0];
+            y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "qicb9eq9ym");
     </script>
     <script>
-    (function() {
-        if (!('serviceWorker' in navigator)) {
-            return;
-        }
-
-        const swVersion = '<?php echo assetVersion('service-worker.php', ROOT . '/router'); ?>';
-
-        window.addEventListener('load', async function() {
-            let pageNeedsReload = false;
-
-            try {
-                const regs = await navigator.serviceWorker.getRegistrations();
-                for (const reg of regs) {
-                    const swUrl = (reg.active && reg.active.scriptURL) ||
-                        (reg.waiting && reg.waiting.scriptURL) ||
-                        (reg.installing && reg.installing.scriptURL) || '';
-
-                    if (swUrl.includes('/sw.js') && !swUrl.includes('/dashboard/sw.js')) {
-                        const removed = await reg.unregister();
-                        if (removed) {
-                            pageNeedsReload = true;
-                        }
-                    }
-                }
-            } catch (e) {}
-
-            try {
-                if ('caches' in window) {
-                    const cacheKeys = await caches.keys();
-                    const visitorCacheKeys = cacheKeys.filter(function(key) {
-                        return key.indexOf('-cache-') !== -1;
-                    });
-
-                    if (visitorCacheKeys.length) {
-                        await Promise.all(visitorCacheKeys.map(function(key) {
-                            return caches.delete(key);
-                        }));
-                        pageNeedsReload = true;
-                    }
-                }
-            } catch (e) {}
-
-            if (pageNeedsReload && !sessionStorage.getItem('visitorSwCacheCleaned')) {
-                sessionStorage.setItem('visitorSwCacheCleaned', '1');
-                window.location.reload();
+        (function() {
+            if (!('serviceWorker' in navigator)) {
                 return;
             }
 
-            try {
-                await navigator.serviceWorker.register('/sw.js?v=' + swVersion);
-            } catch (e) {}
-        });
-    })();
+            const swVersion = '<?php echo assetVersion('service-worker.php', ROOT . '/router'); ?>';
+
+            window.addEventListener('load', async function() {
+                let pageNeedsReload = false;
+
+                try {
+                    const regs = await navigator.serviceWorker.getRegistrations();
+                    for (const reg of regs) {
+                        const swUrl = (reg.active && reg.active.scriptURL) ||
+                            (reg.waiting && reg.waiting.scriptURL) ||
+                            (reg.installing && reg.installing.scriptURL) || '';
+
+                        if (swUrl.includes('/sw.js') && !swUrl.includes('/dashboard/sw.js')) {
+                            const removed = await reg.unregister();
+                            if (removed) {
+                                pageNeedsReload = true;
+                            }
+                        }
+                    }
+                } catch (e) {}
+
+                try {
+                    if ('caches' in window) {
+                        const cacheKeys = await caches.keys();
+                        const visitorCacheKeys = cacheKeys.filter(function(key) {
+                            return key.indexOf('-cache-') !== -1;
+                        });
+
+                        if (visitorCacheKeys.length) {
+                            await Promise.all(visitorCacheKeys.map(function(key) {
+                                return caches.delete(key);
+                            }));
+                            pageNeedsReload = true;
+                        }
+                    }
+                } catch (e) {}
+
+                if (pageNeedsReload && !sessionStorage.getItem('visitorSwCacheCleaned')) {
+                    sessionStorage.setItem('visitorSwCacheCleaned', '1');
+                    window.location.reload();
+                    return;
+                }
+
+                try {
+                    await navigator.serviceWorker.register('/sw.js?v=' + swVersion);
+                } catch (e) {}
+            });
+        })();
     </script>
 </head>
 
@@ -188,17 +188,17 @@ if (isset($_COOKIE['user_data'])) {
 
                     <div class="mobile-actions">
                         <?php if (isset($_COOKIE['user_data'])) { ?>
-                        <button class="mobile-user-btn" type="button" aria-label="Account">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-                                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6" />
-                                <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" stroke="currentColor" stroke-width="1.6"
-                                    stroke-linecap="round" />
-                            </svg>
-                        </button>
+                            <button class="mobile-user-btn" type="button" aria-label="Account">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6" />
+                                    <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" stroke="currentColor" stroke-width="1.6"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </button>
                         <?php } else { ?>
-                        <a href="/subscribe/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
-                            class="mobile-auth-link buySubscription">Subscribe</a>
-                        <!-- <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                            <a href="/subscribe/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                                class="mobile-auth-link buySubscription">Subscribe</a>
+                            <!-- <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
                             class="mobile-auth-link"><i class='bx bx-user-circle'></i></a> -->
                         <?php } ?>
                         <div class="search-container">
@@ -227,25 +227,25 @@ if (isset($_COOKIE['user_data'])) {
 
                     if (isset($_COOKIE['user_data'])) { ?>
 
-                    <div class="header_right">
-                        <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
-                        </p>
-                    </div>
+                        <div class="header_right">
+                            <p class="user--name"><i class='bx bx-user-circle'></i><?php echo PROFILE_DISPLAY_NAME ?>
+                            </p>
+                        </div>
 
-                    <!-- profile side--bar -->
-                    <div class="profile--sideBar">
-                        <div class="profile_container">
-                            <div class="profile_cancel">
-                                <i class='bx bx-x'></i>
-                            </div>
-                            <div class="profile_header">
-                                <!-- <div class="profile--img">
+                        <!-- profile side--bar -->
+                        <div class="profile--sideBar">
+                            <div class="profile_container">
+                                <div class="profile_cancel">
+                                    <i class='bx bx-x'></i>
+                                </div>
+                                <div class="profile_header">
+                                    <!-- <div class="profile--img">
                                         <img src="<?php echo PROFILE_IMAGE ?>" class="img-fluid" alt="user_img">
                                     </div> -->
-                                <div class="user--content">
-                                    <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
-                                    <a href="#"><?php echo PROFILE_EMAIL ?></a>
-                                    <?php
+                                    <div class="user--content">
+                                        <h6><?php echo PROFILE_DISPLAY_NAME ?></h6>
+                                        <a href="#"><?php echo PROFILE_EMAIL ?></a>
+                                        <?php
 
                                         if (isset($showLogoutBtn)) {
                                             echo (($showLogoutBtn == 1) ? '<a href="/logout/">Logout</a>' : '');
@@ -253,10 +253,10 @@ if (isset($_COOKIE['user_data'])) {
 
                                         ?>
 
+                                    </div>
                                 </div>
-                            </div>
 
-                            <?php
+                                <?php
 
                                 if ($activeSubscription == true) {
 
@@ -285,20 +285,20 @@ if (isset($_COOKIE['user_data'])) {
 
                                 ?>
 
+                            </div>
                         </div>
-                    </div>
 
                     <?php
                     } else { ?>
 
 
-                    <div class="header_right">
-                        <!-- <button class="subscribe">subscribe</button> -->
-                        <a href="/subscribe/" class="subscribe">subscribe</a>
-                        <!-- <button class="sign_in"></button> -->
-                        <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
-                            class="sign_in">sign in</a>
-                    </div>
+                        <div class="header_right">
+                            <!-- <button class="subscribe">subscribe</button> -->
+                            <a href="/subscribe/" class="subscribe">subscribe</a>
+                            <!-- <button class="sign_in"></button> -->
+                            <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                                class="sign_in">sign in</a>
+                        </div>
 
                     <?php
                     }
@@ -340,11 +340,11 @@ if (isset($_COOKIE['user_data'])) {
                 </button>
             </div>
             <?php if (isset($_COOKIE['user_data'])) { ?>
-            <div class="mobile-user">
-                <div class="mobile-user__name"><?php echo PROFILE_DISPLAY_NAME ?></div>
-                <div class="mobile-user__email"><?php echo PROFILE_EMAIL ?></div>
-                <div class="mobile-user__links">
-                    <?php
+                <div class="mobile-user">
+                    <div class="mobile-user__name"><?php echo PROFILE_DISPLAY_NAME ?></div>
+                    <div class="mobile-user__email"><?php echo PROFILE_EMAIL ?></div>
+                    <div class="mobile-user__links">
+                        <?php
                         if (isset($activeSubscription) && $activeSubscription == true) {
                             echo "<a href='/manage-subscription/' class='buySubscription'>Manage Subscription</a>";
                         } else {
@@ -355,43 +355,43 @@ if (isset($_COOKIE['user_data'])) {
                             echo "<a href='/logout/'>Logout</a>";
                         }
                         ?>
+                    </div>
                 </div>
-            </div>
             <?php } else { ?>
-            <div class="mobile-auth">
-                <a href="/subscribe/" class="mobile-auth__primary buySubscription">Subscribe</a>
-                <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
-                    class="mobile-auth__secondary">Sign in</a>
-            </div>
+                <div class="mobile-auth">
+                    <a href="/subscribe/" class="mobile-auth__primary buySubscription">Subscribe</a>
+                    <a href="/login/<?php echo ((ACTIVE_URL != '/') ? '?redirect_url=' . ACTIVE_URL : '') ?>"
+                        class="mobile-auth__secondary">Sign in</a>
+                </div>
             <?php } ?>
             <ul>
                 <?php
 
                 if (SITE_ID == 49) { ?>
-                <li><a href="/deepdives/" <?php echo ((BASE_URL == '/deepdives/') ? 'class="active"' : '') ?>
-                        title="Deepdives">Deepdives</a></li>
-                <li><a href="/explainer/" <?php echo ((BASE_URL == '/explainer/') ? 'class="active"' : '') ?>
-                        title="Explainer">Explainer</a></li>
-                <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
-                        title="FIntech News">News</a></li>
-                <li><a href="/ai-emerging-tech/" title="AI/Emerging Tech"
-                        <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
-                </li>
-                <li><a href="/ipo-tales/" title="IPO Tales"
-                        <?php echo ((BASE_URL == '/ipo-tales/') ? 'class="active"' : '') ?>>IPO Tales</a>
-                </li>
-                <li><a href="/pe-vc-tales/" title="PE/VC Tales"
-                        <?php echo ((BASE_URL == '/pe-vc-tales/') ? 'class="active"' : '') ?>>PE/VC Tales</a>
-                </li>
-                <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
-                        title="Money Trivia">Money Trivia</a></li>
-                <li><a href="/money-and-machines/"
-                        <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
-                        title="Money & Machines">Money & Machines</a></li>
-                <li><a href="<?php echo ((DEVELOPMENT_MODE == true) ? 'http://stack.nms.local/' : 'https://stack.theheadandtale.com/') ?>"
-                        target="_blank" title="Report"
-                        <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>>Report<sup
-                            class="sup">NEW</sup></a></li>
+                    <li><a href="/deepdives/" <?php echo ((BASE_URL == '/deepdives/') ? 'class="active"' : '') ?>
+                            title="Deepdives">Deepdives</a></li>
+                    <li><a href="/explainer/" <?php echo ((BASE_URL == '/explainer/') ? 'class="active"' : '') ?>
+                            title="Explainer">Explainer</a></li>
+                    <li><a href="/fintech-news/" <?php echo ((BASE_URL == '/fintech-news/') ? 'class="active"' : '') ?>
+                            title="FIntech News">News</a></li>
+                    <li><a href="/ai-emerging-tech/" title="AI/Emerging Tech"
+                            <?php echo ((BASE_URL == '/ai-emerging-tech/') ? 'class="active"' : '') ?>>AI/Emerging Tech</a>
+                    </li>
+                    <li><a href="/ipo-tales/" title="IPO Tales"
+                            <?php echo ((BASE_URL == '/ipo-tales/') ? 'class="active"' : '') ?>>IPO Tales</a>
+                    </li>
+                    <li><a href="/pe-vc-tales/" title="PE/VC Tales"
+                            <?php echo ((BASE_URL == '/pe-vc-tales/') ? 'class="active"' : '') ?>>PE/VC Tales</a>
+                    </li>
+                    <li><a href="/money-trivia/" <?php echo ((BASE_URL == '/money-trivia/') ? 'class="active"' : '') ?>
+                            title="Money Trivia">Money Trivia</a></li>
+                    <li><a href="/money-and-machines/"
+                            <?php echo ((BASE_URL == '/money-and-machines/') ? 'class="active"' : '') ?>
+                            title="Money & Machines">Money & Machines</a></li>
+                    <li><a href="<?php echo ((DEVELOPMENT_MODE == true) ? 'http://stack.nms.local/' : 'https://stack.theheadandtale.com/') ?>"
+                            target="_blank" title="Report"
+                            <?php echo ((BASE_URL == '/report/') ? 'class="active"' : '') ?>>Report<sup
+                                class="sup">NEW</sup></a></li>
                 <?php
                 }
 

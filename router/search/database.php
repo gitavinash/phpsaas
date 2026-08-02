@@ -182,92 +182,108 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             if ($isNmsNewsSearch) {
 
                 $sql = "
-        SELECT DISTINCT
-            item_type,
-            title,
-            image,
-            url,
-            published_at,
-            relation_id,
-            tag_type,
-            description,
-            rel_score,
-            priority
-        FROM (
+    SELECT DISTINCT
+        item_type,
+        title,
+        image,
+        url,
+        published_at,
+        relation_id,
+        tag_type,
+        description,
+        category_title,
+        news_paid,
+        rel_score,
+        priority
+    FROM (
 
-            /* TAG MATCH */
-            SELECT
-                'news' AS item_type,
-                n.news_title AS title,
-                n.news_image AS image,
-                l.link_url AS url,
-                COALESCE(n.news_published, n.news_time) AS published_at,
-                n.news_id AS relation_id,
-                'tag' AS tag_type,
-                n.news_description AS description,
-                100 AS rel_score,
-                1 AS priority
+        /* TAG MATCH */
+        SELECT
+            'news' AS item_type,
+            n.news_title AS title,
+            n.news_image AS image,
+            l.link_url AS url,
+            COALESCE(n.news_published, n.news_time) AS published_at,
+            n.news_id AS relation_id,
+            'tag' AS tag_type,
+            n.news_description AS description,
+            c.category_title,
+            n.news_paid,
+            100 AS rel_score,
+            1 AS priority
 
-            FROM " . TABLE_PREFIX . "news n
+        FROM " . TABLE_PREFIX . "news n
 
-            INNER JOIN " . TABLE_PREFIX . "link l
-                ON l.link_relation_id = n.news_id
-               AND l.link_type = 'news'
-               AND l.link_status = 200
-               AND l.link_site_id = ?
+        INNER JOIN " . TABLE_PREFIX . "link l
+            ON l.link_relation_id = n.news_id
+           AND l.link_type = 'news'
+           AND l.link_status = 200
+           AND l.link_site_id = ?
 
-            INNER JOIN " . TABLE_PREFIX . "tag t
-                ON t.tag_relation_id = l.link_id
-               AND t.tag_type = 'news'
-               AND t.tag_site_id = ?
+        INNER JOIN " . TABLE_PREFIX . "category c
+            ON c.category_id = n.news_category
+           AND c.category_type = 'news'
+           AND c.category_site_id = ?
 
-            WHERE n.news_site_id = ?
-              AND n.news_status = 1
-              AND n.news_is_public = 1
-              AND MATCH(t.tag_title)
-                  AGAINST (? IN BOOLEAN MODE)
+        INNER JOIN " . TABLE_PREFIX . "tag t
+            ON t.tag_relation_id = l.link_id
+           AND t.tag_type = 'news'
+           AND t.tag_site_id = ?
 
-            UNION ALL
+        WHERE n.news_site_id = ?
+          AND n.news_status = 1
+          AND n.news_is_public = 1
+          AND MATCH(t.tag_title)
+              AGAINST (? IN BOOLEAN MODE)
 
-            /* TITLE MATCH */
-            SELECT
-                'news',
-                n.news_title,
-                n.news_image,
-                l.link_url,
-                COALESCE(n.news_published, n.news_time),
-                n.news_id,
-                NULL,
-                n.news_description,
-                MATCH(n.news_title)
-                    AGAINST (? IN BOOLEAN MODE) * 5,
-                2
+        UNION ALL
 
-            FROM " . TABLE_PREFIX . "news n
+        /* TITLE MATCH */
+        SELECT
+            'news',
+            n.news_title,
+            n.news_image,
+            l.link_url,
+            COALESCE(n.news_published, n.news_time),
+            n.news_id,
+            NULL,
+            n.news_description,
+            c.category_title,
+            n.news_paid,
+            MATCH(n.news_title)
+                AGAINST (? IN BOOLEAN MODE) * 5,
+            2
 
-            INNER JOIN " . TABLE_PREFIX . "link l
-                ON l.link_relation_id = n.news_id
-               AND l.link_type = 'news'
-               AND l.link_status = 200
-               AND l.link_site_id = ?
+        FROM " . TABLE_PREFIX . "news n
 
-            WHERE n.news_site_id = ?
-              AND n.news_status = 1
-              AND n.news_is_public = 1
-              AND MATCH(n.news_title)
-                  AGAINST (? IN BOOLEAN MODE)
+        INNER JOIN " . TABLE_PREFIX . "link l
+            ON l.link_relation_id = n.news_id
+           AND l.link_type = 'news'
+           AND l.link_status = 200
+           AND l.link_site_id = ?
 
-        ) AS combined_results
+        INNER JOIN " . TABLE_PREFIX . "category c
+            ON c.category_id = n.news_category
+           AND c.category_type = 'news'
+           AND c.category_site_id = ?
 
-        ORDER BY {$sortBy},
-                 priority ASC,
-                 rel_score DESC
+        WHERE n.news_site_id = ?
+          AND n.news_status = 1
+          AND n.news_is_public = 1
+          AND MATCH(n.news_title)
+              AGAINST (? IN BOOLEAN MODE)
 
-        LIMIT ? OFFSET ?
-        ";
+    ) AS combined_results
+
+    ORDER BY {$sortBy},
+             priority ASC,
+             rel_score DESC
+
+    LIMIT ? OFFSET ?";
 
                 $params = [
                     // TAG MATCH
+                    $siteId,
                     $siteId,
                     $siteId,
                     $siteId,
@@ -275,6 +291,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
 
                     // TITLE MATCH
                     $qAll,
+                    $siteId,
                     $siteId,
                     $siteId,
                     $qAll,

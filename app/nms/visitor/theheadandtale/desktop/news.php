@@ -1,7 +1,5 @@
 <?php
 
-require_once DATA_FUNCTIONS;
-require_once UTIL_FUNCTIONS;
 require_once 'header.php';
 
 $oldAuthorInfo = false;
@@ -123,7 +121,7 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                     }
                 }
 
-                $userAccessType = base64_decode($_COOKIE['user_type']);
+                $userAccessType = base64_decode(((isset($_COOKIE['user_data'])) ? $_COOKIE['user_data'] : ''));
 
                 if ($userAccessType == 'author' || $userAccessType == 'administrator') {
                     $showFullNews = true;
@@ -131,7 +129,7 @@ $newsContent =  substr($newsContent, 0, ((SITE_VERSION == 'mobile') ? 111 : 130)
                     $showSubscriptionSection = false;
                 }
 
-                echo "<div class='details_box__content {$news_paid} " . (($showFullNews == true) ? '' : 'text-gradient') . "'><p>" . (($showFullNews == true) ? $news_description : $newsContent) . "</p></div>";
+                echo "<div class='details_box__content {$news_paid} " . (($showFullNews == true) ? '' : 'text-gradient') . "'><p>" . (($showFullNews == true) ? removeInlineStyles($news_description) : removeInlineStyles($newsContent)) . "</p></div>";
 
                 $newsAudioSource = ((isset($news_audio) && !empty($news_audio)) ? $news_audio : '');
 
