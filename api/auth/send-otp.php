@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if ($otpDestination == '9990026008') {
             $otpCode = '111111';
         }
-        if ($otpDestination == 'avinashsharma114@gmail.com') {
+        if ($otpDestination == 'appreview@example.com') {
             $otpCode = '111111';
         }
 
