@@ -1,70 +1,70 @@
 <?php
 
-	/** Use for url rounting in router index.php */
+/** Use for url rounting in router index.php */
 
-	$urlStructure=explode('/', rtrim(ltrim(ACTIVE_URL_NON_QUERY, '/'), '/'));
+$urlStructure = explode('/', rtrim(ltrim(ACTIVE_URL_NON_QUERY, '/'), '/'));
 
-    $deviceOS=$_SERVER['HTTP_USER_AGENT'];
+$deviceOS = $_SERVER['HTTP_USER_AGENT'];
 
-	/** Defining Site Version  */
+/** Defining Site Version  */
 
-	switch($urlStructure[0]) {
 
-		case 'amp' : 	define('SITE_VERSION', 'amp');
-						break;
+if (isset($_GET['site_version'])) {
+    if ($_GET['site_version'] == 'app') {
+        define('SITE_VERSION', strtolower(str_replace(' ', '_', $_GET['site_version'])));
+    }
+} else {
+    switch ($urlStructure[0]) {
 
-		default : 	if($deviceType->isMobile()) {
-						
-						define('SITE_VERSION', 'mobile');
+        case 'amp':
+            define('SITE_VERSION', 'amp');
+            break;
 
-					} else if($deviceType->isTablet()) {
+        default:
+            if ($deviceType->isMobile()) {
 
-						define('SITE_VERSION', 'tablet');
+                define('SITE_VERSION', 'mobile');
+            } else if ($deviceType->isTablet()) {
 
-					} else {
+                define('SITE_VERSION', 'tablet');
+            } else {
+                define('SITE_VERSION', 'desktop');
+            }
+            break;
+    }
+}
 
-						define('SITE_VERSION', 'desktop');
+if (SITE_VERSION == 'mobile' || SITE_VERSION == 'tablet') {
 
-					}
-					break;
+    /** Check device is ios */
 
-	}
+    if ($deviceType->isiOS()) {
 
-    if(SITE_VERSION=='mobile' || SITE_VERSION=='tablet') {
-
-        /** Check device is ios */
-	
-        if($deviceType->isiOS()) {
-
-            define('DEVICE_OS', 'ios');
-            
-        }
-
-        /** Check device is android */
-
-        if($deviceType->isAndroidOS()) {
-
-            define('DEVICE_OS', 'android');
-
-        }
-
-    } else {
-
-        switch($deviceOS) {
-
-            case (preg_match('/Mac/', $deviceOS) ? true : false) :
-                define('DEVICE_OS', 'mac');
-                break;
-
-            case stristr($deviceOS, 'Linux') :
-                define('DEVICE_OS', 'linux');
-                break;
-
-            default:
-                define('DEVICE_OS', 'windows');
-                break;
-        }
-
+        define('DEVICE_OS', 'ios');
     }
 
-    require_once 'browserDetect.php';
+    /** Check device is android */
+
+    if ($deviceType->isAndroidOS()) {
+
+        define('DEVICE_OS', 'android');
+    }
+} else {
+
+    switch ($deviceOS) {
+
+        case (preg_match('/Mac/', $deviceOS) ? true : false):
+            define('DEVICE_OS', 'mac');
+            break;
+
+        case stristr($deviceOS, 'Linux'):
+            define('DEVICE_OS', 'linux');
+            break;
+
+        default:
+            define('DEVICE_OS', 'windows');
+            break;
+    }
+}
+
+require_once 'browserDetect.php';
