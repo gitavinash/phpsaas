@@ -32,15 +32,24 @@ require_once 'header.php';
         <div class='topics-grid'>
             <?php
 
-            $categoryQuery = "SELECT link_url, category_title, category_image
-FROM " . TABLE_PREFIX . "link
-INNER JOIN " . TABLE_PREFIX . "category
-    ON link_relation_id = category_id
-    AND category_site_id = " . SITE_ID . "
-    AND category_type='news'
-WHERE link_type='category'
-AND link_status=200
-AND link_site_id=" . SITE_ID . "
+            $categoryQuery = "SELECT
+    l.link_url,
+    c.category_title,
+    c.category_image
+FROM " . TABLE_PREFIX . "link AS l
+INNER JOIN " . TABLE_PREFIX . "category AS c
+    ON l.link_relation_id = c.category_id
+WHERE
+    c.category_site_id = " . SITE_ID . "
+    AND c.category_type = 'news'
+    AND l.link_type = 'category'
+    AND l.link_status = 200
+    AND l.link_site_id = " . SITE_ID . "
+    AND EXISTS (
+        SELECT 1
+        FROM " . TABLE_PREFIX . "news AS n
+        WHERE n.news_category = c.category_id
+    )
 ORDER BY RAND()";
 
             if ($categoryData = mysqli_query($connection, $categoryQuery)) {

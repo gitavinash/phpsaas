@@ -1,3 +1,54 @@
+// Global Fetch Interceptor to preserve site_version query parameter on all HTTP requests
+(function () {
+  const originalFetch = window.fetch;
+  window.fetch = function (resource, init) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const siteVersion = urlParams.get("site_version");
+    if (siteVersion) {
+      if (typeof resource === "string") {
+        if (!resource.includes("site_version=")) {
+          const separator = resource.includes("?") ? "&" : "?";
+          resource = resource + separator + "site_version=" + encodeURIComponent(siteVersion);
+        }
+      } else if (resource && resource.url) {
+        let url = resource.url;
+        if (!url.includes("site_version=")) {
+          const separator = url.includes("?") ? "&" : "?";
+          url = url + separator + "site_version=" + encodeURIComponent(siteVersion);
+          resource = new Request(url, resource);
+        }
+      }
+    }
+    return originalFetch.call(this, resource, init);
+  };
+
+  // Preserve site_version query parameter on link navigation clicks
+  document.addEventListener(
+    "click",
+    (e) => {
+      const link = e.target.closest("a[href]");
+      if (!link) return;
+      const urlParams = new URLSearchParams(window.location.search);
+      const siteVersion = urlParams.get("site_version");
+      if (!siteVersion) return;
+
+      const href = link.getAttribute("href");
+      if (
+        href &&
+        !href.startsWith("#") &&
+        !href.startsWith("javascript:") &&
+        !href.startsWith("tel:") &&
+        !href.startsWith("mailto:") &&
+        !href.includes("site_version=")
+      ) {
+        const separator = href.includes("?") ? "&" : "?";
+        link.setAttribute("href", href + separator + "site_version=" + encodeURIComponent(siteVersion));
+      }
+    },
+    true
+  );
+})();
+
 // Native Theme-Matched Toast Notification System (replaces default browser alert)
 window.showToast = function (message, type = "info") {
   if (!message) return;

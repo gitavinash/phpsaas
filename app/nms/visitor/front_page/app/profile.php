@@ -137,14 +137,14 @@ if (isset($_COOKIE['user_data'])) {
     ?>
 
     <div class="settings-list">
-        <a
+        <!-- <a
             href="/corporate-subscription/"
             class="settings-item native-list-item">
             <div class="settings-label">
                 <i class="ph ph-briefcase"></i> Corporate Subscription
             </div>
             <i class="ph ph-caret-right"></i>
-        </a>
+        </a> -->
         <!-- <div class="settings-item native-list-item">
             <div class="settings-label">
                 <i class="ph ph-bell"></i> Push Notifications
