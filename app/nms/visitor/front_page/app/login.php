@@ -140,7 +140,7 @@ require_once 'header.php';
         </form>
 
         <!-- Social Login Section (hidden when email is entered) -->
-        <div id="socialLoginSection">
+        <!-- <div id="socialLoginSection">
             <div class="auth-divider">
                 <span>or</span>
             </div>
@@ -150,7 +150,7 @@ require_once 'header.php';
                 class="auth-btn google-btn">
                 <i class="ph-fill ph-google-logo"></i> Continue with Google
             </a>
-        </div>
+        </div> -->
     </div>
 </div>
 
