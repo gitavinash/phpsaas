@@ -23,6 +23,92 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
 
 ?>
 
+<link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>datatable/css/buttons.min.css">
+
+<style>
+    .options-bar {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin: 15px 0 !important;
+        float: none !important;
+        clear: both !important;
+    }
+
+    .options-bar .left-box {
+        float: none !important;
+        width: auto !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .options-bar .right-box {
+        float: none !important;
+        width: auto !important;
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+    }
+
+    .export-btn-group {
+        display: inline-flex !important;
+        gap: 8px !important;
+    }
+
+    .btn-export {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 6px 14px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        border-radius: 4px !important;
+        border: 1px solid #dcdfe6 !important;
+        background-color: #ffffff !important;
+        color: #333333 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease-in-out !important;
+        text-decoration: none !important;
+        line-height: 1.4 !important;
+    }
+
+    .btn-export:hover {
+        background-color: #f5f7fa !important;
+        border-color: #c0c4cc !important;
+    }
+
+    .btn-export-excel {
+        color: #1e7e34 !important;
+        border-color: #28a745 !important;
+    }
+
+    .btn-export-excel:hover {
+        background-color: #28a745 !important;
+        color: #ffffff !important;
+    }
+
+    .btn-export-pdf {
+        color: #bd2130 !important;
+        border-color: #dc3545 !important;
+    }
+
+    .btn-export-pdf:hover {
+        background-color: #dc3545 !important;
+        color: #ffffff !important;
+    }
+
+    .btn-export-csv {
+        color: #0062cc !important;
+        border-color: #007bff !important;
+    }
+
+    .btn-export-csv:hover {
+        background-color: #007bff !important;
+        color: #ffffff !important;
+    }
+</style>
+
 <div class="modern-order-list">
     <h2>All Orders</h2>
     <div class="panel">
@@ -57,7 +143,11 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                 </form>
             </div>
             <div class="right-box">
-
+                <div class="export-btn-group">
+                    <button type="button" id="exportExcelBtn" class="btn-export btn-export-excel" title="Export to Excel">
+                        <i class="far fa-file-excel"></i> Export Orders to Excel
+                    </button>
+                </div>
             </div>
         </div>
         <table id="table" data-default-order-column="4" data-default-order-dir="desc">
@@ -152,7 +242,11 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                             }
 
                 ?>
-                            <tr>
+                            <tr data-name="<?php echo htmlspecialchars($profile_display_name, ENT_QUOTES); ?>"
+                                data-order-id="<?php echo htmlspecialchars('OD' . $order_id, ENT_QUOTES); ?>"
+                                data-product-name="<?php echo htmlspecialchars($productNameLabel, ENT_QUOTES); ?>"
+                                data-mobile-number="<?php echo htmlspecialchars($address_mobile, ENT_QUOTES); ?>"
+                                data-status="<?php echo htmlspecialchars($order_status, ENT_QUOTES); ?>">
                                 <td>
                                     <div class="order-cell">
                                         <div class="order-badge">
@@ -212,3 +306,135 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
         </table>
     </div>
 </div>
+
+<script>
+    (function() {
+        var pluginPath = '<?php echo PLUGIN_LIBRARY ?>datatable/js/';
+
+        function loadScript(src) {
+            return new Promise(function(resolve, reject) {
+                if (document.querySelector('script[src="' + src + '"]')) {
+                    resolve();
+                    return;
+                }
+                var s = document.createElement('script');
+                s.src = src;
+                s.onload = resolve;
+                s.onerror = reject;
+                document.head.appendChild(s);
+            });
+        }
+
+        function setupExportButtons() {
+            if (typeof $ === 'undefined' || !$.fn || !$.fn.DataTable) {
+                return;
+            }
+
+            var $table = $('#table');
+            if (!$table.length) {
+                return;
+            }
+
+            var table;
+            if ($.fn.DataTable.isDataTable('#table')) {
+                table = $table.DataTable();
+            } else {
+                var defaultOrderColumn = parseInt($table.attr("data-default-order-column"), 10);
+                var defaultOrderDir = $table.attr("data-default-order-dir") || "desc";
+                var pageLength = parseInt($table.attr("data-page-length"), 10) || 10;
+                table = $table.DataTable({
+                    bDestroy: true,
+                    bStateSave: false,
+                    pageLength: pageLength,
+                    order: [
+                        [!isNaN(defaultOrderColumn) ? defaultOrderColumn : 4, defaultOrderDir]
+                    ]
+                });
+            }
+
+            var exportButtonsCommon = {
+                customizeData: function(data) {
+                    data.header = ['Order ID', 'Client Name', 'Mobile Number', 'Product Name', 'Order Status'];
+                    data.body = [];
+
+                    var api = $('#table').DataTable();
+                    var rows = api.rows({
+                        search: 'applied',
+                        order: 'applied'
+                    }).nodes();
+
+                    $(rows).each(function() {
+                        var $tr = $(this);
+                        var orderId = $tr.attr('data-order-id') || '';
+                        var name = $tr.attr('data-name') || '';
+                        var mobileNumber = $tr.attr('data-mobile-number') || '';
+                        var productName = $tr.attr('data-product-name') || '';
+                        var status = $tr.attr('data-status') || '';
+
+                        data.body.push([orderId, name, mobileNumber, productName, status]);
+                    });
+                }
+            };
+
+            var dtButtons = new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                    $.extend(true, {}, exportButtonsCommon, {
+                        extend: 'excelHtml5',
+                        title: 'Orders_List_' + new Date().toISOString().slice(0, 10),
+                        className: 'dt-btn-excel-export'
+                    }),
+                    $.extend(true, {}, exportButtonsCommon, {
+                        extend: 'pdfHtml5',
+                        title: 'Orders List',
+                        orientation: 'landscape',
+                        pageSize: 'A4',
+                        className: 'dt-btn-pdf-export',
+                        customize: function(doc) {
+                            if (doc.content && doc.content[1] && doc.content[1].table) {
+                                doc.content[1].table.widths = ['15%', '22%', '18%', '30%', '15%'];
+                            }
+                            if (doc.styles && doc.styles.tableHeader) {
+                                doc.styles.tableHeader.alignment = 'left';
+                                doc.styles.tableHeader.fillColor = '#00609e';
+                            }
+                        }
+                    }),
+                    $.extend(true, {}, exportButtonsCommon, {
+                        extend: 'csvHtml5',
+                        title: 'Orders_List_' + new Date().toISOString().slice(0, 10),
+                        className: 'dt-btn-csv-export'
+                    })
+                ]
+            });
+
+            var $btnContainer = $(dtButtons.container());
+            $btnContainer.css('display', 'none').appendTo('body');
+
+            $('#exportExcelBtn').off('click').on('click', function(e) {
+                e.preventDefault();
+                $btnContainer.find('.dt-btn-excel-export').trigger('click');
+            });
+        }
+
+        function init() {
+            Promise.all([
+                loadScript(pluginPath + 'jszip.min.js'),
+                loadScript(pluginPath + 'pdfmake.min.js'),
+                loadScript(pluginPath + 'vfs_fonts.js'),
+                loadScript(pluginPath + 'buttons.min.js')
+            ]).then(function() {
+                return loadScript(pluginPath + 'buttons.html5.min.js');
+            }).then(function() {
+                setupExportButtons();
+            }).catch(function(err) {
+                console.error('Error loading DataTable export plugins:', err);
+            });
+        }
+
+        if (document.readyState === 'complete') {
+            init();
+        } else {
+            window.addEventListener('load', init);
+        }
+    })();
+</script>
