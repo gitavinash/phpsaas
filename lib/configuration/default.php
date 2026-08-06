@@ -59,7 +59,7 @@ define('FEED_LIMIT', ((isset($site_feed_limit)) ? $site_feed_limit : 10)); // to
 // Pagination starting fromy
 
 // Get current page number from query, default to 1 if not set or invalid
-$pageNo = isset($_GET['pg']) && is_numeric($_GET['pg']) && (int)$_GET['pg'] > 0 ? (int)$_GET['pg'] : 1;
+$pageNo = isset($_GET['page']) && is_numeric($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
 define('PAGE_NO', $pageNo);
 
 // SQL LIMIT clause

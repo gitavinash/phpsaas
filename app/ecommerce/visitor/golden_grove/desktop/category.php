@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'header.php';
+require_once 'header.php';
 
 ?>
 <section class="category_wrapper">
@@ -12,19 +12,19 @@
 
             <?php
 
-        if (isset($categorySinglePost)) { ?>
+            if (isset($categorySinglePost)) { ?>
 
 
-            <div class="row">
+                <div class="row">
 
-                <?php
+                    <?php
 
-                $j=0;
-                for ($i = 0; $i < sizeof($categorySinglePost); $i++) {
+                    $j = 0;
+                    for ($i = 0; $i < sizeof($categorySinglePost); $i++) {
 
-                    extract($categorySinglePost[$i]);
-                    echp (($j==0) ? "<div class='category_row'>": '');
-                    echo "<div class='col-md-3 col-6'>
+                        extract($categorySinglePost[$i]);
+                        echp(($j == 0) ? "<div class='category_row'>" : '');
+                        echo "<div class='col-md-3 col-6'>
                                     <a href='{$link_url}'>
                                         <div class='col-card-3'>
                                             <div class='event-card'>
@@ -38,46 +38,46 @@
                                         </div>
                                     </a>
                                 </div>";
-                    
-                    if($j==4) {
-                        echo "</div>";
-                        $j=0;
-                    } else {
-                        $j++;
-                    }
-                }
 
-                ?>
-
-            </div>
-            <div class="center">
-                <div class="pagination">
-                    <?php
-
-                    $sort = ((isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '');
-
-                    if (PAGE_NO != 0) {
-                        echo "<a href='" . BASE_URL . "?pg=" . PREVIOUS_PAGE . "{$sort}'>Previous page</a>";
-                    }
-
-                    if (NEXT_PAGE <= TOTAL_PAGE) {
-                        echo "<a href='" . BASE_URL . "?pg=" . NEXT_PAGE . "{$sort}'>Next page &raquo;</a>";
+                        if ($j == 4) {
+                            echo "</div>";
+                            $j = 0;
+                        } else {
+                            $j++;
+                        }
                     }
 
                     ?>
+
                 </div>
-            </div>
+                <div class="center">
+                    <div class="pagination">
+                        <?php
+
+                        $sort = ((isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '');
+
+                        if (PAGE_NO != 0) {
+                            echo "<a href='" . BASE_URL . "?page=" . PREVIOUS_PAGE . "{$sort}'>Previous page</a>";
+                        }
+
+                        if (NEXT_PAGE <= TOTAL_PAGE) {
+                            echo "<a href='" . BASE_URL . "?page=" . NEXT_PAGE . "{$sort}'>Next page &raquo;</a>";
+                        }
+
+                        ?>
+                    </div>
+                </div>
 
             <?php
-        } else {
+            } else {
 
-            echo "<section class='continue-shopping'>
+                echo "<section class='continue-shopping'>
     <h1><span>No product found</span></h1>
     <a href='/' class='btn btn-success'>Go to homepage</a>
 </section>";
-        }
+            }
 
-        ?>
+            ?>
 
         </div>
     </div>
@@ -190,6 +190,6 @@
 </section>
 <?php
 
-    require_once 'footer.php';
+require_once 'footer.php';
 
 ?>

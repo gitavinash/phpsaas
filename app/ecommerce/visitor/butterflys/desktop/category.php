@@ -57,9 +57,9 @@ include_once 'header.php';
         if (isset($categorySinglePost)) { ?>
 
 
-        <div class="row">
+            <div class="row">
 
-            <?php
+                <?php
 
                 for ($i = 0; $i < sizeof($categorySinglePost); $i++) {
 
@@ -83,24 +83,24 @@ include_once 'header.php';
 
                 ?>
 
-        </div>
-        <div class="center">
-            <div class="pagination">
-                <?php
+            </div>
+            <div class="center">
+                <div class="pagination">
+                    <?php
 
                     $sort = ((isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '');
 
                     if (PAGE_NO != 0) {
-                        echo "<a href='" . BASE_URL . "?pg=" . PREVIOUS_PAGE . "{$sort}'>Previous page</a>";
+                        echo "<a href='" . BASE_URL . "?page=" . PREVIOUS_PAGE . "{$sort}'>Previous page</a>";
                     }
 
                     if (NEXT_PAGE <= TOTAL_PAGE) {
-                        echo "<a href='" . BASE_URL . "?pg=" . NEXT_PAGE . "{$sort}'>Next page &raquo;</a>";
+                        echo "<a href='" . BASE_URL . "?page=" . NEXT_PAGE . "{$sort}'>Next page &raquo;</a>";
                     }
 
                     ?>
+                </div>
             </div>
-        </div>
 
         <?php
         } else {

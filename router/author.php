@@ -1,8 +1,8 @@
 <?php
 // Pagination logic inspired by category.php
 $currentPage = 1;
-if (isset($_GET['pg']) && is_numeric($_GET['pg']) && $_GET['pg'] > 0) {
-	$currentPage = (int)$_GET['pg'];
+if (isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0) {
+	$currentPage = (int)$_GET['page'];
 }
 $authorId = (int)$urlStructure[1];
 

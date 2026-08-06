@@ -11,7 +11,7 @@ echo "<link rel='canonical' href='{$canonicalURL}' />";
 
 $isSearch = strpos(BASE_URL, '/search/') !== false;
 $isTag = strpos(BASE_URL, '/tag/') !== false;
-$isPaginated = (int)($_GET['pg'] ?? $_GET['page'] ?? 1) > 1;
+$isPaginated = (int)($_GET['page'] ?? $_GET['page'] ?? 1) > 1;
 
 if ($isSearch || $isTag) {
     if ($isPaginated) {

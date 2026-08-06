@@ -12,12 +12,12 @@
 
     // ✅ Show "Previous" only if not on page 1
     if (PAGE_NO > 1) {
-        echo "<a class='previousBtn' href='" . BASE_URL . "?pg=" . PREVIOUS_PAGE . "{$qParam}{$sortParam}'>&laquo; Previous page</a>";
+        echo "<a class='previousBtn' href='" . BASE_URL . "?page=" . PREVIOUS_PAGE . "{$qParam}{$sortParam}'>&laquo; Previous page</a>";
     }
 
     // ✅ Show "Next" only if within total pages
     if (NEXT_PAGE <= TOTAL_PAGE) {
-        echo "<a class='nextBtn' href='" . BASE_URL . "?pg=" . NEXT_PAGE . "{$qParam}{$sortParam}'>Next page &raquo;</a>";
+        echo "<a class='nextBtn' href='" . BASE_URL . "?page=" . NEXT_PAGE . "{$qParam}{$sortParam}'>Next page &raquo;</a>";
     }
     ?>
 </div>

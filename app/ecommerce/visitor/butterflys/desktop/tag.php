@@ -131,11 +131,11 @@ if (is_array($tagPost)) {
                         $sort = ((isset($_GET['sort'])) ? '&sort=' . $_GET['sort'] : '');
 
                         if (PAGE_NO != 0) {
-                            echo "<a href='" . BASE_URL . "?pg=" . PREVIOUS_PAGE . "{$sort}'>Previous page</a>";
+                            echo "<a href='" . BASE_URL . "?page=" . PREVIOUS_PAGE . "{$sort}'>Previous page</a>";
                         }
 
                         if ((PAGE_NO + 1) != TOTAL_PAGE) {
-                            echo "<a href='" . BASE_URL . "?pg=" . NEXT_PAGE . "{$sort}'>Next page " . TOTAL_PAGE . " - " . NEXT_PAGE . " &raquo;</a>";
+                            echo "<a href='" . BASE_URL . "?page=" . NEXT_PAGE . "{$sort}'>Next page " . TOTAL_PAGE . " - " . NEXT_PAGE . " &raquo;</a>";
                         }
 
                         ?>

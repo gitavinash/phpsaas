@@ -3,7 +3,7 @@ require_once SEARCH_FUNCTIONS;
 
 $raw    = isset($searchKeyword) ? $searchKeyword : '';
 $siteId = (int) SITE_ID;
-$pageParam = $_GET['page'] ?? $_GET['pg'] ?? 1;   // ← accept both
+$pageParam = $_GET['page'] ?? $_GET['page'] ?? 1;   // ← accept both
 $page = max(1, (int)$pageParam);
 $limit  = 20;
 $offset = ($page - 1) * $limit;

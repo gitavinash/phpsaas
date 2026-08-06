@@ -7,7 +7,7 @@
         // Previous Button
         if (PAGE_NO > 1) {
             $prevPage = PAGE_NO - 1;
-            echo '<a href="' . BASE_URL . '?pg=' . $prevPage . '" class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-primary hover:text-primary transition-colors">
+            echo '<a href="' . BASE_URL . '?page=' . $prevPage . '" class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-primary hover:text-primary transition-colors">
                     <i class="ri-arrow-left-s-line"></i>
                   </a>';
         }
@@ -19,14 +19,14 @@
                 $activeClass = ($i == PAGE_NO)
                     ? 'bg-primary text-white'
                     : 'border border-gray-200 hover:border-primary hover:text-primary text-gray-500';
-                echo '<a href="' . BASE_URL . '?pg=' . $i . '" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">' . $i . '</a>';
+                echo '<a href="' . BASE_URL . '?page=' . $i . '" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">' . $i . '</a>';
             }
         } else {
             // first page
             $activeClass = (1 == PAGE_NO)
                 ? 'bg-primary text-white'
                 : 'border border-gray-200 hover:border-primary hover:text-primary text-gray-500';
-            echo '<a href="' . BASE_URL . '?pg=1" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">1</a>';
+            echo '<a href="' . BASE_URL . '?page=1" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">1</a>';
 
             // gap between first and current
             if (PAGE_NO > 2) {
@@ -36,7 +36,7 @@
                     $activeClass = ($i == PAGE_NO)
                         ? 'bg-primary text-white'
                         : 'border border-gray-200 hover:border-primary hover:text-primary text-gray-500';
-                    echo '<a href="' . BASE_URL . '?pg=' . $i . '" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">' . $i . '</a>';
+                    echo '<a href="' . BASE_URL . '?page=' . $i . '" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">' . $i . '</a>';
                 } else {
                     echo '<span class="px-2 text-gray-500">&hellip;</span>';
                 }
@@ -48,7 +48,7 @@
                 $activeClass = ($i == PAGE_NO)
                     ? 'bg-primary text-white'
                     : 'border border-gray-200 hover:border-primary hover:text-primary text-gray-500';
-                echo '<a href="' . BASE_URL . '?pg=' . $i . '" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">' . $i . '</a>';
+                echo '<a href="' . BASE_URL . '?page=' . $i . '" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">' . $i . '</a>';
             }
 
             // gap between current and last
@@ -59,7 +59,7 @@
                     $activeClass = ($i == PAGE_NO)
                         ? 'bg-primary text-white'
                         : 'border border-gray-200 hover:border-primary hover:text-primary text-gray-500';
-                    echo '<a href="' . BASE_URL . '?pg=' . $i . '" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">' . $i . '</a>';
+                    echo '<a href="' . BASE_URL . '?page=' . $i . '" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">' . $i . '</a>';
                 } else {
                     echo '<span class="px-2 text-gray-500">&hellip;</span>';
                 }
@@ -70,13 +70,13 @@
             $activeClass = ($i == PAGE_NO)
                 ? 'bg-primary text-white'
                 : 'border border-gray-200 hover:border-primary hover:text-primary text-gray-500';
-            echo '<a href="' . BASE_URL . '?pg=' . $i . '" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">' . $i . '</a>';
+            echo '<a href="' . BASE_URL . '?page=' . $i . '" class="w-10 h-10 flex items-center justify-center rounded ' . $activeClass . '">' . $i . '</a>';
         }
 
         // Next Button
         if (PAGE_NO < TOTAL_PAGE) {
             $nextPage = PAGE_NO + 1;
-            echo '<a href="' . BASE_URL . '?pg=' . $nextPage . '" class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-primary hover:text-primary transition-colors">
+            echo '<a href="' . BASE_URL . '?page=' . $nextPage . '" class="w-10 h-10 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-primary hover:text-primary transition-colors">
                     <i class="ri-arrow-right-s-line"></i>
                   </a>';
         }
