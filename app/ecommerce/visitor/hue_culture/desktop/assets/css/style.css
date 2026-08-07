@@ -5747,3 +5747,1251 @@ nav ul li a:hover .badge {
     padding: 30px 20px;
   }
 }
+
+/* ==========================================================================
+   Retainership Packages Category Styles (collaborations-category.php)
+   ========================================================================== */
+:root {
+  --rp-teal: #1d534b;
+  --rp-terracotta: #c2571a;
+  --rp-terracotta-hover: #a84813;
+  --rp-purple: #473059;
+  --rp-navy: #0d1b2a;
+  --rp-gold: #e6c896;
+  --rp-charcoal: #2c2825;
+  --rp-bg-cream: #f8f5f0;
+  --rp-bg-warm: #f2ece4;
+  --rp-card-bg: #ffffff;
+}
+
+.rp-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 25px;
+}
+
+/* Buttons */
+.btn-rp-filled {
+  background-color: var(--rp-terracotta);
+  color: #ffffff !important;
+  border: 1px solid var(--rp-terracotta);
+  padding: 15px 32px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 0;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn-rp-filled:hover {
+  background-color: var(--rp-terracotta-hover);
+  border-color: var(--rp-terracotta-hover);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(194, 87, 26, 0.35);
+}
+
+.btn-rp-outline {
+  background-color: transparent;
+  color: var(--rp-charcoal) !important;
+  border: 1px solid var(--rp-charcoal);
+  padding: 15px 32px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn-rp-outline:hover {
+  background-color: var(--rp-charcoal);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(44, 40, 37, 0.2);
+}
+
+/* 1. Header Hero Section (Top) */
+.rp-hero-section {
+  background-color: var(--rp-bg-cream);
+  padding: 160px 0 45px;
+  text-align: center;
+}
+
+.rp-hero-center {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rp-main-title {
+  font-family: var(--serif);
+  font-size: 3.6rem;
+  font-weight: 700;
+  color: var(--rp-charcoal);
+  line-height: 1.1;
+  margin-bottom: 18px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.rp-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 220px;
+  margin-bottom: 22px;
+}
+
+.rp-ornament-line {
+  height: 1px;
+  background-color: var(--rp-terracotta);
+  flex: 1;
+  opacity: 0.6;
+}
+
+.rp-diamond {
+  color: var(--rp-terracotta);
+  font-size: 0.85rem;
+}
+
+.rp-kicker {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--rp-terracotta);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.rp-desc {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  color: #555555;
+  line-height: 1.7;
+  max-width: 660px;
+}
+
+/* 2. Plans Row Section (3 Pricing Cards in Separate Full Row) */
+.rp-plans-section {
+  background-color: var(--rp-bg-cream);
+  padding: 30px 0 80px;
+}
+
+.rp-pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  align-items: stretch;
+}
+
+.rp-card {
+  background-color: var(--rp-card-bg);
+  border-radius: 14px;
+  padding: 52px 28px 40px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rp-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.09);
+}
+
+/* Top Card Badge Icon */
+.rp-card-badge {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 0 0 5px var(--rp-card-bg), 0 8px 18px rgba(0, 0, 0, 0.12);
+  z-index: 3;
+}
+
+.rp-card-badge svg {
+  width: 26px;
+  height: 26px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.3;
+}
+
+.rp-card-title {
+  font-family: var(--serif);
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 10px;
+  margin-bottom: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.rp-card-price {
+  font-family: var(--sans);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--rp-charcoal);
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.rp-card-price .rp-per {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #777777;
+}
+
+.rp-card-sub {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: #666666;
+  margin-bottom: 24px;
+}
+
+.rp-pill-tag {
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 50px;
+  color: #ffffff;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  line-height: 1.35;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Checklist */
+.rp-checklist {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  margin-top: 10px;
+}
+
+.rp-check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--rp-charcoal);
+  line-height: 1.45;
+  transition: transform 0.2s ease;
+}
+
+.rp-check-item:hover {
+  transform: translateX(3px);
+}
+
+.rp-check-icon {
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.rp-check-icon svg {
+  width: 11px;
+  height: 11px;
+  stroke: #ffffff;
+  fill: none;
+  stroke-width: 2.5;
+}
+
+/* Card Specific Colors & Top Accent Borders */
+.rp-card-essential {
+  border-top: 4px solid var(--rp-teal);
+}
+.rp-card-essential .rp-card-badge {
+  background-color: var(--rp-teal);
+}
+.rp-card-essential .rp-card-title {
+  color: var(--rp-teal);
+}
+.rp-card-essential .rp-pill-tag {
+  background-color: var(--rp-teal);
+}
+.rp-card-essential .rp-check-icon {
+  background-color: var(--rp-teal);
+}
+
+.rp-card-professional {
+  border-top: 4px solid var(--rp-terracotta);
+}
+.rp-card-professional .rp-card-badge {
+  background-color: var(--rp-terracotta);
+}
+.rp-card-professional .rp-card-title {
+  color: var(--rp-terracotta);
+}
+.rp-card-professional .rp-pill-tag {
+  background-color: var(--rp-terracotta);
+}
+.rp-card-professional .rp-check-icon {
+  background-color: var(--rp-terracotta);
+}
+
+.rp-card-signature {
+  border-top: 4px solid var(--rp-purple);
+}
+.rp-card-signature .rp-card-badge {
+  background-color: var(--rp-purple);
+}
+.rp-card-signature .rp-card-title {
+  color: var(--rp-purple);
+}
+.rp-card-signature .rp-pill-tag {
+  background-color: var(--rp-purple);
+}
+.rp-card-signature .rp-check-icon {
+  background-color: var(--rp-purple);
+}
+
+/* 3. Features Section ("WHY WORK ON RETAINER?") */
+.rp-features-section {
+  background-color: var(--rp-bg-cream);
+  padding: 20px 0 80px;
+}
+
+.rp-why-strip {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 50px 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.rp-why-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: var(--rp-charcoal);
+  text-transform: uppercase;
+  margin-bottom: 45px;
+}
+
+.rp-why-header-line {
+  height: 1px;
+  width: 45px;
+  background-color: var(--rp-terracotta);
+}
+
+.rp-why-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.rp-why-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  cursor: default;
+}
+
+.rp-why-circle {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rp-why-circle.rp-c-teal { background-color: var(--rp-teal); }
+.rp-why-circle.rp-c-terracotta { background-color: var(--rp-terracotta); }
+.rp-why-circle.rp-c-coral { background-color: #d16b4c; }
+.rp-why-circle.rp-c-slate { background-color: #3e5a78; }
+.rp-why-circle.rp-c-purple { background-color: var(--rp-purple); }
+.rp-why-circle.rp-c-cyan { background-color: #1a707a; }
+
+.rp-why-item:hover .rp-why-circle {
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.rp-why-circle svg {
+  width: 25px;
+  height: 25px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.3;
+}
+
+.rp-why-text {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--rp-charcoal);
+  line-height: 1.4;
+  max-width: 160px;
+}
+
+/* 4. Bottom Dark Navy Quote Banner */
+.rp-navy-banner {
+  background-color: var(--rp-navy);
+  padding: 65px 25px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.rp-navy-content {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.rp-navy-title {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  color: #ffffff;
+  font-weight: 400;
+  line-height: 1.3;
+  margin-bottom: 6px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.rp-navy-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 2.4rem;
+  color: var(--rp-gold);
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.rp-navy-art {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.35;
+  width: 180px;
+  pointer-events: none;
+}
+
+.rp-navy-art-left {
+  left: 20px;
+}
+
+.rp-navy-art-right {
+  right: 20px;
+  transform: translateY(-50%) scaleX(-1);
+}
+
+/* Responsive Design for Retainership Packages */
+@media (max-width: 1024px) {
+  .rp-pricing-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .rp-why-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .rp-hero-section {
+    padding: 120px 0 35px;
+  }
+
+  .rp-main-title {
+    font-size: 2.8rem;
+  }
+
+  .rp-pricing-cards {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .rp-why-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .rp-navy-title,
+  .rp-navy-sub {
+    font-size: 1.7rem;
+  }
+}
+
+/* ==========================================================================
+   Colour Styling Category Styles (color-dna-category.php)
+   ========================================================================== */
+:root {
+  --cs-terracotta: #ba6041;
+  --cs-terracotta-hover: #a35337;
+  --cs-charcoal: #2c2825;
+  --cs-text-muted: #555555;
+  --cs-bg-light: #f8f6f3;
+  --cs-bg-warm: #f2ece4;
+  --cs-sage-green: #485e49;
+}
+
+.cs-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 25px;
+}
+
+/* Buttons */
+.btn-cs-filled {
+  background-color: var(--cs-terracotta);
+  color: #ffffff !important;
+  border: 1px solid var(--cs-terracotta);
+  padding: 14px 28px;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 0;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn-cs-filled:hover {
+  background-color: var(--cs-terracotta-hover);
+  border-color: var(--cs-terracotta-hover);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(186, 96, 65, 0.3);
+}
+
+.btn-cs-outline {
+  background-color: transparent;
+  color: var(--cs-charcoal) !important;
+  border: 1px solid var(--cs-charcoal);
+  padding: 14px 28px;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn-cs-outline:hover {
+  background-color: var(--cs-charcoal);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(44, 40, 37, 0.2);
+}
+
+.cs-link-underline {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--cs-charcoal);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.cs-link-underline:hover {
+  color: var(--cs-terracotta);
+}
+
+.cs-accent-line {
+  width: 45px;
+  height: 2px;
+  background-color: var(--cs-terracotta);
+  margin-bottom: 22px;
+}
+
+/* 1. Hero Section */
+.cs-hero {
+  background-color: var(--cs-bg-light);
+  background-image: linear-gradient(to right,
+          rgba(248, 246, 243, 0.98) 0%,
+          rgba(248, 246, 243, 0.92) 42%,
+          rgba(248, 246, 243, 0.55) 70%,
+          rgba(248, 246, 243, 0.15) 100%), url("https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1920&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  padding: 170px 0 110px;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+}
+
+.cs-hero-content {
+  max-width: 650px;
+}
+
+.cs-kicker {
+  color: var(--cs-terracotta);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.cs-hero-title {
+  font-family: var(--serif);
+  font-size: 3.4rem;
+  font-weight: 700;
+  color: var(--cs-charcoal);
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+
+.cs-hero-title .cs-highlight {
+  color: var(--cs-terracotta);
+}
+
+.cs-hero-desc {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  color: var(--cs-text-muted);
+  line-height: 1.7;
+  max-width: 520px;
+  margin-bottom: 35px;
+}
+
+.cs-hero-btns {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cs-hero-visual img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.07);
+}
+
+/* 2. Value Proposition Strip */
+.cs-value-strip {
+  background-color: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 35px 0;
+}
+
+.cs-value-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+}
+
+.cs-value-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 0 15px;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+}
+
+.cs-value-item:hover {
+  transform: translateY(-3px);
+}
+
+.cs-value-item:last-child {
+  border-right: none;
+}
+
+.cs-value-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--cs-charcoal);
+  transition: color 0.3s ease;
+}
+
+.cs-value-item:hover .cs-value-icon {
+  color: var(--cs-terracotta);
+}
+
+.cs-value-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.3;
+}
+
+.cs-value-text {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cs-charcoal);
+  line-height: 1.35;
+  max-width: 170px;
+}
+
+/* 3. What is Colour Styling */
+.cs-what-is {
+  background-color: var(--cs-bg-light);
+  background-image: linear-gradient(to right,
+          rgba(248, 246, 243, 0.98) 0%,
+          rgba(248, 246, 243, 0.92) 42%,
+          rgba(248, 246, 243, 0.55) 70%,
+          rgba(248, 246, 243, 0.15) 100%), url("https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1920&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  padding: 140px 0;
+  min-height: 480px;
+  display: flex;
+  align-items: center;
+}
+
+.cs-what-content {
+  max-width: 620px;
+}
+
+.cs-sub-kicker {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #666666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.cs-section-title {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--cs-charcoal);
+  margin-bottom: 25px;
+  letter-spacing: 0.5px;
+}
+
+.cs-body-text {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  color: var(--cs-text-muted);
+  line-height: 1.75;
+  max-width: 500px;
+}
+
+.cs-what-img {
+  width: 100%;
+  height: 440px;
+  object-fit: cover;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+}
+
+/* 4. What We Style */
+.cs-what-we-style {
+  background-color: #ffffff;
+  padding: 100px 0;
+}
+
+.cs-center-title {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--cs-charcoal);
+  text-align: center;
+  letter-spacing: 1.5px;
+  margin-bottom: 60px;
+  text-transform: uppercase;
+}
+
+.cs-style-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.cs-style-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+}
+
+.cs-style-item:hover {
+  transform: translateY(-4px);
+}
+
+.cs-style-icon {
+  width: 44px;
+  height: 44px;
+  color: var(--cs-charcoal);
+  transition: color 0.3s ease;
+}
+
+.cs-style-item:hover .cs-style-icon {
+  color: var(--cs-terracotta);
+}
+
+.cs-style-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.2;
+}
+
+.cs-style-name {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cs-charcoal);
+  line-height: 1.35;
+  max-width: 130px;
+}
+
+/* 5. Our Colour Styling Approach */
+.cs-approach {
+  background-color: var(--cs-bg-light);
+  padding: 90px 0;
+}
+
+.cs-approach-grid {
+  display: grid;
+  grid-template-columns: 0.55fr 1.45fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.cs-approach-img {
+  width: 100%;
+  height: 310px;
+  object-fit: cover;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cs-approach-img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+}
+
+.cs-approach-title {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--cs-charcoal);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.cs-approach-line {
+  width: 40px;
+  height: 2px;
+  background-color: var(--cs-terracotta);
+  margin-bottom: 40px;
+}
+
+.cs-steps-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  position: relative;
+}
+
+.cs-step-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.cs-step-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.cs-step-icon {
+  width: 42px;
+  height: 42px;
+  color: var(--cs-charcoal);
+  flex-shrink: 0;
+  z-index: 2;
+  background-color: var(--cs-bg-light);
+  padding: 0 4px;
+}
+
+.cs-step-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.2;
+}
+
+.cs-step-arrow {
+  position: absolute;
+  left: 55%;
+  width: 90%;
+  top: 50%;
+  height: 1px;
+  border-bottom: 1.5px dotted #aaaaaa;
+  z-index: 1;
+}
+
+.cs-step-arrow::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -3px;
+  width: 5px;
+  height: 5px;
+  border-top: 1.5px solid #aaaaaa;
+  border-right: 1.5px solid #aaaaaa;
+  transform: rotate(45deg);
+}
+
+.cs-step-card:last-child .cs-step-arrow {
+  display: none;
+}
+
+.cs-step-title {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--cs-charcoal);
+  margin-bottom: 6px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.cs-step-desc {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: #666666;
+  line-height: 1.45;
+  text-align: center;
+  max-width: 140px;
+}
+
+/* 6. Ready to Style Your Space */
+.cs-ready-section {
+  background-color: var(--cs-bg-warm);
+  padding: 90px 0;
+  width: 100%;
+}
+
+.cs-ready-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 0.9fr;
+  gap: 45px;
+  align-items: center;
+}
+
+.cs-ready-title {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cs-charcoal);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+  line-height: 1.25;
+}
+
+.cs-ready-desc {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  color: var(--cs-text-muted);
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.cs-ready-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.cs-ready-features {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 20px;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.cs-r-feature {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cs-rf-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--cs-charcoal);
+  flex-shrink: 0;
+}
+
+.cs-rf-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.3;
+}
+
+.cs-rf-text {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--cs-charcoal);
+}
+
+.cs-ready-img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* 7. Dark Sage Quote Banner */
+.cs-sage-banner {
+  background-color: var(--cs-sage-green);
+  padding: 55px 25px;
+  text-align: center;
+}
+
+.cs-sage-top {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  color: #ffffff;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  opacity: 0.95;
+}
+
+.cs-sage-script {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 2.5rem;
+  color: #f7e8db;
+  font-weight: 400;
+}
+
+/* Responsive Design for Colour Styling */
+@media (max-width: 1024px) {
+  .cs-hero-grid,
+  .cs-what-grid,
+  .cs-approach-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .cs-style-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+  }
+
+  .cs-steps-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+
+  .cs-ready-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .cs-ready-features {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cs-hero {
+    padding: 120px 0 60px;
+  }
+
+  .cs-hero-title {
+    font-size: 2.5rem;
+  }
+
+  .cs-value-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+  }
+
+  .cs-value-item {
+    border-right: none;
+  }
+
+  .cs-style-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .cs-steps-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .cs-sage-script {
+    font-size: 1.8rem;
+  }
+}
+
+/* ==========================================================================
+   Brand Colour Strategy Micro-Polishes (product-category.php)
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6, .btn-filled, .btn-outline, .btn-gb-outline, .c-submit {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.btn-filled {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-filled:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(186, 96, 65, 0.35);
+}
+
+.btn-outline, .btn-gb-outline {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-outline:hover, .btn-gb-outline:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(44, 40, 37, 0.2);
+}
+
+.c-submit {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.c-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(186, 96, 65, 0.35);
+}
+
+.matter-card, .who-card, .process-step {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: default;
+}
+
+.matter-card:hover, .who-card:hover, .process-step:hover {
+  transform: translateY(-4px);
+}
+
+.matter-card:hover .matter-icon,
+.who-card:hover .who-icon,
+.process-step:hover .process-icon {
+  color: #ba6041 !important;
+  transition: color 0.3s ease;
+}
+
+.project-card {
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.project-card img {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.project-card:hover img {
+  transform: scale(1.03);
+}
+
+.c-input:focus {
+  border-color: #ba6041 !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(186, 96, 65, 0.12) !important;
+  transition: all 0.2s ease;
+}
+
