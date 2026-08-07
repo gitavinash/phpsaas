@@ -50,7 +50,7 @@ if ($currentPage < $totalPages) {
             <div class="category-card-img">
               <?php if ($newsPaid): ?>
                 <span class="paid-badge overlay">
-                  <svg class="paid-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                  <svg class="paid-icon" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z"/></svg>
                   Premium
                 </span>
               <?php endif; ?>

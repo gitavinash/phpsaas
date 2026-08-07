@@ -56,10 +56,11 @@ $featuredArticle = $latestNewsData[0] ?? null;
 // 2. Fetch Editor's Picks (tag containing 'editor')
 $editorsPicks = [];
 $epQuery = "
-    SELECT news_title, news_image, link_url, news_paid 
+    SELECT news_title, news_image, link_url, news_paid, category_title 
     FROM " . TABLE_PREFIX . "tag 
     INNER JOIN " . TABLE_PREFIX . "news ON news_id=tag_relation_id 
     INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id 
+    LEFT JOIN " . TABLE_PREFIX . "category ON news_category = category_id AND category_site_id = " . SITE_ID . "
     WHERE link_site_id=" . SITE_ID . " 
       AND link_type='news' 
       AND link_status=200 
@@ -187,14 +188,37 @@ if ($aiResult = mysqli_query($connection, $aiQuery)) {
           <?php if (!empty($editorsPicks)): ?>
             <?php foreach ($editorsPicks as $ep): ?>
               <li class="ep-item">
-                <?php if ($ep['news_paid'] == 1): ?>
-                  <span class="paid-badge"><svg class="paid-icon" viewBox="0 0 24 24">
-                      <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-                    </svg>
-                    Premium</span>
-                <?php endif; ?>
-                <a href="<?php echo htmlspecialchars($ep['link_url']); ?>"><?php echo htmlspecialchars($ep['news_title']); ?></a>
+                <article class="ep-card">
+                  <?php if (!empty($ep['news_image'])): ?>
+                    <div class="ep-card-image">
+                      <a href="<?php echo htmlspecialchars($ep['link_url']); ?>">
+                        <img
+                          src="<?php echo htmlspecialchars($ep['news_image']); ?>"
+                          alt="<?php echo htmlspecialchars($ep['news_title']); ?>"
+                          loading="lazy"
+                          class="ep-img" />
+                      </a>
+                    </div>
+                  <?php endif; ?>
+                  <div class="ep-card-content">
+                    <div class="ep-card-meta">
+                      <?php if ($ep['news_paid'] == 1): ?>
+                        <span class="paid-badge">
+                          <svg class="paid-icon" viewBox="0 0 24 24">
+                            <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
+                          </svg>
+                          Premium
+                        </span>
+                      <?php endif; ?>
+                      <?php if (!empty($ep['category_title'])): ?>
+                        <span class="ep-category"><?php echo htmlspecialchars($ep['category_title']); ?></span>
+                      <?php endif; ?>
+                    </div>
+                    <h4 class="ep-card-title">
+                      <a href="<?php echo htmlspecialchars($ep['link_url']); ?>"><?php echo htmlspecialchars($ep['news_title']); ?></a>
+                    </h4>
+                  </div>
+                </article>
               </li>
             <?php endforeach; ?>
           <?php else: ?>
@@ -230,7 +254,7 @@ if ($aiResult = mysqli_query($connection, $aiQuery)) {
                 <?php if ($tItem['news_paid'] == 1): ?>
                   <span class="paid-badge"><svg class="paid-icon" viewBox="0 0 24 24">
                       <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                        d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
                     </svg>
                     Premium</span>
                 <?php endif; ?>
@@ -299,7 +323,7 @@ if ($aiResult = mysqli_query($connection, $aiQuery)) {
           <div class="image-wrapper fintech-lead-img">
             <?php if (!empty($f0['news_paid']) && $f0['news_paid'] == 1): ?>
               <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
                 </svg> Premium</span>
             <?php endif; ?>
             <a href="<?php echo htmlspecialchars($f0['link_url']); ?>">
@@ -330,7 +354,7 @@ if ($aiResult = mysqli_query($connection, $aiQuery)) {
             <div class="image-wrapper fintech-mini-img">
               <?php if (!empty($f1['news_paid']) && $f1['news_paid'] == 1): ?>
                 <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
                   </svg> Premium</span>
               <?php endif; ?>
               <a href="<?php echo htmlspecialchars($f1['link_url']); ?>">
@@ -352,7 +376,7 @@ if ($aiResult = mysqli_query($connection, $aiQuery)) {
             <div class="image-wrapper fintech-mini-img">
               <?php if (!empty($f2['news_paid']) && $f2['news_paid'] == 1): ?>
                 <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
                   </svg> Premium</span>
               <?php endif; ?>
               <a href="<?php echo htmlspecialchars($f2['link_url']); ?>">
@@ -373,7 +397,7 @@ if ($aiResult = mysqli_query($connection, $aiQuery)) {
           <article class="fintech-banner-card" style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.88) 100%), url('<?php echo htmlspecialchars($f3['news_image']); ?>');">
             <?php if (!empty($f3['news_paid']) && $f3['news_paid'] == 1): ?>
               <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
                 </svg> Premium</span>
             <?php endif; ?>
             <div class="fintech-banner-content">
@@ -405,7 +429,7 @@ if ($aiResult = mysqli_query($connection, $aiQuery)) {
               <?php if ($mm['news_paid'] == 1): ?>
                 <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
                     <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                      d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
                   </svg>
                   Premium</span>
               <?php endif; ?>
@@ -450,7 +474,7 @@ if ($aiResult = mysqli_query($connection, $aiQuery)) {
                   <div class="image-wrapper ipo-img-wrapper">
                     <?php if (!empty($ipo['news_paid']) && $ipo['news_paid'] == 1): ?>
                       <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
                         </svg> Premium</span>
                     <?php endif; ?>
                     <a href="<?php echo htmlspecialchars($ipo['link_url']); ?>">
@@ -521,7 +545,7 @@ if ($aiResult = mysqli_query($connection, $aiQuery)) {
                 <div class="image-wrapper tech-image-wrapper">
                   <?php if (!empty($ai['news_paid']) && $ai['news_paid'] == 1): ?>
                     <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                        <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
                       </svg> Premium</span>
                   <?php endif; ?>
                   <a href="<?php echo htmlspecialchars($ai['link_url']); ?>">

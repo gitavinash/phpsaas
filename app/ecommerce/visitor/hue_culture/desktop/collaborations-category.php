@@ -6,8 +6,32 @@ require_once 'header.php';
 
 
 
-<!-- 1. Header Hero Section (Top) -->
-<section class="rp-hero-section">
+<!-- 1. Strategic Partnerships Hero Section -->
+<section class="cs-hero">
+    <div class="cs-container">
+        <div class="cs-hero-content">
+            <div class="cs-kicker">COLOUR COLLABORATIONS & CONSULTANCY</div>
+            <h1 class="cs-hero-title">
+                Elevate Design.<br>
+                <span class="cs-highlight">Transform Experience.</span>
+            </h1>
+            <div class="cs-accent-line"></div>
+            <p class="cs-hero-desc">
+                Exceptional spaces are shaped by more than form—they are defined by the emotions they evoke. At Color Clinic, we partner with architects, interior designers, developers, and brands to craft thoughtful colour strategies that elevate design, enrich user experience, and strengthen project narratives.
+            </p>
+            <p class="cs-hero-desc" style="margin-top: -18px; max-width: 600px;">
+                As an extension of your design team, we bring expertise in colour psychology, material harmony, and lighting integration to ensure every palette is purposeful, cohesive, and aligned with the vision of the project. Whether supporting a single project or working alongside your team on a long-term retainer, we help transform colour into a strategic design asset.
+            </p>
+            <div class="cs-hero-btns">
+                <a href="#retainership-packages" class="btn-cs-filled">EXPLORE RETAINER PACKAGES</a>
+                <a href="#" class="btn-cs-outline">BOOK A CONSULTATION</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 2. Header Hero Section (Packages) -->
+<section id="retainership-packages" class="rp-hero-section">
     <div class="rp-container rp-hero-center">
         <h1 class="rp-main-title">Retainership Packages</h1>
         <div class="rp-ornament">
