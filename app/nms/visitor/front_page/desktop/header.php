@@ -95,6 +95,7 @@ if (isset($_COOKIE['user_data'])) {
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css" />
   <?php require_once DEFAULT_META ?>
   <!-- JSON-LD Structured Data Schema -->
@@ -313,7 +314,7 @@ if (isset($_COOKIE['user_data'])) {
 
       <!-- App Download Drawer Promo -->
       <div class="drawer-app-promo">
-        <div class="app-promo-icon">🔖</div>
+        <div class="app-promo-icon"><i class="ph ph-bookmark-simple"></i></div>
         <h4>Bookmark Stories on Mobile</h4>
         <p>Save articles offline and receive instant news notifications on iOS &amp; Android.</p>
         <a href="/app-download/" class="btn-app-download">Download App &rarr;</a>
@@ -324,7 +325,7 @@ if (isset($_COOKIE['user_data'])) {
   <!-- Floating Mobile Smart App Banner -->
   <div class="mobile-app-banner" id="mobileAppBanner">
     <div class="app-banner-info">
-      <div class="app-banner-icon">📱</div>
+      <div class="app-banner-icon"><i class="ph ph-device-mobile"></i></div>
       <div class="app-banner-text">
         <strong>Get The Head &amp; Tale App</strong>
         <span>Bookmark stories &amp; read offline</span>
@@ -340,7 +341,7 @@ if (isset($_COOKIE['user_data'])) {
   <div class="search-modal bookmark-app-modal" id="bookmarkAppModal" aria-hidden="true" role="dialog">
     <div class="bookmark-modal-box">
       <button class="close-search-btn bookmark-modal-close" id="closeBookmarkModalBtn">&times;</button>
-      <div class="bookmark-modal-icon">🔖</div>
+      <div class="bookmark-modal-icon"><i class="ph ph-bookmark-simple"></i></div>
       <h2>Bookmark Stories on Mobile App</h2>
       <p>Save articles offline, build your reading list, and get real-time breaking news alerts on iOS &amp; Android.</p>
       

@@ -109,7 +109,7 @@ $remainingPosts = is_array($queryPost) ? array_slice($queryPost, $initialBatchSi
       </div>
     <?php else: ?>
       <div class="search-no-results">
-        <div class="search-no-results-icon">🔍</div>
+        <div class="search-no-results-icon"><i class="ph ph-magnifying-glass"></i></div>
         <h2>No Stories Found</h2>
         <p>We couldn't find any articles matching "<strong><?php echo h($searchKeyword); ?></strong>". Try searching for related industry terms or explore popular sections below.</p>
         <div class="popular-tags-bar" style="justify-content: center; margin-top: 20px;">

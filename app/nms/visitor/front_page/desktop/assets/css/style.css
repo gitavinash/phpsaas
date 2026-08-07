@@ -2757,7 +2757,7 @@ img {
 }
 
 .plan-price-tag {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 2.2rem;
   font-weight: 700;
   color: var(--primary-color);

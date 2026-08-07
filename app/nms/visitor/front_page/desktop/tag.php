@@ -81,7 +81,7 @@ if ($currentPage < $totalPages) {
                         <div class="category-card-meta">
                           <span class="date"><?php echo $pubDate; ?><?php echo $authorName ? ' • ' . $authorName : ''; ?></span>
                           <div style="display: flex; align-items: center; gap: 10px;">
-                            <button class="trigger-bookmark-app bookmark-card-btn" title="Bookmark on Mobile App" aria-label="Bookmark Story">🔖</button>
+                            <button class="trigger-bookmark-app bookmark-card-btn" title="Bookmark on Mobile App" aria-label="Bookmark Story"><i class="ph ph-bookmark-simple"></i></button>
                             <span class="read-more">Read Story <span class="arrow">→</span></span>
                           </div>
                         </div>
@@ -97,7 +97,7 @@ if ($currentPage < $totalPages) {
     if (!$hasPosts):
     ?>
       <div class="search-no-results" style="margin: 40px auto;">
-        <div class="search-no-results-icon">🏷️</div>
+        <div class="search-no-results-icon"><i class="ph ph-tag"></i></div>
         <h2>No Stories Tagged #<?php echo $tagTitleFormatted; ?></h2>
         <p>We couldn't find any active articles with this tag. Explore popular categories below.</p>
         <div class="popular-tags-bar" style="justify-content: center; margin-top: 20px;">

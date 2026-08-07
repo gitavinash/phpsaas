@@ -84,7 +84,7 @@ if (isset($newsList['articles']) && sizeof($newsList['articles']) > 0) {
                         <span class="article-meta-date"><?php echo date('M d, Y • h:i A', strtotime($news_published)); ?></span>
                     </div>
                     <div class="article-meta-right">
-                        <span class="read-time">📖 <?php echo $readTime; ?> min read</span>
+                        <span class="read-time"><i class="ph ph-book-open"></i> <?php echo $readTime; ?> min read</span>
                     </div>
                 </div>
             </header>
