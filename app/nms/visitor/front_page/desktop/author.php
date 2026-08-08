@@ -32,7 +32,7 @@ if ($currentPage < $totalPages) {
         <?php if (!empty($authorImage)): ?>
           <img src="<?php echo $authorImage; ?>" alt="<?php echo $authorName; ?>" class="author-avatar-lg" />
         <?php else: ?>
-          <div class="author-avatar-lg" style="background: #334155; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: 700;">
+          <div class="author-avatar-lg author-avatar-fallback">
             <span><?php echo strtoupper(substr($authorName, 0, 1)); ?></span>
           </div>
         <?php endif; ?>
@@ -65,11 +65,11 @@ if ($currentPage < $totalPages) {
             }
           }
           if ($hasAny) {
-            echo '<div class="author-social-row" style="display:flex;gap:12px;margin-top:10px;">';
+            echo '<div class="author-social-row">';
             foreach ($socials as $platform => $icon) {
               $url = $socialLinks[$platform] ?? '';
               if (!empty($url)) {
-                echo '<a href="' . htmlspecialchars($url) . '" target="_blank" style="color:#cbd5e1;transition:color 0.2s;" title="' . ucfirst($platform) . '">' . $icon . '</a>';
+                echo '<a href="' . htmlspecialchars($url) . '" target="_blank" title="' . ucfirst($platform) . '">' . $icon . '</a>';
               }
             }
             echo '</div>';
@@ -81,7 +81,7 @@ if ($currentPage < $totalPages) {
   </div>
 
   <div class="container">
-    <div class="section-header" style="margin-bottom: 24px;">
+    <div class="section-header author-articles-header">
       <h2>Articles by <?php echo $authorName; ?></h2>
     </div>
 
@@ -138,74 +138,5 @@ if ($currentPage < $totalPages) {
 
   </div>
 </section>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const trigger = document.getElementById('authorInfiniteTrigger');
-    const grid = document.getElementById('authorNewsGrid');
-
-    if (!trigger || !grid) return;
-
-    let isFetching = false;
-
-    const fetchNextPage = function() {
-      const nextPageUrl = trigger.getAttribute('data-next-page');
-      if (!nextPageUrl || isFetching) return;
-
-      isFetching = true;
-
-      fetch(nextPageUrl)
-        .then(res => res.text())
-        .then(htmlText => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlText, 'text/html');
-          const newCards = doc.querySelectorAll('#authorNewsGrid .category-news-card');
-
-          if (newCards && newCards.length > 0) {
-            newCards.forEach((card, index) => {
-              card.style.opacity = '0';
-              card.style.transform = 'translateY(15px)';
-              card.style.transition = `opacity 0.4s ease ${index * 0.05}s, transform 0.4s ease ${index * 0.05}s`;
-              grid.appendChild(card);
-
-              requestAnimationFrame(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-              });
-            });
-
-            const nextTrigger = doc.querySelector('#authorInfiniteTrigger');
-            const nextUrlAttr = nextTrigger ? nextTrigger.getAttribute('data-next-page') : '';
-
-            if (nextUrlAttr && nextUrlAttr !== nextPageUrl) {
-              trigger.setAttribute('data-next-page', nextUrlAttr);
-            } else {
-              trigger.style.display = 'none';
-            }
-          } else {
-            trigger.style.display = 'none';
-          }
-          isFetching = false;
-        })
-        .catch(err => {
-          console.error('Error fetching author stories:', err);
-          trigger.style.display = 'none';
-          isFetching = false;
-        });
-    };
-
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !isFetching) {
-            fetchNextPage();
-          }
-        });
-      }, { rootMargin: '600px' });
-
-      observer.observe(trigger);
-    }
-  });
-</script>
 
 <?php require_once 'footer.php'; ?>

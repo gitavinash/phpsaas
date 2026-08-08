@@ -382,7 +382,7 @@ function getHomepageContent($conn)
     return $out;
 }
 
-function getCategoryPost($conn, $categoryId = 0, $categoryType = 'post', $sortBy = 'new', $dateFilter = 'all', $pageNo = 0)
+function getCategoryPost($conn, $categoryId = 0, $categoryType = 'post', $sortBy = 'new', $dateFilter = 'all', $pageNo = 0, $limit = 10)
 {
     if ($categoryId == 0) {
         return [];
@@ -436,7 +436,7 @@ function getCategoryPost($conn, $categoryId = 0, $categoryType = 'post', $sortBy
             break;
     }
 
-    $categoryQuery = "SELECT * FROM " . TABLE_PREFIX . "post WHERE post_category={$categoryId} AND post_type='{$categoryType}' AND post_status=1 AND post_site_id=" . SITE_ID;
+    $categoryQuery = "SELECT * FROM " . TABLE_PREFIX . "{$categoryType} WHERE {$categoryType}_category={$categoryId} {$dateSql} AND {$categoryType}_site_id=" . SITE_ID . " {$orderBy} LIMIT {$pageNo}, {$limit} ";
 
     $resData = mysqli_query($conn, $categoryQuery);
     if (!$resData) {

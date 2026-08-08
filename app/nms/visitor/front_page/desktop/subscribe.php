@@ -16,17 +16,15 @@ if (DEVELOPMENT_MODE == false) {
 require_once 'header.php';
 
 if ($activeSubscription == true) {
-    if ($subscription_mode == 'year') { ?>
-        <script>
-            window.location.href = '/manage-subscription/';
-        </script>
-<?php
+    if ($subscription_mode == 'year') {
+        header("Location: /manage-subscription/");
+        exit();
     }
 }
 
 ?>
 
-<section class="category-page" style="padding-bottom: 60px;">
+<section class="category-page subscribe-page-wrapper">
   <!-- Full-Width Subscription Hero Banner -->
   <div class="category-header-hero">
     <div class="container">
@@ -74,32 +72,20 @@ if ($activeSubscription == true) {
                           <div class="plan-details">
                               <h3 class="plan-name"><?php echo htmlspecialchars($product_title); ?></h3>
                               <div class="plan-price-tag">
-                                  <?php echo htmlspecialchars($inventory_currency_symbol); ?> <?php echo htmlspecialchars($priceMain); ?><span style="font-size: 1rem; color: var(--text-secondary);"><?php echo htmlspecialchars($priceDec); ?></span>
-                              </div>
-                              <?php if ($hasMrp) { ?>
-                                  <div style="font-size: 0.85rem; color: #888; margin-top: 4px;">
-                                      <s><?php echo htmlspecialchars($inventory_currency_symbol) . htmlspecialchars(number_format((float)$inventory_mrp, 0)); ?></s>
-                                      <?php if ($savingsPercent > 0) { ?>
-                                          <span style="color: #10b981; font-weight: 700; margin-left: 6px;"><?php echo $savingsPercent; ?>% OFF</span>
-                                      <?php } ?>
+                                  <?php echo htmlspecialchars($inventory_currency_symbol); ?> <?php echo htmlspecialchars($priceMain); ?><span class="price-decimals"><?php echo htmlspecialchars($priceDec); ?></span>
+                                </div>
+                                <?php if (!empty($inventory_mrp) && $inventory_mrp > $inventory_price): ?>
+                                  <div class="price-mrp-wrapper">
+                                    <span class="text-decoration-line-through"><?php echo htmlspecialchars($inventory_currency_symbol); ?> <?php echo htmlspecialchars($inventory_mrp); ?></span>
+                                    <?php if ($savingsPercent > 0): ?>
+                                      <span class="price-discount-tag"><?php echo $savingsPercent; ?>% OFF</span>
+                                    <?php endif; ?>
                                   </div>
-                              <?php } ?>
-                          </div>
-
-                          <ul style="list-style: none; padding: 0; margin: 24px 0 28px 0; font-size: 0.92rem; color: var(--text-secondary); text-align: left;">
-                              <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                                <svg width="18" height="18" fill="#10b981" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                                Unlimited access to all premium stories &amp; archives
-                              </li>
-                              <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                                <svg width="18" height="18" fill="#10b981" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                                Concise explainers &amp; ecosystem briefings
-                              </li>
-                              <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                                <?php endif; ?>
                                 <svg width="18" height="18" fill="#10b981" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                                 Ad-free clean executive reading experience
                               </li>
-                              <li style="display: flex; align-items: center; gap: 10px;">
+                              <li class="plan-feature-item last-item">
                                 <svg width="18" height="18" fill="#10b981" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                                 Cancel auto-renewal anytime
                               </li>
@@ -109,10 +95,10 @@ if ($activeSubscription == true) {
                             <?php if (isset($_COOKIE['user_data'])): ?>
                               <form action="/subscription/" method="post">
                                 <input type="hidden" name="id" value="<?php echo $product_id; ?>">
-                                <input type="submit" class="btn <?php echo $isFeatured ? 'btn-primary' : 'btn-outline-secondary'; ?>" style="width: 100%; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; padding: 12px;" value="Select Plan &rarr;">
+                                <input type="submit" class="btn <?php echo $isFeatured ? 'btn-primary' : 'btn-outline-secondary'; ?> btn-plan-select" value="Select Plan &rarr;">
                               </form>
                             <?php else: ?>
-                              <a href="/login/?duration=monthly" class="btn <?php echo $isFeatured ? 'btn-primary' : 'btn-outline-secondary'; ?>" style="display: block; width: 100%; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; padding: 12px; text-align: center;">Continue to Sign In &rarr;</a>
+                              <a href="/login/?duration=monthly" class="btn <?php echo $isFeatured ? 'btn-primary' : 'btn-outline-secondary'; ?> btn-plan-select">Continue to Sign In &rarr;</a>
                             <?php endif; ?>
                           </div>
                       </div>
@@ -180,7 +166,7 @@ if ($activeSubscription == true) {
           <span class="subscribe-faq-icon">+</span>
         </div>
         <div class="subscribe-faq-answer">
-          <p>Yes. You can disable auto-renewal anytime from your account dashboard under <a href="/manage-subscription/" style="color: var(--accent-color); font-weight: 600;">Manage My Subscription</a>. Your access will remain active through the end of your current paid billing period.</p>
+          <p>Yes. You can disable auto-renewal anytime from your account dashboard under <a href="/manage-subscription/" class="faq-link">Manage My Subscription</a>. Your access will remain active through the end of your current paid billing period.</p>
         </div>
       </div>
     </div>
@@ -188,20 +174,6 @@ if ($activeSubscription == true) {
   </div>
 </section>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const faqItems = document.querySelectorAll('.subscribe-faq-item');
-    faqItems.forEach(item => {
-      const q = item.querySelector('.subscribe-faq-question');
-      q.addEventListener('click', () => {
-        const isActive = item.classList.contains('active');
-        faqItems.forEach(el => el.classList.remove('active'));
-        if (!isActive) {
-          item.classList.add('active');
-        }
-      });
-    });
-  });
-</script>
+
 
 <?php require_once 'footer.php'; ?>

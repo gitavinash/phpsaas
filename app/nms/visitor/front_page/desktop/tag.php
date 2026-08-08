@@ -80,7 +80,7 @@ if ($currentPage < $totalPages) {
                         <p><?php echo $metaDesc; ?></p>
                         <div class="category-card-meta">
                           <span class="date"><?php echo $pubDate; ?><?php echo $authorName ? ' • ' . $authorName : ''; ?></span>
-                          <div style="display: flex; align-items: center; gap: 10px;">
+                          <div class="card-action-group">
                             <button class="trigger-bookmark-app bookmark-card-btn" title="Bookmark on Mobile App" aria-label="Bookmark Story"><i class="ph ph-bookmark-simple"></i></button>
                             <span class="read-more">Read Story <span class="arrow">→</span></span>
                           </div>
@@ -96,11 +96,11 @@ if ($currentPage < $totalPages) {
 
     if (!$hasPosts):
     ?>
-      <div class="search-no-results" style="margin: 40px auto;">
+      <div class="search-no-results search-no-results-custom">
         <div class="search-no-results-icon"><i class="ph ph-tag"></i></div>
         <h2>No Stories Tagged #<?php echo $tagTitleFormatted; ?></h2>
         <p>We couldn't find any active articles with this tag. Explore popular categories below.</p>
-        <div class="popular-tags-bar" style="justify-content: center; margin-top: 20px;">
+        <div class="popular-tags-bar popular-tags-center">
           <a href="/fintech-news/" class="popular-tag-item">Fintech News</a>
           <a href="/ai-and-emerging-tech/" class="popular-tag-item">AI &amp; Emerging Tech</a>
           <a href="/money-and-machines/" class="popular-tag-item">Startup Ecosystem</a>
@@ -120,74 +120,5 @@ if ($currentPage < $totalPages) {
 
   </div>
 </section>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const trigger = document.getElementById('tagInfiniteTrigger');
-    const grid = document.getElementById('tagNewsGrid');
-
-    if (!trigger || !grid) return;
-
-    let isFetching = false;
-
-    const fetchNextPage = function() {
-      const nextPageUrl = trigger.getAttribute('data-next-page');
-      if (!nextPageUrl || isFetching) return;
-
-      isFetching = true;
-
-      fetch(nextPageUrl)
-        .then(res => res.text())
-        .then(htmlText => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlText, 'text/html');
-          const newCards = doc.querySelectorAll('#tagNewsGrid .category-news-card');
-
-          if (newCards && newCards.length > 0) {
-            newCards.forEach((card, index) => {
-              card.style.opacity = '0';
-              card.style.transform = 'translateY(15px)';
-              card.style.transition = `opacity 0.4s ease ${index * 0.05}s, transform 0.4s ease ${index * 0.05}s`;
-              grid.appendChild(card);
-
-              requestAnimationFrame(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-              });
-            });
-
-            const nextTrigger = doc.querySelector('#tagInfiniteTrigger');
-            const nextUrlAttr = nextTrigger ? nextTrigger.getAttribute('data-next-page') : '';
-
-            if (nextUrlAttr && nextUrlAttr !== nextPageUrl) {
-              trigger.setAttribute('data-next-page', nextUrlAttr);
-            } else {
-              trigger.style.display = 'none';
-            }
-          } else {
-            trigger.style.display = 'none';
-          }
-          isFetching = false;
-        })
-        .catch(err => {
-          console.error('Error fetching tag stories:', err);
-          trigger.style.display = 'none';
-          isFetching = false;
-        });
-    };
-
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !isFetching) {
-            fetchNextPage();
-          }
-        });
-      }, { rootMargin: '600px' });
-
-      observer.observe(trigger);
-    }
-  });
-</script>
 
 <?php require_once 'footer.php'; ?>

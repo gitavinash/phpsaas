@@ -216,7 +216,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                         </ul>
                     </div>
                 </li>
-                <!-- <li <?php echo (($postType == 'media') ? 'class="active"' : '') ?>>
+                <li <?php echo (($postType == 'media') ? 'class="active"' : '') ?>>
                     <a href="media/?type=list"><i class="fas fa-folder-open"></i> Media</a>
                     <div class="side-menu">
                         <ul>
@@ -232,12 +232,12 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                             <li><a href="media/?type=list&media=video"><i class="fas fa-video"></i> Videos</a></li>
                         </ul>
                     </div>
-                </li> -->
+                </li>
                 <li <?php echo (($postType == 'setting') ? 'class="active"' : '') ?>>
                     <a href="setting/?type=configuration"><i class="fas fa-cog"></i> Settings</a>
                     <div class="side-menu">
                         <ul>
-                            <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
+                            <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
                             <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
                             <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
@@ -247,7 +247,7 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
                     </div>
                     <div class="bottom-menu">
                         <ul>
-                            <!-- <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li> -->
+                            <li><a href="setting/?type=menu"><i class="fas fa-ellipsis-v"></i> Menu</a></li>
                             <li><a href="setting/?type=configuration"><i class="fas fa-tools"></i> Configuration</a>
                             </li>
                             <li><a href="setting/?type=profile"><i class="fas fa-user"></i> Profile</a></li>
@@ -260,25 +260,25 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
 
                 if ($site_access_type == 'administrator') { ?>
 
-                <li <?php echo ((ADMIN_BASE_URL == '/user/') ? 'class="active"' : '') ?>>
-                    <a href="user/?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
-                    <div class="side-menu">
-                        <ul>
-                            <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
-                            </li>
-                            <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
-                            <li><a href="user/?type=sessions"><i class="fas fa-bolt"></i> Manage sessions</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-                            <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
-                            </li>
-                            <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
-                            <li><a href="user/?type=sessions"><i class="fas fa-bolt"></i> Manage sessions</a></li>
-                        </ul>
-                    </div>
-                </li>
+                    <li <?php echo ((ADMIN_BASE_URL == '/user/') ? 'class="active"' : '') ?>>
+                        <a href="user/?type=list&status=all"><i class="fas fa-users"></i> Manage Users</a>
+                        <div class="side-menu">
+                            <ul>
+                                <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                                </li>
+                                <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                                <li><a href="user/?type=sessions"><i class="fas fa-bolt"></i> Manage sessions</a></li>
+                            </ul>
+                        </div>
+                        <div class="bottom-menu">
+                            <ul>
+                                <li><a href="user/?type=list&status=all"><i class="fas fa-list"></i> All users</a>
+                                </li>
+                                <li><a href="user/?type=add"><i class="fas fa-plus"></i> Add new user</a></li>
+                                <li><a href="user/?type=sessions"><i class="fas fa-bolt"></i> Manage sessions</a></li>
+                            </ul>
+                        </div>
+                    </li>
                 <?php
                 }
 
@@ -290,38 +290,38 @@ $postType = mysqli_real_escape_string($connection, rtrim(ltrim(ADMIN_BASE_URL, '
     <div class="mobile-nav-overlay" id="nav-overlay"></div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var menuSearch = document.getElementById('side-nav-search');
-        var menuRoot = document.querySelector('nav.side-nav > ul');
+        document.addEventListener('DOMContentLoaded', function() {
+            var menuSearch = document.getElementById('side-nav-search');
+            var menuRoot = document.querySelector('nav.side-nav > ul');
 
-        if (menuSearch && menuRoot) {
-            var menuItems = menuRoot.children;
+            if (menuSearch && menuRoot) {
+                var menuItems = menuRoot.children;
 
-            menuSearch.addEventListener('input', function() {
-                var searchTerm = menuSearch.value.toLowerCase().trim();
+                menuSearch.addEventListener('input', function() {
+                    var searchTerm = menuSearch.value.toLowerCase().trim();
 
-                for (var i = 0; i < menuItems.length; i++) {
-                    var item = menuItems[i];
-                    var topAnchor = item.firstElementChild;
+                    for (var i = 0; i < menuItems.length; i++) {
+                        var item = menuItems[i];
+                        var topAnchor = item.firstElementChild;
 
-                    if (!topAnchor || topAnchor.tagName !== 'A') {
-                        continue;
+                        if (!topAnchor || topAnchor.tagName !== 'A') {
+                            continue;
+                        }
+
+                        var searchableText = topAnchor.textContent.toLowerCase();
+                        var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
+
+                        for (var j = 0; j < subLinks.length; j++) {
+                            searchableText += ' ' + subLinks[j].textContent.toLowerCase();
+                        }
+
+                        item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -
+                                1) ? '' :
+                            'none';
                     }
-
-                    var searchableText = topAnchor.textContent.toLowerCase();
-                    var subLinks = item.querySelectorAll('.side-menu a, .bottom-menu a');
-
-                    for (var j = 0; j < subLinks.length; j++) {
-                        searchableText += ' ' + subLinks[j].textContent.toLowerCase();
-                    }
-
-                    item.style.display = (searchTerm === '' || searchableText.indexOf(searchTerm) !== -
-                            1) ? '' :
-                        'none';
-                }
-            });
-        }
-    });
+                });
+            }
+        });
     </script>
 
     <main>

@@ -96,7 +96,7 @@ if (isset($_COOKIE['user_data'])) {
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css" />
+  <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>" />
   <?php require_once DEFAULT_META ?>
   <!-- JSON-LD Structured Data Schema -->
   <script type="application/ld+json">
@@ -241,7 +241,7 @@ if (isset($_COOKIE['user_data'])) {
         <?php endif; ?>
 
         <!-- Mobile Right Drawer Button -->
-        <button class="mobile-menu-btn" id="openRightDrawerBtn" aria-label="Open Account Portal" style="margin-left: 4px;">
+        <button class="mobile-menu-btn" id="openRightDrawerBtn" aria-label="Open Account Portal">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         </button>
 
@@ -256,7 +256,7 @@ if (isset($_COOKIE['user_data'])) {
   <!-- Left Mobile Slide-Out Drawer (Categories & Navigation) -->
   <aside class="mobile-drawer mobile-drawer-left" id="leftMobileDrawer">
     <div class="drawer-header">
-      <img src="https://theheadandtale.com//app/nms/visitor/theheadandtale/desktop/assets/images/main_logo.png" alt="Logo" style="height: 28px; width: auto;" />
+      <img src="https://theheadandtale.com//app/nms/visitor/theheadandtale/desktop/assets/images/main_logo.png" alt="Logo" class="drawer-header-logo" />
       <button class="drawer-close-btn" id="closeLeftDrawerBtn">&times;</button>
     </div>
     <div class="drawer-body">
@@ -298,17 +298,17 @@ if (isset($_COOKIE['user_data'])) {
     </div>
     <div class="drawer-body">
       <?php if ($isLoggedIn): ?>
-        <div style="margin-bottom: 24px;">
-          <p style="font-weight: 700; color: var(--primary-color); margin-bottom: 12px;">Account Options</p>
-          <a href="/manage-subscription/" class="btn btn-outline-secondary btn-block" style="margin-bottom: 10px; display: block; text-align: center;">Manage Subscription</a>
-          <a href="/logout-all-devices/" class="btn btn-outline-secondary btn-block" style="margin-bottom: 10px; display: block; text-align: center;">Active Sessions</a>
-          <a href="/logout/" class="btn btn-primary btn-block" style="display: block; text-align: center;">Sign Out</a>
+        <div class="drawer-section">
+          <p class="drawer-section-title">Account Options</p>
+          <a href="/manage-subscription/" class="btn btn-outline-secondary btn-block">Manage Subscription</a>
+          <a href="/logout-all-devices/" class="btn btn-outline-secondary btn-block">Active Sessions</a>
+          <a href="/logout/" class="btn btn-primary btn-block">Sign Out</a>
         </div>
       <?php else: ?>
-        <div style="margin-bottom: 24px; text-align: center;">
-          <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 16px;">Sign in to access your saved articles and subscriber features.</p>
-          <a href="/login/" class="btn btn-primary btn-block" style="display: block; width: 100%; text-align: center; margin-bottom: 12px;">Member Sign In</a>
-          <a href="/subscribe/" class="btn btn-outline-secondary btn-block" style="display: block; width: 100%; text-align: center;">View Subscriptions</a>
+        <div class="drawer-login-prompt">
+          <p class="drawer-login-desc">Sign in to access your saved articles and subscriber features.</p>
+          <a href="/login/" class="btn btn-primary btn-block btn-drawer-login">Member Sign In</a>
+          <a href="/subscribe/" class="btn btn-outline-secondary btn-block btn-drawer-sub">View Subscriptions</a>
         </div>
       <?php endif; ?>
 
@@ -396,7 +396,7 @@ if (isset($_COOKIE['user_data'])) {
       </div>
 
       <!-- Autocomplete Suggestions Block -->
-      <div id="autocompleteBlock" class="search-section-block" style="display: none;">
+      <div id="autocompleteBlock" class="search-section-block display-none">
         <div class="search-section-title">
           <span>Suggested Topics & Stories</span>
         </div>
@@ -406,284 +406,6 @@ if (isset($_COOKIE['user_data'])) {
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const openBtn = document.getElementById('openSearchBtn');
-      const closeBtn = document.getElementById('closeSearchBtn');
-      const modal = document.getElementById('searchModal');
-      const input = document.getElementById('searchInput');
-      const searchForm = document.getElementById('searchForm');
-      const recentBlock = document.getElementById('recentSearchesBlock');
-      const recentPills = document.getElementById('recentSearchPills');
-      const clearRecentBtn = document.getElementById('clearRecentBtn');
-      const autoBlock = document.getElementById('autocompleteBlock');
-      const autoResults = document.getElementById('autocompleteResults');
-
-      const STORAGE_KEY = 'isw_recent_searches';
-
-      // Load & Render Recent Searches
-      const getRecentSearches = function() {
-        try {
-          return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        } catch (e) {
-          return [];
-        }
-      };
-
-      const saveRecentSearch = function(query) {
-        if (!query || !query.trim()) return;
-        let searches = getRecentSearches();
-        searches = searches.filter(q => q.toLowerCase() !== query.toLowerCase().trim());
-        searches.unshift(query.trim());
-        if (searches.length > 6) searches = searches.slice(0, 6);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(searches));
-        renderRecentSearches();
-      };
-
-      const removeRecentSearch = function(query) {
-        let searches = getRecentSearches();
-        searches = searches.filter(q => q.toLowerCase() !== query.toLowerCase().trim());
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(searches));
-        renderRecentSearches();
-      };
-
-      const renderRecentSearches = function() {
-        if (!recentBlock || !recentPills) return;
-        const searches = getRecentSearches();
-        if (searches.length === 0) {
-          recentBlock.style.display = 'none';
-          return;
-        }
-        recentBlock.style.display = 'block';
-        recentPills.innerHTML = searches.map(q => `
-          <div class="recent-pill" data-query="${q.replace(/"/g, '&quot;')}">
-            <span>${q}</span>
-            <span class="recent-pill-remove" data-remove="${q.replace(/"/g, '&quot;')}">&times;</span>
-          </div>
-        `).join('');
-      };
-
-      if (clearRecentBtn) {
-        clearRecentBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          localStorage.removeItem(STORAGE_KEY);
-          renderRecentSearches();
-        });
-      }
-
-      if (recentPills) {
-        recentPills.addEventListener('click', function(e) {
-          const removeTarget = e.target.closest('[data-remove]');
-          if (removeTarget) {
-            e.stopPropagation();
-            removeRecentSearch(removeTarget.getAttribute('data-remove'));
-            return;
-          }
-          const pill = e.target.closest('.recent-pill');
-          if (pill) {
-            const query = pill.getAttribute('data-query');
-            if (input) {
-              input.value = query;
-              if (searchForm) searchForm.submit();
-            }
-          }
-        });
-      }
-
-      if (searchForm) {
-        searchForm.addEventListener('submit', function() {
-          if (input && input.value) {
-            saveRecentSearch(input.value);
-          }
-        });
-      }
-
-      // Autocomplete Search Logic
-      let debounceTimer = null;
-      if (input) {
-        input.addEventListener('input', function() {
-          const q = input.value.trim();
-          clearTimeout(debounceTimer);
-
-          if (q.length < 2) {
-            if (autoBlock) autoBlock.style.display = 'none';
-            renderRecentSearches();
-            return;
-          }
-
-          debounceTimer = setTimeout(() => {
-            fetch('/?action=autocomplete&q=' + encodeURIComponent(q))
-              .then(res => res.json())
-              .then(items => {
-                if (!autoBlock || !autoResults) return;
-                if (!items || items.length === 0) {
-                  autoBlock.style.display = 'none';
-                  return;
-                }
-                autoBlock.style.display = 'block';
-                if (recentBlock) recentBlock.style.display = 'none';
-
-                autoResults.innerHTML = items.map(item => `
-                  <a href="${item.url}" class="autocomplete-item">
-                    <span>${item.type === 'tag' ? '#' : ''}${item.title}</span>
-                    <span class="autocomplete-badge ${item.type}">${item.type === 'tag' ? 'Topic Tag' : 'Story'}</span>
-                  </a>
-                `).join('');
-              })
-              .catch(err => {
-                console.error('Autocomplete fetch error:', err);
-              });
-          }, 200);
-        });
-      }
-
-      // Popular Quick Tags Listener
-      document.querySelectorAll('.popular-tag-item').forEach(tag => {
-        tag.addEventListener('click', function() {
-          const val = this.getAttribute('data-tag');
-          if (input && val) {
-            input.value = val;
-            if (searchForm) searchForm.submit();
-          }
-        });
-      });
-
-      // ESC key listener to close modal
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-          modal.classList.remove('active');
-          modal.setAttribute('aria-hidden', 'true');
-          if (autoBlock) autoBlock.style.display = 'none';
-        }
-      });
-
-      // Account Dropdown Toggle
-      const acctDropdown = document.getElementById('userAccountDropdown');
-      const acctBtn = document.getElementById('accountMenuBtn');
-      if (acctDropdown && acctBtn) {
-        acctBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          acctDropdown.classList.toggle('active');
-        });
-        document.addEventListener('click', function(e) {
-          if (!acctDropdown.contains(e.target)) {
-            acctDropdown.classList.remove('active');
-          }
-        });
-      }
-
-      // Left & Right Dual Mobile Slide-Out Drawers
-      const overlay = document.getElementById('mobileDrawerOverlay');
-      const openLeftBtn = document.getElementById('openLeftDrawerBtn');
-      const closeLeftBtn = document.getElementById('closeLeftDrawerBtn');
-      const leftDrawer = document.getElementById('leftMobileDrawer');
-
-      const openRightBtn = document.getElementById('openRightDrawerBtn');
-      const closeRightBtn = document.getElementById('closeRightDrawerBtn');
-      const rightDrawer = document.getElementById('rightMobileDrawer');
-
-      const closeAllDrawers = function() {
-        if (leftDrawer) leftDrawer.classList.remove('active');
-        if (rightDrawer) rightDrawer.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
-      };
-
-      if (openLeftBtn && leftDrawer) {
-        openLeftBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          closeAllDrawers();
-          leftDrawer.classList.add('active');
-          if (overlay) overlay.classList.add('active');
-        });
-      }
-
-      if (closeLeftBtn) closeLeftBtn.addEventListener('click', closeAllDrawers);
-
-      if (openRightBtn && rightDrawer) {
-        openRightBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          closeAllDrawers();
-          rightDrawer.classList.add('active');
-          if (overlay) overlay.classList.add('active');
-        });
-      }
-
-      if (closeRightBtn) closeRightBtn.addEventListener('click', closeAllDrawers);
-      if (overlay) overlay.addEventListener('click', closeAllDrawers);
-
-      // Mobile App Banner Dismissal State (localStorage)
-      const appBanner = document.getElementById('mobileAppBanner');
-      const dismissBannerBtn = document.getElementById('dismissAppBannerBtn');
-      if (appBanner) {
-        if (!localStorage.getItem('ht_app_banner_dismissed')) {
-          setTimeout(function() {
-            appBanner.classList.add('visible');
-          }, 1500);
-        }
-        if (dismissBannerBtn) {
-          dismissBannerBtn.addEventListener('click', function() {
-            appBanner.classList.remove('visible');
-            localStorage.setItem('ht_app_banner_dismissed', 'true');
-          });
-        }
-      }
-
-      // Bookmark App Download Modal
-      const bookmarkModal = document.getElementById('bookmarkAppModal');
-      const closeBookmarkModalBtn = document.getElementById('closeBookmarkModalBtn');
-
-      document.addEventListener('click', function(e) {
-        if (e.target.closest('.trigger-bookmark-app')) {
-          e.preventDefault();
-          if (bookmarkModal) {
-            bookmarkModal.classList.add('active');
-            bookmarkModal.setAttribute('aria-hidden', 'false');
-          }
-        }
-      });
-
-      if (closeBookmarkModalBtn && bookmarkModal) {
-        closeBookmarkModalBtn.addEventListener('click', function() {
-          bookmarkModal.classList.remove('active');
-          bookmarkModal.setAttribute('aria-hidden', 'true');
-        });
-        bookmarkModal.addEventListener('click', function(e) {
-          if (e.target === bookmarkModal) {
-            bookmarkModal.classList.remove('active');
-            bookmarkModal.setAttribute('aria-hidden', 'true');
-          }
-        });
-      }
-
-      document.addEventListener('click', function(e) {
-        if (e.target.closest('#openSearchBtn, .open-search-trigger, [href="#openSearch"]')) {
-          e.preventDefault();
-          if (modal) {
-            modal.classList.add('active');
-            modal.setAttribute('aria-hidden', 'false');
-            renderRecentSearches();
-            if (input) input.focus();
-          }
-        }
-      });
-
-      if (closeBtn && modal) {
-        closeBtn.addEventListener('click', function() {
-          modal.classList.remove('active');
-          modal.setAttribute('aria-hidden', 'true');
-          if (autoBlock) autoBlock.style.display = 'none';
-        });
-
-        modal.addEventListener('click', function(e) {
-          if (e.target === modal) {
-            modal.classList.remove('active');
-            modal.setAttribute('aria-hidden', 'true');
-            if (autoBlock) autoBlock.style.display = 'none';
-          }
-        });
-      }
-    });
-  </script>
 
   <!-- Main Content -->
   <main>

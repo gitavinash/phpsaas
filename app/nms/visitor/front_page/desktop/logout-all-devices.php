@@ -18,7 +18,7 @@ require_once 'header.php';
   <div class="container">
     <div class="not-found-card">
       <h1>Notice</h1>
-      <p class="paywall-subdeck" style="margin-bottom: 24px;">Unable to log out from all devices at this time. Please try again or contact support.</p>
+      <p class="paywall-subdeck paywall-subdeck-mb">Unable to log out from all devices at this time. Please try again or contact support.</p>
       <div class="not-found-actions">
         <a href="/manage-subscription/" class="btn btn-primary">Go to Account Settings</a>
         <a href="/" class="btn btn-outline-secondary">Return to Homepage</a>

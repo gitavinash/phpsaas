@@ -2,9 +2,7 @@
 
 $redirect_url = ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/');
 
-if (isset($responseMsg)) {
-    echo "<script>alert('{$responseMsg}')</script>";
-}
+
 
 if (isset($_COOKIE['isLogin'])) {
     header("Location: {$redirect_url}");
@@ -49,19 +47,19 @@ if (isset($_COOKIE['isLogin'])) {
                 </button>
             </div>
 
-            <div id="verifyEmailOTP" style="display: none;">
+            <div id="verifyEmailOTP" class="display-none">
                 <div class="auth-input-group">
                     <label for="otpEmailValue">Enter 6-Digit OTP</label>
                     <input type="text" inputmode="numeric" pattern="^\d{6}$" maxlength="6" name="otp" id="otpEmailValue" placeholder="123456" disabled />
                 </div>
                 <input type="hidden" class="recaptcha_token" name="recaptcha_token">
-                <div style="margin-bottom: 16px;">
-                    <a href="#" id="resendEmailOTPBtn" class="disabled" style="pointer-events: none; text-decoration: none; font-size: 0.85rem; color: #888;">Resend OTP in 30s</a>
+                <div class="otp-resend-wrapper">
+                    <a href="#" id="resendEmailOTPBtn" class="disabled resend-otp-btn">Resend OTP in 30s</a>
                 </div>
                 <button type="button" id="verifyEmailOTPBtn" class="auth-btn-primary">Verify OTP &rarr;</button>
             </div>
 
-            <div id="userRegistration" style="display: none;">
+            <div id="userRegistration" class="display-none">
                 <div class="auth-input-group">
                     <label for="userName">Full Name</label>
                     <input type="text" name="name" id="userName" placeholder="Your Name" />
@@ -94,10 +92,10 @@ if (isset($_COOKIE['isLogin'])) {
                                 ?>" style="color: var(--primary-color); font-weight: 600; text-decoration: underline;">Sign up</a>
         </div> -->
 
-        <div style="text-align: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); font-size: 0.78rem; color: #888;">
+        <div class="login-footer-legal">
             By continuing, you agree to our
-            <a href="/terms-and-conditions/" target="_blank" style="color: #666; text-decoration: underline;">Terms &amp; Conditions</a>
-            and <a href="/privacy-policy/" target="_blank" style="color: #666; text-decoration: underline;">Privacy Policy</a>.
+            <a href="/terms-and-conditions/" target="_blank">Terms &amp; Conditions</a>
+            and <a href="/privacy-policy/" target="_blank">Privacy Policy</a>.
         </div>
     </main>
 
@@ -105,9 +103,7 @@ if (isset($_COOKIE['isLogin'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?php echo USER_JS; ?>script.js"></script>
 
-    <?php if (isset($alertMsg)) {
-        echo "<script>alert('{$alertMsg}')</script>";
-    } ?>
+
 </body>
 
 </html>
