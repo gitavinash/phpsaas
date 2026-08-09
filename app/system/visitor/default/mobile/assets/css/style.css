@@ -1,0 +1,42 @@
+body {
+  padding: 0;
+  margin: 0 auto;
+  text-align: center;
+  max-width: 900px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: "KoHo", sans-serif;
+}
+
+img {
+  height: 600px;
+  padding: 5% 0px 0px 0px;
+  box-sizing: border-box;
+}
+
+h1 {
+  float: left;
+  width: 100%;
+  font-size: 32px;
+  color: #000;
+  color: #c70039;
+}
+
+h1 span {
+  float: left;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 300;
+  color: #494949;
+  padding: 10px 0px 0px;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 20% 5%;
+  }
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
