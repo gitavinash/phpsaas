@@ -13,17 +13,58 @@ if (isset($_COOKIE['isLogin'])) {
 
 require_once 'header.php';
 
+if (defined('GOOGLE_RECAPTCHA_GENERATOR') && file_exists(GOOGLE_RECAPTCHA_GENERATOR)) {
+    require_once GOOGLE_RECAPTCHA_GENERATOR;
+}
+
 ?>
 <style>
+    .auth-portal-box {
+        max-width: 440px;
+        margin: 24px auto;
+        padding: 28px 24px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        border: 1px solid #eaeaea;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .auth-logo-header {
+        margin-bottom: 20px;
+    }
+
+    .auth-logo-header img {
+        max-height: 42px;
+        width: auto;
+    }
+
+    .auth-form-title {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0 0 6px 0;
+    }
+
+    .auth-form-subtitle {
+        font-size: 0.88rem;
+        color: #666666;
+        margin: 0 0 22px 0;
+        line-height: 1.4;
+    }
+
     .auth-notice-banner {
         display: flex;
         align-items: center;
         gap: 10px;
         padding: 12px 16px;
-        border-radius: 12px;
-        font-size: 0.9rem;
+        border-radius: 10px;
+        font-size: 0.875rem;
         font-weight: 500;
         margin-bottom: 18px;
+        text-align: left;
         transition: all 0.25s ease;
     }
 
@@ -45,114 +86,259 @@ require_once 'header.php';
         border: 1px solid rgba(245, 158, 11, 0.2);
     }
 
-    .auth-notice-banner i {
-        font-size: 1.2rem;
-        flex-shrink: 0;
+    .auth-form-section {
+        margin-bottom: 16px;
+        text-align: left;
+    }
+
+    .auth-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 16px;
+        text-align: left;
+    }
+
+    .auth-input-group label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #333333;
+    }
+
+    .auth-input-group input {
+        width: 100%;
+        padding: 12px 14px;
+        font-size: 0.95rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        background-color: #f9fafb;
+        color: #111827;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .auth-input-group input:focus {
+        background-color: #ffffff;
+        border-color: #000000;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .auth-btn-primary {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #ffffff;
+        background-color: #000000;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.1s;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .auth-btn-primary:hover {
+        background-color: #222222;
+    }
+
+    .auth-back-btn {
+        background: none;
+        border: none;
+        color: #666666;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 0 0 12px 0;
+        display: inline-block;
+    }
+
+    .auth-back-btn:hover {
+        color: #000000;
+        text-decoration: underline;
+    }
+
+    .otp-resend-wrapper {
+        margin: 8px 0 14px 0;
+        text-align: left;
+    }
+
+    .resend-otp-btn {
+        color: #d93025;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .resend-otp-btn.disabled {
+        color: #999999 !important;
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    .auth-divider {
+        position: relative;
+        text-align: center;
+        margin: 22px 0 18px 0;
+    }
+
+    .auth-divider::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #e5e7eb;
+        z-index: 1;
+    }
+
+    .auth-divider span {
+        position: relative;
+        background-color: #ffffff;
+        padding: 0 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #9ca3af;
+        text-transform: uppercase;
+        z-index: 2;
+    }
+
+    .auth-google-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 11px 16px;
+        background-color: #ffffff;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.925rem;
+        font-weight: 500;
+        color: #374151;
+        text-decoration: none;
+        transition: background-color 0.2s, border-color 0.2s;
+        box-sizing: border-box;
+    }
+
+    .auth-google-btn:hover {
+        background-color: #f9fafb;
+        border-color: #9ca3af;
+        color: #111827;
+    }
+
+    .login-footer-legal {
+        margin-top: 22px;
+        padding-top: 14px;
+        border-top: 1px solid #f3f4f6;
+        font-size: 0.775rem;
+        color: #9ca3af;
+        line-height: 1.5;
+        text-align: center;
+    }
+
+    .login-footer-legal a {
+        color: #4b5563;
+        text-decoration: underline;
+    }
+
+    .login-footer-legal a:hover {
+        color: #111827;
     }
 </style>
 
-<!-- AUTH SCREEN CONTENT -->
-<div id="view-auth" class="page-view active">
-    <div class="auth-body">
-        <h2 class="auth-title">
-            Welcome to <?php echo SITE_NAME ?>
-        </h2>
+<main class="auth-portal-box">
+    <div class="auth-logo-header">
+        <a href="/"><img src="<?php echo SITE_LOGO; ?>" alt="<?php echo SITE_NAME; ?>" /></a>
+    </div>
 
-        <!-- Native App Inline Notice Banner -->
-        <div id="authNotice" class="auth-notice-banner" style="display: none;">
-            <i id="authNoticeIcon" class="ph ph-warning-circle"></i>
-            <span id="authNoticeText"></span>
+    <h1 class="auth-form-title">Sign In</h1>
+    <p class="auth-form-subtitle">Enter your email to receive a secure one-time verification code.</p>
+
+    <!-- Inline Notice Banner -->
+    <div id="authNotice" class="auth-notice-banner" style="display: none;">
+        <i id="authNoticeIcon" class="ph ph-warning-circle"></i>
+        <span id="authNoticeText"></span>
+    </div>
+
+    <form id="login" autocomplete="off" onsubmit="return false;">
+        <input type="hidden" name="reg_type" value="subscriber">
+
+        <!-- Step 1: Email Input -->
+        <div id="enterEmail" class="auth-form-section">
+            <div class="auth-input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="name@company.com" required />
+            </div>
+            <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+            <button type="button" id="emailLoginContinueBtn" class="auth-btn-primary">
+                Continue &rarr;
+            </button>
         </div>
 
-        <form id="login" autocomplete="off" class="auth-form" onsubmit="return false;">
-            <!-- Step 1: Enter Email -->
-            <div id="enterEmail">
-                <p class="auth-subtitle">
-                    Enter your email to get started.
-                </p>
-                <input
-                    type="email"
-                    id="email"
-                    class="auth-input"
-                    name="email"
-                    placeholder="youremail@example.com"
-                    required />
-                <button
-                    type="button"
-                    id="emailLoginContinueBtn"
-                    class="auth-btn primary-btn"
-                    style="border: none; width: 100%; margin-top: 12px; cursor: pointer;">
-                    Continue
-                </button>
+        <!-- Step 2: OTP Verification -->
+        <div id="verifyEmailOTP" class="auth-form-section" style="display: none;">
+            <button type="button" class="auth-back-btn" id="backToEmailBtn">
+                &larr; Back
+            </button>
+            <div class="auth-input-group">
+                <label for="otpEmailValue">Enter 6-Digit OTP</label>
+                <input type="text" inputmode="numeric" pattern="^\d{6}$" maxlength="6" name="otp" id="otpEmailValue" placeholder="123456" disabled autocomplete="one-time-code" />
             </div>
-
-            <!-- Step 2: Verify OTP -->
-            <div id="verifyEmailOTP" style="display: none;">
-                <p class="auth-subtitle">
-                    Verify 6-digit OTP sent to your email
-                </p>
-                <input
-                    type="text"
-                    inputmode="numeric"
-                    pattern="^\d{6}$"
-                    maxlength="6"
-                    id="otpEmailValue"
-                    class="auth-input"
-                    name="otp"
-                    placeholder="123456"
-                    disabled />
-
-                <div style="margin: 12px 0 16px; text-align: left;">
-                    <a href="#" id="resendEmailOTPBtn" class="disabled" style="color: var(--accent-primary, #0066cc); text-decoration: none; font-size: 0.9rem; pointer-events: none;">
-                        Resend OTP in 30s
-                    </a>
-                </div>
-
-                <button
-                    type="button"
-                    id="verifyEmailOTPBtn"
-                    class="auth-btn primary-btn"
-                    style="border: none; width: 100%; cursor: pointer;">
-                    Verify OTP
-                </button>
+            <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+            <div class="otp-resend-wrapper">
+                <a href="#" id="resendEmailOTPBtn" class="disabled resend-otp-btn" style="pointer-events: none;">Resend OTP in 30s</a>
             </div>
+            <button type="button" id="verifyEmailOTPBtn" class="auth-btn-primary">Verify OTP &rarr;</button>
+        </div>
 
-            <!-- Step 3: Complete Registration -->
-            <div id="userRegistration" style="display: none;">
-                <p class="auth-subtitle">
-                    Enter your full name to complete setup
-                </p>
-                <input
-                    type="text"
-                    id="userName"
-                    class="auth-input"
-                    name="name"
-                    placeholder="Full Name (e.g. Avinash Kumar)" />
-
-                <button
-                    type="button"
-                    id="userRegistrationBtn"
-                    class="auth-btn primary-btn"
-                    style="border: none; width: 100%; margin-top: 12px; cursor: pointer;">
-                    Complete Registration
-                </button>
+        <!-- Step 3: User Registration (New Users Only) -->
+        <div id="userRegistration" class="auth-form-section" style="display: none;">
+            <button type="button" class="auth-back-btn" id="backToOTPBtn">
+                &larr; Back
+            </button>
+            <div class="auth-input-group">
+                <label for="userName">Full Name</label>
+                <input type="text" name="name" id="userName" placeholder="Your Name" autocomplete="name" />
             </div>
-        </form>
+            <input type="hidden" class="recaptcha_token" name="recaptcha_token">
+            <button type="button" id="userRegistrationBtn" class="auth-btn-primary">Complete Registration &rarr;</button>
+        </div>
+    </form>
 
-        <!-- Social Login Section (hidden when email is entered) -->
-        <!-- <div id="socialLoginSection">
-            <div class="auth-divider">
-                <span>or</span>
-            </div>
+    <div id="socialLoginSection">
+        <div class="auth-divider">
+            <span>or</span>
+        </div>
 
-            <a
-                href="/oauth/google/?redirect_url=<?php echo urlencode($redirect_url); ?>"
-                class="auth-btn google-btn">
-                <i class="ph-fill ph-google-logo"></i> Continue with Google
-            </a>
-        </div> -->
+        <a href='/oauth/google/?redirect_url=<?php
+                                                echo ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/')
+                                                    . ((isset($method)) ? '&method=' . $method : '')
+                                                    . ((isset($id)) ? '&id=' . $id : '')
+                                                    . ((isset($baseUrl)) ? '&baseUrl=' . $baseUrl  : '');
+                                                ?>' class="auth-google-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+            </svg>
+            Continue with Google
+        </a>
     </div>
-</div>
+
+    <div class="login-footer-legal">
+        By continuing, you agree to our
+        <a href="/terms-and-conditions/" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>
+        and
+        <a href="/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+    </div>
+</main>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -207,12 +393,45 @@ require_once 'header.php';
             return null;
         }
 
+        // Restrict OTP input to 6 digits only
+        const otpInput = document.getElementById("otpEmailValue");
+        if (otpInput) {
+            otpInput.addEventListener("input", function() {
+                this.value = this.value.replace(/[^0-9]/g, "").slice(0, 6);
+            });
+        }
+
+        // Back button navigation
+        const backToEmailBtn = document.getElementById("backToEmailBtn");
+        if (backToEmailBtn) {
+            backToEmailBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                hideNotice();
+                document.getElementById("verifyEmailOTP").style.display = "none";
+                document.getElementById("enterEmail").style.display = "block";
+                const socialSec = document.getElementById("socialLoginSection");
+                if (socialSec) socialSec.style.display = "block";
+                const emailInp = document.getElementById("email");
+                if (emailInp) emailInp.focus();
+            });
+        }
+
+        const backToOTPBtn = document.getElementById("backToOTPBtn");
+        if (backToOTPBtn) {
+            backToOTPBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                hideNotice();
+                document.getElementById("userRegistration").style.display = "none";
+                document.getElementById("verifyEmailOTP").style.display = "block";
+                if (otpInput) otpInput.focus();
+            });
+        }
+
         const emailBtn = document.getElementById("emailLoginContinueBtn");
         const emailInput = document.getElementById("email");
         const enterEmailSec = document.getElementById("enterEmail");
         const verifyEmailSec = document.getElementById("verifyEmailOTP");
         const socialLoginSec = document.getElementById("socialLoginSection");
-        const otpInput = document.getElementById("otpEmailValue");
 
         let isSubmittingEmail = false;
 
@@ -233,7 +452,7 @@ require_once 'header.php';
             try {
                 const res = await fetch(`/api/auth/auth-by-email/?email=${encodeURIComponent(email)}&reg_type=subscriber`);
                 const data = await res.json();
-                if (emailBtn) emailBtn.style.display = "block";
+                if (emailBtn) emailBtn.style.display = "flex";
                 isSubmittingEmail = false;
 
                 if (data.status === "success") {
@@ -254,7 +473,7 @@ require_once 'header.php';
                 }
             } catch (err) {
                 console.error(err);
-                if (emailBtn) emailBtn.style.display = "block";
+                if (emailBtn) emailBtn.style.display = "flex";
                 isSubmittingEmail = false;
                 showNotice("Something went wrong. Please try again.", "error");
             }
@@ -291,7 +510,7 @@ require_once 'header.php';
             try {
                 const res = await fetch(`/api/auth/verify-otp/?otp_ref_id=${encodeURIComponent(otpRef)}&otp_code=${encodeURIComponent(otpValue)}&reg_type=subscriber&otp_mode=email`);
                 const data = await res.json();
-                if (verifyBtn) verifyBtn.style.display = "block";
+                if (verifyBtn) verifyBtn.style.display = "flex";
                 isVerifying = false;
 
                 if (data.status === "success") {
@@ -313,7 +532,7 @@ require_once 'header.php';
                 }
             } catch (err) {
                 console.error(err);
-                if (verifyBtn) verifyBtn.style.display = "block";
+                if (verifyBtn) verifyBtn.style.display = "flex";
                 isVerifying = false;
                 showNotice("Something went wrong verifying OTP.", "error");
             }
@@ -376,12 +595,12 @@ require_once 'header.php';
                             window.location.href = redirect;
                         }, 600);
                     } else {
-                        regBtn.style.display = "block";
+                        regBtn.style.display = "flex";
                         showNotice(data.msg || "Failed to update profile", "error");
                     }
                 } catch (err) {
                     console.error(err);
-                    regBtn.style.display = "block";
+                    regBtn.style.display = "flex";
                     showNotice("Error updating profile.", "error");
                 }
             });

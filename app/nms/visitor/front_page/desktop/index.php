@@ -548,10 +548,10 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
         </ul>
       </div>
       <div class="newsletter-action">
-        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing!');">
-          <div class="input-wrapper">
-            <input type="email" placeholder="Enter your email address..." required />
-            <button type="submit" class="btn btn-newsletter">
+        <form class="newsletter-form" action="/thankyou_newsletter/" method="GET">
+          <div class=" input-wrapper">
+            <input type="email" id="newsletterEmail" name="email" placeholder="Enter your email address..." required />
+            <button type="submit" class="btn btn-newsletter" id="submitNewsletter">
               Subscribe Free <span class="arrow">→</span>
             </button>
           </div>

@@ -23,7 +23,6 @@ $email_body = "
                         <ul style='padding-left: 20px;'>
                             <li><strong>Exclusive Content:</strong> In-depth articles, expert analyses, and special reports just for our subscribers.</li>
                             <li><strong>Real-Time Updates:</strong> Breaking news delivered as it happens.</li>
-                            <li><strong>Ad-Free Experience:</strong> Enjoy uninterrupted reading without distractions.</li>
                         </ul>
 
                         <p style='margin-top: 25px;'><strong>Need Help?</strong></p>

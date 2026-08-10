@@ -4,35 +4,35 @@ require_once DATA_FUNCTIONS;
 
 // AJAX Autocomplete Endpoint for Search Modal (Tags & News Stories)
 if (isset($_GET['action']) && $_GET['action'] == 'autocomplete') {
-    header('Content-Type: application/json; charset=utf-8');
-    $q = mysqli_real_escape_string($connection, trim($_GET['q'] ?? ''));
-    $results = [];
-    if (!empty($q)) {
-        // Query Tag Table
-        $tagSql = "SELECT tag_title, link_url FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=tag_id WHERE link_type='tag' AND link_status=200 AND tag_title LIKE '%{$q}%' LIMIT 5";
-        if ($res = mysqli_query($connection, $tagSql)) {
-            while ($row = mysqli_fetch_assoc($res)) {
-                $results[] = [
-                    'type' => 'tag',
-                    'title' => htmlspecialchars($row['tag_title']),
-                    'url' => htmlspecialchars($row['link_url'])
-                ];
-            }
-        }
-        // Query News Titles
-        $newsSql = "SELECT news_title, link_url FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_title LIKE '%{$q}%' LIMIT 4";
-        if ($res = mysqli_query($connection, $newsSql)) {
-            while ($row = mysqli_fetch_assoc($res)) {
-                $results[] = [
-                    'type' => 'story',
-                    'title' => htmlspecialchars($row['news_title']),
-                    'url' => htmlspecialchars($row['link_url'])
-                ];
-            }
-        }
+  header('Content-Type: application/json; charset=utf-8');
+  $q = mysqli_real_escape_string($connection, trim($_GET['q'] ?? ''));
+  $results = [];
+  if (!empty($q)) {
+    // Query Tag Table
+    $tagSql = "SELECT tag_title, link_url FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=tag_id WHERE link_type='tag' AND link_status=200 AND tag_title LIKE '%{$q}%' LIMIT 5";
+    if ($res = mysqli_query($connection, $tagSql)) {
+      while ($row = mysqli_fetch_assoc($res)) {
+        $results[] = [
+          'type' => 'tag',
+          'title' => htmlspecialchars($row['tag_title']),
+          'url' => htmlspecialchars($row['link_url'])
+        ];
+      }
     }
-    echo json_encode($results);
-    exit();
+    // Query News Titles
+    $newsSql = "SELECT news_title, link_url FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_title LIKE '%{$q}%' LIMIT 4";
+    if ($res = mysqli_query($connection, $newsSql)) {
+      while ($row = mysqli_fetch_assoc($res)) {
+        $results[] = [
+          'type' => 'story',
+          'title' => htmlspecialchars($row['news_title']),
+          'url' => htmlspecialchars($row['link_url'])
+        ];
+      }
+    }
+  }
+  echo json_encode($results);
+  exit();
 }
 
 $activeSubscription = false;
@@ -73,7 +73,7 @@ if (isset($_COOKIE['user_data'])) {
         }
 
         if (!$is_excluded) {
-          require_once 'user-suspend.php';
+          require_once 'manage-active-session.php';
           exit();
         }
       } else {
@@ -100,18 +100,55 @@ if (isset($_COOKIE['user_data'])) {
   <?php require_once DEFAULT_META ?>
   <!-- JSON-LD Structured Data Schema -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "NewsMediaOrganization",
-    "name": "The Head & Tale",
-    "url": "https://theheadandtale.com",
-    "logo": "https://theheadandtale.com/app/nms/visitor/theheadandtale/desktop/assets/images/main_logo.png",
-    "sameAs": [
-      "https://twitter.com/headandtale",
-      "https://linkedin.com/company/headandtale"
-    ]
-  }
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
+      "name": "The Head & Tale",
+      "url": "https://theheadandtale.com",
+      "logo": "https://theheadandtale.com/app/nms/visitor/theheadandtale/desktop/assets/images/main_logo.png",
+      "sameAs": [
+        "https://twitter.com/headandtale",
+        "https://linkedin.com/company/headandtale"
+      ]
+    }
   </script>
+  <!-- SweetAlert2 Library & Custom Theme Styling -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    .swal2-popup.swal2-editorial-popup {
+      font-family: var(--font-body, "Inter", -apple-system, BlinkMacSystemFont, sans-serif) !important;
+      border-radius: 16px !important;
+      padding: 28px !important;
+      border: 1px solid var(--border-color, #e0e0e0) !important;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
+    }
+    .swal2-editorial-popup .swal2-title {
+      font-family: var(--font-heading, "Playfair Display", Georgia, serif) !important;
+      color: var(--primary-color, #0a0a0a) !important;
+      font-size: 1.6rem !important;
+      font-weight: 700 !important;
+    }
+    .swal2-editorial-popup .swal2-html-container {
+      font-size: 0.95rem !important;
+      color: var(--text-secondary, #555555) !important;
+      line-height: 1.6 !important;
+    }
+    .swal2-editorial-popup .swal2-confirm {
+      background-color: #dc2626 !important;
+      border-radius: 8px !important;
+      font-weight: 700 !important;
+      font-size: 0.9rem !important;
+      padding: 12px 28px !important;
+      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25) !important;
+    }
+    .swal2-editorial-popup .swal2-cancel {
+      background-color: #64748b !important;
+      border-radius: 8px !important;
+      font-weight: 600 !important;
+      font-size: 0.9rem !important;
+      padding: 12px 22px !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -120,7 +157,11 @@ if (isset($_COOKIE['user_data'])) {
     <div class="container header-container">
       <!-- Mobile Left Drawer Toggle (Categories & Navigation) -->
       <button class="mobile-menu-btn" id="openLeftDrawerBtn" aria-label="Open Mobile Categories">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
       </button>
 
       <div class="logo">
@@ -138,7 +179,7 @@ if (isset($_COOKIE['user_data'])) {
       <nav class="main-nav" aria-label="Main Navigation">
         <ul class="nav-menu">
           <li><a href="/">Home</a></li>
-          
+
           <!-- Mega Menu Dropdown -->
           <li class="has-mega-menu">
             <a href="/fintech-news/">
@@ -213,39 +254,66 @@ if (isset($_COOKIE['user_data'])) {
         ?>
           <div class="user-account-dropdown" id="userAccountDropdown">
             <button class="account-btn" id="accountMenuBtn" type="button" aria-haspopup="true" aria-expanded="false">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
               <span>My Account</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
             </button>
             <div class="account-dropdown-menu" id="accountDropdownMenu">
               <a href="/manage-subscription/" class="account-dropdown-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-9M14 17H5M12 12H3"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 7h-9M14 17H5M12 12H3" />
+                </svg>
                 Manage Subscription
               </a>
-              <a href="/logout-all-devices/" class="account-dropdown-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <a href="/manage-active-session/" class="account-dropdown-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
                 Active Sessions
               </a>
               <div class="dropdown-divider"></div>
               <a href="/logout/" class="account-dropdown-item logout">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
                 Sign Out
               </a>
             </div>
           </div>
         <?php else: ?>
           <a href="/login/" class="btn-outline-signin">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
             <span>Sign In</span>
           </a>
         <?php endif; ?>
 
         <!-- Mobile Right Drawer Button -->
         <button class="mobile-menu-btn" id="openRightDrawerBtn" aria-label="Open Account Portal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
         </button>
 
-        <a href="/subscribe/" class="btn btn-primary">Subscribe</a>
+        <?php
+
+        if (!$activeSubscription) {
+          echo '<a href="/subscribe/" class="btn btn-primary">Subscribe</a>';
+        }
+        ?>
+
       </div>
     </div>
   </header>
@@ -311,31 +379,8 @@ if (isset($_COOKIE['user_data'])) {
           <a href="/subscribe/" class="btn btn-outline-secondary btn-block btn-drawer-sub">View Subscriptions</a>
         </div>
       <?php endif; ?>
-
-      <!-- App Download Drawer Promo -->
-      <div class="drawer-app-promo">
-        <div class="app-promo-icon"><i class="ph ph-bookmark-simple"></i></div>
-        <h4>Bookmark Stories on Mobile</h4>
-        <p>Save articles offline and receive instant news notifications on iOS &amp; Android.</p>
-        <a href="/app-download/" class="btn-app-download">Download App &rarr;</a>
-      </div>
     </div>
   </aside>
-
-  <!-- Floating Mobile Smart App Banner -->
-  <div class="mobile-app-banner" id="mobileAppBanner">
-    <div class="app-banner-info">
-      <div class="app-banner-icon"><i class="ph ph-device-mobile"></i></div>
-      <div class="app-banner-text">
-        <strong>Get The Head &amp; Tale App</strong>
-        <span>Bookmark stories &amp; read offline</span>
-      </div>
-    </div>
-    <div class="app-banner-actions">
-      <a href="/app-download/" class="btn-app-get">GET APP</a>
-      <button class="app-banner-dismiss" id="dismissAppBannerBtn" aria-label="Close Banner">&times;</button>
-    </div>
-  </div>
 
   <!-- Bookmark App Download Modal Triggered on Bookmark Tap -->
   <div class="search-modal bookmark-app-modal" id="bookmarkAppModal" aria-hidden="true" role="dialog">
@@ -344,14 +389,18 @@ if (isset($_COOKIE['user_data'])) {
       <div class="bookmark-modal-icon"><i class="ph ph-bookmark-simple"></i></div>
       <h2>Bookmark Stories on Mobile App</h2>
       <p>Save articles offline, build your reading list, and get real-time breaking news alerts on iOS &amp; Android.</p>
-      
+
       <div class="app-store-badge-group">
         <a href="/app-download/" class="app-store-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.3c.64-.78 1.08-1.85.96-2.93-.93.04-2.07.62-2.74 1.4-.6.69-1.13 1.79-.98 2.86 1.04.08 2.12-.55 2.76-1.33z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.3c.64-.78 1.08-1.85.96-2.93-.93.04-2.07.62-2.74 1.4-.6.69-1.13 1.79-.98 2.86 1.04.08 2.12-.55 2.76-1.33z" />
+          </svg>
           <span>App Store</span>
         </a>
         <a href="/app-download/" class="app-store-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3.6 1.83a2 2 0 0 0-.6 1.44v17.46a2 2 0 0 0 .6 1.44l.08.08L13.4 12.5v-.28L3.68 1.75l-.08.08zm13.11 7.29-3.31-1.9L10.23 10.4l3.17 3.17 3.31-1.9c.94-.54.94-1.42 0-1.96zm-1.04 4.88L12.5 10.83l-8.9 8.9c.31.33.84.38 1.34.1l10.73-5.83zm-8.9-8.9L12.5 13.17l3.17-3.17L4.94 4.17c-.5-.28-1.03-.23-1.34.1l8.17 8.17z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.6 1.83a2 2 0 0 0-.6 1.44v17.46a2 2 0 0 0 .6 1.44l.08.08L13.4 12.5v-.28L3.68 1.75l-.08.08zm13.11 7.29-3.31-1.9L10.23 10.4l3.17 3.17 3.31-1.9c.94-.54.94-1.42 0-1.96zm-1.04 4.88L12.5 10.83l-8.9 8.9c.31.33.84.38 1.34.1l10.73-5.83zm-8.9-8.9L12.5 13.17l3.17-3.17L4.94 4.17c-.5-.28-1.03-.23-1.34.1l8.17 8.17z" />
+          </svg>
           <span>Google Play</span>
         </a>
       </div>
@@ -370,7 +419,9 @@ if (isset($_COOKIE['user_data'])) {
       </div>
       <form action="/search/" method="GET" class="search-modal-form" id="searchForm">
         <div class="search-input-group">
-          <svg class="search-icon-svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <svg class="search-icon-svg" viewBox="0 0 24 24">
+            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+          </svg>
           <input type="text" name="q" placeholder="Type to search Fintech, AI, IPOs..." required id="searchInput" autocomplete="off" />
           <button type="submit" class="btn btn-primary">Search</button>
         </div>

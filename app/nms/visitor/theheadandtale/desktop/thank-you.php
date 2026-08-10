@@ -7,7 +7,7 @@ if (!isset($id)) {
     $order_id = $id;
 }
 
-$orderType == ((isset($orderType)) ? $orderType : 'subscription');
+$orderType = ((isset($orderType)) ? $orderType : 'subscription');
 
 switch ($orderType) {
     case 'news':
