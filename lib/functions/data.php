@@ -394,44 +394,44 @@ function getNewsCategoryPost($conn, $categoryId = 0, $categoryType = 'post', $so
 
     switch ($sortBy) {
         case 'old':
-            $orderBy = 'ORDER BY link_published ASC';
+            $orderBy = 'ORDER BY news_published ASC';
             break;
         case 'popular':
-            $orderBy = 'ORDER BY post_viewed DESC, link_published DESC';
+            $orderBy = 'ORDER BY post_viewed DESC, news_published DESC';
             break;
         case 'replies':
-            $orderBy = 'ORDER BY post_replies DESC, link_published DESC';
+            $orderBy = 'ORDER BY post_replies DESC, news_published DESC';
             break;
         case 'likes':
-            $orderBy = 'ORDER BY post_likes DESC, link_published DESC';
+            $orderBy = 'ORDER BY post_likes DESC, news_published DESC';
             break;
         default:
-            $orderBy = 'ORDER BY link_published DESC';
+            $orderBy = 'ORDER BY news_published DESC';
             break;
     }
 
     switch ($dateFilter) {
         case 'today':
             // From today 00:00:00 to today 23:59:59
-            $dateSql = "AND link_published BETWEEN CONCAT(CURDATE(), ' 00:00:00') 
+            $dateSql = "AND news_published BETWEEN CONCAT(CURDATE(), ' 00:00:00') 
                     AND CONCAT(CURDATE(), ' 23:59:59')";
             break;
 
         case 'week':
             // From 7 days ago 00:00:00 to today 23:59:59
-            $dateSql = "AND link_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 7 DAY) 
+            $dateSql = "AND news_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 7 DAY) 
                     AND CONCAT(CURDATE(), ' 23:59:59')";
             break;
 
         case 'month':
             // From 1 month ago 00:00:00 to today 23:59:59
-            $dateSql = "AND link_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 1 MONTH) 
+            $dateSql = "AND news_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 1 MONTH) 
                     AND CONCAT(CURDATE(), ' 23:59:59')";
             break;
 
         case 'year':
             // From 1 year ago 00:00:00 to today 23:59:59
-            $dateSql = "AND link_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 1 YEAR) 
+            $dateSql = "AND news_published BETWEEN DATE_SUB(CONCAT(CURDATE(), ' 00:00:00'), INTERVAL 1 YEAR) 
                     AND CONCAT(CURDATE(), ' 23:59:59')";
             break;
 

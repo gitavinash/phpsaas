@@ -2,7 +2,7 @@
 
 require_once 'header.php';
 
-if ($featuredArticle = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id AND link_status=200 AND link_site_id=" . SITE_ID . " WHERE link_status=200 AND news_site_id=" . SITE_ID . " ORDER BY link_is_featured DESC, link_published DESC LIMIT 1")) {
+if ($featuredArticle = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id AND link_status=200 AND link_site_id=" . SITE_ID . " WHERE link_status=200 AND news_category IN (201, 202, 204) AND news_site_id=" . SITE_ID . " ORDER BY link_is_featured DESC, news_published DESC LIMIT 1")) {
   $featuredArticle = mysqli_fetch_assoc($featuredArticle);
 } else {
   $featuredArticle = null;
