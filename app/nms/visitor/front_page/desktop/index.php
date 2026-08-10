@@ -32,8 +32,8 @@ $peVcArticles = getNewsCategoryPost($connection, 399, 'news', 'new', 'all', 0, 1
 // 8. Fetch The monthly Crypto Map
 $cryptoMapArticles = getNewsCategoryPost($connection, 411, 'news', 'new', 'all', 0, 10);
 
-// 9. Fetch Money Thrivia
-$moneyThriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all', 0, 3);
+// 9. Fetch Money Trivia
+$moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all', 0, 3);
 
 ?>
 <!-- Hero Section -->
@@ -480,18 +480,18 @@ $moneyThriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'al
   </div>
 </section>
 
-<!-- Money Thrivia -->
+<!-- Money Trivia -->
 <section id="ai" class="section ai-section dark-mode">
   <div class="container">
     <div class="section-header">
       <div>
-        <h2>Money Thrivia</h2>
+        <h2>Money Trivia</h2>
       </div>
-      <a href="/money-thrivia/" class="view-all dark">View All <span class="arrow">→</span></a>
+      <a href="/money-Trivia/" class="view-all dark">View All <span class="arrow">→</span></a>
     </div>
     <div class="card-grid">
-      <?php if (!empty($moneyThriviaArticles)): ?>
-        <?php foreach ($moneyThriviaArticles as $ai): ?>
+      <?php if (!empty($moneyTriviaArticles)): ?>
+        <?php foreach ($moneyTriviaArticles as $ai): ?>
           <article class="tech-card">
             <div class="image-wrapper tech-image-wrapper">
               <?php if (!empty($ai['news_paid']) && $ai['news_paid'] == 1): ?>
