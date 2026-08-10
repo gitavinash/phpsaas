@@ -26,7 +26,7 @@ if (isset($id)) {
             );
         }
 
-        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_vendor_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol FROM isw_order LEFT JOIN isw_address ON order_address_id=address_id LEFT JOIN isw_user ON order_user_id=user_id LEFT JOIN isw_profile ON profile_user_id=user_id LEFT JOIN isw_city ON city_id=address_city_id LEFT JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
+        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_assign_to, order_vendor_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, order_status, product_title, product_image, inventory_currency_symbol FROM isw_order LEFT JOIN isw_address ON order_address_id=address_id LEFT JOIN isw_user ON order_user_id=user_id LEFT JOIN isw_profile ON profile_user_id=user_id LEFT JOIN isw_city ON city_id=address_city_id LEFT JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
 
         $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id AND product_type='product' AND product_site_id" . $siteId;
         $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=order_product_id AND inventory_type='product' AND inventory_site_id" . $siteId;
@@ -39,15 +39,18 @@ if (isset($id)) {
 
                 extract(mysqli_fetch_assoc($checkOrder));
 
-                $orderStatusValue = trim((string)$transaction_status);
+                $orderStatusValue = trim((string)$order_status);
+
                 $numericStatusMap = array(
-                    '' => 'Pending',
                     '0' => 'Pending',
-                    '1' => 'Confirmed',
-                    '2' => 'Waiting',
-                    '3' => 'Cancelled',
-                    '4' => 'Returned',
-                    '5' => 'Delivered',
+                    '1' => 'Order Accepted by Vendor',
+                    '2' => 'Assigned to Vendor',
+                    '3' => 'Processing',
+                    '4' => 'Shipped',
+                    '5' => 'Out for Delivery',
+                    '6' => 'Delivered',
+                    '7' => 'Cancelled',
+                    '8' => 'Returned',
                 );
 
                 if (isset($numericStatusMap[$orderStatusValue])) {
@@ -189,7 +192,7 @@ if (isset($id)) {
                                                                     <div class="order-item-edit-grid">
                                                                         <div class="premium-form-group">
                                                                             <label>Select Product</label>
-                                                                            <select class="premium-form-control select-product-dropdown" style="width: 100%;">
+                                                                            <select class="premium-form-control select-product-dropdown selectJS" style="width: 100%;">
                                                                                 <?php for ($p = 0; $p < sizeof($productListData); $p++) { ?>
                                                                                     <option value="<?php echo htmlspecialchars($productListData[$p]['product_id'], ENT_QUOTES); ?>"
                                                                                         data-image="<?php echo htmlspecialchars($productListData[$p]['product_image'] ?? '', ENT_QUOTES); ?>"
@@ -250,7 +253,7 @@ if (isset($id)) {
                                                                     <div class="order-item-edit-grid">
                                                                         <div class="premium-form-group">
                                                                             <label>Select Product</label>
-                                                                            <select class="premium-form-control select-product-dropdown" style="width: 100%;">
+                                                                            <select class="premium-form-control select-product-dropdown selectJS" style="width: 100%;">
                                                                                 <?php for ($p = 0; $p < sizeof($productListData); $p++) { ?>
                                                                                     <option value="<?php echo htmlspecialchars($productListData[$p]['product_id'], ENT_QUOTES); ?>"
                                                                                         data-image="<?php echo htmlspecialchars($productListData[$p]['product_image'] ?? '', ENT_QUOTES); ?>"
@@ -325,7 +328,7 @@ if (isset($id)) {
                                             </div>
                                             <div class="premium-form-group">
                                                 <label>State</label>
-                                                <select class="premium-form-control" name="state" required>
+                                                <select class="premium-form-control selectJS" name="state" required>
                                                     <?php
                                                     if ($stateDetails = mysqli_query($connection, "SELECT state_id, state_name FROM " . TABLE_PREFIX . "state WHERE state_country_id=101")) {
                                                         if (mysqli_num_rows($stateDetails) != 0) {
@@ -346,7 +349,7 @@ if (isset($id)) {
                                             </div>
                                             <div class="premium-form-group full-width">
                                                 <label>Address Type</label>
-                                                <select name="address_type" class="premium-form-control">
+                                                <select name="address_type" class="premium-form-control selectJS">
                                                     <option value="">Select address type</option>
                                                     <option value="home" <?php echo (($address_type == 'home') ? 'selected' : '') ?>>Home</option>
                                                     <option value="work" <?php echo (($address_type == 'work') ? 'selected' : '') ?>>Work</option>
@@ -400,7 +403,7 @@ if (isset($id)) {
 
                                                 ?>
                                                 <label><?php echo ($order_vendor_id == 0) ? 'Select' : 'Change'; ?> Fulfillment Partner</label>
-                                                <select name="assigned_vendor" class="premium-form-control" style="width: 100%;">
+                                                <select name="assigned_vendor" class="premium-form-control selectJS" style="width: 100%;">
                                                     <option value="">Select partner</option>
                                                     <?php
 
@@ -419,6 +422,50 @@ if (isset($id)) {
                                             </div>
                                             <div style="margin-top: 12px;">
                                                 <button type="button" class="btn-premium-action btn-save" id="saveVendorEditBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> <?php echo ($order_vendor_id == 0) ? 'Assign' : 'Change'; ?> Partner</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Card: Fulfillment Partner / Vendor Details -->
+                                    <div class="premium-card">
+                                        <h3 class="premium-card-title"><i class="fas fa-truck"></i> Delivery Partner</h3>
+                                        <div id="deliveryAgentEditMode" style="display: block;">
+                                            <div class="premium-form-group">
+                                                <?php
+
+                                                if ($order_assign_to == 0) { ?>
+                                                    <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
+                                                        <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
+                                                        <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
+                                                            <strong>No Delivery Partner Assigned</strong><br>
+                                                            Please assign a delivery partner to process this order.
+                                                        </div>
+                                                    </div>
+                                                <?php
+                                                }
+
+                                                ?>
+                                                <label><?php echo ($order_assign_to == 0) ? 'Select' : 'Change'; ?> Delivery Partner</label>
+                                                <select name="assigned_delivery_agent" class="premium-form-control selectJS" style="width: 100%;">
+                                                    <option value="">Select delivery partner</option>
+                                                    <?php
+
+                                                    $userParentFilter = (USER_TYPE != 'administrator') ? "AND user_parent_id=" . USER_ID : "";
+
+                                                    if ($checkDeliveryAgent = mysqli_query($connection, "SELECT user_id, profile_display_name FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=site_access_user_id INNER JOIN " . TABLE_PREFIX . "user ON user_id=site_access_user_id {$userParentFilter} WHERE site_access_type='delivery_agent' AND site_access_status=1 AND site_access_site_id=" . SITE_ID)) {
+                                                        if (mysqli_num_rows($checkDeliveryAgent) != 0) {
+                                                            while ($deliveryAgentData = mysqli_fetch_assoc($checkDeliveryAgent)) {
+                                                                echo "<option value='{$deliveryAgentData['user_id']}' " . ($order_assign_to == $deliveryAgentData['user_id'] ? "selected" : "") . ">{$deliveryAgentData['profile_display_name']}</option>";
+                                                            }
+                                                        }
+                                                    }
+
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div style="margin-top: 12px;">
+                                                <button type="button" class="btn-premium-action btn-save" id="saveDeliveryPartnerBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> <?php echo ($order_assign_to == 0) ? 'Assign' : 'Change'; ?> Delivery Partner</button>
                                             </div>
                                         </div>
                                     </div>
@@ -461,17 +508,947 @@ if (isset($id)) {
 
                             <!-- Floating Actions Bar at bottom of cards -->
                             <div class="premium-action-row">
+
+                                <!-- Backend Admin CTA -->
+                                <input type="hidden" name="id" value="<?php echo $id ?>">
+                                <a href="#" id="orderUpdateData" class="btn-premium-action btn-reschedule"><i class="fas fa-check"></i> Update order</a>
+
+                                <!-- CTA for Vendors -->
                                 <input type="hidden" name="type" value="order">
                                 <input type="hidden" name="id" value="<?php echo $id ?>">
-                                <a href="#" id="orderConfirmBtn" class="btn-premium-action btn-confirm"><i class="fas fa-check"></i> Confirm</a>
-                                <a href="#" id="orderWaitingBtn" class="btn-premium-action btn-waiting"><i class="fas fa-clock"></i> Waiting</a>
-                                <a href="#" id="orderCancelBtn" class="btn-premium-action btn-cancel"><i class="fas fa-times"></i> Cancel</a>
+                                <a href="#" id="orderConfirmBtn" class="btn-premium-action btn-confirm"><i class="fas fa-check"></i> Accept</a>
+                                <a href="#" id="orderCancelBtn" class="btn-premium-action btn-cancel"><i class="fas fa-times"></i> Reject</a>
+
+                                <!-- CTA for Delivery Agents -->
+                                <a href="#" id="orderRescheduleBtn" class="btn-premium-action btn-reschedule"><i class="fas fa-calendar-plus"></i> Reschedule Delivery</a>
                                 <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return"><i class="fas fa-undo"></i> Return</a>
                                 <a href="#" id="orderDeliverBtn" class="btn-premium-action btn-delivered"><i class="fas fa-shipping-fast"></i> Delivered</a>
                             </div>
                         </form>
                     </div>
                 </div>
+
+                <!-- Order Action Modal -->
+                <div id="orderActionModal" class="order-action-modal">
+                    <div class="order-action-modal-backdrop"></div>
+                    <div class="order-action-modal-content">
+                        <div class="order-action-modal-header">
+                            <h3 id="modalTitle">Process Order Action</h3>
+                            <button type="button" class="close-modal-btn" aria-label="Close modal">&times;</button>
+                        </div>
+                        <form id="orderActionForm" enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="<?php echo $id; ?>">
+                            <input type="hidden" name="action_type" id="actionTypeInput" value="">
+
+                            <div id="returnReasonGroup" class="premium-form-group" style="display: none;">
+                                <label for="returnReasonInput">Return Reason <span id="returnReasonRequiredMark" class="required" style="display: none;">*</span></label>
+                                <select id="returnReasonInput" name="return_reason" class="premium-form-control selectJS">
+                                    <option value="">Select reason</option>
+                                    <option value="damaged_item">Damaged item</option>
+                                    <option value="wrong_item">Wrong item delivered</option>
+                                    <option value="quality_issue">Quality issue</option>
+                                    <option value="size_issue">Size issue</option>
+                                    <option value="late_delivery">Late delivery</option>
+                                    <option value="changed_mind">Changed my mind</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="premium-form-group">
+                                <label for="actionComment">Comment <span id="commentRequiredMark" class="required">*</span></label>
+                                <textarea id="actionComment" name="comment" class="premium-form-control" placeholder="Enter comments here..."></textarea>
+                            </div>
+
+                            <div id="rescheduleFields" style="display: none;">
+                                <div class="premium-form-group">
+                                    <label for="deliveryDateInput">Delivery Date <span id="deliveryDateRequiredMark" class="required" style="display: none;">*</span></label>
+                                    <input type="date" id="deliveryDateInput" name="delivery_date" class="premium-form-control">
+                                </div>
+                                <div class="premium-form-group">
+                                    <label for="deliveryPreferredTimeInput">Delivery Preferred Time <span id="deliveryTimeRequiredMark" class="required" style="display: none;">*</span></label>
+                                    <select id="deliveryPreferredTimeInput" name="delivery_preferred_time" class="premium-form-control selectJS">
+                                        <option value="">Select time slot</option>
+                                        <option value="00:00-01:00">12:00 AM - 01:00 AM</option>
+                                        <option value="01:00-02:00">01:00 AM - 02:00 AM</option>
+                                        <option value="02:00-03:00">02:00 AM - 03:00 AM</option>
+                                        <option value="03:00-04:00">03:00 AM - 04:00 AM</option>
+                                        <option value="04:00-05:00">04:00 AM - 05:00 AM</option>
+                                        <option value="05:00-06:00">05:00 AM - 06:00 AM</option>
+                                        <option value="06:00-07:00">06:00 AM - 07:00 AM</option>
+                                        <option value="07:00-08:00">07:00 AM - 08:00 AM</option>
+                                        <option value="08:00-09:00">08:00 AM - 09:00 AM</option>
+                                        <option value="09:00-10:00">09:00 AM - 10:00 AM</option>
+                                        <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
+                                        <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
+                                        <option value="12:00-13:00">12:00 PM - 01:00 PM</option>
+                                        <option value="13:00-14:00">01:00 PM - 02:00 PM</option>
+                                        <option value="14:00-15:00">02:00 PM - 03:00 PM</option>
+                                        <option value="15:00-16:00">03:00 PM - 04:00 PM</option>
+                                        <option value="16:00-17:00">04:00 PM - 05:00 PM</option>
+                                        <option value="17:00-18:00">05:00 PM - 06:00 PM</option>
+                                        <option value="18:00-19:00">06:00 PM - 07:00 PM</option>
+                                        <option value="19:00-20:00">07:00 PM - 08:00 PM</option>
+                                        <option value="20:00-21:00">08:00 PM - 09:00 PM</option>
+                                        <option value="21:00-22:00">09:00 PM - 10:00 PM</option>
+                                        <option value="22:00-23:00">10:00 PM - 11:00 PM</option>
+                                        <option value="23:00-24:00">11:00 PM - 12:00 AM</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="premium-form-group" id="actionPhotoGroup">
+                                <label for="actionPhoto">Upload Photo <span id="photoRequiredMark" class="required" style="display: none;">*</span></label>
+                                <div class="photo-upload-container">
+                                    <input type="file" id="actionPhoto" name="photo" accept="image/*" class="premium-form-control-file">
+                                    <div class="photo-preview-box" id="photoPreviewBox">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Select or capture photo</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="order-action-modal-footer">
+                                <button type="button" class="btn-premium-action btn-secondary close-modal-btn">Cancel</button>
+                                <button type="submit" class="btn-premium-action btn-primary" id="submitActionBtn">Confirm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="orderActionFeedback" class="order-action-feedback" aria-live="polite" style="display: none;">
+                    <div class="order-action-feedback-header">
+                        <div>
+                            <span class="order-action-feedback-title" id="orderActionFeedbackTitle">Order Update</span>
+                            <div class="order-action-feedback-meta" id="orderActionFeedbackMeta">Status response</div>
+                        </div>
+                        <button type="button" id="toggleOrderActionFeedback" class="order-action-feedback-toggle" aria-expanded="false">Show</button>
+                    </div>
+                    <div class="order-action-feedback-body" id="orderActionFeedbackBody"></div>
+                </div>
+
+                <!-- Toast Notification Container -->
+                <div id="orderToastNotification" class="order-toast-notification"></div>
+
+                <style>
+                    .btn-reschedule {
+                        background-color: #3b82f6 !important;
+                    }
+
+                    .btn-reschedule:hover {
+                        background-color: #2563eb !important;
+                    }
+
+                    .order-action-modal {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        z-index: 10000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    }
+
+                    .order-action-modal.is-active {
+                        opacity: 1;
+                        pointer-events: auto;
+                    }
+
+                    .order-action-modal-backdrop {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(15, 23, 42, 0.6);
+                        backdrop-filter: blur(8px);
+                        -webkit-backdrop-filter: blur(8px);
+                    }
+
+                    .order-action-modal-content {
+                        position: relative;
+                        background: #ffffff;
+                        width: 90%;
+                        max-width: 500px;
+                        border-radius: 16px;
+                        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                        transform: scale(0.9);
+                        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                        z-index: 1;
+                        overflow: hidden;
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                    }
+
+                    .order-action-modal.is-active .order-action-modal-content {
+                        transform: scale(1);
+                    }
+
+                    .order-action-modal-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 20px 24px;
+                        border-bottom: 1px solid #f1f5f9;
+                    }
+
+                    .order-action-modal-header h3 {
+                        margin: 0;
+                        font-size: 1.25rem;
+                        font-weight: 700;
+                        color: #0f172a;
+                        transition: color 0.3s;
+                    }
+
+                    .order-action-modal-header .close-modal-btn {
+                        background: transparent;
+                        border: none;
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                        color: #64748b;
+                        padding: 0;
+                        line-height: 1;
+                        transition: color 0.2s;
+                    }
+
+                    .order-action-modal-header .close-modal-btn:hover {
+                        color: #0f172a;
+                    }
+
+                    .order-action-modal form {
+                        padding: 24px;
+                        margin: 0;
+                    }
+
+                    .order-action-modal .premium-form-group {
+                        display: flex;
+                        flex-direction: column;
+                        width: 100%;
+                        margin-bottom: 20px;
+                    }
+
+                    .order-action-modal .premium-form-group .select2-container {
+                        float: none !important;
+                        display: block !important;
+                        width: 100% !important;
+                    }
+
+                    .order-action-modal .premium-form-group .premium-form-control,
+                    .order-action-modal .premium-form-group textarea.premium-form-control {
+                        display: block;
+                        width: 100% !important;
+                        box-sizing: border-box;
+                    }
+
+                    .order-action-modal .premium-form-group label {
+                        display: block;
+                        margin-bottom: 8px;
+                        font-weight: 600;
+                        color: #334155;
+                        font-size: 0.9rem;
+                    }
+
+                    .order-action-modal .premium-form-group label .required {
+                        color: #ef4444;
+                    }
+
+                    .order-action-modal textarea.premium-form-control {
+                        width: 100%;
+                        min-height: 100px;
+                        padding: 12px;
+                        border: 1px solid #cbd5e1;
+                        border-radius: 8px;
+                        font-size: 0.95rem;
+                        resize: vertical;
+                        outline: none;
+                        transition: border-color 0.2s, box-shadow 0.2s;
+                        background: #f8fafc;
+                    }
+
+                    .order-action-modal textarea.premium-form-control:focus {
+                        border-color: #3b82f6;
+                        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+                        background: #ffffff;
+                    }
+
+                    .photo-upload-container {
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .premium-form-control-file {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0;
+                        cursor: pointer;
+                        z-index: 2;
+                    }
+
+                    .photo-preview-box {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        border: 2px dashed #cbd5e1;
+                        border-radius: 12px;
+                        padding: 24px;
+                        background: #f8fafc;
+                        text-align: center;
+                        transition: background 0.2s, border-color 0.2s;
+                        cursor: pointer;
+                        min-height: 140px;
+                    }
+
+                    .photo-preview-box i {
+                        font-size: 2rem;
+                        color: #94a3b8;
+                        margin-bottom: 8px;
+                        transition: color 0.2s;
+                    }
+
+                    .photo-preview-box span {
+                        font-size: 0.85rem;
+                        color: #64748b;
+                        font-weight: 500;
+                    }
+
+                    .photo-upload-container:hover .photo-preview-box {
+                        background: #f1f5f9;
+                        border-color: #94a3b8;
+                    }
+
+                    .photo-upload-container:hover .photo-preview-box i {
+                        color: #64748b;
+                    }
+
+                    .photo-preview-box.has-image {
+                        border-style: solid;
+                        border-color: #3b82f6;
+                        background-size: cover;
+                        background-position: center;
+                        min-height: 160px;
+                    }
+
+                    .photo-preview-box.has-image i,
+                    .photo-preview-box.has-image span {
+                        background: rgba(15, 23, 42, 0.75);
+                        color: #ffffff;
+                        padding: 4px 10px;
+                        border-radius: 6px;
+                        backdrop-filter: blur(4px);
+                    }
+
+                    .order-action-modal-footer {
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 12px;
+                        margin-top: 24px;
+                        border-top: 1px solid #f1f5f9;
+                        padding-top: 16px;
+                    }
+
+                    .order-action-modal-footer .btn-premium-action {
+                        padding: 10px 20px;
+                        font-size: 0.95rem;
+                        font-weight: 600;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        border: none;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .order-action-modal-footer .btn-secondary {
+                        background: #f1f5f9;
+                        color: #475569;
+                    }
+
+                    .order-action-modal-footer .btn-secondary:hover {
+                        background: #e2e8f0;
+                        color: #0f172a;
+                    }
+
+                    .order-action-modal-footer .btn-primary {
+                        background: #3b82f6;
+                        color: #ffffff;
+                    }
+
+                    .order-action-modal-footer .btn-primary:hover {
+                        background: #2563eb;
+                    }
+
+                    .order-action-modal-footer .btn-primary:disabled {
+                        background: #93c5fd;
+                        cursor: not-allowed;
+                    }
+
+                    .order-action-modal.action-reschedule h3 {
+                        color: #2563eb;
+                    }
+
+                    .order-action-modal.action-reschedule .btn-primary {
+                        background: #2563eb;
+                    }
+
+                    .order-action-modal.action-reschedule .btn-primary:hover {
+                        background: #1d4ed8;
+                    }
+
+                    .order-action-modal.action-return h3 {
+                        color: #dc2626;
+                    }
+
+                    .order-action-modal.action-return .btn-primary {
+                        background: #dc2626;
+                    }
+
+                    .order-action-modal.action-return .btn-primary:hover {
+                        background: #b91c1c;
+                    }
+
+                    .order-action-modal.action-deliver h3 {
+                        color: #059669;
+                    }
+
+                    .order-action-modal.action-deliver .btn-primary {
+                        background: #059669;
+                    }
+
+                    .order-action-modal.action-deliver .btn-primary:hover {
+                        background: #047857;
+                    }
+
+                    .order-toast-notification {
+                        position: fixed;
+                        bottom: 24px;
+                        right: 24px;
+                        z-index: 10001;
+                        padding: 16px 24px;
+                        border-radius: 12px;
+                        background: #0f172a;
+                        color: #ffffff;
+                        font-weight: 600;
+                        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                        transform: translateY(100px);
+                        opacity: 0;
+                        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+                    }
+
+                    .order-toast-notification.is-visible {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+
+                    .order-toast-notification.success {
+                        background: #10b981;
+                    }
+
+                    .order-toast-notification.error {
+                        background: #ef4444;
+                    }
+
+                    .order-action-feedback {
+                        margin: 18px 0 0;
+                        border: 1px solid #cbd5e1;
+                        border-radius: 14px;
+                        overflow: hidden;
+                        background: #fff;
+                        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+                    }
+
+                    .order-action-feedback-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 12px;
+                        padding: 14px 18px;
+                        background: #f8fafc;
+                        border-bottom: 1px solid #e2e8f0;
+                    }
+
+                    .order-action-feedback-title {
+                        display: block;
+                        font-size: 0.98rem;
+                        font-weight: 700;
+                        color: #0f172a;
+                    }
+
+                    .order-action-feedback-meta {
+                        margin-top: 2px;
+                        font-size: 0.82rem;
+                        color: #64748b;
+                    }
+
+                    .order-action-feedback-toggle {
+                        border: none;
+                        background: #2563eb;
+                        color: #fff;
+                        border-radius: 999px;
+                        padding: 8px 14px;
+                        font-weight: 700;
+                        cursor: pointer;
+                    }
+
+                    .order-action-feedback-body {
+                        display: none;
+                        padding: 16px 18px 18px;
+                        color: #0f172a;
+                        line-height: 1.6;
+                        font-size: 0.95rem;
+                        white-space: pre-line;
+                    }
+
+                    .order-action-feedback.is-open .order-action-feedback-body {
+                        display: block;
+                    }
+
+                    .order-action-feedback.is-success {
+                        border-color: rgba(16, 185, 129, 0.35);
+                    }
+
+                    .order-action-feedback.is-success .order-action-feedback-header {
+                        background: rgba(16, 185, 129, 0.08);
+                    }
+
+                    .order-action-feedback.is-success .order-action-feedback-toggle {
+                        background: #10b981;
+                    }
+
+                    .order-action-feedback.is-error {
+                        border-color: rgba(239, 68, 68, 0.35);
+                    }
+
+                    .order-action-feedback.is-error .order-action-feedback-header {
+                        background: rgba(239, 68, 68, 0.08);
+                    }
+
+                    .order-action-feedback.is-error .order-action-feedback-toggle {
+                        background: #ef4444;
+                    }
+                </style>
+
+                <script>
+                    (function() {
+                        var modal = document.getElementById('orderActionModal');
+                        if (!modal) {
+                            return;
+                        }
+
+                        var form = document.getElementById('orderActionForm');
+                        var actionTypeInput = document.getElementById('actionTypeInput');
+                        var modalTitle = document.getElementById('modalTitle');
+                        var submitBtn = document.getElementById('submitActionBtn');
+                        var closeBtns = modal.querySelectorAll('.close-modal-btn');
+                        var actionPhotoGroup = document.getElementById('actionPhotoGroup');
+                        var fileInput = document.getElementById('actionPhoto');
+                        var photoRequiredMark = document.getElementById('photoRequiredMark');
+                        var returnReasonGroup = document.getElementById('returnReasonGroup');
+                        var returnReasonInput = document.getElementById('returnReasonInput');
+                        var returnReasonRequiredMark = document.getElementById('returnReasonRequiredMark');
+                        var commentInput = document.getElementById('actionComment');
+                        var commentRequiredMark = document.getElementById('commentRequiredMark');
+                        var rescheduleFields = document.getElementById('rescheduleFields');
+                        var deliveryDateInput = document.getElementById('deliveryDateInput');
+                        var deliveryPreferredTimeInput = document.getElementById('deliveryPreferredTimeInput');
+                        var deliveryDateRequiredMark = document.getElementById('deliveryDateRequiredMark');
+                        var deliveryTimeRequiredMark = document.getElementById('deliveryTimeRequiredMark');
+                        var previewBox = document.getElementById('photoPreviewBox');
+                        var toast = document.getElementById('orderToastNotification');
+                        var feedbackBox = document.getElementById('orderActionFeedback');
+                        var feedbackTitle = document.getElementById('orderActionFeedbackTitle');
+                        var feedbackMeta = document.getElementById('orderActionFeedbackMeta');
+                        var feedbackBody = document.getElementById('orderActionFeedbackBody');
+                        var feedbackToggle = document.getElementById('toggleOrderActionFeedback');
+                        var today = new Date();
+                        var tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+                        function formatDateForInput(dateObj) {
+                            var yyyy = dateObj.getFullYear();
+                            var mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                            var dd = String(dateObj.getDate()).padStart(2, '0');
+                            return yyyy + '-' + mm + '-' + dd;
+                        }
+
+                        function isFutureDateOnly(dateValue) {
+                            if (!dateValue) {
+                                return false;
+                            }
+                            return dateValue >= formatDateForInput(tomorrow);
+                        }
+
+                        var minAllowedDate = formatDateForInput(tomorrow);
+                        var currentActionConfig = null;
+                        window.orderUiProcessing = window.orderUiProcessing || {};
+
+                        window.orderUiProcessing.setButtonProcessing = function(button, labelText) {
+                            if (!button || button.getAttribute('data-processing') === '1') {
+                                return;
+                            }
+
+                            button.setAttribute('data-processing', '1');
+                            button.setAttribute('aria-disabled', 'true');
+                            button.dataset.originalHtml = button.innerHTML;
+                            button.style.pointerEvents = 'none';
+                            button.style.opacity = '0.85';
+                            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (labelText || 'Processing...');
+                        };
+
+                        window.orderUiProcessing.clearButtonProcessing = function(button) {
+                            if (!button || button.getAttribute('data-processing') !== '1') {
+                                return;
+                            }
+
+                            button.removeAttribute('data-processing');
+                            button.removeAttribute('aria-disabled');
+                            button.style.pointerEvents = '';
+                            button.style.opacity = '';
+
+                            if (button.dataset.originalHtml) {
+                                button.innerHTML = button.dataset.originalHtml;
+                                delete button.dataset.originalHtml;
+                            }
+                        };
+
+                        if (deliveryDateInput) {
+                            deliveryDateInput.setAttribute('min', minAllowedDate);
+                            deliveryDateInput.addEventListener('focus', function() {
+                                if (typeof this.showPicker === 'function') {
+                                    this.showPicker();
+                                }
+                            });
+                            deliveryDateInput.addEventListener('click', function() {
+                                if (typeof this.showPicker === 'function') {
+                                    this.showPicker();
+                                }
+                            });
+                            deliveryDateInput.addEventListener('change', function() {
+                                if (this.value && !isFutureDateOnly(this.value)) {
+                                    this.value = '';
+                                    showToast('Please select a future date only.', 'error');
+                                }
+                            });
+                        }
+
+                        var configs = {
+                            'orderRescheduleBtn': {
+                                action: 'reschulde',
+                                endpoint: '/api/order/reschdule_delivery/',
+                                title: 'Confirm Other Day Delivery',
+                                btnText: 'Confirm Other Day Delivery',
+                                colorClass: 'action-reschedule',
+                                requireComment: true,
+                                requireSchedule: true,
+                                requirePhoto: false,
+                                showPhotoField: false,
+                                requireReturnReason: false
+                            },
+                            'orderReturnBtn': {
+                                action: 'return',
+                                endpoint: '/api/order/return_delivery/',
+                                title: 'Confirm Return',
+                                btnText: 'Confirm Return',
+                                colorClass: 'action-return',
+                                requireComment: false,
+                                requireSchedule: false,
+                                requirePhoto: false,
+                                showPhotoField: false,
+                                requireReturnReason: true
+                            },
+                            'orderDeliverBtn': {
+                                action: 'deliverd',
+                                endpoint: '/api/order/confirm_delivery/',
+                                title: 'Confirm Delivery',
+                                btnText: 'Confirm Delivery',
+                                colorClass: 'action-deliver',
+                                requireComment: true,
+                                requireSchedule: false,
+                                requirePhoto: true,
+                                showPhotoField: true,
+                                requireReturnReason: false
+                            }
+                        };
+
+                        function closeModal() {
+                            modal.classList.remove('is-active');
+                            form.reset();
+                            currentActionConfig = null;
+                            if (window.orderUiProcessing && typeof window.orderUiProcessing.clearButtonProcessing === 'function') {
+                                window.orderUiProcessing.clearButtonProcessing(document.getElementById('orderRescheduleBtn'));
+                                window.orderUiProcessing.clearButtonProcessing(document.getElementById('orderReturnBtn'));
+                                window.orderUiProcessing.clearButtonProcessing(document.getElementById('orderDeliverBtn'));
+                            }
+                            if (rescheduleFields) {
+                                rescheduleFields.style.display = 'none';
+                            }
+                            if (deliveryDateInput) {
+                                deliveryDateInput.required = false;
+                                deliveryDateInput.value = '';
+                            }
+                            if (deliveryPreferredTimeInput) {
+                                deliveryPreferredTimeInput.required = false;
+                                deliveryPreferredTimeInput.value = '';
+                            }
+                            if (deliveryDateRequiredMark) {
+                                deliveryDateRequiredMark.style.display = 'none';
+                            }
+                            if (deliveryTimeRequiredMark) {
+                                deliveryTimeRequiredMark.style.display = 'none';
+                            }
+                            if (fileInput) {
+                                fileInput.required = false;
+                            }
+                            if (photoRequiredMark) {
+                                photoRequiredMark.style.display = 'none';
+                            }
+                            if (returnReasonGroup) {
+                                returnReasonGroup.style.display = 'none';
+                            }
+                            if (returnReasonInput) {
+                                returnReasonInput.required = false;
+                                returnReasonInput.value = '';
+                            }
+                            if (returnReasonRequiredMark) {
+                                returnReasonRequiredMark.style.display = 'none';
+                            }
+                            if (commentInput) {
+                                commentInput.required = false;
+                                commentInput.placeholder = 'Enter comments here...';
+                            }
+                            if (commentRequiredMark) {
+                                commentRequiredMark.style.display = 'inline';
+                            }
+                            if (actionPhotoGroup) {
+                                actionPhotoGroup.style.display = 'block';
+                            }
+                            previewBox.classList.remove('has-image');
+                            previewBox.style.backgroundImage = '';
+                            previewBox.querySelector('i').style.display = '';
+                            previewBox.querySelector('span').textContent = 'Select or capture photo';
+                        }
+
+                        Object.keys(configs).forEach(function(btnId) {
+                            var btn = document.getElementById(btnId);
+                            if (btn) {
+                                btn.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    e.stopImmediatePropagation();
+                                    if (window.orderUiProcessing && typeof window.orderUiProcessing.setButtonProcessing === 'function') {
+                                        window.orderUiProcessing.setButtonProcessing(this, 'Processing...');
+                                    }
+                                    var config = configs[btnId];
+                                    currentActionConfig = config;
+                                    actionTypeInput.value = config.action;
+                                    modalTitle.textContent = config.title;
+                                    submitBtn.textContent = config.btnText;
+                                    if (rescheduleFields) {
+                                        rescheduleFields.style.display = config.requireSchedule ? 'block' : 'none';
+                                    }
+                                    if (deliveryDateInput) {
+                                        deliveryDateInput.setAttribute('min', minAllowedDate);
+                                        deliveryDateInput.required = !!config.requireSchedule;
+                                        if (!config.requireSchedule) {
+                                            deliveryDateInput.value = '';
+                                        }
+                                    }
+                                    if (deliveryPreferredTimeInput) {
+                                        deliveryPreferredTimeInput.required = !!config.requireSchedule;
+                                        if (!config.requireSchedule) {
+                                            deliveryPreferredTimeInput.value = '';
+                                        }
+                                    }
+                                    if (deliveryDateRequiredMark) {
+                                        deliveryDateRequiredMark.style.display = config.requireSchedule ? 'inline' : 'none';
+                                    }
+                                    if (deliveryTimeRequiredMark) {
+                                        deliveryTimeRequiredMark.style.display = config.requireSchedule ? 'inline' : 'none';
+                                    }
+                                    if (fileInput) {
+                                        fileInput.required = !!config.requirePhoto;
+                                    }
+                                    if (photoRequiredMark) {
+                                        photoRequiredMark.style.display = config.requirePhoto ? 'inline' : 'none';
+                                    }
+                                    if (returnReasonGroup) {
+                                        returnReasonGroup.style.display = config.requireReturnReason ? 'block' : 'none';
+                                    }
+                                    if (returnReasonInput) {
+                                        returnReasonInput.required = !!config.requireReturnReason;
+                                        returnReasonInput.value = '';
+                                    }
+                                    if (returnReasonRequiredMark) {
+                                        returnReasonRequiredMark.style.display = config.requireReturnReason ? 'inline' : 'none';
+                                    }
+                                    if (commentInput) {
+                                        commentInput.required = !!config.requireComment;
+                                        commentInput.placeholder = config.action === 'return' ? 'Write additional comment (optional)...' : 'Enter comments here...';
+                                    }
+                                    if (commentRequiredMark) {
+                                        commentRequiredMark.style.display = config.requireComment ? 'inline' : 'none';
+                                    }
+                                    if (actionPhotoGroup) {
+                                        actionPhotoGroup.style.display = config.showPhotoField ? 'block' : 'none';
+                                    }
+                                    modal.className = 'order-action-modal ' + config.colorClass;
+                                    modal.classList.add('is-active');
+
+                                    setTimeout(function() {
+                                        document.getElementById('actionComment').focus();
+                                    }, 100);
+                                });
+                            }
+                        });
+
+                        closeBtns.forEach(function(btn) {
+                            btn.addEventListener('click', closeModal);
+                        });
+
+                        modal.querySelector('.order-action-modal-backdrop').addEventListener('click', closeModal);
+
+                        document.addEventListener('keydown', function(e) {
+                            if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+                                closeModal();
+                            }
+                        });
+
+                        fileInput.addEventListener('change', function() {
+                            var file = this.files[0];
+                            if (file) {
+                                var reader = new FileReader();
+                                reader.onload = function(evt) {
+                                    previewBox.classList.add('has-image');
+                                    previewBox.style.backgroundImage = 'url(' + evt.target.result + ')';
+                                    previewBox.querySelector('i').style.display = 'none';
+                                    previewBox.querySelector('span').textContent = file.name;
+                                };
+                                reader.readAsDataURL(file);
+                            } else {
+                                previewBox.classList.remove('has-image');
+                                previewBox.style.backgroundImage = '';
+                                previewBox.querySelector('i').style.display = '';
+                                previewBox.querySelector('span').textContent = 'Select or capture photo';
+                            }
+                        });
+
+                        function showToast(message, status) {
+                            toast.textContent = message;
+                            toast.className = 'order-toast-notification ' + (status === 'success' ? 'success' : 'error');
+                            toast.classList.add('is-visible');
+                            setTimeout(function() {
+                                toast.classList.remove('is-visible');
+                            }, 3000);
+                        }
+
+                        function showFeedback(status, title, message, meta) {
+                            if (!feedbackBox || !feedbackTitle || !feedbackMeta || !feedbackBody || !feedbackToggle) {
+                                showToast(message || 'Action processed.', status || 'success');
+                                return;
+                            }
+
+                            feedbackBox.classList.remove('is-success', 'is-error', 'is-open');
+                            feedbackBox.classList.add(status === 'success' ? 'is-success' : 'is-error', 'is-open');
+                            feedbackBox.style.display = 'block';
+                            feedbackTitle.textContent = title || 'Order Update';
+                            feedbackMeta.textContent = meta || (status === 'success' ? 'Success' : 'Attention required');
+                            feedbackBody.textContent = message || '';
+                            feedbackToggle.textContent = 'Hide';
+                            feedbackToggle.setAttribute('aria-expanded', 'true');
+                        }
+
+                        if (feedbackToggle && feedbackBox) {
+                            feedbackToggle.addEventListener('click', function() {
+                                var isOpen = feedbackBox.classList.contains('is-open');
+                                feedbackBox.classList.toggle('is-open', !isOpen);
+                                this.textContent = isOpen ? 'Show' : 'Hide';
+                                this.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+                            });
+                        }
+
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+
+                            var action = actionTypeInput.value;
+                            var comment = commentInput ? commentInput.value.trim() : '';
+                            var selectedPhoto = fileInput && fileInput.files ? fileInput.files[0] : null;
+                            var selectedReturnReason = returnReasonInput ? returnReasonInput.value.trim() : '';
+                            var deliveryDateValue = deliveryDateInput ? deliveryDateInput.value.trim() : '';
+                            var deliveryPreferredTimeValue = deliveryPreferredTimeInput ? deliveryPreferredTimeInput.value.trim() : '';
+
+                            if (action !== 'return' && !comment) {
+                                showToast('Comment is required.', 'error');
+                                return;
+                            }
+
+                            if (action === 'return' && !selectedReturnReason) {
+                                showToast('Please select a return reason.', 'error');
+                                return;
+                            }
+
+                            if (action === 'reschulde' && !deliveryDateValue) {
+                                showToast('Delivery date is required for reschedule.', 'error');
+                                return;
+                            }
+
+                            if (action === 'reschulde' && !isFutureDateOnly(deliveryDateValue)) {
+                                showToast('Please select a future date only.', 'error');
+                                return;
+                            }
+
+                            if (action === 'reschulde' && !deliveryPreferredTimeValue) {
+                                showToast('Delivery preferred time is required for reschedule.', 'error');
+                                return;
+                            }
+
+                            if (action === 'deliverd' && !selectedPhoto) {
+                                showToast('Delivery photo is required.', 'error');
+                                return;
+                            }
+
+                            submitBtn.disabled = true;
+                            var originalBtnText = submitBtn.textContent;
+                            submitBtn.textContent = 'Processing...';
+
+                            var formData = new FormData(form);
+                            var actionUrl = (currentActionConfig && currentActionConfig.endpoint) ? currentActionConfig.endpoint : ('/api/order/' + action + '/');
+
+                            fetch(actionUrl, {
+                                    method: 'POST',
+                                    body: formData
+                                })
+                                .then(function(response) {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(function(data) {
+                                    if (data.status === 200 || data.status === 'success') {
+                                        showToast(data.msg || 'Action processed successfully!', 'success');
+                                        setTimeout(function() {
+                                            window.location.reload();
+                                        }, 1500);
+                                    } else {
+                                        showToast(data.msg || 'Failed to process action.', 'error');
+                                        submitBtn.disabled = false;
+                                        submitBtn.textContent = originalBtnText;
+                                    }
+                                })
+                                .catch(function(error) {
+                                    console.error('Error submitting order action:', error);
+                                    showToast('Something went wrong. Please try again.', 'error');
+                                    submitBtn.disabled = false;
+                                    submitBtn.textContent = originalBtnText;
+                                });
+                        });
+                    })();
+                </script>
 
                 <script>
                     (function() {
@@ -766,7 +1743,7 @@ if (isset($id)) {
                                 '    <div class="order-item-edit-grid">' +
                                 '        <div class="premium-form-group">' +
                                 '            <label>Select Product</label>' +
-                                '            <select class="premium-form-control select-product-dropdown" style="width: 100%;">' +
+                                '            <select class="premium-form-control select-product-dropdown selectJS" style="width: 100%;">' +
                                 optionsHtml +
                                 '            </select>' +
                                 '        </div>' +
@@ -1110,6 +2087,9 @@ if (isset($id)) {
                             var saveVendorEditBtn = e.target.closest('#saveVendorEditBtn');
                             if (saveVendorEditBtn) {
                                 e.preventDefault();
+                                if (saveVendorEditBtn.disabled || saveVendorEditBtn.getAttribute('data-processing') === '1') {
+                                    return;
+                                }
                                 var selectEl = document.querySelector('#vendorEditMode select[name="assigned_vendor"]');
                                 if (selectEl) {
                                     var vendorCode = selectEl.value;
@@ -1128,6 +2108,11 @@ if (isset($id)) {
                                         }
                                         return;
                                     }
+
+                                    var originalVendorBtnHtml = saveVendorEditBtn.innerHTML;
+                                    saveVendorEditBtn.disabled = true;
+                                    saveVendorEditBtn.setAttribute('data-processing', '1');
+                                    saveVendorEditBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
                                     $.ajax({
                                         type: 'POST',
@@ -1182,6 +2167,11 @@ if (isset($id)) {
                                             } else {
                                                 alert('Failed to assign vendor.');
                                             }
+                                        },
+                                        complete: function() {
+                                            saveVendorEditBtn.disabled = false;
+                                            saveVendorEditBtn.removeAttribute('data-processing');
+                                            saveVendorEditBtn.innerHTML = originalVendorBtnHtml;
                                         }
                                     });
                                 }
@@ -1381,17 +2371,25 @@ if (isset($id)) {
                                 if (typeof jQuery !== 'undefined' && jQuery.fn.select2) {
                                     $selects.each(function() {
                                         var $el = jQuery(this);
+                                        var isProductSelect = $el.hasClass('select-product-dropdown') || $el.attr('name') === 'assigned_product_id';
+
                                         if ($el.data('select2')) {
                                             $el.select2('destroy');
                                         }
-                                    });
-                                    $selects.select2({
-                                        templateResult: formatProductOption,
-                                        templateSelection: formatProductOption,
-                                        escapeMarkup: function(m) {
-                                            return m;
-                                        },
-                                        width: '100%'
+
+                                        var options = {
+                                            width: '100%'
+                                        };
+
+                                        if (isProductSelect) {
+                                            options.templateResult = formatProductOption;
+                                            options.templateSelection = formatProductOption;
+                                            options.escapeMarkup = function(m) {
+                                                return m;
+                                            };
+                                        }
+
+                                        $el.select2(options);
                                     });
                                 }
                             });
@@ -1413,7 +2411,7 @@ if (isset($id)) {
                             return true;
                         }
 
-                        var actionButtons = ['#orderUpdateData', '#orderConfirmBtn', '#orderWaitingBtn', '#orderDeliverBtn'];
+                        var actionButtons = ['#orderUpdateData', '#orderWaitingBtn'];
                         actionButtons.forEach(function(selector) {
                             var btn = document.querySelector(selector);
                             if (btn) {
@@ -1438,6 +2436,113 @@ if (isset($id)) {
                             }
                         });
 
+                        var directCtaButtons = ['orderWaitingBtn'];
+                        directCtaButtons.forEach(function(btnId) {
+                            var btn = document.getElementById(btnId);
+                            if (!btn) {
+                                return;
+                            }
+
+                            btn.addEventListener('click', function(e) {
+                                if (this.getAttribute('data-processing') === '1') {
+                                    e.preventDefault();
+                                    e.stopImmediatePropagation();
+                                    return;
+                                }
+
+                                if (window.orderUiProcessing && typeof window.orderUiProcessing.setButtonProcessing === 'function') {
+                                    window.orderUiProcessing.setButtonProcessing(this, 'Processing...');
+                                    setTimeout(function() {
+                                        if (window.orderUiProcessing && typeof window.orderUiProcessing.clearButtonProcessing === 'function') {
+                                            window.orderUiProcessing.clearButtonProcessing(btn);
+                                        }
+                                    }, 2500);
+                                }
+                            }, true);
+                        });
+
+                        function runFooterAction(button, requestUrl, actionValue, successMessage) {
+                            if (!button || button.getAttribute('data-processing') === '1') {
+                                return;
+                            }
+
+                            if (window.orderUiProcessing && typeof window.orderUiProcessing.setButtonProcessing === 'function') {
+                                window.orderUiProcessing.setButtonProcessing(button, 'Processing...');
+                            }
+
+                            var formData = $('#orderData').serializeArray();
+                            formData.push({
+                                name: 'action',
+                                value: actionValue
+                            });
+
+                            $.ajax({
+                                type: 'POST',
+                                url: requestUrl,
+                                dataType: 'json',
+                                data: formData,
+                                success: function(response) {
+                                    if (response.status == 200 || response.status == 'success') {
+                                        showFeedback('success', 'Success', response.msg || successMessage, 'Action completed successfully.');
+                                        setTimeout(function() {
+                                            window.location.reload();
+                                        }, 2500);
+                                    } else {
+                                        showFeedback('error', 'Error', response.msg || 'Something went wrong.', 'Please review the order and try again.');
+                                    }
+                                },
+                                error: function() {
+                                    showFeedback('error', 'Error', 'Request failed.', 'The server did not accept the request.');
+                                },
+                                complete: function() {
+                                    if (window.orderUiProcessing && typeof window.orderUiProcessing.clearButtonProcessing === 'function') {
+                                        window.orderUiProcessing.clearButtonProcessing(button);
+                                    }
+                                }
+                            });
+                        }
+
+                        var confirmBtn = document.getElementById('orderConfirmBtn');
+                        if (confirmBtn) {
+                            confirmBtn.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                e.stopImmediatePropagation();
+                                runFooterAction(this, '/api/order/accept_order/', 'accept', 'Order accepted successfully.');
+                            }, true);
+                        }
+
+                        var rejectBtn = document.getElementById('orderCancelBtn');
+                        if (rejectBtn) {
+                            rejectBtn.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                e.stopImmediatePropagation();
+
+                                var button = this;
+                                var proceed = function() {
+                                    runFooterAction(button, '/api/order/cancel_order/', 'cancel', 'Order rejected successfully.');
+                                };
+
+                                if (typeof Swal !== 'undefined') {
+                                    Swal.fire({
+                                        title: 'Are you sure?',
+                                        text: 'Do you want to reject this order?',
+                                        icon: 'warning',
+                                        type: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#ef4444',
+                                        cancelButtonColor: '#6b7280',
+                                        confirmButtonText: 'Yes, reject it!'
+                                    }).then(function(result) {
+                                        if (result.value) {
+                                            proceed();
+                                        }
+                                    });
+                                } else if (confirm('Do you want to reject this order?')) {
+                                    proceed();
+                                }
+                            }, true);
+                        }
+
                         // Listen to changes on product dropdowns
                         document.addEventListener('change', function(e) {
                             if (e.target.classList.contains('select-product-dropdown') || e.target.classList.contains('selectJS')) {
@@ -1446,21 +2551,128 @@ if (isset($id)) {
                         });
 
                         // Initialize Select2 on load for any pre-opened edit container dropdowns or product edit mode select
-                        var visibleSelects = document.querySelectorAll('.order-item-edit-container[style*="display: block"] .select-product-dropdown, #productEditMode .selectJS');
-                        if (visibleSelects.length > 0) {
+                        var allSelects = document.querySelectorAll('.selectJS');
+                        if (allSelects.length > 0) {
                             if (typeof jQuery !== 'undefined') {
                                 updateProductDropdownOptions();
-                                initSelect2(jQuery(visibleSelects));
+                                initSelect2(jQuery(allSelects));
                             } else {
                                 var initInterval = setInterval(function() {
                                     if (typeof jQuery !== 'undefined') {
                                         clearInterval(initInterval);
                                         updateProductDropdownOptions();
-                                        initSelect2(jQuery(visibleSelects));
+                                        initSelect2(jQuery(allSelects));
                                     }
                                 }, 50);
                             }
                         }
+                    })();
+                </script>
+                <script>
+                    (function() {
+                        var root = document.querySelector('.order-info-ui');
+
+                        if (!root) {
+                            return;
+                        }
+
+                        var orderId = root.getAttribute('data-order-id') || 'default';
+                        document.addEventListener('click', function(e) {
+                            // 5. Save Delivery Partner Edit Button Click
+                            var saveDeliveryPartnerBtn = e.target.closest('#saveDeliveryPartnerBtn');
+                            if (saveDeliveryPartnerBtn) {
+                                e.preventDefault();
+                                if (saveDeliveryPartnerBtn.disabled || saveDeliveryPartnerBtn.getAttribute('data-processing') === '1') {
+                                    return;
+                                }
+                                var selectEl = document.querySelector('#deliveryAgentEditMode select[name="assigned_delivery_agent"]');
+                                if (selectEl) {
+                                    var vendorCode = selectEl.value;
+                                    if (!vendorCode || vendorCode.trim() === '') {
+                                        if (typeof Swal !== 'undefined') {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                type: 'error',
+                                                title: 'Delivery Partner Required',
+                                                text: 'Please select a delivery partner.',
+                                                timer: 2000,
+                                                showConfirmButton: false
+                                            });
+                                        } else {
+                                            alert('Please select a delivery partner.');
+                                        }
+                                        return;
+                                    }
+
+                                    var originalDeliveryBtnHtml = saveDeliveryPartnerBtn.innerHTML;
+                                    saveDeliveryPartnerBtn.disabled = true;
+                                    saveDeliveryPartnerBtn.setAttribute('data-processing', '1');
+                                    saveDeliveryPartnerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/api/order/assign_delivery_agent/',
+                                        data: {
+                                            id: orderId,
+                                            assigned_delivery_agent: vendorCode
+                                        },
+                                        dataType: 'json',
+                                        success: function(response) {
+                                            if (response.status == 200) {
+                                                if (typeof Swal !== 'undefined') {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        type: 'success',
+                                                        title: 'Success',
+                                                        text: response.msg || 'Delivery Agent assigned successfully.',
+                                                        timer: 1500,
+                                                        showConfirmButton: false
+                                                    });
+                                                } else {
+                                                    alert(response.msg || 'Delivery Agent assigned successfully.');
+                                                }
+                                                setTimeout(function() {
+                                                    window.location.reload();
+                                                }, 1500);
+                                            } else {
+                                                if (typeof Swal !== 'undefined') {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        type: 'error',
+                                                        title: 'Error',
+                                                        text: response.msg || 'Something went wrong.',
+                                                        timer: 2000,
+                                                        showConfirmButton: false
+                                                    });
+                                                } else {
+                                                    alert(response.msg || 'Something went wrong.');
+                                                }
+                                            }
+                                        },
+                                        error: function() {
+                                            if (typeof Swal !== 'undefined') {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    type: 'error',
+                                                    title: 'Error',
+                                                    text: 'Failed to assign delivery agent.',
+                                                    timer: 2000,
+                                                    showConfirmButton: false
+                                                });
+                                            } else {
+                                                alert('Failed to assign delivery agent.');
+                                            }
+                                        },
+                                        complete: function() {
+                                            saveDeliveryPartnerBtn.disabled = false;
+                                            saveDeliveryPartnerBtn.removeAttribute('data-processing');
+                                            saveDeliveryPartnerBtn.innerHTML = originalDeliveryBtnHtml;
+                                        }
+                                    });
+                                }
+                                return;
+                            }
+                        });
                     })();
                 </script>
 

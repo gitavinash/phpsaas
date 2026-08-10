@@ -209,3 +209,31 @@ function shortToLongUrl($connection, $shortUrl)
     }
     return [];
 }
+
+function createLog($connection, $refId, $refType, $logType, $description, $internal = '', $siteId = null, $userId = null)
+{
+    if (!($connection instanceof mysqli)) {
+        return false;
+    }
+
+    $siteId = (string) (($siteId !== null) ? $siteId : (defined('SITE_ID') ? SITE_ID : 0));
+    $userId = (string) (($userId !== null) ? $userId : (defined('USER_ID') ? USER_ID : 0));
+    $refId = (string) $refId;
+    $refType = (string) $refType;
+    $logType = (string) $logType;
+    $description = (string) $description;
+    $internal = (string) $internal;
+
+    $insertLogSQL = "INSERT INTO " . TABLE_PREFIX . "log(log_site_id, log_user_id, log_ref_id, log_ref_type, log_type, log_description, log_internal) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($connection, $insertLogSQL);
+
+    if (!$stmt) {
+        return false;
+    }
+
+    mysqli_stmt_bind_param($stmt, 'sssssss', $siteId, $userId, $refId, $refType, $logType, $description, $internal);
+    $result = mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+
+    return $result;
+}

@@ -113,23 +113,16 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                 <form method="GET">
                     <input type="hidden" name="type" value="<?php echo htmlspecialchars($typeParam); ?>">
                     <select class="form-control" name="status" id="changeStatus">
-                        <option value="all" <?php echo (($statusParam == 'all') ? 'selected' : '') ?>>All
-                            <?php echo $postType ?></option>
-                        <option value="0" <?php echo (($statusParam == '0') ? 'selected' : '') ?>>Pending
-                            <?php echo $postType ?></option>
-                        <option value="1" <?php echo (($statusParam == '1') ? 'selected' : '') ?>>Confirm
-                            <?php echo $postType ?></option>
-                        <option value="2" <?php echo (($statusParam == '2') ? 'selected' : '') ?>>Reject
-                            <?php echo $postType ?></option>
-                        <option value="3" <?php echo (($statusParam == '3') ? 'selected' : '') ?>>Cancel
-                            <?php echo $postType ?></option>
-                        <option value="4" <?php echo (($statusParam == '4') ? 'selected' : '') ?>>Waiting
-                            <?php echo $postType ?></option>
-                        <option value="5" <?php echo (($statusParam == '5') ? 'selected' : '') ?>>RTO
-                            <?php echo $postType ?>
-                        </option>
-                        <option value="6" <?php echo (($statusParam == '6') ? 'selected' : '') ?>>Delivered
-                            <?php echo $postType ?></option>
+                        <option value="all" <?php echo (($statusParam == 'all') ? 'selected' : '') ?>>All</option>
+                        <option value="0" <?php echo (($statusParam == '0') ? 'selected' : '') ?>>Pending</option>
+                        <option value="1" <?php echo (($statusParam == '1') ? 'selected' : '') ?>>Order Accepted by Vendor</option>
+                        <option value="2" <?php echo (($statusParam == '2') ? 'selected' : '') ?>>Assigned to Vendor</option>
+                        <option value="3" <?php echo (($statusParam == '3') ? 'selected' : '') ?>>Processing</option>
+                        <option value="4" <?php echo (($statusParam == '4') ? 'selected' : '') ?>>Shipped</option>
+                        <option value="5" <?php echo (($statusParam == '5') ? 'selected' : '') ?>>Out for Delivery</option>
+                        <option value="6" <?php echo (($statusParam == '6') ? 'selected' : '') ?>>Delivered</option>
+                        <option value="7" <?php echo (($statusParam == '7') ? 'selected' : '') ?>>Cancelled</option>
+                        <option value="8" <?php echo (($statusParam == '8') ? 'selected' : '') ?>>Returned</option>
                     </select>
                     <select class="form-control" name="sort" id="changeSort">
                         <option value="recent" <?php echo (($sortParam == 'recent') ? 'selected' : '') ?>>Newest Received First</option>
@@ -150,6 +143,7 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
             <thead>
                 <tr>
                     <th style="width: 480px">Order</th>
+                    <th style="width: 130px">Contact No.</th>
                     <th style="width: 130px">Amount</th>
                     <th style="width: 120px">Payment</th>
                     <th style="width: 120px">Status</th>
@@ -180,33 +174,43 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                                     break;
 
                                 case 1:
-                                    $order_status = 'Confirm';
+                                    $order_status = 'Order Accepted';
                                     $statusClass = 'status-confirm';
                                     break;
 
                                 case 2:
-                                    $order_status = 'Reject';
-                                    $statusClass = 'status-reject';
+                                    $order_status = 'Assigned to Vendor';
+                                    $statusClass = 'status-confirm';
                                     break;
 
                                 case 3:
-                                    $order_status = 'Cancel';
-                                    $statusClass = 'status-cancel';
+                                    $order_status = 'Processing';
+                                    $statusClass = 'status-waiting';
                                     break;
 
                                 case 4:
-                                    $order_status = 'Waiting';
+                                    $order_status = 'Shipped';
                                     $statusClass = 'status-waiting';
                                     break;
 
                                 case 5:
-                                    $order_status = 'RTO';
-                                    $statusClass = 'status-rto';
+                                    $order_status = 'Out for Delivery';
+                                    $statusClass = 'status-waiting';
                                     break;
 
                                 case 6:
                                     $order_status = 'Delivered';
                                     $statusClass = 'status-delivered';
+                                    break;
+
+                                case 7:
+                                    $order_status = 'Cancelled';
+                                    $statusClass = 'status-cancel';
+                                    break;
+
+                                case 8:
+                                    $order_status = 'Returned';
+                                    $statusClass = 'status-rto';
                                     break;
                             }
 
@@ -241,8 +245,7 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                             <tr data-name="<?php echo htmlspecialchars($profile_display_name, ENT_QUOTES); ?>"
                                 data-order-id="<?php echo htmlspecialchars('OD' . $order_id, ENT_QUOTES); ?>"
                                 data-product-name="<?php echo htmlspecialchars($productNameLabel, ENT_QUOTES); ?>"
-                                data-mobile-number="<?php echo htmlspecialchars($address_mobile, ENT_QUOTES); ?>"
-                                data-status="<?php echo htmlspecialchars($order_status, ENT_QUOTES); ?>">
+                                data-mobile-number="<?php echo htmlspecialchars($address_mobile, ENT_QUOTES); ?>">
                                 <td>
                                     <div class="order-cell">
                                         <div class="order-badge">
@@ -263,12 +266,6 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                                             <div class="order-product-name">
                                                 Product: <?php echo htmlspecialchars($productNameLabel); ?>
                                             </div>
-                                            <div class="order-tags">
-                                                <span class="order-tag"><?php echo htmlspecialchars($address_mobile); ?></span>
-                                                <span
-                                                    class="order-tag <?php echo $statusClass; ?>"><?php echo $order_status; ?></span>
-                                                <span class="order-tag"><?php echo htmlspecialchars($paymentLabel); ?></span>
-                                            </div>
                                             <!-- <div class="hover">
                                                 <a href="order/?type=view&id=<?php echo base64_encode($order_id); ?>"><i
                                                         class="fas fa-eye"></i>
@@ -276,6 +273,9 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                                             </div> -->
                                         </div>
                                     </div>
+                                </td>
+                                <td>
+                                    <div class="amount-main"><?php echo $address_mobile; ?></div>
                                 </td>
                                 <td>
                                     <div class="amount-main"><?php echo $orderAmount; ?></div>

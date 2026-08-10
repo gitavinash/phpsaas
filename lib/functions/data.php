@@ -382,27 +382,31 @@ function getHomepageContent($conn)
     return $out;
 }
 
-function getCategoryPost($conn, $categoryId = 0, $categoryType = 'post', $sortBy = 'new', $dateFilter = 'all', $pageNo = 0, $limit = 10)
+function getNewsCategoryPost($conn, $categoryId = 0, $categoryType = 'post', $sortBy = 'new', $dateFilter = 'all', $pageNo = 0, $limit = 10)
 {
     if ($categoryId == 0) {
         return [];
     }
 
+    $categoryIds = is_array($categoryId)
+        ? implode(',', $categoryId)
+        : (is_object($categoryId) ? ($categoryId->id ?? 0) : $categoryId);
+
     switch ($sortBy) {
         case 'old':
-            $orderBy = 'link_published ASC';
+            $orderBy = 'ORDER BY link_published ASC';
             break;
         case 'popular':
-            $orderBy = 'post_viewed DESC, link_published DESC';
+            $orderBy = 'ORDER BY post_viewed DESC, link_published DESC';
             break;
         case 'replies':
-            $orderBy = 'post_replies DESC, link_published DESC';
+            $orderBy = 'ORDER BY post_replies DESC, link_published DESC';
             break;
         case 'likes':
-            $orderBy = 'post_likes DESC, link_published DESC';
+            $orderBy = 'ORDER BY post_likes DESC, link_published DESC';
             break;
         default:
-            $orderBy = 'link_published DESC';
+            $orderBy = 'ORDER BY link_published DESC';
             break;
     }
 
@@ -436,16 +440,18 @@ function getCategoryPost($conn, $categoryId = 0, $categoryType = 'post', $sortBy
             break;
     }
 
-    $categoryQuery = "SELECT * FROM " . TABLE_PREFIX . "{$categoryType} WHERE {$categoryType}_category={$categoryId} {$dateSql} AND {$categoryType}_site_id=" . SITE_ID . " {$orderBy} LIMIT {$pageNo}, {$limit} ";
+    $categoryQuery = "SELECT news_image, news_title, LEFT(REGEXP_REPLACE(news_description, '<[^>]*>', ''), 500) AS news_description, news_paid, news_published, profile_display_name, category_title, link_url, meta_description FROM " . TABLE_PREFIX . "{$categoryType} INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id={$categoryType}_id AND link_status=200 AND link_site_id=" . SITE_ID . " LEFT JOIN " . TABLE_PREFIX . "meta ON meta_relation_id=link_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id={$categoryType}_owner_id INNER JOIN " . TABLE_PREFIX . "category ON category_id={$categoryType}_category AND category_site_id=" . SITE_ID . " WHERE {$categoryType}_category IN ({$categoryIds}) {$dateSql} AND {$categoryType}_site_id=" . SITE_ID . " {$orderBy} LIMIT {$pageNo}, {$limit} ";
 
     $resData = mysqli_query($conn, $categoryQuery);
     if (!$resData) {
         return [];
     } else {
-        $out = mysqli_fetch_assoc($resData);
+        $out = [];
+        while ($row = mysqli_fetch_assoc($resData)) {
+            $out[] = $row;
+        }
     }
 
-    echo $categoryQuery;
     mysqli_free_result($resData);
 
     return $out;

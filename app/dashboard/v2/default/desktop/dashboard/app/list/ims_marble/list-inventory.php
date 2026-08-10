@@ -127,8 +127,16 @@ if (isset($_GET['status'])) {
         $userFilter = '';
     }
 
+    if (isset($_GET['status']) && $_GET['status'] != '') {
+        $statusFilter = "AND block_status='" . mysqli_real_escape_string($connection, $_GET['status']) . "'";
+    } else {
+        $statusFilter = "AND block_status NOT IN (2,3)";
+    }
 
-    if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_site_id='" . SITE_ID . "' {$userFilter} {$statusFilter} {$typeFilter} {$warehouseFilter} ORDER BY block_code ASC, block_title ASC")) {
+    $totalQty = [];
+    $totalNoOfAvailableSlabs = [];
+
+    if ($inventoryList = mysqli_query($connection, "SELECT * FROM {$tableNamePrefix}block INNER JOIN " . TABLE_PREFIX . "warehouse ON block_warehouse_id=warehouse_id LEFT JOIN " . TABLE_PREFIX . "supplier ON block_supplier_id=supplier_id INNER JOIN " . TABLE_PREFIX . "address ON warehouse_address_id=address_id INNER JOIN " . TABLE_PREFIX . "state ON address_state_id=state_id INNER JOIN " . TABLE_PREFIX . "city ON address_city_id=city_id WHERE block_site_id='" . SITE_ID . "' {$statusFilter} {$userFilter} {$statusFilter} {$typeFilter} {$warehouseFilter} ORDER BY block_code ASC, block_title ASC")) {
         echo "<tbody>";
         $totalNoOfSlabs = array();
         $totalNoOfAvailableSlabs = array();

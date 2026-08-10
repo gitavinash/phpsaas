@@ -556,8 +556,8 @@ img {
 }
 
 .ipo-card {
-  flex: 0 0 calc(33.333% - 14px);
-  min-width: 300px;
+  flex: 0 0 calc(25% - 15px);
+  min-width: 240px;
   scroll-snap-align: start;
   background: var(--white);
   border: 1px solid var(--border-color);
@@ -1233,27 +1233,6 @@ img {
   color: var(--text-secondary);
 }
 
-/* IPO Tales Timeline */
-.ipo-timeline {
-  display: flex;
-  overflow-x: auto;
-  gap: var(--spacing-lg);
-  padding-bottom: var(--spacing-md);
-  scrollbar-width: thin;
-}
-
-.ipo-card {
-  min-width: 280px;
-  border-right: 1px solid var(--border-color);
-  padding-right: var(--spacing-lg);
-}
-
-.ipo-date {
-  font-family: var(--font-heading);
-  font-size: 1.2rem;
-  color: var(--accent-color);
-  margin-bottom: var(--spacing-xs);
-}
 
 /* Editor's Pick Sidebar Module */
 .editors-pick-module {

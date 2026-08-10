@@ -165,7 +165,7 @@ if (isset($id)) {
                             <div class="premium-action-row">
                                 <input type="hidden" name="type" value="order">
                                 <input type="hidden" name="id" value="<?php echo $id ?>">
-                                <a href="#" id="orderRescheduleBtn" class="btn-premium-action btn-reschedule"><i class="fas fa-calendar-plus"></i> Reschedule</a>
+                                <a href="#" id="orderRescheduleBtn" class="btn-premium-action btn-reschedule"><i class="fas fa-calendar-plus"></i> Other Day Delivery</a>
                                 <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return-action"><i class="fas fa-undo"></i> Return</a>
                                 <a href="#" id="orderDeliverBtn" class="btn-premium-action btn-delivered"><i class="fas fa-shipping-fast"></i> Delivered</a>
                             </div>
@@ -190,8 +190,45 @@ if (isset($id)) {
                                 <textarea id="actionComment" name="comment" class="premium-form-control" placeholder="Enter comments here..." required></textarea>
                             </div>
 
-                            <div class="premium-form-group">
-                                <label for="actionPhoto">Upload Photo</label>
+                            <div id="rescheduleFields" style="display: none;">
+                                <div class="premium-form-group">
+                                    <label for="deliveryDateInput">Delivery Date <span id="deliveryDateRequiredMark" class="required" style="display: none;">*</span></label>
+                                    <input type="date" id="deliveryDateInput" name="delivery_date" class="premium-form-control">
+                                </div>
+                                <div class="premium-form-group">
+                                    <label for="deliveryPreferredTimeInput">Delivery Preferred Time <span id="deliveryTimeRequiredMark" class="required" style="display: none;">*</span></label>
+                                    <select id="deliveryPreferredTimeInput" name="delivery_preferred_time" class="premium-form-control">
+                                        <option value="">Select time slot</option>
+                                        <option value="00:00-01:00">12:00 AM - 01:00 AM</option>
+                                        <option value="01:00-02:00">01:00 AM - 02:00 AM</option>
+                                        <option value="02:00-03:00">02:00 AM - 03:00 AM</option>
+                                        <option value="03:00-04:00">03:00 AM - 04:00 AM</option>
+                                        <option value="04:00-05:00">04:00 AM - 05:00 AM</option>
+                                        <option value="05:00-06:00">05:00 AM - 06:00 AM</option>
+                                        <option value="06:00-07:00">06:00 AM - 07:00 AM</option>
+                                        <option value="07:00-08:00">07:00 AM - 08:00 AM</option>
+                                        <option value="08:00-09:00">08:00 AM - 09:00 AM</option>
+                                        <option value="09:00-10:00">09:00 AM - 10:00 AM</option>
+                                        <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
+                                        <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
+                                        <option value="12:00-13:00">12:00 PM - 01:00 PM</option>
+                                        <option value="13:00-14:00">01:00 PM - 02:00 PM</option>
+                                        <option value="14:00-15:00">02:00 PM - 03:00 PM</option>
+                                        <option value="15:00-16:00">03:00 PM - 04:00 PM</option>
+                                        <option value="16:00-17:00">04:00 PM - 05:00 PM</option>
+                                        <option value="17:00-18:00">05:00 PM - 06:00 PM</option>
+                                        <option value="18:00-19:00">06:00 PM - 07:00 PM</option>
+                                        <option value="19:00-20:00">07:00 PM - 08:00 PM</option>
+                                        <option value="20:00-21:00">08:00 PM - 09:00 PM</option>
+                                        <option value="21:00-22:00">09:00 PM - 10:00 PM</option>
+                                        <option value="22:00-23:00">10:00 PM - 11:00 PM</option>
+                                        <option value="23:00-24:00">11:00 PM - 12:00 AM</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="premium-form-group" id="actionPhotoGroup">
+                                <label for="actionPhoto">Upload Photo <span id="photoRequiredMark" class="required" style="display: none;">*</span></label>
                                 <div class="photo-upload-container">
                                     <input type="file" id="actionPhoto" name="photo" accept="image/*" class="premium-form-control-file">
                                     <div class="photo-preview-box" id="photoPreviewBox">
@@ -542,29 +579,82 @@ if (isset($id)) {
                         var modalTitle = document.getElementById('modalTitle');
                         var submitBtn = document.getElementById('submitActionBtn');
                         var closeBtns = modal.querySelectorAll('.close-modal-btn');
+                        var actionPhotoGroup = document.getElementById('actionPhotoGroup');
                         var fileInput = document.getElementById('actionPhoto');
+                        var rescheduleFields = document.getElementById('rescheduleFields');
+                        var deliveryDateInput = document.getElementById('deliveryDateInput');
+                        var deliveryPreferredTimeInput = document.getElementById('deliveryPreferredTimeInput');
+                        var deliveryDateRequiredMark = document.getElementById('deliveryDateRequiredMark');
+                        var deliveryTimeRequiredMark = document.getElementById('deliveryTimeRequiredMark');
+                        var photoRequiredMark = document.getElementById('photoRequiredMark');
                         var previewBox = document.getElementById('photoPreviewBox');
                         var toast = document.getElementById('orderToastNotification');
+                        var today = new Date();
+                        var tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+                        function formatDateForInput(dateObj) {
+                            var yyyy = dateObj.getFullYear();
+                            var mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                            var dd = String(dateObj.getDate()).padStart(2, '0');
+                            return yyyy + '-' + mm + '-' + dd;
+                        }
+
+                        function isFutureDateOnly(dateValue) {
+                            if (!dateValue) {
+                                return false;
+                            }
+                            return dateValue >= formatDateForInput(tomorrow);
+                        }
+
+                        var minAllowedDate = formatDateForInput(tomorrow);
+                        if (deliveryDateInput) {
+                            deliveryDateInput.setAttribute('min', minAllowedDate);
+                            deliveryDateInput.addEventListener('focus', function() {
+                                if (typeof this.showPicker === 'function') {
+                                    this.showPicker();
+                                }
+                            });
+                            deliveryDateInput.addEventListener('click', function() {
+                                if (typeof this.showPicker === 'function') {
+                                    this.showPicker();
+                                }
+                            });
+                            deliveryDateInput.addEventListener('change', function() {
+                                if (this.value && !isFutureDateOnly(this.value)) {
+                                    this.value = '';
+                                    showToast('Please select a future date only.', 'error');
+                                }
+                            });
+                        }
 
                         // Map button IDs to action type and modal UI configurations
                         var configs = {
                             'orderRescheduleBtn': {
                                 action: 'reschulde',
-                                title: 'Confirm Reschedule',
-                                btnText: 'Confirm Reschedule',
-                                colorClass: 'action-reschedule'
+                                title: 'Confirm Other Day Delivery',
+                                btnText: 'Confirm Other Day Delivery',
+                                colorClass: 'action-reschedule',
+                                requirePhoto: false,
+                                requireSchedule: true,
+                                showPhotoField: false
                             },
                             'orderReturnBtn': {
                                 action: 'return',
                                 title: 'Confirm Return',
                                 btnText: 'Confirm Return',
-                                colorClass: 'action-return'
+                                colorClass: 'action-return',
+                                requirePhoto: false,
+                                requireSchedule: false,
+                                showPhotoField: true
                             },
                             'orderDeliverBtn': {
                                 action: 'deliverd',
                                 title: 'Confirm Delivery',
                                 btnText: 'Confirm Delivery',
-                                colorClass: 'action-deliver'
+                                colorClass: 'action-deliver',
+                                requirePhoto: true,
+                                requireSchedule: false,
+                                showPhotoField: true
                             }
                         };
 
@@ -572,6 +662,32 @@ if (isset($id)) {
                         function closeModal() {
                             modal.classList.remove('is-active');
                             form.reset();
+                            if (fileInput) {
+                                fileInput.required = false;
+                            }
+                            if (photoRequiredMark) {
+                                photoRequiredMark.style.display = 'none';
+                            }
+                            if (rescheduleFields) {
+                                rescheduleFields.style.display = 'none';
+                            }
+                            if (deliveryDateInput) {
+                                deliveryDateInput.required = false;
+                                deliveryDateInput.value = '';
+                            }
+                            if (deliveryPreferredTimeInput) {
+                                deliveryPreferredTimeInput.required = false;
+                                deliveryPreferredTimeInput.value = '';
+                            }
+                            if (deliveryDateRequiredMark) {
+                                deliveryDateRequiredMark.style.display = 'none';
+                            }
+                            if (deliveryTimeRequiredMark) {
+                                deliveryTimeRequiredMark.style.display = 'none';
+                            }
+                            if (actionPhotoGroup) {
+                                actionPhotoGroup.style.display = 'block';
+                            }
                             previewBox.classList.remove('has-image');
                             previewBox.style.backgroundImage = '';
                             previewBox.querySelector('i').style.display = '';
@@ -584,10 +700,42 @@ if (isset($id)) {
                             if (btn) {
                                 btn.addEventListener('click', function(e) {
                                     e.preventDefault();
+                                    e.stopImmediatePropagation();
                                     var config = configs[btnId];
                                     actionTypeInput.value = config.action;
                                     modalTitle.textContent = config.title;
                                     submitBtn.textContent = config.btnText;
+                                    if (fileInput) {
+                                        fileInput.required = !!config.requirePhoto;
+                                    }
+                                    if (photoRequiredMark) {
+                                        photoRequiredMark.style.display = config.requirePhoto ? 'inline' : 'none';
+                                    }
+                                    if (rescheduleFields) {
+                                        rescheduleFields.style.display = config.requireSchedule ? 'block' : 'none';
+                                    }
+                                    if (deliveryDateInput) {
+                                        deliveryDateInput.setAttribute('min', minAllowedDate);
+                                        deliveryDateInput.required = !!config.requireSchedule;
+                                        if (!config.requireSchedule) {
+                                            deliveryDateInput.value = '';
+                                        }
+                                    }
+                                    if (deliveryPreferredTimeInput) {
+                                        deliveryPreferredTimeInput.required = !!config.requireSchedule;
+                                        if (!config.requireSchedule) {
+                                            deliveryPreferredTimeInput.value = '';
+                                        }
+                                    }
+                                    if (deliveryDateRequiredMark) {
+                                        deliveryDateRequiredMark.style.display = config.requireSchedule ? 'inline' : 'none';
+                                    }
+                                    if (deliveryTimeRequiredMark) {
+                                        deliveryTimeRequiredMark.style.display = config.requireSchedule ? 'inline' : 'none';
+                                    }
+                                    if (actionPhotoGroup) {
+                                        actionPhotoGroup.style.display = config.showPhotoField ? 'block' : 'none';
+                                    }
 
                                     // Set theme color class on modal
                                     modal.className = 'order-action-modal ' + config.colorClass;
@@ -652,9 +800,32 @@ if (isset($id)) {
 
                             var action = actionTypeInput.value;
                             var comment = document.getElementById('actionComment').value.trim();
+                            var selectedPhoto = fileInput && fileInput.files ? fileInput.files[0] : null;
+                            var deliveryDateValue = deliveryDateInput ? deliveryDateInput.value.trim() : '';
+                            var deliveryPreferredTimeValue = deliveryPreferredTimeInput ? deliveryPreferredTimeInput.value.trim() : '';
 
                             if (!comment) {
                                 showToast('Comment is required.', 'error');
+                                return;
+                            }
+
+                            if (action === 'reschulde' && !deliveryDateValue) {
+                                showToast('Delivery date is required for reschedule.', 'error');
+                                return;
+                            }
+
+                            if (action === 'reschulde' && !isFutureDateOnly(deliveryDateValue)) {
+                                showToast('Please select a future date only.', 'error');
+                                return;
+                            }
+
+                            if (action === 'reschulde' && !deliveryPreferredTimeValue) {
+                                showToast('Delivery preferred time is required for reschedule.', 'error');
+                                return;
+                            }
+
+                            if (action === 'deliverd' && !selectedPhoto) {
+                                showToast('Delivery photo is required.', 'error');
                                 return;
                             }
 

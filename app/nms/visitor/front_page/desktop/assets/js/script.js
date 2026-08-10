@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!query || !query.trim()) return;
     let searches = getRecentSearches();
     searches = searches.filter(
-      (q) => q.toLowerCase() !== query.toLowerCase().trim()
+      (q) => q.toLowerCase() !== query.toLowerCase().trim(),
     );
     searches.unshift(query.trim());
     if (searches.length > 6) searches = searches.slice(0, 6);
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const removeRecentSearch = function (query) {
     let searches = getRecentSearches();
     searches = searches.filter(
-      (q) => q.toLowerCase() !== query.toLowerCase().trim()
+      (q) => q.toLowerCase() !== query.toLowerCase().trim(),
     );
     localStorage.setItem(STORAGE_KEY, JSON.stringify(searches));
     renderRecentSearches();
@@ -83,10 +83,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <span>${q}</span>
         <span class="recent-pill-remove" data-remove="${q.replace(
           /"/g,
-          "&quot;"
+          "&quot;",
         )}">&times;</span>
       </div>
-    `
+    `,
       )
       .join("");
   };
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   item.type === "tag" ? "Topic Tag" : "Story"
                 }</span>
               </a>
-            `
+            `,
               )
               .join("");
           })
@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const bookmarkModal = document.getElementById("bookmarkAppModal");
   const closeBookmarkModalBtn = document.getElementById(
-    "closeBookmarkModalBtn"
+    "closeBookmarkModalBtn",
   );
 
   document.addEventListener("click", function (e) {
@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", function (e) {
     if (
       e.target.closest(
-        '#openSearchBtn, .open-search-trigger, [href="#openSearch"]'
+        '#openSearchBtn, .open-search-trigger, [href="#openSearch"]',
       )
     ) {
       e.preventDefault();
@@ -392,6 +392,60 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const initCardSlider = (
+    trackEl,
+    prevBtnEl,
+    nextBtnEl,
+    cardSelector,
+    stepCount = 4,
+  ) => {
+    if (!trackEl || !prevBtnEl || !nextBtnEl) return;
+
+    const getScrollAmount = () => {
+      const cards = Array.from(trackEl.querySelectorAll(cardSelector));
+      if (!cards.length) return 320;
+
+      const gap = parseFloat(
+        getComputedStyle(trackEl).columnGap ||
+          getComputedStyle(trackEl).gap ||
+          0,
+      );
+      let total = 0;
+      cards.slice(0, stepCount).forEach((card, index) => {
+        total += card.getBoundingClientRect().width + (index > 0 ? gap : 0);
+      });
+
+      return Math.max(total, 320);
+    };
+
+    nextBtnEl.addEventListener("click", () => {
+      trackEl.scrollBy({
+        left: getScrollAmount(),
+        behavior: "smooth",
+      });
+    });
+
+    prevBtnEl.addEventListener("click", () => {
+      trackEl.scrollBy({
+        left: -getScrollAmount(),
+        behavior: "smooth",
+      });
+    });
+  };
+
+  initCardSlider(
+    document.getElementById("pevcTrack"),
+    document.getElementById("pevcPrev"),
+    document.getElementById("pevcNext"),
+    ".ipo-card",
+  );
+  initCardSlider(
+    document.getElementById("moneyCryptoTrack"),
+    document.getElementById("moneyCryptoPrev"),
+    document.getElementById("moneyCryptoNext"),
+    ".ipo-card",
+  );
+
   // 4. Single News Detail Page Infinite Scroll & Gallery Initialization
   const newsTrigger = document.getElementById("infiniteScrollTrigger");
   const newsFeed = document.getElementById("storyFeedContainer");
@@ -471,7 +525,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         rootMargin: "400px",
-      }
+      },
     );
 
     newsObserver.observe(newsTrigger);
@@ -511,7 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(htmlText, "text/html");
           const newCards = doc.querySelectorAll(
-            "#categoryNewsGrid .category-news-card"
+            "#categoryNewsGrid .category-news-card",
           );
 
           if (newCards && newCards.length > 0) {
@@ -565,7 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         rootMargin: "300px",
-      }
+      },
     );
 
     categoryObserver.observe(categoryTrigger);
@@ -590,7 +644,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(htmlText, "text/html");
           const newCards = doc.querySelectorAll(
-            "#tagNewsGrid .category-news-card"
+            "#tagNewsGrid .category-news-card",
           );
 
           if (newCards && newCards.length > 0) {
@@ -641,7 +695,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         rootMargin: "300px",
-      }
+      },
     );
 
     tagObserver.observe(tagTrigger);
@@ -666,7 +720,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(htmlText, "text/html");
           const newCards = doc.querySelectorAll(
-            "#authorNewsGrid .category-news-card"
+            "#authorNewsGrid .category-news-card",
           );
 
           if (newCards && newCards.length > 0) {
@@ -717,7 +771,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         rootMargin: "300px",
-      }
+      },
     );
 
     authorObserver.observe(authorTrigger);
@@ -731,7 +785,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let remainingPosts = [];
     try {
       remainingPosts = JSON.parse(
-        searchTrigger.getAttribute("data-remaining") || "[]"
+        searchTrigger.getAttribute("data-remaining") || "[]",
       );
     } catch (e) {
       console.error("Error parsing remaining search posts:", e);
@@ -771,7 +825,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 year: "numeric",
               })
             : "";
-          let shortDesc = (row.meta_description || row.description || "").trim();
+          let shortDesc = (
+            row.meta_description ||
+            row.description ||
+            ""
+          ).trim();
           if (shortDesc.length > 160)
             shortDesc = shortDesc.substring(0, 157) + "...";
 
@@ -822,7 +880,7 @@ document.addEventListener("DOMContentLoaded", () => {
               const parser = new DOMParser();
               const doc = parser.parseFromString(htmlText, "text/html");
               const newCards = doc.querySelectorAll(
-                "#searchResultsGrid .search-result-card"
+                "#searchResultsGrid .search-result-card",
               );
 
               if (newCards && newCards.length > 0) {
@@ -878,7 +936,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         rootMargin: "300px",
-      }
+      },
     );
 
     searchObserver.observe(searchTrigger);
@@ -903,7 +961,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 10. Auto Redirect Notice Handler
   const redirectNotice = document.querySelector(
-    ".redirect-notice[data-redirect-url]"
+    ".redirect-notice[data-redirect-url]",
   );
   if (redirectNotice) {
     const redirectUrl = redirectNotice.getAttribute("data-redirect-url");
