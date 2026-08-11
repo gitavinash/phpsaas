@@ -382,7 +382,7 @@ if ($activeSubscription == true) {
 
                 <div class="info-pill-item">
                   <span class="info-pill-label">Reader Access</span>
-                  <span class="info-pill-val highlight-active">Unlimited &bull; Premium</span>
+                  <span class="info-pill-val highlight-active">Premium</span>
                 </div>
               </div>
             </div>
