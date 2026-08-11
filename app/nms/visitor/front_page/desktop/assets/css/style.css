@@ -2201,6 +2201,12 @@ a.badge-category:hover {
   -webkit-text-fill-color: transparent;
 }
 
+.details_box iframe {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
 /* Author Bio Card */
 .author-bio-card {
   background: var(--white);
