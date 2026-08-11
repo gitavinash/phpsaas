@@ -16,8 +16,11 @@ if (DEVELOPMENT_MODE == false) {
 require_once 'header.php';
 
 if ($activeSubscription == true) {
-  if ($subscription_mode == 'year') {
-    header("Location: /manage-subscription/");
+  if ($subscription_mode == 'year') { ?>
+    <script>
+      window.location.href = "/manage-subscription/";
+    </script>
+<?php
     exit();
   }
 }

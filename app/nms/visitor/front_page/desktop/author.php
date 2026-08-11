@@ -10,9 +10,9 @@ $totalPages = defined('TOTAL_PAGE') ? (int)TOTAL_PAGE : 1;
 
 $nextPageUrl = '';
 if ($currentPage < $totalPages) {
-    $queryParams = $_GET;
-    $queryParams['page'] = $currentPage + 1;
-    $nextPageUrl = '?' . http_build_query($queryParams);
+  $queryParams = $_GET;
+  $queryParams['page'] = $currentPage + 1;
+  $nextPageUrl = '?' . http_build_query($queryParams);
 }
 
 ?>
@@ -93,8 +93,11 @@ if ($currentPage < $totalPages) {
           $newsTitle = htmlspecialchars($article['news_title'] ?? '');
           $newsImg = htmlspecialchars($article['news_image'] ?? '');
           $newsPaid = !empty($article['news_paid']) && $article['news_paid'] == 1;
-          $metaDesc = htmlspecialchars(!empty($article['meta_description']) ? $article['meta_description'] : ($article['news_description'] ?? ''));
+          $metaDesc = htmlspecialchars(!empty($article['meta_description']) ? $article['meta_description'] : (trimParagraph($article['news_description'] ?? '', 150) ?? ''));
           $publishedDate = !empty($article['news_published']) ? date('M d, Y', strtotime($article['news_published'])) : '';
+          $catTitle = $article['category_title'] ?? '';
+          $catUrl = $article['category_url'] ?? '';
+          if (!empty($catUrl) && $catUrl[0] !== '/') $catUrl = '/' . ltrim($catUrl, '/');
           ?>
           <article class="category-news-card">
             <div class="category-card-img">
@@ -111,9 +114,17 @@ if ($currentPage < $totalPages) {
               </a>
             </div>
             <div class="category-card-content">
-              <span class="tag">Author Story</span>
+              <span class="tag">
+                <?php if (!empty($catTitle)): ?>
+                  <?php if (!empty($catUrl)): ?>
+                    <a href="<?php echo htmlspecialchars($catUrl); ?>"><?php echo htmlspecialchars($catTitle); ?></a>
+                  <?php else: ?>
+                    <?php echo htmlspecialchars($catTitle); ?>
+                  <?php endif; ?>
+                <?php endif; ?>
+              </span>
               <h2><a href="<?php echo $linkUrl; ?>"><?php echo $newsTitle; ?></a></h2>
-              <p><?php echo $metaDesc; ?></p>
+              <p><?php echo removeInlineStyles($metaDesc, true); ?></p>
               <div class="category-card-meta">
                 <span class="date"><?php echo $publishedDate; ?></span>
                 <span class="read-more">Read Story <span class="arrow">→</span></span>

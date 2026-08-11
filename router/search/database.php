@@ -192,6 +192,9 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
         tag_type,
         description,
         category_title,
+        category_url,
+        author_name,
+        author_id,
         news_paid,
         rel_score,
         priority
@@ -208,6 +211,9 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             'tag' AS tag_type,
             n.news_description AS description,
             c.category_title,
+            cl.link_url AS category_url,
+            p.profile_display_name AS author_name,
+            n.news_owner_id AS author_id,
             n.news_paid,
             100 AS rel_score,
             1 AS priority
@@ -225,8 +231,17 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
            AND c.category_type = 'news'
            AND c.category_site_id = ?
 
+        LEFT JOIN " . TABLE_PREFIX . "link cl
+            ON cl.link_relation_id = c.category_id
+           AND cl.link_type = 'category'
+           AND cl.link_status = 200
+           AND cl.link_site_id = ?
+
+        LEFT JOIN " . TABLE_PREFIX . "profile p
+            ON p.profile_user_id = n.news_owner_id
+
         INNER JOIN " . TABLE_PREFIX . "tag t
-            ON t.tag_relation_id = l.link_id
+            ON (t.tag_relation_id = n.news_id OR t.tag_relation_id = l.link_id)
            AND t.tag_type = 'news'
            AND t.tag_site_id = ?
 
@@ -249,6 +264,9 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             NULL,
             n.news_description,
             c.category_title,
+            cl.link_url,
+            p.profile_display_name,
+            n.news_owner_id,
             n.news_paid,
             MATCH(n.news_title)
                 AGAINST (? IN BOOLEAN MODE) * 5,
@@ -266,6 +284,15 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
             ON c.category_id = n.news_category
            AND c.category_type = 'news'
            AND c.category_site_id = ?
+
+        LEFT JOIN " . TABLE_PREFIX . "link cl
+            ON cl.link_relation_id = c.category_id
+           AND cl.link_type = 'category'
+           AND cl.link_status = 200
+           AND cl.link_site_id = ?
+
+        LEFT JOIN " . TABLE_PREFIX . "profile p
+            ON p.profile_user_id = n.news_owner_id
 
         WHERE n.news_site_id = ?
           AND n.news_status = 1
@@ -287,10 +314,12 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
                     $siteId,
                     $siteId,
                     $siteId,
+                    $siteId,
                     $qAll,
 
                     // TITLE MATCH
                     $qAll,
+                    $siteId,
                     $siteId,
                     $siteId,
                     $siteId,
@@ -313,7 +342,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
            AND l.link_site_id = ?
 
         LEFT JOIN " . TABLE_PREFIX . "tag t
-            ON t.tag_relation_id = l.link_id
+            ON (t.tag_relation_id = n.news_id OR t.tag_relation_id = l.link_id)
            AND t.tag_type = 'news'
            AND t.tag_site_id = ?
 
@@ -375,7 +404,7 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
            AND l.link_site_id = ?
 
         INNER JOIN " . TABLE_PREFIX . "tag t
-            ON t.tag_relation_id = l.link_id
+            ON (t.tag_relation_id = n.news_id OR t.tag_relation_id = l.link_id)
            AND t.tag_type = 'news'
            AND t.tag_site_id = ?
 
@@ -613,6 +642,9 @@ if ($res) {
     while ($row = mysqli_fetch_assoc($res)) {
         // normalize URL to start with '/'
         $row['url'] = (!empty($row['url']) && $row['url'][0] === '/') ? $row['url'] : '/' . ltrim((string)($row['url'] ?? ''), '/');
+        if (!empty($row['category_url'])) {
+            $row['category_url'] = ($row['category_url'][0] === '/') ? $row['category_url'] : '/' . ltrim((string)$row['category_url'], '/');
+        }
         $rows[] = $row;
     }
 }

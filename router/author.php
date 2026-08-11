@@ -49,13 +49,22 @@ if ($totalAuthorPost = mysqli_query($connection, $countQuery)) {
 $offset = ($currentPage - 1) * PER_PAGE_LIMIT;
 if ($offset < 0) $offset = 0;
 
-$authorQuery = "SELECT DISTINCT n.*, l.link_url
+$authorQuery = "SELECT DISTINCT n.*, l.link_url, c.category_title, cl.link_url AS category_url
 FROM " . TABLE_PREFIX . "news n
 INNER JOIN " . TABLE_PREFIX . "link l 
 	ON l.link_relation_id = n.news_id 
 	AND l.link_status = 200 
 	AND l.link_site_id = '" . SITE_ID . "' 
 	AND l.link_type = 'news'
+LEFT JOIN " . TABLE_PREFIX . "category c
+	ON c.category_id = n.news_category
+	AND c.category_type = 'news'
+	AND c.category_site_id = '" . SITE_ID . "'
+LEFT JOIN " . TABLE_PREFIX . "link cl
+	ON cl.link_relation_id = c.category_id
+	AND cl.link_type = 'category'
+	AND cl.link_status = 200
+	AND cl.link_site_id = '" . SITE_ID . "'
 LEFT JOIN " . TABLE_PREFIX . "authors a
 	ON n.news_id = a.rel_id 
 	AND a.rel_type = 'news'

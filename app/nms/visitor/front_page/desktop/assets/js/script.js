@@ -153,8 +153,17 @@ document.addEventListener("DOMContentLoaded", () => {
             autoResults.innerHTML = items
               .map(
                 (item) => `
-              <a href="${item.url}" class="autocomplete-item">
-                <span>${item.type === "tag" ? "#" : ""}${item.title}</span>
+              <a href="${item.url}" class="autocomplete-item ${item.type}">
+                <div class="autocomplete-left">
+                  ${
+                    item.type === "story" && item.image
+                      ? `<img src="${item.image}" alt="${item.title.replace(/"/g, '&quot;')}" class="autocomplete-img" onerror="this.outerHTML='<div class=\\'autocomplete-img-placeholder\\'><svg width=\\'16\\' height=\\'16\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>';" />`
+                      : item.type === "story"
+                      ? `<div class="autocomplete-img-placeholder"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
+                      : `<div class="autocomplete-tag-icon">#</div>`
+                  }
+                  <span class="autocomplete-title">${item.title}</span>
+                </div>
                 <span class="autocomplete-badge ${item.type}">${
                   item.type === "tag" ? "Topic Tag" : "Story"
                 }</span>
@@ -841,6 +850,35 @@ document.addEventListener("DOMContentLoaded", () => {
             </span>`
             : "";
 
+          const categoryTitle = row.category_title || "";
+          const categoryUrl = row.category_url
+            ? row.category_url.startsWith("/")
+              ? row.category_url
+              : "/" + row.category_url
+            : "";
+          const tagHtml = categoryTitle
+            ? `<span class="tag">${
+                categoryUrl
+                  ? `<a href="${categoryUrl}">${categoryTitle}</a>`
+                  : categoryTitle
+              }</span>`
+            : "";
+
+          const authorName = row.author_name || row.profile_display_name || "";
+          const authorId = row.author_id || row.news_owner_id || "";
+          let authorHtml = "";
+          if (authorName) {
+            if (authorId) {
+              const authorSlug = encodeURIComponent(
+                authorName.trim().toLowerCase().replace(/\s+/g, "-"),
+              );
+              const authorUrl = `/author/${authorId}-${authorSlug}-articles/`;
+              authorHtml = `<span class="meta-sep">•</span><span class="author">By <a href="${authorUrl}">${authorName}</a></span>`;
+            } else {
+              authorHtml = `<span class="meta-sep">•</span><span class="author">By ${authorName}</span>`;
+            }
+          }
+
           card.innerHTML = `
             <div class="search-card-img">
               ${paidBadge}
@@ -849,11 +887,14 @@ document.addEventListener("DOMContentLoaded", () => {
               </a>
             </div>
             <div class="search-card-content">
-              <span class="tag">Search Match</span>
+              ${tagHtml}
               <h2><a href="${linkUrl}">${newsTitle}</a></h2>
               <p>${shortDesc}</p>
               <div class="category-card-meta">
-                <span class="date">${pubDate}</span>
+                <div class="meta-left">
+                  <span class="date">${pubDate}</span>
+                  ${authorHtml}
+                </div>
                 <span class="read-more">Read Story <span class="arrow">&rarr;</span></span>
               </div>
             </div>

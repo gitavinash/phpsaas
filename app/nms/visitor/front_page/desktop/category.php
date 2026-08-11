@@ -7,9 +7,9 @@ $totalPages = defined('TOTAL_PAGE') ? (int)TOTAL_PAGE : 1;
 
 $nextPageUrl = '';
 if ($currentPage < $totalPages) {
-    $queryParams = $_GET;
-    $queryParams['page'] = $currentPage + 1;
-    $nextPageUrl = '?' . http_build_query($queryParams);
+  $queryParams = $_GET;
+  $queryParams['page'] = $currentPage + 1;
+  $nextPageUrl = '?' . http_build_query($queryParams);
 }
 
 ?>
@@ -24,9 +24,9 @@ if ($currentPage < $totalPages) {
         <span class="sep">/</span>
         <span class="current"><?php echo htmlspecialchars($category_title ?? 'News'); ?></span>
       </nav>
-      
+
       <div class="category-hero-content">
-        <span class="category-hero-kicker">EDITORIAL COVERAGE</span>
+        <!-- <span class="category-hero-kicker">EDITORIAL COVERAGE</span> -->
         <h1><?php echo htmlspecialchars($category_title ?? 'Category News'); ?></h1>
         <p class="category-hero-desc">In-depth reporting, market intelligence, and analytical commentary on <?php echo htmlspecialchars(strtolower($category_title ?? 'this sector')); ?>.</p>
       </div>
@@ -39,18 +39,26 @@ if ($currentPage < $totalPages) {
       <?php if (!empty($categorySinglePost)): ?>
         <?php foreach ($categorySinglePost as $post): ?>
           <?php
-            $linkUrl = htmlspecialchars($post['link_url'] ?? '#');
-            $newsTitle = htmlspecialchars($post['news_title'] ?? '');
-            $newsImg = htmlspecialchars($post['news_image'] ?? '');
-            $newsPaid = !empty($post['news_paid']) && $post['news_paid'] == 1;
-            $metaDesc = htmlspecialchars(!empty($post['meta_description']) ? $post['meta_description'] : ($post['news_description'] ?? ''));
-            $publishedDate = date('M d, Y', strtotime($post['news_published'] ?? 'now'));
+          $linkUrl = htmlspecialchars($post['link_url'] ?? '#');
+          $newsTitle = htmlspecialchars($post['news_title'] ?? '');
+          $newsImg = htmlspecialchars($post['news_image'] ?? '');
+          $newsPaid = !empty($post['news_paid']) && $post['news_paid'] == 1;
+          $metaDesc = htmlspecialchars(!empty($post['meta_description']) ? $post['meta_description'] : (trimParagraph($post['news_description'] ?? '', 150) ?? ''));
+          $authorName = htmlspecialchars($post['profile_display_name'] ?? '');
+          $authorId = $post['author_id'] ?? ($post['news_owner_id'] ?? '');
+          $authorUrl = '';
+          if (!empty($authorName) && !empty($authorId)) {
+            $authorSlug = urlencode(strtolower(str_replace(' ', '-', trim($post['profile_display_name'] ?? ''))));
+            $authorUrl = "/author/{$authorId}-{$authorSlug}-articles/";
+          }
           ?>
           <article class="category-news-card">
             <div class="category-card-img">
               <?php if ($newsPaid): ?>
                 <span class="paid-badge overlay">
-                  <svg class="paid-icon" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z"/></svg>
+                  <svg class="paid-icon" viewBox="0 0 24 24">
+                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
+                  </svg>
                   Premium
                 </span>
               <?php endif; ?>
@@ -61,9 +69,15 @@ if ($currentPage < $totalPages) {
             <div class="category-card-content">
               <span class="tag"><?php echo htmlspecialchars($category_title ?? 'News'); ?></span>
               <h2><a href="<?php echo $linkUrl; ?>"><?php echo $newsTitle; ?></a></h2>
-              <p><?php echo $metaDesc; ?></p>
+              <p><?php echo removeInlineStyles($metaDesc, true); ?></p>
               <div class="category-card-meta">
-                <span class="date"><?php echo $publishedDate; ?></span>
+                <div class="meta-left">
+                  <span class="date"><?php echo date('M d, Y', strtotime($post['news_published'])); ?></span>
+                  <?php if (!empty($authorName)): ?>
+                    <span class="meta-sep">•</span>
+                    <span class="author"> <?php if (!empty($authorUrl)): ?><a href="<?php echo $authorUrl; ?>"><?php echo $authorName; ?></a><?php else: ?><?php echo $authorName; ?><?php endif; ?></span>
+                  <?php endif; ?>
+                </div>
                 <span class="read-more">Read Story <span class="arrow">→</span></span>
               </div>
             </div>

@@ -19,13 +19,18 @@ if (isset($_GET['action']) && $_GET['action'] == 'autocomplete') {
         ];
       }
     }
-    // Query News Titles
-    $newsSql = "SELECT news_title, link_url FROM " . TABLE_PREFIX . "news INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=news_id WHERE link_type='news' AND link_status=200 AND news_title LIKE '%{$q}%' LIMIT 4";
+    // Query News Stories matching title OR tags with news_image (Latest articles first)
+    $newsSql = "SELECT DISTINCT n.news_title, n.news_image, l.link_url FROM " . TABLE_PREFIX . "news n INNER JOIN " . TABLE_PREFIX . "link l ON l.link_relation_id = n.news_id AND l.link_type = 'news' AND l.link_status = 200 AND l.link_site_id = " . SITE_ID . " LEFT JOIN " . TABLE_PREFIX . "tag t ON (t.tag_relation_id = n.news_id OR t.tag_relation_id = l.link_id) AND t.tag_type = 'news' AND t.tag_site_id = " . SITE_ID . " WHERE n.news_site_id = " . SITE_ID . " AND n.news_status = 1 AND n.news_is_public = 1 AND (n.news_title LIKE '%{$q}%' OR t.tag_title LIKE '%{$q}%') ORDER BY n.news_id DESC LIMIT 4";
     if ($res = mysqli_query($connection, $newsSql)) {
       while ($row = mysqli_fetch_assoc($res)) {
+        $img = trim($row['news_image'] ?? '');
+        if (!empty($img) && substr($img, 0, 1) !== '/' && !preg_match('/^https?:\/\//i', $img)) {
+          $img = '/' . $img;
+        }
         $results[] = [
           'type' => 'story',
           'title' => htmlspecialchars($row['news_title']),
+          'image' => htmlspecialchars($img),
           'url' => htmlspecialchars($row['link_url'])
         ];
       }
@@ -122,17 +127,20 @@ if (isset($_COOKIE['user_data'])) {
       border: 1px solid var(--border-color, #e0e0e0) !important;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
     }
+
     .swal2-editorial-popup .swal2-title {
       font-family: var(--font-heading, "Playfair Display", Georgia, serif) !important;
       color: var(--primary-color, #0a0a0a) !important;
       font-size: 1.6rem !important;
       font-weight: 700 !important;
     }
+
     .swal2-editorial-popup .swal2-html-container {
       font-size: 0.95rem !important;
       color: var(--text-secondary, #555555) !important;
       line-height: 1.6 !important;
     }
+
     .swal2-editorial-popup .swal2-confirm {
       background-color: #dc2626 !important;
       border-radius: 8px !important;
@@ -141,12 +149,272 @@ if (isset($_COOKIE['user_data'])) {
       padding: 12px 28px !important;
       box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25) !important;
     }
-    .swal2-editorial-popup .swal2-cancel {
-      background-color: #64748b !important;
+
+    /* Professional & Minimal Navigation Dropdown System */
+    .main-nav .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .main-nav .nav-menu>li,
+    .main-nav .nav-menu>.relative,
+    .main-nav .nav-menu>div {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .main-nav .nav-link,
+    .main-nav .nav-menu>li>a,
+    .main-nav .nav-menu>div>a {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #0f172a;
+      text-decoration: none;
+      padding: 14px 0;
+      transition: color 0.15s ease;
+      position: relative;
+    }
+
+    .main-nav .nav-link:hover,
+    .main-nav .nav-menu>li>a:hover,
+    .main-nav .nav-menu>div>a:hover {
+      color: var(--accent-color, #d93025);
+    }
+
+    /* Minimal Caret indicator for top-level dropdown items */
+    .main-nav .relative.group>a.nav-link::after,
+    .main-nav .has-dropdown>a::after {
+      content: "▾";
+      font-size: 0.7rem;
+      margin-left: 3px;
+      transition: transform 0.2s ease, color 0.15s ease;
+      color: #94a3b8;
+    }
+
+    .main-nav .relative.group:hover>a.nav-link::after,
+    .main-nav .has-dropdown:hover>a::after {
+      transform: rotate(180deg);
+      color: var(--accent-color, #d93025);
+    }
+
+    /* Multi-Level Click Dropdown & Flyout System (Hidden by Default) */
+    .main-nav .absolute,
+    .main-nav .dropdown-menu,
+    .mobile-drawer .absolute,
+    .mobile-drawer .dropdown-menu {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none;
+    }
+
+    /* Level 1 Desktop Dropdown Positioning */
+    .main-nav .nav-menu>.relative>.absolute,
+    .main-nav .nav-menu>li>.dropdown-menu,
+    .main-nav .nav-menu>div>.absolute {
+      position: absolute !important;
+      top: 100% !important;
+      left: 0 !important;
+      min-width: 220px !important;
+      background: #ffffff !important;
+      border: 1px solid rgba(226, 232, 240, 0.85) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
+      padding: 6px !important;
+      z-index: 1000 !important;
+      margin-top: 4px !important;
+    }
+
+    /* Level 2 Desktop Flyout Positioning */
+    .main-nav .absolute .relative>.absolute,
+    .main-nav [class*="group/fly"]>.absolute,
+    .main-nav [class*="group/fly"]>div {
+      position: absolute !important;
+      top: -6px !important;
+      left: 100% !important;
+      margin-left: 4px !important;
+      min-width: 210px !important;
+      background: #ffffff !important;
+      border: 1px solid rgba(226, 232, 240, 0.85) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
+      padding: 6px !important;
+      z-index: 1010 !important;
+    }
+
+    /* Minimal Dropdown List & Links */
+    .main-nav .absolute ul,
+    .main-nav .dropdown-menu {
+      list-style: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2px !important;
+    }
+
+    .main-nav .absolute ul li,
+    .main-nav .dropdown-menu li {
+      position: relative !important;
+      width: 100% !important;
+      list-style: none !important;
+    }
+
+    .main-nav .absolute ul li a,
+    .main-nav .dropdown-menu li a {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding: 9px 12px !important;
+      font-size: 0.88rem !important;
+      font-weight: 500 !important;
+      color: #334155 !important;
+      text-decoration: none !important;
       border-radius: 8px !important;
+      transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease !important;
+    }
+
+    .main-nav .absolute ul li a:hover,
+    .main-nav .dropdown-menu li a:hover {
+      background: #f8fafc !important;
+      color: var(--accent-color, #d93025) !important;
+      transform: translateX(2px) !important;
+    }
+
+    /* Mobile Drawer Submenu Stacking Position */
+    .mobile-drawer .drawer-nav-list {
+      list-style: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 10px !important;
+    }
+
+    .mobile-drawer .drawer-nav-list>li,
+    .mobile-drawer .drawer-nav-list>.relative,
+    .mobile-drawer .drawer-nav-list>div {
+      position: static !important;
+      width: 100% !important;
+      display: block !important;
+    }
+
+    .mobile-drawer .drawer-nav-list a.nav-link,
+    .mobile-drawer .drawer-nav-list>li>a,
+    .mobile-drawer .drawer-nav-list>div>a {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      font-size: 0.98rem !important;
       font-weight: 600 !important;
-      font-size: 0.9rem !important;
-      padding: 12px 22px !important;
+      color: #0f172a !important;
+      text-decoration: none !important;
+      padding: 11px 14px !important;
+      border-radius: 8px !important;
+      background: #f8fafc !important;
+      border: 1px solid #f1f5f9 !important;
+      transition: all 0.15s ease !important;
+    }
+
+    .mobile-drawer .absolute,
+    .mobile-drawer .dropdown-menu {
+      position: static !important;
+      box-shadow: none !important;
+      border: none !important;
+      background: transparent !important;
+      min-width: auto !important;
+      margin: 6px 0 6px 12px !important;
+      padding: 0 0 0 12px !important;
+      border-left: 2px solid #e2e8f0 !important;
+    }
+
+    .mobile-drawer .absolute ul,
+    .mobile-drawer .dropdown-menu {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      list-style: none !important;
+    }
+
+    .mobile-drawer .absolute ul li a,
+    .mobile-drawer .dropdown-menu li a {
+      display: block !important;
+      padding: 8px 12px !important;
+      font-size: 0.88rem !important;
+      font-weight: 500 !important;
+      color: #475569 !important;
+      background: transparent !important;
+      border: none !important;
+      border-radius: 6px !important;
+    }
+
+    /* REVEAL WHEN .is-open IS ADDED ON CLICK (FOR ALL LEVELS) */
+    .main-nav .is-open>.absolute,
+    .main-nav .is-open>div.absolute,
+    .main-nav .is-open>.dropdown-menu,
+    .mobile-drawer .is-open>.absolute,
+    .mobile-drawer .is-open>div.absolute,
+    .mobile-drawer .is-open>.dropdown-menu {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+    }
+
+    /* Caret Arrows for ALL Level 1 Dropdown Menus */
+    .main-nav :has(> .absolute)>a::after,
+    .main-nav :has(> .dropdown-menu)>a::after,
+    .main-nav .has-sub>a::after,
+    .mobile-drawer :has(> .absolute)>a::after,
+    .mobile-drawer :has(> .dropdown-menu)>a::after,
+    .mobile-drawer .has-sub>a::after {
+      content: "▾" !important;
+      font-size: 0.75rem !important;
+      margin-left: 6px !important;
+      transition: transform 0.2s ease, color 0.15s ease !important;
+      color: #94a3b8 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+    }
+
+    .main-nav :has(> .absolute).is-open>a::after,
+    .main-nav .has-sub.is-open>a::after,
+    .mobile-drawer :has(> .absolute).is-open>a::after,
+    .mobile-drawer .has-sub.is-open>a::after {
+      transform: rotate(180deg) !important;
+      color: var(--accent-color, #d93025) !important;
+    }
+
+    /* Sub-level Caret Arrows for ALL Level 2+ Flyout Menus */
+    .main-nav .absolute :has(> .absolute)>a::after,
+    .main-nav .absolute :has(> .dropdown-menu)>a::after,
+    .main-nav .absolute .has-sub>a::after,
+    .mobile-drawer .absolute :has(> .absolute)>a::after,
+    .mobile-drawer .absolute :has(> .dropdown-menu)>a::after,
+    .mobile-drawer .absolute .has-sub>a::after {
+      content: "›" !important;
+      font-size: 1.1rem !important;
+      line-height: 1 !important;
+      float: right !important;
+      margin-left: 8px !important;
+    }
+
+    .main-nav .absolute :has(> .absolute).is-open>a::after,
+    .main-nav .absolute .has-sub.is-open>a::after,
+    .mobile-drawer .absolute :has(> .absolute).is-open>a::after,
+    .mobile-drawer .absolute .has-sub.is-open>a::after {
+      transform: rotate(90deg) !important;
+      color: var(--accent-color, #d93025) !important;
     }
   </style>
 </head>
@@ -167,7 +435,7 @@ if (isset($_COOKIE['user_data'])) {
       <div class="logo">
         <a href="/">
           <img
-            src="https://theheadandtale.com//app/nms/visitor/theheadandtale/desktop/assets/images/main_logo.png"
+            src="<?php echo SITE_LOGO ?>"
             alt="The Head &amp; Tale"
             width="180"
             height="42"
@@ -178,63 +446,7 @@ if (isset($_COOKIE['user_data'])) {
       <!-- Main Navigation with Mega-Menu (All items visible at a glance) -->
       <nav class="main-nav" aria-label="Main Navigation">
         <ul class="nav-menu">
-          <li><a href="/">Home</a></li>
-
-          <!-- Mega Menu Dropdown -->
-          <li class="has-mega-menu">
-            <a href="/fintech-news/">
-              Categories <span class="caret">▾</span>
-            </a>
-            <div class="mega-menu-dropdown">
-              <div class="mega-menu-grid">
-                <div class="mega-column">
-                  <span class="mega-col-title">Fintech &amp; Banking</span>
-                  <ul>
-                    <li><a href="/fintech-news/">Digital Banking</a></li>
-                    <li><a href="/fintech-news/">Payments &amp; Wallets</a></li>
-                    <li><a href="/fintech-news/">Crypto &amp; Web3</a></li>
-                    <li><a href="/fintech-news/">Insurtech &amp; Credit</a></li>
-                  </ul>
-                </div>
-                <div class="mega-column">
-                  <span class="mega-col-title">AI &amp; Emerging Tech</span>
-                  <ul>
-                    <li><a href="/ai-and-emerging-tech/">Generative AI</a></li>
-                    <li><a href="/ai-and-emerging-tech/">Enterprise AI</a></li>
-                    <li><a href="/ai-and-emerging-tech/">Machine Learning</a></li>
-                    <li><a href="/ai-and-emerging-tech/">Robotics &amp; Automation</a></li>
-                  </ul>
-                </div>
-                <div class="mega-column">
-                  <span class="mega-col-title">Startups &amp; Markets</span>
-                  <ul>
-                    <li><a href="/money-and-machines/">Venture Capital</a></li>
-                    <li><a href="/money-and-machines/">Unicorn Tales</a></li>
-                    <li><a href="/ipo-tales/">IPO Tales</a></li>
-                    <li><a href="/money-and-machines/">Founders Corner</a></li>
-                  </ul>
-                </div>
-                <div class="mega-column featured-col">
-                  <span class="mega-col-title">Executive Coverage</span>
-                  <p>In-depth intelligence and proprietary market analysis for fintech leaders.</p>
-                  <a href="/subscribe/" class="mega-cta-btn">View Membership &rarr;</a>
-                </div>
-              </div>
-            </div>
-          </li>
-
-          <!-- Coverage Dropdown -->
-          <li class="has-dropdown">
-            <a href="/subscribe/">
-              Coverage <span class="caret">▾</span>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="/subscribe/">Executive Briefings</a></li>
-              <li><a href="/subscribe/">Proprietary Reports</a></li>
-            </ul>
-          </li>
-
-          <li><a href="/about-us/">About Us</a></li>
+          <?php generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true, 'nav-link'); ?>
         </ul>
       </nav>
 
@@ -329,31 +541,7 @@ if (isset($_COOKIE['user_data'])) {
     </div>
     <div class="drawer-body">
       <ul class="drawer-nav-list">
-        <li><a href="/">Home</a></li>
-        <li>
-          <a href="/fintech-news/">Fintech &amp; Banking</a>
-          <ul class="drawer-sub-list">
-            <li><a href="/fintech-news/">Digital Banking</a></li>
-            <li><a href="/fintech-news/">Payments &amp; Wallets</a></li>
-            <li><a href="/fintech-news/">Crypto &amp; Web3</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="/ai-and-emerging-tech/">AI &amp; Emerging Tech</a>
-          <ul class="drawer-sub-list">
-            <li><a href="/ai-and-emerging-tech/">Generative AI</a></li>
-            <li><a href="/ai-and-emerging-tech/">Enterprise AI</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="/money-and-machines/">Startup Ecosystem</a>
-          <ul class="drawer-sub-list">
-            <li><a href="/money-and-machines/">Venture Capital</a></li>
-            <li><a href="/money-and-machines/">Unicorn Tales</a></li>
-            <li><a href="/ipo-tales/">IPO Tales</a></li>
-          </ul>
-        </li>
-        <li><a href="/about-us/">About Us</a></li>
+        <?php generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true, 'nav-link'); ?>
       </ul>
     </div>
   </aside>
@@ -457,6 +645,53 @@ if (isset($_COOKIE['user_data'])) {
     </div>
   </div>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Click-to-toggle Dropdown Handler for all menu levels
+      const dropdownParents = document.querySelectorAll('.main-nav .group, .main-nav .relative, .main-nav .has-dropdown, .main-nav .group\\/fly, .mobile-drawer .group, .mobile-drawer .relative, .mobile-drawer .has-dropdown, .mobile-drawer .group\\/fly');
+
+      dropdownParents.forEach(function(parent) {
+        // Check if element has a dropdown child
+        const childDropdown = parent.querySelector('.absolute, .dropdown-menu');
+        if (!childDropdown) return;
+
+        const directLink = parent.querySelector(':scope > a');
+        if (directLink) {
+          directLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const isOpen = parent.classList.contains('is-open');
+
+            // Close sibling dropdowns at the same level
+            if (parent.parentElement) {
+              const siblings = parent.parentElement.querySelectorAll(':scope > .group, :scope > .relative, :scope > .has-dropdown, :scope > .group\\/fly');
+              siblings.forEach(function(sibling) {
+                if (sibling !== parent) {
+                  sibling.classList.remove('is-open');
+                }
+              });
+            }
+
+            if (isOpen) {
+              parent.classList.remove('is-open');
+            } else {
+              parent.classList.add('is-open');
+            }
+          });
+        }
+      });
+
+      // Close open dropdowns when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.main-nav') && !e.target.closest('.mobile-drawer')) {
+          document.querySelectorAll('.is-open').forEach(function(item) {
+            item.classList.remove('is-open');
+          });
+        }
+      });
+    });
+  </script>
 
   <!-- Main Content -->
   <main>

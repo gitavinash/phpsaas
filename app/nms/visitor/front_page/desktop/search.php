@@ -10,11 +10,11 @@ $source        = $searchData['source']   ?? 'post';
 
 // Helper for escaping
 if (!function_exists('h')) {
-    function h($s)
-    {
-        $clean = strip_tags((string)$s);
-        return htmlspecialchars($clean, ENT_QUOTES, 'UTF-8');
-    }
+  function h($s)
+  {
+    $clean = strip_tags((string)$s);
+    return htmlspecialchars($clean, ENT_QUOTES, 'UTF-8');
+  }
 }
 
 $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : (isset($_GET['p']) ? (int)$_GET['p'] : 1);
@@ -22,9 +22,9 @@ $totalPages = defined('TOTAL_PAGE') ? (int)TOTAL_PAGE : 1;
 
 $nextPageUrl = '';
 if ($currentPage < $totalPages) {
-    $queryParams = $_GET;
-    $queryParams['page'] = $currentPage + 1;
-    $nextPageUrl = '?' . http_build_query($queryParams);
+  $queryParams = $_GET;
+  $queryParams['page'] = $currentPage + 1;
+  $nextPageUrl = '?' . http_build_query($queryParams);
 }
 
 // Client-side batching if many results passed on single page
@@ -66,20 +66,32 @@ $remainingPosts = is_array($queryPost) ? array_slice($queryPost, $initialBatchSi
       <div class="search-results-grid" id="searchResultsGrid">
         <?php foreach ($initialPosts as $row): ?>
           <?php
-            $link_url = $row['url'] ?? '#';
-            if ($link_url !== '' && $link_url[0] !== '/') $link_url = '/' . ltrim($link_url, '/');
+          $link_url = $row['url'] ?? '#';
+          if ($link_url !== '' && $link_url[0] !== '/') $link_url = '/' . ltrim($link_url, '/');
 
-            $news_title = $row['title'] ?? '';
-            $news_image = $row['image'] ?? '';
-            $news_paid = $row['news_paid'] ?? 0;
-            $news_published = $row['published_at'] ?? '';
-            $meta_description = $row['meta_description'] ?? '';
-            $news_description = $row['description'] ?? '';
+          $news_title = $row['title'] ?? '';
+          $news_image = $row['image'] ?? '';
+          $news_paid = $row['news_paid'] ?? 0;
+          $news_published = $row['published_at'] ?? '';
+          $meta_description = $row['meta_description'] ?? '';
+          $news_description = trimParagraph($row['description'] ?? '', 150);
 
-            $shortDescription = trim($meta_description) ?: trim($news_description);
-            if (strlen($shortDescription) > 160) {
-              $shortDescription = substr($shortDescription, 0, 157) . '...';
-            }
+          $category_title = $row['category_title'] ?? '';
+          $category_url = $row['category_url'] ?? '';
+          if ($category_url !== '' && $category_url[0] !== '/') $category_url = '/' . ltrim($category_url, '/');
+
+          $author_name = $row['author_name'] ?? ($row['profile_display_name'] ?? '');
+          $author_id = $row['author_id'] ?? ($row['news_owner_id'] ?? '');
+          $author_url = '';
+          if (!empty($author_name) && !empty($author_id)) {
+            $author_slug = urlencode(strtolower(str_replace(' ', '-', trim($author_name))));
+            $author_url = "/author/{$author_id}-{$author_slug}-articles/";
+          }
+
+          $shortDescription = trim($meta_description) ?: trim($news_description);
+          if (strlen($shortDescription) > 160) {
+            $shortDescription = substr($shortDescription, 0, 157) . '...';
+          }
           ?>
           <article class="search-result-card">
             <div class="search-card-img">
@@ -96,11 +108,25 @@ $remainingPosts = is_array($queryPost) ? array_slice($queryPost, $initialBatchSi
               </a>
             </div>
             <div class="search-card-content">
-              <span class="tag">Search Match</span>
+              <?php if (!empty($category_title)): ?>
+                <span class="tag">
+                  <?php if (!empty($category_url)): ?>
+                    <a href="<?php echo h($category_url); ?>"><?php echo h($category_title); ?></a>
+                  <?php else: ?>
+                    <?php echo h($category_title); ?>
+                  <?php endif; ?>
+                </span>
+              <?php endif; ?>
               <h2><a href="<?php echo h($link_url); ?>"><?php echo h($news_title); ?></a></h2>
-              <p><?php echo h($shortDescription); ?></p>
+              <p><?php echo removeInlineStyles($shortDescription, true); ?></p>
               <div class="category-card-meta">
-                <span class="date"><?php echo ($news_published ? date('M d, Y', strtotime($news_published)) : ''); ?></span>
+                <div class="meta-left">
+                  <span class="date"><?php echo ($news_published ? date('M d, Y', strtotime($news_published)) : ''); ?></span>
+                  <?php if (!empty($author_name)): ?>
+                    <span class="meta-sep">•</span>
+                    <span class="author"><?php if (!empty($author_url)): ?><a href="<?php echo h($author_url); ?>"><?php echo h($author_name); ?></a><?php else: ?><?php echo h($author_name); ?><?php endif; ?></span>
+                  <?php endif; ?>
+                </div>
                 <span class="read-more">Read Story <span class="arrow">→</span></span>
               </div>
             </div>

@@ -8,8 +8,15 @@ if ($featuredArticle = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX
   $featuredArticle = null;
 }
 
-// 2. Fetch Editor's Picks
-$editorsPicks = getNewsCategoryPost($connection, [201, 202, 204], 'news', 'new', 'all', 0, 5);
+// 2. Fetch Editor's Picks (Excluding featured article to avoid duplicate)
+$editorsPicks = getNewsCategoryPost($connection, [201, 202, 204], 'news', 'new', 'all', 0, 10);
+if ($featuredArticle && !empty($editorsPicks)) {
+  $editorsPicks = array_filter($editorsPicks, function ($ep) use ($featuredArticle) {
+    return ($ep['link_url'] ?? '') !== ($featuredArticle['link_url'] ?? '')
+      && ($ep['news_title'] ?? '') !== ($featuredArticle['news_title'] ?? '');
+  });
+  $editorsPicks = array_values(array_slice($editorsPicks, 0, 5));
+}
 
 // 3. Fetch Fintech Chronicles
 $fintechArticles = getNewsCategoryPost($connection, 281, 'news', 'new', 'all', 0, 10);

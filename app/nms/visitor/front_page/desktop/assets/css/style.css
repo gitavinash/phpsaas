@@ -321,6 +321,17 @@ img {
   border-radius: 20px;
   margin-bottom: 8px;
 }
+.tag a {
+  color: inherit;
+  text-decoration: none;
+}
+.tag a:hover {
+  text-decoration: underline;
+}
+.tag .tag-sep {
+  opacity: 0.5;
+  margin: 0 4px;
+}
 
 /* Image Wrapper and Hover Effects */
 .image-wrapper {
@@ -2247,6 +2258,30 @@ img {
   align-items: center;
 }
 
+.category-card-meta .meta-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.category-card-meta .meta-sep {
+  color: #ccc;
+  font-size: 0.75rem;
+}
+
+.category-card-meta .author a {
+  color: #777;
+  /* font-weight: 600; */
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.category-card-meta .author a:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
 .category-card-meta .read-more {
   font-weight: 600;
   color: var(--primary-color);
@@ -2391,7 +2426,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
+  padding: 8px 12px;
   border-radius: 8px;
   text-decoration: none;
   color: var(--primary-color);
@@ -2400,10 +2435,67 @@ img {
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
+.autocomplete-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+  margin-right: 12px;
+}
+
+.autocomplete-img {
+  width: 48px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.autocomplete-img-placeholder {
+  width: 48px;
+  height: 36px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+}
+
+.autocomplete-tag-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: rgba(217, 48, 37, 0.08);
+  color: var(--accent-color, #d93025);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.autocomplete-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
 .autocomplete-item:hover {
   background: var(--primary-color);
   color: var(--white);
   transform: translateX(4px);
+}
+
+.autocomplete-item:hover .autocomplete-img-placeholder,
+.autocomplete-item:hover .autocomplete-tag-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
 }
 
 .autocomplete-badge {
@@ -2414,6 +2506,7 @@ img {
   padding: 2px 8px;
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
 }
 
 .autocomplete-item:hover .autocomplete-badge {
@@ -3358,46 +3451,123 @@ img {
   transform: rotate(180deg);
 }
 
-/* Level 2 Dropdown Menu */
+/* Level 2 Dropdown Menu & Flyouts */
+.main-nav .group .absolute,
+.main-nav .relative .absolute,
 .dropdown-menu {
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 220px;
-  background: var(--white);
-  border: 1px solid var(--border-color);
-  border-top: 3px solid var(--accent-color);
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  list-style: none;
+  min-width: 240px;
+  background: var(--white, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-top: 3px solid var(--accent-color, #d93025);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
   padding: 8px 0;
   margin: 0;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px);
-  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  transform: translateY(8px);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1000;
+  pointer-events: none;
 }
 
+.main-nav .group:hover > .absolute,
+.main-nav .group:hover > div.absolute,
+.main-nav .relative:hover > .absolute,
 .has-dropdown:hover > .dropdown-menu {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
+.main-nav .absolute ul,
+.dropdown-menu {
+  list-style: none;
+  padding: 6px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.main-nav .absolute ul li,
 .dropdown-menu li {
   position: relative;
+  width: 100%;
+  list-style: none;
 }
 
+.main-nav .absolute ul li a,
 .dropdown-menu li a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 18px;
+  padding: 10px 16px;
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--primary-color);
+  color: var(--primary-color, #0a0a0a);
   text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.main-nav .absolute ul li a:hover,
+.dropdown-menu li a:hover {
+  background: #f8fafc;
+  color: var(--accent-color, #d93025);
+  padding-left: 20px;
+}
+
+/* Flyout Submenu Level 2 */
+.main-nav .group\/fly {
+  position: relative;
+}
+
+.main-nav .group\/fly > a::after {
+  content: "›";
+  font-size: 1.2rem;
+  line-height: 1;
+  color: #94a3b8;
+  transition: transform 0.15s ease;
+}
+
+.main-nav .group\/fly:hover > a::after {
+  transform: translateX(3px);
+  color: var(--accent-color, #d93025);
+}
+
+.main-nav .group\/fly .absolute,
+.main-nav .group\/fly > div {
+  position: absolute;
+  top: -8px;
+  left: 100%;
+  margin-left: 6px;
+  min-width: 230px;
+  background: var(--white, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-left: 3px solid var(--accent-color, #d93025);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  padding: 8px 0;
+  z-index: 1010;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(8px);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.main-nav .group\/fly:hover > .absolute,
+.main-nav .group\/fly:hover > div {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  pointer-events: auto;
+}
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -3751,39 +3921,127 @@ img {
   flex-grow: 1;
 }
 
-.drawer-nav-list {
+.mobile-drawer .drawer-nav-list {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.drawer-nav-list > li {
-  margin-bottom: 16px;
-}
-
-.drawer-nav-list > li > a {
-  font-size: 1.02rem;
-  font-weight: 700;
-  color: var(--primary-color);
-  text-decoration: none;
+.mobile-drawer .drawer-nav-list > li,
+.mobile-drawer .drawer-nav-list > .relative,
+.mobile-drawer .drawer-nav-list > div {
+  position: static;
+  width: 100%;
   display: block;
 }
 
-.drawer-sub-list {
-  list-style: none;
-  padding-left: 12px;
-  margin-top: 8px;
-  border-left: 2px solid var(--border-color);
-}
-
-.drawer-sub-list li {
-  margin-bottom: 8px;
-}
-
-.drawer-sub-list li a {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
+.mobile-drawer .drawer-nav-list a.nav-link,
+.mobile-drawer .drawer-nav-list > li > a,
+.mobile-drawer .drawer-nav-list > div > a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #0f172a;
   text-decoration: none;
+  padding: 11px 14px;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  transition: all 0.15s ease;
+}
+
+.mobile-drawer .drawer-nav-list a.nav-link:hover,
+.mobile-drawer .drawer-nav-list a.nav-link:active {
+  background: #f1f5f9;
+  color: var(--accent-color, #d93025);
+}
+
+.mobile-drawer .relative.group > a.nav-link::after {
+  content: "▾";
+  font-size: 0.8rem;
+  color: #64748b;
+  transform: none;
+}
+
+/* Submenus inside Mobile Drawer (Hidden by default, Expand on Click) */
+.mobile-drawer .group .absolute,
+.mobile-drawer .relative .absolute,
+.mobile-drawer .dropdown-menu,
+.mobile-drawer .group\/fly .absolute,
+.mobile-drawer .group\/fly > div {
+  display: none;
+  position: static;
+  opacity: 0;
+  visibility: hidden;
+  transform: none;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+  min-width: auto;
+  margin: 6px 0 6px 12px;
+  padding: 0 0 0 12px;
+  border-left: 2px solid #e2e8f0;
+  pointer-events: none;
+}
+
+.mobile-drawer .group.is-open > .absolute,
+.mobile-drawer .group.is-open > div.absolute,
+.mobile-drawer .relative.is-open > .absolute,
+.mobile-drawer .has-dropdown.is-open > .dropdown-menu,
+.mobile-drawer .group\/fly.is-open > .absolute,
+.mobile-drawer .group\/fly.is-open > div {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.mobile-drawer .absolute ul,
+.mobile-drawer .dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.mobile-drawer .absolute ul li a,
+.mobile-drawer .dropdown-menu li a {
+  display: block;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #475569;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+}
+
+.mobile-drawer .absolute ul li a:hover,
+.mobile-drawer .dropdown-menu li a:hover {
+  color: var(--accent-color, #d93025);
+  background: #f8fafc;
+}
+
+/* Level 2 Flyouts in Mobile Drawer */
+.mobile-drawer .group\/fly .absolute,
+.mobile-drawer .group\/fly > div {
+  position: static;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+  margin: 4px 0 4px 12px;
+  padding-left: 10px;
+  border-left: 2px solid #cbd5e1;
 }
 
 @media (max-width: 992px) {
@@ -5064,5 +5322,365 @@ img {
   .manage-cancel-wrap {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* ==========================================================================
+   Comprehensive Mobile Responsive Optimizations for Homepage (index.php)
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  /* Hero Section Grid */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+  
+  .hero-featured h1 {
+    font-size: 1.65rem !important;
+    line-height: 1.3 !important;
+  }
+
+  /* IPO Tales Grid */
+  .fintech-news-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  /* AI Tech & Money Trivia Grids */
+  .ai-section .card-grid,
+  .money-machines-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Container & Global Spacing */
+  .container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .section {
+    padding: 32px 0 !important;
+  }
+
+  /* Section Header */
+  .section-header {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 20px !important;
+  }
+
+  .section-header h2 {
+    font-size: 1.4rem !important;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 20px 0 28px 0 !important;
+  }
+
+  .hero-featured-link .article-thumb {
+    aspect-ratio: 16 / 9 !important;
+    height: auto !important;
+    max-height: 260px !important;
+    border-radius: 12px !important;
+    object-fit: cover !important;
+  }
+
+  .hero-featured h1 {
+    font-size: 1.4rem !important;
+    margin-top: 10px !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Sidebar Editor's Picks */
+  .editors-pick-module {
+    background: #f8fafc !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    border: 1px solid #f1f5f9 !important;
+  }
+
+  .ep-card {
+    display: flex !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+
+  .ep-card-image {
+    width: 80px !important;
+    height: 80px !important;
+    flex-shrink: 0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+
+  .ep-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .ep-card-title {
+    font-size: 0.92rem !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Trending & Fintech Slider */
+  .trending-track {
+    display: flex !important;
+    gap: 14px !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 12px !important;
+    scrollbar-width: none !important;
+  }
+
+  .trending-track::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .trending-card-slide {
+    flex: 0 0 85% !important;
+    width: 85% !important;
+    min-width: 260px !important;
+    scroll-snap-align: start !important;
+    min-height: 220px !important;
+    border-radius: 12px !important;
+  }
+
+  /* AI Tech & Money Trivia Cards (1 Column on Mobile) */
+  .ai-section .card-grid,
+  .money-machines-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .tech-card,
+  .mm-card {
+    border-radius: 12px !important;
+  }
+
+  .tech-image-wrapper,
+  .mm-section .image-wrapper {
+    height: 200px !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+  }
+
+  .tech-article-thumb,
+  .mm-section .article-thumb {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .tech-card-body h3,
+  .mm-card h3 {
+    font-size: 1.15rem !important;
+    line-height: 1.35 !important;
+    margin-top: 10px !important;
+  }
+
+  .tech-card-body p,
+  .mm-card p {
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+  }
+
+  /* IPO Tales Layout */
+  .fintech-lead-img {
+    aspect-ratio: 16 / 9 !important;
+    height: auto !important;
+    max-height: 240px !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+  }
+
+  .fintech-lead-content h3 {
+    font-size: 1.25rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .fintech-mini-card {
+    display: flex !important;
+    gap: 12px !important;
+    align-items: center !important;
+    background: #ffffff !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+    border: 1px solid #f1f5f9 !important;
+  }
+
+  .fintech-mini-img {
+    width: 80px !important;
+    height: 80px !important;
+    flex-shrink: 0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+
+  .fintech-mini-img img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .fintech-mini-content h3 {
+    font-size: 0.9rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .fintech-banner-card {
+    min-height: 180px !important;
+    border-radius: 12px !important;
+  }
+
+  /* PE/VC & Crypto Sliders */
+  .ipo-track {
+    display: flex !important;
+    gap: 14px !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 12px !important;
+    scrollbar-width: none !important;
+  }
+
+  .ipo-track::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .ipo-card {
+    flex: 0 0 82% !important;
+    width: 82% !important;
+    min-width: 250px !important;
+    scroll-snap-align: start !important;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 12px !important;
+  }
+
+  .ipo-img-wrapper {
+    height: 160px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+
+  .ipo-img-wrapper img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .ipo-content h3 {
+    font-size: 1.05rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .ipo-content p {
+    font-size: 0.88rem !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Newsletter Section */
+  .newsletter-section {
+    padding: 36px 0 !important;
+  }
+
+  .newsletter-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    padding: 24px 20px !important;
+    border-radius: 16px !important;
+  }
+
+  .newsletter-info h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Mobile Email Input & Button Optimization */
+  .newsletter-form .input-wrapper,
+  .input-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .newsletter-form input,
+  #newsletterEmail {
+    width: 100% !important;
+    height: 52px !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    padding: 0 18px !important;
+    font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
+    font-weight: 500 !important;
+    color: #0f172a !important;
+    outline: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .newsletter-form input::placeholder,
+  #newsletterEmail::placeholder {
+    color: #94a3b8 !important;
+    font-size: 0.95rem !important;
+  }
+
+  .newsletter-form input:focus,
+  #newsletterEmail:focus {
+    border-color: var(--accent-color, #d93025) !important;
+    box-shadow: 0 0 0 3.5px rgba(217, 48, 37, 0.2) !important;
+    background: #ffffff !important;
+  }
+
+  .btn-newsletter,
+  #submitNewsletter {
+    width: 100% !important;
+    height: 52px !important;
+    box-sizing: border-box !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    background: var(--accent-color, #dc2626) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3) !important;
+    cursor: pointer !important;
+    transition: transform 0.15s ease, background-color 0.15s ease !important;
+  }
+
+  .btn-newsletter:active,
+  #submitNewsletter:active {
+    transform: scale(0.98) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-featured h1 {
+    font-size: 1.25rem !important;
+  }
+
+  .trending-card-slide,
+  .ipo-card {
+    flex: 0 0 90% !important;
+    width: 90% !important;
   }
 }
