@@ -2203,6 +2203,7 @@ a.badge-category:hover {
 
 .details_box iframe {
   width: 100%;
+  min-height: 250px;
   height: auto;
   border-radius: 8px;
 }
