@@ -1274,11 +1274,13 @@ a.badge-category:hover {
 }
 
 .newsletter-info h2 {
-  font-size: 2.2rem;
+  font-size: clamp(1.8rem, 2.4vw, 2.4rem);
   color: #ffffff;
-  line-height: 1.25;
+  line-height: 1.2;
   margin-bottom: 12px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  max-width: 620px;
 }
 
 .newsletter-info p {

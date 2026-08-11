@@ -19,7 +19,7 @@ if ($featuredArticle && !empty($editorsPicks)) {
 }
 
 // 3. Fetch Fintech Chronicles
-$fintechArticles = getNewsCategoryPost($connection, 281, 'news', 'new', 'all', 0, 10);
+$fintechArticles = getNewsCategoryPost($connection, 281, 'news', 'new', 'all', 0, 4);
 
 // 6. Fetch AI & Emerging Tech
 $aiArticles = getNewsCategoryPost($connection, 282, 'news', 'new', 'all', 0, 3);
@@ -202,10 +202,10 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
       <h2>Fintech Highlights</h2>
       <div class="section-header-actions">
         <a href="/fintech-news/" class="view-all">View All <span class="arrow">→</span></a>
-        <div class="slider-controls">
+        <!-- <div class="slider-controls">
           <button class="slider-arrow prev-btn" id="trendingPrev" aria-label="Previous trending news">←</button>
           <button class="slider-arrow next-btn" id="trendingNext" aria-label="Next trending news">→</button>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="trending-slider-container">
@@ -217,7 +217,7 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
         ?>
             <a href="<?php echo htmlspecialchars($tItem['link_url']); ?>" class="trending-card-link" aria-label="Read article: <?php echo htmlspecialchars($tItem['news_title']); ?>">
               <article class="trending-card-slide" style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.88) 100%), url('<?php echo htmlspecialchars($tItem['news_image']); ?>');">
-                <span class="trending-number"><?php echo sprintf('%02d', $tIndex + 1); ?></span>
+                <!-- <span class="trending-number"><?php echo sprintf('%02d', $tIndex + 1); ?></span> -->
                 <div class="trending-card-content">
                   <?php if ($tItem['news_paid'] == 1): ?>
                     <span class="paid-badge"><svg class="paid-icon" viewBox="0 0 24 24">
@@ -616,31 +616,17 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
     <div class="newsletter-grid">
       <div class="newsletter-info">
         <span class="newsletter-badge">WEEKLY DEEPDIVE</span>
-        <h2>Join 15,000+ Smart Readers</h2>
+        <h2>Get sharper fintech and tech insights in your inbox</h2>
         <p>
-          Get the deepest insights on Indian Tech and Finance, delivered straight to your inbox every Sunday morning.
+          Sign up for concise summaries of powerful fintech and emerging tech insights delivered directly to your inbox every time we publish.
         </p>
-        <ul class="newsletter-benefits">
-          <li>
-            <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
-            Exclusive PE/VC & Fintech deepdives
-          </li>
-          <li>
-            <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
-            Analytical breakdowns with zero fluff
-          </li>
-        </ul>
       </div>
       <div class="newsletter-action">
         <form class="newsletter-form" action="/thankyou_newsletter/" method="GET">
           <div class=" input-wrapper">
             <input type="email" id="newsletterEmail" name="email" placeholder="Enter your email address..." required />
             <button type="submit" class="btn btn-newsletter" id="submitNewsletter">
-              Subscribe Free <span class="arrow">→</span>
+              Join Now <span class="arrow">→</span>
             </button>
           </div>
           <div class="newsletter-trust">

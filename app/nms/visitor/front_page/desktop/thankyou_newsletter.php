@@ -316,13 +316,10 @@ $cleanEmail = filter_var($subscriberEmail, FILTER_VALIDATE_EMAIL) ? htmlspecialc
                     </div>
 
                     <br>
-                    <span class="ty-kicker-badge">
-                        <i class="ph ph-check-circle"></i> Subscription Confirmed
-                    </span>
 
-                    <h1 class="ty-newsletter-title">Welcome to The Head &amp; Tale Briefing</h1>
+                    <h1 class="ty-newsletter-title">Welcome to <?php echo SITE_NAME ?> Briefing</h1>
                     <p class="ty-newsletter-subtitle">
-                        You're all set! Thank you for subscribing to our executive newsletter. You will now receive curated briefings, breaking market coverage, and deep-dive analysis directly in your inbox.
+                        You are all set! Thank you for signing up to our newsletter. You will now receive curated briefings and deep-dive analysis directly in your inbox.
                     </p>
 
                     <?php if (!empty($cleanEmail)) { ?>
@@ -333,7 +330,7 @@ $cleanEmail = filter_var($subscriberEmail, FILTER_VALIDATE_EMAIL) ? htmlspecialc
                 </div>
 
                 <!-- Benefits Highlights Grid -->
-                <div class="ty-benefits-section">
+                <!-- <div class="ty-benefits-section">
                     <h2 class="ty-benefits-heading">
                         <i class="ph ph-sparkle"></i> What to Expect in Your Inbox
                     </h2>
@@ -363,7 +360,7 @@ $cleanEmail = filter_var($subscriberEmail, FILTER_VALIDATE_EMAIL) ? htmlspecialc
                             <p class="ty-benefit-desc">100% editorial signal. We respect your inbox and never share or sell subscriber emails.</p>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- CTA Buttons -->
                 <div class="ty-newsletter-actions">
