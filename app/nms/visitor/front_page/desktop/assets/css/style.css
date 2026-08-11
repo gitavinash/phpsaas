@@ -2092,32 +2092,35 @@ a.badge-category:hover {
 .social-share-icons {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .social-share-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 20px;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
   background: var(--bg-secondary);
   color: var(--text-color);
-  font-size: 0.82rem;
-  font-weight: 600;
   text-decoration: none;
-  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
 }
 
 .social-share-btn:hover {
   background: var(--primary-color);
   color: var(--white);
+  border-color: var(--primary-color);
   transform: translateY(-1px);
 }
 
 .social-share-btn svg {
-  width: 15px;
-  height: 15px;
+  width: 19px;
+  height: 19px;
   fill: currentColor;
 }
 
