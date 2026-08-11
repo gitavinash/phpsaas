@@ -528,6 +528,26 @@ if (isset($_COOKIE['user_data'])) {
           <!-- My Account / Sign In Option -->
           <?php
           $isLoggedIn = isset($_COOKIE['isLogin']) || isset($_COOKIE['user_data']);
+          $accountButtonLabel = 'My Account';
+          if ($isLoggedIn && !empty($user_id)) {
+            $accountUserQuery = "SELECT p.profile_display_name, u.user_username
+              FROM " . TABLE_PREFIX . "profile p
+              LEFT JOIN " . TABLE_PREFIX . "user u ON u.user_id = p.profile_user_id
+              WHERE p.profile_user_id = " . (int)$user_id . "
+              LIMIT 1";
+            if ($accountUserResult = mysqli_query($connection, $accountUserQuery)) {
+              if ($accountUserRow = mysqli_fetch_assoc($accountUserResult)) {
+                $displayName = trim((string)($accountUserRow['profile_display_name'] ?? ''));
+                if ($displayName === '') {
+                  $displayName = trim((string)($accountUserRow['user_username'] ?? ''));
+                }
+                if ($displayName !== '') {
+                  $accountButtonLabel = mb_substr($displayName, 0, 18);
+                }
+              }
+              mysqli_free_result($accountUserResult);
+            }
+          }
           if ($isLoggedIn):
           ?>
             <div class="user-account-dropdown" id="userAccountDropdown">
@@ -536,7 +556,7 @@ if (isset($_COOKIE['user_data'])) {
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                   <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span>My Account</span>
+                <span><?php echo htmlspecialchars($accountButtonLabel); ?></span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M6 9l6 6 6-6" />
                 </svg>
