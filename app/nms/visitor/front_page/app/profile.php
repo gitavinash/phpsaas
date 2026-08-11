@@ -164,7 +164,7 @@ if (isset($_COOKIE['user_data'])) {
             href="/about-us/"
             class="settings-item native-list-item">
             <div class="settings-label">
-                <i class="ph ph-info"></i> About The Head & Tale
+                <i class="ph ph-info"></i> About <?php echo SITE_NAME ?>
             </div>
             <i class="ph ph-caret-right"></i>
         </a>

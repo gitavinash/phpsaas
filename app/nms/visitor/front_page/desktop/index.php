@@ -2,14 +2,14 @@
 
 require_once 'header.php';
 
-if ($featuredArticle = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id AND link_status=200 AND link_site_id=" . SITE_ID . " WHERE link_status=200 AND news_category IN (201, 202, 204) AND news_site_id=" . SITE_ID . " ORDER BY link_is_featured DESC, news_published DESC LIMIT 1")) {
+if ($featuredArticle = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id AND link_status=200 AND link_site_id=" . SITE_ID . " WHERE link_status=200 AND news_site_id=" . SITE_ID . " ORDER BY link_is_featured DESC, news_published DESC LIMIT 1")) {
   $featuredArticle = mysqli_fetch_assoc($featuredArticle);
 } else {
   $featuredArticle = null;
 }
 
 // 2. Fetch Editor's Picks (Excluding featured article to avoid duplicate)
-$editorsPicks = getNewsCategoryPost($connection, [201, 202, 204], 'news', 'new', 'all', 0, 10);
+$editorsPicks = getNewsCategoryPost($connection, [201, 202, 204, 386, 399], 'news', 'new', 'all', 0, 10);
 if ($featuredArticle && !empty($editorsPicks)) {
   $editorsPicks = array_filter($editorsPicks, function ($ep) use ($featuredArticle) {
     return ($ep['link_url'] ?? '') !== ($featuredArticle['link_url'] ?? '')
@@ -61,7 +61,7 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
           </h1>
         </a>
         <div class="meta-info">
-          <span class="author">By The Head & Tale</span>
+          <span class="author">By <?php echo htmlspecialchars($featuredArticle['news_author']); ?></span>
           <span class="separator">•</span>
           <span class="date"><?php echo date('M d, Y', strtotime($featuredArticle['news_published'])); ?></span>
         </div>

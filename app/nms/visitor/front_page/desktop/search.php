@@ -73,8 +73,6 @@ $remainingPosts = is_array($queryPost) ? array_slice($queryPost, $initialBatchSi
           $news_image = $row['image'] ?? '';
           $news_paid = $row['news_paid'] ?? 0;
           $news_published = $row['published_at'] ?? '';
-          $meta_description = $row['meta_description'] ?? '';
-          $news_description = trimParagraph($row['description'] ?? '', 150);
 
           $category_title = $row['category_title'] ?? '';
           $category_url = $row['category_url'] ?? '';
@@ -88,10 +86,6 @@ $remainingPosts = is_array($queryPost) ? array_slice($queryPost, $initialBatchSi
             $author_url = "/author/{$author_id}-{$author_slug}-articles/";
           }
 
-          $shortDescription = trim($meta_description) ?: trim($news_description);
-          if (strlen($shortDescription) > 160) {
-            $shortDescription = substr($shortDescription, 0, 157) . '...';
-          }
           ?>
           <article class="search-result-card">
             <div class="search-card-img">
@@ -118,7 +112,6 @@ $remainingPosts = is_array($queryPost) ? array_slice($queryPost, $initialBatchSi
                 </span>
               <?php endif; ?>
               <h2><a href="<?php echo h($link_url); ?>"><?php echo h($news_title); ?></a></h2>
-              <p><?php echo removeInlineStyles($shortDescription, true); ?></p>
               <div class="category-card-meta">
                 <div class="meta-left">
                   <span class="date"><?php echo ($news_published ? date('M d, Y', strtotime($news_published)) : ''); ?></span>

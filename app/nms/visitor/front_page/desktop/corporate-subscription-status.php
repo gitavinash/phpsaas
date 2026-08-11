@@ -274,7 +274,7 @@ $isSuccess = (strtolower($paymentStatus) == 'paid');
       <h1 class="status-title"><?php echo $isSuccess ? 'Corporate Membership Confirmed!' : 'Payment Unsuccessful'; ?></h1>
       <p class="status-subtitle">
         <?php echo $isSuccess
-          ? 'Thank you for choosing The Head & Tale for your organization. Your corporate subscription seats are ready to allocate.'
+          ? 'Thank you for choosing ' . SITE_NAME . ' for your organization. Your corporate subscription seats are ready to allocate.'
           : 'We could not process your transaction. Please try again or contact info@theheadandtale.com for support.'; ?>
       </p>
     </div>

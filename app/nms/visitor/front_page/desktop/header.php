@@ -108,9 +108,9 @@ if (isset($_COOKIE['user_data'])) {
     {
       "@context": "https://schema.org",
       "@type": "NewsMediaOrganization",
-      "name": "The Head & Tale",
+      "name": "<?php echo SITE_NAME ?>",
       "url": "https://theheadandtale.com",
-      "logo": "https://theheadandtale.com/app/nms/visitor/theheadandtale/desktop/assets/images/main_logo.png",
+      "logo": "<?php echo SITE_LOGO ?>",
       "sameAs": [
         "https://twitter.com/headandtale",
         "https://linkedin.com/company/headandtale"
