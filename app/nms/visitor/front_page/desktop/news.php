@@ -79,6 +79,45 @@ if (isset($newsList['articles']) && sizeof($newsList['articles']) > 0) {
     }
 }
 
+$breadcrumbCategoryTitle = '';
+$breadcrumbCategoryUrl = '';
+$breadcrumbCategoryId = (int)($news_category ?? $category_id ?? 0);
+$breadcrumbSiteId = (int)SITE_ID;
+
+if ($breadcrumbCategoryId > 0) {
+    $breadcrumbCategorySql = "SELECT c.category_title, cl.link_url
+        FROM " . TABLE_PREFIX . "category c
+        LEFT JOIN " . TABLE_PREFIX . "link cl
+            ON cl.link_relation_id = c.category_id
+           AND cl.link_type = 'category'
+           AND cl.link_status = 200
+           AND cl.link_site_id = ?
+        WHERE c.category_id = ?
+          AND c.category_type = 'news'
+          AND c.category_site_id = ?";
+
+    if ($breadcrumbCategoryStmt = mysqli_prepare($connection, $breadcrumbCategorySql)) {
+        mysqli_stmt_bind_param($breadcrumbCategoryStmt, 'iii', $breadcrumbSiteId, $breadcrumbCategoryId, $breadcrumbSiteId);
+        mysqli_stmt_execute($breadcrumbCategoryStmt);
+        $breadcrumbCategoryResult = mysqli_stmt_get_result($breadcrumbCategoryStmt);
+        if ($breadcrumbCategoryResult && $breadcrumbCategoryRow = mysqli_fetch_assoc($breadcrumbCategoryResult)) {
+            $breadcrumbCategoryTitle = trim((string)($breadcrumbCategoryRow['category_title'] ?? ''));
+            $breadcrumbCategoryUrl = trim((string)($breadcrumbCategoryRow['link_url'] ?? ''));
+        }
+        mysqli_stmt_close($breadcrumbCategoryStmt);
+    }
+}
+
+if ($breadcrumbCategoryTitle === '') {
+    $breadcrumbCategoryTitle = 'News';
+}
+
+if ($breadcrumbCategoryUrl !== '' && $breadcrumbCategoryUrl[0] !== '/') {
+    $breadcrumbCategoryUrl = '/' . ltrim($breadcrumbCategoryUrl, '/');
+}
+
+$breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
+
 ?>
 <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick.css">
 <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>slick/slick-theme.css">
@@ -91,13 +130,15 @@ if (isset($newsList['articles']) && sizeof($newsList['articles']) > 0) {
             <header class="article-header-section">
                 <nav class="article-breadcrumb" aria-label="Breadcrumb">
                     <a href="/">Home</a>
-                    <span>/</span>
-                    <a href="/news/">News</a>
-                    <span>/</span>
-                    <span>Story</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <?php if (!empty($breadcrumbCategoryUrl)): ?>
+                        <a href="<?php echo htmlspecialchars($breadcrumbCategoryUrl); ?>"><?php echo htmlspecialchars($breadcrumbCategoryTitle); ?></a>
+                    <?php else: ?>
+                        <span class="breadcrumb-current"><?php echo htmlspecialchars($breadcrumbCategoryTitle); ?></span>
+                    <?php endif; ?>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-current"><?php echo htmlspecialchars($breadcrumbArticleTitle); ?></span>
                 </nav>
-
-                <span class="article-category-badge">Editorial Deepdive</span>
 
                 <h1><?php echo htmlspecialchars($news_title); ?></h1>
 

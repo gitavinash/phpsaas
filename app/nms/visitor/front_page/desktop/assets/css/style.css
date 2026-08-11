@@ -1922,8 +1922,9 @@ a.badge-category:hover {
 .article-breadcrumb {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
-  font-size: 0.85rem;
+  font-size: 0.86rem;
   color: var(--text-secondary);
   margin-bottom: 16px;
 }
@@ -1931,10 +1932,20 @@ a.badge-category:hover {
 .article-breadcrumb a {
   color: var(--text-secondary);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .article-breadcrumb a:hover {
   color: var(--accent-color);
+}
+
+.article-breadcrumb .breadcrumb-separator {
+  color: #94a3b8;
+}
+
+.article-breadcrumb .breadcrumb-current {
+  color: var(--primary-color);
+  font-weight: 600;
 }
 
 .article-category-badge {
