@@ -170,22 +170,19 @@ $breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
                 <span class="social-share-label">Share Story</span>
                 <div class="social-share-icons">
                     <a href="http://twitter.com/share?text=<?php echo urlencode($news_title); ?>&url=<?php echo SITE_URL . $link_url; ?>" target="_blank" class="social-share-btn" aria-label="Share on X">
-                        <svg viewBox="0 0 24 24">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                         </svg>
-                        X (Twitter)
                     </a>
                     <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo SITE_URL . $link_url; ?>&title=<?php echo urlencode($news_title); ?>" target="_blank" class="social-share-btn" aria-label="Share on LinkedIn">
-                        <svg viewBox="0 0 24 24">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
                         </svg>
-                        LinkedIn
                     </a>
-                    <a href="https://wa.me/?text=<?php echo urlencode($news_title) . ' ' . SITE_URL . $link_url; ?>" target="_blank" class="social-share-btn" aria-label="Share on WhatsApp">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+                    <a href="https://wa.me/?text=<?php echo urlencode($news_title) . ' ' . SITE_URL . $link_url; ?>" target="_blank" class="social-share-btn social-share-btn--whatsapp" aria-label="Share on WhatsApp">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12.04 2.5c-5.2 0-9.42 4.22-9.42 9.42 0 1.66.43 3.28 1.25 4.7L2.02 21.5l5.06-1.33a9.42 9.42 0 0 0 4.56 1.14c5.2 0 9.42-4.22 9.42-9.42 0-2.52-1.03-4.9-2.9-6.67A9.36 9.36 0 0 0 12.04 2.5zm0 16.9c-1.47 0-2.9-.4-4.15-1.14l-.3-.18-3 .79.81-2.93-.2-.31a7.84 7.84 0 0 1 1.24-9.33A7.83 7.83 0 0 1 12.04 4.2c4.33 0 7.84 3.51 7.84 7.84 0 4.33-3.51 7.84-7.84 7.84zm4.49-5.88c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.54.12-.16.24-.63.78-.77.94-.14.16-.28.18-.53.06-.24-.12-1.03-.38-1.96-1.22-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.77-.19-.47-.39-.41-.54-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.29-.22.24-.85.83-.85 2.03 0 1.2.87 2.35.99 2.51.12.16 1.71 2.61 4.15 3.66.58.25 1.02.4 1.38.5.58.18 1.11.16 1.53.1.47-.06 1.43-.58 1.64-1.14.21-.56.21-1.04.15-1.14-.06-.1-.22-.17-.47-.29z" />
                         </svg>
-                        WhatsApp
                     </a>
                 </div>
             </div>
