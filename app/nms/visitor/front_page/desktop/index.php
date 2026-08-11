@@ -148,7 +148,10 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
     <aside class="hero-sidebar">
       <!-- Editor's Pick Module -->
       <div class="editors-pick-module">
-        <h3 class="sidebar-title">More stories</h3>
+        <div class="sidebar-title-row">
+          <h3 class="sidebar-title">More stories</h3>
+          <a href="/editors-pick/" class="sidebar-view-all">View all stories</a>
+        </div>
         <ul class="ep-list">
           <?php if (!empty($editorsPicks)): ?>
             <?php foreach ($editorsPicks as $ep): ?>

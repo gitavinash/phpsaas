@@ -624,8 +624,27 @@ a.badge-category:hover {
   letter-spacing: 1px;
   border-bottom: 2px solid var(--primary-color);
   padding-bottom: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 0;
   display: inline-block;
+}
+
+.sidebar-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: var(--spacing-md);
+}
+
+.sidebar-view-all {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.sidebar-view-all:hover {
+  text-decoration: underline;
 }
 
 .trending-list li {

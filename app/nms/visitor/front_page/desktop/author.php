@@ -38,7 +38,7 @@ if ($currentPage < $totalPages) {
         <?php endif; ?>
 
         <div class="author-meta-info">
-          <span class="author-role-tag">JOURNALIST &amp; CONTRIBUTOR</span>
+          <span class="author-role-tag">Author</span>
           <h1><?php echo $authorName; ?></h1>
 
           <?php
