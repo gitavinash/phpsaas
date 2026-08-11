@@ -169,6 +169,18 @@ $breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
             <div class="social-share-container">
                 <span class="social-share-label">Share Story</span>
                 <div class="social-share-icons">
+                    <a href="https://www.google.com/preferences/source?q=theheadandtale" target="_blank" rel="noopener" class="social-share-source-link" aria-label="Add as preferred source on Google">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="#4285F4" d="M21.35 12.23c0-.78-.07-1.53-.2-2.25H12v4.26h5.23a4.48 4.48 0 0 1-1.94 2.94v2.44h3.13c1.83-1.68 2.88-4.16 2.88-7.39z" />
+                            <path fill="#34A853" d="M12 21.75c2.62 0 4.82-.87 6.43-2.36l-3.13-2.44c-.87.58-1.98.93-3.3.93-2.54 0-4.69-1.71-5.46-4.01H3.31v2.52A9.75 9.75 0 0 0 12 21.75z" />
+                            <path fill="#FBBC05" d="M6.54 13.87a5.86 5.86 0 0 1 0-3.74V7.61H3.31a9.75 9.75 0 0 0 0 8.78l3.23-2.52z" />
+                            <path fill="#EA4335" d="M12 6.13c1.42 0 2.69.49 3.69 1.45l2.76-2.76A9.8 9.8 0 0 0 12 2.25a9.75 9.75 0 0 0-8.69 5.36l3.23 2.52C7.31 7.84 9.46 6.13 12 6.13z" />
+                        </svg>
+                        <span class="social-share-source-text">
+                            <span>Add as preferred source</span>
+                            <span>on Google</span>
+                        </span>
+                    </a>
                     <a href="http://twitter.com/share?text=<?php echo urlencode($news_title); ?>&url=<?php echo SITE_URL . $link_url; ?>" target="_blank" class="social-share-btn" aria-label="Share on X">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
