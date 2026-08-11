@@ -2,7 +2,7 @@
 
 require_once 'header.php';
 
-if ($featuredArticle = mysqli_query($connection, "SELECT news_image, news_title, news_published, profile_display_name, link_url FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id AND link_status=200 AND link_site_id=" . SITE_ID . " INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=news_owner_id WHERE link_status=200 AND news_site_id=" . SITE_ID . " ORDER BY link_is_featured DESC, news_published DESC LIMIT 1")) {
+if ($featuredArticle = mysqli_query($connection, "SELECT n.news_image, n.news_title, n.news_description, n.news_published, n.news_paid, n.news_owner_id, p.profile_display_name, l.link_url, c.category_title, cl.link_url AS category_url, m.meta_description FROM " . TABLE_PREFIX . "link l INNER JOIN " . TABLE_PREFIX . "news n ON l.link_relation_id=n.news_id AND l.link_status=200 AND l.link_site_id=" . SITE_ID . " INNER JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id=n.news_owner_id LEFT JOIN " . TABLE_PREFIX . "meta m ON m.meta_relation_id=l.link_id LEFT JOIN " . TABLE_PREFIX . "category c ON c.category_id=n.news_category AND c.category_type='news' AND c.category_site_id=" . SITE_ID . " LEFT JOIN " . TABLE_PREFIX . "link cl ON cl.link_relation_id=c.category_id AND cl.link_type='category' AND cl.link_status=200 AND cl.link_site_id=" . SITE_ID . " WHERE l.link_status=200 AND n.news_site_id=" . SITE_ID . " ORDER BY l.link_is_featured DESC, n.news_published DESC LIMIT 1")) {
   $featuredArticle = mysqli_fetch_assoc($featuredArticle);
 } else {
   $featuredArticle = null;
@@ -15,7 +15,7 @@ if ($featuredArticle && !empty($editorsPicks)) {
     return ($ep['link_url'] ?? '') !== ($featuredArticle['link_url'] ?? '')
       && ($ep['news_title'] ?? '') !== ($featuredArticle['news_title'] ?? '');
   });
-  $editorsPicks = array_values(array_slice($editorsPicks, 0, 5));
+  $editorsPicks = array_values(array_slice($editorsPicks, 0, 6));
 }
 
 // 3. Fetch Fintech Chronicles
@@ -46,25 +46,105 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
 <!-- Hero Section -->
 <section class="hero-section">
   <div class="container hero-grid">
-    <article class="hero-featured">
-      <span class="category-tag">Featured</span>
-      <?php if ($featuredArticle): ?>
-        <a href="<?php echo htmlspecialchars($featuredArticle['link_url']); ?>" class="hero-featured-link">
-          <img
-            src="<?php echo htmlspecialchars($featuredArticle['news_image']); ?>"
-            alt="<?php echo htmlspecialchars($featuredArticle['news_title']); ?>"
-            fetchpriority="high"
-            decoding="async"
-            class="article-thumb" />
-          <h1>
-            <?php echo htmlspecialchars($featuredArticle['news_title']); ?>
-          </h1>
-        </a>
-        <!-- <div class="meta-info">
-          <span class="date"><?php echo date('M d, Y', strtotime($featuredArticle['news_published'])); ?></span>
-        </div> -->
-      <?php endif; ?>
-    </article>
+    <?php if ($featuredArticle):
+      $featuredExcerpt = !empty($featuredArticle['meta_description'])
+        ? $featuredArticle['meta_description']
+        : (!empty($featuredArticle['news_description']) ? strip_tags($featuredArticle['news_description']) : '');
+      if (mb_strlen($featuredExcerpt) > 160) {
+        $featuredExcerpt = mb_substr($featuredExcerpt, 0, 157) . '...';
+      }
+
+      $authorName = $featuredArticle['profile_display_name'] ?? '';
+      $authorId = $featuredArticle['news_owner_id'] ?? '';
+      $authorUrl = '';
+      if (!empty($authorName) && !empty($authorId)) {
+        $authorSlug = urlencode(strtolower(str_replace(' ', '-', trim($authorName))));
+        $authorUrl = "/author/{$authorId}-{$authorSlug}-articles/";
+      }
+
+      $categoryUrl = $featuredArticle['category_url'] ?? '';
+      if (!empty($categoryUrl) && $categoryUrl[0] !== '/') {
+        $categoryUrl = '/' . ltrim($categoryUrl, '/');
+      }
+    ?>
+      <article class="featured-hero-card">
+        <div class="featured-hero-img-wrapper">
+          <a href="<?php echo htmlspecialchars($featuredArticle['link_url']); ?>" class="featured-hero-img-link" aria-label="<?php echo htmlspecialchars($featuredArticle['news_title']); ?>">
+            <img
+              src="<?php echo htmlspecialchars($featuredArticle['news_image']); ?>"
+              alt="<?php echo htmlspecialchars($featuredArticle['news_title']); ?>"
+              class="featured-hero-img"
+              loading="eager"
+              fetchpriority="high" />
+          </a>
+
+          <div class="featured-hero-badges">
+            <div class="badges-left">
+              <span class="badge-pill badge-featured">
+                <span class="pulse-dot"></span>
+                Featured
+              </span>
+            </div>
+            <?php if (!empty($featuredArticle['news_paid']) && $featuredArticle['news_paid'] == 1): ?>
+              <span class="badge-pill badge-premium">
+                <svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
+                </svg>
+                Premium
+              </span>
+            <?php endif; ?>
+          </div>
+        </div>
+
+        <div class="featured-hero-body">
+          <div class="featured-hero-main-content">
+            <h1 class="featured-hero-title">
+              <a href="<?php echo htmlspecialchars($featuredArticle['link_url']); ?>">
+                <?php echo htmlspecialchars($featuredArticle['news_title']); ?>
+              </a>
+            </h1>
+            <?php if (!empty($featuredExcerpt)): ?>
+              <p class="featured-hero-excerpt">
+                <?php echo htmlspecialchars($featuredExcerpt); ?>
+              </p>
+            <?php endif; ?>
+          </div>
+
+          <div class="featured-hero-meta">
+            <div class="meta-author-time">
+              <?php if (!empty($authorName)): ?>
+                <span class="meta-author">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                  <?php if (!empty($authorUrl)): ?>
+                    <a href="<?php echo htmlspecialchars($authorUrl); ?>" class="author-link"><?php echo htmlspecialchars($authorName); ?></a>
+                  <?php else: ?>
+                    <?php echo htmlspecialchars($authorName); ?>
+                  <?php endif; ?>
+                </span>
+                <span class="meta-dot">•</span>
+              <?php endif; ?>
+              <span class="meta-time">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <?php echo publishedTimeAgo($featuredArticle['news_published']); ?>
+              </span>
+            </div>
+            <a href="<?php echo htmlspecialchars($featuredArticle['link_url']); ?>" class="featured-cta">
+              Read Story
+              <svg class="cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </article>
+    <?php endif; ?>
     <aside class="hero-sidebar">
       <!-- Editor's Pick Module -->
       <div class="editors-pick-module">
@@ -120,9 +200,12 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
   <div class="container">
     <div class="section-header">
       <h2>Fintech Highlights</h2>
-      <div class="slider-controls">
-        <button class="slider-arrow prev-btn" id="trendingPrev" aria-label="Previous trending news">←</button>
-        <button class="slider-arrow next-btn" id="trendingNext" aria-label="Next trending news">→</button>
+      <div class="section-header-actions">
+        <a href="/fintech-news/" class="view-all">View All <span class="arrow">→</span></a>
+        <div class="slider-controls">
+          <button class="slider-arrow prev-btn" id="trendingPrev" aria-label="Previous trending news">←</button>
+          <button class="slider-arrow next-btn" id="trendingNext" aria-label="Next trending news">→</button>
+        </div>
       </div>
     </div>
     <div class="trending-slider-container">
