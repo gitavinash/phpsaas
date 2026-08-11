@@ -40,21 +40,21 @@
     <div class="footer-links">
       <h4>Company</h4>
       <ul>
-        <?php generateMenu('SITE_NAV_FOOTER_1', 'dropdown', true, 'nav-link'); ?>
+        <?php generateMenu('SITE_NAV_FOOTER_1', 'mobile', true, 'nav-link'); ?>
       </ul>
     </div>
 
     <div class="footer-links">
       <h4>Quick Links</h4>
       <ul>
-        <?php generateMenu('SITE_NAV_FOOTER_2', 'dropdown', true, 'nav-link'); ?>
+        <?php generateMenu('SITE_NAV_FOOTER_2', 'mobile', true, 'nav-link'); ?>
       </ul>
     </div>
 
     <div class="footer-links">
       <h4>Membership</h4>
       <ul>
-        <?php generateMenu('SITE_NAV_FOOTER_3', 'dropdown', true, 'nav-link'); ?>
+        <?php generateMenu('SITE_NAV_FOOTER_3', 'mobile', true, 'nav-link'); ?>
       </ul>
     </div>
   </div>

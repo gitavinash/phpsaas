@@ -47,8 +47,36 @@ $readTime = max(1, ceil($wordCount / 200));
 // Fetch Related Articles for Next Infinite Story
 $newsList = similarArticles($connection, $news_id, 'news', 6);
 $nextArticleUrl = '';
+
+// Track already loaded stories to avoid duplicate infinite-scroll loops.
+$seenIdsParam = isset($_GET['seen']) ? (string)$_GET['seen'] : '';
+$seenIds = [];
+if ($seenIdsParam !== '') {
+    foreach (explode(',', $seenIdsParam) as $rawSeenId) {
+        $id = (int)trim($rawSeenId);
+        if ($id > 0) {
+            $seenIds[$id] = true;
+        }
+    }
+}
+$seenIds[(int)$news_id] = true;
+
 if (isset($newsList['articles']) && sizeof($newsList['articles']) > 0) {
-    $nextArticleUrl = $newsList['articles'][0]['link_url'] ?? '';
+    foreach ($newsList['articles'] as $candidate) {
+        $candidateId = (int)($candidate['id'] ?? 0);
+        $candidateUrl = (string)($candidate['link_url'] ?? '');
+
+        if ($candidateId <= 0 || $candidateUrl === '') {
+            continue;
+        }
+        if (isset($seenIds[$candidateId])) {
+            continue;
+        }
+
+        $glue = (strpos($candidateUrl, '?') !== false) ? '&' : '?';
+        $nextArticleUrl = $candidateUrl . $glue . 'seen=' . implode(',', array_keys($seenIds));
+        break;
+    }
 }
 
 ?>

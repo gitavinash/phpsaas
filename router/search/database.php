@@ -5,7 +5,7 @@ $raw    = isset($searchKeyword) ? $searchKeyword : '';
 $siteId = (int) SITE_ID;
 $pageParam = $_GET['page'] ?? $_GET['page'] ?? 1;   // ← accept both
 $page = max(1, (int)$pageParam);
-$limit  = 20;
+$limit  = 10;
 $offset = ($page - 1) * $limit;
 
 $sortBy = 'RAND()';
@@ -112,16 +112,40 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
     switch ($source) {
         case 'product':
             $sql = "
-                SELECT
-                    'product' AS item_type,
+                     SELECT DISTINCT
+                        'news' AS item_type,
+                        n.news_title AS title,
+                        n.news_image AS image,
+                        l.link_url AS url,
+                        COALESCE(n.news_published, n.news_time) AS published_at,
+                        n.news_id AS relation_id,
+                        NULL AS tag_type,
+                        n.news_description AS description,
+                        c.category_title,
+                        cl.link_url AS category_url,
+                        p.profile_display_name AS author_name,
+                        n.news_owner_id AS author_id,
+                        n.news_paid,
+                        0.1 AS rel_score
                     pr.product_title AS title,
                     pr.product_image AS image,
                     l.link_url       AS url,
+                     INNER JOIN " . TABLE_PREFIX . "category c
+                         ON c.category_id = n.news_category
+                        AND c.category_type = 'news'
+                        AND c.category_site_id = ?
+                     LEFT JOIN " . TABLE_PREFIX . "link cl
+                         ON cl.link_relation_id = c.category_id
+                        AND cl.link_type = 'category'
+                        AND cl.link_status = 200
+                        AND cl.link_site_id = ?
+                     LEFT JOIN " . TABLE_PREFIX . "profile p
+                         ON p.profile_user_id = n.news_owner_id
                     pr.product_time  AS published_at,
                     pr.product_id    AS relation_id,
                     NULL             AS tag_type,
                     pr.product_description AS description,
-                    (
+            $fbParams = array_merge([$siteId, $siteId, $siteId], $p, [$limit, $offset]);
                         (MATCH(pr.product_title) AGAINST (? IN BOOLEAN MODE)) * 2.2
                       + (MATCH(pr.product_title, pr.product_highlight, pr.product_description) AGAINST (? IN BOOLEAN MODE)) * 1.2
                       + (MATCH(pr.product_title) AGAINST (? IN BOOLEAN MODE)) * 0.7
@@ -446,34 +470,6 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
 
         UNION ALL
 
-        /* CONTENT MATCH */
-        SELECT
-            'news',
-            n.news_title,
-            n.news_image,
-            l.link_url,
-            COALESCE(n.news_published, n.news_time),
-            n.news_id,
-            NULL,
-            n.news_description,
-            MATCH(n.news_highlight, n.news_description)
-                AGAINST (? IN BOOLEAN MODE),
-            3
-
-        FROM " . TABLE_PREFIX . "news n
-
-        INNER JOIN " . TABLE_PREFIX . "link l
-            ON l.link_relation_id = n.news_id
-           AND l.link_type = 'news'
-           AND l.link_status = 200
-           AND l.link_site_id = ?
-
-        WHERE n.news_site_id = ?
-          AND n.news_status = 1
-          AND n.news_is_public = 1
-          AND MATCH(n.news_highlight, n.news_description)
-              AGAINST (? IN BOOLEAN MODE)
-
     ) AS combined_results
 
     ORDER BY {$sortBy},
@@ -495,12 +491,6 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
                 $siteId,
                 $siteId,
                 $qAll,
-
-                // CONTENT MATCH
-                $qAny,
-                $siteId,
-                $siteId,
-                $qAny,
 
                 // PAGINATION
                 $limit,
@@ -531,8 +521,6 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
                 AGAINST (? IN BOOLEAN MODE)
          OR MATCH(n.news_title)
                 AGAINST (? IN BOOLEAN MODE)
-         OR MATCH(n.news_highlight, n.news_description)
-                AGAINST (? IN BOOLEAN MODE)
       )
     ";
 
@@ -541,7 +529,6 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
                 $siteId,
                 $siteId,
                 $qAll,
-                $qAny,
                 $qAny
             ];
 
@@ -759,11 +746,35 @@ if (!$rows || $shouldAugmentNewsWithLike) {
                 [$wTagNews, $pTagNews] = $buildLike('tn', ['tag_title'], $likePhrase, $likeTokens);
             }
             $fbSql = "
-                     SELECT DISTINCT 'news' AS item_type, n.news_title AS title, n.news_image AS image, l.link_url AS url,
-                                    COALESCE(n.news_published, n.news_time) AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
+                     SELECT DISTINCT
+                        'news' AS item_type,
+                        n.news_title AS title,
+                        n.news_image AS image,
+                        l.link_url AS url,
+                        COALESCE(n.news_published, n.news_time) AS published_at,
+                        n.news_id AS relation_id,
+                        NULL AS tag_type,
+                        n.news_description AS description,
+                        c.category_title,
+                        cl.link_url AS category_url,
+                        p.profile_display_name AS author_name,
+                        n.news_owner_id AS author_id,
+                        n.news_paid,
+                        0.1 AS rel_score
                      FROM " . TABLE_PREFIX . "news n
                      LEFT JOIN " . TABLE_PREFIX . "link l
                          ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
+                     INNER JOIN " . TABLE_PREFIX . "category c
+                         ON c.category_id = n.news_category
+                        AND c.category_type = 'news'
+                        AND c.category_site_id = ?
+                     LEFT JOIN " . TABLE_PREFIX . "link cl
+                         ON cl.link_relation_id = c.category_id
+                        AND cl.link_type = 'category'
+                        AND cl.link_status = 200
+                        AND cl.link_site_id = ?
+                     LEFT JOIN " . TABLE_PREFIX . "profile p
+                         ON p.profile_user_id = n.news_owner_id
                      LEFT JOIN " . TABLE_PREFIX . "tag t
                          ON t.tag_relation_id=l.link_id AND t.tag_type='news' AND t.tag_site_id=?
                      LEFT JOIN " . TABLE_PREFIX . "tag tn
@@ -773,13 +784,24 @@ if (!$rows || $shouldAugmentNewsWithLike) {
                          AND ({$wTitle} OR {$wTagLink} OR {$wTagNews})
                      ORDER BY COALESCE(n.news_published, n.news_time) {$newsFallbackOrder}
                      LIMIT ? OFFSET ?";
-            $fbParams = array_merge([$siteId, $siteId, $siteId], $pTitle, $pTagLink, $pTagNews, [$limit, $offset]);
+            $fbParams = array_merge([$siteId, $siteId, $siteId, $siteId, $siteId], $pTitle, $pTagLink, $pTagNews, [$limit, $offset]);
 
             $fbCountSql = "
                      SELECT COUNT(DISTINCT n.news_id) AS total
                      FROM " . TABLE_PREFIX . "news n
                      LEFT JOIN " . TABLE_PREFIX . "link l
                          ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
+                     INNER JOIN " . TABLE_PREFIX . "category c
+                         ON c.category_id = n.news_category
+                        AND c.category_type = 'news'
+                        AND c.category_site_id = ?
+                     LEFT JOIN " . TABLE_PREFIX . "link cl
+                         ON cl.link_relation_id = c.category_id
+                        AND cl.link_type = 'category'
+                        AND cl.link_status = 200
+                        AND cl.link_site_id = ?
+                     LEFT JOIN " . TABLE_PREFIX . "profile p
+                         ON p.profile_user_id = n.news_owner_id
                      LEFT JOIN " . TABLE_PREFIX . "tag t
                          ON t.tag_relation_id=l.link_id AND t.tag_type='news' AND t.tag_site_id=?
                      LEFT JOIN " . TABLE_PREFIX . "tag tn
@@ -787,7 +809,7 @@ if (!$rows || $shouldAugmentNewsWithLike) {
                      WHERE n.news_site_id=?
                          AND n.news_status=1 AND n.news_is_public=1
                          AND ({$wTitle} OR {$wTagLink} OR {$wTagNews})";
-            $fbCountParams = array_merge([$siteId, $siteId, $siteId], $pTitle, $pTagLink, $pTagNews);
+            $fbCountParams = array_merge([$siteId, $siteId, $siteId, $siteId, $siteId], $pTitle, $pTagLink, $pTagNews);
         } else {
             if ($isSingleTokenSearch && $singleToken !== '') {
                 [$wExactTitle, $pExactTitle] = $buildExactOrAcronymLike('n', ['news_title'], $singleToken, $acronymPattern, $useAcronymPattern, $isAiToken);
@@ -795,24 +817,47 @@ if (!$rows || $shouldAugmentNewsWithLike) {
                     $w = $wExactTitle;
                     $p = $pExactTitle;
                 } else {
-                    [$wLikeContent, $pLikeContent] = $buildLike('n', ['news_highlight', 'news_description'], $likePhrase, $likeTokens);
-                    $w = "({$wExactTitle} OR {$wLikeContent})";
-                    $p = array_merge($pExactTitle, $pLikeContent);
+                    $w = $wExactTitle;
+                    $p = $pExactTitle;
                 }
             } else {
-                [$w, $p] = $buildLike('n', ['news_title', 'news_highlight', 'news_description'], $likePhrase, $likeTokens);
+                [$w, $p] = $buildLike('n', ['news_title'], $likePhrase, $likeTokens);
             }
             $fbSql = "
-                     SELECT 'news' AS item_type, n.news_title AS title, n.news_image AS image, l.link_url AS url,
-                                    COALESCE(n.news_published, n.news_time) AS published_at, n.news_id AS relation_id, NULL AS tag_type, 0.1 AS rel_score
+                     SELECT
+                        'news' AS item_type,
+                        n.news_title AS title,
+                        n.news_image AS image,
+                        l.link_url AS url,
+                        COALESCE(n.news_published, n.news_time) AS published_at,
+                        n.news_id AS relation_id,
+                        NULL AS tag_type,
+                        n.news_description AS description,
+                        c.category_title,
+                        cl.link_url AS category_url,
+                        p.profile_display_name AS author_name,
+                        n.news_owner_id AS author_id,
+                        n.news_paid,
+                        0.1 AS rel_score
                      FROM " . TABLE_PREFIX . "news n
                      LEFT JOIN " . TABLE_PREFIX . "link l
                          ON l.link_relation_id=n.news_id AND l.link_type='news' AND l.link_status=200
+                     INNER JOIN " . TABLE_PREFIX . "category c
+                         ON c.category_id = n.news_category
+                        AND c.category_type = 'news'
+                        AND c.category_site_id = ?
+                     LEFT JOIN " . TABLE_PREFIX . "link cl
+                         ON cl.link_relation_id = c.category_id
+                        AND cl.link_type = 'category'
+                        AND cl.link_status = 200
+                        AND cl.link_site_id = ?
+                     LEFT JOIN " . TABLE_PREFIX . "profile p
+                         ON p.profile_user_id = n.news_owner_id
                      WHERE n.news_site_id=?
                          AND n.news_status=1 AND n.news_is_public=1
                          AND {$w}
                      LIMIT ? OFFSET ?";
-            $fbParams = array_merge([$siteId], $p, [$limit, $offset]);
+            $fbParams = array_merge([$siteId, $siteId, $siteId], $p, [$limit, $offset]);
 
             $fbCountSql = "
                      SELECT COUNT(DISTINCT n.news_id) AS total

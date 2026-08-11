@@ -29,7 +29,7 @@ if ($currentPage < $totalPages) {
 
 // Client-side batching if many results passed on single page
 $totalPosts = is_array($queryPost) ? count($queryPost) : 0;
-$initialBatchSize = 9;
+$initialBatchSize = 10;
 $initialPosts = is_array($queryPost) ? array_slice($queryPost, 0, $initialBatchSize) : [];
 $remainingPosts = is_array($queryPost) ? array_slice($queryPost, $initialBatchSize) : [];
 
@@ -69,17 +69,23 @@ $remainingPosts = is_array($queryPost) ? array_slice($queryPost, $initialBatchSi
           $link_url = $row['url'] ?? '#';
           if ($link_url !== '' && $link_url[0] !== '/') $link_url = '/' . ltrim($link_url, '/');
 
-          $news_title = $row['title'] ?? '';
-          $news_image = $row['image'] ?? '';
-          $news_paid = $row['news_paid'] ?? 0;
-          $news_published = $row['published_at'] ?? '';
+          $news_title = $row['title'] ?? ($row['news_title'] ?? ($row['post_title'] ?? ''));
+          $news_image = $row['image'] ?? ($row['news_image'] ?? ($row['post_image'] ?? ''));
+          $news_paid = $row['news_paid'] ?? ($row['paid'] ?? 0);
+          $news_published = $row['published_at'] ?? ($row['news_published'] ?? ($row['news_time'] ?? ''));
 
-          $category_title = $row['category_title'] ?? '';
-          $category_url = $row['category_url'] ?? '';
+          $descriptionSource = trimParagraph($row['description'] ?? ($row['news_description'] ?? ($row['news_highlight'] ?? '')), 300);
+          $shortDescription = trimParagraph($descriptionSource, 150);
+          if (strlen($shortDescription) > 160) {
+            $shortDescription = substr($shortDescription, 0, 157) . '...';
+          }
+
+          $category_title = $row['category_title'] ?? ($row['category_name'] ?? ($row['tag_title'] ?? ''));
+          $category_url = $row['category_url'] ?? ($row['category_link'] ?? ($row['tag_url'] ?? ''));
           if ($category_url !== '' && $category_url[0] !== '/') $category_url = '/' . ltrim($category_url, '/');
 
-          $author_name = $row['author_name'] ?? ($row['profile_display_name'] ?? '');
-          $author_id = $row['author_id'] ?? ($row['news_owner_id'] ?? '');
+          $author_name = $row['author_name'] ?? ($row['profile_display_name'] ?? ($row['news_author_name'] ?? ''));
+          $author_id = $row['author_id'] ?? ($row['news_owner_id'] ?? ($row['profile_user_id'] ?? ''));
           $author_url = '';
           if (!empty($author_name) && !empty($author_id)) {
             $author_slug = urlencode(strtolower(str_replace(' ', '-', trim($author_name))));
@@ -112,6 +118,9 @@ $remainingPosts = is_array($queryPost) ? array_slice($queryPost, $initialBatchSi
                 </span>
               <?php endif; ?>
               <h2><a href="<?php echo h($link_url); ?>"><?php echo h($news_title); ?></a></h2>
+              <?php if (!empty($shortDescription)): ?>
+                <p><?php echo removeInlineStyles(h($shortDescription), true); ?></p>
+              <?php endif; ?>
               <div class="category-card-meta">
                 <div class="meta-left">
                   <span class="date"><?php echo ($news_published ? date('M d, Y', strtotime($news_published)) : ''); ?></span>

@@ -2,7 +2,7 @@
 
 require_once 'header.php';
 
-if ($featuredArticle = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id AND link_status=200 AND link_site_id=" . SITE_ID . " WHERE link_status=200 AND news_site_id=" . SITE_ID . " ORDER BY link_is_featured DESC, news_published DESC LIMIT 1")) {
+if ($featuredArticle = mysqli_query($connection, "SELECT news_image, news_title, news_published, profile_display_name, link_url FROM " . TABLE_PREFIX . "link INNER JOIN " . TABLE_PREFIX . "news ON link_relation_id=news_id AND link_status=200 AND link_site_id=" . SITE_ID . " INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=news_owner_id WHERE link_status=200 AND news_site_id=" . SITE_ID . " ORDER BY link_is_featured DESC, news_published DESC LIMIT 1")) {
   $featuredArticle = mysqli_fetch_assoc($featuredArticle);
 } else {
   $featuredArticle = null;
@@ -60,11 +60,9 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
             <?php echo htmlspecialchars($featuredArticle['news_title']); ?>
           </h1>
         </a>
-        <div class="meta-info">
-          <span class="author">By <?php echo htmlspecialchars($featuredArticle['news_author']); ?></span>
-          <span class="separator">•</span>
+        <!-- <div class="meta-info">
           <span class="date"><?php echo date('M d, Y', strtotime($featuredArticle['news_published'])); ?></span>
-        </div>
+        </div> -->
       <?php endif; ?>
     </article>
     <aside class="hero-sidebar">
@@ -134,24 +132,24 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
         if (!empty($fintechArticles)):
           foreach ($fintechArticles as $tIndex => $tItem):
         ?>
-            <article class="trending-card-slide" style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.88) 100%), url('<?php echo htmlspecialchars($tItem['news_image']); ?>');">
-              <span class="trending-number"><?php echo sprintf('%02d', $tIndex + 1); ?></span>
-              <div class="trending-card-content">
-                <?php if ($tItem['news_paid'] == 1): ?>
-                  <span class="paid-badge"><svg class="paid-icon" viewBox="0 0 24 24">
-                      <path
-                        d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
-                    </svg>
-                    Premium</span>
-                <?php endif; ?>
-                <h3>
-                  <a href="<?php echo htmlspecialchars($tItem['link_url']); ?>"><?php echo htmlspecialchars($tItem['news_title']); ?></a>
-                </h3>
-              </div>
-              <div class="trending-meta">
-                <span class="time"><?php echo publishedTimeAgo($tItem['news_published']); ?></span>
-              </div>
-            </article>
+            <a href="<?php echo htmlspecialchars($tItem['link_url']); ?>" class="trending-card-link" aria-label="Read article: <?php echo htmlspecialchars($tItem['news_title']); ?>">
+              <article class="trending-card-slide" style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.88) 100%), url('<?php echo htmlspecialchars($tItem['news_image']); ?>');">
+                <span class="trending-number"><?php echo sprintf('%02d', $tIndex + 1); ?></span>
+                <div class="trending-card-content">
+                  <?php if ($tItem['news_paid'] == 1): ?>
+                    <span class="paid-badge"><svg class="paid-icon" viewBox="0 0 24 24">
+                        <path
+                          d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
+                      </svg>
+                      Premium</span>
+                  <?php endif; ?>
+                  <h3><?php echo htmlspecialchars($tItem['news_title']); ?></h3>
+                </div>
+                <div class="trending-meta">
+                  <span class="time"><?php echo date('d M, Y', strtotime($tItem['news_published'])); ?></span>
+                </div>
+              </article>
+            </a>
           <?php
           endforeach;
         else:

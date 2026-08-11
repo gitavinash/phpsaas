@@ -127,40 +127,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   let debounceTimer = null;
-  if (input) {
-    input.addEventListener("input", function () {
-      const q = input.value.trim();
-      clearTimeout(debounceTimer);
+  let autoController = null;
+  let autoRequestSeq = 0;
+  const autoCache = new Map();
 
-      if (q.length < 2) {
-        if (autoBlock) autoBlock.style.display = "none";
-        renderRecentSearches();
-        return;
-      }
+  const renderAutocompleteItems = function (items) {
+    if (!autoBlock || !autoResults) return;
+    if (!items || items.length === 0) {
+      autoBlock.style.display = "none";
+      return;
+    }
+    autoBlock.style.display = "block";
+    if (recentBlock) recentBlock.style.display = "none";
 
-      debounceTimer = setTimeout(() => {
-        fetch("/?action=autocomplete&q=" + encodeURIComponent(q))
-          .then((res) => res.json())
-          .then((items) => {
-            if (!autoBlock || !autoResults) return;
-            if (!items || items.length === 0) {
-              autoBlock.style.display = "none";
-              return;
-            }
-            autoBlock.style.display = "block";
-            if (recentBlock) recentBlock.style.display = "none";
-
-            autoResults.innerHTML = items
-              .map(
-                (item) => `
+    autoResults.innerHTML = items
+      .map(
+        (item) => `
               <a href="${item.url}" class="autocomplete-item ${item.type}">
                 <div class="autocomplete-left">
                   ${
                     item.type === "story" && item.image
-                      ? `<img src="${item.image}" alt="${item.title.replace(/"/g, '&quot;')}" class="autocomplete-img" onerror="this.outerHTML='<div class=\\'autocomplete-img-placeholder\\'><svg width=\\'16\\' height=\\'16\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>';" />`
+                      ? `<img src="${item.image}" alt="${item.title.replace(/"/g, "&quot;")}" class="autocomplete-img" onerror="this.outerHTML='<div class=\\'autocomplete-img-placeholder\\'><svg width=\\'16\\' height=\\'16\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>';" />`
                       : item.type === "story"
-                      ? `<div class="autocomplete-img-placeholder"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
-                      : `<div class="autocomplete-tag-icon">#</div>`
+                        ? `<div class="autocomplete-img-placeholder"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
+                        : `<div class="autocomplete-tag-icon">#</div>`
                   }
                   <span class="autocomplete-title">${item.title}</span>
                 </div>
@@ -169,13 +159,61 @@ document.addEventListener("DOMContentLoaded", () => {
                 }</span>
               </a>
             `,
-              )
-              .join("");
+      )
+      .join("");
+  };
+
+  if (input) {
+    input.addEventListener("input", function () {
+      const q = input.value.trim();
+      clearTimeout(debounceTimer);
+
+      if (q.length < 2) {
+        if (autoController) {
+          autoController.abort();
+          autoController = null;
+        }
+        if (autoBlock) autoBlock.style.display = "none";
+        renderRecentSearches();
+        return;
+      }
+
+      debounceTimer = setTimeout(() => {
+        const cacheKey = q.toLowerCase();
+        if (autoCache.has(cacheKey)) {
+          renderAutocompleteItems(autoCache.get(cacheKey));
+          return;
+        }
+
+        if (autoController) {
+          autoController.abort();
+        }
+        autoController = new AbortController();
+        autoRequestSeq += 1;
+        const reqSeq = autoRequestSeq;
+
+        fetch("/?action=autocomplete&q=" + encodeURIComponent(q), {
+          signal: autoController.signal,
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("Autocomplete request failed");
+            return res.json();
+          })
+          .then((items) => {
+            if (reqSeq !== autoRequestSeq) return;
+            const safeItems = Array.isArray(items) ? items : [];
+            autoCache.set(cacheKey, safeItems);
+            if (autoCache.size > 25) {
+              const firstKey = autoCache.keys().next().value;
+              autoCache.delete(firstKey);
+            }
+            renderAutocompleteItems(safeItems);
           })
           .catch((err) => {
+            if (err && err.name === "AbortError") return;
             console.error("Autocomplete fetch error:", err);
           });
-      }, 200);
+      }, 300);
     });
   }
 
@@ -801,13 +839,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let isFetchingSearch = false;
+    let searchObserver = null;
+    let searchScrollFrame = 0;
+    const searchLoadThreshold = 700;
+
+    const isSearchNearBottom = function () {
+      const triggerRect = searchTrigger.getBoundingClientRect();
+      return triggerRect.top <= window.innerHeight + searchLoadThreshold;
+    };
+
+    const scheduleSearchCheck = function () {
+      if (searchScrollFrame) return;
+      searchScrollFrame = window.requestAnimationFrame(() => {
+        searchScrollFrame = 0;
+        if (
+          !isFetchingSearch &&
+          searchTrigger.offsetParent !== null &&
+          isSearchNearBottom()
+        ) {
+          appendSearchBatch();
+        }
+      });
+    };
 
     const appendSearchBatch = function () {
       if (isFetchingSearch) return;
       isFetchingSearch = true;
 
       if (remainingPosts.length > 0) {
-        const batchSize = 6;
+        const batchSize = 10;
         const nextBatch = remainingPosts.splice(0, batchSize);
 
         nextBatch.forEach((row, index) => {
@@ -909,9 +969,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (remainingPosts.length === 0) {
           searchTrigger.style.display = "none";
-          searchObserver.unobserve(searchTrigger);
+          if (searchObserver) {
+            searchObserver.unobserve(searchTrigger);
+          }
         }
         isFetchingSearch = false;
+        scheduleSearchCheck();
       } else {
         const nextPageUrl = searchTrigger.getAttribute("data-next-page");
         if (nextPageUrl) {
@@ -948,12 +1011,15 @@ document.addEventListener("DOMContentLoaded", () => {
                   searchTrigger.setAttribute("data-next-page", nextUrlAttr);
                 } else {
                   searchTrigger.style.display = "none";
-                  searchObserver.unobserve(searchTrigger);
+                  if (searchObserver) {
+                    searchObserver.unobserve(searchTrigger);
+                  }
                 }
               } else {
                 searchTrigger.style.display = "none";
               }
               isFetchingSearch = false;
+              scheduleSearchCheck();
             })
             .catch((err) => {
               console.error("Failed to load search page:", err);
@@ -967,7 +1033,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    const searchObserver = new IntersectionObserver(
+    searchObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !isFetchingSearch) {
@@ -976,11 +1042,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       },
       {
-        rootMargin: "300px",
+        rootMargin: "700px 0px",
       },
     );
 
     searchObserver.observe(searchTrigger);
+    window.addEventListener("scroll", scheduleSearchCheck, { passive: true });
+    window.addEventListener("resize", scheduleSearchCheck);
+    scheduleSearchCheck();
   }
 
   // 9. Subscribe Page FAQ Accordion

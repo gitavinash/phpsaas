@@ -26,7 +26,7 @@
                    AND l.link_status=200
                  WHERE c.category_site_id='" . SITE_ID . "'
                  GROUP BY l.link_relation_id
-                 ORDER BY c.category_id DESC ";
+                 ORDER BY c.category_id DESC";
                 if ($res = mysqli_query($connection, $sql)) {
                     while ($row = mysqli_fetch_assoc($res)) {
                         $label = htmlspecialchars($row['category_title'], ENT_QUOTES);

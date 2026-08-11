@@ -9,7 +9,7 @@
   --border-color: #e0e0e0;
   --white: #ffffff;
 
-  --font-heading: "Playfair Display", serif;
+  --font-heading: "Newsreader", Georgia, serif;
   --font-body: "Inter", sans-serif;
 
   --spacing-xs: 4px;
@@ -69,7 +69,11 @@ h6 {
   font-family: var(--font-heading);
   color: var(--primary-color);
   line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
   margin-bottom: var(--spacing-sm);
+  text-rendering: optimizeLegibility;
 }
 
 a {
@@ -115,54 +119,228 @@ img {
   background-color: #b3241b;
 }
 
+/* Page Template Styles */
+.page-shell {
+  padding: 0 0 80px;
+  background: linear-gradient(180deg, rgba(217, 48, 37, 0.04) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.page-banner {
+  background: linear-gradient(135deg, #111111 0%, #1f1f1f 50%, #2b2b2b 100%);
+  color: #ffffff;
+  padding: 72px 0 64px;
+}
+
+.page-banner-inner {
+  display: flex;
+  align-items: center;
+}
+
+.page-banner-copy {
+  max-width: 760px;
+}
+
+.page-banner-copy .category-tag {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.page-banner-copy h1 {
+  font-size: clamp(2.1rem, 3.2vw, 3rem);
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.page-banner-copy p {
+  font-size: 1.04rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.page-content-block {
+  margin-top: -24px;
+  position: relative;
+  z-index: 1;
+}
+
+.page-content-card {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(10, 10, 10, 0.08);
+}
+
+.page-content-body p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .page-banner {
+    padding: 56px 0 48px;
+  }
+
+  .page-content-card {
+    padding: 24px;
+  }
+}
+
 /* Header */
 .site-header {
-  background-color: var(--white);
-  border-bottom: 1px solid var(--border-color);
+  background-color: var(--white, #ffffff);
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: var(--spacing-md) 0;
+  padding: 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
 
-.header-container {
+.header-top-bar {
+  padding: 12px 0;
+  background-color: #ffffff;
+}
+
+.header-top-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .logo a {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 }
 
-.main-nav ul {
-  display: flex;
-  gap: var(--spacing-lg);
-}
-
-.main-nav a {
-  font-weight: 500;
-  font-size: 0.95rem;
-}
-
-.main-nav a:hover {
-  color: var(--accent-color);
+.logo-img {
+  max-height: 42px;
+  width: auto;
+  display: block;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: 16px;
 }
 
-.search-btn {
+.header-actions .search-btn {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-color);
+  color: var(--primary-color, #0f172a);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.header-actions .search-btn:hover {
+  background-color: #f1f5f9;
+  color: var(--accent-color, #d93025);
+}
+
+.btn-outline-signin {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn-outline-signin:hover {
+  border-color: #94a3b8;
+  color: var(--accent-color, #d93025);
+  background-color: #f8fafc;
+}
+
+/* Dedicated Category Navigation Bar */
+.header-nav-bar {
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #ffffff;
+}
+
+.header-nav-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.header-nav-container::-webkit-scrollbar {
+  display: none;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+}
+
+.main-nav .nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav .nav-link,
+.main-nav .nav-menu > li > a,
+.main-nav .nav-menu > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-decoration: none;
+  padding: 12px 0;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  transition: color 0.15s ease;
+  position: relative;
+}
+
+.main-nav .nav-link:hover,
+.main-nav .nav-menu > li > a:hover,
+.main-nav .nav-menu > a:hover {
+  color: var(--accent-color, #d93025);
+}
+
+.main-nav .nav-link.active,
+.main-nav .nav-menu > a.active {
+  color: var(--accent-color, #d93025);
+}
+
+.main-nav .nav-link.active::after,
+.main-nav .nav-menu > a.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--accent-color, #d93025);
+  border-radius: 2px 2px 0 0;
 }
 
 /* Hero Section */
@@ -1384,11 +1562,19 @@ img {
   display: none;
 }
 
-.trending-card-slide {
+.trending-card-link {
+  display: block;
   flex: 0 0 calc(25% - 15px);
   min-width: 260px;
   min-height: 220px;
   scroll-snap-align: start;
+  text-decoration: none;
+  color: inherit;
+}
+
+.trending-card-slide {
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1400,13 +1586,16 @@ img {
   justify-content: space-between;
   position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.trending-card-slide:hover {
+.trending-card-link:hover .trending-card-slide,
+.trending-card-link:focus-visible .trending-card-slide {
   transform: translateY(-4px);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
   border-color: rgba(255, 255, 255, 0.4);
+  background-color: var(--accent-color, #d93025);
+  background-blend-mode: multiply;
 }
 
 .slider-controls {

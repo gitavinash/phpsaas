@@ -5,34 +5,105 @@ require_once DATA_FUNCTIONS;
 // AJAX Autocomplete Endpoint for Search Modal (Tags & News Stories)
 if (isset($_GET['action']) && $_GET['action'] == 'autocomplete') {
   header('Content-Type: application/json; charset=utf-8');
-  $q = mysqli_real_escape_string($connection, trim($_GET['q'] ?? ''));
+  header('Cache-Control: private, max-age=30');
+  $q = trim((string)($_GET['q'] ?? ''));
+  $q = mb_substr($q, 0, 60);
   $results = [];
-  if (!empty($q)) {
-    // Query Tag Table
-    $tagSql = "SELECT tag_title, link_url FROM " . TABLE_PREFIX . "tag INNER JOIN " . TABLE_PREFIX . "link ON link_relation_id=tag_id WHERE link_type='tag' AND link_status=200 AND tag_title LIKE '%{$q}%' LIMIT 5";
-    if ($res = mysqli_query($connection, $tagSql)) {
-      while ($row = mysqli_fetch_assoc($res)) {
-        $results[] = [
-          'type' => 'tag',
-          'title' => htmlspecialchars($row['tag_title']),
-          'url' => htmlspecialchars($row['link_url'])
-        ];
+  if (!empty($q) && mb_strlen($q) >= 2) {
+    $siteId = (int)SITE_ID;
+    $qPrefix = $q . '%';
+
+    // Query Tag Table (prefix match for index-friendly lookup)
+    $tagSql = "SELECT t.tag_title, l.link_url
+      FROM " . TABLE_PREFIX . "tag t
+      INNER JOIN " . TABLE_PREFIX . "link l
+        ON l.link_relation_id = t.tag_id
+       AND l.link_type = 'tag'
+       AND l.link_status = 200
+       AND l.link_site_id = ?
+      WHERE t.tag_site_id = ?
+        AND t.tag_title LIKE ?
+      ORDER BY t.tag_id DESC
+      LIMIT 5";
+
+    if ($tagStmt = mysqli_prepare($connection, $tagSql)) {
+      mysqli_stmt_bind_param($tagStmt, 'iis', $siteId, $siteId, $qPrefix);
+      mysqli_stmt_execute($tagStmt);
+      $tagRes = mysqli_stmt_get_result($tagStmt);
+      if ($tagRes) {
+        while ($row = mysqli_fetch_assoc($tagRes)) {
+          $results[] = [
+            'type' => 'tag',
+            'title' => htmlspecialchars($row['tag_title']),
+            'url' => htmlspecialchars($row['link_url'])
+          ];
+        }
       }
     }
-    // Query News Stories matching title OR tags with news_image (Latest articles first)
-    $newsSql = "SELECT DISTINCT n.news_title, n.news_image, l.link_url FROM " . TABLE_PREFIX . "news n INNER JOIN " . TABLE_PREFIX . "link l ON l.link_relation_id = n.news_id AND l.link_type = 'news' AND l.link_status = 200 AND l.link_site_id = " . SITE_ID . " LEFT JOIN " . TABLE_PREFIX . "tag t ON (t.tag_relation_id = n.news_id OR t.tag_relation_id = l.link_id) AND t.tag_type = 'news' AND t.tag_site_id = " . SITE_ID . " WHERE n.news_site_id = " . SITE_ID . " AND n.news_status = 1 AND n.news_is_public = 1 AND (n.news_title LIKE '%{$q}%' OR t.tag_title LIKE '%{$q}%') ORDER BY n.news_id DESC LIMIT 4";
-    if ($res = mysqli_query($connection, $newsSql)) {
-      while ($row = mysqli_fetch_assoc($res)) {
-        $img = trim($row['news_image'] ?? '');
-        if (!empty($img) && substr($img, 0, 1) !== '/' && !preg_match('/^https?:\/\//i', $img)) {
-          $img = '/' . $img;
+
+    // Query News Stories using UNION to avoid expensive title/tag OR scan
+    $newsSql = "SELECT DISTINCT x.news_title, x.news_image, x.link_url, x.news_id
+      FROM (
+        SELECT n.news_id, n.news_title, n.news_image, l.link_url
+        FROM " . TABLE_PREFIX . "news n
+        INNER JOIN " . TABLE_PREFIX . "link l
+          ON l.link_relation_id = n.news_id
+         AND l.link_type = 'news'
+         AND l.link_status = 200
+         AND l.link_site_id = ?
+        WHERE n.news_site_id = ?
+          AND n.news_status = 1
+          AND n.news_is_public = 1
+          AND n.news_title LIKE ?
+
+        UNION
+
+        SELECT n.news_id, n.news_title, n.news_image, l.link_url
+        FROM " . TABLE_PREFIX . "news n
+        INNER JOIN " . TABLE_PREFIX . "link l
+          ON l.link_relation_id = n.news_id
+         AND l.link_type = 'news'
+         AND l.link_status = 200
+         AND l.link_site_id = ?
+        INNER JOIN " . TABLE_PREFIX . "tag t
+          ON (t.tag_relation_id = n.news_id OR t.tag_relation_id = l.link_id)
+         AND t.tag_type = 'news'
+         AND t.tag_site_id = ?
+        WHERE n.news_site_id = ?
+          AND n.news_status = 1
+          AND n.news_is_public = 1
+          AND t.tag_title LIKE ?
+      ) x
+      ORDER BY x.news_id DESC
+      LIMIT 4";
+
+    if ($newsStmt = mysqli_prepare($connection, $newsSql)) {
+      mysqli_stmt_bind_param(
+        $newsStmt,
+        'iisiiis',
+        $siteId,
+        $siteId,
+        $qPrefix,
+        $siteId,
+        $siteId,
+        $siteId,
+        $qPrefix
+      );
+      mysqli_stmt_execute($newsStmt);
+      $newsRes = mysqli_stmt_get_result($newsStmt);
+      if ($newsRes) {
+        while ($row = mysqli_fetch_assoc($newsRes)) {
+          $img = trim($row['news_image'] ?? '');
+          if (!empty($img) && substr($img, 0, 1) !== '/' && !preg_match('/^https?:\/\//i', $img)) {
+            $img = '/' . $img;
+          }
+          $results[] = [
+            'type' => 'story',
+            'title' => htmlspecialchars($row['news_title']),
+            'image' => htmlspecialchars($img),
+            'url' => htmlspecialchars($row['link_url'])
+          ];
         }
-        $results[] = [
-          'type' => 'story',
-          'title' => htmlspecialchars($row['news_title']),
-          'image' => htmlspecialchars($img),
-          'url' => htmlspecialchars($row['link_url'])
-        ];
       }
     }
   }
@@ -98,7 +169,7 @@ if (isset($_COOKIE['user_data'])) {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>" />
@@ -422,110 +493,115 @@ if (isset($_COOKIE['user_data'])) {
 <body>
   <!-- Header -->
   <header class="site-header">
-    <div class="container header-container">
-      <!-- Mobile Left Drawer Toggle (Categories & Navigation) -->
-      <button class="mobile-menu-btn" id="openLeftDrawerBtn" aria-label="Open Mobile Categories">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-
-      <div class="logo">
-        <a href="/">
-          <img
-            src="<?php echo SITE_LOGO ?>"
-            alt="The Head &amp; Tale"
-            width="180"
-            height="42"
-            class="logo-img" />
-        </a>
-      </div>
-
-      <!-- Main Navigation with Mega-Menu (All items visible at a glance) -->
-      <nav class="main-nav" aria-label="Main Navigation">
-        <ul class="nav-menu">
-          <?php generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true, 'nav-link'); ?>
-        </ul>
-      </nav>
-
-      <div class="header-actions">
-        <!-- Search Trigger -->
-        <button class="search-btn" id="openSearchBtn" aria-label="Open Search">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    <!-- Top Row: Logo & Actions -->
+    <div class="header-top-bar">
+      <div class="container header-top-container">
+        <!-- Mobile Left Drawer Toggle (Categories & Navigation) -->
+        <button class="mobile-menu-btn" id="openLeftDrawerBtn" aria-label="Open Mobile Categories">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
 
-        <!-- My Account / Sign In Option -->
-        <?php
-        $isLoggedIn = isset($_COOKIE['isLogin']) || isset($_COOKIE['user_data']);
-        if ($isLoggedIn):
-        ?>
-          <div class="user-account-dropdown" id="userAccountDropdown">
-            <button class="account-btn" id="accountMenuBtn" type="button" aria-haspopup="true" aria-expanded="false">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="logo">
+          <a href="/">
+            <img
+              src="<?php echo SITE_LOGO ?>"
+              alt="The Head &amp; Tale"
+              width="180"
+              height="42"
+              class="logo-img" />
+          </a>
+        </div>
+
+        <div class="header-actions">
+          <!-- Search Trigger -->
+          <button class="search-btn" id="openSearchBtn" aria-label="Open Search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+
+          <!-- My Account / Sign In Option -->
+          <?php
+          $isLoggedIn = isset($_COOKIE['isLogin']) || isset($_COOKIE['user_data']);
+          if ($isLoggedIn):
+          ?>
+            <div class="user-account-dropdown" id="userAccountDropdown">
+              <button class="account-btn" id="accountMenuBtn" type="button" aria-haspopup="true" aria-expanded="false">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>My Account</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+              <div class="account-dropdown-menu" id="accountDropdownMenu">
+                <a href="/manage-subscription/" class="account-dropdown-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 7h-9M14 17H5M12 12H3" />
+                  </svg>
+                  Manage Subscription
+                </a>
+                <a href="/manage-active-session/" class="account-dropdown-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                  </svg>
+                  Active Sessions
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/logout/" class="account-dropdown-item logout">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  Sign Out
+                </a>
+              </div>
+            </div>
+          <?php else: ?>
+            <a href="/login/" class="btn-outline-signin">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
-              <span>My Account</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </button>
-            <div class="account-dropdown-menu" id="accountDropdownMenu">
-              <a href="/manage-subscription/" class="account-dropdown-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20 7h-9M14 17H5M12 12H3" />
-                </svg>
-                Manage Subscription
-              </a>
-              <a href="/manage-active-session/" class="account-dropdown-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                  <line x1="8" y1="21" x2="16" y2="21" />
-                  <line x1="12" y1="17" x2="12" y2="21" />
-                </svg>
-                Active Sessions
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="/logout/" class="account-dropdown-item logout">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-                Sign Out
-              </a>
-            </div>
-          </div>
-        <?php else: ?>
-          <a href="/login/" class="btn-outline-signin">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <span>Sign In</span>
+            </a>
+          <?php endif; ?>
+
+          <!-- Mobile Right Drawer Button -->
+          <button class="mobile-menu-btn" id="openRightDrawerBtn" aria-label="Open Account Portal">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            <span>Sign In</span>
-          </a>
-        <?php endif; ?>
+          </button>
 
-        <!-- Mobile Right Drawer Button -->
-        <button class="mobile-menu-btn" id="openRightDrawerBtn" aria-label="Open Account Portal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-        </button>
+          <?php
+          if (!$activeSubscription) {
+            echo '<a href="/subscribe/" class="btn btn-primary">Subscribe</a>';
+          }
+          ?>
+        </div>
+      </div>
+    </div>
 
-        <?php
-
-        if (!$activeSubscription) {
-          echo '<a href="/subscribe/" class="btn btn-primary">Subscribe</a>';
-        }
-        ?>
-
+    <!-- Bottom Row: Dedicated Navigation Bar -->
+    <div class="header-nav-bar">
+      <div class="container header-nav-container">
+        <nav class="main-nav" aria-label="Main Navigation">
+          <ul class="nav-menu">
+            <?php generateMenu('SITE_NAV_MAIN_HEADER', 'dropdown', true, 'nav-link'); ?>
+          </ul>
+        </nav>
       </div>
     </div>
   </header>

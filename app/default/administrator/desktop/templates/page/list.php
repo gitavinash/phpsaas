@@ -47,38 +47,47 @@ $postStatus = (($postStatus == 'all') ? '' : "AND page_status='{$postStatus}'");
     <tbody>
         <?php
 
-        if ($dataList = mysqli_query($connection, "SELECT p.page_id, p.page_title, l.link_url, l.link_status, UNIX_TIMESTAMP(COALESCE(l.link_published, l.link_creation, l.link_modified)) AS published_ts, pr.profile_display_name FROM " . TABLE_PREFIX . "page p INNER JOIN (SELECT link_relation_id, MAX(link_id) AS latest_link_id FROM " . TABLE_PREFIX . "link WHERE link_type='{$postType}' AND link_site_id='" . SITE_ID . "' AND link_status!=301 GROUP BY link_relation_id) ll ON ll.link_relation_id=p.page_id INNER JOIN " . TABLE_PREFIX . "link l ON l.link_id=ll.latest_link_id INNER JOIN " . TABLE_PREFIX . "profile pr ON pr.profile_user_id='" . USER_ID . "' WHERE p.page_type='page' $postStatus ORDER BY published_ts DESC, p.page_id DESC")) {
+        if ($dataList = mysqli_query($connection, "SELECT p.page_id, p.page_title, l.link_url, l.link_status, pr.profile_display_name, l.link_published
+                  FROM " . TABLE_PREFIX . "page p
+                  INNER JOIN " . TABLE_PREFIX . "link l
+                    ON p.page_id = l.link_relation_id
+                   AND l.link_type='page'
+                   AND l.link_status=200
+                INNER JOIN " . TABLE_PREFIX . "profile pr
+                    ON p.page_owner_id = pr.profile_id
+                 WHERE p.page_site_id='" . SITE_ID . "'
+                 ORDER BY p.page_id DESC")) {
             if (mysqli_num_rows($dataList) != 0) {
                 while ($data = mysqli_fetch_assoc($dataList)) {
                     extract($data) ?>
-        <?php
+                    <?php
                     $statusLabel = ($link_status == '200') ? 'Published' : 'Draft';
                     $statusClass = ($link_status == '200') ? 'status-live' : 'status-draft';
-        ?>
-        <tr style="height: 80px;">
-            <td>
-                <div class="page-cell">
-                    <div class="page-meta">
-                        <p><a class="page-title-link"
-                                href="page/?type=edit&editor=true&id=<?php echo base64_encode($page_id); ?>"><?php echo $page_title; ?></a>
-                        </p>
-                        <div class="page-tags">
-                            <span class="page-tag <?php echo $statusClass; ?>"><?php echo $statusLabel; ?></span>
-                        </div>
-                    </div>
-                </div>
-            </td>
-            <td><?php echo $profile_display_name; ?></td>
-            <td data-order="<?php echo (int)$published_ts; ?>" data-sort="<?php echo (int)$published_ts; ?>">
-                <?php echo date('d/m/Y H:i:s', (int)$published_ts); ?></td>
-            <td>
-                <div class="action-btns">
-                    <a href="page/?type=edit&editor=true&id=<?php echo base64_encode($page_id); ?>" class="action-btn btn-edit" title="Edit"><i class="fas fa-pencil-alt"></i> Edit</a>
-                    <a href="<?php echo $link_url; ?>" target="_blank" class="action-btn btn-view" title="View"><i class="fas fa-eye"></i> View</a>
-                    <a href="#" id="<?php echo base64_encode($page_id) ?>_page" class="action-btn btn-delete deleteBtn" title="Delete"><i class="fas fa-trash"></i> Delete</a>
-                </div>
-            </td>
-        </tr>
+                    ?>
+                    <tr style="height: 80px;">
+                        <td>
+                            <div class="page-cell">
+                                <div class="page-meta">
+                                    <p><a class="page-title-link"
+                                            href="page/?type=edit&editor=true&id=<?php echo base64_encode($page_id); ?>"><?php echo $page_title; ?></a>
+                                    </p>
+                                    <div class="page-tags">
+                                        <span class="page-tag <?php echo $statusClass; ?>"><?php echo $statusLabel; ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><?php echo $profile_display_name; ?></td>
+                        <td data-order="<?php echo (int)$link_published; ?>" data-sort="<?php echo (int)$link_published; ?>">
+                            <?php echo date('d/m/Y H:i:s', strtotime($link_published)); ?></td>
+                        <td>
+                            <div class="action-btns">
+                                <a href="page/?type=edit&editor=true&id=<?php echo base64_encode($page_id); ?>" class="action-btn btn-edit" title="Edit"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                <a href="<?php echo $link_url; ?>" target="_blank" class="action-btn btn-view" title="View"><i class="fas fa-eye"></i> View</a>
+                                <a href="#" id="<?php echo base64_encode($page_id) ?>_page" class="action-btn btn-delete deleteBtn" title="Delete"><i class="fas fa-trash"></i> Delete</a>
+                            </div>
+                        </td>
+                    </tr>
         <?php
                 }
             }
