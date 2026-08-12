@@ -17,7 +17,7 @@ $pageDescription = !empty($page_description) ? $page_description : 'Add your pag
     <div class="container page-content-block">
         <article class="page-content-card">
             <div class="page-content-body">
-                <?php echo $pageDescription; ?>
+                <?php echo removeInlineStyles($pageDescription); ?>
             </div>
         </article>
     </div>
