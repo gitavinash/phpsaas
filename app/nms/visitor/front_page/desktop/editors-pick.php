@@ -1,13 +1,66 @@
 <?php
 
-require_once 'header.php';
+if (defined('DATA_FUNCTIONS')) {
+  require_once DATA_FUNCTIONS;
+}
 
 $categoryIds = [201, 202, 204, 386, 399];
-$category_title = "Editors' Picks";
-$categorySinglePost = getNewsCategoryPost($connection, $categoryIds, 'news', 'new', 'all', 0, 20);
+$category_title = "Editor's Pick";
 
 $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : (isset($_GET['p']) ? (int)$_GET['p'] : 1);
-$totalPages = defined('TOTAL_PAGE') ? (int)TOTAL_PAGE : 1;
+if ($currentPage < 1) {
+  $currentPage = 1;
+}
+
+$limit = 20;
+$offset = ($currentPage - 1) * $limit;
+
+$catIdsStr = implode(',', array_map('intval', $categoryIds));
+
+$totalCount = 0;
+if (isset($connection)) {
+  $countQuery = "SELECT COUNT(DISTINCT news_id) AS total FROM " . TABLE_PREFIX . "news WHERE news_category IN ({$catIdsStr}) AND news_site_id=" . SITE_ID;
+  if ($countRes = mysqli_query($connection, $countQuery)) {
+    if ($row = mysqli_fetch_assoc($countRes)) {
+      $totalCount = (int)$row['total'];
+    }
+  }
+}
+
+$totalPages = max(1, (int)ceil($totalCount / $limit));
+
+$categorySinglePost = getNewsCategoryPost($connection, $categoryIds, 'news', 'new', 'all', $offset, $limit);
+
+if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
+  header("Content-Type: application/json; charset=utf-8");
+  $items = [];
+  if (!empty($categorySinglePost) && is_array($categorySinglePost)) {
+    foreach ($categorySinglePost as $post) {
+      $publishedTime = function_exists('publishedTimeAgo') ? publishedTimeAgo($post['news_published'] ?? '') : date('M d, Y', strtotime($post['news_published'] ?? 'now'));
+      $postCatTitle = $post['category_title'] ?? $category_title ?? 'News';
+      $postCatUrl = $post['category_url'] ?? '';
+      if (!empty($postCatUrl) && $postCatUrl[0] !== '/') {
+        $postCatUrl = '/' . ltrim($postCatUrl, '/');
+      }
+      $items[] = [
+        'link_url' => $post['link_url'] ?? '',
+        'news_title' => $post['news_title'] ?? '',
+        'news_image' => $post['news_image'] ?? '',
+        'news_published' => $publishedTime,
+        'news_paid' => (int)($post['news_paid'] ?? 0),
+        'category_title' => $postCatTitle,
+        'category_url' => $postCatUrl
+      ];
+    }
+  }
+  echo json_encode([
+    'status' => 200,
+    'page' => $currentPage,
+    'totalPages' => $totalPages,
+    'items' => $items
+  ]);
+  exit();
+}
 
 $nextPageUrl = '';
 if ($currentPage < $totalPages) {
@@ -15,6 +68,8 @@ if ($currentPage < $totalPages) {
   $queryParams['page'] = $currentPage + 1;
   $nextPageUrl = '?' . http_build_query($queryParams);
 }
+
+require_once 'header.php';
 
 ?>
 <section class="category-page">
@@ -55,6 +110,12 @@ if ($currentPage < $totalPages) {
             $authorSlug = urlencode(strtolower(str_replace(' ', '-', trim($post['profile_display_name'] ?? ''))));
             $authorUrl = "/author/{$authorId}-{$authorSlug}-articles/";
           }
+          $postCatTitle = htmlspecialchars($post['category_title'] ?? $category_title ?? 'News');
+          $postCatUrl = $post['category_url'] ?? '';
+          if (!empty($postCatUrl) && $postCatUrl[0] !== '/') {
+            $postCatUrl = '/' . ltrim($postCatUrl, '/');
+          }
+          $postCatUrl = htmlspecialchars($postCatUrl);
           ?>
           <article class="category-news-card">
             <div class="category-card-img">
@@ -71,7 +132,13 @@ if ($currentPage < $totalPages) {
               </a>
             </div>
             <div class="category-card-content">
-              <span class="tag"><?php echo htmlspecialchars($category_title ?? 'News'); ?></span>
+              <span class="tag">
+                <?php if (!empty($postCatUrl)): ?>
+                  <a href="<?php echo $postCatUrl; ?>"><?php echo $postCatTitle; ?></a>
+                <?php else: ?>
+                  <?php echo $postCatTitle; ?>
+                <?php endif; ?>
+              </span>
               <h2><a href="<?php echo $linkUrl; ?>"><?php echo $newsTitle; ?></a></h2>
               <p><?php echo removeInlineStyles($metaDesc, true); ?></p>
               <div class="category-card-meta">
