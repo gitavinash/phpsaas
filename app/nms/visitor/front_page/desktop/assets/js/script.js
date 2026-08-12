@@ -1,26 +1,77 @@
-document.addEventListener("contextmenu", (e) => e.preventDefault());
-
-document.addEventListener("keydown", function (e) {
-  // F12
-  if (e.key === "F12") {
+(function () {
+  // Disable right-click
+  document.addEventListener("contextmenu", function (e) {
     e.preventDefault();
-  }
+  });
 
-  // Ctrl+Shift+I / Cmd+Option+I
-  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "i") {
+  // Disable copy, cut and paste
+  document.addEventListener("copy", function (e) {
     e.preventDefault();
-  }
+  });
 
-  // Ctrl+Shift+J / Cmd+Option+J
-  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "j") {
+  document.addEventListener("cut", function (e) {
     e.preventDefault();
-  }
+  });
 
-  // Ctrl+U / Cmd+U
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "u") {
+  document.addEventListener("paste", function (e) {
     e.preventDefault();
-  }
-});
+  });
+
+  // Disable text selection
+  document.addEventListener("selectstart", function (e) {
+    e.preventDefault();
+  });
+
+  // Disable drag
+  document.addEventListener("dragstart", function (e) {
+    e.preventDefault();
+  });
+
+  // Disable common keyboard shortcuts
+  document.addEventListener("keydown", function (e) {
+    const key = e.key.toLowerCase();
+
+    // F12
+    if (e.key === "F12") {
+      e.preventDefault();
+    }
+
+    // Ctrl/Cmd + U
+    if ((e.ctrlKey || e.metaKey) && key === "u") {
+      e.preventDefault();
+    }
+
+    // Ctrl/Cmd + C
+    if ((e.ctrlKey || e.metaKey) && key === "c") {
+      e.preventDefault();
+    }
+
+    // Ctrl/Cmd + X
+    if ((e.ctrlKey || e.metaKey) && key === "x") {
+      e.preventDefault();
+    }
+
+    // Ctrl/Cmd + V
+    if ((e.ctrlKey || e.metaKey) && key === "v") {
+      e.preventDefault();
+    }
+
+    // Ctrl/Cmd + A
+    if ((e.ctrlKey || e.metaKey) && key === "a") {
+      e.preventDefault();
+    }
+
+    // Ctrl/Cmd + Shift + I
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && key === "i") {
+      e.preventDefault();
+    }
+
+    // Ctrl/Cmd + Shift + J
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && key === "j") {
+      e.preventDefault();
+    }
+  });
+})();
 document.addEventListener("DOMContentLoaded", () => {
   // 1. Navbar Scroll Effect & Smooth Anchors
   const header = document.querySelector(".site-header");
