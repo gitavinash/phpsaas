@@ -5,7 +5,7 @@ if (defined('DATA_FUNCTIONS')) {
 }
 
 $categoryIds = [201, 202, 204, 386, 399];
-$category_title = "Editor's Pick";
+$category_title = "More Stories";
 
 $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : (isset($_GET['p']) ? (int)$_GET['p'] : 1);
 if ($currentPage < 1) {

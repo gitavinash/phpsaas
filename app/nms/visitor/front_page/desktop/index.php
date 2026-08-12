@@ -214,7 +214,7 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
       <div class="editors-pick-module">
         <div class="sidebar-title-row">
           <h3 class="sidebar-title">More stories</h3>
-          <a href="/editors-pick/" class="sidebar-view-all">View all stories</a>
+          <a href="/more-stories/" class="sidebar-view-all">View all stories</a>
         </div>
         <ul class="ep-list">
           <?php if (!empty($editorsPicks)): ?>
