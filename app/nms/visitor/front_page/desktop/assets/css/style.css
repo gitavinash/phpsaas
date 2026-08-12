@@ -2247,9 +2247,10 @@ a.badge-category:hover {
 
 .details_box iframe {
   width: 100%;
-  min-height: 250px;
+  aspect-ratio: 16 / 9;
   height: auto;
   border-radius: 8px;
+  border: 0;
 }
 
 /* Author Bio Card */
