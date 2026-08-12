@@ -428,44 +428,44 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
 </section>
 
 <!-- Video Section -->
-<!-- <section id="videos" class="section video-section" style="background-color: #0e0e11; color: #ffffff; padding: 48px 0;">
+<!-- <section id="videos" class="section video-section">
   <div class="container">
-    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 12px;">
+    <div class="section-header">
       <div>
-        <h2 style="color: #ffffff; margin: 0; font-size: 2rem;">Videos</h2>
+        <h2 class="video-section-title">Videos</h2>
       </div>
-      <div class="section-header-actions" style="display: flex; align-items: center; gap: 16px;">
-        <a href="<?php echo htmlspecialchars($youtubeChannelUrl); ?>" target="_blank" rel="noopener" class="view-all" style="color: #ef4444; text-decoration: none; font-weight: 600;">Visit Channel <span class="arrow">→</span></a>
-        <div class="slider-controls" style="display: flex; gap: 8px;">
-          <button class="slider-arrow prev-btn" id="videoPrev" aria-label="Previous video" style="background: rgba(255,255,255,0.08); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">←</button>
-          <button class="slider-arrow next-btn" id="videoNext" aria-label="Next video" style="background: rgba(255,255,255,0.08); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">→</button>
+      <div class="section-header-actions">
+        <a href="<?php echo htmlspecialchars($youtubeChannelUrl); ?>" target="_blank" rel="noopener" class="view-all">Visit Channel <span class="arrow">→</span></a>
+        <div class="slider-controls">
+          <button class="slider-arrow prev-btn" id="videoPrev" aria-label="Previous video">←</button>
+          <button class="slider-arrow next-btn" id="videoNext" aria-label="Next video">→</button>
         </div>
       </div>
     </div>
-    <div class="video-slider-container" style="position: relative; overflow: hidden; margin: 0 -4px; padding: 4px;">
-      <div class="video-track" id="videoTrack" style="display: flex; gap: 20px; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 8px;">
+    <div class="video-slider-container">
+      <div class="video-track" id="videoTrack">
         <?php foreach (array_slice($videosList, 0, 5) as $vItem): ?>
-          <article class="video-card-slide" style="flex: 0 0 calc((100% - 40px) / 3); width: calc((100% - 40px) / 3); max-width: calc((100% - 40px) / 3); min-width: 280px; box-sizing: border-box; scroll-snap-align: start; background: #18181b; border: 1px solid #27272a; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;">
-            <div class="video-thumb-wrapper" style="position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: linear-gradient(135deg, #1f1f23 0%, #09090b 100%);">
-              <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($vItem['title']); ?>" style="display: block; width: 100%; height: 100%; position: relative; text-decoration: none;">
-                <img src="<?php echo htmlspecialchars($vItem['thumb']); ?>" alt="<?php echo htmlspecialchars($vItem['title']); ?>" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.9;" />
-                <div class="video-play-overlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 52px; height: 52px; background: rgba(220,38,38,0.92); color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(0,0,0,0.5); z-index: 2;">
+          <article class="video-card-slide">
+            <div class="video-thumb-wrapper">
+              <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($vItem['title']); ?>">
+                <img src="<?php echo htmlspecialchars($vItem['thumb']); ?>" alt="<?php echo htmlspecialchars($vItem['title']); ?>" loading="lazy" />
+                <div class="video-play-overlay">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8 5v14l11-7z" />
                   </svg>
                 </div>
-                <span class="video-duration-tag" style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.85); color: #ffffff; font-size: 0.72rem; font-weight: 700; padding: 3px 7px; border-radius: 4px; z-index: 2;"><?php echo htmlspecialchars($vItem['duration']); ?></span>
+                <span class="video-duration-tag"><?php echo htmlspecialchars($vItem['duration']); ?></span>
               </a>
             </div>
-            <div class="video-card-info" style="padding: 16px; display: flex; flex-direction: column; flex-grow: 1;">
-              <span class="video-channel-badge" style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #ef4444; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+            <div class="video-card-info">
+              <span class="video-channel-badge">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M23.498 6.186a2.994 2.994 0 0 0-2.107-2.117C19.163 3.5 12 3.5 12 3.5s-7.163 0-9.391.569A2.994 2.994 0 0 0 .502 6.186C0 8.414 0 12 0 12s0 3.586.502 5.814a2.994 2.994 0 0 0 2.107 2.117C4.837 20.5 12 20.5 12 20.5s7.163 0 9.391-.569a2.994 2.994 0 0 0 2.107-2.117C24 15.586 24 12 24 12s0-3.586-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                 </svg>
                 The Head &amp; Tale
               </span>
-              <h3 style="font-size: 0.98rem; font-weight: 600; line-height: 1.4; margin: 0;">
-                <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener" style="color: #f4f4f5; text-decoration: none;"><?php echo htmlspecialchars($vItem['title']); ?></a>
+              <h3>
+                <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($vItem['title']); ?></a>
               </h3>
             </div>
           </article>

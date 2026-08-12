@@ -121,145 +121,10 @@ require_once 'header.php';
 $isSuccess = (strtolower($paymentStatus) == 'paid');
 ?>
 
-<style>
-  .corp-status-page {
-    background: #f8fafc;
-    min-height: 80vh;
-    padding: 60px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .corp-status-card {
-    max-width: 640px;
-    width: 100%;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
-    overflow: hidden;
-    text-align: center;
-  }
-
-  .corp-status-banner {
-    padding: 40px 24px 30px;
-    background: <?php echo $isSuccess ? 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)' : 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)'; ?>;
-    border-bottom: 1px solid <?php echo $isSuccess ? '#bbf7d0' : '#fecaca'; ?>;
-  }
-
-  .status-icon-ring {
-    width: 76px;
-    height: 76px;
-    border-radius: 50%;
-    margin: 0 auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: <?php echo $isSuccess ? '#16a34a' : '#dc2626'; ?>;
-    color: #ffffff;
-    box-shadow: 0 8px 24px <?php echo $isSuccess ? 'rgba(22, 163, 74, 0.25)' : 'rgba(220, 38, 38, 0.25)'; ?>;
-  }
-
-  .status-title {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 8px;
-  }
-
-  .status-subtitle {
-    font-size: 0.98rem;
-    color: #475569;
-    max-width: 480px;
-    margin: 0 auto;
-    line-height: 1.5;
-  }
-
-  .corp-status-body {
-    padding: 32px 32px 40px;
-  }
-
-  .detail-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 32px;
-    background: #f8fafc;
-    padding: 16px;
-    border-radius: 12px;
-    border: 1px solid #f1f5f9;
-    text-align: left;
-  }
-
-  .detail-item {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .detail-label {
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #64748b;
-  }
-
-  .detail-val {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #0f172a;
-  }
-
-  .redirect-progress-box {
-    margin-bottom: 24px;
-    padding: 14px 18px;
-    background: #f1f5f9;
-    border-radius: 10px;
-    font-size: 0.88rem;
-    color: #475569;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .btn-status-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 14px 24px;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #ffffff;
-    background: var(--accent-color, #d93025);
-    border-radius: 12px;
-    text-decoration: none;
-    box-shadow: 0 4px 14px rgba(217, 48, 37, 0.25);
-    transition: all 0.2s ease;
-  }
-
-  .btn-status-cta:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(217, 48, 37, 0.35);
-  }
-
-  @media (max-width: 576px) {
-    .detail-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .corp-status-body {
-      padding: 24px 20px 32px;
-    }
-  }
-</style>
-
 <div class="corp-status-page">
   <div class="corp-status-card">
-    <div class="corp-status-banner">
-      <div class="status-icon-ring">
+    <div class="corp-status-banner <?php echo $isSuccess ? 'success' : 'error'; ?>">
+      <div class="status-icon-ring <?php echo $isSuccess ? 'success' : 'error'; ?>">
         <?php if ($isSuccess): ?>
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"></polyline>
@@ -287,7 +152,7 @@ $isSuccess = (strtolower($paymentStatus) == 'paid');
         </div>
         <div class="detail-item">
           <span class="detail-label">Payment Status</span>
-          <span class="detail-val" style="color: <?php echo $isSuccess ? '#16a34a' : '#dc2626'; ?>"><?php echo strtoupper($paymentStatus); ?></span>
+          <span class="detail-val <?php echo $isSuccess ? 'text-success' : 'text-danger'; ?>"><?php echo strtoupper($paymentStatus); ?></span>
         </div>
         <?php if (isset($order_msg) && $order_msg > 0): ?>
           <div class="detail-item">
@@ -304,7 +169,7 @@ $isSuccess = (strtolower($paymentStatus) == 'paid');
       <?php if ($isSuccess): ?>
         <div class="redirect-progress-box">
           <span>Redirecting to Corporate Desk in <strong id="countdownSec">5</strong>s...</span>
-          <a href="/manage-subscribers/" style="color: var(--accent-color, #d93025); font-weight: 700; text-decoration: underline;">Skip Wait →</a>
+          <a href="/manage-subscribers/" class="corp-status-skip-link">Skip Wait →</a>
         </div>
         <a href="/manage-subscribers/" class="btn-status-cta">Go to Subscriber Management Desk →</a>
 

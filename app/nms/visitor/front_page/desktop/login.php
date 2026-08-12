@@ -26,257 +26,6 @@ if (isset($_COOKIE['isLogin'])) {
     <link rel="stylesheet" href="<?php echo USER_STYLESHEET; ?>login.css?ver=<?php echo time(); ?>">
     <meta name="robots" content="noindex,nofollow">
     <?php require_once GOOGLE_RECAPTCHA_GENERATOR; ?>
-    <style>
-        body.auth-portal-page {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background-color: #fdfbf7;
-            background-image: 
-                radial-gradient(circle at 15% 15%, rgba(217, 48, 37, 0.03) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(10, 10, 10, 0.03) 0%, transparent 40%);
-            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .auth-portal-box {
-            width: 100%;
-            max-width: 440px;
-            margin: 40px 16px;
-            padding: 36px 32px;
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.07), 0 0 0 1px rgba(0, 0, 0, 0.05);
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        .auth-logo-header {
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .auth-logo-header img {
-            max-height: 44px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .auth-form-title {
-            font-family: "Playfair Display", Georgia, serif;
-            font-size: 1.65rem;
-            font-weight: 700;
-            color: #0a0a0a;
-            margin: 0 0 8px 0;
-            line-height: 1.2;
-        }
-
-        .auth-form-subtitle {
-            font-size: 0.9rem;
-            color: #666666;
-            margin: 0 0 24px 0;
-            line-height: 1.45;
-        }
-
-        .auth-form-section {
-            text-align: left;
-            margin-bottom: 16px;
-        }
-
-        .auth-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 16px;
-            text-align: left;
-        }
-
-        .auth-input-group label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #1a1a1a;
-        }
-
-        .auth-input-group input {
-            width: 100%;
-            padding: 12px 14px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background-color: #fafafa;
-            color: #1a1a1a;
-            outline: none;
-            box-sizing: border-box;
-            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-        }
-
-        .auth-input-group input:focus {
-            background-color: #ffffff;
-            border-color: #0a0a0a;
-            box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.08);
-        }
-
-        .auth-btn-primary {
-            width: 100%;
-            padding: 12px 20px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            font-family: inherit;
-            color: #ffffff;
-            background-color: #0a0a0a;
-            border: 1px solid #0a0a0a;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        }
-
-        .auth-btn-primary:hover {
-            background-color: #222222;
-            border-color: #222222;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-        }
-
-        .auth-back-btn {
-            background: transparent;
-            border: none;
-            color: #666666;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 4px 8px;
-            margin-bottom: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            border-radius: 6px;
-            transition: background-color 0.2s, color 0.2s;
-            outline: none;
-        }
-
-        .auth-back-btn:hover {
-            background-color: #f3f4f6;
-            color: #111827;
-        }
-
-        .otp-resend-wrapper {
-            margin: 10px 0 16px 0;
-            text-align: left;
-        }
-
-        .resend-otp-btn {
-            color: #d93025;
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .resend-otp-btn.disabled {
-            color: #999999 !important;
-            pointer-events: none;
-            opacity: 0.7;
-        }
-
-        .auth-divider {
-            position: relative;
-            text-align: center;
-            margin: 24px 0;
-        }
-
-        .auth-divider::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background-color: #e5e7eb;
-            z-index: 1;
-        }
-
-        .auth-divider span {
-            position: relative;
-            background-color: #ffffff;
-            padding: 0 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #9ca3af;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            z-index: 2;
-        }
-
-        .auth-google-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 11px 16px;
-            background-color: #ffffff;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 0.925rem;
-            font-weight: 500;
-            color: #1a1a1a;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            box-sizing: border-box;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-        }
-
-        .auth-google-btn:hover {
-            background-color: #fcfcfc;
-            border-color: #bbbbbb;
-            color: #000000;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
-        }
-
-        .login-footer-legal {
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 1px solid #f3f4f6;
-            font-size: 0.775rem;
-            color: #666666;
-            line-height: 1.5;
-            text-align: center;
-        }
-
-        .login-footer-legal a {
-            color: #1a1a1a;
-            font-weight: 500;
-            text-decoration: underline;
-            text-underline-offset: 2px;
-        }
-
-        .login-footer-legal a:hover {
-            color: #d93025;
-        }
-
-        .display-none {
-            display: none !important;
-        }
-
-        @media (max-width: 576px) {
-            .auth-portal-box {
-                padding: 28px 20px;
-                border-radius: 12px;
-                margin: 20px 12px;
-            }
-        }
-    </style>
 </head>
 
 <body class="auth-portal-page">
@@ -305,7 +54,7 @@ if (isset($_COOKIE['isLogin'])) {
             </div>
 
             <!-- Step 2: OTP Verification -->
-            <div id="verifyEmailOTP" class="auth-form-section" style="display: none;">
+            <div id="verifyEmailOTP" class="auth-form-section display-none">
                 <button type="button" class="auth-back-btn" id="backToEmailBtn" onclick="goBackToEmail(event)">
                     &larr; Back
                 </button>
@@ -315,13 +64,13 @@ if (isset($_COOKIE['isLogin'])) {
                 </div>
                 <input type="hidden" class="recaptcha_token" name="recaptcha_token">
                 <div class="otp-resend-wrapper">
-                    <a href="#" id="resendEmailOTPBtn" class="disabled resend-otp-btn" style="pointer-events: none;">Resend OTP in 30s</a>
+                    <a href="#" id="resendEmailOTPBtn" class="disabled resend-otp-btn">Resend OTP in 30s</a>
                 </div>
                 <button type="button" id="verifyEmailOTPBtn" class="auth-btn-primary">Verify OTP &rarr;</button>
             </div>
 
             <!-- Step 3: User Registration (New Users Only) -->
-            <div id="userRegistration" class="auth-form-section" style="display: none;">
+            <div id="userRegistration" class="auth-form-section display-none">
                 <button type="button" class="auth-back-btn" id="backToOTPBtn" onclick="goBackToOTP(event)">
                     &larr; Back
                 </button>

@@ -69,7 +69,7 @@ if ($currentPage < $totalPages) {
             foreach ($socials as $platform => $icon) {
               $url = $socialLinks[$platform] ?? '';
               if (!empty($url)) {
-                echo '<a href="' . htmlspecialchars($url) . '" target="_blank" title="' . ucfirst($platform) . '">' . $icon . '</a>';
+                echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener" aria-label="' . ucfirst($platform) . '" title="' . ucfirst($platform) . '">' . $icon . '</a>';
               }
             }
             echo '</div>';
