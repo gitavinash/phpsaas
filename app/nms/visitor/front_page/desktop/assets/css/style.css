@@ -1126,6 +1126,50 @@ a.badge-category:hover {
   transform: scale(1.05);
 }
 
+.video-tech-card .tech-image-wrapper a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.video-tech-card .video-play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  background: rgba(220, 38, 38, 0.92);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.25s ease;
+  z-index: 2;
+}
+
+.video-tech-card:hover .video-play-overlay {
+  transform: translate(-50%, -50%) scale(1.15);
+  background: #ef4444;
+}
+
+.video-tech-card .video-duration-tag {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  z-index: 2;
+}
+
 .tech-card-body {
   padding: 20px;
   display: flex;

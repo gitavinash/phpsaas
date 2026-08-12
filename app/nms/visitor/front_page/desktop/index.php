@@ -30,8 +30,72 @@ $moneyMachinesArticles = getNewsCategoryPost($connection, 329, 'news', 'new', 'a
 // 5. Fetch IPO Tales
 $ipoArticles = getNewsCategoryPost($connection, 386, 'news', 'new', 'all', 0, 4);
 
-// 6. Video Section: Fetch YouTube Videos
-$videosList = getNewsCategoryPost($connection, 386, 'news', 'new', 'all', 0, 4);
+// 6. Video Section: Fetch YouTube Videos from @theheadandtale
+$youtubeChannelUrl = 'https://www.youtube.com/@theheadandtale';
+if (!function_exists('getYoutubeChannelVideos')) {
+  function getYoutubeChannelVideos($channelId = 'UCEAwb_zHxUEYQBcz6ghpDMw')
+  {
+    $cacheFile = sys_get_temp_dir() . '/yt_feed_' . md5($channelId) . '.json';
+    $cacheTime = 900; // 15-minute cache
+
+    if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheTime)) {
+      $cached = json_decode(file_get_contents($cacheFile), true);
+      if (is_array($cached) && !empty($cached)) {
+        return $cached;
+      }
+    }
+
+    $feedUrl = 'https://www.youtube.com/feeds/videos.xml?channel_id=' . urlencode($channelId);
+    $context = stream_context_create([
+      'http' => [
+        'timeout' => 4,
+        'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+      ]
+    ]);
+
+    $videos = [];
+    $rssContent = @file_get_contents($feedUrl, false, $context);
+    if ($rssContent !== false && !empty($rssContent)) {
+      $xml = @simplexml_load_string($rssContent);
+      if ($xml && isset($xml->entry)) {
+        foreach ($xml->entry as $entry) {
+          $yt = $entry->children('yt', true);
+          $videoId = (string)($yt->videoId ?? '');
+          $title = (string)($entry->title ?? '');
+          $published = (string)($entry->published ?? '');
+
+          if (!empty($videoId)) {
+            $thumb = "https://img.youtube.com/vi/{$videoId}/hqdefault.jpg";
+            $url = "https://www.youtube.com/watch?v={$videoId}";
+            $videos[] = [
+              'id' => $videoId,
+              'title' => $title,
+              'url' => $url,
+              'thumb' => $thumb,
+              'published' => $published ? date('M d, Y', strtotime($published)) : ''
+            ];
+          }
+        }
+      }
+    }
+
+    if (!empty($videos)) {
+      file_put_contents($cacheFile, json_encode($videos));
+      return $videos;
+    }
+
+    if (file_exists($cacheFile)) {
+      $cached = json_decode(file_get_contents($cacheFile), true);
+      if (is_array($cached) && !empty($cached)) {
+        return $cached;
+      }
+    }
+
+    return $videos;
+  }
+}
+
+$videosList = array_slice(getYoutubeChannelVideos('UCEAwb_zHxUEYQBcz6ghpDMw'), 0, 3);
 
 // 7. Fetch PE & VC
 $peVcArticles = getNewsCategoryPost($connection, 399, 'news', 'new', 'all', 0, 10);
@@ -427,53 +491,56 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
   </div>
 </section>
 
-<!-- Video Section -->
-<!-- <section id="videos" class="section video-section">
+<!-- Video Section (Matching AI & Emerging Tech Section Look) -->
+<section id="videos" class="section ai-section dark-mode video-section-grid">
   <div class="container">
     <div class="section-header">
       <div>
-        <h2 class="video-section-title">Videos</h2>
+        <h2>Videos</h2>
       </div>
-      <div class="section-header-actions">
-        <a href="<?php echo htmlspecialchars($youtubeChannelUrl); ?>" target="_blank" rel="noopener" class="view-all">Visit Channel <span class="arrow">→</span></a>
-        <div class="slider-controls">
-          <button class="slider-arrow prev-btn" id="videoPrev" aria-label="Previous video">←</button>
-          <button class="slider-arrow next-btn" id="videoNext" aria-label="Next video">→</button>
-        </div>
-      </div>
+      <a href="<?php echo htmlspecialchars($youtubeChannelUrl); ?>" target="_blank" rel="noopener" class="view-all dark">Visit Channel <span class="arrow">→</span></a>
     </div>
-    <div class="video-slider-container">
-      <div class="video-track" id="videoTrack">
-        <?php foreach (array_slice($videosList, 0, 5) as $vItem): ?>
-          <article class="video-card-slide">
-            <div class="video-thumb-wrapper">
+    <div class="card-grid">
+      <?php if (!empty($videosList)): ?>
+        <?php foreach ($videosList as $vItem): ?>
+          <article class="tech-card video-tech-card">
+            <div class="image-wrapper tech-image-wrapper">
               <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($vItem['title']); ?>">
-                <img src="<?php echo htmlspecialchars($vItem['thumb']); ?>" alt="<?php echo htmlspecialchars($vItem['title']); ?>" loading="lazy" />
+                <img
+                  src="<?php echo htmlspecialchars($vItem['thumb']); ?>"
+                  alt="<?php echo htmlspecialchars($vItem['title']); ?>"
+                  class="tech-article-thumb"
+                  loading="lazy" />
                 <div class="video-play-overlay">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8 5v14l11-7z" />
                   </svg>
                 </div>
-                <span class="video-duration-tag"><?php echo htmlspecialchars($vItem['duration']); ?></span>
+                <?php if (!empty($vItem['published'])): ?>
+                  <span class="video-duration-tag"><?php echo htmlspecialchars($vItem['published']); ?></span>
+                <?php endif; ?>
               </a>
             </div>
-            <div class="video-card-info">
-              <span class="video-channel-badge">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.498 6.186a2.994 2.994 0 0 0-2.107-2.117C19.163 3.5 12 3.5 12 3.5s-7.163 0-9.391.569A2.994 2.994 0 0 0 .502 6.186C0 8.414 0 12 0 12s0 3.586.502 5.814a2.994 2.994 0 0 0 2.107 2.117C4.837 20.5 12 20.5 12 20.5s7.163 0 9.391-.569a2.994 2.994 0 0 0 2.107-2.117C24 15.586 24 12 24 12s0-3.586-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                </svg>
-                The Head &amp; Tale
-              </span>
-              <h3>
-                <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($vItem['title']); ?></a>
-              </h3>
+            <div class="tech-card-body">
+              <div>
+                <span class="video-channel-badge">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.498 6.186a2.994 2.994 0 0 0-2.107-2.117C19.163 3.5 12 3.5 12 3.5s-7.163 0-9.391.569A2.994 2.994 0 0 0 .502 6.186C0 8.414 0 12 0 12s0 3.586.502 5.814a2.994 2.994 0 0 0 2.107 2.117C4.837 20.5 12 20.5 12 20.5s7.163 0 9.391-.569a2.994 2.994 0 0 0 2.107-2.117C24 15.586 24 12 24 12s0-3.586-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                  </svg>
+                  The Head &amp; Tale
+                </span>
+                <h3>
+                  <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($vItem['title']); ?></a>
+                </h3>
+              </div>
+              <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener" class="read-more">Watch on YouTube <span class="arrow">→</span></a>
             </div>
           </article>
         <?php endforeach; ?>
-      </div>
+      <?php endif; ?>
     </div>
   </div>
-</section> -->
+</section>
 
 <!-- PE VC Section -->
 <section id="pevc" class="section ipo-section">
