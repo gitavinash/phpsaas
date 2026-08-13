@@ -1062,11 +1062,62 @@ article:hover .image-wrapper img {
   overflow: hidden;
 }
 
-/* AI Section (Dark Mode) */
+/* AI Section Base (Dark Mode - Strict Theme & Logo Color Reference) */
 .ai-section.dark-mode {
-  background-color: #0c0e12;
-  color: #e5e7eb;
-  padding: 80px 0;
+  color: #f5f5f6;
+  padding: 72px 0;
+  border-top: 3px solid var(--accent-color, #eb1918);
+  border-bottom: 1px solid rgba(245, 195, 170, 0.1);
+  position: relative;
+}
+
+/* 1. AI & Emerging Tech Section (Logo Deep Charcoal + Brand Red Radial Glow) */
+#ai.ai-section.dark-mode {
+  background-color: #141211;
+  background-image:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(235, 25, 24, 0.15) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 85% 90%,
+      rgba(245, 195, 170, 0.05) 0%,
+      transparent 55%
+    );
+}
+
+/* 2. Video Section (Logo Rich Charcoal + Dual Red & Warm Peach Ambient Glow) */
+.ai-section.dark-mode.video-section-grid {
+  background-color: #181615;
+  background-image:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(235, 25, 24, 0.10) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 15% 85%,
+      rgba(235, 25, 24, 0.05) 0%,
+      transparent 55%
+    );
+}
+
+/* 3. Money Trivia Section (Logo Warm Dark Charcoal + Warm Peach Highlight Glow) */
+.ai-section.dark-mode.trivia-section,
+#money-trivia.ai-section.dark-mode {
+  background-color: #1d1918;
+  background-image:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(245, 195, 170, 0.14) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 80% 85%,
+      rgba(235, 25, 24, 0.08) 0%,
+      transparent 55%
+    );
 }
 
 .ai-section .section-header {

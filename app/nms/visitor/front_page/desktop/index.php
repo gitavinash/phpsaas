@@ -639,7 +639,7 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
 </section>
 
 <!-- Money Trivia -->
-<section id="ai" class="section ai-section dark-mode">
+<section id="money-trivia" class="section ai-section dark-mode trivia-section">
   <div class="container">
     <div class="section-header">
       <div>
