@@ -177,6 +177,28 @@ require_once 'header.php';
 
     numUsers.oninput = calculate;
     calculate();
+
+    // FAQ Accordion Toggle Handler
+    const faqItems = document.querySelectorAll('.faq-accordion-item');
+    faqItems.forEach(function(item) {
+      const header = item.querySelector('.faq-header');
+      if (header) {
+        header.addEventListener('click', function(e) {
+          e.preventDefault();
+          const isOpen = item.hasAttribute('open') || item.classList.contains('is-open');
+
+          faqItems.forEach(function(otherItem) {
+            otherItem.removeAttribute('open');
+            otherItem.classList.remove('is-open', 'active');
+          });
+
+          if (!isOpen) {
+            item.setAttribute('open', '');
+            item.classList.add('is-open', 'active');
+          }
+        });
+      }
+    });
   });
 </script>
 

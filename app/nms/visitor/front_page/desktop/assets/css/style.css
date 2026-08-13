@@ -1093,7 +1093,7 @@ article:hover .image-wrapper img {
   background-image:
     radial-gradient(
       circle at 50% 0%,
-      rgba(235, 25, 24, 0.10) 0%,
+      rgba(235, 25, 24, 0.1) 0%,
       transparent 70%
     ),
     radial-gradient(
@@ -8066,61 +8066,394 @@ article:hover .image-wrapper img {
   }
 }
 
-/* Corporate Subscription Page Styles */
+/* Corporate Subscription Page Styles (Theme-Matched & Desktop Optimized) */
 .corp-hero {
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-  padding: 60px 20px 48px;
+  background: var(--bg-color, #fdfbf7);
+  background-image: radial-gradient(
+    circle at 50% 0%,
+    rgba(217, 48, 37, 0.05) 0%,
+    transparent 60%
+  );
+  padding: 64px 24px 48px;
   text-align: center;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
 }
 
 .corp-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  background: #fee2e2;
-  color: #dc2626;
+  background: rgba(217, 48, 37, 0.08);
+  color: var(--accent-color, #d93025);
   padding: 5px 14px;
   border-radius: 20px;
+  border: 1px solid rgba(217, 48, 37, 0.2);
   margin-bottom: 16px;
 }
 
 .corp-hero h1 {
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: #0f172a;
+  font-family: var(--font-heading, "Playfair Display", Georgia, serif);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--primary-color, #0a0a0a);
   margin: 0 0 12px;
   line-height: 1.25;
 }
 
 .corp-hero p {
-  font-size: 1.05rem;
-  color: #475569;
-  max-width: 620px;
+  font-size: 1.1rem;
+  color: var(--text-secondary, #555555);
+  max-width: 640px;
   margin: 0 auto;
   line-height: 1.6;
 }
 
 .corp-main-section {
-  background: #f8fafc;
-  padding: 48px 16px 80px;
+  background-color: var(--bg-color, #fdfbf7);
+  padding: 48px 24px 80px;
 }
 
 .corp-container {
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
 .pricing-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+  background: var(--white, #ffffff);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 16px;
+  box-shadow:
+    0 16px 40px -10px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.02);
   overflow: hidden;
+  position: relative;
+}
+
+.pricing-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent-color, #d93025);
+}
+
+.selector-box {
+  padding: 40px 36px 28px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.selector-title {
+  font-family: var(--font-heading, "Playfair Display", Georgia, serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--primary-color, #0a0a0a);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.seat-control-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.seat-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: var(--primary-color, #0a0a0a);
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.seat-btn:hover {
+  background: var(--accent-color, #d93025);
+  color: #ffffff;
+  border-color: var(--accent-color, #d93025);
+}
+
+.seat-input {
+  width: 110px;
+  height: 52px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color, #0a0a0a);
+  outline: none;
+  font-family: inherit;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.seat-input:focus {
+  border-color: var(--accent-color, #d93025);
+  box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.15);
+}
+
+.chips-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.chip-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chip-btn:hover {
+  background: var(--primary-color, #0a0a0a);
+  color: #ffffff;
+  border-color: var(--primary-color, #0a0a0a);
+}
+
+.helper-text {
+  text-align: center;
+  font-size: 0.82rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.tiers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 28px 36px;
+  background: #fdfbf7;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.tier-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 16px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.tier-card.active-tier {
+  border-color: var(--accent-color, #d93025);
+  background: rgba(217, 48, 37, 0.03);
+  box-shadow: 0 6px 18px rgba(217, 48, 37, 0.12);
+  transform: translateY(-2px);
+}
+
+.tier-range {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+.tier-price {
+  font-family: var(--font-heading, "Playfair Display", Georgia, serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--primary-color, #0a0a0a);
+}
+
+.tier-unit {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.total-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 36px;
+  background: #ffffff;
+}
+
+.total-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.total-amount {
+  font-family: var(--font-heading, "Playfair Display", Georgia, serif);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--primary-color, #0a0a0a);
+}
+
+.btn-checkout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: var(--accent-color, #d93025);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(217, 48, 37, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-checkout:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(217, 48, 37, 0.4);
+}
+
+.footer-strip {
+  text-align: center;
+  padding: 14px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 24px 36px;
+  background: #ffffff;
+  border-top: 1px solid #f1f5f9;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary-color, #0a0a0a);
+}
+
+.feature-icon-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #16a34a;
+  font-weight: 700;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.corp-faq-card {
+  background: var(--white, #ffffff);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 16px;
+  padding: 36px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  margin-top: 36px;
+}
+
+.corp-faq-card h3 {
+  font-family: var(--font-heading, "Playfair Display", Georgia, serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color, #0a0a0a);
+  margin-bottom: 24px;
+  margin-top: 0;
+}
+
+.faq-accordion-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+  padding: 0;
+}
+
+.faq-accordion-item[open] {
+  border-color: var(--accent-color, #d93025);
+}
+
+.faq-header {
+  padding: 18px 20px;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--primary-color, #0a0a0a);
+  list-style: none;
+}
+
+.faq-header::-webkit-details-marker {
+  display: none;
+}
+
+.faq-icon-chevron {
+  font-size: 0.9rem;
+  color: #64748b;
+  transition: transform 0.2s ease;
+}
+
+.faq-accordion-item[open] .faq-icon-chevron,
+.faq-accordion-item.is-open .faq-icon-chevron,
+.faq-accordion-item.active .faq-icon-chevron {
+  transform: rotate(180deg);
+  color: var(--accent-color, #d93025);
+}
+
+.faq-body {
+  display: none;
+  padding: 0 20px 20px 20px;
+  font-size: 0.95rem;
+  color: var(--text-secondary, #555555);
+  line-height: 1.65;
+}
+
+.faq-accordion-item[open] .faq-body,
+.faq-accordion-item.is-open .faq-body,
+.faq-accordion-item.active .faq-body,
+details[open] .faq-body {
+  display: block !important;
 }
 
 /* Manage Subscribers Desk Styles */
@@ -8438,17 +8771,6 @@ article:hover .image-wrapper img {
   font-weight: 800;
   color: #0f172a;
   margin: 0 0 20px;
-}
-
-.faq__box,
-.faq-accordion-item {
-  border-bottom: 1px solid #f1f5f9;
-  padding: 14px 0;
-}
-
-.faq__box:last-child,
-.faq-accordion-item:last-child {
-  border-bottom: none;
 }
 
 .faq__box .question,
