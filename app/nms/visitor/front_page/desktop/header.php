@@ -139,7 +139,7 @@ if (isset($_COOKIE['user_data'])) {
     if ($checkUserSession = mysqli_query($connection, "SELECT us_active_device FROM " . TABLE_PREFIX . "user_sessions WHERE us_status=1 AND us_user_id='{$user_id}' AND us_site_id=" . SITE_ID)) {
       if (mysqli_num_rows($checkUserSession) > 2) {
         $showLogoutBtn = 0;
-        $excluded_paths = ['/manage-subscription/', '/terms-and-conditions/', '/about-us/', '/terms-and-conditions/', '/privacy-policy/', '/refund-policy/'];
+        $excluded_paths = ['/manage-active-session/', '/manage-subscription/', '/terms-and-conditions/', '/about-us/', '/privacy-policy/', '/refund-policy/'];
         $is_excluded = false;
         foreach ($excluded_paths as $path) {
           if (strpos(BASE_URL, $path) !== false) {
@@ -172,7 +172,7 @@ if (isset($_COOKIE['user_data'])) {
     href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.css?v=<?php echo filemtime(__DIR__ . '/assets/css/style.css'); ?>" />
+  <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css" />
   <?php require_once DEFAULT_META ?>
   <!-- JSON-LD Structured Data Schema -->
   <script type="application/ld+json">
@@ -194,13 +194,12 @@ if (isset($_COOKIE['user_data'])) {
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-KN6V4VKJN4"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || []
 
     function gtag() {
       dataLayer.push(arguments);
     }
     gtag('js', new Date());
-
     gtag('config', 'G-KN6V4VKJN4');
   </script>
   <script type="text/javascript">

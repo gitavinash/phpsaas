@@ -337,14 +337,14 @@ $breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
             </div>
 
             <!-- Author Bio Card -->
-            <?php if (!empty($authorBio)): ?>
+            <!-- <?php if (!empty($authorBio)): ?>
                 <div class="author-bio-card">
                     <div>
                         <h4>About the Author</h4>
                         <?php echo $authorBio; ?>
                     </div>
                 </div>
-            <?php endif; ?>
+            <?php endif; ?> -->
 
             <!-- Tags List -->
             <?php if (!empty($tagName)): ?>
@@ -361,8 +361,8 @@ $breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
                         $tagArray = explode(', ', $tagName);
                         foreach ($tagArray as $tName) {
                             $tClean = htmlspecialchars(ucwords($tName));
-                            $tSlug = str_replace(' ', '-', $tClean);
-                            echo "<a href='/tag/{$tSlug}' class='tag-pill'><span class='hash'>#</span>{$tClean}</a>";
+                            $tSlug = str_replace(' ', '-', strtolower($tClean));
+                            echo "<a href='/tag/{$tSlug}/' class='tag-pill'><span class='hash'>#</span>{$tClean}</a>";
                         }
                         ?>
                     </div>

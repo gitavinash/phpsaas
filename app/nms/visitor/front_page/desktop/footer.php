@@ -61,11 +61,11 @@
 
   <div class="container footer-bottom">
     <p>&copy; 2026 The Head and Tale. All rights reserved.</p>
-    <p>Designed by Blumox Technologies</p>
+    <p>Designed by <a href="https://blumox.com" title="News portal development company in New Delhi" target="_blank" rel="noopener">Blumox Technologies</a></p>
   </div>
 </footer>
 
-<script src="<?php echo USER_JS; ?>script.js?v=<?php echo filemtime(__DIR__ . '/assets/js/script.js'); ?>"></script>
+<script src="<?php echo USER_JS; ?>script.js"></script>
 </body>
 
 </html>
