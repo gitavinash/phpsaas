@@ -112,40 +112,16 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
     switch ($source) {
         case 'product':
             $sql = "
-                     SELECT DISTINCT
-                        'news' AS item_type,
-                        n.news_title AS title,
-                        n.news_image AS image,
-                        l.link_url AS url,
-                        COALESCE(n.news_published, n.news_time) AS published_at,
-                        n.news_id AS relation_id,
-                        NULL AS tag_type,
-                        n.news_description AS description,
-                        c.category_title,
-                        cl.link_url AS category_url,
-                        p.profile_display_name AS author_name,
-                        n.news_owner_id AS author_id,
-                        n.news_paid,
-                        0.1 AS rel_score
+                SELECT
+                    'product'        AS item_type,
                     pr.product_title AS title,
                     pr.product_image AS image,
                     l.link_url       AS url,
-                     INNER JOIN " . TABLE_PREFIX . "category c
-                         ON c.category_id = n.news_category
-                        AND c.category_type = 'news'
-                        AND c.category_site_id = ?
-                     LEFT JOIN " . TABLE_PREFIX . "link cl
-                         ON cl.link_relation_id = c.category_id
-                        AND cl.link_type = 'category'
-                        AND cl.link_status = 200
-                        AND cl.link_site_id = ?
-                     LEFT JOIN " . TABLE_PREFIX . "profile p
-                         ON p.profile_user_id = n.news_owner_id
                     pr.product_time  AS published_at,
                     pr.product_id    AS relation_id,
                     NULL             AS tag_type,
                     pr.product_description AS description,
-            $fbParams = array_merge([$siteId, $siteId, $siteId], $p, [$limit, $offset]);
+                    (
                         (MATCH(pr.product_title) AGAINST (? IN BOOLEAN MODE)) * 2.2
                       + (MATCH(pr.product_title, pr.product_highlight, pr.product_description) AGAINST (? IN BOOLEAN MODE)) * 1.2
                       + (MATCH(pr.product_title) AGAINST (? IN BOOLEAN MODE)) * 0.7
@@ -187,14 +163,14 @@ function buildSqlBySource(string $source, int $siteId, string $qAll, string $qAn
                 $qAll,
                 $qAll,
                 $qAny,
-                $qAny, // rel_score bits
-                $siteId,                    // site filter
+                $qAny,
+                $siteId,
                 $qAll,
                 $qAll,
                 $qAny,
-                $qAny, // WHERE repeats
+                $qAny,
                 $qAll,
-                $qAll,               // ORDER BY scoring
+                $qAll,
                 $limit,
                 $offset
             ];
