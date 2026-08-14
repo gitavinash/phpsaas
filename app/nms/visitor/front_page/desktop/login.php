@@ -22,8 +22,8 @@ if (isset($_COOKIE['isLogin'])) {
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET; ?>style.css?ver=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET; ?>login.css?ver=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET; ?>style.min.css?ver=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET; ?>login.min.css?ver=<?php echo time(); ?>">
     <meta name="robots" content="noindex,nofollow">
     <?php require_once GOOGLE_RECAPTCHA_GENERATOR; ?>
 </head>
@@ -155,8 +155,8 @@ if (isset($_COOKIE['isLogin'])) {
             }
         });
     </script>
-    <script src="<?php echo USER_JS; ?>login.js"></script>
-    <script src="<?php echo USER_JS; ?>script.js"></script>
+    <script src="<?php echo USER_JS; ?>login.min.js"></script>
+    <script src="<?php echo USER_JS; ?>script.min.js"></script>
 
 </body>
 

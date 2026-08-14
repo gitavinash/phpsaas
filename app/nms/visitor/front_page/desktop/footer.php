@@ -65,7 +65,7 @@
   </div>
 </footer>
 
-<script src="<?php echo USER_JS; ?>script.js"></script>
+<script src="<?php echo USER_JS; ?>script.min.js"></script>
 </body>
 
 </html>
