@@ -295,7 +295,10 @@ $("#emailLoginContinueBtn").click(function (e) {
           // Switch sections
           $("#enterEmail").removeClass("display-none").hide();
           $("#socialLoginSection").hide();
-          $("#verifyEmailOTP").removeClass("display-none").css("display", "block").show();
+          $("#verifyEmailOTP")
+            .removeClass("display-none")
+            .css("display", "block")
+            .show();
           $("#otpEmailValue").focus().select();
           // Make OTP focusable + validated now
           $("#otpEmailValue")
@@ -455,9 +458,10 @@ $("#userRegistrationBtn").click(function (e) {
     },
     error: function (xhr) {
       console.error("Error:", xhr);
-      const errMsg =
-        xhr.responseJSON?.msg ||
-        "An unexpected error occurred. Please try again.";
+      var errMsg =
+        xhr.responseJSON && xhr.responseJSON.msg
+          ? xhr.responseJSON.msg
+          : "An unexpected error occurred. Please try again.";
       popUpMessage("center", errMsg, "error");
     },
     complete: function () {
