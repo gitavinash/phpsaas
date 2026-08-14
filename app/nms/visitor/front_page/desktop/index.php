@@ -18,6 +18,24 @@ if ($featuredArticle && !empty($editorsPicks)) {
   $editorsPicks = array_values(array_slice($editorsPicks, 0, 6));
 }
 
+// If no Editor's Picks stories found, fallback to recent stories
+if (empty($editorsPicks)) {
+  $recentQuery = "SELECT n.news_image, n.news_title, LEFT(REGEXP_REPLACE(n.news_description, '<[^>]*>', ''), 500) AS news_description, n.news_paid, n.news_published, n.news_owner_id AS author_id, p.profile_display_name, c.category_title, cl.link_url AS category_url, l.link_url, m.meta_description FROM " . TABLE_PREFIX . "news n INNER JOIN " . TABLE_PREFIX . "link l ON l.link_relation_id=n.news_id AND l.link_status=200 AND l.link_type='news' AND l.link_site_id=" . SITE_ID . " LEFT JOIN " . TABLE_PREFIX . "meta m ON m.meta_relation_id=l.link_id INNER JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id=n.news_owner_id INNER JOIN " . TABLE_PREFIX . "category c ON c.category_id=n.news_category AND c.category_site_id=" . SITE_ID . " LEFT JOIN " . TABLE_PREFIX . "link cl ON cl.link_relation_id=c.category_id AND cl.link_type='category' AND cl.link_status=200 AND cl.link_site_id=" . SITE_ID . " WHERE n.news_site_id=" . SITE_ID . " ORDER BY n.news_published DESC LIMIT 10";
+  if ($recentRes = mysqli_query($connection, $recentQuery)) {
+    $recentArticles = [];
+    while ($row = mysqli_fetch_assoc($recentRes)) {
+      $recentArticles[] = $row;
+    }
+    if ($featuredArticle && !empty($recentArticles)) {
+      $recentArticles = array_filter($recentArticles, function ($ep) use ($featuredArticle) {
+        return ($ep['link_url'] ?? '') !== ($featuredArticle['link_url'] ?? '')
+          && ($ep['news_title'] ?? '') !== ($featuredArticle['news_title'] ?? '');
+      });
+    }
+    $editorsPicks = array_values(array_slice($recentArticles, 0, 6));
+  }
+}
+
 // 3. Fetch Fintech Chronicles
 $fintechArticles = getNewsCategoryPost($connection, 281, 'news', 'new', 'all', 0, 4);
 
@@ -107,6 +125,7 @@ $cryptoMapArticles = getNewsCategoryPost($connection, 411, 'news', 'new', 'all',
 $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all', 0, 3);
 
 ?>
+<?php if ($featuredArticle || !empty($editorsPicks)): ?>
 <!-- Hero Section -->
 <section class="hero-section">
   <div class="container hero-grid">
@@ -209,15 +228,15 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
         </div>
       </article>
     <?php endif; ?>
-    <aside class="hero-sidebar">
-      <!-- Editor's Pick Module -->
-      <div class="editors-pick-module">
-        <div class="sidebar-title-row">
-          <h3 class="sidebar-title">More stories</h3>
-          <a href="/more-stories/" class="sidebar-view-all">View all stories</a>
-        </div>
-        <ul class="ep-list">
-          <?php if (!empty($editorsPicks)): ?>
+    <?php if (!empty($editorsPicks)): ?>
+      <aside class="hero-sidebar">
+        <!-- Editor's Pick Module -->
+        <div class="editors-pick-module">
+          <div class="sidebar-title-row">
+            <h3 class="sidebar-title">More stories</h3>
+            <a href="/more-stories/" class="sidebar-view-all">View all stories</a>
+          </div>
+          <ul class="ep-list">
             <?php foreach ($editorsPicks as $ep): ?>
               <li class="ep-item">
                 <article class="ep-card">
@@ -253,15 +272,15 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
                 </article>
               </li>
             <?php endforeach; ?>
-          <?php else: ?>
-            <li class="ep-item"><a>No article found</a></li>
-          <?php endif; ?>
-        </ul>
-      </div>
-    </aside>
+          </ul>
+        </div>
+      </aside>
+    <?php endif; ?>
   </div>
 </section>
+<?php endif; ?>
 
+<?php if (!empty($fintechArticles)): ?>
 <!-- Fintech News -->
 <section class="section trending-section">
   <div class="container">
@@ -277,40 +296,33 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
     </div>
     <div class="trending-slider-container">
       <div class="trending-track" id="trendingTrack">
-        <?php
-        // Fetch up to 8 trending items for the slider
-        if (!empty($fintechArticles)):
-          foreach ($fintechArticles as $tIndex => $tItem):
-        ?>
-            <a href="<?php echo htmlspecialchars($tItem['link_url']); ?>" class="trending-card-link" aria-label="Read article: <?php echo htmlspecialchars($tItem['news_title']); ?>">
-              <article class="trending-card-slide" style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.88) 100%), url('<?php echo htmlspecialchars($tItem['news_image']); ?>');">
-                <!-- <span class="trending-number"><?php echo sprintf('%02d', $tIndex + 1); ?></span> -->
-                <div class="trending-card-content">
-                  <?php if ($tItem['news_paid'] == 1): ?>
-                    <span class="paid-badge"><svg class="paid-icon" viewBox="0 0 24 24">
-                        <path
-                          d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
-                      </svg>
-                      Premium</span>
-                  <?php endif; ?>
-                  <h3><?php echo htmlspecialchars($tItem['news_title']); ?></h3>
-                </div>
-                <div class="trending-meta">
-                  <span class="time"><?php echo date('d M, Y', strtotime($tItem['news_published'])); ?></span>
-                </div>
-              </article>
-            </a>
-          <?php
-          endforeach;
-        else:
-          ?>
-          <p>No trending articles found.</p>
-        <?php endif; ?>
+        <?php foreach ($fintechArticles as $tIndex => $tItem): ?>
+          <a href="<?php echo htmlspecialchars($tItem['link_url']); ?>" class="trending-card-link" aria-label="Read article: <?php echo htmlspecialchars($tItem['news_title']); ?>">
+            <article class="trending-card-slide" style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.88) 100%), url('<?php echo htmlspecialchars($tItem['news_image']); ?>');">
+              <!-- <span class="trending-number"><?php echo sprintf('%02d', $tIndex + 1); ?></span> -->
+              <div class="trending-card-content">
+                <?php if ($tItem['news_paid'] == 1): ?>
+                  <span class="paid-badge"><svg class="paid-icon" viewBox="0 0 24 24">
+                      <path
+                        d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
+                    </svg>
+                    Premium</span>
+                <?php endif; ?>
+                <h3><?php echo htmlspecialchars($tItem['news_title']); ?></h3>
+              </div>
+              <div class="trending-meta">
+                <span class="time"><?php echo date('d M, Y', strtotime($tItem['news_published'])); ?></span>
+              </div>
+            </article>
+          </a>
+        <?php endforeach; ?>
       </div>
     </div>
   </div>
 </section>
+<?php endif; ?>
 
+<?php if (!empty($aiArticles)): ?>
 <!-- Dark Mode Section: AI & Emerging Tech -->
 <section id="ai" class="section ai-section dark-mode">
   <div class="container">
@@ -321,38 +333,38 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
       <a href="/ai-emerging-tech/" class="view-all dark">View All <span class="arrow">→</span></a>
     </div>
     <div class="card-grid">
-      <?php if (!empty($aiArticles)): ?>
-        <?php foreach ($aiArticles as $ai): ?>
-          <article class="tech-card">
-            <div class="image-wrapper tech-image-wrapper">
-              <?php if (!empty($ai['news_paid']) && $ai['news_paid'] == 1): ?>
-                <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
-                  </svg> Premium</span>
-              <?php endif; ?>
-              <a href="<?php echo htmlspecialchars($ai['link_url']); ?>">
-                <img
-                  src="<?php echo htmlspecialchars($ai['news_image']); ?>"
-                  alt="<?php echo htmlspecialchars($ai['news_title']); ?>"
-                  class="tech-article-thumb" />
-              </a>
-            </div>
-            <div class="tech-card-body">
-              <h3>
-                <a href="<?php echo htmlspecialchars($ai['link_url']); ?>"><?php echo htmlspecialchars($ai['news_title']); ?></a>
-              </h3>
-              <p>
-                <?php echo htmlspecialchars(!empty($ai['meta_description']) ? $ai['meta_description'] : $ai['news_description']); ?>
-              </p>
-              <a href="<?php echo htmlspecialchars($ai['link_url']); ?>" class="read-more">Read Analysis <span class="arrow">→</span></a>
-            </div>
-          </article>
-        <?php endforeach; ?>
-      <?php endif; ?>
+      <?php foreach ($aiArticles as $ai): ?>
+        <article class="tech-card">
+          <div class="image-wrapper tech-image-wrapper">
+            <?php if (!empty($ai['news_paid']) && $ai['news_paid'] == 1): ?>
+              <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
+                </svg> Premium</span>
+            <?php endif; ?>
+            <a href="<?php echo htmlspecialchars($ai['link_url']); ?>">
+              <img
+                src="<?php echo htmlspecialchars($ai['news_image']); ?>"
+                alt="<?php echo htmlspecialchars($ai['news_title']); ?>"
+                class="tech-article-thumb" />
+            </a>
+          </div>
+          <div class="tech-card-body">
+            <h3>
+              <a href="<?php echo htmlspecialchars($ai['link_url']); ?>"><?php echo htmlspecialchars($ai['news_title']); ?></a>
+            </h3>
+            <p>
+              <?php echo htmlspecialchars(!empty($ai['meta_description']) ? $ai['meta_description'] : $ai['news_description']); ?>
+            </p>
+            <a href="<?php echo htmlspecialchars($ai['link_url']); ?>" class="read-more">Read Analysis <span class="arrow">→</span></a>
+          </div>
+        </article>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>
+<?php endif; ?>
 
+<?php if (!empty($moneyMachinesArticles)): ?>
 <!-- Money & Machines Section -->
 <section class="section mm-section">
   <div class="container">
@@ -361,35 +373,35 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
       <a href="/money-and-machines/" class="view-all">View All <span class="arrow">→</span></a>
     </div>
     <div class="money-machines-grid">
-      <?php if (!empty($moneyMachinesArticles)): ?>
-        <?php foreach ($moneyMachinesArticles as $mm): ?>
-          <article class="mm-card">
-            <div class="image-wrapper">
-              <?php if ($mm['news_paid'] == 1): ?>
-                <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                    <path
-                      d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
-                  </svg>
-                  Premium</span>
-              <?php endif; ?>
-              <a href="<?php echo htmlspecialchars($mm['link_url']); ?>">
-                <img
-                  src="<?php echo htmlspecialchars($mm['news_image']); ?>"
-                  alt="<?php echo htmlspecialchars($mm['news_title']); ?>"
-                  class="article-thumb" />
-              </a>
-            </div>
-            <h3>
-              <a href="<?php echo htmlspecialchars($mm['link_url']); ?>"><?php echo htmlspecialchars($mm['news_title']); ?></a>
-            </h3>
-            <p><?php echo htmlspecialchars(!empty($mm['meta_description']) ? $mm['meta_description'] : $mm['news_description']); ?></p>
-          </article>
-        <?php endforeach; ?>
-      <?php endif; ?>
+      <?php foreach ($moneyMachinesArticles as $mm): ?>
+        <article class="mm-card">
+          <div class="image-wrapper">
+            <?php if ($mm['news_paid'] == 1): ?>
+              <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
+                  <path
+                    d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
+                </svg>
+                Premium</span>
+            <?php endif; ?>
+            <a href="<?php echo htmlspecialchars($mm['link_url']); ?>">
+              <img
+                src="<?php echo htmlspecialchars($mm['news_image']); ?>"
+                alt="<?php echo htmlspecialchars($mm['news_title']); ?>"
+                class="article-thumb" />
+            </a>
+          </div>
+          <h3>
+            <a href="<?php echo htmlspecialchars($mm['link_url']); ?>"><?php echo htmlspecialchars($mm['news_title']); ?></a>
+          </h3>
+          <p><?php echo htmlspecialchars(!empty($mm['meta_description']) ? $mm['meta_description'] : $mm['news_description']); ?></p>
+        </article>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>
+<?php endif; ?>
 
+<?php if (!empty($ipoArticles)): ?>
 <!-- IPO Tales -->
 <section id="fintech" class="section fintech-section">
   <div class="container">
@@ -490,7 +502,9 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
     </div>
   </div>
 </section>
+<?php endif; ?>
 
+<?php if (!empty($videosList)): ?>
 <!-- Video Section (Matching AI & Emerging Tech Section Look) -->
 <section id="videos" class="section ai-section dark-mode video-section-grid">
   <div class="container">
@@ -501,47 +515,47 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
       <a href="<?php echo htmlspecialchars($youtubeChannelUrl); ?>" target="_blank" rel="noopener" class="view-all dark">Visit Channel <span class="arrow">→</span></a>
     </div>
     <div class="card-grid">
-      <?php if (!empty($videosList)): ?>
-        <?php foreach ($videosList as $vItem): ?>
-          <article class="tech-card video-tech-card">
-            <div class="image-wrapper tech-image-wrapper">
-              <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($vItem['title']); ?>">
-                <img
-                  src="<?php echo htmlspecialchars($vItem['thumb']); ?>"
-                  alt="<?php echo htmlspecialchars($vItem['title']); ?>"
-                  class="tech-article-thumb"
-                  loading="lazy" />
-                <div class="video-play-overlay">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>
-                <?php if (!empty($vItem['published'])): ?>
-                  <span class="video-duration-tag"><?php echo htmlspecialchars($vItem['published']); ?></span>
-                <?php endif; ?>
-              </a>
-            </div>
-            <div class="tech-card-body">
-              <div>
-                <span class="video-channel-badge">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M23.498 6.186a2.994 2.994 0 0 0-2.107-2.117C19.163 3.5 12 3.5 12 3.5s-7.163 0-9.391.569A2.994 2.994 0 0 0 .502 6.186C0 8.414 0 12 0 12s0 3.586.502 5.814a2.994 2.994 0 0 0 2.107 2.117C4.837 20.5 12 20.5 12 20.5s7.163 0 9.391-.569a2.994 2.994 0 0 0 2.107-2.117C24 15.586 24 12 24 12s0-3.586-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                  </svg>
-                  The Head &amp; Tale
-                </span>
-                <h3>
-                  <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($vItem['title']); ?></a>
-                </h3>
+      <?php foreach ($videosList as $vItem): ?>
+        <article class="tech-card video-tech-card">
+          <div class="image-wrapper tech-image-wrapper">
+            <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($vItem['title']); ?>">
+              <img
+                src="<?php echo htmlspecialchars($vItem['thumb']); ?>"
+                alt="<?php echo htmlspecialchars($vItem['title']); ?>"
+                class="tech-article-thumb"
+                loading="lazy" />
+              <div class="video-play-overlay">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
               </div>
-              <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener" class="read-more">Watch on YouTube <span class="arrow">→</span></a>
+              <?php if (!empty($vItem['published'])): ?>
+                <span class="video-duration-tag"><?php echo htmlspecialchars($vItem['published']); ?></span>
+              <?php endif; ?>
+            </a>
+          </div>
+          <div class="tech-card-body">
+            <div>
+              <span class="video-channel-badge">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a2.994 2.994 0 0 0-2.107-2.117C19.163 3.5 12 3.5 12 3.5s-7.163 0-9.391.569A2.994 2.994 0 0 0 .502 6.186C0 8.414 0 12 0 12s0 3.586.502 5.814a2.994 2.994 0 0 0 2.107 2.117C4.837 20.5 12 20.5 12 20.5s7.163 0 9.391-.569a2.994 2.994 0 0 0 2.107-2.117C24 15.586 24 12 24 12s0-3.586-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+                The Head &amp; Tale
+              </span>
+              <h3>
+                <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($vItem['title']); ?></a>
+              </h3>
             </div>
-          </article>
-        <?php endforeach; ?>
-      <?php endif; ?>
+            <a href="<?php echo htmlspecialchars($vItem['url']); ?>" target="_blank" rel="noopener" class="read-more">Watch on YouTube <span class="arrow">→</span></a>
+          </div>
+        </article>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>
+<?php endif; ?>
 
+<?php if (!empty($peVcArticles)): ?>
 <!-- PE VC Section -->
 <section id="pevc" class="section ipo-section">
   <div class="container">
@@ -559,37 +573,37 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
     </div>
     <div class="ipo-slider-container">
       <div class="ipo-track" id="pevcTrack">
-        <?php if (!empty($peVcArticles)): ?>
-          <?php foreach ($peVcArticles as $pevc): ?>
-            <article class="ipo-card">
-              <div class="image-wrapper ipo-img-wrapper">
-                <?php if (!empty($pevc['news_paid']) && $pevc['news_paid'] == 1): ?>
-                  <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                      <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
-                    </svg> Premium</span>
-                <?php endif; ?>
-                <a href="<?php echo htmlspecialchars($pevc['link_url']); ?>">
-                  <img
-                    src="<?php echo htmlspecialchars($pevc['news_image']); ?>"
-                    alt="<?php echo htmlspecialchars($pevc['news_title']); ?>"
-                    class="article-thumb" />
-                </a>
-              </div>
-              <div class="ipo-content">
-                <div class="ipo-date"><?php echo date('M d, Y', strtotime($pevc['news_published'])); ?></div>
-                <h3>
-                  <a href="<?php echo htmlspecialchars($pevc['link_url']); ?>"><?php echo htmlspecialchars($pevc['news_title']); ?></a>
-                </h3>
-                <p><?php echo htmlspecialchars(!empty($pevc['meta_description']) ? $pevc['meta_description'] : $pevc['news_description']); ?></p>
-              </div>
-            </article>
-          <?php endforeach; ?>
-        <?php endif; ?>
+        <?php foreach ($peVcArticles as $pevc): ?>
+          <article class="ipo-card">
+            <div class="image-wrapper ipo-img-wrapper">
+              <?php if (!empty($pevc['news_paid']) && $pevc['news_paid'] == 1): ?>
+                <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
+                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
+                  </svg> Premium</span>
+              <?php endif; ?>
+              <a href="<?php echo htmlspecialchars($pevc['link_url']); ?>">
+                <img
+                  src="<?php echo htmlspecialchars($pevc['news_image']); ?>"
+                  alt="<?php echo htmlspecialchars($pevc['news_title']); ?>"
+                  class="article-thumb" />
+              </a>
+            </div>
+            <div class="ipo-content">
+              <div class="ipo-date"><?php echo date('M d, Y', strtotime($pevc['news_published'])); ?></div>
+              <h3>
+                <a href="<?php echo htmlspecialchars($pevc['link_url']); ?>"><?php echo htmlspecialchars($pevc['news_title']); ?></a>
+              </h3>
+              <p><?php echo htmlspecialchars(!empty($pevc['meta_description']) ? $pevc['meta_description'] : $pevc['news_description']); ?></p>
+            </div>
+          </article>
+        <?php endforeach; ?>
       </div>
     </div>
   </div>
 </section>
+<?php endif; ?>
 
+<?php if (!empty($cryptoMapArticles)): ?>
 <!-- The Monthly Crypto Map Section -->
 <section id="moneyCrypto" class="section ipo-section">
   <div class="container">
@@ -607,37 +621,37 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
     </div>
     <div class="ipo-slider-container">
       <div class="ipo-track" id="moneyCryptoTrack">
-        <?php if (!empty($cryptoMapArticles)): ?>
-          <?php foreach ($cryptoMapArticles as $crypto): ?>
-            <article class="ipo-card">
-              <div class="image-wrapper ipo-img-wrapper">
-                <?php if (!empty($crypto['news_paid']) && $crypto['news_paid'] == 1): ?>
-                  <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                      <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
-                    </svg> Premium</span>
-                <?php endif; ?>
-                <a href="<?php echo htmlspecialchars($crypto['link_url']); ?>">
-                  <img
-                    src="<?php echo htmlspecialchars($crypto['news_image']); ?>"
-                    alt="<?php echo htmlspecialchars($crypto['news_title']); ?>"
-                    class="article-thumb" />
-                </a>
-              </div>
-              <div class="ipo-content">
-                <div class="ipo-date"><?php echo date('M d, Y', strtotime($crypto['news_published'])); ?></div>
-                <h3>
-                  <a href="<?php echo htmlspecialchars($crypto['link_url']); ?>"><?php echo htmlspecialchars($crypto['news_title']); ?></a>
-                </h3>
-                <p><?php echo htmlspecialchars(!empty($crypto['meta_description']) ? $crypto['meta_description'] : $crypto['news_description']); ?></p>
-              </div>
-            </article>
-          <?php endforeach; ?>
-        <?php endif; ?>
+        <?php foreach ($cryptoMapArticles as $crypto): ?>
+          <article class="ipo-card">
+            <div class="image-wrapper ipo-img-wrapper">
+              <?php if (!empty($crypto['news_paid']) && $crypto['news_paid'] == 1): ?>
+                <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
+                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
+                  </svg> Premium</span>
+              <?php endif; ?>
+              <a href="<?php echo htmlspecialchars($crypto['link_url']); ?>">
+                <img
+                  src="<?php echo htmlspecialchars($crypto['news_image']); ?>"
+                  alt="<?php echo htmlspecialchars($crypto['news_title']); ?>"
+                  class="article-thumb" />
+              </a>
+            </div>
+            <div class="ipo-content">
+              <div class="ipo-date"><?php echo date('M d, Y', strtotime($crypto['news_published'])); ?></div>
+              <h3>
+                <a href="<?php echo htmlspecialchars($crypto['link_url']); ?>"><?php echo htmlspecialchars($crypto['news_title']); ?></a>
+              </h3>
+              <p><?php echo htmlspecialchars(!empty($crypto['meta_description']) ? $crypto['meta_description'] : $crypto['news_description']); ?></p>
+            </div>
+          </article>
+        <?php endforeach; ?>
       </div>
     </div>
   </div>
 </section>
+<?php endif; ?>
 
+<?php if (!empty($moneyTriviaArticles)): ?>
 <!-- Money Trivia -->
 <section id="money-trivia" class="section ai-section dark-mode trivia-section">
   <div class="container">
@@ -648,37 +662,36 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
       <a href="/money-Trivia/" class="view-all dark">View All <span class="arrow">→</span></a>
     </div>
     <div class="card-grid">
-      <?php if (!empty($moneyTriviaArticles)): ?>
-        <?php foreach ($moneyTriviaArticles as $ai): ?>
-          <article class="tech-card">
-            <div class="image-wrapper tech-image-wrapper">
-              <?php if (!empty($ai['news_paid']) && $ai['news_paid'] == 1): ?>
-                <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
-                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
-                  </svg> Premium</span>
-              <?php endif; ?>
-              <a href="<?php echo htmlspecialchars($ai['link_url']); ?>">
-                <img
-                  src="<?php echo htmlspecialchars($ai['news_image']); ?>"
-                  alt="<?php echo htmlspecialchars($ai['news_title']); ?>"
-                  class="tech-article-thumb" />
-              </a>
-            </div>
-            <div class="tech-card-body">
-              <h3>
-                <a href="<?php echo htmlspecialchars($ai['link_url']); ?>"><?php echo htmlspecialchars($ai['news_title']); ?></a>
-              </h3>
-              <p>
-                <?php echo htmlspecialchars(!empty($ai['meta_description']) ? $ai['meta_description'] : $ai['news_description']); ?>
-              </p>
-              <a href="<?php echo htmlspecialchars($ai['link_url']); ?>" class="read-more">Read Analysis <span class="arrow">→</span></a>
-            </div>
-          </article>
-        <?php endforeach; ?>
-      <?php endif; ?>
+      <?php foreach ($moneyTriviaArticles as $ai): ?>
+        <article class="tech-card">
+          <div class="image-wrapper tech-image-wrapper">
+            <?php if (!empty($ai['news_paid']) && $ai['news_paid'] == 1): ?>
+              <span class="paid-badge overlay"><svg class="paid-icon" viewBox="0 0 24 24">
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-1h14v1z" />
+                </svg> Premium</span>
+            <?php endif; ?>
+            <a href="<?php echo htmlspecialchars($ai['link_url']); ?>">
+              <img
+                src="<?php echo htmlspecialchars($ai['news_image']); ?>"
+                alt="<?php echo htmlspecialchars($ai['news_title']); ?>"
+                class="tech-article-thumb" />
+            </a>
+          </div>
+          <div class="tech-card-body">
+            <h3>
+              <a href="<?php echo htmlspecialchars($ai['link_url']); ?>"><?php echo htmlspecialchars($ai['news_title']); ?></a>
+            </h3>
+            <p>
+              <?php echo htmlspecialchars(!empty($ai['meta_description']) ? $ai['meta_description'] : $ai['news_description']); ?>
+            </p>
+            <a href="<?php echo htmlspecialchars($ai['link_url']); ?>" class="read-more">Read Analysis <span class="arrow">→</span></a>
+          </div>
+        </article>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- Subscribe Section -->
 <section id="subscribe" class="newsletter-section">
