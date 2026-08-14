@@ -2303,6 +2303,11 @@ article:hover .image-wrapper img {
   margin-bottom: 24px;
 }
 
+.details_box__content p a {
+  color: #1926bf;
+  font-weight: 600;
+}
+
 .details_box__content h2,
 .details_box__content h3 {
   font-family: var(--font-heading);

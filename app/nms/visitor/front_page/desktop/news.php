@@ -177,8 +177,8 @@ $breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
                             <path fill="#EA4335" d="M12 6.13c1.42 0 2.69.49 3.69 1.45l2.76-2.76A9.8 9.8 0 0 0 12 2.25a9.75 9.75 0 0 0-8.69 5.36l3.23 2.52C7.31 7.84 9.46 6.13 12 6.13z" />
                         </svg>
                         <span class="social-share-source-text">
-                            <span>Add as preferred source</span>
-                            <span>on Google</span>
+                            <span>Add as preferred</span>
+                            <span>source on Google</span>
                         </span>
                     </a>
                     <a href="http://twitter.com/share?text=<?php echo urlencode($news_title); ?>&url=<?php echo SITE_URL . $link_url; ?>" target="_blank" class="social-share-btn" aria-label="Share on X">
