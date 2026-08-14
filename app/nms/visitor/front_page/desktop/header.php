@@ -449,11 +449,11 @@ if (isset($_COOKIE['user_data'])) {
       <!-- Popular Quick Topics -->
       <div class="popular-tags-bar">
         <span class="popular-tag-label">Popular:</span>
-        <span class="popular-tag-item" data-tag="Fintech">#Fintech</span>
-        <span class="popular-tag-item" data-tag="AI">#Artificial Intelligence</span>
-        <span class="popular-tag-item" data-tag="IPO">#IPOs</span>
-        <span class="popular-tag-item" data-tag="Banking">#Banking</span>
-        <span class="popular-tag-item" data-tag="Startups">#Startups</span>
+        <span class="popular-tag-item" data-tag="fintech">#Fintech</span>
+        <span class="popular-tag-item" data-tag="ai">#Artificial Intelligence</span>
+        <span class="popular-tag-item" data-tag="ipo">#IPOs</span>
+        <span class="popular-tag-item" data-tag="banking">#Banking</span>
+        <span class="popular-tag-item" data-tag="startups">#Startups</span>
       </div>
 
       <!-- Recent Searches Block -->
