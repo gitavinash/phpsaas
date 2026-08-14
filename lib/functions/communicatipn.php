@@ -191,7 +191,7 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.i
         return 'cURL Error: ' . $curlError;
     }
 
-    if ($httpCode != 201) {
+    if ($httpCode != 200 && $httpCode != 201) {
         return 'SMTP API Error: ' . $result;
     }
 
@@ -278,7 +278,7 @@ function sendNewsLetterVerficationLinkviaEmail($email)
         return 'cURL Error: ' . $curlError;
     }
 
-    if ($httpCode != 201) {
+    if ($httpCode != 200 && $httpCode != 201) {
         return 'SMTP API Error: ' . $result;
     }
 

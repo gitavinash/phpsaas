@@ -2,7 +2,7 @@
 
 require_once UTIL_FUNCTIONS;
 
-$httpStatus = ((DEVELOPMENT_MODE == true) ? 200 : 500);
+$httpStatus = 200;
 $status = 'warning';
 $msg = 'Invalid request';
 
@@ -25,22 +25,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $otpMode = 'email';
             $otpComment = ((isset($profile_display_name)) ? $profile_display_name : 'User');
             require_once 'send-otp.php';
-            if ($response['status'] == 'success') {
+            if (isset($response['status']) && ($response['status'] == 'success' || $response['status'] == 'warning')) {
                 $status = 'success';
                 $msg = 'OTP sent successfully';
                 $httpStatus = 200;
             } else {
-                $status = ((DEVELOPMENT_MODE == true)) ? 'success' : 'error';;
-                $msg = ((DEVELOPMENT_MODE == true)) ? $response['msg'] : 'Failed to send OTP';
+                $status = 'error';
+                $msg = !empty($response['msg']) ? $response['msg'] : 'Failed to send OTP';
+                $httpStatus = 500;
             }
         } else {
             $status = 'error';
             $msg = 'Something is wrong while trying to register';
+            $httpStatus = 500;
             mysqli_query($connection, 'ROLLBACK');
         }
     }
 } else {
+    $status = 'error';
     $msg = ((DEVELOPMENT_MODE == true) ? mysqli_error($connection) : 'Something is wrong while trying to register');
+    $httpStatus = 405;
 }
 
 $result = array(
