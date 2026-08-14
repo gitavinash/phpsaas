@@ -381,11 +381,11 @@ if (!empty($socialProofs)):
 ?>
     <!-- Social Proof Section -->
     <style>
-    :root {
-      --sp-font-serif: "Playfair Display", Georgia, serif;
-      --sp-font-sans: "Montserrat", sans-serif;
-      --sp-title-size: 1.25rem;
-    }
+        :root {
+            --sp-font-serif: "Playfair Display", Georgia, serif;
+            --sp-font-sans: "Montserrat", sans-serif;
+            --sp-title-size: 1.25rem;
+        }
     </style>
     <section class="social-proof-section py-20" id="social-proof">
         <div class="container mx-auto px-6 text-center mb-16">
@@ -574,6 +574,40 @@ if (!empty($socialProofs)):
         </div>
     </div>
 </section>
+
+<!-- Client Logos Slider Section -->
+
+<section class="client-logo-section py-16 px-6 border-t border-gray-100">
+    <div class="container mx-auto text-center mb-10">
+        <span class="text-xs font-semibold uppercase tracking-widest text-primary mb-3 block">Corporate &amp; Event Partners</span>
+        <h2 class="serif text-2xl md:text-4xl text-gray-800 font-medium mb-3">Trusted by Leading Brands &amp; Clients</h2>
+        <p class="text-gray-500 text-base max-w-2xl mx-auto">We are honored to partner with premier corporate brands, hospitality leaders, and luxury event creators across India.</p>
+    </div>
+
+    <div class="client-marquee-container">
+        <div class="client-marquee-track">
+            <?php
+            $clientLogos = [
+                ['name' => 'Versace', 'img' => USER_IMAGES . 'versace-logo.jpg'],
+                ['name' => 'COS', 'img' => USER_IMAGES . 'cos-logo.jpg'],
+                ['name' => 'Ethos Watches', 'img' => USER_IMAGES . 'ethos-logo.svg'],
+                ['name' => 'Salvatore Ferragamo', 'img' => USER_IMAGES . 'salvatore-ferragamo-logo.png'],
+                ['name' => 'Jimmy Choo', 'img' => USER_IMAGES . 'jimmy-choo-logo.png'],
+            ];
+
+            // Render array 3 times to enable seamless infinite continuous scrolling loop
+            $loopLogos = array_merge($clientLogos, $clientLogos, $clientLogos);
+
+            foreach ($loopLogos as $logo):
+            ?>
+                <div class="client-logo-item" title="<?= htmlspecialchars($logo['name']) ?>">
+                    <img src="<?= htmlspecialchars($logo['img']) ?>" alt="<?= htmlspecialchars($logo['name']) ?> Logo" loading="lazy" />
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
 
 
 <!-- Newsletter Section -->

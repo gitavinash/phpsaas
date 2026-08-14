@@ -241,7 +241,7 @@ body.auth-portal-page {
 }
 
 .display-none {
-  display: none !important;
+  display: none;
 }
 
 @media (max-width: 576px) {

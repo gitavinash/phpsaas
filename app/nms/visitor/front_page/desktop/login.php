@@ -54,7 +54,7 @@ if (isset($_COOKIE['isLogin'])) {
             </div>
 
             <!-- Step 2: OTP Verification -->
-            <div id="verifyEmailOTP" class="auth-form-section display-none">
+            <div id="verifyEmailOTP" class="auth-form-section" style="display: none;">
                 <button type="button" class="auth-back-btn" id="backToEmailBtn" onclick="goBackToEmail(event)">
                     &larr; Back
                 </button>
@@ -70,7 +70,7 @@ if (isset($_COOKIE['isLogin'])) {
             </div>
 
             <!-- Step 3: User Registration (New Users Only) -->
-            <div id="userRegistration" class="auth-form-section display-none">
+            <div id="userRegistration" class="auth-form-section" style="display: none;">
                 <button type="button" class="auth-back-btn" id="backToOTPBtn" onclick="goBackToOTP(event)">
                     &larr; Back
                 </button>

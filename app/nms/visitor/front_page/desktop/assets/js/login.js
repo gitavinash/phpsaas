@@ -293,8 +293,9 @@ $("#emailLoginContinueBtn").click(function (e) {
         $("#emailLoginContinueBtn").show();
         if (data.status == "success") {
           // Switch sections
-          $("#enterEmail").hide();
-          $("#verifyEmailOTP").show();
+          $("#enterEmail").removeClass("display-none").hide();
+          $("#socialLoginSection").hide();
+          $("#verifyEmailOTP").removeClass("display-none").css("display", "block").show();
           $("#otpEmailValue").focus().select();
           // Make OTP focusable + validated now
           $("#otpEmailValue")

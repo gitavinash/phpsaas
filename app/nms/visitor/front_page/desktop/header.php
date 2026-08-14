@@ -288,6 +288,13 @@ if (isset($_COOKIE['user_data'])) {
                 </svg>
               </button>
               <div class="account-dropdown-menu" id="accountDropdownMenu">
+                <a href="/my-profile/" class="account-dropdown-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  My Profile
+                </a>
                 <a href="/manage-subscription/" class="account-dropdown-item">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 7h-9M14 17H5M12 12H3" />
@@ -378,6 +385,7 @@ if (isset($_COOKIE['user_data'])) {
       <?php if ($isLoggedIn): ?>
         <div class="drawer-section">
           <p class="drawer-section-title">Account Options</p>
+          <a href="/my-profile/" class="btn btn-outline-secondary btn-block">My Profile</a>
           <a href="/manage-subscription/" class="btn btn-outline-secondary btn-block">Manage Subscription</a>
           <a href="/logout-all-devices/" class="btn btn-outline-secondary btn-block">Active Sessions</a>
           <a href="/logout/" class="btn btn-primary btn-block">Sign Out</a>

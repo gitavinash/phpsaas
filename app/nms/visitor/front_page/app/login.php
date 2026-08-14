@@ -458,7 +458,10 @@ if (defined('GOOGLE_RECAPTCHA_GENERATOR') && file_exists(GOOGLE_RECAPTCHA_GENERA
                 if (data.status === "success") {
                     if (enterEmailSec) enterEmailSec.style.display = "none";
                     if (socialLoginSec) socialLoginSec.style.display = "none";
-                    if (verifyEmailSec) verifyEmailSec.style.display = "block";
+                    if (verifyEmailSec) {
+                        verifyEmailSec.classList.remove("display-none");
+                        verifyEmailSec.style.display = "block";
+                    }
                     if (otpInput) {
                         otpInput.disabled = false;
                         otpInput.value = "";

@@ -454,3 +454,91 @@ input:focus {
   border: 0;
   display: block;
 }
+.client-logo-section {
+  background: linear-gradient(180deg, #f8f5f2 0%, #ffffff 100%);
+  position: relative;
+  overflow: hidden;
+}
+.client-marquee-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 2.5rem 0;
+}
+.client-marquee-container::before,
+.client-marquee-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 140px;
+  z-index: 10;
+  pointer-events: none;
+}
+.client-marquee-container::before {
+  left: 0;
+  background: linear-gradient(to right, #f8f5f2, transparent);
+}
+.client-marquee-container::after {
+  right: 0;
+  background: linear-gradient(to left, #ffffff, transparent);
+}
+.client-marquee-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  gap: 2.5rem;
+  animation: clientLogoMarquee 28s linear infinite;
+}
+.client-marquee-container:hover .client-marquee-track {
+  animation-play-state: paused;
+}
+@keyframes clientLogoMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333333%);
+  }
+}
+.client-logo-item {
+  flex: 0 0 200px;
+  width: 200px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.client-logo-item:hover {
+  transform: translateY(-2px) scale(1.08);
+}
+.client-logo-item img,
+.client-logo-item svg {
+  max-height: 54px;
+  max-width: 170px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  opacity: 0.8;
+  filter: grayscale(100%);
+  transition:
+    opacity 0.35s ease,
+    filter 0.35s ease,
+    transform 0.35s ease;
+}
+.client-logo-item:hover img,
+.client-logo-item:hover svg {
+  opacity: 1;
+  filter: grayscale(0%);
+}
+
+
+
+
+
