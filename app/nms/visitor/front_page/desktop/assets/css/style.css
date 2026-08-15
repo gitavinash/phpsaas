@@ -1606,8 +1606,44 @@ article:hover .image-wrapper img {
     gap: 28px;
   }
 
+/* Desktop 4 Stories Slider Layout for PE/VC and Crypto Map */
+@media (min-width: 769px) {
+  .ipo-track {
+    gap: 16px !important;
+  }
+
   .ipo-card {
-    flex: 0 0 calc(50% - 10px);
+    flex: 0 0 calc((100% - 48px) / 4) !important;
+    width: calc((100% - 48px) / 4) !important;
+    max-width: calc((100% - 48px) / 4) !important;
+    min-width: 0 !important;
+  }
+
+  .ipo-img-wrapper {
+    height: 155px !important;
+  }
+
+  .ipo-content {
+    padding: 14px !important;
+  }
+
+  .ipo-card h3 {
+    font-size: 1.02rem !important;
+    line-height: 1.35 !important;
+    margin-bottom: 6px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  .ipo-card p {
+    font-size: 0.85rem !important;
+    line-height: 1.45 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
   }
 }
 
