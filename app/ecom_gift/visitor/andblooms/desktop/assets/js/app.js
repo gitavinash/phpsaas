@@ -87,24 +87,28 @@ $(document).ready(function () {
             cartCircle.textContent = currentValue + 1;
           }
 
-          Swal.fire({
-            icon: "success",
-            title: "Product Added!",
-            text: "Do you want to go to the checkout page?",
-            showCancelButton: true,
-            confirmButtonText: "Go to Checkout",
-            cancelButtonText: "Continue Shopping",
-            reverseButtons: true, // Puts the cancel button first
-          }).then((result) => {
-            if (result.value) {
-              console.log("Redirecting to checkout..."); // Debugging output
-              window.location.href = "/checkout/";
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-              console.log("User chose to continue shopping.");
-            } else {
-              console.log("Unexpected action:", result);
-            }
-          });
+          if (data.relationType === "event" || window.location.pathname.indexOf("/event") !== -1 || $("#productInfo").attr("data-item-type") === "event" || $("#productInfo").data("item-type") === "event") {
+            window.location.href = "/checkout/";
+          } else {
+            Swal.fire({
+              icon: "success",
+              title: "Product Added!",
+              text: "Do you want to go to the checkout page?",
+              showCancelButton: true,
+              confirmButtonText: "Go to Checkout",
+              cancelButtonText: "Continue Shopping",
+              reverseButtons: true, // Puts the cancel button first
+            }).then((result) => {
+              if (result.value) {
+                console.log("Redirecting to checkout..."); // Debugging output
+                window.location.href = "/checkout/";
+              } else if (result.dismiss === Swal.DismissReason.cancel) {
+                console.log("User chose to continue shopping.");
+              } else {
+                console.log("Unexpected action:", result);
+              }
+            });
+          }
 
           var currentCartCount = parseInt($("#cartItems").text()) || 0;
           $("#cartItems").text(currentCartCount + qty);

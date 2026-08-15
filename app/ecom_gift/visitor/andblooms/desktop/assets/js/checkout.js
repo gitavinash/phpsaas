@@ -292,26 +292,45 @@ $(document).ready(function () {
             $("#addToCart").show();
 
             if (data.status == 200) {
-              $(".checkout-form").hide();
-              // $('#shippingName').append(data.name);
-              // $('#shippingAddress').append(data.address);
-              // $('.shipping-box').show();
-              //   window.location.href='/shipping/?id=' + data.order;
-              $("#shippingDetails").addClass("hidden");
-              $("#placeOrder").addClass("hidden");
-
-              $("#deliveryDetails").show();
-              $("#continueDelivery").show();
-
               orderID = data.order;
-              $("#continueShipping").addClass("hidden");
-              $("#continueCheckout").removeClass("hidden");
+              const hasEvent = $("#continueShipping").data("has-event") === true || $("#continueShipping").attr("data-has-event") === "true";
+              if (hasEvent) {
+                $.ajax({
+                  type: "POST",
+                  dataType: "json",
+                  data: {
+                    type: "order",
+                    action: "meta",
+                    order_id: orderID
+                  },
+                  success: function (res) {
+                    if (res && res.redirect) {
+                      window.location.href = res.redirect;
+                    } else {
+                      window.location.href = "/shipping/?id=" + orderID;
+                    }
+                  },
+                  error: function () {
+                    window.location.href = "/shipping/?id=" + orderID;
+                  }
+                });
+              } else {
+                $(".checkout-form").hide();
+                $("#shippingDetails").addClass("hidden");
+                $("#placeOrder").addClass("hidden");
+
+                $("#deliveryDetails").show();
+                $("#continueDelivery").show();
+
+                $("#continueShipping").addClass("hidden");
+                $("#continueCheckout").removeClass("hidden");
+              }
             } else {
               popUpMessage("center", data.msg, data.error);
               $("#continueShipping").removeClass("hidden");
               $btn
                 .prop("disabled", false)
-                .text("Continue to Delivery date & time");
+                .text($("#continueShipping").data("has-event") === true ? "Continue to Payment" : "Continue to Delivery date & time");
               console.log(data);
             }
           },
@@ -320,7 +339,7 @@ $(document).ready(function () {
             $("#continueShipping").removeClass("hidden");
             $btn
               .prop("disabled", false)
-              .text("Continue to Delivery date & time");
+              .text($("#continueShipping").data("has-event") === true ? "Continue to Payment" : "Continue to Delivery date & time");
             console.log(data);
           },
         });

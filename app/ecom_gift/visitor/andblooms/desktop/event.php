@@ -269,7 +269,7 @@ require_once 'header.php';
             </div>
 
             <div class="flex gap-4 mb-8 desktop-default-cta">
-                <p style="display:none" id="productInfo"
+                <p style="display:none" id="productInfo" data-item-type="event"
                     value="<?php echo $event_id . '_' . (($inventory_price == 0) ? $inventory_mrp : $inventory_price) . '_1' ?>">
                 </p>
 

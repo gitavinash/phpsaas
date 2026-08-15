@@ -32,12 +32,12 @@ include_once 'header.php';
         GROUP_CONCAT(c.cart_qty) AS cart_qty, 
         c.cart_currency, SUM(c.cart_price) AS cart_price,
         c.cart_status, 
-        GROUP_CONCAT(p.product_image) AS product_image,
-        GROUP_CONCAT(p.product_title) AS product_title,
+        GROUP_CONCAT(COALESCE(p.product_image, e.event_image, e.event_thumbnail)) AS product_image,
+        GROUP_CONCAT(COALESCE(p.product_title, e.event_title)) AS product_title,
         
         i.inventory_currency, 
-        GROUP_CONCAT(i.inventory_price) AS productPrices,
-        GROUP_CONCAT(i.inventory_mrp) AS productMRPs,
+        GROUP_CONCAT(COALESCE(i.inventory_price, c.cart_price)) AS productPrices,
+        GROUP_CONCAT(COALESCE(i.inventory_mrp, c.cart_price)) AS productMRPs,
         
         pr.profile_first_name, pr.profile_last_name, pr.profile_display_name, 
         pr.profile_mobile, pr.profile_email, 
@@ -48,10 +48,14 @@ include_once 'header.php';
     FROM " . TABLE_PREFIX . "order o
     INNER JOIN " . TABLE_PREFIX . "cart c 
         ON c.cart_session_id = o.order_cart_session_id AND c.cart_status=2
-    INNER JOIN " . TABLE_PREFIX . "product p 
-        ON p.product_id = c.cart_relation_id
-    INNER JOIN " . TABLE_PREFIX . "inventory i 
-        ON i.inventory_relation_id = p.product_id
+    LEFT JOIN " . TABLE_PREFIX . "product p 
+        ON (p.product_id = c.cart_relation_id AND c.cart_relation_type = 'product')
+    LEFT JOIN " . TABLE_PREFIX . "event e 
+        ON (e.event_id = c.cart_relation_id AND c.cart_relation_type = 'event')
+    LEFT JOIN " . TABLE_PREFIX . "inventory i 
+        ON (i.inventory_relation_id = c.cart_relation_id 
+            AND i.inventory_site_id = " . SITE_ID . " 
+            AND ((c.cart_relation_type = 'product' AND i.inventory_type = 'product') OR (c.cart_relation_type = 'event' AND i.inventory_type = 'event')))
     INNER JOIN " . TABLE_PREFIX . "user u 
         ON o.order_user_id = u.user_id
     INNER JOIN " . TABLE_PREFIX . "profile pr 
@@ -63,8 +67,7 @@ include_once 'header.php';
     INNER JOIN " . TABLE_PREFIX . "state s 
         ON s.state_id = a.address_state_id
 
-    WHERE i.inventory_type = 'product'
-      AND o.order_id = '{$id}'
+    WHERE o.order_id = '{$id}'
       AND o.order_cart_session_id = '" . SESSION_ID . "'
       AND o.order_status = 0
       AND c.cart_site_id = " . SITE_ID . "
