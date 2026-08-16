@@ -174,20 +174,7 @@ if (isset($_COOKIE['user_data'])) {
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css" />
   <?php require_once DEFAULT_META ?>
-  <!-- JSON-LD Structured Data Schema -->
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "NewsMediaOrganization",
-      "name": "<?php echo SITE_NAME ?>",
-      "url": "https://theheadandtale.com",
-      "logo": "<?php echo SITE_LOGO ?>",
-      "sameAs": [
-        "https://twitter.com/headandtale",
-        "https://linkedin.com/company/headandtale"
-      ]
-    }
-  </script>
+
   <!-- SweetAlert2 Library & Custom Theme Styling -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

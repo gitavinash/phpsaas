@@ -153,7 +153,7 @@ $breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
                         <span class="article-meta-date"><?php echo date('M d, Y • h:i A', strtotime($news_published)); ?></span>
                     </div>
                     <div class="article-meta-right">
-                        <span class="read-time"><i class="ph ph-book-open"></i> <?php echo $readTime; ?> min read</span>
+                        <span class="read-time desktop-read-time"><i class="ph ph-book-open"></i> <?php echo $readTime; ?> min read</span>
                     </div>
                 </div>
             </header>
@@ -162,6 +162,7 @@ $breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
             <?php if (!empty($news_image)): ?>
                 <div class="article-hero-media">
                     <img src="<?php echo htmlspecialchars($news_image); ?>" alt="<?php echo htmlspecialchars($news_title); ?>" fetchpriority="high" decoding="async" />
+                    <span class="read-time hero-read-time-badge mobile-read-time"><i class="ph ph-book-open"></i> <?php echo $readTime; ?> min read</span>
                 </div>
             <?php endif; ?>
 
