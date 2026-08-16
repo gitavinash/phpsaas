@@ -167,7 +167,7 @@ $breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
 
             <!-- Social Share Bar -->
             <div class="social-share-container">
-                <span class="social-share-label">Share Story</span>
+                <span class="social-share-label">Share</span>
                 <div class="social-share-icons">
                     <a href="https://www.google.com/preferences/source?q=theheadandtale" target="_blank" rel="noopener" class="social-share-source-link" aria-label="Add as preferred source on Google">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -181,39 +181,49 @@ $breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
                             <span>source on Google</span>
                         </span>
                     </a>
-                    <a href="http://twitter.com/share?text=<?php echo urlencode($news_title); ?>&url=<?php echo SITE_URL . $link_url; ?>" target="_blank" class="social-share-btn" aria-label="Share on X">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    <button type="button" class="native-share-btn" onclick="triggerNativeShare(this)" data-share-title="<?php echo htmlspecialchars($news_title, ENT_QUOTES, 'UTF-8'); ?>" data-share-url="<?php echo SITE_URL . $link_url; ?>" aria-label="Share Story">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                            <polyline points="16 6 12 2 8 6"></polyline>
+                            <line x1="12" y1="2" x2="12" y2="15"></line>
                         </svg>
-                    </a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo SITE_URL . $link_url; ?>&title=<?php echo urlencode($news_title); ?>" target="_blank" class="social-share-btn" aria-label="Share on LinkedIn">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-                        </svg>
-                    </a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL . $link_url); ?>" target="_blank" class="social-share-btn" aria-label="Share on Facebook">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0" />
-                        </svg>
-                    </a>
-                    <a href="https://t.me/share/url?url=<?php echo urlencode(SITE_URL . $link_url); ?>&text=<?php echo urlencode($news_title); ?>" target="_blank" class="social-share-btn" aria-label="Share on Telegram">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M9.78 18.65c-.39 0-.33-.15-.46-.52l-1.17-3.84 8.98-5.68" />
-                            <path d="M9.78 18.65c.3 0 .43-.14.6-.3l1.64-1.59-2.05-1.24" />
-                            <path d="M9.97 15.52l4.98 3.67c.57.31.98.15 1.12-.52l2.02-9.5c.21-.82-.31-1.2-.86-.95L5.39 12.8c-.81.32-.8.77-.15.97l3.05.95 7.05-4.45c.33-.2.63-.09.38.13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </a>
-                    <a href="mailto:?subject=<?php echo rawurlencode($news_title); ?>&body=<?php echo rawurlencode($news_title . "\n\n" . SITE_URL . $link_url); ?>" class="social-share-btn" aria-label="Share by Email">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M2 6h20v12H2z" fill="none" stroke="currentColor" stroke-width="1.8" />
-                            <path d="M2 7l10 7L22 7" fill="none" stroke="currentColor" stroke-width="1.8" />
-                        </svg>
-                    </a>
-                    <a href="https://wa.me/?text=<?php echo urlencode($news_title) . ' ' . SITE_URL . $link_url; ?>" target="_blank" class="social-share-btn" aria-label="Share on WhatsApp">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M12.04 2.5c-5.2 0-9.42 4.22-9.42 9.42 0 1.66.43 3.28 1.25 4.7L2.02 21.5l5.06-1.33a9.42 9.42 0 0 0 4.56 1.14c5.2 0 9.42-4.22 9.42-9.42 0-2.52-1.03-4.9-2.9-6.67A9.36 9.36 0 0 0 12.04 2.5zm0 16.9c-1.47 0-2.9-.4-4.15-1.14l-.3-.18-3 .79.81-2.93-.2-.31a7.84 7.84 0 0 1 1.24-9.33A7.83 7.83 0 0 1 12.04 4.2c4.33 0 7.84 3.51 7.84 7.84 0 4.33-3.51 7.84-7.84 7.84zm4.49-5.88c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.54.12-.16.24-.63.78-.77.94-.14.16-.28.18-.53.06-.24-.12-1.03-.38-1.96-1.22-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.77-.19-.47-.39-.41-.54-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.29-.22.24-.85.83-.85 2.03 0 1.2.87 2.35.99 2.51.12.16 1.71 2.61 4.15 3.66.58.25 1.02.4 1.38.5.58.18 1.11.16 1.53.1.47-.06 1.43-.58 1.64-1.14.21-.56.21-1.04.15-1.14-.06-.1-.22-.17-.47-.29z" />
-                        </svg>
-                    </a>
+                        <span>Share</span>
+                    </button>
+                    <div class="desktop-social-icons">
+                        <a href="http://twitter.com/share?text=<?php echo urlencode($news_title); ?>&url=<?php echo SITE_URL . $link_url; ?>" target="_blank" class="social-share-btn" aria-label="Share on X">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                            </svg>
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo SITE_URL . $link_url; ?>&title=<?php echo urlencode($news_title); ?>" target="_blank" class="social-share-btn" aria-label="Share on LinkedIn">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                            </svg>
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL . $link_url); ?>" target="_blank" class="social-share-btn" aria-label="Share on Facebook">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0" />
+                            </svg>
+                        </a>
+                        <a href="https://t.me/share/url?url=<?php echo urlencode(SITE_URL . $link_url); ?>&text=<?php echo urlencode($news_title); ?>" target="_blank" class="social-share-btn" aria-label="Share on Telegram">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M9.78 18.65c-.39 0-.33-.15-.46-.52l-1.17-3.84 8.98-5.68" />
+                                <path d="M9.78 18.65c.3 0 .43-.14.6-.3l1.64-1.59-2.05-1.24" />
+                                <path d="M9.97 15.52l4.98 3.67c.57.31.98.15 1.12-.52l2.02-9.5c.21-.82-.31-1.2-.86-.95L5.39 12.8c-.81.32-.8.77-.15.97l3.05.95 7.05-4.45c.33-.2.63-.09.38.13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </a>
+                        <a href="mailto:?subject=<?php echo rawurlencode($news_title); ?>&body=<?php echo rawurlencode($news_title . "\n\n" . SITE_URL . $link_url); ?>" class="social-share-btn" aria-label="Share by Email">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M2 6h20v12H2z" fill="none" stroke="currentColor" stroke-width="1.8" />
+                                <path d="M2 7l10 7L22 7" fill="none" stroke="currentColor" stroke-width="1.8" />
+                            </svg>
+                        </a>
+                        <a href="https://wa.me/?text=<?php echo urlencode($news_title) . ' ' . SITE_URL . $link_url; ?>" target="_blank" class="social-share-btn" aria-label="Share on WhatsApp">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12.04 2.5c-5.2 0-9.42 4.22-9.42 9.42 0 1.66.43 3.28 1.25 4.7L2.02 21.5l5.06-1.33a9.42 9.42 0 0 0 4.56 1.14c5.2 0 9.42-4.22 9.42-9.42 0-2.52-1.03-4.9-2.9-6.67A9.36 9.36 0 0 0 12.04 2.5zm0 16.9c-1.47 0-2.9-.4-4.15-1.14l-.3-.18-3 .79.81-2.93-.2-.31a7.84 7.84 0 0 1 1.24-9.33A7.83 7.83 0 0 1 12.04 4.2c4.33 0 7.84 3.51 7.84 7.84 0 4.33-3.51 7.84-7.84 7.84zm4.49-5.88c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.54.12-.16.24-.63.78-.77.94-.14.16-.28.18-.53.06-.24-.12-1.03-.38-1.96-1.22-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.77-.19-.47-.39-.41-.54-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.29-.22.24-.85.83-.85 2.03 0 1.2.87 2.35.99 2.51.12.16 1.71 2.61 4.15 3.66.58.25 1.02.4 1.38.5.58.18 1.11.16 1.53.1.47-.06 1.43-.58 1.64-1.14.21-.56.21-1.04.15-1.14-.06-.1-.22-.17-.47-.29z" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -383,8 +393,33 @@ $breadcrumbArticleTitle = trim((string)($news_title ?? 'Story'));
     </div>
 <?php endif; ?>
 
-<script src="<?php echo JS_LIBRARY ?>jquery.min.js"></script>
-<script src="<?php echo PLUGIN_LIBRARY ?>slick/slick.min.js"></script>
-
+<script>
+if (typeof window.triggerNativeShare !== 'function') {
+    window.triggerNativeShare = function(btn) {
+        var title = btn.getAttribute('data-share-title') || document.title;
+        var url = btn.getAttribute('data-share-url') || window.location.href;
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                url: url
+            }).catch(function(err) {
+                if (err.name !== 'AbortError') {
+                    console.log('Native share error:', err);
+                }
+            });
+        } else {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function() {
+                    alert('Story link copied to clipboard!');
+                }).catch(function() {
+                    prompt('Copy story link:', url);
+                });
+            } else {
+                prompt('Copy story link:', url);
+            }
+        }
+    };
+}
+</script>
 
 <?php require_once 'footer.php'; ?>
