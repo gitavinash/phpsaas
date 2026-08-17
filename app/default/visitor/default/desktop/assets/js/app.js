@@ -30,11 +30,23 @@ $(document).ready(function () {
           window.location.href = data.url;
         } else {
           console.log(`Success : `, data);
+          var errMsg = data.message || data.msg || 'Payment initialization failed. Please verify your shipping info and try again.';
+          if (typeof showCheckoutError === 'function') {
+            showCheckoutError(errMsg);
+          } else {
+            alert(errMsg);
+          }
         }
         $("#processToPayment").show();
       },
-      error: function (data) {
-        console.log(`error : `, data);
+      error: function (xhr, status, error) {
+        console.log(`error : `, xhr);
+        var errMsg = 'A network error occurred while connecting to the payment gateway. Please check your connection and try again.';
+        if (typeof showCheckoutError === 'function') {
+          showCheckoutError(errMsg);
+        } else {
+          alert(errMsg);
+        }
         $("#processToPayment").show();
       },
     });

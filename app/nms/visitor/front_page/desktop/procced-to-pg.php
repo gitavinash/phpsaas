@@ -1,26 +1,35 @@
 <?php
 
 if (!function_exists('renderPgError')) {
-    function renderPgError($msg) {
+    function renderPgError($msg)
+    {
         if (file_exists(__DIR__ . '/header.php')) {
             require_once __DIR__ . '/header.php';
         }
         echo '
-        <div class="status-page-wrapper">
+        <section class="status-page-wrapper">
             <div class="container">
                 <div class="status-card">
-                    <div class="status-icon-wrapper error">
-                        <i class="ph ph-warning-circle"></i>
-                    </div>
-                    <h1 class="status-title">Notice</h1>
-                    <p class="status-desc">' . htmlspecialchars($msg) . '</p>
-                    <div class="status-actions">
-                        <a href="/subscribe/" class="auth-btn primary-btn">View Subscriptions</a>
-                        <a href="/" class="auth-btn primary-btn outline">Return to Home</a>
+                    <div class="status-card-banner error"></div>
+                    <div class="status-card-inner">
+                        <div class="status-icon-wrapper error">
+                            <i class="ph ph-warning-circle"></i>
+                        </div>
+                        <span class="status-kicker-tag error">Order Notice</span>
+                        <h1 class="status-title">Action Required</h1>
+                        <p class="status-desc">' . htmlspecialchars($msg) . '</p>
+                        <div class="status-actions">
+                            <a href="/subscribe/" class="auth-btn primary-btn">View Subscriptions</a>
+                            <a href="/" class="auth-btn primary-btn outline">Return to Home</a>
+                        </div>
+                        <div class="status-footer-note">
+                            <i class="ph ph-shield-check"></i>
+                            <span>Secure checkout support &bull; <a href="mailto:info@theheadandtale.com">Contact Support</a></span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>';
+        </section>';
         if (file_exists(__DIR__ . '/footer.php')) {
             require_once __DIR__ . '/footer.php';
         }
@@ -28,21 +37,22 @@ if (!function_exists('renderPgError')) {
     }
 }
 
-if (!isset($id)) {
+$id = $id ?? $_GET['id'] ?? null;
+if (empty($id)) {
     renderPgError('Something went wrong. Order ID missing.');
 }
 
 $orderId = base64_decode($id);
 
-if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, order_total_price, order_currency, cart_relation_type FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "cart ON cart_session_id=order_cart_session_id WHERE order_id='{$orderId}' AND order_product_type='order' AND order_status=0 AND order_site_id=" . SITE_ID . " ORDER BY cart_updated DESC")) {
+if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, order_total_price, order_currency, cart_relation_type FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "cart ON cart_session_id=order_cart_session_id WHERE order_id='{$orderId}' AND order_status=0 AND order_site_id=" . SITE_ID . " ORDER BY cart_updated DESC")) {
     if (mysqli_num_rows($checkDetails) != 0) {
         extract(mysqli_fetch_assoc($checkDetails));
 
-        $cartQuery = "SELECT * FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "order ON cart_session_id= order_cart_session_id WHERE cart_relation_type='order' AND order_product_type='order' AND cart_site_id=" . SITE_ID . " ORDER BY cart_updated DESC";
+        $cartQuery = "SELECT * FROM " . TABLE_PREFIX . "cart INNER JOIN " . TABLE_PREFIX . "order ON cart_session_id= order_cart_session_id WHERE cart_relation_type='order' AND cart_site_id=" . SITE_ID . " ORDER BY cart_updated DESC";
 
         if ($cartInfo = mysqli_query($connection, $cartQuery)) {
             if (mysqli_num_rows($cartInfo) == 0) {
-                if (DEVELOPMENT_MODE == true) {
+                if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE == true) {
                     echo $cartQuery;
                 } else {
                     renderPgError('Your cart is currently empty.');
@@ -127,8 +137,50 @@ if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, ord
                                                     $siteApp = ((isset($app)) ? $app : 'default');
                                                     $pgRequestType = ((isset($pgRequestType)) ? $pgRequestType : 'default');
                                                     $url = '/payment/generate/?id=' . $transaction_id . '&pg_type=order&app=' . str_replace(' ', '', $siteApp) . ' &pgRequestType=' . str_replace(' ', '', $pgRequestType) . '&customRedirection=' . rtrim(SITE_URL, '/') . '/corporate-subscription-status/?tid=' . $transaction_id;
-                                                    header('Location: ' . $url, true, 301);
                                                 }
+
+                                                header('Location: ' . $url, true, 301);
+
+                                                if (file_exists(__DIR__ . '/header.php')) {
+                                                    require_once __DIR__ . '/header.php';
+                                                }
+
+                                                echo '
+                                                <section class="status-page-wrapper">
+                                                    <div class="container">
+                                                        <div class="status-card">
+                                                            <div class="status-card-banner loading"></div>
+                                                            <div class="status-card-inner">
+                                                                <div class="status-icon-wrapper loading">
+                                                                    <i class="ph ph-circle-notch spinner"></i>
+                                                                </div>
+                                                                <span class="status-kicker-tag loading">Redirecting to Checkout</span>
+                                                                <h1 class="status-title">Connecting to Payment Gateway...</h1>
+                                                                <p class="status-desc">Please wait while we transfer you to the secure payment server. Do not refresh or close this browser window.</p>
+                                                                <div class="pg-loader-bar">
+                                                                    <div class="pg-loader-progress"></div>
+                                                                </div>
+                                                                <div class="status-actions">
+                                                                    <a href="' . htmlspecialchars($url) . '" class="auth-btn primary-btn">Click here if not redirected &rarr;</a>
+                                                                </div>
+                                                                <div class="status-footer-note">
+                                                                    <i class="ph ph-lock-key"></i>
+                                                                    <span>256-Bit SSL Encrypted &bull; Safe Checkout</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <script>
+                                                    setTimeout(function() {
+                                                        window.location.href = ' . json_encode($url) . ';
+                                                    }, 100);
+                                                </script>';
+
+                                                if (file_exists(__DIR__ . '/footer.php')) {
+                                                    require_once __DIR__ . '/footer.php';
+                                                }
+                                                exit();
                                             }
                                         }
                                     } else {
@@ -140,15 +192,21 @@ if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, ord
                             } else {
                                 renderPgError('Cart is empty or something went wrong.');
                             }
+                        } else {
+                            renderPgError('Something went wrong while trying to fetch cart data.');
                         }
                     } else {
                         renderPgError('Something went wrong while trying to create a new order.');
                     }
+                } else {
+                    renderPgError('Something went wrong while trying to fetch order details.');
                 }
             }
         } else {
             renderPgError('Something went wrong while trying to fetch cart data.');
         }
+    } else {
+        renderPgError('Something went wrong while validating order.');
     }
 } else {
     renderPgError('Something went wrong while validating order.');

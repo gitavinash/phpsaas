@@ -1,8 +1,103 @@
 <?php
 
+if (!function_exists('renderShippingErrorPage')) {
+    function renderShippingErrorPage($title = "Checkout Error", $message = "Something went wrong while processing your order request.", $errorCode = "CHECKOUT_ERROR", $debugInfo = "")
+    {
+        require_once 'header.php';
+?>
+        <section class="checkout-box checkout-error-page">
+            <div class="container">
+                <div class="checkout-error-card">
+                    <div class="error-card-banner">
+                        <div class="error-icon-ring">
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <span class="error-code-badge"><?php echo htmlspecialchars(str_replace('_', ' ', $errorCode)); ?></span>
+                        <h1 class="error-card-title"><?php echo htmlspecialchars($title); ?></h1>
+                        <p class="error-card-desc"><?php echo htmlspecialchars($message); ?></p>
+                    </div>
+
+                    <div class="error-card-content">
+                        <div class="error-tips-box">
+                            <strong>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                Helpful Suggestions
+                            </strong>
+                            <ul>
+                                <li>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Verify your order link or return to the home page to restart checkout.
+                                </li>
+                                <li>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    If purchasing a subscription, check if your plan is already active.
+                                </li>
+                                <li>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Contact our support team if you believe this is a system issue.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <?php if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE === true && !empty($debugInfo)): ?>
+                            <details class="error-debug-details">
+                                <summary>Technical Diagnostics (Dev Mode)</summary>
+                                <pre class="debug-code"><?php echo htmlspecialchars($debugInfo); ?></pre>
+                            </details>
+                        <?php endif; ?>
+
+                        <div class="error-btn-group">
+                            <a href="/" class="button btn-error-home">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                                    <polyline points="12 19 5 12 12 5"></polyline>
+                                </svg>
+                                <span>Return to Home</span>
+                            </a>
+                            <a href="/contact-us/" class="btn-error-support">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                                <span>Contact Support</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="creditBox">
+                    <div class="container">
+                        <p>By continuing you agree to our <a href="/terms-and-conditions">Terms &amp; Conditions</a> and <a href="/privacy-policy/">Privacy Policy</a></p>
+                        <p class="powered-by">Powered by <a href="https://blumox.com" target="_blank" title="Build online e-commerce store with Cartt">Blumox Technologies</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+<?php
+        require_once 'footer.php';
+        exit();
+    }
+}
+
 if (!isset($id)) {
-    echo 'Something went wrong';
-    exit();
+    renderShippingErrorPage(
+        "Missing Order Identifier",
+        "No order ID was provided in your request. Please return to your cart and restart checkout.",
+        "MISSING_ORDER_ID"
+    );
 }
 
 if (SITE_ID == 49) {
@@ -39,26 +134,38 @@ if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, ord
 
         if ($cartInfo = mysqli_query($connection, $cartQuery)) {
             if (mysqli_num_rows($cartInfo) == 0) {
-                echo "Empty shipping cart";
-                exit();
+                renderShippingErrorPage(
+                    "Your Shipping Cart is Empty",
+                    "There are no active items found in your shipping cart session.",
+                    "EMPTY_CART"
+                );
             } else {
                 $inventory_currency_symbol = ((isset($inventory_currency_symbol)) ? $inventory_currency_symbol : '₹');
                 $inventory_price = ((isset($inventory_price)) ? $inventory_price : $order_total_price);
                 $inventory_tax_status = ((isset($inventory_tax_status)) ? $inventory_tax_status : 0);
             }
         } else {
-            echo "Something went wrong while trying to fetch cart data";
-            exit();
+            renderShippingErrorPage(
+                "Cart Data Fetch Failed",
+                "Something went wrong while trying to fetch cart items from the database.",
+                "CART_FETCH_ERROR"
+            );
         }
     } else {
-        if (DEVELOPMENT_MODE == true) {
-            echo "SELECT order_cart_session_id, order_total_price, order_currency, cart_relation_type FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "cart ON cart_session_id=order_cart_session_id WHERE order_id='{$orderId}' AND order_status=0 AND order_site_id=" . SITE_ID . " ORDER BY cart_updated DESC";
-        }
-        exit();
+        $devSql = (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE === true) ? "Query: SELECT order_cart_session_id, order_total_price, order_currency, cart_relation_type FROM " . TABLE_PREFIX . "order INNER JOIN " . TABLE_PREFIX . "cart ON cart_session_id=order_cart_session_id WHERE order_id='{$orderId}' AND order_status=0 AND order_site_id=" . SITE_ID . " ORDER BY cart_updated DESC" : "";
+        renderShippingErrorPage(
+            "Order Session Expired or Not Found",
+            "This checkout link may have expired or the order has already been completed.",
+            "ORDER_NOT_FOUND",
+            $devSql
+        );
     }
 } else {
-    echo "Something went wrong";
-    exit();
+    renderShippingErrorPage(
+        "Database System Error",
+        "Something went wrong while attempting to retrieve your order details.",
+        "DATABASE_ERROR"
+    );
 }
 
 require_once 'header.php';
@@ -90,6 +197,29 @@ require_once 'header.php';
 
         <div class="checkout-layout">
             <div class="checkout-main">
+                <!-- Dynamic / Session Error Information Banner Container -->
+                <div id="checkoutErrorContainer">
+                    <?php
+                    $checkoutErrorMsg = isset($_GET['error']) ? trim($_GET['error']) : (isset($errorMsg) ? $errorMsg : '');
+                    if (!empty($checkoutErrorMsg)):
+                    ?>
+                        <div class="checkout-alert-banner alert-danger" role="alert">
+                            <div class="alert-icon-ring">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                            <div class="alert-content">
+                                <strong class="alert-heading">Notice</strong>
+                                <span class="alert-message"><?php echo htmlspecialchars($checkoutErrorMsg); ?></span>
+                            </div>
+                            <button type="button" class="alert-dismiss-btn" onclick="this.closest('.checkout-alert-banner').remove();" aria-label="Close Notice">&times;</button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
                 <?php
 
                 $checkAppFile = DEFAULT_USER_PATH . ltrim(BASE_URL, '/') . SITE_APP . '.php';
@@ -333,6 +463,28 @@ require_once 'header.php';
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
             }
+        }
+
+        function showCheckoutError(msg) {
+            var container = document.getElementById('checkoutErrorContainer');
+            if (!container) return;
+            var html = '<div class="checkout-alert-banner alert-danger animated-shake" role="alert">' +
+                '<div class="alert-icon-ring">' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>' +
+                '</svg>' +
+                '</div>' +
+                '<div class="alert-content">' +
+                '<strong class="alert-heading">Action Required</strong>' +
+                '<span class="alert-message">' + (msg || 'Payment processing failed. Please try again or choose another payment method.') + '</span>' +
+                '</div>' +
+                '<button type="button" class="alert-dismiss-btn" onclick="this.closest(\'.checkout-alert-banner\').remove();" aria-label="Close Notice">&times;</button>' +
+                '</div>';
+            container.innerHTML = html;
+            container.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest'
+            });
         }
     </script>
 

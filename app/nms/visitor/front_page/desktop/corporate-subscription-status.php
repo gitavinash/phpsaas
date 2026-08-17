@@ -1,106 +1,36 @@
 <?php
-if (!isset($orderId)) {
+if (!isset($id)) {
   echo "<h1>Something went wrong</h1>";
   exit();
 }
 
-$orderId = base64_decode($orderId);
-$orderData = explode('_', $orderId);
-$order_id = $orderData[0];
+$orderId = base64_decode($id);
 
-// Fetch payment status from Cashfree
-$cashfreeStatus = getCashfreePaymentStatus($orderId);
-
-$paymentStatus = $cashfreeStatus['order_status'] ?? 'UNKNOWN';
-$paymentSessionId = $cashfreeStatus['payment_session_id'] ?? '';
-
-function getCashfreePaymentStatus($orderId)
-{
-  // Determine API endpoint based on environment
-  $baseUrl = (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE == TRUE)
-    ? 'https://sandbox.cashfree.com/pg/orders'
-    : 'https://api.cashfree.com/pg/orders';
-
-  $url = $baseUrl . "/" . urlencode($orderId);
-
-  if (!defined('PG_APP_ID') || !defined('PG_SECRET_KEY')) {
-    error_log("Cashfree configuration missing: PG_APP_ID or PG_SECRET_KEY not defined");
-    return null;
-  }
-
-  $ch = curl_init($url);
-
-  curl_setopt_array($ch, [
-    CURLOPT_URL => $url,
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_TIMEOUT => 30,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => "GET",
-    CURLOPT_HTTPHEADER => [
-      "accept: application/json",
-      "content-type: application/json",
-      "x-api-version: 2023-08-01",
-      "x-client-id: " . PG_APP_ID,
-      "x-client-secret: " . PG_SECRET_KEY
-    ],
-    CURLOPT_SSL_VERIFYPEER => true,
-    CURLOPT_SSL_VERIFYHOST => 2
-  ]);
-
-  $response = curl_exec($ch);
-  $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-  $error = curl_error($ch);
-  curl_close($ch);
-
-  if ($error) {
-    error_log("Cashfree API Error: " . $error);
-    return null;
-  }
-
-  if ($httpCode !== 200) {
-    error_log("Cashfree API HTTP Error: " . $httpCode . " Response: " . $response);
-    return null;
-  }
-
-  $result = json_decode($response, true);
-
-  if (json_last_error() !== JSON_ERROR_NONE) {
-    error_log("Cashfree API JSON Decode Error: " . json_last_error_msg());
-    return null;
-  }
-
-  return $result;
-}
-
-$transactionQuery = "SELECT transaction_id, transaction_status, transaction_user_id, transaction_type, order_msg FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id WHERE transaction_id=" . base64_decode($tid) . " AND order_site_id=" . SITE_ID . " AND transaction_site_id=" . SITE_ID;
+$transactionQuery = "SELECT transaction_id, transaction_status, transaction_user_id, transaction_type, order_msg FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id WHERE transaction_order_id=" . $orderId . " AND order_site_id=" . SITE_ID . " AND transaction_site_id=" . SITE_ID;
 
 if ($checkTransaction = mysqli_query($connection, $transactionQuery)) {
   if (mysqli_num_rows($checkTransaction) != 0) {
     extract(mysqli_fetch_assoc($checkTransaction));
-    if ($transaction_status == 1) {
-      header("Location: /manage-subscribers/");
-      exit();
-    } else {
-      if (strtolower($paymentStatus) == 'paid') {
-        $updateQuery = "UPDATE " . TABLE_PREFIX . "transaction SET transaction_status=1 WHERE transaction_id='{$transaction_id}' AND transaction_site_id=" . SITE_ID;
-        if (!mysqli_query($connection, $updateQuery)) {
-          if (DEVELOPMENT_MODE == true) {
-            echo mysqli_error($connection);
-          } else {
-            echo "Something went wrong";
-            exit();
-          }
+    $paymentStatus = (($transaction_status == 1) ? 'Paid' : 'Unpaid');
+    if (strtolower($paymentStatus) == 'paid') {
+      $updateQuery = "UPDATE " . TABLE_PREFIX . "transaction SET transaction_status=1 WHERE transaction_id='{$transaction_id}' AND transaction_site_id=" . SITE_ID;
+      if (!mysqli_query($connection, $updateQuery)) {
+        if (DEVELOPMENT_MODE == true) {
+          echo mysqli_error($connection);
+        } else {
+          echo "Something went wrong";
+          exit();
         }
+      }
 
-        $addCorpSubscriptionQuery = "INSERT INTO " . TABLE_PREFIX . "corporate_subscription (cp_site_id, cp_admin_user_id, cp_used, cp_limit, cp_expiry) VALUES (" . SITE_ID . ", {$transaction_user_id}, 0, {$order_msg}, DATE_ADD(CURDATE(), INTERVAL 1 YEAR))";
+      $addCorpSubscriptionQuery = "INSERT INTO " . TABLE_PREFIX . "corporate_subscription (cp_site_id, cp_admin_user_id, cp_used, cp_limit, cp_expiry) VALUES (" . SITE_ID . ", {$transaction_user_id}, 0, {$order_msg}, DATE_ADD(CURDATE(), INTERVAL 1 YEAR))";
 
-        if (!mysqli_query($connection, $addCorpSubscriptionQuery)) {
-          if (DEVELOPMENT_MODE == true) {
-            echo mysqli_error($connection);
-          } else {
-            echo "Something went wrong";
-            exit();
-          }
+      if (!mysqli_query($connection, $addCorpSubscriptionQuery)) {
+        if (DEVELOPMENT_MODE == true) {
+          echo mysqli_error($connection);
+        } else {
+          echo "Something went wrong";
+          exit();
         }
       }
     }
@@ -148,7 +78,7 @@ $isSuccess = (strtolower($paymentStatus) == 'paid');
       <div class="detail-grid">
         <div class="detail-item">
           <span class="detail-label">Order Reference</span>
-          <span class="detail-val">#<?php echo htmlspecialchars($order_id); ?></span>
+          <span class="detail-val">#<?php echo htmlspecialchars($orderId); ?></span>
         </div>
         <div class="detail-item">
           <span class="detail-label">Payment Status</span>

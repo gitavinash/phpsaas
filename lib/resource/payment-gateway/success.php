@@ -48,7 +48,7 @@ switch ($transaction_type) {
         break;
 
     default:
-        $validTransactionCheckQuery = "SELECT transaction_id, transaction_order_id as order_id, transaction_cart_id, transaction_method, transaction_payment_mode, transaction_time, transaction_currency, transaction_amount, order_id, order_product_id, order_total_price, order_product_qty, order_product_price, order_delivery_charges, profile_mobile as mobile, profile_email, profile_first_name, profile_last_name, profile_display_name, city_name, state_name, country_name, address_name, address_house_no, address_area, address_landmark, address_pin_code FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "profile ON transaction_user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id LEFT JOIN " . TABLE_PREFIX . "address ON address_id=order_address_id LEFT JOIN " . TABLE_PREFIX . "city ON city_id=address_city_id LEFT JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "country ON country_id=address_country_id WHERE transaction_id='{$transaction_id}' AND transaction_site_id=" . SITE_ID;
+        $validTransactionCheckQuery = "SELECT transaction_id, transaction_order_id as order_id, transaction_cart_id, transaction_method, transaction_payment_mode, transaction_time, transaction_currency, transaction_amount, order_id, order_product_id, order_product_type, order_total_price, order_product_qty, order_product_price, order_delivery_charges, profile_mobile as mobile, profile_email, profile_first_name, profile_last_name, profile_display_name, city_name, state_name, country_name, address_name, address_house_no, address_area, address_landmark, address_pin_code FROM " . TABLE_PREFIX . "transaction INNER JOIN " . TABLE_PREFIX . "profile ON transaction_user_id=profile_user_id INNER JOIN " . TABLE_PREFIX . "order ON transaction_order_id=order_id LEFT JOIN " . TABLE_PREFIX . "address ON address_id=order_address_id LEFT JOIN " . TABLE_PREFIX . "city ON city_id=address_city_id LEFT JOIN " . TABLE_PREFIX . "state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "country ON country_id=address_country_id WHERE transaction_id='{$transaction_id}' AND transaction_site_id=" . SITE_ID;
         break;
 }
 
@@ -79,7 +79,10 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
                 if ($updateOrderStatus && $updateCartStatus) {
 
                     mysqli_query($connection, "COMMIT");
-                    header("Location: /thank-you/?id={$id}&redirectUrl={$redirectTo}", TRUE, 301);
+
+                    $urlToRedirect = (($order_product_type == 'corporate_subscription') ? '/corporate-subscription-status/' : '/thank-you/');
+
+                    header("Location: {$urlToRedirect}?id={$id}&redirectUrl={$redirectTo}", TRUE, 301);
                     exit();
                 } else {
 
@@ -104,7 +107,9 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
 
                     mysqli_query($connection, "COMMIT");
 
-                    header("Location: /thank-you/?id={$id}&redirectUrl={$redirectTo}", TRUE, 301);
+                    $urlToRedirect = (($order_product_type == 'corporate_subscription') ? '/corporate-subscription-status/' : '/thank-you/');
+
+                    header("Location: {$urlToRedirect}?id={$id}&redirectUrl={$redirectTo}", TRUE, 301);
                     exit();
                 } else {
 
@@ -209,7 +214,9 @@ if ($checkTransaction = mysqli_query($connection, $validTransactionCheckQuery)) 
 
                     mysqli_query($connection, "COMMIT");
 
-                    header("Location: /thank-you/?id={$id}", TRUE, 301);
+                    $urlToRedirect = (($order_product_type == 'corporate_subscription') ? '/corporate-subscription-status/' : '/thank-you/');
+
+                    header("Location: {$urlToRedirect}?id={$id}", TRUE, 301);
                     exit();
                 } else {
 

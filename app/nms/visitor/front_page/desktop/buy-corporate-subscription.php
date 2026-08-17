@@ -36,7 +36,7 @@ mysqli_query($connection, "START TRANSACTION");
 
 if ($checkOrder = mysqli_query($connection, "SELECT order_id as orderRelationId FROM " . TABLE_PREFIX . "order WHERE order_cart_session_id='" . SESSION_ID . "' AND order_site_id='" . SITE_ID . "' AND order_status!=1")) {
     if (mysqli_num_rows($checkOrder) == 0) {
-        $addNewOrder = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "order(order_site_id, order_user_id, order_cart_session_id, order_product_price, order_product_type, order_status, order_generate, order_msg) VALUES(" . SITE_ID . ", '{$user_id}', '" . SESSION_ID . "', '{$calculatedTotal}', 'order', 0, NOW(), '{$requestedSeats}')");
+        $addNewOrder = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "order(order_site_id, order_user_id, order_cart_session_id, order_product_price, order_product_type, order_status, order_generate, order_msg) VALUES(" . SITE_ID . ", '{$user_id}', '" . SESSION_ID . "', '{$calculatedTotal}', 'corporate_subscription', 0, NOW(), '{$requestedSeats}')");
         $orderRelationId = mysqli_insert_id($connection);
         $order_id = base64_encode($orderRelationId);
     } else {
