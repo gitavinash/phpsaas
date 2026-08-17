@@ -3662,7 +3662,6 @@ body.premium-admin .container .dataTables_wrapper .dataTables_processing {
    ============================================================ */
 
 @media (max-width: 680px) {
-
   /* ──────────────────────────────────────────
      HEADER: strict flex row
      [☰  Logo]  ···············  [Avatar]
@@ -3670,7 +3669,9 @@ body.premium-admin .container .dataTables_wrapper .dataTables_processing {
   ────────────────────────────────────────── */
   body.premium-admin header {
     position: fixed;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 52px;
     padding: 0 10px;
     display: flex;
@@ -3679,10 +3680,10 @@ body.premium-admin .container .dataTables_wrapper .dataTables_processing {
     justify-content: space-between;
     gap: 0;
     box-sizing: border-box;
-    background: rgba(255,255,255,0.97);
+    background: rgba(255, 255, 255, 0.97);
     backdrop-filter: blur(6px);
     border-bottom: 1px solid #e8edf4;
-    box-shadow: 0 2px 10px rgba(15,23,42,0.07);
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.07);
     z-index: 1000;
   }
 
@@ -3793,7 +3794,7 @@ body.premium-admin .container .dataTables_wrapper .dataTables_processing {
     display: flex;
     align-items: center;
     padding: 4px;
-    font-size: 0;        /* hide "Welcome, Name" text */
+    font-size: 0; /* hide "Welcome, Name" text */
     gap: 0;
     border-radius: 50%;
     border: none;
@@ -3814,7 +3815,7 @@ body.premium-admin .container .dataTables_wrapper .dataTables_processing {
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid #e2e8f0;
-    box-shadow: 0 1px 6px rgba(15,23,42,0.12);
+    box-shadow: 0 1px 6px rgba(15, 23, 42, 0.12);
   }
 
   body.premium-admin .right-side ul li .profile-img img {
@@ -3976,7 +3977,6 @@ body.premium-admin .container .dataTables_wrapper .dataTables_processing {
 
 /* ── Extra-small phones (≤ 480px) ── */
 @media (max-width: 480px) {
-
   body.premium-admin header {
     height: 50px;
     padding: 0 8px;
@@ -5834,6 +5834,7 @@ body.premium-admin main > h2 + .form-box .form-group textarea:focus {
   flex-direction: column;
   gap: 4px;
   flex-grow: 1 !important;
+  min-width: 200px;
 }
 
 .order-item-edit-btn-wrapper {
