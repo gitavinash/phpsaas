@@ -296,39 +296,39 @@ if (isset($id)) {
                                         <div class="premium-form-grid">
                                             <div class="premium-form-group">
                                                 <label>First Name</label>
-                                                <input type="text" name="first_name" class="premium-form-control" value="<?php echo $profile_first_name ?>">
+                                                <input type="text" name="first_name" class="premium-form-control" value="<?php echo $profile_first_name ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                             </div>
                                             <div class="premium-form-group">
                                                 <label>Last Name</label>
-                                                <input type="text" name="last_name" class="premium-form-control" value="<?php echo $profile_last_name ?>">
+                                                <input type="text" name="last_name" class="premium-form-control" value="<?php echo $profile_last_name ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                             </div>
                                             <div class="premium-form-group">
                                                 <label>Email Address</label>
-                                                <input type="text" name="email" class="premium-form-control" value="<?php echo $user_email ?>">
+                                                <input type="text" name="email" class="premium-form-control" value="<?php echo $user_email ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                             </div>
                                             <div class="premium-form-group">
                                                 <label>Mobile Number</label>
-                                                <input type="text" name="mobile" class="premium-form-control" value="<?php echo $user_mobile ?>">
+                                                <input type="text" name="mobile" class="premium-form-control" value="<?php echo $user_mobile ?>" readonly>
                                             </div>
                                             <div class="premium-form-group">
                                                 <label>House No. / Suite</label>
-                                                <input type="text" name="address_house_no" class="premium-form-control" value="<?php echo $address_house_no ?>">
+                                                <input type="text" name="address_house_no" class="premium-form-control" value="<?php echo $address_house_no ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                             </div>
                                             <div class="premium-form-group">
                                                 <label>Address Line</label>
-                                                <input type="text" name="address_area" class="premium-form-control" value="<?php echo $address_area ?>">
+                                                <input type="text" name="address_area" class="premium-form-control" value="<?php echo $address_area ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                             </div>
                                             <div class="premium-form-group">
                                                 <label>Landmark</label>
-                                                <input type="text" name="address_landmark" class="premium-form-control" value="<?php echo $address_landmark ?>">
+                                                <input type="text" name="address_landmark" class="premium-form-control" value="<?php echo $address_landmark ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                             </div>
                                             <div class="premium-form-group">
                                                 <label>City</label>
-                                                <input type="text" name="city" class="premium-form-control" value="<?php echo $city_name ?>">
+                                                <input type="text" name="city" class="premium-form-control" value="<?php echo $city_name ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                             </div>
                                             <div class="premium-form-group">
                                                 <label>State</label>
-                                                <select class="premium-form-control selectJS" name="state" required>
+                                                <select class="premium-form-control selectJS" name="state" required <?php echo ((USER_TYPE != 'administrator') ? 'disabled' : '') ?>>
                                                     <?php
                                                     if ($stateDetails = mysqli_query($connection, "SELECT state_id, state_name FROM " . TABLE_PREFIX . "state WHERE state_country_id=101")) {
                                                         if (mysqli_num_rows($stateDetails) != 0) {
@@ -345,11 +345,11 @@ if (isset($id)) {
                                             </div>
                                             <div class="premium-form-group">
                                                 <label>Pin Code</label>
-                                                <input type="text" name="address_pin_code" class="premium-form-control" value="<?php echo $address_pin_code ?>">
+                                                <input type="text" name="address_pin_code" class="premium-form-control" value="<?php echo $address_pin_code ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                             </div>
                                             <div class="premium-form-group full-width">
                                                 <label>Address Type</label>
-                                                <select name="address_type" class="premium-form-control selectJS">
+                                                <select name="address_type" class="premium-form-control selectJS" <?php echo ((USER_TYPE != 'administrator') ? 'disabled' : '') ?>>
                                                     <option value="">Select address type</option>
                                                     <option value="home" <?php echo (($address_type == 'home') ? 'selected' : '') ?>>Home</option>
                                                     <option value="work" <?php echo (($address_type == 'work') ? 'selected' : '') ?>>Work</option>
@@ -427,77 +427,89 @@ if (isset($id)) {
                                     </div>
 
 
-                                    <!-- Card: Fulfillment Partner / Vendor Details -->
-                                    <div class="premium-card">
-                                        <h3 class="premium-card-title"><i class="fas fa-truck"></i> Delivery Partner</h3>
-                                        <div id="deliveryAgentEditMode" style="display: block;">
-                                            <div class="premium-form-group">
-                                                <?php
+                                    <?php
 
-                                                if ($order_assign_to == 0) { ?>
-                                                    <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
-                                                        <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
-                                                        <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
-                                                            <strong>No Delivery Partner Assigned</strong><br>
-                                                            Please assign a delivery partner to process this order.
-                                                        </div>
-                                                    </div>
-                                                <?php
-                                                }
-
-                                                ?>
-                                                <label><?php echo ($order_assign_to == 0) ? 'Select' : 'Change'; ?> Delivery Partner</label>
-                                                <select name="assigned_delivery_agent" class="premium-form-control selectJS" style="width: 100%;">
-                                                    <option value="">Select delivery partner</option>
+                                    if ($order_status == '2') { ?>
+                                        <!-- Card: Fulfillment Partner / Vendor Details -->
+                                        <div class="premium-card">
+                                            <h3 class="premium-card-title"><i class="fas fa-truck"></i> Delivery Partner</h3>
+                                            <div id="deliveryAgentEditMode" style="display: block;">
+                                                <div class="premium-form-group">
                                                     <?php
 
-                                                    $userParentFilter = (USER_TYPE != 'administrator') ? "AND user_parent_id=" . USER_ID : "";
-
-                                                    if ($checkDeliveryAgent = mysqli_query($connection, "SELECT user_id, profile_display_name FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=site_access_user_id INNER JOIN " . TABLE_PREFIX . "user ON user_id=site_access_user_id {$userParentFilter} WHERE site_access_type='delivery_agent' AND site_access_status=1 AND site_access_site_id=" . SITE_ID)) {
-                                                        if (mysqli_num_rows($checkDeliveryAgent) != 0) {
-                                                            while ($deliveryAgentData = mysqli_fetch_assoc($checkDeliveryAgent)) {
-                                                                echo "<option value='{$deliveryAgentData['user_id']}' " . ($order_assign_to == $deliveryAgentData['user_id'] ? "selected" : "") . ">{$deliveryAgentData['profile_display_name']}</option>";
-                                                            }
-                                                        }
+                                                    if ($order_assign_to == 0) { ?>
+                                                        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
+                                                            <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
+                                                            <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
+                                                                <strong>No Delivery Partner Assigned</strong><br>
+                                                                Please assign a delivery partner to process this order.
+                                                            </div>
+                                                        </div>
+                                                    <?php
                                                     }
 
                                                     ?>
-                                                </select>
-                                            </div>
-                                            <div style="margin-top: 12px;">
-                                                <button type="button" class="btn-premium-action btn-save" id="saveDeliveryPartnerBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> <?php echo ($order_assign_to == 0) ? 'Assign' : 'Change'; ?> Delivery Partner</button>
+                                                    <label><?php echo ($order_assign_to == 0) ? 'Select' : 'Change'; ?> Delivery Partner</label>
+                                                    <select name="assigned_delivery_agent" class="premium-form-control selectJS" style="width: 100%;">
+                                                        <option value="">Select delivery partner</option>
+                                                        <?php
+
+                                                        $userParentFilter = (USER_TYPE != 'administrator') ? "AND user_parent_id=" . USER_ID : "";
+
+                                                        if ($checkDeliveryAgent = mysqli_query($connection, "SELECT user_id, profile_display_name FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=site_access_user_id INNER JOIN " . TABLE_PREFIX . "user ON user_id=site_access_user_id {$userParentFilter} WHERE site_access_type='delivery_agent' AND site_access_status=1 AND site_access_site_id=" . SITE_ID)) {
+                                                            if (mysqli_num_rows($checkDeliveryAgent) != 0) {
+                                                                while ($deliveryAgentData = mysqli_fetch_assoc($checkDeliveryAgent)) {
+                                                                    echo "<option value='{$deliveryAgentData['user_id']}' " . ($order_assign_to == $deliveryAgentData['user_id'] ? "selected" : "") . ">{$deliveryAgentData['profile_display_name']}</option>";
+                                                                }
+                                                            }
+                                                        }
+
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div style="margin-top: 12px;">
+                                                    <button type="button" class="btn-premium-action btn-save" id="saveDeliveryPartnerBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> <?php echo ($order_assign_to == 0) ? 'Assign' : 'Change'; ?> Delivery Partner</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    <?php
+                                    }
+
+                                    ?>
+
 
                                     <!-- Card 4: Receiver Details -->
                                     <div class="premium-card">
                                         <h3 class="premium-card-title"><i class="fas fa-map-marker-alt"></i> Receiver Details</h3>
                                         <div class="premium-form-group" style="margin-bottom: 16px;">
                                             <label>Receiver Name</label>
-                                            <input type="text" class="premium-form-control" value="<?php echo $address_name ?>" readonly>
+                                            <input type="text" name="address_name" class="premium-form-control" value="<?php echo htmlspecialchars($address_name ?? '', ENT_QUOTES); ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                         </div>
                                         <div class="premium-form-group" style="margin-bottom: 16px;">
                                             <label>Contact Number</label>
-                                            <input type="text" class="premium-form-control" value="<?php echo $address_mobile ?>" readonly>
+                                            <input type="text" name="address_mobile" class="premium-form-control" value="<?php echo htmlspecialchars($address_mobile ?? '', ENT_QUOTES); ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                         </div>
 
                                         <?php
                                         if ($orderMeta = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$id}' AND order_site_id" . $siteId)) {
                                             if (mysqli_num_rows($orderMeta) != 0) {
+                                                $todayDateStr = date('Y-m-d');
                                                 while ($orderMetaData = mysqli_fetch_assoc($orderMeta)) {
                                                     extract($orderMetaData);
-                                                    if ($order_meta_key == 'message') { ?>
+                                                    $cleanMetaKey = strtolower(trim(str_replace(['_', ' '], '', (string)$order_meta_key)));
+
+                                                    if ($cleanMetaKey == 'deliverydate') { 
+                                                        $formattedDate = '';
+                                                        if (!empty($order_meta_value)) {
+                                                            $time = strtotime($order_meta_value);
+                                                            $formattedDate = ($time !== false) ? date('Y-m-d', $time) : $order_meta_value;
+                                                        }
+                                                    ?>
                                                         <div class="premium-form-group" style="margin-bottom: 16px;">
-                                                            <label><?php echo ucwords(str_replace('_', ' ', $order_meta_key)) ?></label>
-                                                            <textarea class="premium-form-control" readonly><?php echo $order_meta_value ?></textarea>
+                                                            <label>Delivery Date</label>
+                                                            <input type="date" name="order_meta[<?php echo htmlspecialchars($order_meta_key, ENT_QUOTES); ?>]" class="premium-form-control order-meta-datepicker" min="<?php echo $todayDateStr; ?>" value="<?php echo htmlspecialchars($formattedDate, ENT_QUOTES); ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
                                                         </div>
-                                                    <?php } else { ?>
-                                                        <div class="premium-form-group" style="margin-bottom: 16px;">
-                                                            <label><?php echo ucwords(str_replace('_', ' ', $order_meta_key)) ?></label>
-                                                            <input type="text" class="premium-form-control" value="<?php echo $order_meta_value ?>" readonly>
-                                                        </div>
-                                        <?php }
+                                                    <?php }
                                                 }
                                             }
                                         }
@@ -511,18 +523,34 @@ if (isset($id)) {
 
                                 <!-- Backend Admin CTA -->
                                 <input type="hidden" name="id" value="<?php echo $id ?>">
-                                <a href="#" id="orderUpdateData" class="btn-premium-action btn-reschedule"><i class="fas fa-check"></i> Update order</a>
 
-                                <!-- CTA for Vendors -->
-                                <input type="hidden" name="type" value="order">
-                                <input type="hidden" name="id" value="<?php echo $id ?>">
-                                <a href="#" id="orderConfirmBtn" class="btn-premium-action btn-confirm"><i class="fas fa-check"></i> Accept</a>
-                                <a href="#" id="orderCancelBtn" class="btn-premium-action btn-cancel"><i class="fas fa-times"></i> Reject</a>
+                                <?php
 
-                                <!-- CTA for Delivery Agents -->
-                                <a href="#" id="orderRescheduleBtn" class="btn-premium-action btn-reschedule"><i class="fas fa-calendar-plus"></i> Reschedule Delivery</a>
-                                <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return"><i class="fas fa-undo"></i> Return</a>
-                                <a href="#" id="orderDeliverBtn" class="btn-premium-action btn-delivered"><i class="fas fa-shipping-fast"></i> Delivered</a>
+                                if ($order_status == 0) { ?>
+                                    <a href="#" id="orderUpdateData" class="btn-premium-action btn-reschedule"><i class="fas fa-check"></i> Update order</a>
+                                <?php }
+
+                                if ($order_status == 2) { ?>
+                                    <!-- CTA for Vendors -->
+                                    <input type="hidden" name="type" value="order">
+                                    <input type="hidden" name="id" value="<?php echo $id ?>">
+                                    <a href="#" id="orderConfirmBtn" class="btn-premium-action btn-confirm"><i class="fas fa-check"></i> Accept</a>
+                                    <a href="#" id="orderCancelBtn" class="btn-premium-action btn-cancel"><i class="fas fa-times"></i> Reject</a>
+                                <?php
+                                }
+
+                                if ($order_status == 5 || $order_status == 1) { ?>
+                                    <!-- CTA for Delivery Agents -->
+                                    <a href="#" id="orderRescheduleBtn" class="btn-premium-action btn-reschedule"><i class="fas fa-calendar-plus"></i> Reschedule Delivery</a>
+                                    <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return"><i class="fas fa-undo"></i> Return</a>
+                                    <a href="#" id="orderDeliverBtn" class="btn-premium-action btn-delivered"><i class="fas fa-shipping-fast"></i> Delivered</a>
+                                <?php
+                                }
+
+                                ?>
+
+                                <a href="/tracking/?orderid=OD<?php echo $id ?>" class="btn-premium-action btn-track" target="_blank"><i class="fas fa-route"></i> Track order <i class="fas fa-external-link-alt" style="font-size: 11px; margin-left: 4px;"></i></a>
+
                             </div>
                         </form>
                     </div>
@@ -636,6 +664,18 @@ if (isset($id)) {
 
                     .btn-reschedule:hover {
                         background-color: #2563eb !important;
+                    }
+
+                    .btn-track {
+                        background-color: #8b5cf6 !important;
+                        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+                        color: #ffffff !important;
+                    }
+
+                    .btn-track:hover {
+                        background-color: #7c3aed !important;
+                        background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+                        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35) !important;
                     }
 
                     .order-action-modal {
@@ -1036,1645 +1076,9 @@ if (isset($id)) {
                 </style>
 
                 <script>
-                    (function() {
-                        var modal = document.getElementById('orderActionModal');
-                        if (!modal) {
-                            return;
-                        }
-
-                        var form = document.getElementById('orderActionForm');
-                        var actionTypeInput = document.getElementById('actionTypeInput');
-                        var modalTitle = document.getElementById('modalTitle');
-                        var submitBtn = document.getElementById('submitActionBtn');
-                        var closeBtns = modal.querySelectorAll('.close-modal-btn');
-                        var actionPhotoGroup = document.getElementById('actionPhotoGroup');
-                        var fileInput = document.getElementById('actionPhoto');
-                        var photoRequiredMark = document.getElementById('photoRequiredMark');
-                        var returnReasonGroup = document.getElementById('returnReasonGroup');
-                        var returnReasonInput = document.getElementById('returnReasonInput');
-                        var returnReasonRequiredMark = document.getElementById('returnReasonRequiredMark');
-                        var commentInput = document.getElementById('actionComment');
-                        var commentRequiredMark = document.getElementById('commentRequiredMark');
-                        var rescheduleFields = document.getElementById('rescheduleFields');
-                        var deliveryDateInput = document.getElementById('deliveryDateInput');
-                        var deliveryPreferredTimeInput = document.getElementById('deliveryPreferredTimeInput');
-                        var deliveryDateRequiredMark = document.getElementById('deliveryDateRequiredMark');
-                        var deliveryTimeRequiredMark = document.getElementById('deliveryTimeRequiredMark');
-                        var previewBox = document.getElementById('photoPreviewBox');
-                        var toast = document.getElementById('orderToastNotification');
-                        var feedbackBox = document.getElementById('orderActionFeedback');
-                        var feedbackTitle = document.getElementById('orderActionFeedbackTitle');
-                        var feedbackMeta = document.getElementById('orderActionFeedbackMeta');
-                        var feedbackBody = document.getElementById('orderActionFeedbackBody');
-                        var feedbackToggle = document.getElementById('toggleOrderActionFeedback');
-                        var today = new Date();
-                        var tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-
-                        function formatDateForInput(dateObj) {
-                            var yyyy = dateObj.getFullYear();
-                            var mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-                            var dd = String(dateObj.getDate()).padStart(2, '0');
-                            return yyyy + '-' + mm + '-' + dd;
-                        }
-
-                        function isFutureDateOnly(dateValue) {
-                            if (!dateValue) {
-                                return false;
-                            }
-                            return dateValue >= formatDateForInput(tomorrow);
-                        }
-
-                        var minAllowedDate = formatDateForInput(tomorrow);
-                        var currentActionConfig = null;
-                        window.orderUiProcessing = window.orderUiProcessing || {};
-
-                        window.orderUiProcessing.setButtonProcessing = function(button, labelText) {
-                            if (!button || button.getAttribute('data-processing') === '1') {
-                                return;
-                            }
-
-                            button.setAttribute('data-processing', '1');
-                            button.setAttribute('aria-disabled', 'true');
-                            button.dataset.originalHtml = button.innerHTML;
-                            button.style.pointerEvents = 'none';
-                            button.style.opacity = '0.85';
-                            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (labelText || 'Processing...');
-                        };
-
-                        window.orderUiProcessing.clearButtonProcessing = function(button) {
-                            if (!button || button.getAttribute('data-processing') !== '1') {
-                                return;
-                            }
-
-                            button.removeAttribute('data-processing');
-                            button.removeAttribute('aria-disabled');
-                            button.style.pointerEvents = '';
-                            button.style.opacity = '';
-
-                            if (button.dataset.originalHtml) {
-                                button.innerHTML = button.dataset.originalHtml;
-                                delete button.dataset.originalHtml;
-                            }
-                        };
-
-                        if (deliveryDateInput) {
-                            deliveryDateInput.setAttribute('min', minAllowedDate);
-                            deliveryDateInput.addEventListener('focus', function() {
-                                if (typeof this.showPicker === 'function') {
-                                    this.showPicker();
-                                }
-                            });
-                            deliveryDateInput.addEventListener('click', function() {
-                                if (typeof this.showPicker === 'function') {
-                                    this.showPicker();
-                                }
-                            });
-                            deliveryDateInput.addEventListener('change', function() {
-                                if (this.value && !isFutureDateOnly(this.value)) {
-                                    this.value = '';
-                                    showToast('Please select a future date only.', 'error');
-                                }
-                            });
-                        }
-
-                        var configs = {
-                            'orderRescheduleBtn': {
-                                action: 'reschulde',
-                                endpoint: '/api/order/reschdule_delivery/',
-                                title: 'Confirm Other Day Delivery',
-                                btnText: 'Confirm Other Day Delivery',
-                                colorClass: 'action-reschedule',
-                                requireComment: true,
-                                requireSchedule: true,
-                                requirePhoto: false,
-                                showPhotoField: false,
-                                requireReturnReason: false
-                            },
-                            'orderReturnBtn': {
-                                action: 'return',
-                                endpoint: '/api/order/return_delivery/',
-                                title: 'Confirm Return',
-                                btnText: 'Confirm Return',
-                                colorClass: 'action-return',
-                                requireComment: false,
-                                requireSchedule: false,
-                                requirePhoto: false,
-                                showPhotoField: false,
-                                requireReturnReason: true
-                            },
-                            'orderDeliverBtn': {
-                                action: 'deliverd',
-                                endpoint: '/api/order/confirm_delivery/',
-                                title: 'Confirm Delivery',
-                                btnText: 'Confirm Delivery',
-                                colorClass: 'action-deliver',
-                                requireComment: true,
-                                requireSchedule: false,
-                                requirePhoto: true,
-                                showPhotoField: true,
-                                requireReturnReason: false
-                            }
-                        };
-
-                        function closeModal() {
-                            modal.classList.remove('is-active');
-                            form.reset();
-                            currentActionConfig = null;
-                            if (window.orderUiProcessing && typeof window.orderUiProcessing.clearButtonProcessing === 'function') {
-                                window.orderUiProcessing.clearButtonProcessing(document.getElementById('orderRescheduleBtn'));
-                                window.orderUiProcessing.clearButtonProcessing(document.getElementById('orderReturnBtn'));
-                                window.orderUiProcessing.clearButtonProcessing(document.getElementById('orderDeliverBtn'));
-                            }
-                            if (rescheduleFields) {
-                                rescheduleFields.style.display = 'none';
-                            }
-                            if (deliveryDateInput) {
-                                deliveryDateInput.required = false;
-                                deliveryDateInput.value = '';
-                            }
-                            if (deliveryPreferredTimeInput) {
-                                deliveryPreferredTimeInput.required = false;
-                                deliveryPreferredTimeInput.value = '';
-                            }
-                            if (deliveryDateRequiredMark) {
-                                deliveryDateRequiredMark.style.display = 'none';
-                            }
-                            if (deliveryTimeRequiredMark) {
-                                deliveryTimeRequiredMark.style.display = 'none';
-                            }
-                            if (fileInput) {
-                                fileInput.required = false;
-                            }
-                            if (photoRequiredMark) {
-                                photoRequiredMark.style.display = 'none';
-                            }
-                            if (returnReasonGroup) {
-                                returnReasonGroup.style.display = 'none';
-                            }
-                            if (returnReasonInput) {
-                                returnReasonInput.required = false;
-                                returnReasonInput.value = '';
-                            }
-                            if (returnReasonRequiredMark) {
-                                returnReasonRequiredMark.style.display = 'none';
-                            }
-                            if (commentInput) {
-                                commentInput.required = false;
-                                commentInput.placeholder = 'Enter comments here...';
-                            }
-                            if (commentRequiredMark) {
-                                commentRequiredMark.style.display = 'inline';
-                            }
-                            if (actionPhotoGroup) {
-                                actionPhotoGroup.style.display = 'block';
-                            }
-                            previewBox.classList.remove('has-image');
-                            previewBox.style.backgroundImage = '';
-                            previewBox.querySelector('i').style.display = '';
-                            previewBox.querySelector('span').textContent = 'Select or capture photo';
-                        }
-
-                        Object.keys(configs).forEach(function(btnId) {
-                            var btn = document.getElementById(btnId);
-                            if (btn) {
-                                btn.addEventListener('click', function(e) {
-                                    e.preventDefault();
-                                    e.stopImmediatePropagation();
-                                    if (window.orderUiProcessing && typeof window.orderUiProcessing.setButtonProcessing === 'function') {
-                                        window.orderUiProcessing.setButtonProcessing(this, 'Processing...');
-                                    }
-                                    var config = configs[btnId];
-                                    currentActionConfig = config;
-                                    actionTypeInput.value = config.action;
-                                    modalTitle.textContent = config.title;
-                                    submitBtn.textContent = config.btnText;
-                                    if (rescheduleFields) {
-                                        rescheduleFields.style.display = config.requireSchedule ? 'block' : 'none';
-                                    }
-                                    if (deliveryDateInput) {
-                                        deliveryDateInput.setAttribute('min', minAllowedDate);
-                                        deliveryDateInput.required = !!config.requireSchedule;
-                                        if (!config.requireSchedule) {
-                                            deliveryDateInput.value = '';
-                                        }
-                                    }
-                                    if (deliveryPreferredTimeInput) {
-                                        deliveryPreferredTimeInput.required = !!config.requireSchedule;
-                                        if (!config.requireSchedule) {
-                                            deliveryPreferredTimeInput.value = '';
-                                        }
-                                    }
-                                    if (deliveryDateRequiredMark) {
-                                        deliveryDateRequiredMark.style.display = config.requireSchedule ? 'inline' : 'none';
-                                    }
-                                    if (deliveryTimeRequiredMark) {
-                                        deliveryTimeRequiredMark.style.display = config.requireSchedule ? 'inline' : 'none';
-                                    }
-                                    if (fileInput) {
-                                        fileInput.required = !!config.requirePhoto;
-                                    }
-                                    if (photoRequiredMark) {
-                                        photoRequiredMark.style.display = config.requirePhoto ? 'inline' : 'none';
-                                    }
-                                    if (returnReasonGroup) {
-                                        returnReasonGroup.style.display = config.requireReturnReason ? 'block' : 'none';
-                                    }
-                                    if (returnReasonInput) {
-                                        returnReasonInput.required = !!config.requireReturnReason;
-                                        returnReasonInput.value = '';
-                                    }
-                                    if (returnReasonRequiredMark) {
-                                        returnReasonRequiredMark.style.display = config.requireReturnReason ? 'inline' : 'none';
-                                    }
-                                    if (commentInput) {
-                                        commentInput.required = !!config.requireComment;
-                                        commentInput.placeholder = config.action === 'return' ? 'Write additional comment (optional)...' : 'Enter comments here...';
-                                    }
-                                    if (commentRequiredMark) {
-                                        commentRequiredMark.style.display = config.requireComment ? 'inline' : 'none';
-                                    }
-                                    if (actionPhotoGroup) {
-                                        actionPhotoGroup.style.display = config.showPhotoField ? 'block' : 'none';
-                                    }
-                                    modal.className = 'order-action-modal ' + config.colorClass;
-                                    modal.classList.add('is-active');
-
-                                    setTimeout(function() {
-                                        document.getElementById('actionComment').focus();
-                                    }, 100);
-                                });
-                            }
-                        });
-
-                        closeBtns.forEach(function(btn) {
-                            btn.addEventListener('click', closeModal);
-                        });
-
-                        modal.querySelector('.order-action-modal-backdrop').addEventListener('click', closeModal);
-
-                        document.addEventListener('keydown', function(e) {
-                            if (e.key === 'Escape' && modal.classList.contains('is-active')) {
-                                closeModal();
-                            }
-                        });
-
-                        fileInput.addEventListener('change', function() {
-                            var file = this.files[0];
-                            if (file) {
-                                var reader = new FileReader();
-                                reader.onload = function(evt) {
-                                    previewBox.classList.add('has-image');
-                                    previewBox.style.backgroundImage = 'url(' + evt.target.result + ')';
-                                    previewBox.querySelector('i').style.display = 'none';
-                                    previewBox.querySelector('span').textContent = file.name;
-                                };
-                                reader.readAsDataURL(file);
-                            } else {
-                                previewBox.classList.remove('has-image');
-                                previewBox.style.backgroundImage = '';
-                                previewBox.querySelector('i').style.display = '';
-                                previewBox.querySelector('span').textContent = 'Select or capture photo';
-                            }
-                        });
-
-                        function showToast(message, status) {
-                            toast.textContent = message;
-                            toast.className = 'order-toast-notification ' + (status === 'success' ? 'success' : 'error');
-                            toast.classList.add('is-visible');
-                            setTimeout(function() {
-                                toast.classList.remove('is-visible');
-                            }, 3000);
-                        }
-
-                        function showFeedback(status, title, message, meta) {
-                            if (!feedbackBox || !feedbackTitle || !feedbackMeta || !feedbackBody || !feedbackToggle) {
-                                showToast(message || 'Action processed.', status || 'success');
-                                return;
-                            }
-
-                            feedbackBox.classList.remove('is-success', 'is-error', 'is-open');
-                            feedbackBox.classList.add(status === 'success' ? 'is-success' : 'is-error', 'is-open');
-                            feedbackBox.style.display = 'block';
-                            feedbackTitle.textContent = title || 'Order Update';
-                            feedbackMeta.textContent = meta || (status === 'success' ? 'Success' : 'Attention required');
-                            feedbackBody.textContent = message || '';
-                            feedbackToggle.textContent = 'Hide';
-                            feedbackToggle.setAttribute('aria-expanded', 'true');
-                        }
-
-                        if (feedbackToggle && feedbackBox) {
-                            feedbackToggle.addEventListener('click', function() {
-                                var isOpen = feedbackBox.classList.contains('is-open');
-                                feedbackBox.classList.toggle('is-open', !isOpen);
-                                this.textContent = isOpen ? 'Show' : 'Hide';
-                                this.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-                            });
-                        }
-
-                        form.addEventListener('submit', function(e) {
-                            e.preventDefault();
-
-                            var action = actionTypeInput.value;
-                            var comment = commentInput ? commentInput.value.trim() : '';
-                            var selectedPhoto = fileInput && fileInput.files ? fileInput.files[0] : null;
-                            var selectedReturnReason = returnReasonInput ? returnReasonInput.value.trim() : '';
-                            var deliveryDateValue = deliveryDateInput ? deliveryDateInput.value.trim() : '';
-                            var deliveryPreferredTimeValue = deliveryPreferredTimeInput ? deliveryPreferredTimeInput.value.trim() : '';
-
-                            if (action !== 'return' && !comment) {
-                                showToast('Comment is required.', 'error');
-                                return;
-                            }
-
-                            if (action === 'return' && !selectedReturnReason) {
-                                showToast('Please select a return reason.', 'error');
-                                return;
-                            }
-
-                            if (action === 'reschulde' && !deliveryDateValue) {
-                                showToast('Delivery date is required for reschedule.', 'error');
-                                return;
-                            }
-
-                            if (action === 'reschulde' && !isFutureDateOnly(deliveryDateValue)) {
-                                showToast('Please select a future date only.', 'error');
-                                return;
-                            }
-
-                            if (action === 'reschulde' && !deliveryPreferredTimeValue) {
-                                showToast('Delivery preferred time is required for reschedule.', 'error');
-                                return;
-                            }
-
-                            if (action === 'deliverd' && !selectedPhoto) {
-                                showToast('Delivery photo is required.', 'error');
-                                return;
-                            }
-
-                            submitBtn.disabled = true;
-                            var originalBtnText = submitBtn.textContent;
-                            submitBtn.textContent = 'Processing...';
-
-                            var formData = new FormData(form);
-                            var actionUrl = (currentActionConfig && currentActionConfig.endpoint) ? currentActionConfig.endpoint : ('/api/order/' + action + '/');
-
-                            fetch(actionUrl, {
-                                    method: 'POST',
-                                    body: formData
-                                })
-                                .then(function(response) {
-                                    if (!response.ok) {
-                                        throw new Error('Network response was not ok');
-                                    }
-                                    return response.json();
-                                })
-                                .then(function(data) {
-                                    if (data.status === 200 || data.status === 'success') {
-                                        showToast(data.msg || 'Action processed successfully!', 'success');
-                                        setTimeout(function() {
-                                            window.location.reload();
-                                        }, 1500);
-                                    } else {
-                                        showToast(data.msg || 'Failed to process action.', 'error');
-                                        submitBtn.disabled = false;
-                                        submitBtn.textContent = originalBtnText;
-                                    }
-                                })
-                                .catch(function(error) {
-                                    console.error('Error submitting order action:', error);
-                                    showToast('Something went wrong. Please try again.', 'error');
-                                    submitBtn.disabled = false;
-                                    submitBtn.textContent = originalBtnText;
-                                });
-                        });
-                    })();
-                </script>
-
-                <script>
-                    (function() {
-                        var root = document.querySelector('.order-info-ui');
-
-                        if (!root) {
-                            return;
-                        }
-
-                        var orderId = root.getAttribute('data-order-id') || 'default';
-                        var storagePrefix = 'order-ui-collapse-' + orderId + '-';
-                        var toggleList = root.querySelectorAll('.order-collapse-toggle');
-
-                        function saveState(key, value) {
-                            try {
-                                localStorage.setItem(key, value);
-                            } catch (e) {
-                                // Ignore storage errors silently.
-                            }
-                        }
-
-                        function readState(key) {
-                            try {
-                                return localStorage.getItem(key);
-                            } catch (e) {
-                                return null;
-                            }
-                        }
-
-                        function applyState(panel, toggle, isOpen) {
-                            panel.classList.toggle('is-open', isOpen);
-                            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-                        }
-
-                        for (var i = 0; i < toggleList.length; i++) {
-                            (function(toggle) {
-                                var targetId = toggle.getAttribute('data-target');
-                                var panel = toggle.parentNode;
-                                var storageKey = storagePrefix + targetId;
-                                var savedValue = readState(storageKey);
-
-                                if (savedValue !== null) {
-                                    applyState(panel, toggle, savedValue === 'open');
-                                }
-
-                                toggle.addEventListener('click', function() {
-                                    var targetId = this.getAttribute('data-target');
-                                    var body = root.querySelector('#' + targetId);
-
-                                    if (!body) {
-                                        return;
-                                    }
-
-                                    var panel = this.parentNode;
-                                    var isOpen = panel.classList.contains('is-open');
-                                    var nextOpen = !isOpen;
-
-                                    applyState(panel, this, nextOpen);
-                                    saveState(storagePrefix + targetId, nextOpen ? 'open' : 'closed');
-                                });
-                            })(toggleList[i]);
-                        }
-                    })();
-                </script>
-
-                <script>
                     window.allProductsList = <?php echo json_encode($productListData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
                 </script>
-
-                <script>
-                    (function() {
-                        var root = document.querySelector('.order-info-ui');
-                        var orderId = root ? (root.getAttribute('data-order-id') || 'default') : 'default';
-
-                        // helper function to save order data via AJAX
-                        function saveOrderData(callback) {
-                            if (typeof jQuery === 'undefined') {
-                                if (callback) callback(false);
-                                return;
-                            }
-                            var $ = jQuery;
-                            var formData = $('#orderData').serializeArray();
-                            formData.push({
-                                name: 'action',
-                                value: 'update'
-                            });
-
-                            $.ajax({
-                                type: 'POST',
-                                dataType: 'json',
-                                data: formData,
-                                success: function(response) {
-                                    if (response.status == 200) {
-                                        if (typeof Swal !== 'undefined') {
-                                            Swal.fire({
-                                                icon: 'success',
-                                                type: 'success',
-                                                title: 'Success',
-                                                text: response.msg || 'Order updated successfully.',
-                                                timer: 1500,
-                                                showConfirmButton: false
-                                            });
-                                        } else {
-                                            alert(response.msg || 'Order updated successfully.');
-                                        }
-                                        if (callback) callback(true);
-                                    } else {
-                                        if (typeof Swal !== 'undefined') {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                type: 'error',
-                                                title: 'Error',
-                                                text: response.msg || 'Something went wrong.',
-                                                timer: 2000,
-                                                showConfirmButton: false
-                                            });
-                                        } else {
-                                            alert(response.msg || 'Something went wrong.');
-                                        }
-                                        if (callback) callback(false);
-                                    }
-                                },
-                                error: function() {
-                                    if (typeof Swal !== 'undefined') {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            type: 'error',
-                                            title: 'Error',
-                                            text: 'Failed to update order.',
-                                            timer: 2000,
-                                            showConfirmButton: false
-                                        });
-                                    } else {
-                                        alert('Failed to update order.');
-                                    }
-                                    if (callback) callback(false);
-                                }
-                            });
-                        }
-
-                        // Helper function to re-index all inputs and manage totalProducts
-                        function reindexProducts() {
-                            var rows = document.querySelectorAll('.order-item-row');
-                            if (rows.length === 0) {
-                                var totalInput = document.querySelector('input[name="totalProducts"]');
-                                if (totalInput) totalInput.remove();
-
-                                var warningBlock = document.getElementById('noProductWarning');
-                                if (warningBlock) warningBlock.style.display = 'flex';
-                                var productEditMode = document.getElementById('productEditMode');
-                                if (productEditMode) productEditMode.style.display = 'block';
-
-                                var container = document.getElementById('orderItemsListContainer');
-                                if (container) container.style.display = 'none';
-                                var addBtnWrapper = document.getElementById('addProductBtnWrapper');
-                                if (addBtnWrapper) addBtnWrapper.style.display = 'none';
-                                return;
-                            }
-
-                            rows.forEach(function(row, index) {
-                                row.setAttribute('data-index', index);
-
-                                var idInput = row.querySelector('.item-product-id-input');
-                                if (idInput) {
-                                    idInput.name = 'product_id_' + index;
-                                }
-
-                                var qtyInput = row.querySelector('.edit-qty-input');
-                                if (qtyInput) {
-                                    qtyInput.name = 'qty_' + index;
-                                }
-                            });
-
-                            var totalInput = document.querySelector('input[name="totalProducts"]');
-                            if (!totalInput) {
-                                totalInput = document.createElement('input');
-                                totalInput.type = 'hidden';
-                                totalInput.name = 'totalProducts';
-                                var form = document.getElementById('orderData');
-                                if (form) {
-                                    form.appendChild(totalInput);
-                                }
-                            }
-                            totalInput.value = rows.length;
-
-                            var allTotals = document.querySelectorAll('input[name="totalProducts"]');
-                            if (allTotals.length > 1) {
-                                for (var idx = 1; idx < allTotals.length; idx++) {
-                                    allTotals[idx].remove();
-                                }
-                            }
-                            updateProductDropdownOptions();
-                        }
-
-                        // Helper function to dynamically filter out already selected products from dropdowns
-                        function updateProductDropdownOptions() {
-                            var selectedIds = [];
-                            document.querySelectorAll('.item-product-id-input').forEach(function(input) {
-                                if (input.value && input.value.trim() !== '') {
-                                    selectedIds.push(String(input.value));
-                                }
-                            });
-
-                            var unassignedSelect = document.querySelector('#productEditMode select[name="assigned_product_id"]');
-
-                            document.querySelectorAll('.order-item-row').forEach(function(row) {
-                                var selectEl = row.querySelector('.select-product-dropdown');
-                                if (selectEl) {
-                                    var currentVal = String(selectEl.value || '');
-                                    for (var i = 0; i < selectEl.options.length; i++) {
-                                        var opt = selectEl.options[i];
-                                        if (opt.value && opt.value.trim() !== '') {
-                                            var optVal = String(opt.value);
-                                            if (selectedIds.indexOf(optVal) !== -1 && optVal !== currentVal) {
-                                                opt.disabled = true;
-                                            } else {
-                                                opt.disabled = false;
-                                            }
-                                        }
-                                    }
-                                    if (typeof jQuery !== 'undefined' && jQuery(selectEl).data('select2')) {
-                                        initSelect2(jQuery(selectEl));
-                                    }
-                                }
-                            });
-
-                            if (unassignedSelect) {
-                                var currentVal = String(unassignedSelect.value || '');
-                                for (var i = 0; i < unassignedSelect.options.length; i++) {
-                                    var opt = unassignedSelect.options[i];
-                                    if (opt.value && opt.value.trim() !== '') {
-                                        var optVal = String(opt.value);
-                                        if (selectedIds.indexOf(optVal) !== -1 && optVal !== currentVal) {
-                                            opt.disabled = true;
-                                        } else {
-                                            opt.disabled = false;
-                                        }
-                                    }
-                                }
-                                if (typeof jQuery !== 'undefined' && jQuery(unassignedSelect).data('select2')) {
-                                    initSelect2(jQuery(unassignedSelect));
-                                }
-                            }
-                        }
-
-                        // Helper function to create row HTML elements dynamically
-                        function createProductRowHtml(index, productId, productTitle, productImage, qty) {
-                            var row = document.createElement('div');
-                            row.className = 'order-item-row';
-                            row.setAttribute('data-index', index);
-
-                            var imageHtml = '';
-                            if (productImage && productImage.trim() !== '') {
-                                imageHtml = '<img class="view-item-image" src="' + productImage + '" alt="' + productTitle + '">';
-                            } else {
-                                imageHtml = '<div class="view-item-image-placeholder select-product-option-no-img">📦</div>';
-                            }
-
-                            var optionsHtml = '<option value="">Select product</option>';
-                            if (window.allProductsList) {
-                                window.allProductsList.forEach(function(prod) {
-                                    var selected = (String(prod.product_id) === String(productId)) ? 'selected' : '';
-                                    optionsHtml += '<option value="' + prod.product_id + '" data-image="' + (prod.product_image || '') + '" ' + selected + '>' + prod.product_title + '</option>';
-                                });
-                            }
-
-                            var viewStyle = '';
-                            var editStyle = 'style="display: none;"';
-                            if (!productId) {
-                                viewStyle = 'style="display: none !important;"';
-                                editStyle = 'style="display: block;"';
-                            }
-
-                            row.innerHTML =
-                                '<div class="order-item-view-container" ' + viewStyle + '>' +
-                                '    <div class="order-item-view-left">' +
-                                '        <div class="order-item-thumb-wrapper">' +
-                                imageHtml +
-                                '        </div>' +
-                                '        <div class="order-item-details">' +
-                                '            <div class="order-item-title view-item-title">' + productTitle + '</div>' +
-                                '            <div class="order-item-qty">Qty: <span class="view-item-qty">' + qty + '</span></div>' +
-                                '        </div>' +
-                                '    </div>' +
-                                '    <div class="order-item-edit-btn-wrapper" style="display: flex; gap: 8px;">' +
-                                '        <button type="button" class="btn-premium-action btn-edit edit-item-btn"><i class="fas fa-edit"></i> Edit</button>' +
-                                '        <button type="button" class="btn-premium-action btn-cancel remove-item-btn" style="background-color: #ef4444 !important; color: #fff !important;"><i class="fas fa-trash-alt"></i> Remove</button>' +
-                                '    </div>' +
-                                '</div>' +
-                                '<div class="order-item-edit-container" ' + editStyle + '>' +
-                                '    <input type="hidden" name="product_id_' + index + '" class="item-product-id-input" value="' + productId + '">' +
-                                '    <div class="order-item-edit-grid">' +
-                                '        <div class="premium-form-group">' +
-                                '            <label>Select Product</label>' +
-                                '            <select class="premium-form-control select-product-dropdown selectJS" style="width: 100%;">' +
-                                optionsHtml +
-                                '            </select>' +
-                                '        </div>' +
-                                '        <div class="premium-form-group">' +
-                                '            <label>Qty</label>' +
-                                '            <input type="text" name="qty_' + index + '" class="premium-form-control edit-qty-input" value="' + qty + '">' +
-                                '        </div>' +
-                                '        <div style="display: flex; gap: 8px; align-items: flex-end; height: 100%;">' +
-                                '            <button type="button" class="btn-premium-action btn-save save-item-btn" style="flex: 1; height: 38px;"><i class="fas fa-check"></i> Assign Product</button>' +
-                                '            <button type="button" class="btn-premium-action btn-cancel cancel-item-btn" style="height: 38px; background-color: var(--neutral-300) !important; color: var(--neutral-700) !important;"><i class="fas fa-times"></i> Cancel</button>' +
-                                '        </div>' +
-                                '    </div>' +
-                                '</div>';
-
-                            return row;
-                        }
-
-                        // event delegation using vanilla JS
-                        document.addEventListener('click', function(e) {
-                            // 1. Edit Button Click
-                            var editBtn = e.target.closest('.edit-item-btn');
-                            if (editBtn) {
-                                e.preventDefault();
-                                var row = editBtn.closest('.order-item-row');
-                                if (row) {
-                                    var viewContainer = row.querySelector('.order-item-view-container');
-                                    var editContainer = row.querySelector('.order-item-edit-container');
-                                    if (viewContainer && editContainer) {
-                                        viewContainer.style.setProperty('display', 'none', 'important');
-                                        editContainer.style.display = 'block';
-
-                                        // Initialize Select2 using jQuery (if loaded)
-                                        if (typeof jQuery !== 'undefined') {
-                                            var $select = jQuery(row).find('.select-product-dropdown');
-                                            initSelect2($select);
-                                        } else {
-                                            var checkInterval = setInterval(function() {
-                                                if (typeof jQuery !== 'undefined') {
-                                                    clearInterval(checkInterval);
-                                                    var $select = jQuery(row).find('.select-product-dropdown');
-                                                    initSelect2($select);
-                                                }
-                                            }, 50);
-                                        }
-                                    }
-                                }
-                                return;
-                            }
-
-                            // 2. Save Button Click
-                            var saveBtn = e.target.closest('.save-item-btn');
-                            if (saveBtn) {
-                                e.preventDefault();
-                                var row = saveBtn.closest('.order-item-row');
-                                if (row) {
-                                    var viewContainer = row.querySelector('.order-item-view-container');
-                                    var editContainer = row.querySelector('.order-item-edit-container');
-                                    if (viewContainer && editContainer) {
-                                        var selectEl = editContainer.querySelector('.select-product-dropdown');
-                                        var qtyInput = editContainer.querySelector('.edit-qty-input');
-                                        var productIdInput = editContainer.querySelector('.item-product-id-input');
-
-                                        if (selectEl && qtyInput && productIdInput) {
-                                            var selectedOption = selectEl.options[selectEl.selectedIndex];
-                                            var newProductId = selectEl.value;
-
-                                            if (!newProductId || newProductId.trim() === '') {
-                                                if (typeof Swal !== 'undefined') {
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        type: 'error',
-                                                        title: 'Product Required',
-                                                        text: 'Please select a product before saving.',
-                                                        timer: 2000,
-                                                        showConfirmButton: false
-                                                    });
-                                                } else {
-                                                    alert('Please select a product before saving.');
-                                                }
-                                                return;
-                                            }
-
-                                            var newProductTitle = selectedOption ? selectedOption.text.trim() : '';
-                                            var newProductImage = selectedOption ? selectedOption.getAttribute('data-image') : '';
-                                            var newQty = qtyInput.value;
-                                            var oldProductId = productIdInput.value;
-
-                                            // Call API endpoint to save / assign product
-                                            $.ajax({
-                                                type: 'POST',
-                                                url: '/api/order/assign_product/',
-                                                data: {
-                                                    id: orderId,
-                                                    product_id: newProductId,
-                                                    qty: newQty,
-                                                    old_product_id: oldProductId
-                                                },
-                                                dataType: 'json',
-                                                success: function(response) {
-                                                    if (response.status == 200) {
-                                                        // Sync backend inputs
-                                                        productIdInput.value = newProductId;
-
-                                                        // Update view title and qty
-                                                        var viewTitle = viewContainer.querySelector('.view-item-title');
-                                                        var viewQty = viewContainer.querySelector('.view-item-qty');
-                                                        if (viewTitle) viewTitle.textContent = newProductTitle;
-                                                        if (viewQty) viewQty.textContent = newQty;
-
-                                                        // Update view image
-                                                        var thumbWrapper = viewContainer.querySelector('.order-item-thumb-wrapper');
-                                                        if (thumbWrapper) {
-                                                            thumbWrapper.innerHTML = '';
-                                                            if (newProductImage && newProductImage.trim() !== '') {
-                                                                var img = document.createElement('img');
-                                                                img.className = 'view-item-image';
-                                                                img.src = newProductImage;
-                                                                img.alt = newProductTitle;
-                                                                thumbWrapper.appendChild(img);
-                                                            } else {
-                                                                var placeholder = document.createElement('div');
-                                                                placeholder.className = 'view-item-image-placeholder select-product-option-no-img';
-                                                                placeholder.textContent = '📦';
-                                                                thumbWrapper.appendChild(placeholder);
-                                                            }
-                                                        }
-
-                                                        editContainer.style.display = 'none';
-                                                        viewContainer.removeAttribute('style');
-
-                                                        // Re-index all inputs
-                                                        reindexProducts();
-
-                                                        if (typeof Swal !== 'undefined') {
-                                                            Swal.fire({
-                                                                icon: 'success',
-                                                                type: 'success',
-                                                                title: 'Success',
-                                                                text: response.msg || 'Product assigned successfully.',
-                                                                timer: 1500,
-                                                                showConfirmButton: false
-                                                            });
-                                                        }
-                                                    } else {
-                                                        if (typeof Swal !== 'undefined') {
-                                                            Swal.fire({
-                                                                icon: 'error',
-                                                                type: 'error',
-                                                                title: 'Error',
-                                                                text: response.msg || 'Something went wrong.',
-                                                                timer: 2000,
-                                                                showConfirmButton: false
-                                                            });
-                                                        } else {
-                                                            alert(response.msg || 'Something went wrong.');
-                                                        }
-                                                    }
-                                                },
-                                                error: function() {
-                                                    if (typeof Swal !== 'undefined') {
-                                                        Swal.fire({
-                                                            icon: 'error',
-                                                            type: 'error',
-                                                            title: 'Error',
-                                                            text: 'Failed to assign product.',
-                                                            timer: 2000,
-                                                            showConfirmButton: false
-                                                        });
-                                                    } else {
-                                                        alert('Failed to assign product.');
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                }
-                                return;
-                            }
-
-                            // 2.5 Cancel Item Edit Button Click
-                            var cancelBtn = e.target.closest('.cancel-item-btn');
-                            if (cancelBtn) {
-                                e.preventDefault();
-                                var row = cancelBtn.closest('.order-item-row');
-                                if (row) {
-                                    var productIdInput = row.querySelector('.item-product-id-input');
-                                    if (productIdInput && !productIdInput.value) {
-                                        // It's a new unsaved row - remove it completely
-                                        row.remove();
-                                        reindexProducts();
-                                        return;
-                                    }
-
-                                    var viewContainer = row.querySelector('.order-item-view-container');
-                                    var editContainer = row.querySelector('.order-item-edit-container');
-                                    if (viewContainer && editContainer) {
-                                        var selectEl = editContainer.querySelector('.select-product-dropdown');
-                                        var qtyInput = editContainer.querySelector('.edit-qty-input');
-
-                                        // Reset select and quantity to current values
-                                        if (selectEl && qtyInput && productIdInput) {
-                                            selectEl.value = productIdInput.value;
-                                            if (typeof jQuery !== 'undefined' && jQuery(selectEl).data('select2')) {
-                                                jQuery(selectEl).trigger('change');
-                                            }
-                                            var viewQty = viewContainer.querySelector('.view-item-qty');
-                                            if (viewQty) {
-                                                qtyInput.value = viewQty.textContent.trim();
-                                            }
-                                        }
-
-                                        editContainer.style.display = 'none';
-                                        viewContainer.removeAttribute('style');
-                                        updateProductDropdownOptions();
-                                    }
-                                }
-                                return;
-                            }
-
-                            // 2.6 Remove Product Button Click
-                            var removeBtn = e.target.closest('.remove-item-btn');
-                            if (removeBtn) {
-                                e.preventDefault();
-                                var row = removeBtn.closest('.order-item-row');
-                                if (row) {
-                                    var performRemoval = function() {
-                                        var productIdInput = row.querySelector('.item-product-id-input');
-                                        var productId = productIdInput ? productIdInput.value : '';
-
-                                        if (productId && productId.trim() !== '') {
-                                            $.ajax({
-                                                type: 'GET',
-                                                url: '/api/order/remove_product/',
-                                                data: {
-                                                    id: orderId,
-                                                    product_id: productId
-                                                },
-                                                dataType: 'json',
-                                                success: function(response) {
-                                                    if (response.status == 200) {
-                                                        row.remove();
-                                                        reindexProducts();
-
-                                                        if (typeof Swal !== 'undefined') {
-                                                            Swal.fire({
-                                                                icon: 'success',
-                                                                type: 'success',
-                                                                title: 'Success',
-                                                                text: response.msg || 'Product removed successfully.',
-                                                                timer: 1500,
-                                                                showConfirmButton: false
-                                                            });
-                                                        }
-                                                    } else {
-                                                        if (typeof Swal !== 'undefined') {
-                                                            Swal.fire({
-                                                                icon: 'error',
-                                                                type: 'error',
-                                                                title: 'Error',
-                                                                text: response.msg || 'Something went wrong.',
-                                                                timer: 2000,
-                                                                showConfirmButton: false
-                                                            });
-                                                        } else {
-                                                            alert(response.msg || 'Something went wrong.');
-                                                        }
-                                                    }
-                                                },
-                                                error: function() {
-                                                    if (typeof Swal !== 'undefined') {
-                                                        Swal.fire({
-                                                            icon: 'error',
-                                                            type: 'error',
-                                                            title: 'Error',
-                                                            text: 'Failed to remove product.',
-                                                            timer: 2000,
-                                                            showConfirmButton: false
-                                                        });
-                                                    } else {
-                                                        alert('Failed to remove product.');
-                                                    }
-                                                }
-                                            });
-                                        } else {
-                                            row.remove();
-                                            reindexProducts();
-                                        }
-                                    };
-
-                                    if (typeof Swal !== 'undefined') {
-                                        Swal.fire({
-                                            title: 'Are you sure?',
-                                            text: 'Do you want to remove this product from the order?',
-                                            icon: 'warning',
-                                            type: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonColor: '#ef4444',
-                                            cancelButtonColor: '#6b7280',
-                                            confirmButtonText: 'Yes, remove it!'
-                                        }).then(function(result) {
-                                            if (result.value) {
-                                                performRemoval();
-                                            }
-                                        });
-                                    } else {
-                                        if (confirm('Are you sure you want to remove this product from the order?')) {
-                                            performRemoval();
-                                        }
-                                    }
-                                }
-                                return;
-                            }
-
-                            // 3. Change Vendor Button Click
-                            var changeVendorBtn = e.target.closest('#changeVendorBtn');
-                            if (changeVendorBtn) {
-                                e.preventDefault();
-                                var viewMode = document.getElementById('vendorViewMode');
-                                var editMode = document.getElementById('vendorEditMode');
-                                if (viewMode && editMode) {
-                                    viewMode.style.display = 'none';
-                                    editMode.style.display = 'block';
-                                }
-                                return;
-                            }
-
-                            // 4. Cancel Vendor Edit Button Click
-                            var cancelVendorEditBtn = e.target.closest('#cancelVendorEditBtn');
-                            if (cancelVendorEditBtn) {
-                                e.preventDefault();
-                                var viewMode = document.getElementById('vendorViewMode');
-                                var editMode = document.getElementById('vendorEditMode');
-                                if (viewMode && editMode) {
-                                    editMode.style.display = 'none';
-                                    viewMode.style.display = 'block';
-                                }
-                                return;
-                            }
-
-                            // 5. Save Vendor Edit Button Click
-                            var saveVendorEditBtn = e.target.closest('#saveVendorEditBtn');
-                            if (saveVendorEditBtn) {
-                                e.preventDefault();
-                                if (saveVendorEditBtn.disabled || saveVendorEditBtn.getAttribute('data-processing') === '1') {
-                                    return;
-                                }
-                                var selectEl = document.querySelector('#vendorEditMode select[name="assigned_vendor"]');
-                                if (selectEl) {
-                                    var vendorCode = selectEl.value;
-                                    if (!vendorCode || vendorCode.trim() === '') {
-                                        if (typeof Swal !== 'undefined') {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                type: 'error',
-                                                title: 'Vendor Required',
-                                                text: 'Please select a partner.',
-                                                timer: 2000,
-                                                showConfirmButton: false
-                                            });
-                                        } else {
-                                            alert('Please select a partner.');
-                                        }
-                                        return;
-                                    }
-
-                                    var originalVendorBtnHtml = saveVendorEditBtn.innerHTML;
-                                    saveVendorEditBtn.disabled = true;
-                                    saveVendorEditBtn.setAttribute('data-processing', '1');
-                                    saveVendorEditBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '/api/order/assign_vendor/',
-                                        data: {
-                                            id: orderId,
-                                            assigned_vendor: vendorCode
-                                        },
-                                        dataType: 'json',
-                                        success: function(response) {
-                                            if (response.status == 200) {
-                                                if (typeof Swal !== 'undefined') {
-                                                    Swal.fire({
-                                                        icon: 'success',
-                                                        type: 'success',
-                                                        title: 'Success',
-                                                        text: response.msg || 'Vendor assigned successfully.',
-                                                        timer: 1500,
-                                                        showConfirmButton: false
-                                                    });
-                                                } else {
-                                                    alert(response.msg || 'Vendor assigned successfully.');
-                                                }
-                                                setTimeout(function() {
-                                                    window.location.reload();
-                                                }, 1500);
-                                            } else {
-                                                if (typeof Swal !== 'undefined') {
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        type: 'error',
-                                                        title: 'Error',
-                                                        text: response.msg || 'Something went wrong.',
-                                                        timer: 2000,
-                                                        showConfirmButton: false
-                                                    });
-                                                } else {
-                                                    alert(response.msg || 'Something went wrong.');
-                                                }
-                                            }
-                                        },
-                                        error: function() {
-                                            if (typeof Swal !== 'undefined') {
-                                                Swal.fire({
-                                                    icon: 'error',
-                                                    type: 'error',
-                                                    title: 'Error',
-                                                    text: 'Failed to assign vendor.',
-                                                    timer: 2000,
-                                                    showConfirmButton: false
-                                                });
-                                            } else {
-                                                alert('Failed to assign vendor.');
-                                            }
-                                        },
-                                        complete: function() {
-                                            saveVendorEditBtn.disabled = false;
-                                            saveVendorEditBtn.removeAttribute('data-processing');
-                                            saveVendorEditBtn.innerHTML = originalVendorBtnHtml;
-                                        }
-                                    });
-                                }
-                                return;
-                            }
-
-
-                            // 6. Save Product Edit Button Click
-                            var saveProductEditBtn = e.target.closest('#saveProductEditBtn');
-                            if (saveProductEditBtn) {
-                                e.preventDefault();
-                                var selectEl = document.querySelector('#productEditMode select[name="assigned_product_id"]');
-                                var qtyInput = document.getElementById('assignedQtyInput');
-                                if (selectEl) {
-                                    var selectedOption = selectEl.options[selectEl.selectedIndex];
-                                    var selectedId = selectEl.value;
-
-                                    if (!selectedId || selectedId.trim() === '') {
-                                        if (typeof Swal !== 'undefined') {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                type: 'error',
-                                                title: 'Product Required',
-                                                text: 'Please select a product to assign.',
-                                                timer: 2000,
-                                                showConfirmButton: false
-                                            });
-                                        } else {
-                                            alert('Please select a product to assign.');
-                                        }
-                                        return;
-                                    }
-
-                                    var title = selectedOption ? selectedOption.text.trim() : '';
-                                    var image = selectedOption ? selectedOption.getAttribute('data-image') : '';
-                                    var qty = qtyInput ? qtyInput.value : '1';
-
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '/api/order/assign_product/',
-                                        data: {
-                                            id: orderId,
-                                            product_id: selectedId,
-                                            qty: qty
-                                        },
-                                        dataType: 'json',
-                                        success: function(response) {
-                                            if (response.status == 200) {
-                                                var container = document.getElementById('orderItemsListContainer');
-                                                if (container) {
-                                                    var newRow = createProductRowHtml(0, selectedId, title, image, qty);
-                                                    container.appendChild(newRow);
-
-                                                    reindexProducts();
-
-                                                    if (typeof Swal !== 'undefined') {
-                                                        Swal.fire({
-                                                            icon: 'success',
-                                                            type: 'success',
-                                                            title: 'Success',
-                                                            text: response.msg || 'Product assigned successfully.',
-                                                            timer: 1500,
-                                                            showConfirmButton: false
-                                                        });
-                                                    }
-
-                                                    var warningBlock = document.getElementById('noProductWarning');
-                                                    if (warningBlock) warningBlock.style.display = 'none';
-                                                    var editMode = document.getElementById('productEditMode');
-                                                    if (editMode) editMode.style.display = 'none';
-
-                                                    container.style.display = 'block';
-                                                    var addBtnWrapper = document.getElementById('addProductBtnWrapper');
-                                                    if (addBtnWrapper) addBtnWrapper.style.display = 'flex';
-
-                                                    selectEl.value = '';
-                                                    if (qtyInput) qtyInput.value = '1';
-                                                    if (typeof jQuery !== 'undefined' && jQuery(selectEl).data('select2')) {
-                                                        jQuery(selectEl).trigger('change');
-                                                    }
-                                                }
-                                            } else {
-                                                if (typeof Swal !== 'undefined') {
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        type: 'error',
-                                                        title: 'Error',
-                                                        text: response.msg || 'Something went wrong.',
-                                                        timer: 2000,
-                                                        showConfirmButton: false
-                                                    });
-                                                } else {
-                                                    alert(response.msg || 'Something went wrong.');
-                                                }
-                                            }
-                                        },
-                                        error: function() {
-                                            if (typeof Swal !== 'undefined') {
-                                                Swal.fire({
-                                                    icon: 'error',
-                                                    type: 'error',
-                                                    title: 'Error',
-                                                    text: 'Failed to assign product.',
-                                                    timer: 2000,
-                                                    showConfirmButton: false
-                                                });
-                                            } else {
-                                                alert('Failed to assign product.');
-                                            }
-                                        }
-                                    });
-                                }
-                                return;
-                            }
-
-                            // 7. Cancel Product Edit Button Click
-                            var cancelProductEditBtn = e.target.closest('#cancelProductEditBtn');
-                            if (cancelProductEditBtn) {
-                                e.preventDefault();
-                                if (typeof jQuery !== 'undefined') {
-                                    var $select = jQuery('#productEditMode .selectJS');
-                                    if ($select.length && $select.val() !== '') {
-                                        $select.val('').trigger('change');
-                                    }
-                                }
-                                var qtyInput = document.getElementById('assignedQtyInput');
-                                if (qtyInput) {
-                                    qtyInput.value = '1';
-                                }
-                                return;
-                            }
-                        });
-
-                        // Add Product Button Click
-                        var addProductBtn = document.getElementById('addProductBtn');
-                        if (addProductBtn) {
-                            addProductBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                var container = document.getElementById('orderItemsListContainer');
-                                if (container) {
-                                    var nextIndex = document.querySelectorAll('.order-item-row').length;
-                                    var newRow = createProductRowHtml(nextIndex, '', '', '', '1');
-
-                                    container.appendChild(newRow);
-
-                                    var $newSelect = jQuery(newRow).find('.select-product-dropdown');
-                                    if (typeof initSelect2 === 'function') {
-                                        initSelect2($newSelect);
-                                    }
-
-                                    reindexProducts();
-                                }
-                            });
-                        }
-
-                        // Helper functions for Select2
-                        function ensureSelect2(callback) {
-                            if (typeof jQuery === 'undefined') {
-                                return; // cannot load without jQuery
-                            }
-                            var $ = jQuery;
-                            if (!$.fn.select2) {
-                                var cssUrl = "<?php echo SITE_URL . '/' . PLUGIN_LIBRARY; ?>select2/css/select2.min.css";
-                                var jsUrl = "<?php echo SITE_URL . '/' . PLUGIN_LIBRARY; ?>select2/js/select2.min.js";
-
-                                if ($('link[href="' + cssUrl + '"]').length === 0) {
-                                    $("head").append('<link rel="stylesheet" href="' + cssUrl + '">');
-                                }
-
-                                $.getScript(jsUrl, function() {
-                                    callback();
-                                });
-                            } else {
-                                callback();
-                            }
-                        }
-
-                        function formatProductOption(state) {
-                            if (!state.id || !state.element) {
-                                return state.text;
-                            }
-                            if (state.element.disabled) {
-                                return null;
-                            }
-                            var imgUrl = state.element.getAttribute('data-image');
-                            var imgHtml = '';
-                            if (imgUrl && imgUrl.trim() !== '') {
-                                imgHtml = '<img class="select-product-option-img" src="' + imgUrl + '" />';
-                            } else {
-                                imgHtml = '<div class="select-product-option-no-img">📦</div>';
-                            }
-                            return '<div class="select-product-option-wrapper">' + imgHtml + '<span class="select-product-option-text">' + state.text + '</span></div>';
-                        }
-
-                        function initSelect2($selects) {
-                            ensureSelect2(function() {
-                                if (typeof jQuery !== 'undefined' && jQuery.fn.select2) {
-                                    $selects.each(function() {
-                                        var $el = jQuery(this);
-                                        var isProductSelect = $el.hasClass('select-product-dropdown') || $el.attr('name') === 'assigned_product_id';
-
-                                        if ($el.data('select2')) {
-                                            $el.select2('destroy');
-                                        }
-
-                                        var options = {
-                                            width: '100%'
-                                        };
-
-                                        if (isProductSelect) {
-                                            options.templateResult = formatProductOption;
-                                            options.templateSelection = formatProductOption;
-                                            options.escapeMarkup = function(m) {
-                                                return m;
-                                            };
-                                        }
-
-                                        $el.select2(options);
-                                    });
-                                }
-                            });
-                        }
-
-
-                        // Product selection validation for main action buttons
-                        function validateProductSelection() {
-                            var productInputs = document.querySelectorAll('.item-product-id-input');
-                            for (var i = 0; i < productInputs.length; i++) {
-                                if (!productInputs[i].value || productInputs[i].value.trim() === '') {
-                                    return false;
-                                }
-                            }
-                            var assignedProductSelect = document.querySelector('select[name="assigned_product_id"]');
-                            if (assignedProductSelect && (!assignedProductSelect.value || assignedProductSelect.value.trim() === '')) {
-                                return false;
-                            }
-                            return true;
-                        }
-
-                        var actionButtons = ['#orderUpdateData', '#orderWaitingBtn'];
-                        actionButtons.forEach(function(selector) {
-                            var btn = document.querySelector(selector);
-                            if (btn) {
-                                btn.addEventListener('click', function(e) {
-                                    if (!validateProductSelection()) {
-                                        e.preventDefault();
-                                        e.stopImmediatePropagation();
-                                        if (typeof Swal !== 'undefined') {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                type: 'error',
-                                                title: 'Product Required',
-                                                text: 'Please select a product before updating the order.',
-                                                timer: 2500,
-                                                showConfirmButton: false
-                                            });
-                                        } else {
-                                            alert('Please select a product before updating the order.');
-                                        }
-                                    }
-                                }, true); // capture phase
-                            }
-                        });
-
-                        var directCtaButtons = ['orderWaitingBtn'];
-                        directCtaButtons.forEach(function(btnId) {
-                            var btn = document.getElementById(btnId);
-                            if (!btn) {
-                                return;
-                            }
-
-                            btn.addEventListener('click', function(e) {
-                                if (this.getAttribute('data-processing') === '1') {
-                                    e.preventDefault();
-                                    e.stopImmediatePropagation();
-                                    return;
-                                }
-
-                                if (window.orderUiProcessing && typeof window.orderUiProcessing.setButtonProcessing === 'function') {
-                                    window.orderUiProcessing.setButtonProcessing(this, 'Processing...');
-                                    setTimeout(function() {
-                                        if (window.orderUiProcessing && typeof window.orderUiProcessing.clearButtonProcessing === 'function') {
-                                            window.orderUiProcessing.clearButtonProcessing(btn);
-                                        }
-                                    }, 2500);
-                                }
-                            }, true);
-                        });
-
-                        function runFooterAction(button, requestUrl, actionValue, successMessage) {
-                            if (!button || button.getAttribute('data-processing') === '1') {
-                                return;
-                            }
-
-                            if (window.orderUiProcessing && typeof window.orderUiProcessing.setButtonProcessing === 'function') {
-                                window.orderUiProcessing.setButtonProcessing(button, 'Processing...');
-                            }
-
-                            var formData = $('#orderData').serializeArray();
-                            formData.push({
-                                name: 'action',
-                                value: actionValue
-                            });
-
-                            $.ajax({
-                                type: 'POST',
-                                url: requestUrl,
-                                dataType: 'json',
-                                data: formData,
-                                success: function(response) {
-                                    if (response.status == 200 || response.status == 'success') {
-                                        showFeedback('success', 'Success', response.msg || successMessage, 'Action completed successfully.');
-                                        setTimeout(function() {
-                                            window.location.reload();
-                                        }, 2500);
-                                    } else {
-                                        showFeedback('error', 'Error', response.msg || 'Something went wrong.', 'Please review the order and try again.');
-                                    }
-                                },
-                                error: function() {
-                                    showFeedback('error', 'Error', 'Request failed.', 'The server did not accept the request.');
-                                },
-                                complete: function() {
-                                    if (window.orderUiProcessing && typeof window.orderUiProcessing.clearButtonProcessing === 'function') {
-                                        window.orderUiProcessing.clearButtonProcessing(button);
-                                    }
-                                }
-                            });
-                        }
-
-                        var confirmBtn = document.getElementById('orderConfirmBtn');
-                        if (confirmBtn) {
-                            confirmBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                e.stopImmediatePropagation();
-                                runFooterAction(this, '/api/order/accept_order/', 'accept', 'Order accepted successfully.');
-                            }, true);
-                        }
-
-                        var rejectBtn = document.getElementById('orderCancelBtn');
-                        if (rejectBtn) {
-                            rejectBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                e.stopImmediatePropagation();
-
-                                var button = this;
-                                var proceed = function() {
-                                    runFooterAction(button, '/api/order/cancel_order/', 'cancel', 'Order rejected successfully.');
-                                };
-
-                                if (typeof Swal !== 'undefined') {
-                                    Swal.fire({
-                                        title: 'Are you sure?',
-                                        text: 'Do you want to reject this order?',
-                                        icon: 'warning',
-                                        type: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#ef4444',
-                                        cancelButtonColor: '#6b7280',
-                                        confirmButtonText: 'Yes, reject it!'
-                                    }).then(function(result) {
-                                        if (result.value) {
-                                            proceed();
-                                        }
-                                    });
-                                } else if (confirm('Do you want to reject this order?')) {
-                                    proceed();
-                                }
-                            }, true);
-                        }
-
-                        // Listen to changes on product dropdowns
-                        document.addEventListener('change', function(e) {
-                            if (e.target.classList.contains('select-product-dropdown') || e.target.classList.contains('selectJS')) {
-                                updateProductDropdownOptions();
-                            }
-                        });
-
-                        // Initialize Select2 on load for any pre-opened edit container dropdowns or product edit mode select
-                        var allSelects = document.querySelectorAll('.selectJS');
-                        if (allSelects.length > 0) {
-                            if (typeof jQuery !== 'undefined') {
-                                updateProductDropdownOptions();
-                                initSelect2(jQuery(allSelects));
-                            } else {
-                                var initInterval = setInterval(function() {
-                                    if (typeof jQuery !== 'undefined') {
-                                        clearInterval(initInterval);
-                                        updateProductDropdownOptions();
-                                        initSelect2(jQuery(allSelects));
-                                    }
-                                }, 50);
-                            }
-                        }
-                    })();
-                </script>
-                <script>
-                    (function() {
-                        var root = document.querySelector('.order-info-ui');
-
-                        if (!root) {
-                            return;
-                        }
-
-                        var orderId = root.getAttribute('data-order-id') || 'default';
-                        document.addEventListener('click', function(e) {
-                            // 5. Save Delivery Partner Edit Button Click
-                            var saveDeliveryPartnerBtn = e.target.closest('#saveDeliveryPartnerBtn');
-                            if (saveDeliveryPartnerBtn) {
-                                e.preventDefault();
-                                if (saveDeliveryPartnerBtn.disabled || saveDeliveryPartnerBtn.getAttribute('data-processing') === '1') {
-                                    return;
-                                }
-                                var selectEl = document.querySelector('#deliveryAgentEditMode select[name="assigned_delivery_agent"]');
-                                if (selectEl) {
-                                    var vendorCode = selectEl.value;
-                                    if (!vendorCode || vendorCode.trim() === '') {
-                                        if (typeof Swal !== 'undefined') {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                type: 'error',
-                                                title: 'Delivery Partner Required',
-                                                text: 'Please select a delivery partner.',
-                                                timer: 2000,
-                                                showConfirmButton: false
-                                            });
-                                        } else {
-                                            alert('Please select a delivery partner.');
-                                        }
-                                        return;
-                                    }
-
-                                    var originalDeliveryBtnHtml = saveDeliveryPartnerBtn.innerHTML;
-                                    saveDeliveryPartnerBtn.disabled = true;
-                                    saveDeliveryPartnerBtn.setAttribute('data-processing', '1');
-                                    saveDeliveryPartnerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '/api/order/assign_delivery_agent/',
-                                        data: {
-                                            id: orderId,
-                                            assigned_delivery_agent: vendorCode
-                                        },
-                                        dataType: 'json',
-                                        success: function(response) {
-                                            if (response.status == 200) {
-                                                if (typeof Swal !== 'undefined') {
-                                                    Swal.fire({
-                                                        icon: 'success',
-                                                        type: 'success',
-                                                        title: 'Success',
-                                                        text: response.msg || 'Delivery Agent assigned successfully.',
-                                                        timer: 1500,
-                                                        showConfirmButton: false
-                                                    });
-                                                } else {
-                                                    alert(response.msg || 'Delivery Agent assigned successfully.');
-                                                }
-                                                setTimeout(function() {
-                                                    window.location.reload();
-                                                }, 1500);
-                                            } else {
-                                                if (typeof Swal !== 'undefined') {
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        type: 'error',
-                                                        title: 'Error',
-                                                        text: response.msg || 'Something went wrong.',
-                                                        timer: 2000,
-                                                        showConfirmButton: false
-                                                    });
-                                                } else {
-                                                    alert(response.msg || 'Something went wrong.');
-                                                }
-                                            }
-                                        },
-                                        error: function() {
-                                            if (typeof Swal !== 'undefined') {
-                                                Swal.fire({
-                                                    icon: 'error',
-                                                    type: 'error',
-                                                    title: 'Error',
-                                                    text: 'Failed to assign delivery agent.',
-                                                    timer: 2000,
-                                                    showConfirmButton: false
-                                                });
-                                            } else {
-                                                alert('Failed to assign delivery agent.');
-                                            }
-                                        },
-                                        complete: function() {
-                                            saveDeliveryPartnerBtn.disabled = false;
-                                            saveDeliveryPartnerBtn.removeAttribute('data-processing');
-                                            saveDeliveryPartnerBtn.innerHTML = originalDeliveryBtnHtml;
-                                        }
-                                    });
-                                }
-                                return;
-                            }
-                        });
-                    })();
-                </script>
+                <script src="<?php echo JS_LIBRARY; ?>order_view.js"></script>
 
 <?php
             }

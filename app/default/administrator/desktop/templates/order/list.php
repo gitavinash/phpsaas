@@ -139,7 +139,7 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                 </div>
             </div>
         </div>
-        <table id="table" data-default-order-column="4" data-default-order-dir="desc">
+        <table id="table" data-default-order-column="5" data-default-order-dir="desc">
             <thead>
                 <tr>
                     <th style="width: 480px">Order</th>
@@ -287,7 +287,7 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                                     <a href="order/?type=view&id=<?php echo base64_encode($order_id); ?>" class="order-view-btn"><i
                                             class="fas fa-eye"></i> View</a>
                                     <a href="/tracking/?orderid=OD<?php echo $order_id; ?>" target="_blank" class="order-view-btn"><i
-                                            class="fas fa-route"></i> Track</a>
+                                            class="fas fa-route"></i> Track <i class="fas fa-external-link-alt" style="font-size: 10px; margin-left: 3px;"></i></a>
                                 </td>
                             </tr>
                 <?php
@@ -345,7 +345,7 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                     bStateSave: false,
                     pageLength: pageLength,
                     order: [
-                        [!isNaN(defaultOrderColumn) ? defaultOrderColumn : 4, defaultOrderDir]
+                        [!isNaN(defaultOrderColumn) ? defaultOrderColumn : 5, defaultOrderDir]
                     ]
                 });
             }

@@ -5769,6 +5769,18 @@ textarea.premium-form-control {
   background-color: var(--success) !important;
 }
 
+.btn-track {
+  background-color: #8b5cf6 !important;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+  color: #ffffff !important;
+}
+
+.btn-track:hover {
+  background-color: #7c3aed !important;
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35) !important;
+}
+
 /* Cohesive Fixed Bottom Action Row */
 .premium-action-row {
   position: fixed !important;

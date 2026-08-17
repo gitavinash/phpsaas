@@ -21,6 +21,7 @@
 			<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 			<script src="<?php echo JS_LIBRARY ?>admin_menu_builder.min.js"></script>
 			<script src="<?php echo JS_LIBRARY ?>admin_new.min.js"></script>
+			<script src="<?php echo JS_LIBRARY ?>order_view.min.js"></script>
 			</body>
 
 			</html>
