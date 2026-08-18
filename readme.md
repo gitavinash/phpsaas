@@ -159,6 +159,7 @@ Order status follows the standard logistics lifecycle from order creation to fin
 |    `6` | Delivered          |
 |    `7` | Cancelled          |
 |    `8` | Returned           |
+|    `9` | Rescheduled        |
 
 ### Normal Order Flow
 
@@ -176,12 +177,24 @@ Out for Delivery
 Delivered
 ```
 
+### Reschedule Flow
+
+An order can be rescheduled during delivery:
+
+```text
+Out for Delivery
+       ↓
+  Rescheduled
+       ↓
+Out for Delivery / Delivered
+```
+
 ### Cancellation Flow
 
 An order can be cancelled before delivery, depending on the business rules:
 
 ```text
-Pending / Accepted / Processing / Shipped
+Pending / Accepted / Processing / Shipped / Rescheduled
                     ↓
                 Cancelled
 ```

@@ -8057,13 +8057,13 @@ textarea.premium-form-control {
 }
 
 .order-action-modal-footer .btn-secondary {
-  background: #f1f5f9;
-  color: #475569;
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
 }
 
 .order-action-modal-footer .btn-secondary:hover {
-  background: #e2e8f0;
-  color: #0f172a;
+  background-color: #2563eb !important;
+  color: #ffffff !important;
 }
 
 .order-action-modal-footer .btn-primary {

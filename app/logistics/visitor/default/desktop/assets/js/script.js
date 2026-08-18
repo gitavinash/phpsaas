@@ -255,8 +255,8 @@ function renderTracking(data) {
   const state = order.deliveryState || null;
   const deliveryLocation = [city, state].filter(Boolean).join(', ') || '—';
 
-  // Latest log entry (first element — API returns newest first or only entry)
-  const latestLog = logs.length ? logs[0] : null;
+  // Latest log entry (last element in chronological array)
+  const latestLog = logs.length ? logs[logs.length - 1] : null;
 
   // -- Summary Card --
   setText("display-tracking-id",   order.trackingId                              || "—");
@@ -264,6 +264,40 @@ function renderTracking(data) {
   setText("display-order-status",  order.orderStatus                             || "—");
   setText("display-order-date",    order.orderDate ? formatDate(order.orderDate) : "—");
   setText("display-delivery-city", deliveryLocation);
+
+  // -- Delivery Date, Slot, and Comment fields --
+  const delDateItem = document.getElementById("delivery-date-meta-item");
+  const delSlotItem = document.getElementById("delivery-slot-meta-item");
+  const retCommentItem = document.getElementById("return-comment-meta-item");
+  const resCommentItem = document.getElementById("reschedule-comment-meta-item");
+
+  if (order.deliveryDate) {
+    setText("display-delivery-date", formatDate(order.deliveryDate));
+    if (delDateItem) delDateItem.style.display = "block";
+  } else if (delDateItem) {
+    delDateItem.style.display = "none";
+  }
+
+  if (order.deliverySlot) {
+    setText("display-delivery-slot", order.deliverySlot);
+    if (delSlotItem) delSlotItem.style.display = "block";
+  } else if (delSlotItem) {
+    delSlotItem.style.display = "none";
+  }
+
+  if (order.returnComment) {
+    setText("display-return-comment", cleanCommentText(order.returnComment));
+    if (retCommentItem) retCommentItem.style.display = "block";
+  } else if (retCommentItem) {
+    retCommentItem.style.display = "none";
+  }
+
+  if (order.rescheduleComment) {
+    setText("display-reschedule-comment", cleanCommentText(order.rescheduleComment));
+    if (resCommentItem) resCommentItem.style.display = "block";
+  } else if (resCommentItem) {
+    resCommentItem.style.display = "none";
+  }
 
   // -- Shipment Details Card --
   setText("display-origin",      order.pickupCity    || order.origin      || "—");
@@ -280,11 +314,10 @@ function renderTracking(data) {
 
   // -- Latest Update Card --
   const latestStatus = latestLog ? latestLog.status   : (order.orderStatus || "—");
-  const latestMsg    = latestLog ? latestLog.message  : "—";
   const latestTime   = latestLog ? formatDate(latestLog.date) : (order.orderDate ? formatDate(order.orderDate) : "—");
 
   setText("display-latest-status",   latestStatus);
-  setText("display-latest-location", latestMsg);     // use message as the descriptive line
+  setText("display-latest-location", deliveryLocation);
   setText("display-latest-time",     latestTime);
 
   // -- Status Badge --
@@ -296,8 +329,8 @@ function renderTracking(data) {
   // -- Progress Tracker --
   updateProgress(order.orderStatus);
 
-  // -- Timeline (uses logs array) --
-  renderTimeline(logs);
+  // -- Timeline (newest log record first) --
+  renderTimeline([...logs].reverse());
 }
 
 /* =============================================
@@ -352,6 +385,14 @@ function renderLatestIcon(status) {
   wrap.innerHTML = svg;
 }
 
+/**
+ * Helper to clean comments by removing special characters and normalizing spaces.
+ */
+function cleanCommentText(str) {
+  if (!str) return "";
+  return str.replace(/[^a-zA-Z0-9\s:.,]/g, " ").replace(/\s+/g, " ").trim();
+}
+
 /* =============================================
        updateProgress
     ============================================= */
@@ -366,28 +407,39 @@ function updateProgress(stageOrStatus) {
 
   // Resolve current stage index via keyword matching (last match wins)
   let currentIdx = 0;
-  for (let i = STAGES.length - 1; i >= 0; i--) {
-    if (STAGES[i].keywords.some((kw) => val.includes(kw))) {
-      currentIdx = i;
-      break;
+  if (val.includes("reschedul")) {
+    currentIdx = 3;
+  } else if (val.includes("return")) {
+    currentIdx = 4;
+  } else {
+    for (let i = STAGES.length - 1; i >= 0; i--) {
+      if (STAGES[i].keywords.some((kw) => val.includes(kw))) {
+        currentIdx = i;
+        break;
+      }
     }
   }
 
   container.innerHTML = STAGES.map((stage, idx) => {
     let cls = "";
-    let aria = `${stage.label} — pending`;
+    let labelText = stage.label;
+
+    if (idx === 3 && val.includes("reschedul")) {
+      labelText = "Rescheduled";
+    } else if (idx === 4 && val.includes("return")) {
+      labelText = "Returned";
+    }
+
     if (idx < currentIdx) {
       cls = "completed";
-      aria = `${stage.label} — completed`;
     } else if (idx === currentIdx) {
       cls = "current";
-      aria = `${stage.label} — current step`;
     }
 
     return `
-          <div class="progress-step ${cls}" role="listitem" aria-label="${escHtml(aria)}">
+          <div class="progress-step ${cls}" role="listitem" aria-label="${escHtml(labelText)}">
             <div class="step-icon" aria-hidden="true">${stage.icon}</div>
-            <span class="step-label">${escHtml(stage.label)}</span>
+            <span class="step-label">${escHtml(labelText)}</span>
           </div>`;
   }).join("");
 }
@@ -426,15 +478,36 @@ function renderTimeline(logs) {
           ? `<div class="timeline-line" aria-hidden="true"></div>`
           : "";
 
-      // Build message row only if message text exists
-      const messageRow = message
-        ? `<span class="timeline-location">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                  </svg>
-                  ${escHtml(message)}
-                </span>`
-        : "";
+      // Render details for Rescheduled or Return events if available
+      let detailsHtml = "";
+      if (item.deliveryDate) {
+        detailsHtml += `<div style="font-size:.8rem;color:#475569;margin-top:4px;display:flex;align-items:center;gap:4px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Delivery Date: <strong style="color:#0f172a;">${escHtml(formatDate(item.deliveryDate))}</strong>
+        </div>`;
+      }
+      if (item.deliverySlot) {
+        detailsHtml += `<div style="font-size:.8rem;color:#475569;margin-top:2px;display:flex;align-items:center;gap:4px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Delivery Slot: <strong style="color:#0f172a;">${escHtml(item.deliverySlot)}</strong>
+        </div>`;
+      }
+
+      const retComment = item.returnComment || (item.status && item.status.toLowerCase().includes('return') ? item.comment : null);
+      if (retComment) {
+        detailsHtml += `<div style="font-size:.8rem;color:#dc2626;margin-top:4px;display:flex;align-items:flex-start;gap:4px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:2px;flex-shrink:0;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Return Comment: <strong style="color:#b91c1c;">${escHtml(cleanCommentText(retComment))}</strong></span>
+        </div>`;
+      }
+
+      const resComment = item.rescheduleComment || (item.status && item.status.toLowerCase().includes('reschedule') ? item.comment : null);
+      if (resComment) {
+        detailsHtml += `<div style="font-size:.8rem;color:#2563eb;margin-top:4px;display:flex;align-items:flex-start;gap:4px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:2px;flex-shrink:0;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Reschedule Comment: <strong style="color:#1d4ed8;">${escHtml(cleanCommentText(resComment))}</strong></span>
+        </div>`;
+      }
 
       return `
           <div class="timeline-item" role="listitem">
@@ -444,8 +517,7 @@ function renderTimeline(logs) {
             </div>
             <div class="timeline-content">
               <div class="timeline-title">${escHtml(title)}</div>
-              <div class="timeline-meta">
-                ${messageRow}
+              <div class="timeline-meta" style="flex-direction:column;align-items:flex-start;gap:2px;">
                 <span class="timeline-time">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <circle cx="12" cy="12" r="10"/>
@@ -453,6 +525,7 @@ function renderTimeline(logs) {
                   </svg>
                   ${escHtml(time ? formatDate(time) : "—")}
                 </span>
+                ${detailsHtml}
               </div>
             </div>
           </div>`;

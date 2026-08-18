@@ -51,6 +51,7 @@ if (isset($id)) {
                     '6' => 'Delivered',
                     '7' => 'Cancelled',
                     '8' => 'Returned',
+                    '9' => 'Rescheduled',
                 );
 
                 if (isset($numericStatusMap[$orderStatusValue])) {
@@ -67,10 +68,12 @@ if (isset($id)) {
 
                 if (in_array($orderStatusRaw, array('delivered', 'complete', 'completed', 'success', 'confirmed', 'confirm'))) {
                     $orderStatusChipClass = 'badge-delivered';
-                } elseif (in_array($orderStatusRaw, array('waiting', 'pending', 'processing', 'on_hold', 'in_progress'))) {
+                } elseif (in_array($orderStatusRaw, array('waiting', 'pending', 'processing', 'on_hold', 'in_progress', 'out_for_delivery', 'shipped'))) {
                     $orderStatusChipClass = 'badge-pending';
                 } elseif (in_array($orderStatusRaw, array('cancel', 'cancelled', 'return', 'returned', 'failed', 'rejected'))) {
                     $orderStatusChipClass = 'badge-cancelled';
+                } elseif (in_array($orderStatusRaw, array('rescheduled', 'reschedule'))) {
+                    $orderStatusChipClass = 'badge-rescheduled';
                 }
 
 ?>
@@ -426,61 +429,53 @@ if (isset($id)) {
                                         </div>
                                     </div>
 
+                                    <!-- Card: Fulfillment Partner / Vendor Details -->
+                                    <div class="premium-card">
+                                        <h3 class="premium-card-title"><i class="fas fa-truck"></i> Delivery Partner</h3>
+                                        <div id="deliveryAgentEditMode" style="display: block;">
+                                            <div class="premium-form-group">
+                                                <?php
 
-                                    <?php
-
-                                    if ($order_status == '2') { ?>
-                                        <!-- Card: Fulfillment Partner / Vendor Details -->
-                                        <div class="premium-card">
-                                            <h3 class="premium-card-title"><i class="fas fa-truck"></i> Delivery Partner</h3>
-                                            <div id="deliveryAgentEditMode" style="display: block;">
-                                                <div class="premium-form-group">
-                                                    <?php
-
-                                                    if ($order_assign_to == 0) { ?>
-                                                        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
-                                                            <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
-                                                            <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
-                                                                <strong>No Delivery Partner Assigned</strong><br>
-                                                                Please assign a delivery partner to process this order.
-                                                            </div>
+                                                if ($order_assign_to == 0) { ?>
+                                                    <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start;">
+                                                        <i class="fas fa-exclamation-triangle" style="color: var(--warning); margin-top: 2px;"></i>
+                                                        <div style="font-size: 12px; color: #78350f; line-height: 1.5;">
+                                                            <strong>No Delivery Partner Assigned</strong><br>
+                                                            Please assign a delivery partner to process this order.
                                                         </div>
+                                                    </div>
+                                                <?php
+                                                }
+
+                                                ?>
+                                                <label><?php echo ($order_assign_to == 0) ? 'Select' : 'Change'; ?> Delivery Partner</label>
+                                                <select name="assigned_delivery_agent" class="premium-form-control selectJS" style="width: 100%;">
+                                                    <option value="">Select delivery partner</option>
                                                     <?php
+
+                                                    $userParentFilter = (USER_TYPE != 'administrator') ? "AND user_parent_id=" . USER_ID : "";
+
+                                                    if ($checkDeliveryAgent = mysqli_query($connection, "SELECT user_id, profile_display_name FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=site_access_user_id INNER JOIN " . TABLE_PREFIX . "user ON user_id=site_access_user_id {$userParentFilter} WHERE site_access_type='delivery_agent' AND site_access_status=1 AND site_access_site_id=" . SITE_ID)) {
+                                                        if (mysqli_num_rows($checkDeliveryAgent) != 0) {
+                                                            while ($deliveryAgentData = mysqli_fetch_assoc($checkDeliveryAgent)) {
+                                                                echo "<option value='{$deliveryAgentData['user_id']}' " . ($order_assign_to == $deliveryAgentData['user_id'] ? "selected" : "") . ">{$deliveryAgentData['profile_display_name']}</option>";
+                                                            }
+                                                        }
                                                     }
 
                                                     ?>
-                                                    <label><?php echo ($order_assign_to == 0) ? 'Select' : 'Change'; ?> Delivery Partner</label>
-                                                    <select name="assigned_delivery_agent" class="premium-form-control selectJS" style="width: 100%;">
-                                                        <option value="">Select delivery partner</option>
-                                                        <?php
-
-                                                        $userParentFilter = (USER_TYPE != 'administrator') ? "AND user_parent_id=" . USER_ID : "";
-
-                                                        if ($checkDeliveryAgent = mysqli_query($connection, "SELECT user_id, profile_display_name FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=site_access_user_id INNER JOIN " . TABLE_PREFIX . "user ON user_id=site_access_user_id {$userParentFilter} WHERE site_access_type='delivery_agent' AND site_access_status=1 AND site_access_site_id=" . SITE_ID)) {
-                                                            if (mysqli_num_rows($checkDeliveryAgent) != 0) {
-                                                                while ($deliveryAgentData = mysqli_fetch_assoc($checkDeliveryAgent)) {
-                                                                    echo "<option value='{$deliveryAgentData['user_id']}' " . ($order_assign_to == $deliveryAgentData['user_id'] ? "selected" : "") . ">{$deliveryAgentData['profile_display_name']}</option>";
-                                                                }
-                                                            }
-                                                        }
-
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                                <div style="margin-top: 12px;">
-                                                    <button type="button" class="btn-premium-action btn-save" id="saveDeliveryPartnerBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> <?php echo ($order_assign_to == 0) ? 'Assign' : 'Change'; ?> Delivery Partner</button>
-                                                </div>
+                                                </select>
+                                            </div>
+                                            <div style="margin-top: 12px;">
+                                                <button type="button" class="btn-premium-action btn-save" id="saveDeliveryPartnerBtn" style="height: 32px; font-size: 12px; padding: 0 10px;"><i class="fas fa-check"></i> <?php echo ($order_assign_to == 0) ? 'Assign' : 'Change'; ?> Delivery Partner</button>
                                             </div>
                                         </div>
-                                    <?php
-                                    }
+                                    </div>
 
-                                    ?>
-
-
-                                    <!-- Card 4: Receiver Details -->
+                                    <!-- Card 4: Receiver Details & Meta Information -->
                                     <div class="premium-card">
-                                        <h3 class="premium-card-title"><i class="fas fa-map-marker-alt"></i> Receiver Details</h3>
+                                        <h3 class="premium-card-title"><i class="fas fa-user-check"></i> Receiver Details & Order Meta</h3>
+
                                         <div class="premium-form-group" style="margin-bottom: 16px;">
                                             <label>Receiver Name</label>
                                             <input type="text" name="address_name" class="premium-form-control" value="<?php echo htmlspecialchars($address_name ?? '', ENT_QUOTES); ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
@@ -491,9 +486,28 @@ if (isset($id)) {
                                         </div>
 
                                         <?php
+                                        if (!function_exists('formatDeliverySlotAMPM')) {
+                                            function formatDeliverySlotAMPM($slotStr)
+                                            {
+                                                if (empty($slotStr)) return '';
+                                                $slotStr = trim($slotStr);
+                                                if (preg_match('/^(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/', $slotStr, $matches)) {
+                                                    $startTime = strtotime($matches[1]);
+                                                    $endTime = strtotime($matches[2]);
+                                                    if ($startTime !== false && $endTime !== false) {
+                                                        return date('h:i A', $startTime) . ' - ' . date('h:i A', $endTime);
+                                                    }
+                                                }
+                                                return $slotStr;
+                                            }
+                                        }
+
+                                        $slotAlreadyRendered = false;
+
                                         if ($orderMeta = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$id}' AND order_site_id" . $siteId)) {
                                             if (mysqli_num_rows($orderMeta) != 0) {
                                                 $todayDateStr = date('Y-m-d');
+
                                                 while ($orderMetaData = mysqli_fetch_assoc($orderMeta)) {
                                                     extract($orderMetaData);
                                                     $cleanMetaKey = strtolower(trim(str_replace(['_', ' '], '', (string)$order_meta_key)));
@@ -507,52 +521,76 @@ if (isset($id)) {
                                         ?>
                                                         <div class="premium-form-group" style="margin-bottom: 16px;">
                                                             <label>Delivery Date</label>
-                                                            <input type="date" name="order_meta[<?php echo htmlspecialchars($order_meta_key, ENT_QUOTES); ?>]" class="premium-form-control order-meta-datepicker" min="<?php echo $todayDateStr; ?>" value="<?php echo htmlspecialchars($formattedDate, ENT_QUOTES); ?>" <?php echo ((USER_TYPE != 'administrator') ? 'readonly' : '') ?>>
+                                                            <input type="date" name="order_meta[<?php echo htmlspecialchars($order_meta_key, ENT_QUOTES); ?>]" class="premium-form-control order-meta-datepicker" min="<?php echo $todayDateStr; ?>" value="<?php echo htmlspecialchars($formattedDate, ENT_QUOTES); ?>" readonly>
                                                         </div>
-                                        <?php }
+                                                    <?php
+                                                    } else if (in_array($cleanMetaKey, ['preferredtime', 'deliveryslot', 'timeslot'])) {
+                                                        if ($slotAlreadyRendered) continue;
+                                                        $slotAlreadyRendered = true;
+                                                        $displaySlot = formatDeliverySlotAMPM($order_meta_value ?? '');
+                                                    ?>
+                                                        <div class="premium-form-group" style="margin-bottom: 16px;">
+                                                            <label>Delivery Slot</label>
+                                                            <input type="text" name="order_meta[<?php echo htmlspecialchars($order_meta_key, ENT_QUOTES); ?>]" class="premium-form-control" value="<?php echo htmlspecialchars($displaySlot, ENT_QUOTES); ?>" readonly>
+                                                        </div>
+                                                    <?php
+                                                    } else if (strpos($cleanMetaKey, 'photo') !== false || strpos($cleanMetaKey, 'image') !== false || preg_match('/\.(jpg|jpeg|png|webp|gif)$/i', (string)$order_meta_value)) {
+                                                    ?>
+                                                        <div class="premium-form-group" style="margin-bottom: 16px;">
+                                                            <label><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $order_meta_key)), ENT_QUOTES); ?></label>
+                                                            <?php if (!empty($order_meta_value)) { ?>
+                                                                <div class="delivery-photo-wrapper" style="margin-top: 6px;">
+                                                                    <a href="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" target="_blank" title="Click to view full image">
+                                                                        <img src="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" alt="Delivery Photo" style="max-width: 220px; max-height: 220px; border-radius: 10px; border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08); display: block; object-fit: cover;">
+                                                                    </a>
+                                                                </div>
+                                                            <?php } else { ?>
+                                                                <span class="text-muted" style="font-size: 13px; color: #64748b;">No photo available</span>
+                                                            <?php } ?>
+                                                        </div>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <div class="premium-form-group" style="margin-bottom: 16px;">
+                                                            <label><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $order_meta_key)), ENT_QUOTES); ?></label>
+                                                            <?php if (strlen($order_meta_value) > 60 || in_array($cleanMetaKey, ['message', 'comment', 'reason', 'note', 'description'])) { ?>
+                                                                <textarea name="order_meta[<?php echo htmlspecialchars($order_meta_key, ENT_QUOTES); ?>]" class="premium-form-control" readonly><?php echo htmlspecialchars($order_meta_value ?? '', ENT_QUOTES); ?></textarea>
+                                                            <?php } else { ?>
+                                                                <input type="text" name="order_meta[<?php echo htmlspecialchars($order_meta_key, ENT_QUOTES); ?>]" class="premium-form-control" value="<?php echo htmlspecialchars($order_meta_value ?? '', ENT_QUOTES); ?>" readonly>
+                                                            <?php } ?>
+                                                        </div>
+                                            <?php       }
                                                 }
                                             }
                                         }
-                                        ?>
+
+                                        if (!$slotAlreadyRendered) {
+                                            ?>
+                                            <div class="premium-form-group" style="margin-bottom: 16px;">
+                                                <label>Delivery Slot</label>
+                                                <input type="text" class="premium-form-control" value="Not selected" readonly>
+                                            </div>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Floating Actions Bar at bottom of cards -->
                             <div class="premium-action-row">
-
-                                <!-- Backend Admin CTA -->
                                 <input type="hidden" name="id" value="<?php echo $id ?>">
 
-                                <?php
-
-                                if ($order_status == 0) { ?>
-                                    <a href="#" id="orderUpdateData" class="btn-premium-action btn-reschedule"><i class="fas fa-check"></i> Update order</a>
-                                <?php }
-
-                                if ($order_status == 2) { ?>
-                                    <!-- CTA for Vendors -->
-                                    <input type="hidden" name="type" value="order">
-                                    <input type="hidden" name="id" value="<?php echo $id ?>">
-                                    <a href="#" id="orderConfirmBtn" class="btn-premium-action btn-confirm"><i class="fas fa-check"></i> Accept</a>
-                                    <a href="#" id="orderCancelBtn" class="btn-premium-action btn-cancel"><i class="fas fa-times"></i> Reject</a>
-                                <?php
-                                }
-
-                                if ($order_status == 5 || $order_status == 1) { ?>
-                                    <!-- CTA for Delivery Agents -->
-                                    <a href="#" id="orderRescheduleBtn" class="btn-premium-action btn-reschedule"><i class="fas fa-calendar-plus"></i> Reschedule Delivery</a>
-                                    <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return"><i class="fas fa-undo"></i> Return</a>
-                                    <a href="#" id="orderDeliverBtn" class="btn-premium-action btn-delivered"><i class="fas fa-shipping-fast"></i> Delivered</a>
-                                <?php
-                                }
-
-                                if (USER_TYPE != 'vendor' || USER_TYPE != 'delivery_agent') { ?>
-                                    <a href="/tracking/?orderid=OD<?php echo $id ?>" class="btn-premium-action btn-track" target="_blank"><i class="fas fa-route"></i> Track order <i class="fas fa-external-link-alt" style="font-size: 11px; margin-left: 4px;"></i></a>
-                                <?php
-                                }
-
-                                ?>
+                                <!-- Backend Admin CTA -->
+                                <a href="#" id="orderUpdateData" class="btn-premium-action btn-reschedule"><i class="fas fa-check"></i> Update order</a>
+                                <!-- CTA for Vendors -->
+                                <input type="hidden" name="type" value="order">
+                                <input type="hidden" name="id" value="<?php echo $id ?>">
+                                <a href="#" id="orderConfirmBtn" class="btn-premium-action btn-confirm"><i class="fas fa-check"></i> Accept</a>
+                                <a href="#" id="orderCancelBtn" class="btn-premium-action btn-cancel"><i class="fas fa-times"></i> Reject</a>
+                                <!-- CTA for Delivery Agents -->
+                                <a href="#" id="orderRescheduleBtn" class="btn-premium-action btn-reschedule"><i class="fas fa-calendar-plus"></i> Reschedule Delivery</a>
+                                <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return"><i class="fas fa-undo"></i> Return</a>
+                                <a href="#" id="orderDeliverBtn" class="btn-premium-action btn-delivered"><i class="fas fa-shipping-fast"></i> Delivered</a>
+                                <a href="/tracking/?orderid=OD<?php echo $id ?>" class="btn-premium-action btn-track" target="_blank"><i class="fas fa-route"></i> Track order <i class="fas fa-external-link-alt" style="font-size: 11px; margin-left: 4px;"></i></a>
 
                             </div>
                         </form>
@@ -575,13 +613,13 @@ if (isset($id)) {
                                 <label for="returnReasonInput">Return Reason <span id="returnReasonRequiredMark" class="required" style="display: none;">*</span></label>
                                 <select id="returnReasonInput" name="return_reason" class="premium-form-control selectJS">
                                     <option value="">Select reason</option>
-                                    <option value="damaged_item">Damaged item</option>
-                                    <option value="wrong_item">Wrong item delivered</option>
-                                    <option value="quality_issue">Quality issue</option>
-                                    <option value="size_issue">Size issue</option>
-                                    <option value="late_delivery">Late delivery</option>
-                                    <option value="changed_mind">Changed my mind</option>
-                                    <option value="other">Other</option>
+                                    <option value="Damaged Item">Damaged Item</option>
+                                    <option value="Wrong Item Delivered">Wrong Item Delivered</option>
+                                    <option value="Quality Issue">Quality Issue</option>
+                                    <option value="Size Issue">Size Issue</option>
+                                    <option value="Late Delivery">Late Delivery</option>
+                                    <option value="Changed My Mind">Changed My Mind</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </div>
 
@@ -639,7 +677,7 @@ if (isset($id)) {
                             </div>
 
                             <div class="order-action-modal-footer">
-                                <button type="button" class="btn-premium-action btn-secondary close-modal-btn">Cancel</button>
+                                <button type="button" class="btn-premium-action btn-secondary close-modal-btn" style="background-color: #3b82f6 !important; color: #ffffff !important;">Cancel</button>
                                 <button type="submit" class="btn-premium-action btn-primary" id="submitActionBtn">Confirm</button>
                             </div>
                         </form>

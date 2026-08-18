@@ -159,6 +159,22 @@
               <div class="meta-label">Delivery City</div>
               <div class="meta-value" id="display-delivery-city">—</div>
             </div>
+            <div class="meta-item" id="delivery-date-meta-item" style="display: none;">
+              <div class="meta-label">Delivery Date</div>
+              <div class="meta-value" id="display-delivery-date">—</div>
+            </div>
+            <div class="meta-item" id="delivery-slot-meta-item" style="display: none;">
+              <div class="meta-label">Delivery Slot</div>
+              <div class="meta-value" id="display-delivery-slot">—</div>
+            </div>
+            <div class="meta-item" id="return-comment-meta-item" style="display: none;">
+              <div class="meta-label">Return Comment</div>
+              <div class="meta-value" id="display-return-comment">—</div>
+            </div>
+            <div class="meta-item" id="reschedule-comment-meta-item" style="display: none;">
+              <div class="meta-label">Reschedule Comment</div>
+              <div class="meta-value" id="display-reschedule-comment">—</div>
+            </div>
           </div>
         </article>
 

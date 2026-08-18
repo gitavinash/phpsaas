@@ -7390,7 +7390,6 @@ textarea.premium-form-control {
   padding-left: 18px;
 }
 
-
 #orderImportFlow .result-errors li {
   font-size: 12px;
   line-height: 1.45;
@@ -7423,11 +7422,12 @@ textarea.premium-form-control {
    ============================================================ */
 
 @media (max-width: 680px) {
-
   /* Header: strict flex row */
   body.premium-admin header {
     position: fixed;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 52px;
     padding: 0 10px;
     display: flex;
@@ -7435,10 +7435,10 @@ textarea.premium-form-control {
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
-    background: rgba(255,255,255,0.97);
+    background: rgba(255, 255, 255, 0.97);
     backdrop-filter: blur(6px);
     border-bottom: 1px solid #e8edf4;
-    box-shadow: 0 2px 10px rgba(15,23,42,0.07);
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.07);
     z-index: 1000;
   }
 
@@ -7570,7 +7570,7 @@ textarea.premium-form-control {
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid #e2e8f0;
-    box-shadow: 0 1px 6px rgba(15,23,42,0.12);
+    box-shadow: 0 1px 6px rgba(15, 23, 42, 0.12);
   }
 
   body.premium-admin .right-side ul li .profile-img img {
@@ -7592,7 +7592,7 @@ textarea.premium-form-control {
     width: 100%;
     border-radius: 16px 16px 0 0;
     padding: 16px 12px 20px;
-    box-shadow: 0 -6px 28px rgba(15,23,42,0.14);
+    box-shadow: 0 -6px 28px rgba(15, 23, 42, 0.14);
     z-index: 1100;
   }
 
@@ -7692,7 +7692,7 @@ textarea.premium-form-control {
     left: 0;
     width: 100%;
     position: relative;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     margin-top: 2px;
     padding: 4px 0;
@@ -7732,7 +7732,6 @@ textarea.premium-form-control {
 
 /* Extra-small phones ≤ 480px */
 @media (max-width: 480px) {
-
   body.premium-admin header {
     height: 50px;
     padding: 0 8px;
@@ -7796,4 +7795,9 @@ textarea.premium-form-control {
     font-size: 14px;
     padding: 13px 10px;
   }
+}
+.premium-card {
+  border: none;
+  padding: 0px;
+  box-shadow: none;
 }
