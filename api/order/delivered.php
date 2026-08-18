@@ -40,7 +40,7 @@ if (!$updateOrder) {
 $photoUrl = '';
 $fileInput = $_FILES['actionPhoto'] ?? $_FILES['photo'] ?? null;
 if ($fileInput && !empty($fileInput['name']) && $fileInput['error'] === UPLOAD_ERR_OK) {
-    $uploadDir = ROOT . '/lib/resource/ui/uploads/delivery/';
+    $uploadDir = ROOT . '/upload/' . SITE_DOMAIN . '/' . date('Y/m/');
     if (!is_dir($uploadDir)) {
         @mkdir($uploadDir, 0777, true);
     }
@@ -49,12 +49,12 @@ if ($fileInput && !empty($fileInput['name']) && $fileInput['error'] === UPLOAD_E
     $targetPath = $uploadDir . $filename;
 
     if (move_uploaded_file($fileInput['tmp_name'], $targetPath)) {
-        $photoUrl = '/lib/resource/ui/uploads/delivery/' . $filename;
+        $photoUrl = '/upload/' . SITE_DOMAIN . '/' . date('Y/m/') . $filename;
     }
 }
 
 // Save delivery metadata
-$saveMeta = function($key, $val) use ($connection, $siteId, $idEsc) {
+$saveMeta = function ($key, $val) use ($connection, $siteId, $idEsc) {
     if (empty($key) || empty($val)) return;
     $valEsc = mysqli_real_escape_string($connection, $val);
     $checkMeta = mysqli_query($connection, "SELECT order_meta_id FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id = '{$idEsc}' AND order_meta_key = '{$key}' LIMIT 1");
