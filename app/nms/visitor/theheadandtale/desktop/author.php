@@ -28,6 +28,11 @@ require_once 'header.php';
                                 style="margin:0 0 8px 0;font-size:2.2rem;line-height:1.1;font-weight:600;color:#222;word-break:break-word;">
                                 <?php echo htmlspecialchars($authorInfo['profile_display_name'] ?? $authorInfo['user_username']); ?>
                             </h2>
+                            <?php if (!empty($authorInfo['author_bio'] ?? $authorInfo['bio'] ?? '')) { ?>
+                                <p style="margin:4px 0 12px 0;font-size:1.4rem;line-height:1.5;color:#555;word-break:break-word;">
+                                    <?php echo nl2br(htmlspecialchars($authorInfo['author_bio'] ?? $authorInfo['bio'])); ?>
+                                </p>
+                            <?php } ?>
                             <style>
                                 .author-social-row {
                                     display: flex;

@@ -8,11 +8,14 @@ $authorId = (int)$urlStructure[1];
 
 $authorInfo = null;
 // Fetch author info (profile, user tables)
-// No profile_bio in table, so do not select it
-$authorInfoQuery = "SELECT u.user_id, u.user_username, p.profile_display_name, p.profile_image, pm.profile_meta_value AS social_links
+$authorInfoQuery = "SELECT u.user_id, u.user_username, p.profile_display_name, p.profile_image, 
+	pm_social.profile_meta_value AS social_links,
+	pm_bio.profile_meta_value AS author_bio
 FROM " . TABLE_PREFIX . "user u
 INNER JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
- LEFT JOIN " . TABLE_PREFIX . "profile_meta pm ON pm.profile_meta_profile_id = u.user_id WHERE u.user_id = {$authorId} LIMIT 1";
+LEFT JOIN " . TABLE_PREFIX . "profile_meta pm_social ON pm_social.profile_meta_profile_id = u.user_id AND pm_social.profile_meta_key = 'social_links'
+LEFT JOIN " . TABLE_PREFIX . "profile_meta pm_bio ON pm_bio.profile_meta_profile_id = u.user_id AND pm_bio.profile_meta_key = 'bio'
+WHERE u.user_id = {$authorId} LIMIT 1";
 if ($authorInfoResult = mysqli_query($connection, $authorInfoQuery)) {
 	if (mysqli_num_rows($authorInfoResult) > 0) {
 		$authorInfo = mysqli_fetch_assoc($authorInfoResult);

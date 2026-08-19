@@ -40,6 +40,11 @@ if ($currentPage < $totalPages) {
         <div class="author-meta-info">
           <span class="author-role-tag">Author</span>
           <h1><?php echo $authorName; ?></h1>
+          <?php if (!empty($authorInfo['author_bio'] ?? $authorInfo['bio'] ?? '')): ?>
+            <p class="author-bio" style="margin:8px 0 12px;font-size:1rem;line-height:1.5;color:#666;">
+              <?php echo nl2br(htmlspecialchars($authorInfo['author_bio'] ?? $authorInfo['bio'])); ?>
+            </p>
+          <?php endif; ?>
 
           <?php
           $socials = [
