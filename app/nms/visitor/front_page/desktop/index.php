@@ -124,6 +124,21 @@ $cryptoMapArticles = getNewsCategoryPost($connection, 411, 'news', 'new', 'all',
 // 9. Fetch Money Trivia
 $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all', 0, 3);
 
+// 10. Fetch Who Reads Us Testimonials (3 featured testimonials)
+$featuredTestimonials = array_slice(testimonialsList($connection, 3), 0, 3);
+
+// Helper function to clean quote content if not already declared
+if (!function_exists('clean_quote')) {
+  function clean_quote($s)
+  {
+    $s = html_entity_decode($s, ENT_QUOTES, 'UTF-8');
+    $s = strip_tags($s);                                // remove inline styles/tags
+    $s = preg_replace('/\xC2\xA0|&nbsp;?/i', ' ', $s); // remove nbsp
+    $s = preg_replace('/\s{2,}/', ' ', $s);            // extra spaces
+    return trim($s);
+  }
+}
+
 ?>
 <?php if ($featuredArticle || !empty($editorsPicks)): ?>
 <!-- Hero Section -->
@@ -685,6 +700,157 @@ $moneyTriviaArticles = getNewsCategoryPost($connection, 203, 'news', 'new', 'all
               <?php echo htmlspecialchars(!empty($ai['meta_description']) ? $ai['meta_description'] : $ai['news_description']); ?>
             </p>
             <a href="<?php echo htmlspecialchars($ai['link_url']); ?>" class="read-more">Read Analysis <span class="arrow">→</span></a>
+          </div>
+        </article>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
+<?php if (!empty($featuredTestimonials)): ?>
+<!-- Who Reads Us Section -->
+<style>
+  .who-reads-us-section {
+    padding: 56px 0;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .who-reads-us-section .section-kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--accent-color, #d93025);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .wru-index-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+  }
+
+  .wru-index-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  .wru-index-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.07);
+    border-color: #cbd5e1;
+  }
+
+  .wru-index-quote-mark {
+    font-family: var(--font-heading, Georgia, serif);
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--accent-color, #d93025);
+    opacity: 0.2;
+    margin-bottom: -8px;
+  }
+
+  .wru-index-quote {
+    font-family: var(--font-heading, Georgia, serif);
+    font-size: 0.975rem;
+    line-height: 1.6;
+    color: #334155;
+    margin-bottom: 20px;
+    flex-grow: 1;
+  }
+
+  .wru-index-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .wru-index-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+  }
+
+  .wru-index-meta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wru-index-name {
+    font-size: 0.925rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.3;
+  }
+
+  .wru-index-role {
+    font-size: 0.8rem;
+    color: #64748b;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 768px) {
+    .wru-index-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<section id="who-reads-us" class="section who-reads-us-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="section-kicker">EXECUTIVE READERSHIP</span>
+        <h2>Who Reads Us</h2>
+      </div>
+      <a href="/who-reads-us/" class="view-all">Explore All Reviews <span class="arrow">→</span></a>
+    </div>
+
+    <div class="wru-index-grid">
+      <?php foreach ($featuredTestimonials as $row): ?>
+        <?php
+        $readerInfo     = explode(",", $row["category_title"]);
+        $readerName     = trim($readerInfo[0]);
+        $readerPosition = ucwords(trim(str_replace($readerName . (sizeof($readerInfo) == 1 ? "" : ","), "", $row["category_title"])));
+
+        $defaultAvatar = IMG_LIBRARY . 'default-black-profile-pic-icon.png';
+        $img           = !empty($row['category_image']) ? $row['category_image'] : $defaultAvatar;
+        $quote         = clean_quote($row['category_description']);
+
+        $nameEsc  = htmlspecialchars($readerName, ENT_QUOTES, 'UTF-8');
+        $roleEsc  = htmlspecialchars($readerPosition, ENT_QUOTES, 'UTF-8');
+        $imgEsc   = htmlspecialchars($img, ENT_QUOTES, 'UTF-8');
+        $quoteEsc = htmlspecialchars($quote, ENT_QUOTES, 'UTF-8');
+        $defaultAvatarEsc = htmlspecialchars($defaultAvatar, ENT_QUOTES, 'UTF-8');
+        ?>
+
+        <article class="wru-index-card">
+          <div class="wru-index-quote-mark">&ldquo;</div>
+          <p class="wru-index-quote"><?php echo $quoteEsc; ?></p>
+
+          <div class="wru-index-user">
+            <img src="<?php echo $imgEsc; ?>" alt="<?php echo $nameEsc; ?>" class="wru-index-avatar" loading="lazy" onerror="this.onerror=null; this.src='<?php echo $defaultAvatarEsc; ?>';">
+            <div class="wru-index-meta">
+              <strong class="wru-index-name"><?php echo $nameEsc; ?></strong>
+              <span class="wru-index-role"><?php echo $roleEsc; ?></span>
+            </div>
           </div>
         </article>
       <?php endforeach; ?>
