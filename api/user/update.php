@@ -86,22 +86,27 @@ function update($connection, $data)
                     $socialMetaOk = mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$metaKey}'");
                 }
 
-                // Optional: Fix existing bad JSON for this user (one-time repair)
-                /*
-                $fixQuery = mysqli_query($connection, "SELECT profile_meta_id, profile_meta_value FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$metaKey}'");
-                if ($fixQuery && mysqli_num_rows($fixQuery) > 0) {
-                    $fixRow = mysqli_fetch_assoc($fixQuery);
-                    $raw = $fixRow['profile_meta_value'];
-                    $clean = preg_replace('/[\x00-\x1F\x7F]/u', '', $raw);
-                    $arr = json_decode($clean, true);
-                    if (json_last_error() === JSON_ERROR_NONE && is_array($arr)) {
-                        $fixedJson = json_encode($arr, JSON_UNESCAPED_SLASHES);
-                        mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "profile_meta SET profile_meta_value='" . mysqli_real_escape_string($connection, $fixedJson) . "' WHERE profile_meta_id='{$fixRow['profile_meta_id']}'");
+                // Bio Meta (profile_meta table, key: bio)
+                $bioMetaOk = true;
+                if (isset($bio)) {
+                    $cleanBio = trim($bio);
+                    $bioKey = 'bio';
+                    if ($cleanBio !== '') {
+                        $checkBioMeta = mysqli_query($connection, "SELECT profile_meta_id FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$bioKey}'");
+                        if ($checkBioMeta && mysqli_num_rows($checkBioMeta) > 0) {
+                            // Update
+                            $bioMetaOk = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "profile_meta SET profile_meta_value='" . mysqli_real_escape_string($connection, $cleanBio) . "' WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$bioKey}'");
+                        } else {
+                            // Insert
+                            $bioMetaOk = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile_meta (profile_meta_profile_id, profile_meta_key, profile_meta_value) VALUES ('{$user_id}', '{$bioKey}', '" . mysqli_real_escape_string($connection, $cleanBio) . "')");
+                        }
+                    } else {
+                        // Delete if empty
+                        $bioMetaOk = mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='{$bioKey}'");
                     }
                 }
-                */
 
-                if ($updateProfileQuery && $updateUserAccessQuery && $socialMetaOk) {
+                if ($updateProfileQuery && $updateUserAccessQuery && $socialMetaOk && $bioMetaOk) {
                     $status = 'success';
                     $msg = 'User update successfully';
                     mysqli_query($connection, "COMMIT");

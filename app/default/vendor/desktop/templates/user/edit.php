@@ -25,6 +25,14 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                 echo "No social_links meta found for user_id: {$user_id}";
             }
         }
+
+        // Fetch bio from profile_meta table
+        $user_bio = '';
+        $bioMetaQuery = mysqli_query($connection, "SELECT profile_meta_value FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id='{$user_id}' AND profile_meta_key='bio' LIMIT 1");
+        if ($bioMetaQuery && mysqli_num_rows($bioMetaQuery) > 0) {
+            $bioMetaRow = mysqli_fetch_assoc($bioMetaQuery);
+            $user_bio = $bioMetaRow['profile_meta_value'];
+        }
     } else {
 ?>
         <script type="text/javascript">
@@ -85,6 +93,11 @@ if ($checkUser = mysqli_query($connection, "SELECT user_mobile, user_email, site
                                 }
                                 ?>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bio">Bio</label>
+                            <textarea name="bio" id="bio" class="form-control inside-shadow" rows="4"
+                                placeholder="Enter user bio..."><?php echo isset($user_bio) ? htmlspecialchars($user_bio) : ''; ?></textarea>
                         </div>
                         <!-- Social Media Links Section -->
                         <div class="form-group">
