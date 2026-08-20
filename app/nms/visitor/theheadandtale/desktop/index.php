@@ -382,10 +382,10 @@
 <?php
 
 if (SITE_VERSION == 'mobile') { ?>
-<!-- Floating trigger (mobile only) -->
-<a href='/who-reads-us/' class="reviews-fab" id="openReviews" aria-controls="reviewsSheet" aria-expanded="false">
-    Who Reads Us
-</a>
+    <!-- Floating trigger (mobile only) -->
+    <a href='/who-reads-us/' class="reviews-fab" id="openReviews" aria-controls="reviewsSheet" aria-expanded="false">
+        Who Reads Us
+    </a>
 <?php
 }
 
