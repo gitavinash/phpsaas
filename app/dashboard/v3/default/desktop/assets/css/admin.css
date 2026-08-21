@@ -1644,3 +1644,253 @@ footer .credit i.fi-rr-heart {
   color: var(--rose-500) !important;
   margin: 0 2px !important;
 }
+
+/* ==========================================================================
+   REPORT PAGES — v3 THEME OVERRIDE
+   Applies to: /report/sales.php, /report/expenses.php,
+               /report/visits.php, /report/employees.php
+   ========================================================================== */
+
+/* ---- Page heading ---- */
+h1.pageHeading,
+h2.heading,
+.report-heading {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: var(--slate-800) !important;
+  margin-bottom: 4px !important;
+  letter-spacing: -0.01em !important;
+}
+
+h2.heading span {
+  display: block !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: var(--slate-400) !important;
+  margin-top: 2px !important;
+  letter-spacing: 0 !important;
+}
+
+/* ---- Top bar container ---- */
+.box-1.dashboard-datepicker {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  margin-bottom: 18px !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+/* ---- Summary cards row ---- */
+.dashboard-summary-cards-row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) !important;
+  gap: 14px !important;
+  margin-bottom: 20px !important;
+}
+
+/* ---- Summary card base reset (override inline) ---- */
+.dashboard-summary-card {
+  background: var(--surface-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 16px 18px !important;
+  box-shadow: var(--shadow-sm) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-width: 0 !important;
+  transition: box-shadow 0.15s ease, transform 0.15s ease !important;
+}
+
+.dashboard-summary-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07) !important;
+}
+
+.dashboard-summary-card .icon-bg,
+.dashboard-summary-card > i[style*="position:absolute"] {
+  position: absolute !important;
+  right: -14px !important;
+  top: -14px !important;
+  font-size: 72px !important;
+  opacity: 0.09 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* Summary label */
+.dashboard-summary-card > div[style*="font-size:12px"],
+.dashboard-summary-card > div[style*="font-size: 12px"],
+.dashboard-summary-card .card-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: var(--slate-500) !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Summary value */
+.dashboard-summary-card > div[style*="font-size:clamp"],
+.dashboard-summary-card > div[style*="font-size: clamp"] {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  color: var(--slate-900) !important;
+  margin-top: 8px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.05 !important;
+}
+
+/* ---- Expense card list ---- */
+.expense-card-list {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 14px !important;
+  margin-bottom: 20px !important;
+}
+
+.expense-card-list .expense-card {
+  background: var(--surface-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 14px 16px !important;
+  box-shadow: var(--shadow-sm) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+  max-width: 100% !important;
+  flex: unset !important;
+}
+
+.expense-card-list .expense-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07) !important;
+}
+
+/* ---- Data table — report table ---- */
+.report-table-wrap,
+section .main-box {
+  background: var(--surface-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+/* ---- Pagination bar ---- */
+.pagination-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin: 18px 0 8px !important;
+  gap: 10px !important;
+}
+
+.pagination-center {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--slate-500) !important;
+  text-align: center !important;
+}
+
+/* ---- Employee / agent report card ---- */
+.widget-setting-info.membership-card,
+article.widget-setting-info {
+  background: var(--surface-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 14px 16px !important;
+  box-shadow: var(--shadow-sm) !important;
+  margin-bottom: 12px !important;
+  transition: box-shadow 0.15s ease !important;
+}
+
+.widget-setting-info.membership-card:hover,
+article.widget-setting-info:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07) !important;
+}
+
+/* ---- Membership due strip ---- */
+.membership-due-strip {
+  background: var(--rose-50) !important;
+  border: 1px solid #fecdd3 !important;
+  border-radius: var(--radius-md) !important;
+  padding: 8px 12px !important;
+  margin-top: 10px !important;
+  color: #9f1239 !important;
+}
+
+/* ---- Action stack buttons ---- */
+.action-stack {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+/* ---- Empty states in reports ---- */
+.empty-state {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 40px 20px !important;
+  color: var(--slate-400) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.empty-state i {
+  font-size: 36px !important;
+  opacity: 0.4 !important;
+}
+
+/* ---- Inline form inside report pages ---- */
+section .form-group input,
+section .form-group select,
+section .form-group textarea {
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-md) !important;
+  background: #ffffff !important;
+  font-size: 14px !important;
+  color: var(--slate-800) !important;
+  padding: 10px 14px !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+section .form-group input:focus,
+section .form-group select:focus,
+section .form-group textarea:focus {
+  border-color: var(--brand-600) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-600) 12%, transparent) !important;
+  outline: none !important;
+}
+
+/* ---- Report shortcut button ---- */
+.main-box .shortcut {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  padding: 10px 14px !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+.main-box .shortcut a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: var(--radius-md) !important;
+  background: var(--brand-600) !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  transition: background 0.15s ease !important;
+}
+
+.main-box .shortcut a:hover {
+  background: var(--brand-700) !important;
+}
