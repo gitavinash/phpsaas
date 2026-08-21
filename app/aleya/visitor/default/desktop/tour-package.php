@@ -195,7 +195,7 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><?php echo defined('SITE_NAME') ? SITE_NAME : 'Travel' ?> - <?php echo htmlspecialchars($tour_package_title ?? 'Tour Package') ?></title>
 
@@ -925,14 +925,6 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
             box-shadow: var(--shadow-sm);
         }
 
-        @media (max-width: 600px) {
-            .farewell-card {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-        }
-
         .farewell-icon {
             width: 52px;
             height: 52px;
@@ -1393,13 +1385,6 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
             transform: scale(1.1);
         }
 
-        @media (max-width: 600px) {
-            .lightbox-prev { left: 10px; width: 42px; height: 42px; font-size: 1.6rem; }
-            .lightbox-next { right: 10px; width: 42px; height: 42px; font-size: 1.6rem; }
-            .lightbox-close { top: 16px; right: 16px; width: 40px; height: 40px; }
-            .share-options-grid { grid-template-columns: 1fr; }
-        }
-
         /* --- Footer & Credit Strap --- */
         .luxury-footer {
             text-align: center;
@@ -1436,14 +1421,15 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
             left: 0;
             right: 0;
             background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 16px;
+            backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 10px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
             z-index: 999;
+            height: 64px;
         }
 
         @media (min-width: 992px) {
@@ -1452,17 +1438,30 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
             }
         }
 
-        .cta-info label {
-            display: block;
-            font-size: 0.7rem;
-            color: #94a3b8;
-            text-transform: uppercase;
+        .cta-info {
+            display: flex;
+            flex-direction: column;
         }
 
-        .cta-info span {
-            font-size: 1rem;
-            font-weight: 700;
+        .cta-info label {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-price {
+            font-size: 1.15rem;
+            font-weight: 800;
             color: #fbbf24;
+            letter-spacing: -0.3px;
+            line-height: 1.1;
+        }
+
+        .cta-price small {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #cbd5e1;
         }
 
         .btn-cta-gold {
@@ -1473,12 +1472,386 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
             background: linear-gradient(135deg, #c59b27 0%, #9a7312 100%);
             color: #ffffff;
             font-weight: 700;
-            font-size: 0.9rem;
-            padding: 12px 20px;
+            font-size: 0.875rem;
+            padding: 10px 20px;
             border-radius: var(--radius-full);
             text-decoration: none;
             border: none;
             cursor: pointer;
+            box-shadow: 0 4px 14px rgba(197, 155, 39, 0.35);
+        }
+
+        /* --- DEDICATED HIGH-IMPACT MOBILE RESPONSIVE MEDIA QUERIES (MOBILE ONLY) --- */
+        @media (max-width: 767px) {
+            body {
+                padding-bottom: 84px;
+            }
+
+            .luxury-wrapper {
+                padding: 12px 12px;
+            }
+
+            .site-header {
+                padding: 12px 16px;
+                margin-bottom: 14px;
+                border-radius: var(--radius-md);
+            }
+
+            .brand-logo-img {
+                max-height: 38px;
+            }
+
+            .brand-badge {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+
+            .company-name {
+                font-size: 1.15rem;
+            }
+
+            /* Mobile Only: Remove Header Share Button */
+            .btn-header-share {
+                display: none !important;
+            }
+
+            /* Mobile Only: Sleek Minimal Hero Section */
+            .hero-card {
+                min-height: 230px;
+                padding: 18px 16px;
+                margin-bottom: 14px;
+                border-radius: var(--radius-md);
+                justify-content: flex-end;
+            }
+
+            .hero-tag {
+                padding: 4px 10px;
+                font-size: 0.675rem;
+                margin-bottom: 8px;
+                letter-spacing: 0.5px;
+            }
+
+            .hero-title {
+                font-size: 1.35rem;
+                line-height: 1.28;
+                margin-bottom: 12px;
+            }
+
+            .hero-meta-grid {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding-top: 10px;
+                border-top: 1px solid rgba(255, 255, 255, 0.15);
+            }
+
+            /* Mobile Only: Remove Price from Hero */
+            .meta-pill-price {
+                display: none !important;
+            }
+
+            /* Mobile Only: Make Meta Pills Compact & Minimal */
+            .meta-pill {
+                flex: 0 0 auto;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 5px 12px;
+                background: rgba(15, 23, 42, 0.75);
+                backdrop-filter: blur(10px);
+                border-radius: var(--radius-full);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+
+            .meta-icon {
+                width: 18px;
+                height: 18px;
+                background: transparent;
+                color: #fbbf24;
+                padding: 0;
+                box-shadow: none;
+            }
+
+            .meta-icon svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .meta-text {
+                display: flex;
+                align-items: center;
+            }
+
+            .meta-text label {
+                display: none !important;
+            }
+
+            .meta-text span {
+                font-size: 0.775rem;
+                font-weight: 600;
+                color: #ffffff;
+                letter-spacing: 0.2px;
+            }
+
+            /* Minimalist Section Cards */
+            .luxury-card {
+                padding: 16px 14px;
+                margin-bottom: 14px;
+                border-radius: var(--radius-md);
+            }
+
+            .section-header {
+                gap: 10px;
+                margin-bottom: 14px;
+                padding-bottom: 10px;
+            }
+
+            .section-icon {
+                width: 34px;
+                height: 34px;
+                border-radius: 8px;
+            }
+
+            .section-icon svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .overview-content {
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+
+            /* Compact 2-Column Photo Gallery */
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .gallery-item {
+                border-radius: var(--radius-sm);
+                aspect-ratio: 4 / 3;
+            }
+
+            .gallery-caption {
+                padding: 6px 8px;
+                font-size: 0.725rem;
+            }
+
+            .btn-gallery-more {
+                padding: 9px 20px;
+                font-size: 0.825rem;
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Compact Timeline & Accordions - Day Title Below Day Number on Mobile */
+            .itinerary-timeline {
+                padding-left: 14px;
+            }
+
+            .itinerary-timeline::before {
+                left: 4px;
+                top: 14px;
+                bottom: 14px;
+                width: 2px;
+            }
+
+            .timeline-marker {
+                left: -14px;
+                top: 14px;
+                width: 14px;
+                height: 14px;
+                border-width: 3px;
+                box-shadow: 0 0 0 2px var(--color-accent-light);
+            }
+
+            .timeline-item {
+                margin-bottom: 14px;
+            }
+
+            .day-card {
+                border-radius: var(--radius-sm);
+            }
+
+            .day-card-header {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                grid-template-areas:
+                    "badge icon"
+                    "title title";
+                gap: 6px 12px;
+                padding: 12px 14px;
+                align-items: center;
+            }
+
+            .day-badge {
+                grid-area: badge;
+                justify-self: start;
+                padding: 4px 10px;
+                font-size: 0.725rem;
+            }
+
+            .toggle-icon {
+                grid-area: icon;
+                justify-self: end;
+                width: 24px;
+                height: 24px;
+            }
+
+            .day-title {
+                grid-area: title;
+                font-size: 0.95rem;
+                line-height: 1.35;
+                margin-top: 2px;
+            }
+
+            .day-card-body {
+                padding: 14px;
+                font-size: 0.875rem;
+                line-height: 1.6;
+            }
+
+            /* Day Hotel Cards */
+            .day-hotel-card {
+                margin-top: 12px;
+                border-radius: var(--radius-sm);
+            }
+
+            .hotel-card-header {
+                padding: 8px 12px;
+            }
+
+            .hotel-badge-tag {
+                font-size: 0.725rem;
+                gap: 4px;
+            }
+
+            .hotel-type-pill {
+                font-size: 0.7rem;
+                padding: 2px 8px;
+            }
+
+            .hotel-card-body {
+                padding: 12px;
+                flex-direction: row;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .hotel-thumb-box {
+                width: 80px;
+                min-width: 80px;
+                max-width: 80px;
+                aspect-ratio: 4 / 3;
+                border-radius: 6px;
+            }
+
+            .hotel-name {
+                font-size: 0.975rem;
+                margin-bottom: 4px;
+            }
+
+            .hotel-location {
+                font-size: 0.75rem;
+                margin-bottom: 4px;
+            }
+
+            .hotel-room-type {
+                font-size: 0.75rem;
+                margin-bottom: 4px;
+            }
+
+            .btn-hotel-link {
+                font-size: 0.75rem;
+            }
+
+            .legal-disclaimer {
+                padding: 8px 12px;
+                font-size: 0.7rem;
+            }
+
+            /* Farewell Card */
+            .farewell-card {
+                padding: 14px;
+                gap: 10px;
+                margin-top: 12px;
+                border-radius: var(--radius-sm);
+                flex-direction: row;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .farewell-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .farewell-title {
+                font-size: 1.05rem;
+            }
+
+            .farewell-text {
+                font-size: 0.85rem;
+                margin-bottom: 8px;
+            }
+
+            .farewell-tag {
+                font-size: 0.725rem;
+                padding: 4px 8px;
+            }
+
+            /* Inclusions, Exclusions, Pricing Table */
+            .inc-exc-grid {
+                gap: 12px;
+            }
+
+            .inc-card, .exc-card {
+                padding: 14px;
+            }
+
+            .inc-exc-header {
+                font-size: 1.05rem;
+                margin-bottom: 10px;
+            }
+
+            .inc-exc-list li {
+                font-size: 0.825rem;
+                gap: 8px;
+            }
+
+            .luxury-table th, .luxury-table td {
+                padding: 10px 10px;
+                font-size: 0.8rem;
+            }
+
+            .price-highlight {
+                font-size: 0.9rem;
+            }
+
+            .policy-card {
+                padding: 12px 14px;
+            }
+
+            .policy-card h4 {
+                font-size: 0.9rem;
+            }
+
+            .policy-list {
+                font-size: 0.8rem;
+            }
+
+            .lightbox-prev { left: 8px; width: 40px; height: 40px; font-size: 1.4rem; }
+            .lightbox-next { right: 8px; width: 40px; height: 40px; font-size: 1.4rem; }
+            .lightbox-close { top: 14px; right: 14px; width: 38px; height: 38px; }
+            .share-options-grid { grid-template-columns: 1fr; }
         }
 
         /* --- Print Styling --- */
@@ -1552,7 +1925,7 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                 <?php endif; ?>
             </a>
             <div>
-                <button onclick="handleSharePackage()" class="btn-action-outline btn-share" title="Share Tour Package">
+                <button onclick="handleSharePackage()" class="btn-action-outline btn-share btn-header-share" title="Share Tour Package">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <circle cx="18" cy="5" r="3"></circle>
                         <circle cx="6" cy="12" r="3"></circle>
@@ -1610,7 +1983,7 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                 <?php endif; ?>
 
                 <?php if (!empty($tour_package_price_selling_adult)): ?>
-                    <div class="meta-pill">
+                    <div class="meta-pill meta-pill-price">
                         <div class="meta-icon">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -2040,11 +2413,16 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
 
     </div>
 
-    <!-- Mobile Sticky Action Bar -->
+    <!-- Mobile Sticky Action Bar (Shows Starting Price on Mobile Footer Bar) -->
     <div class="mobile-cta-bar">
         <div class="cta-info">
-            <label><?php echo htmlspecialchars($tour_package_title ?? 'Tour Package'); ?></label>
-            <span><?php echo isset($tour_package_duration) ? ((int)$tour_package_duration . ' Nights') : 'Custom Tour'; ?></span>
+            <?php if (!empty($tour_package_price_selling_adult)): ?>
+                <label>Starting Price</label>
+                <span class="cta-price">₹ <?php echo number_format((float)$tour_package_price_selling_adult); ?> <small>/ person</small></span>
+            <?php else: ?>
+                <label><?php echo htmlspecialchars($tour_package_title ?? 'Tour Package'); ?></label>
+                <span><?php echo isset($tour_package_duration) ? ((int)$tour_package_duration . ' Nights') : 'Custom Tour'; ?></span>
+            <?php endif; ?>
         </div>
         <button onclick="handleSharePackage()" class="btn-cta-gold">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
