@@ -26,6 +26,9 @@ define('LOGOUT_PATH', '/logout/');
 define('FORGOT_PASSWORD_PATH', '/forgot-password/');
 define('REGISTRATION_PATH', '/register/');
 
+/** Pexels API Key */
+define('PEXELS_API_KEY', 's8pSS2kcCDM4A59jeh6fNx1XL5eHLBdBcOU0gFgZPpiYOnwthaTI1bat');
+
 #############################################################################################
 ############################  DO NOT CHANGE CODE BELOW THIS LINE  ###########################
 #############################################################################################
