@@ -26,12 +26,13 @@ $mailtoUrl = "mailto:" . htmlspecialchars($siteEmail) . "?subject=" . rawurlenco
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Access Approval Required | <?php echo htmlspecialchars($siteName); ?></title>
     <?php if ($siteIcon): ?>
-    <link rel="icon" href="<?php echo htmlspecialchars($siteIcon); ?>">
+        <link rel="icon" href="<?php echo htmlspecialchars($siteIcon); ?>">
     <?php endif; ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -140,8 +141,7 @@ $mailtoUrl = "mailto:" . htmlspecialchars($siteEmail) . "?subject=" . rawurlenco
             margin-bottom: 1.5rem;
         }
 
-        <?php if ($displayName || $email): ?>
-        .user-chip {
+        <?php if ($displayName || $email): ?>.user-chip {
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -175,9 +175,8 @@ $mailtoUrl = "mailto:" . htmlspecialchars($siteEmail) . "?subject=" . rawurlenco
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        <?php endif; ?>
 
-        .actions {
+        <?php endif; ?>.actions {
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
@@ -233,11 +232,12 @@ $mailtoUrl = "mailto:" . htmlspecialchars($siteEmail) . "?subject=" . rawurlenco
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
         <div class="card">
-            
+
             <div class="logo-container">
                 <?php if ($siteLogo): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="site-logo">
@@ -258,23 +258,27 @@ $mailtoUrl = "mailto:" . htmlspecialchars($siteEmail) . "?subject=" . rawurlenco
             </p>
 
             <?php if ($displayName || $email): ?>
-            <div class="user-chip">
-                <div class="avatar">
-                    <?php echo strtoupper(substr($displayName ? $displayName : ($email ? $email : 'U'), 0, 1)); ?>
+                <div class="user-chip">
+                    <div class="avatar">
+                        <?php echo strtoupper(substr($displayName ? $displayName : ($email ? $email : 'U'), 0, 1)); ?>
+                    </div>
+                    <span class="user-text">
+                        <?php echo htmlspecialchars($email ? $email : $displayName); ?>
+                    </span>
                 </div>
-                <span class="user-text">
-                    <?php echo htmlspecialchars($email ? $email : $displayName); ?>
-                </span>
-            </div>
             <?php endif; ?>
 
             <div class="actions">
                 <a href="<?php echo $mailtoUrl; ?>" class="btn btn-primary">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
                     Send Email to Administrator
                 </a>
                 <button type="button" class="btn btn-secondary" onclick="window.location.reload()">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
                     Check Status & Refresh
                 </button>
                 <a href="/logout/" class="btn btn-link">
@@ -286,4 +290,5 @@ $mailtoUrl = "mailto:" . htmlspecialchars($siteEmail) . "?subject=" . rawurlenco
     </div>
 
 </body>
+
 </html>
