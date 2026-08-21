@@ -110,7 +110,7 @@ if (is_dir($dashboardDirectory)) {
 
 	require_once $dashboardDirectory . '/footer.php';
 } else {
-	require_once ERROR_404;
+	require_once ADMIN_ERROR_USER_TYPE_NOT_FOUND;
 }
 
 exit();

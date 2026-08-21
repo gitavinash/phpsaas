@@ -266,7 +266,7 @@ if (file_exists(USER_PATH . '500.php')) {
 
 define('ADMIN_ERROR_403', ADMIN_PATH . '403.php');
 define('ADMIN_ERROR_404', ADMIN_PATH . '404.php');
-define('ADMIN_ERROR_502', ADMIN_PATH . '502.php');
+define('ADMIN_ERROR_USER_TYPE_NOT_FOUND', ADMIN_PATH . 'user_type_not_found.php');
 
 /** Site Logo and Icon */
 
