@@ -149,13 +149,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $httpStatus = 400;
             $msg = 'No images provided for assignment';
         } else {
-            $year = date('Y');
-            $month = date('m');
-            $uploadSubDir = "gallery/{$year}/{$month}/";
-            $targetDir = ROOT . '/resource/uploads/' . $uploadSubDir;
-
-            if (!file_exists($targetDir)) {
-                mkdir($targetDir, 0777, true);
+            $uploadPath = ROOT . '/upload/' . SITE_DOMAIN . '/' . date('Y/m/');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
             }
 
             $addedImages = [];
@@ -176,14 +172,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 curl_close($ch);
 
                 if ($httpCode === 200 && !empty($imageData)) {
-                    $ext = 'jpg';
-                    $cleanPackageSlug = preg_replace('/[^a-zA-Z0-9_-]/', '_', strtolower($packageId));
-                    $filename = "pexels_" . $cleanPackageSlug . "_d" . $assignDay . "_" . time() . "_" . mt_rand(1000, 9999) . "." . $ext;
-                    $savePath = $targetDir . $filename;
+                    $fileExtension = 'jpg';
+                    $cleanPackageSlug = preg_replace('/[^a-zA-Z0-9_-]/', '_', strtolower((string)$packageId));
+                    $filename = "pexels_" . $cleanPackageSlug . "_d" . $assignDay . "_" . time() . "." . $fileExtension;
 
-                    if (file_put_contents($savePath, $imageData)) {
-                        $publicPath = '/' . $uploadSubDir . $filename;
+                    $uniquePrefix = time() . '_' . bin2hex(random_bytes(5));
+                    $cleanName = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $filename));
+                    $uploadFile = $uploadPath . $uniquePrefix . '_' . $cleanName;
+                    $uploadMediaPath = str_replace(ROOT, '', $uploadFile);
+                    $uploadMediaLink = '/attachment' . str_replace('.' . $fileExtension, '', $uploadMediaPath) . '/';
+                    $uploadFileName = ucwords(preg_replace('/[_]+/', ' ', str_replace($fileExtension, '', preg_replace('~[^\p{M}\s\w-]+~u', '', $filename))));
 
+                    if (file_put_contents($uploadFile, $imageData)) {
                         if ($assignDay > 0) {
                             foreach ($existingList as &$ex) {
                                 if (isset($ex['day']) && (int)$ex['day'] === $assignDay) {
@@ -194,15 +194,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
 
                         $existingList[] = [
-                            'path' => $publicPath,
-                            'name' => $imageName,
-                            'day' => $assignDay
+                            'path' => $uploadMediaPath,
+                            'name' => (!empty($imageName) && $imageName !== 'Stock Photo') ? $imageName : $uploadFileName,
+                            'day'  => $assignDay,
+                            'link' => $uploadMediaLink
                         ];
 
-                        $addedImages[] = $publicPath;
+                        $addedImages[] = $uploadMediaPath;
 
                         if (empty($currentFeaturedImg) && $assignDay === 1) {
-                            $currentFeaturedImg = $publicPath;
+                            $currentFeaturedImg = $uploadMediaPath;
                         }
                     }
                 }
