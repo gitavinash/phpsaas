@@ -1,122 +1,166 @@
-<h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List<span>All tour packages list will be displayed here.</span>
-</h2>
-<div class="main-box">
-    <div class="shortcut">
-        <a href="/dashboard/packages/domestic/add/"><i class="fi fi-rr-plus"></i></a>
+<div class="package-page-wrapper" id="packageListApp" data-package-type="international">
+    <!-- Header Banner -->
+    <div class="package-header-bar">
+        <div class="package-header-left">
+            <div class="package-header-icon international-icon">
+                <i class="fi-rr-globe"></i>
+            </div>
+            <div class="package-header-titles">
+                <h2>International Tour Packages</h2>
+                <p>Manage, customize, and publish international itineraries and holiday offerings.</p>
+            </div>
+        </div>
+        <div class="package-header-actions">
+            <div class="package-type-toggle">
+                <a href="/dashboard/packages/domestic/list/" class="type-tab"><i class="fi-rr-home"></i> Domestic</a>
+                <a href="/dashboard/packages/international/list/" class="type-tab active"><i class="fi-rr-globe"></i> International</a>
+            </div>
+            <a href="/dashboard/packages/international/add/" class="btn-add-pkg-v3">
+                <i class="fi-rr-plus"></i> Add Package
+            </a>
+        </div>
     </div>
-    <section>
+
+    <!-- Quick Metric Cards -->
+    <div class="package-kpi-row">
+        <div class="pkg-mini-kpi indigo">
+            <div class="kpi-icon"><i class="fi-rr-box-alt"></i></div>
+            <div class="kpi-meta">
+                <p>Total Packages</p>
+                <h3 id="statTotalPackages">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi emerald">
+            <div class="kpi-icon"><i class="fi-rr-check-circle"></i></div>
+            <div class="kpi-meta">
+                <p>Active & Live</p>
+                <h3 id="statActivePackages">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi amber">
+            <div class="kpi-icon"><i class="fi-rr-edit"></i></div>
+            <div class="kpi-meta">
+                <p>Drafts</p>
+                <h3 id="statDraftPackages">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi sky">
+            <div class="kpi-icon"><i class="fi-rr-marker"></i></div>
+            <div class="kpi-meta">
+                <p>Countries</p>
+                <h3 id="statDestinations">-</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Package Table Card -->
+    <div class="package-table-card">
+        <!-- Modern Interactive Filter & Search Toolbar (Single Line) -->
+        <div class="package-filter-toolbar">
+            <div class="filter-search-box">
+                <svg class="search-svg-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="pkgTableSearch" class="filter-search-input" placeholder="Search packages, countries...">
+                <button type="button" id="clearSearchBtn" class="clear-search-btn" title="Clear search">✕</button>
+            </div>
+            <div class="filter-dropdowns-wrap">
+                <!-- Status Filter -->
+                <select id="filterStatus" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="draft">Draft</option>
+                    <option value="pending">Pending</option>
+                </select>
+
+                <!-- Theme Filter -->
+                <select id="filterTheme" class="filter-select">
+                    <option value="">All Themes</option>
+                    <option value="religious">Religious</option>
+                    <option value="honeymoon">Honeymoon</option>
+                    <option value="family">Family</option>
+                    <option value="adventure">Adventure</option>
+                    <option value="wildlife">Wildlife</option>
+                    <option value="beach">Beach</option>
+                    <option value="hill station">Hill Station</option>
+                    <option value="heritage">Heritage</option>
+                    <option value="standard">Standard</option>
+                </select>
+
+                <!-- Duration Filter -->
+                <select id="filterDuration" class="filter-select">
+                    <option value="">All Durations</option>
+                    <option value="short">1 - 3 Nights (Short)</option>
+                    <option value="medium">4 - 6 Nights (Medium)</option>
+                    <option value="long">7+ Nights (Long)</option>
+                </select>
+
+                <!-- Hotel Rating Filter -->
+                <select id="filterHotel" class="filter-select">
+                    <option value="">All Hotels</option>
+                    <option value="5 star">5 Star</option>
+                    <option value="4 star">4 Star</option>
+                    <option value="3 star">3 Star</option>
+                    <option value="standard">Standard</option>
+                </select>
+
+                <!-- Destination / Country Filter -->
+                <select id="filterDestination" class="filter-select">
+                    <option value="">All Countries</option>
+                </select>
+
+                <!-- Reset Button -->
+                <button type="button" id="resetPkgFilters" class="btn-filter-reset" title="Reset All Filters">
+                    <i class="fi fi-rr-refresh"></i> <span>Reset</span>
+                </button>
+            </div>
+        </div>
+
         <div class="list-box">
-            <table class="showTableList">
+            <table class="showTableList package-v3-datatable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Theme</th>
-                        <th>Country</th>
-                        <th>Duration</th>
-                        <th>Hotel</th>
-                        <th>Status</th>
-                        <th></th>
+                        <th class="col-pkg-main">Package & Details</th>
+                        <th class="col-pkg-location">Country & Lodging</th>
+                        <th class="col-pkg-status">Status</th>
+                        <th class="col-pkg-actions">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php
-
-                    if ($packageData = mysqli_query($connection, "SELECT tour_package_id, tour_package_title, tour_package_type, tour_package_country, tour_package_theme, tour_package_duration, tour_package_hotel, tour_package_status, link_url FROM " . TABLE_PREFIX . "tour_package LEFT JOIN " . TABLE_PREFIX . "link ON link_relation_id=tour_package_id AND link_status=200 AND link_site_id=" . SITE_ID . " AND link_type='tour_package' WHERE tour_package_status!=3 AND tour_package_type='international' AND tour_package_site_id=" . SITE_ID . " ORDER BY tour_package_created_at DESC")) {
-                        if (mysqli_num_rows($packageData) != 0) {
-                            $i = 1;
-                            while ($packageDataInfo = mysqli_fetch_assoc($packageData)) {
-                                extract($packageDataInfo);
-                                switch ($tour_package_status) {
-                                    case 1:
-                                        $packageStatus = 'Active';
-                                        break;
-                                    case 2:
-                                        $packageStatus = 'Draft';
-                                        break;
-                                    case 3:
-                                        $packageStatus = 'Delete';
-                                        break;
-                                    default:
-                                        $packageStatus = 'Pending';
-                                        break;
-                                }
-                                echo "
-                                    <tr>
-                                        <td>{$tour_package_title}</td>
-                                        <td>" . ucwords($tour_package_theme) . "</td>
-                                        <td>{$tour_package_country}</td>
-                                        <td>{$tour_package_duration}N/" . ($tour_package_duration + 1) . "D</td>
-                                        <td>" . ucwords(str_replace('_', ' ', $tour_package_hotel)) . "</td>
-                                        <td>{$packageStatus}</td>
-                                        <td>
-                                            <a href='/dashboard/packages/domestic/edit/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Edit package' data-title='Edit package'><i class='fi fi-rr-edit bgWhite'></i></a>
-                                            <a href='/dashboard/packages/domestic/gallery/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Package gallery' data-title='Package gallery'><i class='fi fi-rr-gallery bgWhite'></i></a>
-                                            <a href='/dashboard/packages/domestic/price-list/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Price lists' data-title='Price list'><i class='fi fi-rr-indian-rupee-sign bgWhite'></i></a>
-                                            <a href='/dashboard/packages/domestic/hotel-list/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Hotel lists' data-title='Hotel list'><i class='fi fi-rr-hotel bgWhite'></i></a>
-                                            <a href='/dashboard/packages/domestic/transpotation-list/?id=" . base64_encode($tour_package_id) . "' class='tableActionIconBtn' title='Transpotation lists' data-title='Transpotation list'><i class='fi fi-rr-cars bgWhite'></i></a>
-                                            <a href='#' class='tableActionIconBtn movePackageBtn' data-id='{$tour_package_id}' data-target-type='domestic' title='Move to Domestic' data-title='Move to Domestic'><i class='fi fi-rr-home bgWhite' style='color: #10b981;'></i></a>
-                                            <a href='{$link_url}' target='_blank' class='tableActionIconBtn' title='View package' data-title='View package'><i class='fi fi-rr-eye btn-blue'></i></a>
-                                            <a href='#' data-type='packages' data-id='{$tour_package_id}' title='Delete package' data-type='{$tour_package_type}' data-title='Delete package' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
-                                        </td>
-                                    </tr>
-                                ";
-                                $i++;
-                            }
-                        } else {
-                            echo "<tr>
-                            <td colspan=100>No Data Found</td>
-                            </tr>";
-                        }
-                    }
-
-                    ?>
+                <tbody id="packageTableBody">
+                    <tr>
+                        <td colspan="4" class="table-loading-state">
+                            <div class="table-loading-spinner"></div>
+                            <span>Loading tour packages...</span>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-    </section>
+
+        <!-- Pagination & Rows Per Page Bar -->
+        <div class="package-pagination-bar" id="packagePaginationBar">
+            <div class="pagination-info-wrap">
+                <div class="pagination-size-select-wrap">
+                    <label for="pkgPerPage">Rows per page:</label>
+                    <select id="pkgPerPage" class="pagination-size-select">
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <span id="pkgPaginationInfo" class="pagination-info-text">Showing 0 of 0 packages</span>
+            </div>
+            <div class="pagination-controls">
+                <button type="button" class="pagination-nav-btn" id="pkgPrevPage" disabled>
+                    <i class="fi fi-rr-angle-left"></i> Previous
+                </button>
+                <div class="pagination-page-numbers" id="pkgPaginationPages"></div>
+                <button type="button" class="pagination-nav-btn" id="pkgNextPage" disabled>
+                    Next <i class="fi fi-rr-angle-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        $(document).on("click", ".movePackageBtn", function(e) {
-            e.preventDefault();
-            const $btn = $(this);
-            const packageId = $btn.data("id");
-            const targetType = $btn.data("target-type") || "domestic";
-            const targetLabel = targetType === "international" ? "International" : "Domestic";
-
-            Swal.fire({
-                title: `Move to ${targetLabel}?`,
-                text: `Are you sure you want to move this package to ${targetLabel} packages?`,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#10b981",
-                cancelButtonColor: "#64748b",
-                confirmButtonText: `Yes, move to ${targetLabel}`
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        url: "/api/aleya/packages/move-type/",
-                        type: "POST",
-                        data: {
-                            packageId: packageId,
-                            targetType: targetType
-                        },
-                        dataType: "json",
-                        success: function(res) {
-                            if (res.status === "success") {
-                                popUpMessage("center", res.msg, "success");
-                                setTimeout(() => location.reload(), 1200);
-                            } else {
-                                popUpMessage("center", res.msg || "Failed to move package", "error");
-                            }
-                        },
-                        error: function() {
-                            popUpMessage("center", "Error moving tour package", "error");
-                        }
-                    });
-                }
-            });
-        });
-    });
-</script>

@@ -275,21 +275,66 @@ function uploadCSV(inputId, uploadUrl, btnId) {
   });
 }
 
-$(document).ready(function (e) {
+// Modular Select2 and AutoComplete Initializer
+function initSelect2Components() {
+  if (typeof $.fn.select2 === "undefined") return;
+
   if ($(".indianCityAutoComplete").length) {
-    // Initialize select2 for the existing element
     initializeSelect2HereMaps(".indianCityAutoComplete");
   }
 
   if ($(".internationalCityAutoComplete").length) {
-    // Initialize select2 for the existing element
     initializeSelect2HereMapsForInternational(".internationalCityAutoComplete");
   }
 
   if ($(".addressAutoComplete").length) {
-    // Initialize select2 for the existing element
     initializeSelect2HereMapsWithCompleteAddress(".addressAutoComplete");
   }
+
+  if ($(".selectJS").length) {
+    $(".selectJS").each(function () {
+      if (!$(this).hasClass("select2-hidden-accessible")) {
+        $(this).select2();
+      }
+    });
+  }
+}
+window.initSelect2Components = initSelect2Components;
+
+// Modular Gallery Uploader Initializer
+function initGalleryUploaders() {
+  if (typeof $.fn.imageUploader === "undefined") return;
+
+  if ($(".addGallery").length) {
+    $(".addGallery").each(function () {
+      if (!$(this).find(".image-uploader").length) {
+        $(this).imageUploader({
+          imagesInputName: "gallery",
+          maxFiles: 50,
+        });
+      }
+    });
+  }
+
+  if ($(".updateGallery").length && typeof oldGalleryImages !== "undefined") {
+    $(".updateGallery").each(function () {
+      if (!$(this).find(".image-uploader").length) {
+        $(this).imageUploader({
+          preloaded: oldGalleryImages,
+          imagesInputName: "gallery",
+          preloadedInputName: "oldGallery",
+          maxSize: 2 * 1024 * 1024,
+          maxFiles: 50,
+        });
+      }
+    });
+  }
+}
+window.initGalleryUploaders = initGalleryUploaders;
+
+$(document).ready(function (e) {
+  initSelect2Components();
+  initGalleryUploaders();
 
   dateRangeParams = dateRangeParams === "" ? "" : dateRangeParams;
   if (dateRangeParams == null) {
@@ -299,28 +344,6 @@ $(document).ready(function (e) {
   }
   if (typeof tempId !== "undefined") {
     dateRangeParams += "&userId=" + tempId;
-  }
-
-  /** gallery */
-
-  var addGallery = document.getElementsByClassName("addGallery");
-  var updateGallery = document.getElementsByClassName("updateGallery");
-
-  if (addGallery) {
-    $(".addGallery").imageUploader({
-      imagesInputName: "gallery",
-      maxFiles: 50,
-    });
-  }
-
-  if (typeof oldGalleryImages !== "undefined" && updateGallery.length > 0) {
-    $(".updateGallery").imageUploader({
-      preloaded: oldGalleryImages,
-      imagesInputName: "gallery",
-      preloadedInputName: "oldGallery",
-      maxSize: 2 * 1024 * 1024,
-      maxFiles: 50,
-    });
   }
 
   $(document).on("click", ".deleteButton", function (event) {
@@ -552,6 +575,13 @@ $(document).ready(function (e) {
       legendEl.innerHTML = legendHtml;
     }
 
+    if (typeof Chart !== "undefined") {
+      const existingChart = typeof Chart.getChart === "function" ? Chart.getChart(canvasEl) : canvasEl._chartInstance;
+      if (existingChart) {
+        existingChart.destroy();
+      }
+    }
+
     var myChart = new Chart(
       canvasEl.getContext("2d"),
       {
@@ -585,6 +615,7 @@ $(document).ready(function (e) {
         },
       },
     );
+    canvasEl._chartInstance = myChart;
   }
 
   function createLineChart(
@@ -614,6 +645,13 @@ $(document).ready(function (e) {
       gradient.addColorStop(0, "rgba(79, 70, 229, 0.22)");
       gradient.addColorStop(1, "rgba(79, 70, 229, 0.0)");
       fillBg = gradient;
+    }
+
+    if (typeof Chart !== "undefined") {
+      const existingChart = typeof Chart.getChart === "function" ? Chart.getChart(canvasEl) : canvasEl._chartInstance;
+      if (existingChart) {
+        existingChart.destroy();
+      }
     }
 
     var myChart = new Chart(ctx, {
@@ -649,6 +687,7 @@ $(document).ready(function (e) {
         },
       },
     });
+    canvasEl._chartInstance = myChart;
   }
 
   // Counting number animation
@@ -834,16 +873,16 @@ $(document).ready(function (e) {
         // 1. Populate KPI Counters
         if (res.kpis) {
           const k = res.kpis;
-          if ($("#totalLeadsValue").length) $("#totalLeadsValue").text(k.totalLeads || 0);
+          if ($("#totalLeadsValue").length) $("#totalLeadsValue").text(k.freshLeads ?? k.totalLeads ?? 0);
           if ($("#totalConfirmLeadsValue, #totalConfirmedLeadsValue").length) {
-            $("#totalConfirmLeadsValue, #totalConfirmedLeadsValue").text(k.confirmedLeads || 0);
+            $("#totalConfirmLeadsValue, #totalConfirmedLeadsValue").text(k.confirmedLeads ?? 0);
           }
-          if ($("#totalPendingLeadsValue").length) $("#totalPendingLeadsValue").text(k.pendingLeads || 0);
-          if ($("#totalFollowupLeadsValue").length) $("#totalFollowupLeadsValue").text(k.followupLeads || 0);
-          if ($("#totalDuplicateLeadsValue").length) $("#totalDuplicateLeadsValue").text(k.duplicateLeads || 0);
-          if ($("#totalCancelLeadsValue").length) $("#totalCancelLeadsValue").text(k.cancelLeads || 0);
+          if ($("#totalPendingLeadsValue").length) $("#totalPendingLeadsValue").text(k.pendingLeads ?? 0);
+          if ($("#totalFollowupLeadsValue").length) $("#totalFollowupLeadsValue").text(k.followupLeads ?? 0);
+          if ($("#totalDuplicateLeadsValue").length) $("#totalDuplicateLeadsValue").text(k.duplicateLeads ?? 0);
+          if ($("#totalCancelLeadsValue").length) $("#totalCancelLeadsValue").text(k.cancelLeads ?? 0);
           if ($("#totalPendingRequestsValue, #totalPendingRequestValue").length) {
-            $("#totalPendingRequestsValue, #totalPendingRequestValue").text(k.pendingRequests || 0);
+            $("#totalPendingRequestsValue, #totalPendingRequestValue").text(k.pendingRequests ?? 0);
           }
           if ($("#kpiConversionRateValue").length) $("#kpiConversionRateValue").text(k.conversionRate || "0%");
           if ($("#kpiRevenueSummaryValue").length) $("#kpiRevenueSummaryValue").text(k.totalRevenue || "₹0");
@@ -859,64 +898,75 @@ $(document).ready(function (e) {
           }
 
           // Render Enquiry Timeline Flow Chart (Line Trend)
-          if (res.charts.enquiryFlow && document.getElementById("enquiryFlowCanvas")) {
-            const flowCanvas = document.getElementById("enquiryFlowCanvas");
-            const flowCtx = flowCanvas.getContext("2d");
-
-            if (window.enquiryFlowChartInstance) {
-              window.enquiryFlowChartInstance.destroy();
+          const flowContainer = document.getElementById("enquiryFlowContainer");
+          if (res.charts.enquiryFlow && flowContainer) {
+            let flowCanvas = document.getElementById("enquiryFlowCanvas");
+            if (!flowCanvas) {
+              flowContainer.innerHTML = '<canvas id="enquiryFlowCanvas"></canvas>';
+              flowCanvas = document.getElementById("enquiryFlowCanvas");
             }
 
-            const flowLabels = res.charts.enquiryFlow.labels || [];
-            const flowData = res.charts.enquiryFlow.data || [];
+            if (flowCanvas) {
+              const flowCtx = flowCanvas.getContext("2d");
 
-            if (flowLabels.length > 0) {
-              window.enquiryFlowChartInstance = new Chart(flowCtx, {
-                type: "line",
-                data: {
-                  labels: flowLabels,
-                  datasets: [
-                    {
-                      label: "Enquiries",
-                      data: flowData,
-                      borderColor: "#6366f1",
-                      backgroundColor: "rgba(99, 102, 241, 0.08)",
-                      borderWidth: 2.5,
-                      fill: true,
-                      tension: 0.35,
-                      pointRadius: 4,
-                      pointBackgroundColor: "#6366f1",
-                      pointHoverRadius: 6,
+              if (window.enquiryFlowChartInstance) {
+                window.enquiryFlowChartInstance.destroy();
+                window.enquiryFlowChartInstance = null;
+              }
+              if (typeof Chart !== "undefined") {
+                const existingFlow = typeof Chart.getChart === "function" ? Chart.getChart(flowCanvas) : flowCanvas._chartInstance;
+                if (existingFlow) existingFlow.destroy();
+              }
+
+              const flowLabels = res.charts.enquiryFlow.labels || [];
+              const flowData = res.charts.enquiryFlow.data || [];
+
+              if (flowLabels.length > 0) {
+                window.enquiryFlowChartInstance = new Chart(flowCtx, {
+                  type: "line",
+                  data: {
+                    labels: flowLabels,
+                    datasets: [
+                      {
+                        label: "Enquiries",
+                        data: flowData,
+                        borderColor: "#6366f1",
+                        backgroundColor: "rgba(99, 102, 241, 0.08)",
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 4,
+                        pointBackgroundColor: "#6366f1",
+                        pointHoverRadius: 6,
+                      },
+                    ],
+                  },
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: { display: false },
+                      tooltip: {
+                        mode: "index",
+                        intersect: false,
+                        padding: 10,
+                      },
                     },
-                  ],
-                },
-                options: {
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                      mode: "index",
-                      intersect: false,
-                      padding: 10,
+                    scales: {
+                      x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11 }, color: "#64748b" },
+                      },
+                      y: {
+                        beginAtZero: true,
+                        grid: { color: "#f1f5f9" },
+                        ticks: { font: { size: 11 }, color: "#64748b" },
+                      },
                     },
                   },
-                  scales: {
-                    x: {
-                      grid: { display: false },
-                      ticks: { font: { size: 11 }, color: "#64748b" },
-                    },
-                    y: {
-                      beginAtZero: true,
-                      grid: { color: "#f1f5f9" },
-                      ticks: { font: { size: 11 }, color: "#64748b" },
-                    },
-                  },
-                },
-              });
-            } else {
-              const flowContainer = document.getElementById("enquiryFlowContainer");
-              if (flowContainer) {
+                });
+                flowCanvas._chartInstance = window.enquiryFlowChartInstance;
+              } else {
                 flowContainer.innerHTML = `
                   <div class="no-data-state">
                     <div class="no-data-icon"><i class="fi-rr-folder-open"></i></div>
@@ -984,6 +1034,7 @@ $(document).ready(function (e) {
       },
     });
   }
+  window.loadDashboardV3Data = loadDashboardV3Data;
 
   // Full-Screen Kanban Board Toggle
   $(document).on("click", "#toggleKanbanFullscreenBtn", function (e) {
@@ -1057,11 +1108,8 @@ $(document).ready(function (e) {
     });
   });
 
-  loadDashboardV3Data();
-
-  // Enquiry performance
-
-  if ($("#enquiryPerformace").length) {
+  // Legacy Enquiry performance & pending request fallback (only if not v3 dashboard)
+  if (!$("#totalLeadsValue").length && $("#enquiryPerformace").length) {
     $.ajax({
       type: "GET",
       url: "/api/report/enquiry-performance/?daterange=" + dateRangeParams,
@@ -1075,9 +1123,7 @@ $(document).ready(function (e) {
     });
   }
 
-  // Pending request
-
-  if ($("#totalPendingRequests").length || $("#totalPendingRequest").length) {
+  if (!$("#totalLeadsValue").length && ($("#totalPendingRequests").length || $("#totalPendingRequest").length)) {
     const targetId = $("#totalPendingRequests").length ? "totalPendingRequests" : "totalPendingRequest";
     $.ajax({
       type: "GET",
@@ -1179,152 +1225,299 @@ $(document).ready(function (e) {
     return numB - numA; // Compare the numeric parts in reverse order
   };
 
-  // Order List
-  $(".showTableList").DataTable({
-    pageLength: 50,
-    fixedHeader: true,
-    responsive: false, // Disable responsiveness when using fixedColumns and scrollX
-    searching: true,
-    lengthChange: false,
-    autoWidth: false,
-    ordering: false,
-    scrollX: true, // Enable horizontal scrolling
-    scrollCollapse: true, // Collapse the table to fit content
-    columnDefs: [
-      { type: "date", targets: 4 }, // Assuming the date column is the fifth column (index 4)
-      { width: "20%", targets: 1 }, // Set width for the second column
-      { width: "150px", targets: -1 },
-      {
-        targets: "_all", // Apply to all columns
-        createdCell: function (td, cellData, rowData, row, col) {
-          $(td).css({
-            "max-width": "150px", // Set the maximum width
-            "white-space": "normal", // Allow text wrapping
-            "word-wrap": "break-word", // Ensure words break if necessary
+  // Modular DataTables Initialization Engine (SPA Compatible)
+  function initDataTables() {
+    if (typeof $.fn.DataTable === "undefined") return;
+
+    if ($(".showTableList").length) {
+      $(".showTableList").each(function () {
+        if (!$.fn.DataTable.isDataTable(this)) {
+          const isPkgV3 = $(this).hasClass("package-v3-datatable") || $(this).closest(".package-table-card").length > 0;
+          $(this).DataTable({
+            pageLength: 50,
+            fixedHeader: false,
+            responsive: false,
+            searching: true,
+            lengthChange: false,
+            autoWidth: false,
+            ordering: false,
+            scrollX: isPkgV3 ? false : true,
+            scrollCollapse: isPkgV3 ? false : true,
+            columnDefs: [
+              {
+                targets: "_all",
+                createdCell: function (td, cellData, rowData, row, col) {
+                  $(td).css({
+                    "white-space": "normal",
+                    "word-wrap": "break-word",
+                  });
+                },
+              },
+            ],
+            createdRow: function (row, data, dataIndex) {
+              var rowDataStatus = (data[data.length - 2] || "").toLowerCase().replace(/[^a-z0-9]/g, "_");
+              if (rowDataStatus) {
+                $(row).addClass("dt-status-row-" + rowDataStatus);
+              }
+            },
           });
-        },
-      },
-    ],
-    createdRow: function (row, data, dataIndex) {
-      var rowDataStatus = data[data.length - 2].toLowerCase();
-      var rowDataStatus = rowDataStatus.replace(" ", "_");
+        }
+      });
+    }
 
-      // Apply inline background color for each cell in the row
-      var color;
+    if ($(".showTableListWithoutFilter").length) {
+      $(".showTableListWithoutFilter").each(function () {
+        if (!$.fn.DataTable.isDataTable(this)) {
+          $(this).DataTable({
+            columnDefs: [{ type: "date", targets: 4 }],
+            order: [[4, "desc"]],
+          });
+        }
+      });
+    }
+  }
+  window.initDataTables = initDataTables;
 
-      switch (rowDataStatus) {
-        case "draft":
-          color = "#f9e29f"; // Darkened pastel yellow for draft
-          break;
-        case "initiate":
-          color = "#f5f5f5"; // Soft greyish white for initiate
-          break;
-        case "active":
-          color = "#b4e2b4"; // Darkened pastel green for active
-          break;
-        case "approved":
-          color = "#b4e2b4"; // Darkened pastel green for active
-          break;
-        case "closed":
-          color = "#b4e2b4"; // Darkened pastel green for active
-          break;
-        case "sold_out":
-          color = "#b87085"; // Darkened pastel pinkish-red for sold out
-          break;
-        case "success":
-          color = "#A9D5D1"; // Darkened pastel teal for success
-          break;
-        case "duplicate":
-          color = "#C8C8F0"; // Darkened lavender for duplicate
-          break;
-        case "follow_up":
-          color = "#E6AF60"; // Darkened pastel orange for follow-up
-          break;
-        case "payment initiate":
-          color = "#B3E6F0"; // Darkened pastel blue for payment initiate
-          break;
-        case "payment refund":
-          color = "#F6B0DB"; // Darkened pastel pink-purple for refund
-          break;
-        case "failed":
-          color = "#F8B3B3"; // Darkened pastel coral for failed
-          break;
-        case "soft delete":
-          color = "#F5B0B0"; // Darkened pastel red for soft delete
-          break;
-        case "delete":
-          color = "#F8A6A6"; // Darkened pastel pink-red for delete
-          break;
-        default:
-          color = "#D1D2D4"; // Soft grey for default (pending)
-          break;
+  // Package Management Real-Time Filter Engine (SPA Compatible)
+  function initPackageTableFilters() {
+    if (typeof $.fn.DataTable === "undefined") return;
+
+    if (Array.isArray($.fn.dataTable.ext.search)) {
+      $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(function (fn) {
+        return fn._isPkgFilter !== true;
+      });
+
+      var pkgCustomFilter = function (settings, data, dataIndex) {
+        if (!settings.nTable || !$(settings.nTable).hasClass("package-v3-datatable")) {
+          return true;
+        }
+
+        var searchVal = $.trim($("#pkgTableSearch").val()).toLowerCase();
+        var statusVal = $.trim($("#filterStatus").val()).toLowerCase();
+        var themeVal = $.trim($("#filterTheme").val()).toLowerCase();
+        var durVal = $.trim($("#filterDuration").val()).toLowerCase();
+        var hotelVal = $.trim($("#filterHotel").val()).toLowerCase();
+        var destVal = $.trim($("#filterDestination").val()).toLowerCase();
+
+        var rowNode = settings.aoData[dataIndex] ? settings.aoData[dataIndex].nTr : null;
+        var rowStatus = rowNode ? (rowNode.getAttribute("data-status") || "") : (data[2] || "").toLowerCase();
+        var rowTheme = rowNode ? (rowNode.getAttribute("data-theme") || "") : (data[0] || "").toLowerCase();
+        var rowDuration = rowNode ? parseInt(rowNode.getAttribute("data-duration") || "0", 10) : 0;
+        var rowHotel = rowNode ? (rowNode.getAttribute("data-hotel") || "") : (data[1] || "").toLowerCase();
+        var rowCity = rowNode ? (rowNode.getAttribute("data-city") || "") : (data[1] || "").toLowerCase();
+
+        if (!rowDuration && data[0]) {
+          var dMatch = data[0].match(/(\d+)\s*n/i);
+          if (dMatch) rowDuration = parseInt(dMatch[1], 10);
+        }
+
+        var rowFullText = (data[0] + " " + data[1] + " " + data[2] + " " + rowStatus + " " + rowTheme + " " + rowHotel + " " + rowCity).toLowerCase();
+
+        // 1. Text Search
+        if (searchVal && rowFullText.indexOf(searchVal) === -1) {
+          return false;
+        }
+
+        // 2. Status Filter
+        if (statusVal && rowStatus !== statusVal && rowStatus.indexOf(statusVal) === -1) {
+          return false;
+        }
+
+        // 3. Theme Filter
+        if (themeVal && rowTheme !== themeVal && rowTheme.indexOf(themeVal) === -1) {
+          return false;
+        }
+
+        // 4. Duration Filter
+        if (durVal === "short" && (rowDuration < 1 || rowDuration > 3)) {
+          return false;
+        }
+        if (durVal === "medium" && (rowDuration < 4 || rowDuration > 6)) {
+          return false;
+        }
+        if (durVal === "long" && rowDuration < 7) {
+          return false;
+        }
+
+        // 5. Hotel Star Category Filter
+        if (hotelVal && rowHotel.indexOf(hotelVal) === -1) {
+          return false;
+        }
+
+        // 6. Destination Filter
+        if (destVal && rowCity.indexOf(destVal) === -1) {
+          return false;
+        }
+
+        return true;
+      };
+      pkgCustomFilter._isPkgFilter = true;
+      $.fn.dataTable.ext.search.push(pkgCustomFilter);
+    }
+  }
+  window.initPackageTableFilters = initPackageTableFilters;
+
+  // Delegated Package Table Filter Events
+  $(document).off("input.pkgFilter keyup.pkgFilter", "#pkgTableSearch").on("input.pkgFilter keyup.pkgFilter", "#pkgTableSearch", function () {
+    $("#clearSearchBtn").toggle(Boolean($.trim($(this).val())));
+    $(".package-v3-datatable").each(function () {
+      if ($.fn.DataTable.isDataTable(this)) {
+        $(this).DataTable().draw();
       }
-
-      // Apply the background color to the row and all its cells
-      $(row).css("background-color", color); // Apply background to row
-      $(row)
-        .find("td")
-        .css("background-color", color + " !important"); // Apply to individual cells in case of overrides
-    },
-    fixedColumns: {
-      leftColumns: 1, // Freeze the first column
-      rightColumns: 1, // Freeze the last column
-    },
-    order: [[4, "desc"]], // Order by the fifth column (date)
+    });
   });
 
-  if ($(".showTableListWithoutFilter").length) {
-    $(".showTableListWithoutFilter").DataTable({
-      columnDefs: [
-        { type: "date", targets: 4 }, // Assuming the date column is the first column (index 0)
-      ],
-      order: [[4, "desc"]],
+  $(document).off("click.pkgFilter", "#clearSearchBtn").on("click.pkgFilter", "#clearSearchBtn", function (e) {
+    e.preventDefault();
+    $("#pkgTableSearch").val("").trigger("input").focus();
+  });
+
+  $(document).off("change.pkgFilter", "#filterStatus, #filterTheme, #filterDuration, #filterHotel, #filterDestination").on("change.pkgFilter", "#filterStatus, #filterTheme, #filterDuration, #filterHotel, #filterDestination", function () {
+    $(".package-v3-datatable").each(function () {
+      if ($.fn.DataTable.isDataTable(this)) {
+        $(this).DataTable().draw();
+      }
+    });
+  });
+
+  $(document).off("click.pkgFilter", "#resetPkgFilters").on("click.pkgFilter", "#resetPkgFilters", function (e) {
+    e.preventDefault();
+    $("#pkgTableSearch").val("");
+    $("#filterStatus").val("");
+    $("#filterTheme").val("");
+    $("#filterDuration").val("");
+    $("#filterHotel").val("");
+    $("#filterDestination").val("");
+    $("#clearSearchBtn").hide();
+    $(".package-v3-datatable").each(function () {
+      if ($.fn.DataTable.isDataTable(this)) {
+        $(this).DataTable().draw();
+      }
+    });
+  });
+
+  // Global Lightweight Floating Tooltip Engine
+  function initGlobalTooltips() {
+    let $tooltip = $("#v3GlobalTooltip");
+    if (!$tooltip.length) {
+      $tooltip = $('<div id="v3GlobalTooltip" class="v3-global-tooltip" role="tooltip"></div>');
+      $("body").append($tooltip);
+    }
+
+    const selector = "[data-tooltip], .pkg-actions-toolbar a, .pkg-actions-toolbar button, .package-filter-toolbar [title], .btn-action-icon, .btn-action-pill, .btn-filter-reset, .package-filter-toolbar .filter-select";
+
+    $(document).off("mouseenter.v3Tooltip", selector).on("mouseenter.v3Tooltip", selector, function () {
+      const $el = $(this);
+      let text = $el.attr("data-tooltip");
+
+      if (!text && $el.attr("title")) {
+        text = $el.attr("title");
+        $el.data("v3-orig-title", text);
+        $el.removeAttr("title"); // Suppress native ugly browser tooltip
+      }
+
+      if (!text) {
+        text = $el.data("v3-orig-title");
+      }
+
+      if (!text) return;
+
+      $tooltip.text(text).removeClass("placement-bottom visible");
+
+      const rect = this.getBoundingClientRect();
+      const tooltipHeight = $tooltip.outerHeight() || 28;
+      const tooltipWidth = $tooltip.outerWidth() || 80;
+
+      let top = rect.top - 7;
+      let left = rect.left + rect.width / 2;
+      let isBottom = false;
+
+      if (top - tooltipHeight < 10) {
+        top = rect.bottom + 7;
+        isBottom = true;
+      }
+
+      if (left - tooltipWidth / 2 < 10) {
+        left = 10 + tooltipWidth / 2;
+      } else if (left + tooltipWidth / 2 > window.innerWidth - 10) {
+        left = window.innerWidth - 10 - tooltipWidth / 2;
+      }
+
+      $tooltip.css({
+        top: top + "px",
+        left: left + "px",
+      });
+
+      if (isBottom) {
+        $tooltip.addClass("placement-bottom");
+      }
+
+      requestAnimationFrame(() => {
+        $tooltip.addClass("visible");
+      });
+    });
+
+    $(document).off("mouseleave.v3Tooltip click.v3Tooltip", selector).on("mouseleave.v3Tooltip click.v3Tooltip", selector, function () {
+      $tooltip.removeClass("visible");
+      const orig = $(this).data("v3-orig-title");
+      if (orig && !$(this).attr("title")) {
+        $(this).attr("title", orig);
+      }
     });
   }
+  window.initGlobalTooltips = initGlobalTooltips;
 
-  // Date Range picker
+  // Modular DateRangePicker Initialization Engine (SPA Compatible)
+  function initDateRangePicker() {
+    if (!$(".dateRangePicker").length || typeof moment === "undefined" || typeof $.fn.daterangepicker === "undefined") return;
 
-  if ($(".dateRangePicker").length) {
-    // Last 30 Days
-    // var start = moment().subtract(29, 'days');
-    // var end = moment();
+    let start = moment().startOf("month");
+    let end = moment().endOf("month");
 
-    // Date range start from current month
-    var start = moment().startOf("month");
-    var end = moment().endOf("month");
+    if (dateRangeParams) {
+      const parts = dateRangeParams.split(" - ");
+      if (parts.length === 2) {
+        const pStart = moment(parts[0], ["DD-MMM-YYYY", "YYYY-MM-DD", "D MMM YYYY"]);
+        const pEnd = moment(parts[1], ["DD-MMM-YYYY", "YYYY-MM-DD", "D MMM YYYY"]);
+        if (pStart.isValid() && pEnd.isValid()) {
+          start = pStart;
+          end = pEnd;
+        }
+      }
+    }
 
-    function getFriendlyPeriodLabel(start, end) {
-      if (!start || !end) return "This Month";
+    function getFriendlyPeriodLabel(s, e) {
+      if (!s || !e) return "This Month";
       const today = moment().startOf("day");
-      const s = start.clone().startOf("day");
-      const e = end.clone().startOf("day");
+      const sDay = s.clone().startOf("day");
+      const eDay = e.clone().startOf("day");
 
-      if (s.isSame(today) && e.isSame(today)) return "Today";
+      if (sDay.isSame(today) && eDay.isSame(today)) return "Today";
       const yesterday = today.clone().subtract(1, "days");
-      if (s.isSame(yesterday) && e.isSame(yesterday)) return "Yesterday";
+      if (sDay.isSame(yesterday) && eDay.isSame(yesterday)) return "Yesterday";
       const last7 = today.clone().subtract(6, "days");
-      if (s.isSame(last7) && e.isSame(today)) return "Last 7 Days";
+      if (sDay.isSame(last7) && eDay.isSame(today)) return "Last 7 Days";
       const last30 = today.clone().subtract(29, "days");
-      if (s.isSame(last30) && e.isSame(today)) return "Last 30 Days";
+      if (sDay.isSame(last30) && eDay.isSame(today)) return "Last 30 Days";
       const startThisMonth = today.clone().startOf("month");
       const endThisMonth = today.clone().endOf("month");
-      if (s.isSame(startThisMonth) && (e.isSame(endThisMonth) || e.isSame(today))) return "This Month";
+      if (sDay.isSame(startThisMonth) && (eDay.isSame(endThisMonth) || eDay.isSame(today))) return "This Month";
       const startLastMonth = today.clone().subtract(1, "month").startOf("month");
       const endLastMonth = today.clone().subtract(1, "month").endOf("month");
-      if (s.isSame(startLastMonth) && e.isSame(endLastMonth)) return "Last Month";
+      if (sDay.isSame(startLastMonth) && eDay.isSame(endLastMonth)) return "Last Month";
 
       return "Custom Range";
     }
 
-    function cb(start, end) {
-      if (!start || !end) return;
-      const formattedText = start.format("D MMM YYYY") + " - " + end.format("D MMM YYYY");
+    function cb(s, e) {
+      if (!s || !e) return;
+      const formattedText = s.format("D MMM YYYY") + " - " + e.format("D MMM YYYY");
       $(".dateRangePicker span").html(formattedText);
 
-      const friendlyLabel = getFriendlyPeriodLabel(start, end);
+      const friendlyLabel = getFriendlyPeriodLabel(s, e);
       $(".selected-range-text, #selectedRangeText").text(friendlyLabel);
 
-      const diffDays = Math.abs(end.diff(start, "days")) + 1;
+      const diffDays = Math.abs(e.diff(s, "days")) + 1;
       let durationText = `${diffDays} Days`;
       if (diffDays === 1) {
         durationText = "1 Day";
@@ -1335,14 +1528,21 @@ $(document).ready(function (e) {
         durationText = months === 1 ? "1 Month" : `${months} Months`;
       }
       $("#dateDurationTag").text(durationText);
-      dateRangeParams = start.format("DD-MMM-YYYY") + " - " + end.format("DD-MMM-YYYY");
-      if (typeof loadDashboardV3Data === "function") {
+      dateRangeParams = s.format("DD-MMM-YYYY") + " - " + e.format("DD-MMM-YYYY");
+      dateRangeValue = dateRangeParams;
+
+      if ($("#totalLeadsValue").length || $(".kanban-widget-wrapper").length || $("#enquiryFlowCanvas").length) {
         loadDashboardV3Data();
       }
     }
 
-    $(".dateRangePicker")
-      .daterangepicker(
+    $(".dateRangePicker").each(function () {
+      const $el = $(this);
+      if ($el.data("daterangepicker")) {
+        $el.data("daterangepicker").remove();
+      }
+
+      $el.daterangepicker(
         {
           startDate: start,
           endDate: end,
@@ -1365,11 +1565,12 @@ $(document).ready(function (e) {
           },
         },
         cb,
-      )
-      .val(dateRangeValue);
+      );
 
-    cb(start, end);
+      cb(start, end);
+    });
   }
+  window.initDateRangePicker = initDateRangePicker;
 
   // Real-Time Lead Kanban Board Drag & Drop System
   function loadKanbanBoardData() {
@@ -2486,6 +2687,95 @@ $(document).ready(function (e) {
     });
   }
 
+  // Master SPA Lifecycle Initializer
+  function initAppComponents() {
+    // 1. Sync URL Query Parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    dateRangeParams = urlParams.get("daterange") || "";
+    dateRangeValue = dateRangeParams;
+    leadId = urlParams.get("id");
+    if (typeof tempId !== "undefined" && tempId) {
+      if (!dateRangeParams.includes("userId=")) {
+        dateRangeParams += (dateRangeParams ? "&" : "") + "userId=" + tempId;
+      }
+    }
+
+    // 2. Auto-initialize DateRangePicker
+    if (typeof initDateRangePicker === "function") {
+      initDateRangePicker();
+    }
+
+    // 3. Auto-initialize Dashboard V3 Data & Charts if on dashboard
+    if (
+      $("#totalLeadsValue").length ||
+      $("#enquiryFlowCanvas").length ||
+      $(".kanban-widget-wrapper").length ||
+      $(".kpi-grid").length
+    ) {
+      loadDashboardV3Data();
+    }
+
+    // 4. Auto-initialize DataTables
+    if (typeof initDataTables === "function") {
+      initDataTables();
+    }
+
+    // 5. Auto-initialize Select2 & AutoComplete
+    if (typeof initSelect2Components === "function") {
+      initSelect2Components();
+    }
+
+    // 6. Auto-initialize Gallery Uploaders
+    if (typeof initGalleryUploaders === "function") {
+      initGalleryUploaders();
+    }
+
+    // 7. Auto-initialize Package Table Filter Engine
+    if (typeof initPackageTableFilters === "function") {
+      initPackageTableFilters();
+    }
+
+    // 8. Auto-initialize Global High-Contrast Tooltip Engine
+    if (typeof initGlobalTooltips === "function") {
+      initGlobalTooltips();
+    }
+  }
+  window.initAppComponents = initAppComponents;
+
+  // Prevent full-page submission on dashboard datepicker form
+  $(document).on("submit", ".widgetForm", function (e) {
+    if ($("#totalLeadsValue").length || $(".kanban-widget-wrapper").length || $("#enquiryFlowCanvas").length) {
+      e.preventDefault();
+      loadDashboardV3Data();
+      return false;
+    }
+  });
+
+  // V3 Dropdown Toggle & Outside Click Dismissal
+  $(document).on("click", ".btn-cta-more", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const $wrapper = $(this).closest(".v3-dropdown-wrapper");
+    $(".v3-dropdown-wrapper").not($wrapper).removeClass("active");
+    $wrapper.toggleClass("active");
+  });
+
+  $(document).on("click", function (e) {
+    if (!$(e.target).closest(".v3-dropdown-wrapper").length) {
+      $(".v3-dropdown-wrapper").removeClass("active");
+    }
+  });
+
+  // Re-run component initialization on every SPA page load
+  $(document).on("spa:loaded", function () {
+    if (typeof window.initAppComponents === "function") {
+      window.initAppComponents();
+    }
+  });
+
+  // Run on initial page load
+  initAppComponents();
+
   loadExternalJS("/app/dashboard/v2/default/desktop/assets/js/policy.min.js");
 });
 
@@ -2622,9 +2912,9 @@ $(document).ready(function (e) {
         if (window.jQuery) {
           window.jQuery(document).trigger('ready');
           window.jQuery(document).trigger('spa:loaded');
-          if (window.jQuery('.select2').length && typeof window.jQuery.fn.select2 === 'function') {
-            window.jQuery('.select2').select2();
-          }
+        }
+        if (typeof window.initAppComponents === 'function') {
+          window.initAppComponents();
         }
       } catch (err) {
         console.error('SPA Router error:', err);
@@ -2669,33 +2959,52 @@ $(document).ready(function (e) {
       loadPage(window.location.href, false);
     });
 
-    // Dynamic Right-side Flyout Submenus Positioning
+    // Dynamic Right-side Flyout Submenus Positioning & Auto-close Handler
+    let currentActiveSideMenu = null;
+
+    function closeAllSideMenus() {
+      document.querySelectorAll('nav.side-nav .side-menu').forEach(function (menu) {
+        menu.style.display = 'none';
+      });
+      currentActiveSideMenu = null;
+    }
+
+    window.addEventListener('scroll', closeAllSideMenus, { passive: true });
+    document.addEventListener('scroll', closeAllSideMenus, { passive: true, capture: true });
+
     document.addEventListener('mouseover', function (e) {
-      const li = e.target.closest('nav.side-nav ul li');
-      if (li) {
-        const sideMenu = li.querySelector('.side-menu');
+      const hoveredSideMenu = e.target.closest('.side-menu');
+      if (hoveredSideMenu) {
+        // Pointer is inside the open flyout submenu, keep it visible
+        return;
+      }
+
+      const hoveredLi = e.target.closest('nav.side-nav ul li');
+      if (hoveredLi) {
+        const sideMenu = hoveredLi.querySelector('.side-menu');
         if (sideMenu) {
-          const rect = li.getBoundingClientRect();
+          if (currentActiveSideMenu && currentActiveSideMenu !== sideMenu) {
+            currentActiveSideMenu.style.display = 'none';
+          }
+          const rect = hoveredLi.getBoundingClientRect();
           sideMenu.style.position = 'fixed';
           sideMenu.style.top = rect.top + 'px';
           sideMenu.style.left = (rect.right - 2) + 'px';
           sideMenu.style.display = 'block';
           sideMenu.style.zIndex = '99999';
+          currentActiveSideMenu = sideMenu;
+        } else {
+          // Hovering an item without a sub-menu (e.g. Dashboard, Domestic packages)
+          closeAllSideMenus();
         }
+      } else {
+        // Pointer left the sidebar entirely
+        closeAllSideMenus();
       }
     });
 
-    document.addEventListener('mouseout', function (e) {
-      const li = e.target.closest('nav.side-nav ul li');
-      if (li) {
-        const related = e.relatedTarget ? e.relatedTarget.closest('nav.side-nav ul li, .side-menu') : null;
-        if (!related || !li.contains(related)) {
-          const sideMenu = li.querySelector('.side-menu');
-          if (sideMenu) {
-            sideMenu.style.display = 'none';
-          }
-        }
-      }
+    document.addEventListener('mouseleave', function () {
+      closeAllSideMenus();
     });
 
     // Profile Dropdown Click & Toggle Handler

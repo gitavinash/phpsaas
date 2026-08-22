@@ -124,6 +124,8 @@ const tempId = '<?php echo base64_encode(USER_ID) ?>';
 
                 ?>
 				<script src="<?php echo ADMIN_JS ?>app.js"></script>
+				<script src="<?php echo ADMIN_JS ?>gallery.js"></script>
+				<script src="<?php echo ADMIN_JS ?>packages.js"></script>
 				<?php
                 $appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
                 $appJSScript = ADMIN_JS . SITE_APP . '.js';
