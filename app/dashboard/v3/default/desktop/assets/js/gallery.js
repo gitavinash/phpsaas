@@ -309,110 +309,124 @@
       });
 
       // Single Add Suggested Pexels Photo
-      $(document).on("click", ".btn-add-single-pexels", function () {
-        const $btn = $(this);
-        const idx = $btn.data("idx");
-        const item = self.pexelsSuggestionsData[idx];
-        const chosenDay =
-          parseInt(
-            $btn
-              .closest(".pexels-card-body")
-              .find(".pexels-day-select")
-              .val()
-          ) || 0;
+      $(document)
+        .off("click", ".btn-add-single-pexels")
+        .on("click", ".btn-add-single-pexels", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const $btn = $(this);
+          if ($btn.attr("data-busy") === "1") return;
+          $btn.attr("data-busy", "1").prop("disabled", true);
 
-        $btn
-          .prop("disabled", true)
-          .html('<i class="fi fi-rr-spinner spinner"></i> Adding...');
-
-        $.ajax({
-          url: "/api/v3/gallery/add-suggested/",
-          type: "POST",
-          data: {
-            packageId: self.packageId,
-            galleryId: self.galleryId,
-            imagePath: item.url,
-            day: chosenDay,
-          },
-          dataType: "json",
-          success: function (res) {
-            if (res.status === "success") {
-              if (typeof popUpMessage === "function") {
-                popUpMessage("center", res.msg, "success");
-              }
-              self.loadGalleryFromApi();
-              $btn.html('<i class="fi fi-rr-check"></i> Added');
-            } else {
+          const idx = $btn.data("idx");
+          const item = self.pexelsSuggestionsData[idx];
+          const chosenDay =
+            parseInt(
               $btn
+                .closest(".pexels-card-body")
+                .find(".pexels-day-select")
+                .val()
+            ) || 0;
+
+          $btn.html('<i class="fi fi-rr-spinner spinner"></i> Adding...');
+
+          $.ajax({
+            url: "/api/v3/gallery/add-suggested/",
+            type: "POST",
+            data: {
+              packageId: self.packageId,
+              galleryId: self.galleryId,
+              imagePath: item.url,
+              day: chosenDay,
+            },
+            dataType: "json",
+            success: function (res) {
+              $btn.removeAttr("data-busy");
+              if (res.status === "success") {
+                if (typeof popUpMessage === "function") {
+                  popUpMessage("center", res.msg, "success");
+                }
+                self.loadGalleryFromApi();
+                $btn.html('<i class="fi fi-rr-check"></i> Added');
+              } else {
+                $btn
+                  .prop("disabled", false)
+                  .html('<i class="fi fi-rr-plus"></i> Add to Gallery');
+                if (typeof popUpMessage === "function") {
+                  popUpMessage("center", res.msg || "Failed to add image", "error");
+                }
+              }
+            },
+            error: function () {
+              $btn
+                .removeAttr("data-busy")
                 .prop("disabled", false)
                 .html('<i class="fi fi-rr-plus"></i> Add to Gallery');
               if (typeof popUpMessage === "function") {
-                popUpMessage("center", res.msg || "Failed to add image", "error");
+                popUpMessage("center", "Error adding image to gallery", "error");
               }
-            }
-          },
-          error: function () {
-            $btn
-              .prop("disabled", false)
-              .html('<i class="fi fi-rr-plus"></i> Add to Gallery');
-            if (typeof popUpMessage === "function") {
-              popUpMessage("center", "Error adding image to gallery", "error");
-            }
-          },
+            },
+          });
         });
-      });
 
       // Auto-assign All Suggested Day Photos
-      $(document).on("click", "#btnAddAllSuggested", function () {
-        const $btn = $(this);
-        $btn
-          .prop("disabled", true)
-          .html(
+      $(document)
+        .off("click", "#btnAddAllSuggested")
+        .on("click", "#btnAddAllSuggested", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const $btn = $(this);
+          if ($btn.attr("data-busy") === "1") return;
+          $btn.attr("data-busy", "1").prop("disabled", true);
+
+          $btn.html(
             '<i class="fi fi-rr-spinner spinner"></i> Searching & Auto-Assigning Day Photos...'
           );
 
-        $.ajax({
-          url: "/api/v3/gallery/add-suggested/",
-          type: "POST",
-          data: {
-            packageId: self.packageId,
-            galleryId: self.galleryId,
-            autoAssign: 1,
-          },
-          dataType: "json",
-          success: function (res) {
-            if (res.status === "success") {
-              if (typeof popUpMessage === "function") {
-                popUpMessage("center", res.msg, "success");
+          $.ajax({
+            url: "/api/v3/gallery/add-suggested/",
+            type: "POST",
+            data: {
+              packageId: self.packageId,
+              galleryId: self.galleryId,
+              autoAssign: 1,
+            },
+            dataType: "json",
+            success: function (res) {
+              $btn.removeAttr("data-busy");
+              if (res.status === "success") {
+                if (typeof popUpMessage === "function") {
+                  popUpMessage("center", res.msg, "success");
+                }
+                self.loadGalleryFromApi();
+              } else {
+                $btn
+                  .prop("disabled", false)
+                  .html(
+                    '<i class="fi fi-rr-magic-wand"></i> ✨ Auto-Assign All Day Photos'
+                  );
+                if (typeof popUpMessage === "function") {
+                  popUpMessage(
+                    "center",
+                    res.msg || "Failed to assign suggested images",
+                    "error"
+                  );
+                }
               }
-              self.loadGalleryFromApi();
-            } else {
+            },
+            error: function () {
               $btn
+                .removeAttr("data-busy")
                 .prop("disabled", false)
                 .html(
                   '<i class="fi fi-rr-magic-wand"></i> ✨ Auto-Assign All Day Photos'
                 );
               if (typeof popUpMessage === "function") {
-                popUpMessage(
-                  "center",
-                  res.msg || "Failed to assign suggested images",
-                  "error"
-                );
+                popUpMessage("center", "Error assigning suggested images", "error");
               }
-            }
-          },
-          error: function () {
-            $btn
-              .prop("disabled", false)
-              .html(
-                '<i class="fi fi-rr-magic-wand"></i> ✨ Auto-Assign All Day Photos'
-              );
-            if (typeof popUpMessage === "function") {
-              popUpMessage("center", "Error assigning suggested images", "error");
-            }
-          },
+            },
+          });
         });
-      });
 
       // Day Assignment dropdown changes
       $(document).on("change", ".assign-day-select", function () {

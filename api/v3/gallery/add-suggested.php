@@ -49,14 +49,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (!function_exists('fetchTopPexelsPhotoForTermV3')) {
-            function fetchTopPexelsPhotoForTermV3($searchTerm) {
+            function fetchTopPexelsPhotoForTermV3($searchTerm)
+            {
                 $apiKey = defined('PEXELS_API_KEY') ? PEXELS_API_KEY : 's8pSS2kcCDM4A59jeh6fNx1XL5eHLBdBcOU0gFgZPpiYOnwthaTI1bat';
                 $url = "https://api.pexels.com/v1/search?query=" . urlencode($searchTerm) . "&orientation=landscape&per_page=1";
 
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+                curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, [
                     "Authorization: {$apiKey}"
                 ]);
@@ -86,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $pkgCountry = trim($pkgData['tour_package_country'] ?? '');
                     $pkgTitle = trim($pkgData['tour_package_title'] ?? '');
                     $pkgTheme = trim($pkgData['tour_package_theme'] ?? '');
-                    $pkgDuration = (int)$pkgData['tour_package_duration'] ?? 0;
+                    $pkgDuration = (int)($pkgData['tour_package_duration'] ?? 0);
                     $itineraryRaw = $pkgData['tour_package_itinerary'] ?? '';
 
                     $itineraryList = [];
@@ -149,12 +153,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $httpStatus = 400;
             $msg = 'No images provided for assignment';
         } else {
-            $uploadPath = ROOT . '/upload/' . SITE_DOMAIN . '/' . date('Y/m/');
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
+            $domainFolder = defined('SITE_DOMAIN') && !empty(SITE_DOMAIN) ? strtolower(SITE_DOMAIN) : 'default';
+            $uploadPath = ROOT . '/upload/' . $domainFolder . '/' . date('Y/m/');
+            if (!is_dir($uploadPath)) {
+                @mkdir($uploadPath, 0777, true);
+                @chmod($uploadPath, 0777);
             }
 
             $addedImages = [];
+            $ownerId = defined('USER_ID') ? (int)USER_ID : 1;
 
             foreach ($itemsToAdd as $item) {
                 $remoteUrl = $item['url'];
@@ -165,13 +172,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 curl_setopt($ch, CURLOPT_URL, $remoteUrl);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+                curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
                 $imageData = curl_exec($ch);
                 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
 
-                if ($httpCode === 200 && !empty($imageData)) {
+                if (empty($imageData) || $httpCode !== 200) {
+                    $streamCtx = stream_context_create([
+                        'http' => [
+                            'method' => 'GET',
+                            'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n",
+                            'timeout' => 15
+                        ],
+                        'ssl' => [
+                            'verify_peer' => false,
+                            'verify_peer_name' => false
+                        ]
+                    ]);
+                    $imageData = @file_get_contents($remoteUrl, false, $streamCtx);
+                }
+
+                if (!empty($imageData)) {
                     $fileExtension = 'jpg';
                     $cleanPackageSlug = preg_replace('/[^a-zA-Z0-9_-]/', '_', strtolower((string)$packageId));
                     $filename = "pexels_" . $cleanPackageSlug . "_d" . $assignDay . "_" . time() . "." . $fileExtension;
@@ -184,6 +208,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $uploadFileName = ucwords(preg_replace('/[_]+/', ' ', str_replace($fileExtension, '', preg_replace('~[^\p{M}\s\w-]+~u', '', $filename))));
 
                     if (file_put_contents($uploadFile, $imageData)) {
+                        @chmod($uploadFile, 0666);
+
                         if ($assignDay > 0) {
                             foreach ($existingList as &$ex) {
                                 if (isset($ex['day']) && (int)$ex['day'] === $assignDay) {
@@ -204,6 +230,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         if (empty($currentFeaturedImg) && $assignDay === 1) {
                             $currentFeaturedImg = $uploadMediaPath;
+                        }
+
+                        // Sync to media and link tables
+                        $escPath = mysqli_real_escape_string($connection, $uploadMediaPath);
+                        $escTitle = mysqli_real_escape_string($connection, $uploadFileName);
+                        $escLink = mysqli_real_escape_string($connection, $uploadMediaLink);
+
+                        $addMediaQ = "INSERT INTO {$tblPrefix}media (media_url, media_title, media_type, media_ext, media_owner_id, media_status, media_site_id) VALUES ('{$escPath}', '{$escTitle}', 'image/jpeg', 'jpg', {$ownerId}, 1, {$siteId})";
+                        if (mysqli_query($connection, $addMediaQ)) {
+                            $mediaId = mysqli_insert_id($connection);
+                            $addLinkQ = "INSERT INTO {$tblPrefix}link (link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) VALUES ('{$escLink}', {$mediaId}, 200, 'media', {$ownerId}, {$siteId}, NOW(), NOW(), NOW())";
+                            mysqli_query($connection, $addLinkQ);
                         }
                     }
                 }
@@ -235,11 +273,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            if ($dbSuccess) {
+            if ($dbSuccess && count($addedImages) > 0) {
                 $httpStatus = 200;
                 $status = 'success';
                 $msg = count($addedImages) > 1 ? "Added & assigned " . count($addedImages) . " photos successfully!" : "Photo added & assigned successfully!";
                 $galleryImages = $existingList;
+            } elseif ($dbSuccess && count($addedImages) === 0) {
+                $httpStatus = 200;
+                $status = 'error';
+                $msg = 'Unable to download images from external source. Please check external server connectivity.';
             } else {
                 $httpStatus = 500;
                 $status = 'error';
