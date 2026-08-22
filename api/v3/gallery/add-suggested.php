@@ -263,10 +263,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $featuredEscaped = mysqli_real_escape_string($connection, $currentFeaturedImg);
 
             if ($gId > 0) {
-                $updateQuery = "UPDATE {$tblPrefix}gallery SET gallery_image_list = '{$jsonEncoded}', gallery_image = '{$featuredEscaped}', gallery_status = 1 WHERE gallery_id = '{$gId}' AND gallery_site_id = {$siteId}";
+                $updateQuery = "UPDATE {$tblPrefix}gallery SET gallery_image_list = '{$jsonEncoded}', gallery_image = '{$featuredEscaped}', gallery_thumbnail = '{$featuredEscaped}', gallery_status = 1 WHERE gallery_id = '{$gId}' AND gallery_site_id = {$siteId}";
                 $dbSuccess = mysqli_query($connection, $updateQuery);
             } else {
-                $insertQuery = "INSERT INTO {$tblPrefix}gallery (gallery_title, gallery_category, gallery_type, gallery_image, gallery_image_list, gallery_site_id, gallery_status, gallery_created_at) VALUES ('Tour Package Gallery', '{$packageId}', 'tour_package', '{$featuredEscaped}', '{$jsonEncoded}', {$siteId}, 1, NOW())";
+                $insertQuery = "INSERT INTO {$tblPrefix}gallery (gallery_image, gallery_thumbnail, gallery_title, gallery_category, gallery_site_id, gallery_type, gallery_image_list, gallery_owner_id, gallery_status) VALUES ('{$featuredEscaped}', '{$featuredEscaped}', 'Tour Package Gallery', '{$packageId}', {$siteId}, 'tour_package', '{$jsonEncoded}', {$ownerId}, 1)";
                 $dbSuccess = mysqli_query($connection, $insertQuery);
                 if ($dbSuccess) {
                     $gId = mysqli_insert_id($connection);

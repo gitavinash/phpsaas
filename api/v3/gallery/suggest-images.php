@@ -24,7 +24,7 @@ $page = isset($_REQUEST['page']) ? max(1, (int)$_REQUEST['page']) : 1;
 
 if ($packageId > 0) {
     $query = "SELECT tour_package_title, tour_package_city, tour_package_country, tour_package_theme, tour_package_duration, tour_package_itinerary FROM {$tblPrefix}tour_package WHERE tour_package_id = '{$packageId}' AND tour_package_site_id = {$siteId}";
-    
+
     if ($res = mysqli_query($connection, $query)) {
         if (mysqli_num_rows($res) > 0) {
             $pkg = mysqli_fetch_assoc($res);
@@ -44,7 +44,8 @@ if ($packageId > 0) {
             $destination = !empty($city) ? $city : (!empty($country) ? $country : $title);
 
             if (!function_exists('fetchPexelsPhotosV3')) {
-                function fetchPexelsPhotosV3($searchTerm, $perPage = 6, $page = 1) {
+                function fetchPexelsPhotosV3($searchTerm, $perPage = 6, $page = 1)
+                {
                     $apiKey = defined('PEXELS_API_KEY') ? PEXELS_API_KEY : 's8pSS2kcCDM4A59jeh6fNx1XL5eHLBdBcOU0gFgZPpiYOnwthaTI1bat';
                     $url = "https://api.pexels.com/v1/search?query=" . urlencode($searchTerm) . "&orientation=landscape&page=" . (int)$page . "&per_page=" . (int)$perPage;
 
