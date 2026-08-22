@@ -2766,15 +2766,54 @@ $(document).ready(function (e) {
     }
   });
 
+  // Modular V3 Component & Table Auto-Initializer (Instant SPA Support)
+  window.initV3PageModules = function () {
+    const ADMIN_JS = "/app/dashboard/v3/default/desktop/assets/js/";
+
+    // 1. Package Gallery Module
+    const $gallery = $("#packageGalleryApp, .package-gallery-wrapper");
+    if ($gallery.length > 0) {
+      if (window.V3Gallery && typeof window.V3Gallery.autoInit === "function") {
+        window.V3Gallery.autoInit();
+      } else if (window.jQuery && typeof window.jQuery.getScript === "function") {
+        window.jQuery.getScript(ADMIN_JS + "gallery.js", function () {
+          if (window.V3Gallery && typeof window.V3Gallery.autoInit === "function") {
+            window.V3Gallery.autoInit();
+          }
+        });
+      }
+    }
+
+    // 2. Tour Packages & DataTable Module
+    const $packages = $("#packageListApp, .package-page-wrapper[data-package-type]");
+    if ($packages.length > 0) {
+      if (window.V3Packages && typeof window.V3Packages.autoInit === "function") {
+        window.V3Packages.autoInit();
+      } else if (window.jQuery && typeof window.jQuery.getScript === "function") {
+        window.jQuery.getScript(ADMIN_JS + "table.js", function () {
+          window.jQuery.getScript(ADMIN_JS + "packages.js", function () {
+            if (window.V3Packages && typeof window.V3Packages.autoInit === "function") {
+              window.V3Packages.autoInit();
+            }
+          });
+        });
+      }
+    }
+  };
+
   // Re-run component initialization on every SPA page load
   $(document).on("spa:loaded", function () {
     if (typeof window.initAppComponents === "function") {
       window.initAppComponents();
     }
+    if (typeof window.initV3PageModules === "function") {
+      window.initV3PageModules();
+    }
   });
 
   // Run on initial page load
   initAppComponents();
+  window.initV3PageModules();
 
   loadExternalJS("/app/dashboard/v2/default/desktop/assets/js/policy.min.js");
 });
@@ -2915,6 +2954,9 @@ $(document).ready(function (e) {
         }
         if (typeof window.initAppComponents === 'function') {
           window.initAppComponents();
+        }
+        if (typeof window.initV3PageModules === 'function') {
+          window.initV3PageModules();
         }
       } catch (err) {
         console.error('SPA Router error:', err);

@@ -164,3 +164,5 @@
         </div>
     </div>
 </div>
+<script src="<?php echo ADMIN_JS ?>table.js"></script>
+<script src="<?php echo ADMIN_JS ?>packages.js"></script>

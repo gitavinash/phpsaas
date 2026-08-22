@@ -2,7 +2,17 @@
  * V3 Package Gallery Module
  * Handles dynamic API loading, day assignment, Pexels stock photos, lightbox, and image upload.
  */
-(function ($) {
+(function (factory) {
+  if (typeof window.jQuery !== "undefined") {
+    factory(window.jQuery);
+  } else {
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof window.jQuery !== "undefined") {
+        factory(window.jQuery);
+      }
+    });
+  }
+})(function ($) {
   "use strict";
 
   window.V3Gallery = {
@@ -24,8 +34,14 @@
       if (!opts || !opts.packageId) {
         return;
       }
-      this.packageId = opts.packageId;
+      this.packageId = String(opts.packageId);
       this.encodedId = opts.encodedId || "";
+      this.galleryData = null;
+      this.pexelsLoaded = false;
+      this.pexelsSuggestionsData = [];
+      this.currentPexelsPage = 1;
+      this.previewImages = [];
+      this.selectedUploadFiles = [];
       this.bindEvents();
       this.loadGalleryFromApi();
     },
@@ -33,9 +49,32 @@
     autoInit: function () {
       const $wrapper = $("#packageGalleryApp, .package-gallery-wrapper");
       if ($wrapper.length > 0) {
-        const pkgId = $wrapper.data("package-id") || $wrapper.attr("data-package-id");
-        const encId = $wrapper.data("encoded-id") || $wrapper.attr("data-encoded-id") || "";
-        if (pkgId) {
+        let pkgId = $wrapper.attr("data-package-id") || $wrapper.data("package-id");
+        let encId = $wrapper.attr("data-encoded-id") || $wrapper.data("encoded-id") || "";
+
+        if (!pkgId || pkgId === "0") {
+          const urlParams = new URLSearchParams(window.location.search);
+          const rawId = urlParams.get("id");
+          if (rawId) {
+            try {
+              const decoded = atob(rawId);
+              if (decoded && !isNaN(decoded)) {
+                pkgId = decoded;
+                encId = rawId;
+              } else if (!isNaN(rawId)) {
+                pkgId = rawId;
+                encId = btoa(rawId);
+              }
+            } catch (e) {
+              if (!isNaN(rawId)) {
+                pkgId = rawId;
+                encId = btoa(rawId);
+              }
+            }
+          }
+        }
+
+        if (pkgId && pkgId !== "0") {
           this.init({ packageId: pkgId, encodedId: encId });
         }
       }
@@ -287,7 +326,7 @@
           .html('<i class="fi fi-rr-spinner spinner"></i> Adding...');
 
         $.ajax({
-          url: "/api/aleya/gallery/add-suggested/",
+          url: "/api/v3/gallery/add-suggested/",
           type: "POST",
           data: {
             packageId: self.packageId,
@@ -333,7 +372,7 @@
           );
 
         $.ajax({
-          url: "/api/aleya/gallery/add-suggested/",
+          url: "/api/v3/gallery/add-suggested/",
           type: "POST",
           data: {
             packageId: self.packageId,
@@ -385,7 +424,7 @@
         $select.prop("disabled", true);
 
         $.ajax({
-          url: "/api/aleya/gallery/assign-day/",
+          url: "/api/v3/gallery/assign-day/",
           type: "POST",
           data: {
             packageId: self.packageId,
@@ -982,7 +1021,7 @@
       }
 
       $.ajax({
-        url: "/api/aleya/gallery/suggest-images/",
+        url: "/api/v3/gallery/suggest-images/",
         type: "GET",
         data: {
           packageId: self.packageId,
@@ -1121,6 +1160,9 @@
   };
 
   // Auto-init on direct load and SPA navigation
+  if (window.V3Gallery && typeof window.V3Gallery.autoInit === "function") {
+    window.V3Gallery.autoInit();
+  }
   $(document).ready(function () {
     window.V3Gallery.autoInit();
   });
@@ -1128,4 +1170,4 @@
   $(document).on("spa:loaded", function () {
     window.V3Gallery.autoInit();
   });
-})(jQuery);
+});

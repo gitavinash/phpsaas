@@ -1,15 +1,13 @@
 <?php
 
-$id = mysqli_real_escape_string($connection, ((isset($_GET['id'])) ? base64_decode($_GET['id']) : 0));
-$encodedId = base64_encode($id);
-
-$packageUrl = '';
-if ($id > 0) {
-    $qLink = mysqli_query($connection, "SELECT link_url FROM " . TABLE_PREFIX . "link WHERE link_relation_id = '{$id}' AND link_type = 'tour_package' AND link_site_id = " . SITE_ID . " LIMIT 1");
-    if ($qLink && mysqli_num_rows($qLink) > 0) {
-        $packageUrl = mysqli_fetch_assoc($qLink)['link_url'] ?? '';
-    }
+$rawId = $_GET['id'] ?? 0;
+if (is_numeric($rawId) && (int)$rawId > 0) {
+    $id = (int)$rawId;
+} else {
+    $decoded = base64_decode((string)$rawId, true);
+    $id = ($decoded !== false && is_numeric($decoded)) ? (int)$decoded : (int)$rawId;
 }
+$encodedId = base64_encode($id);
 
 ?>
 
@@ -34,7 +32,7 @@ if ($id > 0) {
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="<?php echo !empty($packageUrl) ? htmlspecialchars($packageUrl) : '#'; ?>" target="_blank" class="btn-gallery-action" id="btnViewLivePackage" style="background: #f8fafc; color: #0284c7; border: 1px solid #cbd5e1; <?php echo empty($packageUrl) ? 'display: none;' : ''; ?>" data-tooltip="View Live Package Itinerary" title="View Live Package Itinerary">
+            <a href="#" target="_blank" class="btn-gallery-action" id="btnViewLivePackage" style="background: #f8fafc; color: #0284c7; border: 1px solid #cbd5e1; display: none;" data-tooltip="View Live Package Itinerary" title="View Live Package Itinerary">
                 <i class="fi fi-rr-eye"></i> View Package
             </a>
             <a href="/dashboard/packages/international/list/" class="btn-gallery-action" style="background: #f8fafc; color: #475569; border: 1px solid #cbd5e1;" data-tooltip="Back to International Packages List">
@@ -235,23 +233,4 @@ if ($id > 0) {
         </div>
     </div>
 </div>
-
-<script>
-    (function() {
-        function initGallery() {
-            if (window.V3Gallery) {
-                window.V3Gallery.init({
-                    packageId: "<?php echo $id; ?>",
-                    encodedId: "<?php echo $encodedId; ?>"
-                });
-            } else {
-                setTimeout(initGallery, 30);
-            }
-        }
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", initGallery);
-        } else {
-            initGallery();
-        }
-    })();
-</script>
+<script src="<?php echo ADMIN_JS ?>gallery.js"></script>

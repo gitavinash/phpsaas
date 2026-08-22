@@ -2323,6 +2323,7 @@ section .form-group textarea:focus {
   border-top: none !important;
   border-bottom: 1px solid var(--border-subtle) !important;
   white-space: nowrap !important;
+  text-align: left;
 }
 
 .package-table-card table.showTableList tbody tr td {

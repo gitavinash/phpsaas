@@ -35,7 +35,11 @@ if (isset($daterange)) {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="icon" href="<?php echo SITE_ICON ?>">
     <title><?php echo str_replace('_', ' ', $dashboardPageTitle . ' | ' . SITE_NAME); ?></title>
-    <style>:root { --brand-700: <?php echo SITE_THEME_COLOUR ?>; }</style>
+    <style>
+        :root {
+            --brand-700: <?php echo SITE_THEME_COLOUR ?>;
+        }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
