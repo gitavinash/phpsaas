@@ -29,12 +29,23 @@
     currentLightboxIndex: 0,
     selectedUploadFiles: [],
     eventsBound: false,
+    isLoading: false,
+    loadedPackageId: null,
 
     init: function (opts) {
       if (!opts || !opts.packageId) {
         return;
       }
-      this.packageId = String(opts.packageId);
+      const $grid = $("#galleryGrid");
+      if (!$grid.length) {
+        return;
+      }
+      const pkgId = String(opts.packageId);
+      if (this.loadedPackageId === pkgId && (this.isLoading || this.galleryData)) {
+        return;
+      }
+      this.loadedPackageId = pkgId;
+      this.packageId = pkgId;
       this.encodedId = opts.encodedId || "";
       this.galleryData = null;
       this.pexelsLoaded = false;
@@ -749,6 +760,7 @@
     loadGalleryFromApi: function () {
       const self = this;
       const $grid = $("#galleryGrid");
+      self.isLoading = true;
 
       $.ajax({
         url: "/api/v3/gallery/list/",
@@ -756,6 +768,7 @@
         data: { packageId: self.packageId },
         dataType: "json",
         success: function (res) {
+          self.isLoading = false;
           if (res.status === "success") {
             self.galleryData = res;
             self.galleryId = res.galleryId || 0;
@@ -772,6 +785,7 @@
           }
         },
         error: function () {
+          self.isLoading = false;
           $grid.html(
             '<div style="grid-column: 1 / -1; padding: 40px; text-align: center; color: #ef4444;">Failed to load gallery data from API. Please refresh the page.</div>'
           );
@@ -1172,16 +1186,4 @@
       $("#lightboxModal").addClass("active");
     },
   };
-
-  // Auto-init on direct load and SPA navigation
-  if (window.V3Gallery && typeof window.V3Gallery.autoInit === "function") {
-    window.V3Gallery.autoInit();
-  }
-  $(document).ready(function () {
-    window.V3Gallery.autoInit();
-  });
-
-  $(document).on("spa:loaded", function () {
-    window.V3Gallery.autoInit();
-  });
 });

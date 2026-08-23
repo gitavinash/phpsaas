@@ -100,24 +100,39 @@ if (isset($connection) && $connection && ($resReq = mysqli_query($connection, $s
 }
 
 // ---- 4. ENQUIRY SOURCE DISTRIBUTION ----
-$sourceLabels = [];
-$sourceData   = [];
-$sqlSource = "SELECT
-    CASE WHEN enquiry_source IS NULL OR enquiry_source = '' THEN 'Direct'
-         ELSE enquiry_source END AS source_name,
-    COUNT(*) AS count
-FROM {$tblPrefix}enquiry
-WHERE {$siteFilter}{$userFilter}{$daterangeFilter}
-GROUP BY source_name
-ORDER BY count DESC
-LIMIT 6";
+function cleanSourceName($source) {
+    if (empty($source) || trim($source) === '') {
+        return 'Direct';
+    }
+    $cleaned = trim($source);
+    $cleaned = preg_replace('#^https?://#i', '', $cleaned);
+    $cleaned = preg_replace('#^www\.#i', '', $cleaned);
+    $cleaned = rtrim($cleaned, '/');
+    return ucfirst($cleaned);
+}
+
+$sourceMap = [];
+$sqlSource = "SELECT enquiry_source, COUNT(*) AS count
+              FROM {$tblPrefix}enquiry
+              WHERE {$siteFilter}{$userFilter}{$daterangeFilter}
+              GROUP BY enquiry_source
+              ORDER BY count DESC";
 
 if (isset($connection) && $connection && ($resSource = mysqli_query($connection, $sqlSource))) {
     while ($row = mysqli_fetch_assoc($resSource)) {
-        $sourceLabels[] = ucfirst($row['source_name']);
-        $sourceData[]   = intval($row['count']);
+        $name = cleanSourceName($row['enquiry_source']);
+        $cnt = intval($row['count']);
+        if (!isset($sourceMap[$name])) {
+            $sourceMap[$name] = 0;
+        }
+        $sourceMap[$name] += $cnt;
     }
 }
+
+arsort($sourceMap);
+$topSources   = array_slice($sourceMap, 0, 6, true);
+$sourceLabels = array_keys($topSources);
+$sourceData   = array_values($topSources);
 
 // ---- 5. ENQUIRY PERFORMANCE DISTRIBUTION ----
 $perfLabels = ['Fresh', 'Pending', 'Follow Up', 'Confirmed', 'Cancelled'];
@@ -198,15 +213,40 @@ if (isset($connection) && $connection && ($resKanban = mysqli_query($connection,
     }
 }
 
+// ---- 9. UPCOMING FOLLOWUPS (Earliest followups) ----
+$followups = [];
+$sqlFollowups = "SELECT enquiry_id, enquiry_agent, enquiry_first_name AS name, enquiry_mobile,
+                        enquiry_subject, enquiry_time, enquiry_status, enquiry_source, enquiry_followup
+                 FROM {$tblPrefix}enquiry
+                 WHERE {$siteFilter}{$userFilter} AND enquiry_status = 3
+                 ORDER BY enquiry_followup ASC
+                 LIMIT 10";
+
+if (isset($connection) && $connection && ($resFollow = mysqli_query($connection, $sqlFollowups))) {
+    while ($row = mysqli_fetch_assoc($resFollow)) {
+        $followups[] = [
+            'id'          => $row['enquiry_id'],
+            'encoded_id'  => base64_encode($row['enquiry_id']),
+            'name'        => !empty($row['name']) ? $row['name'] : 'Lead #' . $row['enquiry_id'],
+            'mobile'      => !empty($row['enquiry_mobile']) ? $row['enquiry_mobile'] : 'N/A',
+            'subject'     => !empty($row['enquiry_subject']) ? $row['enquiry_subject'] : 'Enquiry',
+            'source'      => !empty($row['enquiry_source']) ? $row['enquiry_source'] : 'Direct',
+            'time'        => !empty($row['enquiry_followup']) ? date('d-m-Y h:i A', strtotime($row['enquiry_followup'])) : 'N/A',
+            'followupRaw' => $row['enquiry_followup']
+        ];
+    }
+}
+
 echo json_encode([
-    'status' => 200,
-    'kpis'   => $kpis,
-    'charts' => [
+    'status'    => 200,
+    'kpis'      => $kpis,
+    'charts'    => [
         'enquirySource'      => ['labels' => $sourceLabels, 'data' => $sourceData],
         'enquiryPerformance' => ['labels' => $perfLabels,   'data' => $perfData],
         'enquiryFlow'        => ['labels' => $flowLabels,   'data' => $flowData],
         'sourceFlowBars'     => $sourceFlowBars,
     ],
-    'kanban' => $kanbanLeads,
+    'kanban'    => $kanbanLeads,
+    'followups' => $followups,
 ]);
 exit();

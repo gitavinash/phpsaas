@@ -68,6 +68,11 @@
 
   V3DataTable.prototype = {
     init: function () {
+      const $table = $(this.options.tableSelector);
+      const $tbody = $(this.options.tbodySelector);
+      if (!$table.length || !$tbody.length) {
+        return;
+      }
       const $perPage = $(this.options.perPageSelector);
       if ($perPage.length > 0) {
         this.pageSize = parseInt($perPage.val(), 10) || this.options.defaultPageSize;
@@ -202,7 +207,6 @@
         if (!isBackgroundPrefetch) {
           self.currentPage = page;
           self.applyApiResponse(cachedRes);
-          self.prefetchNextPage(page + 1);
         }
         return;
       }
@@ -211,6 +215,7 @@
         if (self.prefetchingPages[cacheKey]) return;
         self.prefetchingPages[cacheKey] = true;
       } else {
+        if (self.isLoading) return;
         self.isLoading = true;
         self.currentPage = page;
         const $tbody = $(self.options.tbodySelector);
@@ -241,7 +246,6 @@
 
             if (!isBackgroundPrefetch) {
               self.applyApiResponse(res);
-              self.prefetchNextPage(page + 1);
             }
           } else if (!isBackgroundPrefetch) {
             $(self.options.tbodySelector).html(`

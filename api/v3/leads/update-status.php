@@ -12,31 +12,45 @@ if (!isset($connection)) {
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_REQUEST['leadId'])) {
-    $leadId    = isset($_REQUEST['leadId']) ? trim($_REQUEST['leadId']) : '';
-    $newStatus = isset($_REQUEST['status']) ? intval($_REQUEST['status']) : 0;
+$rawLeadId = isset($_POST['leadId']) ? $_POST['leadId'] : (isset($_GET['leadId']) ? $_GET['leadId'] : (isset($_REQUEST['leadId']) ? $_REQUEST['leadId'] : (isset($leadId) ? $leadId : '')));
+$rawStatus = isset($_POST['status']) ? $_POST['status'] : (isset($_GET['status']) ? $_GET['status'] : (isset($_REQUEST['status']) ? $_REQUEST['status'] : (isset($status) ? $status : null)));
 
-    if (!empty($leadId)) {
-        $decoded = base64_decode($leadId, true);
-        $realId  = ($decoded !== false && is_numeric($decoded)) ? intval($decoded) : intval($leadId);
+if ($rawStatus === null) {
+    $rawStatus = isset($_POST['leadStatus']) ? $_POST['leadStatus'] : (isset($_GET['leadStatus']) ? $_GET['leadStatus'] : (isset($leadStatus) ? $leadStatus : null));
+}
 
-        if ($realId > 0 && isset($connection) && $connection) {
-            // Enforce site_id when updating so agents can't modify cross-site leads
-            $siteClause = ($siteId > 0) ? " AND enquiry_site_id = {$siteId}" : "";
-            $sql = "UPDATE {$tblPrefix}enquiry
-                    SET enquiry_status = {$newStatus}
-                    WHERE enquiry_id = {$realId}{$siteClause}";
+if (!empty($rawLeadId) && $rawStatus !== null && is_numeric($rawStatus)) {
+    $newStatus = intval($rawStatus);
+    $decoded   = base64_decode(trim($rawLeadId), true);
+    $realId    = ($decoded !== false && is_numeric($decoded)) ? intval($decoded) : intval($rawLeadId);
 
-            if (mysqli_query($connection, $sql) && mysqli_affected_rows($connection) > 0) {
-                echo json_encode(['status' => 200, 'msg' => 'Lead status updated successfully']);
-                exit();
-            }
+    if ($realId > 0 && isset($connection) && $connection) {
+        $siteClause = ($siteId > 0) ? " AND enquiry_site_id = {$siteId}" : "";
+        $sql = "UPDATE {$tblPrefix}enquiry
+                SET enquiry_status = {$newStatus}
+                WHERE enquiry_id = {$realId}{$siteClause}";
 
-            echo json_encode(['status' => 404, 'msg' => 'Lead not found or permission denied']);
+        if (mysqli_query($connection, $sql)) {
+            echo json_encode([
+                'status'  => 200,
+                'msg'     => 'Lead status updated successfully',
+                'lead_id' => $realId,
+                'new_status' => $newStatus,
+            ]);
             exit();
         }
+
+        echo json_encode(['status' => 500, 'msg' => 'Database error during status update: ' . mysqli_error($connection)]);
+        exit();
     }
 }
 
-echo json_encode(['status' => 400, 'msg' => 'Invalid lead request parameters']);
+echo json_encode([
+    'status' => 400,
+    'msg' => 'Invalid lead request parameters',
+    'debug' => [
+        'rawLeadId' => $rawLeadId,
+        'rawStatus' => $rawStatus,
+    ],
+]);
 exit();

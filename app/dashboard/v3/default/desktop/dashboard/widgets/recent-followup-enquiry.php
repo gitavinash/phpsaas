@@ -1,85 +1,30 @@
 <?php
-
-    $userList=array();
-
-        if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, user_mobile, user_email, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_site_id=" . SITE_ID)) {
-            if (mysqli_num_rows($userInfoList) != 0) {
-                while ($data = mysqli_fetch_assoc($userInfoList)) {
-                    extract($data);
-                    $userList[]=array(
-                        'id' => $user_id,
-                        'name' => $profile_display_name,
-                        'email' => $user_email
-                    );
-                }
-            }
-        }
-
+// Dashboard V3 Upcoming Followups Widget (API Driven)
 ?>
-<div class="widget-info">
+<div class="widget-info v3-followups-widget">
     <div class="info-box">
-        <p>Upcoming followups</p>
+        <p><i class="fi fi-rr-calendar-clock"></i> Upcoming Follow-ups</p>
     </div>
-    <table class="no-margin showTableListWithoutFilter">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Mobile</th>
-                <th>Enquiry for</th>
-                <?php
-                
-                    if($site_access_type!='agent') {
-                        echo "<th>Source</th>";
-                    }
-
-                ?>
-                <th>Time</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-
-            $userFilter='';
-            
-            if($site_access_type=='administrator') {
-                $enquiryFilter=" AND enquiry_status=3";
-            } else {
-                $userFilter=" enquiry_agent='".USER_ID."' AND ";
-                $enquiryFilter=" AND enquiry_status=3";
-            }
-
-
-        if ($dataList = mysqli_query($connection, "SELECT enquiry_id, enquiry_agent, enquiry_first_name as name, enquiry_mobile, enquiry_subject, enquiry_time, enquiry_status, enquiry_source, enquiry_followup FROM ".TABLE_PREFIX."enquiry WHERE {$userFilter} enquiry_site_id=".SITE_ID." {$enquiryFilter} ORDER BY enquiry_followup ASC LIMIT 0, 5")) {
-            if (mysqli_num_rows($dataList) != 0) {
-                while ($data = mysqli_fetch_assoc($dataList)) {
-                    extract($data) ?>
-            <tr>
-                <td><?php echo $name; ?></td>
-                <td><?php echo $enquiry_mobile; ?></td>
-                <td><?php echo $enquiry_subject; ?></td>
-                <?php
-                
-                    if($site_access_type!='agent') {
-                        echo "<td>{$enquiry_source}</td>";
-                }
-
-                ?>
-                <td></span><?php echo date('d-m-Y h:i A', strtotime($enquiry_followup)); ?>
-                </td>
-                <td>
-                    <a href="leads/view/?id=<?php echo base64_encode($enquiry_id); ?>" class="btn dataTableBtn">View
-                        lead details</a>
-                </td>
-            </tr>
-            </td>
-            </tr>
-            <?php
-                }
-            }
-        }
-
-        ?>
-        </tbody>
-    </table>
+    <div class="v3-table-responsive">
+        <table class="no-margin v3-followups-table" id="recentFollowupsTable">
+            <thead>
+                <tr>
+                    <th>Lead Name</th>
+                    <th>Mobile</th>
+                    <th>Enquiry For</th>
+                    <th>Source</th>
+                    <th>Follow-up Time</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="recentFollowupsTableBody">
+                <tr>
+                    <td colspan="6" class="table-loading-state" style="text-align: center; padding: 24px; color: #64748b;">
+                        <div class="table-loading-spinner" style="margin: 0 auto 8px auto; width: 24px; height: 24px; border: 2px solid #e2e8f0; border-top-color: #0284c7; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                        Loading upcoming follow-ups...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

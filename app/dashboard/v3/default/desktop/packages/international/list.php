@@ -118,7 +118,7 @@
         </div>
 
         <div class="list-box">
-            <table class="showTableList package-v3-datatable">
+            <table class="package-v3-datatable">
                 <thead>
                     <tr>
                         <th class="col-pkg-main">Package & Details</th>
@@ -164,5 +164,3 @@
         </div>
     </div>
 </div>
-<script src="<?php echo ADMIN_JS ?>table.js"></script>
-<script src="<?php echo ADMIN_JS ?>packages.js"></script>

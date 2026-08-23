@@ -859,180 +859,563 @@ $(document).ready(function (e) {
     increaseCountingNumberAnimation(`${objectID}Value`, startVal, total, 1, 86);
   }
 
-  // High-Performance V3 Single Page Application Dashboard API Engine
-  function loadDashboardV3Data() {
-    const daterange = typeof dateRangeParams !== "undefined" ? dateRangeParams : "";
+  // High-Performance V3 Modular Dashboard API Engine
+  let lastLoadedDashboardRange = null;
 
+  // 1. Fresh Enquiries KPI
+  function loadKpiFresh(daterange) {
+    const $el = $("#totalLeadsValue");
+    if (!$el.length) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/overview/?daterange=" + encodeURIComponent(daterange),
+      url: "/api/v3/dashboard/kpis/fresh/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (res && res.status === 200 && res.count !== undefined) {
+          $el.text(res.count);
+        }
+      },
+    });
+  }
+
+  // 2. Confirmed Enquiries KPI
+  function loadKpiConfirmed(daterange) {
+    const $el = $("#totalConfirmLeadsValue, #totalConfirmedLeadsValue");
+    if (!$el.length) return;
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/kpis/confirmed/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (res && res.status === 200 && res.count !== undefined) {
+          $el.text(res.count);
+        }
+      },
+    });
+  }
+
+  // 3. Pending Enquiries KPI
+  function loadKpiPending(daterange) {
+    const $el = $("#totalPendingLeadsValue");
+    if (!$el.length) return;
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/kpis/pending/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (res && res.status === 200 && res.count !== undefined) {
+          $el.text(res.count);
+        }
+      },
+    });
+  }
+
+  // 4. Follow Up Enquiries KPI
+  function loadKpiFollowup(daterange) {
+    const $el = $("#totalFollowupLeadsValue");
+    if (!$el.length) return;
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/kpis/followup/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (res && res.status === 200 && res.count !== undefined) {
+          $el.text(res.count);
+        }
+      },
+    });
+  }
+
+  // 5. Duplicate Enquiries KPI
+  function loadKpiDuplicate(daterange) {
+    const $el = $("#totalDuplicateLeadsValue");
+    if (!$el.length) return;
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/kpis/duplicate/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (res && res.status === 200 && res.count !== undefined) {
+          $el.text(res.count);
+        }
+      },
+    });
+  }
+
+  // 6. Cancelled Enquiries KPI
+  function loadKpiCancel(daterange) {
+    const $el = $("#totalCancelLeadsValue");
+    if (!$el.length) return;
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/kpis/cancel/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (res && res.status === 200 && res.count !== undefined) {
+          $el.text(res.count);
+        }
+      },
+    });
+  }
+
+  // 7. Pending Requests KPI
+  function loadKpiPendingRequests(daterange) {
+    const $el = $("#totalPendingRequestsValue, #totalPendingRequestValue");
+    if (!$el.length) return;
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/kpis/pending-requests/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (res && res.status === 200 && res.count !== undefined) {
+          $el.text(res.count);
+        }
+      },
+    });
+  }
+
+  // 8. Conversion Rate KPI
+  function loadKpiConversionRate(daterange) {
+    const $el = $("#kpiConversionRateValue");
+    if (!$el.length) return;
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/kpis/conversion-rate/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (res && res.status === 200 && res.conversionRate !== undefined) {
+          $el.text(res.conversionRate);
+        }
+      },
+    });
+  }
+
+  // 9. Modular Revenue Summary
+  function loadDashboardRevenue(daterange) {
+    if (!$("#kpiRevenueSummaryValue").length) return;
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/revenue/?daterange=" + encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (!res || res.status !== 200) return;
+        if ($("#kpiRevenueSummaryValue").length) $("#kpiRevenueSummaryValue").text(res.totalRevenue || "₹0");
+      },
+    });
+  }
 
-        // 1. Populate KPI Counters
-        if (res.kpis) {
-          const k = res.kpis;
-          if ($("#totalLeadsValue").length) $("#totalLeadsValue").text(k.freshLeads ?? k.totalLeads ?? 0);
-          if ($("#totalConfirmLeadsValue, #totalConfirmedLeadsValue").length) {
-            $("#totalConfirmLeadsValue, #totalConfirmedLeadsValue").text(k.confirmedLeads ?? 0);
-          }
-          if ($("#totalPendingLeadsValue").length) $("#totalPendingLeadsValue").text(k.pendingLeads ?? 0);
-          if ($("#totalFollowupLeadsValue").length) $("#totalFollowupLeadsValue").text(k.followupLeads ?? 0);
-          if ($("#totalDuplicateLeadsValue").length) $("#totalDuplicateLeadsValue").text(k.duplicateLeads ?? 0);
-          if ($("#totalCancelLeadsValue").length) $("#totalCancelLeadsValue").text(k.cancelLeads ?? 0);
-          if ($("#totalPendingRequestsValue, #totalPendingRequestValue").length) {
-            $("#totalPendingRequestsValue, #totalPendingRequestValue").text(k.pendingRequests ?? 0);
-          }
-          if ($("#kpiConversionRateValue").length) $("#kpiConversionRateValue").text(k.conversionRate || "0%");
-          if ($("#kpiRevenueSummaryValue").length) $("#kpiRevenueSummaryValue").text(k.totalRevenue || "₹0");
+  // 10. Modular Enquiry Sources
+  function loadDashboardSources(daterange) {
+    if (!document.getElementById("topEnquirySource")) return;
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/sources/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (!res || res.status !== 200) return;
+        createPieChart("topEnquirySource", { labels: res.labels, data: res.data });
+      },
+    });
+  }
+
+  // 11. Modular Enquiry Performance
+  function loadDashboardPerformance(daterange) {
+    if (!document.getElementById("enquiryPerformance")) return;
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/performance/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (!res || res.status !== 200) return;
+        createPieChart("enquiryPerformance", { labels: res.labels, data: res.data });
+      },
+    });
+  }
+
+  // 12. Modular Timeline Flow Chart
+  function loadDashboardFlow(daterange) {
+    const flowContainer = document.getElementById("enquiryFlowContainer");
+    if (!flowContainer && !document.getElementById("enquiryFlowCanvas")) return;
+
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/flow/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (!res || res.status !== 200) return;
+        let flowCanvas = document.getElementById("enquiryFlowCanvas");
+        if (!flowCanvas && flowContainer) {
+          flowContainer.innerHTML = '<canvas id="enquiryFlowCanvas"></canvas>';
+          flowCanvas = document.getElementById("enquiryFlowCanvas");
+        }
+        if (!flowCanvas) return;
+
+        const flowCtx = flowCanvas.getContext("2d");
+        if (window.enquiryFlowChartInstance) {
+          window.enquiryFlowChartInstance.destroy();
+          window.enquiryFlowChartInstance = null;
+        }
+        if (typeof Chart !== "undefined") {
+          const existingFlow = typeof Chart.getChart === "function" ? Chart.getChart(flowCanvas) : flowCanvas._chartInstance;
+          if (existingFlow) existingFlow.destroy();
         }
 
-        // 2. Populate Distribution & Flow Charts
-        if (res.charts) {
-          if (res.charts.enquirySource) {
-            createPieChart("topEnquirySource", res.charts.enquirySource);
-          }
-          if (res.charts.enquiryPerformance) {
-            createPieChart("enquiryPerformance", res.charts.enquiryPerformance);
-          }
+        const flowLabels = res.labels || [];
+        const flowData = res.data || [];
 
-          // Render Enquiry Timeline Flow Chart (Line Trend)
-          const flowContainer = document.getElementById("enquiryFlowContainer");
-          if (res.charts.enquiryFlow && flowContainer) {
-            let flowCanvas = document.getElementById("enquiryFlowCanvas");
-            if (!flowCanvas) {
-              flowContainer.innerHTML = '<canvas id="enquiryFlowCanvas"></canvas>';
-              flowCanvas = document.getElementById("enquiryFlowCanvas");
-            }
-
-            if (flowCanvas) {
-              const flowCtx = flowCanvas.getContext("2d");
-
-              if (window.enquiryFlowChartInstance) {
-                window.enquiryFlowChartInstance.destroy();
-                window.enquiryFlowChartInstance = null;
-              }
-              if (typeof Chart !== "undefined") {
-                const existingFlow = typeof Chart.getChart === "function" ? Chart.getChart(flowCanvas) : flowCanvas._chartInstance;
-                if (existingFlow) existingFlow.destroy();
-              }
-
-              const flowLabels = res.charts.enquiryFlow.labels || [];
-              const flowData = res.charts.enquiryFlow.data || [];
-
-              if (flowLabels.length > 0) {
-                window.enquiryFlowChartInstance = new Chart(flowCtx, {
-                  type: "line",
-                  data: {
-                    labels: flowLabels,
-                    datasets: [
-                      {
-                        label: "Enquiries",
-                        data: flowData,
-                        borderColor: "#6366f1",
-                        backgroundColor: "rgba(99, 102, 241, 0.08)",
-                        borderWidth: 2.5,
-                        fill: true,
-                        tension: 0.35,
-                        pointRadius: 4,
-                        pointBackgroundColor: "#6366f1",
-                        pointHoverRadius: 6,
-                      },
-                    ],
-                  },
-                  options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: { display: false },
-                      tooltip: {
-                        mode: "index",
-                        intersect: false,
-                        padding: 10,
-                      },
-                    },
-                    scales: {
-                      x: {
-                        grid: { display: false },
-                        ticks: { font: { size: 11 }, color: "#64748b" },
-                      },
-                      y: {
-                        beginAtZero: true,
-                        grid: { color: "#f1f5f9" },
-                        ticks: { font: { size: 11 }, color: "#64748b" },
-                      },
-                    },
-                  },
-                });
-                flowCanvas._chartInstance = window.enquiryFlowChartInstance;
-              } else {
-                flowContainer.innerHTML = `
-                  <div class="no-data-state">
-                    <div class="no-data-icon"><i class="fi-rr-folder-open"></i></div>
-                    <p class="no-data-title">No Timeline Data Available</p>
-                    <p class="no-data-desc">No records found for the selected reporting period</p>
-                  </div>
-                `;
-              }
-            }
-          }
+        if (flowLabels.length > 0) {
+          window.enquiryFlowChartInstance = new Chart(flowCtx, {
+            type: "line",
+            data: {
+              labels: flowLabels,
+              datasets: [
+                {
+                  label: "Enquiries",
+                  data: flowData,
+                  borderColor: "#6366f1",
+                  backgroundColor: "rgba(99, 102, 241, 0.08)",
+                  borderWidth: 2.5,
+                  fill: true,
+                  tension: 0.35,
+                  pointRadius: 4,
+                  pointBackgroundColor: "#6366f1",
+                  pointHoverRadius: 6,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  mode: "index",
+                  intersect: false,
+                  padding: 10,
+                },
+              },
+              scales: {
+                x: {
+                  grid: { display: false },
+                  ticks: { font: { size: 11 }, color: "#64748b" },
+                },
+                y: {
+                  beginAtZero: true,
+                  grid: { color: "#f1f5f9" },
+                  ticks: { font: { size: 11 }, color: "#64748b" },
+                },
+              },
+            },
+          });
+          flowCanvas._chartInstance = window.enquiryFlowChartInstance;
+        } else if (flowContainer) {
+          flowContainer.innerHTML = `
+            <div class="no-data-state">
+              <div class="no-data-icon"><i class="fi-rr-folder-open"></i></div>
+              <p class="no-data-title">No Timeline Data Available</p>
+              <p class="no-data-desc">No records found for the selected reporting period</p>
+            </div>
+          `;
         }
+      },
+    });
+  }
 
-        // 3. Populate Kanban Board Cards
-        if (res.kanban && $(".kanban-widget-wrapper").length) {
-          const statuses = ["0", "2", "3", "1"];
-          statuses.forEach((st) => {
-            const container = $(`#kanban-container-${st}`);
-            const countPill = $(`#kanban-count-${st}`);
-            const rawItems = res.kanban[st];
-            const items = Array.isArray(rawItems) ? rawItems : [];
+  // 13. Modular Upcoming Follow-ups Table
+  function loadDashboardFollowups() {
+    const $followupsBody = $("#recentFollowupsTableBody");
+    if (!$followupsBody.length) return;
 
-            countPill.text(items.length);
-            const columnCol = container.closest(".kanban-column");
-            columnCol.find(".kanban-load-more-btn").remove();
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/dashboard/followups/",
+      dataType: "json",
+      success: function (res) {
+        if (!res || res.status !== 200) return;
+        const followupsList = Array.isArray(res.followups) ? res.followups : [];
+        $followupsBody.empty();
 
-            container.empty();
-
-            if (items.length === 0) {
-              const labelMap = { "0": "fresh", "2": "pending", "3": "follow-up", "1": "confirmed" };
-              container.html(`<div class="kanban-empty-drop-zone">Drop ${labelMap[st] || "leads"} here</div>`);
-            } else {
-              items.forEach((item) => {
-                const sourceTag = item.source ? `<span class="kanban-source-pill">${item.source}</span>` : "";
-                const mobileLink = item.mobile && item.mobile !== "N/A" ? `<a href="tel:${item.mobile}"><i class="fi-rr-phone-call"></i> ${item.mobile}</a>` : "";
-
-                const cardHtml = `
-                  <div class="kanban-card" draggable="true" data-lead-id="${item.encoded_id}" data-status="${st}">
-                    <div class="kanban-card-head">
-                      <span class="kanban-customer-name">${item.name}</span>
-                      <div class="kanban-card-drag-indicator">
-                        ${sourceTag}
-                        <i class="fi-rr-apps-sort drag-grip-icon" title="Drag card"></i>
-                      </div>
-                    </div>
-                    <div class="kanban-card-subject">${item.subject}</div>
-                    ${mobileLink ? `<div class="kanban-card-contact">${mobileLink}</div>` : ""}
-                    <div class="kanban-card-actions-bar">
-                      <span><i class="fi-rr-clock"></i> ${item.time}</span>
-                      <a href="leads/view/?id=${item.encoded_id}" class="btn-kanban-action"><i class="fi-rr-eye"></i> Details</a>
-                    </div>
-                  </div>
-                `;
-                container.append(cardHtml);
-              });
-
-              if (items.length >= 10) {
-                columnCol.append(`<button class="kanban-load-more-btn" data-status="${st}">Load More</button>`);
-              }
-            }
+        if (followupsList.length === 0) {
+          $followupsBody.html(`
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 24px; color: #64748b;">
+                <i class="fi fi-rr-check-circle" style="color: #10b981; font-size: 20px; display: block; margin-bottom: 4px;"></i>
+                No upcoming follow-ups scheduled.
+              </td>
+            </tr>
+          `);
+        } else {
+          followupsList.forEach((item) => {
+            const rowHtml = `
+              <tr>
+                <td><strong>${item.name}</strong></td>
+                <td>${item.mobile !== "N/A" ? `<a href="tel:${item.mobile}"><i class="fi fi-rr-phone-call"></i> ${item.mobile}</a>` : '<span style="color:#94a3b8;">N/A</span>'}</td>
+                <td>${item.subject}</td>
+                <td><span class="v3-source-badge" style="background:#f1f5f9; color:#475569; padding:3px 8px; border-radius:6px; font-size:12px;">${item.source}</span></td>
+                <td><span style="color:#0284c7; font-weight:600;"><i class="fi fi-rr-calendar"></i> ${item.time}</span></td>
+                <td style="text-align: right;">
+                  <a href="leads/view/?id=${item.encoded_id}" class="btn dataTableBtn" style="padding: 4px 10px; font-size: 12px;">
+                    View Details
+                  </a>
+                </td>
+              </tr>
+            `;
+            $followupsBody.append(rowHtml);
           });
         }
       },
-      error: function (err) {
-        console.log("V3 Dashboard API Load Error:", err);
+    });
+  }
+
+  // 14. Modular Kanban Board Data & Interactive CTAs
+  function renderKanbanCard(item, st) {
+    const rawName = item.name && item.name.trim() !== "" ? item.name.trim() : (item.customer_name || item.lead_name || "Customer");
+    const customerName = rawName.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+    const sourceTag = item.source ? `<span class="kanban-source-pill">${item.source}</span>` : "";
+    const cleanPhone = (item.mobile && item.mobile !== "N/A") ? item.mobile.replace(/[^0-9+]/g, "") : "";
+    const waPhone = cleanPhone.startsWith("+") ? cleanPhone.substring(1) : (cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone);
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+    // 1. Call Button (Mobile: direct call, Desktop: reveals/copies number)
+    let callBtnHtml = "";
+    if (cleanPhone) {
+      if (isMobile) {
+        callBtnHtml = `
+          <a href="tel:${cleanPhone}" class="kanban-cta-btn cta-call" title="Call ${customerName}">
+            <i class="fi fi-rr-phone-call"></i> Call
+          </a>
+        `;
+      } else {
+        callBtnHtml = `
+          <button type="button" class="kanban-cta-btn cta-call btn-kanban-call-desktop" data-phone="${cleanPhone}" data-original-text="Call" title="Click to copy: ${item.mobile}">
+            <i class="fi fi-rr-phone-call"></i> <span class="call-btn-label">Call</span>
+          </button>
+        `;
+      }
+    }
+
+    // 2. WhatsApp CTA
+    let whatsappBtnHtml = "";
+    if (cleanPhone) {
+      whatsappBtnHtml = `
+        <a href="https://api.whatsapp.com/send?phone=${waPhone}&text=Hello%20${encodeURIComponent(customerName)},%20regarding%20your%20travel%20enquiry" target="_blank" class="kanban-cta-btn cta-whatsapp" title="Chat on WhatsApp">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: -1px; flex-shrink: 0;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg> WhatsApp
+        </a>
+      `;
+    }
+
+    // 3. Quick Stage Advance Button (Explicit Clear Action)
+    let advanceBtnHtml = "";
+    if (st === "0") {
+      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="2" data-stage-name="Pending" title="Move status to Pending"><i class="fi fi-rr-arrow-right"></i> Move to Pending</button>`;
+    } else if (st === "2") {
+      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="3" data-stage-name="Follow Up" title="Move status to Follow Up"><i class="fi fi-rr-arrow-right"></i> Move to Follow Up</button>`;
+    } else if (st === "3") {
+      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance cta-confirm btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="1" data-stage-name="Confirmed" title="Confirm Booking for this lead"><i class="fi fi-rr-check-circle"></i> Confirm Booking</button>`;
+    } else if (st === "1") {
+      advanceBtnHtml = `<span class="kanban-won-badge"><i class="fi fi-rr-check-circle"></i> Confirmed Booking</span>`;
+    }
+
+    // 4. Assign Agent, Lost, and Duplicate Buttons (ONLY ON FRESH STAGE st === "0")
+    let assignBtnHtml = "";
+    let lostBtnHtml = "";
+    let duplicateBtnHtml = "";
+
+    if (st === "0") {
+      assignBtnHtml = `<button type="button" class="kanban-cta-btn cta-assign btn-kanban-assign-trigger" data-lead-id="${item.encoded_id}" data-lead-name="${customerName}" title="Assign lead to team member"><i class="fi fi-rr-user"></i> Assign</button>`;
+      lostBtnHtml = `<button type="button" class="kanban-cta-btn cta-lost btn-kanban-confirm-status" data-lead-id="${item.encoded_id}" data-status="5" data-action-name="Lost / Not Interested" title="Mark as Lost (Not Interested)"><i class="fi fi-rr-cross"></i> Lost</button>`;
+      duplicateBtnHtml = `<button type="button" class="kanban-cta-btn cta-duplicate btn-kanban-confirm-status" data-lead-id="${item.encoded_id}" data-status="4" data-action-name="Duplicate" title="Mark as Duplicate"><i class="fi fi-rr-copy"></i> Duplicate</button>`;
+    }
+
+    // Primary Row CTAs
+    const primaryCtas = [callBtnHtml, whatsappBtnHtml, assignBtnHtml].filter(Boolean).join("");
+    // Secondary Stage Actions
+    const secondaryCtas = [advanceBtnHtml, lostBtnHtml, duplicateBtnHtml].filter(Boolean).join("");
+
+    const jsonStr = encodeURIComponent(JSON.stringify(item));
+
+    return `
+      <div class="kanban-card" draggable="true" data-lead-id="${item.encoded_id}" data-status="${st}" data-lead-json="${jsonStr}">
+        <div class="kanban-card-head">
+          <span class="kanban-customer-name">${customerName}</span>
+          <div class="kanban-card-drag-indicator">
+            ${sourceTag}
+            <i class="fi fi-rr-apps-sort drag-grip-icon" title="Drag card"></i>
+          </div>
+        </div>
+        <div class="kanban-card-subject">
+          <i class="fi fi-rr-map-marker"></i> ${item.subject}
+        </div>
+        ${primaryCtas ? `<div class="kanban-quick-cta-row">${primaryCtas}</div>` : ""}
+        ${secondaryCtas ? `<div class="kanban-quick-cta-row">${secondaryCtas}</div>` : ""}
+        <div class="kanban-card-actions-bar">
+          <span class="kanban-card-time"><i class="fi fi-rr-clock"></i> ${item.time}</span>
+          <a href="leads/view/?id=${item.encoded_id}" class="btn-kanban-action">
+            <i class="fi fi-rr-eye"></i> Details
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  // SPA In-Place Kanban DOM Helpers
+  function updateKanbanCounts() {
+    const statuses = ["0", "2", "3", "1"];
+    statuses.forEach((st) => {
+      const count = $(`#kanban-container-${st}`).find(".kanban-card").length;
+      $(`#kanban-count-${st}`).text(count);
+    });
+  }
+
+  function checkKanbanEmptyStates() {
+    const statuses = ["0", "2", "3", "1"];
+    const labelMap = { "0": "fresh", "2": "pending", "3": "follow-up", "1": "confirmed" };
+    statuses.forEach((st) => {
+      const container = $(`#kanban-container-${st}`);
+      if (container.find(".kanban-card").length === 0) {
+        if (!container.find(".kanban-empty-drop-zone").length) {
+          container.html(`<div class="kanban-empty-drop-zone">Drop ${labelMap[st] || "leads"} here</div>`);
+        }
+      } else {
+        container.find(".kanban-empty-drop-zone").remove();
+      }
+    });
+  }
+
+  function moveKanbanCardDom(leadId, targetStatus) {
+    const $card = $(`.kanban-card[data-lead-id="${leadId}"]`);
+    if (!$card.length) return;
+
+    const st = String(targetStatus);
+    const targetContainer = $(`#kanban-container-${st}`);
+    targetContainer.find(".kanban-empty-drop-zone").remove();
+
+    let leadData = null;
+    const rawJson = $card.attr("data-lead-json");
+    if (rawJson) {
+      try {
+        leadData = JSON.parse(decodeURIComponent(rawJson));
+      } catch (e) {
+        try {
+          leadData = JSON.parse(rawJson);
+        } catch (err) {}
+      }
+    }
+
+    if (!leadData || !leadData.encoded_id) {
+      leadData = {
+        encoded_id: leadId,
+        name: $card.find(".kanban-customer-name").text().trim(),
+        subject: $card.find(".kanban-card-subject").text().trim(),
+        time: $card.find(".kanban-card-time").text().trim(),
+        mobile: $card.find(".btn-kanban-call-desktop").attr("data-phone") || "",
+        source: $card.find(".kanban-source-pill").text().trim(),
+        status: st,
+      };
+    } else {
+      leadData.status = st;
+    }
+
+    const newCardEl = $(renderKanbanCard(leadData, st));
+    newCardEl.css("display", "none");
+    targetContainer.prepend(newCardEl);
+    newCardEl.fadeIn(250);
+
+    $card.fadeOut(200, function () {
+      $(this).remove();
+      updateKanbanCounts();
+      checkKanbanEmptyStates();
+    });
+  }
+
+  function removeKanbanCardDom(leadId) {
+    const $card = $(`.kanban-card[data-lead-id="${leadId}"]`);
+    if (!$card.length) return;
+
+    $card.fadeOut(250, function () {
+      $(this).remove();
+      updateKanbanCounts();
+      checkKanbanEmptyStates();
+    });
+  }
+
+  function renderKanbanBoardGrouped(boardData) {
+    if (!boardData) return;
+    const statuses = ["0", "2", "3", "1"];
+    statuses.forEach((st) => {
+      const container = $(`#kanban-container-${st}`);
+      const countPill = $(`#kanban-count-${st}`);
+      const items = Array.isArray(boardData[st]) ? boardData[st] : [];
+
+      countPill.text(items.length);
+      const columnCol = container.closest(".kanban-column");
+      columnCol.find(".kanban-load-more-btn").remove();
+      container.empty();
+
+      if (items.length === 0) {
+        const labelMap = { "0": "fresh", "2": "pending", "3": "follow-up", "1": "confirmed" };
+        container.html(`<div class="kanban-empty-drop-zone">Drop ${labelMap[st] || "leads"} here</div>`);
+      } else {
+        items.forEach((item) => {
+          container.append(renderKanbanCard(item, st));
+        });
+
+        if (items.length >= 10) {
+          columnCol.append(`<button class="kanban-load-more-btn" data-status="${st}">Load More</button>`);
+        }
+      }
+    });
+  }
+
+  function loadDashboardKanban(daterange) {
+    if (!$(".kanban-widget-wrapper").length) return;
+
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/leads/kanban/?daterange=" + encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (!res) return;
+        let boardData = res.data || res.grouped;
+        if (Array.isArray(res.data) && !res.grouped) {
+          boardData = { "0": [], "2": [], "3": [], "1": [] };
+          res.data.forEach((lead) => {
+            const st = String(lead.status);
+            if (boardData[st]) {
+              boardData[st].push(lead);
+            }
+          });
+        }
+        renderKanbanBoardGrouped(boardData);
       },
     });
+  }
+
+  // Dashboard Aggregator Orchestrator
+  function loadDashboardV3Data(force) {
+    const daterange = typeof dateRangeParams !== "undefined" ? dateRangeParams : "";
+    if (!force && lastLoadedDashboardRange === daterange) {
+      return;
+    }
+    lastLoadedDashboardRange = daterange;
+
+    // Load each KPI independently
+    loadKpiFresh(daterange);
+    loadKpiConfirmed(daterange);
+    loadKpiPending(daterange);
+    loadKpiFollowup(daterange);
+    loadKpiDuplicate(daterange);
+    loadKpiCancel(daterange);
+    loadKpiPendingRequests(daterange);
+    loadKpiConversionRate(daterange);
+    loadDashboardRevenue(daterange);
+
+    // Load Charts, Follow-ups, and Kanban Board
+    loadDashboardSources(daterange);
+    loadDashboardPerformance(daterange);
+    loadDashboardFlow(daterange);
+    loadDashboardFollowups();
+    loadDashboardKanban(daterange);
   }
   window.loadDashboardV3Data = loadDashboardV3Data;
 
@@ -1075,27 +1458,7 @@ $(document).ready(function (e) {
       success: function (res) {
         if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
           res.data.forEach((item) => {
-            const sourceTag = item.source ? `<span class="kanban-source-pill">${item.source}</span>` : "";
-            const mobileLink = item.mobile && item.mobile !== "N/A" ? `<a href="tel:${item.mobile}"><i class="fi-rr-phone-call"></i> ${item.mobile}</a>` : "";
-
-            const cardHtml = `
-              <div class="kanban-card" draggable="true" data-lead-id="${item.encoded_id}" data-status="${status}">
-                <div class="kanban-card-head">
-                  <span class="kanban-customer-name">${item.name}</span>
-                  <div class="kanban-card-drag-indicator">
-                    ${sourceTag}
-                    <i class="fi-rr-apps-sort drag-grip-icon" title="Drag card"></i>
-                  </div>
-                </div>
-                <div class="kanban-card-subject">${item.subject}</div>
-                ${mobileLink ? `<div class="kanban-card-contact">${mobileLink}</div>` : ""}
-                <div class="kanban-card-actions-bar">
-                  <span><i class="fi-rr-clock"></i> ${item.time}</span>
-                  <a href="leads/view/?id=${item.encoded_id}" class="btn-kanban-action"><i class="fi-rr-eye"></i> Details</a>
-                </div>
-              </div>
-            `;
-            container.append(cardHtml);
+            container.append(renderKanbanCard(item, status));
           });
           btn.text("Load More");
         } else {
@@ -1104,6 +1467,337 @@ $(document).ready(function (e) {
       },
       error: function () {
         btn.text("Load More");
+      },
+    });
+  });
+
+  // CTA Event 1: Desktop Phone Click to Reveal and Copy Number
+  $(document).on("click", ".btn-kanban-call-desktop", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const btn = $(this);
+    const phone = btn.attr("data-phone");
+    if (!phone) return;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(phone);
+    }
+    btn.find(".call-btn-label").text(phone);
+    btn.addClass("copied");
+
+    setTimeout(() => {
+      btn.find(".call-btn-label").text(btn.attr("data-original-text") || "Call");
+      btn.removeClass("copied");
+    }, 2500);
+  });
+
+  // CTA Event 2: Quick Status Change & Stage Advance with Clear Feedback
+  $(document).on("click", ".btn-kanban-quick-status, .btn-kanban-advance", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const btn = $(this);
+    const leadId = btn.attr("data-lead-id");
+    const targetStatus = btn.attr("data-target-status") || btn.attr("data-status");
+    const stageName = btn.attr("data-stage-name") || "next stage";
+    if (!leadId || targetStatus === undefined) return;
+
+    const originalHtml = btn.html();
+    btn.html(`<i class="fi fi-rr-spinner fi-rr-spin"></i> Moving...`).prop("disabled", true).css("opacity", 0.7);
+
+    $.ajax({
+      type: "POST",
+      url: "/api/v3/leads/update-status/",
+      data: { leadId: leadId, status: targetStatus },
+      dataType: "json",
+      success: function (res) {
+        if (res && res.status === 200) {
+          moveKanbanCardDom(leadId, targetStatus);
+        } else {
+          btn.html(originalHtml).prop("disabled", false).css("opacity", 1);
+        }
+      },
+      error: function () {
+        btn.html(originalHtml).prop("disabled", false).css("opacity", 1);
+      },
+    });
+  });
+
+  // CTA Event 3: Confirm Status Change for Lost & Duplicate using SweetAlert
+  $(document).on("click", ".btn-kanban-confirm-status", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const btn = $(this);
+    const leadId = btn.attr("data-lead-id");
+    const targetStatus = btn.attr("data-status");
+    const actionName = btn.attr("data-action-name") || "this status";
+
+    const doUpdate = () => {
+      const originalHtml = btn.html();
+      btn.html(`<i class="fi fi-rr-spinner fi-rr-spin"></i> Updating...`).prop("disabled", true).css("opacity", 0.6);
+
+      $.ajax({
+        type: "POST",
+        url: "/api/v3/leads/update-status/",
+        data: { leadId: leadId, status: targetStatus },
+        dataType: "json",
+        success: function (res) {
+          if (res && res.status === 200) {
+            removeKanbanCardDom(leadId);
+            if (typeof Swal !== "undefined") {
+              Swal.fire({
+                type: "success",
+                icon: "success",
+                title: `Marked as ${actionName}`,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          } else {
+            btn.html(originalHtml).prop("disabled", false).css("opacity", 1);
+            if (typeof Swal !== "undefined") {
+              Swal.fire({
+                type: "error",
+                icon: "error",
+                title: "Failed to update",
+                text: (res && res.msg) ? res.msg : "Could not update lead status.",
+              });
+            }
+          }
+        },
+        error: function () {
+          btn.html(originalHtml).prop("disabled", false).css("opacity", 1);
+          if (typeof Swal !== "undefined") {
+            Swal.fire({
+              type: "error",
+              icon: "error",
+              title: "Error",
+              text: "An error occurred while updating status.",
+            });
+          }
+        },
+      });
+    };
+
+    if (typeof Swal !== "undefined") {
+      Swal.fire({
+        title: `Mark as ${actionName}?`,
+        text: "This lead will be removed from the active pipeline.",
+        type: "warning",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: targetStatus === "5" ? "#dc2626" : "#64748b",
+        cancelButtonColor: "#94a3b8",
+        confirmButtonText: `Yes, mark as ${actionName}`,
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result && (result.value || result.isConfirmed === true || result === true)) {
+          doUpdate();
+        }
+      });
+    } else {
+      doUpdate();
+    }
+  });
+
+  // Helper functions for user avatars in Select2
+  function getInitials(name) {
+    if (!name) return "U";
+    const parts = name.trim().split(" ");
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  }
+
+  function getAvatarColor(str) {
+    const colors = ["#0284c7", "#0d9488", "#7c3aed", "#d97706", "#e11d48", "#2563eb", "#059669", "#4f46e5"];
+    let hash = 0;
+    for (let i = 0; i < (str || "").length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+  }
+
+  // CTA Event 4: Quick Assign Agent Modal (Rich Select2 UI with Leads List parity)
+  $(document).on("click", ".btn-kanban-assign-trigger", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const btn = $(this);
+    const leadId = btn.attr("data-lead-id");
+    const leadName = btn.attr("data-lead-name") || "Lead";
+
+    // Clean up any existing overlay
+    if ($("#kanbanAssignSelect").data("select2")) {
+      try { $("#kanbanAssignSelect").select2("destroy"); } catch (err) {}
+    }
+    $("#kanbanAssignOverlay").remove();
+
+    // Fetch active team members
+    $.ajax({
+      type: "GET",
+      url: "/api/v3/leads/agents/",
+      dataType: "json",
+      success: function (res) {
+        const agents = (res && Array.isArray(res.agents)) ? res.agents : [];
+        let optionsHtml = '<option value="0">-- Select Team Member --</option>';
+        
+        agents.forEach((ag) => {
+          const initials = getInitials(ag.name);
+          const color = getAvatarColor(ag.name || ag.email);
+          const role = ag.role || "Team Member";
+          optionsHtml += `<option value="${ag.id}" data-name="${ag.name}" data-email="${ag.email || ''}" data-role="${role}" data-initials="${initials}" data-color="${color}">${ag.name} (${ag.email || role})</option>`;
+        });
+
+        const modalHtml = `
+          <div class="kanban-assign-overlay" id="kanbanAssignOverlay">
+            <div class="kanban-assign-card">
+              <div class="kanban-assign-header">
+                <div class="assign-icon-bubble">
+                  <i class="fi fi-rr-user-add"></i>
+                </div>
+                <div>
+                  <h4 class="kanban-assign-heading">Assign Lead</h4>
+                  <p class="kanban-assign-subheading">Assign <span class="assign-lead-tag">${leadName}</span> to a team member</p>
+                </div>
+                <button type="button" class="btn-close-assign" id="closeKanbanAssignBtn" title="Close dialog">&times;</button>
+              </div>
+              <div class="assign-form-group">
+                <label>Select Team Member</label>
+                <select id="kanbanAssignSelect" class="selectJS form-control" style="width: 100%;">
+                  ${optionsHtml}
+                </select>
+              </div>
+              <div class="kanban-assign-footer">
+                <button type="button" class="btn-assign-cancel" id="cancelKanbanAssignBtn">Cancel</button>
+                <button type="button" class="btn-assign-submit" id="submitKanbanAssignBtn" data-lead-id="${leadId}">
+                  <i class="fi fi-rr-check"></i> Assign Lead
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        $("body").append(modalHtml);
+
+        // Initialize Select2 with custom rich template
+        if (typeof $.fn.select2 !== "undefined") {
+          $("#kanbanAssignSelect").select2({
+            dropdownParent: $("#kanbanAssignOverlay"),
+            placeholder: "Search team member by name or email...",
+            width: "100%",
+            templateResult: function (data) {
+              if (!data.id || data.id === "0") {
+                return data.text;
+              }
+              const elem = $(data.element);
+              const name = elem.attr("data-name") || data.text;
+              const email = elem.attr("data-email") || "";
+              const role = elem.attr("data-role") || "Team Member";
+              const initials = elem.attr("data-initials") || "U";
+              const color = elem.attr("data-color") || "#0284c7";
+
+              return $(`
+                <div class="select2-user-item">
+                  <div class="select2-user-avatar" style="background-color: ${color};">${initials}</div>
+                  <div class="select2-user-meta">
+                    <span class="select2-user-name">${name}</span>
+                    <div class="select2-user-sub">
+                      <span class="select2-user-role-badge">${role}</span>
+                      ${email ? `<span>• ${email}</span>` : ""}
+                    </div>
+                  </div>
+                </div>
+              `);
+            },
+            templateSelection: function (data) {
+              if (!data.id || data.id === "0") {
+                return data.text;
+              }
+              const elem = $(data.element);
+              const name = elem.attr("data-name") || data.text;
+              const email = elem.attr("data-email") || "";
+              return `${name} ${email ? "(" + email + ")" : ""}`;
+            },
+            escapeMarkup: function (m) {
+              return m;
+            },
+          });
+        }
+      },
+    });
+  });
+
+  $(document).on("click", "#closeKanbanAssignBtn, #cancelKanbanAssignBtn", function () {
+    if ($("#kanbanAssignSelect").data("select2")) {
+      try { $("#kanbanAssignSelect").select2("destroy"); } catch (err) {}
+    }
+    $("#kanbanAssignOverlay").remove();
+  });
+
+  $(document).on("click", "#submitKanbanAssignBtn", function () {
+    const submitBtn = $(this);
+    const leadId = submitBtn.attr("data-lead-id");
+    const agentId = $("#kanbanAssignSelect").val();
+    const selectedOption = $("#kanbanAssignSelect option:selected");
+    const agentName = selectedOption.attr("data-name") || selectedOption.text();
+
+    if (!agentId || agentId === "0") {
+      if (typeof Swal !== "undefined") {
+        Swal.fire({
+          type: "warning",
+          icon: "warning",
+          title: "Select Team Member",
+          text: "Please select a user to assign this lead to.",
+        });
+      }
+      return;
+    }
+
+    submitBtn.html('<i class="fi fi-rr-spinner fi-rr-spin"></i> Assigning...').prop("disabled", true);
+
+    $.ajax({
+      type: "POST",
+      url: "/api/v3/leads/assign/",
+      data: { leadId: leadId, agentId: agentId },
+      dataType: "json",
+      success: function (res) {
+        if ($("#kanbanAssignSelect").data("select2")) {
+          try { $("#kanbanAssignSelect").select2("destroy"); } catch (err) {}
+        }
+        $("#kanbanAssignOverlay").remove();
+
+        if (res && res.status === 200) {
+          moveKanbanCardDom(leadId, "2");
+          if (typeof Swal !== "undefined") {
+            Swal.fire({
+              type: "success",
+              icon: "success",
+              title: "Lead Assigned",
+              text: `Lead successfully assigned to ${agentName}.`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        } else {
+          if (typeof Swal !== "undefined") {
+            Swal.fire({
+              type: "error",
+              icon: "error",
+              title: "Assignment Failed",
+              text: (res && res.message) ? res.message : ((res && res.msg) ? res.msg : "Failed to assign lead to user."),
+            });
+          }
+        }
+      },
+      error: function () {
+        submitBtn.html('<i class="fi fi-rr-check"></i> Assign Lead').prop("disabled", false);
+        if (typeof Swal !== "undefined") {
+          Swal.fire({
+            type: "error",
+            icon: "error",
+            title: "Error",
+            text: "An error occurred during assignment.",
+          });
+        }
       },
     });
   });
@@ -1229,8 +1923,15 @@ $(document).ready(function (e) {
   function initDataTables() {
     if (typeof $.fn.DataTable === "undefined") return;
 
+    if ($.fn.dataTable && $.fn.dataTable.ext) {
+      $.fn.dataTable.ext.errMode = "none";
+    }
+
     if ($(".showTableList").length) {
       $(".showTableList").each(function () {
+        if ($(this).hasClass("package-v3-datatable") || $(this).closest(".package-table-card").length > 0) {
+          return;
+        }
         if (!$.fn.DataTable.isDataTable(this)) {
           const isPkgV3 = $(this).hasClass("package-v3-datatable") || $(this).closest(".package-table-card").length > 0;
           $(this).DataTable({
@@ -1630,9 +2331,7 @@ $(document).ready(function (e) {
   function initKanbanBoard() {
     let draggedCard = null;
 
-    loadKanbanBoardData();
-
-    $(document).on("dragstart", ".kanban-card", function (e) {
+    $(document).off("dragstart.kanban").on("dragstart.kanban", ".kanban-card", function (e) {
       draggedCard = this;
       $(this).addClass("is-dragging");
       if (e.originalEvent && e.originalEvent.dataTransfer) {
@@ -1671,17 +2370,9 @@ $(document).ready(function (e) {
         const oldStatus = $(draggedCard).attr("data-status");
         if (oldStatus === newStatus) return;
 
-        // Remove empty drop zone placeholder if present
-        targetContainer.find(".kanban-empty-drop-zone").remove();
-
-        // Move card DOM element into new column container
-        $(draggedCard).attr("data-status", newStatus).detach().appendTo(targetContainer);
-
-        // Update column counts live
-        updateKanbanCounts();
+        const leadId = $(draggedCard).attr("data-lead-id");
 
         // Send AJAX request to update lead status in database via API v3
-        const leadId = $(draggedCard).attr("data-lead-id");
         $.ajax({
           type: "POST",
           url: "/api/v3/leads/update-status/",
@@ -1690,7 +2381,7 @@ $(document).ready(function (e) {
             status: newStatus,
           },
           success: function (res) {
-            console.log("Lead status updated via API v3:", newStatus);
+            moveKanbanCardDom(leadId, newStatus);
           },
           error: function (err) {
             console.log("Lead status API update notice:", err);
@@ -1707,6 +2398,118 @@ $(document).ready(function (e) {
       });
     }
   }
+
+  // Kanban Real-time Instant & Database Deep Search
+  let kanbanSearchTimer = null;
+  let kanbanSearchXhr = null;
+
+  $(document).on("input", "#kanbanSearchInput, .kanban-search-input", function () {
+    const rawVal = $(this).val();
+    const query = rawVal.trim();
+    const clearBtn = $("#kanbanSearchClearBtn, .kanban-search-clear-btn");
+
+    if (query.length > 0) {
+      clearBtn.show();
+    } else {
+      clearBtn.hide();
+    }
+
+    // Step 1: Instant Client-Side DOM filter on currently rendered cards
+    const statuses = ["0", "2", "3", "1"];
+    let totalClientMatches = 0;
+    statuses.forEach((st) => {
+      const container = $(`#kanban-container-${st}`);
+      const cards = container.find(".kanban-card");
+      let visibleCount = 0;
+
+      cards.each(function () {
+        const card = $(this);
+        let leadText = card.text();
+        const rawJson = card.attr("data-lead-json");
+        if (rawJson) {
+          try {
+            const parsed = JSON.parse(decodeURIComponent(rawJson));
+            leadText += " " + Object.values(parsed).join(" ");
+          } catch (e) {
+            try {
+              const parsed = JSON.parse(rawJson);
+              leadText += " " + Object.values(parsed).join(" ");
+            } catch (err) {}
+          }
+        }
+        leadText = leadText.toLowerCase();
+
+        if (!query || leadText.includes(query.toLowerCase())) {
+          card.removeClass("is-hidden-by-search");
+          visibleCount++;
+          totalClientMatches++;
+        } else {
+          card.addClass("is-hidden-by-search");
+        }
+      });
+
+      const countPill = $(`#kanban-count-${st}`);
+      countPill.text(query ? visibleCount : cards.length);
+
+      container.find(".kanban-no-search-results").remove();
+      if (query && cards.length > 0 && visibleCount === 0) {
+        container.append('<div class="kanban-no-search-results">Searching database...</div>');
+      }
+    });
+
+    // Step 2: Debounced Server-side Database Search
+    if (kanbanSearchTimer) {
+      clearTimeout(kanbanSearchTimer);
+    }
+    if (kanbanSearchXhr) {
+      kanbanSearchXhr.abort();
+      kanbanSearchXhr = null;
+    }
+
+    if (!query) {
+      // Search cleared -> restore original date range board
+      const daterange = typeof dateRangeParams !== "undefined" ? dateRangeParams : "";
+      loadDashboardKanban(daterange);
+      return;
+    }
+
+    kanbanSearchTimer = setTimeout(() => {
+      kanbanSearchXhr = $.ajax({
+        type: "GET",
+        url: "/api/v3/leads/kanban/?search=" + encodeURIComponent(query),
+        dataType: "json",
+        success: function (res) {
+          // Verify user hasn't changed query while request was in-flight
+          const currentVal = $("#kanbanSearchInput, .kanban-search-input").val().trim();
+          if (currentVal !== query) return;
+
+          if (res && res.data) {
+            renderKanbanBoardGrouped(res.data);
+
+            let totalFound = 0;
+            statuses.forEach((st) => {
+              totalFound += (res.data[st] ? res.data[st].length : 0);
+            });
+
+            if (totalFound === 0) {
+              statuses.forEach((st) => {
+                const container = $(`#kanban-container-${st}`);
+                container.html(`<div class="kanban-no-search-results">No matching leads in database</div>`);
+              });
+            }
+          }
+        },
+        error: function (xhr, status) {
+          if (status === "abort") return;
+        },
+      });
+    }, 300);
+  });
+
+  $(document).on("click", "#kanbanSearchClearBtn, .kanban-search-clear-btn", function (e) {
+    e.preventDefault();
+    $("#kanbanSearchInput, .kanban-search-input").val("").trigger("input");
+  });
 
   initKanbanBoard();
 
@@ -2766,7 +3569,38 @@ $(document).ready(function (e) {
     }
   });
 
-  // Modular V3 Component & Table Auto-Initializer (Instant SPA Support)
+  // Modular V3 Script Registry & Component Auto-Initializer (Instant SPA Support)
+  const v3LoadedScripts = {};
+
+  function ensureScriptLoaded(url, callback) {
+    if (v3LoadedScripts[url] === "loaded") {
+      if (typeof callback === "function") callback();
+      return;
+    }
+    if (Array.isArray(v3LoadedScripts[url])) {
+      v3LoadedScripts[url].push(callback);
+      return;
+    }
+    v3LoadedScripts[url] = [callback];
+    $.ajax({
+      url: url,
+      dataType: "script",
+      cache: true,
+      success: function () {
+        const callbacks = v3LoadedScripts[url];
+        v3LoadedScripts[url] = "loaded";
+        if (Array.isArray(callbacks)) {
+          callbacks.forEach(function (cb) {
+            if (typeof cb === "function") cb();
+          });
+        }
+      },
+      error: function () {
+        v3LoadedScripts[url] = null;
+      },
+    });
+  }
+
   window.initV3PageModules = function () {
     const ADMIN_JS = "/app/dashboard/v3/default/desktop/assets/js/";
 
@@ -2775,8 +3609,8 @@ $(document).ready(function (e) {
     if ($gallery.length > 0) {
       if (window.V3Gallery && typeof window.V3Gallery.autoInit === "function") {
         window.V3Gallery.autoInit();
-      } else if (window.jQuery && typeof window.jQuery.getScript === "function") {
-        window.jQuery.getScript(ADMIN_JS + "gallery.js", function () {
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "gallery.js", function () {
           if (window.V3Gallery && typeof window.V3Gallery.autoInit === "function") {
             window.V3Gallery.autoInit();
           }
@@ -2785,13 +3619,13 @@ $(document).ready(function (e) {
     }
 
     // 2. Tour Packages & DataTable Module
-    const $packages = $("#packageListApp, .package-page-wrapper[data-package-type]");
+    const $packages = $("#packageListApp, .package-list-wrapper");
     if ($packages.length > 0) {
       if (window.V3Packages && typeof window.V3Packages.autoInit === "function") {
         window.V3Packages.autoInit();
-      } else if (window.jQuery && typeof window.jQuery.getScript === "function") {
-        window.jQuery.getScript(ADMIN_JS + "table.js", function () {
-          window.jQuery.getScript(ADMIN_JS + "packages.js", function () {
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "table.js", function () {
+          ensureScriptLoaded(ADMIN_JS + "packages.js", function () {
             if (window.V3Packages && typeof window.V3Packages.autoInit === "function") {
               window.V3Packages.autoInit();
             }
@@ -2799,10 +3633,25 @@ $(document).ready(function (e) {
         });
       }
     }
+
+    // 3. Package Edit Module
+    const $pkgEdit = $("#packageEditApp, .package-edit-wrapper");
+    if ($pkgEdit.length > 0) {
+      if (window.V3PackageEdit && typeof window.V3PackageEdit.init === "function") {
+        window.V3PackageEdit.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "package-edit.js", function () {
+          if (window.V3PackageEdit && typeof window.V3PackageEdit.init === "function") {
+            window.V3PackageEdit.init();
+          }
+        });
+      }
+    }
   };
 
   // Re-run component initialization on every SPA page load
   $(document).on("spa:loaded", function () {
+    lastLoadedDashboardRange = null;
     if (typeof window.initAppComponents === "function") {
       window.initAppComponents();
     }
@@ -2938,7 +3787,7 @@ $(document).ready(function (e) {
 
         updateActiveSidebar(url);
 
-        const scripts = newContainer.querySelectorAll('script');
+        const scripts = container.querySelectorAll('script');
         scripts.forEach(oldScript => {
           const newScript = document.createElement('script');
           Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));

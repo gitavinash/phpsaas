@@ -8,3 +8,4 @@ custom.log
 error.log
 *.log
 .ftpquota
+.agents

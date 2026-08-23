@@ -8,8 +8,18 @@
             </div>
         </div>
         <div class="kanban-header-actions">
-            <a href="<?php echo BASE_URL ?>leads/kanban/" class="btn-kanban-fullscreen" id="openKanbanPageBtn" style="text-decoration: none;">
-                <i class="fi-rr-expand"></i> <span class="btn-fs-label">Open Full Kanban Page</span>
+            <div class="kanban-search-box">
+                <span class="kanban-search-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </span>
+                <input type="text" class="kanban-search-input" id="kanbanSearchInput" placeholder="Search leads by name, phone, destination...">
+                <button type="button" class="kanban-search-clear-btn" id="kanbanSearchClearBtn" title="Clear search">&times;</button>
+            </div>
+            <a href="<?php echo BASE_URL ?>leads/kanban/" class="btn-kanban-fullscreen" id="openKanbanPageBtn" title="Open Full Screen Kanban Workspace">
+                <i class="fi fi-rr-expand"></i> <span class="btn-fs-label">Full Screen</span>
             </a>
         </div>
     </div>

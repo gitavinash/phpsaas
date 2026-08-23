@@ -21,18 +21,28 @@
     eventsBound: false,
 
     init: function (opts) {
-      if (opts && opts.type) {
-        this.type = opts.type;
+      const $tbody = $("#packageTableBody");
+      if (!$tbody.length) {
+        return;
       }
+      const newType = opts && opts.type ? opts.type : "domestic";
+      if (this.isInitialized && this.type === newType && this.tableInstance) {
+        return;
+      }
+      this.type = newType;
+      this.isInitialized = true;
       this.bindEvents();
       this.initDataTable();
     },
 
     autoInit: function () {
-      const $wrapper = $("#packageListApp, .package-page-wrapper[data-package-type]");
+      const $wrapper = $("#packageListApp, .package-list-wrapper");
       if ($wrapper.length > 0) {
         const pkgType = $wrapper.data("package-type") || $wrapper.attr("data-package-type") || "domestic";
         this.init({ type: pkgType });
+      } else {
+        this.isInitialized = false;
+        this.tableInstance = null;
       }
     },
 
@@ -299,16 +309,4 @@
       `;
     }
   };
-
-  // Auto-initialize on direct page load & SPA navigation
-  if (window.V3Packages && typeof window.V3Packages.autoInit === "function") {
-    window.V3Packages.autoInit();
-  }
-  $(document).ready(function () {
-    window.V3Packages.autoInit();
-  });
-
-  $(document).on("spa:loaded", function () {
-    window.V3Packages.autoInit();
-  });
 });

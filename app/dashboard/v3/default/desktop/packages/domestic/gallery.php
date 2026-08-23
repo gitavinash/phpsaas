@@ -233,4 +233,3 @@ $encodedId = base64_encode($id);
         </div>
     </div>
 </div>
-<script src="<?php echo ADMIN_JS ?>gallery.js"></script>
