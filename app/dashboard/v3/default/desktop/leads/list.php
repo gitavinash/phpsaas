@@ -1,387 +1,174 @@
 <?php
-$statusCondition = '';
-$nameCondition = '';
-$emailCondition = '';
-$mobileCondition = '';
-$durationCondition = '';
-
-if (isset($leadStatus)) {
-    $statusCondition = "e.enquiry_status={$leadStatus} AND ";
-}
-
-if (isset($daterange)) {
-    $dates = explode(" - ", $daterange);
-    $startDate = date('Y-m-d 00:00:00', strtotime($dates[0]));
-    $endDate = date('Y-m-d 23:59:59', strtotime($dates[1]));
-    $durationCondition = " e.enquiry_time BETWEEN '{$startDate}' AND '{$endDate}' AND ";
-}
-
-if (isset($leadEmail)) {
-    $emailCondition = " e.enquiry_email='{$leadEmail}' AND ";
-}
-
-if (isset($leadMobile)) {
-    $leadMobile = normalizeIndianMobile($leadMobile);
-    $mobileCondition = " e.enquiry_mobile='{$leadMobile}' AND ";
-}
-
-if (isset($leadName)) {
-    $nameCondition = " e.enquiry_first_name LIKE '%{$leadName}%' AND ";
-}
-// if (isset($leadName)) {
-//     $nameCondition = " CONCAT_WS(' ', e.enquiry_first_name, e.enquiry_middle_name, e.enquiry_last_name) LIKE CONCAT('%{$leadName}%') AND ";
-// }
-
-$user_filter = '';
-
-if ($site_access_type == 'agent') {
-    $user_filter = " e.enquiry_agent='" . USER_ID . "' AND ";
-}
-
-if (isset($agentId)) {
-    $user_filter = " e.enquiry_agent='{$agentId}' AND ";
-}
-
-$userList = array();
-
-if ($userInfoList = mysqli_query($connection, "SELECT user_id, user_username, user_mobile, user_email, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_status=1 AND site_access_site_id=" . SITE_ID)) {
-    if (mysqli_num_rows($userInfoList) != 0) {
-        while ($data = mysqli_fetch_assoc($userInfoList)) {
-            extract($data);
-            $userList[] = array(
-                'id' => $user_id,
-                'name' => $profile_display_name,
-                'email' => $user_email,
-            );
-        }
-    }
-}
-
+// Workspace Rule Compliant: No inline SQL queries, styles, or scripts.
+// All data is dynamically loaded via /api/v3/leads/list.php by leads.js
 ?>
-<h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List ( Between
-    <?php echo date('jS F y', strtotime($startDate)) . ' to ' . date('jS F y', strtotime($endDate)) ?>)<span>All
-        hostings list will be displayed here</span>
-</h2>
-<div class="box-1">
-    <div class="shortcut">
-        <a href="#" id="showFilterPopUp" data-title="Filter leads" style="background: #167a92;"><i
-                class="fi fi-rr-filter"></i></a>
-        <a href="/dashboard/leads/add/" data-title="Add new leads"><i class="fi fi-rr-plus"></i></a>
-    </div>
-    <!-- <div class="filters">
-            <div class="form-group">
-                <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
-                <select id="hostingStatus">
-                    <option value=""><?php echo ucwords($urlStructure[1]) ?> Status</option>
-                    <option value="0">Fresh</option>
-                    <option value="1">Confirm</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Follow up</option>
-                    <option value="4">Cancel</option>
-                    <option value="5">Duplicate</option>
-                </select>
+
+<div class="package-page-wrapper leads-page-wrapper" id="leadsListApp">
+    <!-- Header Banner -->
+    <div class="package-header-bar">
+        <div class="package-header-left">
+            <div class="package-header-icon">
+                <i class="fi fi-rr-user-time"></i>
             </div>
-            <div class="form-group right">
-                <label>Date</label>
-                <input type="text" class="dateRangePicker" placeholder="Select date range">
+            <div class="package-header-titles">
+                <h2>Leads & Enquiries Pipeline</h2>
+                <p>Manage, track, and convert traveler inquiries and sales prospects.</p>
             </div>
-        </div> -->
-    <div class="tableHeaderBar">
-        <select id="bulkActionOnLeads" class="form-control">
-            <option value="">Bulk actions</option>
-            <option value="delete">Delete leads</option>
-            <option value="convert_to_sales">Convert to sales</option>
-            <?php
-
-            if ($site_access_type != 'agent') { ?>
-                <option value="mark_duplicate">Mark as duplicate</option>
-            <?php
-            }
-
-            ?>
-        </select>
-    </div>
-    <div class="list-box">
-        <table class="showTableList nowrap">
-            <thead>
-                <tr>
-                    <td></td>
-                    <?php
-
-                    if ($site_access_type == 'digital_marketing') { ?>
-                        <th>Name</th>
-                        <th>Subject</th>
-                        <th>Time</th>
-                        <th>Source</th>
-                        <th>Status</th>
-                    <?php
-                    } else { ?>
-                        <th>Name</th>
-                        <!-- <th>Email</th> -->
-                        <th>Mobile</th>
-                        <?php echo ((SITE_APP == 'astro_client') ? '<th>Alternate mobile</th>' : '') ?>
-                        <th>Subject</th>
-                        <th>Time</th>
-                        <?php
-
-                        if ($site_access_type != 'agent') {
-                            echo (($site_access_type != 'team_lead') ? '<th>Source</th>' : '');
-                            echo "<th>Assign to</th>";
-                        }
-                        if (SITE_APP != 'astro_client') {
-                            echo "<th>Recent note</th>";
-                        }
-
-                        ?>
-                        <th>Status</th>
-                        <th></th>
-                    <?php
-
-                    }
-
-                    ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-
-                $enquiryQuery = "SELECT
-    e.enquiry_id,
-    e.enquiry_time,
-    CASE
-        WHEN e.enquiry_agent = 0 THEN NULL
-        ELSE p.profile_display_name
-    END AS agent_display_name,
-    e.enquiry_first_name,
-    e.enquiry_email,
-    e.enquiry_mobile,
-    e.enquiry_alt_mobile,
-    e.enquiry_subject,
-    e.enquiry_source,
-    e.enquiry_status,
-    n.enquiry_notes_meta_type,
-    n.enquiry_notes_meta_value
-FROM
-    " . TABLE_PREFIX . "enquiry e
-LEFT JOIN
-    " . TABLE_PREFIX . "profile p ON e.enquiry_agent = p.profile_user_id
-LEFT JOIN
-    (SELECT
-         enquiry_notes_ref_id,
-         MAX(enquiry_notes_update) AS latest_notes_time
-     FROM
-         " . TABLE_PREFIX . "enquiry_notes
-     GROUP BY
-         enquiry_notes_ref_id) latest_notes ON enquiry_id = latest_notes.enquiry_notes_ref_id
-LEFT JOIN
-    " . TABLE_PREFIX . "enquiry_notes n ON enquiry_id = n.enquiry_notes_ref_id AND latest_notes.latest_notes_time = n.enquiry_notes_update
-WHERE
-    {$user_filter}
-    {$statusCondition}
-    {$nameCondition}
-    {$mobileCondition}
-    {$emailCondition}
-    {$durationCondition}
-    e.enquiry_site_id = " . SITE_ID . "
-    GROUP BY enquiry_id
-ORDER BY
-    e.enquiry_time DESC LIMIT 0, 1000";
-
-                if ($dataList = mysqli_query($connection, $enquiryQuery)) {
-                    if (mysqli_num_rows($dataList) != 0) {
-                        while ($data = mysqli_fetch_assoc($dataList)) {
-                            extract($data);
-
-                            switch ($enquiry_status) {
-                                case 1:
-                                    $leadCurrentStatus = 'Success';
-                                    break;
-                                case 2:
-                                    $leadCurrentStatus = 'Pending';
-                                    break;
-                                case 3:
-                                    $leadCurrentStatus = 'Follow up';
-                                    break;
-                                case 4:
-                                    $leadCurrentStatus = 'Failed';
-                                    break;
-                                case 5:
-                                    $leadCurrentStatus = 'Duplicate';
-                                    break;
-                                case 6:
-                                    $leadCurrentStatus = 'Payment initiate';
-                                    break;
-                                case 8:
-                                    $leadCurrentStatus = 'Closed';
-                                    break;
-                                default:
-                                    $leadCurrentStatus = 'Initiate';
-                                    break;
-                            }
-
-                ?>
-                            <tr>
-                                <td><input type="checkbox" name="leads[]" value="<?php echo base64_encode($enquiry_id) ?>"></td>
-                                <?php
-
-                                if ($site_access_type == 'digital_marketing') { ?>
-                                    <td><?php echo ucwords($enquiry_first_name) ?></td>
-                                    <td><?php echo $enquiry_subject; ?></td>
-                                    <td>
-                                        <?php echo date('d M Y, h:i A', strtotime($enquiry_time)); ?></td>
-                                    <td><?php echo ucwords($enquiry_source) ?></td>
-                                    <td><?php echo ucwords($leadCurrentStatus) ?></td>
-                                <?php
-                                } else { ?>
-                                    <td><?php echo ucwords($enquiry_first_name) ?></td>
-                                    <!-- <td><?php echo $enquiry_email; ?></td> -->
-                                    <td><?php echo $enquiry_mobile; ?></td>
-                                    <?php
-
-                                    if (SITE_APP == 'astro_client') { ?>
-                                        <td><?php echo $enquiry_alt_mobile; ?></td>
-                                    <?php
-                                    }
-
-                                    ?>
-                                    <td><?php echo $enquiry_subject; ?></td>
-                                    <td>
-                                        <?php echo date('d M Y, h:i A', strtotime($enquiry_time)); ?></td>
-                                    <?php
-
-                                    if ($site_access_type != 'agent') {
-                                        if ($site_access_type != 'team_lead') {
-                                            echo "<td>" . ucwords($enquiry_source) . "</td>";
-                                        } ?>
-
-                                        <td>
-                                            <form method="POST">
-                                                <?php
-                                                if ($site_access_type != 'agent' && $enquiry_status == 0 && $agent_display_name == null) { ?>
-                                                    <select class="selectJS form-control" name="userId" required>
-                                                        <option value="">Select user</option>
-                                                        <?php
-
-                                                        for ($i = 0; $i < sizeof($userList); $i++) {
-                                                            echo "<option value='" . base64_encode($userList[$i]['id'] . '_' . $userList[$i]['name']) . "'>{$userList[$i]['name']} {$userList[$i]['email']}</option>";
-                                                        }
-
-                                                        ?>
-                                                    </select>
-                                                    <input type="hidden" name="leadId" value="<?php echo base64_encode($enquiry_id) ?>">
-                                                    <input type="hidden" name="action" value="assign">
-                                                    <input type="hidden" name="type" value="leads">
-                                                    <input type="submit" value="Assign lead to user"
-                                                        class="btn dataTableSubmitBtn dataTableBtn">
-                                                <?php
-                                                } else {
-                                                    echo $agent_display_name;
-                                                }
-                                                ?>
-                                            </form>
-                                        </td>
-                                    <?php
-                                    }
-
-                                    if (SITE_APP != 'astro_client') { ?>
-                                        <td>
-                                            <strong><?php echo $enquiry_notes_meta_type ?></strong><br /><?php echo $enquiry_notes_meta_value ?>
-                                        </td>
-                                    <?php
-                                    }
-
-                                    ?>
-                                    </td>
-                                    <td><?php echo $leadCurrentStatus ?></td>
-                                    <td>
-                                        <a href='leads/view/?id=<?php echo base64_encode($enquiry_id) ?>' target='_blank'
-                                            class='tableActionIconBtn' title='View package' data-title='View package'><i
-                                                class="fi-rr-eye bgWhite"></i></a>
-                                        <?php
-
-                                        if ($enquiry_status == 0 && $site_access_type != 'agent') { ?>
-
-                                            <a href='#' target='_blank' class='tableActionIconBtn duplicateLead' title='Mark as Duplicate'
-                                                id="<?php echo base64_encode($enquiry_id) ?>" data-title='Mark as Duplicate'><i
-                                                    class="fi-rr-clipoard-wrong bgYellow"></i></a>
-
-                                        <?php
-                                        }
-
-                                        if ($site_access_type == 'administrator') { ?>
-                                            <a href='#' target='_blank' class='tableActionIconBtn deleteButton' title='Delete lead'
-                                                data-type='leads' data-id="<?php echo $enquiry_id ?>" data-title='Delete lead'><i
-                                                    class="fi-rr-trash bgRed"></i></a>
-                                        <?php                                        }
-
-                                        ?>
-                                    </td>
-                                <?php
-                                }
-
-                                ?>
-                            </tr>
-                <?php
-                        }
-                    }
-                }
-
-                ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="popUp filterBox">
-        <div class="fullScreenPopUpBox">
-            <div class="widget box-7">
-                <div class="contentArea">
-                    <form method="POST" action="#" autocomplete="off">
-                        <section class="form">
-                            <div class="step-open-box step_1_box">
-                                <div class="form-header">
-                                    <h4 class="heading">Set Filter conditions</h4>
-                                </div>
-                                <div class="form-group">
-                                    <select class="selectJS form-control" id="filterStatus" name="filterStatus">
-                                        <option value="">All statuses</option>
-                                        <option value="0">Initiated</option>
-                                        <option value="1">Successful</option>
-                                        <option value="2">Pending</option>
-                                        <option value="3">Follow-up</option>
-                                        <option value="4">Failed</option>
-                                        <option value="5">Duplicate</option>
-                                        <option value="8">Closed</option>
-                                    </select>
-                                    <label>Status</label>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" name="name" id="filterName">
-                                    <label class="form-lable">Name</label>
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" name="filterEmail" id="filterEmail">
-                                    <label class="form-lable">Email</label>
-                                </div>
-                                <div class="form-group">
-                                    <input type="number" name="filterMobile" id="filterMobile">
-                                    <label class="form-lable">Mobile</label>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="dateRangePicker" name="filterDuration"
-                                        id="filterDuration">
-                                    <label class="form-lable">Duration</label>
-                                </div>
-                            </div>
-                    </form>
-                </div>
+        </div>
+        <div class="package-header-actions">
+            <div class="leads-pipeline-toggle">
+                <a href="/dashboard/leads/list/" class="leads-view-tab active" title="Table List View">
+                    <i class="fi fi-rr-list"></i> <span>List</span>
+                </a>
+                <a href="/dashboard/leads/kanban/" class="leads-view-tab" title="Kanban Board View">
+                    <i class="fi fi-rr-apps"></i> <span>Kanban</span>
+                </a>
             </div>
-            <div class="widget box-3">
-                <div class="actionArea">
-                    <span class="btn popUpBtn" id="applyFilterOnLeads"><i class="fi-rr-check"></i> Apply filter</span>
-                    <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                        Cancel</span>
-                </div>
+            <a href="/dashboard/leads/add/" class="btn-add-pkg-v3" title="Add New Enquiry">
+                <i class="fi fi-rr-plus"></i> Add Lead
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Metric KPI Row -->
+    <div class="package-kpi-row">
+        <div class="pkg-mini-kpi indigo lead-kpi-clickable lead-kpi-filter-btn" data-status="all" title="Click to view all leads">
+            <div class="kpi-icon"><i class="fi fi-rr-users-alt"></i></div>
+            <div class="kpi-meta">
+                <p>Total Leads</p>
+                <h3 id="statTotalLeads">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi purple lead-kpi-clickable lead-kpi-filter-btn" data-status="0" title="Click to filter fresh leads">
+            <div class="kpi-icon"><i class="fi fi-rr-inbox"></i></div>
+            <div class="kpi-meta">
+                <p>Fresh Leads</p>
+                <h3 id="statFreshLeads">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi amber lead-kpi-clickable lead-kpi-filter-btn" data-status="2" title="Click to filter pending / follow up">
+            <div class="kpi-icon"><i class="fi fi-rr-phone-call"></i></div>
+            <div class="kpi-meta">
+                <p>Pending / Follow Up</p>
+                <h3 id="statPendingLeads">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi emerald lead-kpi-clickable lead-kpi-filter-btn" data-status="1" title="Click to filter confirmed conversions">
+            <div class="kpi-icon"><i class="fi fi-rr-check-circle"></i></div>
+            <div class="kpi-meta">
+                <p>Confirmed Sales</p>
+                <h3 id="statConfirmedLeads">-</h3>
             </div>
         </div>
     </div>
 
+    <!-- Leads Table Card -->
+    <div class="package-table-card">
+        <!-- Interactive Filter & Search Toolbar -->
+        <div class="package-filter-toolbar leads-filter-toolbar">
+            <!-- Search Input: Name, Mobile, Email, Subject -->
+            <div class="filter-search-box">
+                <svg class="search-svg-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="leadTableSearch" class="filter-search-input" placeholder="Search by name, mobile, email, subject...">
+                <button type="button" id="clearLeadSearchBtn" class="clear-search-btn" title="Clear search">✕</button>
+            </div>
+
+            <!-- Date Range Filter -->
+            <div class="filter-date-box" id="leadDateRangeWrap" title="Filter by date range">
+                <i class="fi fi-rr-calendar"></i>
+                <input type="text" id="filterLeadDateRange" class="filter-date-input" placeholder="Select date range" readonly>
+                <button type="button" id="clearLeadDateRangeBtn" class="clear-date-btn" title="Clear date range">✕</button>
+            </div>
+
+            <div class="filter-dropdowns-wrap">
+                <!-- Status Filter -->
+                <select id="filterLeadStatus" class="filter-select leads-filter-select">
+                    <option value="all">All Statuses</option>
+                    <option value="0">Fresh Leads</option>
+                    <option value="2">Pending</option>
+                    <option value="3">Follow-Up</option>
+                    <option value="1">Confirmed</option>
+                    <option value="6">Payment Initiated</option>
+                    <option value="4">Cancelled</option>
+                    <option value="5">Duplicate</option>
+                    <option value="8">Closed</option>
+                </select>
+
+                <!-- Assigned Agent Filter -->
+                <select id="filterLeadAgent" class="filter-select leads-filter-select">
+                    <option value="all">All Assignees</option>
+                    <option value="0">Unassigned Only</option>
+                </select>
+
+                <!-- Source Filter -->
+                <select id="filterLeadSource" class="filter-select leads-filter-select">
+                    <option value="all">All Sources</option>
+                    <option value="website">Website</option>
+                    <option value="direct">Direct</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="google">Google</option>
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="referral">Referral</option>
+                </select>
+
+                <!-- Reset Filters Button -->
+                <button type="button" id="btnResetLeadFilters" class="btn-reset-filters-v3" title="Reset all filters">
+                    <i class="fi fi-rr-refresh"></i> <span>Reset</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bulk Action Floating Bar -->
+        <div class="leads-bulk-toolbar is-hidden" id="leadsBulkToolbar">
+            <div class="bulk-toolbar-left">
+                <span class="bulk-count-badge" id="selectedLeadsCount">0</span>
+                <span>leads selected</span>
+            </div>
+            <div class="bulk-toolbar-right">
+                <select id="bulkActionSelect" class="v3-select-compact">
+                    <option value="">Choose bulk action...</option>
+                    <option value="convert_to_sales">Convert to Confirmed Sales</option>
+                    <option value="mark_duplicate">Mark as Duplicate</option>
+                    <option value="delete">Delete Selected</option>
+                </select>
+                <button type="button" class="btn-v3-primary" id="btnApplyBulkAction">Apply</button>
+            </div>
+        </div>
+
+        <!-- Data Table Wrap -->
+        <div class="table-responsive">
+            <table class="package-data-table leads-data-table">
+                <thead>
+                    <tr>
+                        <th class="col-checkbox">
+                            <input type="checkbox" id="selectAllLeads" title="Select all leads on this page">
+                        </th>
+                        <th class="col-customer">Customer & Details</th>
+                        <th class="col-contact">Contact Info</th>
+                        <th class="col-subject">Requirement / Notes</th>
+                        <th class="col-agent">Assigned Agent</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="leadsTableBody">
+                    <tr>
+                        <td colspan="6">
+                            <div class="v3-empty-table-state">
+                                <i class="fi fi-rr-spinner icon-spin"></i>
+                                <h4>Loading Leads Pipeline...</h4>
+                                <p>Fetching inquiries and customer records.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Footer -->
+        <div id="leadsPaginationWrap"></div>
+    </div>
 </div>

@@ -109,6 +109,7 @@
 				<script src="<?php echo ADMIN_JS ?>packages.js"></script>
 				<script src="<?php echo ADMIN_JS ?>package-edit.js"></script>
 				<script src="<?php echo ADMIN_JS ?>gallery.js"></script>
+				<script src="<?php echo ADMIN_JS ?>leads.js"></script>
 				<?php
                 $appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
                 $appJSScript = ADMIN_JS . SITE_APP . '.js';

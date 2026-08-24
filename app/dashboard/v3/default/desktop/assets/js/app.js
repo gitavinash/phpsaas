@@ -2097,7 +2097,7 @@ $(document).ready(function (e) {
     });
   });
 
-  // Global Lightweight Floating Tooltip Engine
+  // Global Lightweight Floating Tooltip Engine (Strictly Buttons & Hyperlinks)
   function initGlobalTooltips() {
     let $tooltip = $("#v3GlobalTooltip");
     if (!$tooltip.length) {
@@ -2105,25 +2105,31 @@ $(document).ready(function (e) {
       $("body").append($tooltip);
     }
 
-    const selector = "[data-tooltip], .pkg-actions-toolbar a, .pkg-actions-toolbar button, .package-filter-toolbar [title], .btn-action-icon, .btn-action-pill, .btn-filter-reset, .package-filter-toolbar .filter-select";
+    const selector = "a[data-tooltip], button[data-tooltip], a[title], button[title], a.btn-action-icon, button.btn-action-icon, a.btn-action-pill, button.btn-action-pill, a.btn-filter-reset, button.btn-filter-reset, .btn-reset-filters-v3, .btn-lead-view-cta, .btn-lead-icon-action, .lead-wa-btn-vibrant, .lead-contact-link, .lead-email-link, .clear-search-btn, .clear-date-btn, .btn-empty-reset-filters, .lead-page-btn";
 
     $(document).off("mouseenter.v3Tooltip", selector).on("mouseenter.v3Tooltip", selector, function () {
       const $el = $(this);
+
+      // Ensure tooltips only show on actual buttons and hyperlinks
+      if (!$el.is("a, button, [role='button'], .btn-action-icon, .btn-action-pill, .btn-filter-reset, .btn-reset-filters-v3, .btn-lead-view-cta, .btn-lead-icon-action, .lead-wa-btn-vibrant, .clear-search-btn, .clear-date-btn, .btn-empty-reset-filters, .lead-page-btn")) {
+        return;
+      }
+
       let text = $el.attr("data-tooltip");
 
       if (!text && $el.attr("title")) {
         text = $el.attr("title");
         $el.data("v3-orig-title", text);
-        $el.removeAttr("title"); // Suppress native ugly browser tooltip
+        $el.removeAttr("title"); // Suppress native browser tooltip
       }
 
       if (!text) {
         text = $el.data("v3-orig-title");
       }
 
-      if (!text) return;
+      if (!text || !text.trim()) return;
 
-      $tooltip.text(text).removeClass("placement-bottom visible");
+      $tooltip.text(text.trim()).removeClass("placement-bottom visible");
 
       const rect = this.getBoundingClientRect();
       const tooltipHeight = $tooltip.outerHeight() || 28;
@@ -2164,6 +2170,14 @@ $(document).ready(function (e) {
       if (orig && !$(this).attr("title")) {
         $(this).attr("title", orig);
       }
+    });
+
+    // Auto-dismiss tooltip on scroll, modal/select2 open, or user click outside
+    $(window).off("scroll.v3Tooltip").on("scroll.v3Tooltip", function () {
+      $tooltip.removeClass("visible");
+    });
+    $(document).off("select2:opening select2:closing mousedown.v3Tooltip spa:loaded.v3Tooltip").on("select2:opening select2:closing mousedown.v3Tooltip spa:loaded.v3Tooltip", function () {
+      $tooltip.removeClass("visible");
     });
   }
   window.initGlobalTooltips = initGlobalTooltips;
@@ -3647,6 +3661,20 @@ $(document).ready(function (e) {
             window.V3PackageEdit.autoInit();
           } else if (window.V3PackageEdit && typeof window.V3PackageEdit.init === "function") {
             window.V3PackageEdit.init();
+          }
+        });
+      }
+    }
+
+    // 4. Leads Pipeline Module
+    const $leads = $("#leadsListApp, .leads-page-wrapper");
+    if ($leads.length > 0) {
+      if (window.V3Leads && typeof window.V3Leads.init === "function") {
+        window.V3Leads.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "leads.js", function () {
+          if (window.V3Leads && typeof window.V3Leads.init === "function") {
+            window.V3Leads.init();
           }
         });
       }
