@@ -38,6 +38,7 @@ $query = "
         tp.tour_package_duration,
         tp.tour_package_theme,
         tp.tour_package_city,
+        tp.tour_package_state,
         tp.tour_package_country,
         tp.tour_package_hotel,
         tp.tour_package_outstation_vehicle,
@@ -47,8 +48,15 @@ $query = "
         tp.tour_package_inclusions,
         tp.tour_package_exclusions,
         tp.tour_package_status,
+        g.gallery_image_list,
+        g.gallery_image,
         l.link_url
     FROM {$tblPrefix}tour_package AS tp
+    LEFT JOIN {$tblPrefix}gallery AS g
+        ON g.gallery_category = tp.tour_package_id
+        AND g.gallery_site_id = {$siteId}
+        AND g.gallery_type = 'tour_package'
+        AND g.gallery_status = 1
     LEFT JOIN {$tblPrefix}link AS l
         ON l.link_relation_id = tp.tour_package_id
         AND l.link_type = 'tour_package'
@@ -123,11 +131,56 @@ $hotelTypes = [
     'farm_stay'      => 'Farm stay'
 ];
 
-// Decode Itinerary
+// 5. Decode Itinerary & Merge Gallery Photos by Day
 $rawItinerary = json_decode($row['tour_package_itinerary'] ?? '[]', true);
 if (!is_array($rawItinerary)) {
     $rawItinerary = [];
 }
+
+$galleryImageList = json_decode($row['gallery_image_list'] ?? '[]', true);
+if (!is_array($galleryImageList)) {
+    $galleryImageList = [];
+}
+
+$dayPhotosMap = [];
+foreach ($galleryImageList as $gImg) {
+    $imgPath = $gImg['path'] ?? ($gImg['image'] ?? ($gImg['url'] ?? ''));
+    $dayNum = isset($gImg['day']) ? (int)$gImg['day'] : 0;
+    if (!empty($imgPath) && $dayNum > 0) {
+        if (!isset($dayPhotosMap[$dayNum])) {
+            $dayPhotosMap[$dayNum] = [];
+        }
+        $dayPhotosMap[$dayNum][] = $imgPath;
+    }
+}
+
+foreach ($rawItinerary as $idx => &$dayItem) {
+    $dayNum = $idx + 1;
+    $existingGal = [];
+    if (isset($dayItem['gallery'])) {
+        if (is_array($dayItem['gallery'])) {
+            $existingGal = $dayItem['gallery'];
+        } elseif (is_string($dayItem['gallery'])) {
+            $parsed = json_decode($dayItem['gallery'], true);
+            $existingGal = is_array($parsed) ? $parsed : array_filter(array_map('trim', explode(',', $dayItem['gallery'])));
+        }
+    }
+    
+    // Add photos assigned to this day in gallery
+    if (isset($dayPhotosMap[$dayNum])) {
+        foreach ($dayPhotosMap[$dayNum] as $p) {
+            if (!in_array($p, $existingGal, true)) {
+                $existingGal[] = $p;
+            }
+        }
+    }
+
+    $dayItem['gallery'] = array_values($existingGal);
+    if (!isset($dayItem['feature_image'])) {
+        $dayItem['feature_image'] = '';
+    }
+}
+unset($dayItem);
 
 $duration = (int)($row['tour_package_duration'] ?? 0);
 $nights = $duration;
@@ -145,6 +198,7 @@ $response = [
         'days'                   => $days,
         'theme'                  => $row['tour_package_theme'] ?? '',
         'city'                   => $row['tour_package_city'] ?? '',
+        'state'                  => $row['tour_package_state'] ?? '',
         'country'                => $row['tour_package_country'] ?? '',
         'hotel'                  => $row['tour_package_hotel'] ?? '',
         'outstation_vehicle'     => $row['tour_package_outstation_vehicle'] ?? '',
@@ -162,3 +216,4 @@ $response = [
 ];
 
 echo json_encode($response, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+

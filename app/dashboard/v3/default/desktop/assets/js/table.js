@@ -229,7 +229,11 @@
         `);
       }
 
-      $.ajax({
+      if (!isBackgroundPrefetch && self.activeXhr && self.activeXhr.readyState !== 4) {
+        self.activeXhr.abort();
+      }
+
+      self.activeXhr = $.ajax({
         url: self.options.apiEndpoint,
         type: "GET",
         data: params,

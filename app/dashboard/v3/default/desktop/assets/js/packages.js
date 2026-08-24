@@ -26,9 +26,6 @@
         return;
       }
       const newType = opts && opts.type ? opts.type : "domestic";
-      if (this.isInitialized && this.type === newType && this.tableInstance) {
-        return;
-      }
       this.type = newType;
       this.isInitialized = true;
       this.bindEvents();

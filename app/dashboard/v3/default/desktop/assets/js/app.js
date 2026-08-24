@@ -3637,11 +3637,15 @@ $(document).ready(function (e) {
     // 3. Package Edit Module
     const $pkgEdit = $("#packageEditApp, .package-edit-wrapper");
     if ($pkgEdit.length > 0) {
-      if (window.V3PackageEdit && typeof window.V3PackageEdit.init === "function") {
+      if (window.V3PackageEdit && typeof window.V3PackageEdit.autoInit === "function") {
+        window.V3PackageEdit.autoInit();
+      } else if (window.V3PackageEdit && typeof window.V3PackageEdit.init === "function") {
         window.V3PackageEdit.init();
       } else {
         ensureScriptLoaded(ADMIN_JS + "package-edit.js", function () {
-          if (window.V3PackageEdit && typeof window.V3PackageEdit.init === "function") {
+          if (window.V3PackageEdit && typeof window.V3PackageEdit.autoInit === "function") {
+            window.V3PackageEdit.autoInit();
+          } else if (window.V3PackageEdit && typeof window.V3PackageEdit.init === "function") {
             window.V3PackageEdit.init();
           }
         });
@@ -3798,14 +3802,14 @@ $(document).ready(function (e) {
         window.scrollTo({ top: 0, behavior: 'instant' });
 
         if (window.jQuery) {
-          window.jQuery(document).trigger('ready');
           window.jQuery(document).trigger('spa:loaded');
-        }
-        if (typeof window.initAppComponents === 'function') {
-          window.initAppComponents();
-        }
-        if (typeof window.initV3PageModules === 'function') {
-          window.initV3PageModules();
+        } else {
+          if (typeof window.initAppComponents === 'function') {
+            window.initAppComponents();
+          }
+          if (typeof window.initV3PageModules === 'function') {
+            window.initV3PageModules();
+          }
         }
       } catch (err) {
         console.error('SPA Router error:', err);
@@ -3823,7 +3827,7 @@ $(document).ready(function (e) {
       if (!anchor) return;
 
       const href = anchor.getAttribute('href');
-      if (!href || href === '#' || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) {
+      if (!href || href === '#' || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) {
         return;
       }
 

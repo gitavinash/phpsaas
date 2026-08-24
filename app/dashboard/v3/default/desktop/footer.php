@@ -93,26 +93,7 @@
 				<?php
                 }
                 ?>
-				<script>
-				    if ($(".editor").length) {
-				        const editors = document.querySelectorAll('.editor');
-				        const quillInstances = [];
-				        editors.forEach((editor, index) => {
-				            const quill = new Quill(editor, {
-				                theme: 'snow'
-				            });
 
-				            if ($(`#editor-${index}`).length) {
-				                const hiddenTextarea = document.getElementById(`editor-${index}`);
-				                quill.root.innerHTML = hiddenTextarea.value;
-				                quill.on('text-change', function() {
-				                    hiddenTextarea.value = quill.root.innerHTML;
-				                });
-				                quillInstances.push(quill);
-				            }
-				        });
-				    }
-				</script>
 				<?php
 
                 if ($site_access_type == 'agent') { ?>
@@ -124,6 +105,10 @@
 
                 ?>
 				<script src="<?php echo ADMIN_JS ?>app.js"></script>
+				<script src="<?php echo ADMIN_JS ?>table.js"></script>
+				<script src="<?php echo ADMIN_JS ?>packages.js"></script>
+				<script src="<?php echo ADMIN_JS ?>package-edit.js"></script>
+				<script src="<?php echo ADMIN_JS ?>gallery.js"></script>
 				<?php
                 $appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
                 $appJSScript = ADMIN_JS . SITE_APP . '.js';
