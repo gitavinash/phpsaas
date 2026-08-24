@@ -3694,6 +3694,20 @@ $(document).ready(function (e) {
       }
     }
 
+    // 4c. Package Transport & Transporter Module
+    const $pkgTransport = $("#packageTransportApp, .package-transport-wrapper");
+    if ($pkgTransport.length > 0) {
+      if (window.V3PackageTransport && typeof window.V3PackageTransport.init === "function") {
+        window.V3PackageTransport.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "package-transport.js?v=" + Date.now(), function () {
+          if (window.V3PackageTransport && typeof window.V3PackageTransport.init === "function") {
+            window.V3PackageTransport.init();
+          }
+        });
+      }
+    }
+
     // 5. Leads Pipeline Module
     const $leads = $("#leadsListApp, .leads-page-wrapper");
     if ($leads.length > 0) {

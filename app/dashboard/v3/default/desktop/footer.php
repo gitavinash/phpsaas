@@ -111,6 +111,7 @@
 				<script src="<?php echo ADMIN_JS ?>gallery.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>package-price-list.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>package-hotel-list.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>package-transport.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>leads.js?v=<?php echo time(); ?>"></script>
 				<?php
                 $appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';

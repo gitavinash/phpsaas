@@ -290,9 +290,6 @@
               <a href="${editBasePath}gallery/?id=${encodedId}" class="btn-action-icon gallery" data-tooltip="Photo Gallery" title="Photo Gallery">
                 <i class="fi fi-rr-gallery"></i>
               </a>
-              <a href="${editBasePath}transpotation-list/?id=${encodedId}" class="btn-action-icon transport" data-tooltip="Transport Options" title="Transport Options">
-                <i class="fi fi-rr-cars"></i>
-              </a>
               <div class="btn-action-divider"></div>
               <a href="#" class="btn-action-icon move movePackageBtn" data-id="${pkgId}" data-target-type="${targetMoveType}" data-tooltip="Move to ${targetMoveLabel}" title="Move to ${targetMoveLabel}">
                 <i class="fi fi-rr-plane-alt"></i>
