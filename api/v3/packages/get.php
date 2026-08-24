@@ -29,6 +29,12 @@ if ($packageId <= 0) {
     exit;
 }
 
+// Ensure tour_package_template column exists
+$colCheck = mysqli_query($connection, "SHOW COLUMNS FROM `{$tblPrefix}tour_package` LIKE 'tour_package_template'");
+if ($colCheck && mysqli_num_rows($colCheck) === 0) {
+    mysqli_query($connection, "ALTER TABLE `{$tblPrefix}tour_package` ADD COLUMN `tour_package_template` VARCHAR(50) NOT NULL DEFAULT 'mit' AFTER `tour_package_theme`");
+}
+
 // 1. Fetch Package Record
 $query = "
     SELECT 
@@ -37,6 +43,7 @@ $query = "
         tp.tour_package_type,
         tp.tour_package_duration,
         tp.tour_package_theme,
+        tp.tour_package_template,
         tp.tour_package_city,
         tp.tour_package_state,
         tp.tour_package_country,
@@ -197,6 +204,7 @@ $response = [
         'nights'                 => $nights,
         'days'                   => $days,
         'theme'                  => $row['tour_package_theme'] ?? '',
+        'template'               => !empty($row['tour_package_template']) ? $row['tour_package_template'] : 'mit',
         'city'                   => $row['tour_package_city'] ?? '',
         'state'                  => $row['tour_package_state'] ?? '',
         'country'                => $row['tour_package_country'] ?? '',
@@ -208,7 +216,13 @@ $response = [
         'inclusions'             => $row['tour_package_inclusions'] ?? '',
         'exclusions'             => $row['tour_package_exclusions'] ?? '',
         'status'                 => (int)($row['tour_package_status'] ?? 1),
-        'link_url'               => $row['link_url'] ?? ''
+        'link_url'               => $row['link_url'] ?? '',
+        'is_published'           => (!isset($row['tour_package_status']) || (int)$row['tour_package_status'] !== 0)
+    ],
+    'templates_list' => [
+        'mit'      => 'MIT Multi-Page Proposal (A4 PDF / Premium)',
+        'standard' => 'Standard Clean Layout',
+        'modern'   => 'Modern Card Layout'
     ],
     'vehicles'      => $vehiclesList,
     'travel_styles' => $travelStyles,

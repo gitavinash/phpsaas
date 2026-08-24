@@ -816,7 +816,7 @@ $defaultSearchQuery = !empty($tour_package_city) ? $tour_package_city : (!empty(
                             <input type="text" id="pexelsSearchQuery" class="pexels-search-input" placeholder="Search city or destination..." value="<?php echo htmlspecialchars($defaultSearchQuery); ?>">
                             <button type="button" class="btn-pexels-action" id="btnSearchPexels"><i class="fi fi-rr-search"></i> Search</button>
                             <button type="button" class="btn-pexels-action btn-add-all-suggested" id="btnAddAllSuggested" title="Automatically searches & assigns destination photos for each day of your itinerary in 1 click">
-                                <i class="fi fi-rr-magic-wand"></i> ✨ Auto-Assign All Day Photos
+                                <i class="fi fi-rr-magic-wand"></i> Auto-Assign All Day Photos
                             </button>
                         </div>
                     </div>
@@ -1304,12 +1304,12 @@ $defaultSearchQuery = !empty($tour_package_city) ? $tour_package_city : (!empty(
                         popUpMessage("center", res.msg, "success");
                         setTimeout(() => location.reload(), 1200);
                     } else {
-                        $btn.prop("disabled", false).html('<i class="fi fi-rr-magic-wand"></i> ✨ Auto-Assign All Day Photos');
+                        $btn.prop("disabled", false).html('<i class="fi fi-rr-magic-wand"></i> Auto-Assign All Day Photos');
                         popUpMessage("center", res.msg || "Failed to assign suggested images", "error");
                     }
                 },
                 error: function() {
-                    $btn.prop("disabled", false).html('<i class="fi fi-rr-magic-wand"></i> ✨ Auto-Assign All Day Photos');
+                    $btn.prop("disabled", false).html('<i class="fi fi-rr-magic-wand"></i> Auto-Assign All Day Photos');
                     popUpMessage("center", "Error assigning suggested images", "error");
                 }
             });

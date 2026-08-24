@@ -34,7 +34,7 @@ if (isset($daterange)) {
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="icon" href="<?php echo SITE_ICON ?>">
-    <title><?php echo str_replace('_', ' ', $dashboardPageTitle . ' | ' . SITE_NAME); ?></title>
+    <title><?php echo str_replace(['_', '-'], ' ', $dashboardPageTitle . ' | ' . SITE_NAME); ?></title>
     <style>
         :root {
             --brand-700: <?php echo SITE_THEME_COLOUR ?>;
@@ -56,7 +56,7 @@ if (isset($daterange)) {
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>drag_and_drop/drag_and_drop.min.css">
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin.css?v=<?php echo time(); ?>">
     <?php
     if (SITE_VERSION == 'mobile') {
@@ -251,7 +251,7 @@ if (isset($daterange)) {
                         for ($i = 0; $i < sizeof($urlStructure); $i++) {
 
                             $paginationURL = $paginationURL . '/' . strtolower($urlStructure[$i]);
-                            echo "<li><a href='{$paginationURL}/'>" . ucwords(str_replace('_', ' ', $urlStructure[$i])) . "</a></li>";
+                            echo "<li><a href='{$paginationURL}/'>" . ucwords(str_replace(['_', '-'], ' ', $urlStructure[$i])) . "</a></li>";
                         }
 
                         ?>

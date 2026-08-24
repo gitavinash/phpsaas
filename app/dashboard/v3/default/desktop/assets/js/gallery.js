@@ -264,11 +264,11 @@
       $(document).on("click", ".theme-filter-btn", function () {
         const btnId = $(this).attr("id");
 
-        if (btnId === "btnToggleSuggestions") {
+        if (btnId === "btnToggleSuggestions" || $(this).data("filter") === "suggestions") {
           $(".theme-filter-btn").removeClass("active");
           $(this).addClass("active");
 
-          $("#galleryGrid").hide();
+          $("#galleryGrid, .dashboard-gallery-grid").hide();
           $("#galleryBulkBar").hide();
           $("#pexelsSuggestionPanel").slideDown(200);
 
@@ -280,7 +280,7 @@
           $(this).addClass("active");
 
           $("#pexelsSuggestionPanel").slideUp(200);
-          $("#galleryGrid").show();
+          $("#galleryGrid, .dashboard-gallery-grid").show();
 
           self.applyGalleryFilters();
         }
@@ -414,7 +414,7 @@
                 $btn
                   .prop("disabled", false)
                   .html(
-                    '<i class="fi fi-rr-magic-wand"></i> ✨ Auto-Assign All Day Photos'
+                    '<i class="fi fi-rr-magic-wand"></i> Auto-Assign All Day Photos'
                   );
                 if (typeof popUpMessage === "function") {
                   popUpMessage(
@@ -430,7 +430,7 @@
                 .removeAttr("data-busy")
                 .prop("disabled", false)
                 .html(
-                  '<i class="fi fi-rr-magic-wand"></i> ✨ Auto-Assign All Day Photos'
+                  '<i class="fi fi-rr-magic-wand"></i> Auto-Assign All Day Photos'
                 );
               if (typeof popUpMessage === "function") {
                 popUpMessage("center", "Error assigning suggested images", "error");
@@ -914,7 +914,11 @@
 
     renderGalleryGrid: function (images, assignedDayMap) {
       const self = this;
-      const $grid = $("#galleryGrid");
+      const $grid = $("#galleryGrid, .dashboard-gallery-grid");
+
+      if ($("#btnToggleSuggestions").hasClass("active") || $("#pexelsSuggestionPanel").is(":visible")) {
+        $grid.hide();
+      }
 
       if (!images || images.length === 0) {
         self.clearSelection();

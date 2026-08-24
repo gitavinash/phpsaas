@@ -89,7 +89,7 @@ $encodedId = base64_encode($id);
                 <i class="fi fi-rr-clock"></i> Unassigned (<span id="tabCountUnassigned">0</span>)
             </button>
             <button type="button" class="theme-filter-btn btn-suggestions-tab" id="btnToggleSuggestions" data-tooltip="Discover recommended stock photos">
-                <i class="fi fi-rr-magic-wand"></i> Stock Suggestions
+                <i class="fi fi-rr-magic-wand"></i> Image Suggestions
             </button>
         </div>
 
@@ -131,7 +131,7 @@ $encodedId = base64_encode($id);
                 <input type="text" id="pexelsSearchQuery" class="pexels-search-input" placeholder="Search city or destination...">
                 <button type="button" class="btn-pexels-action" id="btnSearchPexels" data-tooltip="Search Pexels stock photos"><i class="fi fi-rr-search"></i> Search</button>
                 <button type="button" class="btn-pexels-action btn-add-all-suggested" id="btnAddAllSuggested" data-tooltip="Auto-assign destination photos for all itinerary days">
-                    <i class="fi fi-rr-magic-wand"></i> ✨ Auto-Assign All Day Photos
+                    <i class="fi fi-rr-magic-wand"></i> Auto-Assign All Day Photos
                 </button>
             </div>
         </div>

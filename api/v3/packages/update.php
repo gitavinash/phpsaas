@@ -43,6 +43,7 @@ if ($packageId <= 0) {
 // 2. Read Form Payload
 $packageName            = isset($_POST['packageName']) ? mysqli_real_escape_string($connection, trim($_POST['packageName'])) : '';
 $travelStyle            = isset($_POST['travelStyle']) && $_POST['travelStyle'] !== 'select' ? mysqli_real_escape_string($connection, trim($_POST['travelStyle'])) : 'standard';
+$template               = isset($_POST['tourPackageTemplate']) && $_POST['tourPackageTemplate'] !== 'select' ? mysqli_real_escape_string($connection, trim($_POST['tourPackageTemplate'])) : 'mit';
 $packageType            = isset($_POST['packageType']) ? mysqli_real_escape_string($connection, trim($_POST['packageType'])) : 'domestic';
 $hotel                  = isset($_POST['hotel']) && $_POST['hotel'] !== 'select' ? mysqli_real_escape_string($connection, trim($_POST['hotel'])) : '';
 $outstationVehicle      = isset($_POST['outstationVehicle']) && $_POST['outstationVehicle'] !== 'select' ? mysqli_real_escape_string($connection, strtolower(trim($_POST['outstationVehicle']))) : '';
@@ -114,6 +115,7 @@ $updateQuery = "
     SET 
         tour_package_title                  = '{$packageName}',
         tour_package_theme                  = '{$travelStyle}',
+        tour_package_template               = '{$template}',
         tour_package_type                   = '{$packageType}',
         tour_package_duration               = {$calculatedDuration},
         tour_package_hotel                  = '{$hotel}',

@@ -890,6 +890,23 @@
           } catch (e) {
             pkgId = queryId;
           }
+        } else {
+          // Parse last segment from pathname if not in query params
+          const pathParts = window.location.pathname.split('/').filter(Boolean);
+          const lastSeg = pathParts[pathParts.length - 1];
+          if (lastSeg && lastSeg !== 'edit' && lastSeg !== 'domestic' && lastSeg !== 'international') {
+            encodedId = lastSeg;
+            try {
+              const dec = atob(lastSeg);
+              if (!isNaN(dec) && parseInt(dec) > 0) {
+                pkgId = parseInt(dec);
+              } else {
+                pkgId = lastSeg;
+              }
+            } catch (e) {
+              pkgId = lastSeg;
+            }
+          }
         }
       }
 
@@ -901,6 +918,8 @@
       this.packageId = pkgId;
       this.encodedId = encodedId;
       this.packageType = pkgType;
+      this.bindEvents();
+      this.eventsBound = true;
       this.loadPackageData(pkgId);
     },
 
@@ -930,11 +949,8 @@
           self.activeXhr = null;
           if (res && res.status === 'success' && res.package) {
             self.data = res;
+            self.packageData = res;
             self.renderPackage(res);
-            if (!self.eventsBound) {
-              self.bindEvents();
-              self.eventsBound = true;
-            }
           } else {
             self.renderError(res.message || 'Failed to load tour package details.');
           }
@@ -1050,7 +1066,11 @@
       const locationText = pkg.type === 'international' ? (pkg.country || pkg.city || 'International') : (pkg.city || 'Domestic');
       $('#pkgMetaLocation').html(`<i class="fi-rr-marker icon-marker"></i> ${locationText}`);
 
-      if (pkg.link_url) {
+      // Website Publishing Checkbox (default to true if new/undefined/true)
+      const isPublished = (pkg.is_published !== false);
+      $('#chkPublishToWebsite').prop('checked', isPublished);
+
+      if (pkg.link_url && isPublished) {
         $('#btnViewLivePackage').attr('href', pkg.link_url).show();
       } else {
         $('#btnViewLivePackage').hide();
@@ -1079,6 +1099,9 @@
         const isSel = (pkg.theme && pkg.theme.toLowerCase() === k.toLowerCase()) ? 'selected' : '';
         $travelStyle.append(`<option value="${k}" ${isSel}>${val}</option>`);
       });
+
+      // Template Selection Cards
+      this.selectTemplate(pkg.template || 'mit');
 
       // Hotel Types Dropdown
       const $hotel = $('#hotel');
@@ -1257,6 +1280,7 @@
     },
 
     bindEvents: function () {
+      const self = this;
       // 1. Tab Switching
       $(document).off('click.v3pkgTab', '.edit-tab-btn');
       $(document).on('click.v3pkgTab', '.edit-tab-btn', function (e) {
@@ -1481,11 +1505,13 @@
         formData.append('packageId', pkgId);
         formData.append('packageName', packageName);
         formData.append('travelStyle', $('#travelStyle').val() || 'standard');
+        formData.append('tourPackageTemplate', $('#tourPackageTemplate').val() || 'mit');
         formData.append('hotel', $('#hotel').val() || '');
         formData.append('outstationVehicle', $('#outstationVehicle').val() || '');
         formData.append('localSighseeignVehicle', $('#localSighseeignVehicle').val() || '');
         formData.append('overview', $('#editor-0').val() || '');
         formData.append('packageType', $('#packageType').val() || 'domestic');
+        formData.append('publishToWebsite', $('#chkPublishToWebsite').is(':checked') ? 1 : 0);
 
         $.ajax({
           url: '/api/v3/packages/update-general/',
@@ -1499,6 +1525,13 @@
             if (res && res.status === 'success') {
               if (res.packageName) {
                 $('#pkgHeaderTitle').text(res.packageName);
+              }
+              if (typeof res.is_published !== 'undefined') {
+                if (res.is_published && res.link_url) {
+                  $('#btnViewLivePackage').attr('href', res.link_url).show();
+                } else if (!res.is_published) {
+                  $('#btnViewLivePackage').hide();
+                }
               }
               if (typeof popUpMessage === 'function') {
                 popUpMessage('center', res.message || 'Itinerary updated successfully.', 'success');
@@ -1636,7 +1669,429 @@
           }
         });
       });
+
+      // 13. Template Selection & Preview Handlers
+      $(document).off('click.v3pkgTempCard', '.v3-template-card');
+      $(document).on('click.v3pkgTempCard', '.v3-template-card', function (e) {
+        if ($(e.target).closest('.btn-template-preview').length) {
+          return;
+        }
+        const templateId = $(this).attr('data-template-id') || $(this).data('template-id') || 'mit';
+        self.selectTemplate(templateId);
+      });
+
+      $(document).off('click.v3pkgTempSelect', '.btn-template-select');
+      $(document).on('click.v3pkgTempSelect', '.btn-template-select', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const templateId = $(this).attr('data-template-id') || $(this).data('template-id') || $(this).closest('.v3-template-card').attr('data-template-id') || 'mit';
+        self.selectTemplate(templateId);
+      });
+
+      $(document).off('click.v3pkgTempPrev', '.btn-template-preview');
+      $(document).on('click.v3pkgTempPrev', '.btn-template-preview', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const templateId = $(this).attr('data-template-id') || $(this).data('template-id') || $(this).closest('.v3-template-card').attr('data-template-id') || 'mit';
+        self.openTemplatePreviewModal(templateId);
+      });
+
+      // Next / Prev Template Navigation (In Preview Modal)
+      $(document).off('click.v3pkgNavPrevTemp', '#btnPrevPreviewTemplate, #btnFloatPrevTemplate');
+      $(document).on('click.v3pkgNavPrevTemp', '#btnPrevPreviewTemplate, #btnFloatPrevTemplate', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.navigateTemplatePreview(-1);
+      });
+
+      $(document).off('click.v3pkgNavNextTemp', '#btnNextPreviewTemplate, #btnFloatNextTemplate');
+      $(document).on('click.v3pkgNavNextTemp', '#btnNextPreviewTemplate, #btnFloatNextTemplate', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.navigateTemplatePreview(1);
+      });
+
+      // Keyboard Left/Right arrow navigation when modal is active
+      $(document).off('keydown.v3pkgModalNav');
+      $(document).on('keydown.v3pkgModalNav', function (e) {
+        if ($('#modalPackageTemplatePreview').hasClass('is-active')) {
+          if (e.key === 'ArrowLeft' || e.keyCode === 37) {
+            e.preventDefault();
+            self.navigateTemplatePreview(-1);
+          } else if (e.key === 'ArrowRight' || e.keyCode === 39) {
+            e.preventDefault();
+            self.navigateTemplatePreview(1);
+          }
+        }
+      });
+
+      $(document).off('click.v3pkgClosePrev', '#btnCloseTemplatePreviewModal');
+      $(document).on('click.v3pkgClosePrev', '#btnCloseTemplatePreviewModal', function (e) {
+        e.preventDefault();
+        $('#modalPackageTemplatePreview').removeClass('is-active');
+      });
+
+      // Close modal on clicking outside dialog
+      $(document).off('click.v3pkgModalBackdrop', '#modalPackageTemplatePreview');
+      $(document).on('click.v3pkgModalBackdrop', '#modalPackageTemplatePreview', function (e) {
+        if (e.target === this) {
+          $(this).removeClass('is-active');
+        }
+      });
+
+      // Close on Escape key
+      $(document).off('keydown.v3pkgModalEsc');
+      $(document).on('keydown.v3pkgModalEsc', function (e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+          $('#modalPackageTemplatePreview').removeClass('is-active');
+        }
+      });
+
+      $(document).off('click.v3pkgApplyPrev', '#btnApplyPreviewedTemplate');
+      $(document).on('click.v3pkgApplyPrev', '#btnApplyPreviewedTemplate', function (e) {
+        e.preventDefault();
+        const templateId = $(this).data('template-id') || 'mit';
+        self.selectTemplate(templateId);
+        $('#modalPackageTemplatePreview').removeClass('is-active');
+        if (typeof popUpMessage === 'function') {
+          popUpMessage('center', `Selected ${templateId.toUpperCase()} template layout.`, 'success');
+        }
+      });
+
+      // Travel Style / Theme dropdown sync
+      $(document).off('change.v3pkgTheme', '#travelStyle');
+      $(document).on('change.v3pkgTheme', '#travelStyle', function () {
+        const val = ($(this).val() || 'standard').trim();
+        const themeClean = val.toLowerCase().replace(/[^a-z0-9]/g, '');
+        $('#pkgMetaTheme').attr('class', 'pkg-theme-pill pkg-theme-' + themeClean).text(val ? (val.charAt(0).toUpperCase() + val.slice(1)) : 'Standard');
+      });
+    },
+
+    templateOrder: ['mit', 'standard', 'modern'],
+    templateLabels: {
+      'mit': 'MIT Multi-Page Proposal (A4 PDF / Premium)',
+      'standard': 'Standard Clean Layout',
+      'modern': 'Modern Card Layout'
+    },
+    activePreviewTemplate: 'mit',
+
+    navigateTemplatePreview: function (direction) {
+      const templates = this.templateOrder || ['mit', 'standard', 'modern'];
+      const current = this.activePreviewTemplate || $('#tourPackageTemplate').val() || 'mit';
+      let index = templates.indexOf(current);
+      if (index === -1) index = 0;
+      const nextIndex = (index + direction + templates.length) % templates.length;
+      const nextTemplateId = templates[nextIndex];
+      this.openTemplatePreviewModal(nextTemplateId);
+    },
+
+    selectTemplate: function (templateId) {
+      templateId = templateId || 'mit';
+      $('#tourPackageTemplate').val(templateId);
+      $('.v3-template-card').removeClass('active');
+      const $card = $(`.v3-template-card[data-template-id="${templateId}"]`);
+      if ($card.length) {
+        $card.addClass('active');
+      }
+    },
+
+    openTemplatePreviewModal: function (templateId) {
+      templateId = templateId || $('#tourPackageTemplate').val() || 'mit';
+      this.activePreviewTemplate = templateId;
+      
+      const templates = this.templateOrder || ['mit', 'standard', 'modern'];
+      let idx = templates.indexOf(templateId);
+      if (idx === -1) idx = 0;
+      $('#previewTemplateCounter').text(`${idx + 1} / ${templates.length}`);
+
+      const pkg = (this.packageData && this.packageData.package) ? this.packageData.package : {};
+      const title = ($('#name').val() || pkg.title || 'Tour Package').trim();
+      const theme = ($('#travelStyle').val() || pkg.theme || 'standard').trim();
+      const hotel = ($('#hotel').val() || pkg.hotel || '').trim();
+      const outstationVehicle = ($('#outstationVehicle').val() || pkg.outstation_vehicle || '').trim();
+      const localSightseeingVehicle = ($('#localSighseeignVehicle').val() || pkg.localsightseen_vehicle || '').trim();
+      
+      const overviewEl = document.querySelector('#overviewEditor .ql-editor');
+      const overview = overviewEl ? overviewEl.innerHTML : ($('#editor-0').val() || pkg.overview || '');
+      
+      const incEl = document.querySelector('#inclusionsEditor .ql-editor');
+      const inclusions = incEl ? incEl.innerHTML : ($('#editor-inclusion').val() || pkg.inclusions || '');
+      
+      const excEl = document.querySelector('#exclusionsEditor .ql-editor');
+      const exclusions = excEl ? excEl.innerHTML : ($('#editor-exclusion').val() || pkg.exclusions || '');
+
+      const days = [];
+      $('.v3-day-card').each(function () {
+        const dayNum = $(this).data('day');
+        const dayTitle = $(this).find('.v3-day-title-input').val() || `Day ${dayNum}`;
+        const dayEl = document.querySelector(`#dayEditor_${dayNum} .ql-editor`);
+        const dayContent = dayEl ? dayEl.innerHTML : ($(`#editor-${dayNum}`).val() || '');
+        const dayStay = $(this).find('.v3-day-stay-field select, .select2-stay-city').val() || $(`#dayStayInput_${dayNum}`).val() || '';
+        days.push({
+          day: dayTitle,
+          overview: dayContent,
+          stay: dayStay
+        });
+      });
+
+      if (days.length === 0 && pkg.itinerary && Array.isArray(pkg.itinerary)) {
+        pkg.itinerary.forEach(function (d, idx) {
+          days.push({
+            day: d.day || `Day ${idx + 1}`,
+            overview: d.overview || '',
+            stay: d.stay || ''
+          });
+        });
+      }
+
+      $('#btnApplyPreviewedTemplate').data('template-id', templateId);
+      const titles = this.templateLabels || {
+        'mit': 'MIT Multi-Page Proposal (A4 PDF / Premium)',
+        'standard': 'Standard Clean Layout',
+        'modern': 'Modern Card Layout'
+      };
+      $('#previewModalTitle').text(titles[templateId] || 'Template Preview');
+
+      let renderHtml = '';
+      if (templateId === 'mit') {
+        renderHtml = this.buildMitTemplatePreview({ title, theme, hotel, outstationVehicle, localSightseeingVehicle, overview, inclusions, exclusions, days });
+      } else if (templateId === 'modern') {
+        renderHtml = this.buildModernTemplatePreview({ title, theme, hotel, outstationVehicle, localSightseeingVehicle, overview, inclusions, exclusions, days });
+      } else {
+        renderHtml = this.buildStandardTemplatePreview({ title, theme, hotel, outstationVehicle, localSightseeingVehicle, overview, inclusions, exclusions, days });
+      }
+
+      $('#templatePreviewCanvas').html(renderHtml);
+      $('#modalPackageTemplatePreview').addClass('is-active');
+      $('#modalPackageTemplatePreview .v3-preview-modal-body').scrollTop(0);
+    },
+
+    buildMitTemplatePreview: function (data) {
+      function esc(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+      const totalDays = data.days.length || 1;
+      const totalNights = Math.max(1, totalDays - 1);
+      const totalPages = totalDays + 3;
+      const themeGrad = 'linear-gradient(135deg, #e76317 0%, #fb923c 100%)';
+
+      function footer(page) {
+        return `
+          <footer style="position: absolute; bottom: 20px; width: 100%; text-align: center; border-top: 1px solid #eee; padding-top: 8px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin: 0 40px; font-size: 11px; color: #64748b;">
+              <span><strong>ISW Holidays</strong> &bull; Tour Itinerary Proposal</span>
+              <span>Page ${page} of ${totalPages}</span>
+            </div>
+          </footer>
+        `;
+      }
+
+      // Page 1: Overview
+      let html = `
+        <section class="page" style="margin-bottom: 24px; position: relative; width: 210mm; min-height: 297mm; max-width: 100%; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden;">
+          <div style="position: relative; width: 100%; height: 80mm; background: ${themeGrad}; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; color: #ffffff;">
+            <h2 style="font-size: 26px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">${esc(data.title)}</h2>
+            <div style="position: absolute; bottom: 12px; right: 20px; font-size: 12px; background: rgba(0,0,0,0.25); backdrop-filter: blur(4px); padding: 4px 10px; border-radius: 6px; font-weight: 600;">Proposal Overview</div>
+          </div>
+          <div style="padding: 24px 30px;">
+            <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 18px; text-align: center; min-width: 110px;">
+                <span style="display:block; font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;">Duration</span>
+                <strong style="font-size: 15px; color: #0f172a;">${totalNights}N / ${totalDays}D</strong>
+              </div>
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 18px; text-align: center; min-width: 110px;">
+                <span style="display:block; font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;">Travel Style</span>
+                <strong style="font-size: 15px; color: #0f172a; text-transform: capitalize;">${esc(data.theme)}</strong>
+              </div>
+              ${data.hotel ? `
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 18px; text-align: center; min-width: 110px;">
+                <span style="display:block; font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;">Hotel Tier</span>
+                <strong style="font-size: 15px; color: #0f172a; text-transform: capitalize;">${esc(data.hotel)}</strong>
+              </div>` : ''}
+              ${data.outstationVehicle ? `
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 18px; text-align: center; min-width: 110px;">
+                <span style="display:block; font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700;">Vehicle</span>
+                <strong style="font-size: 15px; color: #0f172a; text-transform: capitalize;">${esc(data.outstationVehicle)}</strong>
+              </div>` : ''}
+            </div>
+            <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px;">Tour Overview</h3>
+            <div style="font-size: 13.5px; color: #334155; line-height: 1.7;">
+              ${data.overview ? data.overview : '<p style="color:#94a3b8; font-style:italic;">No overview provided.</p>'}
+            </div>
+          </div>
+          ${footer(1)}
+        </section>
+      `;
+
+      // Day Pages
+      data.days.forEach(function (d, idx) {
+        const pageNum = idx + 2;
+        html += `
+          <section class="page" style="margin-bottom: 24px; position: relative; width: 210mm; min-height: 297mm; max-width: 100%; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden;">
+            <div style="position: relative; width: 100%; height: 60mm; background: ${themeGrad}; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; color: #ffffff;">
+              <h2 style="font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">${esc(d.day || `Day ${idx + 1}`)}</h2>
+              ${d.stay ? `<div style="position: absolute; bottom: 12px; right: 20px; font-size: 12px; background: rgba(0,0,0,0.25); backdrop-filter: blur(4px); padding: 4px 10px; border-radius: 6px; font-weight: 600;">Stay: ${esc(d.stay)}</div>` : ''}
+            </div>
+            <div style="padding: 24px 30px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 14px;">Schedule & Activities</h3>
+              <div style="font-size: 13.5px; color: #334155; line-height: 1.7;">
+                ${d.overview ? d.overview : '<p style="color:#94a3b8; font-style:italic;">Activities for this day will be updated soon.</p>'}
+              </div>
+            </div>
+            ${footer(pageNum)}
+          </section>
+        `;
+      });
+
+      // Policies & Pricing Page
+      const policyPage = totalDays + 2;
+      html += `
+        <section class="page" style="margin-bottom: 24px; position: relative; width: 210mm; min-height: 297mm; max-width: 100%; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden;">
+          <div style="position: relative; width: 100%; height: 50mm; background: ${themeGrad}; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; color: #ffffff;">
+            <h2 style="font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">Terms, Inclusions & Exclusions</h2>
+          </div>
+          <div style="padding: 24px 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 18px;">
+              <h4 style="font-size: 15px; font-weight: 700; color: #15803d; margin-bottom: 12px; display:flex; align-items:center; gap:6px;">
+                <i class="fi fi-rr-check-circle"></i> Inclusions
+              </h4>
+              <div style="font-size: 13px; color: #166534; line-height: 1.6;">
+                ${data.inclusions ? data.inclusions : '<p style="font-style:italic;">Standard inclusions apply.</p>'}
+              </div>
+            </div>
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 18px;">
+              <h4 style="font-size: 15px; font-weight: 700; color: #b91c1c; margin-bottom: 12px; display:flex; align-items:center; gap:6px;">
+                <i class="fi fi-rr-cross-circle"></i> Exclusions
+              </h4>
+              <div style="font-size: 13px; color: #991b1b; line-height: 1.6;">
+                ${data.exclusions ? data.exclusions : '<p style="font-style:italic;">Personal expenses not included.</p>'}
+              </div>
+            </div>
+          </div>
+          ${footer(policyPage)}
+        </section>
+      `;
+
+      return html;
+    },
+
+    buildStandardTemplatePreview: function (data) {
+      function esc(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+      const totalDays = data.days.length || 1;
+      const totalNights = Math.max(1, totalDays - 1);
+
+      let html = `
+        <div style="max-width: 860px; margin: 0 auto; background: #ffffff; border-radius: 14px; border: 1px solid #e2e8f0; padding: 36px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
+          <div style="border-bottom: 2px solid #0284c7; padding-bottom: 18px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+            <div>
+              <span style="font-size: 12px; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: 0.5px;">Standard Itinerary</span>
+              <h2 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 4px;">${esc(data.title)}</h2>
+            </div>
+            <span style="background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 20px; white-space: nowrap;">
+              ${totalNights} Nights / ${totalDays} Days
+            </span>
+          </div>
+
+          <div style="margin-bottom: 28px; line-height: 1.7; color: #334155; font-size: 14px;">
+            ${data.overview ? data.overview : '<p style="color:#94a3b8; font-style:italic;">No overview provided.</p>'}
+          </div>
+
+          <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <i class="fi fi-rr-calendar" style="color:#0284c7;"></i> Day-by-Day Timeline
+          </h3>
+
+          <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 30px;">
+            ${data.days.map((d, idx) => `
+              <div style="border-left: 3px solid #0284c7; padding-left: 16px; margin-left: 6px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                  <strong style="font-size: 15px; color: #0f172a;">${esc(d.day || `Day ${idx + 1}`)}</strong>
+                  ${d.stay ? `<span style="font-size: 12px; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; color: #475569;">Stay: ${esc(d.stay)}</span>` : ''}
+                </div>
+                <div style="font-size: 13.5px; color: #475569; line-height: 1.6;">
+                  ${d.overview || '<p style="color:#94a3b8; font-style:italic;">Sightseeing & transfer.</p>'}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;">
+              <h4 style="font-size: 14px; font-weight: 700; color: #15803d; margin-bottom: 8px;"><i class="fi fi-rr-check-circle"></i> Inclusions</h4>
+              <div style="font-size: 12.5px; color: #334155; line-height: 1.5;">${data.inclusions || 'Standard inclusions.'}</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;">
+              <h4 style="font-size: 14px; font-weight: 700; color: #b91c1c; margin-bottom: 8px;"><i class="fi fi-rr-cross-circle"></i> Exclusions</h4>
+              <div style="font-size: 12.5px; color: #334155; line-height: 1.5;">${data.exclusions || 'Personal expenses.'}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      return html;
+    },
+
+    buildModernTemplatePreview: function (data) {
+      function esc(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+      const totalDays = data.days.length || 1;
+      const totalNights = Math.max(1, totalDays - 1);
+
+      let html = `
+        <div style="max-width: 880px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; padding: 32px; box-shadow: 0 8px 30px rgba(0,0,0,0.07);">
+          <div style="background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%); border-radius: 14px; padding: 28px; color: #ffffff; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 12px; font-weight: 700; background: rgba(255,255,255,0.25); padding: 4px 10px; border-radius: 6px; text-transform: uppercase;">Modern Vacation Proposal</span>
+              <span style="font-size: 13px; font-weight: 700;">${totalNights}N / ${totalDays}D</span>
+            </div>
+            <h2 style="font-size: 26px; font-weight: 800; line-height: 1.25;">${esc(data.title)}</h2>
+          </div>
+
+          <div style="margin-bottom: 28px; font-size: 14px; color: #334155; line-height: 1.65; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px;">
+            ${data.overview ? data.overview : '<p style="color:#94a3b8; font-style:italic;">No overview provided.</p>'}
+          </div>
+
+          <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 16px;"><i class="fi fi-rr-grid" style="color:#6366f1;"></i> Daily Schedule Cards</h3>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; margin-bottom: 28px;">
+            ${data.days.map((d, idx) => `
+              <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                  <span style="background: #ede9fe; color: #6d28d9; font-weight: 700; font-size: 12px; padding: 3px 8px; border-radius: 6px;">Day ${idx + 1}</span>
+                  ${d.stay ? `<span style="font-size: 12px; color: #64748b; font-weight: 600;"><i class="fi fi-rr-marker"></i> ${esc(d.stay)}</span>` : ''}
+                </div>
+                <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">${esc(d.day || `Day ${idx + 1}`)}</h4>
+                <div style="font-size: 13px; color: #475569; line-height: 1.55;">
+                  ${d.overview || '<p style="color:#94a3b8; font-style:italic;">Activities planned.</p>'}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 18px;">
+              <h4 style="font-size: 14.5px; font-weight: 700; color: #15803d; margin-bottom: 8px;"><i class="fi fi-rr-check"></i> Package Inclusions</h4>
+              <div style="font-size: 13px; color: #166534; line-height: 1.55;">${data.inclusions || 'All standard inclusions.'}</div>
+            </div>
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 18px;">
+              <h4 style="font-size: 14.5px; font-weight: 700; color: #b91c1c; margin-bottom: 8px;"><i class="fi fi-rr-cross"></i> Package Exclusions</h4>
+              <div style="font-size: 13px; color: #991b1b; line-height: 1.55;">${data.exclusions || 'Personal expenses.'}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      return html;
     }
   };
+
+  $(function () {
+    if (window.V3PackageEdit && typeof window.V3PackageEdit.autoInit === 'function') {
+      window.V3PackageEdit.autoInit();
+    }
+  });
 
 })(jQuery);

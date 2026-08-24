@@ -1,13 +1,22 @@
 <?php
 
 $rawId = $_GET['id'] ?? 0;
+if (empty($rawId) && isset($urlStructure) && is_array($urlStructure)) {
+    $lastSeg = end($urlStructure);
+    if (!empty($lastSeg) && $lastSeg !== 'edit' && $lastSeg !== 'domestic' && $lastSeg !== 'international') {
+        $rawId = $lastSeg;
+    }
+}
+if (empty($rawId) && isset($id)) {
+    $rawId = $id;
+}
 if (is_numeric($rawId) && (int)$rawId > 0) {
     $id = (int)$rawId;
 } else {
     $decoded = base64_decode((string)$rawId, true);
     $id = ($decoded !== false && is_numeric($decoded)) ? (int)$decoded : (int)$rawId;
 }
-$encodedId = is_numeric($id) ? base64_encode($id) : $rawId;
+$encodedId = is_numeric($id) && (int)$id > 0 ? base64_encode($id) : $rawId;
 ?>
 
 <div class="package-page-wrapper package-edit-wrapper" id="packageEditApp" data-package-id="<?php echo $id; ?>" data-encoded-id="<?php echo $encodedId; ?>" data-package-type="international">
@@ -51,7 +60,7 @@ $encodedId = is_numeric($id) ? base64_encode($id) : $rawId;
                 </div>
             </div>
             <div class="package-header-actions">
-                <a href="#" target="_blank" class="btn-gallery-action btn-view-live" id="btnViewLivePackage" title="View Live Package">
+                <a href="#" target="_blank" class="btn-gallery-action btn-view-live" id="btnViewLivePackage" title="View Live Package" style="display: none;">
                     <i class="fi fi-rr-eye"></i> View Live
                 </a>
                 <a href="/dashboard/packages/international/gallery/?id=<?php echo $encodedId; ?>" class="btn-gallery-action btn-manage-gallery" id="btnManageGallery" title="Manage Gallery Photos">
@@ -112,7 +121,7 @@ $encodedId = is_numeric($id) ? base64_encode($id) : $rawId;
                                 <div class="v3-card-icon indigo"><i class="fi fi-rr-bed"></i></div>
                                 <div>
                                     <h3 class="v3-card-title">Stay & Theme Attributes</h3>
-                                    <p class="v3-card-subtitle">Travel style and accommodation quality standard.</p>
+                                    <p class="v3-card-subtitle">Travel style, template, and accommodation standard.</p>
                                 </div>
                             </div>
                         </div>
@@ -190,6 +199,128 @@ $encodedId = is_numeric($id) ? base64_encode($id) : $rawId;
                             <div class="editor" id="overviewEditor"></div>
                             <textarea name="overview" id="editor-0" class="d-none"></textarea>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Template Selection Cards (Bottom of Overview) -->
+                <div class="v3-edit-card template-selection-card">
+                    <div class="v3-edit-card-header">
+                        <div class="v3-card-title-wrap">
+                            <div class="v3-card-icon fuchsia"><i class="fi fi-rr-layout-fluid"></i></div>
+                            <div>
+                                <h3 class="v3-card-title">Itinerary & Proposal Template Layout</h3>
+                                <p class="v3-card-subtitle">Choose the presentation layout for customer quotations, web previews, and PDF downloads.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="v3-edit-card-body">
+                        <input type="hidden" name="tourPackageTemplate" id="tourPackageTemplate" value="mit">
+
+                        <div class="v3-template-cards-grid">
+                            <!-- Template 1: MIT Multi-Page Proposal -->
+                            <div class="v3-template-card active" data-template-id="mit">
+                                <div class="v3-template-card-top">
+                                    <div class="v3-template-icon-box">
+                                        <i class="fi fi-rr-document-signed"></i>
+                                    </div>
+                                    <div class="v3-template-header-info">
+                                        <div class="v3-template-title-row">
+                                            <h4 class="v3-template-name">MIT Proposal</h4>
+                                            <span class="v3-template-pill-badge">Default</span>
+                                        </div>
+                                        <p class="v3-template-desc">Multi-page proposal with dynamic waves & PDF export.</p>
+                                    </div>
+                                    <div class="v3-template-radio">
+                                        <i class="fi fi-rr-check"></i>
+                                    </div>
+                                </div>
+                                <div class="v3-template-card-bottom">
+                                    <div class="v3-template-mini-tags">
+                                        <span class="v3-temp-tag"><i class="fi fi-rr-document"></i> Multi-Page A4</span>
+                                        <span class="v3-temp-tag"><i class="fi fi-rr-file-pdf"></i> PDF Ready</span>
+                                    </div>
+                                    <button type="button" class="btn-template-preview" data-template-id="mit" title="Preview MIT Proposal">
+                                        <i class="fi fi-rr-eye"></i> <span>Preview</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Template 2: Standard Clean Layout -->
+                            <div class="v3-template-card" data-template-id="standard">
+                                <div class="v3-template-card-top">
+                                    <div class="v3-template-icon-box">
+                                        <i class="fi fi-rr-list-timeline"></i>
+                                    </div>
+                                    <div class="v3-template-header-info">
+                                        <div class="v3-template-title-row">
+                                            <h4 class="v3-template-name">Standard Timeline</h4>
+                                            <span class="v3-template-pill-badge" style="background:#f1f5f9; color:#475569; border-color:#e2e8f0;">Clean</span>
+                                        </div>
+                                        <p class="v3-template-desc">Day-by-day vertical timeline with compact summary.</p>
+                                    </div>
+                                    <div class="v3-template-radio">
+                                        <i class="fi fi-rr-check"></i>
+                                    </div>
+                                </div>
+                                <div class="v3-template-card-bottom">
+                                    <div class="v3-template-mini-tags">
+                                        <span class="v3-temp-tag"><i class="fi fi-rr-list-timeline"></i> Timeline</span>
+                                        <span class="v3-temp-tag"><i class="fi fi-rr-apps"></i> Compact</span>
+                                    </div>
+                                    <button type="button" class="btn-template-preview" data-template-id="standard" title="Preview Standard Timeline">
+                                        <i class="fi fi-rr-eye"></i> <span>Preview</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Template 3: Modern Card Layout -->
+                            <div class="v3-template-card" data-template-id="modern">
+                                <div class="v3-template-card-top">
+                                    <div class="v3-template-icon-box">
+                                        <i class="fi fi-rr-grid"></i>
+                                    </div>
+                                    <div class="v3-template-header-info">
+                                        <div class="v3-template-title-row">
+                                            <h4 class="v3-template-name">Modern Cards</h4>
+                                            <span class="v3-template-pill-badge" style="background:#fdf4ff; color:#a21caf; border-color:#f5d0fe;">Visual</span>
+                                        </div>
+                                        <p class="v3-template-desc">Modular cards with visual hotel badges & meal highlights.</p>
+                                    </div>
+                                    <div class="v3-template-radio">
+                                        <i class="fi fi-rr-check"></i>
+                                    </div>
+                                </div>
+                                <div class="v3-template-card-bottom">
+                                    <div class="v3-template-mini-tags">
+                                        <span class="v3-temp-tag"><i class="fi fi-rr-grid"></i> Card Blocks</span>
+                                        <span class="v3-temp-tag"><i class="fi fi-rr-sparkles"></i> Highlights</span>
+                                    </div>
+                                    <button type="button" class="btn-template-preview" data-template-id="modern" title="Preview Modern Cards">
+                                        <i class="fi fi-rr-eye"></i> <span>Preview</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Website Publishing Option Card -->
+                <div class="v3-edit-card" id="cardWebsitePublish">
+                    <div class="v3-edit-card-body" style="padding: 16px 20px;">
+                        <label class="v3-publish-checkbox-label" for="chkPublishToWebsite">
+                            <div class="v3-publish-checkbox-left">
+                                <div class="v3-publish-icon-box">
+                                    <i class="fi fi-rr-globe"></i>
+                                </div>
+                                <div class="v3-publish-text-wrap">
+                                    <h4 class="v3-publish-title">Publish to Website</h4>
+                                    <p class="v3-publish-desc">Show and make this tour package bookable on your live website.</p>
+                                </div>
+                            </div>
+                            <div class="v3-publish-checkbox-control">
+                                <input type="checkbox" id="chkPublishToWebsite" name="publishToWebsite" value="1" checked class="v3-custom-checkbox">
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -291,4 +422,39 @@ $encodedId = is_numeric($id) ? base64_encode($id) : $rawId;
             </div>
         </form>
     </div>
+
+    <!-- Template Live Preview Modal -->
+    <div id="modalPackageTemplatePreview" class="v3-modal-overlay">
+        <div class="v3-modal-dialog v3-modal-dialog-preview">
+            <div class="v3-preview-modal-header">
+                <div class="v3-preview-header-left">
+                    <span class="v3-preview-badge"><i class="fi fi-rr-layout-fluid"></i> Template Preview</span>
+                    <h3 class="v3-preview-title" id="previewModalTitle">Template Preview</h3>
+                    <span class="v3-preview-counter-pill" id="previewTemplateCounter">1 / 3</span>
+                </div>
+                <div class="v3-modal-fullscreen-actions">
+                    <div class="v3-preview-nav-btns">
+                        <button type="button" class="btn-v3-action btn-outline btn-prev-template" id="btnPrevPreviewTemplate" title="Previous Template (Left Arrow)">
+                            <i class="fi fi-rr-angle-left"></i> Previous
+                        </button>
+                        <button type="button" class="btn-v3-action btn-outline btn-next-template" id="btnNextPreviewTemplate" title="Next Template (Right Arrow)">
+                            Next <i class="fi fi-rr-angle-right"></i>
+                        </button>
+                    </div>
+                    <button type="button" class="btn-v3-action btn-green" id="btnApplyPreviewedTemplate">
+                        <i class="fi fi-rr-check"></i> Use This Template
+                    </button>
+                    <button type="button" class="btn-v3-action btn-outline" id="btnCloseTemplatePreviewModal">
+                        <i class="fi fi-rr-cross"></i> Close
+                    </button>
+                </div>
+            </div>
+            <div class="v3-preview-modal-body">
+                <div id="templatePreviewCanvas" class="itinerary-mit-preview-container">
+                    <!-- Live preview pages dynamically rendered here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>

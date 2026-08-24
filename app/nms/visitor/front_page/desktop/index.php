@@ -370,7 +370,7 @@ if (!function_exists('clean_quote')) {
               <p>
                 <?php echo htmlspecialchars(!empty($ai['meta_description']) ? $ai['meta_description'] : $ai['news_description']); ?>
               </p>
-              <a href="<?php echo htmlspecialchars($ai['link_url']); ?>" class="read-more">Read Analysis <span class="arrow">→</span></a>
+              <a href="<?php echo htmlspecialchars($ai['link_url']); ?>" class="read-more">Read more <span class="arrow">→</span></a>
             </div>
           </article>
         <?php endforeach; ?>
@@ -699,7 +699,7 @@ if (!function_exists('clean_quote')) {
               <p>
                 <?php echo htmlspecialchars(!empty($ai['meta_description']) ? $ai['meta_description'] : $ai['news_description']); ?>
               </p>
-              <a href="<?php echo htmlspecialchars($ai['link_url']); ?>" class="read-more">Read Analysis <span class="arrow">→</span></a>
+              <a href="<?php echo htmlspecialchars($ai['link_url']); ?>" class="read-more">Read more <span class="arrow">→</span></a>
             </div>
           </article>
         <?php endforeach; ?>

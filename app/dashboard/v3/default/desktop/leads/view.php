@@ -13,8 +13,13 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
     }
 }
 ?>
-
-<div id="leadViewApp" class="lead-view-wrapper" data-lead-id="<?php echo htmlspecialchars($rawLeadId); ?>">
+<div id="leadViewApp" class="lead-view-wrapper"
+    data-lead-id="<?php echo htmlspecialchars($rawLeadId); ?>"
+    data-site-name="<?php echo htmlspecialchars(defined('SITE_NAME') ? SITE_NAME : ''); ?>"
+    data-site-logo="<?php echo htmlspecialchars(defined('SITE_LOGO') ? SITE_LOGO : ''); ?>"
+    data-site-domain="<?php echo htmlspecialchars(defined('COMPANY_SITE_DOMAIN') ? COMPANY_SITE_DOMAIN : (defined('SITE_DOMAIN') ? SITE_DOMAIN : '')); ?>"
+    data-site-theme="<?php echo htmlspecialchars(defined('SITE_THEME_COLOUR') ? SITE_THEME_COLOUR : '#e76317'); ?>"
+    data-site-bg="<?php echo htmlspecialchars(defined('SITE_BACKGROUND_COLOUR') ? SITE_BACKGROUND_COLOUR : '#fb923c'); ?>">
     <!-- Dynamic Content Container Populated via /api/v3/leads/view.php -->
     <div id="leadViewMainContainer">
         <div class="v3-leads-table-loader">
@@ -122,27 +127,29 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
 <!-- Modal: Full Screen Send & Customize Itinerary Cover -->
 <div class="v3-modal-overlay" id="modalSendItinerary">
     <div class="v3-modal-dialog v3-modal-dialog-fullscreen">
-        <!-- Sticky Fullscreen Header (Plain & Minimal) -->
+        <!-- Sticky Fullscreen Header -->
         <div class="v3-modal-fullscreen-header">
             <div class="v3-modal-fullscreen-title-wrap">
-                <h4 class="v3-modal-title"><i class="fi fi-rr-paper-plane"></i> Search, Customize & Send Tour Itinerary</h4>
-                <span class="v3-lead-badge badge-fresh" id="itinModalLeadBadge">Lead Itinerary</span>
+                <div class="v3-modal-header-icon-box">
+                    <i class="fi fi-rr-route"></i>
+                </div>
+                <div class="v3-modal-header-text">
+                    <h4 class="v3-modal-title">Tour Itinerary & Proposal Builder</h4>
+                    <span class="v3-modal-lead-chip" id="itinModalLeadBadge">Lead Itinerary</span>
+                </div>
             </div>
             <div class="v3-modal-fullscreen-actions">
-                <a href="#" class="btn-v3-action btn-outline v3-hidden" id="btnDownloadItineraryPdf" target="_blank">
-                    <i class="fi fi-rr-file-pdf"></i> Download PDF
-                </a>
-                <button type="button" class="btn-v3-action btn-green v3-hidden" id="btnPublishAndSendItinerary">
-                    <i class="fi fi-rr-paper-plane"></i> Send Itinerary to Customer
+                <button type="button" class="btn-v3-action btn-green v3-hidden" id="btnPreviewItinerary">
+                    <i class="fi fi-rr-eye"></i> Preview Itinerary
                 </button>
-                <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
+                <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close (Press Esc)"><i class="fi fi-rr-cross"></i></button>
             </div>
         </div>
 
         <!-- Scrollable Fullscreen Canvas Body -->
         <div class="v3-modal-fullscreen-body">
             <div class="v3-itin-canvas-container">
-                
+
                 <!-- 1. Search & Template Selector -->
                 <div class="v3-itin-section-card">
                     <div class="v3-itin-section-header">
@@ -154,7 +161,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                     <div class="v3-itinerary-search-row">
                         <div class="v3-modal-form-group">
                             <label class="v3-modal-label"><i class="fi fi-rr-marker"></i> Destination / Country / City *</label>
-                            <select class="internationalCityAutoComplete form-control v3-select-full" id="itineraryDestinationInput"></select>
+                            <select class="form-control v3-select-full" id="itineraryDestinationInput"></select>
                         </div>
                         <div class="v3-modal-form-group">
                             <label class="v3-modal-label"><i class="fi fi-rr-compass"></i> Travel Style / Theme</label>
@@ -215,7 +222,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
 
                 <!-- 2. Main Customization Form -->
                 <div id="itineraryCustomSection" class="v3-hidden v3-itin-custom-canvas">
-                    
+
                     <!-- Section A: Overview & Pricing Configuration -->
                     <div class="v3-itin-section-card">
                         <div class="v3-itin-section-header">
@@ -224,7 +231,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                                 <span>2. General Package & Quotation Pricing</span>
                             </div>
                         </div>
-                        
+
                         <div class="v3-form-grid-2">
                             <div class="v3-modal-form-group">
                                 <label class="v3-modal-label">Itinerary Title *</label>
@@ -289,7 +296,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                                 <span>4. Inclusions, Exclusions & Special Terms</span>
                             </div>
                         </div>
-                        
+
                         <div class="v3-form-grid-2">
                             <div class="v3-modal-form-group">
                                 <label class="v3-modal-label"><i class="fi fi-rr-check-circle v3-text-green"></i> What's Included</label>
@@ -302,8 +309,43 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                         </div>
                     </div>
 
+                    <!-- 5. Footer Preview CTA Bar -->
+                    <div class="v3-itin-footer-actions">
+                        <button type="button" class="btn-v3-action btn-green btn-v3-preview-lg" id="btnPreviewItineraryBottom">
+                            <i class="fi fi-rr-eye"></i> Preview Itinerary Proposal
+                        </button>
+                    </div>
+
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Real Itinerary Proposal Live Preview -->
+<div class="v3-modal-overlay" id="modalItineraryLivePreview">
+    <div class="v3-modal-dialog v3-modal-dialog-preview">
+        <!-- Preview Header -->
+        <div class="v3-preview-modal-header">
+            <div class="v3-preview-header-left">
+                <div class="v3-preview-badge"><i class="fi fi-rr-eye"></i> Real Itinerary Preview</div>
+                <h4 class="v3-preview-header-title" id="livePreviewHeaderTitle">Custom Tour Proposal</h4>
+            </div>
+            <div class="v3-preview-header-actions">
+                <button type="button" class="btn-v3-action btn-outline" id="btnLivePreviewDownloadPdf">
+                    <i class="fi fi-rr-file-pdf"></i> Download PDF
+                </button>
+                <button type="button" class="btn-v3-action btn-green" id="btnLivePreviewSendItinerary">
+                    <i class="fi fi-rr-paper-plane"></i> Send Itinerary to Customer
+                </button>
+                <button type="button" class="v3-modal-close-btn v3-preview-close-trigger" title="Close Preview (Esc)"><i class="fi fi-rr-cross"></i></button>
+            </div>
+        </div>
+        <!-- Scrollable Document Preview Body -->
+        <div class="v3-preview-modal-body">
+            <div class="v3-preview-sheet" id="livePreviewSheet">
+                <!-- Injected via JavaScript -->
             </div>
         </div>
     </div>

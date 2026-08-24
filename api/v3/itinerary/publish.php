@@ -25,20 +25,11 @@ $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $userId    = defined('USER_ID')      ? (int) USER_ID : 0;
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode([
-        'status' => 'error',
-        'msg'    => 'Method Not Allowed. Use POST.'
-    ]);
-    exit;
-}
-
-// Get raw POST JSON or form data
+// Get raw POST JSON or form / query data
 $rawInput = file_get_contents('php://input');
 $data = json_decode($rawInput, true);
-if (!is_array($data)) {
-    $data = $_POST;
+if (!is_array($data) || empty($data)) {
+    $data = !empty($_POST) ? $_POST : $_GET;
 }
 
 $packageId = isset($data['id']) ? (int)$data['id'] : 0;
@@ -155,6 +146,8 @@ if (mysqli_query($connection, $insertQuery)) {
         LIMIT 1
     ");
 
+    $isDownload = !empty($payload['isDownload']);
+
     if ($customerQuery && mysqli_num_rows($customerQuery) > 0) {
         $customerData = mysqli_fetch_assoc($customerQuery);
         $clientName   = trim(($customerData['enquiry_user_name'] ?? '') ?: 'Valued Customer');
@@ -164,14 +157,16 @@ if (mysqli_query($connection, $insertQuery)) {
         $viewUrl = (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/view-itinerary/{$encodedId}/";
         $pdfUrl  = (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/download-itinerary/{$encodedId}/";
 
-        // Dispatch Email if template exists
-        if (defined('USER_EMAIL_TEMPLATE') && file_exists(USER_EMAIL_TEMPLATE . 'send-itinerary.php')) {
-            @require_once USER_EMAIL_TEMPLATE . 'send-itinerary.php';
-        }
+        if (!$isDownload) {
+            // Dispatch Email if template exists
+            if (defined('USER_EMAIL_TEMPLATE') && file_exists(USER_EMAIL_TEMPLATE . 'send-itinerary.php')) {
+                @require_once USER_EMAIL_TEMPLATE . 'send-itinerary.php';
+            }
 
-        // Dispatch WhatsApp if template exists
-        if (defined('WHATSAPP_TEMPLATE_USER') && file_exists(WHATSAPP_TEMPLATE_USER . 'send-itinerary.php')) {
-            @require_once WHATSAPP_TEMPLATE_USER . 'send-itinerary.php';
+            // Dispatch WhatsApp if template exists
+            if (defined('WHATSAPP_TEMPLATE_USER') && file_exists(WHATSAPP_TEMPLATE_USER . 'send-itinerary.php')) {
+                @require_once WHATSAPP_TEMPLATE_USER . 'send-itinerary.php';
+            }
         }
     }
 

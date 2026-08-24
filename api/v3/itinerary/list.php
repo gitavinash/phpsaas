@@ -104,9 +104,17 @@ $query = "
         tp.tour_package_exclusions,
         tpp.tour_package_price_id,
         tpp.tour_package_price_type,
-        tpp.tour_package_price_adult,
-        tpp.tour_package_price_child,
-        tpp.tour_package_price_infant,
+        tpp.tour_package_price_mrp_adult,
+        tpp.tour_package_price_mrp_child,
+        tpp.tour_package_price_selling_adult,
+        tpp.tour_package_price_selling_child,
+        tpp.tour_package_price_net_adult,
+        tpp.tour_package_price_net_child,
+        tpp.tour_package_price_agent_adult,
+        tpp.tour_package_price_agent_child,
+        COALESCE(tpp.tour_package_price_selling_adult, tpp.tour_package_price_mrp_adult, 0) AS tour_package_price_adult,
+        COALESCE(tpp.tour_package_price_selling_child, tpp.tour_package_price_mrp_child, 0) AS tour_package_price_child,
+        0 AS tour_package_price_infant,
         ROW_NUMBER() OVER (
           PARTITION BY tp.tour_package_id
           ORDER BY 
@@ -138,6 +146,8 @@ if ($res) {
                 $row['parsed_itinerary'] = $decodedItin;
             }
         }
+        // Ensure template identifier is present
+        $row['tour_package_template'] = !empty($row['tour_package_template']) ? $row['tour_package_template'] : 'mit';
         $itineraryList[] = $row;
     }
 
