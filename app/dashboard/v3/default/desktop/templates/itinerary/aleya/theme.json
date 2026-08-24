@@ -1,0 +1,20 @@
+{
+  "id": "aleya",
+  "name": "Aleya Luxury",
+  "title": "Aleya Luxury Proposal",
+  "version": "1.0.0",
+  "author": "Aleya",
+  "tag": "Luxury",
+  "badge": "Gold Edition",
+  "badge_style": "background:#fef8ec; color:#b0871d; border-color:#fde68a;",
+  "icon": "fi fi-rr-crown",
+  "icon_style": "background:#fef8ec; color:#c59b27;",
+  "description": "Gold luxury theme with gallery lightbox, verified stays & A4 PDF export.",
+  "accent_color": "#c59b27",
+  "tags": [
+    { "icon": "fi fi-rr-crown", "label": "Gold Theme" },
+    { "icon": "fi fi-rr-picture", "label": "Gallery" }
+  ],
+  "screenshot": "screenshot.svg",
+  "order": 4
+}

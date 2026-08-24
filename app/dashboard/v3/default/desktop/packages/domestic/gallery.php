@@ -19,7 +19,7 @@ $encodedId = base64_encode($id);
                 <i class="fi-rr-gallery"></i>
             </div>
             <div class="package-header-titles">
-                <h2 id="pkgHeaderTitle">Tour Package — Gallery</h2>
+                <h2 id="pkgHeaderTitle">Tour Package</h2>
                 <div class="pkg-meta-row" style="margin-top: 4px;">
                     <span class="pkg-theme-pill pkg-theme-standard" id="pkgMetaTheme">Standard</span>
                     <span class="pkg-duration-badge" id="pkgMetaDuration">
@@ -32,14 +32,14 @@ $encodedId = base64_encode($id);
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="#" target="_blank" class="btn-gallery-action" id="btnViewLivePackage" style="background: #f8fafc; color: #0284c7; border: 1px solid #cbd5e1; display: none;" data-tooltip="View Live Package Itinerary" title="View Live Package Itinerary">
+            <a href="#" target="_blank" class="btn-v3-action" id="btnViewLivePackage" style="display: none;" data-tooltip="View Live Package" title="View Live Package">
                 <i class="fi fi-rr-eye"></i> View Package
             </a>
-            <a href="/dashboard/packages/domestic/list/" class="btn-gallery-action" style="background: #f8fafc; color: #475569; border: 1px solid #cbd5e1;" data-tooltip="Back to Domestic Packages List">
+            <a href="/dashboard/packages/domestic/list/" class="btn-v3-action" data-tooltip="Back to Domestic Packages List" title="Back to Domestic Packages List">
                 <i class="fi fi-rr-arrow-left"></i> Packages
             </a>
-            <a href="/dashboard/packages/domestic/edit/?id=<?php echo $encodedId; ?>" class="btn-gallery-action" style="background: #f8fafc; color: #475569; border: 1px solid #cbd5e1;" data-tooltip="Edit Package Details">
-                <i class="fi fi-rr-edit"></i> Edit Details
+            <a href="/dashboard/packages/domestic/edit/?id=<?php echo $encodedId; ?>" class="btn-v3-action" data-tooltip="Edit Package Details" title="Edit Package Details">
+                <i class="fi fi-rr-edit"></i> Edit Package
             </a>
         </div>
     </div>
@@ -80,13 +80,13 @@ $encodedId = base64_encode($id);
     <div class="gallery-sub-header">
         <div class="gallery-filter-tabs">
             <button type="button" class="theme-filter-btn active" data-filter="all" data-tooltip="Show all gallery photos">
-                <i class="fi fi-rr-apps"></i> All (<span id="tabCountAll">0</span>)
+                <i class="fi fi-rr-apps"></i> All <span class="filter-badge" id="tabCountAll">0</span>
             </button>
             <button type="button" class="theme-filter-btn" data-filter="assigned" data-tooltip="Show day-assigned photos">
-                <i class="fi fi-rr-calendar-check"></i> Assigned (<span id="tabCountAssigned">0</span>)
+                <i class="fi fi-rr-calendar-check"></i> Assigned <span class="filter-badge" id="tabCountAssigned">0</span>
             </button>
             <button type="button" class="theme-filter-btn" data-filter="unassigned" data-tooltip="Show unassigned photos">
-                <i class="fi fi-rr-clock"></i> Unassigned (<span id="tabCountUnassigned">0</span>)
+                <i class="fi fi-rr-clock"></i> Unassigned <span class="filter-badge" id="tabCountUnassigned">0</span>
             </button>
             <button type="button" class="theme-filter-btn btn-suggestions-tab" id="btnToggleSuggestions" data-tooltip="Discover recommended stock photos">
                 <i class="fi fi-rr-magic-wand"></i> Image Suggestions
@@ -95,7 +95,7 @@ $encodedId = base64_encode($id);
 
         <div class="gallery-quick-actions">
             <input type="text" id="galleryLocalSearch" class="gallery-search-input" placeholder="Search photos..." data-tooltip="Filter photos by day or name">
-            <button type="button" class="btn-gallery-action upload open-gallery-upload-modal" id="btnOpenGalleryUpload" data-tooltip="Upload new image from your device">
+            <button type="button" class="btn-v3-action primary open-gallery-upload-modal" id="btnOpenGalleryUpload" data-tooltip="Upload new image from your device">
                 <i class="fi fi-rr-cloud-upload"></i> Upload Image
             </button>
         </div>

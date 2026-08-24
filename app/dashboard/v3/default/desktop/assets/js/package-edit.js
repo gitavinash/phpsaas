@@ -918,6 +918,7 @@
       this.packageId = pkgId;
       this.encodedId = encodedId;
       this.packageType = pkgType;
+      this.initAvailableTemplates();
       this.bindEvents();
       this.eventsBound = true;
       this.loadPackageData(pkgId);
@@ -1725,17 +1726,22 @@
         }
       });
 
+      function closeModal() {
+        $('#modalPackageTemplatePreview').removeClass('is-active');
+        $('#templatePreviewCanvas').empty();
+      }
+
       $(document).off('click.v3pkgClosePrev', '#btnCloseTemplatePreviewModal');
       $(document).on('click.v3pkgClosePrev', '#btnCloseTemplatePreviewModal', function (e) {
         e.preventDefault();
-        $('#modalPackageTemplatePreview').removeClass('is-active');
+        closeModal();
       });
 
       // Close modal on clicking outside dialog
       $(document).off('click.v3pkgModalBackdrop', '#modalPackageTemplatePreview');
       $(document).on('click.v3pkgModalBackdrop', '#modalPackageTemplatePreview', function (e) {
         if (e.target === this) {
-          $(this).removeClass('is-active');
+          closeModal();
         }
       });
 
@@ -1743,7 +1749,7 @@
       $(document).off('keydown.v3pkgModalEsc');
       $(document).on('keydown.v3pkgModalEsc', function (e) {
         if (e.key === 'Escape' || e.keyCode === 27) {
-          $('#modalPackageTemplatePreview').removeClass('is-active');
+          closeModal();
         }
       });
 
@@ -1752,7 +1758,7 @@
         e.preventDefault();
         const templateId = $(this).data('template-id') || 'mit';
         self.selectTemplate(templateId);
-        $('#modalPackageTemplatePreview').removeClass('is-active');
+        closeModal();
         if (typeof popUpMessage === 'function') {
           popUpMessage('center', `Selected ${templateId.toUpperCase()} template layout.`, 'success');
         }
@@ -1778,10 +1784,12 @@
           const pdf = new jsPDF('p', 'pt', 'a4');
           const pageWidth = pdf.internal.pageSize.getWidth();
           const pageHeight = pdf.internal.pageSize.getHeight();
-          const pages = document.querySelectorAll('#templatePreviewCanvas .page');
+          const iframe = document.getElementById('previewTemplateIframe');
+          const iframeDoc = iframe ? (iframe.contentDocument || iframe.contentWindow.document) : document;
+          const pages = iframeDoc.querySelectorAll('.page');
 
           if (!pages || pages.length === 0) {
-            const canvasEl = document.querySelector('#templatePreviewCanvas');
+            const canvasEl = iframeDoc.getElementById('pdfContentWrapper') || iframeDoc.body || document.querySelector('#templatePreviewCanvas');
             const canvas = await html2canvas(canvasEl, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff' });
             const imgData = canvas.toDataURL('image/jpeg', 0.95);
             const imgProps = pdf.getImageProperties(imgData);
@@ -1841,12 +1849,22 @@
 
     templateOrder: ['mit', 'standard', 'modern', 'aleya'],
     templateLabels: {
-      'mit': 'MIT Multi-Page Proposal (A4 PDF / Premium)',
-      'standard': 'Standard Clean Layout',
-      'modern': 'Modern Card Layout',
-      'aleya': 'Aleya Luxury Proposal (A4 PDF / Gold)'
+      'mit': 'MIT Multi-Page Proposal',
+      'standard': 'Standard Timeline Proposal',
+      'modern': 'Modern Card Proposal',
+      'aleya': 'Aleya Luxury Proposal'
     },
     activePreviewTemplate: 'mit',
+
+    initAvailableTemplates: function () {
+      if (window.V3_AVAILABLE_TEMPLATES && Array.isArray(window.V3_AVAILABLE_TEMPLATES) && window.V3_AVAILABLE_TEMPLATES.length > 0) {
+        this.templateOrder = window.V3_AVAILABLE_TEMPLATES.map(function (t) { return t.id; });
+        this.templateLabels = {};
+        window.V3_AVAILABLE_TEMPLATES.forEach(t => {
+          this.templateLabels[t.id] = t.title || t.name;
+        });
+      }
+    },
 
     navigateTemplatePreview: function (direction) {
       const templates = this.templateOrder || ['mit', 'standard', 'modern', 'aleya'];
@@ -1869,13 +1887,26 @@
     },
 
     openTemplatePreviewModal: function (templateId) {
+      this.loadTemplatePreview(templateId);
+    },
+
+    loadTemplatePreview: function (templateId) {
       templateId = templateId || $('#tourPackageTemplate').val() || 'mit';
       this.activePreviewTemplate = templateId;
-      
+
       const templates = this.templateOrder || ['mit', 'standard', 'modern', 'aleya'];
       let idx = templates.indexOf(templateId);
       if (idx === -1) idx = 0;
       $('#previewTemplateCounter').text(`${idx + 1} / ${templates.length}`);
+
+      const titles = this.templateLabels || {
+        'mit': 'MIT Multi-Page Proposal',
+        'standard': 'Standard Timeline Proposal',
+        'modern': 'Modern Card Proposal',
+        'aleya': 'Aleya Luxury Proposal'
+      };
+      $('#previewModalTitle').text(titles[templateId] || 'Template Preview');
+      $('#btnApplyPreviewedTemplate').data('template-id', templateId);
 
       const pkg = (this.packageData && this.packageData.package) ? this.packageData.package : {};
       const title = ($('#name').val() || pkg.title || 'Tour Package').trim();
@@ -1884,14 +1915,18 @@
       const city = ($('#destinationCity').val() || pkg.city || 'Destination').trim();
       const outstationVehicle = ($('#outstationVehicle').val() || pkg.outstation_vehicle || '').trim();
       const localSightseeingVehicle = ($('#localSighseeignVehicle').val() || pkg.localsightseen_vehicle || '').trim();
-      const coverImage = (pkg.image || pkg.featured_image || pkg.gallery_image || '');
-      
+
+      let coverImage = (pkg.image || pkg.featured_image || pkg.cover_image || pkg.gallery_image || (pkg.gallery_image_list && pkg.gallery_image_list[0] ? (pkg.gallery_image_list[0].path || pkg.gallery_image_list[0].url) : '') || '');
+      if (!coverImage && window.V3PackageEdit && window.V3PackageEdit.galleryImageList && window.V3PackageEdit.galleryImageList.length > 0) {
+        coverImage = window.V3PackageEdit.galleryImageList[0].path || window.V3PackageEdit.galleryImageList[0].url || '';
+      }
+
       const overviewEl = document.querySelector('#overviewEditor .ql-editor');
       const overview = overviewEl ? overviewEl.innerHTML : ($('#editor-0').val() || pkg.overview || '');
-      
+
       const incEl = document.querySelector('#inclusionsEditor .ql-editor');
       const inclusions = incEl ? incEl.innerHTML : ($('#editor-inclusion').val() || pkg.inclusions || '');
-      
+
       const excEl = document.querySelector('#exclusionsEditor .ql-editor');
       const exclusions = excEl ? excEl.innerHTML : ($('#editor-exclusion').val() || pkg.exclusions || '');
 
@@ -1904,503 +1939,108 @@
         const dayEl = document.querySelector(`#dayEditor_${dayNum} .ql-editor`);
         const dayContent = dayEl ? dayEl.innerHTML : ($(`#editor-${dayNum}`).val() || '');
         const dayStay = $(this).find('.v3-day-stay-field select, .select2-stay-city').val() || $(`#dayStayInput_${dayNum}`).val() || '';
-        const dayImg = (itineraryList[i] && (itineraryList[i].feature_image || itineraryList[i].image)) ? (itineraryList[i].feature_image || itineraryList[i].image) : '';
+        let dayImg = $(this).find('.v3-day-feat-input').val() || $(`#dayFeatInput_${dayNum}`).val() || $(this).data('feature-image') || '';
+        if (!dayImg && itineraryList[i]) {
+          dayImg = itineraryList[i].feature_image || itineraryList[i].image || '';
+        }
+        if (!dayImg && window.V3PackageEdit && window.V3PackageEdit.galleryImageList && window.V3PackageEdit.galleryImageList[i]) {
+          dayImg = window.V3PackageEdit.galleryImageList[i].path || window.V3PackageEdit.galleryImageList[i].url || '';
+        }
         days.push({
           day: dayTitle,
           overview: dayContent,
           stay: dayStay,
-          image: dayImg
+          image: dayImg,
+          feature_image: dayImg
         });
       });
 
       if (days.length === 0 && itineraryList.length > 0) {
         itineraryList.forEach(function (d, idx) {
+          let dImg = d.feature_image || d.image || '';
+          if (!dImg && window.V3PackageEdit && window.V3PackageEdit.galleryImageList && window.V3PackageEdit.galleryImageList[idx]) {
+            dImg = window.V3PackageEdit.galleryImageList[idx].path || window.V3PackageEdit.galleryImageList[idx].url || '';
+          }
           days.push({
             day: d.day || `Day ${idx + 1}`,
             overview: d.overview || '',
             stay: d.stay || '',
-            image: d.feature_image || d.image || ''
+            image: dImg,
+            feature_image: dImg
           });
         });
       }
 
-      $('#btnApplyPreviewedTemplate').data('template-id', templateId);
-      const titles = this.templateLabels || {
-        'mit': 'MIT Multi-Page Proposal',
-        'standard': 'Standard Timeline Proposal',
-        'modern': 'Modern Card Proposal',
-        'aleya': 'Aleya Luxury Proposal'
-      };
-      $('#previewModalTitle').text(titles[templateId] || 'Template Preview');
+      // Display dynamic loader state
+      $('#templatePreviewCanvas').html(`
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 480px; width: 100%; gap: 16px; color: #94a3b8;">
+          <div class="spinner-border text-primary" style="width: 3rem; height: 3rem; border-width: 3px;" role="status"></div>
+          <span style="font-size: 14px; font-weight: 600; color: #e2e8f0;">Loading ${titles[templateId] || 'Template'}...</span>
+        </div>
+      `);
 
-      let renderHtml = '';
-      if (templateId === 'mit') {
-        renderHtml = this.buildMitTemplatePreview({ title, theme, hotel, city, outstationVehicle, localSightseeingVehicle, coverImage, overview, inclusions, exclusions, days });
-      } else if (templateId === 'modern') {
-        renderHtml = this.buildModernTemplatePreview({ title, theme, hotel, city, outstationVehicle, localSightseeingVehicle, coverImage, overview, inclusions, exclusions, days });
-      } else if (templateId === 'aleya') {
-        renderHtml = this.buildAleyaTemplatePreview({ title, theme, hotel, city, outstationVehicle, localSightseeingVehicle, coverImage, overview, inclusions, exclusions, days });
-      } else {
-        renderHtml = this.buildStandardTemplatePreview({ title, theme, hotel, city, outstationVehicle, localSightseeingVehicle, coverImage, overview, inclusions, exclusions, days });
-      }
-
-      $('#templatePreviewCanvas').html(renderHtml);
       $('#modalPackageTemplatePreview').addClass('is-active');
       $('#modalPackageTemplatePreview .v3-preview-modal-body').scrollTop(0);
-    },
 
-    buildMitTemplatePreview: function (data) {
-      function esc(str) {
-        if (!str) return '';
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      }
-      const siteName = window.SITE_NAME || window.siteName || 'Travel Partner';
-      const totalDays = data.days.length || 1;
-      const totalNights = Math.max(1, totalDays - 1);
-      const themeGrad = 'linear-gradient(135deg, #ea580c 0%, #f97316 100%)';
+      // Dynamically load the server-side template directly
+      const payload = {
+        id: pkg.id || 0,
+        template: templateId,
+        format: 'json',
+        title: title,
+        theme: theme,
+        hotel: hotel,
+        city: city,
+        outstationVehicle: outstationVehicle,
+        localSightseeingVehicle: localSightseeingVehicle,
+        coverImage: coverImage,
+        overview: overview,
+        inclusions: inclusions,
+        exclusions: exclusions,
+        days: days
+      };
 
-      let html = `
-        <div style="background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 24px;">
-          <div style="position: relative; width: 100%; min-height: 240px; background: ${themeGrad}; display: flex; align-items: flex-end; padding: 28px 34px; color: #ffffff; overflow: hidden;">
-            ${data.coverImage ? `<img src="${esc(data.coverImage)}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />` : ''}
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.75) 100%);"></div>
-            <div style="position: relative; z-index: 2; width: 100%;">
-              <span style="background: rgba(255,255,255,0.2); backdrop-filter: blur(6px); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
-                ${totalNights}N / ${totalDays}D &bull; ${esc(data.city || 'Destination')}
-              </span>
-              <h1 style="font-size: 26px; font-weight: 800; margin-top: 6px; text-shadow: 0 2px 8px rgba(0,0,0,0.4);">${esc(data.title)}</h1>
+      $.ajax({
+        url: '/api/v3/packages/render/',
+        method: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(payload),
+        dataType: 'json',
+        success: function (res) {
+          if (res && res.status === 'success' && res.html) {
+            const iframe = document.createElement('iframe');
+            iframe.id = 'previewTemplateIframe';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.style.display = 'block';
+            iframe.style.background = '#475569';
+
+            $('#templatePreviewCanvas').empty().append(iframe);
+
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(res.html);
+            iframeDoc.close();
+          } else {
+            $('#templatePreviewCanvas').html(`
+              <div style="padding: 40px; text-align: center; color: #f87171;">
+                <i class="fi fi-rr-cross-circle" style="font-size: 36px; display: block; margin-bottom: 12px;"></i>
+                <p style="font-size: 15px; font-weight: 600;">Unable to render template preview.</p>
+              </div>
+            `);
+          }
+        },
+        error: function (xhr) {
+          console.error('[V3 Package Preview API Error]:', xhr.statusText);
+          $('#templatePreviewCanvas').html(`
+            <div style="padding: 40px; text-align: center; color: #f87171;">
+              <i class="fi fi-rr-cross-circle" style="font-size: 36px; display: block; margin-bottom: 12px;"></i>
+              <p style="font-size: 15px; font-weight: 600;">Failed to load template preview.</p>
             </div>
-          </div>
-
-          <div style="padding: 24px 34px;">
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; text-align: center;">
-                <span style="display:block; font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700;">Duration</span>
-                <strong style="font-size: 14px; color: #0f172a;">${totalNights}N / ${totalDays}D</strong>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; text-align: center;">
-                <span style="display:block; font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700;">Travel Style</span>
-                <strong style="font-size: 14px; color: #0f172a; text-transform: capitalize;">${esc(data.theme)}</strong>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; text-align: center;">
-                <span style="display:block; font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700;">Hotel Tier</span>
-                <strong style="font-size: 14px; color: #0f172a; text-transform: capitalize;">${esc(data.hotel || 'Deluxe 3★')}</strong>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; text-align: center;">
-                <span style="display:block; font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700;">Vehicle</span>
-                <strong style="font-size: 14px; color: #0f172a; text-transform: capitalize;">${esc(data.outstationVehicle || 'AC Dedicated')}</strong>
-              </div>
-            </div>
-
-            ${data.overview ? `
-              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 22px; margin-bottom: 24px;">
-                <h3 style="font-size: 16px; font-weight: 800; color: #ea580c; margin-bottom: 8px;">Tour Overview</h3>
-                <div style="font-size: 13.5px; color: #334155; line-height: 1.75;">${data.overview}</div>
-              </div>
-            ` : ''}
-
-            <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 16px;">Day-by-Day Itinerary</h3>
-            <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
-              ${data.days.map((d, idx) => {
-                const isLast = (idx === data.days.length - 1);
-                return `
-                  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 22px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                      <span style="background: #ea580c; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 6px;">Day ${idx + 1}</span>
-                      <h4 style="font-size: 15px; font-weight: 800; color: #0f172a; flex: 1; margin-left: 12px;">${esc(d.day || `Day ${idx + 1}`)}</h4>
-                    </div>
-                    <div style="font-size: 13.5px; color: #334155; line-height: 1.7;">${d.overview || '<p style="color:#94a3b8; font-style:italic;">Sightseeing and transfers.</p>'}</div>
-                    ${d.image ? `
-                      <div style="margin-top: 12px; height: 160px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0;">
-                        <img src="${esc(d.image)}" style="width: 100%; height: 100%; object-fit: cover;" />
-                      </div>
-                    ` : ''}
-                    ${d.stay ? `
-                      <div style="margin-top: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: #166534; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                        <i class="fi fi-rr-bed"></i> Night Stay: ${esc(d.stay)}
-                      </div>
-                    ` : (isLast ? `
-                      <div style="margin-top: 12px; background: #fdf4ff; border: 1px solid #f5d0fe; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: #86198f; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                        <i class="fi fi-rr-plane"></i> Tour Concludes: Farewell & transfers! ✨
-                      </div>
-                    ` : '')}
-                  </div>
-                `;
-              }).join('')}
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px;">
-              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 18px;">
-                <h4 style="color: #16a34a; font-size: 14px; font-weight: 800; margin-bottom: 8px;"><i class="fi fi-rr-check-circle"></i> Inclusions</h4>
-                <div style="font-size: 13px; color: #166534; line-height: 1.6;">${data.inclusions || 'Standard package inclusions.'}</div>
-              </div>
-              <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 18px;">
-                <h4 style="color: #dc2626; font-size: 14px; font-weight: 800; margin-bottom: 8px;"><i class="fi fi-rr-cross-circle"></i> Exclusions</h4>
-                <div style="font-size: 13px; color: #991b1b; line-height: 1.6;">${data.exclusions || 'Personal expenses not included.'}</div>
-              </div>
-            </div>
-
-            <div style="background: linear-gradient(135deg, #431407 0%, #7c2d12 100%); border-radius: 12px; padding: 22px; color: #ffffff; margin-bottom: 18px;">
-              <h4 style="font-size: 16px; font-weight: 800;">${esc(siteName)}</h4>
-              <p style="font-size: 12.5px; color: #fed7aa; margin-top: 2px;">Your dedicated travel planning specialist</p>
-            </div>
-
-            <div style="text-align: center; font-size: 11.5px; color: #64748b; padding-top: 8px; border-top: 1px solid #f1f5f9;">
-              Powered by <a href="https://aleya.in" target="_blank" rel="noopener" style="color: #ea580c; text-decoration: none; font-weight: 700;">Aleya</a> — Travel Agency Management Software
-            </div>
-          </div>
-        </div>
-      `;
-
-      return html;
-    },
-
-    buildStandardTemplatePreview: function (data) {
-      function esc(str) {
-        if (!str) return '';
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      }
-      const siteName = window.SITE_NAME || window.siteName || 'Travel Partner';
-      const totalDays = data.days.length || 1;
-      const totalNights = Math.max(1, totalDays - 1);
-
-      let html = `
-        <div style="background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 24px;">
-          <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; padding: 28px 34px; border-bottom: 3px solid #0284c7;">
-            <div style="display: flex; gap: 8px; margin-bottom: 6px;">
-              <span style="background: #0284c7; color: #ffffff; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px;">
-                ${totalNights}N / ${totalDays}D
-              </span>
-              <span style="background: rgba(255,255,255,0.15); color: #ffffff; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px;">
-                ${esc(data.city || 'Destination')}
-              </span>
-            </div>
-            <h1 style="font-size: 24px; font-weight: 800;">${esc(data.title)}</h1>
-          </div>
-
-          <div style="padding: 24px 34px;">
-            ${data.coverImage ? `
-              <div style="width: 100%; height: 200px; border-radius: 10px; overflow: hidden; margin-bottom: 20px; border: 1px solid #e2e8f0;">
-                <img src="${esc(data.coverImage)}" style="width: 100%; height: 100%; object-fit: cover;" />
-              </div>
-            ` : ''}
-
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; text-align: center;">
-                <span style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Duration</span>
-                <strong style="font-size: 14px; color: #0f172a;">${totalNights}N / ${totalDays}D</strong>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; text-align: center;">
-                <span style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Travel Style</span>
-                <strong style="font-size: 14px; color: #0f172a; text-transform: capitalize;">${esc(data.theme)}</strong>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; text-align: center;">
-                <span style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Hotel</span>
-                <strong style="font-size: 14px; color: #0f172a; text-transform: capitalize;">${esc(data.hotel || 'Deluxe')}</strong>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; text-align: center;">
-                <span style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Vehicle</span>
-                <strong style="font-size: 14px; color: #0f172a; text-transform: capitalize;">${esc(data.outstationVehicle || 'AC Private')}</strong>
-              </div>
-            </div>
-
-            ${data.overview ? `
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; margin-bottom: 24px;">
-                <h3 style="font-size: 16px; font-weight: 800; color: #0284c7; margin-bottom: 8px;">Itinerary Overview</h3>
-                <div style="font-size: 13.5px; color: #334155; line-height: 1.75;">${data.overview}</div>
-              </div>
-            ` : ''}
-
-            <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 16px;">Day-Wise Itinerary</h3>
-            <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
-              ${data.days.map((d, idx) => {
-                const isLast = (idx === data.days.length - 1);
-                return `
-                  <div style="border-left: 3px solid #0284c7; background: #ffffff; border: 1px solid #e2e8f0; border-left: 3px solid #0284c7; border-radius: 8px; padding: 18px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                      <h4 style="font-size: 15px; font-weight: 800; color: #0f172a;">Day ${idx + 1}: ${esc(d.day || `Day ${idx + 1}`)}</h4>
-                    </div>
-                    <div style="font-size: 13.5px; color: #334155; line-height: 1.7;">${d.overview || '<p style="color:#94a3b8; font-style:italic;">Sightseeing and transfers.</p>'}</div>
-                    ${d.image ? `
-                      <div style="margin-top: 12px; height: 160px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0;">
-                        <img src="${esc(d.image)}" style="width: 100%; height: 100%; object-fit: cover;" />
-                      </div>
-                    ` : ''}
-                    ${d.stay ? `
-                      <div style="margin-top: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; padding: 8px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
-                        <i class="fi fi-rr-bed"></i> Overnight Stay: ${esc(d.stay)}
-                      </div>
-                    ` : (isLast ? `
-                      <div style="margin-top: 12px; background: #fdf4ff; border: 1px solid #f5d0fe; color: #86198f; padding: 8px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
-                        <i class="fi fi-rr-plane"></i> Tour Conclusion: Safe Travels!
-                      </div>
-                    ` : '')}
-                  </div>
-                `;
-              }).join('')}
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px;">
-              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 18px;">
-                <h4 style="color: #16a34a; font-size: 14px; font-weight: 800; margin-bottom: 8px;"><i class="fi fi-rr-check-circle"></i> Inclusions</h4>
-                <div style="font-size: 13px; color: #334155; line-height: 1.6;">${data.inclusions || 'Standard inclusions apply.'}</div>
-              </div>
-              <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 18px;">
-                <h4 style="color: #dc2626; font-size: 14px; font-weight: 800; margin-bottom: 8px;"><i class="fi fi-rr-cross-circle"></i> Exclusions</h4>
-                <div style="font-size: 13px; color: #334155; line-height: 1.6;">${data.exclusions || 'Personal expenses not included.'}</div>
-              </div>
-            </div>
-
-            <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 10px; padding: 20px; color: #ffffff; margin-bottom: 16px;">
-              <h4 style="font-size: 16px; font-weight: 800;">${esc(siteName)}</h4>
-              <p style="font-size: 12.5px; color: #94a3b8; margin-top: 2px;">Your dedicated travel planning specialist</p>
-            </div>
-
-            <div style="text-align: center; font-size: 11.5px; color: #64748b; padding-top: 8px; border-top: 1px solid #f1f5f9;">
-              Powered by <a href="https://aleya.in" target="_blank" rel="noopener" style="color: #0284c7; text-decoration: none; font-weight: 700;">Aleya</a> — Travel Agency Management Software
-            </div>
-          </div>
-        </div>
-      `;
-
-      return html;
-    },
-
-    buildModernTemplatePreview: function (data) {
-      function esc(str) {
-        if (!str) return '';
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      }
-      const siteName = window.SITE_NAME || window.siteName || 'Travel Partner';
-      const totalDays = data.days.length || 1;
-      const totalNights = Math.max(1, totalDays - 1);
-
-      let html = `
-        <div style="background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 24px;">
-          <div style="position: relative; width: 100%; min-height: 240px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); display: flex; align-items: flex-end; padding: 28px 34px; color: #ffffff; overflow: hidden;">
-            ${data.coverImage ? `<img src="${esc(data.coverImage)}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />` : ''}
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.85) 100%);"></div>
-            <div style="position: relative; z-index: 2; width: 100%;">
-              <span style="background: rgba(255,255,255,0.2); backdrop-filter: blur(6px); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
-                ${totalNights}N / ${totalDays}D &bull; ${esc(data.city || 'Destination')}
-              </span>
-              <h1 style="font-size: 26px; font-weight: 800; line-height: 1.25; margin-top: 6px;">${esc(data.title)}</h1>
-            </div>
-          </div>
-
-          <div style="padding: 24px 34px;">
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; text-align: center;">
-                <span style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">Theme</span>
-                <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 2px;">${esc(data.theme)}</div>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; text-align: center;">
-                <span style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">Hotel Style</span>
-                <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 2px;">${esc(data.hotel || 'Deluxe 3★')}</div>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; text-align: center;">
-                <span style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">Transport</span>
-                <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 2px;">${esc(data.outstationVehicle || 'AC Dedicated')}</div>
-              </div>
-            </div>
-
-            ${data.overview ? `
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 22px; margin-bottom: 24px;">
-                <div style="font-size: 14px; font-weight: 800; color: #4f46e5; margin-bottom: 8px;"><i class="fi fi-rr-sparkles"></i> Tour Overview</div>
-                <div style="font-size: 13.5px; color: #334155; line-height: 1.75;">${data.overview}</div>
-              </div>
-            ` : ''}
-
-            <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 16px;">Day-by-Day Route & Activities</h3>
-            <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
-              ${data.days.map((d, idx) => {
-                const isLast = (idx === data.days.length - 1);
-                return `
-                  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                    <div style="padding: 14px 18px; background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%); border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
-                      <span style="background: #4f46e5; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 6px;">Day ${idx + 1}</span>
-                      <h4 style="font-size: 15px; font-weight: 800; color: #1e1b4b; flex: 1; margin-left: 12px;">${esc(d.day || `Day ${idx + 1}`)}</h4>
-                    </div>
-                    <div style="padding: 18px;">
-                      <div style="font-size: 13.5px; color: #334155; line-height: 1.7;">${d.overview || '<p style="color:#94a3b8; font-style:italic;">Planned sightseeing.</p>'}</div>
-                      ${d.image ? `
-                        <div style="margin-top: 12px; height: 160px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0;">
-                          <img src="${esc(d.image)}" style="width: 100%; height: 100%; object-fit: cover;" />
-                        </div>
-                      ` : ''}
-                      ${d.stay ? `
-                        <div style="margin-top: 12px; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: #4338ca; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                          <i class="fi fi-rr-bed"></i> Overnight Stay: ${esc(d.stay)}
-                        </div>
-                      ` : (isLast ? `
-                        <div style="margin-top: 12px; background: #fdf4ff; border: 1px solid #f5d0fe; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: #86198f; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                          <i class="fi fi-rr-plane"></i> End of a Wonderful Journey! ✨
-                        </div>
-                      ` : '')}
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px;">
-              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 18px;">
-                <h4 style="font-size: 14.5px; font-weight: 700; color: #15803d; margin-bottom: 8px;"><i class="fi fi-rr-check"></i> Inclusions</h4>
-                <div style="font-size: 13px; color: #166534; line-height: 1.55;">${data.inclusions || 'All standard inclusions.'}</div>
-              </div>
-              <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 18px;">
-                <h4 style="font-size: 14.5px; font-weight: 700; color: #b91c1c; margin-bottom: 8px;"><i class="fi fi-rr-cross"></i> Exclusions</h4>
-                <div style="font-size: 13px; color: #991b1b; line-height: 1.55;">${data.exclusions || 'Personal expenses.'}</div>
-              </div>
-            </div>
-
-            <div style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border-radius: 12px; padding: 22px; color: #ffffff; margin-bottom: 18px;">
-              <h4 style="font-size: 16px; font-weight: 800;">${esc(siteName)}</h4>
-              <p style="font-size: 12.5px; color: #c7d2fe; margin-top: 2px;">Your dedicated travel planning specialist</p>
-            </div>
-
-            <div style="text-align: center; font-size: 11.5px; color: #64748b; padding-top: 8px; border-top: 1px solid #f1f5f9;">
-              Powered by <a href="https://aleya.in" target="_blank" rel="noopener" style="color: #4f46e5; text-decoration: none; font-weight: 700;">Aleya</a> — Travel Agency Management Software
-            </div>
-          </div>
-        </div>
-      `;
-
-      return html;
-    },
-
-    buildAleyaTemplatePreview: function (data) {
-      function esc(str) {
-        if (!str) return '';
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      }
-      const siteName = window.SITE_NAME || window.siteName || 'Travel Partner';
-      const totalDays = data.days.length || 1;
-      const totalNights = Math.max(1, totalDays - 1);
-
-      let html = `
-        <div style="background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 24px; font-family: 'Plus Jakarta Sans', sans-serif;">
-          <div style="position: relative; width: 100%; min-height: 280px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: flex; align-items: flex-end; padding: 32px 34px; color: #ffffff; overflow: hidden;">
-            ${data.coverImage ? `<img src="${esc(data.coverImage)}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />` : ''}
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.92) 100%);"></div>
-            <div style="position: relative; z-index: 2; width: 100%;">
-              <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                <span style="background: rgba(197, 155, 39, 0.4); backdrop-filter: blur(6px); border: 1px solid #c59b27; color: #fef8ec; font-size: 11.5px; font-weight: 700; padding: 4px 12px; border-radius: 20px;">
-                  <i class="fi fi-rr-marker"></i> ${esc(data.city || 'Destination')}
-                </span>
-                <span style="background: rgba(255,255,255,0.2); backdrop-filter: blur(6px); font-size: 11.5px; font-weight: 700; padding: 4px 12px; border-radius: 20px;">
-                  ${totalNights}N / ${totalDays}D
-                </span>
-              </div>
-              <h1 style="font-size: 28px; font-weight: 800; font-family: 'Playfair Display', serif; line-height: 1.25;">${esc(data.title)}</h1>
-            </div>
-          </div>
-
-          <div style="padding: 28px 34px;">
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; text-align: center;">
-                <span style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Duration</span>
-                <strong style="font-size: 14.5px; color: #0f172a;">${totalNights}N / ${totalDays}D</strong>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; text-align: center;">
-                <span style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Style</span>
-                <strong style="font-size: 14.5px; color: #0f172a; text-transform: capitalize;">${esc(data.theme)}</strong>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; text-align: center;">
-                <span style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Hotel</span>
-                <strong style="font-size: 14.5px; color: #0f172a; text-transform: capitalize;">${esc(data.hotel || 'Deluxe 3★')}</strong>
-              </div>
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; text-align: center;">
-                <span style="font-size: 10.5px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Vehicle</span>
-                <strong style="font-size: 14.5px; color: #0f172a; text-transform: capitalize;">${esc(data.outstationVehicle || 'Private AC')}</strong>
-              </div>
-            </div>
-
-            ${data.overview ? `
-              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); margin-bottom: 24px;">
-                <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px; border-bottom: 2px solid #fef8ec; padding-bottom: 6px;">
-                  <span style="color: #c59b27;">&bull;</span> Tour Overview
-                </h3>
-                <div style="font-size: 13.5px; color: #334155; line-height: 1.8;">${data.overview}</div>
-              </div>
-            ` : ''}
-
-            <h3 style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 16px;">
-              Detailed Day-Wise Itinerary
-            </h3>
-            <div style="display: flex; flex-direction: column; gap: 18px; margin-bottom: 24px;">
-              ${data.days.map((d, idx) => {
-                const isLast = (idx === data.days.length - 1);
-                return `
-                  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                    <div style="padding: 16px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
-                      <span style="background: #c59b27; color: #ffffff; font-size: 11.5px; font-weight: 800; padding: 4px 10px; border-radius: 6px;">Day ${idx + 1}</span>
-                      <h4 style="font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #0f172a; flex: 1; margin-left: 14px;">${esc(d.day || `Day ${idx + 1}`)}</h4>
-                    </div>
-                    <div style="padding: 20px;">
-                      <div style="font-size: 13.5px; color: #334155; line-height: 1.75;">${d.overview || '<p style="color:#94a3b8; font-style:italic;">Sightseeing and transfers as scheduled.</p>'}</div>
-                      ${d.image ? `
-                        <div style="margin-top: 14px; height: 180px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0;">
-                          <img src="${esc(d.image)}" style="width: 100%; height: 100%; object-fit: cover;" />
-                        </div>
-                      ` : ''}
-                      ${d.stay ? `
-                        <div style="margin-top: 14px; background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;">
-                          <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="width: 38px; height: 38px; border-radius: 8px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-                              <i class="fi fi-rr-bed"></i>
-                            </div>
-                            <div>
-                              <div style="font-size: 14px; font-weight: 800; color: #065f46;">${esc(d.stay)}</div>
-                              <div style="font-size: 12px; color: #047857;">Overnight Stay in ${esc(data.city || 'Destination')} &bull; Confirmed Property</div>
-                            </div>
-                          </div>
-                          <span style="font-size: 11px; font-weight: 700; background: #16a34a; color: #ffffff; padding: 4px 10px; border-radius: 6px;">Stay Included</span>
-                        </div>
-                      ` : (isLast ? `
-                        <div style="margin-top: 14px; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border: 1px solid #f5d0fe; border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;">
-                          <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="width: 38px; height: 38px; border-radius: 8px; background: #fae8ff; color: #a21caf; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-                              <i class="fi fi-rr-plane"></i>
-                            </div>
-                            <div>
-                              <div style="font-size: 14px; font-weight: 800; color: #86198f;">End of a Magical Journey! ✨</div>
-                              <div style="font-size: 12px; color: #a21caf;">Transfer to station/airport with lifelong memories.</div>
-                            </div>
-                          </div>
-                          <span style="font-size: 11px; font-weight: 700; background: #a21caf; color: #ffffff; padding: 4px 10px; border-radius: 6px;">Farewell</span>
-                        </div>
-                      ` : '')}
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px;">
-              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px;">
-                <h4 style="font-size: 14.5px; font-weight: 700; color: #15803d; margin-bottom: 10px;"><i class="fi fi-rr-check"></i> Package Inclusions</h4>
-                <div style="font-size: 13px; color: #166534; line-height: 1.6;">${data.inclusions || 'All standard package inclusions.'}</div>
-              </div>
-              <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 20px;">
-                <h4 style="font-size: 14.5px; font-weight: 700; color: #b91c1c; margin-bottom: 10px;"><i class="fi fi-rr-cross"></i> Package Exclusions</h4>
-                <div style="font-size: 13px; color: #991b1b; line-height: 1.6;">${data.exclusions || 'Personal expenses & entry fees.'}</div>
-              </div>
-            </div>
-
-            <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 12px; padding: 24px 28px; color: #ffffff; margin-bottom: 18px;">
-              <h4 style="font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700;">${esc(siteName)}</h4>
-              <p style="font-size: 12.5px; color: #94a3b8; margin-top: 2px;">Your dedicated luxury travel planning partner</p>
-            </div>
-
-            <div style="text-align: center; font-size: 11.5px; color: #64748b; padding-top: 8px; border-top: 1px solid #f1f5f9;">
-              Powered by <a href="https://aleya.in" target="_blank" rel="noopener" style="color: #c59b27; text-decoration: none; font-weight: 700;">Aleya</a> — Travel Agency Management Software
-            </div>
-          </div>
-        </div>
-      `;
-
-      return html;
+          `);
+        }
+      });
     }
   };
 

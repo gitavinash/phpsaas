@@ -1,0 +1,20 @@
+{
+  "id": "modern",
+  "name": "Modern Cards",
+  "title": "Modern Card Proposal",
+  "version": "1.0.0",
+  "author": "Aleya",
+  "tag": "Visual",
+  "badge": "Cards",
+  "badge_style": "background:#fdf4ff; color:#a21caf; border-color:#f5d0fe;",
+  "icon": "fi fi-rr-grid",
+  "icon_style": "background:#eef2ff; color:#4f46e5;",
+  "description": "Modular cards with visual hotel badges, meal highlights & card layouts.",
+  "accent_color": "#4f46e5",
+  "tags": [
+    { "icon": "fi fi-rr-grid", "label": "Card Blocks" },
+    { "icon": "fi fi-rr-sparkles", "label": "Highlights" }
+  ],
+  "screenshot": "screenshot.svg",
+  "order": 3
+}

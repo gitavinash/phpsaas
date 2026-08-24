@@ -17,7 +17,48 @@ if (is_numeric($rawId) && (int)$rawId > 0) {
     $id = ($decoded !== false && is_numeric($decoded)) ? (int)$decoded : (int)$rawId;
 }
 $encodedId = is_numeric($id) && (int)$id > 0 ? base64_encode($id) : $rawId;
+
+// Discover Available Itinerary Proposal Templates dynamically from templates/itinerary/
+$itineraryTemplatesDir = realpath(__DIR__ . '/../../templates/itinerary');
+$availableTemplates = [];
+if ($itineraryTemplatesDir && is_dir($itineraryTemplatesDir)) {
+    foreach (scandir($itineraryTemplatesDir) as $folder) {
+        if ($folder === '.' || $folder === '..') continue;
+        $folderPath = $itineraryTemplatesDir . '/' . $folder;
+        if (is_dir($folderPath) && (file_exists($folderPath . '/theme.json') || file_exists($folderPath . '/index.php'))) {
+            $tData = [];
+            if (file_exists($folderPath . '/theme.json')) {
+                $jsonStr = file_get_contents($folderPath . '/theme.json');
+                $tData = json_decode($jsonStr, true) ?: [];
+            }
+            $tData['id'] = $tData['id'] ?? $folder;
+            $tData['name'] = $tData['name'] ?? ucfirst($folder);
+            $tData['title'] = $tData['title'] ?? ($tData['name'] . ' Proposal');
+            $tData['description'] = $tData['description'] ?? 'Custom proposal template.';
+            $tData['badge'] = $tData['badge'] ?? ($tData['tag'] ?? '');
+            $tData['icon'] = $tData['icon'] ?? 'fi fi-rr-document';
+            $tData['order'] = isset($tData['order']) ? (int)$tData['order'] : 99;
+            $availableTemplates[] = $tData;
+        }
+    }
+    usort($availableTemplates, function($a, $b) { 
+        return ($a['order'] ?? 99) <=> ($b['order'] ?? 99); 
+    });
+}
+
+// Fallback if empty
+if (empty($availableTemplates)) {
+    $availableTemplates = [
+        ['id' => 'mit', 'name' => 'MIT Proposal', 'title' => 'MIT Multi-Page Proposal', 'badge' => 'Default', 'description' => 'Multi-page proposal with dynamic waves & PDF export.', 'icon' => 'fi fi-rr-document-signed', 'tags' => [['icon' => 'fi fi-rr-document', 'label' => 'Multi-Page A4'], ['icon' => 'fi fi-rr-file-pdf', 'label' => 'PDF Ready']]],
+        ['id' => 'standard', 'name' => 'Standard Timeline', 'title' => 'Standard Timeline Proposal', 'badge' => 'Clean', 'description' => 'Day-by-day vertical timeline with compact summary.', 'icon' => 'fi fi-rr-list-timeline', 'tags' => [['icon' => 'fi fi-rr-list-timeline', 'label' => 'Timeline'], ['icon' => 'fi fi-rr-apps', 'label' => 'Compact']]],
+        ['id' => 'modern', 'name' => 'Modern Cards', 'title' => 'Modern Card Proposal', 'badge' => 'Visual', 'description' => 'Modular cards with visual hotel badges & meal highlights.', 'icon' => 'fi fi-rr-grid', 'tags' => [['icon' => 'fi fi-rr-grid', 'label' => 'Card Blocks'], ['icon' => 'fi fi-rr-sparkles', 'label' => 'Highlights']]],
+        ['id' => 'aleya', 'name' => 'Aleya Luxury', 'title' => 'Aleya Luxury Proposal', 'badge' => 'Luxury', 'description' => 'Gold luxury theme with gallery lightbox, stays & A4 PDF export.', 'icon' => 'fi fi-rr-crown', 'tags' => [['icon' => 'fi fi-rr-crown', 'label' => 'Gold Theme'], ['icon' => 'fi fi-rr-picture', 'label' => 'Gallery']]]
+    ];
+}
 ?>
+<script>
+    window.V3_AVAILABLE_TEMPLATES = <?php echo json_encode($availableTemplates); ?>;
+</script>
 
 <div class="package-page-wrapper package-edit-wrapper" id="packageEditApp" data-package-id="<?php echo $id; ?>" data-encoded-id="<?php echo $encodedId; ?>" data-package-type="domestic">
 
@@ -202,7 +243,7 @@ $encodedId = is_numeric($id) && (int)$id > 0 ? base64_encode($id) : $rawId;
                     </div>
                 </div>
 
-                <!-- Template Selection Cards (Bottom of Overview) -->
+                <!-- Template Selection Cards -->
                 <div class="v3-edit-card template-selection-card">
                     <div class="v3-edit-card-header">
                         <div class="v3-card-title-wrap">
@@ -216,118 +257,54 @@ $encodedId = is_numeric($id) && (int)$id > 0 ? base64_encode($id) : $rawId;
                     <div class="v3-edit-card-body">
                         <input type="hidden" name="tourPackageTemplate" id="tourPackageTemplate" value="mit">
 
-                        <div class="v3-template-cards-grid">
-                            <!-- Template 1: MIT Multi-Page Proposal -->
-                            <div class="v3-template-card active" data-template-id="mit">
-                                <div class="v3-template-card-top">
-                                    <div class="v3-template-icon-box">
-                                        <i class="fi fi-rr-document-signed"></i>
-                                    </div>
-                                    <div class="v3-template-header-info">
-                                        <div class="v3-template-title-row">
-                                            <h4 class="v3-template-name">MIT Proposal</h4>
-                                            <span class="v3-template-pill-badge">Default</span>
+                        <div class="v3-template-cards-grid" id="v3TemplateCardsGrid">
+                            <?php foreach ($availableTemplates as $idx => $tmpl): 
+                                $tId = htmlspecialchars($tmpl['id'] ?? 'mit');
+                                $tName = htmlspecialchars($tmpl['name'] ?? ucfirst($tId));
+                                $tDesc = htmlspecialchars($tmpl['description'] ?? '');
+                                $tBadge = htmlspecialchars($tmpl['badge'] ?? ($tmpl['tag'] ?? ''));
+                                $tBadgeStyle = !empty($tmpl['badge_style']) ? 'style="' . htmlspecialchars($tmpl['badge_style']) . '"' : '';
+                                $tIcon = htmlspecialchars($tmpl['icon'] ?? 'fi fi-rr-document');
+                                $tIconStyle = !empty($tmpl['icon_style']) ? 'style="' . htmlspecialchars($tmpl['icon_style']) . '"' : '';
+                                $isActive = ($tId === 'mit' || $idx === 0) ? ' active' : '';
+                            ?>
+                                <div class="v3-template-card<?php echo $isActive; ?>" data-template-id="<?php echo $tId; ?>">
+                                    <div class="v3-template-card-top">
+                                        <div class="v3-template-icon-box" <?php echo $tIconStyle; ?>>
+                                            <i class="<?php echo $tIcon; ?>"></i>
                                         </div>
-                                        <p class="v3-template-desc">Multi-page proposal with dynamic waves & PDF export.</p>
-                                    </div>
-                                    <div class="v3-template-radio">
-                                        <i class="fi fi-rr-check"></i>
-                                    </div>
-                                </div>
-                                <div class="v3-template-card-bottom">
-                                    <div class="v3-template-mini-tags">
-                                        <span class="v3-temp-tag"><i class="fi fi-rr-document"></i> Multi-Page A4</span>
-                                        <span class="v3-temp-tag"><i class="fi fi-rr-file-pdf"></i> PDF Ready</span>
-                                    </div>
-                                    <button type="button" class="btn-template-preview" data-template-id="mit" title="Preview MIT Proposal">
-                                        <i class="fi fi-rr-eye"></i> <span>Preview</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Template 2: Standard Clean Layout -->
-                            <div class="v3-template-card" data-template-id="standard">
-                                <div class="v3-template-card-top">
-                                    <div class="v3-template-icon-box">
-                                        <i class="fi fi-rr-list-timeline"></i>
-                                    </div>
-                                    <div class="v3-template-header-info">
-                                        <div class="v3-template-title-row">
-                                            <h4 class="v3-template-name">Standard Timeline</h4>
-                                            <span class="v3-template-pill-badge" style="background:#f1f5f9; color:#475569; border-color:#e2e8f0;">Clean</span>
+                                        <div class="v3-template-header-info">
+                                            <div class="v3-template-title-row">
+                                                <h4 class="v3-template-name"><?php echo $tName; ?></h4>
+                                                <?php if (!empty($tBadge)): ?>
+                                                    <span class="v3-template-pill-badge" <?php echo $tBadgeStyle; ?>><?php echo $tBadge; ?></span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <p class="v3-template-desc"><?php echo $tDesc; ?></p>
                                         </div>
-                                        <p class="v3-template-desc">Day-by-day vertical timeline with compact summary.</p>
-                                    </div>
-                                    <div class="v3-template-radio">
-                                        <i class="fi fi-rr-check"></i>
-                                    </div>
-                                </div>
-                                <div class="v3-template-card-bottom">
-                                    <div class="v3-template-mini-tags">
-                                        <span class="v3-temp-tag"><i class="fi fi-rr-list-timeline"></i> Timeline</span>
-                                        <span class="v3-temp-tag"><i class="fi fi-rr-apps"></i> Compact</span>
-                                    </div>
-                                    <button type="button" class="btn-template-preview" data-template-id="standard" title="Preview Standard Timeline">
-                                        <i class="fi fi-rr-eye"></i> <span>Preview</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Template 3: Modern Card Layout -->
-                            <div class="v3-template-card" data-template-id="modern">
-                                <div class="v3-template-card-top">
-                                    <div class="v3-template-icon-box">
-                                        <i class="fi fi-rr-grid"></i>
-                                    </div>
-                                    <div class="v3-template-header-info">
-                                        <div class="v3-template-title-row">
-                                            <h4 class="v3-template-name">Modern Cards</h4>
-                                            <span class="v3-template-pill-badge" style="background:#fdf4ff; color:#a21caf; border-color:#f5d0fe;">Visual</span>
+                                        <div class="v3-template-radio">
+                                            <i class="fi fi-rr-check"></i>
                                         </div>
-                                        <p class="v3-template-desc">Modular cards with visual hotel badges & meal highlights.</p>
                                     </div>
-                                    <div class="v3-template-radio">
-                                        <i class="fi fi-rr-check"></i>
-                                    </div>
-                                </div>
-                                <div class="v3-template-card-bottom">
-                                    <div class="v3-template-mini-tags">
-                                        <span class="v3-temp-tag"><i class="fi fi-rr-grid"></i> Card Blocks</span>
-                                        <span class="v3-temp-tag"><i class="fi fi-rr-sparkles"></i> Highlights</span>
-                                    </div>
-                                    <button type="button" class="btn-template-preview" data-template-id="modern" title="Preview Modern Cards">
-                                        <i class="fi fi-rr-eye"></i> <span>Preview</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Template 4: Aleya Luxury Proposal -->
-                            <div class="v3-template-card" data-template-id="aleya">
-                                <div class="v3-template-card-top">
-                                    <div class="v3-template-icon-box" style="background:#fef8ec; color:#c59b27;">
-                                        <i class="fi fi-rr-crown"></i>
-                                    </div>
-                                    <div class="v3-template-header-info">
-                                        <div class="v3-template-title-row">
-                                            <h4 class="v3-template-name">Aleya Luxury</h4>
-                                            <span class="v3-template-pill-badge" style="background:#fef8ec; color:#b0871d; border-color:#fde68a;">Luxury</span>
+                                    <div class="v3-template-card-bottom">
+                                        <div class="v3-template-mini-tags">
+                                            <?php if (!empty($tmpl['tags']) && is_array($tmpl['tags'])): ?>
+                                                <?php foreach ($tmpl['tags'] as $tag): ?>
+                                                    <span class="v3-temp-tag">
+                                                        <i class="<?php echo htmlspecialchars($tag['icon'] ?? 'fi fi-rr-tag'); ?>"></i> 
+                                                        <?php echo htmlspecialchars($tag['label'] ?? ''); ?>
+                                                    </span>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <span class="v3-temp-tag"><i class="fi fi-rr-document"></i> Proposal</span>
+                                            <?php endif; ?>
                                         </div>
-                                        <p class="v3-template-desc">Gold luxury theme with gallery lightbox, stays & A4 PDF export.</p>
-                                    </div>
-                                    <div class="v3-template-radio">
-                                        <i class="fi fi-rr-check"></i>
+                                        <button type="button" class="btn-template-preview" data-template-id="<?php echo $tId; ?>" title="Preview <?php echo $tName; ?>">
+                                            <i class="fi fi-rr-eye"></i> <span>Preview</span>
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="v3-template-card-bottom">
-                                    <div class="v3-template-mini-tags">
-                                        <span class="v3-temp-tag"><i class="fi fi-rr-crown"></i> Gold Theme</span>
-                                        <span class="v3-temp-tag"><i class="fi fi-rr-picture"></i> Gallery</span>
-                                    </div>
-                                    <button type="button" class="btn-template-preview" data-template-id="aleya" title="Preview Aleya Luxury">
-                                        <i class="fi fi-rr-eye"></i> <span>Preview</span>
-                                    </button>
-                                </div>
-                            </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
@@ -455,29 +432,24 @@ $encodedId = is_numeric($id) && (int)$id > 0 ? base64_encode($id) : $rawId;
         <div class="v3-modal-dialog v3-modal-dialog-preview">
             <div class="v3-preview-modal-header">
                 <div class="v3-preview-header-left">
-                    <span class="v3-preview-badge"><i class="fi fi-rr-eye"></i> Preview</span>
-                    <div class="v3-preview-title-wrap">
-                        <h3 class="v3-preview-title" id="previewModalTitle">Template Preview</h3>
-                    </div>
+                    <span class="v3-preview-badge"><i class="fi fi-rr-layout-fluid"></i> Template Preview</span>
+                    <h3 class="v3-preview-header-title" id="previewModalTitle">Template Preview</h3>
+                    <span class="v3-preview-counter-pill" id="previewTemplateCounter">1 / 4</span>
                 </div>
                 <div class="v3-preview-header-actions">
-                    <div class="v3-preview-nav-group">
-                        <button type="button" class="btn-preview-nav" id="btnPrevPreviewTemplate" title="Previous Template (Left Arrow)">
-                            <i class="fi fi-rr-angle-left"></i>
+                    <div class="v3-preview-nav-btns">
+                        <button type="button" class="btn-v3-action btn-outline btn-prev-template" id="btnPrevPreviewTemplate" title="Previous Template (Left Arrow)">
+                            <i class="fi fi-rr-angle-left"></i> Previous
                         </button>
-                        <span class="v3-preview-counter-pill" id="previewTemplateCounter">1 / 4</span>
-                        <button type="button" class="btn-preview-nav" id="btnNextPreviewTemplate" title="Next Template (Right Arrow)">
-                            <i class="fi fi-rr-angle-right"></i>
+                        <button type="button" class="btn-v3-action btn-outline btn-next-template" id="btnNextPreviewTemplate" title="Next Template (Right Arrow)">
+                            Next <i class="fi fi-rr-angle-right"></i>
                         </button>
                     </div>
-                    <button type="button" class="btn-v3-action btn-pdf-action" id="btnDownloadPreviewPDF" title="Download as A4 PDF">
-                        <i class="fi fi-rr-file-pdf"></i> <span>Download PDF</span>
+                    <button type="button" class="btn-v3-action btn-green" id="btnApplyPreviewedTemplate">
+                        <i class="fi fi-rr-check"></i> Use This Template
                     </button>
-                    <button type="button" class="btn-v3-action btn-green-action" id="btnApplyPreviewedTemplate">
-                        <i class="fi fi-rr-check"></i> <span>Use This Template</span>
-                    </button>
-                    <button type="button" class="v3-preview-close-btn" id="btnCloseTemplatePreviewModal" title="Close Preview (Esc)">
-                        <i class="fi fi-rr-cross"></i>
+                    <button type="button" class="btn-v3-action btn-outline" id="btnCloseTemplatePreviewModal" title="Close Preview (Esc)">
+                        <i class="fi fi-rr-cross"></i> Close
                     </button>
                 </div>
             </div>

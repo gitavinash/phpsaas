@@ -30,8 +30,9 @@ if ($packageId <= 0) {
 }
 
 $query = "
-    SELECT tp.tour_package_id, tp.tour_package_title, tp.tour_package_city, tp.tour_package_country,
+    SELECT tp.tour_package_id, tp.tour_package_title, tp.tour_package_city, tp.tour_package_state, tp.tour_package_country,
            tp.tour_package_theme, tp.tour_package_duration, tp.tour_package_itinerary, tp.tour_package_status,
+           tp.tour_package_type,
            g.gallery_image_list, g.gallery_id, g.gallery_image,
            l.link_url
     FROM {$tblPrefix}tour_package AS tp
@@ -63,7 +64,9 @@ $row = mysqli_fetch_assoc($res);
 
 $title       = $row['tour_package_title'] ?? 'Tour Package';
 $city        = $row['tour_package_city'] ?? '';
+$state       = $row['tour_package_state'] ?? '';
 $country     = $row['tour_package_country'] ?? '';
+$category    = $row['tour_package_type'] ?? 'domestic';
 $theme       = $row['tour_package_theme'] ?? 'standard';
 $duration    = (int)($row['tour_package_duration'] ?? 0);
 $itinerary   = $row['tour_package_itinerary'] ?? '';
@@ -139,7 +142,10 @@ echo json_encode([
         'encodedId'          => base64_encode($packageId),
         'title'              => $title,
         'city'               => $city,
+        'state'              => $state,
         'country'            => $country,
+        'location_label'     => $city ?: ($state ?: ($country ?: 'Domestic')),
+        'category'           => $category,
         'theme'              => $theme,
         'themeClass'         => $themeClass,
         'themeLabel'         => $themeLabel,

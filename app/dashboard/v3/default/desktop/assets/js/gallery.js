@@ -41,13 +41,11 @@
         return;
       }
       const pkgId = String(opts.packageId);
-      if (this.loadedPackageId === pkgId && (this.isLoading || this.galleryData)) {
-        return;
-      }
       this.loadedPackageId = pkgId;
       this.packageId = pkgId;
       this.encodedId = opts.encodedId || "";
       this.galleryData = null;
+      this.isLoading = false;
       this.pexelsLoaded = false;
       this.pexelsSuggestionsData = [];
       this.currentPexelsPage = 1;
@@ -795,7 +793,7 @@
 
     renderHeaderMeta: function (pkg) {
       if (!pkg) return;
-      $("#pkgHeaderTitle").text(pkg.title + " — Gallery");
+      $("#pkgHeaderTitle").text(pkg.title || 'Tour Package');
       $("#pkgMetaTheme")
         .attr("class", "pkg-theme-pill " + pkg.themeClass)
         .text(pkg.themeLabel);
@@ -803,7 +801,7 @@
         `<i class="fi-rr-moon" style="color: #6366f1;"></i> ${pkg.duration}N / <i class="fi-rr-sun" style="color: #f59e0b;"></i> ${pkg.totalDays}D`
       );
       $("#pkgMetaLocation").html(
-        `<i class="fi-rr-marker" style="color: #0284c7;"></i> ${pkg.city || pkg.country || "Domestic"}`
+        `<i class="fi-rr-marker" style="color: #0284c7;"></i> ${pkg.location_label || pkg.city || pkg.state || pkg.country || "Domestic"}`
       );
       if (pkg.linkUrl) {
         $("#btnViewLivePackage").attr("href", pkg.linkUrl).show();

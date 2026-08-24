@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="aleyaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="#ffffff"/>
+  <rect x="40" y="30" width="520" height="120" rx="12" fill="url(#aleyaGrad)" stroke="#c59b27" stroke-width="2"/>
+  <rect x="65" y="48" width="90" height="20" rx="10" fill="rgba(197, 155, 39, 0.4)" stroke="#c59b27"/>
+  <text x="75" y="62" fill="#fef8ec" font-size="10" font-weight="700">DESTINATION</text>
+  <text x="65" y="98" fill="#ffffff" font-family="'Playfair Display', serif" font-size="24" font-weight="700">SWISS ALPS &amp; PARIS GETAWAY</text>
+  <text x="65" y="125" fill="#c59b27" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700">8 NIGHTS / 9 DAYS • ALEYA LUXURY PROPOSAL</text>
+
+  <!-- 4 Stats Cards -->
+  <rect x="40" y="165" width="120" height="45" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="55" y="185" fill="#64748b" font-size="9" font-weight="700">DURATION</text>
+  <text x="55" y="200" fill="#0f172a" font-size="12" font-weight="800">8N / 9D</text>
+
+  <rect x="170" y="165" width="120" height="45" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="185" y="185" fill="#64748b" font-size="9" font-weight="700">STYLE</text>
+  <text x="185" y="200" fill="#0f172a" font-size="12" font-weight="800">Luxury Premium</text>
+
+  <rect x="300" y="165" width="120" height="45" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="315" y="185" fill="#64748b" font-size="9" font-weight="700">HOTEL</text>
+  <text x="315" y="200" fill="#0f172a" font-size="12" font-weight="800">5★ Grand Resort</text>
+
+  <rect x="430" y="165" width="130" height="45" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="445" y="185" fill="#64748b" font-size="9" font-weight="700">VEHICLE</text>
+  <text x="445" y="200" fill="#0f172a" font-size="12" font-weight="800">Mercedes VIP</text>
+
+  <!-- Luxury Itinerary Card Preview -->
+  <rect x="40" y="225" width="520" height="145" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+  <rect x="40" y="225" width="520" height="30" rx="10" fill="#f8fafc"/>
+  <rect x="52" y="231" width="50" height="18" rx="4" fill="#c59b27"/>
+  <text x="60" y="244" fill="#ffffff" font-size="10" font-weight="800">DAY 1</text>
+  <text x="110" y="245" fill="#0f172a" font-family="'Playfair Display', serif" font-size="13" font-weight="700">Arrival in Zurich &amp; Panoramic Lake Lucerne Cruise</text>
+  
+  <text x="55" y="278" fill="#334155" font-size="11.5">First-class transfer from Zurich Airport to 5-star Lucerne Lakefront Palace...</text>
+  
+  <!-- Stay Card -->
+  <rect x="55" y="295" width="490" height="45" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="75" y="322" fill="#065f46" font-size="12" font-weight="800">Overnight Stay: Grand Hotel National Lucerne ★★★★★</text>
+</svg>

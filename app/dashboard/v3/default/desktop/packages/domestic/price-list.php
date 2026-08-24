@@ -1,188 +1,232 @@
-<script>
-for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && key.startsWith('packageInfo_')) {
-        localStorage.removeItem(key);
-    }
+<?php
+$rawId = $_GET['id'] ?? ($id ?? 0);
+if (is_numeric($rawId) && (int)$rawId > 0) {
+    $packageId = (int)$rawId;
+} else {
+    $decoded = base64_decode((string)$rawId, true);
+    $packageId = ($decoded !== false && is_numeric($decoded)) ? (int)$decoded : (int)$rawId;
 }
-</script>
-<h2 class="heading">Price list<span>All hostings list will be displayed here.</span>
-</h2>
-<div class="main-box">
-    <div class="shortcut">
-        <a href="/dashboard/packages/domestic/price/?id=<?php echo $id ?>" data-title="Add new price"><i
-                class="fi fi-rr-plus"></i></a>
-    </div>
-    <section>
-        <div class="list-box">
-            <table class="showTableList largeThead">
-                <thead>
-                    <tr>
-                        <th rowspan=2>Duration</th>
-                        <th colspan=4>Adult ( Price )</th>
-                        <th colspan=4>Child ( Price )</th>
-                        <th rowspan=2>Type</th>
-                        <th rowspan=2>Status</th>
-                        <th rowspan=2></th>
-                    </tr>
-                    <tr>
-                        <th>Net</th>
-                        <th>MRP</th>
-                        <th>Selling</th>
-                        <th>Agent</th>
-                        <th>Net</th>
-                        <th>MRP</th>
-                        <th>Selling</th>
-                        <th>Agent</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
+$encodedId = base64_encode((string)$packageId);
+?>
 
-                    $packageId = base64_decode($id);
-
-                    if ($packageData = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "tour_package_price WHERE tour_package_price_status!=3 AND tour_package_price_parent_id='{$packageId}' AND tour_package_price_site_id=" . SITE_ID . " ORDER BY tour_package_price_created_at DESC")) {
-                        if (mysqli_num_rows($packageData) != 0) {
-                            $i = 1;
-                            while ($packageDataInfo = mysqli_fetch_assoc($packageData)) {
-
-                                $packageDataInfoJSON = json_encode($packageDataInfo, TRUE);
-                                echo "
-                                <script>
-                                localStorage.setItem('packageInfo_{$packageDataInfo['tour_package_price_id']}', JSON.stringify({$packageDataInfoJSON}));
-                                </script>
-                                ";
-                                extract($packageDataInfo);
-                                switch ($tour_package_price_status) {
-                                    case 1:
-                                        $packageStatus = 'Active';
-                                        break;
-                                    case 2:
-                                        $packageStatus = 'Draft';
-                                        break;
-                                    case 3:
-                                        $packageStatus = 'Delete';
-                                        break;
-                                    default:
-                                        $packageStatus = 'Pending';
-                                        break;
-                                }
-                                echo "
-                                    <tr>
-                                        <td>" . date('d-M', strtotime($tour_package_price_date_start)) . " to " . date('d-M', strtotime($tour_package_price_date_end)) . "</td>
-                                        <td>₹ {$tour_package_price_net_adult}</td>
-                                        <td>₹ {$tour_package_price_mrp_adult}</td>
-                                        <td>₹ {$tour_package_price_selling_adult}</td>
-                                        <td>₹ {$tour_package_price_agent_adult}</td>
-                                        <td>₹ {$tour_package_price_net_child}</td>
-                                        <td>₹ {$tour_package_price_mrp_child}</td>
-                                        <td>₹ {$tour_package_price_selling_child}</td>
-                                        <td>₹ {$tour_package_price_agent_child}</td>
-                                        <td>" . ucwords($tour_package_price_type) . "</td>
-                                        <td>{$packageStatus}</td>
-                                        <td>
-                                            <a href='#' class='tableActionIconBtn editPrice' title='Edit price' data-id='{$tour_package_price_id}' data-title='Edit price'><i class='fi fi-rr-edit bgWhite'></i></a>
-                                            <a href='#' data-type='packages/price' data-id='{$tour_package_price_id}' title='Delete price' data-title='Delete price' class='tableActionIconBtn deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
-                                        </td>
-                                    </tr>
-                                ";
-                                $i++;
-                            }
-                        } else {
-                            echo "<tr>
-                            <td colspan=100>No Data Found</td>
-                            </tr>";
-                        }
-                    }
-
-                    ?>
-                </tbody>
-            </table>
-        </div>
-    </section>
-</div>
-
-<div class="popUp centerBodyPopUp editPriceBox">
-    <div class="fullScreenPopUpBox">
-        <div class="widget box-8">
-            <div class="contentArea">
-                <h4 class="heading" style="margin-bottom: 2rem">Search Itinenary</h4>
-                <div class="box-1">
-                    <form id="singleSharingForm">
-                        <div class="priceBox">
-                            <div class="form-group">
-                                <div class="box-5">
-                                    <p class="form-lable" id="Label">Starting date<sup>*</sup></p>
-                                    <input id="startDate" class="datePickerWithoutYear" placeholder="15 July"
-                                        name="sessionStartSingleSharing" type="text" required />
-                                </div>
-                                <div class="box-5">
-                                    <p class="form-lable" id="Label">Ending Date<sup>*</sup></p>
-                                    <input id="endDate" class="datePickerWithoutYear" placeholder="15 August"
-                                        name="sessionEndSingleSharing" type="text" required />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <h2>Price per Adult ( in ₹ )</h2>
-                                <div class="box-2-5">
-                                    <p class="form-lable" id="Label">Net cost<sup>*</sup></p>
-                                    <input id="adultNet" name="netCostAdultSingleSharing" placeholder="999"
-                                        type="number" required />
-                                </div>
-                                <div class="box-2-5">
-                                    <p class="form-lable" id="Label">MRP</p>
-                                    <input id="adultMRP" name="mrpAdultSingleSharing" placeholder="1999"
-                                        type="number" />
-                                </div>
-                                <div class="box-2-5">
-                                    <p class="form-lable" id="Label">Selling price<sup>*</sup></p>
-                                    <input id="adultSelling" name="sellingPriceAdultSingleSharing" placeholder="1799"
-                                        type="number" required />
-                                </div>
-                                <div class="box-2-5">
-                                    <p class="form-lable" id="Label">Sales team price</p>
-                                    <input id="adultAgent" name="agentPriceAdultSingleSharing" placeholder="1499"
-                                        type="number" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <h2>Price per Children ( in ₹ )</h2>
-                                <div class="box-2-5">
-                                    <p class="form-lable" id="Label">Net cost<sup>*</sup></p>
-                                    <input id="childNet" name="netCostChildSingleSharing" placeholder="999"
-                                        type="number" required />
-                                </div>
-                                <div class="box-2-5">
-                                    <p class="form-lable" id="Label">MRP</p>
-                                    <input id="childMRP" name="mrpChildSingleSharing" placeholder="1999"
-                                        type="number" />
-                                </div>
-                                <div class="box-2-5">
-                                    <p class="form-lable" id="Label">Selling price<sup>*</sup></p>
-                                    <input id="childSelling" name="sellingPriceChildSingleSharing" placeholder="1799"
-                                        type="number" required />
-                                </div>
-                                <div class="box-2-5">
-                                    <p class="form-lable" id="Label">Sales team price</p>
-                                    <input id="childAgent" name="agentPriceChildSingleSharing" placeholder="1499"
-                                        type="number" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" name="tourPackageId" value="<?php echo $id ?>">
-                            <input type="hidden" name="priceType" value="single">
-                        </div>
-                    </form>
+<div class="package-page-wrapper package-price-list-wrapper" id="packagePriceListApp" data-package-id="<?php echo $packageId; ?>" data-encoded-id="<?php echo $encodedId; ?>" data-package-type="domestic">
+    <!-- Header Bar -->
+    <div class="package-header-bar">
+        <div class="package-header-left">
+            <div class="package-header-icon">
+                <i class="fi fi-rr-badge-percent"></i>
+            </div>
+            <div class="package-header-titles">
+                <h2 id="pkgHeaderTitleText">Domestic Tour Package</h2>
+                <div class="pkg-meta-row">
+                    <span class="pkg-theme-pill pkg-theme-standard" id="pkgMetaTheme">Standard</span>
+                    <span class="pkg-duration-badge" id="pkgMetaDuration">
+                        <i class="fi fi-rr-moon pkg-duration-moon"></i> 0N / <i class="fi fi-rr-sun pkg-duration-sun"></i> 1D
+                    </span>
+                    <span class="pkg-duration-badge" id="pkgMetaLocation">
+                        <i class="fi fi-rr-marker" style="color: #0284c7;"></i> Domestic
+                    </span>
                 </div>
             </div>
         </div>
-        <div class="widget box-2">
-            <div class="actionArea">
-                <a class="btn popUpBtn" id="updateItineraryPriceBtn"><i class="fi-rr-check"></i> Update price</a>
-                <span class="btn popUpBtn" onclick="closePopup(this)"><i class=" fi-rr-cross"></i>
-                    Cancel</a>
+        <div class="package-header-actions">
+            <button type="button" class="btn-v3-primary" id="btnAddPriceSlab" title="Add New Price Slabs">
+                <i class="fi fi-rr-plus"></i> Add Price Slabs
+            </button>
+            <a href="/dashboard/packages/domestic/edit/?id=<?php echo $encodedId; ?>" class="btn-v3-action" id="btnEditPackage" title="Edit Package Details">
+                <i class="fi fi-rr-edit"></i> Edit Package
+            </a>
+            <a href="/dashboard/packages/domestic/list/" class="btn-v3-action" id="btnBackPackages" title="Back to Domestic Packages List">
+                <i class="fi fi-rr-arrow-left"></i> Packages
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick KPI Metric Cards -->
+    <div class="package-kpi-row">
+        <div class="pkg-mini-kpi indigo">
+            <div class="kpi-icon"><i class="fi fi-rr-receipt"></i></div>
+            <div class="kpi-meta">
+                <p>Total Slabs</p>
+                <h3 id="statTotalSlabs">-</h3>
             </div>
         </div>
+        <div class="pkg-mini-kpi emerald">
+            <div class="kpi-icon"><i class="fi fi-rr-check-circle"></i></div>
+            <div class="kpi-meta">
+                <p>Active Rates</p>
+                <h3 id="statActiveRates">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi amber">
+            <div class="kpi-icon"><i class="fi fi-rr-user"></i></div>
+            <div class="kpi-meta">
+                <p>Lowest Adult Rate</p>
+                <h3 id="statLowestAdult">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi sky">
+            <div class="kpi-icon"><i class="fi fi-rr-child-head"></i></div>
+            <div class="kpi-meta">
+                <p>Lowest Child Rate</p>
+                <h3 id="statLowestChild">-</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card Container -->
+    <div class="package-table-card">
+        <div class="v3-table-header-bar">
+            <div class="table-header-title">
+                <i class="fi fi-rr-layers"></i> Configured Pricing Matrix & Seasonal Slabs
+            </div>
+            <div class="table-header-counter" id="statPriceCountBadge">
+                Loading price slabs...
+            </div>
+        </div>
+
+        <div class="v3-table-responsive-wrapper">
+            <table class="showTableList price-matrix-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" class="th-main">Validity Duration</th>
+                        <th colspan="4" class="th-adult-group">Adult Pricing (INR)</th>
+                        <th colspan="4" class="th-child-group">Child Pricing (INR)</th>
+                        <th rowspan="2" class="th-main col-center">Sharing Type</th>
+                        <th rowspan="2" class="th-main col-center">Status</th>
+                        <th rowspan="2" class="th-main col-actions">Actions</th>
+                    </tr>
+                    <tr>
+                        <!-- Adult sub-headers -->
+                        <th class="th-sub-adult">Net</th>
+                        <th class="th-sub-adult">MRP</th>
+                        <th class="th-sub-adult selling">Selling</th>
+                        <th class="th-sub-adult col-divider">Agent</th>
+                        <!-- Child sub-headers -->
+                        <th class="th-sub-child">Net</th>
+                        <th class="th-sub-child">MRP</th>
+                        <th class="th-sub-child selling">Selling</th>
+                        <th class="th-sub-child col-divider">Agent</th>
+                    </tr>
+                </thead>
+                <tbody id="priceTableBody">
+                    <tr>
+                        <td colspan="12" class="table-loading-state">
+                            <div class="table-loading-spinner"></div>
+                            <p>Loading pricing matrix & seasonal slabs...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Edit / Add Price Modal Dialog -->
+<div class="v3-modal-overlay" id="editPriceModal" aria-hidden="true">
+    <div class="v3-modal-dialog modal-price-dialog" role="dialog" aria-modal="true">
+        <div class="v3-modal-header">
+            <div class="v3-modal-title-group">
+                <div class="v3-modal-icon-badge" id="modalPriceIconBadge">
+                    <i class="fi fi-rr-edit" id="modalPriceIcon"></i>
+                </div>
+                <div>
+                    <h3 id="modalPriceTitle">Update Pricing Slab</h3>
+                    <p id="modalPriceSubtitle">Adjust seasonal validity dates and adult/child rates</p>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-close-price-modal" aria-label="Close Modal">
+                <i class="fi fi-rr-cross"></i>
+            </button>
+        </div>
+        <form id="formEditPrice">
+            <div class="v3-modal-body">
+                <input type="hidden" id="editPriceId" name="id" value="" />
+
+                <!-- Validity & Sharing Type Section -->
+                <div class="v3-form-section">
+                    <div class="v3-form-section-title">
+                        <i class="fi fi-rr-calendar"></i> Seasonal Validity & Sharing
+                    </div>
+                    <div class="v3-form-grid-3">
+                        <div class="v3-form-field">
+                            <label for="editStartDate">Starting Date *</label>
+                            <input type="text" id="editStartDate" name="startDate" class="v3-price-input datePickerWithoutYear" placeholder="15 July" required autocomplete="off" />
+                        </div>
+                        <div class="v3-form-field">
+                            <label for="editEndDate">Ending Date *</label>
+                            <input type="text" id="editEndDate" name="endDate" class="v3-price-input datePickerWithoutYear" placeholder="15 August" required autocomplete="off" />
+                        </div>
+                        <div class="v3-form-field">
+                            <label for="editPriceType">Sharing Type *</label>
+                            <select id="editPriceType" name="priceType" class="v3-price-input" required>
+                                <option value="single">Single Sharing</option>
+                                <option value="double">Double Sharing</option>
+                                <option value="triple">Triple Sharing</option>
+                                <option value="quad">Quad Sharing</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adult Rates Section -->
+                <div class="v3-form-section card-box">
+                    <div class="v3-form-section-title adult">
+                        <i class="fi fi-rr-user"></i> Adult Rates (Per Person)
+                    </div>
+                    <div class="v3-form-grid-4">
+                        <div class="v3-form-field">
+                            <label for="editAdultNet">Net Cost *</label>
+                            <input type="number" id="editAdultNet" name="adultNet" class="v3-price-input" placeholder="999" required />
+                        </div>
+                        <div class="v3-form-field">
+                            <label for="editAdultMRP">MRP</label>
+                            <input type="number" id="editAdultMRP" name="adultMRP" class="v3-price-input" placeholder="1999" />
+                        </div>
+                        <div class="v3-form-field">
+                            <label for="editAdultSelling" class="highlight">Selling Price *</label>
+                            <input type="number" id="editAdultSelling" name="adultSelling" class="v3-price-input highlight-adult" placeholder="1799" required />
+                        </div>
+                        <div class="v3-form-field">
+                            <label for="editAdultAgent">Agent Price</label>
+                            <input type="number" id="editAdultAgent" name="adultAgent" class="v3-price-input" placeholder="1499" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Child Rates Section -->
+                <div class="v3-form-section card-box">
+                    <div class="v3-form-section-title child">
+                        <i class="fi fi-rr-child-head"></i> Child Rates (Per Person)
+                    </div>
+                    <div class="v3-form-grid-4">
+                        <div class="v3-form-field">
+                            <label for="editChildNet">Net Cost *</label>
+                            <input type="number" id="editChildNet" name="childNet" class="v3-price-input" placeholder="599" required />
+                        </div>
+                        <div class="v3-form-field">
+                            <label for="editChildMRP">MRP</label>
+                            <input type="number" id="editChildMRP" name="childMRP" class="v3-price-input" placeholder="1299" />
+                        </div>
+                        <div class="v3-form-field">
+                            <label for="editChildSelling" class="highlight">Selling Price *</label>
+                            <input type="number" id="editChildSelling" name="childSelling" class="v3-price-input highlight-child" placeholder="999" required />
+                        </div>
+                        <div class="v3-form-field">
+                            <label for="editChildAgent">Agent Price</label>
+                            <input type="number" id="editChildAgent" name="childAgent" class="v3-price-input" placeholder="899" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="v3-modal-footer-actions">
+                <button type="button" class="btn-v3-action btn-cancel-price-edit">
+                    <i class="fi fi-rr-cross"></i> Cancel
+                </button>
+                <button type="submit" class="btn-v3-primary" id="btnSubmitPriceUpdate">
+                    <i class="fi fi-rr-check"></i> <span id="btnSubmitPriceText">Save Changes</span>
+                </button>
+            </div>
+        </form>
     </div>
 </div>

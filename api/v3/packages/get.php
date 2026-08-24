@@ -183,15 +183,55 @@ foreach ($rawItinerary as $idx => &$dayItem) {
     }
 
     $dayItem['gallery'] = array_values($existingGal);
-    if (!isset($dayItem['feature_image'])) {
-        $dayItem['feature_image'] = '';
+    if (empty($dayItem['feature_image'])) {
+        if (!empty($dayPhotosMap[$dayNum][0])) {
+            $dayItem['feature_image'] = $dayPhotosMap[$dayNum][0];
+        } elseif (!empty($existingGal[0])) {
+            $dayItem['feature_image'] = $existingGal[0];
+        } elseif (!empty($galleryImageList[$idx]['path'])) {
+            $dayItem['feature_image'] = $galleryImageList[$idx]['path'];
+        } else {
+            $dayItem['feature_image'] = '';
+        }
     }
 }
 unset($dayItem);
 
+$coverImg = !empty($row['gallery_image']) ? $row['gallery_image'] : (!empty($row['tour_package_image']) ? $row['tour_package_image'] : '');
+if (empty($coverImg) && !empty($galleryImageList[0]['path'])) {
+    $coverImg = $galleryImageList[0]['path'];
+}
+
 $duration = (int)($row['tour_package_duration'] ?? 0);
 $nights = $duration;
 $days = $duration + 1;
+
+$docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : (defined('ROOT') ? ROOT : realpath(__DIR__ . '/../../../'));
+$discoveredTemplates = [];
+$templatesBaseDir = $docRoot . '/app/dashboard/v3/default/desktop/templates/itinerary';
+if (is_dir($templatesBaseDir)) {
+    $dirItems = scandir($templatesBaseDir);
+    foreach ($dirItems as $tDir) {
+        if ($tDir === '.' || $tDir === '..' || !is_dir($templatesBaseDir . '/' . $tDir)) continue;
+        $themeJsonPath = $templatesBaseDir . '/' . $tDir . '/theme.json';
+        if (file_exists($themeJsonPath)) {
+            $tJson = json_decode(file_get_contents($themeJsonPath), true);
+            if ($tJson && !empty($tJson['id'])) {
+                $discoveredTemplates[$tJson['id']] = $tJson['title'] ?? ucfirst($tDir);
+            }
+        } elseif (file_exists($templatesBaseDir . '/' . $tDir . '/index.php')) {
+            $discoveredTemplates[strtolower($tDir)] = ucfirst($tDir) . ' Proposal';
+        }
+    }
+}
+if (empty($discoveredTemplates)) {
+    $discoveredTemplates = [
+        'mit'      => 'MIT Multi-Page Proposal (A4 PDF / Premium)',
+        'standard' => 'Standard Timeline Proposal',
+        'modern'   => 'Modern Card Proposal',
+        'aleya'    => 'Aleya Luxury Proposal'
+    ];
+}
 
 $response = [
     'status'        => 'success',
@@ -215,15 +255,16 @@ $response = [
         'itinerary'              => $rawItinerary,
         'inclusions'             => $row['tour_package_inclusions'] ?? '',
         'exclusions'             => $row['tour_package_exclusions'] ?? '',
+        'image'                  => $coverImg,
+        'featured_image'         => $coverImg,
+        'cover_image'            => $coverImg,
+        'gallery_image'          => $row['gallery_image'] ?? '',
+        'gallery_image_list'     => $galleryImageList,
         'status'                 => (int)($row['tour_package_status'] ?? 1),
         'link_url'               => $row['link_url'] ?? '',
         'is_published'           => (!isset($row['tour_package_status']) || (int)$row['tour_package_status'] !== 0)
     ],
-    'templates_list' => [
-        'mit'      => 'MIT Multi-Page Proposal (A4 PDF / Premium)',
-        'standard' => 'Standard Clean Layout',
-        'modern'   => 'Modern Card Layout'
-    ],
+    'templates_list' => $discoveredTemplates,
     'vehicles'      => $vehiclesList,
     'travel_styles' => $travelStyles,
     'hotel_types'   => $hotelTypes

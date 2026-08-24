@@ -1,9 +1,8 @@
 <?php
-
 /**
- * V3 Itinerary Template: MIT Multi-Page Proposal Layout
- * Path: app/dashboard/v3/default/desktop/templates/itinerary/mit.php
- * Description: MIT-style travel proposal layout with dynamic wave headers, stay boxes, inclusions, and A4 PDF export.
+ * V3 Itinerary Template: Standard Clean Layout
+ * Path: app/dashboard/v3/default/desktop/templates/itinerary/standard.php
+ * Description: Clean, modern vertical timeline itinerary layout. Continuous in web view with A4 PDF export.
  */
 
 if (!function_exists('fixImageUrl')) {
@@ -12,18 +11,24 @@ if (!function_exists('fixImageUrl')) {
         if (empty($url)) return '';
         $url = trim($url);
         if (preg_match('/^https?:\/\//i', $url)) return $url;
-        if (defined('ROOT') && file_exists(ROOT . '/' . ltrim($url, '/'))) return $url;
-        if (strpos($url, '/upload/crm.') === 0) {
-            return 'https://crm.musafirindiatrip.com' . $url;
+
+        // Resolve active base domain dynamically
+        $baseUrl = '';
+        if (defined('SITE_URL') && !empty(SITE_URL)) {
+            $baseUrl = rtrim(SITE_URL, '/');
+        } elseif (defined('SITE_DOMAIN') && !empty(SITE_DOMAIN)) {
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+            $baseUrl = $protocol . rtrim(SITE_DOMAIN, '/');
+        } elseif (!empty($_SERVER['HTTP_HOST'])) {
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+            $baseUrl = $protocol . $_SERVER['HTTP_HOST'];
         }
-        if (strpos($url, '/upload/') === 0) {
-            if (defined('SITE_URL') && !empty(SITE_URL)) {
-                return rtrim(SITE_URL, '/') . $url;
-            }
-            if (defined('ROOT') && file_exists(ROOT . $url)) return $url;
-            return 'https://crm.musafirindiatrip.com' . $url;
+
+        if (!empty($baseUrl)) {
+            return $baseUrl . '/' . ltrim($url, '/');
         }
-        return $url;
+
+        return '/' . ltrim($url, '/');
     }
 }
 
@@ -65,12 +70,39 @@ if (!empty($pkgDuration)) {
     $totalDaysCount = $totalNightsCount + 1;
 }
 
-$incList = is_array($pkgInclusions) ? $pkgInclusions : array_filter(array_map('trim', explode("\n", strip_tags(str_replace(['<br>', '</li>', '<p>', ','], "\n", (string)$pkgInclusions)))));
-$excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('trim', explode("\n", strip_tags(str_replace(['<br>', '</li>', '<p>', ','], "\n", (string)$pkgExclusions)))));
+if (!function_exists('parseBulletList')) {
+    function parseBulletList($input)
+    {
+        if (empty($input)) return [];
+        $items = [];
+        if (is_array($input)) {
+            foreach ($input as $item) {
+                $subItems = parseBulletList($item);
+                foreach ($subItems as $sub) {
+                    $items[] = $sub;
+                }
+            }
+        } else {
+            $str = str_replace(['<br>', '<br/>', '<br />', '</li>', '<p>', '</p>', ','], "\n", (string)$input);
+            $rawLines = explode("\n", strip_tags($str));
+            foreach ($rawLines as $line) {
+                $line = trim($line);
+                $line = preg_replace('/^[•\-\*✓✗✔✕\d\.\)]+\s*/u', '', $line);
+                $line = trim($line);
+                if (!empty($line)) {
+                    $items[] = $line;
+                }
+            }
+        }
+        return array_values(array_unique($items));
+    }
+}
+
+$incList = parseBulletList($pkgInclusions);
+$excList = parseBulletList($pkgExclusions);
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -86,33 +118,30 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
 
     <style>
         :root {
-            --mit-primary: #ea580c;
-            --mit-secondary: #f97316;
-            --mit-dark: #0f172a;
-            --mit-text: #1e293b;
-            --mit-muted: #64748b;
-            --mit-border: #e2e8f0;
-            --mit-bg: #f8fafc;
-            --mit-card: #ffffff;
-            --radius-md: 16px;
-            --radius-sm: 10px;
+            --std-primary: #0f172a;
+            --std-accent: #0284c7;
+            --std-accent-light: #e0f2fe;
+            --std-text: #1e293b;
+            --std-muted: #64748b;
+            --std-border: #e2e8f0;
+            --std-bg: #f8fafc;
+            --std-card: #ffffff;
+            --radius-md: 14px;
+            --radius-sm: 8px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--mit-bg);
-            color: var(--mit-text);
+            background-color: var(--std-bg);
+            color: var(--std-text);
             line-height: 1.7;
             -webkit-font-smoothing: antialiased;
             padding-bottom: 50px;
         }
 
+        /* Floating PDF Action Bar */
         .v3-pdf-actions-bar {
             position: fixed;
             top: 20px;
@@ -125,7 +154,7 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
             padding: 8px 14px;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
-            border: 1px solid var(--mit-border);
+            border: 1px solid var(--std-border);
         }
 
         .btn-pdf-action {
@@ -143,36 +172,38 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
         }
 
         .btn-pdf-download {
-            background: linear-gradient(135deg, var(--mit-primary), var(--mit-secondary));
+            background: var(--std-accent);
             color: #ffffff;
         }
 
         .btn-pdf-download:hover {
-            opacity: 0.92;
+            background: #0369a1;
             transform: translateY(-1px);
         }
 
         .btn-pdf-print {
             background: #ffffff;
-            color: var(--mit-text);
-            border: 1px solid var(--mit-border);
+            color: var(--std-text);
+            border: 1px solid var(--std-border);
         }
 
-        .mit-wrapper {
+        /* Continuous Web View Container */
+        .standard-wrapper {
             max-width: 1060px;
             margin: 0 auto;
             padding: 24px 20px;
         }
 
+        /* Header Bar */
         .site-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 16px 24px;
-            background: var(--mit-card);
+            background: var(--std-card);
             border-radius: var(--radius-md);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-            border: 1px solid var(--mit-border);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid var(--std-border);
             margin-bottom: 24px;
         }
 
@@ -181,39 +212,36 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
             align-items: center;
             gap: 12px;
             text-decoration: none;
-            color: var(--mit-dark);
+            color: var(--std-primary);
             font-size: 20px;
             font-weight: 800;
         }
 
-        .brand-logo-img {
-            max-height: 46px;
-            width: auto;
-            object-fit: contain;
-        }
+        .brand-logo-img { max-height: 46px; width: auto; object-fit: contain; }
 
-        .brand-badge {
-            background: #fff7ed;
-            color: var(--mit-primary);
+        .brand-pill {
+            background: var(--std-accent-light);
+            color: var(--std-accent);
             font-size: 12px;
             font-weight: 700;
             padding: 6px 14px;
             border-radius: 9999px;
         }
 
+        /* Hero Banner */
         .hero-banner {
-            min-height: 400px;
+            min-height: 380px;
             position: relative;
             border-radius: var(--radius-md);
             overflow: hidden;
-            background: linear-gradient(135deg, #431407 0%, #7c2d12 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             padding: 34px;
             color: #ffffff;
             margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(234, 88, 12, 0.15);
+            box-shadow: 0 10px 30px rgba(15,23,42,0.1);
         }
 
         .hero-banner img {
@@ -224,10 +252,10 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
             object-fit: cover;
         }
 
-        .hero-gradient {
+        .hero-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(67, 20, 7, 0.15) 0%, rgba(67, 20, 7, 0.88) 100%);
+            background: linear-gradient(180deg, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.85) 100%);
         }
 
         .hero-content {
@@ -235,11 +263,12 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
             z-index: 2;
         }
 
-        .hero-badge {
-            background: linear-gradient(135deg, var(--mit-primary), var(--mit-secondary));
-            color: #ffffff;
+        .hero-tag {
+            background: rgba(2, 132, 199, 0.4);
+            border: 1px solid rgba(2, 132, 199, 0.6);
+            color: #bae6fd;
             font-size: 12px;
-            font-weight: 800;
+            font-weight: 700;
             padding: 4px 12px;
             border-radius: 9999px;
             display: inline-flex;
@@ -249,22 +278,22 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
         }
 
         .hero-title {
-            font-size: 32px;
+            font-size: 30px;
             font-weight: 800;
             line-height: 1.25;
             margin-bottom: 16px;
         }
 
-        .hero-pills {
+        .hero-meta-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .hero-pill {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255,255,255,0.15);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255,255,255,0.2);
             padding: 6px 14px;
             border-radius: 9999px;
             font-size: 12.5px;
@@ -274,13 +303,14 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
             gap: 6px;
         }
 
-        .mit-card {
-            background: var(--mit-card);
+        /* Section Cards */
+        .std-card {
+            background: var(--std-card);
             border-radius: var(--radius-md);
             padding: 28px;
-            border: 1px solid var(--mit-border);
+            border: 1px solid var(--std-border);
             margin-bottom: 24px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
         .section-header {
@@ -293,152 +323,141 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
         }
 
         .section-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: #fff7ed;
-            color: var(--mit-primary);
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: var(--std-accent-light);
+            color: var(--std-accent);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .section-title {
             font-size: 20px;
             font-weight: 800;
-            color: var(--mit-dark);
+            color: var(--std-primary);
         }
 
-        .day-cards-list {
+        /* Timeline */
+        .timeline-list {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        .day-block {
-            background: var(--mit-card);
-            border: 1px solid var(--mit-border);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        .timeline-item {
+            position: relative;
+            padding-left: 32px;
         }
 
-        .day-block-header {
-            padding: 16px 20px;
-            background: #fff7ed;
-            border-bottom: 1px solid #fed7aa;
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 24px;
+            bottom: -20px;
+            width: 2px;
+            background: #e2e8f0;
+        }
+
+        .timeline-item:last-child::before { display: none; }
+
+        .timeline-marker {
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--std-accent);
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 0 2px var(--std-accent);
+        }
+
+        .day-box {
+            background: var(--std-card);
+            border: 1px solid var(--std-border);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+        }
+
+        .day-box-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-bottom: 12px;
         }
 
-        .day-badge-num {
-            background: var(--mit-primary);
+        .day-badge {
+            background: var(--std-accent);
             color: #ffffff;
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 800;
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 6px;
             text-transform: uppercase;
         }
 
-        .day-block-title {
+        .day-title {
             font-size: 16px;
             font-weight: 800;
-            color: #7c2d12;
-            flex: 1;
-            margin-left: 12px;
+            color: var(--std-primary);
         }
 
-        .day-block-body {
-            padding: 20px;
-            font-size: 14px;
-            color: #334155;
-            line-height: 1.7;
-        }
-
-        .day-img-holder {
+        .day-img-box {
             margin: 14px 0;
-            height: 200px;
+            height: 180px;
             border-radius: var(--radius-sm);
             overflow: hidden;
-            border: 1px solid var(--mit-border);
+            border: 1px solid var(--std-border);
         }
 
-        .day-img-holder img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .day-img-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        .stay-block {
-            margin-top: 16px;
+        .day-stay-pill {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
+            padding: 10px 16px;
             border-radius: var(--radius-sm);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            font-size: 13px;
+            color: #166534;
+            font-weight: 600;
         }
 
-        .stay-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: #dcfce7;
-            color: #16a34a;
+        .day-farewell-pill {
+            margin-top: 14px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .farewell-block {
-            margin-top: 16px;
+            gap: 10px;
             background: #fdf4ff;
             border: 1px solid #f5d0fe;
+            padding: 10px 16px;
             border-radius: var(--radius-sm);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            font-size: 13px;
+            color: #86198f;
+            font-weight: 600;
         }
 
-        .farewell-icon-box {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: #fae8ff;
-            color: #a21caf;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
+        /* Inclusions / Exclusions */
         .inc-exc-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 18px;
         }
 
-        .inc-col,
-        .exc-col {
+        .inc-col, .exc-col {
             border-radius: var(--radius-md);
             padding: 20px;
         }
 
-        .inc-col {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-        }
-
-        .exc-col {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-        }
+        .inc-col { background: #f0fdf4; border: 1px solid #bbf7d0; }
+        .exc-col { background: #fef2f2; border: 1px solid #fecaca; }
 
         .inc-exc-title {
             font-size: 14px;
@@ -449,35 +468,16 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
             gap: 6px;
         }
 
-        .inc-col .inc-exc-title {
-            color: #16a34a;
-        }
+        .inc-col .inc-exc-title { color: #16a34a; }
+        .exc-col .inc-exc-title { color: #dc2626; }
 
-        .exc-col .inc-exc-title {
-            color: #dc2626;
-        }
+        .inc-exc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #334155; }
+        .inc-col .inc-exc-list li i { color: #16a34a; margin-right: 4px; }
+        .exc-col .inc-exc-list li i { color: #dc2626; margin-right: 4px; }
 
-        .inc-exc-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 13px;
-            color: #334155;
-        }
-
-        .inc-col .inc-exc-list li i {
-            color: #16a34a;
-            margin-right: 4px;
-        }
-
-        .exc-col .inc-exc-list li i {
-            color: #dc2626;
-            margin-right: 4px;
-        }
-
+        /* Company Contact Card */
         .company-contact-card {
-            background: linear-gradient(135deg, #431407 0%, #7c2d12 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             border-radius: var(--radius-md);
             padding: 30px;
             color: #ffffff;
@@ -492,8 +492,8 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
         }
 
         .contact-item {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
             border-radius: var(--radius-sm);
             padding: 14px;
         }
@@ -501,7 +501,7 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
         .contact-label {
             font-size: 11px;
             text-transform: uppercase;
-            color: #fed7aa;
+            color: #94a3b8;
             font-weight: 700;
             display: block;
             margin-bottom: 4px;
@@ -513,15 +513,13 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
             color: #ffffff;
         }
 
-        .contact-val a {
-            color: #fdba74;
-            text-decoration: none;
-        }
+        .contact-val a { color: #38bdf8; text-decoration: none; }
 
+        /* Footer */
         .site-footer {
             text-align: center;
             font-size: 12.5px;
-            color: var(--mit-muted);
+            color: var(--std-muted);
             padding-top: 14px;
         }
 
@@ -530,41 +528,21 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
             font-size: 12px;
         }
 
-        .credit-note a {
-            color: var(--mit-primary);
-            text-decoration: none;
-            font-weight: 700;
-        }
+        .credit-note a { color: var(--std-accent); text-decoration: none; font-weight: 700; }
 
+        /* Print A4 */
         @media print {
-            body {
-                background: #ffffff !important;
-                padding: 0 !important;
-            }
-
-            .v3-pdf-actions-bar {
-                display: none !important;
-            }
-
-            .mit-wrapper {
-                max-width: 100% !important;
-                padding: 0 !important;
-            }
-
-            .mit-card,
-            .company-contact-card,
-            .day-block {
-                page-break-inside: avoid;
-                margin-bottom: 16px !important;
-            }
+            body { background: #ffffff !important; padding: 0 !important; }
+            .v3-pdf-actions-bar { display: none !important; }
+            .standard-wrapper { max-width: 100% !important; padding: 0 !important; }
+            .std-card, .company-contact-card { page-break-inside: avoid; margin-bottom: 16px !important; }
         }
     </style>
 </head>
-
 <body>
 
     <div class="v3-pdf-actions-bar">
-        <button type="button" class="btn-pdf-action btn-pdf-download" id="btnDownloadMitPDF">
+        <button type="button" class="btn-pdf-action btn-pdf-download" id="btnDownloadStandardPDF">
             <i class="ri-file-download-line"></i> Download Itinerary PDF
         </button>
         <button type="button" class="btn-pdf-action btn-pdf-print" onclick="window.print()">
@@ -572,7 +550,7 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
         </button>
     </div>
 
-    <div class="mit-wrapper" id="itineraryDocument">
+    <div class="standard-wrapper" id="itineraryDocument">
 
         <header class="site-header">
             <a href="<?php echo htmlspecialchars(!empty($siteUrl) ? $siteUrl : '#'); ?>" class="brand-logo">
@@ -582,132 +560,129 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
                     <span><?php echo htmlspecialchars($siteName); ?></span>
                 <?php endif; ?>
             </a>
-            <div class="brand-badge">Quote Ref: #<?php echo htmlspecialchars((string)$quoteRef); ?></div>
+            <div class="brand-pill">Quote Ref: #<?php echo htmlspecialchars((string)$quoteRef); ?></div>
         </header>
 
         <section class="hero-banner">
             <?php if (!empty($heroFeatureImage)): ?>
                 <img src="<?php echo htmlspecialchars($heroFeatureImage); ?>" alt="<?php echo htmlspecialchars($pkgTitle); ?>" />
-                <div class="hero-gradient"></div>
+                <div class="hero-overlay"></div>
             <?php endif; ?>
             <div class="hero-content">
-                <div class="hero-badge"><i class="ri-sparkling-fill"></i> MIT Proposal Itinerary</div>
+                <div class="hero-tag"><i class="ri-compass-3-line"></i> Curated Itinerary Proposal</div>
                 <h1 class="hero-title"><?php echo htmlspecialchars($pkgTitle); ?></h1>
-                <div class="hero-pills">
+                <div class="hero-meta-row">
                     <span class="hero-pill"><i class="ri-time-line"></i> <?php echo $totalNightsCount; ?>N / <?php echo $totalDaysCount; ?>D</span>
                     <span class="hero-pill"><i class="ri-map-pin-line"></i> <?php echo htmlspecialchars($pkgCity); ?></span>
-                    <span class="hero-pill"><i class="ri-compass-3-line"></i> <?php echo htmlspecialchars(ucfirst($pkgTheme)); ?></span>
+                    <span class="hero-pill"><i class="ri-hotel-line"></i> <?php echo !empty($pkgHotel) ? htmlspecialchars(ucfirst($pkgHotel)) : 'Deluxe Hotel'; ?></span>
                     <?php if (!empty($pkgPriceAdult)): ?>
-                        <span class="hero-pill" style="background: rgba(234, 88, 12, 0.5);"><i class="ri-money-rupee-circle-line"></i> ₹ <?php echo number_format((float)$pkgPriceAdult); ?></span>
+                        <span class="hero-pill" style="background: rgba(2, 132, 199, 0.4);"><i class="ri-money-rupee-circle-line"></i> ₹ <?php echo number_format((float)$pkgPriceAdult); ?></span>
                     <?php endif; ?>
                 </div>
             </div>
         </section>
 
         <?php if (!empty($pkgOverview)): ?>
-            <section class="mit-card">
-                <div class="section-header">
-                    <div class="section-icon"><i class="ri-information-line"></i></div>
-                    <h2 class="section-title">Tour Overview</h2>
-                </div>
-                <div style="font-size: 14px; color: #334155; line-height: 1.8;">
-                    <?php echo $pkgOverview; ?>
-                </div>
-            </section>
+        <section class="std-card">
+            <div class="section-header">
+                <div class="section-icon"><i class="ri-information-line"></i></div>
+                <h2 class="section-title">Tour Overview</h2>
+            </div>
+            <div style="font-size: 14px; color: #334155; line-height: 1.8;">
+                <?php echo $pkgOverview; ?>
+            </div>
+        </section>
         <?php endif; ?>
 
-        <section class="mit-card">
+        <section class="std-card">
             <div class="section-header">
                 <div class="section-icon"><i class="ri-calendar-todo-line"></i></div>
                 <h2 class="section-title">Day-Wise Itinerary</h2>
             </div>
 
-            <div class="day-cards-list">
-                <?php
+            <div class="timeline-list">
+                <?php 
                 $dayIdx = 1;
-                foreach ($pkgDays as $d):
+                foreach ($pkgDays as $d): 
                     $dayLabel = is_array($d) ? ($d['day'] ?? ($d['title'] ?? "Day $dayIdx")) : "Day $dayIdx";
                     $overview = is_array($d) ? ($d['overview'] ?? ($d['content'] ?? '')) : '';
                     $stay = is_array($d) ? ($d['stay'] ?? ($d['hotel'] ?? '')) : '';
                     $img = is_array($d) ? fixImageUrl($d['feature_image'] ?? ($d['image'] ?? '')) : '';
                     $isLast = ($dayIdx === $totalDaysCount);
                 ?>
-                    <div class="day-block">
-                        <div class="day-block-header">
-                            <span class="day-badge-num">Day <?php echo $dayIdx; ?></span>
-                            <h3 class="day-block-title"><?php echo htmlspecialchars($dayLabel); ?></h3>
-                        </div>
-                        <div class="day-block-body">
-                            <div><?php echo !empty($overview) ? $overview : '<p>Sightseeing and transfers as scheduled.</p>'; ?></div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="day-box">
+                            <div class="day-box-header">
+                                <span class="day-badge">Day <?php echo $dayIdx; ?></span>
+                                <h3 class="day-title"><?php echo htmlspecialchars($dayLabel); ?></h3>
+                            </div>
+                            <div style="font-size: 13.5px; color: #334155; line-height: 1.7;">
+                                <?php echo !empty($overview) ? $overview : '<p>Sightseeing and transfers as scheduled.</p>'; ?>
+                            </div>
 
                             <?php if (!empty($img)): ?>
-                                <div class="day-img-holder">
+                                <div class="day-img-box">
                                     <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($dayLabel); ?>" />
                                 </div>
                             <?php endif; ?>
 
                             <?php if (!empty($stay)): ?>
-                                <div class="stay-block">
-                                    <div class="stay-icon"><i class="ri-hotel-bed-line"></i></div>
-                                    <div>
-                                        <div style="font-size: 13.5px; font-weight: 700; color: #166534;"><?php echo htmlspecialchars($stay); ?></div>
-                                        <div style="font-size: 12px; color: #15803d;">Overnight Stay in <?php echo htmlspecialchars($pkgCity); ?></div>
-                                    </div>
+                                <div class="day-stay-pill">
+                                    <i class="ri-hotel-bed-line"></i>
+                                    <span><strong>Night Stay:</strong> <?php echo htmlspecialchars($stay); ?> (<?php echo htmlspecialchars($pkgCity); ?>)</span>
                                 </div>
                             <?php elseif ($isLast): ?>
-                                <div class="farewell-block">
-                                    <div class="farewell-icon-box"><i class="ri-flight-takeoff-line"></i></div>
-                                    <div>
-                                        <div style="font-size: 13.5px; font-weight: 700; color: #86198f;">End of a Wonderful Trip! ✨</div>
-                                        <div style="font-size: 12px; color: #a21caf;">Transfer for onward journey. Thank you for choosing us!</div>
-                                    </div>
+                                <div class="day-farewell-pill">
+                                    <i class="ri-flight-takeoff-line"></i>
+                                    <span><strong>Tour Concludes:</strong> Transfer to onward journey with wonderful memories!</span>
                                 </div>
                             <?php endif; ?>
                         </div>
                     </div>
-                <?php
+                <?php 
                     $dayIdx++;
-                endforeach;
+                endforeach; 
                 ?>
             </div>
         </section>
 
         <?php if (!empty($incList) || !empty($excList)): ?>
-            <section class="mit-card">
-                <div class="section-header">
-                    <div class="section-icon"><i class="ri-shield-check-line"></i></div>
-                    <h2 class="section-title">Inclusions & Exclusions</h2>
+        <section class="std-card">
+            <div class="section-header">
+                <div class="section-icon"><i class="ri-shield-check-line"></i></div>
+                <h2 class="section-title">Inclusions & Exclusions</h2>
+            </div>
+            <div class="inc-exc-grid">
+                <?php if (!empty($incList)): ?>
+                <div class="inc-col">
+                    <div class="inc-exc-title"><i class="ri-checkbox-circle-fill"></i> Inclusions</div>
+                    <ul class="inc-exc-list">
+                        <?php foreach ($incList as $inc): ?>
+                            <li><i class="ri-check-line"></i> <?php echo htmlspecialchars($inc); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
-                <div class="inc-exc-grid">
-                    <?php if (!empty($incList)): ?>
-                        <div class="inc-col">
-                            <div class="inc-exc-title"><i class="ri-checkbox-circle-fill"></i> Package Inclusions</div>
-                            <ul class="inc-exc-list">
-                                <?php foreach ($incList as $inc): ?>
-                                    <li><i class="ri-check-line"></i> <?php echo htmlspecialchars($inc); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
+                <?php endif; ?>
 
-                    <?php if (!empty($excList)): ?>
-                        <div class="exc-col">
-                            <div class="inc-exc-title"><i class="ri-close-circle-fill"></i> Package Exclusions</div>
-                            <ul class="inc-exc-list">
-                                <?php foreach ($excList as $exc): ?>
-                                    <li><i class="ri-close-line"></i> <?php echo htmlspecialchars($exc); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
+                <?php if (!empty($excList)): ?>
+                <div class="exc-col">
+                    <div class="inc-exc-title"><i class="ri-close-circle-fill"></i> Exclusions</div>
+                    <ul class="inc-exc-list">
+                        <?php foreach ($excList as $exc): ?>
+                            <li><i class="ri-close-line"></i> <?php echo htmlspecialchars($exc); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
-            </section>
+                <?php endif; ?>
+            </div>
+        </section>
         <?php endif; ?>
 
-        <!-- Company Contact Information -->
+        <!-- Company Contact Information Card -->
         <section class="company-contact-card">
             <h3 style="font-size: 18px; font-weight: 800;"><?php echo htmlspecialchars($siteName); ?></h3>
-            <p style="font-size: 13px; color: #fed7aa; margin-top: 2px;">Your dedicated travel planning specialist</p>
+            <p style="font-size: 13px; color: #94a3b8; margin-top: 2px;">Your dedicated travel specialist</p>
 
             <div class="contact-grid">
                 <?php if (!empty($sitePhone)): ?>
@@ -751,16 +726,14 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
     </div>
 
     <script>
-        document.getElementById('btnDownloadMitPDF').addEventListener('click', async function() {
+        document.getElementById('btnDownloadStandardPDF').addEventListener('click', async function() {
             const btn = this;
             const orig = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Generating PDF...';
 
             try {
-                const {
-                    jsPDF
-                } = window.jspdf;
+                const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'pt', 'a4');
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
@@ -789,7 +762,7 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
                     heightLeft -= pageHeight;
                 }
 
-                pdf.save("<?php echo preg_replace('/[^A-Za-z0-9_-]/', '_', $pkgTitle); ?>_MIT_Proposal.pdf");
+                pdf.save("<?php echo preg_replace('/[^A-Za-z0-9_-]/', '_', $pkgTitle); ?>_Proposal.pdf");
             } catch (e) {
                 console.error(e);
                 window.print();
@@ -800,5 +773,4 @@ $excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('t
         });
     </script>
 </body>
-
 </html>

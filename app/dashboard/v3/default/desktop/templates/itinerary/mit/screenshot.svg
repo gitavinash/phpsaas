@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="mitHeroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e76317" />
+      <stop offset="100%" stop-color="#fb923c" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="#eef2f6"/>
+
+  <!-- A4 Page representation -->
+  <rect x="50" y="20" width="500" height="360" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Hero with Wave bottom -->
+  <rect x="50" y="20" width="500" height="100" fill="url(#mitHeroGrad)"/>
+  <!-- Mountain wave path -->
+  <path d="M 50,120 L 50,105 C 100,118 160,88 230,108 C 300,128 370,92 440,110 C 490,120 520,98 550,112 L 550,120 Z" fill="#ffffff"/>
+
+  <!-- Ref Id Badge -->
+  <rect x="440" y="80" width="95" height="22" rx="4" fill="#fb923c"/>
+  <text x="450" y="95" fill="#ffffff" font-size="10" font-weight="800">Ref. id: #1059</text>
+
+  <!-- Title with Pipes -->
+  <text x="75" y="148" fill="#fb923c" font-size="20" font-weight="800">|</text>
+  <text x="90" y="148" fill="#111827" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="800">KASHMIR TOUR PACKAGE</text>
+  <text x="315" y="148" fill="#fb923c" font-size="20" font-weight="800">|</text>
+
+  <!-- 3 Orange Stats Boxes -->
+  <rect x="75" y="165" width="135" height="44" rx="6" fill="#e76317"/>
+  <text x="90" y="180" fill="#ffedd5" font-size="8" font-weight="700">TRAVEL DURATION</text>
+  <text x="90" y="198" fill="#ffffff" font-size="12" font-weight="800">5N / 6D</text>
+
+  <rect x="232" y="165" width="135" height="44" rx="6" fill="#e76317"/>
+  <text x="247" y="180" fill="#ffedd5" font-size="8" font-weight="700">TRAVEL LOCATION</text>
+  <text x="247" y="198" fill="#ffffff" font-size="12" font-weight="800">Srinagar</text>
+
+  <rect x="390" y="165" width="135" height="44" rx="6" fill="#e76317"/>
+  <text x="405" y="180" fill="#ffedd5" font-size="8" font-weight="700">THEME / STYLE</text>
+  <text x="405" y="198" fill="#ffffff" font-size="12" font-weight="800">Honeymoon</text>
+
+  <!-- Tour Overview Header & Text -->
+  <text x="75" y="235" fill="#fb923c" font-size="16" font-weight="800">|</text>
+  <text x="88" y="235" fill="#111827" font-size="13" font-weight="800">Tour Overview</text>
+  <text x="75" y="255" fill="#4b5563" font-size="10.5">Experience paradise on earth with luxury houseboat stays on Dal Lake,</text>
+  <text x="75" y="270" fill="#4b5563" font-size="10.5">snowcapped Gulmarg gondola rides, and Pahalgam valley excursions.</text>
+
+  <!-- Mini Inclusions Snippet -->
+  <rect x="75" y="290" width="450" height="48" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="90" y="310" fill="#16a34a" font-size="11" font-weight="800">✓ Inclusions &amp; Accommodations</text>
+  <text x="90" y="326" fill="#166534" font-size="10">Houseboat stay, Shikara ride, Deluxe 3★ Hotels, Private Cab transfers</text>
+
+  <!-- Page Footer -->
+  <line x1="75" y1="355" x2="525" y2="355" stroke="#f1f5f9" stroke-width="1"/>
+  <text x="75" y="368" fill="#94a3b8" font-size="9">Musafir India Trip • musafirindiatrip.com</text>
+  <text x="485" y="368" fill="#94a3b8" font-size="9">Page 1 of 6</text>
+</svg>

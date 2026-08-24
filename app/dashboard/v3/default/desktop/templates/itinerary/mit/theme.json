@@ -1,0 +1,20 @@
+{
+  "id": "mit",
+  "name": "MIT Proposal",
+  "title": "MIT Multi-Page Proposal",
+  "version": "1.0.0",
+  "author": "Aleya",
+  "tag": "Default",
+  "badge": "Multi-Page",
+  "badge_style": "background:#fff7ed; color:#ea580c; border-color:#ffedd5;",
+  "icon": "fi fi-rr-document-signed",
+  "icon_style": "background:#fff7ed; color:#ea580c;",
+  "description": "Multi-page proposal with dynamic waves, stay blocks & A4 PDF export.",
+  "accent_color": "#ea580c",
+  "tags": [
+    { "icon": "fi fi-rr-document", "label": "Multi-Page A4" },
+    { "icon": "fi fi-rr-file-pdf", "label": "PDF Ready" }
+  ],
+  "screenshot": "screenshot.svg",
+  "order": 1
+}

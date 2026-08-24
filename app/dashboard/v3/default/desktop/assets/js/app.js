@@ -3666,7 +3666,35 @@ $(document).ready(function (e) {
       }
     }
 
-    // 4. Leads Pipeline Module
+    // 4. Package Price List Module
+    const $pkgPrices = $("#packagePriceListApp, .package-price-list-wrapper");
+    if ($pkgPrices.length > 0) {
+      if (window.V3PackagePriceList && typeof window.V3PackagePriceList.autoInit === "function") {
+        window.V3PackagePriceList.autoInit();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "package-price-list.js?v=" + Date.now(), function () {
+          if (window.V3PackagePriceList && typeof window.V3PackagePriceList.autoInit === "function") {
+            window.V3PackagePriceList.autoInit();
+          }
+        });
+      }
+    }
+
+    // 4b. Package Hotel List Module
+    const $pkgHotels = $("#packageHotelListApp, .package-hotel-list-wrapper");
+    if ($pkgHotels.length > 0) {
+      if (window.V3PackageHotelList && typeof window.V3PackageHotelList.init === "function") {
+        window.V3PackageHotelList.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "package-hotel-list.js?v=" + Date.now(), function () {
+          if (window.V3PackageHotelList && typeof window.V3PackageHotelList.init === "function") {
+            window.V3PackageHotelList.init();
+          }
+        });
+      }
+    }
+
+    // 5. Leads Pipeline Module
     const $leads = $("#leadsListApp, .leads-page-wrapper");
     if ($leads.length > 0) {
       if (window.V3Leads && typeof window.V3Leads.init === "function") {

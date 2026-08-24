@@ -23,18 +23,24 @@ if (!function_exists('fixImageUrl')) {
         if (empty($url)) return '';
         $url = trim($url);
         if (preg_match('/^https?:\/\//i', $url)) return $url;
-        if (defined('ROOT') && file_exists(ROOT . '/' . ltrim($url, '/'))) return $url;
-        if (strpos($url, '/upload/crm.') === 0) {
-            return 'https://crm.musafirindiatrip.com' . $url;
+
+        // Resolve active base domain dynamically
+        $baseUrl = '';
+        if (defined('SITE_URL') && !empty(SITE_URL)) {
+            $baseUrl = rtrim(SITE_URL, '/');
+        } elseif (defined('SITE_DOMAIN') && !empty(SITE_DOMAIN)) {
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+            $baseUrl = $protocol . rtrim(SITE_DOMAIN, '/');
+        } elseif (!empty($_SERVER['HTTP_HOST'])) {
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+            $baseUrl = $protocol . $_SERVER['HTTP_HOST'];
         }
-        if (strpos($url, '/upload/') === 0) {
-            if (defined('SITE_URL') && !empty(SITE_URL)) {
-                return rtrim(SITE_URL, '/') . $url;
-            }
-            if (defined('ROOT') && file_exists(ROOT . $url)) return $url;
-            return 'https://crm.musafirindiatrip.com' . $url;
+
+        if (!empty($baseUrl)) {
+            return $baseUrl . '/' . ltrim($url, '/');
         }
-        return $url;
+
+        return '/' . ltrim($url, '/');
     }
 }
 
@@ -1656,8 +1662,36 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
 
         <!-- Inclusions & Exclusions Section -->
         <?php
-        $inclusionsList = is_array($pkgInclusions) ? $pkgInclusions : array_filter(array_map('trim', explode("\n", strip_tags(str_replace(['<br>', '</li>', '<p>', ','], "\n", (string)$pkgInclusions)))));
-        $exclusionsList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('trim', explode("\n", strip_tags(str_replace(['<br>', '</li>', '<p>', ','], "\n", (string)$pkgExclusions)))));
+        if (!function_exists('parseBulletList')) {
+            function parseBulletList($input)
+            {
+                if (empty($input)) return [];
+                $items = [];
+                if (is_array($input)) {
+                    foreach ($input as $item) {
+                        $subItems = parseBulletList($item);
+                        foreach ($subItems as $sub) {
+                            $items[] = $sub;
+                        }
+                    }
+                } else {
+                    $str = str_replace(['<br>', '<br/>', '<br />', '</li>', '<p>', '</p>', ','], "\n", (string)$input);
+                    $rawLines = explode("\n", strip_tags($str));
+                    foreach ($rawLines as $line) {
+                        $line = trim($line);
+                        $line = preg_replace('/^[•\-\*✓✗✔✕\d\.\)]+\s*/u', '', $line);
+                        $line = trim($line);
+                        if (!empty($line)) {
+                            $items[] = $line;
+                        }
+                    }
+                }
+                return array_values(array_unique($items));
+            }
+        }
+
+        $inclusionsList = parseBulletList($pkgInclusions);
+        $exclusionsList = parseBulletList($pkgExclusions);
 
         if (!empty($inclusionsList) || !empty($exclusionsList)):
         ?>
