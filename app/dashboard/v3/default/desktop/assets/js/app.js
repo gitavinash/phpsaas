@@ -3672,9 +3672,37 @@ $(document).ready(function (e) {
       if (window.V3Leads && typeof window.V3Leads.init === "function") {
         window.V3Leads.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "leads.js", function () {
+        ensureScriptLoaded(ADMIN_JS + "leads.js?v=" + Date.now(), function () {
           if (window.V3Leads && typeof window.V3Leads.init === "function") {
             window.V3Leads.init();
+          }
+        });
+      }
+    }
+
+    // 5. Lead Details View Module
+    const $leadView = $("#leadViewApp, .lead-view-wrapper");
+    if ($leadView.length > 0) {
+      if (window.V3LeadView && typeof window.V3LeadView.init === "function") {
+        window.V3LeadView.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "lead-view.js?v=" + Date.now(), function () {
+          if (window.V3LeadView && typeof window.V3LeadView.init === "function") {
+            window.V3LeadView.init();
+          }
+        });
+      }
+    }
+
+    // 6. Integration Hub Module
+    const $integration = $("#integrationApp, .integration-page-wrapper");
+    if ($integration.length > 0) {
+      if (window.V3Integration && typeof window.V3Integration.init === "function") {
+        window.V3Integration.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "integration.js?v=" + Date.now(), function () {
+          if (window.V3Integration && typeof window.V3Integration.init === "function") {
+            window.V3Integration.init();
           }
         });
       }
@@ -3801,15 +3829,8 @@ $(document).ready(function (e) {
           document.title = doc.title;
         }
 
-        const newBreadcrumbs = doc.querySelector('.i-m-here-pagination');
-        const currentBreadcrumbs = document.querySelector('.i-m-here-pagination');
-        if (newBreadcrumbs && currentBreadcrumbs) {
-          currentBreadcrumbs.innerHTML = newBreadcrumbs.innerHTML;
-        } else if (newBreadcrumbs && !currentBreadcrumbs && container) {
-          container.insertAdjacentElement('beforebegin', newBreadcrumbs);
-        } else if (!newBreadcrumbs && currentBreadcrumbs) {
-          currentBreadcrumbs.remove();
-        }
+        // Clean up any stray breadcrumbs outside container to prevent duplication
+        document.querySelectorAll('main > .i-m-here-pagination').forEach(el => el.remove());
 
         container.innerHTML = newContainer.innerHTML;
 

@@ -172,3 +172,5 @@
         <div id="leadsPaginationWrap"></div>
     </div>
 </div>
+
+<script src="<?php echo ADMIN_JS ?>leads.js?v=<?php echo time(); ?>"></script>

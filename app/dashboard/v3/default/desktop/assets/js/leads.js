@@ -238,12 +238,20 @@
       $("#btnApplyBulkAction").on("click", function () {
         const action = $("#bulkActionSelect").val();
         if (!action) {
-          alert("Please select a bulk action from the dropdown.");
+          if (typeof popUpMessage === "function") {
+            popUpMessage("center", "Please select a bulk action from the dropdown.", "warning");
+          } else {
+            alert("Please select a bulk action from the dropdown.");
+          }
           return;
         }
         const ids = Array.from(self.selectedLeads);
         if (ids.length === 0) {
-          alert("Please select at least one lead.");
+          if (typeof popUpMessage === "function") {
+            popUpMessage("center", "Please select at least one lead.", "warning");
+          } else {
+            alert("Please select at least one lead.");
+          }
           return;
         }
         self.handleBulkAction(action, ids);
@@ -354,6 +362,9 @@
           type: "POST",
           data: {
             lead_id: leadId,
+            leadId: leadId,
+            id: leadId,
+            enquiry_id: leadId,
             status: statusVal,
           },
           dataType: "json",
@@ -406,7 +417,7 @@
         if (!confirm(`Are you sure you want to delete ${ids.length} selected lead(s)?`)) return;
         let completed = 0;
         ids.forEach(function (id) {
-          $.post("/api/v3/leads/update-status/", { lead_id: id, status: 4 }, function () {
+          $.post("/api/v3/leads/update-status/", { leadId: id, lead_id: id, id: id, enquiry_id: id, status: 4 }, function () {
             completed++;
             if (completed >= ids.length) {
               self.selectedLeads.clear();
@@ -418,7 +429,7 @@
       } else if (action === "mark_duplicate") {
         let completed = 0;
         ids.forEach(function (id) {
-          $.post("/api/v3/leads/update-status/", { lead_id: id, status: 5 }, function () {
+          $.post("/api/v3/leads/update-status/", { leadId: id, lead_id: id, id: id, enquiry_id: id, status: 5 }, function () {
             completed++;
             if (completed >= ids.length) {
               self.selectedLeads.clear();
@@ -430,7 +441,7 @@
       } else if (action === "convert_to_sales") {
         let completed = 0;
         ids.forEach(function (id) {
-          $.post("/api/v3/leads/update-status/", { lead_id: id, status: 1 }, function () {
+          $.post("/api/v3/leads/update-status/", { leadId: id, lead_id: id, id: id, enquiry_id: id, status: 1 }, function () {
             completed++;
             if (completed >= ids.length) {
               self.selectedLeads.clear();
@@ -467,7 +478,7 @@
 
       $.ajax({
         url: "/api/v3/leads/list.php",
-        type: "GET",
+        type: "POST",
         data: {
           page: self.currentPage,
           limit: self.limit,

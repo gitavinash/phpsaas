@@ -14,25 +14,35 @@ $siteId     = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $userId     = defined('USER_ID')      ? (int) USER_ID : 0;
 $accessType = isset($site_access_type) ? $site_access_type : 'administrator';
 
+$reqData = $_POST;
+$rawInput = file_get_contents('php://input');
+if (!empty($rawInput)) {
+    $decoded = json_decode($rawInput, true);
+    if (is_array($decoded)) {
+        $reqData = array_merge($reqData, $decoded);
+    }
+}
+$reqData = array_merge($_GET, $_REQUEST, $reqData);
+
 $siteFilter = ($siteId > 0) ? "e.enquiry_site_id = {$siteId}" : "1=1";
 $userFilter = ($accessType === 'agent' && $userId > 0)
     ? " AND (e.enquiry_agent = '{$userId}')"
     : "";
 
 // Specific agent filter from request
-if (isset($_GET['agent_id']) && $_GET['agent_id'] !== '' && $_GET['agent_id'] !== 'all') {
-    if ($_GET['agent_id'] === '0' || $_GET['agent_id'] === 'unassigned') {
+if (isset($reqData['agent_id']) && $reqData['agent_id'] !== '' && $reqData['agent_id'] !== 'all') {
+    if ($reqData['agent_id'] === '0' || $reqData['agent_id'] === 'unassigned') {
         $userFilter .= " AND (e.enquiry_agent = '0' OR e.enquiry_agent = '' OR e.enquiry_agent IS NULL)";
-    } elseif (is_numeric($_GET['agent_id']) && (int)$_GET['agent_id'] > 0) {
-        $filterAgentId = (int)$_GET['agent_id'];
+    } elseif (is_numeric($reqData['agent_id']) && (int)$reqData['agent_id'] > 0) {
+        $filterAgentId = (int)$reqData['agent_id'];
         $userFilter .= " AND e.enquiry_agent = '{$filterAgentId}'";
     }
 }
 
 // Date Range Filter
 $daterangeFilter = "";
-if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'] !== 'null' && $_GET['daterange'] !== 'all') {
-    $dates = explode(' - ', trim($_GET['daterange']));
+if (isset($reqData['daterange']) && !empty($reqData['daterange']) && $reqData['daterange'] !== 'null' && $reqData['daterange'] !== 'all') {
+    $dates = explode(' - ', trim($reqData['daterange']));
     if (count($dates) == 2) {
         $t1 = date('Y-m-d 00:00:00', strtotime($dates[0]));
         $t2 = date('Y-m-d 23:59:59', strtotime($dates[1]));
@@ -42,8 +52,8 @@ if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'
 
 // Search Filter
 $searchFilter = "";
-if (isset($_GET['search']) && trim($_GET['search']) !== '') {
-    $searchKey = mysqli_real_escape_string($connection, trim($_GET['search']));
+if (isset($reqData['search']) && trim($reqData['search']) !== '') {
+    $searchKey = mysqli_real_escape_string($connection, trim($reqData['search']));
     $searchFilter = " AND (e.enquiry_first_name LIKE '%{$searchKey}%' 
                        OR e.enquiry_last_name LIKE '%{$searchKey}%'
                        OR e.enquiry_mobile LIKE '%{$searchKey}%' 
@@ -55,15 +65,15 @@ if (isset($_GET['search']) && trim($_GET['search']) !== '') {
 
 // Status Filter
 $statusFilter = "";
-if (isset($_GET['status']) && $_GET['status'] !== '' && $_GET['status'] !== 'all') {
-    $targetStatus = (int)$_GET['status'];
+if (isset($reqData['status']) && $reqData['status'] !== '' && $reqData['status'] !== 'all') {
+    $targetStatus = (int)$reqData['status'];
     $statusFilter = " AND e.enquiry_status = {$targetStatus}";
 }
 
 // Source Filter
 $sourceFilter = "";
-if (isset($_GET['source']) && trim($_GET['source']) !== '' && $_GET['source'] !== 'all') {
-    $sourceKey = mysqli_real_escape_string($connection, trim($_GET['source']));
+if (isset($reqData['source']) && trim($reqData['source']) !== '' && $reqData['source'] !== 'all') {
+    $sourceKey = mysqli_real_escape_string($connection, trim($reqData['source']));
     $sourceFilter = " AND e.enquiry_source LIKE '%{$sourceKey}%'";
 }
 
@@ -141,8 +151,8 @@ if (isset($connection) && ($sRes = mysqli_query($connection, $statsQuery))) {
 }
 
 // 2. Pagination Calculation
-$page  = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-$limit = isset($_GET['limit']) ? min(max(5, (int)$_GET['limit']), 200) : 50;
+$page  = isset($reqData['page']) ? max(1, (int)$reqData['page']) : 1;
+$limit = isset($reqData['limit']) ? min(max(5, (int)$reqData['limit']), 200) : 50;
 $offset = ($page - 1) * $limit;
 
 // Total Count matching current filters
@@ -206,13 +216,13 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
         $leadsList[] = [
             'id'               => $leadId,
             'encoded_id'       => base64_encode($leadId),
-            'name'             => ucwords($fullName),
-            'first_name'       => ucwords($firstName),
+            'name'             => ucwords(strtolower($fullName)),
+            'first_name'       => ucwords(strtolower($firstName)),
             'email'            => trim($row['enquiry_email'] ?? ''),
             'mobile'           => trim($row['enquiry_mobile'] ?? ''),
             'alt_mobile'       => trim($row['enquiry_alt_mobile'] ?? ''),
             'wa_mobile'        => $waMobile,
-            'subject'          => !empty($row['enquiry_subject']) ? trim($row['enquiry_subject']) : 'Tour Package Enquiry',
+            'subject'          => !empty($row['enquiry_subject']) ? ucwords(strtolower(trim($row['enquiry_subject']))) : 'Tour Package Enquiry',
             'source'           => cleanLeadSource($row['enquiry_source'] ?? ''),
             'source_raw'       => trim($row['enquiry_source'] ?? ''),
             'status'           => (int)$row['enquiry_status'],

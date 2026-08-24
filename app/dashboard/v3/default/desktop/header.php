@@ -57,7 +57,7 @@ if (isset($daterange)) {
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin.css?v=<?php echo time(); ?>">
     <?php
     if (SITE_VERSION == 'mobile') {
         echo "<link rel='stylesheet' type='text/css' href='" . ADMIN_STYLESHEET . "admin_mobile.css'>";
@@ -111,11 +111,6 @@ if (isset($daterange)) {
         <div class="right-side">
             <div class="mobileLogo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt=""></a></div>
             <ul>
-                <li <?php echo ((SITE_VERSION == 'mobile') ? "style='display:none'" : '') ?>><a
-                        href="https://support.blumox.com/?url=<?php echo urlencode(SITE_URL . ACTIVE_URL . '&domain=' . SITE_DOMAIN) ?>"
-                        target="_blank" title="Support"><i class="fi-rr-headset"></i></a></li>
-                <!-- <li <?php echo ((SITE_VERSION == 'mobile') ? "style='display:none'" : '') ?>><a href="#"
-                        onclick="showNotification()"><i class="fi-rr-bell"></i></a></li> -->
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
                         <div class="profile-img"><img
