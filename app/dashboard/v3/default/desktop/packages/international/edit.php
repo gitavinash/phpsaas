@@ -300,6 +300,34 @@ $encodedId = is_numeric($id) && (int)$id > 0 ? base64_encode($id) : $rawId;
                                     </button>
                                 </div>
                             </div>
+
+                            <!-- Template 4: Aleya Luxury Proposal -->
+                            <div class="v3-template-card" data-template-id="aleya">
+                                <div class="v3-template-card-top">
+                                    <div class="v3-template-icon-box" style="background:#fef8ec; color:#c59b27;">
+                                        <i class="fi fi-rr-crown"></i>
+                                    </div>
+                                    <div class="v3-template-header-info">
+                                        <div class="v3-template-title-row">
+                                            <h4 class="v3-template-name">Aleya Luxury</h4>
+                                            <span class="v3-template-pill-badge" style="background:#fef8ec; color:#b0871d; border-color:#fde68a;">Luxury</span>
+                                        </div>
+                                        <p class="v3-template-desc">Gold luxury theme with gallery lightbox, stays & A4 PDF export.</p>
+                                    </div>
+                                    <div class="v3-template-radio">
+                                        <i class="fi fi-rr-check"></i>
+                                    </div>
+                                </div>
+                                <div class="v3-template-card-bottom">
+                                    <div class="v3-template-mini-tags">
+                                        <span class="v3-temp-tag"><i class="fi fi-rr-crown"></i> Gold Theme</span>
+                                        <span class="v3-temp-tag"><i class="fi fi-rr-picture"></i> Gallery</span>
+                                    </div>
+                                    <button type="button" class="btn-template-preview" data-template-id="aleya" title="Preview Aleya Luxury">
+                                        <i class="fi fi-rr-eye"></i> <span>Preview</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -428,24 +456,29 @@ $encodedId = is_numeric($id) && (int)$id > 0 ? base64_encode($id) : $rawId;
         <div class="v3-modal-dialog v3-modal-dialog-preview">
             <div class="v3-preview-modal-header">
                 <div class="v3-preview-header-left">
-                    <span class="v3-preview-badge"><i class="fi fi-rr-layout-fluid"></i> Template Preview</span>
-                    <h3 class="v3-preview-title" id="previewModalTitle">Template Preview</h3>
-                    <span class="v3-preview-counter-pill" id="previewTemplateCounter">1 / 3</span>
+                    <span class="v3-preview-badge"><i class="fi fi-rr-eye"></i> Preview</span>
+                    <div class="v3-preview-title-wrap">
+                        <h3 class="v3-preview-title" id="previewModalTitle">Template Preview</h3>
+                    </div>
                 </div>
-                <div class="v3-modal-fullscreen-actions">
-                    <div class="v3-preview-nav-btns">
-                        <button type="button" class="btn-v3-action btn-outline btn-prev-template" id="btnPrevPreviewTemplate" title="Previous Template (Left Arrow)">
-                            <i class="fi fi-rr-angle-left"></i> Previous
+                <div class="v3-preview-header-actions">
+                    <div class="v3-preview-nav-group">
+                        <button type="button" class="btn-preview-nav" id="btnPrevPreviewTemplate" title="Previous Template (Left Arrow)">
+                            <i class="fi fi-rr-angle-left"></i>
                         </button>
-                        <button type="button" class="btn-v3-action btn-outline btn-next-template" id="btnNextPreviewTemplate" title="Next Template (Right Arrow)">
-                            Next <i class="fi fi-rr-angle-right"></i>
+                        <span class="v3-preview-counter-pill" id="previewTemplateCounter">1 / 4</span>
+                        <button type="button" class="btn-preview-nav" id="btnNextPreviewTemplate" title="Next Template (Right Arrow)">
+                            <i class="fi fi-rr-angle-right"></i>
                         </button>
                     </div>
-                    <button type="button" class="btn-v3-action btn-green" id="btnApplyPreviewedTemplate">
-                        <i class="fi fi-rr-check"></i> Use This Template
+                    <button type="button" class="btn-v3-action btn-pdf-action" id="btnDownloadPreviewPDF" title="Download as A4 PDF">
+                        <i class="fi fi-rr-file-pdf"></i> <span>Download PDF</span>
                     </button>
-                    <button type="button" class="btn-v3-action btn-outline" id="btnCloseTemplatePreviewModal">
-                        <i class="fi fi-rr-cross"></i> Close
+                    <button type="button" class="btn-v3-action btn-green-action" id="btnApplyPreviewedTemplate">
+                        <i class="fi fi-rr-check"></i> <span>Use This Template</span>
+                    </button>
+                    <button type="button" class="v3-preview-close-btn" id="btnCloseTemplatePreviewModal" title="Close Preview (Esc)">
+                        <i class="fi fi-rr-cross"></i>
                     </button>
                 </div>
             </div>

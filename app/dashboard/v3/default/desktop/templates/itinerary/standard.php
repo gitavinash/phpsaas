@@ -1,10 +1,742 @@
 <?php
 /**
- * V3 Itinerary Template: Standard Single/Multi-Page
+ * V3 Itinerary Template: Standard Clean Layout
  * Path: app/dashboard/v3/default/desktop/templates/itinerary/standard.php
- * Description: Standard clean format with timeline day items, inclusions/exclusions columns, and summary card.
+ * Description: Clean, modern vertical timeline itinerary layout. Continuous in web view with A4 PDF export.
  */
+
+if (!function_exists('fixImageUrl')) {
+    function fixImageUrl($url)
+    {
+        if (empty($url)) return '';
+        $url = trim($url);
+        if (preg_match('/^https?:\/\//i', $url)) return $url;
+        if (defined('ROOT') && file_exists(ROOT . '/' . ltrim($url, '/'))) return $url;
+        if (strpos($url, '/upload/crm.') === 0) {
+            return 'https://crm.musafirindiatrip.com' . $url;
+        }
+        if (strpos($url, '/upload/') === 0) {
+            if (defined('SITE_URL') && !empty(SITE_URL)) {
+                return rtrim(SITE_URL, '/') . $url;
+            }
+            if (defined('ROOT') && file_exists(ROOT . $url)) return $url;
+            return 'https://crm.musafirindiatrip.com' . $url;
+        }
+        return $url;
+    }
+}
+
+// Dynamic Site & Company Info
+$siteName    = defined('SITE_NAME') ? SITE_NAME : ($company_name ?? 'Travel Partner');
+$sitePhone   = defined('SITE_MOBILE') ? SITE_MOBILE : (defined('SITE_PHONE') ? SITE_PHONE : ($company_phone ?? ''));
+$siteEmail   = defined('SITE_EMAIL') ? SITE_EMAIL : ($company_email ?? '');
+$siteAddress = defined('SITE_ADDRESS') ? SITE_ADDRESS : ($company_address ?? '');
+$siteUrl     = defined('SITE_URL') ? SITE_URL : ($company_url ?? '');
+$siteLogo    = fixImageUrl(defined('SITE_LOGO') ? SITE_LOGO : ($company_logo ?? ''));
+
+// Package Variables
+$pkgTitle       = $tour_package_title ?? ($itinerary_title ?? ($title ?? 'Tour Package Itinerary'));
+$pkgCity        = $tour_package_city ?? ($city ?? 'Destination');
+$pkgState       = $tour_package_state ?? '';
+$pkgCountry     = $tour_package_country ?? '';
+$pkgDuration    = $tour_package_duration ?? ($numberOfDays ?? ($duration ?? 0));
+$pkgTheme       = $tour_package_theme ?? ($travelStyle ?? 'Standard');
+$pkgHotel       = $tour_package_hotel ?? ($hotel ?? '');
+$pkgPriceAdult  = $tour_package_price_selling_adult ?? ($selling_price ?? ($price ?? 0));
+$pkgOutVehicle  = $tour_package_outstation_vehicle ?? ($outstationVehicle ?? '');
+$pkgLocVehicle  = $tour_package_localsightseen_vehicle ?? ($localSightseeingVehicle ?? '');
+$pkgOverview    = $tour_package_overview ?? ($itinerary_overview ?? ($overview ?? ''));
+$pkgInclusions  = $tour_package_inclusions ?? ($inclusions ?? '');
+$pkgExclusions  = $tour_package_exclusions ?? ($exclusions ?? '');
+$pkgDays        = $itineraries ?? ($itinerary ?? ($days ?? []));
+$quoteRef       = $quoteId ?? ($quotationId ?? ($tour_package_id ?? rand(1000, 9999)));
+
+if (is_string($pkgDays)) {
+    $pkgDays = json_decode($pkgDays, true) ?: [];
+}
+
+$heroFeatureImage = fixImageUrl($tour_package_image ?? ($gallery_image ?? ($featureImage ?? '')));
+
+$totalDaysCount = !empty($pkgDays) ? count($pkgDays) : 1;
+$totalNightsCount = max(1, $totalDaysCount - 1);
+if (!empty($pkgDuration)) {
+    $totalNightsCount = (int)$pkgDuration;
+    $totalDaysCount = $totalNightsCount + 1;
+}
+
+$incList = is_array($pkgInclusions) ? $pkgInclusions : array_filter(array_map('trim', explode("\n", strip_tags(str_replace(['<br>', '</li>', '<p>', ','], "\n", (string)$pkgInclusions)))));
+$excList = is_array($pkgExclusions) ? $pkgExclusions : array_filter(array_map('trim', explode("\n", strip_tags(str_replace(['<br>', '</li>', '<p>', ','], "\n", (string)$pkgExclusions)))));
 ?>
-<div class="itinerary-standard-template" data-template-id="standard" data-template-name="Standard Clean Layout">
-    <!-- Template Metadata & Structural Blueprint -->
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo htmlspecialchars($siteName . ' - ' . $pkgTitle); ?></title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        :root {
+            --std-primary: #0f172a;
+            --std-accent: #0284c7;
+            --std-accent-light: #e0f2fe;
+            --std-text: #1e293b;
+            --std-muted: #64748b;
+            --std-border: #e2e8f0;
+            --std-bg: #f8fafc;
+            --std-card: #ffffff;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--std-bg);
+            color: var(--std-text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            padding-bottom: 50px;
+        }
+
+        /* Floating PDF Action Bar */
+        .v3-pdf-actions-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            padding: 8px 14px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
+            border: 1px solid var(--std-border);
+        }
+
+        .btn-pdf-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-pdf-download {
+            background: var(--std-accent);
+            color: #ffffff;
+        }
+
+        .btn-pdf-download:hover {
+            background: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        .btn-pdf-print {
+            background: #ffffff;
+            color: var(--std-text);
+            border: 1px solid var(--std-border);
+        }
+
+        /* Continuous Web View Container */
+        .standard-wrapper {
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        /* Header Bar */
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--std-card);
+            border-radius: var(--radius-md);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid var(--std-border);
+            margin-bottom: 24px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--std-primary);
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .brand-logo-img { max-height: 46px; width: auto; object-fit: contain; }
+
+        .brand-pill {
+            background: var(--std-accent-light);
+            color: var(--std-accent);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 9999px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            min-height: 380px;
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 34px;
+            color: #ffffff;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(15,23,42,0.1);
+        }
+
+        .hero-banner img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.85) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-tag {
+            background: rgba(2, 132, 199, 0.4);
+            border: 1px solid rgba(2, 132, 199, 0.6);
+            color: #bae6fd;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .hero-title {
+            font-size: 30px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 16px;
+        }
+
+        .hero-meta-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-pill {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 12.5px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Section Cards */
+        .std-card {
+            background: var(--std-card);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            border: 1px solid var(--std-border);
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .section-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: var(--std-accent-light);
+            color: var(--std-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--std-primary);
+        }
+
+        /* Timeline */
+        .timeline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 24px;
+            bottom: -20px;
+            width: 2px;
+            background: #e2e8f0;
+        }
+
+        .timeline-item:last-child::before { display: none; }
+
+        .timeline-marker {
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--std-accent);
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 0 2px var(--std-accent);
+        }
+
+        .day-box {
+            background: var(--std-card);
+            border: 1px solid var(--std-border);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+        }
+
+        .day-box-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .day-badge {
+            background: var(--std-accent);
+            color: #ffffff;
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .day-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--std-primary);
+        }
+
+        .day-img-box {
+            margin: 14px 0;
+            height: 180px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid var(--std-border);
+        }
+
+        .day-img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .day-stay-pill {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: #166534;
+            font-weight: 600;
+        }
+
+        .day-farewell-pill {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fdf4ff;
+            border: 1px solid #f5d0fe;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: #86198f;
+            font-weight: 600;
+        }
+
+        /* Inclusions / Exclusions */
+        .inc-exc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .inc-col, .exc-col {
+            border-radius: var(--radius-md);
+            padding: 20px;
+        }
+
+        .inc-col { background: #f0fdf4; border: 1px solid #bbf7d0; }
+        .exc-col { background: #fef2f2; border: 1px solid #fecaca; }
+
+        .inc-exc-title {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .inc-col .inc-exc-title { color: #16a34a; }
+        .exc-col .inc-exc-title { color: #dc2626; }
+
+        .inc-exc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #334155; }
+        .inc-col .inc-exc-list li i { color: #16a34a; margin-right: 4px; }
+        .exc-col .inc-exc-list li i { color: #dc2626; margin-right: 4px; }
+
+        /* Company Contact Card */
+        .company-contact-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-radius: var(--radius-md);
+            padding: 30px;
+            color: #ffffff;
+            margin-bottom: 24px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .contact-item {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+        }
+
+        .contact-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .contact-val {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .contact-val a { color: #38bdf8; text-decoration: none; }
+
+        /* Footer */
+        .site-footer {
+            text-align: center;
+            font-size: 12.5px;
+            color: var(--std-muted);
+            padding-top: 14px;
+        }
+
+        .credit-note {
+            margin-top: 6px;
+            font-size: 12px;
+        }
+
+        .credit-note a { color: var(--std-accent); text-decoration: none; font-weight: 700; }
+
+        /* Print A4 */
+        @media print {
+            body { background: #ffffff !important; padding: 0 !important; }
+            .v3-pdf-actions-bar { display: none !important; }
+            .standard-wrapper { max-width: 100% !important; padding: 0 !important; }
+            .std-card, .company-contact-card { page-break-inside: avoid; margin-bottom: 16px !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="v3-pdf-actions-bar">
+        <button type="button" class="btn-pdf-action btn-pdf-download" id="btnDownloadStandardPDF">
+            <i class="ri-file-download-line"></i> Download Itinerary PDF
+        </button>
+        <button type="button" class="btn-pdf-action btn-pdf-print" onclick="window.print()">
+            <i class="ri-printer-line"></i> Print
+        </button>
+    </div>
+
+    <div class="standard-wrapper" id="itineraryDocument">
+
+        <header class="site-header">
+            <a href="<?php echo htmlspecialchars(!empty($siteUrl) ? $siteUrl : '#'); ?>" class="brand-logo">
+                <?php if (!empty($siteLogo)): ?>
+                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="brand-logo-img" />
+                <?php else: ?>
+                    <span><?php echo htmlspecialchars($siteName); ?></span>
+                <?php endif; ?>
+            </a>
+            <div class="brand-pill">Quote Ref: #<?php echo htmlspecialchars((string)$quoteRef); ?></div>
+        </header>
+
+        <section class="hero-banner">
+            <?php if (!empty($heroFeatureImage)): ?>
+                <img src="<?php echo htmlspecialchars($heroFeatureImage); ?>" alt="<?php echo htmlspecialchars($pkgTitle); ?>" />
+                <div class="hero-overlay"></div>
+            <?php endif; ?>
+            <div class="hero-content">
+                <div class="hero-tag"><i class="ri-compass-3-line"></i> Curated Itinerary Proposal</div>
+                <h1 class="hero-title"><?php echo htmlspecialchars($pkgTitle); ?></h1>
+                <div class="hero-meta-row">
+                    <span class="hero-pill"><i class="ri-time-line"></i> <?php echo $totalNightsCount; ?>N / <?php echo $totalDaysCount; ?>D</span>
+                    <span class="hero-pill"><i class="ri-map-pin-line"></i> <?php echo htmlspecialchars($pkgCity); ?></span>
+                    <span class="hero-pill"><i class="ri-hotel-line"></i> <?php echo !empty($pkgHotel) ? htmlspecialchars(ucfirst($pkgHotel)) : 'Deluxe Hotel'; ?></span>
+                    <?php if (!empty($pkgPriceAdult)): ?>
+                        <span class="hero-pill" style="background: rgba(2, 132, 199, 0.4);"><i class="ri-money-rupee-circle-line"></i> ₹ <?php echo number_format((float)$pkgPriceAdult); ?></span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </section>
+
+        <?php if (!empty($pkgOverview)): ?>
+        <section class="std-card">
+            <div class="section-header">
+                <div class="section-icon"><i class="ri-information-line"></i></div>
+                <h2 class="section-title">Tour Overview</h2>
+            </div>
+            <div style="font-size: 14px; color: #334155; line-height: 1.8;">
+                <?php echo $pkgOverview; ?>
+            </div>
+        </section>
+        <?php endif; ?>
+
+        <section class="std-card">
+            <div class="section-header">
+                <div class="section-icon"><i class="ri-calendar-todo-line"></i></div>
+                <h2 class="section-title">Day-Wise Itinerary</h2>
+            </div>
+
+            <div class="timeline-list">
+                <?php 
+                $dayIdx = 1;
+                foreach ($pkgDays as $d): 
+                    $dayLabel = is_array($d) ? ($d['day'] ?? ($d['title'] ?? "Day $dayIdx")) : "Day $dayIdx";
+                    $overview = is_array($d) ? ($d['overview'] ?? ($d['content'] ?? '')) : '';
+                    $stay = is_array($d) ? ($d['stay'] ?? ($d['hotel'] ?? '')) : '';
+                    $img = is_array($d) ? fixImageUrl($d['feature_image'] ?? ($d['image'] ?? '')) : '';
+                    $isLast = ($dayIdx === $totalDaysCount);
+                ?>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="day-box">
+                            <div class="day-box-header">
+                                <span class="day-badge">Day <?php echo $dayIdx; ?></span>
+                                <h3 class="day-title"><?php echo htmlspecialchars($dayLabel); ?></h3>
+                            </div>
+                            <div style="font-size: 13.5px; color: #334155; line-height: 1.7;">
+                                <?php echo !empty($overview) ? $overview : '<p>Sightseeing and transfers as scheduled.</p>'; ?>
+                            </div>
+
+                            <?php if (!empty($img)): ?>
+                                <div class="day-img-box">
+                                    <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo htmlspecialchars($dayLabel); ?>" />
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($stay)): ?>
+                                <div class="day-stay-pill">
+                                    <i class="ri-hotel-bed-line"></i>
+                                    <span><strong>Night Stay:</strong> <?php echo htmlspecialchars($stay); ?> (<?php echo htmlspecialchars($pkgCity); ?>)</span>
+                                </div>
+                            <?php elseif ($isLast): ?>
+                                <div class="day-farewell-pill">
+                                    <i class="ri-flight-takeoff-line"></i>
+                                    <span><strong>Tour Concludes:</strong> Transfer to onward journey with wonderful memories!</span>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php 
+                    $dayIdx++;
+                endforeach; 
+                ?>
+            </div>
+        </section>
+
+        <?php if (!empty($incList) || !empty($excList)): ?>
+        <section class="std-card">
+            <div class="section-header">
+                <div class="section-icon"><i class="ri-shield-check-line"></i></div>
+                <h2 class="section-title">Inclusions & Exclusions</h2>
+            </div>
+            <div class="inc-exc-grid">
+                <?php if (!empty($incList)): ?>
+                <div class="inc-col">
+                    <div class="inc-exc-title"><i class="ri-checkbox-circle-fill"></i> Inclusions</div>
+                    <ul class="inc-exc-list">
+                        <?php foreach ($incList as $inc): ?>
+                            <li><i class="ri-check-line"></i> <?php echo htmlspecialchars($inc); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <?php endif; ?>
+
+                <?php if (!empty($excList)): ?>
+                <div class="exc-col">
+                    <div class="inc-exc-title"><i class="ri-close-circle-fill"></i> Exclusions</div>
+                    <ul class="inc-exc-list">
+                        <?php foreach ($excList as $exc): ?>
+                            <li><i class="ri-close-line"></i> <?php echo htmlspecialchars($exc); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <?php endif; ?>
+            </div>
+        </section>
+        <?php endif; ?>
+
+        <!-- Company Contact Information Card -->
+        <section class="company-contact-card">
+            <h3 style="font-size: 18px; font-weight: 800;"><?php echo htmlspecialchars($siteName); ?></h3>
+            <p style="font-size: 13px; color: #94a3b8; margin-top: 2px;">Your dedicated travel specialist</p>
+
+            <div class="contact-grid">
+                <?php if (!empty($sitePhone)): ?>
+                    <div class="contact-item">
+                        <span class="contact-label">Phone / WhatsApp</span>
+                        <span class="contact-val"><a href="tel:<?php echo htmlspecialchars($sitePhone); ?>"><?php echo htmlspecialchars($sitePhone); ?></a></span>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($siteEmail)): ?>
+                    <div class="contact-item">
+                        <span class="contact-label">Email Support</span>
+                        <span class="contact-val"><a href="mailto:<?php echo htmlspecialchars($siteEmail); ?>"><?php echo htmlspecialchars($siteEmail); ?></a></span>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($siteAddress)): ?>
+                    <div class="contact-item">
+                        <span class="contact-label">Office Address</span>
+                        <span class="contact-val"><?php echo htmlspecialchars($siteAddress); ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($siteUrl)): ?>
+                    <div class="contact-item">
+                        <span class="contact-label">Website</span>
+                        <span class="contact-val"><a href="<?php echo htmlspecialchars($siteUrl); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars(preg_replace('/^https?:\/\//i', '', rtrim($siteUrl, '/'))); ?></a></span>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </section>
+
+        <!-- Footer & Aleya Credit -->
+        <footer class="site-footer">
+            <p>&copy; <?php echo date('Y'); ?> <strong><?php echo htmlspecialchars($siteName); ?></strong>. All rights reserved.</p>
+            <div class="credit-note">
+                Powered by <a href="https://aleya.in" target="_blank" rel="noopener">Aleya</a> — Travel Agency Management Software
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.getElementById('btnDownloadStandardPDF').addEventListener('click', async function() {
+            const btn = this;
+            const orig = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Generating PDF...';
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'pt', 'a4');
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const element = document.getElementById('itineraryDocument');
+
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff'
+                });
+
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const imgWidth = pageWidth;
+                const pageCanvasHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = pageCanvasHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, pageCanvasHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - pageCanvasHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, pageCanvasHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                pdf.save("<?php echo preg_replace('/[^A-Za-z0-9_-]/', '_', $pkgTitle); ?>_Proposal.pdf");
+            } catch (e) {
+                console.error(e);
+                window.print();
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = orig;
+            }
+        });
+    </script>
+</body>
+</html>
