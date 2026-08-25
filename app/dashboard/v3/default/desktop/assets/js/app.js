@@ -3708,6 +3708,20 @@ $(document).ready(function (e) {
       }
     }
 
+    // 4d. Transporters Directory Module
+    const $transporters = $("#transportersListApp, .transporter-list-wrapper");
+    if ($transporters.length > 0) {
+      if (window.V3Transporters && typeof window.V3Transporters.init === "function") {
+        window.V3Transporters.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "transporters.js?v=" + Date.now(), function () {
+          if (window.V3Transporters && typeof window.V3Transporters.init === "function") {
+            window.V3Transporters.init();
+          }
+        });
+      }
+    }
+
     // 5. Leads Pipeline Module
     const $leads = $("#leadsListApp, .leads-page-wrapper");
     if ($leads.length > 0) {
