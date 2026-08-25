@@ -3736,6 +3736,20 @@ $(document).ready(function (e) {
       }
     }
 
+    // 5b. Employee Performance Report Module
+    const $empReport = $("#employeesReportApp, .employees-report-wrapper");
+    if ($empReport.length > 0) {
+      if (window.V3ReportEmployees && typeof window.V3ReportEmployees.init === "function") {
+        window.V3ReportEmployees.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "report-employees.js?v=" + Date.now(), function () {
+          if (window.V3ReportEmployees && typeof window.V3ReportEmployees.init === "function") {
+            window.V3ReportEmployees.init();
+          }
+        });
+      }
+    }
+
     // 5. Lead Details View Module
     const $leadView = $("#leadViewApp, .lead-view-wrapper");
     if ($leadView.length > 0) {
