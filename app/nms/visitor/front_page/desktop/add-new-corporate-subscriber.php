@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     if ($checkSubscription = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "subscription WHERE subscription_user_id='{$user_id}' AND subscription_site_id=" . SITE_ID)) {
                         if (mysqli_num_rows($checkSubscription) > 0) {
-                            $allocateSubscription = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "subscription SET subscription_refer_by='" . USER_ID . "', subscription_expiry='{$cp_expiry}' WHERE subscription_site_id=" . SITE_ID);
+                            $allocateSubscription = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "subscription SET subscription_refer_by='" . USER_ID . "', subscription_expiry='{$cp_expiry}' WHERE subscription_user_id='{$user_id}' AND subscription_site_id=" . SITE_ID);
                         } else {
                             $allocateSubscription = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_user_id, subscription_refer_by, subscription_site_id, subscription_relation_id, subscription_mode, subscription_type, subscription_status, subscription_expiry) VALUES ({$user_id}, " . USER_ID . "," . SITE_ID . ", '4076', 'year', 'product', 1, '{$cp_expiry}')");
                         }
