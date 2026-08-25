@@ -12,7 +12,7 @@ if ($checkSubscription = mysqli_query($connection, "SELECT * FROM " . TABLE_PREF
     $subscriptionStatus = 'active';
     extract(mysqli_fetch_assoc($checkSubscription));
     $subscriberListFound = false;
-    if ($subscriberList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "subscription INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=subscription_user_id WHERE subscription_refer_by='{$cp_admin_user_id}' AND subscription_site_id=" . SITE_ID)) {
+    if ($subscriberList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "subscription INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=subscription_user_id WHERE subscription_refer_by='" . USER_ID . "' AND subscription_site_id=" . SITE_ID)) {
       if (mysqli_num_rows($subscriberList) != 0) {
         $subscriberListFound = true;
         $subscriberListCount = mysqli_num_rows($subscriberList);
@@ -196,86 +196,97 @@ require_once 'header.php';
       </div>
 
       <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Table filtering & pagination
-        const searchInput = document.getElementById('subscriberSearch');
-        const statusFilter = document.getElementById('statusFilter');
-        const tbody = document.getElementById('subsTbody');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const pageInfo = document.getElementById('pageInfo');
+        document.addEventListener('DOMContentLoaded', function() {
+          // Table filtering & pagination
+          const searchInput = document.getElementById('subscriberSearch');
+          const statusFilter = document.getElementById('statusFilter');
+          const tbody = document.getElementById('subsTbody');
+          const prevBtn = document.getElementById('prevBtn');
+          const nextBtn = document.getElementById('nextBtn');
+          const pageInfo = document.getElementById('pageInfo');
 
-        if (tbody) {
-          const rows = Array.from(tbody.querySelectorAll('tr[data-name]'));
-          let filtered = [...rows];
-          let curPage = 1;
-          const perPage = 5;
+          if (tbody) {
+            const rows = Array.from(tbody.querySelectorAll('tr[data-name]'));
+            let filtered = [...rows];
+            let curPage = 1;
+            const perPage = 5;
 
-          function applyFilter() {
-            const q = searchInput ? searchInput.value.toLowerCase().trim() : '';
-            const st = statusFilter ? statusFilter.value : '';
+            function applyFilter() {
+              const q = searchInput ? searchInput.value.toLowerCase().trim() : '';
+              const st = statusFilter ? statusFilter.value : '';
 
-            filtered = rows.filter(r => {
-              const name = r.dataset.name || '';
-              const email = r.dataset.email || '';
-              const status = r.dataset.status || '';
+              filtered = rows.filter(r => {
+                const name = r.dataset.name || '';
+                const email = r.dataset.email || '';
+                const status = r.dataset.status || '';
 
-              const mQ = !q || name.includes(q) || email.includes(q);
-              const mS = !st || status === st;
-              return mQ && mS;
-            });
+                const mQ = !q || name.includes(q) || email.includes(q);
+                const mS = !st || status === st;
+                return mQ && mS;
+              });
 
-            curPage = 1;
-            render();
-          }
+              curPage = 1;
+              render();
+            }
 
-          function render() {
-            const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-            rows.forEach(r => r.style.display = 'none');
+            function render() {
+              const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+              rows.forEach(r => r.style.display = 'none');
 
-            const start = (curPage - 1) * perPage;
-            const end = start + perPage;
-            filtered.slice(start, end).forEach(r => r.style.display = '');
+              const start = (curPage - 1) * perPage;
+              const end = start + perPage;
+              filtered.slice(start, end).forEach(r => r.style.display = '');
 
-            if (pageInfo) pageInfo.textContent = `Page ${curPage} of ${totalPages} (${filtered.length} items)`;
-            if (prevBtn) prevBtn.disabled = curPage <= 1;
-            if (nextBtn) nextBtn.disabled = curPage >= totalPages;
-          }
+              if (pageInfo) pageInfo.textContent = `Page ${curPage} of ${totalPages} (${filtered.length} items)`;
+              if (prevBtn) prevBtn.disabled = curPage <= 1;
+              if (nextBtn) nextBtn.disabled = curPage >= totalPages;
+            }
 
-          if (prevBtn) prevBtn.onclick = () => { if (curPage > 1) { curPage--; render(); } };
-          if (nextBtn) nextBtn.onclick = () => { const totalPages = Math.ceil(filtered.length / perPage); if (curPage < totalPages) { curPage++; render(); } };
-
-          if (searchInput) searchInput.addEventListener('input', applyFilter);
-          if (statusFilter) statusFilter.addEventListener('change', applyFilter);
-
-          applyFilter();
-        }
-
-        // FAQ Accordion click handler
-        const faqBoxes = document.querySelectorAll('.faq__box, .faq-accordion-item, .subscribe-faq-item');
-        faqBoxes.forEach(function(box) {
-          const trigger = box.querySelector('.question, .faq-header, .subscribe-faq-question');
-          if (trigger) {
-            trigger.style.cursor = 'pointer';
-            trigger.addEventListener('click', function(e) {
-              e.preventDefault();
-              const isOpen = box.classList.contains('active') || box.classList.contains('is-open');
-
-              // Toggle current box
-              if (isOpen) {
-                box.classList.remove('active', 'is-open');
-              } else {
-                box.classList.add('active', 'is-open');
+            if (prevBtn) prevBtn.onclick = () => {
+              if (curPage > 1) {
+                curPage--;
+                render();
               }
-
-              const answer = box.querySelector('.answer, .faq-body, .subscribe-faq-answer');
-              if (answer) {
-                answer.style.display = isOpen ? 'none' : 'block';
+            };
+            if (nextBtn) nextBtn.onclick = () => {
+              const totalPages = Math.ceil(filtered.length / perPage);
+              if (curPage < totalPages) {
+                curPage++;
+                render();
               }
-            });
+            };
+
+            if (searchInput) searchInput.addEventListener('input', applyFilter);
+            if (statusFilter) statusFilter.addEventListener('change', applyFilter);
+
+            applyFilter();
           }
+
+          // FAQ Accordion click handler
+          const faqBoxes = document.querySelectorAll('.faq__box, .faq-accordion-item, .subscribe-faq-item');
+          faqBoxes.forEach(function(box) {
+            const trigger = box.querySelector('.question, .faq-header, .subscribe-faq-question');
+            if (trigger) {
+              trigger.style.cursor = 'pointer';
+              trigger.addEventListener('click', function(e) {
+                e.preventDefault();
+                const isOpen = box.classList.contains('active') || box.classList.contains('is-open');
+
+                // Toggle current box
+                if (isOpen) {
+                  box.classList.remove('active', 'is-open');
+                } else {
+                  box.classList.add('active', 'is-open');
+                }
+
+                const answer = box.querySelector('.answer, .faq-body, .subscribe-faq-answer');
+                if (answer) {
+                  answer.style.display = isOpen ? 'none' : 'block';
+                }
+              });
+            }
+          });
         });
-      });
       </script>
 
     <?php else: ?>
