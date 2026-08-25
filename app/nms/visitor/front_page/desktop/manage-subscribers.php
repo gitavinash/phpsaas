@@ -1,6 +1,7 @@
 <?php
-
+echo "Updating...";
 require_once LOGIN_CHECK;
+exit();
 
 $subscriberListCount = 0;
 $subscribers = [];
