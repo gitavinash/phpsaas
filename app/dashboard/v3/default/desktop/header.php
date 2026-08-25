@@ -161,28 +161,6 @@ if (isset($daterange)) {
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/setting/') !== false) ? 'class="active"' : '') ?>>
                     <a href="/dashboard/setting/"><i class="fi-rr-settings"></i> Setting</a>
-                    <div class="side-menu">
-                        <ul>
-                            <?php
-                            if ($site_access_type == 'administrator') { ?>
-
-                                <li><a href="/dashboard/setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
-                            <?php } ?>
-                            <li><a href="/dashboard/setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-menu">
-                        <ul>
-
-                            <?php
-
-                            if ($site_access_type == 'administrator') { ?>
-
-                                <li><a href="/dashboard/setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
-                            <?php } ?>
-                            <li><a href="/dashboard/setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
-                        </ul>
-                    </div>
                 </li>
 
                 <?php

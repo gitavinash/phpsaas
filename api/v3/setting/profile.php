@@ -37,7 +37,7 @@ if ($userId <= 0) {
 if ($method === 'GET') {
     $sql = "SELECT u.user_id, u.user_username, u.user_email, u.user_mobile, u.user_status, u.user_reg_time,
                    p.profile_first_name, p.profile_last_name, p.profile_display_name,
-                   p.profile_alt_email, p.profile_alt_mobile,
+                   p.profile_alt_email, p.profile_alt_mobile, p.profile_image,
                    pm_bio.profile_meta_value AS profile_bio,
                    sa.site_access_type as role
             FROM " . TABLE_PREFIX . "user u
@@ -81,6 +81,7 @@ if ($method === 'GET') {
             'alt_email' => $u['profile_alt_email'] ?? '',
             'alt_mobile' => $u['profile_alt_mobile'] ?? '',
             'bio' => $u['profile_bio'] ?? '',
+            'profile_image' => $u['profile_image'] ?? '',
             'role' => $u['role'] ?? 'administrator',
             'registered_time' => $u['user_reg_time'] ?? ''
         ]
@@ -131,6 +132,37 @@ if ($method === 'POST' || $method === 'PUT') {
         }
     }
 
+    // Handle Profile Picture Upload (per lib/modules/imageUploader.php convention)
+    $newProfileImage = '';
+    if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
+        $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        $ext = strtolower(pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION));
+        if (in_array($ext, $allowedExts)) {
+            $rootDir    = defined('ROOT') ? ROOT : $_SERVER['DOCUMENT_ROOT'];
+            $siteDomain = defined('SITE_DOMAIN') ? SITE_DOMAIN : 'default';
+            $uploadPath = $rootDir . '/upload/' . $siteDomain . '/' . date('Y/m/');
+
+            if (!is_dir($uploadPath)) {
+                if (!@mkdir($uploadPath, 0755, true) && !is_dir($uploadPath)) {
+                    // Fallback
+                    $uploadPath = $rootDir . '/upload/' . date('Y/m/');
+                    if (!is_dir($uploadPath)) {
+                        @mkdir($uploadPath, 0755, true);
+                    }
+                }
+            }
+
+            $uniquePrefix = time() . '_' . bin2hex(random_bytes(5));
+            $cleanName    = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $_FILES['profile_image']['name']));
+            $filename     = 'profile_' . $userId . '_' . $uniquePrefix . '_' . $cleanName;
+            $uploadFile   = $uploadPath . $filename;
+
+            if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $uploadFile)) {
+                $newProfileImage = str_replace($rootDir, '', $uploadFile);
+            }
+        }
+    }
+
     $escapedFName   = mysqli_real_escape_string($connection, $firstName);
     $escapedLName   = mysqli_real_escape_string($connection, $lastName);
     $escapedDName   = mysqli_real_escape_string($connection, $displayName);
@@ -138,6 +170,7 @@ if ($method === 'POST' || $method === 'PUT') {
     $escapedMob     = mysqli_real_escape_string($connection, $mobile);
     $escapedAltMob  = mysqli_real_escape_string($connection, $altMobile);
     $escapedBio     = mysqli_real_escape_string($connection, $bio);
+    $escapedImg     = mysqli_real_escape_string($connection, $newProfileImage);
 
     mysqli_query($connection, "START TRANSACTION");
 
@@ -148,8 +181,9 @@ if ($method === 'POST' || $method === 'PUT') {
     }
 
     // 2. Update isw_profile
-    $checkProf = mysqli_query($connection, "SELECT profile_id FROM " . TABLE_PREFIX . "profile WHERE profile_user_id = {$userId} LIMIT 1");
+    $checkProf = mysqli_query($connection, "SELECT profile_id, profile_image FROM " . TABLE_PREFIX . "profile WHERE profile_user_id = {$userId} LIMIT 1");
     if ($checkProf && mysqli_num_rows($checkProf) > 0) {
+        $imgClause = !empty($newProfileImage) ? ", profile_image = '{$escapedImg}'" : "";
         $updateProf = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "profile SET
             profile_first_name = '{$escapedFName}',
             profile_last_name = '{$escapedLName}',
@@ -157,14 +191,15 @@ if ($method === 'POST' || $method === 'PUT') {
             profile_alt_email = '{$escapedAltMail}',
             profile_mobile = '{$escapedMob}',
             profile_alt_mobile = '{$escapedAltMob}'
+            {$imgClause}
             WHERE profile_user_id = {$userId}");
     } else {
         $updateProf = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile (
             profile_user_id, profile_first_name, profile_last_name, profile_display_name,
-            profile_alt_email, profile_mobile, profile_alt_mobile
+            profile_alt_email, profile_mobile, profile_alt_mobile, profile_image
         ) VALUES (
             {$userId}, '{$escapedFName}', '{$escapedLName}', '{$escapedDName}',
-            '{$escapedAltMail}', '{$escapedMob}', '{$escapedAltMob}'
+            '{$escapedAltMail}', '{$escapedMob}', '{$escapedAltMob}', '{$escapedImg}'
         )");
     }
 
@@ -179,9 +214,15 @@ if ($method === 'POST' || $method === 'PUT') {
 
     if ($updateUser && $updateProf && $updateBio) {
         mysqli_query($connection, "COMMIT");
+
+        if (!empty($newProfileImage)) {
+            setcookie('user_image', base64_encode($newProfileImage), time() + 30 * 24 * 60 * 60, '/');
+        }
+
         echo json_encode([
             'status' => 'success',
-            'msg' => 'Your profile information has been updated successfully.'
+            'msg' => 'Your profile information has been updated successfully.',
+            'profile_image' => $newProfileImage
         ]);
     } else {
         mysqli_query($connection, "ROLLBACK");

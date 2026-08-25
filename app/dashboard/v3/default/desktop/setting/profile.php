@@ -35,6 +35,33 @@
                     </div>
 
                     <div class="v3-card-body">
+                        <!-- Profile Photo Hero Box -->
+                        <div class="v3-profile-hero-card">
+                            <div class="v3-avatar-wrapper">
+                                <div class="v3-avatar-frame">
+                                    <img id="profileImagePreview" class="v3-avatar-img is-v3-hidden" src="" alt="Profile Photo">
+                                    <div id="profileImageInitials" class="v3-avatar-initials">U</div>
+                                </div>
+                                <label for="profileImageInput" class="v3-avatar-edit-badge" title="Change photo">
+                                    <i class="fi fi-rr-camera"></i>
+                                </label>
+                            </div>
+                            <div class="v3-profile-hero-info">
+                                <h4 id="heroProfileName">Profile Photo</h4>
+                                <p>Upload a clear square portrait (JPG, PNG or WEBP &mdash; max 5MB).</p>
+                                <div class="v3-profile-hero-actions">
+                                    <label for="profileImageInput" class="v3-btn-photo-upload">
+                                        <i class="fi fi-rr-upload"></i> <span>Upload Photo</span>
+                                    </label>
+                                    <input type="file" id="profileImageInput" name="profile_image" accept="image/png, image/jpeg, image/webp" style="display: none;">
+                                    <button type="button" id="btnRemoveProfileImage" class="v3-btn-photo-remove is-v3-hidden">
+                                        <i class="fi fi-rr-trash"></i> <span>Remove</span>
+                                    </button>
+                                    <span id="profileImageFileName" style="font-size: 12px; color: #64748b; font-weight: 500;"></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="v3-form-grid">
                             <!-- First Name -->
                             <div class="v3-form-group">
@@ -208,8 +235,9 @@
                     </div>
 
                     <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 16px;">
-                        <div class="transport-avatar-badge" id="previewProfileAvatar" style="width: 64px; height: 64px; font-size: 22px; font-weight: 700; border-radius: 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);">
-                            U
+                        <div class="v3-avatar-frame" style="width: 72px; height: 72px; margin-bottom: 12px;">
+                            <img id="previewProfileImg" class="v3-avatar-img is-v3-hidden" src="" alt="Profile">
+                            <div id="previewProfileAvatar" class="v3-avatar-initials" style="font-size: 24px;">U</div>
                         </div>
                         <h3 id="previewProfileName" style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 4px 0;">Loading...</h3>
                         <span id="previewProfileRole" class="badge-service-state badge-role-admin" style="font-size: 11.5px; margin-top: 2px;">

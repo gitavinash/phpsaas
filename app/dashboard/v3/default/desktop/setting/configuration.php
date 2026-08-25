@@ -22,7 +22,7 @@
         <!-- Left: Main Form Cards -->
         <div class="v3-form-main-col">
             <form id="settingConfigForm" class="v3-form-container" autocomplete="off" novalidate>
-                <!-- Card 1: Website Identity -->
+                <!-- Card 1: Website Identity & Domain -->
                 <div class="v3-card-section">
                     <div class="v3-card-header">
                         <div class="v3-card-header-icon indigo">
@@ -76,57 +76,75 @@
                     </div>
                 </div>
 
-                <!-- Card 2: SEO & Search Metadata -->
+                <!-- Card 2: Brand Assets & Visual Identity (2 Columns) -->
                 <div class="v3-card-section">
                     <div class="v3-card-header">
-                        <div class="v3-card-header-icon emerald">
-                            <i class="fi fi-rr-search-alt"></i>
+                        <div class="v3-card-header-icon rose">
+                            <i class="fi fi-rr-picture"></i>
                         </div>
                         <div class="v3-card-header-text">
-                            <h3>SEO Metadata &amp; Search Indexing</h3>
-                            <p>Define global description snippet and search engine crawler instructions.</p>
+                            <h3>Brand Assets &amp; Visual Identity</h3>
+                            <p>Upload your website header logo and browser tab favicon.</p>
                         </div>
                     </div>
 
                     <div class="v3-card-body">
-                        <div class="v3-form-grid">
-                            <!-- Site Description -->
-                            <div class="v3-form-group span-2">
-                                <label for="configSiteDescription" class="v3-form-label">
-                                    Meta Description (Search Snippet)
-                                </label>
-                                <div class="v3-input-icon-wrap textarea-wrap">
-                                    <i class="fi fi-rr-document input-icon"></i>
-                                    <textarea id="configSiteDescription" name="site_description" class="v3-form-textarea" rows="3" placeholder="Brief summary of your travel services, packages, and offerings for Google search..."></textarea>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+                            <!-- Column 1: Website Main Logo (Rectangular Preview) -->
+                            <div class="v3-profile-hero-card" style="margin-bottom: 0; height: 100%;">
+                                <div class="v3-logo-wrapper">
+                                    <div class="v3-logo-frame">
+                                        <img id="configLogoPreview" class="is-v3-hidden" src="" alt="">
+                                        <div id="configLogoPlaceholder" class="v3-avatar-initials" style="background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #64748b; font-size: 22px;">
+                                            <i class="fi fi-rr-picture"></i>
+                                        </div>
+                                    </div>
+                                    <label for="configLogoInput" class="v3-avatar-edit-badge" title="Upload Logo">
+                                        <i class="fi fi-rr-camera"></i>
+                                    </label>
                                 </div>
-                                <span class="v3-field-hint">Recommended length: 140–160 characters.</span>
+                                <div class="v3-profile-hero-info">
+                                    <h4 style="font-size: 14px;">Website Main Logo</h4>
+                                    <p style="margin-bottom: 10px;">Header &amp; invoice logo (PNG, JPG, SVG, WEBP &mdash; max 5MB).</p>
+                                    <div class="v3-profile-hero-actions">
+                                        <label for="configLogoInput" class="v3-btn-photo-upload">
+                                            <i class="fi fi-rr-upload"></i> <span>Upload Logo</span>
+                                        </label>
+                                        <input type="file" id="configLogoInput" name="site_logo" accept="image/png, image/jpeg, image/webp, image/svg+xml" style="display: none;">
+                                        <button type="button" id="btnRemoveLogo" class="v3-btn-photo-remove is-v3-hidden" title="Remove Logo">
+                                            <i class="fi fi-rr-trash"></i> <span>Remove</span>
+                                        </button>
+                                        <span id="configLogoFileName" style="font-size: 11.5px; color: #64748b; font-weight: 500; width: 100%;"></span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- Site Keywords -->
-                            <div class="v3-form-group span-2">
-                                <label for="configSiteKeyword" class="v3-form-label">
-                                    Meta Keywords <span class="opt" style="font-weight: normal; color: #94a3b8;">(Comma-separated)</span>
-                                </label>
-                                <div class="v3-input-icon-wrap">
-                                    <i class="fi fi-rr-tags input-icon"></i>
-                                    <input type="text" id="configSiteKeyword" name="site_keyword" class="v3-form-input" placeholder="e.g. tour packages, travel agency, himachal tours, taxi booking">
+                            <!-- Column 2: Browser Tab Favicon (Square Preview) -->
+                            <div class="v3-profile-hero-card" style="margin-bottom: 0; height: 100%;">
+                                <div class="v3-favicon-wrapper">
+                                    <div class="v3-favicon-frame">
+                                        <img id="configFaviconPreview" class="is-v3-hidden" src="" alt="">
+                                        <div id="configFaviconPlaceholder" class="v3-avatar-initials" style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); color: #4f46e5; font-size: 22px;">
+                                            <i class="fi fi-rr-globe"></i>
+                                        </div>
+                                    </div>
+                                    <label for="configFaviconInput" class="v3-avatar-edit-badge" title="Upload Favicon" style="background: #16a34a;">
+                                        <i class="fi fi-rr-camera"></i>
+                                    </label>
                                 </div>
-                            </div>
-
-                            <!-- Search Engine Indexing Toggle -->
-                            <div class="v3-form-group span-2">
-                                <label class="v3-form-label">
-                                    Search Engine Indexing Visibility
-                                </label>
-                                <div style="display: flex; gap: 14px; margin-top: 4px; flex-wrap: wrap;">
-                                    <label style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 13px; font-weight: 500; color: #334155; transition: all 0.15s ease;">
-                                        <input type="radio" name="site_index" id="indexYes" value="index, follow" checked>
-                                        <span><strong style="color: #10b981;">Allow Indexing</strong> (index, follow &mdash; Recommended for Live Sites)</span>
-                                    </label>
-                                    <label style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 13px; font-weight: 500; color: #334155; transition: all 0.15s ease;">
-                                        <input type="radio" name="site_index" id="indexNo" value="noindex, nofollow">
-                                        <span><strong style="color: #ef4444;">Prevent Indexing</strong> (noindex, nofollow &mdash; Staging / Private)</span>
-                                    </label>
+                                <div class="v3-profile-hero-info">
+                                    <h4 style="font-size: 14px;">Browser Tab Favicon</h4>
+                                    <p style="margin-bottom: 10px;">Square icon for tabs &amp; bookmarks (ICO, PNG, SVG &mdash; max 2MB).</p>
+                                    <div class="v3-profile-hero-actions">
+                                        <label for="configFaviconInput" class="v3-btn-photo-upload">
+                                            <i class="fi fi-rr-upload"></i> <span>Upload Favicon</span>
+                                        </label>
+                                        <input type="file" id="configFaviconInput" name="site_icon" accept="image/x-icon, image/png, image/svg+xml, image/webp, image/jpeg" style="display: none;">
+                                        <button type="button" id="btnRemoveFavicon" class="v3-btn-photo-remove is-v3-hidden" title="Remove Favicon">
+                                            <i class="fi fi-rr-trash"></i> <span>Remove</span>
+                                        </button>
+                                        <span id="configFaviconFileName" style="font-size: 11.5px; color: #64748b; font-weight: 500; width: 100%;"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -178,29 +196,35 @@
             </form>
         </div>
 
-        <!-- Right: Live Search Snippet Preview & SEO Tips -->
+        <!-- Right: Live Brand Preview Card -->
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
-                <!-- Search Result Preview Card -->
-                <div class="v3-live-preview-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Google Search Preview</span>
-                        <span id="previewIndexBadge" class="v3-status-badge status-active" style="font-size: 11px;"><span class="status-pulse-dot"></span> Indexed</span>
+                <!-- Website Brand Identity Card -->
+                <div class="v3-live-preview-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Brand Identity Preview</span>
+                        <span class="v3-status-badge status-active" style="font-size: 10px;"><span class="status-pulse-dot"></span> Active</span>
                     </div>
 
-                    <div style="font-family: Arial, sans-serif;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                            <div style="width: 20px; height: 20px; border-radius: 50%; background: #e0e7ff; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #4f46e5; font-weight: bold;">
-                                <i class="fi fi-rr-globe"></i>
+                    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+                        <div class="v3-logo-frame" style="width: 80px; height: 45px; padding: 4px;">
+                            <img id="sidebarLogoPreview" class="is-v3-hidden" src="" alt="Brand Logo">
+                            <div id="sidebarLogoPlaceholder" class="v3-avatar-initials" style="background: #f1f5f9; color: #64748b; font-size: 16px;">
+                                <i class="fi fi-rr-picture"></i>
                             </div>
-                            <span id="previewSearchDomain" style="font-size: 12px; color: #202124;">https://example.com</span>
                         </div>
-                        <h4 id="previewSearchTitle" style="font-size: 16px; color: #1a0dab; margin: 0 0 4px 0; font-weight: 500; cursor: pointer; text-decoration: none;">
-                            Website Title
-                        </h4>
-                        <p id="previewSearchSnippet" style="font-size: 13px; color: #4d5156; margin: 0; line-height: 1.45;">
-                            Website description snippet will appear here as you configure metadata...
-                        </p>
+                        <div>
+                            <h4 id="sidebarSiteName" style="margin: 0; font-size: 15px; font-weight: 700; color: #0f172a;">Website Name</h4>
+                            <p id="sidebarSiteDomain" style="margin: 2px 0 0 0; font-size: 12px; color: #64748b;">yourdomain.com</p>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid #f8fafc; padding-top: 12px; display: flex; align-items: center; justify-content: space-between; font-size: 12.5px;">
+                        <span style="color: #64748b;">Theme Accent:</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span id="sidebarThemeDot" style="width: 14px; height: 14px; border-radius: 50%; background: #4f46e5; display: inline-block;"></span>
+                            <span id="sidebarThemeHex" style="font-family: monospace; font-weight: 600; color: #334155;">#4F46E5</span>
+                        </div>
                     </div>
                 </div>
 
@@ -208,8 +232,8 @@
                 <div class="v3-tips-box">
                     <div class="tips-icon"><i class="fi fi-rr-bulb"></i></div>
                     <div class="tips-content">
-                        <strong style="color: #166534; display: block; margin-bottom: 2px;">SEO Optimization Tip</strong>
-                        Keep your Website Title concise (under 60 characters) and include your primary brand or service region for higher search rankings.
+                        <strong style="color: #166534; display: block; margin-bottom: 2px;">Branding Tip</strong>
+                        Use a transparent PNG or SVG logo for crisp rendering on customer portals and quotation PDFs.
                     </div>
                 </div>
             </div>

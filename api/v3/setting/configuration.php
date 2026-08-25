@@ -47,6 +47,7 @@ if ($siteId <= 0) {
 if ($method === 'GET') {
     $sql = "SELECT s.site_id, s.site_name, s.site_description, s.site_keyword, s.site_lang,
                    s.site_index, s.site_status, s.site_domain, s.site_app_id,
+                   s.site_logo, s.site_icon,
                    ss.site_theme_color, ss.site_custom_domain
             FROM " . TABLE_PREFIX . "site s
             LEFT JOIN " . TABLE_PREFIX . "site_setting ss ON ss.site_setting_site_id = s.site_id
@@ -75,6 +76,8 @@ if ($method === 'GET') {
             'site_lang' => $site['site_lang'] ?: 'en',
             'site_index' => $site['site_index'] ?: 'index, follow',
             'site_domain' => $site['site_domain'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : ''),
+            'site_logo' => $site['site_logo'] ?? '',
+            'site_icon' => $site['site_icon'] ?? '',
             'site_theme_color' => $site['site_theme_color'] ?: '#4f46e5',
             'site_app' => $site['site_app'] ?? 'cms',
             'site_status' => (int)($site['site_status'] ?? 1)
@@ -107,12 +110,60 @@ if ($method === 'POST' || $method === 'PUT') {
         exit;
     }
 
+    $rootDir    = defined('ROOT') ? ROOT : (!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3));
+    $siteDomain = defined('SITE_DOMAIN') ? SITE_DOMAIN : 'default';
+    $uploadPath = $rootDir . '/upload/' . $siteDomain . '/' . date('Y/m/');
+
+    if (!is_dir($uploadPath)) {
+        if (!@mkdir($uploadPath, 0755, true) && !is_dir($uploadPath)) {
+            $uploadPath = $rootDir . '/upload/' . date('Y/m/');
+            if (!is_dir($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+        }
+    }
+
+    // 1. Handle Website Logo Upload
+    $newSiteLogo = '';
+    if (isset($_FILES['site_logo']) && $_FILES['site_logo']['error'] === UPLOAD_ERR_OK) {
+        $allowedLogoExts = ['png', 'jpg', 'jpeg', 'webp', 'svg'];
+        $ext = strtolower(pathinfo($_FILES['site_logo']['name'], PATHINFO_EXTENSION));
+        if (in_array($ext, $allowedLogoExts)) {
+            $uniquePrefix = time() . '_' . bin2hex(random_bytes(4));
+            $cleanName    = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $_FILES['site_logo']['name']));
+            $filename     = 'logo_' . $siteId . '_' . $uniquePrefix . '_' . $cleanName;
+            $uploadFile   = $uploadPath . $filename;
+            if (move_uploaded_file($_FILES['site_logo']['tmp_name'], $uploadFile)) {
+                $newSiteLogo = str_replace($rootDir, '', $uploadFile);
+            }
+        }
+    }
+
+    // 2. Handle Website Favicon / Icon Upload
+    $newSiteIcon = '';
+    if (isset($_FILES['site_icon']) && $_FILES['site_icon']['error'] === UPLOAD_ERR_OK) {
+        $allowedIconExts = ['ico', 'png', 'svg', 'webp', 'jpg', 'jpeg'];
+        $ext = strtolower(pathinfo($_FILES['site_icon']['name'], PATHINFO_EXTENSION));
+        if (in_array($ext, $allowedIconExts)) {
+            $uniquePrefix = time() . '_' . bin2hex(random_bytes(4));
+            $cleanName    = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $_FILES['site_icon']['name']));
+            $filename     = 'favicon_' . $siteId . '_' . $uniquePrefix . '_' . $cleanName;
+            $uploadFile   = $uploadPath . $filename;
+            if (move_uploaded_file($_FILES['site_icon']['tmp_name'], $uploadFile)) {
+                $newSiteIcon = str_replace($rootDir, '', $uploadFile);
+            }
+        }
+    }
+
     $escapedName = mysqli_real_escape_string($connection, $siteName);
     $escapedDesc = mysqli_real_escape_string($connection, $siteDescription);
     $escapedKw   = mysqli_real_escape_string($connection, $siteKeyword);
     $escapedLang = mysqli_real_escape_string($connection, $siteLang);
     $escapedIdx  = mysqli_real_escape_string($connection, $siteIndex);
     $escapedThm  = mysqli_real_escape_string($connection, $siteTheme);
+
+    $logoClause = !empty($newSiteLogo) ? ", site_logo = '" . mysqli_real_escape_string($connection, $newSiteLogo) . "'" : "";
+    $iconClause = !empty($newSiteIcon) ? ", site_icon = '" . mysqli_real_escape_string($connection, $newSiteIcon) . "'" : "";
 
     mysqli_query($connection, "START TRANSACTION");
 
@@ -122,6 +173,8 @@ if ($method === 'POST' || $method === 'PUT') {
         site_keyword = '{$escapedKw}',
         site_lang = '{$escapedLang}',
         site_index = '{$escapedIdx}'
+        {$logoClause}
+        {$iconClause}
         WHERE site_id = {$siteId}");
 
     // Check if site_setting row exists
@@ -138,7 +191,9 @@ if ($method === 'POST' || $method === 'PUT') {
         mysqli_query($connection, "COMMIT");
         echo json_encode([
             'status' => 'success',
-            'msg' => 'Website configuration saved successfully.'
+            'msg' => 'Website configuration and brand assets saved successfully.',
+            'site_logo' => $newSiteLogo,
+            'site_icon' => $newSiteIcon
         ]);
     } else {
         mysqli_query($connection, "ROLLBACK");
