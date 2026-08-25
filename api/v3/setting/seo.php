@@ -1,7 +1,7 @@
 <?php
 
 /**
- * V3 SEO Metadata & Search Indexing API Endpoint
+ * V3 SEO Metadata & Search Visibility API Endpoint
  * Path: /api/v3/setting/seo.php
  */
 
@@ -17,9 +17,6 @@ if (!isset($connection)) {
     }
 }
 
-require_once LOGIN_CHECK;
-
-$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
 
 if ($siteId <= 0) {
@@ -35,88 +32,106 @@ if ($siteId <= 0) {
 
 if ($siteId <= 0) {
     http_response_code(400);
-    echo json_encode([
-        'status' => 'error',
-        'msg' => 'Active site identifier could not be resolved.'
-    ]);
+    echo json_encode(['status' => 'error', 'msg' => 'Active site identifier could not be resolved.']);
     exit;
 }
 
+if (!defined('SITE_ID')) {
+    define('SITE_ID', $siteId);
+}
+
+if (!defined('LOGIN_CHECK')) {
+    $loginCheckPath = (defined('ROOT') ? ROOT : (!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3))) . '/lib/modules/isLogin.php';
+    if (file_exists($loginCheckPath)) {
+        define('LOGIN_CHECK', $loginCheckPath);
+    }
+}
+
+if (defined('LOGIN_CHECK') && file_exists(LOGIN_CHECK)) {
+    require_once LOGIN_CHECK;
+}
+
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
 // --------------------------------------------------------------------------
-// 1. GET: Fetch SEO & Indexing Metadata
+// 1. GET: Fetch Current SEO Metadata
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
-    $sql = "SELECT site_id, site_name, site_description, site_keyword, site_index, site_domain
-            FROM " . TABLE_PREFIX . "site
-            WHERE site_id = {$siteId}
-            LIMIT 1";
+    $siteQuery = "SELECT site_name, site_title, site_description, site_keywords, site_index, site_domain 
+                  FROM " . TABLE_PREFIX . "site 
+                  WHERE site_id = {$siteId} LIMIT 1";
+    $siteRes = mysqli_query($connection, $siteQuery);
+    $siteData = $siteRes ? mysqli_fetch_assoc($siteRes) : [];
 
-    $res = mysqli_query($connection, $sql);
-    if (!$res || mysqli_num_rows($res) === 0) {
-        http_response_code(404);
-        echo json_encode([
-            'status' => 'error',
-            'msg' => 'Site configuration not found.'
-        ]);
-        exit;
-    }
-
-    $site = mysqli_fetch_assoc($res);
+    $data = [
+        'site_title'       => $siteData['site_title'] ?? ($siteData['site_name'] ?? ''),
+        'site_name'        => $siteData['site_name'] ?? '',
+        'site_domain'      => $siteData['site_domain'] ?? '',
+        'site_description' => $siteData['site_description'] ?? '',
+        'site_keywords'    => $siteData['site_keywords'] ?? '',
+        'site_index'       => (string)($siteData['site_index'] ?? '1')
+    ];
 
     echo json_encode([
         'status' => 'success',
-        'data' => [
-            'site_name'        => $site['site_name'] ?? '',
-            'site_description' => $site['site_description'] ?? '',
-            'site_keyword'     => $site['site_keyword'] ?? '',
-            'site_index'       => $site['site_index'] ?: 'index, follow',
-            'site_domain'      => $site['site_domain'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : '')
-        ]
+        'data'   => $data
     ]);
     exit;
 }
 
 // --------------------------------------------------------------------------
-// 2. POST / PUT: Save SEO & Indexing Metadata
+// 2. POST / PUT: Update SEO Metadata
 // --------------------------------------------------------------------------
 if ($method === 'POST' || $method === 'PUT') {
     $rawInput = file_get_contents('php://input');
     $jsonData = json_decode($rawInput, true) ?? [];
     $data = !empty($_POST) ? $_POST : $jsonData;
 
-    $siteName        = trim($data['site_name'] ?? $data['site_meta_title'] ?? '');
-    $siteDescription = trim($data['site_description'] ?? $data['site_meta_description'] ?? '');
-    $siteKeyword     = trim($data['site_keyword'] ?? $data['site_meta_keywords'] ?? '');
-    $siteIndex       = trim($data['site_index'] ?? 'index, follow');
+    $title       = trim($data['site_title'] ?? '');
+    $description = trim($data['site_description'] ?? '');
+    $keywords    = trim($data['site_keywords'] ?? '');
+    $index       = isset($data['site_index']) ? (int)$data['site_index'] : 1;
 
-    $escName = mysqli_real_escape_string($connection, $siteName);
-    $escDesc = mysqli_real_escape_string($connection, $siteDescription);
-    $escKw   = mysqli_real_escape_string($connection, $siteKeyword);
-    $escIdx  = mysqli_real_escape_string($connection, $siteIndex);
+    $escTitle = mysqli_real_escape_string($connection, $title);
+    $escDesc = mysqli_real_escape_string($connection, $description);
+    $escKeywords = mysqli_real_escape_string($connection, $keywords);
 
-    $updateSql = "UPDATE " . TABLE_PREFIX . "site 
-                  SET site_description = '{$escDesc}',
-                      site_keyword     = '{$escKw}',
-                      site_index       = '{$escIdx}'";
+    $sql = "UPDATE " . TABLE_PREFIX . "site 
+            SET site_title = '{$escTitle}', 
+                site_description = '{$escDesc}', 
+                site_keywords = '{$escKeywords}', 
+                site_index = {$index} 
+            WHERE site_id = {$siteId}";
 
-    if (!empty($siteName)) {
-        $updateSql .= ", site_name = '{$escName}'";
-    }
-
-    $updateSql .= " WHERE site_id = {$siteId}";
-
-    $ok = mysqli_query($connection, $updateSql);
+    $ok = mysqli_query($connection, $sql);
 
     if ($ok) {
+        // Also sync to site_configuration for backward compatibility
+        $cfgUpdates = [
+            'site_title' => $title,
+            'site_description' => $description,
+            'site_keywords' => $keywords,
+            'site_index' => (string)$index
+        ];
+
+        foreach ($cfgUpdates as $k => $v) {
+            $escVal = mysqli_real_escape_string($connection, $v);
+            $escKey = mysqli_real_escape_string($connection, $k);
+            mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration 
+                (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status)
+                VALUES ({$siteId}, '{$escKey}', '{$escVal}', 1)
+                ON DUPLICATE KEY UPDATE site_configuration_value = '{$escVal}', site_configuration_status = 1");
+        }
+
         echo json_encode([
             'status' => 'success',
-            'msg'    => 'SEO metadata and search indexing preferences saved successfully.'
+            'msg'    => 'SEO metadata and Google search indexing preferences updated successfully.'
         ]);
     } else {
         http_response_code(500);
         echo json_encode([
             'status' => 'error',
-            'msg'    => 'Failed to update SEO metadata.'
+            'msg'    => 'Database error updating SEO configuration.'
         ]);
     }
     exit;

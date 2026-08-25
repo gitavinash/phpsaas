@@ -3879,8 +3879,10 @@ $(document).ready(function (e) {
       }
     }
 
-    // 6. Integration Hub Module
-    const $integration = $("#integrationApp, .integration-page-wrapper");
+    // 6. Integration Hub & Plugin Modules
+    const $integration = $(
+      "#integrationApp, .integration-page-wrapper, .integration-plugin-wrapper, [id^='plugin'], #fbLeadsApp, #fbPageLeadsApp"
+    );
     if ($integration.length > 0) {
       if (window.V3Integration && typeof window.V3Integration.init === "function") {
         window.V3Integration.init();

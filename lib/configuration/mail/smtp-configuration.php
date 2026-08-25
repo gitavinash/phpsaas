@@ -11,8 +11,8 @@ if (defined('EMAIL_SMTP_DEFAULT')) {
         define('SMTP_PASSWORD', EMAIL_SMTP_PASSWORD); // password of the email
         define('SMTP_EMAIL', EMAIL_SMTP_EMAIL); // Which email is display to receiver end like :- donotreply@isw.one
         define('SMTP_NAME', EMAIL_SMTP_NAME); // Show Name on email :- Blumox Technologies, Avinash Kumar
-        define('REPLY_EMAIL', EMAIL_SMTP_EMAIL); // Reply email where user can send a reply mail like :- contact@isw.one
-        define('REPLY_EMAIL_NAME', EMAIL_SMTP_REPLY_NAME); // Reply email where user can send a reply mail like :- contact@isw.one
+        define('REPLY_EMAIL', (defined('EMAIL_SMTP_REPLY_EMAIL') && !empty(EMAIL_SMTP_REPLY_EMAIL)) ? EMAIL_SMTP_REPLY_EMAIL : EMAIL_SMTP_EMAIL); // Reply email where user can send a reply mail
+        define('REPLY_EMAIL_NAME', defined('EMAIL_SMTP_REPLY_NAME') ? EMAIL_SMTP_REPLY_NAME : (defined('SITE_NAME') ? SITE_NAME : ''));
     }
 } else {
     define('SMTP_HOST', 'smtp.zeptomail.in');

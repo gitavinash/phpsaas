@@ -112,8 +112,8 @@ if ($pageRow) {
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon brand-facebook">
-                <i class="fi fi-rr-form"></i>
+            <div class="integration-brand-logo brand-facebook">
+                <img src="/app/dashboard/v3/default/desktop/assets/images/integration/facebook.svg" alt="Facebook">
             </div>
             <div class="package-header-titles">
                 <h2><?php echo htmlspecialchars($pageDisplayName); ?></h2>
@@ -129,12 +129,12 @@ if ($pageRow) {
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="integration/facebook/" class="btn-gallery-action btn-back-list" title="Back to Facebook Pages">
-                <i class="fi fi-rr-arrow-left"></i> All Pages
+            <a href="/dashboard/integration/facebook/" class="v3-btn-secondary" title="Back to Facebook Pages">
+                <i class="fi fi-rr-arrow-left"></i> <span>All Pages</span>
             </a>
             <?php if ($pageRow) { ?>
-                <a href="<?php echo str_replace('&sync=true', '', ACTIVE_URL); ?>&sync=true" class="btn-gallery-action btn-reconnect" title="Sync Lead Forms from Facebook">
-                    <i class="fi fi-rr-refresh"></i> Sync Lead Forms
+                <a href="<?php echo str_replace('&sync=true', '', ACTIVE_URL); ?>&sync=true" class="v3-btn-primary" title="Sync Lead Forms from Facebook">
+                    <i class="fi fi-rr-refresh"></i> <span>Sync Lead Forms</span>
                 </a>
             <?php } ?>
         </div>
@@ -147,50 +147,68 @@ if ($pageRow) {
             </div>
             <h3>Facebook Page Not Found</h3>
             <p>The requested page identifier could not be verified in your workspace or access is restricted.</p>
-            <a href="integration/facebook/" class="btn-fb-connect">
+            <a href="/dashboard/integration/facebook/" class="btn-fb-connect">
                 <i class="fi fi-rr-arrow-left"></i> Return to Pages List
             </a>
         </div>
     <?php } elseif ($formsCount > 0) { ?>
-        <!-- Forms Table Card -->
-        <div class="package-table-card">
+        <!-- Modern Forms Table Card -->
+        <div class="v3-table-card">
+            <div class="v3-table-card-header">
+                <div class="v3-table-card-header-left">
+                    <i class="fi fi-rr-form" style="color: #1877f2; font-size: 18px;"></i>
+                    <h3>Subscribed Lead Generation Forms</h3>
+                    <span class="v3-badge v3-badge-blue"><?php echo $formsCount; ?> Active</span>
+                </div>
+                <div>
+                    <span class="integration-status-badge active">
+                        <i class="fi fi-rr-shield-check"></i> Webhook Listener Ready
+                    </span>
+                </div>
+            </div>
+
             <div class="table-responsive">
-                <table class="package-data-table">
+                <table class="v3-data-table">
                     <thead>
                         <tr>
-                            <th>Lead Form Name</th>
+                            <th>Lead Form</th>
                             <th>Form ID</th>
-                            <th>Webhook Sync</th>
+                            <th>Webhook Integration</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            <th style="text-align: right;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php while ($form = mysqli_fetch_assoc($pageFormList)) { ?>
                             <tr>
                                 <td>
-                                    <div class="v3-table-cell-title">
-                                        <i class="fi fi-rr-form" style="color: #1877f2; margin-right: 6px;"></i>
-                                        <strong><?php echo htmlspecialchars($form['fb_forms_name']); ?></strong>
+                                    <div class="v3-table-form-cell">
+                                        <div class="v3-table-form-icon">
+                                            <i class="fi fi-rr-form"></i>
+                                        </div>
+                                        <div class="v3-table-form-info">
+                                            <h4><?php echo htmlspecialchars($form['fb_forms_name']); ?></h4>
+                                            <span>Instant Lead Capture</span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="fb-page-id-badge"><?php echo htmlspecialchars($form['fb_forms_id']); ?></span>
+                                    <span class="v3-code-pill"><?php echo htmlspecialchars($form['fb_forms_id']); ?></span>
                                 </td>
                                 <td>
-                                    <span class="integration-status-badge active">
-                                        <i class="fi fi-rr-check"></i> Subscribed
+                                    <span class="v3-status-badge status-active">
+                                        <span class="status-pulse-dot"></span> Subscribed
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="v3-badge v3-badge-green">Active</span>
+                                    <span class="v3-status-badge status-active">
+                                        <span class="status-pulse-dot"></span> Active
+                                    </span>
                                 </td>
-                                <td>
-                                    <div class="v3-table-actions">
-                                        <a href="/dashboard/integration/facebook/form-leads/?id=<?php echo urlencode($form['fb_forms_id']); ?>" class="btn-gallery-action btn-manage-gallery" title="View Form Leads">
-                                            <i class="fi fi-rr-users"></i> View Form Leads
-                                        </a>
-                                    </div>
+                                <td style="text-align: right;">
+                                    <a href="/dashboard/integration/facebook/form-leads/?id=<?php echo urlencode($form['fb_forms_id']); ?>" class="v3-btn-table-action" title="View Form Leads">
+                                        <i class="fi fi-rr-users"></i> View Form Leads
+                                    </a>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -204,7 +222,7 @@ if ($pageRow) {
             <i class="fi fi-rr-form empty-icon"></i>
             <h4>No Lead Forms Found</h4>
             <p>No active lead generation forms were found on this Facebook page. Create a form inside Facebook Ads Manager and sync.</p>
-            <a href="<?php echo str_replace('&sync=true', '', ACTIVE_URL); ?>&sync=true" class="btn-gallery-action btn-reconnect">
+            <a href="<?php echo str_replace('&sync=true', '', ACTIVE_URL); ?>&sync=true" class="v3-btn-primary">
                 <i class="fi fi-rr-refresh"></i> Sync Forms Now
             </a>
         </div>

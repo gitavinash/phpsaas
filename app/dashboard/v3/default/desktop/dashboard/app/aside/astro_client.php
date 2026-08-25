@@ -23,8 +23,66 @@ if ($site_access_type == 'administrator') { ?>
     <p>Integration<span>Manage third party resources.</span></p>
 </li>
 
+<?php
+$activeAsidePg = 'razorpay';
+if (defined('PG_NAME') && !empty(PG_NAME)) {
+    $activeAsidePg = strtolower(PG_NAME);
+} elseif (defined('ENABLE_INSTAMOJO') && ENABLE_INSTAMOJO == '1') {
+    $activeAsidePg = 'instamojo';
+} elseif (defined('ENABLE_SABPAISA') && ENABLE_SABPAISA == '1') {
+    $activeAsidePg = 'sabpaisa';
+} elseif (defined('ENABLE_PHONEPE') && ENABLE_PHONEPE == '1') {
+    $activeAsidePg = 'phonepe';
+} elseif (defined('ENABLE_WORLDLINE') && ENABLE_WORLDLINE == '1') {
+    $activeAsidePg = 'worldline';
+} elseif (defined('ENABLE_PAYU') && ENABLE_PAYU == '1') {
+    $activeAsidePg = 'payu';
+} elseif (defined('ENABLE_PHI_COMMERCE') && ENABLE_PHI_COMMERCE == '1') {
+    $activeAsidePg = 'phi_commerce';
+} elseif (defined('ENABLE_CASHFREE') && ENABLE_CASHFREE == '1') {
+    $activeAsidePg = 'cashfree';
+} elseif (defined('ENABLE_RAZORPAY') && ENABLE_RAZORPAY == '1') {
+    $activeAsidePg = 'razorpay';
+}
+?>
 <li <?php echo ((strpos(ADMIN_BASE_URL, '/integration/') !== false) ? 'class="active"' : '') ?>>
-    <a href="integration/"><i class="fi fi-rr-plug-connection"></i> Plugins</a>
+    <a href="/dashboard/integration/"><i class="fi fi-rr-plug-connection"></i> Plugins</a>
+    <div class="side-menu">
+        <ul>
+            <li><a href="/dashboard/integration/"><i class="fi-rr-apps-sort"></i> All Plugins</a></li>
+            <li data-aside-plugin="facebook" <?php echo ((!defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Ads</a></li>
+            <li data-aside-plugin="whatsapp" <?php echo ((!defined('ENABLE_WHATSAPP_BUSINESS_API') || ENABLE_WHATSAPP_BUSINESS_API == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/whatsapp/"><i class="fi-rr-comment-alt-middle"></i> WhatsApp API</a></li>
+            <li data-aside-plugin="smtp" <?php echo ((!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/smtp/"><i class="fi-rr-envelope"></i> SMTP Email</a></li>
+            <li data-aside-plugin="google_ads" <?php echo ((defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
+            <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
+            <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
+            <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>
+            <li data-aside-plugin="phonepe" <?php echo ($activeAsidePg === 'phonepe' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phonepe/"><i class="fi-rr-credit-card"></i> PhonePe</a></li>
+            <li data-aside-plugin="worldline" <?php echo ($activeAsidePg === 'worldline' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/worldline/"><i class="fi-rr-credit-card"></i> Worldline</a></li>
+            <li data-aside-plugin="payu" <?php echo ($activeAsidePg === 'payu' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/payu/"><i class="fi-rr-credit-card"></i> PayU</a></li>
+            <li data-aside-plugin="phi_commerce" <?php echo ($activeAsidePg === 'phi_commerce' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phi_commerce/"><i class="fi-rr-credit-card"></i> Phi Commerce</a></li>
+            <li data-aside-plugin="cashfree" <?php echo ($activeAsidePg === 'cashfree' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/cashfree/"><i class="fi-rr-credit-card"></i> Cashfree</a></li>
+            <li data-aside-plugin="upi" <?php echo ((!defined('ENABLE_UPI') || ENABLE_UPI == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/upi/"><i class="fi-rr-qr-scan"></i> UPI &amp; QR</a></li>
+        </ul>
+    </div>
+    <div class="bottom-menu">
+        <ul>
+            <li><a href="/dashboard/integration/"><i class="fi-rr-apps-sort"></i> All Plugins</a></li>
+            <li data-aside-plugin="facebook" <?php echo ((!defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Ads</a></li>
+            <li data-aside-plugin="whatsapp" <?php echo ((!defined('ENABLE_WHATSAPP_BUSINESS_API') || ENABLE_WHATSAPP_BUSINESS_API == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/whatsapp/"><i class="fi-rr-comment-alt-middle"></i> WhatsApp API</a></li>
+            <li data-aside-plugin="smtp" <?php echo ((!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/smtp/"><i class="fi-rr-envelope"></i> SMTP Email</a></li>
+            <li data-aside-plugin="google_ads" <?php echo ((defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
+            <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
+            <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
+            <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>
+            <li data-aside-plugin="phonepe" <?php echo ($activeAsidePg === 'phonepe' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phonepe/"><i class="fi-rr-credit-card"></i> PhonePe</a></li>
+            <li data-aside-plugin="worldline" <?php echo ($activeAsidePg === 'worldline' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/worldline/"><i class="fi-rr-credit-card"></i> Worldline</a></li>
+            <li data-aside-plugin="payu" <?php echo ($activeAsidePg === 'payu' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/payu/"><i class="fi-rr-credit-card"></i> PayU</a></li>
+            <li data-aside-plugin="phi_commerce" <?php echo ($activeAsidePg === 'phi_commerce' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phi_commerce/"><i class="fi-rr-credit-card"></i> Phi Commerce</a></li>
+            <li data-aside-plugin="cashfree" <?php echo ($activeAsidePg === 'cashfree' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/cashfree/"><i class="fi-rr-credit-card"></i> Cashfree</a></li>
+            <li data-aside-plugin="upi" <?php echo ((!defined('ENABLE_UPI') || ENABLE_UPI == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/upi/"><i class="fi-rr-qr-scan"></i> UPI &amp; QR</a></li>
+        </ul>
+    </div>
 </li>
 
 <?php

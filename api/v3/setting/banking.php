@@ -17,9 +17,6 @@ if (!isset($connection)) {
     }
 }
 
-require_once LOGIN_CHECK;
-
-$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
 
 if ($siteId <= 0) {
@@ -32,6 +29,29 @@ if ($siteId <= 0) {
         $siteId = (int)$row['site_id'];
     }
 }
+
+if ($siteId <= 0) {
+    http_response_code(400);
+    echo json_encode(['status' => 'error', 'msg' => 'Active site identifier could not be resolved.']);
+    exit;
+}
+
+if (!defined('SITE_ID')) {
+    define('SITE_ID', $siteId);
+}
+
+if (!defined('LOGIN_CHECK')) {
+    $loginCheckPath = (defined('ROOT') ? ROOT : (!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3))) . '/lib/modules/isLogin.php';
+    if (file_exists($loginCheckPath)) {
+        define('LOGIN_CHECK', $loginCheckPath);
+    }
+}
+
+if (defined('LOGIN_CHECK') && file_exists(LOGIN_CHECK)) {
+    require_once LOGIN_CHECK;
+}
+
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($siteId <= 0) {
     http_response_code(400);

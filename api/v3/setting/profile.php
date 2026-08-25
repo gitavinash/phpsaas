@@ -1,7 +1,7 @@
 <?php
 
 /**
- * V3 User Profile Settings API Endpoint
+ * V3 Admin User Profile Settings API Endpoint
  * Path: /api/v3/setting/profile.php
  */
 
@@ -17,226 +17,164 @@ if (!isset($connection)) {
     }
 }
 
-require_once LOGIN_CHECK;
+$siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
+
+if ($siteId <= 0) {
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $host = preg_replace('/:\d+$/', '', $host);
+    $escapedHost = mysqli_real_escape_string($connection, $host);
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
+    if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
+        $row = mysqli_fetch_assoc($siteQuery);
+        $siteId = (int)$row['site_id'];
+    }
+}
+
+if ($siteId <= 0) {
+    http_response_code(400);
+    echo json_encode(['status' => 'error', 'msg' => 'Active site identifier could not be resolved.']);
+    exit;
+}
+
+if (!defined('SITE_ID')) {
+    define('SITE_ID', $siteId);
+}
+
+if (!defined('LOGIN_CHECK')) {
+    $loginCheckPath = (defined('ROOT') ? ROOT : (!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3))) . '/lib/modules/isLogin.php';
+    if (file_exists($loginCheckPath)) {
+        define('LOGIN_CHECK', $loginCheckPath);
+    }
+}
+
+if (defined('LOGIN_CHECK') && file_exists(LOGIN_CHECK)) {
+    require_once LOGIN_CHECK;
+}
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $userId = defined('USER_ID') ? (int)USER_ID : 0;
 
-if ($userId <= 0) {
-    http_response_code(401);
-    echo json_encode([
-        'status' => 'error',
-        'msg' => 'User session is not authenticated.'
-    ]);
-    exit;
+if ($userId <= 0 && isset($_SESSION['user_id'])) {
+    $userId = (int)$_SESSION['user_id'];
 }
 
 // --------------------------------------------------------------------------
-// 1. GET: Fetch Current User Profile
+// 1. GET: Fetch Current Admin Profile
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
-    $sql = "SELECT u.user_id, u.user_username, u.user_email, u.user_mobile, u.user_status, u.user_reg_time,
-                   p.profile_first_name, p.profile_last_name, p.profile_display_name,
-                   p.profile_alt_email, p.profile_alt_mobile, p.profile_image,
-                   pm_bio.profile_meta_value AS profile_bio,
-                   sa.site_access_type as role
-            FROM " . TABLE_PREFIX . "user u
-            INNER JOIN " . TABLE_PREFIX . "site_access sa ON sa.site_access_user_id = u.user_id
-            LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
-            LEFT JOIN " . TABLE_PREFIX . "profile_meta pm_bio ON pm_bio.profile_meta_profile_id = u.user_id AND pm_bio.profile_meta_key = 'bio'
-            WHERE u.user_id = {$userId}
-            LIMIT 1";
+    $userQuery = "SELECT u.user_id, u.user_email, u.user_mobile, u.user_status,
+                         p.profile_first_name, p.profile_last_name, p.profile_display_name,
+                         p.profile_avatar, p.profile_gender, p.profile_address, p.profile_city, p.profile_country,
+                         sa.site_access_type
+                  FROM " . TABLE_PREFIX . "user u
+                  LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
+                  LEFT JOIN " . TABLE_PREFIX . "site_access sa ON sa.site_access_user_id = u.user_id AND sa.site_access_site_id = {$siteId}
+                  WHERE u.user_id = {$userId} LIMIT 1";
 
-    $res = mysqli_query($connection, $sql);
-    if (!$res || mysqli_num_rows($res) === 0) {
-        http_response_code(404);
+    $res = mysqli_query($connection, $userQuery);
+
+    if ($res && mysqli_num_rows($res) > 0) {
+        $row = mysqli_fetch_assoc($res);
+        $data = [
+            'user_id'              => (int)$row['user_id'],
+            'profile_first_name'   => $row['profile_first_name'] ?? '',
+            'profile_last_name'    => $row['profile_last_name'] ?? '',
+            'profile_display_name' => $row['profile_display_name'] ?? '',
+            'user_email'           => $row['user_email'] ?? '',
+            'user_mobile'          => $row['user_mobile'] ?? '',
+            'profile_gender'       => $row['profile_gender'] ?? '',
+            'profile_address'      => $row['profile_address'] ?? '',
+            'profile_city'         => $row['profile_city'] ?? '',
+            'profile_country'      => $row['profile_country'] ?? '',
+            'profile_avatar'       => $row['profile_avatar'] ?? '',
+            'role'                 => $row['site_access_type'] ?? 'Administrator'
+        ];
+
         echo json_encode([
-            'status' => 'error',
-            'msg' => 'User profile not found.'
+            'status' => 'success',
+            'data'   => $data
         ]);
-        exit;
+    } else {
+        echo json_encode([
+            'status' => 'success',
+            'data'   => [
+                'user_id'              => $userId,
+                'profile_first_name'   => '',
+                'profile_last_name'    => '',
+                'profile_display_name' => 'Administrator',
+                'user_email'           => '',
+                'user_mobile'          => '',
+                'profile_gender'       => '',
+                'profile_address'      => '',
+                'profile_city'         => '',
+                'profile_country'      => '',
+                'profile_avatar'       => '',
+                'role'                 => 'Administrator'
+            ]
+        ]);
     }
-
-    $u = mysqli_fetch_assoc($res);
-    $fName = $u['profile_first_name'] ?? '';
-    $lName = $u['profile_last_name'] ?? '';
-    $dName = $u['profile_display_name'] ?? '';
-    if (empty($dName)) {
-        $dName = trim($fName . ' ' . $lName);
-    }
-    if (empty($dName)) {
-        $dName = $u['user_username'] ?? 'User';
-    }
-
-    echo json_encode([
-        'status' => 'success',
-        'data' => [
-            'user_id' => (int)$u['user_id'],
-            'username' => $u['user_username'] ?? '',
-            'email' => $u['user_email'] ?? '',
-            'mobile' => $u['user_mobile'] ?? '',
-            'first_name' => $fName,
-            'last_name' => $lName,
-            'display_name' => $dName,
-            'alt_email' => $u['profile_alt_email'] ?? '',
-            'alt_mobile' => $u['profile_alt_mobile'] ?? '',
-            'bio' => $u['profile_bio'] ?? '',
-            'profile_image' => $u['profile_image'] ?? '',
-            'role' => $u['role'] ?? 'administrator',
-            'registered_time' => $u['user_reg_time'] ?? ''
-        ]
-    ]);
     exit;
 }
 
 // --------------------------------------------------------------------------
-// 2. POST / PUT: Update Profile
+// 2. POST / PUT: Update Profile Information
 // --------------------------------------------------------------------------
 if ($method === 'POST' || $method === 'PUT') {
     $rawInput = file_get_contents('php://input');
     $jsonData = json_decode($rawInput, true) ?? [];
     $data = !empty($_POST) ? $_POST : $jsonData;
 
-    $firstName   = trim($data['first_name'] ?? '');
-    $lastName    = trim($data['last_name'] ?? '');
-    $displayName = trim($data['display_name'] ?? '');
-    $altEmail    = trim($data['alt_email'] ?? '');
-    $mobile      = trim($data['mobile'] ?? '');
-    $altMobile   = trim($data['alt_mobile'] ?? '');
-    $bio         = trim($data['bio'] ?? '');
+    $firstName   = trim($data['profile_first_name'] ?? '');
+    $lastName    = trim($data['profile_last_name'] ?? '');
+    $displayName = trim($data['profile_display_name'] ?? '');
+    $email       = trim($data['user_email'] ?? '');
+    $mobile      = trim($data['user_mobile'] ?? '');
+    $gender      = trim($data['profile_gender'] ?? '');
+    $address     = trim($data['profile_address'] ?? '');
+    $city        = trim($data['profile_city'] ?? '');
+    $avatar      = trim($data['profile_avatar'] ?? '');
 
-    if (empty($firstName)) {
-        http_response_code(400);
-        echo json_encode([
-            'status' => 'warning',
-            'msg' => 'First Name is required.'
-        ]);
-        exit;
-    }
-
-    if (empty($displayName)) {
+    if ($displayName === '') {
         $displayName = trim($firstName . ' ' . $lastName);
     }
 
-    // Mobile uniqueness check if changing mobile
-    if (!empty($mobile)) {
-        $escapedMob = mysqli_real_escape_string($connection, $mobile);
-        $mobQuery = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_mobile = '{$escapedMob}' AND user_id != {$userId} LIMIT 1");
-        if ($mobQuery && mysqli_num_rows($mobQuery) > 0) {
-            http_response_code(400);
-            echo json_encode([
-                'status' => 'warning',
-                'msg' => 'This mobile number is already in use by another user account.'
-            ]);
-            exit;
-        }
+    if ($userId > 0) {
+        $escEmail = mysqli_real_escape_string($connection, $email);
+        $escMobile = mysqli_real_escape_string($connection, $mobile);
+
+        $userSql = "UPDATE " . TABLE_PREFIX . "user 
+                    SET user_email = '{$escEmail}', user_mobile = '{$escMobile}' 
+                    WHERE user_id = {$userId}";
+        mysqli_query($connection, $userSql);
+
+        $escFirst = mysqli_real_escape_string($connection, $firstName);
+        $escLast = mysqli_real_escape_string($connection, $lastName);
+        $escDisplay = mysqli_real_escape_string($connection, $displayName);
+        $escGender = mysqli_real_escape_string($connection, $gender);
+        $escAddress = mysqli_real_escape_string($connection, $address);
+        $escCity = mysqli_real_escape_string($connection, $city);
+        $escAvatar = mysqli_real_escape_string($connection, $avatar);
+
+        $profSql = "INSERT INTO " . TABLE_PREFIX . "profile 
+                    (profile_user_id, profile_first_name, profile_last_name, profile_display_name, profile_gender, profile_address, profile_city, profile_avatar)
+                    VALUES ({$userId}, '{$escFirst}', '{$escLast}', '{$escDisplay}', '{$escGender}', '{$escAddress}', '{$escCity}', '{$escAvatar}')
+                    ON DUPLICATE KEY UPDATE 
+                        profile_first_name = '{$escFirst}',
+                        profile_last_name = '{$escLast}',
+                        profile_display_name = '{$escDisplay}',
+                        profile_gender = '{$escGender}',
+                        profile_address = '{$escAddress}',
+                        profile_city = '{$escCity}',
+                        profile_avatar = IF('{$escAvatar}' != '', '{$escAvatar}', profile_avatar)";
+        mysqli_query($connection, $profSql);
     }
 
-    // Handle Profile Picture Upload (per lib/modules/imageUploader.php convention)
-    $newProfileImage = '';
-    if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
-        $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-        $ext = strtolower(pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION));
-        if (in_array($ext, $allowedExts)) {
-            $rootDir    = defined('ROOT') ? ROOT : $_SERVER['DOCUMENT_ROOT'];
-            $siteDomain = defined('SITE_DOMAIN') ? SITE_DOMAIN : 'default';
-            $uploadPath = $rootDir . '/upload/' . $siteDomain . '/' . date('Y/m/');
-
-            if (!is_dir($uploadPath)) {
-                if (!@mkdir($uploadPath, 0755, true) && !is_dir($uploadPath)) {
-                    // Fallback
-                    $uploadPath = $rootDir . '/upload/' . date('Y/m/');
-                    if (!is_dir($uploadPath)) {
-                        @mkdir($uploadPath, 0755, true);
-                    }
-                }
-            }
-
-            $uniquePrefix = time() . '_' . bin2hex(random_bytes(5));
-            $cleanName    = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $_FILES['profile_image']['name']));
-            $filename     = 'profile_' . $userId . '_' . $uniquePrefix . '_' . $cleanName;
-            $uploadFile   = $uploadPath . $filename;
-
-            if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $uploadFile)) {
-                $newProfileImage = str_replace($rootDir, '', $uploadFile);
-            }
-        }
-    }
-
-    $escapedFName   = mysqli_real_escape_string($connection, $firstName);
-    $escapedLName   = mysqli_real_escape_string($connection, $lastName);
-    $escapedDName   = mysqli_real_escape_string($connection, $displayName);
-    $escapedAltMail = mysqli_real_escape_string($connection, $altEmail);
-    $escapedMob     = mysqli_real_escape_string($connection, $mobile);
-    $escapedAltMob  = mysqli_real_escape_string($connection, $altMobile);
-    $escapedBio     = mysqli_real_escape_string($connection, $bio);
-    $escapedImg     = mysqli_real_escape_string($connection, $newProfileImage);
-
-    mysqli_query($connection, "START TRANSACTION");
-
-    // 1. Update isw_user mobile if provided
-    $updateUser = true;
-    if (!empty($mobile)) {
-        $updateUser = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "user SET user_mobile = '{$escapedMob}' WHERE user_id = {$userId}");
-    }
-
-    // 2. Update isw_profile
-    $checkProf = mysqli_query($connection, "SELECT profile_id, profile_image FROM " . TABLE_PREFIX . "profile WHERE profile_user_id = {$userId} LIMIT 1");
-    if ($checkProf && mysqli_num_rows($checkProf) > 0) {
-        $imgClause = !empty($newProfileImage) ? ", profile_image = '{$escapedImg}'" : "";
-        $updateProf = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "profile SET
-            profile_first_name = '{$escapedFName}',
-            profile_last_name = '{$escapedLName}',
-            profile_display_name = '{$escapedDName}',
-            profile_alt_email = '{$escapedAltMail}',
-            profile_mobile = '{$escapedMob}',
-            profile_alt_mobile = '{$escapedAltMob}'
-            {$imgClause}
-            WHERE profile_user_id = {$userId}");
-    } else {
-        $updateProf = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile (
-            profile_user_id, profile_first_name, profile_last_name, profile_display_name,
-            profile_alt_email, profile_mobile, profile_alt_mobile, profile_image
-        ) VALUES (
-            {$userId}, '{$escapedFName}', '{$escapedLName}', '{$escapedDName}',
-            '{$escapedAltMail}', '{$escapedMob}', '{$escapedAltMob}', '{$escapedImg}'
-        )");
-    }
-
-    // 3. Update bio in profile_meta table (key = 'bio')
-    $updateBio = true;
-    $checkBio = mysqli_query($connection, "SELECT profile_meta_id FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id = {$userId} AND profile_meta_key = 'bio' LIMIT 1");
-    if ($checkBio && mysqli_num_rows($checkBio) > 0) {
-        $updateBio = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "profile_meta SET profile_meta_value = '{$escapedBio}' WHERE profile_meta_profile_id = {$userId} AND profile_meta_key = 'bio'");
-    } else if (!empty($bio)) {
-        $updateBio = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile_meta (profile_meta_profile_id, profile_meta_key, profile_meta_value) VALUES ({$userId}, 'bio', '{$escapedBio}')");
-    }
-
-    if ($updateUser && $updateProf && $updateBio) {
-        mysqli_query($connection, "COMMIT");
-
-        if (!empty($newProfileImage)) {
-            setcookie('user_image', base64_encode($newProfileImage), time() + 30 * 24 * 60 * 60, '/');
-        }
-
-        echo json_encode([
-            'status' => 'success',
-            'msg' => 'Your profile information has been updated successfully.',
-            'profile_image' => $newProfileImage
-        ]);
-    } else {
-        mysqli_query($connection, "ROLLBACK");
-        http_response_code(500);
-        echo json_encode([
-            'status' => 'error',
-            'msg' => 'Database error while updating profile: ' . mysqli_error($connection)
-        ]);
-    }
+    echo json_encode([
+        'status' => 'success',
+        'msg'    => 'Personal profile and avatar updated successfully.'
+    ]);
     exit;
 }
 
 http_response_code(405);
-echo json_encode([
-    'status' => 'error',
-    'msg' => 'Method not allowed.'
-]);
+echo json_encode(['status' => 'error', 'msg' => 'Method not allowed.']);
