@@ -1,5 +1,5 @@
 <?php
-echo "Updating..."
+echo "Updating...";
 exit();
 require_once LOGIN_CHECK;
 
