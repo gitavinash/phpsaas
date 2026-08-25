@@ -1,77 +1,138 @@
-<h2 class="heading"><?php echo ucwords($urlStructure[1]) ?> List<span>All Users list will be displayed here.</span>
-</h2>
-<div class="shortcut">
-    <a href="/dashboard/user/add/"><i class="fi fi-rr-plus"></i></a>
-</div>
-<div class="main-box">
-    <section>
-        <div class="filters">
-            <div class="form-group">
-                <label>User Status</label>
-                <select id="UserStatus">
-                    <option value="">User Status</option>
-                    <option value="1">Confirm</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Cancel</option>
-                </select>
+<div class="package-page-wrapper user-list-wrapper" id="usersListApp">
+    <!-- Header Banner -->
+    <div class="package-header-bar">
+        <div class="package-header-left">
+            <div class="package-header-icon user-header-badge">
+                <i class="fi fi-rr-users"></i>
             </div>
-            <div class="form-group right">
-                <label>Date</label>
-                <input type="text" class="dateRangePicker" placeholder="Select date range">
+            <div class="package-header-titles">
+                <h2>Team &amp; Users Management</h2>
+                <p>Manage employee accounts, role permissions, and system access credentials.</p>
             </div>
         </div>
+        <div class="package-header-actions">
+            <a href="/dashboard/user/add/" class="btn-add-pkg-v3" data-tooltip="Create new user account">
+                <i class="fi fi-rr-user-add"></i> <span>Add User</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Metric Cards -->
+    <div class="package-kpi-row">
+        <div class="pkg-mini-kpi indigo">
+            <div class="kpi-icon"><i class="fi fi-rr-users"></i></div>
+            <div class="kpi-meta">
+                <p>Total Team Members</p>
+                <h3 id="statTotalUsers">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi emerald">
+            <div class="kpi-icon"><i class="fi fi-rr-shield-check"></i></div>
+            <div class="kpi-meta">
+                <p>Administrators</p>
+                <h3 id="statTotalAdmins">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi sky">
+            <div class="kpi-icon"><i class="fi fi-rr-headset"></i></div>
+            <div class="kpi-meta">
+                <p>Sales Agents</p>
+                <h3 id="statTotalAgents">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi purple">
+            <div class="kpi-icon"><i class="fi fi-rr-settings-sliders"></i></div>
+            <div class="kpi-meta">
+                <p>Operations &amp; Staff</p>
+                <h3 id="statTotalOperations">-</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table Card -->
+    <div class="package-table-card">
+        <!-- Interactive Filter & Search Toolbar -->
+        <div class="package-filter-toolbar">
+            <div class="filter-search-box">
+                <svg class="search-svg-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="userSearchInput" class="filter-search-input" placeholder="Search by name, email, mobile, or role..." autocomplete="off">
+                <button type="button" id="clearUserSearchBtn" class="clear-search-btn" title="Clear search" style="display: none;">✕</button>
+            </div>
+
+            <div class="filter-dropdowns-wrap">
+                <!-- Role Filter -->
+                <select id="filterUserRole" class="filter-select">
+                    <option value="">All Roles</option>
+                    <option value="administrator">Administrator</option>
+                    <option value="agent">Sales Agent</option>
+                    <option value="operations">Operations</option>
+                    <option value="accountant">Accounts</option>
+                    <option value="support">Support</option>
+                </select>
+
+                <!-- Status Filter -->
+                <select id="filterUserStatus" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="active" selected>Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+
+                <!-- Reset Filters Button -->
+                <button type="button" id="btnResetUserFilters" class="btn-v3-action" style="padding: 7px 12px; font-size: 12px;" data-tooltip="Reset all filters">
+                    <i class="fi fi-rr-refresh"></i> Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Users DataTable View -->
         <div class="list-box">
-            <table class="showTableList">
+            <table class="package-v3-datatable" id="usersTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>Email</th>
-                        <th>Type</th>
-                        <th></th>
+                        <th class="col-user-info">Team Member / Name</th>
+                        <th class="col-user-contact">Contact Details</th>
+                        <th class="col-user-role">Role &amp; Permissions</th>
+                        <th class="col-user-status">Status</th>
+                        <th class="col-user-actions">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php
-
-                    if ($dataList = mysqli_query($connection, "SELECT user_id, user_username, user_mobile, user_email, user_status, site_access_type, profile_display_name FROM " . TABLE_PREFIX . "user INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id = user_id INNER JOIN " . TABLE_PREFIX . "site_access ON site_access_user_id=user_id WHERE site_access_status=1 AND site_access_type NOT IN('customer', 'subscriber') AND site_access_site_id=" . SITE_ID)) {
-                        if (mysqli_num_rows($dataList) != 0) {
-                            while ($data = mysqli_fetch_assoc($dataList)) {
-                                extract($data) ?>
+                <tbody id="usersTableBody">
                     <tr>
-                        <td><?php echo $profile_display_name; ?></td>
-                        <td><?php echo $user_mobile; ?></td>
-                        <td><?php echo $user_email; ?></td>
-                        <td><?php echo $site_access_type; ?></td>
-                        <td>
-                            <a href="user/edit/?editor=true&id=<?php echo base64_encode($user_id); ?>"
-                                class='tableActionIconBtn'><i class="fi fi-rr-edit bgLightGreen"></i></a>
-                            <?php
-
-                                        if (SITE_APP_ID == 20 || SITE_APP_ID == 19) { ?>
-
-                            <a href="user/kyc/?id=<?php echo base64_encode($user_id); ?>" class='tableActionIconBtn'><i
-                                    class="fi fi-rr-assessment bgLightGreen"></i></a>
-                            <?php
-                                        }
-
-                                        if ($site_access_type != 'administrator' || USER_ID != $user_id) { ?>
-                            <a href='#' data-type='user' data-id='<?php echo $user_id ?>'
-                                class='tableActionIconBtn deleteButton'><i class='fi fi-rr-trash bgRed'></i></a>
-                            <?php
-                                        }
-
-                                        ?>
+                        <td colspan="5" class="table-loading-state">
+                            <div class="table-loading-spinner"></div>
+                            <span>Loading team members...</span>
                         </td>
                     </tr>
-                    <?php
-                            }
-                        }
-                    }
-
-                    ?>
                 </tbody>
             </table>
         </div>
-    </section>
+
+        <!-- Pagination & Rows Per Page Bar -->
+        <div class="package-pagination-bar" id="userPaginationBar" style="display: none;">
+            <div class="pagination-info-wrap">
+                <div class="pagination-size-select-wrap">
+                    <label for="userPerPage">Rows per page:</label>
+                    <select id="userPerPage" class="pagination-size-select">
+                        <option value="10">10</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <span id="userPaginationInfo" class="pagination-info-text">Showing 0 of 0 users</span>
+            </div>
+            <div class="pagination-controls">
+                <button type="button" class="pagination-nav-btn" id="userPrevPage" disabled>
+                    <i class="fi fi-rr-angle-left"></i> Previous
+                </button>
+                <div class="pagination-page-numbers" id="userPaginationPages"></div>
+                <button type="button" class="pagination-nav-btn" id="userNextPage" disabled>
+                    Next <i class="fi fi-rr-angle-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

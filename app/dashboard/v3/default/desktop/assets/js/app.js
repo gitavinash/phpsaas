@@ -3795,6 +3795,34 @@ $(document).ready(function (e) {
       }
     }
 
+    // 4g. Team & Users Directory Module
+    const $usersList = $("#usersListApp, .user-list-wrapper");
+    if ($usersList.length > 0) {
+      if (window.V3Users && typeof window.V3Users.init === "function") {
+        window.V3Users.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "users.js?v=" + Date.now(), function () {
+          if (window.V3Users && typeof window.V3Users.init === "function") {
+            window.V3Users.init();
+          }
+        });
+      }
+    }
+
+    // 4h. Team & User Forms Module (Add / Edit / KYC)
+    const $userForms = $("#addUserApp, #editUserApp, #userKycApp, .user-form-wrapper");
+    if ($userForms.length > 0) {
+      if (window.V3UserForm && typeof window.V3UserForm.init === "function") {
+        window.V3UserForm.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "user-form.js?v=" + Date.now(), function () {
+          if (window.V3UserForm && typeof window.V3UserForm.init === "function") {
+            window.V3UserForm.init();
+          }
+        });
+      }
+    }
+
     // 5. Leads Pipeline Module
     const $leads = $("#leadsListApp, .leads-page-wrapper");
     if ($leads.length > 0) {
