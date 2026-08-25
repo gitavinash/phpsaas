@@ -43,21 +43,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     if ($checkSubscription = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "subscription WHERE subscription_user_id='{$user_id}' AND subscription_site_id=" . SITE_ID)) {
                         if (mysqli_num_rows($checkSubscription) > 0) {
-                            $msg = 'This email is already subscribed';
+                            $allocateSubscription = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "subscription SET subscription_refer_by='" . USER_ID . "', subscription_expiry='{$cp_expiry}' WHERE subscription_site_id=" . SITE_ID);
                         } else {
-                            $insertSubscription = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_user_id, subscription_refer_by, subscription_site_id, subscription_relation_id, subscription_mode, subscription_type, subscription_status, subscription_expiry) VALUES ({$user_id}, " . USER_ID . "," . SITE_ID . ", '4076', 'year', 'product', 1, '{$cp_expiry}')");
+                            $allocateSubscription = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "subscription(subscription_user_id, subscription_refer_by, subscription_site_id, subscription_relation_id, subscription_mode, subscription_type, subscription_status, subscription_expiry) VALUES ({$user_id}, " . USER_ID . "," . SITE_ID . ", '4076', 'year', 'product', 1, '{$cp_expiry}')");
 
                             $deductCredit = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "corporate_subscription SET cp_used=cp_used+1 WHERE cp_admin_user_id='" . USER_ID . "' AND cp_site_id=" . SITE_ID . " AND cp_used<cp_limit");
-
-                            if ($insertUser && $insertProfile && $insertSubscription && $deductCredit) {
-                                mysqli_query($connection, "COMMIT");
-                                $msg = 'Subscriber added successfully';
-                                $icon = 'success';
-                                $title = 'Success';
-                            } else {
-                                mysqli_query($connection, "ROLLBACK");
-                                $msg = 'Failed to add subscriber. Please try again.';
-                            }
+                        }
+                        if ($insertUser && $insertProfile && $allocateSubscription && $deductCredit) {
+                            mysqli_query($connection, "COMMIT");
+                            $msg = 'Subscriber added successfully';
+                            $icon = 'success';
+                            $title = 'Success';
+                        } else {
+                            mysqli_query($connection, "ROLLBACK");
+                            $msg = 'Failed to add subscriber. Please try again.';
                         }
                     } else {
                         mysqli_query($connection, "ROLLBACK");
@@ -90,20 +89,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <h1>Please wait...</h1>
     <script>
-    // Display SweetAlert popup if message is set
-    <?php if (isset($msg) && !empty($msg)): ?>
-    Swal.fire({
-        icon: '<?php echo htmlspecialchars($icon ?? 'error'); ?>',
-        title: '<?php echo htmlspecialchars($title ?? 'Alert'); ?>',
-        text: '<?php echo htmlspecialchars($msg); ?>',
-        showConfirmButton: false,
-        timer: 1500,
-        timerProgressBar: true,
-        allowOutsideClick: false
-    }).then(() => {
-        window.location.href = '/manage-subscribers/';
-    });
-    <?php endif; ?>
+        // Display SweetAlert popup if message is set
+        <?php if (isset($msg) && !empty($msg)): ?>
+            Swal.fire({
+                icon: '<?php echo htmlspecialchars($icon ?? 'error'); ?>',
+                title: '<?php echo htmlspecialchars($title ?? 'Alert'); ?>',
+                text: '<?php echo htmlspecialchars($msg); ?>',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                allowOutsideClick: false
+            }).then(() => {
+                window.location.href = '/manage-subscribers/';
+            });
+        <?php endif; ?>
     </script>
 
 </body>
