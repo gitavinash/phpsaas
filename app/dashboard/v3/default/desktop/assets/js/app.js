@@ -3851,6 +3851,20 @@ $(document).ready(function (e) {
       }
     }
 
+    // 5c. Settings & Profile Module
+    const $settings = $("#settingConfigApp, #settingProfileApp, .setting-page-wrapper");
+    if ($settings.length > 0) {
+      if (window.V3Settings && typeof window.V3Settings.init === "function") {
+        window.V3Settings.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "settings.js?v=" + Date.now(), function () {
+          if (window.V3Settings && typeof window.V3Settings.init === "function") {
+            window.V3Settings.init();
+          }
+        });
+      }
+    }
+
     // 5. Lead Details View Module
     const $leadView = $("#leadViewApp, .lead-view-wrapper");
     if ($leadView.length > 0) {

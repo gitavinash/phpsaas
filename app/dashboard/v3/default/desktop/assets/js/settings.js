@@ -8,6 +8,8 @@
 
   const V3Settings = {
     isSubmitting: false,
+    activeConfigXhr: null,
+    activeProfileXhr: null,
 
     init: function () {
       if ($("#settingConfigApp").length > 0) {
@@ -23,7 +25,12 @@
     // ------------------------------------------------------------------------
     initConfig: function () {
       const self = this;
+      self.bindConfigEvents();
       self.loadConfigData();
+    },
+
+    bindConfigEvents: function () {
+      const self = this;
 
       // Theme Preset Buttons
       $(document).off("click", ".theme-preset-btn").on("click", ".theme-preset-btn", function () {
@@ -61,7 +68,11 @@
     loadConfigData: function () {
       const self = this;
 
-      $.ajax({
+      if (self.activeConfigXhr && typeof self.activeConfigXhr.abort === "function") {
+        self.activeConfigXhr.abort();
+      }
+
+      self.activeConfigXhr = $.ajax({
         url: "/api/v3/setting/configuration/",
         method: "GET",
         dataType: "json",
@@ -87,8 +98,13 @@
             self.updateSearchPreview();
           }
         },
-        error: function () {
-          self.showAlert("error", "Failed to load website configuration.");
+        error: function (xhr, status) {
+          if (status !== "abort") {
+            self.showAlert("error", "Failed to load website configuration.");
+          }
+        },
+        complete: function () {
+          self.activeConfigXhr = null;
         }
       });
     },
@@ -182,7 +198,12 @@
     // ------------------------------------------------------------------------
     initProfile: function () {
       const self = this;
+      self.bindProfileEvents();
       self.loadProfileData();
+    },
+
+    bindProfileEvents: function () {
+      const self = this;
 
       // Live Profile Preview Update
       $(document).off("input change", "#profileFirstName, #profileLastName, #profileDisplayName, #profileMobile, #profileBio").on("input change", "#profileFirstName, #profileLastName, #profileDisplayName, #profileMobile, #profileBio", function () {
@@ -199,7 +220,11 @@
     loadProfileData: function () {
       const self = this;
 
-      $.ajax({
+      if (self.activeProfileXhr && typeof self.activeProfileXhr.abort === "function") {
+        self.activeProfileXhr.abort();
+      }
+
+      self.activeProfileXhr = $.ajax({
         url: "/api/v3/setting/profile/",
         method: "GET",
         dataType: "json",
@@ -240,8 +265,13 @@
             self.updateProfilePreview();
           }
         },
-        error: function () {
-          self.showAlert("error", "Failed to load user profile.");
+        error: function (xhr, status) {
+          if (status !== "abort") {
+            self.showAlert("error", "Failed to load user profile.");
+          }
+        },
+        complete: function () {
+          self.activeProfileXhr = null;
         }
       });
     },
@@ -373,10 +403,6 @@
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
   }
-
-  $(document).ready(function () {
-    V3Settings.init();
-  });
 
   window.V3Settings = V3Settings;
 })(window, jQuery);

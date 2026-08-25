@@ -496,7 +496,7 @@
       $btn.prop('disabled', true);
 
       $.ajax({
-        url: '/api/v3/transporters/delete.php',
+        url: '/api/v3/transporters/delete/',
         type: 'POST',
         data: JSON.stringify({ transporter_id: id }),
         contentType: 'application/json',

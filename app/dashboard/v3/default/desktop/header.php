@@ -121,7 +121,7 @@ if (isset($daterange)) {
                     if (SITE_VERSION != 'mobile') { ?>
                         <div class="profile-menu">
                             <ul>
-                                <li><a href="/dashboard/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
+                                <li><a href="/dashboard/setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                                 <li><a href="/logout/"><i class="fi-rr-exit"></i> Logout</a></li>
                             </ul>
                         </div>
@@ -160,15 +160,15 @@ if (isset($daterange)) {
                 </li>
 
                 <li <?php echo ((strpos(ADMIN_BASE_URL, '/setting/') !== false) ? 'class="active"' : '') ?>>
-                    <a href="setting/"><i class="fi-rr-settings"></i> Setting</a>
+                    <a href="/dashboard/setting/"><i class="fi-rr-settings"></i> Setting</a>
                     <div class="side-menu">
                         <ul>
                             <?php
                             if ($site_access_type == 'administrator') { ?>
 
-                                <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                                <li><a href="/dashboard/setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
                             <?php } ?>
-                            <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
+                            <li><a href="/dashboard/setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
                     </div>
                     <div class="bottom-menu">
@@ -178,9 +178,9 @@ if (isset($daterange)) {
 
                             if ($site_access_type == 'administrator') { ?>
 
-                                <li><a href="setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
+                                <li><a href="/dashboard/setting/configuration/"><i class="fi-rr-settings"></i> Configuration</a></li>
                             <?php } ?>
-                            <li><a href="setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
+                            <li><a href="/dashboard/setting/profile/"><i class="fi-rr-portrait"></i> Profile</a></li>
                         </ul>
                     </div>
                 </li>
@@ -191,17 +191,17 @@ if (isset($daterange)) {
 
 
                     <li <?php echo ((strpos(ADMIN_BASE_URL, '/user/') !== false) ? 'class="active"' : '') ?>>
-                        <a href="user/"><i class="fi fi-rr-user"></i> Users</a>
+                        <a href="/dashboard/user/"><i class="fi fi-rr-user"></i> Users</a>
                         <div class="side-menu">
                             <ul>
-                                <li><a href="user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                                <li><a href="user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
+                                <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                                <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
                             </ul>
                         </div>
                         <div class="bottom-menu">
                             <ul>
-                                <li><a href="user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                                <li><a href="user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
+                                <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
+                                <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
                             </ul>
                         </div>
                     </li>

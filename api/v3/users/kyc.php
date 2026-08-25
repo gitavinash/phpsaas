@@ -1,4 +1,5 @@
 <?php
+
 /**
  * V3 User KYC API Endpoint
  * Path: /api/v3/users/kyc.php
@@ -6,9 +7,15 @@
 
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../../../../lib/configuration/config.php';
-require_once __DIR__ . '/../../../../lib/configuration/connection.php';
-require_once __DIR__ . '/../../../../lib/configuration/directory.php';
+if (!isset($connection)) {
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
+    if (file_exists($docRoot . '/config.php')) {
+        require_once $docRoot . '/config.php';
+    }
+    if (file_exists($docRoot . '/lib/modules/connection.php')) {
+        require_once $docRoot . '/lib/modules/connection.php';
+    }
+}
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
@@ -80,11 +87,11 @@ if ($method === 'GET') {
     // Build Pre-formatted WhatsApp Reminder Link
     $siteName = defined('SITE_NAME') ? SITE_NAME : 'Our Platform';
     $waMessage = "*" . $siteName . " - KYC Document Verification*\n\n"
-               . "Hello " . $displayName . ",\n\n"
-               . "Please complete your identity and compliance verification by uploading your KYC documents using the secure link below:\n\n"
-               . $kycPublicUrl . "\n\n"
-               . "If you have already submitted your documents, please ignore this reminder.\n\n"
-               . "Thank you,\n" . $siteName . " Team";
+        . "Hello " . $displayName . ",\n\n"
+        . "Please complete your identity and compliance verification by uploading your KYC documents using the secure link below:\n\n"
+        . $kycPublicUrl . "\n\n"
+        . "If you have already submitted your documents, please ignore this reminder.\n\n"
+        . "Thank you,\n" . $siteName . " Team";
 
     $cleanMobile = preg_replace('/[^0-9]/', '', str_replace('+91', '', $userMobile));
     $whatsappUrl = "https://wa.me/91" . $cleanMobile . "?text=" . urlencode($waMessage);

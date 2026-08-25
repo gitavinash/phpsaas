@@ -1,4 +1,5 @@
 <?php
+
 /**
  * V3 User Profile Settings API Endpoint
  * Path: /api/v3/setting/profile.php
@@ -6,9 +7,16 @@
 
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../../../../lib/configuration/config.php';
-require_once __DIR__ . '/../../../../lib/configuration/connection.php';
-require_once __DIR__ . '/../../../../lib/configuration/directory.php';
+if (!isset($connection)) {
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
+    if (file_exists($docRoot . '/config.php')) {
+        require_once $docRoot . '/config.php';
+    }
+    if (file_exists($docRoot . '/lib/modules/connection.php')) {
+        require_once $docRoot . '/lib/modules/connection.php';
+    }
+}
+
 require_once LOGIN_CHECK;
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -27,13 +35,15 @@ if ($userId <= 0) {
 // 1. GET: Fetch Current User Profile
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
-    $sql = "SELECT u.user_id, u.user_username, u.user_email, u.user_mobile, u.user_status, u.user_registered_time,
+    $sql = "SELECT u.user_id, u.user_username, u.user_email, u.user_mobile, u.user_status, u.user_reg_time,
                    p.profile_first_name, p.profile_last_name, p.profile_display_name,
-                   p.profile_alt_email, p.profile_alt_mobile, p.profile_bio,
+                   p.profile_alt_email, p.profile_alt_mobile,
+                   pm_bio.profile_meta_value AS profile_bio,
                    sa.site_access_type as role
             FROM " . TABLE_PREFIX . "user u
             INNER JOIN " . TABLE_PREFIX . "site_access sa ON sa.site_access_user_id = u.user_id
             LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
+            LEFT JOIN " . TABLE_PREFIX . "profile_meta pm_bio ON pm_bio.profile_meta_profile_id = u.user_id AND pm_bio.profile_meta_key = 'bio'
             WHERE u.user_id = {$userId}
             LIMIT 1";
 
@@ -72,7 +82,7 @@ if ($method === 'GET') {
             'alt_mobile' => $u['profile_alt_mobile'] ?? '',
             'bio' => $u['profile_bio'] ?? '',
             'role' => $u['role'] ?? 'administrator',
-            'registered_time' => $u['user_registered_time'] ?? ''
+            'registered_time' => $u['user_reg_time'] ?? ''
         ]
     ]);
     exit;
@@ -131,13 +141,13 @@ if ($method === 'POST' || $method === 'PUT') {
 
     mysqli_query($connection, "START TRANSACTION");
 
-    // Update isw_user mobile if provided
+    // 1. Update isw_user mobile if provided
     $updateUser = true;
     if (!empty($mobile)) {
         $updateUser = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "user SET user_mobile = '{$escapedMob}' WHERE user_id = {$userId}");
     }
 
-    // Check if profile row exists
+    // 2. Update isw_profile
     $checkProf = mysqli_query($connection, "SELECT profile_id FROM " . TABLE_PREFIX . "profile WHERE profile_user_id = {$userId} LIMIT 1");
     if ($checkProf && mysqli_num_rows($checkProf) > 0) {
         $updateProf = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "profile SET
@@ -146,20 +156,28 @@ if ($method === 'POST' || $method === 'PUT') {
             profile_display_name = '{$escapedDName}',
             profile_alt_email = '{$escapedAltMail}',
             profile_mobile = '{$escapedMob}',
-            profile_alt_mobile = '{$escapedAltMob}',
-            profile_bio = '{$escapedBio}'
+            profile_alt_mobile = '{$escapedAltMob}'
             WHERE profile_user_id = {$userId}");
     } else {
         $updateProf = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile (
             profile_user_id, profile_first_name, profile_last_name, profile_display_name,
-            profile_alt_email, profile_mobile, profile_alt_mobile, profile_bio
+            profile_alt_email, profile_mobile, profile_alt_mobile
         ) VALUES (
             {$userId}, '{$escapedFName}', '{$escapedLName}', '{$escapedDName}',
-            '{$escapedAltMail}', '{$escapedMob}', '{$escapedAltMob}', '{$escapedBio}'
+            '{$escapedAltMail}', '{$escapedMob}', '{$escapedAltMob}'
         )");
     }
 
-    if ($updateUser && $updateProf) {
+    // 3. Update bio in profile_meta table (key = 'bio')
+    $updateBio = true;
+    $checkBio = mysqli_query($connection, "SELECT profile_meta_id FROM " . TABLE_PREFIX . "profile_meta WHERE profile_meta_profile_id = {$userId} AND profile_meta_key = 'bio' LIMIT 1");
+    if ($checkBio && mysqli_num_rows($checkBio) > 0) {
+        $updateBio = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "profile_meta SET profile_meta_value = '{$escapedBio}' WHERE profile_meta_profile_id = {$userId} AND profile_meta_key = 'bio'");
+    } else if (!empty($bio)) {
+        $updateBio = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "profile_meta (profile_meta_profile_id, profile_meta_key, profile_meta_value) VALUES ({$userId}, 'bio', '{$escapedBio}')");
+    }
+
+    if ($updateUser && $updateProf && $updateBio) {
         mysqli_query($connection, "COMMIT");
         echo json_encode([
             'status' => 'success',

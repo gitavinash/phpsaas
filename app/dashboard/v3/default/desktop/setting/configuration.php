@@ -11,11 +11,8 @@
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="/dashboard/setting/profile/" class="btn-v3-action" data-tooltip="Manage Personal Profile">
-                <i class="fi fi-rr-portrait"></i> <span>My Profile</span>
-            </a>
-            <a href="/dashboard/" class="btn-v3-action" data-tooltip="Back to Dashboard">
-                <i class="fi fi-rr-arrow-left"></i> <span>Dashboard</span>
+            <a href="/dashboard/setting/" class="btn-v3-action" data-tooltip="Back to Settings">
+                <i class="fi fi-rr-settings"></i> <span>Settings</span>
             </a>
         </div>
     </div>
@@ -171,7 +168,7 @@
 
                 <!-- Form Action Footer -->
                 <div class="v3-form-actions-bar">
-                    <a href="/dashboard/" class="v3-btn-secondary">
+                    <a href="/dashboard/setting/" class="v3-btn-secondary">
                         <i class="fi fi-rr-arrow-left"></i> Cancel
                     </a>
                     <button type="submit" id="btnSaveConfig" class="v3-btn-primary">

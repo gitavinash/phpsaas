@@ -431,7 +431,7 @@
       const self = this;
 
       $.ajax({
-        url: self.apiEndpoint + "delete.php",
+        url: self.apiEndpoint + "delete/",
         method: "POST",
         dataType: "json",
         data: { id: userId },

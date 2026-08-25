@@ -1,4 +1,5 @@
 <?php
+
 /**
  * V3 Website Configuration API Endpoint
  * Path: /api/v3/setting/configuration.php
@@ -6,10 +7,15 @@
 
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../../../../lib/configuration/config.php';
-require_once __DIR__ . '/../../../../lib/configuration/connection.php';
-require_once __DIR__ . '/../../../../lib/configuration/directory.php';
-require_once LOGIN_CHECK;
+if (!isset($connection)) {
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
+    if (file_exists($docRoot . '/config.php')) {
+        require_once $docRoot . '/config.php';
+    }
+    if (file_exists($docRoot . '/lib/modules/connection.php')) {
+        require_once $docRoot . '/lib/modules/connection.php';
+    }
+}
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
@@ -40,7 +46,7 @@ if ($siteId <= 0) {
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
     $sql = "SELECT s.site_id, s.site_name, s.site_description, s.site_keyword, s.site_lang,
-                   s.site_index, s.site_status, s.site_domain, s.site_type,
+                   s.site_index, s.site_status, s.site_domain, s.site_app_id,
                    ss.site_theme_color, ss.site_custom_domain
             FROM " . TABLE_PREFIX . "site s
             LEFT JOIN " . TABLE_PREFIX . "site_setting ss ON ss.site_setting_site_id = s.site_id
@@ -70,7 +76,7 @@ if ($method === 'GET') {
             'site_index' => $site['site_index'] ?: 'index, follow',
             'site_domain' => $site['site_domain'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : ''),
             'site_theme_color' => $site['site_theme_color'] ?: '#4f46e5',
-            'site_type' => $site['site_type'] ?? 'website',
+            'site_app' => $site['site_app'] ?? 'cms',
             'site_status' => (int)($site['site_status'] ?? 1)
         ]
     ]);

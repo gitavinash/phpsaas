@@ -477,7 +477,7 @@
       }
 
       $.ajax({
-        url: "/api/v3/leads/list.php",
+        url: "/api/v3/leads/list/",
         type: "POST",
         data: {
           page: self.currentPage,

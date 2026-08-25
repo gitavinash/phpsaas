@@ -11,11 +11,8 @@
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="/dashboard/setting/configuration/" class="btn-v3-action" data-tooltip="Manage Website Settings">
-                <i class="fi fi-rr-settings-sliders"></i> <span>Configuration</span>
-            </a>
-            <a href="/dashboard/" class="btn-v3-action" data-tooltip="Back to Dashboard">
-                <i class="fi fi-rr-arrow-left"></i> <span>Dashboard</span>
+            <a href="/dashboard/setting/" class="btn-v3-action" data-tooltip="Back to Settings">
+                <i class="fi fi-rr-settings"></i> <span>Settings</span>
             </a>
         </div>
     </div>
@@ -65,7 +62,7 @@
                             <!-- Public Display Name -->
                             <div class="v3-form-group">
                                 <label for="profileDisplayName" class="v3-form-label">
-                                    Display Name <span class="opt" style="font-weight: normal; color: #94a3b8;">(Shown across CRM &amp; Reports)</span>
+                                    Display Name
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-id-badge input-icon"></i>
@@ -76,7 +73,7 @@
                             <!-- Bio / Designation -->
                             <div class="v3-form-group">
                                 <label for="profileBio" class="v3-form-label">
-                                    Role Title / Bio <span class="opt" style="font-weight: normal; color: #94a3b8;">(Optional)</span>
+                                    Role Title / Bio
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-briefcase input-icon"></i>
@@ -116,7 +113,7 @@
                             <!-- Alternate Mobile -->
                             <div class="v3-form-group">
                                 <label for="profileAltMobile" class="v3-form-label">
-                                    WhatsApp / Alternate Mobile <span class="opt" style="font-weight: normal; color: #94a3b8;">(Optional)</span>
+                                    WhatsApp / Alt Mobile
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-comment-alt input-icon"></i>
@@ -127,7 +124,7 @@
                             <!-- Primary Email -->
                             <div class="v3-form-group">
                                 <label for="profileEmail" class="v3-form-label">
-                                    Primary Account Email <span class="opt" style="font-weight: normal; color: #94a3b8;">(Login Identifier &mdash; Readonly)</span>
+                                    Primary Account Email
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-envelope input-icon"></i>
@@ -138,7 +135,7 @@
                             <!-- Alternate Email -->
                             <div class="v3-form-group">
                                 <label for="profileAltEmail" class="v3-form-label">
-                                    Alternate Email <span class="opt" style="font-weight: normal; color: #94a3b8;">(For CC / Backup alerts)</span>
+                                    Alternate Email
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-at input-icon"></i>
@@ -190,7 +187,7 @@
 
                 <!-- Form Action Footer -->
                 <div class="v3-form-actions-bar">
-                    <a href="/dashboard/" class="v3-btn-secondary">
+                    <a href="/dashboard/setting/" class="v3-btn-secondary">
                         <i class="fi fi-rr-arrow-left"></i> Cancel
                     </a>
                     <button type="submit" id="btnSaveProfile" class="v3-btn-primary">
