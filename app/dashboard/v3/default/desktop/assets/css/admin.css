@@ -720,6 +720,9 @@ main .container .heading span {
 .kpi-icon-box i {
   font-size: 18px !important;
   line-height: 1 !important;
+  animation: none !important;
+  -webkit-animation: none !important;
+  transform: none !important;
 }
 
 .kpi-blue .kpi-icon-box, #totalLeads .kpi-icon-box { background: var(--brand-50) !important; color: var(--brand-700) !important; }
