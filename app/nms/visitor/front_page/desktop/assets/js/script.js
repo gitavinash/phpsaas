@@ -13,9 +13,9 @@
     e.preventDefault();
   });
 
-  document.addEventListener("paste", function (e) {
-    e.preventDefault();
-  });
+  // document.addEventListener("paste", function (e) {
+  //   e.preventDefault();
+  // });
 
   // Disable text selection
   document.addEventListener("selectstart", function (e) {
@@ -52,9 +52,9 @@
     }
 
     // Ctrl/Cmd + V
-    if ((e.ctrlKey || e.metaKey) && key === "v") {
-      e.preventDefault();
-    }
+    // if ((e.ctrlKey || e.metaKey) && key === "v") {
+    //   e.preventDefault();
+    // }
 
     // Ctrl/Cmd + A
     if ((e.ctrlKey || e.metaKey) && key === "a") {
