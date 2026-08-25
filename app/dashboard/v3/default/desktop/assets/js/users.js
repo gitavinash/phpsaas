@@ -359,9 +359,6 @@
               <a href="/dashboard/user/edit/?id=${u.encoded_id}" class="btn-action-icon edit" data-tooltip="Edit User" title="Edit User">
                 <i class="fi fi-rr-edit"></i>
               </a>
-              <a href="/dashboard/user/kyc/?id=${u.encoded_id}" class="btn-action-icon kyc" data-tooltip="KYC Details" title="KYC Details">
-                <i class="fi fi-rr-assessment"></i>
-              </a>
               ${deleteBtnHTML}
             </div>
           </td>

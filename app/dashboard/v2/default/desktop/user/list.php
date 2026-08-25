@@ -38,32 +38,32 @@
                         if (mysqli_num_rows($dataList) != 0) {
                             while ($data = mysqli_fetch_assoc($dataList)) {
                                 extract($data) ?>
-                    <tr>
-                        <td><?php echo $profile_display_name; ?></td>
-                        <td><?php echo $user_mobile; ?></td>
-                        <td><?php echo $user_email; ?></td>
-                        <td><?php echo $site_access_type; ?></td>
-                        <td>
-                            <a href="user/edit/?editor=true&id=<?php echo base64_encode($user_id); ?>"
-                                class='tableActionIconBtn'><i class="fi fi-rr-edit bgLightGreen"></i></a>
-                            <?php
+                                <tr>
+                                    <td><?php echo $profile_display_name; ?></td>
+                                    <td><?php echo $user_mobile; ?></td>
+                                    <td><?php echo $user_email; ?></td>
+                                    <td><?php echo $site_access_type; ?></td>
+                                    <td>
+                                        <a href="user/edit/?editor=true&id=<?php echo base64_encode($user_id); ?>"
+                                            class='tableActionIconBtn'><i class="fi fi-rr-edit bgLightGreen"></i></a>
+                                        <?php
 
                                         if (SITE_APP_ID == 20 || SITE_APP_ID == 19) { ?>
 
-                            <a href="user/kyc/?id=<?php echo base64_encode($user_id); ?>" class='tableActionIconBtn'><i
-                                    class="fi fi-rr-assessment bgLightGreen"></i></a>
-                            <?php
+                                            <a href="user/kyc/?id=<?php echo base64_encode($user_id); ?>" class='tableActionIconBtn'><i
+                                                    class="fi fi-rr-assessment bgLightGreen"></i></a>
+                                        <?php
                                         }
 
                                         if ($site_access_type != 'administrator' || USER_ID != $user_id) { ?>
-                            <a href='#' data-type='user' data-id='<?php echo $user_id ?>'
-                                class='tableActionIconBtn deleteButton'><i class='fi fi-rr-trash bgRed'></i></a>
-                            <?php
+                                            <a href='#' data-type='user' data-id='<?php echo $user_id ?>'
+                                                class='tableActionIconBtn deleteButton'><i class='fi fi-rr-trash bgRed'></i></a>
+                                        <?php
                                         }
 
                                         ?>
-                        </td>
-                    </tr>
+                                    </td>
+                                </tr>
                     <?php
                             }
                         }

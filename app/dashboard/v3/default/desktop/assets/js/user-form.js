@@ -284,42 +284,235 @@
     // ----------------------------------------------------
     initKyc: function () {
       const self = this;
-      const userId = $("#userKycApp").data("user-id");
+      let userId = $("#userKycApp").data("user-id") || $("#kycUserId").val();
+      if (!userId) {
+        const urlParams = new URLSearchParams(window.location.search);
+        userId = urlParams.get("id") || urlParams.get("user_id");
+        if (userId) {
+          $("#kycUserId").val(userId);
+        }
+      }
       if (!userId) return;
 
-      $.ajax({
-        url: self.apiEndpoint + "list.php?id=" + encodeURIComponent(userId),
-        method: "GET",
-        dataType: "json",
-        success: function (res) {
-          $("#kycLoadingState").hide();
-          if (res && res.status === "success" && res.data && res.data.length > 0) {
-            const u = res.data[0];
-            $("#kycUserName").text(u.name);
-            $("#kycUserEmail").text(u.email || "-");
-            $("#kycUserMobile").text(u.mobile ? "+91 " + u.mobile : "-");
-            $("#kycUserAvatar").text(u.initials || "U");
+      self.loadKycDetails(userId);
 
-            // WhatsApp link
-            if (u.mobile) {
-              const cleanMobile = u.mobile.replace(/[^0-9]/g, "");
-              const msg = encodeURIComponent(`Hi ${u.name}, please complete your KYC verification for Aleya CRM dashboard access.`);
-              $("#btnSendKycWhatsapp").attr("href", "https://wa.me/91" + cleanMobile + "?text=" + msg);
-            }
-
-            $("#kycContentWrap").show();
+      // Copy Link Button
+      $(document).off("click", "#btnCopyKycUrl").on("click", "#btnCopyKycUrl", function () {
+        const url = $("#kycPublicUrlInput").val();
+        if (url) {
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(function () {
+              self.showAlert("success", "KYC Verification URL copied to clipboard!");
+            });
           } else {
-            $("#kycReviewBox").html('<p style="text-align:center; color:#ef4444; padding:30px;">User not found.</p>');
+            $("#kycPublicUrlInput").select();
+            document.execCommand("copy");
+            self.showAlert("success", "KYC Verification URL copied to clipboard!");
           }
-        },
-        error: function () {
-          $("#kycLoadingState").hide();
-          $("#kycReviewBox").html('<p style="text-align:center; color:#ef4444; padding:30px;">Failed to load user KYC.</p>');
         }
       });
 
+      // Send Email Reminder Button
       $(document).off("click", "#btnSendKycEmail").on("click", "#btnSendKycEmail", function () {
-        self.showAlert("success", "KYC verification email request queued successfully.");
+        const $btn = $(this);
+        const origHtml = $btn.html();
+        $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner-alt rotating"></i> <span>Sending...</span>');
+
+        $.ajax({
+          url: self.apiEndpoint + "kyc.php",
+          method: "POST",
+          dataType: "json",
+          contentType: "application/json",
+          data: JSON.stringify({ id: userId, action: "send_reminder" }),
+          success: function (res) {
+            $btn.prop("disabled", false).html(origHtml);
+            if (res && res.status === "success") {
+              self.showAlert("success", res.msg || "KYC reminder email dispatched successfully!");
+            } else {
+              self.showAlert("error", res ? res.msg : "Failed to dispatch email reminder.");
+            }
+          },
+          error: function () {
+            $btn.prop("disabled", false).html(origHtml);
+            self.showAlert("error", "Network error while dispatching KYC reminder email.");
+          }
+        });
+      });
+
+      // Upload Documents Form Submit
+      $(document).off("submit", "#userKycUploadForm").on("submit", "#userKycUploadForm", function (e) {
+        e.preventDefault();
+        self.submitKycForm(userId);
+      });
+    },
+
+    loadKycDetails: function (userId) {
+      const self = this;
+
+      $.ajax({
+        url: self.apiEndpoint + "kyc.php?id=" + encodeURIComponent(userId),
+        method: "GET",
+        dataType: "json",
+        success: function (res) {
+          if (res && res.status === "success") {
+            const u = res.user || {};
+            const kyc = res.kyc;
+            const kycUrl = res.kyc_url || "";
+            const waUrl = res.whatsapp_url || "#";
+
+            // User Info
+            $("#kycUserName").text(u.name || "Team Member");
+            $("#kycUserEmail").text(u.email || "No email provided");
+            $("#kycUserMobile").text(u.mobile ? "+91 " + u.mobile : "+91 \u2014");
+
+            let initials = "U";
+            if (u.first_name) {
+              initials = u.first_name.charAt(0).toUpperCase();
+              if (u.last_name) initials += u.last_name.charAt(0).toUpperCase();
+            } else if (u.name) {
+              const parts = u.name.trim().split(" ");
+              initials = parts[0].charAt(0).toUpperCase();
+              if (parts.length > 1) initials += parts[1].charAt(0).toUpperCase();
+            }
+            $("#kycUserAvatar").text(initials);
+
+            const role = (u.role || "agent").toLowerCase();
+            let badgeClass = "badge-service-state badge-role-agent";
+            let iconClass = "fi fi-rr-headset";
+            let roleName = "Sales Agent";
+            if (role === "administrator") {
+              badgeClass = "badge-service-state badge-role-admin";
+              iconClass = "fi fi-rr-shield-check";
+              roleName = "Administrator";
+            } else if (role === "operations") {
+              badgeClass = "badge-service-state badge-role-operations";
+              iconClass = "fi fi-rr-settings-sliders";
+              roleName = "Operations Manager";
+            } else if (role === "accountant") {
+              badgeClass = "badge-service-state badge-role-accounts";
+              iconClass = "fi fi-rr-calculator";
+              roleName = "Accounts & Finance";
+            }
+            $("#kycUserRole").attr("class", badgeClass).html(`<i class="${iconClass}"></i> ${selfEscapeHTML(roleName)}`);
+
+            // URLs
+            $("#kycPublicUrlInput").val(kycUrl);
+            $("#btnSendKycWhatsapp").attr("href", waUrl);
+
+            // KYC Status Alert Box & Form Fields
+            if (kyc) {
+              $("#kycAadharNumber").val(kyc.aadhar_number || "");
+              $("#kycPanNumber").val(kyc.pan_number || "");
+              $("#kycGstNumber").val(kyc.gst_number || "");
+              $("#kycStatusSelect").val(kyc.status !== undefined ? String(kyc.status) : "0");
+              $("#kycRemarks").val(kyc.aadhar_remark || "");
+
+              // Document links
+              if (kyc.aadhar_file) {
+                $("#aadharFilePreview").html(`
+                  <a href="${selfEscapeHTML(kyc.aadhar_file)}" target="_blank" class="v3-doc-link" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#4f46e5; font-weight:600; text-decoration:none;">
+                    <i class="fi fi-rr-file-check" style="color:#10b981;"></i> View Uploaded Aadhaar File &rarr;
+                  </a>
+                `).show();
+              }
+              if (kyc.pan_file) {
+                $("#panFilePreview").html(`
+                  <a href="${selfEscapeHTML(kyc.pan_file)}" target="_blank" class="v3-doc-link" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#4f46e5; font-weight:600; text-decoration:none;">
+                    <i class="fi fi-rr-file-check" style="color:#10b981;"></i> View Uploaded PAN File &rarr;
+                  </a>
+                `).show();
+              }
+              if (kyc.gst_file) {
+                $("#gstFilePreview").html(`
+                  <a href="${selfEscapeHTML(kyc.gst_file)}" target="_blank" class="v3-doc-link" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#4f46e5; font-weight:600; text-decoration:none;">
+                    <i class="fi fi-rr-file-check" style="color:#10b981;"></i> View Uploaded GST File &rarr;
+                  </a>
+                `).show();
+              }
+
+              if (kyc.status === 1) {
+                $("#kycStatusBox").attr("style", "background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:14px 18px; display:flex; align-items:center; gap:12px; margin-bottom:18px;");
+                $("#kycStatusIcon").html('<i class="fi fi-rr-checkbox" style="color:#16a34a; font-size:22px;"></i>');
+                $("#kycStatusTitle").attr("style", "color:#166534; font-weight:700; margin:0 0 2px 0; font-size:14px;").text("KYC Verified & Compliant");
+                $("#kycStatusDesc").attr("style", "color:#15803d; font-size:12.5px; margin:0;").text("This user has completed verification and identity documents have been approved.");
+                $("#kycSidebarBadge").attr("class", "v3-status-badge status-active").html('<span class="status-pulse-dot"></span> Verified');
+              } else if (kyc.status === 2) {
+                $("#kycStatusBox").attr("style", "background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:14px 18px; display:flex; align-items:center; gap:12px; margin-bottom:18px;");
+                $("#kycStatusIcon").html('<i class="fi fi-rr-cross-circle" style="color:#dc2626; font-size:22px;"></i>');
+                $("#kycStatusTitle").attr("style", "color:#991b1b; font-weight:700; margin:0 0 2px 0; font-size:14px;").text("KYC Rejected / Incomplete");
+                $("#kycStatusDesc").attr("style", "color:#b91c1c; font-size:12.5px; margin:0;").text("Documents were rejected or require resubmission.");
+                $("#kycSidebarBadge").attr("class", "v3-status-badge status-inactive").text("Rejected");
+              } else {
+                $("#kycStatusBox").attr("style", "background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:14px 18px; display:flex; align-items:center; gap:12px; margin-bottom:18px;");
+                $("#kycStatusIcon").html('<i class="fi fi-rr-info" style="color:#d97706; font-size:22px;"></i>');
+                $("#kycStatusTitle").attr("style", "color:#92400e; font-weight:700; margin:0 0 2px 0; font-size:14px;").text("KYC Documents Submitted (Under Review)");
+                $("#kycStatusDesc").attr("style", "color:#b45309; font-size:12.5px; margin:0;").text("Documents have been submitted and are awaiting compliance approval.");
+                $("#kycSidebarBadge").attr("class", "v3-status-badge status-warning").text("Pending Review");
+              }
+            } else {
+              $("#kycStatusBox").attr("style", "background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:14px 18px; display:flex; align-items:center; gap:12px; margin-bottom:18px;");
+              $("#kycStatusIcon").html('<i class="fi fi-rr-info" style="color:#d97706; font-size:22px;"></i>');
+              $("#kycStatusTitle").attr("style", "color:#92400e; font-weight:700; margin:0 0 2px 0; font-size:14px;").text("KYC Documents Pending");
+              $("#kycStatusDesc").attr("style", "color:#b45309; font-size:12.5px; margin:0;").text("This user has not yet submitted identification and verification documents.");
+              $("#kycSidebarBadge").attr("class", "v3-status-badge status-warning").text("Pending");
+            }
+          } else {
+            self.showAlert("error", res ? res.msg : "Failed to load KYC records.");
+          }
+        },
+        error: function () {
+          self.showAlert("error", "Network error while loading KYC records.");
+        }
+      });
+    },
+
+    submitKycForm: function (userId) {
+      const self = this;
+      if (self.isSubmitting) return;
+
+      const formElement = document.getElementById("userKycUploadForm");
+      const formData = new FormData(formElement);
+
+      const $btn = $("#btnSaveKyc");
+      const origHtml = $btn.html();
+      $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner-alt rotating"></i> <span>Saving Documents...</span>');
+      self.isSubmitting = true;
+
+      $.ajax({
+        url: self.apiEndpoint + "kyc.php",
+        method: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "json",
+        success: function (res) {
+          self.isSubmitting = false;
+          $btn.prop("disabled", false).html(origHtml);
+
+          if (res && res.status === "success") {
+            const swalFn = window.swal || window.Swal;
+            if (swalFn) {
+              swalFn({
+                title: "Saved!",
+                text: res.msg || "KYC details updated successfully.",
+                type: "success",
+                icon: "success",
+                timer: 1800,
+                showConfirmButton: false
+              });
+            } else {
+              alert(res.msg || "KYC details updated successfully.");
+            }
+            self.loadKycDetails(userId);
+          } else {
+            self.showAlert("error", res ? res.msg : "Failed to save KYC documents.");
+          }
+        },
+        error: function () {
+          self.isSubmitting = false;
+          $btn.prop("disabled", false).html(origHtml);
+          self.showAlert("error", "Network error while saving KYC documents.");
+        }
       });
     },
 
