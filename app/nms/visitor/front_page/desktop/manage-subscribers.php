@@ -1,7 +1,5 @@
 <?php
-echo "Updating...";
 require_once LOGIN_CHECK;
-exit();
 
 $subscriberListCount = 0;
 $subscribers = [];
@@ -13,7 +11,7 @@ if ($checkSubscription = mysqli_query($connection, "SELECT * FROM " . TABLE_PREF
     $subscriptionStatus = 'active';
     extract(mysqli_fetch_assoc($checkSubscription));
     $subscriberListFound = false;
-    if ($subscriberList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "subscription INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=subscription_user_id WHERE subscription_refer_by='" . USER_ID . "' AND subscription_site_id=" . SITE_ID)) {
+    if ($subscriberList = mysqli_query($connection, "SELECT profile_display_name, profile_email, subscription_status FROM " . TABLE_PREFIX . "subscription INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=subscription_user_id WHERE subscription_refer_by='" . USER_ID . "' AND subscription_site_id=" . SITE_ID)) {
       if (mysqli_num_rows($subscriberList) != 0) {
         $subscriberListFound = true;
         $subscriberListCount = mysqli_num_rows($subscriberList);
