@@ -113,6 +113,8 @@
 				<script src="<?php echo ADMIN_JS ?>package-hotel-list.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>package-transport.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>transporters.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>transporter-add.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>transporter-vehicles.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>leads.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>report-employees.js?v=<?php echo time(); ?>"></script>
 				<?php

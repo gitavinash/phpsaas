@@ -3,22 +3,12 @@
 header("Content-type: application/json; charset=utf-8");
 
 if (!isset($connection)) {
-    if (!defined('ACTIVE_URL_NON_QUERY')) {
-        $siteStatusPath = $_SERVER['DOCUMENT_ROOT'] . '/lib/modules/siteStatus.php';
-        if (file_exists($siteStatusPath)) {
-            require_once $siteStatusPath;
-        }
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 2);
+    if (file_exists($docRoot . '/config.php')) {
+        require_once $docRoot . '/config.php';
     }
-    if (!isset($deviceType)) {
-        $devicePath = $_SERVER['DOCUMENT_ROOT'] . '/lib/modules/device.php';
-        if (file_exists($devicePath)) {
-            require_once $devicePath;
-            $deviceType = new Device();
-        }
-    }
-    $configPath = $_SERVER['DOCUMENT_ROOT'] . '/lib/configuration/index.php';
-    if (file_exists($configPath)) {
-        require_once $configPath;
+    if (file_exists($docRoot . '/lib/modules/connection.php')) {
+        require_once $docRoot . '/lib/modules/connection.php';
     }
 }
 
@@ -90,10 +80,76 @@ $query = "
     LIMIT 50
 ";
 
+// Common destination city pincode dictionary for fast accurate fallbacks
+$knownPincodes = [
+    'delhi' => '110001', 'new delhi' => '110001', 'mumbai' => '400001', 'bangalore' => '560001',
+    'bengaluru' => '560001', 'kolkata' => '700001', 'chennai' => '600001', 'hyderabad' => '500001',
+    'pune' => '411001', 'ahmedabad' => '380001', 'jaipur' => '302001', 'udaipur' => '313001',
+    'jodhpur' => '342001', 'jaisalmer' => '345001', 'bikaner' => '334001', 'pushkar' => '305022',
+    'ajmer' => '305001', 'mount abu' => '307501', 'shimla' => '171001', 'manali' => '175131',
+    'kullu' => '175101', 'dharamshala' => '176215', 'mcleodganj' => '176219', 'dalhousie' => '176304',
+    'kasauli' => '173204', 'jibhi' => '175119', 'spiti' => '172114', 'srinagar' => '190001',
+    'gulmarg' => '193403', 'pahalgam' => '192126', 'leh' => '194101', 'ladakh' => '194101',
+    'agra' => '282001', 'varanasi' => '221001', 'lucknow' => '226001', 'kanpur' => '208001',
+    'amritsar' => '143001', 'chandigarh' => '160001', 'ludhiana' => '141001', 'jalandhar' => '144001',
+    'dehradun' => '248001', 'haridwar' => '249401', 'rishikesh' => '249201', 'nainital' => '263001',
+    'mussoorie' => '248179', 'ranikhet' => '263645', 'jim corbett' => '244715', 'almora' => '263601',
+    'kausani' => '263639', 'auli' => '246443', 'goa' => '403001', 'panaji' => '403001',
+    'arambol' => '403524', 'calangute' => '403516', 'candolim' => '403515', 'baga' => '403516',
+    'margao' => '403601', 'kochi' => '682001', 'cochin' => '682001', 'munnar' => '685612',
+    'alleppey' => '688001', 'alappuzha' => '688001', 'thekkady' => '685509', 'wayanad' => '673121',
+    'kovalam' => '695527', 'varkala' => '695141', 'trivandrum' => '695001', 'thiruvananthapuram' => '695001',
+    'ooty' => '643001', 'kodaikanal' => '624101', 'coimbatore' => '641001', 'madurai' => '625001',
+    'rameswaram' => '623526', 'kanyakumari' => '629702', 'mysore' => '570001', 'mysuru' => '570001',
+    'coorg' => '571201', 'hampi' => '583239', 'gokarna' => '581326', 'darjeeling' => '734101',
+    'gangtok' => '737101', 'kalimpong' => '734301', 'pelling' => '737113', 'shillong' => '793001',
+    'guwahati' => '781001', 'kaziranga' => '785609', 'port blair' => '744101', 'havelock' => '744211',
+    'puri' => '752001', 'bhubaneswar' => '751001', 'patna' => '800001', 'gaya' => '823001',
+    'bodhgaya' => '824231', 'ranchi' => '834001', 'jamshedpur' => '831001', 'indore' => '452001',
+    'bhopal' => '462001', 'gwalior' => '474001', 'khajuraho' => '471606', 'ujjain' => '456001',
+    'surat' => '395001', 'vadodara' => '390001', 'rajkot' => '360001', 'bhuj' => '370001',
+    'rann of kutch' => '370510', 'somnath' => '362268', 'dwarka' => '361335'
+];
+
 $results = [];
 $stateCities = [];
 $otherCities = [];
 $seen = [];
+
+// If search term is present, also fetch matching States
+if (!empty($escapedSearch)) {
+    $stateQuery = "
+        SELECT 
+            s.state_id,
+            TRIM(s.state_name) AS state_name,
+            TRIM(co.country_name) AS country_name
+        FROM isw_state s
+        LEFT JOIN isw_country co ON s.state_country_id = co.country_id
+        WHERE s.state_name LIKE '%{$escapedSearch}%'
+        ORDER BY s.state_name ASC
+        LIMIT 10
+    ";
+    if ($sRes = mysqli_query($connection, $stateQuery)) {
+        while ($sRow = mysqli_fetch_assoc($sRes)) {
+            $stName = formatCityTitle($sRow['state_name']);
+            $coName = formatCityTitle($sRow['country_name'] ?? 'India');
+            if (empty($stName)) continue;
+            $sKey = 'state_' . strtolower($stName);
+            if (!in_array($sKey, $seen, true)) {
+                $seen[] = $sKey;
+                $results[] = [
+                    'id'      => $stName,
+                    'text'    => $stName . ' (State, ' . $coName . ')',
+                    'city'    => $stName,
+                    'state'   => $stName,
+                    'country' => $coName,
+                    'pincode' => '',
+                    'type'    => 'state'
+                ];
+            }
+        }
+    }
+}
 
 if ($res = mysqli_query($connection, $query)) {
     while ($row = mysqli_fetch_assoc($res)) {
@@ -108,6 +164,20 @@ if ($res = mysqli_query($connection, $query)) {
         }
         $seen[] = $cKey;
 
+        // Determine Pincode
+        $lowerCity = strtolower(trim($cName));
+        $pincode = '';
+        if (isset($knownPincodes[$lowerCity])) {
+            $pincode = $knownPincodes[$lowerCity];
+        } else {
+            foreach ($knownPincodes as $k => $p) {
+                if (strpos($lowerCity, $k) !== false || strpos($k, $lowerCity) !== false) {
+                    $pincode = $p;
+                    break;
+                }
+            }
+        }
+
         // Label: "Manali (Himachal Pradesh, India)" or "Jaipur (Rajasthan, India)"
         $metaParts = array_filter([$sName, $coName]);
         $labelText = $cName . (!empty($metaParts) ? ' (' . implode(', ', $metaParts) . ')' : '');
@@ -117,7 +187,8 @@ if ($res = mysqli_query($connection, $query)) {
             'text'    => $labelText,
             'city'    => $cName,
             'state'   => $sName,
-            'country' => $coName
+            'country' => $coName,
+            'pincode' => $pincode
         ];
 
         $results[] = $cityItem;

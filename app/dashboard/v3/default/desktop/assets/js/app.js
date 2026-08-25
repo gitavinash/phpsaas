@@ -25,21 +25,66 @@ function loadExternalJS(filePath) {
   document.body.appendChild(script); // Append the script to the body (or head)
 }
 
-/** SweetAlert Pop Up Box */
+/** SweetAlert Pop Up Box & Global Normalizer */
+(function() {
+  if (typeof window.swal === 'function') {
+    const originalSwal = window.swal;
+    window.swal = function(firstArg, secondArg, thirdArg) {
+      if (typeof firstArg === 'object' && firstArg !== null) {
+        const opts = Object.assign({}, firstArg);
+        if (opts.icon && !opts.type) {
+          opts.type = opts.icon;
+        }
+        if (opts.type && !opts.icon) {
+          opts.icon = opts.type;
+        }
+        if (opts.button && !opts.confirmButtonText) {
+          opts.confirmButtonText = opts.button;
+        }
+        return originalSwal.call(this, opts);
+      } else if (typeof firstArg === 'string' && thirdArg) {
+        return originalSwal.call(this, {
+          title: firstArg,
+          text: secondArg || '',
+          type: thirdArg,
+          icon: thirdArg
+        });
+      }
+      return originalSwal.apply(this, arguments);
+    };
+    Object.assign(window.swal, originalSwal);
+    window.Swal = window.swal;
+  }
+})();
 
 function popUpMessage(msgPostion, msgTxt, msgType) {
-  Swal.fire({
-    position: msgPostion,
-    type: msgType,
-    title: msgTxt,
-    showConfirmButton: false,
-    timer: 1500,
-  });
+  if (typeof Swal !== 'undefined' && typeof Swal.fire === 'function') {
+    Swal.fire({
+      position: msgPostion || 'center',
+      type: msgType || 'info',
+      icon: msgType || 'info',
+      title: msgTxt,
+      showConfirmButton: false,
+      timer: 1800,
+    });
+  } else if (typeof window.swal === 'function') {
+    window.swal({
+      title: msgTxt,
+      type: msgType || 'info',
+      icon: msgType || 'info',
+      timer: 1800,
+      showConfirmButton: false
+    });
+  } else {
+    alert(msgTxt);
+  }
 }
 
 function showWarning(message, selector) {
   popUpMessage("center", message, "warning");
-  $(selector).focus();
+  if (selector && $(selector).length) {
+    $(selector).focus();
+  }
 }
 
 function toggleDisplay(showBox, showEditBtn) {
@@ -3717,6 +3762,34 @@ $(document).ready(function (e) {
         ensureScriptLoaded(ADMIN_JS + "transporters.js?v=" + Date.now(), function () {
           if (window.V3Transporters && typeof window.V3Transporters.init === "function") {
             window.V3Transporters.init();
+          }
+        });
+      }
+    }
+
+    // 4e. Transporter Add Module
+    const $transporterAdd = $("#addTransporterApp, .transporter-form-wrapper");
+    if ($transporterAdd.length > 0) {
+      if (window.V3TransporterAdd && typeof window.V3TransporterAdd.init === "function") {
+        window.V3TransporterAdd.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "transporter-add.js?v=" + Date.now(), function () {
+          if (window.V3TransporterAdd && typeof window.V3TransporterAdd.init === "function") {
+            window.V3TransporterAdd.init();
+          }
+        });
+      }
+    }
+
+    // 4f. Transporter Fleet & Vehicles Master Module
+    const $vehiclesMaster = $("#vehiclesMasterApp, .vehicle-master-wrapper");
+    if ($vehiclesMaster.length > 0) {
+      if (window.V3TransporterVehicles && typeof window.V3TransporterVehicles.init === "function") {
+        window.V3TransporterVehicles.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "transporter-vehicles.js?v=" + Date.now(), function () {
+          if (window.V3TransporterVehicles && typeof window.V3TransporterVehicles.init === "function") {
+            window.V3TransporterVehicles.init();
           }
         });
       }

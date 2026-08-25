@@ -11,6 +11,9 @@
             </div>
         </div>
         <div class="package-header-actions">
+            <a href="/dashboard/vendors/transporter/vehicle/" class="btn-v3-action" data-tooltip="Manage Fleet & Vehicle Models">
+                <i class="fi fi-rr-car-alt"></i> Fleet &amp; Vehicles
+            </a>
             <a href="/dashboard/vendors/transporter/add/" class="btn-add-pkg-v3" data-tooltip="Add new transporter to directory">
                 <i class="fi fi-rr-plus"></i> Add Transporter
             </a>
@@ -87,12 +90,12 @@
             <table class="package-v3-datatable" id="transportersTable">
                 <thead>
                     <tr>
-                        <th style="min-width: 220px;">Transporter / Vendor</th>
-                        <th style="min-width: 180px;">Contact Details</th>
-                        <th style="min-width: 160px;">Base Location</th>
-                        <th style="min-width: 200px;">Service Area / States</th>
-                        <th style="min-width: 100px; text-align: center;">Status</th>
-                        <th style="min-width: 120px; text-align: right;">Actions</th>
+                        <th class="col-tpt-name">Transporter / Vendor</th>
+                        <th class="col-tpt-contact">Contact Details</th>
+                        <th class="col-tpt-location">Base Location</th>
+                        <th class="col-tpt-service">Service Area / States</th>
+                        <th class="col-tpt-status">Status</th>
+                        <th class="col-tpt-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="transportersTableBody">

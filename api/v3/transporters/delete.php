@@ -3,21 +3,18 @@
 header("Content-type: application/json; charset=utf-8");
 
 if (!isset($connection)) {
-    $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? dirname(__DIR__, 3);
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
     if (file_exists($docRoot . '/config.php')) {
         require_once $docRoot . '/config.php';
     }
     if (file_exists($docRoot . '/lib/modules/connection.php')) {
         require_once $docRoot . '/lib/modules/connection.php';
     }
-    if (file_exists($docRoot . '/lib/modules/siteStatus.php')) {
-        require_once $docRoot . '/lib/modules/siteStatus.php';
-    }
 }
 
-$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
-$siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
-$userId    = defined('USER_ID')      ? (int) USER_ID : 0;
+$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+$siteId    = defined('SITE_ID')      ? (int) SITE_ID : (int)($_SESSION['site_id'] ?? 0);
+$userId    = defined('USER_ID')      ? (int) USER_ID : (int)($_SESSION['user_id'] ?? 0);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

@@ -120,7 +120,7 @@
       `);
 
       $.ajax({
-        url: "/api/v3/leads/view.php",
+        url: "/api/v3/leads/view/",
         type: "GET",
         data: { id: self.leadId },
         dataType: "json",
@@ -782,7 +782,7 @@
         }
 
         $.ajax({
-          url: "/api/v3/leads/add-note.php",
+          url: "/api/v3/leads/add-note/",
           type: "POST",
           data: postData,
           dataType: "json",
@@ -947,7 +947,7 @@
         };
 
         $.ajax({
-          url: "/api/v3/leads/update.php",
+          url: "/api/v3/leads/update/",
           type: "POST",
           data: postData,
           dataType: "json",
@@ -1030,7 +1030,7 @@
         $("#btnPreviewItinerary").addClass("v3-hidden");
 
         $.ajax({
-          url: "/api/v3/itinerary/list.php",
+          url: "/api/v3/itinerary/list/",
           type: "GET",
           data: {
             destination: dest,
@@ -1263,7 +1263,7 @@
         };
 
         $.ajax({
-          url: "/api/v3/itinerary/publish.php",
+          url: "/api/v3/itinerary/publish/",
           type: "POST",
           contentType: "application/json",
           data: JSON.stringify(postData),
@@ -1289,7 +1289,7 @@
         });
       };
 
-      // Preview Itinerary CTA in Builder Modal (Client-side Real Preview matching download-itinerary-mit.php)
+      // Preview Itinerary CTA in Builder Modal (Client-side Real Preview matching download-itinerary-mit/)
       $(document).on("click", "#btnPreviewItinerary, #btnPreviewItineraryBottom", function (e) {
         e.preventDefault();
         const title = $("#itineraryCustomTitle").val().trim() || "Custom Tour Itinerary";
@@ -1744,7 +1744,7 @@
         $btn.prop("disabled", true).text("Saving...");
 
         $.ajax({
-          url: "/api/v3/leads/payment-record.php",
+          url: "/api/v3/leads/payment-record/",
           type: "POST",
           data: {
             leadId: self.leadId,
@@ -1786,7 +1786,7 @@
         $btn.prop("disabled", true).text("Closing...");
 
         $.ajax({
-          url: "/api/v3/leads/add-note.php",
+          url: "/api/v3/leads/add-note/",
           type: "POST",
           data: {
             leadId: self.leadId,
@@ -1890,7 +1890,7 @@
     performAgentAssign: function (agentId) {
       const self = this;
       $.ajax({
-        url: "/api/v3/leads/assign.php",
+        url: "/api/v3/leads/assign/",
         type: "POST",
         data: {
           leadId: self.leadId,

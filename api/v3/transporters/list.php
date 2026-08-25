@@ -3,7 +3,7 @@
 header("Content-type: application/json; charset=utf-8");
 
 if (!isset($connection)) {
-    $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? dirname(__DIR__, 3);
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
     if (file_exists($docRoot . '/config.php')) {
         require_once $docRoot . '/config.php';
     }
@@ -12,17 +12,32 @@ if (!isset($connection)) {
     }
 }
 
-$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
-$siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
-$userId    = defined('USER_ID')      ? (int) USER_ID : 0;
+$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+$siteId    = defined('SITE_ID')      ? (int) SITE_ID : (int)($_SESSION['site_id'] ?? 0);
+$userId    = defined('USER_ID')      ? (int) USER_ID : (int)($_SESSION['user_id'] ?? 0);
 
 $search = isset($_GET['search']) ? mysqli_real_escape_string($connection, trim($_GET['search'])) : '';
 $state  = isset($_GET['state']) ? mysqli_real_escape_string($connection, trim($_GET['state'])) : '';
 $status = isset($_GET['status']) ? trim($_GET['status']) : '';
 
+$rawId = $_GET['id'] ?? ($_GET['transporter_id'] ?? 0);
+$transporterId = 0;
+if (is_numeric($rawId) && (int)$rawId > 0) {
+    $transporterId = (int)$rawId;
+} else if (!empty($rawId)) {
+    $decoded = base64_decode((string)$rawId, true);
+    if ($decoded !== false && is_numeric($decoded)) {
+        $transporterId = (int)$decoded;
+    }
+}
+
 $whereConditions = [];
 if ($siteId > 0) {
     $whereConditions[] = "t.transporter_site_id = {$siteId}";
+}
+
+if ($transporterId > 0) {
+    $whereConditions[] = "t.transporter_id = {$transporterId}";
 }
 
 if (!empty($search)) {
