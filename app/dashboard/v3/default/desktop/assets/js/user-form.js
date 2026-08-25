@@ -87,7 +87,7 @@
       self.isSubmitting = true;
 
       $.ajax({
-        url: self.apiEndpoint + "create.php",
+        url: self.apiEndpoint + "create/",
         method: "POST",
         dataType: "json",
         contentType: "application/json",
@@ -156,7 +156,7 @@
       const self = this;
 
       $.ajax({
-        url: self.apiEndpoint + "list.php?id=" + encodeURIComponent(userId),
+        url: self.apiEndpoint + "list/?id=" + encodeURIComponent(userId),
         method: "GET",
         dataType: "json",
         success: function (res) {
@@ -241,7 +241,7 @@
       self.isSubmitting = true;
 
       $.ajax({
-        url: self.apiEndpoint + "update.php",
+        url: self.apiEndpoint + "update/",
         method: "POST",
         dataType: "json",
         contentType: "application/json",
@@ -319,7 +319,7 @@
         $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner-alt rotating"></i> <span>Sending...</span>');
 
         $.ajax({
-          url: self.apiEndpoint + "kyc.php",
+          url: self.apiEndpoint + "kyc/",
           method: "POST",
           dataType: "json",
           contentType: "application/json",
@@ -350,7 +350,7 @@
       const self = this;
 
       $.ajax({
-        url: self.apiEndpoint + "kyc.php?id=" + encodeURIComponent(userId),
+        url: self.apiEndpoint + "kyc/?id=" + encodeURIComponent(userId),
         method: "GET",
         dataType: "json",
         success: function (res) {
@@ -479,7 +479,7 @@
       self.isSubmitting = true;
 
       $.ajax({
-        url: self.apiEndpoint + "kyc.php",
+        url: self.apiEndpoint + "kyc/",
         method: "POST",
         data: formData,
         processData: false,
@@ -522,7 +522,7 @@
     fetchRoles: function (selectSelector, callback) {
       const self = this;
       $.ajax({
-        url: self.apiEndpoint + "roles.php",
+        url: self.apiEndpoint + "roles/",
         method: "GET",
         dataType: "json",
         success: function (res) {
