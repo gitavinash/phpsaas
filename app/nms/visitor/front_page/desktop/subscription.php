@@ -58,7 +58,7 @@ if (isset($_COOKIE['user_data'])) {
 
     if ($checkCart = mysqli_query($connection, "SELECT cart_id FROM " . TABLE_PREFIX . "cart WHERE cart_session_id='" . SESSION_ID . "' AND cart_site_id='" . SITE_ID . "' AND cart_status!=1")) {
         if (mysqli_num_rows($checkCart) == 0) {
-            $addToCart = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_user_id, cart_relation_id, cart_relation_type, cart_qty, cart_currency, cart_currency_symbol, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$user_id}', '{$id}', 'product', '1', '{$cart_currency}', '{$cart_symbol}', '', '{$totalPrice}', 2, NOW())");
+            $addToCart = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_user_id, cart_relation_id, cart_relation_type, cart_qty, cart_currency, cart_currency_symbol, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$user_id}', '{$id}', 'product', '1', '{$cart_currency}', '{$cart_symbol}', '{$totalPrice}', 2, NOW())");
         } else {
             $addToCart = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_relation_id='{$id}', cart_price='{$totalPrice}', cart_currency='{$cart_currency}', cart_currency_symbol='{$cart_symbol}' WHERE cart_session_id='" . SESSION_ID . "' AND cart_site_id='" . SITE_ID . "'");
         }
