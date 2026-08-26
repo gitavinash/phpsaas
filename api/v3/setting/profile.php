@@ -64,7 +64,7 @@ if ($userId <= 0 && isset($_SESSION['user_id'])) {
 if ($method === 'GET') {
     $userQuery = "SELECT u.user_id, u.user_email, u.user_mobile, u.user_status,
                          p.profile_first_name, p.profile_last_name, p.profile_display_name,
-                         p.profile_avatar, p.profile_gender, p.profile_address, p.profile_city, p.profile_country,
+                         p.profile_image, p.profile_gender, p.profile_address, p.profile_city, p.profile_country,
                          sa.site_access_type
                   FROM " . TABLE_PREFIX . "user u
                   LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
@@ -86,7 +86,7 @@ if ($method === 'GET') {
             'profile_address'      => $row['profile_address'] ?? '',
             'profile_city'         => $row['profile_city'] ?? '',
             'profile_country'      => $row['profile_country'] ?? '',
-            'profile_avatar'       => $row['profile_avatar'] ?? '',
+            'profile_image'       => $row['profile_image'] ?? '',
             'role'                 => $row['site_access_type'] ?? 'Administrator'
         ];
 
@@ -108,7 +108,7 @@ if ($method === 'GET') {
                 'profile_address'      => '',
                 'profile_city'         => '',
                 'profile_country'      => '',
-                'profile_avatar'       => '',
+                'profile_image'       => '',
                 'role'                 => 'Administrator'
             ]
         ]);
@@ -132,7 +132,7 @@ if ($method === 'POST' || $method === 'PUT') {
     $gender      = trim($data['profile_gender'] ?? '');
     $address     = trim($data['profile_address'] ?? '');
     $city        = trim($data['profile_city'] ?? '');
-    $avatar      = trim($data['profile_avatar'] ?? '');
+    $avatar      = trim($data['profile_image'] ?? '');
 
     if ($displayName === '') {
         $displayName = trim($firstName . ' ' . $lastName);
@@ -156,7 +156,7 @@ if ($method === 'POST' || $method === 'PUT') {
         $escAvatar = mysqli_real_escape_string($connection, $avatar);
 
         $profSql = "INSERT INTO " . TABLE_PREFIX . "profile 
-                    (profile_user_id, profile_first_name, profile_last_name, profile_display_name, profile_gender, profile_address, profile_city, profile_avatar)
+                    (profile_user_id, profile_first_name, profile_last_name, profile_display_name, profile_gender, profile_address, profile_city, profile_image)
                     VALUES ({$userId}, '{$escFirst}', '{$escLast}', '{$escDisplay}', '{$escGender}', '{$escAddress}', '{$escCity}', '{$escAvatar}')
                     ON DUPLICATE KEY UPDATE 
                         profile_first_name = '{$escFirst}',
@@ -165,7 +165,7 @@ if ($method === 'POST' || $method === 'PUT') {
                         profile_gender = '{$escGender}',
                         profile_address = '{$escAddress}',
                         profile_city = '{$escCity}',
-                        profile_avatar = IF('{$escAvatar}' != '', '{$escAvatar}', profile_avatar)";
+                        profile_image = IF('{$escAvatar}' != '', '{$escAvatar}', profile_image)";
         mysqli_query($connection, $profSql);
     }
 
