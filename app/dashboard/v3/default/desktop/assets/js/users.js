@@ -295,9 +295,15 @@
         roleBadgeClass = "badge-service-state badge-role-accounts";
       }
 
-      const avatarContent = u.avatar
-        ? `<img src="${u.avatar}" alt="${selfEscapeHTML(u.name)}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 8px;" onerror="this.style.display='none'; $(this).next().show();"><div class="transport-avatar-badge" style="width: 38px; height: 38px; font-size: 14px; flex-shrink: 0; display: none;">${u.initials}</div>`
-        : `<div class="transport-avatar-badge" style="width: 38px; height: 38px; font-size: 14px; flex-shrink: 0;">${u.initials}</div>`;
+      const firstChar = (u.name && u.name.trim().length > 0)
+        ? u.name.trim().charAt(0).toUpperCase()
+        : ((u.initials && u.initials.trim().length > 0) ? u.initials.trim().charAt(0).toUpperCase() : "U");
+
+      const hasAvatar = !!(u.avatar && typeof u.avatar === "string" && u.avatar.trim() !== "" && u.avatar.trim() !== "null" && u.avatar.trim() !== "undefined");
+
+      const avatarContent = hasAvatar
+        ? `<img src="${u.avatar}" alt="${selfEscapeHTML(u.name)}" class="user-table-avatar-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'user-table-avatar-badge\\'>${firstChar}</div>';">`
+        : `<div class="user-table-avatar-badge">${firstChar}</div>`;
 
       const deleteBtnHTML = (!u.is_self)
         ? `<button type="button" class="btn-action-icon delete deleteUserBtn" data-id="${u.id}" data-name="${selfEscapeHTML(u.name)}" data-tooltip="Remove access" title="Remove access">
@@ -310,7 +316,7 @@
           <!-- Name & Info -->
           <td>
             <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 38px; height: 38px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; overflow: hidden;">
+              <div class="user-table-avatar-wrap">
                 ${avatarContent}
               </div>
               <div style="min-width: 0;">

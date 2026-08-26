@@ -4,9 +4,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-require_once 'exception.php';
-require_once 'php_mailer.php';
-require_once 'smtp.php';
+require_once __DIR__ . '/exception.php';
+require_once __DIR__ . '/php_mailer.php';
+require_once __DIR__ . '/smtp.php';
 
 if (!defined('EMAIL_ENABLE')) {
     define('EMAIL_ENABLE', 1);
@@ -14,7 +14,7 @@ if (!defined('EMAIL_ENABLE')) {
 
 if (EMAIL_ENABLE == 1) {
 
-    require_once 'smtp-configuration.php';
+    require_once __DIR__ . '/smtp-configuration.php';
 
     $mail = new PHPMailer(true);
 
@@ -22,18 +22,28 @@ if (EMAIL_ENABLE == 1) {
         // $mail->SMTPDebug = 0; // or use 3 for even more verbose output
         // $mail->Debugoutput = 'html';
 
+        $portNum = defined('SMTP_PORT') ? (int)SMTP_PORT : 587;
+        $sslSetting = defined('SMTP_SSL') ? strtolower((string)SMTP_SSL) : 'tls';
+
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
         $mail->SMTPAuth = true;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = SMTP_PORT;
+
+        if ($portNum === 465 || $sslSetting === 'ssl') {
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        } elseif ($portNum === 25 || $sslSetting === 'false' || $sslSetting === '0' || $sslSetting === 'none') {
+            $mail->SMTPSecure = false;
+            $mail->SMTPAutoTLS = false;
+        } else {
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        }
+
+        $mail->Port = $portNum;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
         $mail->setFrom(SMTP_EMAIL, SMTP_NAME);
         if (filter_var(REPLY_EMAIL, FILTER_VALIDATE_EMAIL)) {
             $mail->addReplyTo(REPLY_EMAIL, REPLY_EMAIL_NAME);
-        } else {
-            echo "Invalid reply email address. '" . REPLY_EMAIL . "'";
         }
         if (empty($toAddress)) {
             throw new Exception('Recipient email address is missing.');

@@ -97,21 +97,44 @@
           $btn.prop("disabled", false).html(origHtml);
 
           if (res && res.status === "success") {
+            const redirectUrl = "/dashboard/user/";
+            const successMsg = res.msg || "Team member added successfully.";
+
+            let redirected = false;
+            const doRedirect = function () {
+              if (!redirected) {
+                redirected = true;
+                if (typeof window.spaNavigate === "function") {
+                  window.spaNavigate(redirectUrl);
+                } else {
+                  window.location.href = redirectUrl;
+                }
+              }
+            };
+
             const swalFn = window.swal || window.Swal;
-            if (swalFn) {
-              swalFn({
+            if (typeof swalFn === "function") {
+              const swalRes = swalFn({
                 title: "User Created!",
-                text: res.msg || "Team member added successfully.",
+                text: successMsg,
                 type: "success",
                 icon: "success",
-                timer: 1800,
+                timer: 1500,
                 showConfirmButton: false
-              }).then(function () {
-                window.location.href = "/dashboard/user/";
+              }, function () {
+                doRedirect();
               });
+
+              if (swalRes && typeof swalRes.then === "function") {
+                swalRes.then(doRedirect);
+              }
+              setTimeout(doRedirect, 1600);
+            } else if (typeof window.popUpMessage === "function") {
+              window.popUpMessage("center", successMsg, "success");
+              setTimeout(doRedirect, 1200);
             } else {
-              alert(res.msg || "User created successfully!");
-              window.location.href = "/dashboard/user/";
+              self.showAlert("success", successMsg);
+              setTimeout(doRedirect, 800);
             }
           } else {
             self.showAlert("error", res ? res.msg : "Failed to create user.");
@@ -251,21 +274,44 @@
           $btn.prop("disabled", false).html(origHtml);
 
           if (res && res.status === "success") {
+            const redirectUrl = "/dashboard/user/";
+            const successMsg = res.msg || "User details updated successfully.";
+
+            let redirected = false;
+            const doRedirect = function () {
+              if (!redirected) {
+                redirected = true;
+                if (typeof window.spaNavigate === "function") {
+                  window.spaNavigate(redirectUrl);
+                } else {
+                  window.location.href = redirectUrl;
+                }
+              }
+            };
+
             const swalFn = window.swal || window.Swal;
-            if (swalFn) {
-              swalFn({
+            if (typeof swalFn === "function") {
+              const swalRes = swalFn({
                 title: "Updated!",
-                text: res.msg || "User details updated successfully.",
+                text: successMsg,
                 type: "success",
                 icon: "success",
-                timer: 1800,
+                timer: 1500,
                 showConfirmButton: false
-              }).then(function () {
-                window.location.href = "/dashboard/user/";
+              }, function () {
+                doRedirect();
               });
+
+              if (swalRes && typeof swalRes.then === "function") {
+                swalRes.then(doRedirect);
+              }
+              setTimeout(doRedirect, 1600);
+            } else if (typeof window.popUpMessage === "function") {
+              window.popUpMessage("center", successMsg, "success");
+              setTimeout(doRedirect, 1200);
             } else {
-              alert(res.msg || "User details updated successfully!");
-              window.location.href = "/dashboard/user/";
+              self.showAlert("success", successMsg);
+              setTimeout(doRedirect, 800);
             }
           } else {
             self.showAlert("error", res ? res.msg : "Failed to update user.");

@@ -17,6 +17,64 @@ $siteId    = defined('SITE_ID') && (int)SITE_ID > 0 ? (int) SITE_ID : (isset($_S
 $siteAppId = defined('SITE_APP_ID') && (int)SITE_APP_ID > 0 ? (int) SITE_APP_ID : (isset($_SESSION['site_app_id']) ? (int)$_SESSION['site_app_id'] : 0);
 $loggedInUserId = defined('USER_ID') && (int)USER_ID > 0 ? (int) USER_ID : (isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0);
 
+if ($siteId <= 0) {
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $host = preg_replace('/:\d+$/', '', $host);
+    $escapedHost = mysqli_real_escape_string($connection, $host);
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
+    if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
+        $row = mysqli_fetch_assoc($siteQuery);
+        $siteId = (int)$row['site_id'];
+    }
+}
+
+if (!defined('SITE_ID') && $siteId > 0) {
+    define('SITE_ID', $siteId);
+}
+
+// Load Site Metadata & Configuration
+$siteName = 'CRM Platform';
+$siteLogo = '';
+$siteThemeColor = '#2563eb';
+$siteDomain = $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+if ($siteId > 0) {
+    $siteQuery = mysqli_query($connection, "
+        SELECT 
+            s.site_name, 
+            s.site_logo, 
+            s.site_domain,
+            ss.site_theme_color 
+        FROM {$tblPrefix}site s 
+        LEFT JOIN {$tblPrefix}site_setting ss ON ss.site_setting_site_id = s.site_id 
+        WHERE s.site_id = {$siteId} 
+        LIMIT 1
+    ");
+    if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
+        $siteRow = mysqli_fetch_assoc($siteQuery);
+        if (!empty($siteRow['site_name'])) $siteName = $siteRow['site_name'];
+        if (!empty($siteRow['site_logo'])) $siteLogo = $siteRow['site_logo'];
+        if (!empty($siteRow['site_theme_color'])) $siteThemeColor = $siteRow['site_theme_color'];
+        if (!empty($siteRow['site_domain'])) $siteDomain = $siteRow['site_domain'];
+    }
+
+    $smtpRes = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM {$tblPrefix}site_configuration WHERE site_configuration_status = 1 AND site_configuration_site_id = {$siteId} AND (site_configuration_key LIKE 'email_smtp_%' OR site_configuration_key = 'enable_smtp_email')");
+    if ($smtpRes) {
+        while ($sRow = mysqli_fetch_assoc($smtpRes)) {
+            $constKey = strtoupper($sRow['site_configuration_key']);
+            if (!defined($constKey)) {
+                define($constKey, $sRow['site_configuration_value']);
+            }
+        }
+    }
+}
+
+if (!defined('SITE_NAME')) define('SITE_NAME', $siteName);
+if (!defined('SITE_LOGO')) define('SITE_LOGO', $siteLogo);
+if (!defined('SITE_THEME_COLOR')) define('SITE_THEME_COLOR', $siteThemeColor);
+if (!defined('SITE_THEME_COLOUR')) define('SITE_THEME_COLOUR', $siteThemeColor);
+if (!defined('SITE_DOMAIN')) define('SITE_DOMAIN', $siteDomain);
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['status' => 'error', 'msg' => 'Method not allowed. Use POST.']);
@@ -191,11 +249,35 @@ try {
 
     mysqli_commit($connection);
 
+    // Dispatch Welcome Email to New Team Member
+    $emailSent = false;
+    $emailError = '';
+    try {
+        $profile_display_name = $profileDisplayName ?: ($firstName . ' ' . $lastName);
+        $user_role_title = ucwords(str_replace('_', ' ', $safeUserRole));
+        $loginURL = (defined('SITE_URL') ? SITE_URL : ('https://' . ($_SERVER['HTTP_HOST'] ?? ''))) . '/login/';
+        
+        $email = $safeEmail;
+        $toAddress = $safeEmail;
+        $mobile = $safeMobile;
+        $rawPassword = $password;
+
+        $templatePath = dirname(__DIR__, 3) . '/lib/resource/email/add-new-user.php';
+        if (file_exists($templatePath)) {
+            require $templatePath;
+            $emailSent = true;
+        }
+    } catch (\Throwable $mailEx) {
+        $emailError = $mailEx->getMessage();
+        error_log("Welcome email error for user {$userId}: " . $emailError);
+    }
+
     echo json_encode([
         'status'     => 'success',
-        'msg'        => 'User added successfully!',
+        'msg'        => 'User added successfully!' . ($emailSent ? ' Welcome email sent to ' . $safeEmail . '.' : ''),
         'user_id'    => $userId,
-        'encoded_id' => base64_encode((string)$userId)
+        'encoded_id' => base64_encode((string)$userId),
+        'email_sent' => $emailSent
     ]);
 } catch (Exception $e) {
     mysqli_rollback($connection);
