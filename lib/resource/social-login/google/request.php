@@ -1,13 +1,15 @@
 <?php
 if (!defined('ENABLE_GOOGLE_AUTH')) {
-    echo "<h2>Google oAuth is disable for this domain: " . SITE_URL . "</h2>";
-    exit();
+    // Update the following variables
+    $google_oauth_client_id = DEFAULT_GOOGLE_AUTH_CLIENT_ID;
+    $google_oauth_client_secret = DEFAULT_GOOGLE_AUTH_CLIENT_SECRET;
+} else {
+    // Update the following variables
+    $google_oauth_client_id = GOOGLE_AUTH_CLIENT_ID;
+    $google_oauth_client_secret = GOOGLE_AUTH_CLIENT_SECRET;
 }
-$redirectUrl = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
 
-// Update the following variables
-$google_oauth_client_id = GOOGLE_AUTH_CLIENT_ID;
-$google_oauth_client_secret = GOOGLE_AUTH_CLIENT_SECRET;
+$redirectUrl = ((isset($redirect_url)) ? $redirect_url : '/dashboard/');
 
 if (DEVELOPMENT_MODE == true) {
     $google_oauth_redirect_uri = 'http://localhost/oauth/google/';
@@ -199,34 +201,34 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
             }
 
             if (isset($_SESSION['base_url'])) { ?>
-<!DOCTYPE html>
-<html lang="en">
+                <!DOCTYPE html>
+                <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>Redirect to new url.</title>
-    <meta name="robots" content="noindex,nofollow">
-    <script>
-    window.onload = function() {
-        document.getElementById("autoSubmitForm").submit();
-    };
-    </script>
-</head>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+                    <title>Redirect to new url.</title>
+                    <meta name="robots" content="noindex,nofollow">
+                    <script>
+                        window.onload = function() {
+                            document.getElementById("autoSubmitForm").submit();
+                        };
+                    </script>
+                </head>
 
-<body>
-    <form id="autoSubmitForm" action="<?php echo $_SESSION['base_url'] ?>" method="<?php echo $_SESSION['method'] ?>">
-        <input type="hidden" name="id" value="<?php echo $_SESSION['id'] ?>">
-        <input type="hidden" name="redirect_url"
-            value="<?php echo str_replace('?redirect_url=', '', ((isset($_SESSION['redirect_after_login'])) ? $_SESSION['redirect_after_login'] : '/')) ?>">
-        <noscript>
-            <p>JavaScript is disabled. Please click the submit button.</p>
-            <button type="submit">Submit</button>
-        </noscript>
-    </form>
-</body>
+                <body>
+                    <form id="autoSubmitForm" action="<?php echo $_SESSION['base_url'] ?>" method="<?php echo $_SESSION['method'] ?>">
+                        <input type="hidden" name="id" value="<?php echo $_SESSION['id'] ?>">
+                        <input type="hidden" name="redirect_url"
+                            value="<?php echo str_replace('?redirect_url=', '', ((isset($_SESSION['redirect_after_login'])) ? $_SESSION['redirect_after_login'] : '/')) ?>">
+                        <noscript>
+                            <p>JavaScript is disabled. Please click the submit button.</p>
+                            <button type="submit">Submit</button>
+                        </noscript>
+                    </form>
+                </body>
 
-</html>
+                </html>
 
 <?php
 

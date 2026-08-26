@@ -1,0 +1,4 @@
+<?php
+
+define('DEFAULT_GOOGLE_AUTH_CLIENT_ID', '');
+define('DEFAULT_GOOGLE_AUTH_CLIENT_SECRET', '');
