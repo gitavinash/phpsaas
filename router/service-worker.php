@@ -121,3 +121,4 @@ await cache.put(req, networkResponse.clone());
 return networkResponse;
 })());
 });
+<?php exit(); ?>

@@ -58,7 +58,7 @@ if (!defined('SEND_EMAIL')) {
 }
 
 if (defined('SITE_APP_ID') && SITE_APP_ID == 20) {
-	$toAddress = $email; // Email receiver id
+	$toAddress = isset($email) ? $email : ''; // Email receiver id
 }
 
 if (empty($suppressAutoSend) && defined('SEND_EMAIL') && file_exists(SEND_EMAIL)) {

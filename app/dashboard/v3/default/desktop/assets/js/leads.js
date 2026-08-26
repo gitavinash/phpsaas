@@ -27,12 +27,17 @@
     selectedLeads: new Set(),
     isLoading: false,
     eventsBound: false,
+    activeAjaxRequest: null,
 
     init: function () {
       const $app = $("#leadsListApp");
       if (!$app.length) return;
 
-      this.isLoading = false;
+      if ($app.data("v3-leads-inited") === true && this.eventsBound) {
+        return;
+      }
+      $app.data("v3-leads-inited", true);
+
       this.selectedLeads.clear();
       $("#leadsBulkToolbar").hide();
       this.initSelect2();
@@ -153,19 +158,25 @@
 
       // 2. Filter Dropdowns Change
       $("#filterLeadStatus").on("change", function () {
-        self.activeStatus = $(this).val();
+        const val = $(this).val();
+        if (self.activeStatus === val) return;
+        self.activeStatus = val;
         self.currentPage = 1;
         self.loadLeads();
       });
 
       $("#filterLeadAgent").on("change", function () {
-        self.activeAgent = $(this).val();
+        const val = $(this).val();
+        if (self.activeAgent === val) return;
+        self.activeAgent = val;
         self.currentPage = 1;
         self.loadLeads();
       });
 
       $("#filterLeadSource").on("change", function () {
-        self.activeSource = $(this).val();
+        const val = $(this).val();
+        if (self.activeSource === val) return;
+        self.activeSource = val;
         self.currentPage = 1;
         self.loadLeads();
       });
@@ -292,6 +303,48 @@
                   self.showBottomToast("Lead marked as <strong>Unassigned</strong>", "success");
                 } else {
                   self.showBottomToast(`Lead assigned to <strong>${newAgentName}</strong>`, "success");
+
+                  // Trigger Browser Desktop Notification if permitted
+                  if ("Notification" in window && res.notification) {
+                    if (Notification.permission === "granted") {
+                      const notifTitle = res.notification.title || "Lead Assigned";
+                      const notifOptions = {
+                        body: res.notification.body || `Lead has been assigned to ${newAgentName}`,
+                        icon: res.notification.icon || "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
+                        badge: res.notification.icon || "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
+                        data: {
+                          url: res.notification.url || window.location.href,
+                          click_action: res.notification.url || window.location.href,
+                        },
+                      };
+
+                      if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.ready
+                          .then(function (reg) {
+                            reg.showNotification(notifTitle, notifOptions);
+                          })
+                          .catch(function () {
+                            try {
+                              const notif = new Notification(notifTitle, notifOptions);
+                              if (res.notification.url) {
+                                notif.onclick = function () {
+                                  window.open(res.notification.url, "_blank");
+                                };
+                              }
+                            } catch (err) {}
+                          });
+                      } else {
+                        try {
+                          const notif = new Notification(notifTitle, notifOptions);
+                          if (res.notification.url) {
+                            notif.onclick = function () {
+                              window.open(res.notification.url, "_blank");
+                            };
+                          }
+                        } catch (err) {}
+                      }
+                    }
+                  }
                 }
               } else {
                 $select.val(prevAgentId);
@@ -455,7 +508,10 @@
 
     loadLeads: function (showLoader = true) {
       const self = this;
-      if (self.isLoading) return;
+      if (self.activeAjaxRequest) {
+        self.activeAjaxRequest.abort();
+        self.activeAjaxRequest = null;
+      }
       self.isLoading = true;
 
       const $tbody = $("#leadsTableBody");
@@ -476,7 +532,7 @@
         `);
       }
 
-      $.ajax({
+      self.activeAjaxRequest = $.ajax({
         url: "/api/v3/leads/list/",
         type: "POST",
         data: {
@@ -490,6 +546,7 @@
         },
         dataType: "json",
         success: function (res) {
+          self.activeAjaxRequest = null;
           self.isLoading = false;
           if (res.status === 200 || res.status === "success") {
             self.agentsList = res.agents || [];
@@ -516,7 +573,9 @@
             `);
           }
         },
-        error: function (err) {
+        error: function (xhr, status) {
+          if (status === "abort") return;
+          self.activeAjaxRequest = null;
           self.isLoading = false;
           $tbody.html(`
             <tr>
@@ -540,13 +599,12 @@
 
     populateAgentDropdowns: function (agents) {
       const $filter = $("#filterLeadAgent");
-      if ($filter.length && $filter.children("option").length <= 2) {
+      if ($filter.length && $filter.children("option").length <= 2 && agents && agents.length > 0) {
         agents.forEach(function (ag) {
-          $filter.append(`<option value="${ag.id}">${ag.name} (${ag.role})</option>`);
+          if (!$filter.find(`option[value="${ag.id}"]`).length) {
+            $filter.append(`<option value="${ag.id}">${ag.name} (${ag.role})</option>`);
+          }
         });
-        if (typeof $.fn.select2 !== "undefined") {
-          $filter.trigger("change.select2");
-        }
       }
     },
 
@@ -779,10 +837,14 @@
   };
 
   $(document).ready(function () {
-    window.V3Leads.init();
+    if ($("#leadsListApp").length && !$("#leadsListApp").data("v3-leads-inited")) {
+      window.V3Leads.init();
+    }
   });
 
   $(document).on("spa:loaded", function () {
-    window.V3Leads.init();
+    if ($("#leadsListApp").length) {
+      window.V3Leads.init();
+    }
   });
 });

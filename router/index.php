@@ -152,15 +152,15 @@ switch ($urlStructure[0]) {
 
 	case 'sw.js':
 		require_once 'service-worker.php';
-		break;
+		exit();
 
 	case 'offline.html':
 		require_once 'offline.php';
-		break;
+		exit();
 
 	case 'firebase-messaging-sw.js':
 		require_once 'service-worker.php';
-		break;
+		exit();
 
 	// Image render
 

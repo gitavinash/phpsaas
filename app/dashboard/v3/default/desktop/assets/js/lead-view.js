@@ -1900,6 +1900,48 @@
         success: function (res) {
           if (res.status === 200 || res.status === "success") {
             self.notify("Agent reassigned successfully", "success");
+
+            if ("Notification" in window && res.notification) {
+              if (Notification.permission === "granted") {
+                const notifTitle = res.notification.title || "Lead Assigned";
+                const notifOptions = {
+                  body: res.notification.body || "Lead assignment updated.",
+                  icon: res.notification.icon || "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
+                  badge: res.notification.icon || "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
+                  data: {
+                    url: res.notification.url || window.location.href,
+                    click_action: res.notification.url || window.location.href,
+                  },
+                };
+
+                if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+                  navigator.serviceWorker.ready
+                    .then(function (reg) {
+                      reg.showNotification(notifTitle, notifOptions);
+                    })
+                    .catch(function () {
+                      try {
+                        const notif = new Notification(notifTitle, notifOptions);
+                        if (res.notification.url) {
+                          notif.onclick = function () {
+                            window.open(res.notification.url, "_blank");
+                          };
+                        }
+                      } catch (err) {}
+                    });
+                } else {
+                  try {
+                    const notif = new Notification(notifTitle, notifOptions);
+                    if (res.notification.url) {
+                      notif.onclick = function () {
+                        window.open(res.notification.url, "_blank");
+                      };
+                    }
+                  } catch (err) {}
+                }
+              }
+            }
+
             self.loadLeadDetails();
           } else {
             self.notify(res.msg || res.message || "Failed to reassign agent.", "error");

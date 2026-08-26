@@ -1,17 +1,31 @@
 <?php
 
+/**
+ * V3 Executive Lead Assign API Endpoint
+ * Handles Lead Assignment, Status Transition, Note Log, Push Notification, and Email Alerts
+ * Path: /api/v3/leads/assign.php
+ */
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 header("Content-type: application/json; charset=utf-8");
 
 if (!isset($connection)) {
-    $configPath = $_SERVER['DOCUMENT_ROOT'] . '/lib/configuration/index.php';
-    if (file_exists($configPath)) {
-        require_once $configPath;
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
+    if (file_exists($docRoot . '/config.php')) {
+        require_once $docRoot . '/config.php';
+    }
+    if (file_exists($docRoot . '/lib/modules/connection.php')) {
+        require_once $docRoot . '/lib/modules/connection.php';
     }
 }
 
-$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
+$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $currentUserId = defined('USER_ID')  ? (int) USER_ID : 0;
+$siteDomain = SITE_URL;
+$siteName = defined('SITE_NAME') ? SITE_NAME : 'ISW Workspace';
 
 // Flexible parameter extraction
 $rawLeadId = '';
@@ -53,57 +67,269 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawAgentId !== null) {
     if ($realLeadId > 0 && isset($connection) && $connection) {
         $siteClause = ($siteId > 0) ? " AND enquiry_site_id = {$siteId}" : "";
 
-        // Check if lead exists
+        // Check if lead exists and fetch lead details
+        $leadData = [];
         $enquirySubject = 'Lead';
-        $leadSql = "SELECT enquiry_id, enquiry_subject FROM {$tblPrefix}enquiry WHERE enquiry_id = {$realLeadId}{$siteClause}";
+        $leadSql = "SELECT * FROM {$tblPrefix}enquiry WHERE enquiry_id = {$realLeadId}{$siteClause} LIMIT 1";
         if ($resLead = mysqli_query($connection, $leadSql)) {
             if ($lRow = mysqli_fetch_assoc($resLead)) {
-                $enquirySubject = $lRow['enquiry_subject'];
+                $leadData = $lRow;
+                if ($siteId <= 0 && !empty($lRow['enquiry_site_id'])) {
+                    $siteId = (int)$lRow['enquiry_site_id'];
+                }
+                $enquirySubject = !empty($lRow['enquiry_subject']) ? $lRow['enquiry_subject'] : 'Customer Enquiry';
             }
+        }
+
+        if (empty($leadData)) {
+            // Fallback check without site constraint
+            $leadSql2 = "SELECT * FROM {$tblPrefix}enquiry WHERE enquiry_id = {$realLeadId} LIMIT 1";
+            if ($resLead2 = mysqli_query($connection, $leadSql2)) {
+                if ($lRow2 = mysqli_fetch_assoc($resLead2)) {
+                    $leadData = $lRow2;
+                    $siteId = (int)$lRow2['enquiry_site_id'];
+                    $enquirySubject = !empty($lRow2['enquiry_subject']) ? $lRow2['enquiry_subject'] : 'Customer Enquiry';
+                }
+            }
+        }
+
+        if (empty($leadData)) {
+            echo json_encode(['status' => 404, 'status_code' => 404, 'msg' => 'Lead not found in this workspace']);
+            exit();
         }
 
         if ($realAgentId > 0) {
             // Check if agent/user exists
             $agentName = '';
-            $userCheckSql = "SELECT profile_display_name, user_email 
+            $agentEmail = '';
+            $userCheckSql = "SELECT profile_display_name, profile_first_name, profile_last_name, user_email 
                              FROM {$tblPrefix}user 
-                             INNER JOIN {$tblPrefix}profile ON profile_user_id = user_id 
-                             WHERE user_id = {$realAgentId}";
+                             LEFT JOIN {$tblPrefix}profile ON profile_user_id = user_id 
+                             WHERE user_id = {$realAgentId} LIMIT 1";
             if ($resUser = mysqli_query($connection, $userCheckSql)) {
                 if ($uRow = mysqli_fetch_assoc($resUser)) {
-                    $agentName = !empty($uRow['profile_display_name']) ? $uRow['profile_display_name'] : $uRow['user_email'];
+                    $agentName = trim($uRow['profile_display_name'] ?? '');
+                    if (empty($agentName)) {
+                        $agentName = trim(($uRow['profile_first_name'] ?? '') . ' ' . ($uRow['profile_last_name'] ?? ''));
+                    }
+                    if (empty($agentName)) {
+                        $agentName = $uRow['user_email'];
+                    }
+                    $agentEmail = trim($uRow['user_email'] ?? '');
                 }
             }
 
-            // Update lead agent and status to 2 (Pending/Assigned)
+            if (empty($agentName)) {
+                $agentName = "Agent #{$realAgentId}";
+            }
+
+            // Update lead agent and set status to 2 (Assigned/Pending) if it was unassigned (status 1)
+            $newStatus = (int)($leadData['enquiry_status'] ?? 1);
+            if ($newStatus <= 1) {
+                $newStatus = 2;
+            }
+
             $sql = "UPDATE {$tblPrefix}enquiry
-                    SET enquiry_agent = '{$realAgentId}', enquiry_status = 2
+                    SET enquiry_agent = '{$realAgentId}', enquiry_status = {$newStatus}
                     WHERE enquiry_id = {$realLeadId}";
 
             if (mysqli_query($connection, $sql)) {
                 // Record in enquiry notes
-                $noteText = !empty($agentName) ? "Lead assign to {$agentName}" : "Lead assign to agent #{$realAgentId}";
+                $noteText = "Lead assigned to {$agentName}";
                 $noteSql = "INSERT INTO {$tblPrefix}enquiry_notes (enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value)
                             VALUES ({$realLeadId}, '{$currentUserId}', 'assign', '" . mysqli_real_escape_string($connection, $noteText) . "')";
                 @mysqli_query($connection, $noteSql);
 
-                // Optional push notification dispatch
-                if (defined('API_MODULES') && file_exists(API_MODULES . 'notification/send.php')) {
-                    $title = "New {$enquirySubject} lead received";
-                    $body = "Hi {$agentName}, New {$enquirySubject} lead received.";
-                    $redirectURL = '/dashboard/leads/view/?id=' . base64_encode($realLeadId);
-                    @require_once API_MODULES . 'notification/send.php';
+                $custName = trim(($leadData['enquiry_first_name'] ?? '') . ' ' . ($leadData['enquiry_last_name'] ?? ''));
+                if (empty($custName)) {
+                    $custName = $leadData['enquiry_name'] ?? 'Customer Enquiry';
+                }
+                $custMobile = $leadData['enquiry_mobile'] ?? '';
+                $custEmail = $leadData['enquiry_email'] ?? '';
+                $leadEncodedId = base64_encode((string)$realLeadId);
+                $leadViewUrl = "{$siteDomain}/dashboard/leads/view/?id={$leadEncodedId}";
+
+                // Load site configuration for SMTP
+                $siteSmtp = [];
+                $cfgSql = "SELECT site_configuration_key, site_configuration_value 
+                           FROM {$tblPrefix}site_configuration 
+                           WHERE site_configuration_site_id = {$siteId}";
+                if ($resCfg = mysqli_query($connection, $cfgSql)) {
+                    while ($cRow = mysqli_fetch_assoc($resCfg)) {
+                        $siteSmtp[$cRow['site_configuration_key']] = $cRow['site_configuration_value'];
+                    }
+                }
+
+                // 1. Send Push Notification to Agent's active devices (FCM)
+                $deviceTokens = [];
+                $agentUserIdEsc = mysqli_real_escape_string($connection, (string)$realAgentId);
+                $devSql = "SELECT DISTINCT device_token FROM {$tblPrefix}device 
+                           WHERE (device_user_id = '{$agentUserIdEsc}' OR device_user_id = " . (int)$realAgentId . ") 
+                             AND device_status = 1";
+                if ($resDev = mysqli_query($connection, $devSql)) {
+                    while ($dRow = mysqli_fetch_assoc($resDev)) {
+                        if (!empty($dRow['device_token'])) {
+                            $deviceTokens[] = $dRow['device_token'];
+                        }
+                    }
+                }
+
+                $fcmKey = defined('NOTIFICATION_KEY') && !empty(NOTIFICATION_KEY)
+                    ? NOTIFICATION_KEY
+                    : 'AAAA022yuIE:APA91bGmpLAcWlFEJB731Z-pTMjYvQu0xPBLQTtElWwsK83HM5mS-Ua0dnYaykR2QIhlxqRfH1vhgX2KHnsNpVZ_lQUbyHk-f7K9CGXcgFPkfIufQ5zbqp7mQfoF1qHoapHxyllk1U76';
+
+                if (!empty($deviceTokens) && !empty($fcmKey)) {
+                    $notifIcon = defined('SITE_ICON') && !empty(SITE_ICON) ? SITE_ICON : "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png";
+                    $notifImage = "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_push_notification.png";
+                    $notifTitle = "New Lead Assigned: {$custName}";
+                    $notifBody  = "Hi {$agentName}, lead #{$realLeadId} ({$enquirySubject}) has been assigned to you.";
+
+                    $fcmPayload = [
+                        "registration_ids" => $deviceTokens,
+                        "notification" => [
+                            "title" => $notifTitle,
+                            "body" => $notifBody,
+                            "icon" => $notifIcon,
+                            "image" => $notifImage,
+                            "click_action" => $leadViewUrl,
+                            "sound" => "default"
+                        ],
+                        "data" => [
+                            "title" => $notifTitle,
+                            "body" => $notifBody,
+                            "icon" => $notifIcon,
+                            "image" => $notifImage,
+                            "click_action" => $leadViewUrl,
+                            "url" => $leadViewUrl,
+                            "lead_id" => (string)$realLeadId
+                        ]
+                    ];
+
+                    $ch = curl_init('https://fcm.googleapis.com/fcm/send');
+                    curl_setopt($ch, CURLOPT_POST, true);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmPayload));
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                        'Authorization: key=' . $fcmKey,
+                        'Content-Type: application/json'
+                    ]);
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+                    @curl_exec($ch);
+                    @curl_close($ch);
+                }
+
+                // 2. Send HTML Email Notification to Assigned Agent
+                $emailSent = false;
+                if (!empty($agentEmail) && filter_var($agentEmail, FILTER_VALIDATE_EMAIL)) {
+                    $customerName = $custName;
+                    $customerMobile = $custMobile;
+                    $customerEmail = $custEmail;
+                    $leadSubject = $enquirySubject;
+
+                    $templatePath = ($_SERVER['DOCUMENT_ROOT'] ?? dirname(__DIR__, 3)) . '/lib/resource/email/lead-assignment.php';
+                    if (file_exists($templatePath)) {
+                        require_once $templatePath;
+                        $htmlContent = $email_body ?? '';
+
+                        $fromEmail = !empty($siteSmtp['email_smtp_email']) ? $siteSmtp['email_smtp_email'] : 'donotreply@graciousworld.com';
+                        $fromName  = !empty($siteSmtp['email_smtp_name']) ? $siteSmtp['email_smtp_name'] : $siteName;
+                        // $emailSubject = "New Lead Assigned: {$customerName} ({$leadSubject}) - {$siteName}";
+                        $emailSubject = "New Lead Assigned - {$siteName}";
+
+                        // Method A: Dispatch via PHPMailer using site SMTP credentials
+                        $phpMailerDir = ($_SERVER['DOCUMENT_ROOT'] ?? dirname(__DIR__, 3)) . '/lib/configuration/mail/';
+                        if (file_exists($phpMailerDir . 'php_mailer.php')) {
+                            require_once $phpMailerDir . 'exception.php';
+                            require_once $phpMailerDir . 'php_mailer.php';
+                            require_once $phpMailerDir . 'smtp.php';
+
+                            try {
+                                $mail = new PHPMailer(true);
+                                $mail->isSMTP();
+                                $mail->Host = !empty($siteSmtp['email_smtp_host']) ? $siteSmtp['email_smtp_host'] : 'smtp.zeptomail.in';
+                                $mail->SMTPAuth = true;
+                                $mail->Username = !empty($siteSmtp['email_smtp_username']) ? $siteSmtp['email_smtp_username'] : 'emailapikey';
+                                $mail->Password = !empty($siteSmtp['email_smtp_password'])
+                                    ? $siteSmtp['email_smtp_password']
+                                    : 'PHtE6r1eEensjTJ+9xNV7aW4Fs/2NY14r+xvKQIU4YhCW6MAGk1Ro9kumje3/kgtB/kRQPKTy9k7sumUsuiNdmjvPD4dXWqyqK3sx/VYSPOZsbq6x00Zs1gSdkzaV4PrctNu3SDfv9+X';
+                                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                                $mail->Port = !empty($siteSmtp['email_smtp_port']) ? (int)$siteSmtp['email_smtp_port'] : 587;
+                                $mail->setFrom($fromEmail, $fromName);
+                                $mail->addAddress($agentEmail, $agentName);
+                                $mail->isHTML(true);
+                                $mail->CharSet = 'UTF-8';
+                                $mail->Subject = $emailSubject;
+                                $mail->Body    = $htmlContent;
+                                $mail->AltBody = strip_tags($htmlContent);
+                                $mail->Timeout = 5;
+                                if ($mail->send()) {
+                                    $emailSent = true;
+                                }
+                            } catch (\Throwable $e) {
+                                // Fallback to direct Zepto API if PHPMailer had a network issue
+                            }
+                        }
+
+                        // Method B: Direct Zeptomail API fallback if not already sent
+                        if (!$emailSent) {
+                            $zeptoKey = !empty($siteSmtp['email_smtp_password'])
+                                ? 'Zoho-enczapikey ' . $siteSmtp['email_smtp_password']
+                                : 'Zoho-enczapikey PHtE6r1eEensjTJ+9xNV7aW4Fs/2NY14r+xvKQIU4YhCW6MAGk1Ro9kumje3/kgtB/kRQPKTy9k7sumUsuiNdmjvPD4dXWqyqK3sx/VYSPOZsbq6x00Zs1gSdkzaV4PrctNu3SDfv9+X';
+
+                            $emailPayload = [
+                                "from" => [
+                                    "address" => $fromEmail,
+                                    "name"    => $fromName
+                                ],
+                                "to" => [[
+                                    "email_address" => [
+                                        "address" => $agentEmail,
+                                        "name"    => $agentName
+                                    ]
+                                ]],
+                                "subject"  => $emailSubject,
+                                "htmlbody" => $htmlContent
+                            ];
+
+                            $ch = curl_init('https://api.zeptomail.in/v1.1/email');
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            curl_setopt($ch, CURLOPT_POST, true);
+                            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($emailPayload, JSON_UNESCAPED_SLASHES));
+                            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                                'accept: application/json',
+                                'content-type: application/json',
+                                'authorization: ' . $zeptoKey,
+                                'cache-control: no-cache'
+                            ]);
+                            curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+                            $zRes = @curl_exec($ch);
+                            $zCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                            @curl_close($ch);
+                            if ($zCode === 200 || $zCode === 201) {
+                                $emailSent = true;
+                            }
+                        }
+                    }
                 }
 
                 echo json_encode([
                     'status'      => 200,
                     'status_code' => 200,
                     'success'     => true,
-                    'msg'         => 'Agent assigned successfully',
-                    'message'     => 'Agent assigned successfully',
+                    'msg'         => 'Lead assigned to ' . $agentName . ' successfully',
+                    'message'     => 'Lead assigned to ' . $agentName . ' successfully',
                     'lead_id'     => $realLeadId,
                     'agent_id'    => $realAgentId,
                     'agent'       => $agentName,
+                    'email_sent'  => $emailSent,
+                    'notification' => [
+                        'title' => "Lead Assigned: {$custName}",
+                        'body'  => "Lead #{$realLeadId} ({$enquirySubject}) has been assigned to {$agentName}.",
+                        'icon'  => "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
+                        'url'   => $leadViewUrl
+                    ]
                 ]);
                 exit();
             }

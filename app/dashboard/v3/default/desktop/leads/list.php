@@ -157,10 +157,13 @@
                 <tbody id="leadsTableBody">
                     <tr>
                         <td colspan="6">
-                            <div class="v3-empty-table-state">
-                                <i class="fi fi-rr-spinner icon-spin"></i>
-                                <h4>Loading Leads Pipeline...</h4>
-                                <p>Fetching inquiries and customer records.</p>
+                            <div class="v3-leads-table-loader">
+                                <div class="v3-table-spinner">
+                                    <div class="v3-spinner-ring"></div>
+                                    <div class="v3-spinner-inner-dot"></div>
+                                </div>
+                                <h4 class="v3-loader-title">Loading Leads Pipeline...</h4>
+                                <p class="v3-loader-subtitle">Fetching inquiries and customer records.</p>
                             </div>
                         </td>
                     </tr>
