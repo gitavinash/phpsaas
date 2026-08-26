@@ -61,10 +61,6 @@ if (defined('SITE_APP_ID') && SITE_APP_ID == 20) {
 	$toAddress = $email; // Email receiver id
 }
 
-if (!isset($toAddress) || empty($toAddress)) {
-	$toAddress = $email;
-}
-
-if (defined('SEND_EMAIL') && file_exists(SEND_EMAIL)) {
+if (empty($suppressAutoSend) && defined('SEND_EMAIL') && file_exists(SEND_EMAIL)) {
 	require SEND_EMAIL;
 }

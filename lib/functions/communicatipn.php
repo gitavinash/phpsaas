@@ -124,7 +124,7 @@ function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.
     }
     return true;
 }
-function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.in')
+function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'ISW Workspace')
 {
     $name = (($name != '') ? $name : 'User');
     $email = trim((string)$email);
@@ -132,16 +132,23 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.i
         return 'Invalid email address: ' . $email;
     }
 
-    $url = defined('SMTP_API_TEMPLATE_HOST')
-        ? SMTP_API_TEMPLATE_HOST
-        : 'https://api.zeptomail.in/v1.1/email/template';
-
-    $templateKey = defined('SMTP_OTP_TEMPLATE')
-        ? SMTP_OTP_TEMPLATE
-        : '2518b.79db608369f04f8.k1.84d65520-8675-11f0-b801-62df313bf14d.199007f6b72';
-
     $apiKey = defined('SMTP_API_KEY') ? SMTP_API_KEY : 'Zoho-enczapikey PHtE6r1eEensjTJ+9xNV7aW4Fs/2NY14r+xvKQIU4YhCW6MAGk1Ro9kumje3/kgtB/kRQPKTy9k7sumUsuiNdmjvPD4dXWqyqK3sx/VYSPOZsbq6x00Zs1gSdkzaV4PrctNu3SDfv9+X';
+    $fromAddress = defined('EMAIL_SMTP_EMAIL') ? EMAIL_SMTP_EMAIL : 'alerts@blumox.com';
+    $fromName = defined('EMAIL_SMTP_NAME') ? EMAIL_SMTP_NAME : (defined('SITE_NAME') ? SITE_NAME : 'Blumox Technologies');
 
+    // Build custom HTML email template based on current UI
+    $htmlEmailFile = dirname(__DIR__) . '/resource/email/otp-verification.php';
+    $htmlContent = '';
+    if (file_exists($htmlEmailFile)) {
+        ob_start();
+        include $htmlEmailFile;
+        ob_get_clean();
+        $htmlContent = $email_body ?? '';
+    }
+
+    $subject = "Your Login Verification Code: {$otpCode} - {$site_name}";
+
+    // Direct Custom HTML API dispatch via Zeptomail (without Zepto templates)
     $headers = [
         'accept: application/json',
         'content-type: application/json',
@@ -149,11 +156,11 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.i
         'cache-control: no-cache',
     ];
 
-    $payload = [
-        "mail_template_key" => $templateKey,
+    $htmlUrl = 'https://api.zeptomail.in/v1.1/email';
+    $htmlPayload = [
         "from" => [
-            "address" => defined('EMAIL_SMTP_EMAIL') ? EMAIL_SMTP_EMAIL : 'alerts@blumox.com',
-            "name"    => defined('EMAIL_SMTP_NAME') ? EMAIL_SMTP_NAME : 'Blumox Technologies'
+            "address" => $fromAddress,
+            "name"    => $fromName
         ],
         "to" => [[
             "email_address" => [
@@ -161,29 +168,21 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.i
                 "name"    => $name
             ]
         ]],
-        "merge_info" => [
-            "site_name" => ucwords($site_name),
-            "name"      => $name,
-            "OTP"       => (string)$otpCode
-        ]
+        "subject"  => $subject,
+        "htmlbody" => $htmlContent
     ];
 
-    $json = json_encode($payload, JSON_UNESCAPED_SLASHES);
-    if ($json === false) {
-        return 'JSON Encode Error: ' . json_last_error_msg();
-    }
-
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_URL, $htmlUrl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($htmlPayload, JSON_UNESCAPED_SLASHES));
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 
-    $result    = curl_exec($ch);
-    $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlError = curl_error($ch);
     curl_close($ch);
 
@@ -192,7 +191,7 @@ function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Aleya.i
     }
 
     if ($httpCode != 200 && $httpCode != 201) {
-        return 'SMTP API Error: ' . $result;
+        return 'Zeptomail API Error: ' . $result;
     }
 
     return true;
