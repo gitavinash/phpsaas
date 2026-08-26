@@ -1,7 +1,7 @@
 <?php
 
 /**
- * V3 Executive Login Page - Passwordless Email OTP & Google OAuth
+ * V3 Executive Login Page - Left Showcase & Right Passwordless Form Split Layout
  * Path: /app/dashboard/v3/default/desktop/login.php
  */
 
@@ -29,12 +29,58 @@ $siteId = defined('SITE_ID') ? (int)SITE_ID : 1;
 $siteName = defined('SITE_NAME') ? SITE_NAME : 'ISW Platform';
 $siteLogo = defined('SITE_LOGO') && !empty(SITE_LOGO) ? SITE_LOGO : '';
 $siteIcon = defined('SITE_ICON') && !empty(SITE_ICON) ? SITE_ICON : '';
-$appVersion = defined('ALEYA_APP_VERSION') ? ALEYA_APP_VERSION : (defined('SITE_VERSION') ? SITE_VERSION : '3.0');
 $jqueryJs = defined('JS_LIBRARY') ? JS_LIBRARY . 'jquery.min.js' : 'https://code.jquery.com/jquery-3.7.1.min.js';
-$sweetAlertJs = defined('PLUGIN_LIBRARY') ? PLUGIN_LIBRARY . 'sweetalert/sweetalert.min.js' : 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
 
-// Google OAuth URL
-$googleOAuthUrl = '/oauth/google/?redirect_url=' . urlencode($redirect_url);
+// Determine App Model for tailored left promotional showcase
+$rawApp = defined('SITE_APP') ? strtolower(SITE_APP) : 'aleya';
+if (in_array($rawApp, ['ecommerce', 'ecom', 'store', 'shop'])) {
+    $appKey = 'ecom';
+} elseif (in_array($rawApp, ['ecom_gift', 'e_com_gift', 'gift', 'bakery'])) {
+    $appKey = 'ecom_gift';
+} else {
+    $appKey = 'aleya';
+}
+
+$appShowcaseData = [
+    'aleya' => [
+        'badge'       => 'AI-Powered Business Suite',
+        'heading'     => 'Your Business, On Autopilot.',
+        'subheading'  => 'Aleya captures leads from Facebook, Instagram & Google — then automates follow-ups, tracks bookings, and grows your business.',
+        'features'    => [
+            ['icon' => 'fi fi-rr-bolt', 'title' => 'Multi-Channel Lead Capture', 'desc' => 'Instant capture from Meta Ads, Google campaigns & website forms.'],
+            ['icon' => 'fi fi-rr-paper-plane', 'title' => 'Automated Follow-ups', 'desc' => 'Smart WhatsApp & email reminders that keep leads engaged.'],
+            ['icon' => 'fi fi-rr-chart-line-up', 'title' => 'Bookings & Revenue Tracking', 'desc' => 'Live pipeline tracking, invoices, vouchers & conversion insights.']
+        ],
+        'stat_value'  => '100+',
+        'stat_label'  => 'Businesses already growing with Aleya'
+    ],
+    'ecom' => [
+        'badge'       => 'E-Commerce Cloud OS',
+        'heading'     => 'Scale your storefront with speed & intelligence',
+        'subheading'  => 'Manage product catalog, high-frequency customer orders, automated billing, and live store analytics.',
+        'features'    => [
+            ['icon' => 'fi fi-rr-shopping-bag', 'title' => 'Instant Checkout', 'desc' => 'High-conversion checkout with lightning-fast catalog search.'],
+            ['icon' => 'fi fi-rr-chart-line-up', 'title' => 'Real-Time Insights', 'desc' => 'Live revenue metrics, order velocity, and customer cohorts.'],
+            ['icon' => 'fi fi-rr-boxes', 'title' => 'Inventory & Billing', 'desc' => 'Automated stock management and instant digital tax invoices.']
+        ],
+        'stat_value'  => '99.99%',
+        'stat_label'  => 'Uptime &bull; Powers modern digital storefronts'
+    ],
+    'ecom_gift' => [
+        'badge'       => 'Gift & Bakery Studio',
+        'heading'     => 'Craft unforgettable orders, cakes & celebration gifts',
+        'subheading'  => 'Empower custom cake configurations, bespoke gift hampers, date-slot delivery, and greeting cards.',
+        'features'    => [
+            ['icon' => 'fi fi-rr-gift', 'title' => 'Hamper Customizer', 'desc' => 'Bespoke item mixing, packaging themes, and occasion selectors.'],
+            ['icon' => 'fi fi-rr-clock-three', 'title' => 'Delivery Slot Dispatch', 'desc' => 'Pinpoint date and time slot scheduling with rider routing.'],
+            ['icon' => 'fi fi-rr-cake-slice', 'title' => 'Flavor & Custom Modifiers', 'desc' => 'Eggless choices, weight options, and custom message cards.']
+        ],
+        'stat_value'  => '250,000+',
+        'stat_label'  => 'Festive celebrations and hampers delivered'
+    ]
+];
+
+$activeShowcase = $appShowcaseData[$appKey] ?? $appShowcaseData['aleya'];
 
 ?>
 <!DOCTYPE html>
@@ -65,12 +111,64 @@ $googleOAuthUrl = '/oauth/google/?redirect_url=' . urlencode($redirect_url);
     ?>
 </head>
 
-<body class="v3-auth-body">
-    <div class="v3-auth-container">
-        <div class="v3-auth-box">
-            <!-- Auth Card -->
-            <div class="v3-auth-card">
-                <!-- Brand Logo Section -->
+<body class="v3-split-auth-body">
+    <div class="v3-split-auth-layout">
+        <!-- ======================================================= -->
+        <!-- LEFT SHOWCASE HERO SECTION (App-Tailored & Animated) -->
+        <!-- ======================================================= -->
+        <aside class="auth-showcase-panel">
+            <!-- Animated Ambient Gradient Spheres -->
+            <div class="ambient-glow ambient-glow-1"></div>
+            <div class="ambient-glow ambient-glow-2"></div>
+            <div class="ambient-glow ambient-glow-3"></div>
+            <div class="ambient-grid-overlay"></div>
+
+            <div class="showcase-content-wrapper">
+                <!-- Top Brand Badge -->
+                <div class="showcase-header">
+                    <div class="showcase-brand-pill">
+                        <span class="live-status-dot"></span>
+                        <span class="showcase-badge-text"><?php echo htmlspecialchars($activeShowcase['badge']); ?></span>
+                    </div>
+                </div>
+
+                <!-- Main Promotional Copy -->
+                <div class="showcase-hero-text">
+                    <h1 class="showcase-title"><?php echo htmlspecialchars($activeShowcase['heading']); ?></h1>
+                    <p class="showcase-description"><?php echo htmlspecialchars($activeShowcase['subheading']); ?></p>
+                </div>
+
+                <!-- Feature Highlighting Cards -->
+                <div class="showcase-feature-list">
+                    <?php foreach ($activeShowcase['features'] as $feat): ?>
+                        <div class="showcase-feature-item">
+                            <div class="feature-icon-box">
+                                <i class="<?php echo htmlspecialchars($feat['icon']); ?>"></i>
+                            </div>
+                            <div class="feature-text-group">
+                                <strong><?php echo htmlspecialchars($feat['title']); ?></strong>
+                                <span><?php echo htmlspecialchars($feat['desc']); ?></span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Stat Bar / Social Proof Pill -->
+                <div class="showcase-footer-stat">
+                    <div class="stat-highlight">
+                        <strong class="stat-number"><?php echo htmlspecialchars($activeShowcase['stat_value']); ?></strong>
+                        <span class="stat-caption"><?php echo $activeShowcase['stat_label']; ?></span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ======================================================= -->
+        <!-- RIGHT FORM SECTION (Minimal & Pixel-Perfect) -->
+        <!-- ======================================================= -->
+        <main class="auth-form-panel">
+            <div class="auth-form-container">
+                <!-- Brand Monogram / Logo -->
                 <div class="logo">
                     <?php if (!empty($siteLogo)): ?>
                         <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>">
@@ -82,11 +180,12 @@ $googleOAuthUrl = '/oauth/google/?redirect_url=' . urlencode($redirect_url);
                     <?php endif; ?>
                 </div>
 
-                <div class="card-body">
+                <!-- Form Card -->
+                <div class="v3-auth-card">
                     <!-- Heading -->
                     <div class="form-heading">
-                        <strong>Welcome Back!</strong>
-                        <span>Sign in to access your <?php echo htmlspecialchars($siteName); ?> workspace</span>
+                        <strong>Sign In</strong>
+                        <span>Enter your work email to access your workspace</span>
                     </div>
 
                     <!-- Dynamic Live Alert Banner -->
@@ -95,33 +194,13 @@ $googleOAuthUrl = '/oauth/google/?redirect_url=' . urlencode($redirect_url);
                         <span id="authAlertText"></span>
                     </div>
 
-                    <!-- Google Sign-In Option -->
-                    <div class="auth-social-row">
-                        <a href="<?php echo htmlspecialchars($googleOAuthUrl); ?>" id="btnGoogleSignIn" class="btn-google-login">
-                            <svg class="google-svg-icon" viewBox="0 0 24 24" width="18" height="18">
-                                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
-                                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z" />
-                                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.04 0 12s.45 3.82 1.25 5.42l4.03-3.15z" />
-                                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
-                            </svg>
-                            <span>Continue with Google</span>
-                        </a>
-                    </div>
-
-                    <!-- Divider -->
-                    <div class="auth-divider">
-                        <span>or sign in with email OTP</span>
-                    </div>
-
-                    <!-- ======================================================= -->
-                    <!-- EMAIL OTP LOGIN WORKFLOW -->
-                    <!-- ======================================================= -->
+                    <!-- Passwordless Email OTP Workflow -->
                     <div id="authOtpSection" class="auth-section">
                         <!-- Step A: Enter Email Address -->
                         <div id="paneOtpStepEmail" class="otp-pane">
                             <form id="formSendOtp" autocomplete="off">
                                 <div class="form-group">
-                                    <label class="auth-label" for="otpEmail">Work Email Address</label>
+                                    <label class="auth-label" for="otpEmail">Email Address</label>
                                     <div class="input-icon-wrap">
                                         <i class="fi fi-rr-envelope input-icon"></i>
                                         <input
@@ -129,7 +208,7 @@ $googleOAuthUrl = '/oauth/google/?redirect_url=' . urlencode($redirect_url);
                                             class="form-control input-with-label"
                                             name="email"
                                             id="otpEmail"
-                                            placeholder="name@domain.com"
+                                            placeholder="name@company.com"
                                             required
                                             autofocus>
                                     </div>
@@ -139,8 +218,8 @@ $googleOAuthUrl = '/oauth/google/?redirect_url=' . urlencode($redirect_url);
 
                                 <button type="submit" id="btnSendOtp" class="button theme-button">
                                     <span class="btn-spinner"></span>
-                                    <span class="btn-text">Send Verification Code</span>
-                                    <i class="fi fi-rr-paper-plane btn-arrow"></i>
+                                    <span class="btn-text">Continue with Email</span>
+                                    <i class="fi fi-rr-arrow-right btn-arrow"></i>
                                 </button>
                             </form>
                         </div>
@@ -148,13 +227,18 @@ $googleOAuthUrl = '/oauth/google/?redirect_url=' . urlencode($redirect_url);
                         <!-- Step B: Verify 6-Digit OTP Code -->
                         <div id="paneOtpStepVerify" class="otp-pane" style="display: none;">
                             <div class="otp-sent-info">
-                                <span>Code sent to <strong id="displayOtpTarget"></strong></span>
-                                <a href="#" id="btnChangeOtpEmail" class="otp-edit-link">Change</a>
+                                <div class="otp-sent-meta">
+                                    <span class="otp-sent-label">Code sent to</span>
+                                    <strong id="displayOtpTarget" class="otp-sent-email"></strong>
+                                </div>
+                                <a href="#" id="btnChangeOtpEmail" class="otp-edit-link">
+                                    <i class="fi fi-rr-edit"></i> Edit
+                                </a>
                             </div>
 
                             <form id="formVerifyOtp" autocomplete="off">
                                 <div class="form-group">
-                                    <label class="auth-label" for="otpCodeInput">Enter 6-Digit Code</label>
+                                    <label class="auth-label" for="otpCodeInput">6-Digit Verification Code</label>
                                     <div class="input-icon-wrap">
                                         <i class="fi fi-rr-shield-check input-icon"></i>
                                         <input
@@ -166,6 +250,7 @@ $googleOAuthUrl = '/oauth/google/?redirect_url=' . urlencode($redirect_url);
                                             maxlength="6"
                                             pattern="\d{6}"
                                             inputmode="numeric"
+                                            autocomplete="one-time-code"
                                             required>
                                     </div>
                                 </div>
@@ -173,7 +258,7 @@ $googleOAuthUrl = '/oauth/google/?redirect_url=' . urlencode($redirect_url);
                                 <div class="form-group form-link-row">
                                     <span class="otp-countdown-text">
                                         Didn't receive code?
-                                        <a href="#" id="btnResendOtp" class="resend-link is-disabled">Resend code in <span id="resendTimer">30</span>s</a>
+                                        <a href="#" id="btnResendOtp" class="resend-link is-disabled">Resend in <span id="resendTimer">30</span>s</a>
                                     </span>
                                 </div>
 
@@ -181,30 +266,23 @@ $googleOAuthUrl = '/oauth/google/?redirect_url=' . urlencode($redirect_url);
 
                                 <button type="submit" id="btnVerifyOtp" class="button theme-button">
                                     <span class="btn-spinner"></span>
-                                    <span class="btn-text">Verify & Sign In</span>
-                                    <i class="fi fi-rr-arrow-right btn-arrow"></i>
+                                    <span class="btn-text">Verify & Continue</span>
+                                    <i class="fi fi-rr-check btn-arrow"></i>
                                 </button>
                             </form>
                         </div>
                     </div>
-
-                    <!-- Register Row -->
-                    <!-- <div class="form-group register-row">
-                        <p>Need a workspace account? <a href="/register/">Register Now</a></p>
-                    </div> -->
                 </div>
 
-                <!-- Legal Notice -->
-                <div class="legal">
-                    <p>By continuing you agree to our <a href="https://blumox.com/terms-and-conditions/" target="_blank">Terms of Service</a> and <a href="https://blumox.com/privacy-policy/" target="_blank">Privacy Policy</a></p>
+                <!-- Footer Legal & Version -->
+                <div class="auth-footer-meta">
+                    <p class="auth-legal-text">
+                        By continuing, you agree to our <a href="https://blumox.com/terms-and-conditions/" target="_blank">Terms</a> &amp; <a href="https://blumox.com/privacy-policy/" target="_blank">Privacy Policy</a>
+                    </p>
+                    <span class="auth-version-text">version 3.0</span>
                 </div>
             </div>
-
-            <!-- Version Tag -->
-            <p class="version">
-                v 3.0
-            </p>
-        </div>
+        </main>
     </div>
 
     <script src="<?php echo htmlspecialchars($jqueryJs); ?>"></script>
