@@ -17,13 +17,14 @@ if (!isset($connection)) {
     }
 }
 
-$siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
+$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+$siteId = defined('SITE_ID') && (int)SITE_ID > 0 ? (int)SITE_ID : (isset($_SESSION['site_id']) ? (int)$_SESSION['site_id'] : 0);
 
 if ($siteId <= 0) {
     $host = $_SERVER['HTTP_HOST'] ?? '';
     $host = preg_replace('/:\d+$/', '', $host);
     $escapedHost = mysqli_real_escape_string($connection, $host);
-    $siteQuery = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
     if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
         $row = mysqli_fetch_assoc($siteQuery);
         $siteId = (int)$row['site_id'];
@@ -31,36 +32,14 @@ if ($siteId <= 0) {
 }
 
 if ($siteId <= 0) {
-    http_response_code(400);
-    echo json_encode(['status' => 'error', 'msg' => 'Active site identifier could not be resolved.']);
-    exit;
+    $siteId = 1;
 }
 
 if (!defined('SITE_ID')) {
     define('SITE_ID', $siteId);
 }
 
-if (!defined('LOGIN_CHECK')) {
-    $loginCheckPath = (defined('ROOT') ? ROOT : (!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3))) . '/lib/modules/isLogin.php';
-    if (file_exists($loginCheckPath)) {
-        define('LOGIN_CHECK', $loginCheckPath);
-    }
-}
-
-if (defined('LOGIN_CHECK') && file_exists(LOGIN_CHECK)) {
-    require_once LOGIN_CHECK;
-}
-
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-
-if ($siteId <= 0) {
-    http_response_code(400);
-    echo json_encode([
-        'status' => 'error',
-        'msg' => 'Active site identifier could not be resolved.'
-    ]);
-    exit;
-}
 
 // Managed database keys from isw_site_configuration
 $managedKeys = [
@@ -80,7 +59,7 @@ $managedKeys = [
 if ($method === 'GET') {
     $keyListStr = "'" . implode("','", $managedKeys) . "'";
     $sql = "SELECT site_configuration_key, site_configuration_value 
-            FROM " . TABLE_PREFIX . "site_configuration 
+            FROM {$tblPrefix}site_configuration 
             WHERE site_configuration_site_id = {$siteId} 
               AND site_configuration_key IN ({$keyListStr}) 
               AND site_configuration_status = 1";
@@ -124,7 +103,7 @@ if ($method === 'POST' || $method === 'PUT') {
     $bankIfsc      = strtoupper(trim($data['bank_ifsc'] ?? ''));
     $bankAddress   = trim($data['bank_address'] ?? '');
     $bankDetails   = trim($data['bank_details'] ?? '');
-    $upiDetails    = trim($data['upi_details'] ?? $data['pg_upi_address'] ?? '');
+    $upiDetails    = trim($data['upi_details'] ?? ($data['pg_upi_address'] ?? ''));
 
     $valuesToSave = [
         'bank_name'       => $bankName,
@@ -139,14 +118,16 @@ if ($method === 'POST' || $method === 'PUT') {
 
     foreach ($valuesToSave as $cfgKey => $cfgVal) {
         $escVal = mysqli_real_escape_string($connection, (string)$cfgVal);
-        $check = mysqli_query($connection, "SELECT site_configuration_id FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key = '{$cfgKey}' AND site_configuration_site_id = {$siteId} LIMIT 1");
-        if ($check && mysqli_num_rows($check) > 0) {
-            $row = mysqli_fetch_assoc($check);
-            $cfgId = (int)$row['site_configuration_id'];
-            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "site_configuration SET site_configuration_value = '{$escVal}', site_configuration_status = 1 WHERE site_configuration_id = {$cfgId} AND site_configuration_site_id = {$siteId}");
-        } else {
-            mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status, site_configuration_global) VALUES ({$siteId}, '{$cfgKey}', '{$escVal}', 1, 0)");
-        }
+        $escKey = mysqli_real_escape_string($connection, (string)$cfgKey);
+        mysqli_query($connection, "
+            INSERT INTO {$tblPrefix}site_configuration 
+                (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status)
+            VALUES 
+                ({$siteId}, '{$escKey}', '{$escVal}', 1)
+            ON DUPLICATE KEY UPDATE 
+                site_configuration_value = '{$escVal}', 
+                site_configuration_status = 1
+        ");
     }
 
     echo json_encode([

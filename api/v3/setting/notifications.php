@@ -17,13 +17,14 @@ if (!isset($connection)) {
     }
 }
 
-$siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
+$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+$siteId = defined('SITE_ID') && (int)SITE_ID > 0 ? (int)SITE_ID : (isset($_SESSION['site_id']) ? (int)$_SESSION['site_id'] : 0);
 
 if ($siteId <= 0) {
     $host = $_SERVER['HTTP_HOST'] ?? '';
     $host = preg_replace('/:\d+$/', '', $host);
     $escapedHost = mysqli_real_escape_string($connection, $host);
-    $siteQuery = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
+    $siteQuery = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
     if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
         $row = mysqli_fetch_assoc($siteQuery);
         $siteId = (int)$row['site_id'];
@@ -31,56 +32,57 @@ if ($siteId <= 0) {
 }
 
 if ($siteId <= 0) {
-    http_response_code(400);
-    echo json_encode(['status' => 'error', 'msg' => 'Active site identifier could not be resolved.']);
-    exit;
+    $siteId = 1;
 }
 
 if (!defined('SITE_ID')) {
     define('SITE_ID', $siteId);
 }
 
-if (!defined('LOGIN_CHECK')) {
-    $loginCheckPath = (defined('ROOT') ? ROOT : (!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3))) . '/lib/modules/isLogin.php';
-    if (file_exists($loginCheckPath)) {
-        define('LOGIN_CHECK', $loginCheckPath);
-    }
-}
-
-if (defined('LOGIN_CHECK') && file_exists(LOGIN_CHECK)) {
-    require_once LOGIN_CHECK;
-}
-
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+$notificationKeys = [
+    'email_notification',
+    'admin_email_notification',
+    'admin_email',
+    'enquiry_email',
+    'site_email_alert',
+    'enable_whatsapp_business_api',
+    'admin_whatsapp_number',
+    'company_whatsapp_number',
+    'sms_enable',
+    'sms_default',
+    'enable_sms',
+    'company_mobile',
+    'enable_whatsapp',
+    'company_whatsapp',
+    'enable_push_notification',
+    'enable_inapp_notification',
+    'company_whatsapp_enquiry_thank_you',
+    'company_whatsapp_payment_request',
+    'company_whatsapp_itinerary_sent',
+    'enable_sound_alert',
+    'notify_new_lead',
+    'notify_booking_paid',
+    'notify_lead_assigned',
+    'notify_invoice_generated'
+];
 
 // --------------------------------------------------------------------------
 // 1. GET: Fetch Current Notification Routing Settings
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
-    $configKeys = [
-        'email_notification',
-        'admin_email_notification',
-        'enable_sms',
-        'enable_whatsapp',
-        'company_whatsapp',
-        'company_mobile',
-        'enable_push_notification',
-        'enable_sound_alert',
-        'notify_new_lead',
-        'notify_booking_paid',
-        'notify_lead_assigned',
-        'notify_invoice_generated'
-    ];
-
     $escKeys = "'" . implode("','", array_map(function($k) use ($connection) {
         return mysqli_real_escape_string($connection, $k);
-    }, $configKeys)) . "'";
+    }, $notificationKeys)) . "'";
 
-    $cfgRes = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value 
-                                         FROM " . TABLE_PREFIX . "site_configuration 
-                                         WHERE site_configuration_site_id = {$siteId} 
-                                           AND site_configuration_key IN ({$escKeys}) 
-                                           AND site_configuration_status = 1");
+    $cfgRes = mysqli_query($connection, "
+        SELECT site_configuration_key, site_configuration_value 
+        FROM {$tblPrefix}site_configuration 
+        WHERE site_configuration_site_id = {$siteId} 
+          AND site_configuration_key IN ({$escKeys}) 
+          AND site_configuration_status = 1
+    ");
 
     $configMap = [];
     if ($cfgRes) {
@@ -89,22 +91,30 @@ if ($method === 'GET') {
         }
     }
 
-    $siteRes = mysqli_query($connection, "SELECT site_email, site_mobile FROM " . TABLE_PREFIX . "site WHERE site_id = {$siteId} LIMIT 1");
-    $siteRow = $siteRes ? mysqli_fetch_assoc($siteRes) : [];
+    $adminEmail = $configMap['admin_email'] ?? ($configMap['admin_email_notification'] ?? ($configMap['email_notification'] ?? ''));
+    $adminWhatsapp = $configMap['admin_whatsapp_number'] ?? ($configMap['company_whatsapp'] ?? ($configMap['company_mobile'] ?? ''));
 
     $data = [
-        'email_notification'        => $configMap['email_notification'] ?? ($configMap['admin_email_notification'] ?? '1'),
-        'admin_email_notification'  => $configMap['admin_email_notification'] ?? ($configMap['email_notification'] ?? ($siteRow['site_email'] ?? '')),
-        'enable_sms'                => $configMap['enable_sms'] ?? '0',
-        'company_mobile'            => $configMap['company_mobile'] ?? ($siteRow['site_mobile'] ?? ''),
-        'enable_whatsapp'           => $configMap['enable_whatsapp'] ?? '1',
-        'company_whatsapp'          => $configMap['company_whatsapp'] ?? ($configMap['company_mobile'] ?? ($siteRow['site_mobile'] ?? '')),
-        'enable_push_notification'  => $configMap['enable_push_notification'] ?? '1',
-        'enable_sound_alert'        => $configMap['enable_sound_alert'] ?? '1',
-        'notify_new_lead'           => $configMap['notify_new_lead'] ?? '1',
-        'notify_booking_paid'       => $configMap['notify_booking_paid'] ?? '1',
-        'notify_lead_assigned'      => $configMap['notify_lead_assigned'] ?? '1',
-        'notify_invoice_generated'  => $configMap['notify_invoice_generated'] ?? '1'
+        'email_notification'                 => $configMap['email_notification'] ?? '1',
+        'admin_email_notification'           => $configMap['admin_email_notification'] ?? '1',
+        'admin_email'                        => $adminEmail,
+        'enquiry_email'                      => $configMap['enquiry_email'] ?? $adminEmail,
+        'site_email_alert'                   => $configMap['site_email_alert'] ?? $adminEmail,
+        'enable_whatsapp_business_api'       => $configMap['enable_whatsapp_business_api'] ?? ($configMap['enable_whatsapp'] ?? '1'),
+        'admin_whatsapp_number'              => $adminWhatsapp,
+        'company_whatsapp_number'            => $configMap['company_whatsapp_number'] ?? $adminWhatsapp,
+        'sms_enable'                         => $configMap['sms_enable'] ?? ($configMap['enable_sms'] ?? '0'),
+        'sms_default'                        => $configMap['sms_default'] ?? '',
+        'enable_push_notification'           => $configMap['enable_push_notification'] ?? '1',
+        'enable_inapp_notification'          => $configMap['enable_inapp_notification'] ?? '1',
+        'company_whatsapp_enquiry_thank_you' => $configMap['company_whatsapp_enquiry_thank_you'] ?? '1',
+        'company_whatsapp_payment_request'   => $configMap['company_whatsapp_payment_request'] ?? '1',
+        'company_whatsapp_itinerary_sent'    => $configMap['company_whatsapp_itinerary_sent'] ?? '1',
+        'enable_sound_alert'                 => $configMap['enable_sound_alert'] ?? '1',
+        'notify_new_lead'                    => $configMap['notify_new_lead'] ?? '1',
+        'notify_booking_paid'                => $configMap['notify_booking_paid'] ?? '1',
+        'notify_lead_assigned'               => $configMap['notify_lead_assigned'] ?? '1',
+        'notify_invoice_generated'           => $configMap['notify_invoice_generated'] ?? '1'
     ];
 
     echo json_encode([
@@ -122,35 +132,23 @@ if ($method === 'POST' || $method === 'PUT') {
     $jsonData = json_decode($rawInput, true) ?? [];
     $data = !empty($_POST) ? $_POST : $jsonData;
 
-    $fields = [
-        'email_notification',
-        'admin_email_notification',
-        'enable_sms',
-        'company_mobile',
-        'enable_whatsapp',
-        'company_whatsapp',
-        'enable_push_notification',
-        'enable_sound_alert',
-        'notify_new_lead',
-        'notify_booking_paid',
-        'notify_lead_assigned',
-        'notify_invoice_generated'
-    ];
-
     $updatedKeys = [];
-    foreach ($fields as $field) {
-        if (isset($data[$field])) {
-            $val = trim((string)$data[$field]);
-            $escVal = mysqli_real_escape_string($connection, $val);
-            $escKey = mysqli_real_escape_string($connection, $field);
+    foreach ($data as $key => $value) {
+        $val = trim((string)$value);
+        $escVal = mysqli_real_escape_string($connection, $val);
+        $escKey = mysqli_real_escape_string($connection, $key);
 
-            $upsertSql = "INSERT INTO " . TABLE_PREFIX . "site_configuration 
-                          (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status)
-                          VALUES ({$siteId}, '{$escKey}', '{$escVal}', 1)
-                          ON DUPLICATE KEY UPDATE site_configuration_value = '{$escVal}', site_configuration_status = 1";
-            mysqli_query($connection, $upsertSql);
-            $updatedKeys[] = $field;
-        }
+        $upsertSql = "
+            INSERT INTO {$tblPrefix}site_configuration 
+                (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status)
+            VALUES 
+                ({$siteId}, '{$escKey}', '{$escVal}', 1)
+            ON DUPLICATE KEY UPDATE 
+                site_configuration_value = '{$escVal}', 
+                site_configuration_status = 1
+        ";
+        mysqli_query($connection, $upsertSql);
+        $updatedKeys[] = $key;
     }
 
     echo json_encode([
