@@ -26,7 +26,7 @@ $email_footer = "							</td>
 								<b style='color: {$themeColor}; font-size: 14.5px; font-weight: 700;'>{$siteName}</b><br/>
 								{$address}
 								<div style='margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; font-size: 11.5px; color: #94a3b8; line-height: 1.6;'>
-									Powered by <a href='{$appUrl}' target='_blank' style='color: {$themeColor}; font-weight: 700; text-decoration: none;'>{$appName}<sup>&trade;</sup></a> &bull; Developed with &hearts; in India by <a href='https://blumox.com?utm_source=" . urlencode(strtolower(str_replace(' ', '_', $siteName))) . "&utm_medium=email_footer' target='_blank' style='color: #475569; font-weight: 600; text-decoration: none;'><strong>{$creditName}</strong></a>
+									Powered by <a href='{$appUrl}' target='_blank' style='color: {$themeColor}; font-weight: 700; text-decoration: none;'>{$appName}<sup>&trade;</sup></a> &bull; Developed with <span style='color: #ef4444; font-size: 12.5px;'>&hearts;</span> in India by <a href='https://blumox.com?utm_source=" . urlencode(strtolower(str_replace(' ', '_', $siteName))) . "&utm_medium=email_footer' target='_blank' style='color: #475569; font-weight: 600; text-decoration: none;'><strong>{$creditName}</strong></a>
 								</div>
 							</div>
 						</td>
