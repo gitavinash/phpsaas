@@ -5,6 +5,21 @@ if (!isset($id)) {
     exit();
 }
 
+if (DEVELOPMENT_MODE == false) {
+    $fetchIPData = file_get_contents("http://ip-api.com/json/" . ((IP == '127.0.0.1') ? '110.235.235.20' : IP) . "?fields=status,message,continent,country,regionName,city,zip,lat,lon,isp,org");
+    extract(json_decode($fetchIPData, TRUE));
+} else {
+    $country = 'us';
+}
+
+if (strtolower($country) == 'india') {
+    $cart_currency = 'INR';
+    $cart_symbol = '₹';
+} else {
+    $cart_currency = 'USD';
+    $cart_symbol = '$';
+}
+
 require_once LOGIN_CHECK;
 
 $redirect_url = ((isset($redirect_url)) ? $redirect_url : '/manage-subscription/');
@@ -43,9 +58,9 @@ if (isset($_COOKIE['user_data'])) {
 
     if ($checkCart = mysqli_query($connection, "SELECT cart_id FROM " . TABLE_PREFIX . "cart WHERE cart_session_id='" . SESSION_ID . "' AND cart_site_id='" . SITE_ID . "' AND cart_status!=1")) {
         if (mysqli_num_rows($checkCart) == 0) {
-            $addToCart = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_user_id, cart_relation_id, cart_relation_type, cart_qty, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$user_id}', '{$id}', 'product', '1', '{$totalPrice}', 2, NOW())");
+            $addToCart = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "cart(cart_session_id, cart_site_id, cart_user_id, cart_relation_id, cart_relation_type, cart_qty, cart_currency, cart_currency_symbol, cart_price, cart_status, cart_generated) VALUES('" . SESSION_ID . "', " . SITE_ID . ", '{$user_id}', '{$id}', 'product', '1', '{$cart_currency}', '{$cart_symbol}', '', '{$totalPrice}', 2, NOW())");
         } else {
-            $addToCart = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_relation_id='{$id}', cart_price='{$totalPrice}' WHERE cart_session_id='" . SESSION_ID . "' AND cart_site_id='" . SITE_ID . "'");
+            $addToCart = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "cart SET cart_relation_id='{$id}', cart_price='{$totalPrice}', cart_currency='{$cart_currency}', cart_currency_symbol='{$cart_symbol}' WHERE cart_session_id='" . SESSION_ID . "' AND cart_site_id='" . SITE_ID . "'");
         }
     }
 
