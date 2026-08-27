@@ -304,7 +304,7 @@ if ($tRes = mysqli_query($connection, $transporterSql)) {
         $serviceState = strtolower(trim($tRow['transporter_service_state'] ?? ''));
         $transCity    = strtolower(trim($tRow['transporter_city'] ?? ''));
         $pkgCityLower = strtolower($pkgCity);
-        $pkgStateLower= strtolower($pkgState);
+        $pkgStateLower = strtolower($pkgState);
 
         $isLocal = false;
         if (!empty($pkgStateLower) && (strpos($serviceState, $pkgStateLower) !== false || strpos($pkgStateLower, $serviceState) !== false)) {
@@ -346,7 +346,9 @@ usort($transportersList, function ($a, $b) {
 });
 
 $assignedCount = count($assignedTransporterMap);
-$localCount    = count(array_filter($transportersList, function($t) { return $t['is_local']; }));
+$localCount    = count(array_filter($transportersList, function ($t) {
+    return $t['is_local'];
+}));
 $totalCount    = count($transportersList);
 $unassignedCount = max(0, $totalCount - $assignedCount);
 
@@ -374,9 +376,9 @@ echo json_encode([
     'metrics'      => [
         'total_transporters'    => $totalCount,
         'assigned_transporters' => $assignedCount,
-        'unassigned_transporters'=> $unassignedCount,
+        'unassigned_transporters' => $unassignedCount,
         'nearby_transporters'   => $localCount,
-        'has_outstation_vehicle'=> !empty($outstationVehicle),
+        'has_outstation_vehicle' => !empty($outstationVehicle),
         'has_local_vehicle'     => !empty($localSightseeingVehicle)
     ]
 ], JSON_UNESCAPED_SLASHES);

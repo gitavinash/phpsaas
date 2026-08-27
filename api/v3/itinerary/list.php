@@ -1,4 +1,5 @@
 <?php
+
 /**
  * V3 Itinerary Search API
  * Endpoint: /api/v3/itinerary/list.php
@@ -14,12 +15,7 @@ if (!isset($connection)) {
     }
 }
 
-if (!defined('LOGIN_CHECK')) {
-    define('LOGIN_CHECK', $_SERVER['DOCUMENT_ROOT'] . '/lib/session/index.php');
-}
-if (file_exists(LOGIN_CHECK)) {
-    require_once LOGIN_CHECK;
-}
+require_once LOGIN_CHECK;
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;

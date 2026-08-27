@@ -9,10 +9,12 @@ if (!isset($connection)) {
     }
 }
 
+require_once LOGIN_CHECK;
+
 $tblPrefix  = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId     = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $userId     = defined('USER_ID')      ? (int) USER_ID : 0;
-$accessType = isset($site_access_type) ? $site_access_type : 'administrator';
+$accessType = isset($site_access_type) ? $site_access_type : 'customer';
 
 $reqData = $_POST;
 $rawInput = file_get_contents('php://input');
@@ -77,7 +79,8 @@ if (isset($reqData['source']) && trim($reqData['source']) !== '' && $reqData['so
     $sourceFilter = " AND e.enquiry_source LIKE '%{$sourceKey}%'";
 }
 
-function cleanLeadSource($src) {
+function cleanLeadSource($src)
+{
     if (empty($src) || trim($src) === '') return 'Direct';
     $c = trim($src);
     $c = preg_replace('#^https?://#i', '', $c);
@@ -86,7 +89,8 @@ function cleanLeadSource($src) {
     return ucfirst($c);
 }
 
-function getLeadStatusMeta($status) {
+function getLeadStatusMeta($status)
+{
     switch ((int)$status) {
         case 1:
             return ['label' => 'Confirmed', 'class' => 'status-confirmed', 'icon' => 'fi-rr-check-circle'];
@@ -107,7 +111,8 @@ function getLeadStatusMeta($status) {
     }
 }
 
-function getRelativeTime($timestamp) {
+function getRelativeTime($timestamp)
+{
     $time = strtotime($timestamp);
     if (!$time) return '';
     $diff = time() - $time;
