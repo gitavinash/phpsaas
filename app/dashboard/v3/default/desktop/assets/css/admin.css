@@ -15718,6 +15718,32 @@ tr:hover .vehicle-table-thumb {
   background: #f8fafc !important;
 }
 
+.vehicle-master-wrapper .vehicle-model-identity {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+}
+
+.vehicle-master-wrapper .vehicle-model-thumbnail {
+  display: block;
+  width: 38px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.vehicle-master-wrapper .vehicle-model-fallback-icon {
+  color: #4f46e5;
+  font-size: 18px;
+}
+
 .col-vehicle-model {
   width: 26% !important;
 }

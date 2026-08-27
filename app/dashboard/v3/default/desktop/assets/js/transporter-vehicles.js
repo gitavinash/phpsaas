@@ -46,6 +46,16 @@
     bindEvents: function () {
       const self = this;
 
+      $(document)
+        .off("error.vehicleModel", ".vehicle-model-thumbnail")
+        .on("error.vehicleModel", ".vehicle-model-thumbnail", function () {
+          $(this).replaceWith(
+            $("<i>").addClass(
+              $(this).data("fallback-icon") + " vehicle-model-fallback-icon",
+            ),
+          );
+        });
+
       // Filter Tabs
       $(document)
         .off("click", "#vehicleFilterTabs .theme-filter-btn")
@@ -507,8 +517,8 @@
         : `<span style="color: #94a3b8; font-size: 12px;">No specifications provided</span>`;
 
       const avatarHTML = v.thumbnail
-        ? `<img src="${v.thumbnail}" alt="${selfEscapeHTML(v.title)}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 8px;" onerror="this.style.display='none'; $(this).next().show();"><div class="transport-avatar-badge" style="width: 38px; height: 38px; font-size: 15px; flex-shrink: 0; display: none;"><i class="${fallbackIcon}"></i></div>`
-        : `<div class="transport-avatar-badge" style="width: 38px; height: 38px; font-size: 15px; flex-shrink: 0;"><i class="${fallbackIcon}"></i></div>`;
+        ? `<img class="vehicle-model-thumbnail" src="${selfEscapeHTML(v.thumbnail)}" alt="" data-fallback-icon="${fallbackIcon}" loading="lazy">`
+        : `<i class="${fallbackIcon} vehicle-model-fallback-icon"></i>`;
 
       const deleteBtnHTML =
         !this.transporterId && v.is_deletable !== false
@@ -519,19 +529,9 @@
 
       return `
         <tr class="vehicle-row" data-id="${v.id}">
-          <!-- Model & Thumbnail -->
+          <!-- Model image or title fallback -->
           <td>
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 38px; height: 38px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; overflow: hidden; background: #f8fafc; border: 1px solid #e2e8f0;">
-                ${avatarHTML}
-              </div>
-              <div style="min-width: 0;">
-                <div style="font-weight: 700; color: #0f172a; font-size: 13.5px; line-height: 1.3; margin-bottom: 2px; text-transform: capitalize;" title="${selfEscapeHTML(capitalizeWords(v.title))}">
-                  ${selfEscapeHTML(capitalizeWords(v.title))}
-                </div>
-                <span style="color: #94a3b8; font-size: 11.5px; font-weight: 500;">Fleet Model #${v.id}</span>
-              </div>
-            </div>
+            <div class="vehicle-model-identity">${avatarHTML}</div>
           </td>
 
           <!-- Category / Type -->
