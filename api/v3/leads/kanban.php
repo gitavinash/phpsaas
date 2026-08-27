@@ -1,7 +1,7 @@
 <?php
 
 header("Content-type: application/json; charset=utf-8");
-
+require_once LOGIN_CHECK;
 if (!isset($connection)) {
     $configPath = $_SERVER['DOCUMENT_ROOT'] . '/lib/configuration/index.php';
     if (file_exists($configPath)) {
@@ -43,7 +43,8 @@ if (isset($_GET['search']) && trim($_GET['search']) !== '') {
     $daterangeFilter = "";
 }
 
-function cleanLeadSource($src) {
+function cleanLeadSource($src)
+{
     if (empty($src) || trim($src) === '') return 'Direct';
     $c = trim($src);
     $c = preg_replace('#^https?://#i', '', $c);
@@ -75,7 +76,7 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
                 'name'       => !empty($row['name'])           ? $row['name']                  : 'Lead #' . $row['enquiry_id'],
                 'mobile'     => !empty($row['enquiry_mobile']) ? $row['enquiry_mobile']        : '',
                 'email'      => !empty($row['enquiry_email'])  ? $row['enquiry_email']         : '',
-                'subject'    => !empty($row['enquiry_subject'])? $row['enquiry_subject']       : 'General Enquiry',
+                'subject'    => !empty($row['enquiry_subject']) ? $row['enquiry_subject']       : 'General Enquiry',
                 'source'     => cleanLeadSource($row['enquiry_source']),
                 'time'       => date('d M, h:i A', strtotime($row['enquiry_time'])),
                 'status'     => (int)$row['enquiry_status'],
@@ -116,7 +117,7 @@ if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql)
             'name'       => !empty($row['name'])           ? $row['name']                  : 'Lead #' . $row['enquiry_id'],
             'mobile'     => !empty($row['enquiry_mobile']) ? $row['enquiry_mobile']        : '',
             'email'      => !empty($row['enquiry_email'])  ? $row['enquiry_email']         : '',
-            'subject'    => !empty($row['enquiry_subject'])? $row['enquiry_subject']       : 'General Enquiry',
+            'subject'    => !empty($row['enquiry_subject']) ? $row['enquiry_subject']       : 'General Enquiry',
             'source'     => cleanLeadSource($row['enquiry_source']),
             'time'       => date('d M, h:i A', strtotime($row['enquiry_time'])),
             'status'     => (int)$row['enquiry_status'],

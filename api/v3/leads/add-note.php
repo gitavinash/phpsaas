@@ -2,6 +2,8 @@
 
 header("Content-type: application/json; charset=utf-8");
 
+require_once LOGIN_CHECK;
+
 if (!isset($connection)) {
     $configPath = $_SERVER['DOCUMENT_ROOT'] . '/lib/configuration/index.php';
     if (file_exists($configPath)) {

@@ -1,5 +1,7 @@
 <?php
 
+require_once LOGIN_CHECK;
+
 header("Content-type: application/json; charset=utf-8");
 
 if (!isset($connection)) {

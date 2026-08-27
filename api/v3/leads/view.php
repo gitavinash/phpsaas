@@ -1,5 +1,5 @@
 <?php
-
+require_once LOGIN_CHECK;
 header("Content-type: application/json; charset=utf-8");
 
 if (!isset($connection)) {
@@ -58,7 +58,8 @@ if (!$leadRes || mysqli_num_rows($leadRes) === 0) {
 $lead = mysqli_fetch_assoc($leadRes);
 
 // Helper for status badge metadata
-function getLeadStatusMeta($status) {
+function getLeadStatusMeta($status)
+{
     switch ((int)$status) {
         case 0:
             return ['label' => 'Fresh Lead', 'class' => 'badge-fresh', 'color' => '#0284c7'];
@@ -299,7 +300,7 @@ $response = [
         'agent_id' => (int)($lead['enquiry_agent'] ?? 0),
         'agent_name' => !empty($lead['agent_name']) ? $lead['agent_name'] : 'Unassigned',
         'agent_role' => !empty($lead['agent_role']) ? ucwords(str_replace('_', ' ', $lead['agent_role'])) : 'Representative',
-        
+
         // Travel & Inquiry Details
         'travel_details' => [
             'date_of_travel' => $travelDate,
