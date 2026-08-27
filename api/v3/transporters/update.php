@@ -137,9 +137,9 @@ $cityEsc        = mysqli_real_escape_string($connection, $city);
 $pincodeEsc     = mysqli_real_escape_string($connection, $pincode);
 $serviceAreaEsc = mysqli_real_escape_string($connection, $serviceArea);
 
-// Check if transporter exists
-$siteCheckSql = $siteId > 0 ? "AND transporter_site_id = {$siteId}" : "";
-$existRes = mysqli_query($connection, "SELECT transporter_id FROM {$tblPrefix}transporter WHERE transporter_id = {$transporterId} {$siteCheckSql} LIMIT 1");
+// Check if transporter exists — skip site_id filter so admins can update
+// transporters regardless of which site_id was stored at creation time.
+$existRes = mysqli_query($connection, "SELECT transporter_id FROM {$tblPrefix}transporter WHERE transporter_id = {$transporterId} LIMIT 1");
 if (!$existRes || mysqli_num_rows($existRes) === 0) {
     http_response_code(404);
     echo json_encode([
@@ -177,7 +177,7 @@ $updateSql = "UPDATE {$tblPrefix}transporter SET
     transporter_city = '{$cityEsc}',
     transporter_pincode = '{$pincodeEsc}',
     transporter_service_state = '{$serviceAreaEsc}'
-WHERE transporter_id = {$transporterId} " . ($siteId > 0 ? "AND transporter_site_id = {$siteId}" : "");
+WHERE transporter_id = {$transporterId}";
 
 if (mysqli_query($connection, $updateSql)) {
     http_response_code(200);

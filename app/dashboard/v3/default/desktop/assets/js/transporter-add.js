@@ -419,21 +419,22 @@
         $('#headerTransporterTitle').text('Edit: ' + item.title);
       }
 
-      // Extract metadata from description if present
+      // Use API-provided fields first, then fall back to parsing description metadata
       let rawDesc = item.description || '';
       let descClean = rawDesc;
-      let contactPerson = '';
-      let altMobile = '';
+      let contactPerson = item.contact_person || '';
+      let altMobile = item.alt_mobile || '';
 
-      if (rawDesc.indexOf('[') !== -1 && rawDesc.indexOf(']') !== -1) {
+      // Parse embedded metadata "[Contact Person: X | Alternate Contact: Y]" only if direct fields are missing
+      if ((!contactPerson || !altMobile) && rawDesc.indexOf('[') !== -1 && rawDesc.indexOf(']') !== -1) {
         const metaBlock = rawDesc.substring(rawDesc.lastIndexOf('[') + 1, rawDesc.lastIndexOf(']'));
         descClean = rawDesc.substring(0, rawDesc.lastIndexOf('[')).trim();
 
         const parts = metaBlock.split('|').map(p => p.trim());
         parts.forEach(p => {
-          if (p.toLowerCase().startsWith('contact person:')) {
+          if (!contactPerson && p.toLowerCase().startsWith('contact person:')) {
             contactPerson = p.substring(15).trim();
-          } else if (p.toLowerCase().startsWith('alternate contact:')) {
+          } else if (!altMobile && p.toLowerCase().startsWith('alternate contact:')) {
             altMobile = p.substring(18).trim();
           }
         });
@@ -446,6 +447,7 @@
         $('#transporterAltMobile').val(altMobile);
       }
       $('#transporterDescription').val(descClean);
+
 
       // Populate Service States
       const serviceStr = item.service_state || item.serviceArea || '';

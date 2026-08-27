@@ -31,8 +31,13 @@ if (is_numeric($rawId) && (int)$rawId > 0) {
     }
 }
 
+// When fetching by specific transporter ID skip site filter — allows admins to load
+// transporters regardless of which site_id was stored at creation time.
+$bySpecificId = $transporterId > 0;
+
 $whereConditions = [];
-if ($siteId > 0) {
+// Only apply site filter when listing all transporters, not when fetching one by ID
+if ($siteId > 0 && !$bySpecificId) {
     $whereConditions[] = "t.transporter_site_id = {$siteId}";
 }
 
@@ -122,14 +127,38 @@ if ($res) {
 
         $assignedPkgs = $assignedCountMap[$tId] ?? 0;
 
+        $rawDesc = $row['transporter_description'] ?? '';
+
+        // Extract contact_person and alt_mobile from embedded metadata in description
+        // Format: "[Contact Person: X | Alternate Contact: Y | Fleet Types: Z]"
+        $contactPerson = '';
+        $altMobile     = '';
+        $cleanDesc     = $rawDesc;
+        if (preg_match('/\[([^\]]+)\]$/', $rawDesc, $metaMatch)) {
+            $metaParts = array_map('trim', explode('|', $metaMatch[1]));
+            foreach ($metaParts as $part) {
+                if (strpos($part, 'Contact Person:') === 0) {
+                    $contactPerson = trim(substr($part, strlen('Contact Person:')));
+                } elseif (strpos($part, 'Alternate Contact:') === 0) {
+                    $altMobile = trim(substr($part, strlen('Alternate Contact:')));
+                }
+            }
+            // Remove the metadata block from the clean description
+            $cleanDesc = trim(preg_replace('/\s*\[[^\]]+\]$/', '', $rawDesc));
+        }
+
         $transportersList[] = [
             'id'             => $tId,
             'encoded_id'     => base64_encode((string)$tId),
             'title'          => $row['transporter_title'] ?? 'Transporter',
+            'name'           => $row['transporter_title'] ?? 'Transporter',
             'thumbnail'      => $row['transporter_thumbnail'] ?? '',
             'email'          => $row['transporter_email'] ?? '',
             'mobile'         => $row['transporter_mobile'] ?? '',
-            'description'    => $row['transporter_description'] ?? '',
+            'phone'          => $row['transporter_mobile'] ?? '',
+            'alt_mobile'     => $altMobile,
+            'contact_person' => $contactPerson,
+            'description'    => $cleanDesc,
             'address'        => $row['transporter_address'] ?? '',
             'area'           => $row['transporter_address'] ?? '',
             'city'           => $row['transporter_city'] ?? '',
@@ -142,6 +171,7 @@ if ($res) {
             'status_label'   => 'Active',
             'assigned_packages_count' => $assignedPkgs
         ];
+
     }
 }
 
