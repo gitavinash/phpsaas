@@ -308,7 +308,7 @@
 
                     <!-- Fleet Master Quick Link -->
                     <div class="live-fleet-link-section">
-                        <a href="/dashboard/vendors/transporter/vehicle/" class="live-fleet-link-btn" data-tooltip="Open Fleet & Vehicle Models Manager">
+                        <a href="/dashboard/vendors/transporter/fleet/?id=<?php echo $_GET['id']; ?>" class="live-fleet-link-btn" data-tooltip="Open Fleet & Vehicle Models Manager">
                             <i class="fi fi-rr-car-alt"></i> Manage Fleet &amp; Vehicles <i class="fi fi-rr-arrow-right"></i>
                         </a>
                     </div>

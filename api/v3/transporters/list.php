@@ -115,7 +115,7 @@ if ($res) {
     while ($row = mysqli_fetch_assoc($res)) {
         $tId = (int)$row['transporter_id'];
         $rawStates = trim($row['transporter_service_state'] ?? '');
-        
+
         if (!empty($rawStates)) {
             $splitStates = array_map('trim', explode(',', $rawStates));
             foreach ($splitStates as $s) {
@@ -141,11 +141,15 @@ if ($res) {
                     $contactPerson = trim(substr($part, strlen('Contact Person:')));
                 } elseif (strpos($part, 'Alternate Contact:') === 0) {
                     $altMobile = trim(substr($part, strlen('Alternate Contact:')));
+                } elseif (strpos($part, 'Fleet Types:') === 0) {
+                    $fleetTypes = array_values(array_filter(array_map('trim', explode(',', substr($part, strlen('Fleet Types:'))))));
                 }
             }
             // Remove the metadata block from the clean description
             $cleanDesc = trim(preg_replace('/\s*\[[^\]]+\]$/', '', $rawDesc));
         }
+
+        $fleetTypes = $fleetTypes ?? [];
 
         $transportersList[] = [
             'id'             => $tId,
@@ -158,6 +162,7 @@ if ($res) {
             'phone'          => $row['transporter_mobile'] ?? '',
             'alt_mobile'     => $altMobile,
             'contact_person' => $contactPerson,
+            'fleet_types'    => $fleetTypes,
             'description'    => $cleanDesc,
             'address'        => $row['transporter_address'] ?? '',
             'area'           => $row['transporter_address'] ?? '',
@@ -171,7 +176,6 @@ if ($res) {
             'status_label'   => 'Active',
             'assigned_packages_count' => $assignedPkgs
         ];
-
     }
 }
 

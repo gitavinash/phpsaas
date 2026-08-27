@@ -3279,6 +3279,101 @@ section .form-group textarea:focus {
   border-color: #fda4af !important;
 }
 
+.transporter-fleet-checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 8px;
+  max-height: 190px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+.transporter-fleet-selector-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.transporter-fleet-selector-toolbar .v3-form-control {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+}
+.transporter-fleet-selector-toolbar .filter-search-input {
+  flex: 1;
+  min-width: 160px;
+  height: 34px;
+  padding: 0 11px;
+  border: 1px solid #dbe3ef;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 12px;
+  outline: none;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.transporter-fleet-selector-toolbar .filter-search-input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+.transporter-fleet-selector-toolbar .v3-btn-secondary {
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+.transporter-fleet-selected-count {
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.transporter-fleet-check-item {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  align-items: center;
+  column-gap: 8px;
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #ffffff;
+  cursor: pointer;
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease,
+    box-shadow 0.16s ease;
+}
+.transporter-fleet-check-item:hover {
+  border-color: #a5b4fc;
+  background: #f8faff;
+  box-shadow: 0 2px 6px rgba(30, 41, 59, 0.05);
+}
+.transporter-fleet-check-item input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: #4f46e5;
+}
+.transporter-assigned-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 700;
+}
+.transporter-fleet-check-item small {
+  grid-column: 2;
+  color: #64748b;
+  font-size: 11px;
+}
+
 /* ---- Single-Line Unified Package Filter & Search Toolbar (No Scroll) ---- */
 .package-filter-toolbar {
   display: flex !important;
@@ -15754,6 +15849,40 @@ tr:hover .vehicle-table-thumb {
   margin: 0 0 16px 0 !important;
   font-size: 13px !important;
   color: #64748b !important;
+}
+
+.transporter-fleet-empty-state {
+  display: none;
+  min-height: 210px;
+  padding: 34px 24px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: center;
+}
+.transporter-fleet-empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 22px;
+}
+.transporter-fleet-empty-state h3 {
+  margin: 0 0 6px;
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 700;
+}
+.transporter-fleet-empty-state p {
+  margin: 0 auto 16px;
+  max-width: 420px;
+  color: #64748b;
+  font-size: 13px;
 }
 
 /* Add / Edit Vehicle Modal */

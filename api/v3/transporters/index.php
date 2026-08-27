@@ -1,4 +1,5 @@
 <?php
+
 /**
  * V3 Transporters Master Resource API
  * Path: /api/v3/transporters/index.php
@@ -11,9 +12,13 @@ $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 $input = file_get_contents('php://input');
 $data  = json_decode($input, true) ?? $_POST;
 $actionParam = $_GET['action'] ?? ($data['action'] ?? ($_POST['action'] ?? ''));
+$isFleetUpdate = $actionParam === 'update_fleet';
 $isUpdate = !empty($data['transporter_id']) || !empty($data['id']) || !empty($_GET['id']) || !empty($_POST['transporter_id']) || ($actionParam === 'update');
 
-if ($method === 'PUT' || ($method === 'POST' && $isUpdate)) {
+if ($method === 'POST' && $isFleetUpdate) {
+    $_POST = array_merge($_POST, $data);
+    require_once __DIR__ . '/update-fleet.php';
+} elseif ($method === 'PUT' || ($method === 'POST' && $isUpdate)) {
     require_once __DIR__ . '/update.php';
 } elseif ($method === 'POST') {
     require_once __DIR__ . '/create.php';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * V3 Vehicles List & Metrics API
  * Path: /api/v3/vehicles/list.php
@@ -25,6 +26,14 @@ $userId    = defined('USER_ID')      ? (int) USER_ID : (int)($_SESSION['user_id'
 
 $search   = isset($_GET['search']) ? mysqli_real_escape_string($connection, trim($_GET['search'])) : '';
 $category = isset($_GET['category']) ? mysqli_real_escape_string($connection, strtolower(trim($_GET['category']))) : '';
+$rawTransporterId = $_GET['transporter_id'] ?? ($_GET['transporterId'] ?? 0);
+$transporterId = is_numeric($rawTransporterId) ? (int)$rawTransporterId : 0;
+if ($transporterId <= 0 && !empty($rawTransporterId)) {
+    $decodedTransporterId = base64_decode((string)$rawTransporterId, true);
+    if ($decodedTransporterId !== false && is_numeric($decodedTransporterId)) {
+        $transporterId = (int)$decodedTransporterId;
+    }
+}
 
 $rawId = $_GET['id'] ?? ($_GET['vehicle_id'] ?? 0);
 $vehicleId = 0;
@@ -38,6 +47,26 @@ if (is_numeric($rawId) && (int)$rawId > 0) {
 }
 
 $whereConditions = [];
+
+if ($transporterId > 0) {
+    $transporterQuery = mysqli_query($connection, "SELECT transporter_description FROM {$tblPrefix}transporter WHERE transporter_id = {$transporterId} LIMIT 1");
+    $transporterRow = $transporterQuery ? mysqli_fetch_assoc($transporterQuery) : null;
+    $fleetTypes = [];
+    if ($transporterRow && preg_match('/Fleet Types:\s*([^\]]+)/i', $transporterRow['transporter_description'] ?? '', $fleetMatch)) {
+        $fleetTypes = array_values(array_filter(array_map('trim', explode(',', $fleetMatch[1]))));
+    }
+
+    if (empty($fleetTypes)) {
+        $whereConditions[] = '1 = 0';
+    } else {
+        $fleetConditions = [];
+        foreach ($fleetTypes as $fleetType) {
+            $fleetType = mysqli_real_escape_string($connection, $fleetType);
+            $fleetConditions[] = "(v.vehicle_type = LOWER('{$fleetType}') OR v.vehicle_title LIKE '%{$fleetType}%')";
+        }
+        $whereConditions[] = '(' . implode(' OR ', $fleetConditions) . ')';
+    }
+}
 
 if ($vehicleId > 0) {
     $whereConditions[] = "v.vehicle_id = {$vehicleId}";
@@ -81,36 +110,48 @@ $sql = "SELECT
 $res = mysqli_query($connection, $sql);
 
 $vehicles = [];
+$formatVehicle = function ($row) {
+    $vId = (int)$row['vehicle_id'];
+    $type = strtolower($row['vehicle_type'] ?? 'other');
+    $typeLabels = [
+        'mpv' => 'MPV',
+        'suv' => 'SUV',
+        'bus' => 'Bus / Coach',
+        'traveller' => 'Tempo Traveller',
+        'light_commercial_vehicle' => 'Light Commercial / Van',
+        'sedan' => 'Sedan',
+        'hatchback' => 'Hatchback',
+        'micro' => 'Small Car / Micro',
+        'flight' => 'Flight',
+        'rail' => 'Rail'
+    ];
+    return [
+        'id' => $vId,
+        'encoded_id' => base64_encode((string)$vId),
+        'title' => ucwords(strtolower(trim($row['vehicle_title'] ?? ''))),
+        'type' => $type,
+        'type_label' => $typeLabels[$type] ?? ucwords(str_replace('_', ' ', $type)),
+        'seating' => (int)($row['vehicle_seating'] ?? 0),
+        'description' => $row['vehicle_description'] ?? '',
+        'thumbnail' => !empty($row['vehicle_thumbnail']) ? $row['vehicle_thumbnail'] : '',
+        'is_deletable' => (int)($row['vehicle_is_deletable'] ?? 1) === 1,
+        'created_at' => $row['vehicle_time'] ?? ''
+    ];
+};
 if ($res && mysqli_num_rows($res) > 0) {
     while ($row = mysqli_fetch_assoc($res)) {
-        $vId = (int)$row['vehicle_id'];
-        $type = strtolower($row['vehicle_type'] ?? 'other');
-        
-        $typeLabels = [
-            'mpv'                      => 'MPV',
-            'suv'                      => 'SUV',
-            'bus'                      => 'Bus / Coach',
-            'traveller'                => 'Tempo Traveller',
-            'light_commercial_vehicle' => 'Light Commercial / Van',
-            'sedan'                    => 'Sedan',
-            'hatchback'                => 'Hatchback',
-            'micro'                    => 'Small Car / Micro',
-            'flight'                   => 'Flight',
-            'rail'                     => 'Rail'
-        ];
+        $vehicles[] = $formatVehicle($row);
+    }
+}
 
-        $vehicles[] = [
-            'id'           => $vId,
-            'encoded_id'   => base64_encode((string)$vId),
-            'title'        => ucwords(strtolower(trim($row['vehicle_title'] ?? ''))),
-            'type'         => $type,
-            'type_label'   => $typeLabels[$type] ?? ucwords(str_replace('_', ' ', $type)),
-            'seating'      => (int)($row['vehicle_seating'] ?? 0),
-            'description'  => $row['vehicle_description'] ?? '',
-            'thumbnail'    => !empty($row['vehicle_thumbnail']) ? $row['vehicle_thumbnail'] : '',
-            'is_deletable' => (int)($row['vehicle_is_deletable'] ?? 1) === 1,
-            'created_at'   => $row['vehicle_time'] ?? ''
-        ];
+$masterVehicles = $vehicles;
+if ($transporterId > 0) {
+    $masterRes = mysqli_query($connection, "SELECT vehicle_id, vehicle_thumbnail, vehicle_title, vehicle_description, vehicle_seating, vehicle_is_deletable, vehicle_type, vehicle_time FROM {$tblPrefix}vehicles ORDER BY vehicle_id DESC");
+    $masterVehicles = [];
+    if ($masterRes) {
+        while ($masterRow = mysqli_fetch_assoc($masterRes)) {
+            $masterVehicles[] = $formatVehicle($masterRow);
+        }
     }
 }
 
@@ -140,6 +181,7 @@ echo json_encode([
     'metrics'    => $metrics,
     'vehicles'   => $vehicles,
     'data'       => $vehicles,
+    'master_vehicles' => $masterVehicles,
     'categories' => [
         'mpv'                      => 'MPV',
         'suv'                      => 'SUV',
