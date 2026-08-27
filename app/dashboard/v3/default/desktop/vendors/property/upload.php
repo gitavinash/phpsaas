@@ -1,24 +1,45 @@
-<h2 class="heading"><?php echo 'Import property' ?><span></span>
-</h2>
-<div class="main-box">
-    <section>
+<div class="package-page-wrapper property-import-wrapper" id="propertyImportApp">
+    <div class="package-header-bar">
+        <div class="package-header-left">
+            <div class="package-header-icon" style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);">
+                <i class="fi fi-rr-cloud-upload" style="color: #ffffff;"></i>
+            </div>
+            <div class="package-header-titles">
+                <h2>Import Properties</h2>
+                <p>Upload a CSV file to add or update properties in your directory.</p>
+            </div>
+        </div>
+        <div class="package-header-actions">
+            <a href="/dashboard/vendors/property/list/" class="btn-v3-action"><i class="fi fi-rr-arrow-left"></i> Properties</a>
+        </div>
+    </div>
+
+    <div class="property-import-card">
+        <div class="property-import-intro">
+            <span class="property-import-step">01</span>
+            <div>
+                <h3>Upload property data</h3>
+                <p>Use a CSV file with your property details. Existing matching records will be updated.</p>
+            </div>
+        </div>
         <div class="steps-box">
             <form action="#" method="POST" id="importData">
                 <section class="form">
                     <div class="step-open-box step_1_box">
                         <div class="uploadBox form-group">
-                            <p><strong>Select .CSV file to import property<sup>*</sup></strong></p>
-                            <div id="dropZone">
-                                <span class="defaultText">Drag & Drop .CSV files here or click to upload</span>
-                            </div>
+                            <p class="property-import-label"><strong>Select CSV file <sup>*</sup></strong><span>One file per import</span></p>
+                            <label id="dropZone" for="fileInput">
+                                <span class="defaultText"><i class="fi fi-rr-cloud-upload upload-icon"></i><strong>Drop your CSV file here</strong><small>or click to browse from your computer</small><em>CSV files only</em></span>
+                            </label>
                             <input type="file" id="fileInput" name="propertyFile" data-limit="1" accept=".csv"
                                 style="display: none;" />
+                            <div class="property-selected-file" id="propertySelectedFile" aria-live="polite"><i class="fi fi-rr-document"></i><span id="propertySelectedFileName">No file selected</span><button type="button" id="clearPropertyFile" title="Remove selected file">&times;</button></div>
                         </div>
 
                         <!-- Loader -->
-                        <div id="loader" style="display:none; margin: 1rem 0;">
-                            <img src="<?php echo IMG_LIBRARY ?>loader_aleya.gif" alt="Loading..." width="40">
-                            <span>Importing data, please wait...</span>
+                        <div id="loader" class="property-import-loader" style="display:none;">
+                            <div class="table-loading-spinner"></div>
+                            <div><strong>Importing properties</strong><span>Please keep this page open while the CSV is processed.</span></div>
                         </div>
 
                         <!-- Status Summary -->
@@ -48,15 +69,13 @@
                             </div>
                         </div>
 
-                        <div class="box-1">
-                            <div class="form-group">
-                                <a href="#" class="btn popUpBtn" id="startImportProperty"><i class="fi-rr-check"></i>
-                                    <span id="btnText">Start import</span></a>
-                            </div>
+                        <div class="property-import-actions">
+                            <a href="#" class="btn btn-primary" id="startImportProperty"><i class="fi fi-rr-upload"></i><span id="btnText">Start import</span></a>
+                            <span class="property-import-note"><i class="fi fi-rr-info"></i> Your original file will not be changed.</span>
                         </div>
                     </div>
                 </section>
             </form>
         </div>
-    </section>
+    </div>
 </div>

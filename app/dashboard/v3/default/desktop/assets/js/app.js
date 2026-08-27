@@ -3785,6 +3785,33 @@ $(document).ready(function (e) {
   }
 
   if ($("#importData").length) {
+    $("#fileInput").on("change", function () {
+      var file = this.files && this.files[0];
+      $("#propertySelectedFile").toggle(!!file);
+      $("#propertySelectedFileName").text(
+        file ? file.name : "No file selected",
+      );
+      $("#dropZone").toggleClass("has-file", !!file);
+    });
+    $("#clearPropertyFile").on("click", function () {
+      $("#fileInput").val("").trigger("change");
+    });
+    $("#dropZone").on("dragenter dragover", function (event) {
+      event.preventDefault();
+      $(this).addClass("dragover");
+    });
+    $("#dropZone").on("dragleave", function () {
+      $(this).removeClass("dragover");
+    });
+    $("#dropZone").on("drop", function (event) {
+      event.preventDefault();
+      $(this).removeClass("dragover");
+      var files = event.originalEvent.dataTransfer.files;
+      if (files && files.length) {
+        $("#fileInput")[0].files = files;
+        $("#fileInput").trigger("change");
+      }
+    });
     $("#startImportProperty").on("click", function (e) {
       e.preventDefault();
       uploadCSV("fileInput", "property", "startImportProperty");
@@ -4223,7 +4250,26 @@ $(document).ready(function (e) {
       }
     }
 
-    // 4i. Team & User Forms Module (Add / Edit / KYC)
+    // 4i. Room Types Library Module
+    const $roomTypesList = $("#roomTypesListApp, .room-types-list-wrapper");
+    if ($roomTypesList.length > 0) {
+      if (window.V3RoomTypes && typeof window.V3RoomTypes.init === "function") {
+        window.V3RoomTypes.init();
+      } else {
+        ensureScriptLoaded(
+          ADMIN_JS + "room-types.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3RoomTypes &&
+              typeof window.V3RoomTypes.init === "function"
+            )
+              window.V3RoomTypes.init();
+          },
+        );
+      }
+    }
+
+    // 4j. Team & User Forms Module (Add / Edit / KYC)
     const $userForms = $(
       "#addUserApp, #editUserApp, #userKycApp, .user-form-wrapper",
     );
