@@ -16,7 +16,7 @@ $accessType = isset($site_access_type) ? $site_access_type : 'administrator';
 
 $siteFilter = ($siteId > 0) ? "enquiry_site_id = {$siteId}" : "1=1";
 $userFilter = ($accessType !== 'administrator' && $userId > 0)
-    ? " AND (enquiry_agent = '{$userId}' OR enquiry_agent = '0')"
+    ? " AND (enquiry_agent = '{$userId}')"
     : "";
 
 $daterangeFilter = "";
@@ -40,7 +40,7 @@ $kpis = array(
     'followupLeads'  => 0,
     'duplicateLeads' => 0,
     'cancelLeads'    => 0,
-    'pendingRequests'=> 0,
+    'pendingRequests' => 0,
     'conversionRate' => '0%'
 );
 
@@ -54,12 +54,24 @@ if (isset($connection) && $connection && ($res = mysqli_query($connection, $sqlK
         $cnt = intval($row['count']);
         $kpis['totalLeads'] += $cnt;
         switch (intval($row['enquiry_status'])) {
-            case 0: $kpis['freshLeads']     = $cnt; break;
-            case 1: $kpis['confirmedLeads'] = $cnt; break;
-            case 2: $kpis['pendingLeads']   = $cnt; break;
-            case 3: $kpis['followupLeads']  = $cnt; break;
-            case 4: $kpis['duplicateLeads'] = $cnt; break;
-            case 5: $kpis['cancelLeads']    = $cnt; break;
+            case 0:
+                $kpis['freshLeads']     = $cnt;
+                break;
+            case 1:
+                $kpis['confirmedLeads'] = $cnt;
+                break;
+            case 2:
+                $kpis['pendingLeads']   = $cnt;
+                break;
+            case 3:
+                $kpis['followupLeads']  = $cnt;
+                break;
+            case 4:
+                $kpis['duplicateLeads'] = $cnt;
+                break;
+            case 5:
+                $kpis['cancelLeads']    = $cnt;
+                break;
         }
     }
 }

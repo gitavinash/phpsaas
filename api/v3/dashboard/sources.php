@@ -16,7 +16,7 @@ $accessType = isset($site_access_type) ? $site_access_type : 'administrator';
 
 $siteFilter = ($siteId > 0) ? "enquiry_site_id = {$siteId}" : "1=1";
 $userFilter = ($accessType !== 'administrator' && $userId > 0)
-    ? " AND (enquiry_agent = '{$userId}' OR enquiry_agent = '0')"
+    ? " AND (enquiry_agent = '{$userId}')"
     : "";
 
 $daterangeFilter = "";
@@ -32,7 +32,8 @@ if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'
 }
 $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
 
-function cleanSourceName($source) {
+function cleanSourceName($source)
+{
     if (empty($source) || trim($source) === '') {
         return 'Direct';
     }

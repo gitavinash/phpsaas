@@ -16,7 +16,7 @@ $accessType = isset($site_access_type) ? $site_access_type : 'administrator';
 
 $siteFilter = ($siteId > 0) ? "enquiry_site_id = {$siteId}" : "1=1";
 $userFilter = ($accessType !== 'administrator' && $userId > 0)
-    ? " AND (enquiry_agent = '{$userId}' OR enquiry_agent = '0')"
+    ? " AND (enquiry_agent = '{$userId}')"
     : "";
 
 $daterangeFilter = "";
