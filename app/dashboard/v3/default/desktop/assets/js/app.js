@@ -27,35 +27,51 @@ function loadExternalJS(filePath) {
 
 /** SweetAlert Pop Up Box & Global Normalizer */
 (function() {
+  // SweetAlert2 exports itself as window.Sweetalert2, window.swal, and window.Swal
+  // but Object.assign misses prototype / non-enumerable methods like .fire().
+  // Ensure window.Swal always has a working .fire() method.
+
+  var sw2 = window.Sweetalert2 || null;
+
+  if (!sw2 && typeof window.swal === 'function' && typeof window.swal.fire === 'function') {
+    // SweetAlert2 loaded directly as window.swal with .fire already
+    sw2 = window.swal;
+  }
+
+  if (sw2 && typeof sw2.fire === 'function') {
+    // Canonical SweetAlert2 — expose consistently as both Swal and swal
+    window.Swal = sw2;
+    window.swal = sw2;
+    return;
+  }
+
+  // Legacy SweetAlert v1 (window.swal is a plain function, no .fire)
   if (typeof window.swal === 'function') {
-    const originalSwal = window.swal;
-    window.swal = function(firstArg, secondArg, thirdArg) {
+    var originalSwal = window.swal;
+    var wrappedSwal = function(firstArg, secondArg, thirdArg) {
       if (typeof firstArg === 'object' && firstArg !== null) {
-        const opts = Object.assign({}, firstArg);
-        if (opts.icon && !opts.type) {
-          opts.type = opts.icon;
-        }
-        if (opts.type && !opts.icon) {
-          opts.icon = opts.type;
-        }
-        if (opts.button && !opts.confirmButtonText) {
-          opts.confirmButtonText = opts.button;
-        }
+        var opts = Object.assign({}, firstArg);
+        if (opts.icon && !opts.type) { opts.type = opts.icon; }
+        if (opts.type && !opts.icon) { opts.icon = opts.type; }
+        if (opts.button && !opts.confirmButtonText) { opts.confirmButtonText = opts.button; }
         return originalSwal.call(this, opts);
       } else if (typeof firstArg === 'string' && thirdArg) {
-        return originalSwal.call(this, {
-          title: firstArg,
-          text: secondArg || '',
-          type: thirdArg,
-          icon: thirdArg
-        });
+        return originalSwal.call(this, { title: firstArg, text: secondArg || '', type: thirdArg, icon: thirdArg });
       }
       return originalSwal.apply(this, arguments);
     };
-    Object.assign(window.swal, originalSwal);
-    window.Swal = window.swal;
+    Object.assign(wrappedSwal, originalSwal);
+
+    // Polyfill .fire() so all code using Swal.fire({...}).then(...) works
+    wrappedSwal.fire = function(opts) {
+      return wrappedSwal.call(window, opts);
+    };
+
+    window.swal = wrappedSwal;
+    window.Swal = wrappedSwal;
   }
 })();
+
 
 function popUpMessage(msgPostion, msgTxt, msgType) {
   if (typeof Swal !== 'undefined' && typeof Swal.fire === 'function') {

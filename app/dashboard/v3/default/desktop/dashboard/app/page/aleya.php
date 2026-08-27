@@ -64,7 +64,11 @@ if (isset($daterange) && !empty($daterange)) {
 
 <!-- Key Performance Indicators -->
 <div class="kpi-grid">
-    <?php require_once ADMIN_PATH . 'dashboard/widgets/enquiry.php'; ?>
+    <?php
+    if ($site_access_type == 'administrator') {
+        require_once ADMIN_PATH . 'dashboard/widgets/enquiry.php';
+    }
+    ?>
     <?php require_once ADMIN_PATH . 'dashboard/widgets/confirmed-enquiry.php'; ?>
     <?php require_once ADMIN_PATH . 'dashboard/widgets/pending-enquiry.php'; ?>
     <?php require_once ADMIN_PATH . 'dashboard/widgets/follow-up-enquiry.php'; ?>
@@ -72,7 +76,6 @@ if (isset($daterange) && !empty($daterange)) {
     <?php
     if ($site_access_type == 'administrator') {
         require_once ADMIN_PATH . 'dashboard/widgets/revenue-summary.php';
-        require_once ADMIN_PATH . 'dashboard/widgets/pending-request.php';
         require_once ADMIN_PATH . 'dashboard/widgets/duplicate-enquiry.php';
         require_once ADMIN_PATH . 'dashboard/widgets/cancle-enquiry.php';
     } else {
@@ -106,9 +109,9 @@ if (isset($daterange) && !empty($daterange)) {
 <!-- Operational Data Tables Stack -->
 <div class="tables-stack">
     <?php
-    if ($site_access_type == 'agent') {
-        require_once ADMIN_PATH . 'dashboard/widgets/recent-followup-enquiry.php';
-    }
+    // if ($site_access_type == 'agent') {
+    //     require_once ADMIN_PATH . 'dashboard/widgets/recent-followup-enquiry.php';
+    // }
     require_once ADMIN_PATH . 'dashboard/widgets/recent-enquiry.php';
     ?>
 </div>

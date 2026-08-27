@@ -28,6 +28,7 @@
     isLoading: false,
     eventsBound: false,
     activeAjaxRequest: null,
+    isAdmin: false,
 
     init: function () {
       const $app = $("#leadsListApp");
@@ -37,6 +38,25 @@
         return;
       }
       $app.data("v3-leads-inited", true);
+
+      // Determine user role from data attribute (set by PHP)
+      const role =
+        $app.data("user-role") ||
+        (typeof siteAdminType !== "undefined" ? siteAdminType : "");
+      this.isAdmin =
+        role === "administrator" ||
+        role === "superadmin" ||
+        role === "operator";
+      $app
+        .toggleClass("leads-admin-view", this.isAdmin)
+        .toggleClass("leads-agent-view", !this.isAdmin);
+
+      // Immediately apply column visibility to <thead> (before data loads)
+      if (!this.isAdmin) {
+        $(".leads-data-table th.col-agent").hide();
+      } else {
+        $(".leads-data-table th.col-agent").show();
+      }
 
       this.selectedLeads.clear();
       $("#leadsBulkToolbar").hide();
@@ -59,17 +79,15 @@
 
         $("#filterLeadStatus").select2({
           dropdownAutoWidth: true,
-          width: "135px",
+          width: "145px",
         });
-
         $("#filterLeadAgent").select2({
           dropdownAutoWidth: true,
           width: "155px",
         });
-
         $("#filterLeadSource").select2({
           dropdownAutoWidth: true,
-          width: "130px",
+          width: "135px",
         });
 
         if ($("#bulkActionSelect").data("select2")) {
@@ -86,18 +104,25 @@
     initDateRangePicker: function () {
       const self = this;
       const $dateInput = $("#filterLeadDateRange");
-      if (!$dateInput.length || typeof $.fn.daterangepicker === "undefined") return;
+      if (!$dateInput.length || typeof $.fn.daterangepicker === "undefined")
+        return;
 
       $dateInput.daterangepicker({
         autoUpdateInput: false,
-        opens: "left",
+        opens: "right",
         ranges: {
           Today: [moment(), moment()],
-          Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+          Yesterday: [
+            moment().subtract(1, "days"),
+            moment().subtract(1, "days"),
+          ],
           "Last 7 Days": [moment().subtract(6, "days"), moment()],
           "Last 30 Days": [moment().subtract(29, "days"), moment()],
           "This Month": [moment().startOf("month"), moment().endOf("month")],
-          "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
+          "Last Month": [
+            moment().subtract(1, "month").startOf("month"),
+            moment().subtract(1, "month").endOf("month"),
+          ],
         },
         locale: {
           format: "YYYY-MM-DD",
@@ -105,11 +130,23 @@
         },
       });
 
+      $dateInput.on("show.daterangepicker", function (event, picker) {
+        picker.container.addClass("leads-date-picker");
+      });
+
       $dateInput.on("apply.daterangepicker", function (ev, picker) {
-        const formatted = picker.startDate.format("YYYY-MM-DD") + " - " + picker.endDate.format("YYYY-MM-DD");
-        $(this).val(formatted);
+        const displayLabel =
+          picker.startDate.format("MMM D") +
+          " – " +
+          picker.endDate.format("MMM D, YYYY");
+        const apiFormat =
+          picker.startDate.format("YYYY-MM-DD") +
+          " - " +
+          picker.endDate.format("YYYY-MM-DD");
+        $(this).val(displayLabel);
         $("#clearLeadDateRangeBtn").show();
-        self.activeDateRange = formatted;
+        $("#leadDateRangeWrap").addClass("has-date");
+        self.activeDateRange = apiFormat;
         self.currentPage = 1;
         self.loadLeads();
       });
@@ -117,6 +154,7 @@
       $dateInput.on("cancel.daterangepicker", function () {
         $(this).val("");
         $("#clearLeadDateRangeBtn").hide();
+        $("#leadDateRangeWrap").removeClass("has-date");
         self.activeDateRange = "";
         self.currentPage = 1;
         self.loadLeads();
@@ -126,10 +164,14 @@
         e.stopPropagation();
         $dateInput.val("");
         $(this).hide();
+        $("#leadDateRangeWrap").removeClass("has-date");
         self.activeDateRange = "";
         self.currentPage = 1;
         self.loadLeads();
       });
+
+      // Update placeholder to show it's interactive
+      $dateInput.attr("placeholder", "Select date range");
     },
 
     bindEvents: function () {
@@ -250,7 +292,11 @@
         const action = $("#bulkActionSelect").val();
         if (!action) {
           if (typeof popUpMessage === "function") {
-            popUpMessage("center", "Please select a bulk action from the dropdown.", "warning");
+            popUpMessage(
+              "center",
+              "Please select a bulk action from the dropdown.",
+              "warning",
+            );
           } else {
             alert("Please select a bulk action from the dropdown.");
           }
@@ -259,7 +305,11 @@
         const ids = Array.from(self.selectedLeads);
         if (ids.length === 0) {
           if (typeof popUpMessage === "function") {
-            popUpMessage("center", "Please select at least one lead.", "warning");
+            popUpMessage(
+              "center",
+              "Please select at least one lead.",
+              "warning",
+            );
           } else {
             alert("Please select at least one lead.");
           }
@@ -274,8 +324,13 @@
         const leadId = $select.data("lead-id");
         const newAgentId = $select.val();
         const newAgentName = $select.find("option:selected").text();
-        const prevAgentId = String($select.data("current-agent") !== undefined ? $select.data("current-agent") : "0");
-        const prevAgentName = $select.data("current-agent-name") || "assigned agent";
+        const prevAgentId = String(
+          $select.data("current-agent") !== undefined
+            ? $select.data("current-agent")
+            : "0",
+        );
+        const prevAgentName =
+          $select.data("current-agent-name") || "assigned agent";
 
         const doAssign = function () {
           $select.prop("disabled", true);
@@ -292,7 +347,11 @@
             dataType: "json",
             success: function (res) {
               $select.prop("disabled", false);
-              if (res.status === 200 || res.status_code === 200 || res.success === true) {
+              if (
+                res.status === 200 ||
+                res.status_code === 200 ||
+                res.success === true
+              ) {
                 // Update tracking data attributes
                 $select.data("current-agent", newAgentId);
                 $select.data("current-agent-name", newAgentName);
@@ -300,32 +359,52 @@
                 $select.attr("data-current-agent-name", newAgentName);
 
                 if (newAgentId === "0" || newAgentId === 0) {
-                  self.showBottomToast("Lead marked as <strong>Unassigned</strong>", "success");
+                  self.showBottomToast(
+                    "Lead marked as <strong>Unassigned</strong>",
+                    "success",
+                  );
                 } else {
-                  self.showBottomToast(`Lead assigned to <strong>${newAgentName}</strong>`, "success");
+                  self.showBottomToast(
+                    `Lead assigned to <strong>${newAgentName}</strong>`,
+                    "success",
+                  );
 
                   // Trigger Browser Desktop Notification if permitted
                   if ("Notification" in window && res.notification) {
                     if (Notification.permission === "granted") {
-                      const notifTitle = res.notification.title || "Lead Assigned";
+                      const notifTitle =
+                        res.notification.title || "Lead Assigned";
                       const notifOptions = {
-                        body: res.notification.body || `Lead has been assigned to ${newAgentName}`,
-                        icon: res.notification.icon || "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
-                        badge: res.notification.icon || "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
+                        body:
+                          res.notification.body ||
+                          `Lead has been assigned to ${newAgentName}`,
+                        icon:
+                          res.notification.icon ||
+                          "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
+                        badge:
+                          res.notification.icon ||
+                          "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
                         data: {
                           url: res.notification.url || window.location.href,
-                          click_action: res.notification.url || window.location.href,
+                          click_action:
+                            res.notification.url || window.location.href,
                         },
                       };
 
-                      if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+                      if (
+                        "serviceWorker" in navigator &&
+                        navigator.serviceWorker.controller
+                      ) {
                         navigator.serviceWorker.ready
                           .then(function (reg) {
                             reg.showNotification(notifTitle, notifOptions);
                           })
                           .catch(function () {
                             try {
-                              const notif = new Notification(notifTitle, notifOptions);
+                              const notif = new Notification(
+                                notifTitle,
+                                notifOptions,
+                              );
                               if (res.notification.url) {
                                 notif.onclick = function () {
                                   window.open(res.notification.url, "_blank");
@@ -335,7 +414,10 @@
                           });
                       } else {
                         try {
-                          const notif = new Notification(notifTitle, notifOptions);
+                          const notif = new Notification(
+                            notifTitle,
+                            notifOptions,
+                          );
                           if (res.notification.url) {
                             notif.onclick = function () {
                               window.open(res.notification.url, "_blank");
@@ -348,7 +430,10 @@
                 }
               } else {
                 $select.val(prevAgentId);
-                self.showBottomToast(res.msg || res.message || "Failed to assign lead.", "error");
+                self.showBottomToast(
+                  res.msg || res.message || "Failed to assign lead.",
+                  "error",
+                );
               }
             },
             error: function (xhr) {
@@ -430,7 +515,11 @@
               self.loadLeads(false);
             } else {
               if (typeof popUpMessage === "function") {
-                popUpMessage("center", res.message || "Failed to update status", "error");
+                popUpMessage(
+                  "center",
+                  res.message || "Failed to update status",
+                  "error",
+                );
               }
             }
           },
@@ -447,7 +536,10 @@
         if (page > 0 && page !== self.currentPage) {
           self.currentPage = page;
           self.loadLeads();
-          $("html, body").animate({ scrollTop: $("#leadsListApp").offset().top - 20 }, 200);
+          $("html, body").animate(
+            { scrollTop: $("#leadsListApp").offset().top - 20 },
+            200,
+          );
         }
       });
     },
@@ -457,52 +549,116 @@
       $("#selectedLeadsCount").text(count);
       const $toolbar = $("#leadsBulkToolbar");
       if (count > 0) {
-        $toolbar.css("display", "flex").fadeIn(150);
+        $toolbar
+          .removeClass("is-hidden")
+          .css("display", "flex")
+          .hide()
+          .fadeIn(150);
       } else {
-        $toolbar.fadeOut(150);
+        $toolbar.addClass("is-hidden").fadeOut(150);
         $("#selectAllLeads").prop("checked", false);
       }
     },
 
     handleBulkAction: function (action, ids) {
       const self = this;
+
+      const execBulk = function (statusCode) {
+        let completed = 0;
+        ids.forEach(function (id) {
+          $.post(
+            "/api/v3/leads/update-status/",
+            {
+              leadId: id,
+              lead_id: id,
+              id: id,
+              enquiry_id: id,
+              status: statusCode,
+            },
+            function () {
+              completed++;
+              if (completed >= ids.length) {
+                self.selectedLeads.clear();
+                self.updateBulkActionToolbar();
+                self.loadLeads();
+              }
+            },
+          );
+        });
+      };
+
+      const useSwal =
+        (typeof Swal !== "undefined" && typeof Swal.fire === "function") ||
+        (typeof swal !== "undefined" && typeof swal === "function");
+
+      const doConfirm = function (opts, onConfirm) {
+        if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+          Swal.fire(opts).then(function (result) {
+            // SweetAlert v1 resolves with true/false; v2 resolves with {isConfirmed}
+            if (
+              result === true ||
+              (result && (result.value || result.isConfirmed))
+            ) {
+              onConfirm();
+            }
+          });
+        } else if (confirm(opts.text || opts.title)) {
+          onConfirm();
+        }
+      };
+
       if (action === "delete") {
-        if (!confirm(`Are you sure you want to delete ${ids.length} selected lead(s)?`)) return;
-        let completed = 0;
-        ids.forEach(function (id) {
-          $.post("/api/v3/leads/update-status/", { leadId: id, lead_id: id, id: id, enquiry_id: id, status: 4 }, function () {
-            completed++;
-            if (completed >= ids.length) {
-              self.selectedLeads.clear();
-              self.updateBulkActionToolbar();
-              self.loadLeads();
-            }
-          });
-        });
+        doConfirm(
+          {
+            title: "Delete Leads?",
+            text:
+              "Are you sure you want to delete " +
+              ids.length +
+              " selected lead(s)? This cannot be undone.",
+            icon: "warning",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, Delete",
+            cancelButtonText: "Cancel",
+          },
+          function () {
+            execBulk(4);
+          },
+        );
       } else if (action === "mark_duplicate") {
-        let completed = 0;
-        ids.forEach(function (id) {
-          $.post("/api/v3/leads/update-status/", { leadId: id, lead_id: id, id: id, enquiry_id: id, status: 5 }, function () {
-            completed++;
-            if (completed >= ids.length) {
-              self.selectedLeads.clear();
-              self.updateBulkActionToolbar();
-              self.loadLeads();
-            }
-          });
-        });
+        doConfirm(
+          {
+            title: "Mark as Duplicate?",
+            text: "Mark " + ids.length + " lead(s) as duplicate?",
+            icon: "question",
+            type: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#0284c7",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, Mark Duplicate",
+          },
+          function () {
+            execBulk(5);
+          },
+        );
       } else if (action === "convert_to_sales") {
-        let completed = 0;
-        ids.forEach(function (id) {
-          $.post("/api/v3/leads/update-status/", { leadId: id, lead_id: id, id: id, enquiry_id: id, status: 1 }, function () {
-            completed++;
-            if (completed >= ids.length) {
-              self.selectedLeads.clear();
-              self.updateBulkActionToolbar();
-              self.loadLeads();
-            }
-          });
-        });
+        doConfirm(
+          {
+            title: "Convert to Confirmed Sales?",
+            text: "Convert " + ids.length + " lead(s) to Confirmed Sales?",
+            icon: "success",
+            type: "success",
+            showCancelButton: true,
+            confirmButtonColor: "#059669",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, Convert",
+          },
+          function () {
+            execBulk(1);
+          },
+        );
       }
     },
 
@@ -542,7 +698,9 @@
           status: self.activeStatus,
           agent_id: self.activeAgent,
           source: self.activeSource,
-          daterange: self.activeDateRange || (typeof dateRangeParams !== "undefined" ? dateRangeParams : ""),
+          daterange:
+            self.activeDateRange ||
+            (typeof dateRangeParams !== "undefined" ? dateRangeParams : ""),
         },
         dataType: "json",
         success: function (res) {
@@ -599,10 +757,17 @@
 
     populateAgentDropdowns: function (agents) {
       const $filter = $("#filterLeadAgent");
-      if ($filter.length && $filter.children("option").length <= 2 && agents && agents.length > 0) {
+      if (
+        $filter.length &&
+        $filter.children("option").length <= 2 &&
+        agents &&
+        agents.length > 0
+      ) {
         agents.forEach(function (ag) {
           if (!$filter.find(`option[value="${ag.id}"]`).length) {
-            $filter.append(`<option value="${ag.id}">${ag.name} (${ag.role})</option>`);
+            $filter.append(
+              `<option value="${ag.id}">${ag.name} (${ag.role})</option>`,
+            );
           }
         });
       }
@@ -733,7 +898,7 @@
             <td class="col-agent">
               <div class="lead-assign-wrap">
                 <i class="fi fi-rr-user lead-assign-icon"></i>
-                <select class="lead-agent-select inline-agent-select" data-lead-id="${lead.id}" data-current-agent="${lead.agent_id || 0}" data-current-agent-name="${lead.agent_name || 'Unassigned'}">
+                <select class="lead-agent-select inline-agent-select" data-lead-id="${lead.id}" data-current-agent="${lead.agent_id || 0}" data-current-agent-name="${lead.agent_name || "Unassigned"}">
                   ${agentOptions}
                 </select>
               </div>
@@ -757,6 +922,33 @@
       });
 
       $tbody.html(html);
+
+      // Apply Select2 to inline agent dropdowns for better UX
+      if (typeof $.fn.select2 !== "undefined") {
+        $tbody.find(".inline-agent-select").each(function () {
+          if (!$(this).data("select2")) {
+            $(this).select2({
+              dropdownAutoWidth: true,
+              width: "100%",
+              minimumResultsForSearch: 5,
+            });
+            // Mark the wrapper so CSS can show the icon over Select2
+            $(this).closest(".lead-assign-wrap").addClass("has-select2");
+          }
+        });
+      }
+
+      // Hide/show agent column based on user role
+      const agentColVisible = self.isAdmin;
+      if (agentColVisible) {
+        $(
+          ".leads-data-table th.col-agent, .leads-data-table td.col-agent",
+        ).show();
+      } else {
+        $(
+          ".leads-data-table th.col-agent, .leads-data-table td.col-agent",
+        ).hide();
+      }
     },
 
     renderPagination: function (p) {
@@ -803,11 +995,14 @@
     showBottomToast: function (message, type = "success") {
       let $container = $("#v3BottomToastContainer");
       if (!$container.length) {
-        $("body").append('<div id="v3BottomToastContainer" class="v3-bottom-toast-container"></div>');
+        $("body").append(
+          '<div id="v3BottomToastContainer" class="v3-bottom-toast-container"></div>',
+        );
         $container = $("#v3BottomToastContainer");
       }
 
-      const iconClass = type === "error" ? "fi fi-rr-cross-circle" : "fi fi-rr-check-circle";
+      const iconClass =
+        type === "error" ? "fi fi-rr-cross-circle" : "fi fi-rr-check-circle";
       const isError = type === "error" ? "toast-error" : "";
 
       const $toast = $(`
@@ -837,7 +1032,10 @@
   };
 
   $(document).ready(function () {
-    if ($("#leadsListApp").length && !$("#leadsListApp").data("v3-leads-inited")) {
+    if (
+      $("#leadsListApp").length &&
+      !$("#leadsListApp").data("v3-leads-inited")
+    ) {
       window.V3Leads.init();
     }
   });

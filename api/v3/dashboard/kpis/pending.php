@@ -2,21 +2,23 @@
 
 header("Content-type: application/json; charset=utf-8");
 
+require_once LOGIN_CHECK;
+
 if (!isset($connection)) {
     $configPath = $_SERVER['DOCUMENT_ROOT'] . '/lib/configuration/index.php';
     if (file_exists($configPath)) {
-        require_once $configPath;
+        require_once $c3onfigPath;
     }
 }
 
 $tblPrefix  = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId     = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $userId     = defined('USER_ID')      ? (int) USER_ID : 0;
-$accessType = isset($site_access_type) ? $site_access_type : 'administrator';
+$accessType = isset($site_access_type) ? $site_access_type : 'customer';
 
 $siteFilter = ($siteId > 0) ? "enquiry_site_id = {$siteId}" : "1=1";
 $userFilter = ($accessType !== 'administrator' && $userId > 0)
-    ? " AND (enquiry_agent = '{$userId}' OR enquiry_agent = '0')"
+    ? " AND (enquiry_agent = '{$userId}')"
     : "";
 
 $daterangeFilter = "";

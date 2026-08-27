@@ -3,7 +3,7 @@
 // All data is dynamically loaded via /api/v3/leads/list.php by leads.js
 ?>
 
-<div class="package-page-wrapper leads-page-wrapper" id="leadsListApp">
+<div class="package-page-wrapper leads-page-wrapper" id="leadsListApp" data-user-role="<?php echo htmlspecialchars($site_access_type ?? '', ENT_QUOTES); ?>">
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
@@ -83,43 +83,41 @@
                 <button type="button" id="clearLeadDateRangeBtn" class="clear-date-btn" title="Clear date range">✕</button>
             </div>
 
-            <div class="filter-dropdowns-wrap">
-                <!-- Status Filter -->
-                <select id="filterLeadStatus" class="filter-select leads-filter-select">
-                    <option value="all">All Statuses</option>
-                    <option value="0">Fresh Leads</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Follow-Up</option>
-                    <option value="1">Confirmed</option>
-                    <option value="6">Payment Initiated</option>
-                    <option value="4">Cancelled</option>
-                    <option value="5">Duplicate</option>
-                    <option value="8">Closed</option>
-                </select>
+            <!-- Status Filter -->
+            <select id="filterLeadStatus" class="filter-select leads-filter-select">
+                <option value="all">All Statuses</option>
+                <option value="0">Fresh Leads</option>
+                <option value="2">Pending</option>
+                <option value="3">Follow-Up</option>
+                <option value="1">Confirmed</option>
+                <option value="6">Payment Initiated</option>
+                <option value="4">Cancelled</option>
+                <option value="5">Duplicate</option>
+                <option value="8">Closed</option>
+            </select>
 
-                <!-- Assigned Agent Filter -->
-                <select id="filterLeadAgent" class="filter-select leads-filter-select">
-                    <option value="all">All Assignees</option>
-                    <option value="0">Unassigned Only</option>
-                </select>
+            <!-- Assigned Agent Filter -->
+            <select id="filterLeadAgent" class="filter-select leads-filter-select">
+                <option value="all">All Assignees</option>
+                <option value="0">Unassigned Only</option>
+            </select>
 
-                <!-- Source Filter -->
-                <select id="filterLeadSource" class="filter-select leads-filter-select">
-                    <option value="all">All Sources</option>
-                    <option value="website">Website</option>
-                    <option value="direct">Direct</option>
-                    <option value="facebook">Facebook</option>
-                    <option value="instagram">Instagram</option>
-                    <option value="google">Google</option>
-                    <option value="whatsapp">WhatsApp</option>
-                    <option value="referral">Referral</option>
-                </select>
+            <!-- Source Filter -->
+            <select id="filterLeadSource" class="filter-select leads-filter-select">
+                <option value="all">All Sources</option>
+                <option value="website">Website</option>
+                <option value="direct">Direct</option>
+                <option value="facebook">Facebook</option>
+                <option value="instagram">Instagram</option>
+                <option value="google">Google</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="referral">Referral</option>
+            </select>
 
-                <!-- Reset Filters Button -->
-                <button type="button" id="btnResetLeadFilters" class="btn-reset-filters-v3" title="Reset all filters">
-                    <i class="fi fi-rr-refresh"></i> <span>Reset</span>
-                </button>
-            </div>
+            <!-- Reset Filters Button -->
+            <button type="button" id="btnResetLeadFilters" class="btn-reset-filters-v3" title="Reset all filters">
+                <i class="fi fi-rr-refresh"></i> <span>Reset</span>
+            </button>
         </div>
 
         <!-- Bulk Action Floating Bar -->
@@ -142,6 +140,14 @@
         <!-- Data Table Wrap -->
         <div class="table-responsive">
             <table class="package-data-table leads-data-table">
+                <colgroup>
+                    <col class="col-checkbox">
+                    <col class="col-customer">
+                    <col class="col-contact">
+                    <col class="col-subject">
+                    <col class="col-agent">
+                    <col class="col-actions">
+                </colgroup>
                 <thead>
                     <tr>
                         <th class="col-checkbox">

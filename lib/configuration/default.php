@@ -83,14 +83,17 @@ define('IMAGE_THUMBNAIL_HEIGHT', ((isset($site_thumbnail_height)) ? $site_thumbn
 
 /** Notification Configuration */
 
+// FCM Server Key — NOTE: New Firebase project (aleya-notification) uses FCM v1 API.
+// The legacy AAAA... key below is from the OLD project. To use FCM v1, a
+// Google service-account JSON must be used instead (see assign.php for planned migration).
 define(
 	'NOTIFICATION_KEY',
 	'AAAA022yuIE:APA91bGmpLAcWlFEJB731Z-pTMjYvQu0xPBLQTtElWwsK83HM5mS-Ua0dnYaykR2QIhlxqRfH1vhgX2KHnsNpVZ_lQUbyHk-f7K9CGXcgFPkfIufQ5zbqp7mQfoF1qHoapHxyllk1U76'
 );
-define('NOTIFICATION_SENDER', '908078528641');
+define('NOTIFICATION_SENDER', '782586665015'); // New project sender ID: aleya-notification
 define(
 	'NOTIFICATION_PUBLIC_KEY',
-	'BFkEn6a9UgVzM0eOG0T75xQMoatlFkPe7B24d-RlTF548AyvVIhJ8fLkQBdJOZl_m4DCiGKkCTs_A9r209DJT0c'
+	'BCrkm9qYYcj18SvNMa4906f8jm9fcDnE9ld1hHM0OT0TkiyPzEJN_SCwH3P8ioSQGYkhh3e3saO9t9QeC8TdRUA' // New VAPID key
 );
 
 /** Site Settings Configuration */

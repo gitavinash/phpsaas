@@ -31,22 +31,22 @@ Scope: /dashboard/
 Served by PHP as JS
 ============================ */
 
-// ------------ Firebase (compat) ------------
+// ------------ Firebase (compat) — aleya-notification project ------------
 try {
-importScripts("https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js");
 } catch (e) {
 // offline? keep going
 console.warn("[SW] Firebase importScripts failed (likely offline).", e);
 }
 
 const firebaseConfig = {
-apiKey: "AIzaSyBlo7GZPUUMNywiJYEHv-RqnFTTQUQDwUA",
-authDomain: "aleya-af985.firebaseapp.com",
-projectId: "aleya-af985",
-storageBucket: "aleya-af985.appspot.com",
-messagingSenderId: "876838268173",
-appId: "1:876838268173:web:8ad5afeae5de209e4d9444",
+apiKey: "AIzaSyDALB6eWd90PHwZbZMjiFafazeVeLL_a1E",
+authDomain: "aleya-notification.firebaseapp.com",
+projectId: "aleya-notification",
+storageBucket: "aleya-notification.firebasestorage.app",
+messagingSenderId: "782586665015",
+appId: "1:782586665015:web:de675497e5af4fd68e07b2",
 };
 
 try {
