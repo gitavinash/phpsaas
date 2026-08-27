@@ -124,10 +124,11 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawAgentId !== null) {
             }
 
             // Update lead agent and set status to 2 (Assigned/Pending) if it was unassigned (status 1)
-            $newStatus = (int)($leadData['enquiry_status'] ?? 1);
-            if ($newStatus <= 1) {
-                $newStatus = 2;
-            }
+            $currentStatus = isset($leadData['enquiry_status'])
+                ? (int)$leadData['enquiry_status']
+                : 0;
+
+            $newStatus = ($currentStatus === 0) ? 2 : $currentStatus;
 
             $sql = "UPDATE {$tblPrefix}enquiry
                     SET enquiry_agent = '{$realAgentId}', enquiry_status = {$newStatus}
