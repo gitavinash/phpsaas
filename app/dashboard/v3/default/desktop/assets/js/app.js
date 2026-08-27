@@ -26,19 +26,23 @@ function loadExternalJS(filePath) {
 }
 
 /** SweetAlert Pop Up Box & Global Normalizer */
-(function() {
+(function () {
   // SweetAlert2 exports itself as window.Sweetalert2, window.swal, and window.Swal
   // but Object.assign misses prototype / non-enumerable methods like .fire().
   // Ensure window.Swal always has a working .fire() method.
 
   var sw2 = window.Sweetalert2 || null;
 
-  if (!sw2 && typeof window.swal === 'function' && typeof window.swal.fire === 'function') {
+  if (
+    !sw2 &&
+    typeof window.swal === "function" &&
+    typeof window.swal.fire === "function"
+  ) {
     // SweetAlert2 loaded directly as window.swal with .fire already
     sw2 = window.swal;
   }
 
-  if (sw2 && typeof sw2.fire === 'function') {
+  if (sw2 && typeof sw2.fire === "function") {
     // Canonical SweetAlert2 — expose consistently as both Swal and swal
     window.Swal = sw2;
     window.swal = sw2;
@@ -46,24 +50,35 @@ function loadExternalJS(filePath) {
   }
 
   // Legacy SweetAlert v1 (window.swal is a plain function, no .fire)
-  if (typeof window.swal === 'function') {
+  if (typeof window.swal === "function") {
     var originalSwal = window.swal;
-    var wrappedSwal = function(firstArg, secondArg, thirdArg) {
-      if (typeof firstArg === 'object' && firstArg !== null) {
+    var wrappedSwal = function (firstArg, secondArg, thirdArg) {
+      if (typeof firstArg === "object" && firstArg !== null) {
         var opts = Object.assign({}, firstArg);
-        if (opts.icon && !opts.type) { opts.type = opts.icon; }
-        if (opts.type && !opts.icon) { opts.icon = opts.type; }
-        if (opts.button && !opts.confirmButtonText) { opts.confirmButtonText = opts.button; }
+        if (opts.icon && !opts.type) {
+          opts.type = opts.icon;
+        }
+        if (opts.type && !opts.icon) {
+          opts.icon = opts.type;
+        }
+        if (opts.button && !opts.confirmButtonText) {
+          opts.confirmButtonText = opts.button;
+        }
         return originalSwal.call(this, opts);
-      } else if (typeof firstArg === 'string' && thirdArg) {
-        return originalSwal.call(this, { title: firstArg, text: secondArg || '', type: thirdArg, icon: thirdArg });
+      } else if (typeof firstArg === "string" && thirdArg) {
+        return originalSwal.call(this, {
+          title: firstArg,
+          text: secondArg || "",
+          type: thirdArg,
+          icon: thirdArg,
+        });
       }
       return originalSwal.apply(this, arguments);
     };
     Object.assign(wrappedSwal, originalSwal);
 
     // Polyfill .fire() so all code using Swal.fire({...}).then(...) works
-    wrappedSwal.fire = function(opts) {
+    wrappedSwal.fire = function (opts) {
       return wrappedSwal.call(window, opts);
     };
 
@@ -72,24 +87,23 @@ function loadExternalJS(filePath) {
   }
 })();
 
-
 function popUpMessage(msgPostion, msgTxt, msgType) {
-  if (typeof Swal !== 'undefined' && typeof Swal.fire === 'function') {
+  if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
     Swal.fire({
-      position: msgPostion || 'center',
-      type: msgType || 'info',
-      icon: msgType || 'info',
+      position: msgPostion || "center",
+      type: msgType || "info",
+      icon: msgType || "info",
       title: msgTxt,
       showConfirmButton: false,
       timer: 1800,
     });
-  } else if (typeof window.swal === 'function') {
+  } else if (typeof window.swal === "function") {
     window.swal({
       title: msgTxt,
-      type: msgType || 'info',
-      icon: msgType || 'info',
+      type: msgType || "info",
+      icon: msgType || "info",
       timer: 1800,
-      showConfirmButton: false
+      showConfirmButton: false,
     });
   } else {
     alert(msgTxt);
@@ -467,15 +481,23 @@ $(document).ready(function (e) {
 
     // Fallback ID mapping for widget container variants
     if (!parentContainer) {
-      if (objectID === "topEnquirySource") parentContainer = document.getElementById("sourceData");
-      if (objectID === "enquiryPerformance") parentContainer = document.getElementById("enquiryPerformace");
+      if (objectID === "topEnquirySource")
+        parentContainer = document.getElementById("sourceData");
+      if (objectID === "enquiryPerformance")
+        parentContainer = document.getElementById("enquiryPerformace");
     }
 
     if (!parentContainer) return;
 
     // Check if valid data exists and total sum > 0
     let hasData = false;
-    if (chartData && chartData.labels && chartData.data && Array.isArray(chartData.data) && chartData.data.length > 0) {
+    if (
+      chartData &&
+      chartData.labels &&
+      chartData.data &&
+      Array.isArray(chartData.data) &&
+      chartData.data.length > 0
+    ) {
       const sum = chartData.data.reduce((a, b) => a + (Number(b) || 0), 0);
       if (sum > 0) {
         hasData = true;
@@ -637,45 +659,45 @@ $(document).ready(function (e) {
     }
 
     if (typeof Chart !== "undefined") {
-      const existingChart = typeof Chart.getChart === "function" ? Chart.getChart(canvasEl) : canvasEl._chartInstance;
+      const existingChart =
+        typeof Chart.getChart === "function"
+          ? Chart.getChart(canvasEl)
+          : canvasEl._chartInstance;
       if (existingChart) {
         existingChart.destroy();
       }
     }
 
-    var myChart = new Chart(
-      canvasEl.getContext("2d"),
-      {
-        type: "doughnut",
-        data: {
-          labels: labels,
-          datasets: datasets,
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: true,
-          aspectRatio: 1,
-          cutout: "68%",
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              callbacks: {
-                label: function (context) {
-                  let label = context.label || "";
-                  if (label) {
-                    label += ": ";
-                  }
-                  label += context.formattedValue;
-                  return label;
-                },
+    var myChart = new Chart(canvasEl.getContext("2d"), {
+      type: "doughnut",
+      data: {
+        labels: labels,
+        datasets: datasets,
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 1,
+        cutout: "68%",
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                let label = context.label || "";
+                if (label) {
+                  label += ": ";
+                }
+                label += context.formattedValue;
+                return label;
               },
             },
           },
         },
       },
-    );
+    });
     canvasEl._chartInstance = myChart;
   }
 
@@ -709,7 +731,10 @@ $(document).ready(function (e) {
     }
 
     if (typeof Chart !== "undefined") {
-      const existingChart = typeof Chart.getChart === "function" ? Chart.getChart(canvasEl) : canvasEl._chartInstance;
+      const existingChart =
+        typeof Chart.getChart === "function"
+          ? Chart.getChart(canvasEl)
+          : canvasEl._chartInstance;
       if (existingChart) {
         existingChart.destroy();
       }
@@ -910,7 +935,9 @@ $(document).ready(function (e) {
   function dashboardWidgetWithoutChart(objectID, data) {
     const valueEl = document.getElementById(`${objectID}Value`);
     if (!valueEl) return;
-    const rawVal = data ? (data.totalLeads ?? data.total ?? data.count ?? 0) : 0;
+    const rawVal = data
+      ? (data.totalLeads ?? data.total ?? data.count ?? 0)
+      : 0;
     const total = Number(rawVal) || 0;
     if (total === 0) {
       valueEl.textContent = "0";
@@ -929,7 +956,9 @@ $(document).ready(function (e) {
     if (!$el.length) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/kpis/fresh/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/kpis/fresh/?daterange=" +
+        encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (res && res.status === 200 && res.count !== undefined) {
@@ -945,7 +974,9 @@ $(document).ready(function (e) {
     if (!$el.length) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/kpis/confirmed/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/kpis/confirmed/?daterange=" +
+        encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (res && res.status === 200 && res.count !== undefined) {
@@ -961,7 +992,9 @@ $(document).ready(function (e) {
     if (!$el.length) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/kpis/pending/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/kpis/pending/?daterange=" +
+        encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (res && res.status === 200 && res.count !== undefined) {
@@ -977,7 +1010,9 @@ $(document).ready(function (e) {
     if (!$el.length) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/kpis/followup/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/kpis/followup/?daterange=" +
+        encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (res && res.status === 200 && res.count !== undefined) {
@@ -993,7 +1028,9 @@ $(document).ready(function (e) {
     if (!$el.length) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/kpis/duplicate/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/kpis/duplicate/?daterange=" +
+        encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (res && res.status === 200 && res.count !== undefined) {
@@ -1009,7 +1046,9 @@ $(document).ready(function (e) {
     if (!$el.length) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/kpis/cancel/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/kpis/cancel/?daterange=" +
+        encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (res && res.status === 200 && res.count !== undefined) {
@@ -1025,7 +1064,9 @@ $(document).ready(function (e) {
     if (!$el.length) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/kpis/pending-requests/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/kpis/pending-requests/?daterange=" +
+        encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (res && res.status === 200 && res.count !== undefined) {
@@ -1041,7 +1082,9 @@ $(document).ready(function (e) {
     if (!$el.length) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/kpis/conversion-rate/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/kpis/conversion-rate/?daterange=" +
+        encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (res && res.status === 200 && res.conversionRate !== undefined) {
@@ -1056,11 +1099,13 @@ $(document).ready(function (e) {
     if (!$("#kpiRevenueSummaryValue").length) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/revenue/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/revenue/?daterange=" + encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (!res || res.status !== 200) return;
-        if ($("#kpiRevenueSummaryValue").length) $("#kpiRevenueSummaryValue").text(res.totalRevenue || "₹0");
+        if ($("#kpiRevenueSummaryValue").length)
+          $("#kpiRevenueSummaryValue").text(res.totalRevenue || "₹0");
       },
     });
   }
@@ -1070,11 +1115,15 @@ $(document).ready(function (e) {
     if (!document.getElementById("topEnquirySource")) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/sources/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/sources/?daterange=" + encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (!res || res.status !== 200) return;
-        createPieChart("topEnquirySource", { labels: res.labels, data: res.data });
+        createPieChart("topEnquirySource", {
+          labels: res.labels,
+          data: res.data,
+        });
       },
     });
   }
@@ -1084,11 +1133,16 @@ $(document).ready(function (e) {
     if (!document.getElementById("enquiryPerformance")) return;
     $.ajax({
       type: "GET",
-      url: "/api/v3/dashboard/performance/?daterange=" + encodeURIComponent(daterange),
+      url:
+        "/api/v3/dashboard/performance/?daterange=" +
+        encodeURIComponent(daterange),
       dataType: "json",
       success: function (res) {
         if (!res || res.status !== 200) return;
-        createPieChart("enquiryPerformance", { labels: res.labels, data: res.data });
+        createPieChart("enquiryPerformance", {
+          labels: res.labels,
+          data: res.data,
+        });
       },
     });
   }
@@ -1117,7 +1171,10 @@ $(document).ready(function (e) {
           window.enquiryFlowChartInstance = null;
         }
         if (typeof Chart !== "undefined") {
-          const existingFlow = typeof Chart.getChart === "function" ? Chart.getChart(flowCanvas) : flowCanvas._chartInstance;
+          const existingFlow =
+            typeof Chart.getChart === "function"
+              ? Chart.getChart(flowCanvas)
+              : flowCanvas._chartInstance;
           if (existingFlow) existingFlow.destroy();
         }
 
@@ -1230,12 +1287,28 @@ $(document).ready(function (e) {
 
   // 14. Modular Kanban Board Data & Interactive CTAs
   function renderKanbanCard(item, st) {
-    const rawName = item.name && item.name.trim() !== "" ? item.name.trim() : (item.customer_name || item.lead_name || "Customer");
-    const customerName = rawName.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
-    const sourceTag = item.source ? `<span class="kanban-source-pill">${item.source}</span>` : "";
-    const cleanPhone = (item.mobile && item.mobile !== "N/A") ? item.mobile.replace(/[^0-9+]/g, "") : "";
-    const waPhone = cleanPhone.startsWith("+") ? cleanPhone.substring(1) : (cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone);
-    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    const rawName =
+      item.name && item.name.trim() !== ""
+        ? item.name.trim()
+        : item.customer_name || item.lead_name || "Customer";
+    const customerName = rawName
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+    const sourceTag = item.source
+      ? `<span class="kanban-source-pill">${item.source}</span>`
+      : "";
+    const cleanPhone =
+      item.mobile && item.mobile !== "N/A"
+        ? item.mobile.replace(/[^0-9+]/g, "")
+        : "";
+    const waPhone = cleanPhone.startsWith("+")
+      ? cleanPhone.substring(1)
+      : cleanPhone.length === 10
+        ? "91" + cleanPhone
+        : cleanPhone;
+    const isMobile =
+      /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      window.innerWidth <= 768;
 
     // 1. Call Button (Mobile: direct call, Desktop: reveals/copies number)
     let callBtnHtml = "";
@@ -1289,9 +1362,13 @@ $(document).ready(function (e) {
     }
 
     // Primary Row CTAs
-    const primaryCtas = [callBtnHtml, whatsappBtnHtml, assignBtnHtml].filter(Boolean).join("");
+    const primaryCtas = [callBtnHtml, whatsappBtnHtml, assignBtnHtml]
+      .filter(Boolean)
+      .join("");
     // Secondary Stage Actions
-    const secondaryCtas = [advanceBtnHtml, lostBtnHtml, duplicateBtnHtml].filter(Boolean).join("");
+    const secondaryCtas = [advanceBtnHtml, lostBtnHtml, duplicateBtnHtml]
+      .filter(Boolean)
+      .join("");
 
     const jsonStr = encodeURIComponent(JSON.stringify(item));
 
@@ -1330,12 +1407,19 @@ $(document).ready(function (e) {
 
   function checkKanbanEmptyStates() {
     const statuses = ["0", "2", "3", "1"];
-    const labelMap = { "0": "fresh", "2": "pending", "3": "follow-up", "1": "confirmed" };
+    const labelMap = {
+      0: "fresh",
+      2: "pending",
+      3: "follow-up",
+      1: "confirmed",
+    };
     statuses.forEach((st) => {
       const container = $(`#kanban-container-${st}`);
       if (container.find(".kanban-card").length === 0) {
         if (!container.find(".kanban-empty-drop-zone").length) {
-          container.html(`<div class="kanban-empty-drop-zone">Drop ${labelMap[st] || "leads"} here</div>`);
+          container.html(
+            `<div class="kanban-empty-drop-zone">Drop ${labelMap[st] || "leads"} here</div>`,
+          );
         }
       } else {
         container.find(".kanban-empty-drop-zone").remove();
@@ -1414,15 +1498,24 @@ $(document).ready(function (e) {
       container.empty();
 
       if (items.length === 0) {
-        const labelMap = { "0": "fresh", "2": "pending", "3": "follow-up", "1": "confirmed" };
-        container.html(`<div class="kanban-empty-drop-zone">Drop ${labelMap[st] || "leads"} here</div>`);
+        const labelMap = {
+          0: "fresh",
+          2: "pending",
+          3: "follow-up",
+          1: "confirmed",
+        };
+        container.html(
+          `<div class="kanban-empty-drop-zone">Drop ${labelMap[st] || "leads"} here</div>`,
+        );
       } else {
         items.forEach((item) => {
           container.append(renderKanbanCard(item, st));
         });
 
         if (items.length >= 10) {
-          columnCol.append(`<button class="kanban-load-more-btn" data-status="${st}">Load More</button>`);
+          columnCol.append(
+            `<button class="kanban-load-more-btn" data-status="${st}">Load More</button>`,
+          );
         }
       }
     });
@@ -1439,7 +1532,7 @@ $(document).ready(function (e) {
         if (!res) return;
         let boardData = res.data || res.grouped;
         if (Array.isArray(res.data) && !res.grouped) {
-          boardData = { "0": [], "2": [], "3": [], "1": [] };
+          boardData = { 0: [], 2: [], 3: [], 1: [] };
           res.data.forEach((lead) => {
             const st = String(lead.status);
             if (boardData[st]) {
@@ -1454,7 +1547,8 @@ $(document).ready(function (e) {
 
   // Dashboard Aggregator Orchestrator
   function loadDashboardV3Data(force) {
-    const daterange = typeof dateRangeParams !== "undefined" ? dateRangeParams : "";
+    const daterange =
+      typeof dateRangeParams !== "undefined" ? dateRangeParams : "";
     if (!force && lastLoadedDashboardRange === daterange) {
       return;
     }
@@ -1488,17 +1582,26 @@ $(document).ready(function (e) {
 
     if (isFS) {
       wrapper.removeClass("kanban-fullscreen-mode");
-      $(this).html('<i class="fi-rr-expand"></i> <span class="btn-fs-label">Full Screen</span>');
+      $(this).html(
+        '<i class="fi-rr-expand"></i> <span class="btn-fs-label">Full Screen</span>',
+      );
     } else {
       wrapper.addClass("kanban-fullscreen-mode");
-      $(this).html('<i class="fi-rr-compress"></i> <span class="btn-fs-label">Exit Full Screen</span>');
+      $(this).html(
+        '<i class="fi-rr-compress"></i> <span class="btn-fs-label">Exit Full Screen</span>',
+      );
     }
   });
 
   $(document).on("keydown", function (e) {
-    if (e.key === "Escape" && $("#kanbanWidgetWrapper").hasClass("kanban-fullscreen-mode")) {
+    if (
+      e.key === "Escape" &&
+      $("#kanbanWidgetWrapper").hasClass("kanban-fullscreen-mode")
+    ) {
       $("#kanbanWidgetWrapper").removeClass("kanban-fullscreen-mode");
-      $("#toggleKanbanFullscreenBtn").html('<i class="fi-rr-expand"></i> <span class="btn-fs-label">Full Screen</span>');
+      $("#toggleKanbanFullscreenBtn").html(
+        '<i class="fi-rr-expand"></i> <span class="btn-fs-label">Full Screen</span>',
+      );
     }
   });
 
@@ -1514,7 +1617,11 @@ $(document).ready(function (e) {
 
     $.ajax({
       type: "GET",
-      url: `/api/v3/leads/kanban/?status=${status}&offset=${currentOffset}&limit=10&daterange=` + encodeURIComponent(typeof dateRangeParams !== "undefined" ? dateRangeParams : ""),
+      url:
+        `/api/v3/leads/kanban/?status=${status}&offset=${currentOffset}&limit=10&daterange=` +
+        encodeURIComponent(
+          typeof dateRangeParams !== "undefined" ? dateRangeParams : "",
+        ),
       dataType: "json",
       success: function (res) {
         if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
@@ -1547,41 +1654,51 @@ $(document).ready(function (e) {
     btn.addClass("copied");
 
     setTimeout(() => {
-      btn.find(".call-btn-label").text(btn.attr("data-original-text") || "Call");
+      btn
+        .find(".call-btn-label")
+        .text(btn.attr("data-original-text") || "Call");
       btn.removeClass("copied");
     }, 2500);
   });
 
   // CTA Event 2: Quick Status Change & Stage Advance with Clear Feedback
-  $(document).on("click", ".btn-kanban-quick-status, .btn-kanban-advance", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const btn = $(this);
-    const leadId = btn.attr("data-lead-id");
-    const targetStatus = btn.attr("data-target-status") || btn.attr("data-status");
-    const stageName = btn.attr("data-stage-name") || "next stage";
-    if (!leadId || targetStatus === undefined) return;
+  $(document).on(
+    "click",
+    ".btn-kanban-quick-status, .btn-kanban-advance",
+    function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const btn = $(this);
+      const leadId = btn.attr("data-lead-id");
+      const targetStatus =
+        btn.attr("data-target-status") || btn.attr("data-status");
+      const stageName = btn.attr("data-stage-name") || "next stage";
+      if (!leadId || targetStatus === undefined) return;
 
-    const originalHtml = btn.html();
-    btn.html(`<i class="fi fi-rr-spinner fi-rr-spin"></i> Moving...`).prop("disabled", true).css("opacity", 0.7);
+      const originalHtml = btn.html();
+      btn
+        .html(`<i class="fi fi-rr-spinner fi-rr-spin"></i> Moving...`)
+        .prop("disabled", true)
+        .css("opacity", 0.7);
 
-    $.ajax({
-      type: "POST",
-      url: "/api/v3/leads/update-status/",
-      data: { leadId: leadId, status: targetStatus },
-      dataType: "json",
-      success: function (res) {
-        if (res && res.status === 200) {
-          moveKanbanCardDom(leadId, targetStatus);
-        } else {
+      $.ajax({
+        type: "POST",
+        url: "/api/v3/leads/update-status/",
+        data: { leadId: leadId, status: targetStatus },
+        dataType: "json",
+        success: function (res) {
+          if (res && res.status === 200) {
+            moveKanbanCardDom(leadId, targetStatus);
+          } else {
+            btn.html(originalHtml).prop("disabled", false).css("opacity", 1);
+          }
+        },
+        error: function () {
           btn.html(originalHtml).prop("disabled", false).css("opacity", 1);
-        }
-      },
-      error: function () {
-        btn.html(originalHtml).prop("disabled", false).css("opacity", 1);
-      },
-    });
-  });
+        },
+      });
+    },
+  );
 
   // CTA Event 3: Confirm Status Change for Lost & Duplicate using SweetAlert
   $(document).on("click", ".btn-kanban-confirm-status", function (e) {
@@ -1594,7 +1711,10 @@ $(document).ready(function (e) {
 
     const doUpdate = () => {
       const originalHtml = btn.html();
-      btn.html(`<i class="fi fi-rr-spinner fi-rr-spin"></i> Updating...`).prop("disabled", true).css("opacity", 0.6);
+      btn
+        .html(`<i class="fi fi-rr-spinner fi-rr-spin"></i> Updating...`)
+        .prop("disabled", true)
+        .css("opacity", 0.6);
 
       $.ajax({
         type: "POST",
@@ -1620,7 +1740,8 @@ $(document).ready(function (e) {
                 type: "error",
                 icon: "error",
                 title: "Failed to update",
-                text: (res && res.msg) ? res.msg : "Could not update lead status.",
+                text:
+                  res && res.msg ? res.msg : "Could not update lead status.",
               });
             }
           }
@@ -1651,7 +1772,10 @@ $(document).ready(function (e) {
         confirmButtonText: `Yes, mark as ${actionName}`,
         cancelButtonText: "Cancel",
       }).then((result) => {
-        if (result && (result.value || result.isConfirmed === true || result === true)) {
+        if (
+          result &&
+          (result.value || result.isConfirmed === true || result === true)
+        ) {
           doUpdate();
         }
       });
@@ -1671,7 +1795,16 @@ $(document).ready(function (e) {
   }
 
   function getAvatarColor(str) {
-    const colors = ["#0284c7", "#0d9488", "#7c3aed", "#d97706", "#e11d48", "#2563eb", "#059669", "#4f46e5"];
+    const colors = [
+      "#0284c7",
+      "#0d9488",
+      "#7c3aed",
+      "#d97706",
+      "#e11d48",
+      "#2563eb",
+      "#059669",
+      "#4f46e5",
+    ];
     let hash = 0;
     for (let i = 0; i < (str || "").length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -1689,7 +1822,9 @@ $(document).ready(function (e) {
 
     // Clean up any existing overlay
     if ($("#kanbanAssignSelect").data("select2")) {
-      try { $("#kanbanAssignSelect").select2("destroy"); } catch (err) {}
+      try {
+        $("#kanbanAssignSelect").select2("destroy");
+      } catch (err) {}
     }
     $("#kanbanAssignOverlay").remove();
 
@@ -1699,14 +1834,14 @@ $(document).ready(function (e) {
       url: "/api/v3/leads/agents/",
       dataType: "json",
       success: function (res) {
-        const agents = (res && Array.isArray(res.agents)) ? res.agents : [];
+        const agents = res && Array.isArray(res.agents) ? res.agents : [];
         let optionsHtml = '<option value="0">-- Select Team Member --</option>';
-        
+
         agents.forEach((ag) => {
           const initials = getInitials(ag.name);
           const color = getAvatarColor(ag.name || ag.email);
           const role = ag.role || "Team Member";
-          optionsHtml += `<option value="${ag.id}" data-name="${ag.name}" data-email="${ag.email || ''}" data-role="${role}" data-initials="${initials}" data-color="${color}">${ag.name} (${ag.email || role})</option>`;
+          optionsHtml += `<option value="${ag.id}" data-name="${ag.name}" data-email="${ag.email || ""}" data-role="${role}" data-initials="${initials}" data-color="${color}">${ag.name} (${ag.email || role})</option>`;
         });
 
         const modalHtml = `
@@ -1787,12 +1922,18 @@ $(document).ready(function (e) {
     });
   });
 
-  $(document).on("click", "#closeKanbanAssignBtn, #cancelKanbanAssignBtn", function () {
-    if ($("#kanbanAssignSelect").data("select2")) {
-      try { $("#kanbanAssignSelect").select2("destroy"); } catch (err) {}
-    }
-    $("#kanbanAssignOverlay").remove();
-  });
+  $(document).on(
+    "click",
+    "#closeKanbanAssignBtn, #cancelKanbanAssignBtn",
+    function () {
+      if ($("#kanbanAssignSelect").data("select2")) {
+        try {
+          $("#kanbanAssignSelect").select2("destroy");
+        } catch (err) {}
+      }
+      $("#kanbanAssignOverlay").remove();
+    },
+  );
 
   $(document).on("click", "#submitKanbanAssignBtn", function () {
     const submitBtn = $(this);
@@ -1813,7 +1954,9 @@ $(document).ready(function (e) {
       return;
     }
 
-    submitBtn.html('<i class="fi fi-rr-spinner fi-rr-spin"></i> Assigning...').prop("disabled", true);
+    submitBtn
+      .html('<i class="fi fi-rr-spinner fi-rr-spin"></i> Assigning...')
+      .prop("disabled", true);
 
     $.ajax({
       type: "POST",
@@ -1822,7 +1965,9 @@ $(document).ready(function (e) {
       dataType: "json",
       success: function (res) {
         if ($("#kanbanAssignSelect").data("select2")) {
-          try { $("#kanbanAssignSelect").select2("destroy"); } catch (err) {}
+          try {
+            $("#kanbanAssignSelect").select2("destroy");
+          } catch (err) {}
         }
         $("#kanbanAssignOverlay").remove();
 
@@ -1844,13 +1989,20 @@ $(document).ready(function (e) {
               type: "error",
               icon: "error",
               title: "Assignment Failed",
-              text: (res && res.message) ? res.message : ((res && res.msg) ? res.msg : "Failed to assign lead to user."),
+              text:
+                res && res.message
+                  ? res.message
+                  : res && res.msg
+                    ? res.msg
+                    : "Failed to assign lead to user.",
             });
           }
         }
       },
       error: function () {
-        submitBtn.html('<i class="fi fi-rr-check"></i> Assign Lead').prop("disabled", false);
+        submitBtn
+          .html('<i class="fi fi-rr-check"></i> Assign Lead')
+          .prop("disabled", false);
         if (typeof Swal !== "undefined") {
           Swal.fire({
             type: "error",
@@ -1878,8 +2030,13 @@ $(document).ready(function (e) {
     });
   }
 
-  if (!$("#totalLeadsValue").length && ($("#totalPendingRequests").length || $("#totalPendingRequest").length)) {
-    const targetId = $("#totalPendingRequests").length ? "totalPendingRequests" : "totalPendingRequest";
+  if (
+    !$("#totalLeadsValue").length &&
+    ($("#totalPendingRequests").length || $("#totalPendingRequest").length)
+  ) {
+    const targetId = $("#totalPendingRequests").length
+      ? "totalPendingRequests"
+      : "totalPendingRequest";
     $.ajax({
       type: "GET",
       url: "/api/report/pending-request/?daterange=" + dateRangeParams,
@@ -1990,11 +2147,16 @@ $(document).ready(function (e) {
 
     if ($(".showTableList").length) {
       $(".showTableList").each(function () {
-        if ($(this).hasClass("package-v3-datatable") || $(this).closest(".package-table-card").length > 0) {
+        if (
+          $(this).hasClass("package-v3-datatable") ||
+          $(this).closest(".package-table-card").length > 0
+        ) {
           return;
         }
         if (!$.fn.DataTable.isDataTable(this)) {
-          const isPkgV3 = $(this).hasClass("package-v3-datatable") || $(this).closest(".package-table-card").length > 0;
+          const isPkgV3 =
+            $(this).hasClass("package-v3-datatable") ||
+            $(this).closest(".package-table-card").length > 0;
           $(this).DataTable({
             pageLength: 50,
             fixedHeader: false,
@@ -2017,7 +2179,9 @@ $(document).ready(function (e) {
               },
             ],
             createdRow: function (row, data, dataIndex) {
-              var rowDataStatus = (data[data.length - 2] || "").toLowerCase().replace(/[^a-z0-9]/g, "_");
+              var rowDataStatus = (data[data.length - 2] || "")
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, "_");
               if (rowDataStatus) {
                 $(row).addClass("dt-status-row-" + rowDataStatus);
               }
@@ -2045,12 +2209,17 @@ $(document).ready(function (e) {
     if (typeof $.fn.DataTable === "undefined") return;
 
     if (Array.isArray($.fn.dataTable.ext.search)) {
-      $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(function (fn) {
-        return fn._isPkgFilter !== true;
-      });
+      $.fn.dataTable.ext.search = $.fn.dataTable.ext.search.filter(
+        function (fn) {
+          return fn._isPkgFilter !== true;
+        },
+      );
 
       var pkgCustomFilter = function (settings, data, dataIndex) {
-        if (!settings.nTable || !$(settings.nTable).hasClass("package-v3-datatable")) {
+        if (
+          !settings.nTable ||
+          !$(settings.nTable).hasClass("package-v3-datatable")
+        ) {
           return true;
         }
 
@@ -2061,19 +2230,45 @@ $(document).ready(function (e) {
         var hotelVal = $.trim($("#filterHotel").val()).toLowerCase();
         var destVal = $.trim($("#filterDestination").val()).toLowerCase();
 
-        var rowNode = settings.aoData[dataIndex] ? settings.aoData[dataIndex].nTr : null;
-        var rowStatus = rowNode ? (rowNode.getAttribute("data-status") || "") : (data[2] || "").toLowerCase();
-        var rowTheme = rowNode ? (rowNode.getAttribute("data-theme") || "") : (data[0] || "").toLowerCase();
-        var rowDuration = rowNode ? parseInt(rowNode.getAttribute("data-duration") || "0", 10) : 0;
-        var rowHotel = rowNode ? (rowNode.getAttribute("data-hotel") || "") : (data[1] || "").toLowerCase();
-        var rowCity = rowNode ? (rowNode.getAttribute("data-city") || "") : (data[1] || "").toLowerCase();
+        var rowNode = settings.aoData[dataIndex]
+          ? settings.aoData[dataIndex].nTr
+          : null;
+        var rowStatus = rowNode
+          ? rowNode.getAttribute("data-status") || ""
+          : (data[2] || "").toLowerCase();
+        var rowTheme = rowNode
+          ? rowNode.getAttribute("data-theme") || ""
+          : (data[0] || "").toLowerCase();
+        var rowDuration = rowNode
+          ? parseInt(rowNode.getAttribute("data-duration") || "0", 10)
+          : 0;
+        var rowHotel = rowNode
+          ? rowNode.getAttribute("data-hotel") || ""
+          : (data[1] || "").toLowerCase();
+        var rowCity = rowNode
+          ? rowNode.getAttribute("data-city") || ""
+          : (data[1] || "").toLowerCase();
 
         if (!rowDuration && data[0]) {
           var dMatch = data[0].match(/(\d+)\s*n/i);
           if (dMatch) rowDuration = parseInt(dMatch[1], 10);
         }
 
-        var rowFullText = (data[0] + " " + data[1] + " " + data[2] + " " + rowStatus + " " + rowTheme + " " + rowHotel + " " + rowCity).toLowerCase();
+        var rowFullText = (
+          data[0] +
+          " " +
+          data[1] +
+          " " +
+          data[2] +
+          " " +
+          rowStatus +
+          " " +
+          rowTheme +
+          " " +
+          rowHotel +
+          " " +
+          rowCity
+        ).toLowerCase();
 
         // 1. Text Search
         if (searchVal && rowFullText.indexOf(searchVal) === -1) {
@@ -2081,12 +2276,20 @@ $(document).ready(function (e) {
         }
 
         // 2. Status Filter
-        if (statusVal && rowStatus !== statusVal && rowStatus.indexOf(statusVal) === -1) {
+        if (
+          statusVal &&
+          rowStatus !== statusVal &&
+          rowStatus.indexOf(statusVal) === -1
+        ) {
           return false;
         }
 
         // 3. Theme Filter
-        if (themeVal && rowTheme !== themeVal && rowTheme.indexOf(themeVal) === -1) {
+        if (
+          themeVal &&
+          rowTheme !== themeVal &&
+          rowTheme.indexOf(themeVal) === -1
+        ) {
           return false;
         }
 
@@ -2120,132 +2323,172 @@ $(document).ready(function (e) {
   window.initPackageTableFilters = initPackageTableFilters;
 
   // Delegated Package Table Filter Events
-  $(document).off("input.pkgFilter keyup.pkgFilter", "#pkgTableSearch").on("input.pkgFilter keyup.pkgFilter", "#pkgTableSearch", function () {
-    $("#clearSearchBtn").toggle(Boolean($.trim($(this).val())));
-    $(".package-v3-datatable").each(function () {
-      if ($.fn.DataTable.isDataTable(this)) {
-        $(this).DataTable().draw();
-      }
+  $(document)
+    .off("input.pkgFilter keyup.pkgFilter", "#pkgTableSearch")
+    .on("input.pkgFilter keyup.pkgFilter", "#pkgTableSearch", function () {
+      $("#clearSearchBtn").toggle(Boolean($.trim($(this).val())));
+      $(".package-v3-datatable").each(function () {
+        if ($.fn.DataTable.isDataTable(this)) {
+          $(this).DataTable().draw();
+        }
+      });
     });
-  });
 
-  $(document).off("click.pkgFilter", "#clearSearchBtn").on("click.pkgFilter", "#clearSearchBtn", function (e) {
-    e.preventDefault();
-    $("#pkgTableSearch").val("").trigger("input").focus();
-  });
-
-  $(document).off("change.pkgFilter", "#filterStatus, #filterTheme, #filterDuration, #filterHotel, #filterDestination").on("change.pkgFilter", "#filterStatus, #filterTheme, #filterDuration, #filterHotel, #filterDestination", function () {
-    $(".package-v3-datatable").each(function () {
-      if ($.fn.DataTable.isDataTable(this)) {
-        $(this).DataTable().draw();
-      }
+  $(document)
+    .off("click.pkgFilter", "#clearSearchBtn")
+    .on("click.pkgFilter", "#clearSearchBtn", function (e) {
+      e.preventDefault();
+      $("#pkgTableSearch").val("").trigger("input").focus();
     });
-  });
 
-  $(document).off("click.pkgFilter", "#resetPkgFilters").on("click.pkgFilter", "#resetPkgFilters", function (e) {
-    e.preventDefault();
-    $("#pkgTableSearch").val("");
-    $("#filterStatus").val("");
-    $("#filterTheme").val("");
-    $("#filterDuration").val("");
-    $("#filterHotel").val("");
-    $("#filterDestination").val("");
-    $("#clearSearchBtn").hide();
-    $(".package-v3-datatable").each(function () {
-      if ($.fn.DataTable.isDataTable(this)) {
-        $(this).DataTable().draw();
-      }
+  $(document)
+    .off(
+      "change.pkgFilter",
+      "#filterStatus, #filterTheme, #filterDuration, #filterHotel, #filterDestination",
+    )
+    .on(
+      "change.pkgFilter",
+      "#filterStatus, #filterTheme, #filterDuration, #filterHotel, #filterDestination",
+      function () {
+        $(".package-v3-datatable").each(function () {
+          if ($.fn.DataTable.isDataTable(this)) {
+            $(this).DataTable().draw();
+          }
+        });
+      },
+    );
+
+  $(document)
+    .off("click.pkgFilter", "#resetPkgFilters")
+    .on("click.pkgFilter", "#resetPkgFilters", function (e) {
+      e.preventDefault();
+      $("#pkgTableSearch").val("");
+      $("#filterStatus").val("");
+      $("#filterTheme").val("");
+      $("#filterDuration").val("");
+      $("#filterHotel").val("");
+      $("#filterDestination").val("");
+      $("#clearSearchBtn").hide();
+      $(".package-v3-datatable").each(function () {
+        if ($.fn.DataTable.isDataTable(this)) {
+          $(this).DataTable().draw();
+        }
+      });
     });
-  });
 
   // Global Lightweight Floating Tooltip Engine (Strictly Buttons & Hyperlinks)
   function initGlobalTooltips() {
     let $tooltip = $("#v3GlobalTooltip");
     if (!$tooltip.length) {
-      $tooltip = $('<div id="v3GlobalTooltip" class="v3-global-tooltip" role="tooltip"></div>');
+      $tooltip = $(
+        '<div id="v3GlobalTooltip" class="v3-global-tooltip" role="tooltip"></div>',
+      );
       $("body").append($tooltip);
     }
 
-    const selector = "a[data-tooltip], button[data-tooltip], a[title], button[title], a.btn-action-icon, button.btn-action-icon, a.btn-action-pill, button.btn-action-pill, a.btn-filter-reset, button.btn-filter-reset, .btn-reset-filters-v3, .btn-lead-view-cta, .btn-lead-icon-action, .lead-wa-btn-vibrant, .lead-contact-link, .lead-email-link, .clear-search-btn, .clear-date-btn, .btn-empty-reset-filters, .lead-page-btn";
+    const selector =
+      "a[data-tooltip], button[data-tooltip], a[title], button[title], a.btn-action-icon, button.btn-action-icon, a.btn-action-pill, button.btn-action-pill, a.btn-filter-reset, button.btn-filter-reset, .btn-reset-filters-v3, .btn-lead-view-cta, .btn-lead-icon-action, .lead-wa-btn-vibrant, .lead-contact-link, .lead-email-link, .clear-search-btn, .clear-date-btn, .btn-empty-reset-filters, .lead-page-btn";
 
-    $(document).off("mouseenter.v3Tooltip", selector).on("mouseenter.v3Tooltip", selector, function () {
-      const $el = $(this);
+    $(document)
+      .off("mouseenter.v3Tooltip", selector)
+      .on("mouseenter.v3Tooltip", selector, function () {
+        const $el = $(this);
 
-      // Ensure tooltips only show on actual buttons and hyperlinks
-      if (!$el.is("a, button, [role='button'], .btn-action-icon, .btn-action-pill, .btn-filter-reset, .btn-reset-filters-v3, .btn-lead-view-cta, .btn-lead-icon-action, .lead-wa-btn-vibrant, .clear-search-btn, .clear-date-btn, .btn-empty-reset-filters, .lead-page-btn")) {
-        return;
-      }
+        // Ensure tooltips only show on actual buttons and hyperlinks
+        if (
+          !$el.is(
+            "a, button, [role='button'], .btn-action-icon, .btn-action-pill, .btn-filter-reset, .btn-reset-filters-v3, .btn-lead-view-cta, .btn-lead-icon-action, .lead-wa-btn-vibrant, .clear-search-btn, .clear-date-btn, .btn-empty-reset-filters, .lead-page-btn",
+          )
+        ) {
+          return;
+        }
 
-      let text = $el.attr("data-tooltip");
+        let text = $el.attr("data-tooltip");
 
-      if (!text && $el.attr("title")) {
-        text = $el.attr("title");
-        $el.data("v3-orig-title", text);
-        $el.removeAttr("title"); // Suppress native browser tooltip
-      }
+        if (!text && $el.attr("title")) {
+          text = $el.attr("title");
+          $el.data("v3-orig-title", text);
+          $el.removeAttr("title"); // Suppress native browser tooltip
+        }
 
-      if (!text) {
-        text = $el.data("v3-orig-title");
-      }
+        if (!text) {
+          text = $el.data("v3-orig-title");
+        }
 
-      if (!text || !text.trim()) return;
+        if (!text || !text.trim()) return;
 
-      $tooltip.text(text.trim()).removeClass("placement-bottom visible");
+        $tooltip.text(text.trim()).removeClass("placement-bottom visible");
 
-      const rect = this.getBoundingClientRect();
-      const tooltipHeight = $tooltip.outerHeight() || 28;
-      const tooltipWidth = $tooltip.outerWidth() || 80;
+        const rect = this.getBoundingClientRect();
+        const tooltipHeight = $tooltip.outerHeight() || 28;
+        const tooltipWidth = $tooltip.outerWidth() || 80;
 
-      let top = rect.top - 7;
-      let left = rect.left + rect.width / 2;
-      let isBottom = false;
+        let top = rect.top - 7;
+        let left = rect.left + rect.width / 2;
+        let isBottom = false;
 
-      if (top - tooltipHeight < 10) {
-        top = rect.bottom + 7;
-        isBottom = true;
-      }
+        if (top - tooltipHeight < 10) {
+          top = rect.bottom + 7;
+          isBottom = true;
+        }
 
-      if (left - tooltipWidth / 2 < 10) {
-        left = 10 + tooltipWidth / 2;
-      } else if (left + tooltipWidth / 2 > window.innerWidth - 10) {
-        left = window.innerWidth - 10 - tooltipWidth / 2;
-      }
+        if (left - tooltipWidth / 2 < 10) {
+          left = 10 + tooltipWidth / 2;
+        } else if (left + tooltipWidth / 2 > window.innerWidth - 10) {
+          left = window.innerWidth - 10 - tooltipWidth / 2;
+        }
 
-      $tooltip.css({
-        top: top + "px",
-        left: left + "px",
+        $tooltip.css({
+          top: top + "px",
+          left: left + "px",
+        });
+
+        if (isBottom) {
+          $tooltip.addClass("placement-bottom");
+        }
+
+        requestAnimationFrame(() => {
+          $tooltip.addClass("visible");
+        });
       });
 
-      if (isBottom) {
-        $tooltip.addClass("placement-bottom");
-      }
-
-      requestAnimationFrame(() => {
-        $tooltip.addClass("visible");
+    $(document)
+      .off("mouseleave.v3Tooltip click.v3Tooltip", selector)
+      .on("mouseleave.v3Tooltip click.v3Tooltip", selector, function () {
+        $tooltip.removeClass("visible");
+        const orig = $(this).data("v3-orig-title");
+        if (orig && !$(this).attr("title")) {
+          $(this).attr("title", orig);
+        }
       });
-    });
-
-    $(document).off("mouseleave.v3Tooltip click.v3Tooltip", selector).on("mouseleave.v3Tooltip click.v3Tooltip", selector, function () {
-      $tooltip.removeClass("visible");
-      const orig = $(this).data("v3-orig-title");
-      if (orig && !$(this).attr("title")) {
-        $(this).attr("title", orig);
-      }
-    });
 
     // Auto-dismiss tooltip on scroll, modal/select2 open, or user click outside
-    $(window).off("scroll.v3Tooltip").on("scroll.v3Tooltip", function () {
-      $tooltip.removeClass("visible");
-    });
-    $(document).off("select2:opening select2:closing mousedown.v3Tooltip spa:loaded.v3Tooltip").on("select2:opening select2:closing mousedown.v3Tooltip spa:loaded.v3Tooltip", function () {
-      $tooltip.removeClass("visible");
-    });
+    $(window)
+      .off("scroll.v3Tooltip")
+      .on("scroll.v3Tooltip", function () {
+        $tooltip.removeClass("visible");
+      });
+    $(document)
+      .off(
+        "select2:opening select2:closing mousedown.v3Tooltip spa:loaded.v3Tooltip",
+      )
+      .on(
+        "select2:opening select2:closing mousedown.v3Tooltip spa:loaded.v3Tooltip",
+        function () {
+          $tooltip.removeClass("visible");
+        },
+      );
   }
   window.initGlobalTooltips = initGlobalTooltips;
 
   // Modular DateRangePicker Initialization Engine (SPA Compatible)
   function initDateRangePicker() {
-    if (!$(".dateRangePicker").length || typeof moment === "undefined" || typeof $.fn.daterangepicker === "undefined") return;
+    if (
+      !$(".dateRangePicker").length ||
+      typeof moment === "undefined" ||
+      typeof $.fn.daterangepicker === "undefined"
+    )
+      return;
 
     let start = moment().startOf("month");
     let end = moment().endOf("month");
@@ -2253,8 +2496,16 @@ $(document).ready(function (e) {
     if (dateRangeParams) {
       const parts = dateRangeParams.split(" - ");
       if (parts.length === 2) {
-        const pStart = moment(parts[0], ["DD-MMM-YYYY", "YYYY-MM-DD", "D MMM YYYY"]);
-        const pEnd = moment(parts[1], ["DD-MMM-YYYY", "YYYY-MM-DD", "D MMM YYYY"]);
+        const pStart = moment(parts[0], [
+          "DD-MMM-YYYY",
+          "YYYY-MM-DD",
+          "D MMM YYYY",
+        ]);
+        const pEnd = moment(parts[1], [
+          "DD-MMM-YYYY",
+          "YYYY-MM-DD",
+          "D MMM YYYY",
+        ]);
         if (pStart.isValid() && pEnd.isValid()) {
           start = pStart;
           end = pEnd;
@@ -2277,17 +2528,26 @@ $(document).ready(function (e) {
       if (sDay.isSame(last30) && eDay.isSame(today)) return "Last 30 Days";
       const startThisMonth = today.clone().startOf("month");
       const endThisMonth = today.clone().endOf("month");
-      if (sDay.isSame(startThisMonth) && (eDay.isSame(endThisMonth) || eDay.isSame(today))) return "This Month";
-      const startLastMonth = today.clone().subtract(1, "month").startOf("month");
+      if (
+        sDay.isSame(startThisMonth) &&
+        (eDay.isSame(endThisMonth) || eDay.isSame(today))
+      )
+        return "This Month";
+      const startLastMonth = today
+        .clone()
+        .subtract(1, "month")
+        .startOf("month");
       const endLastMonth = today.clone().subtract(1, "month").endOf("month");
-      if (sDay.isSame(startLastMonth) && eDay.isSame(endLastMonth)) return "Last Month";
+      if (sDay.isSame(startLastMonth) && eDay.isSame(endLastMonth))
+        return "Last Month";
 
       return "Custom Range";
     }
 
     function cb(s, e) {
       if (!s || !e) return;
-      const formattedText = s.format("D MMM YYYY") + " - " + e.format("D MMM YYYY");
+      const formattedText =
+        s.format("D MMM YYYY") + " - " + e.format("D MMM YYYY");
       $(".dateRangePicker span").html(formattedText);
 
       const friendlyLabel = getFriendlyPeriodLabel(s, e);
@@ -2304,10 +2564,15 @@ $(document).ready(function (e) {
         durationText = months === 1 ? "1 Month" : `${months} Months`;
       }
       $("#dateDurationTag").text(durationText);
-      dateRangeParams = s.format("DD-MMM-YYYY") + " - " + e.format("DD-MMM-YYYY");
+      dateRangeParams =
+        s.format("DD-MMM-YYYY") + " - " + e.format("DD-MMM-YYYY");
       dateRangeValue = dateRangeParams;
 
-      if ($("#totalLeadsValue").length || $(".kanban-widget-wrapper").length || $("#enquiryFlowCanvas").length) {
+      if (
+        $("#totalLeadsValue").length ||
+        $(".kanban-widget-wrapper").length ||
+        $("#enquiryFlowCanvas").length
+      ) {
         loadDashboardV3Data();
       }
     }
@@ -2354,7 +2619,9 @@ $(document).ready(function (e) {
 
     $.ajax({
       type: "GET",
-      url: "/api/v3/leads/kanban/?daterange=" + encodeURIComponent(dateRangeParams),
+      url:
+        "/api/v3/leads/kanban/?daterange=" +
+        encodeURIComponent(dateRangeParams),
       dataType: "json",
       success: function (res) {
         if (res && res.data) {
@@ -2369,15 +2636,19 @@ $(document).ready(function (e) {
 
             if (items.length === 0) {
               const labelMap = {
-                "0": "fresh",
-                "2": "pending",
-                "3": "follow-up",
-                "1": "confirmed",
+                0: "fresh",
+                2: "pending",
+                3: "follow-up",
+                1: "confirmed",
               };
-              container.html(`<div class="kanban-empty-drop-zone">Drop ${labelMap[st] || "leads"} here</div>`);
+              container.html(
+                `<div class="kanban-empty-drop-zone">Drop ${labelMap[st] || "leads"} here</div>`,
+              );
             } else {
               items.forEach((item) => {
-                const sourceTag = item.source ? `<span class="kanban-source-pill">${item.source}</span>` : "";
+                const sourceTag = item.source
+                  ? `<span class="kanban-source-pill">${item.source}</span>`
+                  : "";
                 const cardHtml = `
                   <div class="kanban-card" draggable="true" data-lead-id="${item.encoded_id}" data-status="${st}">
                     <div class="kanban-card-head">
@@ -2406,14 +2677,19 @@ $(document).ready(function (e) {
   function initKanbanBoard() {
     let draggedCard = null;
 
-    $(document).off("dragstart.kanban").on("dragstart.kanban", ".kanban-card", function (e) {
-      draggedCard = this;
-      $(this).addClass("is-dragging");
-      if (e.originalEvent && e.originalEvent.dataTransfer) {
-        e.originalEvent.dataTransfer.setData("text/plain", $(this).attr("data-lead-id"));
-        e.originalEvent.dataTransfer.effectAllowed = "move";
-      }
-    });
+    $(document)
+      .off("dragstart.kanban")
+      .on("dragstart.kanban", ".kanban-card", function (e) {
+        draggedCard = this;
+        $(this).addClass("is-dragging");
+        if (e.originalEvent && e.originalEvent.dataTransfer) {
+          e.originalEvent.dataTransfer.setData(
+            "text/plain",
+            $(this).attr("data-lead-id"),
+          );
+          e.originalEvent.dataTransfer.effectAllowed = "move";
+        }
+      });
 
     $(document).on("dragend", ".kanban-card", function () {
       $(this).removeClass("is-dragging");
@@ -2421,49 +2697,57 @@ $(document).ready(function (e) {
       $(".kanban-column").removeClass("drag-over");
     });
 
-    $(document).on("dragover", ".kanban-column, .kanban-cards-container", function (e) {
-      e.preventDefault();
-      if (e.originalEvent && e.originalEvent.dataTransfer) {
-        e.originalEvent.dataTransfer.dropEffect = "move";
-      }
-      $(this).closest(".kanban-column").addClass("drag-over");
-    });
+    $(document).on(
+      "dragover",
+      ".kanban-column, .kanban-cards-container",
+      function (e) {
+        e.preventDefault();
+        if (e.originalEvent && e.originalEvent.dataTransfer) {
+          e.originalEvent.dataTransfer.dropEffect = "move";
+        }
+        $(this).closest(".kanban-column").addClass("drag-over");
+      },
+    );
 
     $(document).on("dragleave", ".kanban-column", function () {
       $(this).removeClass("drag-over");
     });
 
-    $(document).on("drop", ".kanban-column, .kanban-cards-container", function (e) {
-      e.preventDefault();
-      $(".kanban-column").removeClass("drag-over");
+    $(document).on(
+      "drop",
+      ".kanban-column, .kanban-cards-container",
+      function (e) {
+        e.preventDefault();
+        $(".kanban-column").removeClass("drag-over");
 
-      const columnEl = $(this).closest(".kanban-column");
-      const targetContainer = columnEl.find(".kanban-cards-container");
-      const newStatus = columnEl.attr("data-status");
+        const columnEl = $(this).closest(".kanban-column");
+        const targetContainer = columnEl.find(".kanban-cards-container");
+        const newStatus = columnEl.attr("data-status");
 
-      if (draggedCard && newStatus !== undefined) {
-        const oldStatus = $(draggedCard).attr("data-status");
-        if (oldStatus === newStatus) return;
+        if (draggedCard && newStatus !== undefined) {
+          const oldStatus = $(draggedCard).attr("data-status");
+          if (oldStatus === newStatus) return;
 
-        const leadId = $(draggedCard).attr("data-lead-id");
+          const leadId = $(draggedCard).attr("data-lead-id");
 
-        // Send AJAX request to update lead status in database via API v3
-        $.ajax({
-          type: "POST",
-          url: "/api/v3/leads/update-status/",
-          data: {
-            leadId: leadId,
-            status: newStatus,
-          },
-          success: function (res) {
-            moveKanbanCardDom(leadId, newStatus);
-          },
-          error: function (err) {
-            console.log("Lead status API update notice:", err);
-          },
-        });
-      }
-    });
+          // Send AJAX request to update lead status in database via API v3
+          $.ajax({
+            type: "POST",
+            url: "/api/v3/leads/update-status/",
+            data: {
+              leadId: leadId,
+              status: newStatus,
+            },
+            success: function (res) {
+              moveKanbanCardDom(leadId, newStatus);
+            },
+            error: function (err) {
+              console.log("Lead status API update notice:", err);
+            },
+          });
+        }
+      },
+    );
 
     function updateKanbanCounts() {
       $(".kanban-column").each(function () {
@@ -2478,113 +2762,128 @@ $(document).ready(function (e) {
   let kanbanSearchTimer = null;
   let kanbanSearchXhr = null;
 
-  $(document).on("input", "#kanbanSearchInput, .kanban-search-input", function () {
-    const rawVal = $(this).val();
-    const query = rawVal.trim();
-    const clearBtn = $("#kanbanSearchClearBtn, .kanban-search-clear-btn");
+  $(document).on(
+    "input",
+    "#kanbanSearchInput, .kanban-search-input",
+    function () {
+      const rawVal = $(this).val();
+      const query = rawVal.trim();
+      const clearBtn = $("#kanbanSearchClearBtn, .kanban-search-clear-btn");
 
-    if (query.length > 0) {
-      clearBtn.show();
-    } else {
-      clearBtn.hide();
-    }
-
-    // Step 1: Instant Client-Side DOM filter on currently rendered cards
-    const statuses = ["0", "2", "3", "1"];
-    let totalClientMatches = 0;
-    statuses.forEach((st) => {
-      const container = $(`#kanban-container-${st}`);
-      const cards = container.find(".kanban-card");
-      let visibleCount = 0;
-
-      cards.each(function () {
-        const card = $(this);
-        let leadText = card.text();
-        const rawJson = card.attr("data-lead-json");
-        if (rawJson) {
-          try {
-            const parsed = JSON.parse(decodeURIComponent(rawJson));
-            leadText += " " + Object.values(parsed).join(" ");
-          } catch (e) {
-            try {
-              const parsed = JSON.parse(rawJson);
-              leadText += " " + Object.values(parsed).join(" ");
-            } catch (err) {}
-          }
-        }
-        leadText = leadText.toLowerCase();
-
-        if (!query || leadText.includes(query.toLowerCase())) {
-          card.removeClass("is-hidden-by-search");
-          visibleCount++;
-          totalClientMatches++;
-        } else {
-          card.addClass("is-hidden-by-search");
-        }
-      });
-
-      const countPill = $(`#kanban-count-${st}`);
-      countPill.text(query ? visibleCount : cards.length);
-
-      container.find(".kanban-no-search-results").remove();
-      if (query && cards.length > 0 && visibleCount === 0) {
-        container.append('<div class="kanban-no-search-results">Searching database...</div>');
+      if (query.length > 0) {
+        clearBtn.show();
+      } else {
+        clearBtn.hide();
       }
-    });
 
-    // Step 2: Debounced Server-side Database Search
-    if (kanbanSearchTimer) {
-      clearTimeout(kanbanSearchTimer);
-    }
-    if (kanbanSearchXhr) {
-      kanbanSearchXhr.abort();
-      kanbanSearchXhr = null;
-    }
+      // Step 1: Instant Client-Side DOM filter on currently rendered cards
+      const statuses = ["0", "2", "3", "1"];
+      let totalClientMatches = 0;
+      statuses.forEach((st) => {
+        const container = $(`#kanban-container-${st}`);
+        const cards = container.find(".kanban-card");
+        let visibleCount = 0;
 
-    if (!query) {
-      // Search cleared -> restore original date range board
-      const daterange = typeof dateRangeParams !== "undefined" ? dateRangeParams : "";
-      loadDashboardKanban(daterange);
-      return;
-    }
-
-    kanbanSearchTimer = setTimeout(() => {
-      kanbanSearchXhr = $.ajax({
-        type: "GET",
-        url: "/api/v3/leads/kanban/?search=" + encodeURIComponent(query),
-        dataType: "json",
-        success: function (res) {
-          // Verify user hasn't changed query while request was in-flight
-          const currentVal = $("#kanbanSearchInput, .kanban-search-input").val().trim();
-          if (currentVal !== query) return;
-
-          if (res && res.data) {
-            renderKanbanBoardGrouped(res.data);
-
-            let totalFound = 0;
-            statuses.forEach((st) => {
-              totalFound += (res.data[st] ? res.data[st].length : 0);
-            });
-
-            if (totalFound === 0) {
-              statuses.forEach((st) => {
-                const container = $(`#kanban-container-${st}`);
-                container.html(`<div class="kanban-no-search-results">No matching leads in database</div>`);
-              });
+        cards.each(function () {
+          const card = $(this);
+          let leadText = card.text();
+          const rawJson = card.attr("data-lead-json");
+          if (rawJson) {
+            try {
+              const parsed = JSON.parse(decodeURIComponent(rawJson));
+              leadText += " " + Object.values(parsed).join(" ");
+            } catch (e) {
+              try {
+                const parsed = JSON.parse(rawJson);
+                leadText += " " + Object.values(parsed).join(" ");
+              } catch (err) {}
             }
           }
-        },
-        error: function (xhr, status) {
-          if (status === "abort") return;
-        },
-      });
-    }, 300);
-  });
+          leadText = leadText.toLowerCase();
 
-  $(document).on("click", "#kanbanSearchClearBtn, .kanban-search-clear-btn", function (e) {
-    e.preventDefault();
-    $("#kanbanSearchInput, .kanban-search-input").val("").trigger("input");
-  });
+          if (!query || leadText.includes(query.toLowerCase())) {
+            card.removeClass("is-hidden-by-search");
+            visibleCount++;
+            totalClientMatches++;
+          } else {
+            card.addClass("is-hidden-by-search");
+          }
+        });
+
+        const countPill = $(`#kanban-count-${st}`);
+        countPill.text(query ? visibleCount : cards.length);
+
+        container.find(".kanban-no-search-results").remove();
+        if (query && cards.length > 0 && visibleCount === 0) {
+          container.append(
+            '<div class="kanban-no-search-results">Searching database...</div>',
+          );
+        }
+      });
+
+      // Step 2: Debounced Server-side Database Search
+      if (kanbanSearchTimer) {
+        clearTimeout(kanbanSearchTimer);
+      }
+      if (kanbanSearchXhr) {
+        kanbanSearchXhr.abort();
+        kanbanSearchXhr = null;
+      }
+
+      if (!query) {
+        // Search cleared -> restore original date range board
+        const daterange =
+          typeof dateRangeParams !== "undefined" ? dateRangeParams : "";
+        loadDashboardKanban(daterange);
+        return;
+      }
+
+      kanbanSearchTimer = setTimeout(() => {
+        kanbanSearchXhr = $.ajax({
+          type: "GET",
+          url: "/api/v3/leads/kanban/?search=" + encodeURIComponent(query),
+          dataType: "json",
+          success: function (res) {
+            // Verify user hasn't changed query while request was in-flight
+            const currentVal = $("#kanbanSearchInput, .kanban-search-input")
+              .val()
+              .trim();
+            if (currentVal !== query) return;
+
+            if (res && res.data) {
+              renderKanbanBoardGrouped(res.data);
+
+              let totalFound = 0;
+              statuses.forEach((st) => {
+                totalFound += res.data[st] ? res.data[st].length : 0;
+              });
+
+              if (totalFound === 0) {
+                statuses.forEach((st) => {
+                  const container = $(`#kanban-container-${st}`);
+                  container.html(
+                    `<div class="kanban-no-search-results">No matching leads in database</div>`,
+                  );
+                });
+              }
+            }
+          },
+          error: function (xhr, status) {
+            if (status === "abort") return;
+          },
+        });
+      }, 300);
+    },
+  );
+
+  $(document).on(
+    "click",
+    "#kanbanSearchClearBtn, .kanban-search-clear-btn",
+    function (e) {
+      e.preventDefault();
+      $("#kanbanSearchInput, .kanban-search-input").val("").trigger("input");
+    },
+  );
 
   initKanbanBoard();
 
@@ -3622,7 +3921,11 @@ $(document).ready(function (e) {
 
   // Prevent full-page submission on dashboard datepicker form
   $(document).on("submit", ".widgetForm", function (e) {
-    if ($("#totalLeadsValue").length || $(".kanban-widget-wrapper").length || $("#enquiryFlowCanvas").length) {
+    if (
+      $("#totalLeadsValue").length ||
+      $(".kanban-widget-wrapper").length ||
+      $("#enquiryFlowCanvas").length
+    ) {
       e.preventDefault();
       loadDashboardV3Data();
       return false;
@@ -3686,7 +3989,10 @@ $(document).ready(function (e) {
         window.V3Gallery.autoInit();
       } else {
         ensureScriptLoaded(ADMIN_JS + "gallery.js", function () {
-          if (window.V3Gallery && typeof window.V3Gallery.autoInit === "function") {
+          if (
+            window.V3Gallery &&
+            typeof window.V3Gallery.autoInit === "function"
+          ) {
             window.V3Gallery.autoInit();
           }
         });
@@ -3696,12 +4002,18 @@ $(document).ready(function (e) {
     // 2. Tour Packages & DataTable Module
     const $packages = $("#packageListApp, .package-list-wrapper");
     if ($packages.length > 0) {
-      if (window.V3Packages && typeof window.V3Packages.autoInit === "function") {
+      if (
+        window.V3Packages &&
+        typeof window.V3Packages.autoInit === "function"
+      ) {
         window.V3Packages.autoInit();
       } else {
         ensureScriptLoaded(ADMIN_JS + "table.js", function () {
           ensureScriptLoaded(ADMIN_JS + "packages.js", function () {
-            if (window.V3Packages && typeof window.V3Packages.autoInit === "function") {
+            if (
+              window.V3Packages &&
+              typeof window.V3Packages.autoInit === "function"
+            ) {
               window.V3Packages.autoInit();
             }
           });
@@ -3712,15 +4024,27 @@ $(document).ready(function (e) {
     // 3. Package Edit Module
     const $pkgEdit = $("#packageEditApp, .package-edit-wrapper");
     if ($pkgEdit.length > 0) {
-      if (window.V3PackageEdit && typeof window.V3PackageEdit.autoInit === "function") {
+      if (
+        window.V3PackageEdit &&
+        typeof window.V3PackageEdit.autoInit === "function"
+      ) {
         window.V3PackageEdit.autoInit();
-      } else if (window.V3PackageEdit && typeof window.V3PackageEdit.init === "function") {
+      } else if (
+        window.V3PackageEdit &&
+        typeof window.V3PackageEdit.init === "function"
+      ) {
         window.V3PackageEdit.init();
       } else {
         ensureScriptLoaded(ADMIN_JS + "package-edit.js", function () {
-          if (window.V3PackageEdit && typeof window.V3PackageEdit.autoInit === "function") {
+          if (
+            window.V3PackageEdit &&
+            typeof window.V3PackageEdit.autoInit === "function"
+          ) {
             window.V3PackageEdit.autoInit();
-          } else if (window.V3PackageEdit && typeof window.V3PackageEdit.init === "function") {
+          } else if (
+            window.V3PackageEdit &&
+            typeof window.V3PackageEdit.init === "function"
+          ) {
             window.V3PackageEdit.init();
           }
         });
@@ -3730,84 +4054,138 @@ $(document).ready(function (e) {
     // 4. Package Price List Module
     const $pkgPrices = $("#packagePriceListApp, .package-price-list-wrapper");
     if ($pkgPrices.length > 0) {
-      if (window.V3PackagePriceList && typeof window.V3PackagePriceList.autoInit === "function") {
+      if (
+        window.V3PackagePriceList &&
+        typeof window.V3PackagePriceList.autoInit === "function"
+      ) {
         window.V3PackagePriceList.autoInit();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "package-price-list.js?v=" + Date.now(), function () {
-          if (window.V3PackagePriceList && typeof window.V3PackagePriceList.autoInit === "function") {
-            window.V3PackagePriceList.autoInit();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "package-price-list.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3PackagePriceList &&
+              typeof window.V3PackagePriceList.autoInit === "function"
+            ) {
+              window.V3PackagePriceList.autoInit();
+            }
+          },
+        );
       }
     }
 
     // 4b. Package Hotel List Module
     const $pkgHotels = $("#packageHotelListApp, .package-hotel-list-wrapper");
     if ($pkgHotels.length > 0) {
-      if (window.V3PackageHotelList && typeof window.V3PackageHotelList.init === "function") {
+      if (
+        window.V3PackageHotelList &&
+        typeof window.V3PackageHotelList.init === "function"
+      ) {
         window.V3PackageHotelList.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "package-hotel-list.js?v=" + Date.now(), function () {
-          if (window.V3PackageHotelList && typeof window.V3PackageHotelList.init === "function") {
-            window.V3PackageHotelList.init();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "package-hotel-list.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3PackageHotelList &&
+              typeof window.V3PackageHotelList.init === "function"
+            ) {
+              window.V3PackageHotelList.init();
+            }
+          },
+        );
       }
     }
 
     // 4c. Package Transport & Transporter Module
     const $pkgTransport = $("#packageTransportApp, .package-transport-wrapper");
     if ($pkgTransport.length > 0) {
-      if (window.V3PackageTransport && typeof window.V3PackageTransport.init === "function") {
+      if (
+        window.V3PackageTransport &&
+        typeof window.V3PackageTransport.init === "function"
+      ) {
         window.V3PackageTransport.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "package-transport.js?v=" + Date.now(), function () {
-          if (window.V3PackageTransport && typeof window.V3PackageTransport.init === "function") {
-            window.V3PackageTransport.init();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "package-transport.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3PackageTransport &&
+              typeof window.V3PackageTransport.init === "function"
+            ) {
+              window.V3PackageTransport.init();
+            }
+          },
+        );
       }
     }
 
     // 4d. Transporters Directory Module
     const $transporters = $("#transportersListApp, .transporter-list-wrapper");
     if ($transporters.length > 0) {
-      if (window.V3Transporters && typeof window.V3Transporters.init === "function") {
+      if (
+        window.V3Transporters &&
+        typeof window.V3Transporters.init === "function"
+      ) {
         window.V3Transporters.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "transporters.js?v=" + Date.now(), function () {
-          if (window.V3Transporters && typeof window.V3Transporters.init === "function") {
-            window.V3Transporters.init();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "transporters.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3Transporters &&
+              typeof window.V3Transporters.init === "function"
+            ) {
+              window.V3Transporters.init();
+            }
+          },
+        );
       }
     }
 
     // 4e. Transporter Add Module
     const $transporterAdd = $("#addTransporterApp, .transporter-form-wrapper");
     if ($transporterAdd.length > 0) {
-      if (window.V3TransporterAdd && typeof window.V3TransporterAdd.init === "function") {
+      if (
+        window.V3TransporterAdd &&
+        typeof window.V3TransporterAdd.init === "function"
+      ) {
         window.V3TransporterAdd.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "transporter-add.js?v=" + Date.now(), function () {
-          if (window.V3TransporterAdd && typeof window.V3TransporterAdd.init === "function") {
-            window.V3TransporterAdd.init();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "transporter-add.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3TransporterAdd &&
+              typeof window.V3TransporterAdd.init === "function"
+            ) {
+              window.V3TransporterAdd.init();
+            }
+          },
+        );
       }
     }
 
     // 4f. Transporter Fleet & Vehicles Master Module
     const $vehiclesMaster = $("#vehiclesMasterApp, .vehicle-master-wrapper");
     if ($vehiclesMaster.length > 0) {
-      if (window.V3TransporterVehicles && typeof window.V3TransporterVehicles.init === "function") {
+      if (
+        window.V3TransporterVehicles &&
+        typeof window.V3TransporterVehicles.init === "function"
+      ) {
         window.V3TransporterVehicles.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "transporter-vehicles.js?v=" + Date.now(), function () {
-          if (window.V3TransporterVehicles && typeof window.V3TransporterVehicles.init === "function") {
-            window.V3TransporterVehicles.init();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "transporter-vehicles.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3TransporterVehicles &&
+              typeof window.V3TransporterVehicles.init === "function"
+            ) {
+              window.V3TransporterVehicles.init();
+            }
+          },
+        );
       }
     }
 
@@ -3825,17 +4203,45 @@ $(document).ready(function (e) {
       }
     }
 
-    // 4h. Team & User Forms Module (Add / Edit / KYC)
-    const $userForms = $("#addUserApp, #editUserApp, #userKycApp, .user-form-wrapper");
+    // 4h. Amenities Library Module
+    const $amenitiesList = $("#amenitiesListApp, .amenities-list-wrapper");
+    if ($amenitiesList.length > 0) {
+      if (window.V3Amenities && typeof window.V3Amenities.init === "function") {
+        window.V3Amenities.init();
+      } else {
+        ensureScriptLoaded(
+          ADMIN_JS + "amenities.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3Amenities &&
+              typeof window.V3Amenities.init === "function"
+            ) {
+              window.V3Amenities.init();
+            }
+          },
+        );
+      }
+    }
+
+    // 4i. Team & User Forms Module (Add / Edit / KYC)
+    const $userForms = $(
+      "#addUserApp, #editUserApp, #userKycApp, .user-form-wrapper",
+    );
     if ($userForms.length > 0) {
       if (window.V3UserForm && typeof window.V3UserForm.init === "function") {
         window.V3UserForm.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "user-form.js?v=" + Date.now(), function () {
-          if (window.V3UserForm && typeof window.V3UserForm.init === "function") {
-            window.V3UserForm.init();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "user-form.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3UserForm &&
+              typeof window.V3UserForm.init === "function"
+            ) {
+              window.V3UserForm.init();
+            }
+          },
+        );
       }
     }
 
@@ -3856,28 +4262,45 @@ $(document).ready(function (e) {
     // 5b. Employee Performance Report Module
     const $empReport = $("#employeesReportApp, .employees-report-wrapper");
     if ($empReport.length > 0) {
-      if (window.V3ReportEmployees && typeof window.V3ReportEmployees.init === "function") {
+      if (
+        window.V3ReportEmployees &&
+        typeof window.V3ReportEmployees.init === "function"
+      ) {
         window.V3ReportEmployees.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "report-employees.js?v=" + Date.now(), function () {
-          if (window.V3ReportEmployees && typeof window.V3ReportEmployees.init === "function") {
-            window.V3ReportEmployees.init();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "report-employees.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3ReportEmployees &&
+              typeof window.V3ReportEmployees.init === "function"
+            ) {
+              window.V3ReportEmployees.init();
+            }
+          },
+        );
       }
     }
 
     // 5c. Settings & Profile Module
-    const $settings = $("#settingConfigApp, #settingProfileApp, .setting-page-wrapper");
+    const $settings = $(
+      "#settingConfigApp, #settingProfileApp, .setting-page-wrapper",
+    );
     if ($settings.length > 0) {
       if (window.V3Settings && typeof window.V3Settings.init === "function") {
         window.V3Settings.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "settings.js?v=" + Date.now(), function () {
-          if (window.V3Settings && typeof window.V3Settings.init === "function") {
-            window.V3Settings.init();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "settings.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3Settings &&
+              typeof window.V3Settings.init === "function"
+            ) {
+              window.V3Settings.init();
+            }
+          },
+        );
       }
     }
 
@@ -3887,27 +4310,42 @@ $(document).ready(function (e) {
       if (window.V3LeadView && typeof window.V3LeadView.init === "function") {
         window.V3LeadView.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "lead-view.js?v=" + Date.now(), function () {
-          if (window.V3LeadView && typeof window.V3LeadView.init === "function") {
-            window.V3LeadView.init();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "lead-view.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3LeadView &&
+              typeof window.V3LeadView.init === "function"
+            ) {
+              window.V3LeadView.init();
+            }
+          },
+        );
       }
     }
 
     // 6. Integration Hub & Plugin Modules
     const $integration = $(
-      "#integrationApp, .integration-page-wrapper, .integration-plugin-wrapper, [id^='plugin'], #fbLeadsApp, #fbPageLeadsApp"
+      "#integrationApp, .integration-page-wrapper, .integration-plugin-wrapper, [id^='plugin'], #fbLeadsApp, #fbPageLeadsApp",
     );
     if ($integration.length > 0) {
-      if (window.V3Integration && typeof window.V3Integration.init === "function") {
+      if (
+        window.V3Integration &&
+        typeof window.V3Integration.init === "function"
+      ) {
         window.V3Integration.init();
       } else {
-        ensureScriptLoaded(ADMIN_JS + "integration.js?v=" + Date.now(), function () {
-          if (window.V3Integration && typeof window.V3Integration.init === "function") {
-            window.V3Integration.init();
-          }
-        });
+        ensureScriptLoaded(
+          ADMIN_JS + "integration.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3Integration &&
+              typeof window.V3Integration.init === "function"
+            ) {
+              window.V3Integration.init();
+            }
+          },
+        );
       }
     }
   };
@@ -3933,31 +4371,31 @@ $(document).ready(function (e) {
 /* ==========================================================================
    DASHBOARD V3 SPA ROUTER & SIDEBAR INTERACTION ENGINE
    ========================================================================== */
-(function() {
-  document.addEventListener('DOMContentLoaded', function () {
-    const progressBar = document.getElementById('spa-loader-bar');
-    const containerSelector = 'main .container';
-    const sidebarSelector = '#sidebar';
+(function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    const progressBar = document.getElementById("spa-loader-bar");
+    const containerSelector = "main .container";
+    const sidebarSelector = "#sidebar";
     let isNavigating = false;
 
     function startProgress() {
       if (!progressBar) return;
-      progressBar.classList.add('loading');
-      progressBar.style.width = '25%';
+      progressBar.classList.add("loading");
+      progressBar.style.width = "25%";
       setTimeout(() => {
-        if (progressBar && progressBar.classList.contains('loading')) {
-          progressBar.style.width = '70%';
+        if (progressBar && progressBar.classList.contains("loading")) {
+          progressBar.style.width = "70%";
         }
       }, 150);
     }
 
     function endProgress() {
       if (!progressBar) return;
-      progressBar.style.width = '100%';
+      progressBar.style.width = "100%";
       setTimeout(() => {
         if (progressBar) {
-          progressBar.classList.remove('loading');
-          progressBar.style.width = '0%';
+          progressBar.classList.remove("loading");
+          progressBar.style.width = "0%";
         }
       }, 300);
     }
@@ -3968,32 +4406,37 @@ $(document).ready(function (e) {
         const sidebar = document.querySelector(sidebarSelector);
         if (!sidebar) return;
 
-        sidebar.querySelectorAll('li.active').forEach(el => el.classList.remove('active'));
+        sidebar
+          .querySelectorAll("li.active")
+          .forEach((el) => el.classList.remove("active"));
 
-        const links = sidebar.querySelectorAll('a[href]');
+        const links = sidebar.querySelectorAll("a[href]");
         let matchedLi = null;
 
-        links.forEach(link => {
-          const hrefAttr = link.getAttribute('href');
+        links.forEach((link) => {
+          const hrefAttr = link.getAttribute("href");
           if (!hrefAttr) return;
           const linkPath = new URL(hrefAttr, window.location.origin).pathname;
-          if (linkPath === path || (path.startsWith(linkPath) && linkPath !== '/dashboard/')) {
-            const li = link.closest('li');
+          if (
+            linkPath === path ||
+            (path.startsWith(linkPath) && linkPath !== "/dashboard/")
+          ) {
+            const li = link.closest("li");
             if (li) matchedLi = li;
           }
         });
 
         if (matchedLi) {
-          matchedLi.classList.add('active');
-        } else if (path === '/dashboard/' || path === '/dashboard') {
+          matchedLi.classList.add("active");
+        } else if (path === "/dashboard/" || path === "/dashboard") {
           const homeLink = sidebar.querySelector('a[href="/dashboard/"]');
           if (homeLink) {
-            const homeLi = homeLink.closest('li');
-            if (homeLi) homeLi.classList.add('active');
+            const homeLi = homeLink.closest("li");
+            if (homeLi) homeLi.classList.add("active");
           }
         }
       } catch (e) {
-        console.warn('Sidebar state update error:', e);
+        console.warn("Sidebar state update error:", e);
       }
     }
 
@@ -4002,15 +4445,15 @@ $(document).ready(function (e) {
       isNavigating = true;
 
       const container = document.querySelector(containerSelector);
-      if (container) container.classList.add('spa-navigating');
+      if (container) container.classList.add("spa-navigating");
       startProgress();
 
       try {
         const response = await fetch(url, {
           headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-SPA-Request': '1'
-          }
+            "X-Requested-With": "XMLHttpRequest",
+            "X-SPA-Request": "1",
+          },
         });
 
         if (!response.ok) {
@@ -4020,7 +4463,7 @@ $(document).ready(function (e) {
 
         const htmlText = await response.text();
         const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlText, 'text/html');
+        const doc = parser.parseFromString(htmlText, "text/html");
 
         const newContainer = doc.querySelector(containerSelector);
         if (!newContainer) {
@@ -4033,7 +4476,9 @@ $(document).ready(function (e) {
         }
 
         // Clean up any stray breadcrumbs outside container to prevent duplication
-        document.querySelectorAll('main > .i-m-here-pagination').forEach(el => el.remove());
+        document
+          .querySelectorAll("main > .i-m-here-pagination")
+          .forEach((el) => el.remove());
 
         container.innerHTML = newContainer.innerHTML;
 
@@ -4043,50 +4488,61 @@ $(document).ready(function (e) {
 
         updateActiveSidebar(url);
 
-        const scripts = container.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-          const newScript = document.createElement('script');
-          Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+        const scripts = container.querySelectorAll("script");
+        scripts.forEach((oldScript) => {
+          const newScript = document.createElement("script");
+          Array.from(oldScript.attributes).forEach((attr) =>
+            newScript.setAttribute(attr.name, attr.value),
+          );
           newScript.appendChild(document.createTextNode(oldScript.innerHTML));
           oldScript.parentNode.replaceChild(newScript, oldScript);
         });
 
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        window.scrollTo({ top: 0, behavior: "instant" });
 
         if (window.jQuery) {
-          window.jQuery(document).trigger('spa:loaded');
+          window.jQuery(document).trigger("spa:loaded");
         } else {
-          if (typeof window.initAppComponents === 'function') {
+          if (typeof window.initAppComponents === "function") {
             window.initAppComponents();
           }
-          if (typeof window.initV3PageModules === 'function') {
+          if (typeof window.initV3PageModules === "function") {
             window.initV3PageModules();
           }
         }
       } catch (err) {
-        console.error('SPA Router error:', err);
+        console.error("SPA Router error:", err);
         window.location.href = url;
       } finally {
-        if (container) container.classList.remove('spa-navigating');
+        if (container) container.classList.remove("spa-navigating");
         endProgress();
         isNavigating = false;
       }
     }
 
     // SPA link interceptor
-    document.addEventListener('click', function (e) {
-      const anchor = e.target.closest('a');
+    document.addEventListener("click", function (e) {
+      const anchor = e.target.closest("a");
       if (!anchor) return;
 
-      const href = anchor.getAttribute('href');
-      if (!href || href === '#' || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) {
+      const href = anchor.getAttribute("href");
+      if (
+        !href ||
+        href === "#" ||
+        href.startsWith("#") ||
+        href.startsWith("javascript:") ||
+        href.startsWith("mailto:") ||
+        href.startsWith("tel:")
+      ) {
         return;
       }
 
-      if (anchor.target === '_blank' || 
-          anchor.hasAttribute('download') || 
-          anchor.hasAttribute('data-no-spa') ||
-          href.includes('/logout/')) {
+      if (
+        anchor.target === "_blank" ||
+        anchor.hasAttribute("download") ||
+        anchor.hasAttribute("data-no-spa") ||
+        href.includes("/logout/")
+      ) {
         return;
       }
 
@@ -4094,7 +4550,7 @@ $(document).ready(function (e) {
         const targetUrl = new URL(anchor.href, window.location.origin);
         if (targetUrl.origin !== window.location.origin) return;
 
-        if (targetUrl.pathname.startsWith('/dashboard/')) {
+        if (targetUrl.pathname.startsWith("/dashboard/")) {
           e.preventDefault();
           if (targetUrl.href === window.location.href) return;
           loadPage(targetUrl.href, true);
@@ -4102,7 +4558,7 @@ $(document).ready(function (e) {
       } catch (err) {}
     });
 
-    window.addEventListener('popstate', function () {
+    window.addEventListener("popstate", function () {
       loadPage(window.location.href, false);
     });
 
@@ -4110,35 +4566,40 @@ $(document).ready(function (e) {
     let currentActiveSideMenu = null;
 
     function closeAllSideMenus() {
-      document.querySelectorAll('nav.side-nav .side-menu').forEach(function (menu) {
-        menu.style.display = 'none';
-      });
+      document
+        .querySelectorAll("nav.side-nav .side-menu")
+        .forEach(function (menu) {
+          menu.style.display = "none";
+        });
       currentActiveSideMenu = null;
     }
 
-    window.addEventListener('scroll', closeAllSideMenus, { passive: true });
-    document.addEventListener('scroll', closeAllSideMenus, { passive: true, capture: true });
+    window.addEventListener("scroll", closeAllSideMenus, { passive: true });
+    document.addEventListener("scroll", closeAllSideMenus, {
+      passive: true,
+      capture: true,
+    });
 
-    document.addEventListener('mouseover', function (e) {
-      const hoveredSideMenu = e.target.closest('.side-menu');
+    document.addEventListener("mouseover", function (e) {
+      const hoveredSideMenu = e.target.closest(".side-menu");
       if (hoveredSideMenu) {
         // Pointer is inside the open flyout submenu, keep it visible
         return;
       }
 
-      const hoveredLi = e.target.closest('nav.side-nav ul li');
+      const hoveredLi = e.target.closest("nav.side-nav ul li");
       if (hoveredLi) {
-        const sideMenu = hoveredLi.querySelector('.side-menu');
+        const sideMenu = hoveredLi.querySelector(".side-menu");
         if (sideMenu) {
           if (currentActiveSideMenu && currentActiveSideMenu !== sideMenu) {
-            currentActiveSideMenu.style.display = 'none';
+            currentActiveSideMenu.style.display = "none";
           }
           const rect = hoveredLi.getBoundingClientRect();
-          sideMenu.style.position = 'fixed';
-          sideMenu.style.top = rect.top + 'px';
-          sideMenu.style.left = (rect.right - 2) + 'px';
-          sideMenu.style.display = 'block';
-          sideMenu.style.zIndex = '99999';
+          sideMenu.style.position = "fixed";
+          sideMenu.style.top = rect.top + "px";
+          sideMenu.style.left = rect.right - 2 + "px";
+          sideMenu.style.display = "block";
+          sideMenu.style.zIndex = "99999";
           currentActiveSideMenu = sideMenu;
         } else {
           // Hovering an item without a sub-menu (e.g. Dashboard, Domestic packages)
@@ -4150,25 +4611,26 @@ $(document).ready(function (e) {
       }
     });
 
-    document.addEventListener('mouseleave', function () {
+    document.addEventListener("mouseleave", function () {
       closeAllSideMenus();
     });
 
     // Profile Dropdown Click & Toggle Handler
-    document.addEventListener('click', function (e) {
-      const profileItem = e.target.closest('.right-side ul li');
-      if (profileItem && profileItem.querySelector('.profile-menu')) {
-        const trigger = e.target.closest('a');
-        if (trigger && !e.target.closest('.profile-menu')) {
+    document.addEventListener("click", function (e) {
+      const profileItem = e.target.closest(".right-side ul li");
+      if (profileItem && profileItem.querySelector(".profile-menu")) {
+        const trigger = e.target.closest("a");
+        if (trigger && !e.target.closest(".profile-menu")) {
           e.preventDefault();
-          profileItem.classList.toggle('menu-open');
+          profileItem.classList.toggle("menu-open");
         }
       } else {
-        document.querySelectorAll('.right-side ul li.menu-open').forEach(function (el) {
-          el.classList.remove('menu-open');
-        });
+        document
+          .querySelectorAll(".right-side ul li.menu-open")
+          .forEach(function (el) {
+            el.classList.remove("menu-open");
+          });
       }
     });
   });
 })();
-

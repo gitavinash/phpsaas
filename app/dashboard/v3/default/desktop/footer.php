@@ -2,22 +2,22 @@
 
 				<?php
 
-                if (SITE_VERSION != 'mobile') { ?>
-				    <footer>
-				        <div class="credit">
-				            <p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
-				                    <a href='https://aleya.in?utm_source=<?php echo strtolower(str_replace(' ', '_', SITE_NAME)) ?>'
-				                        target="_blank"><?php echo ucwords(str_replace('_', ' ', SITE_APP_NAME)) ?><sup
-				                            class="trademark">TM</sup></a> | Made
-				                    with <i class="fi-rr-heart"></i> in
-				                    India by <a href="https://blumox.com?utm_source=aleya&utm_medium=dashboard"><strong>Blumox
-				                            Technologies</strong></a></p>
-				        </div>
-				    </footer>
+				if (SITE_VERSION != 'mobile') { ?>
+					<footer>
+						<div class="credit">
+							<p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
+									<a href='https://aleya.in?utm_source=<?php echo strtolower(str_replace(' ', '_', SITE_NAME)) ?>'
+										target="_blank"><?php echo ucwords(str_replace('_', ' ', SITE_APP_NAME)) ?><sup
+											class="trademark">TM</sup></a> | Made
+									with <i class="fi-rr-heart"></i> in
+									India by <a href="https://blumox.com?utm_source=aleya&utm_medium=dashboard"><strong>Blumox
+											Technologies</strong></a></p>
+						</div>
+					</footer>
 				<?php
-                }
+				}
 
-                ?>
+				?>
 				</main>
 
 				<?php require_once NOTIFICATION . 'index.php' ?>
@@ -38,72 +38,72 @@
 				<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 				<script src="<?php echo ADMIN_JS_LIBRARY ?>script.js"></script>
 				<script>
-				    const siteAdminType = '<?php echo $site_access_type ?>';
+					const siteAdminType = '<?php echo $site_access_type ?>';
 				</script>
 				<?php
-                if (SITE_VERSION == 'mobile') { ?>
+				if (SITE_VERSION == 'mobile') { ?>
 
-				    <!-- Mobile JS -->
-				    <script>
-				        (function() {
-				            var openBtn = document.getElementById('moreOpen');
-				            var panel = document.getElementById('morePanel');
-				            var closeBtn = document.getElementById('moreClose');
+					<!-- Mobile JS -->
+					<script>
+						(function() {
+							var openBtn = document.getElementById('moreOpen');
+							var panel = document.getElementById('morePanel');
+							var closeBtn = document.getElementById('moreClose');
 
-				            if (!openBtn || !panel || !closeBtn) return;
+							if (!openBtn || !panel || !closeBtn) return;
 
-				            function openMore() {
-				                panel.setAttribute('aria-hidden', 'false');
-				                document.body.classList.add('more-open');
-				                try {
-				                    closeBtn.focus();
-				                } catch (e) {}
-				            }
+							function openMore() {
+								panel.setAttribute('aria-hidden', 'false');
+								document.body.classList.add('more-open');
+								try {
+									closeBtn.focus();
+								} catch (e) {}
+							}
 
-				            function closeMore() {
-				                panel.setAttribute('aria-hidden', 'true');
-				                document.body.classList.remove('more-open');
-				                try {
-				                    openBtn.focus();
-				                } catch (e) {}
-				            }
+							function closeMore() {
+								panel.setAttribute('aria-hidden', 'true');
+								document.body.classList.remove('more-open');
+								try {
+									openBtn.focus();
+								} catch (e) {}
+							}
 
-				            // Open/Close controls
-				            openBtn.addEventListener('click', openMore);
-				            closeBtn.addEventListener('click', closeMore);
+							// Open/Close controls
+							openBtn.addEventListener('click', openMore);
+							closeBtn.addEventListener('click', closeMore);
 
-				            // Close on Esc
-				            document.addEventListener('keydown', function(e) {
-				                if (e.key === 'Escape') closeMore();
-				            });
+							// Close on Esc
+							document.addEventListener('keydown', function(e) {
+								if (e.key === 'Escape') closeMore();
+							});
 
-				            // Close panel after selecting a menu item (nice on mobile)
-				            panel.querySelectorAll('.more-item, .logout-btn').forEach(function(el) {
-				                el.addEventListener('click', closeMore);
-				            });
+							// Close panel after selecting a menu item (nice on mobile)
+							panel.querySelectorAll('.more-item, .logout-btn').forEach(function(el) {
+								el.addEventListener('click', closeMore);
+							});
 
-				            // Optional: close when clicking empty space beside content (only if target is the outer panel)
-				            panel.addEventListener('click', function(e) {
-				                if (e.target === panel) closeMore();
-				            });
-				        })();
-				    </script>
+							// Optional: close when clicking empty space beside content (only if target is the outer panel)
+							panel.addEventListener('click', function(e) {
+								if (e.target === panel) closeMore();
+							});
+						})();
+					</script>
 
-
-				<?php
-                }
-                ?>
 
 				<?php
+				}
+				?>
 
-                if ($site_access_type == 'agent') { ?>
-				    <script>
-				        const tempId = '<?php echo base64_encode(USER_ID) ?>';
-				    </script>
 				<?php
-                }
 
-                ?>
+				if ($site_access_type == 'agent') { ?>
+					<script>
+						const tempId = '<?php echo base64_encode(USER_ID) ?>';
+					</script>
+				<?php
+				}
+
+				?>
 				<script src="<?php echo ADMIN_JS ?>app.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>table.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>packages.js?v=<?php echo time(); ?>"></script>
@@ -116,18 +116,19 @@
 				<script src="<?php echo ADMIN_JS ?>transporter-add.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>transporter-vehicles.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>users.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>amenities.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>user-form.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>leads.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>report-employees.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>settings.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>integration.js?v=<?php echo time(); ?>"></script>
 				<?php
-                $appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
-                $appJSScript = ADMIN_JS . SITE_APP . '.js';
-                if (file_exists($appJSPath)) {
-                    echo "<script src='{$appJSScript}'></script>";
-                }
-                ?>
+				$appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
+				$appJSScript = ADMIN_JS . SITE_APP . '.js';
+				if (file_exists($appJSPath)) {
+					echo "<script src='{$appJSScript}'></script>";
+				}
+				?>
 				<?php require_once PWA . 'footer.php'; ?>
 				</body>
 
