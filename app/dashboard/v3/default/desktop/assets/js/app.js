@@ -4230,7 +4230,29 @@ $(document).ready(function (e) {
       }
     }
 
-    // 4h. Amenities Library Module
+    // 4h. Properties Directory Module
+    const $propertiesList = $("#propertiesListApp, .property-list-wrapper");
+    if ($propertiesList.length > 0) {
+      if (
+        window.V3Properties &&
+        typeof window.V3Properties.init === "function"
+      ) {
+        window.V3Properties.init();
+      } else {
+        ensureScriptLoaded(
+          ADMIN_JS + "properties.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3Properties &&
+              typeof window.V3Properties.init === "function"
+            )
+              window.V3Properties.init();
+          },
+        );
+      }
+    }
+
+    // 4i. Amenities Library Module
     const $amenitiesList = $("#amenitiesListApp, .amenities-list-wrapper");
     if ($amenitiesList.length > 0) {
       if (window.V3Amenities && typeof window.V3Amenities.init === "function") {

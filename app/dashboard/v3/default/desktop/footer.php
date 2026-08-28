@@ -116,6 +116,7 @@
 				<script src="<?php echo ADMIN_JS ?>transporter-add.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>transporter-vehicles.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>users.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>properties.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>amenities.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>room-types.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>user-form.js?v=<?php echo time(); ?>"></script>

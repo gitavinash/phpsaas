@@ -1,57 +1,96 @@
-<h2 class="heading">Properties list<span>All propertys list will be displayed here</span>
-</h2>
-<div class="shortcut">
-    <a href="/dashboard/vendors/property/add/"><i class="fi fi-rr-plus"></i></a>
-</div>
-<div class="main-box">
-    <section>
-        <div class="filters">
-            <div class="form-group">
-                <label><?php echo ucwords($urlStructure[1]) ?> Status</label>
-                <select id="hostingStatus">
-                    <option value="">Property Status</option>
-                </select>
+<div class="package-page-wrapper property-list-wrapper" id="propertiesListApp">
+    <div class="package-header-bar">
+        <div class="package-header-left">
+            <div class="package-header-icon" style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);"><i class="fi fi-rr-building" style="color: #ffffff;"></i></div>
+            <div class="package-header-titles">
+                <h2>Properties Directory</h2>
+                <p>Manage property details, contacts, rooms, and publishing status.</p>
             </div>
         </div>
+        <div class="package-header-actions"><a href="/dashboard/vendors/property/add/" class="btn-add-pkg-v3"><i class="fi fi-rr-plus"></i> Add Property</a></div>
+    </div>
+    <div class="package-kpi-row">
+        <div class="pkg-mini-kpi indigo">
+            <div class="kpi-icon"><i class="fi fi-rr-building"></i></div>
+            <div class="kpi-meta">
+                <p>Total Properties</p>
+                <h3 id="statTotalProperties">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi emerald">
+            <div class="kpi-icon"><i class="fi fi-rr-check-circle"></i></div>
+            <div class="kpi-meta">
+                <p>Active Properties</p>
+                <h3 id="statActiveProperties">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi sky">
+            <div class="kpi-icon"><i class="fi fi-rr-bed-empty"></i></div>
+            <div class="kpi-meta">
+                <p>Room Inventory</p>
+                <h3 id="statPropertyRooms">-</h3>
+            </div>
+        </div>
+        <div class="pkg-mini-kpi purple">
+            <div class="kpi-icon"><i class="fi fi-rr-marker"></i></div>
+            <div class="kpi-meta">
+                <p>Locations</p>
+                <h3 id="statPropertyLocations">-</h3>
+            </div>
+        </div>
+    </div>
+    <div class="package-table-card">
+        <div class="package-filter-toolbar">
+            <div class="filter-search-box"><i class="fi fi-rr-search search-svg-icon"></i><input type="search" id="propertySearchInput" class="filter-search-input" placeholder="Search by name, city, email, or mobile..." autocomplete="off"><button type="button" id="clearPropertySearchBtn" class="clear-search-btn" title="Clear search" style="display:none">&times;</button></div>
+            <div class="filter-dropdowns-wrap"><select id="filterPropertyType" class="filter-select selectJS" data-placeholder="All Property Types">
+                    <option value="">All Property Types</option>
+                    <option value="apartments">Apartments</option>
+                    <option value="capsule_hotel">Capsule hotel</option>
+                    <option value="guest_house">Guest house</option>
+                    <option value="inn">Inn</option>
+                    <option value="hostel">Hostel</option>
+                    <option value="house">House</option>
+                    <option value="home_stay">Home stay</option>
+                    <option value="1_star_hotel">1 Star Hotel ( Tourist )</option>
+                    <option value="2_star_hotel">2 Star Hotel ( Standard )</option>
+                    <option value="3_star_hotel">3 Star Hotel ( Comfort )</option>
+                    <option value="4_star_hotel">4 Star Hotel ( First Class )</option>
+                    <option value="5_star_hotel">5 Star Hotel ( Luxury )</option>
+                    <option value="motel">Motel</option>
+                    <option value="lodge">Lodge</option>
+                    <option value="tent">Tent</option>
+                    <option value="farm_stay">Farm stay</option>
+                    <option value="resorts">Resorts</option>
+                </select><select id="filterPropertyLocation" class="filter-select" data-placeholder="All Locations">
+                    <option value="">All Locations</option>
+                </select><select id="filterPropertyRoomType" class="filter-select" data-placeholder="All Room Types">
+                    <option value="">All Room Types</option>
+                </select><select id="filterPropertyStatus" class="filter-select selectJS" data-placeholder="All Status">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select><button type="button" id="btnResetPropertyFilters" class="btn-v3-action"><i class="fi fi-rr-refresh"></i> Reset</button></div>
+        </div>
         <div class="list-box">
-            <table class="showTableList">
+            <table class="package-v3-datatable" id="propertiesTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Mobile</th>
-                        <th>Address</th>
-                        <th>Property type</th>
-                        <th></th>
+                        <th>Property</th>
+                        <th>Contact Details</th>
+                        <th>Location</th>
+                        <th>Property Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
-                <?php
-
-                if ($propertyList = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "property WHERE property_site_id=" . SITE_ID)) {
-                    echo "<tbody>";
-                    if (mysqli_num_rows($propertyList) > 0) {
-                        while ($propertyData = mysqli_fetch_assoc($propertyList)) {
-                            extract($propertyData);
-                            echo "<tr>
-                                <td>{$property_title}</td>
-                                <td>{$property_email}</td>
-                                <td>{$property_mobile}</td>
-                                <td>{$property_address} {$property_city}  {$property_pincode}</td>
-                                <td>" . ucwords(str_replace('_', ' ', $property_type)) . "</td>
-                                <td>
-
-                                <a href='/dashboard/vendors/property/update/?id=" . base64_encode($property_id) . "' class='tableActionIconBtn' title='Edit property' data-title='Edit property'><i class='fi fi-rr-edit bgLightGreen'></i></a>
-                                <a href='/dashboard/vendors/property/update/?updateType=rooms&id=" . base64_encode($property_id) . "' class='tableActionIconBtn' title='Update property item' data-title='Updte property'><i class='fi fi-rr-bed-empty bgLightGreen'></i></a>
-                                <a href='#' data-type='property' data-id='{$property_id}' title='Delete property' class='tableActionIconBtn deleteButton' data-title='Delete property' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash bgRed'></i></a>
-                                </td>
-                            </tr>";
-                        }
-                    }
-                    echo "</tbody>";
-                }
-
-                ?>
+                <tbody id="propertiesTableBody">
+                    <tr>
+                        <td colspan="6" class="table-loading-state">
+                            <div class="table-loading-spinner"></div><span>Loading properties directory...</span>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
-    </section>
+    </div>
 </div>
