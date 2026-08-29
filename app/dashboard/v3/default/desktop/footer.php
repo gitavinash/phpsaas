@@ -129,6 +129,9 @@
 				<script src="<?php echo ADMIN_JS ?>company-list.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>company-add.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>company-update.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>v3-editor.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>policy-list.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>policy-form.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>integration.js?v=<?php echo time(); ?>"></script>
 				<?php
 				$appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
