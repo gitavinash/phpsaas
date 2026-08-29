@@ -1,3 +1,7 @@
+<?php
+$currentUserType = strtolower(defined('USER_TYPE') ? USER_TYPE : '');
+$isFullSettingAccess = in_array($currentUserType, ['administrator', 'operator']);
+?>
 <div class="package-page-wrapper setting-page-wrapper">
     <!-- Header Banner -->
     <div class="package-header-bar">
@@ -6,8 +10,8 @@
                 <i class="fi fi-rr-settings" style="color: #ffffff;"></i>
             </div>
             <div class="package-header-titles">
-                <h2>Workspace &amp; Account Settings</h2>
-                <p>Manage website branding, public contact channels, banking &amp; UPI, alert routing, SEO, and personal profile.</p>
+                <h2><?php echo $isFullSettingAccess ? 'Workspace &amp; Account Settings' : 'Account &amp; Profile Settings'; ?></h2>
+                <p><?php echo $isFullSettingAccess ? 'Manage website branding, public contact channels, banking &amp; UPI, alert routing, SEO, and personal profile.' : 'Manage your personal profile photo, display name, contact phone, and account credentials.'; ?></p>
             </div>
         </div>
         <div class="package-header-actions">
@@ -19,6 +23,7 @@
 
     <!-- Modern Settings Cards Grid -->
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 16px;">
+        <?php if ($isFullSettingAccess) { ?>
         <!-- Card 1: Configuration -->
         <a href="/dashboard/setting/configuration/" style="text-decoration: none; color: inherit; display: block;">
             <div class="v3-card-section" style="padding: 24px; display: flex; align-items: flex-start; gap: 16px; height: 100%; transition: all 0.2s ease;">
@@ -98,8 +103,9 @@
                 </div>
             </div>
         </a>
+        <?php } ?>
 
-        <!-- Card 6: Personal Profile -->
+        <!-- Card 6: Personal Profile (Visible to all users) -->
         <a href="/dashboard/setting/profile/" style="text-decoration: none; color: inherit; display: block;">
             <div class="v3-card-section" style="padding: 24px; display: flex; align-items: flex-start; gap: 16px; height: 100%; transition: all 0.2s ease;">
                 <div class="v3-card-header-icon purple" style="width: 48px; height: 48px; min-width: 48px; font-size: 22px; border-radius: 12px;">
@@ -108,7 +114,7 @@
                 <div>
                     <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">Personal Profile</h3>
                     <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.45;">
-                        Update your profile photo, display name, personal phone numbers, notification email, and role biography.
+                        Update your profile photo, display name, personal phone numbers, notification email, and account credentials.
                     </p>
                 </div>
             </div>

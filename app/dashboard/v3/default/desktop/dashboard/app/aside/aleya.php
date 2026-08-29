@@ -206,9 +206,6 @@ if ($site_access_type == 'administrator') { ?>
         </div>
     </li>
 
-    <li <?php echo (strpos($currentUrl, '/setting/') !== false || $currentUrl === '/dashboard/setting/' ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/setting/"><i class="fi fi-rr-settings-sliders"></i> Settings</a>
-    </li>
 
     <li <?php echo (strpos($currentUrl, '/company/') !== false ? 'class="active"' : ''); ?>>
         <a href="/dashboard/company/list/"><i class="fi fi-rr-shop"></i> Companies &amp; Branches</a>

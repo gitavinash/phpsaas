@@ -1,3 +1,10 @@
+<?php
+$currentUserType = strtolower(defined('USER_TYPE') ? USER_TYPE : '');
+if (!in_array($currentUserType, ['administrator', 'operator'])) {
+    echo "<script>window.location.href = '/dashboard/setting/profile/';</script>";
+    exit();
+}
+?>
 <div class="package-page-wrapper setting-page-wrapper" id="settingConfigApp">
     <!-- Header Banner -->
     <div class="package-header-bar">
