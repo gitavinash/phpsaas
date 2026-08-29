@@ -16,7 +16,8 @@ $email_footer = "							</td>
 					</tr>				
 				</table>
 			</td>
-		</tr>				
+		</tr>
+		" . ((SITE_ID != 49) ? "				
 		<tr bgcolor='#fff'>
 			<td valign='top' class='footer' style='border-collapse: collapse; border: 0; margin: 0; padding: 0; -webkit-text-size-adjust: none; color: #555559; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif; font-size: 16px; line-height: 26px; background: #ffffff; text-align: center; border-top: 4px solid {$themeColor};'>
 				<table style='font-weight: normal; border-collapse: collapse; border: 0; margin: 0 auto; padding: 0; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif; width: 100%; max-width: 600px;'>
@@ -30,10 +31,10 @@ $email_footer = "							</td>
 								</div>
 							</div>
 						</td>
-					</tr>
+					</tr>	
 				</table>
 			</td>
-		</tr>
+		</tr>" : "") . "
 	</table>
 </td> 
 </tr>
