@@ -273,6 +273,26 @@
         `;
       }
 
+      const kpis = lead.kpis || {
+        next_followup: {
+          is_scheduled: false,
+          time_formatted: "Not Scheduled",
+          status_badge: "none",
+          label: "Not Scheduled",
+        },
+        lead_age: {
+          days: 0,
+          text: "Active Today",
+        },
+        touchpoints: {
+          total: lead.timeline ? lead.timeline.length : 0,
+          summary: `${lead.timeline ? lead.timeline.length : 0} Touchpoints`,
+        },
+      };
+      const followup = kpis.next_followup;
+      const leadAge = kpis.lead_age;
+      const touchpoints = kpis.touchpoints;
+
       const st = parseInt(lead.status || 0);
       const isAssigned = parseInt(lead.agent_id || 0) > 0;
 
@@ -285,31 +305,6 @@
         userRole === "operational"
       );
 
-      // 2. Top 4-Card Snapshot Grid
-      const card3Html = canManageAgent
-        ? `
-          <!-- Card 3: Assigned Representative (Admin / Operational) -->
-          <div class="v3-snapshot-card">
-            <div class="v3-snapshot-header">
-              <span class="v3-snapshot-label">Assigned Representative</span>
-              <div class="v3-snapshot-icon"><i class="fi fi-rr-user"></i></div>
-            </div>
-            <div class="v3-snapshot-value">${lead.agent_name || "Unassigned"}</div>
-            <div class="v3-snapshot-sub">${lead.agent_role || "Representative"}</div>
-          </div>
-        `
-        : `
-          <!-- Card 3: Lead Status & Stage (Telecallers / Agents) -->
-          <div class="v3-snapshot-card">
-            <div class="v3-snapshot-header">
-              <span class="v3-snapshot-label">Lead Status & Stage</span>
-              <div class="v3-snapshot-icon"><i class="fi fi-rr-flag"></i></div>
-            </div>
-            <div class="v3-snapshot-value">${lead.status_label}</div>
-            <div class="v3-snapshot-sub">Source: ${lead.source}</div>
-          </div>
-        `;
-
       const agentSidebarHtml = canManageAgent
         ? `
           <!-- Assigned Representative Box (Administrator & Operational Only) -->
@@ -318,9 +313,18 @@
               <span>Assigned Representative</span>
               <i class="fi fi-rr-user-gear"></i>
             </div>
-            <select id="leadDetailAgentSelect" class="leads-filter-select v3-select-full">
-              ${agentOptions}
-            </select>
+            <div class="v3-assigned-agent-wrapper">
+              <select id="leadDetailAgentSelect" class="leads-filter-select v3-select-full">
+                <option value="0">-- Unassigned --</option>
+                ${(lead.agents || [])
+                  .map((ag) => {
+                    const agId = parseInt(ag.id || ag.user_id || 0);
+                    const isSelected = parseInt(lead.agent_id || 0) === agId;
+                    return `<option value="${agId}" ${isSelected ? "selected" : ""}>${ag.name} (${ag.role})</option>`;
+                  })
+                  .join("")}
+              </select>
+            </div>
           </div>
         `
         : "";
@@ -328,45 +332,63 @@
       // 4. Complete Unified CRM Assembly
       const html = `
         <div class="v3-lead-view-wrapper">
-          <!-- 1. Minimal Hero Header -->
+          <!-- 1. Minimal Hero Header Banner -->
           <div class="v3-lead-hero-banner">
             <div class="v3-lead-hero-left">
-              <a href="/dashboard/leads/list/" class="v3-lead-back-circle" data-tooltip="Back to Leads Pipeline">
+              <a href="/dashboard/leads/list/" class="v3-lead-back-circle" id="btnBackToLeads" data-tooltip="Back to Leads Pipeline">
                 <i class="fi fi-rr-arrow-left"></i>
               </a>
+
               <div class="v3-lead-hero-title-wrap">
                 <div class="v3-lead-hero-name-row">
                   <h2 class="v3-lead-hero-name">${lead.name}</h2>
-                  
-                  <!-- Minimal Clickable Status Picker -->
                   <div class="v3-minimal-status-picker">
                     <button type="button" class="v3-minimal-status-trigger ${lead.status_class}" id="btnMinimalStatusTrigger" title="Click to change status">
-                      <span class="lead-dot"></span>
+                      <span class="lead-dot" style="background-color: ${lead.status_color}"></span>
                       <span>${lead.status_label}</span>
                       <i class="fi fi-rr-angle-small-down"></i>
                     </button>
+
                     <div class="v3-status-dropdown-menu" id="statusDropdownMenu">
                       <div class="v3-status-opt ${st === 0 ? "selected" : ""}" data-status="0">
                         <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot fresh"></span> Fresh Lead
+                          <span class="v3-status-opt-dot fresh"></span>
+                          <span>Fresh Lead</span>
                         </div>
                         ${st === 0 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
+                      <div class="v3-status-opt ${st === 2 ? "selected" : ""}" data-status="2">
+                        <div class="v3-status-opt-left">
+                          <span class="v3-status-opt-dot opportunity"></span>
+                          <span>Opportunity</span>
+                        </div>
+                        ${st === 2 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
                       <div class="v3-status-opt ${st === 3 ? "selected" : ""}" data-status="3">
                         <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot followup"></span> In Follow-Up
+                          <span class="v3-status-opt-dot followup"></span>
+                          <span>Follow-Up</span>
                         </div>
                         ${st === 3 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
+                      <div class="v3-status-opt ${st === 7 ? "selected" : ""}" data-status="7">
+                        <div class="v3-status-opt-left">
+                          <span class="v3-status-opt-dot duplicate"></span>
+                          <span>Duplicate</span>
+                        </div>
+                        ${st === 7 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
                       <div class="v3-status-opt ${st === 1 ? "selected" : ""}" data-status="1">
                         <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot confirmed"></span> Confirmed Sale
+                          <span class="v3-status-opt-dot confirmed"></span>
+                          <span>Converted (Sale)</span>
                         </div>
                         ${st === 1 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 4 || st === 8 ? "selected" : ""}" data-status="4">
                         <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot closed"></span> Closed / Cancelled
+                          <span class="v3-status-opt-dot closed"></span>
+                          <span>Lost / Cancelled</span>
                         </div>
                         ${st === 4 || st === 8 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
@@ -375,12 +397,12 @@
                 </div>
 
                 <div class="v3-lead-hero-meta">
-                  <span><i class="fi fi-rr-hashtag"></i> Lead #${lead.id}</span>
-                  <span>•</span>
-                  <span><i class="fi fi-rr-calendar"></i> Added ${lead.created_at || "Recently"}</span>
-                  <span>•</span>
-                  <span><i class="fi fi-rr-globe"></i> Source: <strong>${lead.source}</strong></span>
-                  ${lead.campaign ? `<span>•</span><span><i class="fi fi-rr-bullhorn"></i> ${lead.campaign}</span>` : ""}
+                  <span class="v3-hero-meta-item"><i class="fi fi-rr-calendar"></i> Added ${lead.created_at || "Recently"}</span>
+                  <span class="v3-meta-sep">•</span>
+                  <span class="v3-hero-meta-item"><i class="fi fi-rr-time-check"></i> Updated ${lead.updated_at || lead.created_at || "Recently"}</span>
+                  <span class="v3-meta-sep">•</span>
+                  <span class="v3-hero-meta-badge source"><i class="fi fi-rr-globe"></i> ${lead.source}</span>
+                  ${lead.campaign ? `<span class="v3-meta-sep">•</span><span class="v3-hero-meta-badge campaign"><i class="fi fi-rr-bullhorn"></i> ${lead.campaign}</span>` : ""}
                 </div>
               </div>
             </div>
@@ -390,7 +412,7 @@
                 lead.wa_mobile
                   ? `
                 <a href="https://wa.me/${lead.wa_mobile}?text=Hello%20${encodeURIComponent(lead.first_name || lead.name)}" target="_blank" class="v3-btn-contact-action wa" data-tooltip="Chat on WhatsApp">
-                  ${WA_SVG} WhatsApp
+                  ${WA_SVG} <span>WhatsApp</span>
                 </a>
               `
                   : ""
@@ -399,28 +421,28 @@
                 lead.mobile
                   ? `
                 <a href="tel:${lead.mobile}" class="v3-btn-contact-action call" data-tooltip="Call Primary Phone">
-                  <i class="fi fi-rr-phone-call"></i> ${lead.mobile}
+                  <i class="fi fi-rr-phone-call"></i> <span>${lead.mobile}</span>
                 </a>
               `
                   : ""
               }
               <button type="button" class="btn-v3-action btn-outline" id="btnHeroEditLead" data-tooltip="Edit Lead & Requirements">
-                <i class="fi fi-rr-edit"></i> Edit Lead
+                <i class="fi fi-rr-edit"></i> <span>Edit Lead</span>
               </button>
               ${
                 isAssigned
                   ? `
                 <button type="button" class="btn-v3-action btn-outline" id="btnHeroSendItinerary" data-tooltip="Search, Customize & Send Itinerary">
-                  <i class="fi fi-rr-paper-plane"></i> Send Itinerary
+                  <i class="fi fi-rr-paper-plane"></i> <span>Send Itinerary</span>
                 </button>
                 <button type="button" class="btn-v3-action btn-orange" id="btnHeroSetFollowUp" data-tooltip="Set Follow-Up Reminder">
-                  <i class="fi fi-rr-alarm-clock"></i> Follow-Up
+                  <i class="fi fi-rr-alarm-clock"></i> <span>Follow-Up</span>
                 </button>
                 ${
                   st !== 1
                     ? `
                   <button type="button" class="btn-v3-action btn-green" id="btnHeroConvertToSale" data-tooltip="Convert Lead to Confirmed Sale">
-                    <i class="fi fi-rr-check"></i> Convert to Sale
+                    <i class="fi fi-rr-check"></i> <span>Convert to Sale</span>
                   </button>
                 `
                     : ""
@@ -431,19 +453,19 @@
             </div>
           </div>
 
-          <!-- 2. Top 4-Card Snapshot Grid -->
+          <!-- 2. Top 5-Card Snapshot Grid -->
           <div class="v3-lead-snapshot-grid">
-            <!-- Card 1: Package / Subject -->
+            <!-- Card 1: Package / Requirement -->
             <div class="v3-snapshot-card">
               <div class="v3-snapshot-header">
                 <span class="v3-snapshot-label">Package / Requirement</span>
                 <div class="v3-snapshot-icon"><i class="fi fi-rr-plane"></i></div>
               </div>
-              <div class="v3-snapshot-value">${lead.subject || "Custom Package"}</div>
+              <div class="v3-snapshot-value" title="${lead.subject || "Custom Package"}">${lead.subject || "Custom Package"}</div>
               <div class="v3-snapshot-sub"><i class="fi fi-rr-calendar"></i> Travel: ${travel.date_of_travel || "Flexible"}</div>
             </div>
 
-            <!-- Card 2: Pax & Duration -->
+            <!-- Card 2: Duration & Guests -->
             <div class="v3-snapshot-card">
               <div class="v3-snapshot-header">
                 <span class="v3-snapshot-label">Duration & Guests</span>
@@ -453,9 +475,29 @@
               <div class="v3-snapshot-sub">${travel.adults || 1} Adults • ${travel.children || 0} Kids • ${travel.infants || 0} Infants</div>
             </div>
 
-            ${card3Html}
+            <!-- Card 3: Next Follow-Up (KPI 1) -->
+            <div class="v3-snapshot-card">
+              <div class="v3-snapshot-header">
+                <span class="v3-snapshot-label">Next Follow-Up</span>
+                <div class="v3-snapshot-icon"><i class="fi fi-rr-alarm-clock"></i></div>
+              </div>
+              <div class="v3-snapshot-value" title="${followup.time_formatted}">${followup.is_scheduled ? followup.time_formatted : "No Follow-Up Set"}</div>
+              <div class="v3-snapshot-sub">
+                <span class="v3-kpi-pill ${followup.status_badge}">${followup.label}</span>
+              </div>
+            </div>
 
-            <!-- Card 4: Quotation & Value -->
+            <!-- Card 4: Lead Age & Activity (KPI 2 & 3) -->
+            <div class="v3-snapshot-card">
+              <div class="v3-snapshot-header">
+                <span class="v3-snapshot-label">Lead Age & Activity</span>
+                <div class="v3-snapshot-icon"><i class="fi fi-rr-time-past"></i></div>
+              </div>
+              <div class="v3-snapshot-value">${leadAge.text}</div>
+              <div class="v3-snapshot-sub"><i class="fi fi-rr-comment-dots"></i> ${touchpoints.summary || `${touchpoints.total} Touchpoints`}</div>
+            </div>
+
+            <!-- Card 5: Quotation & Value -->
             <div class="v3-snapshot-card">
               <div class="v3-snapshot-header">
                 <span class="v3-snapshot-label">Quotation Value</span>
@@ -479,8 +521,8 @@
                 <button type="button" class="v3-tab-link" data-tab="tab-activity">
                   <i class="fi fi-rr-time-past"></i> Activity & Notes (${lead.timeline ? lead.timeline.length : 0})
                 </button>
-                <button type="button" class="v3-tab-link" data-tab="tab-payments">
-                  <i class="fi fi-rr-money-check"></i> Payments (${lead.payments ? lead.payments.length : 0})
+                <button type="button" class="v3-tab-link ${!isAssigned ? "v3-tab-disabled" : ""}" data-tab="tab-payments" ${!isAssigned ? 'disabled title="Lead must be assigned to an agent to access payments"' : ""}>
+                  <i class="fi fi-rr-money-check"></i> Payments (${lead.payments ? lead.payments.length : 0}) ${!isAssigned ? '<i class="fi fi-rr-lock v3-tab-lock-icon"></i>' : ""}
                 </button>
               </div>
 
@@ -562,6 +604,9 @@
                 <!-- Tab 2: Activity & Notes (HubSpot/Linear Style) -->
                 <div class="v3-lead-tab-pane" id="tab-activity">
                   <!-- Quick Composer Box -->
+                  ${
+                    isAssigned
+                      ? `
                   <div class="v3-note-composer-card">
                     <div class="v3-composer-type-nav">
                       <button type="button" class="v3-composer-type-btn active" data-type="note">
@@ -597,6 +642,19 @@
                       </button>
                     </div>
                   </div>
+                  `
+                      : `
+                  <div class="v3-composer-disabled">
+                    <div class="v3-unassigned-banner">
+                      <div class="v3-unassigned-banner-icon"><i class="fi fi-rr-lock"></i></div>
+                      <div class="v3-unassigned-banner-text">
+                        <h5>Activity & Notes Form Disabled</h5>
+                        <p>This lead is currently unassigned. Please assign an agent or representative to log call notes or schedule follow-up reminders.</p>
+                      </div>
+                    </div>
+                  </div>
+                  `
+                  }
 
                   <!-- Timeline Stream -->
                   ${timelineHtml}
@@ -604,12 +662,24 @@
 
                 <!-- Tab 3: Payment History -->
                 <div class="v3-lead-tab-pane" id="tab-payments">
-                  <div class="v3-flex-end-row">
-                    <button type="button" class="btn-v3-action btn-green" id="btnOpenPaymentModalTab" data-tooltip="Record Payment">
-                      <i class="fi fi-rr-plus"></i> Record Payment
-                    </button>
-                  </div>
-                  ${paymentsHtml}
+                  ${
+                    isAssigned
+                      ? `
+                    <div class="v3-flex-end-row">
+                      <button type="button" class="btn-v3-action btn-green" id="btnOpenPaymentModalTab" data-tooltip="Record Payment">
+                        <i class="fi fi-rr-plus"></i> Record Payment
+                      </button>
+                    </div>
+                    ${paymentsHtml}
+                  `
+                      : `
+                    <div class="v3-leads-empty-state v3-empty-compact">
+                      <div class="v3-empty-icon-wrap v3-empty-icon-compact"><i class="fi fi-rr-lock"></i></div>
+                      <h4 class="v3-empty-title">Payments Disabled</h4>
+                      <p class="v3-empty-subtitle">This lead is unassigned. Please assign an agent or representative before recording or managing payments.</p>
+                    </div>
+                  `
+                  }
                 </div>
               </div>
             </div>
@@ -886,6 +956,10 @@
 
       // 1. Tab Navigation
       $(document).on("click", ".v3-tab-link", function () {
+        if ($(this).hasClass("v3-tab-disabled") || $(this).prop("disabled")) {
+          self.notify("Please assign an agent to this lead before accessing payments.", "warning");
+          return;
+        }
         const tabId = $(this).data("tab");
         $(".v3-tab-link").removeClass("active");
         $(this).addClass("active");
@@ -953,6 +1027,11 @@
 
       // 4. Submit Composer Update
       $(document).on("click", "#btnSubmitComposer", function () {
+        if (!self.leadData || !(parseInt(self.leadData.agent_id || 0) > 0)) {
+          self.notify("Lead is unassigned. Please assign an agent first.", "warning");
+          return;
+        }
+
         const msg = $("#composerNoteInput").val().trim();
         const type = self.activeComposerType;
 

@@ -261,9 +261,10 @@ if ($aRes = mysqli_query($connection, $agentsQuery)) {
     while ($aRow = mysqli_fetch_assoc($aRes)) {
         $role = !empty($aRow['site_access_type']) ? ucwords(str_replace('_', ' ', $aRow['site_access_type'])) : 'Representative';
         $agents[] = [
-            'id'   => (int)$aRow['user_id'],
-            'name' => trim($aRow['profile_display_name'] ?? 'Agent'),
-            'role' => $role,
+            'id'      => (int)$aRow['user_id'],
+            'user_id' => (int)$aRow['user_id'],
+            'name'    => trim($aRow['profile_display_name'] ?? 'Agent'),
+            'role'    => $role,
         ];
     }
 }
@@ -273,6 +274,9 @@ $travelDate = !empty($extraDetails['date_of_travel']) ? date('d M Y', strtotime(
 if ($travelDate === '01 Jan 1970' || empty($extraDetails['date_of_travel'])) {
     $travelDate = '';
 }
+
+$createdAt = !empty($lead['enquiry_time']) && $lead['enquiry_time'] !== '0000-00-00 00:00:00' ? date('d M Y, h:i A', strtotime($lead['enquiry_time'])) : '';
+$updatedAt = !empty($lead['enquiry_update']) && $lead['enquiry_update'] !== '0000-00-00 00:00:00' ? date('d M Y, h:i A', strtotime($lead['enquiry_update'])) : $createdAt;
 
 // Infer Destination from extraDetails, enquiry_city, or matching enquiry_subject with known cities/states
 $destinationCity = trim($extraDetails['destination'] ?? ($extraDetails['city'] ?? ($lead['enquiry_city'] ?? '')));
@@ -301,6 +305,98 @@ if (empty($destinationCity) && !empty($lead['enquiry_subject'])) {
     }
 }
 
+// Calculate KPI 1: Next Follow-Up
+$nextFollowup = [
+    'is_scheduled' => false,
+    'datetime' => '',
+    'time_formatted' => 'Not Scheduled',
+    'status_badge' => 'none',
+    'label' => 'Not Scheduled'
+];
+if (!empty($lead['enquiry_followup']) && $lead['enquiry_followup'] !== '0000-00-00 00:00:00') {
+    $fTs = strtotime($lead['enquiry_followup']);
+    if ($fTs && date('Y', $fTs) > 2000) {
+        $now = time();
+        $isToday = (date('Y-m-d', $fTs) === date('Y-m-d', $now));
+        $isOverdue = ($fTs < $now && !$isToday);
+        
+        $badge = 'upcoming';
+        $badgeLabel = 'Upcoming';
+        if ($isOverdue) {
+            $badge = 'overdue';
+            $badgeLabel = 'Overdue';
+        } elseif ($isToday) {
+            $badge = 'today';
+            $badgeLabel = 'Due Today';
+        }
+
+        $nextFollowup = [
+            'is_scheduled' => true,
+            'datetime' => date('Y-m-d H:i:s', $fTs),
+            'time_formatted' => date('d M Y, h:i A', $fTs),
+            'status_badge' => $badge,
+            'label' => $badgeLabel
+        ];
+    }
+}
+
+// Calculate KPI 2: Lead Age
+$leadAgeDays = 0;
+$leadAgeText = 'Active Today';
+if (!empty($lead['enquiry_time']) && $lead['enquiry_time'] !== '0000-00-00 00:00:00') {
+    $cTs = strtotime($lead['enquiry_time']);
+    if ($cTs && $cTs > 0) {
+        $diffSec = max(0, time() - $cTs);
+        $leadAgeDays = floor($diffSec / 86400);
+        if ($leadAgeDays >= 365) {
+            $yrs = floor($leadAgeDays / 365);
+            $leadAgeText = $yrs . ($yrs === 1 ? ' Year Active' : ' Years Active');
+        } elseif ($leadAgeDays >= 30) {
+            $mos = floor($leadAgeDays / 30);
+            $leadAgeText = $mos . ($mos === 1 ? ' Month Active' : ' Months Active');
+        } elseif ($leadAgeDays >= 1) {
+            $leadAgeText = $leadAgeDays . ($leadAgeDays === 1 ? ' Day Active' : ' Days Active');
+        } else {
+            $hrs = floor($diffSec / 3600);
+            if ($hrs >= 1) {
+                $leadAgeText = $hrs . ($hrs === 1 ? ' Hour Active' : ' Hours Active');
+            } else {
+                $mins = max(1, floor($diffSec / 60));
+                $leadAgeText = $mins . ($mins === 1 ? ' Min Active' : ' Mins Active');
+            }
+        }
+    }
+}
+
+// Calculate KPI 3: Touchpoints & Interactions
+$totalTouchpoints = count($timeline);
+$notesCount = 0;
+$itinerariesCount = 0;
+$paymentsCount = count($payments);
+foreach ($timeline as $tItem) {
+    if (($tItem['type'] ?? '') === 'itinerary') {
+        $itinerariesCount++;
+    } elseif (!in_array($tItem['type'] ?? '', ['generate', 'payment'])) {
+        $notesCount++;
+    }
+}
+
+$kpis = [
+    'next_followup' => $nextFollowup,
+    'lead_age' => [
+        'days' => (int)$leadAgeDays,
+        'text' => $leadAgeText,
+        'created_at' => $createdAt,
+    ],
+    'touchpoints' => [
+        'total' => $totalTouchpoints,
+        'notes_count' => $notesCount,
+        'itineraries_count' => $itinerariesCount,
+        'payments_count' => $paymentsCount,
+        'summary' => "{$totalTouchpoints} Touchpoint" . ($totalTouchpoints === 1 ? '' : 's')
+    ]
+];
+
 $response = [
     'status' => 'success',
     'data' => [
@@ -322,11 +418,14 @@ $response = [
         'source' => !empty($lead['enquiry_source']) ? ucfirst($lead['enquiry_source']) : 'Direct',
         'medium' => trim($lead['enquiry_medium'] ?? ''),
         'campaign' => trim($lead['enquiry_campaign'] ?? ''),
-        'created_at' => !empty($lead['enquiry_time']) ? date('d M Y, h:i A', strtotime($lead['enquiry_time'])) : '',
-        'updated_at' => !empty($lead['enquiry_update']) ? date('d M Y, h:i A', strtotime($lead['enquiry_update'])) : '',
+        'created_at' => $createdAt,
+        'updated_at' => $updatedAt,
         'agent_id' => (int)($lead['enquiry_agent'] ?? 0),
         'agent_name' => !empty($lead['agent_name']) ? $lead['agent_name'] : 'Unassigned',
         'agent_role' => !empty($lead['agent_role']) ? ucwords(str_replace('_', ' ', $lead['agent_role'])) : 'Representative',
+
+        // Key Performance Indicators (KPIs)
+        'kpis' => $kpis,
 
         // Travel & Inquiry Details
         'travel_details' => [
