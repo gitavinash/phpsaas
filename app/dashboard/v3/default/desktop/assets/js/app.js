@@ -4252,6 +4252,29 @@ $(document).ready(function (e) {
       }
     }
 
+    // 4h-2. Property Edit / Update Module
+    const $propertyUpdate = $("#propertyUpdateApp, .property-update-wrapper");
+    if ($propertyUpdate.length > 0) {
+      if (
+        window.V3PropertyUpdate &&
+        typeof window.V3PropertyUpdate.init === "function"
+      ) {
+        window.V3PropertyUpdate.init();
+      } else {
+        ensureScriptLoaded(
+          ADMIN_JS + "property-update.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3PropertyUpdate &&
+              typeof window.V3PropertyUpdate.init === "function"
+            ) {
+              window.V3PropertyUpdate.init();
+            }
+          },
+        );
+      }
+    }
+
     // 4i. Amenities Library Module
     const $amenitiesList = $("#amenitiesListApp, .amenities-list-wrapper");
     if ($amenitiesList.length > 0) {

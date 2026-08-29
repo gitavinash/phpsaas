@@ -92,5 +92,27 @@
                 </tbody>
             </table>
         </div>
+        <div class="package-pagination-bar" id="propertiesPaginationBar">
+            <div class="pagination-info-wrap">
+                <div class="pagination-size-select-wrap">
+                    <label for="propertiesPerPage">Show</label>
+                    <select id="propertiesPerPage" class="pagination-size-select">
+                        <option value="25">25</option>
+                        <option value="50" selected>50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <span class="pagination-info-text" id="propertiesPaginationInfo">Loading…</span>
+            </div>
+            <div class="pagination-controls">
+                <button type="button" class="pagination-nav-btn prev" id="propertiesPrevPage" disabled>
+                    <i class="fi fi-rr-angle-left"></i> Prev
+                </button>
+                <div class="pagination-page-numbers" id="propertiesPaginationPages"></div>
+                <button type="button" class="pagination-nav-btn next" id="propertiesNextPage" disabled>
+                    Next <i class="fi fi-rr-angle-right"></i>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
