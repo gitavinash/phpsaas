@@ -1343,10 +1343,10 @@ $(document).ready(function (e) {
     // 3. Quick Stage Advance Button (Explicit Clear Action)
     let advanceBtnHtml = "";
     if (st === "0") {
-      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="2" data-stage-name="Pending" title="Move status to Pending"><i class="fi fi-rr-arrow-right"></i> Move to Pending</button>`;
-    } else if (st === "2") {
-      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="3" data-stage-name="Follow Up" title="Move status to Follow Up"><i class="fi fi-rr-arrow-right"></i> Move to Follow Up</button>`;
+      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="3" data-stage-name="Follow Up" title="Move status to Follow Up"><i class="fi fi-rr-phone-call"></i> Start Follow-Up</button>`;
     } else if (st === "3") {
+      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="2" data-stage-name="Itinerary Sent" title="Move status to Itinerary Sent"><i class="fi fi-rr-paper-plane"></i> Send Itinerary</button>`;
+    } else if (st === "2") {
       advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance cta-confirm btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="1" data-stage-name="Confirmed" title="Confirm Booking for this lead"><i class="fi fi-rr-check-circle"></i> Confirm Booking</button>`;
     } else if (st === "1") {
       advanceBtnHtml = `<span class="kanban-won-badge"><i class="fi fi-rr-check-circle"></i> Confirmed Booking</span>`;

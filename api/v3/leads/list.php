@@ -93,14 +93,16 @@ function cleanLeadSource($src)
 function getLeadStatusMeta($status)
 {
     switch ((int)$status) {
+        case 0:
+            return ['label' => 'Pending', 'class' => 'status-fresh', 'icon' => 'fi-rr-time-fast'];
         case 1:
             return ['label' => 'Confirmed', 'class' => 'status-confirmed', 'icon' => 'fi-rr-check-circle'];
         case 2:
-            return ['label' => 'Pending', 'class' => 'status-pending', 'icon' => 'fi-rr-time-fast'];
+            return ['label' => 'Itinerary Sent', 'class' => 'status-pending', 'icon' => 'fi-rr-paper-plane'];
         case 3:
             return ['label' => 'Follow Up', 'class' => 'status-followup', 'icon' => 'fi-rr-phone-call'];
         case 4:
-            return ['label' => 'Cancelled', 'class' => 'status-cancelled', 'icon' => 'fi-rr-cross-circle'];
+            return ['label' => 'Cancelled / Lost', 'class' => 'status-cancelled', 'icon' => 'fi-rr-cross-circle'];
         case 5:
             return ['label' => 'Duplicate', 'class' => 'status-duplicate', 'icon' => 'fi-rr-copy'];
         case 6:
@@ -108,7 +110,7 @@ function getLeadStatusMeta($status)
         case 8:
             return ['label' => 'Closed', 'class' => 'status-closed', 'icon' => 'fi-rr-lock'];
         default:
-            return ['label' => 'Fresh Lead', 'class' => 'status-fresh', 'icon' => 'fi-rr-inbox'];
+            return ['label' => 'Pending', 'class' => 'status-fresh', 'icon' => 'fi-rr-time-fast'];
     }
 }
 

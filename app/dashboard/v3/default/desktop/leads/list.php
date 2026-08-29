@@ -1,4 +1,5 @@
 <?php
+
 /**
  * V3 Leads & Inquiries Pipeline List View
  * File: app/dashboard/v3/default/desktop/leads/list.php
@@ -31,7 +32,7 @@ $initialLeadStatus = isset($_GET['leadStatus']) ? (string)$_GET['leadStatus'] : 
                 </a>
             </div>
             <a href="/dashboard/leads/add/" class="btn-add-pkg-v3" title="Add New Enquiry">
-                <i class="fi fi-rr-plus"></i> <span>Add Lead</span>
+                <i class="fi fi-rr-plus"></i> <span>Add New Lead</span>
             </a>
         </div>
     </div>
@@ -45,17 +46,17 @@ $initialLeadStatus = isset($_GET['leadStatus']) ? (string)$_GET['leadStatus'] : 
                 <h3 id="statTotalLeads">-</h3>
             </div>
         </div>
-        <div class="pkg-mini-kpi sky lead-kpi-clickable lead-kpi-filter-btn" data-status="0" title="Click to filter fresh leads">
-            <div class="kpi-icon"><i class="fi fi-rr-inbox"></i></div>
+        <div class="pkg-mini-kpi sky lead-kpi-clickable lead-kpi-filter-btn" data-status="0" title="Click to filter new inquiries">
+            <div class="kpi-icon"><i class="fi fi-rr-sparkles"></i></div>
             <div class="kpi-meta">
-                <p>Fresh Leads</p>
+                <p>New Inquiries</p>
                 <h3 id="statFreshLeads">-</h3>
             </div>
         </div>
-        <div class="pkg-mini-kpi amber lead-kpi-clickable lead-kpi-filter-btn" data-status="2" title="Click to filter pending / follow up">
-            <div class="kpi-icon"><i class="fi fi-rr-phone-call"></i></div>
+        <div class="pkg-mini-kpi amber lead-kpi-clickable lead-kpi-filter-btn" data-status="2" title="Click to filter itinerary sent">
+            <div class="kpi-icon"><i class="fi fi-rr-paper-plane"></i></div>
             <div class="kpi-meta">
-                <p>Pending / Follow Up</p>
+                <p>Itinerary Sent</p>
                 <h3 id="statPendingLeads">-</h3>
             </div>
         </div>
@@ -94,12 +95,12 @@ $initialLeadStatus = isset($_GET['leadStatus']) ? (string)$_GET['leadStatus'] : 
                 <div class="leads-select-holder">
                     <select id="filterLeadStatus" class="leads-filter-select">
                         <option value="all" <?php echo ($initialLeadStatus === 'all' ? 'selected' : ''); ?>>All Statuses</option>
-                        <option value="0" <?php echo ($initialLeadStatus === '0' ? 'selected' : ''); ?>>Fresh Leads</option>
-                        <option value="2" <?php echo ($initialLeadStatus === '2' ? 'selected' : ''); ?>>Pending</option>
+                        <option value="0" <?php echo ($initialLeadStatus === '0' ? 'selected' : ''); ?>>New Inquiries</option>
+                        <option value="2" <?php echo ($initialLeadStatus === '2' ? 'selected' : ''); ?>>Itinerary Sent</option>
                         <option value="3" <?php echo ($initialLeadStatus === '3' ? 'selected' : ''); ?>>Follow-Up</option>
                         <option value="1" <?php echo ($initialLeadStatus === '1' ? 'selected' : ''); ?>>Confirmed</option>
                         <option value="6" <?php echo ($initialLeadStatus === '6' ? 'selected' : ''); ?>>Payment Initiated</option>
-                        <option value="4" <?php echo ($initialLeadStatus === '4' ? 'selected' : ''); ?>>Cancelled</option>
+                        <option value="4" <?php echo ($initialLeadStatus === '4' ? 'selected' : ''); ?>>Cancelled / Lost</option>
                         <option value="5" <?php echo ($initialLeadStatus === '5' ? 'selected' : ''); ?>>Duplicate</option>
                         <option value="8" <?php echo ($initialLeadStatus === '8' ? 'selected' : ''); ?>>Closed</option>
                     </select>
