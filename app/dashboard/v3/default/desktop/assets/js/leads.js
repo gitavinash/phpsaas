@@ -60,6 +60,33 @@
 
       this.selectedLeads.clear();
       $("#leadsBulkToolbar").hide();
+
+      // Read initial filters from URL query parameters or DOM data attributes
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialStatus = urlParams.get("leadStatus") || urlParams.get("status") || $app.data("initial-status") || $("#filterLeadStatus").val() || "all";
+      const initialAgent = urlParams.get("agent_id") || urlParams.get("agent") || $("#filterLeadAgent").val() || "all";
+      const initialSource = urlParams.get("source") || $("#filterLeadSource").val() || "all";
+      const initialSearch = urlParams.get("search") || urlParams.get("q") || $("#leadTableSearch").val() || "";
+
+      this.activeStatus = String(initialStatus);
+      this.activeAgent = String(initialAgent);
+      this.activeSource = String(initialSource);
+      this.activeSearch = String(initialSearch);
+
+      if (this.activeStatus !== "all") {
+        $("#filterLeadStatus").val(this.activeStatus);
+      }
+      if (this.activeAgent !== "all") {
+        $("#filterLeadAgent").val(this.activeAgent);
+      }
+      if (this.activeSource !== "all") {
+        $("#filterLeadSource").val(this.activeSource);
+      }
+      if (this.activeSearch) {
+        $("#leadTableSearch").val(this.activeSearch);
+        $("#clearLeadSearchBtn").show();
+      }
+
       this.initSelect2();
       this.initDateRangePicker();
       if (!this.eventsBound) {
@@ -70,6 +97,7 @@
     },
 
     initSelect2: function () {
+      const self = this;
       if (typeof $.fn.select2 !== "undefined") {
         // Destroy existing select2 to avoid duplicate wrappers
         $("#filterLeadStatus, #filterLeadAgent, #filterLeadSource, #bulkActionSelect, #leadsPerPage").each(function () {
@@ -83,6 +111,10 @@
           width: "120px",
           minimumResultsForSearch: Infinity,
         });
+
+        if (self.activeStatus && self.activeStatus !== "all") {
+          $("#filterLeadStatus").val(self.activeStatus).trigger("change.select2");
+        }
 
         $("#filterLeadAgent").select2({
           dropdownAutoWidth: true,

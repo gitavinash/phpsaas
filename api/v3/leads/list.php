@@ -67,8 +67,9 @@ if (isset($reqData['search']) && trim($reqData['search']) !== '') {
 
 // Status Filter
 $statusFilter = "";
-if (isset($reqData['status']) && $reqData['status'] !== '' && $reqData['status'] !== 'all') {
-    $targetStatus = (int)$reqData['status'];
+$rawStatus = isset($reqData['status']) ? $reqData['status'] : (isset($reqData['leadStatus']) ? $reqData['leadStatus'] : '');
+if ($rawStatus !== '' && $rawStatus !== 'all') {
+    $targetStatus = (int)$rawStatus;
     $statusFilter = " AND e.enquiry_status = {$targetStatus}";
 }
 

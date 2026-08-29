@@ -83,33 +83,45 @@ if (isset($daterange)) {
     <?php
     }
 
+    $currentUrl = defined('ADMIN_BASE_URL') ? ADMIN_BASE_URL : (defined('ACTIVE_URL') ? ACTIVE_URL : '');
+    $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboard' || $currentUrl === '' || $currentUrl === '/');
+    $userRole = strtolower(isset($site_access_type) ? $site_access_type : (defined('USER_TYPE') ? USER_TYPE : ''));
+    $isAgentAleya = (strtolower(SITE_APP) === 'aleya' && $userRole === 'agent');
     ?>
 </head>
 
-<body>
+<body class="<?php echo $isAgentAleya ? 'v3-agent-layout' : ''; ?>">
     <div id="spa-loader-bar"></div>
-    <!-- Show this section when notification is disable -->
-    <!-- <div class="enableNotification">
-
-    </div> -->
-    <!-- Show this section when page is loading -->
-    <!-- <div class="pageLoader">
-        <?php
-
-        if (SITE_ID == 50) { ?>
-        <img src="/app/hms/visitor/mgihotels/desktop/assets/images/logo.png" alt="<?php echo ucwords(SITE_APP) ?> logo">
-        <?php
-        } else { ?>
-        <img src="<?php echo ((SITE_APP_IMAGE != '') ? SITE_APP_IMAGE : '/app/cms/visitor/blumox/desktop/assets/images/logo.svg') ?>"
-            alt="<?php echo ucwords(SITE_APP) ?> logo">
-        <?php
-        }
-
-        ?>
-    </div> -->
     <header>
+        <?php if ($isAgentAleya) { ?>
+            <div class="v3-agent-header-left">
+                <a href="/dashboard/" class="v3-agent-header-logo">
+                    <img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>">
+                </a>
+                <nav class="v3-agent-top-nav">
+                    <a href="/dashboard/" class="v3-top-nav-item <?php echo ($isDashboardActive ? 'active' : ''); ?>">
+                        <i class="fi fi-rr-apps"></i> <span>Dashboard</span>
+                    </a>
+                    <a href="/dashboard/leads/list/" class="v3-top-nav-item <?php echo (strpos($currentUrl, '/leads/list') !== false && !isset($_GET['leadStatus']) ? 'active' : ''); ?>">
+                        <i class="fi fi-rr-chart-network"></i> <span>Leads</span>
+                    </a>
+                    <a href="/dashboard/leads/add/" class="v3-top-nav-item <?php echo (strpos($currentUrl, '/leads/add') !== false ? 'active' : ''); ?>">
+                        <i class="fi fi-rr-add"></i> <span>Add Lead</span>
+                    </a>
+                    <a href="/dashboard/leads/list/?leadStatus=3" class="v3-top-nav-item <?php echo (isset($_GET['leadStatus']) && $_GET['leadStatus'] == '3' ? 'active' : ''); ?>">
+                        <i class="fi fi-rr-comment"></i> <span>Follow-ups</span>
+                    </a>
+                    <a href="/dashboard/leads/list/?leadStatus=1" class="v3-top-nav-item <?php echo (isset($_GET['leadStatus']) && $_GET['leadStatus'] == '1' ? 'active' : ''); ?>">
+                        <i class="fi fi-rr-check"></i> <span>Confirmed</span>
+                    </a>
+                </nav>
+            </div>
+        <?php } ?>
+
         <div class="right-side">
-            <div class="mobileLogo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt=""></a></div>
+            <?php if (!$isAgentAleya) { ?>
+                <div class="mobileLogo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt=""></a></div>
+            <?php } ?>
             <ul>
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
@@ -133,6 +145,7 @@ if (isset($daterange)) {
         </div>
     </header>
 
+    <?php if (!$isAgentAleya) { ?>
     <aside id="sidebar">
         <div class="logo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>"></a>
         </div>
@@ -156,6 +169,7 @@ if (isset($daterange)) {
         </nav>
 
     </aside>
+    <?php } ?>
 
     <?php
 

@@ -6,7 +6,10 @@
  */
 ?>
 
-<div class="package-page-wrapper leads-page-wrapper" id="leadsListApp" data-user-role="<?php echo htmlspecialchars($site_access_type ?? '', ENT_QUOTES); ?>">
+<?php
+$initialLeadStatus = isset($_GET['leadStatus']) ? (string)$_GET['leadStatus'] : (isset($_GET['status']) ? (string)$_GET['status'] : 'all');
+?>
+<div class="package-page-wrapper leads-page-wrapper" id="leadsListApp" data-user-role="<?php echo htmlspecialchars($site_access_type ?? '', ENT_QUOTES); ?>" data-initial-status="<?php echo htmlspecialchars($initialLeadStatus, ENT_QUOTES); ?>">
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
@@ -90,15 +93,15 @@
                 <!-- Status Filter (Select2) -->
                 <div class="leads-select-holder">
                     <select id="filterLeadStatus" class="leads-filter-select">
-                        <option value="all" selected>All Statuses</option>
-                        <option value="0">Fresh Leads</option>
-                        <option value="2">Pending</option>
-                        <option value="3">Follow-Up</option>
-                        <option value="1">Confirmed</option>
-                        <option value="6">Payment Initiated</option>
-                        <option value="4">Cancelled</option>
-                        <option value="5">Duplicate</option>
-                        <option value="8">Closed</option>
+                        <option value="all" <?php echo ($initialLeadStatus === 'all' ? 'selected' : ''); ?>>All Statuses</option>
+                        <option value="0" <?php echo ($initialLeadStatus === '0' ? 'selected' : ''); ?>>Fresh Leads</option>
+                        <option value="2" <?php echo ($initialLeadStatus === '2' ? 'selected' : ''); ?>>Pending</option>
+                        <option value="3" <?php echo ($initialLeadStatus === '3' ? 'selected' : ''); ?>>Follow-Up</option>
+                        <option value="1" <?php echo ($initialLeadStatus === '1' ? 'selected' : ''); ?>>Confirmed</option>
+                        <option value="6" <?php echo ($initialLeadStatus === '6' ? 'selected' : ''); ?>>Payment Initiated</option>
+                        <option value="4" <?php echo ($initialLeadStatus === '4' ? 'selected' : ''); ?>>Cancelled</option>
+                        <option value="5" <?php echo ($initialLeadStatus === '5' ? 'selected' : ''); ?>>Duplicate</option>
+                        <option value="8" <?php echo ($initialLeadStatus === '8' ? 'selected' : ''); ?>>Closed</option>
                     </select>
                 </div>
 
