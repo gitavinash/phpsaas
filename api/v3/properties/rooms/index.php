@@ -185,16 +185,44 @@ if ($method === 'POST') {
         }
     }
 
+    // Setup upload paths matching imageUploader.php (ROOT/upload/SITE_DOMAIN/Y/m/)
+    $rootPath = defined('ROOT') ? ROOT : (!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 4));
+    $siteDomain = defined('SITE_DOMAIN') ? SITE_DOMAIN : '';
+    if (empty($siteDomain) && !empty($siteId)) {
+        $sq = mysqli_query($connection, "SELECT site_domain FROM {$prefix}site WHERE site_id = {$siteId} LIMIT 1");
+        if ($sq && ($sr = mysqli_fetch_assoc($sq)) && !empty($sr['site_domain'])) {
+            $siteDomain = $sr['site_domain'];
+        }
+    }
+    if (empty($siteDomain) && !empty($_SERVER['HTTP_HOST'])) {
+        $siteDomain = preg_replace('/:[0-9]+$/', '', $_SERVER['HTTP_HOST']);
+    }
+    if (empty($siteDomain)) {
+        $siteDomain = 'default';
+    }
+
+    $uploadPath = rtrim($rootPath, '/') . '/upload/' . $siteDomain . '/' . date('Y/m/');
+    $originalUploadDir = $uploadPath . 'original/';
+    $thumbnailUploadDir = $uploadPath . 'thumbnail/';
+    if (!is_dir($uploadPath)) @mkdir($uploadPath, 0755, true);
+    if (!is_dir($originalUploadDir)) @mkdir($originalUploadDir, 0755, true);
+    if (!is_dir($thumbnailUploadDir)) @mkdir($thumbnailUploadDir, 0755, true);
+
+    $validExtensions = ['png', 'gif', 'jpg', 'jpeg', 'webp'];
+
     // Handle Room Feature Image Upload
     $newFeatureImg = $oldFeatureImg;
     if (!empty($_FILES['room_feature_image']['tmp_name']) && $_FILES['room_feature_image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = defined('UPLOAD_PATH') ? UPLOAD_PATH : ($_SERVER['DOCUMENT_ROOT'] . '/uploads/property/rooms/');
-        if (!is_dir($uploadDir)) @mkdir($uploadDir, 0755, true);
-        $ext = strtolower(pathinfo($_FILES['room_feature_image']['name'], PATHINFO_EXTENSION));
-        if (in_array($ext, ['jpg','jpeg','png','gif','webp'], true)) {
-            $fn = 'room_' . $propId . '_' . time() . '.' . $ext;
-            if (move_uploaded_file($_FILES['room_feature_image']['tmp_name'], rtrim($uploadDir, '/') . '/' . $fn)) {
-                $newFeatureImg = '/uploads/property/rooms/' . $fn;
+        $rawFilename = strtolower(str_replace("'", "_", str_replace('-', '_', str_replace(' ', '_', $_FILES['room_feature_image']['name']))));
+        $ext = strtolower(pathinfo($rawFilename, PATHINFO_EXTENSION));
+        if (in_array($ext, $validExtensions, true)) {
+            $uniquePrefix = time() . '_' . bin2hex(random_bytes(5));
+            $cleanName = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $rawFilename));
+            $destFile = $uploadPath . $uniquePrefix . '_' . $cleanName;
+            $origFile = $originalUploadDir . $uniquePrefix . '_' . $cleanName;
+            if (move_uploaded_file($_FILES['room_feature_image']['tmp_name'], $destFile)) {
+                @copy($destFile, $origFile);
+                $newFeatureImg = str_replace($rootPath, '', $destFile);
             }
         }
     } elseif (empty($newFeatureImg) && !empty($_POST['inherited_feature_image'])) {
@@ -219,9 +247,6 @@ if ($method === 'POST') {
 
     // Multi-file upload for room gallery
     if (!empty($_FILES['room_gallery']) && !empty($_FILES['room_gallery']['name'])) {
-        $uploadDir = defined('UPLOAD_PATH') ? UPLOAD_PATH : ($_SERVER['DOCUMENT_ROOT'] . '/uploads/property/rooms/');
-        if (!is_dir($uploadDir)) @mkdir($uploadDir, 0755, true);
-        $allowed = ['jpg','jpeg','png','gif','webp'];
         $files = $_FILES['room_gallery'];
         $count = is_array($files['name']) ? count($files['name']) : 1;
         for ($i = 0; $i < $count; $i++) {
@@ -229,11 +254,20 @@ if ($method === 'POST') {
             $origName = is_array($files['name'])     ? $files['name'][$i]     : $files['name'];
             $err      = is_array($files['error'])    ? $files['error'][$i]    : $files['error'];
             if ($err !== UPLOAD_ERR_OK || empty($tmpName)) continue;
-            $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
-            if (!in_array($ext, $allowed, true)) continue;
-            $fn   = 'room_gal_' . $propId . '_' . time() . '_' . $i . '_' . uniqid() . '.' . $ext;
-            if (move_uploaded_file($tmpName, rtrim($uploadDir, '/') . '/' . $fn)) {
-                $newGallery[] = ['name' => $origName, 'path' => '/uploads/property/rooms/' . $fn, 'type' => $ext];
+
+            $rawFilename = strtolower(str_replace("'", "_", str_replace('-', '_', str_replace(' ', '_', $origName))));
+            $ext = strtolower(pathinfo($rawFilename, PATHINFO_EXTENSION));
+            if (!in_array($ext, $validExtensions, true)) continue;
+
+            $uniquePrefix = time() . '_' . bin2hex(random_bytes(5));
+            $cleanName = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $rawFilename));
+            $destFile = $uploadPath . $uniquePrefix . '_' . $cleanName;
+            $origFile = $originalUploadDir . $uniquePrefix . '_' . $cleanName;
+
+            if (move_uploaded_file($tmpName, $destFile)) {
+                @copy($destFile, $origFile);
+                $webPath = str_replace($rootPath, '', $destFile);
+                $newGallery[] = ['name' => $origName, 'path' => $webPath, 'type' => $ext];
             }
         }
     }

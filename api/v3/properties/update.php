@@ -121,23 +121,48 @@ $oldThumbnail = $existing['property_thumbnail'] ?? '';
 $oldGalleryJs = $existing['property_gallery'] ?? '';
 
 // -----------------------------------------------------------------------
+// Upload Paths matching imageUploader.php (ROOT/upload/SITE_DOMAIN/Y/m/)
+// -----------------------------------------------------------------------
+$rootPath = defined('ROOT') ? ROOT : (!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3));
+$siteDomain = defined('SITE_DOMAIN') ? SITE_DOMAIN : '';
+if (empty($siteDomain) && !empty($siteId)) {
+    $sq = mysqli_query($connection, "SELECT site_domain FROM {$prefix}site WHERE site_id = {$siteId} LIMIT 1");
+    if ($sq && ($sr = mysqli_fetch_assoc($sq)) && !empty($sr['site_domain'])) {
+        $siteDomain = $sr['site_domain'];
+    }
+}
+if (empty($siteDomain) && !empty($_SERVER['HTTP_HOST'])) {
+    $siteDomain = preg_replace('/:[0-9]+$/', '', $_SERVER['HTTP_HOST']);
+}
+if (empty($siteDomain)) {
+    $siteDomain = 'default';
+}
+
+$uploadPath = rtrim($rootPath, '/') . '/upload/' . $siteDomain . '/' . date('Y/m/');
+$originalUploadDir = $uploadPath . 'original/';
+$thumbnailUploadDir = $uploadPath . 'thumbnail/';
+if (!is_dir($uploadPath)) @mkdir($uploadPath, 0755, true);
+if (!is_dir($originalUploadDir)) @mkdir($originalUploadDir, 0755, true);
+if (!is_dir($thumbnailUploadDir)) @mkdir($thumbnailUploadDir, 0755, true);
+
+$validExtensions = ['png', 'gif', 'jpg', 'jpeg', 'webp'];
+
+// -----------------------------------------------------------------------
 // Thumbnail upload (optional)
 // -----------------------------------------------------------------------
 $newThumbnail = $oldThumbnail; // keep existing by default
 
 if (!empty($_FILES['featureImage']['tmp_name']) && $_FILES['featureImage']['error'] === UPLOAD_ERR_OK) {
-    $uploadDir = defined('UPLOAD_PATH') ? UPLOAD_PATH : ($_SERVER['DOCUMENT_ROOT'] . '/uploads/property/');
-    if (!is_dir($uploadDir)) @mkdir($uploadDir, 0755, true);
-
-    $ext      = strtolower(pathinfo($_FILES['featureImage']['name'], PATHINFO_EXTENSION));
-    $allowed  = ['jpg','jpeg','png','gif','webp'];
-    if (in_array($ext, $allowed, true)) {
-        $fileName = 'prop_' . $propertyId . '_' . time() . '.' . $ext;
-        $destPath = rtrim($uploadDir, '/') . '/' . $fileName;
-        $webPath  = defined('UPLOAD_URL') ? rtrim(UPLOAD_URL, '/') . '/' . $fileName
-                                           : '/uploads/property/' . $fileName;
-        if (move_uploaded_file($_FILES['featureImage']['tmp_name'], $destPath)) {
-            $newThumbnail = $webPath;
+    $rawFilename = strtolower(str_replace("'", "_", str_replace('-', '_', str_replace(' ', '_', $_FILES['featureImage']['name']))));
+    $ext = strtolower(pathinfo($rawFilename, PATHINFO_EXTENSION));
+    if (in_array($ext, $validExtensions, true)) {
+        $uniquePrefix = time() . '_' . bin2hex(random_bytes(5));
+        $cleanName = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $rawFilename));
+        $destFile = $uploadPath . $uniquePrefix . '_' . $cleanName;
+        $origFile = $originalUploadDir . $uniquePrefix . '_' . $cleanName;
+        if (move_uploaded_file($_FILES['featureImage']['tmp_name'], $destFile)) {
+            @copy($destFile, $origFile);
+            $newThumbnail = str_replace($rootPath, '', $destFile);
         }
     }
 }
@@ -186,10 +211,6 @@ if (isset($_POST['kept_gallery'])) {
 
 // New gallery uploads (if provided via $_FILES['gallery'])
 if (!empty($_FILES['gallery']) && !empty($_FILES['gallery']['name'])) {
-    $uploadDir = defined('UPLOAD_PATH') ? UPLOAD_PATH : ($_SERVER['DOCUMENT_ROOT'] . '/uploads/property/');
-    if (!is_dir($uploadDir)) @mkdir($uploadDir, 0755, true);
-    $allowed = ['jpg','jpeg','png','gif','webp'];
-
     $files = $_FILES['gallery'];
     $count = is_array($files['name']) ? count($files['name']) : 1;
     for ($i = 0; $i < $count; $i++) {
@@ -197,14 +218,20 @@ if (!empty($_FILES['gallery']) && !empty($_FILES['gallery']['name'])) {
         $origName = is_array($files['name'])     ? $files['name'][$i]     : $files['name'];
         $err      = is_array($files['error'])    ? $files['error'][$i]    : $files['error'];
         if ($err !== UPLOAD_ERR_OK || empty($tmpName)) continue;
-        $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
-        if (!in_array($ext, $allowed, true)) continue;
-        $fn   = 'gal_' . $propertyId . '_' . time() . '_' . $i . '_' . uniqid() . '.' . $ext;
-        $dest = rtrim($uploadDir, '/') . '/' . $fn;
-        $web  = defined('UPLOAD_URL') ? rtrim(UPLOAD_URL, '/') . '/' . $fn
-                                      : '/uploads/property/' . $fn;
-        if (move_uploaded_file($tmpName, $dest)) {
-            $newGallery[] = ['name' => $origName, 'path' => $web, 'type' => $ext];
+
+        $rawFilename = strtolower(str_replace("'", "_", str_replace('-', '_', str_replace(' ', '_', $origName))));
+        $ext = strtolower(pathinfo($rawFilename, PATHINFO_EXTENSION));
+        if (!in_array($ext, $validExtensions, true)) continue;
+
+        $uniquePrefix = time() . '_' . bin2hex(random_bytes(5));
+        $cleanName = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $rawFilename));
+        $destFile = $uploadPath . $uniquePrefix . '_' . $cleanName;
+        $origFile = $originalUploadDir . $uniquePrefix . '_' . $cleanName;
+
+        if (move_uploaded_file($tmpName, $destFile)) {
+            @copy($destFile, $origFile);
+            $webPath = str_replace($rootPath, '', $destFile);
+            $newGallery[] = ['name' => $origName, 'path' => $webPath, 'type' => $ext];
         }
     }
 }
