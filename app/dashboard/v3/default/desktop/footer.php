@@ -107,6 +107,7 @@
 				<script src="<?php echo ADMIN_JS ?>app.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>table.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>packages.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>package-domestic-add.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>package-edit.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>gallery.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>package-price-list.js?v=<?php echo time(); ?>"></script>

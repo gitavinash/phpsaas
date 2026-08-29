@@ -41,16 +41,16 @@ if ($packageId <= 0) {
 }
 
 // 2. Read Form Payload
-$packageName            = isset($_POST['packageName']) ? mysqli_real_escape_string($connection, trim($_POST['packageName'])) : '';
-$travelStyle            = isset($_POST['travelStyle']) && $_POST['travelStyle'] !== 'select' ? mysqli_real_escape_string($connection, trim($_POST['travelStyle'])) : 'standard';
-$template               = isset($_POST['tourPackageTemplate']) && $_POST['tourPackageTemplate'] !== 'select' ? mysqli_real_escape_string($connection, trim($_POST['tourPackageTemplate'])) : 'mit';
-$packageType            = isset($_POST['packageType']) ? mysqli_real_escape_string($connection, trim($_POST['packageType'])) : 'domestic';
-$hotel                  = isset($_POST['hotel']) && $_POST['hotel'] !== 'select' ? mysqli_real_escape_string($connection, trim($_POST['hotel'])) : '';
-$outstationVehicle      = isset($_POST['outstationVehicle']) && $_POST['outstationVehicle'] !== 'select' ? mysqli_real_escape_string($connection, strtolower(trim($_POST['outstationVehicle']))) : '';
-$localSighseeignVehicle = isset($_POST['localSighseeignVehicle']) && $_POST['localSighseeignVehicle'] !== 'select' ? mysqli_real_escape_string($connection, strtolower(trim($_POST['localSighseeignVehicle']))) : '';
-$overview               = isset($_POST['overview']) ? mysqli_real_escape_string($connection, trim($_POST['overview'])) : '';
-$inclusion              = isset($_POST['inclusion']) ? mysqli_real_escape_string($connection, trim($_POST['inclusion'])) : '';
-$exclusion              = isset($_POST['exclusion']) ? mysqli_real_escape_string($connection, trim($_POST['exclusion'])) : '';
+$packageName            = isset($_POST['packageName']) ? mysqli_real_escape_string($connection, stripslashes(trim((string)$_POST['packageName']))) : '';
+$travelStyle            = isset($_POST['travelStyle']) && $_POST['travelStyle'] !== 'select' ? mysqli_real_escape_string($connection, stripslashes(trim((string)$_POST['travelStyle']))) : 'standard';
+$template               = isset($_POST['tourPackageTemplate']) && $_POST['tourPackageTemplate'] !== 'select' ? mysqli_real_escape_string($connection, trim((string)$_POST['tourPackageTemplate'])) : 'mit';
+$packageType            = isset($_POST['packageType']) ? mysqli_real_escape_string($connection, trim((string)$_POST['packageType'])) : 'domestic';
+$hotel                  = isset($_POST['hotel']) && $_POST['hotel'] !== 'select' ? mysqli_real_escape_string($connection, trim((string)$_POST['hotel'])) : '';
+$outstationVehicle      = isset($_POST['outstationVehicle']) && $_POST['outstationVehicle'] !== 'select' ? mysqli_real_escape_string($connection, strtolower(stripslashes(trim((string)$_POST['outstationVehicle'])))) : '';
+$localSighseeignVehicle = isset($_POST['localSighseeignVehicle']) && $_POST['localSighseeignVehicle'] !== 'select' ? mysqli_real_escape_string($connection, strtolower(stripslashes(trim((string)$_POST['localSighseeignVehicle'])))) : '';
+$overview               = isset($_POST['overview']) ? mysqli_real_escape_string($connection, stripslashes(trim((string)$_POST['overview']))) : '';
+$inclusion              = isset($_POST['inclusion']) ? mysqli_real_escape_string($connection, stripslashes(trim((string)$_POST['inclusion']))) : '';
+$exclusion              = isset($_POST['exclusion']) ? mysqli_real_escape_string($connection, stripslashes(trim((string)$_POST['exclusion']))) : '';
 
 if (empty($packageName)) {
     http_response_code(422);
@@ -78,9 +78,9 @@ if (!empty($dayTitles)) {
 
     for ($i = 0; $i < $totalDays; $i++) {
         $dayNum     = $i + 1;
-        $title      = trim($dayTitles[$i] ?? "Day {$dayNum}");
-        $overview   = trim($dayContents[$i] ?? "");
-        $stay       = trim($dayStays[$i] ?? "");
+        $title      = stripslashes(trim($dayTitles[$i] ?? "Day {$dayNum}"));
+        $overview   = stripslashes(trim($dayContents[$i] ?? ""));
+        $stay       = stripslashes(trim($dayStays[$i] ?? ""));
         $featureImg = trim($dayFeatureImgs[$i] ?? "");
         
         $rawGal = $dayGalleries[$i] ?? [];

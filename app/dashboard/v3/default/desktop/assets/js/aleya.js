@@ -945,7 +945,7 @@ $(document).ready(function () {
 
       $.ajax({
         type: "POST",
-        url: "/api/packages/publish/", // Replace with your server-side endpoint URL
+        url: "/api/v3/packages/publish/",
         data: formData,
         dataType: "json",
         success: function (response) {
@@ -955,9 +955,9 @@ $(document).ready(function () {
               window.location.href =
                 "/dashboard/packages/" +
                 packageType +
-                "/price/?id=" +
+                "/price-list/?id=" +
                 response.id +
-                "request=new";
+                "&request=new";
             }, 1500);
           } else {
             $("#createTourPackageBtn").show();
@@ -980,7 +980,7 @@ $(document).ready(function () {
 
       $.ajax({
         type: "POST",
-        url: "/api/packages/update/", // Replace with your server-side endpoint URL
+        url: "/api/v3/packages/update/", // Replace with your server-side endpoint URL
         data: formData,
         dataType: "json",
         success: function (response) {

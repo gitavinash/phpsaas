@@ -39,14 +39,14 @@ if ($packageId <= 0) {
     exit;
 }
 
-$packageName            = isset($_POST['packageName']) ? mysqli_real_escape_string($connection, trim($_POST['packageName'])) : '';
-$travelStyle            = isset($_POST['travelStyle']) && $_POST['travelStyle'] !== 'select' ? mysqli_real_escape_string($connection, trim($_POST['travelStyle'])) : 'standard';
-$template               = isset($_POST['tourPackageTemplate']) && $_POST['tourPackageTemplate'] !== 'select' ? mysqli_real_escape_string($connection, trim($_POST['tourPackageTemplate'])) : 'mit';
-$packageType            = isset($_POST['packageType']) ? mysqli_real_escape_string($connection, trim($_POST['packageType'])) : 'domestic';
-$hotel                  = isset($_POST['hotel']) && $_POST['hotel'] !== 'select' ? mysqli_real_escape_string($connection, trim($_POST['hotel'])) : '';
-$outstationVehicle      = isset($_POST['outstationVehicle']) && $_POST['outstationVehicle'] !== 'select' ? mysqli_real_escape_string($connection, strtolower(trim($_POST['outstationVehicle']))) : '';
-$localSighseeignVehicle = isset($_POST['localSighseeignVehicle']) && $_POST['localSighseeignVehicle'] !== 'select' ? mysqli_real_escape_string($connection, strtolower(trim($_POST['localSighseeignVehicle']))) : '';
-$overview               = isset($_POST['overview']) ? mysqli_real_escape_string($connection, trim($_POST['overview'])) : '';
+$packageName            = isset($_POST['packageName']) ? mysqli_real_escape_string($connection, stripslashes(trim((string)$_POST['packageName']))) : '';
+$travelStyle            = isset($_POST['travelStyle']) && $_POST['travelStyle'] !== 'select' ? mysqli_real_escape_string($connection, stripslashes(trim((string)$_POST['travelStyle']))) : 'standard';
+$template               = isset($_POST['tourPackageTemplate']) && $_POST['tourPackageTemplate'] !== 'select' ? mysqli_real_escape_string($connection, trim((string)$_POST['tourPackageTemplate'])) : 'mit';
+$packageType            = isset($_POST['packageType']) ? mysqli_real_escape_string($connection, trim((string)$_POST['packageType'])) : 'domestic';
+$hotel                  = isset($_POST['hotel']) && $_POST['hotel'] !== 'select' ? mysqli_real_escape_string($connection, trim((string)$_POST['hotel'])) : '';
+$outstationVehicle      = isset($_POST['outstationVehicle']) && $_POST['outstationVehicle'] !== 'select' ? mysqli_real_escape_string($connection, strtolower(stripslashes(trim((string)$_POST['outstationVehicle'])))) : '';
+$localSighseeignVehicle = isset($_POST['localSighseeignVehicle']) && $_POST['localSighseeignVehicle'] !== 'select' ? mysqli_real_escape_string($connection, strtolower(stripslashes(trim((string)$_POST['localSighseeignVehicle'])))) : '';
+$overview               = isset($_POST['overview']) ? mysqli_real_escape_string($connection, stripslashes(trim((string)$_POST['overview']))) : '';
 
 if (empty($packageName)) {
     http_response_code(422);

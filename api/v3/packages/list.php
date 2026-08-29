@@ -182,10 +182,10 @@ if ($listRes) {
     while ($row = mysqli_fetch_assoc($listRes)) {
         $pkgId = (int)$row['tour_package_id'];
         $encodedId = base64_encode($pkgId);
-        $title = $row['tour_package_title'] ?? 'Untitled Package';
+        $title = stripslashes($row['tour_package_title'] ?? 'Untitled Package');
         $pkgType = strtolower($row['tour_package_type'] ?? 'domestic');
-        $city = $row['tour_package_city'] ?? '';
-        $country = $row['tour_package_country'] ?? '';
+        $city = stripslashes($row['tour_package_city'] ?? '');
+        $country = stripslashes($row['tour_package_country'] ?? '');
         $locDisplay = ($pkgType === 'international') ? ($country ?: $city ?: 'International') : ($city ?: 'Multiple Destinations');
         $theme = strtolower(trim($row['tour_package_theme'] ?? 'standard'));
         $themeClass = 'pkg-theme-' . preg_replace('/[^a-z0-9_-]/', '_', $theme);

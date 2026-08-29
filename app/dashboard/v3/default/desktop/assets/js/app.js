@@ -4048,6 +4048,26 @@ $(document).ready(function (e) {
       }
     }
 
+    // 2b. Package Add Module (Domestic & International)
+    const $pkgAdd = $("#packageDomesticAddApp, #packageInternationalAddApp, .package-domestic-add-wrapper, .package-international-add-wrapper");
+    if ($pkgAdd.length > 0) {
+      if (
+        window.V3PackageDomesticAdd &&
+        typeof window.V3PackageDomesticAdd.autoInit === "function"
+      ) {
+        window.V3PackageDomesticAdd.autoInit();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "package-domestic-add.js?v=" + Date.now(), function () {
+          if (
+            window.V3PackageDomesticAdd &&
+            typeof window.V3PackageDomesticAdd.autoInit === "function"
+          ) {
+            window.V3PackageDomesticAdd.autoInit();
+          }
+        });
+      }
+    }
+
     // 3. Package Edit Module
     const $pkgEdit = $("#packageEditApp, .package-edit-wrapper");
     if ($pkgEdit.length > 0) {

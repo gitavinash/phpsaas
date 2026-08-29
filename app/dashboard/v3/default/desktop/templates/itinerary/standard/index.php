@@ -630,7 +630,7 @@ $excList = parseBulletList($pkgExclusions);
                             <?php if (!empty($stay)): ?>
                                 <div class="day-stay-pill">
                                     <i class="ri-hotel-bed-line"></i>
-                                    <span><strong>Night Stay:</strong> <?php echo htmlspecialchars($stay); ?> (<?php echo htmlspecialchars($pkgCity); ?>)</span>
+                                    <span><strong>Night Stay:</strong> <?php echo htmlspecialchars($stay); ?></span>
                                 </div>
                             <?php elseif ($isLast): ?>
                                 <div class="day-farewell-pill">
