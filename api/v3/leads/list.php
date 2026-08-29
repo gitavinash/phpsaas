@@ -157,7 +157,7 @@ if (isset($connection) && ($sRes = mysqli_query($connection, $statsQuery))) {
 
 // 2. Pagination Calculation
 $page  = isset($reqData['page']) ? max(1, (int)$reqData['page']) : 1;
-$limit = isset($reqData['limit']) ? min(max(5, (int)$reqData['limit']), 200) : 50;
+$limit = isset($reqData['limit']) ? min(max(5, (int)$reqData['limit']), 200) : 10;
 $offset = ($page - 1) * $limit;
 
 // Total Count matching current filters

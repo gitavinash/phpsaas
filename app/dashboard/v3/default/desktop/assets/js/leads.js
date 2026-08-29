@@ -1,6 +1,6 @@
 /**
  * V3 Leads Management SPA Module
- * Handles dynamic API fetching, multi-filter pipeline, bulk actions, and agent assignments.
+ * Handles dynamic API fetching, multi-filter pipeline, Select2 dropdowns, bulk actions, and agent assignments.
  */
 (function (factory) {
   if (typeof window.jQuery !== "undefined") {
@@ -17,7 +17,7 @@
 
   window.V3Leads = {
     currentPage: 1,
-    limit: 50,
+    limit: 10,
     activeStatus: "all",
     activeSearch: "",
     activeAgent: "all",
@@ -53,9 +53,9 @@
 
       // Immediately apply column visibility to <thead> (before data loads)
       if (!this.isAdmin) {
-        $(".leads-data-table th.col-agent").hide();
+        $(".leads-data-table th.th-agent, .leads-data-table th.col-agent").hide();
       } else {
-        $(".leads-data-table th.col-agent").show();
+        $(".leads-data-table th.th-agent, .leads-data-table th.col-agent").show();
       }
 
       this.selectedLeads.clear();
@@ -71,7 +71,8 @@
 
     initSelect2: function () {
       if (typeof $.fn.select2 !== "undefined") {
-        $(".leads-filter-select").each(function () {
+        // Destroy existing select2 to avoid duplicate wrappers
+        $("#filterLeadStatus, #filterLeadAgent, #filterLeadSource, #bulkActionSelect, #leadsPerPage").each(function () {
           if ($(this).data("select2")) {
             $(this).select2("destroy");
           }
@@ -79,24 +80,30 @@
 
         $("#filterLeadStatus").select2({
           dropdownAutoWidth: true,
-          width: "145px",
-        });
-        $("#filterLeadAgent").select2({
-          dropdownAutoWidth: true,
-          width: "155px",
-        });
-        $("#filterLeadSource").select2({
-          dropdownAutoWidth: true,
-          width: "135px",
+          width: "120px",
+          minimumResultsForSearch: Infinity,
         });
 
-        if ($("#bulkActionSelect").data("select2")) {
-          $("#bulkActionSelect").select2("destroy");
-        }
+        $("#filterLeadAgent").select2({
+          dropdownAutoWidth: true,
+          width: "130px",
+        });
+
+        $("#filterLeadSource").select2({
+          dropdownAutoWidth: true,
+          width: "115px",
+        });
+
         $("#bulkActionSelect").select2({
           minimumResultsForSearch: Infinity,
           dropdownAutoWidth: true,
           width: "100%",
+        });
+
+        $("#leadsPerPage").select2({
+          minimumResultsForSearch: Infinity,
+          dropdownAutoWidth: true,
+          width: "70px",
         });
       }
     },
@@ -110,6 +117,8 @@
       $dateInput.daterangepicker({
         autoUpdateInput: false,
         opens: "right",
+        alwaysShowCalendars: false,
+        showCustomRangeLabel: true,
         ranges: {
           Today: [moment(), moment()],
           Yesterday: [
@@ -130,8 +139,29 @@
         },
       });
 
+      // Clear any pre-selected date on initial load so it defaults to all dates
+      $dateInput.val("").attr("placeholder", "Select date range");
+      self.activeDateRange = "";
+      $("#clearLeadDateRangeBtn").hide();
+      $("#leadDateRangeWrap").removeClass("has-date");
+
       $dateInput.on("show.daterangepicker", function (event, picker) {
         picker.container.addClass("leads-date-picker");
+        if (typeof picker.move === "function") {
+          picker.move();
+        }
+      });
+
+      // When clicking the wrapper (calendar icon or padding), open the datepicker
+      $("#leadDateRangeWrap").on("click", function (e) {
+        if (e.target !== $dateInput[0] && !$(e.target).closest("#clearLeadDateRangeBtn").length) {
+          const picker = $dateInput.data("daterangepicker");
+          if (picker) {
+            picker.show();
+          } else {
+            $dateInput.trigger("click");
+          }
+        }
       });
 
       $dateInput.on("apply.daterangepicker", function (ev, picker) {
@@ -148,16 +178,36 @@
         $("#leadDateRangeWrap").addClass("has-date");
         self.activeDateRange = apiFormat;
         self.currentPage = 1;
+        if (picker) {
+          if (typeof picker.hide === "function") picker.hide();
+          if (picker.container) picker.container.hide().css("display", "none");
+        }
+        $(".daterangepicker").hide().css("display", "none");
         self.loadLeads();
       });
 
-      $dateInput.on("cancel.daterangepicker", function () {
+      $dateInput.on("cancel.daterangepicker", function (ev, picker) {
         $(this).val("");
         $("#clearLeadDateRangeBtn").hide();
         $("#leadDateRangeWrap").removeClass("has-date");
         self.activeDateRange = "";
         self.currentPage = 1;
+        if (picker) {
+          if (typeof picker.hide === "function") picker.hide();
+          if (picker.container) picker.container.hide().css("display", "none");
+        }
+        $(".daterangepicker").hide().css("display", "none");
         self.loadLeads();
+      });
+
+      // Ensure clicking Apply or Cancel buttons immediately hides the datepicker popup
+      $(document).on("click", ".daterangepicker .applyBtn, .daterangepicker .cancelBtn", function () {
+        const picker = $dateInput.data("daterangepicker");
+        if (picker) {
+          if (typeof picker.hide === "function") picker.hide();
+          if (picker.container) picker.container.hide().css("display", "none");
+        }
+        $(".daterangepicker").hide().css("display", "none");
       });
 
       $("#clearLeadDateRangeBtn").on("click", function (e) {
@@ -169,15 +219,12 @@
         self.currentPage = 1;
         self.loadLeads();
       });
-
-      // Update placeholder to show it's interactive
-      $dateInput.attr("placeholder", "Select date range");
     },
 
     bindEvents: function () {
       const self = this;
 
-      // 1. Debounced Search Input (Name, Mobile, Email, Subject)
+      // 1. Debounced Search Input
       let searchTimeout;
       $("#leadTableSearch").on("input", function () {
         const val = $(this).val().trim();
@@ -229,13 +276,14 @@
         $("#clearLeadSearchBtn").hide();
         $("#filterLeadDateRange").val("");
         $("#clearLeadDateRangeBtn").hide();
+        $("#leadDateRangeWrap").removeClass("has-date");
 
         $("#filterLeadStatus").val("all");
         $("#filterLeadAgent").val("all");
         $("#filterLeadSource").val("all");
 
         if (typeof $.fn.select2 !== "undefined") {
-          $(".leads-filter-select").trigger("change.select2");
+          $("#filterLeadStatus, #filterLeadAgent, #filterLeadSource").trigger("change.select2");
         }
 
         self.activeSearch = "";
@@ -243,7 +291,7 @@
         self.activeStatus = "all";
         self.activeAgent = "all";
         self.activeSource = "all";
-        self.limit = 50;
+        self.limit = parseInt($("#leadsPerPage").val()) || 10;
         self.currentPage = 1;
         self.loadLeads();
       });
@@ -257,11 +305,16 @@
       $(document).on("click", ".lead-kpi-filter-btn", function () {
         const status = $(this).data("status");
         if (status !== undefined) {
-          $("#filterLeadStatus").val(status);
+          const statusStr = String(status);
+          if (self.activeStatus === statusStr && statusStr !== "all") {
+            self.activeStatus = "all";
+          } else {
+            self.activeStatus = statusStr;
+          }
+          $("#filterLeadStatus").val(self.activeStatus);
           if (typeof $.fn.select2 !== "undefined") {
             $("#filterLeadStatus").trigger("change.select2");
           }
-          self.activeStatus = status;
           self.currentPage = 1;
           self.loadLeads();
         }
@@ -292,11 +345,7 @@
         const action = $("#bulkActionSelect").val();
         if (!action) {
           if (typeof popUpMessage === "function") {
-            popUpMessage(
-              "center",
-              "Please select a bulk action from the dropdown.",
-              "warning",
-            );
+            popUpMessage("center", "Please select a bulk action from the dropdown.", "warning");
           } else {
             alert("Please select a bulk action from the dropdown.");
           }
@@ -305,11 +354,7 @@
         const ids = Array.from(self.selectedLeads);
         if (ids.length === 0) {
           if (typeof popUpMessage === "function") {
-            popUpMessage(
-              "center",
-              "Please select at least one lead.",
-              "warning",
-            );
+            popUpMessage("center", "Please select at least one lead.", "warning");
           } else {
             alert("Please select at least one lead.");
           }
@@ -318,7 +363,7 @@
         self.handleBulkAction(action, ids);
       });
 
-      // 7. Inline Agent Assignment Change with SweetAlert Reassignment Confirmation
+      // 8. Inline Agent Assignment Change
       $(document).on("change", ".inline-agent-select", function () {
         const $select = $(this);
         const leadId = $select.data("lead-id");
@@ -352,88 +397,19 @@
                 res.status_code === 200 ||
                 res.success === true
               ) {
-                // Update tracking data attributes
                 $select.data("current-agent", newAgentId);
                 $select.data("current-agent-name", newAgentName);
                 $select.attr("data-current-agent", newAgentId);
                 $select.attr("data-current-agent-name", newAgentName);
 
                 if (newAgentId === "0" || newAgentId === 0) {
-                  self.showBottomToast(
-                    "Lead marked as <strong>Unassigned</strong>",
-                    "success",
-                  );
+                  self.showBottomToast("Lead marked as <strong>Unassigned</strong>", "success");
                 } else {
-                  self.showBottomToast(
-                    `Lead assigned to <strong>${newAgentName}</strong>`,
-                    "success",
-                  );
-
-                  // Trigger Browser Desktop Notification if permitted
-                  if ("Notification" in window && res.notification) {
-                    if (Notification.permission === "granted") {
-                      const notifTitle =
-                        res.notification.title || "Lead Assigned";
-                      const notifOptions = {
-                        body:
-                          res.notification.body ||
-                          `Lead has been assigned to ${newAgentName}`,
-                        icon:
-                          res.notification.icon ||
-                          "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
-                        badge:
-                          res.notification.icon ||
-                          "https://aleya.in/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
-                        data: {
-                          url: res.notification.url || window.location.href,
-                          click_action:
-                            res.notification.url || window.location.href,
-                        },
-                      };
-
-                      if (
-                        "serviceWorker" in navigator &&
-                        navigator.serviceWorker.controller
-                      ) {
-                        navigator.serviceWorker.ready
-                          .then(function (reg) {
-                            reg.showNotification(notifTitle, notifOptions);
-                          })
-                          .catch(function () {
-                            try {
-                              const notif = new Notification(
-                                notifTitle,
-                                notifOptions,
-                              );
-                              if (res.notification.url) {
-                                notif.onclick = function () {
-                                  window.open(res.notification.url, "_blank");
-                                };
-                              }
-                            } catch (err) {}
-                          });
-                      } else {
-                        try {
-                          const notif = new Notification(
-                            notifTitle,
-                            notifOptions,
-                          );
-                          if (res.notification.url) {
-                            notif.onclick = function () {
-                              window.open(res.notification.url, "_blank");
-                            };
-                          }
-                        } catch (err) {}
-                      }
-                    }
-                  }
+                  self.showBottomToast(`Lead assigned to <strong>${newAgentName}</strong>`, "success");
                 }
               } else {
                 $select.val(prevAgentId);
-                self.showBottomToast(
-                  res.msg || res.message || "Failed to assign lead.",
-                  "error",
-                );
+                self.showBottomToast(res.msg || res.message || "Failed to assign lead.", "error");
               }
             },
             error: function (xhr) {
@@ -449,7 +425,6 @@
           });
         };
 
-        // If lead is already assigned to someone and changing to another agent or unassigned
         if (prevAgentId !== "0" && prevAgentId !== newAgentId) {
           const isUnassign = newAgentId === "0";
           const title = isUnassign ? "Unassign Lead?" : "Reassign Lead?";
@@ -462,7 +437,6 @@
             Swal.fire({
               title: title,
               text: text,
-              type: "warning",
               icon: "warning",
               showCancelButton: true,
               confirmButtonColor: "#0284c7",
@@ -482,66 +456,47 @@
             $select.val(prevAgentId);
           }
         } else {
-          // Fresh assignment from unassigned
           doAssign();
         }
       });
 
-      // 8. Inline Quick Status Update
-      $(document).on("change", ".inline-status-select", function () {
-        const $select = $(this);
-        const leadId = $select.data("lead-id");
-        const statusVal = $select.val();
-        if (!leadId) return;
-
-        $select.prop("disabled", true);
-        $.ajax({
-          url: "/api/v3/leads/update-status/",
-          type: "POST",
-          data: {
-            lead_id: leadId,
-            leadId: leadId,
-            id: leadId,
-            enquiry_id: leadId,
-            status: statusVal,
-          },
-          dataType: "json",
-          success: function (res) {
-            $select.prop("disabled", false);
-            if (res.status === 200 || res.status === "success") {
-              if (typeof popUpMessage === "function") {
-                popUpMessage("center", "Lead status updated!", "success");
-              }
-              self.loadLeads(false);
-            } else {
-              if (typeof popUpMessage === "function") {
-                popUpMessage(
-                  "center",
-                  res.message || "Failed to update status",
-                  "error",
-                );
-              }
-            }
-          },
-          error: function () {
-            $select.prop("disabled", false);
-          },
-        });
+      // 9. Pagination Events
+      $("#leadsPerPage").on("change", function () {
+        self.limit = parseInt($(this).val(), 10) || 10;
+        self.currentPage = 1;
+        self.loadLeads();
       });
 
-      // 9. Pagination Navigation
+      $("#leadsPrevPage").on("click", function () {
+        if (self.currentPage > 1) {
+          self.currentPage--;
+          self.loadLeads();
+          self.scrollToTop();
+        }
+      });
+
+      $("#leadsNextPage").on("click", function () {
+        self.currentPage++;
+        self.loadLeads();
+        self.scrollToTop();
+      });
+
       $(document).on("click", ".lead-page-btn", function (e) {
         e.preventDefault();
-        const page = parseInt($(this).data("page"));
+        const page = parseInt($(this).data("page"), 10);
         if (page > 0 && page !== self.currentPage) {
           self.currentPage = page;
           self.loadLeads();
-          $("html, body").animate(
-            { scrollTop: $("#leadsListApp").offset().top - 20 },
-            200,
-          );
+          self.scrollToTop();
         }
       });
+    },
+
+    scrollToTop: function () {
+      const $app = $("#leadsListApp");
+      if ($app.length) {
+        $("html, body").animate({ scrollTop: $app.offset().top - 20 }, 200);
+      }
     },
 
     updateBulkActionToolbar: function () {
@@ -587,14 +542,9 @@
         });
       };
 
-      const useSwal =
-        (typeof Swal !== "undefined" && typeof Swal.fire === "function") ||
-        (typeof swal !== "undefined" && typeof swal === "function");
-
       const doConfirm = function (opts, onConfirm) {
         if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
           Swal.fire(opts).then(function (result) {
-            // SweetAlert v1 resolves with true/false; v2 resolves with {isConfirmed}
             if (
               result === true ||
               (result && (result.value || result.isConfirmed))
@@ -616,7 +566,6 @@
               ids.length +
               " selected lead(s)? This cannot be undone.",
             icon: "warning",
-            type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#dc2626",
             cancelButtonColor: "#64748b",
@@ -633,7 +582,6 @@
             title: "Mark as Duplicate?",
             text: "Mark " + ids.length + " lead(s) as duplicate?",
             icon: "question",
-            type: "question",
             showCancelButton: true,
             confirmButtonColor: "#0284c7",
             cancelButtonColor: "#64748b",
@@ -649,7 +597,6 @@
             title: "Convert to Confirmed Sales?",
             text: "Convert " + ids.length + " lead(s) to Confirmed Sales?",
             icon: "success",
-            type: "success",
             showCancelButton: true,
             confirmButtonColor: "#059669",
             cancelButtonColor: "#64748b",
@@ -674,15 +621,9 @@
       if (showLoader) {
         $tbody.html(`
           <tr>
-            <td colspan="6">
-              <div class="v3-leads-table-loader">
-                <div class="v3-table-spinner">
-                  <div class="v3-spinner-ring"></div>
-                  <div class="v3-spinner-inner-dot"></div>
-                </div>
-                <h4 class="v3-loader-title">Loading Leads Pipeline...</h4>
-                <p class="v3-loader-subtitle">Fetching inquiries, customer records, and live status.</p>
-              </div>
+            <td colspan="6" class="table-loading-state">
+              <div class="table-loading-spinner"></div>
+              <span>Loading leads pipeline...</span>
             </td>
           </tr>
         `);
@@ -729,6 +670,7 @@
                 </td>
               </tr>
             `);
+            $("#leadsPaginationBar").hide();
           }
         },
         error: function (xhr, status) {
@@ -751,6 +693,7 @@
               </td>
             </tr>
           `);
+          $("#leadsPaginationBar").hide();
         },
       });
     },
@@ -770,14 +713,24 @@
             );
           }
         });
+        if (typeof $.fn.select2 !== "undefined") {
+          $filter.trigger("change.select2");
+        }
       }
     },
 
     renderKPIs: function (stats) {
+      const self = this;
       $("#statTotalLeads").text(stats.total || 0);
       $("#statFreshLeads").text(stats.fresh || 0);
       $("#statPendingLeads").text((stats.pending || 0) + (stats.followup || 0));
       $("#statConfirmedLeads").text(stats.confirmed || 0);
+
+      // Highlight active KPI filter card only when a specific status filter is active
+      $(".lead-kpi-filter-btn").removeClass("active");
+      if (self.activeStatus && self.activeStatus !== "all") {
+        $(`.lead-kpi-filter-btn[data-status="${self.activeStatus}"]`).addClass("active");
+      }
     },
 
     renderTableRows: function (leads) {
@@ -815,7 +768,7 @@
 
         let agentOptions = `<option value="0">Unassigned</option>`;
         self.agentsList.forEach(function (ag) {
-          const sel = lead.agent_id === ag.id ? "selected" : "";
+          const sel = String(lead.agent_id) === String(ag.id) ? "selected" : "";
           agentOptions += `<option value="${ag.id}" ${sel}>${ag.name}</option>`;
         });
 
@@ -826,8 +779,8 @@
         `;
 
         const phoneLink = lead.mobile
-          ? `<a href="tel:${lead.mobile}" class="lead-contact-link" data-tooltip="Call ${lead.mobile}"><i class="fi fi-rr-phone-call"></i> ${lead.mobile}</a>`
-          : `<span class="text-muted">-</span>`;
+          ? `<a href="tel:${lead.mobile}" class="lead-contact-link" title="Call ${lead.mobile}"><i class="fi fi-rr-phone-call"></i> ${lead.mobile}</a>`
+          : `<span class="meta-txt muted">-</span>`;
 
         const waSvg = `
           <svg class="wa-svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
@@ -836,30 +789,44 @@
         `;
 
         const waIconBtn = lead.wa_mobile
-          ? `<a href="https://wa.me/${lead.wa_mobile}?text=Hello%20${encodeURIComponent(lead.first_name || lead.name)}" target="_blank" class="lead-wa-btn-vibrant" data-tooltip="WhatsApp ${lead.name}">${waSvg}</a>`
+          ? `<a href="https://wa.me/${lead.wa_mobile}?text=Hello%20${encodeURIComponent(lead.first_name || lead.name)}" target="_blank" class="lead-wa-btn-vibrant" title="Chat on WhatsApp">${waSvg}</a>`
           : "";
 
         const emailLink = lead.email
-          ? `<a href="mailto:${lead.email}" class="lead-email-link" data-tooltip="Email ${lead.email}"><i class="fi fi-rr-envelope"></i> ${lead.email}</a>`
+          ? `<a href="mailto:${lead.email}" class="lead-email-link" title="Email ${lead.email}"><i class="fi fi-rr-envelope"></i> ${lead.email}</a>`
           : `<span class="meta-txt muted">No email</span>`;
 
         const noteSnippet = lead.recent_note
           ? `<div class="lead-note-badge"><i class="fi fi-rr-comment-dots"></i> <span>${lead.recent_note}</span></div>`
           : `<span class="lead-no-note"><i class="fi fi-rr-comment"></i> No notes recorded</span>`;
 
+        // If customer name is large, show first name only
+        let displayName = (lead.name || "").trim();
+        const firstName = (lead.first_name || "").trim();
+        if (displayName.length > 14) {
+          if (firstName.length > 0) {
+            displayName = firstName;
+          } else {
+            const nameParts = displayName.split(/\s+/);
+            if (nameParts.length > 1 && nameParts[0].length > 0) {
+              displayName = nameParts[0];
+            }
+          }
+        }
+
         html += `
           <tr class="${isChecked ? "row-selected" : ""}" data-lead-id="${lead.id}">
-            <td class="col-checkbox">
+            <td class="td-checkbox">
               <input type="checkbox" class="lead-row-checkbox" value="${lead.id}" ${isChecked ? "checked" : ""}>
             </td>
 
-            <td class="col-customer">
+            <td class="td-customer">
               <div class="lead-cell-wrap">
                 <div class="lead-avatar">${initials}</div>
                 <div class="lead-cell-meta">
                   <div class="lead-name-row">
-                    <a href="/dashboard/leads/view/?id=${lead.encoded_id}" class="lead-primary-text" data-tooltip="View ${lead.name}">
-                      ${lead.name}
+                    <a href="/dashboard/leads/view/?id=${lead.encoded_id}" class="lead-primary-text" title="View ${lead.name}">
+                      ${displayName}
                     </a>
                     ${statusBadge}
                   </div>
@@ -872,7 +839,7 @@
               </div>
             </td>
 
-            <td class="col-contact">
+            <td class="td-contact">
               <div class="lead-cell-meta">
                 <div class="lead-phone-line">
                   ${phoneLink}
@@ -884,7 +851,7 @@
               </div>
             </td>
 
-            <td class="col-subject">
+            <td class="td-subject">
               <div class="lead-cell-meta">
                 <div class="lead-primary-text subject">
                   <i class="fi fi-rr-compass"></i> <span>${lead.subject}</span>
@@ -895,7 +862,7 @@
               </div>
             </td>
 
-            <td class="col-agent">
+            <td class="td-agent">
               <div class="lead-assign-wrap">
                 <i class="fi fi-rr-user lead-assign-icon"></i>
                 <select class="lead-agent-select inline-agent-select" data-lead-id="${lead.id}" data-current-agent="${lead.agent_id || 0}" data-current-agent-name="${lead.agent_name || "Unassigned"}">
@@ -904,15 +871,15 @@
               </div>
             </td>
 
-            <td class="col-actions">
+            <td class="td-actions text-right">
               <div class="lead-actions-group">
-                <a href="/dashboard/leads/view/?id=${lead.encoded_id}" class="btn-lead-view-cta" data-tooltip="View Details">
+                <a href="/dashboard/leads/view/?id=${lead.encoded_id}" class="btn-lead-view-cta" title="View Details">
                   <i class="fi fi-rr-eye"></i> <span>View</span>
                 </a>
-                <a href="#" class="btn-lead-icon-action duplicate duplicateLead" id="${lead.encoded_id}" data-tooltip="Mark as Duplicate">
+                <a href="#" class="btn-lead-icon-action duplicate duplicateLead" id="${lead.encoded_id}" title="Mark as Duplicate">
                   <i class="fi fi-rr-copy"></i>
                 </a>
-                <a href="#" class="btn-lead-icon-action delete deleteButton" data-type="leads" data-id="${lead.id}" data-title="Delete lead" data-redirect="false" data-tooltip="Delete Lead">
+                <a href="#" class="btn-lead-icon-action delete deleteButton" data-type="leads" data-id="${lead.id}" data-title="Delete lead" data-redirect="false" title="Delete Lead">
                   <i class="fi fi-rr-trash"></i>
                 </a>
               </div>
@@ -923,7 +890,7 @@
 
       $tbody.html(html);
 
-      // Apply Select2 to inline agent dropdowns for better UX
+      // Apply Select2 to inline agent dropdowns
       if (typeof $.fn.select2 !== "undefined") {
         $tbody.find(".inline-agent-select").each(function () {
           if (!$(this).data("select2")) {
@@ -932,64 +899,45 @@
               width: "100%",
               minimumResultsForSearch: 5,
             });
-            // Mark the wrapper so CSS can show the icon over Select2
             $(this).closest(".lead-assign-wrap").addClass("has-select2");
           }
         });
       }
 
       // Hide/show agent column based on user role
-      const agentColVisible = self.isAdmin;
-      if (agentColVisible) {
-        $(
-          ".leads-data-table th.col-agent, .leads-data-table td.col-agent",
-        ).show();
+      if (self.isAdmin) {
+        $(".leads-data-table th.th-agent, .leads-data-table td.td-agent").show();
       } else {
-        $(
-          ".leads-data-table th.col-agent, .leads-data-table td.col-agent",
-        ).hide();
+        $(".leads-data-table th.th-agent, .leads-data-table td.td-agent").hide();
       }
     },
 
     renderPagination: function (p) {
-      const $wrap = $("#leadsPaginationWrap");
-      if (!p || p.total_pages <= 1) {
-        $wrap.empty();
+      if (!p || !p.total_records || p.total_records === 0) {
+        $("#leadsPaginationBar").hide();
         return;
       }
 
-      const cur = p.current_page;
-      const total = p.total_pages;
-      const totalRecords = p.total_records;
+      const cur = parseInt(p.current_page, 10) || 1;
+      const totalPages = parseInt(p.total_pages, 10) || 1;
+      const totalRecords = parseInt(p.total_records, 10) || 0;
       const from = p.offset + 1;
       const to = Math.min(p.offset + p.limit, totalRecords);
 
-      let pagesHtml = "";
-      const startPage = Math.max(1, cur - 2);
-      const endPage = Math.min(total, cur + 2);
+      $("#leadsPaginationInfo").text(`Showing ${from} to ${to} of ${totalRecords} leads`);
+      $("#leadsPrevPage").prop("disabled", cur <= 1);
+      $("#leadsNextPage").prop("disabled", cur >= totalPages);
 
-      if (cur > 1) {
-        pagesHtml += `<button type="button" class="pagination-btn lead-page-btn" data-page="${cur - 1}"><i class="fi fi-rr-angle-left"></i> Prev</button>`;
+      let pageBtnsHtml = "";
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= cur - 1 && i <= cur + 1)) {
+          pageBtnsHtml += `<button type="button" class="pagination-page-btn lead-page-btn ${i === cur ? "active" : ""}" data-page="${i}">${i}</button>`;
+        } else if (i === cur - 2 || i === cur + 2) {
+          pageBtnsHtml += `<span class="pagination-ellipsis">&hellip;</span>`;
+        }
       }
-
-      for (let i = startPage; i <= endPage; i++) {
-        pagesHtml += `<button type="button" class="pagination-btn lead-page-btn ${i === cur ? "active" : ""}" data-page="${i}">${i}</button>`;
-      }
-
-      if (cur < total) {
-        pagesHtml += `<button type="button" class="pagination-btn lead-page-btn" data-page="${cur + 1}">Next <i class="fi fi-rr-angle-right"></i></button>`;
-      }
-
-      $wrap.html(`
-        <div class="v3-pagination-bar">
-          <div class="pagination-meta">
-            Showing <b>${from}–${to}</b> of <b>${totalRecords}</b> leads
-          </div>
-          <div class="pagination-buttons">
-            ${pagesHtml}
-          </div>
-        </div>
-      `);
+      $("#leadsPaginationPages").html(pageBtnsHtml);
+      $("#leadsPaginationBar").show();
     },
 
     showBottomToast: function (message, type = "success") {
