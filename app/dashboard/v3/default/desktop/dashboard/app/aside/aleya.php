@@ -190,6 +190,16 @@ if ($site_access_type == 'administrator') { ?>
         <p>System &amp; Settings<span>Team, Channels &amp; Policies</span></p>
     </li>
 
+    <?php
+
+    if (USER_TYPE == 'administrator') { ?>
+        <li <?php echo (strpos($currentUrl, '/setting/') !== false ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/setting/"><i class="fi fi-rr-users-alt"></i> Settings</a>
+        </li>
+    <?php
+    }
+    ?>
+
     <li <?php echo (strpos($currentUrl, '/user/') !== false ? 'class="active"' : ''); ?>>
         <a href="/dashboard/user/list/"><i class="fi fi-rr-users-alt"></i> Team &amp; Users</a>
         <div class="side-menu">
