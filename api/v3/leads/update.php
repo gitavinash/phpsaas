@@ -98,10 +98,25 @@ $pickupLocation = trim($inputData['pickup_location'] ?? '');
 $dropLocation = trim($inputData['drop_location'] ?? '');
 $requirements = trim($inputData['requirements'] ?? '');
 
+$destination = trim($inputData['destination'] ?? $inputData['destination_city'] ?? $inputData['city'] ?? '');
+if (empty($package) && !empty($destination)) {
+    $package = $destination;
+}
+
 if (empty($firstName)) {
     http_response_code(400);
     echo json_encode(['status' => 'error', 'message' => 'First name is required.']);
     exit();
+}
+
+if (!empty($dateOfTravel)) {
+    $travelTimestamp = strtotime($dateOfTravel);
+    $todayTimestamp = strtotime(date('Y-m-d'));
+    if ($travelTimestamp !== false && $travelTimestamp < $todayTimestamp) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Date of travel must be today or a future date.']);
+        exit();
+    }
 }
 
 // Clean mobile
@@ -116,6 +131,27 @@ $emailEsc = mysqli_real_escape_string($connection, $email);
 $mobileEsc = mysqli_real_escape_string($connection, $cleanMobile);
 $packageEsc = mysqli_real_escape_string($connection, $package);
 
+// Preserve and update JSON in enquiry_message
+$existingMsg = [];
+$msgRes = mysqli_query($connection, "SELECT enquiry_message FROM {$tblPrefix}enquiry WHERE enquiry_id = {$realLeadId} LIMIT 1");
+if ($msgRes && $msgRow = mysqli_fetch_assoc($msgRes)) {
+    $parsed = json_decode($msgRow['enquiry_message'] ?? '', true);
+    if (is_array($parsed)) {
+        $existingMsg = $parsed;
+    }
+}
+$existingMsg['destination'] = $destination;
+$existingMsg['date_of_travel'] = $dateOfTravel;
+$existingMsg['number_of_days'] = $durationDays;
+$existingMsg['number_of_adults'] = $adults;
+$existingMsg['number_of_childrens'] = $children;
+$existingMsg['number_of_infants'] = $infants;
+$existingMsg['current_location'] = $currentLocation;
+$existingMsg['pickup_location'] = $pickupLocation;
+$existingMsg['drop_location'] = $dropLocation;
+$existingMsg['requirements'] = $requirements;
+$newMsgEsc = mysqli_real_escape_string($connection, json_encode($existingMsg));
+
 mysqli_query($connection, "START TRANSACTION");
 
 // 1. Update enquiry table
@@ -126,7 +162,8 @@ $updateEnquirySql = "
         enquiry_last_name = '{$lastNameEsc}',
         enquiry_email = '{$emailEsc}',
         enquiry_mobile = '{$mobileEsc}',
-        enquiry_subject = '{$packageEsc}'
+        enquiry_subject = '{$packageEsc}',
+        enquiry_message = '{$newMsgEsc}'
     WHERE enquiry_id = {$realLeadId} {$siteClause}
 ";
 

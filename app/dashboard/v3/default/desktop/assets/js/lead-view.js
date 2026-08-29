@@ -36,6 +36,8 @@
     availablePackages: [],
     selectedPackage: null,
 
+    activeXhr: null,
+
     notify: function (title, type, text) {
       type = type || "info";
       if (typeof popUpMessage === "function" && !text) {
@@ -59,16 +61,13 @@
     },
 
     getLeadId: function () {
-      if (this.leadId) return this.leadId;
-      if (this.leadData && this.leadData.id) {
-        this.leadId = String(this.leadData.id);
-        return this.leadId;
-      }
       const urlParams = new URLSearchParams(window.location.search);
       let id = urlParams.get("id") || urlParams.get("leadId") || "";
       if (!id) {
         const $app = $("#leadViewApp");
-        id = $app.data("lead-id") || $app.attr("data-lead-id") || "";
+        if ($app.length) {
+          id = $app.data("lead-id") || $app.attr("data-lead-id") || "";
+        }
       }
       if (!id) {
         const match = window.location.pathname.match(/\/leads\/view\/([^\/]+)/);
@@ -76,16 +75,15 @@
           id = match[1];
         }
       }
-      this.leadId = id ? String(id) : "";
-      return this.leadId;
+      return id ? String(id).trim() : "";
     },
 
     init: function () {
       const $app = $("#leadViewApp");
       if (!$app.length) return;
 
-      this.leadId = this.getLeadId();
-      if (!this.leadId) {
+      const currentId = this.getLeadId();
+      if (!currentId) {
         $("#leadViewMainContainer").html(`
           <div class="v3-leads-empty-state">
             <div class="v3-empty-icon-wrap"><i class="fi fi-rr-exclamation"></i></div>
@@ -97,6 +95,14 @@
         return;
       }
 
+      // If we are ALREADY fetching or already loaded for this exact leadId, ignore redundant calls
+      if (this.leadId === currentId && (this.isLoading || this.leadData)) {
+        return;
+      }
+
+      this.leadId = currentId;
+      this.leadData = null;
+
       if (!this.eventsBound) {
         this.bindEvents();
         this.eventsBound = true;
@@ -107,7 +113,12 @@
 
     loadLeadDetails: function () {
       const self = this;
-      if (self.isLoading) return;
+      if (!self.leadId) return;
+
+      if (self.activeXhr) {
+        self.activeXhr.abort();
+        self.activeXhr = null;
+      }
       self.isLoading = true;
 
       const $container = $("#leadViewMainContainer");
@@ -122,13 +133,14 @@
         </div>
       `);
 
-      $.ajax({
+      self.activeXhr = $.ajax({
         url: "/api/v3/leads/view/",
         type: "GET",
         data: { id: self.leadId },
         dataType: "json",
         success: function (res) {
           self.isLoading = false;
+          self.activeXhr = null;
           if (res.status === "success" && res.data) {
             self.leadData = res.data;
             self.renderView(res.data);
@@ -143,8 +155,10 @@
             `);
           }
         },
-        error: function () {
+        error: function (xhr, status) {
+          if (status === "abort") return;
           self.isLoading = false;
+          self.activeXhr = null;
           $container.html(`
             <div class="v3-leads-empty-state">
               <div class="v3-empty-icon-wrap"><i class="fi fi-rr-exclamation"></i></div>
@@ -260,6 +274,56 @@
       }
 
       const st = parseInt(lead.status || 0);
+      const isAssigned = parseInt(lead.agent_id || 0) > 0;
+
+      // Role check: Only Administrator and Operational can see/manage Assigned Representative
+      const userRole = (lead.access_type || $("#leadViewApp").data("user-role") || "").toLowerCase().trim();
+      const canManageAgent = (
+        userRole === "administrator" ||
+        userRole === "operations" ||
+        userRole === "superadmin" ||
+        userRole === "operational"
+      );
+
+      // 2. Top 4-Card Snapshot Grid
+      const card3Html = canManageAgent
+        ? `
+          <!-- Card 3: Assigned Representative (Admin / Operational) -->
+          <div class="v3-snapshot-card">
+            <div class="v3-snapshot-header">
+              <span class="v3-snapshot-label">Assigned Representative</span>
+              <div class="v3-snapshot-icon"><i class="fi fi-rr-user"></i></div>
+            </div>
+            <div class="v3-snapshot-value">${lead.agent_name || "Unassigned"}</div>
+            <div class="v3-snapshot-sub">${lead.agent_role || "Representative"}</div>
+          </div>
+        `
+        : `
+          <!-- Card 3: Lead Status & Stage (Telecallers / Agents) -->
+          <div class="v3-snapshot-card">
+            <div class="v3-snapshot-header">
+              <span class="v3-snapshot-label">Lead Status & Stage</span>
+              <div class="v3-snapshot-icon"><i class="fi fi-rr-flag"></i></div>
+            </div>
+            <div class="v3-snapshot-value">${lead.status_label}</div>
+            <div class="v3-snapshot-sub">Source: ${lead.source}</div>
+          </div>
+        `;
+
+      const agentSidebarHtml = canManageAgent
+        ? `
+          <!-- Assigned Representative Box (Administrator & Operational Only) -->
+          <div class="v3-sidebar-card">
+            <div class="v3-sidebar-card-title">
+              <span>Assigned Representative</span>
+              <i class="fi fi-rr-user-gear"></i>
+            </div>
+            <select id="leadDetailAgentSelect" class="leads-filter-select v3-select-full">
+              ${agentOptions}
+            </select>
+          </div>
+        `
+        : "";
 
       // 4. Complete Unified CRM Assembly
       const html = `
@@ -343,18 +407,24 @@
               <button type="button" class="btn-v3-action btn-outline" id="btnHeroEditLead" data-tooltip="Edit Lead & Requirements">
                 <i class="fi fi-rr-edit"></i> Edit Lead
               </button>
-              <button type="button" class="btn-v3-action btn-outline" id="btnHeroSendItinerary" data-tooltip="Search, Customize & Send Itinerary">
-                <i class="fi fi-rr-paper-plane"></i> Send Itinerary
-              </button>
-              <button type="button" class="btn-v3-action btn-orange" id="btnHeroSetFollowUp" data-tooltip="Set Follow-Up Reminder">
-                <i class="fi fi-rr-alarm-clock"></i> Follow-Up
-              </button>
               ${
-                st !== 1
+                isAssigned
                   ? `
-                <button type="button" class="btn-v3-action btn-green" id="btnHeroConvertToSale" data-tooltip="Convert Lead to Confirmed Sale">
-                  <i class="fi fi-rr-check"></i> Convert to Sale
+                <button type="button" class="btn-v3-action btn-outline" id="btnHeroSendItinerary" data-tooltip="Search, Customize & Send Itinerary">
+                  <i class="fi fi-rr-paper-plane"></i> Send Itinerary
                 </button>
+                <button type="button" class="btn-v3-action btn-orange" id="btnHeroSetFollowUp" data-tooltip="Set Follow-Up Reminder">
+                  <i class="fi fi-rr-alarm-clock"></i> Follow-Up
+                </button>
+                ${
+                  st !== 1
+                    ? `
+                  <button type="button" class="btn-v3-action btn-green" id="btnHeroConvertToSale" data-tooltip="Convert Lead to Confirmed Sale">
+                    <i class="fi fi-rr-check"></i> Convert to Sale
+                  </button>
+                `
+                    : ""
+                }
               `
                   : ""
               }
@@ -383,15 +453,7 @@
               <div class="v3-snapshot-sub">${travel.adults || 1} Adults • ${travel.children || 0} Kids • ${travel.infants || 0} Infants</div>
             </div>
 
-            <!-- Card 3: Assigned Representative -->
-            <div class="v3-snapshot-card">
-              <div class="v3-snapshot-header">
-                <span class="v3-snapshot-label">Assigned Agent</span>
-                <div class="v3-snapshot-icon"><i class="fi fi-rr-user"></i></div>
-              </div>
-              <div class="v3-snapshot-value">${lead.agent_name || "Unassigned"}</div>
-              <div class="v3-snapshot-sub">${lead.agent_role || "Representative"}</div>
-            </div>
+            ${card3Html}
 
             <!-- Card 4: Quotation & Value -->
             <div class="v3-snapshot-card">
@@ -554,40 +616,117 @@
 
             <!-- Right Area: Sidebar Panels -->
             <div class="v3-sidebar-panel">
-              <!-- Assigned Agent Box -->
-              <div class="v3-sidebar-card">
-                <div class="v3-sidebar-card-title">
-                  <span>Assigned Representative</span>
-                  <i class="fi fi-rr-user-gear"></i>
-                </div>
-                <select id="leadDetailAgentSelect" class="leads-filter-select v3-select-full">
-                  ${agentOptions}
-                </select>
-              </div>
+              ${agentSidebarHtml}
 
-              <!-- Fast Action Buttons -->
-              <div class="v3-sidebar-card">
+              <!-- Fast Actions Sidebar for Telecallers -->
+              <div class="v3-sidebar-card v3-fast-actions-card">
                 <div class="v3-sidebar-card-title">
                   <span>Fast Actions</span>
                   <i class="fi fi-rr-bolt"></i>
                 </div>
-                <div class="v3-sidebar-actions-list">
-                  <button type="button" class="btn-v3-side-action" id="btnSideEditLead" data-tooltip="Edit Lead Details">
-                    <i class="fi fi-rr-edit"></i> Edit Lead Details
-                  </button>
-                  <button type="button" class="btn-v3-side-action" id="btnSideSendItinerary" data-tooltip="Search & Send Tour Itinerary">
-                    <i class="fi fi-rr-paper-plane"></i> Send Itinerary
-                  </button>
-                  <button type="button" class="btn-v3-side-action" id="btnSideSendPaymentLink" data-tooltip="Generate Payment Link">
-                    <i class="fi fi-rr-link"></i> Send Payment Link
-                  </button>
-                  <button type="button" class="btn-v3-side-action" id="btnSideRecordPayment" data-tooltip="Record Payment Received">
-                    <i class="fi fi-rr-money-bill-wave"></i> Record Payment
-                  </button>
-                  <button type="button" class="btn-v3-side-action" id="btnSideCloseLeadModal" data-tooltip="Close Lead with Reason">
-                    <i class="fi fi-rr-cross-circle"></i> Close / Archive Lead
-                  </button>
-                </div>
+                ${
+                  isAssigned
+                    ? `
+                  <div class="v3-fast-actions-grid">
+                    ${
+                      lead.wa_mobile
+                        ? `
+                      <a href="https://wa.me/${lead.wa_mobile}?text=Hello%20${encodeURIComponent(lead.first_name || lead.name)}" target="_blank" class="btn-fast-tile tile-wa" data-tooltip="Chat on WhatsApp">
+                        <div class="fast-tile-icon">${WA_SVG}</div>
+                        <div class="fast-tile-meta">
+                          <span class="fast-tile-title">WhatsApp Chat</span>
+                          <span class="fast-tile-sub">Send instant message</span>
+                        </div>
+                      </a>
+                    `
+                        : ""
+                    }
+
+                    ${
+                      lead.mobile
+                        ? `
+                      <a href="tel:${lead.mobile}" class="btn-fast-tile tile-call" data-tooltip="Call customer mobile">
+                        <div class="fast-tile-icon"><i class="fi fi-rr-phone-call"></i></div>
+                        <div class="fast-tile-meta">
+                          <span class="fast-tile-title">Call Customer</span>
+                          <span class="fast-tile-sub">${lead.mobile}</span>
+                        </div>
+                      </a>
+                    `
+                        : ""
+                    }
+
+                    <button type="button" class="btn-fast-tile tile-followup" id="btnSideSetFollowUp" data-tooltip="Schedule next callback reminder">
+                      <div class="fast-tile-icon"><i class="fi fi-rr-alarm-clock"></i></div>
+                      <div class="fast-tile-meta">
+                        <span class="fast-tile-title">Schedule Follow-Up</span>
+                        <span class="fast-tile-sub">Set reminder / call later</span>
+                      </div>
+                    </button>
+
+                    <button type="button" class="btn-fast-tile tile-itinerary" id="btnSideSendItinerary" data-tooltip="Create and send tour proposal">
+                      <div class="fast-tile-icon"><i class="fi fi-rr-paper-plane"></i></div>
+                      <div class="fast-tile-meta">
+                        <span class="fast-tile-title">Send Tour Itinerary</span>
+                        <span class="fast-tile-sub">Build & share quotation</span>
+                      </div>
+                    </button>
+
+                    <button type="button" class="btn-fast-tile tile-edit" id="btnSideEditLead" data-tooltip="Edit customer information and trip requirements">
+                      <div class="fast-tile-icon"><i class="fi fi-rr-edit"></i></div>
+                      <div class="fast-tile-meta">
+                        <span class="fast-tile-title">Edit Lead & Travel</span>
+                        <span class="fast-tile-sub">Update customer needs</span>
+                      </div>
+                    </button>
+
+                    <button type="button" class="btn-fast-tile tile-pay-record" id="btnSideRecordPayment" data-tooltip="Record payment received from client">
+                      <div class="fast-tile-icon"><i class="fi fi-rr-indian-rupee-sign"></i></div>
+                      <div class="fast-tile-meta">
+                        <span class="fast-tile-title">Record Payment</span>
+                        <span class="fast-tile-sub">Log received payment</span>
+                      </div>
+                    </button>
+
+                    <button type="button" class="btn-fast-tile tile-pay-link" id="btnSideSendPaymentLink" data-tooltip="Generate and share payment link">
+                      <div class="fast-tile-icon"><i class="fi fi-rr-link"></i></div>
+                      <div class="fast-tile-meta">
+                        <span class="fast-tile-title">Send Payment Link</span>
+                        <span class="fast-tile-sub">Request online deposit</span>
+                      </div>
+                    </button>
+
+                    ${
+                      st !== 1
+                        ? `
+                      <button type="button" class="btn-fast-tile tile-convert" id="btnSideConvertToSale" data-tooltip="Mark lead as confirmed booking">
+                        <div class="fast-tile-icon"><i class="fi fi-rr-check-circle"></i></div>
+                        <div class="fast-tile-meta">
+                          <span class="fast-tile-title">Convert to Confirmed Sale</span>
+                          <span class="fast-tile-sub">Confirm tour booking</span>
+                        </div>
+                      </button>
+                    `
+                        : ""
+                    }
+
+                    <button type="button" class="btn-fast-tile tile-close" id="btnSideCloseLeadModal" data-tooltip="Archive or close lead with reason">
+                      <div class="fast-tile-icon"><i class="fi fi-rr-cross-circle"></i></div>
+                      <div class="fast-tile-meta">
+                        <span class="fast-tile-title">Close / Lost Lead</span>
+                        <span class="fast-tile-sub">Mark cancelled / not interested</span>
+                      </div>
+                    </button>
+                  </div>
+                `
+                    : `
+                  <div class="v3-unassigned-lead-banner">
+                    <div class="v3-unassigned-icon"><i class="fi fi-rr-lock"></i></div>
+                    <h5 class="v3-unassigned-title">Lead Unassigned</h5>
+                    <p class="v3-unassigned-desc">Fast Actions will be visible and enabled once this lead is assigned to a representative.</p>
+                  </div>
+                `
+                }
               </div>
             </div>
           </div>
@@ -596,12 +735,22 @@
 
       $container.html(html);
 
-      // Initialize Select2 on agent dropdown
+      // Initialize Single Datepickers
+      self.initSingleDatePickers();
+
       if (typeof $.fn.select2 !== "undefined") {
-        $("#leadDetailAgentSelect, #composerFollowupReason").select2({
-          dropdownAutoWidth: true,
-          width: "100%",
-        });
+        if (canManageAgent && $("#leadDetailAgentSelect").length) {
+          $("#leadDetailAgentSelect").select2({
+            dropdownAutoWidth: true,
+            width: "100%",
+          });
+        }
+        if ($("#composerFollowupReason").length) {
+          $("#composerFollowupReason").select2({
+            dropdownAutoWidth: true,
+            width: "100%",
+          });
+        }
       }
     },
 
@@ -890,7 +1039,7 @@
       });
 
       // 6. Convert to Sale
-      $(document).on("click", "#btnHeroConvertToSale", function () {
+      $(document).on("click", "#btnHeroConvertToSale, #btnSideConvertToSale", function () {
         self.confirmConvertToSale();
       });
 
@@ -917,13 +1066,10 @@
           $("#editLeadEmail").val(d.email || "");
           $("#editLeadMobile").val(d.mobile || "");
           $("#editLeadAltMobile").val(d.alt_mobile || "");
-          $("#editLeadCurrentLocation").val(t.current_location || "");
 
           $("#editLeadSubject").val(d.subject || "");
           $("#editLeadTravelDate").val(t.date_of_travel || "");
           $("#editLeadDuration").val(t.duration_days || 0);
-          $("#editLeadPickup").val(t.pickup_location || "");
-          $("#editLeadDrop").val(t.drop_location || "");
 
           $("#editLeadAdults").val(t.adults || 1);
           $("#editLeadChildren").val(t.children || 0);
@@ -932,8 +1078,93 @@
           $("#editLeadRequirements").val(t.requirements || "");
 
           $("#modalEditLead").addClass("is-active");
+
+          // Initialize Select2 with Cities API for locations
+          self.initCitySelect2(
+            $("#editLeadCurrentLocation"),
+            $("#modalEditLead"),
+            "-- Search / Select Current Location --",
+          );
+          self.initCitySelect2(
+            $("#editLeadDestination"),
+            $("#modalEditLead"),
+            "-- Search / Select Destination City or State --",
+          );
+          self.initCitySelect2(
+            $("#editLeadPickup"),
+            $("#modalEditLead"),
+            "-- Search / Select Pickup Point / City --",
+          );
+          self.initCitySelect2(
+            $("#editLeadDrop"),
+            $("#modalEditLead"),
+            "-- Search / Select Drop Point / City --",
+          );
+
+          // Helper to set Select2 option value
+          function setSelect2Val($el, val, text) {
+            if (!$el || !$el.length) return;
+            $el.empty();
+            if (val) {
+              $el.append(new Option(text || val, val, true, true));
+            }
+            $el.val(val || "").trigger("change");
+          }
+
+          setSelect2Val($("#editLeadCurrentLocation"), t.current_location || "");
+          setSelect2Val($("#editLeadPickup"), t.pickup_location || "");
+          setSelect2Val($("#editLeadDrop"), t.drop_location || "");
+
+          const initialDest = (t.destination || "").trim();
+          const initialSubject = (d.subject || "").trim();
+
+          if (initialDest) {
+            setSelect2Val($("#editLeadDestination"), initialDest);
+            self.detectDestinationFromSubject(initialDest, function (match) {
+              if (match && match.id) {
+                setSelect2Val($("#editLeadDestination"), match.id, match.text || match.id);
+              }
+            });
+          } else if (initialSubject) {
+            // Fetch matching city name from Package / Subject and show as selected
+            self.detectDestinationFromSubject(initialSubject, function (match) {
+              if (match && match.id) {
+                setSelect2Val($("#editLeadDestination"), match.id, match.text || match.id);
+              } else {
+                setSelect2Val($("#editLeadDestination"), initialSubject);
+              }
+            });
+          } else {
+            setSelect2Val($("#editLeadDestination"), "");
+          }
+
+          self.initSingleDatePickers();
+          if (t.date_of_travel && $("#editLeadTravelDate").data("daterangepicker")) {
+            if (typeof moment !== "undefined" && moment(t.date_of_travel, "YYYY-MM-DD", true).isValid()) {
+              $("#editLeadTravelDate").data("daterangepicker").setStartDate(moment(t.date_of_travel, "YYYY-MM-DD"));
+              $("#editLeadTravelDate").data("daterangepicker").setEndDate(moment(t.date_of_travel, "YYYY-MM-DD"));
+            }
+          }
         },
       );
+
+      // Fetch and match city name on Package / Subject field change if destination is empty or matching
+      $(document).on("blur change", "#editLeadSubject", function () {
+        const subj = $(this).val().trim();
+        if (!subj) return;
+        self.detectDestinationFromSubject(subj, function (match) {
+          if (match && match.id) {
+            const currentDest = $("#editLeadDestination").val();
+            if (!currentDest || currentDest === subj) {
+              const optText = match.text || match.id;
+              $("#editLeadDestination")
+                .empty()
+                .append(new Option(optText, match.id, true, true))
+                .trigger("change");
+            }
+          }
+        });
+      });
 
       // Split name when space entered in First Name if Last Name is empty
       $(document).on("blur change", "#editLeadFirstName", function () {
@@ -981,6 +1212,22 @@
           return;
         }
 
+        const travelDate = $("#editLeadTravelDate").val();
+        if (travelDate && typeof moment !== "undefined") {
+          const mDate = moment(travelDate, "YYYY-MM-DD", true);
+          if (mDate.isValid() && mDate.isBefore(moment().startOf("day"))) {
+            self.notify("Date of travel must be today or a future date.", "warning");
+            return;
+          }
+        }
+
+        const destinationVal = $("#editLeadDestination").val() || "";
+        let subjectVal = $("#editLeadSubject").val().trim();
+        if (!subjectVal && destinationVal) {
+          subjectVal = destinationVal;
+          $("#editLeadSubject").val(subjectVal);
+        }
+
         const $btn = $(this);
         $btn.prop("disabled", true).text("Saving...");
 
@@ -994,13 +1241,16 @@
           email: $("#editLeadEmail").val().trim(),
           mobile: mobile,
           alt_mobile: $("#editLeadAltMobile").val().trim(),
-          current_location: $("#editLeadCurrentLocation").val().trim(),
-          subject: $("#editLeadSubject").val().trim(),
-          package: $("#editLeadSubject").val().trim(),
+          current_location: $("#editLeadCurrentLocation").val() || "",
+          destination: destinationVal,
+          destination_city: destinationVal,
+          city: destinationVal,
+          subject: subjectVal,
+          package: subjectVal,
           date_of_travel: $("#editLeadTravelDate").val(),
           duration_days: $("#editLeadDuration").val(),
-          pickup_location: $("#editLeadPickup").val().trim(),
-          drop_location: $("#editLeadDrop").val().trim(),
+          pickup_location: $("#editLeadPickup").val() || "",
+          drop_location: $("#editLeadDrop").val() || "",
           adults: $("#editLeadAdults").val(),
           children: $("#editLeadChildren").val(),
           infants: $("#editLeadInfants").val(),
@@ -1043,7 +1293,8 @@
         "#btnHeroSendItinerary, #btnSideSendItinerary",
         function () {
           const d = self.leadData || {};
-          const dest = (d.subject || "").trim();
+          const t = d.travel_details || {};
+          const dest = (t.destination || d.subject || "").trim();
 
           $("#modalSendItinerary").addClass("is-active");
 
@@ -1058,16 +1309,20 @@
           );
           self.selectedPackage = null;
 
+          // Initialize V3 Cities API for destination
+          self.initCitySelect2(
+            $("#itineraryDestinationInput"),
+            $("#modalSendItinerary"),
+            "-- Search or Select Destination City / Country --",
+          );
+
           if (self.leadData) {
             $("#itinModalLeadBadge").text(
               `Lead #${self.leadData.id}: ${self.leadData.name}`,
             );
             if (dest) {
               const $destInput = $("#itineraryDestinationInput");
-              if (!$destInput.find(`option[value="${dest}"]`).length) {
-                $destInput.append(new Option(dest, dest, true, true));
-              }
-              $destInput.val(dest).trigger("change");
+              $destInput.empty().append(new Option(dest, dest, true, true)).trigger("change");
             }
           }
 
@@ -1079,13 +1334,6 @@
               minimumResultsForSearch: Infinity,
             });
           }
-
-          // Initialize V3 Cities API for destination
-          self.initCitySelect2(
-            $("#itineraryDestinationInput"),
-            $("#modalSendItinerary"),
-            "-- Search or Select Destination City / Country --",
-          );
         },
       );
 
@@ -1922,7 +2170,7 @@
       });
 
       // 9. Other Modals
-      $(document).on("click", "#btnHeroSetFollowUp", function () {
+      $(document).on("click", "#btnHeroSetFollowUp, #btnSideSetFollowUp", function () {
         $(".v3-tab-link[data-tab='tab-activity']").trigger("click");
         $(".v3-composer-type-btn[data-type='followup']").trigger("click");
         $("#composerNoteInput").focus();
@@ -1942,6 +2190,7 @@
         "#btnOpenPaymentModal, #btnOpenPaymentModalTab, #btnSideRecordPayment",
         function () {
           $("#modalUpdatePayment").addClass("is-active");
+          self.initSingleDatePickers();
         },
       );
 
@@ -2253,6 +2502,89 @@
       });
     },
 
+    findBestCityMatch: function (originalText, results) {
+      if (!results || !results.length) return null;
+      const lower = (originalText || "").toLowerCase().trim();
+
+      // Priority 1: Match city or id directly in originalText
+      for (let i = 0; i < results.length; i++) {
+        const item = results[i];
+        const cityName = (item.city || item.id || "").toLowerCase().trim();
+        if (cityName && (lower.includes(cityName) || cityName.includes(lower))) {
+          return item;
+        }
+      }
+
+      // Priority 2: Match state directly in originalText
+      for (let i = 0; i < results.length; i++) {
+        const item = results[i];
+        const stateName = (item.state || "").toLowerCase().trim();
+        if (stateName && (lower.includes(stateName) || stateName.includes(lower))) {
+          return item;
+        }
+      }
+
+      // Priority 3: First result from search
+      return results[0] || null;
+    },
+
+    detectDestinationFromSubject: function (subjectText, callback) {
+      const self = this;
+      if (!subjectText || typeof subjectText !== "string") {
+        if (callback) callback(null);
+        return;
+      }
+
+      // Clean common tourism noise words
+      const cleanText = subjectText
+        .replace(/\b(\d+N\/?\d*D|\d+\s*(nights?|days?)|tour|package|holiday|trip|honeymoon|special|custom|itinerary|vacation|group|couple|family|deluxe|standard|premium|budget|super|luxury|stay|resort|hotel|enquiry|booking)\b/gi, " ")
+        .replace(/[^a-zA-Z\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      const candidateWords = cleanText ? cleanText.split(/\s+/).filter(function (w) { return w.length >= 3; }) : [];
+      const searchTerm = cleanText || (candidateWords.length ? candidateWords[0] : subjectText.trim());
+
+      if (!searchTerm) {
+        if (callback) callback(null);
+        return;
+      }
+
+      $.ajax({
+        url: "/api/v3/cities/",
+        type: "GET",
+        data: { q: searchTerm },
+        dataType: "json",
+        success: function (res) {
+          const results = (res && res.results) || [];
+          if (!results.length && candidateWords.length > 1) {
+            // Fallback: search with first individual keyword
+            $.ajax({
+              url: "/api/v3/cities/",
+              type: "GET",
+              data: { q: candidateWords[0] },
+              dataType: "json",
+              success: function (res2) {
+                const results2 = (res2 && res2.results) || [];
+                const match = self.findBestCityMatch(subjectText, results2);
+                if (callback) callback(match);
+              },
+              error: function () {
+                if (callback) callback(null);
+              },
+            });
+            return;
+          }
+
+          const match = self.findBestCityMatch(subjectText, results);
+          if (callback) callback(match);
+        },
+        error: function () {
+          if (callback) callback(null);
+        },
+      });
+    },
+
     initCitySelect2: function ($el, $dropdownParent, placeholder) {
       if (!$el || !$el.length || typeof $.fn.select2 === "undefined") return;
 
@@ -2283,6 +2615,83 @@
         },
       });
     },
+
+    initSingleDatePickers: function () {
+      if (typeof $.fn.daterangepicker === "undefined") return;
+
+      $(".v3-single-datepicker-input").each(function () {
+        const $el = $(this);
+        if ($el.data("daterangepicker")) {
+          $el.data("daterangepicker").remove();
+        }
+
+        const initialVal = $el.val();
+        let startMoment = typeof moment !== "undefined" ? moment() : undefined;
+        if (
+          initialVal &&
+          typeof moment !== "undefined" &&
+          moment(initialVal, "YYYY-MM-DD", true).isValid()
+        ) {
+          startMoment = moment(initialVal, "YYYY-MM-DD");
+        }
+
+        const curYear = typeof moment !== "undefined" ? moment().year() : 2026;
+        const isFutureOnly =
+          $el.attr("id") === "editLeadTravelDate" ||
+          $el.data("future-only") === true ||
+          $el.attr("data-future-only") === "true";
+
+        let minDateOpt = false;
+        let minYearOpt = curYear - 10;
+        if (isFutureOnly) {
+          minDateOpt = typeof moment !== "undefined" ? moment().startOf("day") : false;
+          minYearOpt = curYear;
+          if (startMoment && typeof moment !== "undefined" && startMoment.isBefore(moment().startOf("day"))) {
+            startMoment = moment().startOf("day");
+          }
+        }
+
+        $el.daterangepicker(
+          {
+            singleDatePicker: true,
+            showDropdowns: true,
+            minDate: minDateOpt,
+            minYear: minYearOpt,
+            maxYear: curYear + 15,
+            autoApply: true,
+            autoUpdateInput: false,
+            startDate: startMoment,
+            opens: "left",
+            drops: "down",
+            locale: {
+              format: "YYYY-MM-DD",
+            },
+          },
+          function (chosen) {
+            $el.val(chosen.format("YYYY-MM-DD")).trigger("change");
+          }
+        );
+
+        $el.on("apply.daterangepicker", function (ev, picker) {
+          $(this).val(picker.startDate.format("YYYY-MM-DD")).trigger("change");
+        });
+
+        $el.on("show.daterangepicker", function (ev, picker) {
+          if (picker && picker.container) {
+            picker.container.addClass("single");
+            picker.container.find(".drp-calendar.right").css("display", "none");
+            picker.container.find(".ranges").css("display", "none");
+            picker.container.find(".drp-buttons").css("display", "none");
+          }
+        });
+
+        // Ensure container is strictly hidden upon instantiation
+        const pickerObj = $el.data("daterangepicker");
+        if (pickerObj && pickerObj.container) {
+          pickerObj.container.hide().css("display", "none");
+        }
+      });
+    },
   };
 
   // Run on page ready and SPA transitions
@@ -2290,7 +2699,9 @@
     window.V3LeadView.init();
   });
 
-  $(document).on("spa:loaded", function () {
-    window.V3LeadView.init();
-  });
+  $(document)
+    .off("spa:loaded.v3LeadView")
+    .on("spa:loaded.v3LeadView", function () {
+      window.V3LeadView.init();
+    });
 });

@@ -10894,13 +10894,197 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   color: #ffffff !important;
 }
 
-/* Fast Actions Sidebar List */
-.v3-sidebar-actions-list {
+/* Fast Actions Sidebar List — Color Coded for Telecallers */
+.v3-sidebar-actions-list,
+.v3-fast-actions-grid {
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
 }
 
+.btn-fast-tile {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 8px 10px !important;
+  border-radius: 9px !important;
+  background: #ffffff !important;
+  border: 1.5px solid #e2e8f0 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  outline: none !important;
+  transition: all 0.16s ease !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.btn-fast-tile:hover {
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.07) !important;
+}
+
+.fast-tile-icon {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 15px !important;
+  flex-shrink: 0 !important;
+  transition: all 0.16s ease !important;
+}
+
+.fast-tile-icon svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+.fast-tile-meta {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1px !important;
+  flex: 1 1 auto !important;
+  overflow: hidden !important;
+}
+
+.fast-tile-title {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  line-height: 1.2 !important;
+}
+
+.fast-tile-sub {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Color Coding Variants */
+.btn-fast-tile.tile-wa {
+  border-color: #bbf7d0 !important;
+  background: #f0fdf4 !important;
+}
+.btn-fast-tile.tile-wa .fast-tile-icon {
+  background: #22c55e !important;
+  color: #ffffff !important;
+}
+.btn-fast-tile.tile-wa:hover {
+  border-color: #16a34a !important;
+  background: #dcfce7 !important;
+}
+
+.btn-fast-tile.tile-call {
+  border-color: #bae6fd !important;
+  background: #f0f9ff !important;
+}
+.btn-fast-tile.tile-call .fast-tile-icon {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+.btn-fast-tile.tile-call:hover {
+  border-color: #0284c7 !important;
+  background: #e0f2fe !important;
+}
+
+.btn-fast-tile.tile-followup {
+  border-color: #fde68a !important;
+  background: #fffbeb !important;
+}
+.btn-fast-tile.tile-followup .fast-tile-icon {
+  background: #f59e0b !important;
+  color: #ffffff !important;
+}
+.btn-fast-tile.tile-followup:hover {
+  border-color: #d97706 !important;
+  background: #fef3c7 !important;
+}
+
+.btn-fast-tile.tile-itinerary {
+  border-color: #99f6e4 !important;
+  background: #f0fdfa !important;
+}
+.btn-fast-tile.tile-itinerary .fast-tile-icon {
+  background: #0d9488 !important;
+  color: #ffffff !important;
+}
+.btn-fast-tile.tile-itinerary:hover {
+  border-color: #0f766e !important;
+  background: #ccfbf1 !important;
+}
+
+.btn-fast-tile.tile-edit {
+  border-color: #c7d2fe !important;
+  background: #eef2ff !important;
+}
+.btn-fast-tile.tile-edit .fast-tile-icon {
+  background: #6366f1 !important;
+  color: #ffffff !important;
+}
+.btn-fast-tile.tile-edit:hover {
+  border-color: #4f46e5 !important;
+  background: #e0e7ff !important;
+}
+
+.btn-fast-tile.tile-pay-record {
+  border-color: #a7f3d0 !important;
+  background: #ecfdf5 !important;
+}
+.btn-fast-tile.tile-pay-record .fast-tile-icon {
+  background: #10b981 !important;
+  color: #ffffff !important;
+}
+.btn-fast-tile.tile-pay-record:hover {
+  border-color: #059669 !important;
+  background: #d1fae5 !important;
+}
+
+.btn-fast-tile.tile-pay-link {
+  border-color: #ddd6fe !important;
+  background: #f5f3ff !important;
+}
+.btn-fast-tile.tile-pay-link .fast-tile-icon {
+  background: #8b5cf6 !important;
+  color: #ffffff !important;
+}
+.btn-fast-tile.tile-pay-link:hover {
+  border-color: #7c3aed !important;
+  background: #ede9fe !important;
+}
+
+.btn-fast-tile.tile-convert {
+  border-color: #86efac !important;
+  background: #f0fdf4 !important;
+}
+.btn-fast-tile.tile-convert .fast-tile-icon {
+  background: #16a34a !important;
+  color: #ffffff !important;
+}
+.btn-fast-tile.tile-convert:hover {
+  border-color: #15803d !important;
+  background: #dcfce7 !important;
+}
+
+.btn-fast-tile.tile-close {
+  border-color: #fecdd3 !important;
+  background: #fff1f2 !important;
+}
+.btn-fast-tile.tile-close .fast-tile-icon {
+  background: #e11d48 !important;
+  color: #ffffff !important;
+}
+.btn-fast-tile.tile-close:hover {
+  border-color: #be123c !important;
+  background: #ffe4e6 !important;
+}
+
+/* Backward compatibility fallback */
 .btn-v3-side-action {
   display: flex !important;
   align-items: center !important;
@@ -10919,6 +11103,45 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   text-decoration: none !important;
   outline: none !important;
   box-sizing: border-box !important;
+}
+
+/* Unassigned Lead State Banner in Fast Actions */
+.v3-unassigned-lead-banner {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  padding: 22px 14px !important;
+  background: #f8fafc !important;
+  border: 1.5px dashed #cbd5e1 !important;
+  border-radius: 10px !important;
+  gap: 8px !important;
+}
+
+.v3-unassigned-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  background: #e2e8f0 !important;
+  color: #64748b !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+}
+
+.v3-unassigned-title {
+  margin: 0 !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #334155 !important;
+}
+
+.v3-unassigned-desc {
+  margin: 0 !important;
+  font-size: 11.5px !important;
+  color: #64748b !important;
+  line-height: 1.4 !important;
 }
 
 .btn-v3-side-action:hover {
@@ -11057,8 +11280,67 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  padding: 16px 20px !important;
-  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 14px 20px !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  gap: 12px !important;
+}
+
+.v3-modal-header-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+}
+
+.v3-modal-header-icon-box {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 10px !important;
+  background: #f0f9ff !important;
+  color: #0284c7 !important;
+  border: 1px solid #e0f2fe !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 17px !important;
+  flex-shrink: 0 !important;
+}
+
+.v3-modal-header-icon-box.icon-edit {
+  background: #eef2ff !important;
+  color: #4f46e5 !important;
+  border-color: #e0e7ff !important;
+}
+
+.v3-modal-header-icon-box.icon-followup {
+  background: #fffbeb !important;
+  color: #d97706 !important;
+  border-color: #fef3c7 !important;
+}
+
+.v3-modal-header-icon-box.icon-link {
+  background: #f5f3ff !important;
+  color: #7c3aed !important;
+  border-color: #ede9fe !important;
+}
+
+.v3-modal-header-icon-box.icon-payment {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
+  border-color: #d1fae5 !important;
+}
+
+.v3-modal-header-icon-box.icon-close {
+  background: #fff1f2 !important;
+  color: #e11d48 !important;
+  border-color: #ffe4e6 !important;
+}
+
+.v3-modal-title-wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
 }
 
 .v3-modal-title {
@@ -11066,18 +11348,40 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   font-size: 15px !important;
   font-weight: 700 !important;
   color: #0f172a !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.25 !important;
+}
+
+.v3-modal-subtitle {
+  margin: 0 !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+  line-height: 1.2 !important;
 }
 
 .v3-modal-close-btn {
-  background: none !important;
-  border: none !important;
-  font-size: 16px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  font-size: 15px !important;
   color: #64748b !important;
   cursor: pointer !important;
-  padding: 4px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s ease !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
 }
+
 .v3-modal-close-btn:hover {
-  color: #0f172a !important;
+  background: #fee2e2 !important;
+  color: #ef4444 !important;
+  border-color: #fca5a5 !important;
+  transform: rotate(90deg) !important;
 }
 
 .v3-modal-body {
@@ -11112,6 +11416,11 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
 .v3-modal-input:focus {
   border-color: #0284c7 !important;
   box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15) !important;
+}
+
+.v3-single-datepicker-input {
+  background-color: #ffffff !important;
+  cursor: pointer !important;
 }
 
 .v3-modal-textarea {
@@ -19578,9 +19887,91 @@ tr:hover .vehicle-table-thumb {
 }
 
 /* =====================================================
+   V3 Lead View Loader & Empty States — Premium Theme
+   ===================================================== */
+.lead-view-wrapper {
+  width: 100% !important;
+  min-height: 480px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.v3-leads-table-loader {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 340px !important;
+  padding: 48px 24px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04) !important;
+  text-align: center !important;
+  margin: 16px 0 !important;
+}
+
+.v3-table-spinner {
+  position: relative !important;
+  width: 52px !important;
+  height: 52px !important;
+  margin-bottom: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.v3-spinner-ring {
+  position: absolute !important;
+  inset: 0 !important;
+  border: 3.5px solid #f1f5f9 !important;
+  border-top-color: #e76317 !important;
+  border-right-color: #0284c7 !important;
+  border-radius: 50% !important;
+  animation: v3SpinnerRotate 0.85s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+}
+
+.v3-spinner-inner-dot {
+  width: 10px !important;
+  height: 10px !important;
+  background: linear-gradient(135deg, #e76317, #f97316) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 10px rgba(231, 99, 23, 0.4) !important;
+  animation: v3SpinnerPulse 1.2s ease-in-out infinite !important;
+}
+
+@keyframes v3SpinnerRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes v3SpinnerPulse {
+  0%, 100% { transform: scale(0.75); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.v3-loader-title {
+  margin: 0 0 6px 0 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  letter-spacing: -0.01em !important;
+}
+
+.v3-loader-subtitle {
+  margin: 0 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+  max-width: 360px !important;
+  line-height: 1.45 !important;
+}
+
+/* =====================================================
    DateRangePicker Popup — Executive V3 Theme System
    ===================================================== */
 .daterangepicker {
+  display: none !important;
   position: absolute !important;
   font-family: inherit !important;
   font-size: 13px !important;
@@ -19601,12 +19992,15 @@ tr:hover .vehicle-table-thumb {
 
 /* Ensure closed / hidden daterangepicker is strictly hidden */
 .daterangepicker[style*="display: none"],
-.daterangepicker[style*="display:none"] {
+.daterangepicker[style*="display:none"],
+.daterangepicker:not([style*="display: block"]):not([style*="display:block"]) {
   display: none !important;
 }
 
-/* Preset-Only Mode: Initial compact state */
-.daterangepicker.show-ranges:not(.show-calendar):not([style*="display: none"]):not([style*="display:none"]) {
+/* Preset-Only Mode: When OPEN and not single and not show-calendar */
+.daterangepicker.show-ranges:not(.show-calendar):not(.single)[style*="display: block"],
+.daterangepicker.show-ranges:not(.show-calendar):not(.single)[style*="display:block"] {
+  display: block !important;
   width: 175px !important;
   min-width: 175px !important;
   max-width: 180px !important;
@@ -19630,8 +20024,73 @@ tr:hover .vehicle-table-thumb {
   display: none !important;
 }
 
+/* Single DatePicker Mode (Clean single-date month calendar): When OPEN */
+.daterangepicker.single[style*="display: block"],
+.daterangepicker.single[style*="display:block"] {
+  display: block !important;
+  width: 275px !important;
+  min-width: 275px !important;
+  max-width: 285px !important;
+  padding: 12px !important;
+  z-index: 9999999 !important;
+}
+
+.daterangepicker.single .ranges {
+  display: none !important;
+}
+
+.daterangepicker.single .drp-calendar.right {
+  display: none !important;
+}
+
+.daterangepicker.single .drp-calendar.left {
+  display: block !important;
+  float: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.daterangepicker.single .drp-buttons {
+  display: none !important;
+}
+
+.daterangepicker select.monthselect,
+.daterangepicker select.yearselect {
+  display: inline-block !important;
+  font-size: 12px !important;
+  font-family: inherit !important;
+  font-weight: 600 !important;
+  padding: 2px 4px !important;
+  height: 28px !important;
+  margin: 0 2px !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  color: #0f172a !important;
+  background: #ffffff !important;
+  cursor: pointer !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+}
+
+.daterangepicker select.monthselect {
+  width: 76px !important;
+}
+
+.daterangepicker select.yearselect {
+  width: 68px !important;
+}
+
+.daterangepicker select.monthselect:focus,
+.daterangepicker select.yearselect:focus {
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15) !important;
+}
+
 /* Expanded Dual-Calendar Mode: When user clicks Custom Range */
-.daterangepicker.show-calendar:not([style*="display: none"]):not([style*="display:none"]) {
+.daterangepicker.show-calendar:not(.single)[style*="display: block"],
+.daterangepicker.show-calendar:not(.single)[style*="display:block"] {
   display: grid !important;
   grid-template-columns: 140px 215px 215px !important;
   grid-template-areas:
@@ -19656,7 +20115,7 @@ tr:hover .vehicle-table-thumb {
   box-sizing: border-box !important;
 }
 
-.daterangepicker.show-calendar .drp-calendar.left {
+.daterangepicker.show-calendar:not(.single) .drp-calendar.left {
   grid-area: calleft !important;
   float: none !important;
   clear: none !important;
@@ -19667,7 +20126,7 @@ tr:hover .vehicle-table-thumb {
   border-right: none !important;
 }
 
-.daterangepicker.show-calendar .drp-calendar.right {
+.daterangepicker.show-calendar:not(.single) .drp-calendar.right {
   grid-area: calright !important;
   float: none !important;
   clear: none !important;
@@ -19676,6 +20135,20 @@ tr:hover .vehicle-table-thumb {
   width: 215px !important;
   box-sizing: border-box !important;
   border-left: none !important;
+}
+
+.daterangepicker.single .drp-calendar.right,
+.daterangepicker.single .drp-calendar.right *,
+.daterangepicker.single .ranges,
+.daterangepicker.single .drp-buttons {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
 }
 
 .daterangepicker .calendar-table {

@@ -44,8 +44,8 @@ $leadQuery = "SELECT
     p.profile_display_name AS agent_name,
     sa.site_access_type AS agent_role
 FROM {$tblPrefix}enquiry e
-LEFT JOIN {$tblPrefix}profile p ON e.enquiry_agent = p.profile_user_id
-LEFT JOIN {$tblPrefix}site_access sa ON (e.enquiry_agent = sa.site_access_user_id AND sa.site_access_site_id = {$siteId})
+LEFT JOIN {$tblPrefix}profile p ON (e.enquiry_agent > 0 AND e.enquiry_agent = p.profile_user_id)
+LEFT JOIN {$tblPrefix}site_access sa ON (e.enquiry_agent > 0 AND e.enquiry_agent = sa.site_access_user_id AND (sa.site_access_site_id = e.enquiry_site_id OR sa.site_access_site_id = {$siteId}))
 WHERE e.enquiry_id = {$leadId} AND {$siteFilter}{$userFilter}
 LIMIT 1";
 
@@ -274,6 +274,33 @@ if ($travelDate === '01 Jan 1970' || empty($extraDetails['date_of_travel'])) {
     $travelDate = '';
 }
 
+// Infer Destination from extraDetails, enquiry_city, or matching enquiry_subject with known cities/states
+$destinationCity = trim($extraDetails['destination'] ?? ($extraDetails['city'] ?? ($lead['enquiry_city'] ?? '')));
+if (empty($destinationCity) && !empty($lead['enquiry_subject'])) {
+    $cleanSubj = trim(preg_replace('/\b(\d+N\/?\d*D|\d+\s*(nights?|days?)|tour|package|holiday|trip|honeymoon|special|custom|itinerary|vacation|group|couple|family|deluxe|standard|premium|budget|super|luxury|stay|resort|hotel)\b/i', '', $lead['enquiry_subject']));
+    $cleanSubj = trim(preg_replace('/[^a-zA-Z\s]/', ' ', $cleanSubj));
+    if (!empty($cleanSubj)) {
+        $cleanSubjEsc = mysqli_real_escape_string($connection, $cleanSubj);
+        $cityMatchQ = "SELECT city_name FROM {$tblPrefix}city WHERE city_name LIKE '%{$cleanSubjEsc}%' OR '{$cleanSubjEsc}' LIKE CONCAT('%', city_name, '%') ORDER BY CHAR_LENGTH(city_name) DESC LIMIT 1";
+        if ($cmRes = mysqli_query($connection, $cityMatchQ)) {
+            if ($cmRow = mysqli_fetch_assoc($cmRes)) {
+                $destinationCity = trim($cmRow['city_name']);
+            }
+        }
+        if (empty($destinationCity)) {
+            $stateMatchQ = "SELECT state_name FROM {$tblPrefix}state WHERE state_name LIKE '%{$cleanSubjEsc}%' OR '{$cleanSubjEsc}' LIKE CONCAT('%', state_name, '%') ORDER BY CHAR_LENGTH(state_name) DESC LIMIT 1";
+            if ($smRes = mysqli_query($connection, $stateMatchQ)) {
+                if ($smRow = mysqli_fetch_assoc($smRes)) {
+                    $destinationCity = trim($smRow['state_name']);
+                }
+            }
+        }
+    }
+    if (empty($destinationCity)) {
+        $destinationCity = trim($lead['enquiry_subject']);
+    }
+}
+
 $response = [
     'status' => 'success',
     'data' => [
@@ -311,6 +338,7 @@ $response = [
             'current_location' => trim($extraDetails['current_location'] ?? ''),
             'pickup_location' => trim($extraDetails['pickup_location'] ?? ''),
             'drop_location' => trim($extraDetails['drop_location'] ?? ''),
+            'destination' => $destinationCity,
             'requirements' => trim($extraDetails['requirements'] ?? ''),
             'custom_fields' => $extraDetails,
         ],

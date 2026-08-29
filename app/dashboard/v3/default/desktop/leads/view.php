@@ -15,6 +15,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
 ?>
 <div id="leadViewApp" class="lead-view-wrapper"
     data-lead-id="<?php echo htmlspecialchars($rawLeadId); ?>"
+    data-user-role="<?php echo htmlspecialchars(isset($site_access_type) ? $site_access_type : 'administrator'); ?>"
     data-site-name="<?php echo htmlspecialchars(defined('SITE_NAME') ? SITE_NAME : ''); ?>"
     data-site-logo="<?php echo htmlspecialchars(defined('SITE_LOGO') ? SITE_LOGO : ''); ?>"
     data-site-domain="<?php echo htmlspecialchars(defined('COMPANY_SITE_DOMAIN') ? COMPANY_SITE_DOMAIN : (defined('SITE_DOMAIN') ? SITE_DOMAIN : '')); ?>"
@@ -37,8 +38,16 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
 <div class="v3-modal-overlay" id="modalEditLead">
     <div class="v3-modal-dialog v3-modal-dialog-lg">
         <div class="v3-modal-header">
-            <h4 class="v3-modal-title"><i class="fi fi-rr-edit"></i> Edit Lead & Travel Details</h4>
-            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger"><i class="fi fi-rr-cross"></i></button>
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box icon-edit">
+                    <i class="fi fi-rr-edit"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Edit Lead & Travel Details</h4>
+                    <span class="v3-modal-subtitle">Update customer information and tour requirements</span>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
         </div>
         <div class="v3-modal-body v3-modal-body-scrollable">
             <input type="hidden" id="editLeadId" value="<?php echo htmlspecialchars($rawLeadId); ?>">
@@ -66,19 +75,23 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                 </div>
                 <div class="v3-modal-form-group">
                     <label class="v3-modal-label">Current City / Location</label>
-                    <input type="text" id="editLeadCurrentLocation" class="v3-modal-input" placeholder="e.g. Mumbai, India">
+                    <select id="editLeadCurrentLocation" class="v3-modal-select"></select>
                 </div>
             </div>
 
             <h5 class="v3-modal-subheading">Travel Logistics</h5>
             <div class="v3-form-grid-2">
                 <div class="v3-modal-form-group">
-                    <label class="v3-modal-label">Package / Subject *</label>
+                    <label class="v3-modal-label">Tour Destination (City / State) *</label>
+                    <select id="editLeadDestination" class="v3-modal-select"></select>
+                </div>
+                <div class="v3-modal-form-group">
+                    <label class="v3-modal-label">Package / Subject</label>
                     <input type="text" id="editLeadSubject" class="v3-modal-input" placeholder="e.g. Dubai Tour Package">
                 </div>
                 <div class="v3-modal-form-group">
                     <label class="v3-modal-label">Date of Travel</label>
-                    <input type="date" id="editLeadTravelDate" class="v3-modal-input">
+                    <input type="text" id="editLeadTravelDate" class="v3-modal-input v3-single-datepicker-input" data-future-only="true" placeholder="YYYY-MM-DD" autocomplete="off" readonly>
                 </div>
                 <div class="v3-modal-form-group">
                     <label class="v3-modal-label">Trip Duration (Nights)</label>
@@ -86,11 +99,11 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                 </div>
                 <div class="v3-modal-form-group">
                     <label class="v3-modal-label">Pickup Point</label>
-                    <input type="text" id="editLeadPickup" class="v3-modal-input" placeholder="e.g. Delhi Airport">
+                    <select id="editLeadPickup" class="v3-modal-select"></select>
                 </div>
                 <div class="v3-modal-form-group">
                     <label class="v3-modal-label">Drop Point</label>
-                    <input type="text" id="editLeadDrop" class="v3-modal-input" placeholder="e.g. Delhi Airport">
+                    <select id="editLeadDrop" class="v3-modal-select"></select>
                 </div>
             </div>
 
@@ -355,8 +368,16 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
 <div class="v3-modal-overlay" id="modalSetFollowUp">
     <div class="v3-modal-dialog">
         <div class="v3-modal-header">
-            <h4 class="v3-modal-title">Schedule Follow-Up Reminder</h4>
-            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger"><i class="fi fi-rr-cross"></i></button>
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box icon-followup">
+                    <i class="fi fi-rr-alarm-clock"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Schedule Follow-Up</h4>
+                    <span class="v3-modal-subtitle">Set callback reminder and call objective</span>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
         </div>
         <div class="v3-modal-body">
             <div class="v3-modal-form-group">
@@ -391,8 +412,16 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
 <div class="v3-modal-overlay" id="modalSendPaymentLink">
     <div class="v3-modal-dialog">
         <div class="v3-modal-header">
-            <h4 class="v3-modal-title">Send Payment Link</h4>
-            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger"><i class="fi fi-rr-cross"></i></button>
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box icon-link">
+                    <i class="fi fi-rr-link"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Send Payment Link</h4>
+                    <span class="v3-modal-subtitle">Generate deposit link for instant online collection</span>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
         </div>
         <div class="v3-modal-body">
             <div class="v3-modal-form-group">
@@ -419,8 +448,16 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
 <div class="v3-modal-overlay" id="modalUpdatePayment">
     <div class="v3-modal-dialog">
         <div class="v3-modal-header">
-            <h4 class="v3-modal-title">Log Payment Record</h4>
-            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger"><i class="fi fi-rr-cross"></i></button>
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box icon-payment">
+                    <i class="fi fi-rr-indian-rupee-sign"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Record Payment Received</h4>
+                    <span class="v3-modal-subtitle">Log cash, UPI, or bank transfer confirmation</span>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
         </div>
         <div class="v3-modal-body">
             <div class="v3-modal-form-group">
@@ -440,7 +477,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
             </div>
             <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Payment Date *</label>
-                <input type="date" id="modalPayDate" class="v3-modal-input" value="<?php echo date('Y-m-d'); ?>">
+                <input type="text" id="modalPayDate" class="v3-modal-input v3-single-datepicker-input" placeholder="YYYY-MM-DD" value="<?php echo date('Y-m-d'); ?>" autocomplete="off" readonly>
             </div>
             <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Transaction / UTR Reference Number</label>
@@ -462,8 +499,16 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
 <div class="v3-modal-overlay" id="modalCloseLead">
     <div class="v3-modal-dialog">
         <div class="v3-modal-header">
-            <h4 class="v3-modal-title">Close or Cancel Lead</h4>
-            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger"><i class="fi fi-rr-cross"></i></button>
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box icon-close">
+                    <i class="fi fi-rr-cross-circle"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Close or Cancel Lead</h4>
+                    <span class="v3-modal-subtitle">Specify reason for closing or archiving lead</span>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
         </div>
         <div class="v3-modal-body">
             <div class="v3-modal-form-group">
