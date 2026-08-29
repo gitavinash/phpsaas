@@ -1,34 +1,47 @@
 <div class="kanban-widget-wrapper" id="kanbanWidgetWrapper">
     <div class="kanban-header-bar">
         <div class="kanban-header-title">
-            <i class="fi-rr-apps"></i>
+            <i class="fi fi-rr-apps"></i>
             <div>
                 <h3>Lead Pipeline Kanban Board</h3>
-                <p>Drag and drop leads to update status in real time</p>
+                <p>Real-time drag &amp; drop lead management</p>
             </div>
         </div>
         <div class="kanban-header-actions">
+            <!-- Real-time Kanban Search Box -->
             <div class="kanban-search-box">
                 <span class="kanban-search-icon">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
+                    <i class="fi fi-rr-search"></i>
                 </span>
                 <input type="text" class="kanban-search-input" id="kanbanSearchInput" placeholder="Search leads by name, phone, destination...">
                 <button type="button" class="kanban-search-clear-btn" id="kanbanSearchClearBtn" title="Clear search">&times;</button>
             </div>
-            <a href="<?php echo BASE_URL ?>leads/kanban/" class="btn-kanban-fullscreen" id="openKanbanPageBtn" title="Open Full Screen Kanban Workspace">
+
+            <!-- View Switcher (List vs Kanban) -->
+            <div class="leads-pipeline-toggle">
+                <a href="/dashboard/leads/list/" class="leads-view-tab" title="Switch to Table List View">
+                    <i class="fi fi-rr-list"></i> <span>List</span>
+                </a>
+                <a href="/dashboard/leads/kanban/" class="leads-view-tab active" title="Kanban Board View">
+                    <i class="fi fi-rr-apps"></i> <span>Kanban</span>
+                </a>
+            </div>
+
+            <!-- Fullscreen & Add Lead CTAs -->
+            <a href="/dashboard/leads/kanban/" class="btn-kanban-fullscreen" id="openKanbanPageBtn" title="Open Full Screen Kanban Workspace">
                 <i class="fi fi-rr-expand"></i> <span class="btn-fs-label">Full Screen</span>
+            </a>
+            <a href="/dashboard/leads/add/" class="btn-add-pkg-v3" title="Add New Lead">
+                <i class="fi fi-rr-plus"></i> <span>Add Lead</span>
             </a>
         </div>
     </div>
 
     <div class="kanban-columns-grid">
-        <!-- Fresh Enquiries Column -->
+        <!-- Pending Column -->
         <div class="kanban-column col-fresh" data-status="0">
             <div class="kanban-column-header">
-                <span class="kanban-column-title"><i class="fi-rr-inbox"></i> Fresh</span>
+                <span class="kanban-column-title"><i class="fi fi-rr-time-fast"></i> Pending</span>
                 <span class="kanban-count-pill" id="kanban-count-0">0</span>
             </div>
             <div class="kanban-cards-container" id="kanban-container-0" data-status="0">
@@ -36,21 +49,10 @@
             </div>
         </div>
 
-        <!-- Pending Column -->
-        <div class="kanban-column col-pending" data-status="2">
-            <div class="kanban-column-header">
-                <span class="kanban-column-title"><i class="fi-rr-time-fast"></i> Pending</span>
-                <span class="kanban-count-pill" id="kanban-count-2">0</span>
-            </div>
-            <div class="kanban-cards-container" id="kanban-container-2" data-status="2">
-                <div class="kanban-empty-drop-zone"><img src="<?php echo IMG_LIBRARY ?>icons8/dots-loader.gif" alt="Loading..."></div>
-            </div>
-        </div>
-
         <!-- Follow-Up Column -->
         <div class="kanban-column col-followup" data-status="3">
             <div class="kanban-column-header">
-                <span class="kanban-column-title"><i class="fi-rr-phone-call"></i> Follow Up</span>
+                <span class="kanban-column-title"><i class="fi fi-rr-phone-call"></i> Follow Up</span>
                 <span class="kanban-count-pill" id="kanban-count-3">0</span>
             </div>
             <div class="kanban-cards-container" id="kanban-container-3" data-status="3">
@@ -58,10 +60,21 @@
             </div>
         </div>
 
+        <!-- Itinerary Sent Column -->
+        <div class="kanban-column col-pending" data-status="2">
+            <div class="kanban-column-header">
+                <span class="kanban-column-title"><i class="fi fi-rr-paper-plane"></i> Itinerary Sent</span>
+                <span class="kanban-count-pill" id="kanban-count-2">0</span>
+            </div>
+            <div class="kanban-cards-container" id="kanban-container-2" data-status="2">
+                <div class="kanban-empty-drop-zone"><img src="<?php echo IMG_LIBRARY ?>icons8/dots-loader.gif" alt="Loading..."></div>
+            </div>
+        </div>
+
         <!-- Confirmed Column -->
         <div class="kanban-column col-confirmed" data-status="1">
             <div class="kanban-column-header">
-                <span class="kanban-column-title"><i class="fi-rr-check-circle"></i> Confirmed</span>
+                <span class="kanban-column-title"><i class="fi fi-rr-check-circle"></i> Confirmed</span>
                 <span class="kanban-count-pill" id="kanban-count-1">0</span>
             </div>
             <div class="kanban-cards-container" id="kanban-container-1" data-status="1">
