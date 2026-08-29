@@ -90,5 +90,7 @@ echo json_encode([
     'status' => 'success',
     'message' => !empty($followupTime) ? 'Follow-up reminder set successfully.' : 'Note added successfully.',
     'lead_id' => $leadId,
+    'followup_time' => !empty($followupTime) ? date('Y-m-d H:i:s', strtotime($followupTime)) : null,
+    'followup_formatted' => !empty($followupTime) ? date('d M Y, h:i A', strtotime($followupTime)) : null,
 ]);
 exit();

@@ -60,6 +60,48 @@
       }
     },
 
+    scheduleClientReminder: function (followupTimeStr, customerName) {
+      if (!followupTimeStr) return;
+
+      // Ask for browser notification permission if not yet decided
+      if ("Notification" in window && Notification.permission === "default") {
+        try {
+          Notification.requestPermission();
+        } catch (e) {}
+      }
+
+      // Compute 5 minutes before follow-up in milliseconds
+      const followupDate = new Date(followupTimeStr.replace(/-/g, "/"));
+      const targetTimeMs = followupDate.getTime() - (5 * 60 * 1000);
+      const delayMs = targetTimeMs - Date.now();
+
+      // Only schedule if within the next 24 hours and still in the future
+      if (delayMs > 0 && delayMs < 24 * 60 * 60 * 1000) {
+        setTimeout(() => {
+          // 1. Browser Native Notification
+          if ("Notification" in window && Notification.permission === "granted") {
+            try {
+              new Notification(`🔔 Follow-Up in 5 Minutes: ${customerName}`, {
+                body: `Scheduled follow-up is due at ${followupDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}.`,
+                icon: "/favicon.ico",
+              });
+            } catch (e) {}
+          }
+
+          // 2. In-App SweetAlert Toast Modal
+          if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+            Swal.fire({
+              title: "🔔 Follow-Up in 5 Minutes!",
+              text: `Your scheduled follow-up with ${customerName} is due in 5 minutes.`,
+              icon: "warning",
+              confirmButtonColor: "#ea580c",
+              confirmButtonText: "View Activity",
+            });
+          }
+        }, delayMs);
+      }
+    },
+
     getLeadId: function () {
       const urlParams = new URLSearchParams(window.location.search);
       let id = urlParams.get("id") || urlParams.get("leadId") || "";
@@ -1065,7 +1107,12 @@
               .html('<i class="fi fi-rr-check"></i> Post Update');
             if (res.status === "success") {
               $("#composerNoteInput").val("");
-              self.notify("Update logged successfully", "success");
+              self.notify(res.message || "Update logged successfully", "success");
+              
+              if (res.followup_time) {
+                self.scheduleClientReminder(res.followup_time, self.leadData ? self.leadData.name : "Customer");
+              }
+              
               self.loadLeadDetails();
             } else {
               self.notify(res.message || "Failed to post update.", "error");
