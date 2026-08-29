@@ -55,9 +55,15 @@ if (!isset($_COOKIE['user_data'])) {
 
 				/** Define new constant variable */
 
-				define('USER_ID', $user_id);
-				define('COMPANY_ID', (($company_id != '') ? $company_id : '0'));
-				define('VENDOR_ID', (($vendor_id != '') ? $vendor_id : '0'));
+				if (!defined('USER_ID')) {
+					define('USER_ID', $user_id);
+				}
+				if (!defined('COMPANY_ID')) {
+					define('COMPANY_ID', (($company_id != '') ? $company_id : '0'));
+				}
+				if (!defined('VENDOR_ID')) {
+					define('VENDOR_ID', (($vendor_id != '') ? $vendor_id : '0'));
+				}
 
 				/** Define new cookie for logged in user */
 

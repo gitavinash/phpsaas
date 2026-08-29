@@ -138,12 +138,6 @@ if (isset($daterange)) {
         </div>
         <nav class="side-nav">
             <ul>
-                <li class="header-section-name">
-                    <p>Dashboard<span>View performance reports.</span></p>
-                </li>
-
-                <li <?php echo ((ADMIN_BASE_URL == '/') ? 'class="active"' : '') ?>><a href="/dashboard/"><i
-                            class="fi-rr-home"></i> Dashboard</a></li>
 
                 <?php
                 $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
@@ -155,40 +149,8 @@ if (isset($daterange)) {
                 }
                 ?>
 
-                <li class="header-section-name">
-                    <p>Setting<span>Manage profile setting.</span></p>
-                </li>
-
-                <li <?php echo ((strpos(ADMIN_BASE_URL, '/setting/') !== false) ? 'class="active"' : '') ?>>
-                    <a href="/dashboard/setting/"><i class="fi-rr-settings"></i> Setting</a>
-                </li>
-
-                <?php
-
-                if ($site_access_type == 'administrator') { ?>
-
-
-                    <li <?php echo ((strpos(ADMIN_BASE_URL, '/user/') !== false) ? 'class="active"' : '') ?>>
-                        <a href="/dashboard/user/"><i class="fi fi-rr-user"></i> Users</a>
-                        <div class="side-menu">
-                            <ul>
-                                <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                                <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a></li>
-                            </ul>
-                        </div>
-                        <div class="bottom-menu">
-                            <ul>
-                                <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All users</a></li>
-                                <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add new user</a>
-                            </ul>
-                        </div>
-                    </li>
-
-                <?php }
-                ?>
-
                 <li class="appVersion">
-                    <p>App version : <?php echo ALEYA_APP_VERSION ?></p>
+                    <p>App version 3.0</p>
                 </li>
             </ul>
         </nav>

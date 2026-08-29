@@ -126,6 +126,9 @@
 				<script src="<?php echo ADMIN_JS ?>leads.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>report-employees.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>settings.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>company-list.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>company-add.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>company-update.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>integration.js?v=<?php echo time(); ?>"></script>
 				<?php
 				$appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
