@@ -64,7 +64,9 @@ function loadExternalJS(filePath) {
         if (opts.button && !opts.confirmButtonText) {
           opts.confirmButtonText = opts.button;
         }
-        return originalSwal.call(this, opts);
+        var args = Array.prototype.slice.call(arguments);
+        args[0] = opts;
+        return originalSwal.apply(this, args);
       } else if (typeof firstArg === "string" && thirdArg) {
         return originalSwal.call(this, {
           title: firstArg,
@@ -4388,6 +4390,20 @@ $(document).ready(function (e) {
         ensureScriptLoaded(ADMIN_JS + "leads.js?v=" + Date.now(), function () {
           if (window.V3Leads && typeof window.V3Leads.init === "function") {
             window.V3Leads.init();
+          }
+        });
+      }
+    }
+
+    // 5a. Leads Add Form Module
+    const $leadAdd = $("#leadAddApp, .lead-add-page-wrapper");
+    if ($leadAdd.length > 0) {
+      if (window.V3LeadAdd && typeof window.V3LeadAdd.init === "function") {
+        window.V3LeadAdd.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "leads-add.js?v=" + Date.now(), function () {
+          if (window.V3LeadAdd && typeof window.V3LeadAdd.init === "function") {
+            window.V3LeadAdd.init();
           }
         });
       }

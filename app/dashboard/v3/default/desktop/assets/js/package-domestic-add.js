@@ -688,23 +688,6 @@
         })
       };
 
-      // Console log all parameters before making API request
-      console.log("%c=== [V3 Domestic Tour Package AI Generator] ===", "color: #4f46e5; font-size: 14px; font-weight: bold;");
-      console.log("%cSubmitting Parameters to /api/v3/itinerary/generate.php:", "color: #047857; font-weight: 600;");
-      console.table({
-        "Package Title": packageName,
-        "Travel Style": travelStyle,
-        "Pickup City": startingCity,
-        "Drop-off City": endCity,
-        "Destination Stops": destinations.join(" -> "),
-        "Stay Durations (Nights)": durations.join(", "),
-        "Total Nights": durations.reduce(function(a, b) { return a + b; }, 0),
-        "Total Days": durations.reduce(function(a, b) { return a + b; }, 0) + 1,
-        "Outstation Vehicle": outstationVehicle,
-        "Local Sightseeing Vehicle": localSighseeignVehicle
-      });
-      console.log("Full Payload Object:", self.currentStepData);
-
       // Switch to Step 2 & Trigger In-Page AI generation
       self.goToStep(2);
       self.generateAIItinerary();

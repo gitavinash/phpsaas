@@ -269,11 +269,44 @@ if ($aRes = mysqli_query($connection, $agentsQuery)) {
     }
 }
 
-// Format Dates
-$travelDate = !empty($extraDetails['date_of_travel']) ? date('d M Y', strtotime($extraDetails['date_of_travel'])) : '';
-if ($travelDate === '01 Jan 1970' || empty($extraDetails['date_of_travel'])) {
-    $travelDate = '';
+// 5. Fetch Enquiry Profile (Travel Logistics)
+$profileQuery = "SELECT * FROM {$tblPrefix}enquiry_profile WHERE enquiry_profile_ref_id = '{$leadId}' ORDER BY status DESC, enquiry_profile_id DESC LIMIT 1";
+$enquiryProfile = [];
+if ($pRes = mysqli_query($connection, $profileQuery)) {
+    if ($pRow = mysqli_fetch_assoc($pRes)) {
+        $enquiryProfile = $pRow;
+    }
 }
+
+// Format Dates
+$travelDateRaw = !empty($enquiryProfile['date_of_travel']) && $enquiryProfile['date_of_travel'] !== '0000-00-00'
+    ? $enquiryProfile['date_of_travel']
+    : ($extraDetails['date_of_travel'] ?? ($extraDetails['travel_date'] ?? ''));
+
+$travelDate = (!empty($travelDateRaw) && strtotime($travelDateRaw) && date('Y', strtotime($travelDateRaw)) > 1970)
+    ? date('d M Y', strtotime($travelDateRaw))
+    : '';
+
+$durationDays = isset($enquiryProfile['number_of_days']) && (int)$enquiryProfile['number_of_days'] > 0
+    ? (int)$enquiryProfile['number_of_days']
+    : (int)($extraDetails['number_of_days'] ?? 0);
+
+$adults = isset($enquiryProfile['number_of_adults']) && (int)$enquiryProfile['number_of_adults'] > 0
+    ? (int)$enquiryProfile['number_of_adults']
+    : (isset($extraDetails['number_of_adults']) && (int)$extraDetails['number_of_adults'] > 0 ? (int)$extraDetails['number_of_adults'] : 2);
+
+$children = isset($enquiryProfile['number_of_childrens'])
+    ? (int)$enquiryProfile['number_of_childrens']
+    : (int)($extraDetails['number_of_childrens'] ?? ($extraDetails['number_of_children'] ?? 0));
+
+$infants = isset($enquiryProfile['number_of_infants'])
+    ? (int)$enquiryProfile['number_of_infants']
+    : (int)($extraDetails['number_of_infants'] ?? 0);
+
+$currentLocation = trim($enquiryProfile['current_location'] ?? ($extraDetails['current_location'] ?? ($lead['enquiry_city'] ?? '')));
+$pickupLocation = trim($enquiryProfile['pickup_location'] ?? ($extraDetails['pickup_location'] ?? ''));
+$dropLocation = trim($enquiryProfile['drop_location'] ?? ($extraDetails['drop_location'] ?? ''));
+$requirements = trim($enquiryProfile['requirements'] ?? ($extraDetails['requirements'] ?? ($lead['enquiry_message'] ?? '')));
 
 $createdAt = !empty($lead['enquiry_time']) && $lead['enquiry_time'] !== '0000-00-00 00:00:00' ? date('d M Y, h:i A', strtotime($lead['enquiry_time'])) : '';
 $updatedAt = !empty($lead['enquiry_update']) && $lead['enquiry_update'] !== '0000-00-00 00:00:00' ? date('d M Y, h:i A', strtotime($lead['enquiry_update'])) : $createdAt;
@@ -430,15 +463,16 @@ $response = [
         // Travel & Inquiry Details
         'travel_details' => [
             'date_of_travel' => $travelDate,
-            'duration_days' => (int)($extraDetails['number_of_days'] ?? 0),
-            'adults' => (int)($extraDetails['number_of_adults'] ?? 0),
-            'children' => (int)($extraDetails['number_of_childrens'] ?? 0),
-            'infants' => (int)($extraDetails['number_of_infants'] ?? 0),
-            'current_location' => trim($extraDetails['current_location'] ?? ''),
-            'pickup_location' => trim($extraDetails['pickup_location'] ?? ''),
-            'drop_location' => trim($extraDetails['drop_location'] ?? ''),
+            'date_of_travel_raw' => (!empty($travelDateRaw) && strtotime($travelDateRaw) && date('Y', strtotime($travelDateRaw)) > 1970) ? date('Y-m-d', strtotime($travelDateRaw)) : '',
+            'duration_days' => (int)$durationDays,
+            'adults' => (int)$adults,
+            'children' => (int)$children,
+            'infants' => (int)$infants,
+            'current_location' => $currentLocation,
+            'pickup_location' => $pickupLocation,
+            'drop_location' => $dropLocation,
             'destination' => $destinationCity,
-            'requirements' => trim($extraDetails['requirements'] ?? ''),
+            'requirements' => $requirements,
             'custom_fields' => $extraDetails,
         ],
 
