@@ -829,7 +829,7 @@
           : `<span class="meta-txt muted">No email</span>`;
 
         const noteSnippet = lead.recent_note
-          ? `<div class="lead-note-badge"><i class="fi fi-rr-comment-dots"></i> <span>${lead.recent_note}</span></div>`
+          ? `<div class="lead-note-badge" title="${lead.recent_note}"><i class="fi fi-rr-comment-dots"></i> <span>${lead.recent_note}</span></div>`
           : `<span class="lead-no-note"><i class="fi fi-rr-comment"></i> No notes recorded</span>`;
 
         // If customer name is large, show first name only

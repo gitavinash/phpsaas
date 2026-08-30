@@ -6287,7 +6287,9 @@ button.btn-action-icon.delete:hover,
 .leads-data-table th.th-subject,
 .leads-data-table td.td-subject {
   width: 24% !important;
-  min-width: 180px !important;
+  max-width: 260px !important;
+  min-width: 170px !important;
+  overflow: hidden !important;
 }
 
 .leads-data-table th.th-agent,
@@ -6383,11 +6385,20 @@ button.btn-action-icon.delete:hover,
 }
 
 .lead-primary-text.subject {
-  display: inline-flex !important;
+  display: flex !important;
   align-items: center !important;
   gap: 5px !important;
   font-size: 12.5px !important;
   color: #1e293b !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.lead-primary-text.subject span {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: inline-block !important;
 }
 
 .lead-primary-text.subject i {
@@ -6511,10 +6522,17 @@ button.btn-action-icon.delete:hover,
   font-size: 11px !important;
   color: #334155 !important;
   font-weight: 500 !important;
-  max-width: 100% !important;
+  max-width: 250px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.lead-note-badge span {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  display: inline-block !important;
+  max-width: 220px !important;
 }
 
 .lead-note-badge i {

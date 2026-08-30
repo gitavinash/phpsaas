@@ -242,7 +242,19 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
             'agent_id'         => $agentId,
             'agent_name'       => $agentName,
             'recent_note_type' => trim($row['enquiry_notes_meta_type'] ?? ''),
-            'recent_note'      => trim($row['enquiry_notes_meta_value'] ?? ''),
+            'recent_note'      => (function() use ($row) {
+                $type = trim($row['enquiry_notes_meta_type'] ?? '');
+                $val  = trim($row['enquiry_notes_meta_value'] ?? '');
+                if ($type === 'payment' || (str_starts_with($val, '{') && str_contains($val, 'paymentAmount'))) {
+                    $dec = json_decode($val, true);
+                    if (is_array($dec)) {
+                        $pAmt = isset($dec['paymentAmount']) ? '₹ ' . number_format((float)$dec['paymentAmount'], 2) : '';
+                        $pMethod = $dec['paymentMethod'] ?? 'Payment';
+                        return "Payment: {$pAmt} ({$pMethod})";
+                    }
+                }
+                return $val;
+            })(),
         ];
     }
 }
