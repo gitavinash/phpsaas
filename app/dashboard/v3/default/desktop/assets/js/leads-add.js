@@ -219,6 +219,28 @@
         $("#leadPackage").val("").trigger("change");
       });
 
+      // Auto-default drop location to chosen pickup location
+      $(document).on("change select2:select", "#leadPickupLocation", function () {
+        const pickupVal = $(this).val();
+        if (pickupVal) {
+          const currentDrop = $("#leadDropLocation").val();
+          if (!currentDrop || currentDrop === pickupVal || !$("#leadDropLocation").data("userModified")) {
+            $("#leadDropLocation")
+              .empty()
+              .append(new Option(pickupVal, pickupVal, true, true))
+              .trigger("change");
+          }
+        }
+      });
+
+      $(document).on("select2:select change", "#leadDropLocation", function () {
+        const dropVal = $(this).val();
+        const pickupVal = $("#leadPickupLocation").val();
+        if (dropVal && dropVal !== pickupVal) {
+          $("#leadDropLocation").data("userModified", true);
+        }
+      });
+
       // Form submission
       $(document).on("submit", "#leadAddForm", function (e) {
         e.preventDefault();

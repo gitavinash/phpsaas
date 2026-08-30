@@ -82,8 +82,32 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
             <h5 class="v3-modal-subheading">Travel Logistics</h5>
             <div class="v3-form-grid-2">
                 <div class="v3-modal-form-group">
-                    <label class="v3-modal-label">Tour Destination (City / State) *</label>
-                    <select id="editLeadDestination" class="v3-modal-select"></select>
+                    <div class="v3-form-label-row">
+                        <label class="v3-modal-label">Tour Package / Destination *</label>
+                        <span class="v3-label-hint">Select package or type custom destination</span>
+                    </div>
+                    <select id="editLeadPackage" class="v3-modal-select v3-package-select" data-placeholder="Choose a tour package or type custom destination..."></select>
+                    
+                    <!-- Selected Package Preview Badge in Modal -->
+                    <div id="editLeadSelectedPkgCard" class="v3-selected-pkg-card" style="display: none; margin-top: 8px;">
+                        <div class="v3-pkg-card-left">
+                            <div class="v3-pkg-card-icon" id="editCardPkgIcon">
+                                <i class="fi fi-rr-sparkles"></i>
+                            </div>
+                            <div class="v3-pkg-card-info">
+                                <div class="v3-pkg-card-title-row">
+                                    <span class="v3-pkg-card-name" id="editCardPkgTitle">Package Title</span>
+                                    <span class="v3-pkg-type-pill" id="editCardPkgTypeBadge">Domestic</span>
+                                </div>
+                                <div class="v3-pkg-card-tags">
+                                    <span class="v3-pkg-tag" id="editCardPkgDuration"><i class="fi fi-rr-moon"></i> <strong>4N / 5D</strong></span>
+                                    <span class="v3-pkg-tag" id="editCardPkgLocation"><i class="fi fi-rr-marker"></i> Location</span>
+                                    <span class="v3-pkg-tag theme" id="editCardPkgTheme"><i class="fi fi-rr-star"></i> Standard</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-clear-pkg-card" id="editBtnClearPkgCard" title="Clear selection">✕</button>
+                    </div>
                 </div>
                 <div class="v3-modal-form-group">
                     <label class="v3-modal-label">Package / Subject</label>

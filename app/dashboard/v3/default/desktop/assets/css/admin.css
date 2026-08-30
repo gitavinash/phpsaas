@@ -11814,6 +11814,195 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   line-height: 1.4 !important;
 }
 
+/* Modern Itinerary & Activity Timeline Cards */
+.v3-timeline-card-content.v3-timeline-card-itinerary {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  white-space: normal !important;
+}
+
+.v3-timeline-itinerary-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-left: 3.5px solid #0284c7 !important;
+  border-radius: 10px !important;
+  padding: 12px 14px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  white-space: normal !important;
+  margin-top: 4px !important;
+}
+
+.v3-tin-card-top {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+.v3-tin-card-info {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+  flex: 1 !important;
+}
+
+.v3-tin-title-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.v3-tin-title {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.v3-tin-title i {
+  color: #0284c7 !important;
+  font-size: 14px !important;
+}
+
+.v3-tin-chip {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 2px 7px !important;
+  border-radius: 6px !important;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.v3-tin-tags {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+}
+
+.v3-tin-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+  background: #f8fafc !important;
+  padding: 2px 8px !important;
+  border-radius: 5px !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.v3-tin-tag i {
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+}
+
+.v3-tin-tag.theme {
+  color: #8b5cf6 !important;
+  background: #f5f3ff !important;
+  border-color: #ddd6fe !important;
+}
+.v3-tin-tag.theme i {
+  color: #8b5cf6 !important;
+}
+
+.v3-tin-price-box {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 1px !important;
+  flex-shrink: 0 !important;
+}
+
+.v3-tin-price-val {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #059669 !important;
+  white-space: nowrap !important;
+}
+
+.v3-tin-price-mrp {
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+  text-decoration: line-through !important;
+}
+
+.v3-tin-actions-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  padding-top: 8px !important;
+  border-top: 1px solid #f1f5f9 !important;
+}
+
+.v3-tin-action-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  padding: 5px 11px !important;
+  border-radius: 6px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  border: 1px solid transparent !important;
+  box-sizing: border-box !important;
+}
+
+.v3-tin-action-btn.primary {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+.v3-tin-action-btn.primary:hover {
+  background: #0369a1 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+.v3-tin-action-btn.secondary {
+  background: #f0fdf4 !important;
+  color: #16a34a !important;
+  border-color: #bbf7d0 !important;
+}
+.v3-tin-action-btn.secondary:hover {
+  background: #16a34a !important;
+  color: #ffffff !important;
+  border-color: #16a34a !important;
+  transform: translateY(-1px) !important;
+}
+
+.v3-tin-action-btn.outline {
+  background: #ffffff !important;
+  color: #475569 !important;
+  border-color: #cbd5e1 !important;
+}
+.v3-tin-action-btn.outline:hover {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #94a3b8 !important;
+  transform: translateY(-1px) !important;
+}
+
+.v3-timeline-payment-text {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: #047857 !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+}
+
 .v3-timeline-itinerary-action {
   margin-top: 6px !important;
 }

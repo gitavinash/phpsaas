@@ -125,96 +125,187 @@ ORDER BY n.enquiry_notes_update DESC";
 
 $timeline = [];
 $payments = [];
+$rawTimelineRows = [];
+$quotationIds = [];
 
 if ($tRes = mysqli_query($connection, $timelineQuery)) {
     while ($tRow = mysqli_fetch_assoc($tRes)) {
+        $rawTimelineRows[] = $tRow;
         $noteType = strtolower(trim($tRow['enquiry_notes_meta_type'] ?? ''));
         $noteVal  = trim($tRow['enquiry_notes_meta_value'] ?? '');
-        $updatedBy = trim($tRow['user_name'] ?? 'System');
-        $updatedAt = $tRow['enquiry_notes_update'] ?? '';
-
-        // Time ago
-        $timeAgo = '';
-        if (!empty($updatedAt)) {
-            $ts = strtotime($updatedAt);
-            if ($ts) {
-                $diff = time() - $ts;
-                if ($diff < 60) $timeAgo = 'Just now';
-                elseif ($diff < 3600) $timeAgo = floor($diff / 60) . 'm ago';
-                elseif ($diff < 86400) $timeAgo = floor($diff / 3600) . 'h ago';
-                elseif ($diff < 172800) $timeAgo = 'Yesterday';
-                else $timeAgo = date('d M Y, h:i A', $ts);
-            }
+        if ($noteType === 'itinerary' && is_numeric($noteVal) && (int)$noteVal > 0) {
+            $quotationIds[] = (int)$noteVal;
         }
-
-        if ($noteType === 'payment') {
-            $payData = json_decode($noteVal, true);
-            if (is_array($payData)) {
-                $payments[] = [
-                    'id' => (int)$tRow['enquiry_notes_id'],
-                    'amount' => $payData['paymentAmount'] ?? '0',
-                    'method' => $payData['paymentMethod'] ?? 'Standard',
-                    'date' => $payData['paymentDate'] ?? date('d-m-Y', strtotime($updatedAt)),
-                    'reference' => $payData['paymentReference'] ?? '',
-                    'notes' => $payData['paymentMsg'] ?? '',
-                    'image' => $payData['paymentImages'] ?? '',
-                    'recorded_by' => $updatedBy,
-                    'created_at' => $updatedAt,
-                ];
-            }
-        }
-
-        // Timeline item formatting
-        $icon = 'fi fi-rr-comment-alt';
-        $itemTitle = ucfirst($noteType);
-        $itemDesc = $noteVal;
-
-        switch ($noteType) {
-            case 'assign':
-                $icon = 'fi fi-rr-user-add';
-                $itemTitle = 'Lead Assigned';
-                break;
-            case 'payment':
-                $icon = 'fi fi-rr-indian-rupee-sign';
-                $itemTitle = 'Payment Recorded';
-                break;
-            case 'generate':
-                $icon = 'fi fi-rr-plus';
-                $itemTitle = 'Lead Created';
-                break;
-            case 'update':
-                $icon = 'fi fi-rr-refresh';
-                $itemTitle = 'Lead Updated';
-                break;
-            case 'sales':
-                $icon = 'fi fi-rr-trophy-star';
-                $itemTitle = 'Converted to Sales';
-                break;
-            case 'duplicate':
-                $icon = 'fi fi-rr-copy';
-                $itemTitle = 'Marked Duplicate';
-                break;
-            case 'itinerary':
-                $icon = 'fi fi-rr-paper-plane';
-                $itemTitle = 'Itinerary Sent';
-                break;
-            default:
-                $icon = 'fi fi-rr-comment-dots';
-                $itemTitle = !empty($noteType) ? ucwords(str_replace('_', ' ', $noteType)) : 'Note';
-                break;
-        }
-
-        $timeline[] = [
-            'id' => (int)$tRow['enquiry_notes_id'],
-            'type' => $noteType,
-            'title' => $itemTitle,
-            'description' => $itemDesc,
-            'user_name' => $updatedBy,
-            'time' => $updatedAt ? date('d M Y, h:i A', strtotime($updatedAt)) : '',
-            'time_relative' => $timeAgo,
-            'icon' => $icon,
-        ];
     }
+}
+
+// Batch fetch quotation metadata for itinerary timeline items
+$quotationsMap = [];
+if (!empty($quotationIds)) {
+    $qIdsEsc = implode(',', array_unique($quotationIds));
+    $quotesQuery = "SELECT 
+        q.quotation_id,
+        q.quotation_ref_id,
+        q.quotation_type_id,
+        q.quotation_mrp,
+        q.quotation_price,
+        q.quotation_description,
+        q.quotation_time,
+        tp.tour_package_title,
+        tp.tour_package_duration,
+        tp.tour_package_city,
+        tp.tour_package_state,
+        tp.tour_package_theme
+    FROM {$tblPrefix}quotation q
+    LEFT JOIN {$tblPrefix}tour_package tp ON tp.tour_package_id = q.quotation_type_id
+    WHERE q.quotation_id IN ({$qIdsEsc})";
+
+    if ($qRes = mysqli_query($connection, $quotesQuery)) {
+        while ($qRow = mysqli_fetch_assoc($qRes)) {
+            $qId = (int)$qRow['quotation_id'];
+            $descData = [];
+            if (!empty($qRow['quotation_description'])) {
+                $descData = json_decode($qRow['quotation_description'], true) ?: [];
+            }
+            $qTitle = !empty($descData['title']) ? $descData['title'] : (!empty($qRow['tour_package_title']) ? $qRow['tour_package_title'] : 'Tour Itinerary #' . $qId);
+            $qPrice = (float)($qRow['quotation_price'] ?? ($descData['total_price'] ?? 0));
+            $qMrp   = (float)($qRow['quotation_mrp'] ?? 0);
+            $qDuration = !empty($descData['duration']) ? $descData['duration'] : (!empty($qRow['tour_package_duration']) ? $qRow['tour_package_duration'] : '');
+            $qDest = !empty($descData['destination']) ? $descData['destination'] : (!empty($qRow['tour_package_city']) ? $qRow['tour_package_city'] : (!empty($qRow['tour_package_state']) ? $qRow['tour_package_state'] : ''));
+            $qTheme = !empty($descData['theme']) ? $descData['theme'] : (!empty($qRow['tour_package_theme']) ? $qRow['tour_package_theme'] : '');
+            $encodedQId = base64_encode((string)$qId);
+
+            $quotationsMap[$qId] = [
+                'id'           => $qId,
+                'encoded_id'   => $encodedQId,
+                'title'        => $qTitle,
+                'price'        => $qPrice,
+                'mrp'          => $qMrp,
+                'duration'     => $qDuration,
+                'destination'  => $qDest,
+                'theme'        => $qTheme,
+                'view_url'     => "/view-itinerary/{$encodedQId}/",
+                'download_url' => "/download-itinerary/{$encodedQId}/",
+            ];
+        }
+    }
+}
+
+foreach ($rawTimelineRows as $tRow) {
+    $noteType = strtolower(trim($tRow['enquiry_notes_meta_type'] ?? ''));
+    $noteVal  = trim($tRow['enquiry_notes_meta_value'] ?? '');
+    $updatedBy = trim($tRow['user_name'] ?? 'System');
+    $updatedAt = $tRow['enquiry_notes_update'] ?? '';
+
+    // Time ago
+    $timeAgo = '';
+    if (!empty($updatedAt)) {
+        $ts = strtotime($updatedAt);
+        if ($ts) {
+            $diff = time() - $ts;
+            if ($diff < 60) $timeAgo = 'Just now';
+            elseif ($diff < 3600) $timeAgo = floor($diff / 60) . 'm ago';
+            elseif ($diff < 86400) $timeAgo = floor($diff / 3600) . 'h ago';
+            elseif ($diff < 172800) $timeAgo = 'Yesterday';
+            else $timeAgo = date('d M Y, h:i A', $ts);
+        }
+    }
+
+    if ($noteType === 'payment') {
+        $payData = json_decode($noteVal, true);
+        if (is_array($payData)) {
+            $payments[] = [
+                'id' => (int)$tRow['enquiry_notes_id'],
+                'amount' => $payData['paymentAmount'] ?? '0',
+                'method' => $payData['paymentMethod'] ?? 'Standard',
+                'date' => $payData['paymentDate'] ?? date('d-m-Y', strtotime($updatedAt)),
+                'reference' => $payData['paymentReference'] ?? '',
+                'notes' => $payData['paymentMsg'] ?? '',
+                'image' => $payData['paymentImages'] ?? '',
+                'recorded_by' => $updatedBy,
+                'created_at' => $updatedAt,
+            ];
+            $itemDesc = "Recorded payment of ₹ " . number_format((float)($payData['paymentAmount'] ?? 0), 2) . " via " . ($payData['paymentMethod'] ?? 'Standard') . (!empty($payData['paymentReference']) ? " (Ref: {$payData['paymentReference']})" : "");
+        } else {
+            $itemDesc = $noteVal;
+        }
+    } else {
+        $itemDesc = $noteVal;
+    }
+
+    // Timeline item formatting
+    $icon = 'fi fi-rr-comment-alt';
+    $itemTitle = ucfirst($noteType);
+
+    switch ($noteType) {
+        case 'assign':
+            $icon = 'fi fi-rr-user-add';
+            $itemTitle = 'Lead Assigned';
+            break;
+        case 'payment':
+            $icon = 'fi fi-rr-indian-rupee-sign';
+            $itemTitle = 'Payment Recorded';
+            break;
+        case 'generate':
+            $icon = 'fi fi-rr-plus';
+            $itemTitle = 'Lead Created';
+            break;
+        case 'update':
+            $icon = 'fi fi-rr-refresh';
+            $itemTitle = 'Lead Updated';
+            break;
+        case 'sales':
+            $icon = 'fi fi-rr-trophy-star';
+            $itemTitle = 'Converted to Sales';
+            break;
+        case 'duplicate':
+            $icon = 'fi fi-rr-copy';
+            $itemTitle = 'Marked Duplicate';
+            break;
+        case 'itinerary':
+            $icon = 'fi fi-rr-paper-plane';
+            $itemTitle = 'Itinerary Sent';
+            break;
+        default:
+            $icon = 'fi fi-rr-comment-dots';
+            $itemTitle = !empty($noteType) ? ucwords(str_replace('_', ' ', $noteType)) : 'Note';
+            break;
+    }
+
+    $quoteInfo = null;
+    if ($noteType === 'itinerary') {
+        if (is_numeric($noteVal) && isset($quotationsMap[(int)$noteVal])) {
+            $quoteInfo = $quotationsMap[(int)$noteVal];
+            $itemDesc  = $quoteInfo['title'];
+        } elseif (is_numeric($noteVal) && (int)$noteVal > 0) {
+            $encId = base64_encode((string)$noteVal);
+            $quoteInfo = [
+                'id'           => (int)$noteVal,
+                'encoded_id'   => $encId,
+                'title'        => 'Tour Itinerary #' . $noteVal,
+                'price'        => 0,
+                'mrp'          => 0,
+                'duration'     => '',
+                'destination'  => '',
+                'theme'        => '',
+                'view_url'     => "/view-itinerary/{$encId}/",
+                'download_url' => "/download-itinerary/{$encId}/",
+            ];
+            $itemDesc = 'Tour Itinerary #' . $noteVal;
+        }
+    }
+
+    $timeline[] = [
+        'id'            => (int)$tRow['enquiry_notes_id'],
+        'type'          => $noteType,
+        'title'         => $itemTitle,
+        'description'   => $itemDesc,
+        'quotation'     => $quoteInfo,
+        'user_name'     => $updatedBy,
+        'time'          => $updatedAt ? date('d M Y, h:i A', strtotime($updatedAt)) : '',
+        'time_relative' => $timeAgo,
+        'icon'          => $icon,
+    ];
 }
 
 // 3. Fetch Active Quotation if available

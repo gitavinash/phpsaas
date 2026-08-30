@@ -236,17 +236,64 @@
       if (lead.timeline && lead.timeline.length > 0) {
         timelineHtml = '<div class="v3-timeline-stream">';
         lead.timeline.forEach((t) => {
-          let extraContent = t.description || "";
-          if (t.type === "itinerary" && t.description) {
+          let extraContent = "";
+          let cardExtraClass = "";
+
+          if (t.type === "itinerary") {
+            const q = t.quotation || {};
+            const encId = q.encoded_id || (t.description && !isNaN(t.description) ? btoa(t.description) : "");
+            const title = q.title || (t.description ? (isNaN(t.description) ? t.description : `Tour Itinerary #${t.description}`) : "Tour Itinerary");
+            const price = parseFloat(q.price || 0);
+            const mrp = parseFloat(q.mrp || 0);
+            const viewUrl = q.view_url || (encId ? `/view-itinerary/${encId}/` : "#");
+            const downloadUrl = q.download_url || (encId ? `/download-itinerary/${encId}/` : "#");
+            const hasMeta = !!(q.destination || q.duration || q.theme);
+
+            cardExtraClass = "v3-timeline-card-itinerary";
             extraContent = `
-              <div>${t.description}</div>
-              <div class="v3-timeline-itinerary-action">
-                <a href="/download-itinerary/${btoa(t.description)}/" target="_blank" class="v3-btn-contact-action call v3-timeline-itinerary-btn">
-                  <i class="fi fi-rr-file-pdf"></i> View & Download Itinerary PDF
-                </a>
+              <div class="v3-timeline-itinerary-card">
+                <div class="v3-tin-card-top">
+                  <div class="v3-tin-card-info">
+                    <div class="v3-tin-title-row">
+                      <span class="v3-tin-title"><i class="fi fi-rr-route"></i> ${title}</span>
+                      ${q.id || (t.description && !isNaN(t.description)) ? `<span class="v3-tin-chip">#${q.id || t.description}</span>` : ""}
+                    </div>
+                    ${hasMeta ? `
+                      <div class="v3-tin-tags">
+                        ${q.destination ? `<span class="v3-tin-tag"><i class="fi fi-rr-marker"></i> ${q.destination}</span>` : ""}
+                        ${q.duration ? `<span class="v3-tin-tag"><i class="fi fi-rr-moon"></i> ${q.duration}</span>` : ""}
+                        ${q.theme ? `<span class="v3-tin-tag theme"><i class="fi fi-rr-star"></i> ${q.theme}</span>` : ""}
+                      </div>
+                    ` : ""}
+                  </div>
+                  ${price > 0 ? `
+                    <div class="v3-tin-price-box">
+                      <span class="v3-tin-price-val">₹ ${price.toLocaleString("en-IN")}</span>
+                      ${mrp > price ? `<span class="v3-tin-price-mrp">₹ ${mrp.toLocaleString("en-IN")}</span>` : ""}
+                    </div>
+                  ` : ""}
+                </div>
+                ${encId ? `
+                  <div class="v3-tin-actions-row">
+                    <a href="${viewUrl}" target="_blank" class="v3-tin-action-btn primary" title="View interactive itinerary webpage">
+                      <i class="fi fi-rr-eye"></i> View Itinerary
+                    </a>
+                    <a href="${downloadUrl}" target="_blank" class="v3-tin-action-btn secondary" title="Download official PDF proposal">
+                      <i class="fi fi-rr-file-pdf"></i> Download PDF
+                    </a>
+                    <button type="button" class="v3-tin-action-btn outline btn-copy-itin-link" data-url="${window.location.origin + viewUrl}" title="Copy itinerary link to clipboard">
+                      <i class="fi fi-rr-copy"></i> Copy Link
+                    </button>
+                  </div>
+                ` : ""}
               </div>
-            `;
+            `.trim();
+          } else if (t.type === "payment" && t.description) {
+            extraContent = `<div class="v3-timeline-payment-text"><i class="fi fi-rr-check-circle"></i> ${t.description}</div>`;
+          } else if (t.description) {
+            extraContent = t.description;
           }
+
           timelineHtml += `
             <div class="v3-timeline-row">
               <div class="v3-timeline-bullet"><i class="${t.icon}"></i></div>
@@ -257,7 +304,7 @@
                 <span>•</span>
                 <span class="v3-timeline-time-ago">${t.time_relative || t.time}</span>
               </div>
-              ${extraContent ? `<div class="v3-timeline-card-content">${extraContent}</div>` : ""}
+              ${extraContent ? `<div class="v3-timeline-card-content ${cardExtraClass}">${extraContent}</div>` : ""}
             </div>
           `;
         });
@@ -997,6 +1044,26 @@
       const self = this;
 
       // 1. Tab Navigation
+      $(document).on("click", ".btn-copy-itin-link", function (e) {
+        e.preventDefault();
+        const url = $(this).data("url") || $(this).attr("data-url");
+        if (!url) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () {
+            self.notify("Itinerary link copied to clipboard!", "success");
+          }).catch(function () {
+            self.notify("Failed to copy itinerary link.", "error");
+          });
+        } else {
+          const $temp = $("<input>");
+          $("body").append($temp);
+          $temp.val(url).select();
+          document.execCommand("copy");
+          $temp.remove();
+          self.notify("Itinerary link copied to clipboard!", "success");
+        }
+      });
+
       $(document).on("click", ".v3-tab-link", function () {
         if ($(this).hasClass("v3-tab-disabled") || $(this).prop("disabled")) {
           self.notify("Please assign an agent to this lead before accessing payments.", "warning");
@@ -1205,16 +1272,18 @@
 
           $("#modalEditLead").addClass("is-active");
 
+          // Initialize Select2 for Tour Package / Destination via Packages API
+          self.initPackageSelect2(
+            $("#editLeadPackage"),
+            $("#modalEditLead"),
+            "Choose a tour package or type custom destination...",
+          );
+
           // Initialize Select2 with Cities API for locations
           self.initCitySelect2(
             $("#editLeadCurrentLocation"),
             $("#modalEditLead"),
             "-- Search / Select Current Location --",
-          );
-          self.initCitySelect2(
-            $("#editLeadDestination"),
-            $("#modalEditLead"),
-            "-- Search / Select Destination City or State --",
           );
           self.initCitySelect2(
             $("#editLeadPickup"),
@@ -1237,31 +1306,54 @@
             $el.val(val || "").trigger("change");
           }
 
+          const pickupVal = t.pickup_location || "Delhi";
+          const dropVal = t.drop_location || pickupVal;
+
           setSelect2Val($("#editLeadCurrentLocation"), t.current_location || "");
-          setSelect2Val($("#editLeadPickup"), t.pickup_location || "");
-          setSelect2Val($("#editLeadDrop"), t.drop_location || "");
+          setSelect2Val($("#editLeadPickup"), pickupVal, pickupVal);
+          setSelect2Val($("#editLeadDrop"), dropVal, dropVal);
+          $("#editLeadDrop").data("userModified", t.drop_location && t.drop_location !== pickupVal);
 
-          const initialDest = (t.destination || "").trim();
           const initialSubject = (d.subject || "").trim();
+          const initialDest = (t.destination || "").trim();
+          const initialPkgVal = initialSubject || initialDest;
 
-          if (initialDest) {
-            setSelect2Val($("#editLeadDestination"), initialDest);
-            self.detectDestinationFromSubject(initialDest, function (match) {
-              if (match && match.id) {
-                setSelect2Val($("#editLeadDestination"), match.id, match.text || match.id);
-              }
-            });
-          } else if (initialSubject) {
-            // Fetch matching city name from Package / Subject and show as selected
-            self.detectDestinationFromSubject(initialSubject, function (match) {
-              if (match && match.id) {
-                setSelect2Val($("#editLeadDestination"), match.id, match.text || match.id);
-              } else {
-                setSelect2Val($("#editLeadDestination"), initialSubject);
+          if (initialPkgVal) {
+            setSelect2Val($("#editLeadPackage"), initialPkgVal, initialPkgVal);
+
+            // Fetch package details from API to populate snapshot card if exact or matching package
+            $.ajax({
+              url: "/api/v3/packages/options/?q=" + encodeURIComponent(initialPkgVal),
+              dataType: "json",
+              success: function (res) {
+                if (res && res.data && res.data.all && res.data.all.length > 0) {
+                  const match = res.data.all.find(
+                    (p) =>
+                      p.title.toLowerCase() === initialPkgVal.toLowerCase() ||
+                      p.city.toLowerCase() === initialPkgVal.toLowerCase() ||
+                      initialPkgVal.toLowerCase().includes(p.title.toLowerCase())
+                  ) || res.data.all[0];
+
+                  if (match) {
+                    const isIntl = (match.type || "").toLowerCase() === "international";
+                    const dur = match.duration || 0;
+                    const days = match.days || (dur > 0 ? dur + 1 : 1);
+                    $("#editCardPkgTitle").text(match.title);
+                    $("#editCardPkgTypeBadge")
+                      .text(isIntl ? "International" : "Domestic")
+                      .attr("class", `v3-pkg-type-pill ${isIntl ? "intl" : "dom"}`);
+                    $("#editCardPkgDuration").html(`<i class="fi fi-rr-moon"></i> <strong>${dur}N / ${days}D</strong>`);
+                    $("#editCardPkgLocation").html(`<i class="fi fi-rr-marker"></i> ${match.city}`);
+                    $("#editCardPkgTheme").html(`<i class="fi fi-rr-star"></i> ${match.theme}`);
+                    $("#editCardPkgIcon").html(`<i class="fi ${isIntl ? 'fi-rr-plane' : 'fi-rr-route'}"></i>`);
+                    $("#editLeadSelectedPkgCard").show();
+                  }
+                }
               }
             });
           } else {
-            setSelect2Val($("#editLeadDestination"), "");
+            setSelect2Val($("#editLeadPackage"), "");
+            $("#editLeadSelectedPkgCard").hide();
           }
 
           self.initSingleDatePickers();
@@ -1274,22 +1366,73 @@
         },
       );
 
-      // Fetch and match city name on Package / Subject field change if destination is empty or matching
-      $(document).on("blur change", "#editLeadSubject", function () {
-        const subj = $(this).val().trim();
-        if (!subj) return;
-        self.detectDestinationFromSubject(subj, function (match) {
-          if (match && match.id) {
-            const currentDest = $("#editLeadDestination").val();
-            if (!currentDest || currentDest === subj) {
-              const optText = match.text || match.id;
-              $("#editLeadDestination")
-                .empty()
-                .append(new Option(optText, match.id, true, true))
-                .trigger("change");
-            }
+      // Package select change in Edit Lead Modal: Update Snapshot Card, Duration, and Subject
+      $(document).on("select2:select", "#editLeadPackage", function (e) {
+        const data = e.params ? e.params.data : null;
+        if (!data) return;
+
+        const isIntl = (data.type || "").toLowerCase() === "international";
+        const duration = parseInt(data.duration) || 0;
+        const days = data.days || (duration > 0 ? duration + 1 : 1);
+        const city = data.city || data.text || "";
+        const theme = data.theme || "Standard";
+
+        // Auto-fill Package / Subject
+        $("#editLeadSubject").val(data.text || data.title || city);
+
+        // Auto-fill duration if package has duration
+        if (duration > 0) {
+          $("#editLeadDuration").val(duration);
+        }
+
+        // Render selected package snapshot card
+        if (data.pkg_id) {
+          $("#editCardPkgTitle").text(data.text || data.title);
+          $("#editCardPkgTypeBadge")
+            .text(isIntl ? "International" : "Domestic")
+            .attr("class", `v3-pkg-type-pill ${isIntl ? "intl" : "dom"}`);
+          $("#editCardPkgDuration").html(`<i class="fi fi-rr-moon"></i> <strong>${duration}N / ${days}D</strong>`);
+          $("#editCardPkgLocation").html(`<i class="fi fi-rr-marker"></i> ${city}`);
+          $("#editCardPkgTheme").html(`<i class="fi fi-rr-star"></i> ${theme}`);
+          $("#editCardPkgIcon").html(`<i class="fi ${isIntl ? 'fi-rr-plane' : 'fi-rr-route'}"></i>`);
+          $("#editLeadSelectedPkgCard").slideDown(150);
+        } else {
+          $("#editLeadSelectedPkgCard").slideUp(150);
+        }
+      });
+
+      // Clear package snapshot card in modal
+      $(document).on("click", "#editBtnClearPkgCard", function () {
+        $("#editLeadPackage").val(null).trigger("change");
+        $("#editLeadSelectedPkgCard").slideUp(150);
+      });
+
+      $(document).on("change", "#editLeadPackage", function () {
+        if (!$(this).val()) {
+          $("#editLeadSelectedPkgCard").slideUp(150);
+        }
+      });
+
+      // Auto-default drop point to chosen pickup point in modal
+      $(document).on("change select2:select", "#editLeadPickup", function () {
+        const pickupVal = $(this).val();
+        if (pickupVal) {
+          const currentDrop = $("#editLeadDrop").val();
+          if (!currentDrop || currentDrop === pickupVal || !$("#editLeadDrop").data("userModified")) {
+            $("#editLeadDrop")
+              .empty()
+              .append(new Option(pickupVal, pickupVal, true, true))
+              .trigger("change");
           }
-        });
+        }
+      });
+
+      $(document).on("select2:select change", "#editLeadDrop", function () {
+        const dropVal = $(this).val();
+        const pickupVal = $("#editLeadPickup").val();
+        if (dropVal && dropVal !== pickupVal) {
+          $("#editLeadDrop").data("userModified", true);
+        }
       });
 
       // Split name when space entered in First Name if Last Name is empty
@@ -1347,10 +1490,10 @@
           }
         }
 
-        const destinationVal = $("#editLeadDestination").val() || "";
+        const packageVal = $("#editLeadPackage").val() || "";
         let subjectVal = $("#editLeadSubject").val().trim();
-        if (!subjectVal && destinationVal) {
-          subjectVal = destinationVal;
+        if (!subjectVal && packageVal) {
+          subjectVal = packageVal;
           $("#editLeadSubject").val(subjectVal);
         }
 
@@ -1368,11 +1511,11 @@
           mobile: mobile,
           alt_mobile: $("#editLeadAltMobile").val().trim(),
           current_location: $("#editLeadCurrentLocation").val() || "",
-          destination: destinationVal,
-          destination_city: destinationVal,
-          city: destinationVal,
-          subject: subjectVal,
-          package: subjectVal,
+          destination: packageVal,
+          destination_city: packageVal,
+          city: packageVal,
+          subject: subjectVal || packageVal,
+          package: packageVal || subjectVal,
           date_of_travel: $("#editLeadTravelDate").val(),
           duration_days: $("#editLeadDuration").val(),
           pickup_location: $("#editLeadPickup").val() || "",
@@ -2739,6 +2882,81 @@
           },
           cache: true,
         },
+      });
+    },
+
+    initPackageSelect2: function ($el, $dropdownParent, placeholder) {
+      if (!$el || !$el.length || typeof $.fn.select2 === "undefined") return;
+
+      $el.select2({
+        placeholder: placeholder || "Choose a tour package or type custom destination...",
+        allowClear: true,
+        width: "100%",
+        tags: true,
+        dropdownParent:
+          $dropdownParent && $dropdownParent.length
+            ? $dropdownParent
+            : undefined,
+        ajax: {
+          url: "/api/v3/packages/options/",
+          dataType: "json",
+          delay: 150,
+          data: function (params) {
+            return {
+              q: params.term || "",
+            };
+          },
+          processResults: function (data) {
+            return {
+              results: (data && data.results) || [],
+            };
+          },
+          cache: true,
+        },
+        templateResult: function (data) {
+          if (!data.id) return data.text;
+          if (data.children) return data.text;
+
+          const isCustom = !data.type && !data.pkg_id;
+          if (isCustom) {
+            return $(`
+              <div class="v3-pkg-option-item custom">
+                <div class="v3-pkg-option-icon custom"><i class="fi fi-rr-search-location"></i></div>
+                <div class="v3-pkg-option-details">
+                  <div class="v3-pkg-option-title">${data.text}</div>
+                  <span class="v3-pkg-badge custom">Custom Destination</span>
+                </div>
+              </div>
+            `);
+          }
+
+          const duration = data.duration;
+          const days = data.days || (parseInt(duration) + 1);
+          const city = data.city || "";
+          const type = data.type || "domestic";
+          const theme = data.theme || "";
+          const isIntl = type.toLowerCase() === "international";
+
+          return $(`
+            <div class="v3-pkg-option-item">
+              <div class="v3-pkg-option-icon ${isIntl ? 'intl' : 'dom'}">
+                <i class="fi ${isIntl ? 'fi-rr-plane' : 'fi-rr-route'}"></i>
+              </div>
+              <div class="v3-pkg-option-details">
+                <div class="v3-pkg-option-title">${data.text}</div>
+                <div class="v3-pkg-option-badges">
+                  ${duration ? `<span class="v3-pkg-badge duration"><i class="fi fi-rr-moon"></i> ${duration}N / ${days}D</span>` : ''}
+                  ${city ? `<span class="v3-pkg-badge destination"><i class="fi fi-rr-marker"></i> ${city}</span>` : ''}
+                  ${theme ? `<span class="v3-pkg-badge theme"><i class="fi fi-rr-star"></i> ${theme}</span>` : ''}
+                  <span class="v3-pkg-badge type ${isIntl ? 'intl' : 'dom'}">${isIntl ? 'International' : 'Domestic'}</span>
+                </div>
+              </div>
+            </div>
+          `);
+        },
+        templateSelection: function (data) {
+          return data.text || data.id;
+        }
       });
     },
 
