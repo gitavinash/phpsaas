@@ -211,6 +211,39 @@ foreach ($rawTimelineRows as $tRow) {
         }
     }
 
+    $category = '';
+    $followupTimeFormatted = '';
+    $paymentDetails = null;
+
+    // Detect if this is a follow-up (JSON or legacy category)
+    $isFollowup = false;
+    $followupObj = null;
+
+    if ($noteType === 'followup') {
+        $isFollowup = true;
+        $dec = json_decode($noteVal, true);
+        if (is_array($dec)) {
+            $followupObj = $dec;
+            $category = $dec['category'] ?? 'General Follow-up';
+            $itemDesc = $dec['note'] ?? '';
+            $followupTimeFormatted = $dec['followup_formatted'] ?? (!empty($dec['followup_time']) ? date('d M Y, h:i A', strtotime($dec['followup_time'])) : '');
+        } else {
+            $category = 'General Follow-up';
+            $itemDesc = $noteVal;
+        }
+    } elseif (
+        strpos($noteType, 'follow') !== false ||
+        strpos($noteType, 'call') !== false ||
+        strpos($noteType, 'price') !== false ||
+        strpos($noteType, 'discussion') !== false ||
+        strpos($noteType, 'customization') !== false ||
+        strpos($noteType, 'negotiation') !== false
+    ) {
+        $isFollowup = true;
+        $category = ucwords(str_replace(['_', '-'], ' ', $tRow['enquiry_notes_meta_type'] ?? 'General Follow-up'));
+        $itemDesc = $noteVal;
+    }
+
     if ($noteType === 'payment') {
         $payData = json_decode($noteVal, true);
         if (is_array($payData)) {
@@ -254,51 +287,68 @@ foreach ($rawTimelineRows as $tRow) {
                 'verified_at'      => $payData['verifiedAt'] ?? null,
                 'created_at'       => $updatedAt,
             ];
+            $paymentDetails = [
+                'amount'    => (float)($payData['paymentAmount'] ?? 0),
+                'method'    => $payData['paymentMethod'] ?? 'Standard',
+                'reference' => $payData['paymentReference'] ?? '',
+                'status'    => $pStatus
+            ];
             $itemDesc = "Recorded payment of ₹ " . number_format((float)($payData['paymentAmount'] ?? 0), 2) . " via " . ($payData['paymentMethod'] ?? 'Standard') . (!empty($payData['paymentReference']) ? " (Ref: {$payData['paymentReference']})" : "");
         } else {
             $itemDesc = $noteVal;
         }
-    } else {
+    } elseif (!$isFollowup) {
         $itemDesc = $noteVal;
+        if ($noteType === 'update' && ($itemDesc === 'User' || empty($itemDesc))) {
+            $itemDesc = 'Updated lead details and status.';
+        }
     }
 
-    // Timeline item formatting
+    // Timeline item icon and title formatting
     $icon = 'fi fi-rr-comment-alt';
     $itemTitle = ucfirst($noteType);
+    $finalType = $noteType;
 
-    switch ($noteType) {
-        case 'assign':
-            $icon = 'fi fi-rr-user-add';
-            $itemTitle = 'Lead Assigned';
-            break;
-        case 'payment':
-            $icon = 'fi fi-rr-indian-rupee-sign';
-            $itemTitle = 'Payment Recorded';
-            break;
-        case 'generate':
-            $icon = 'fi fi-rr-plus';
-            $itemTitle = 'Lead Created';
-            break;
-        case 'update':
-            $icon = 'fi fi-rr-refresh';
-            $itemTitle = 'Lead Updated';
-            break;
-        case 'sales':
-            $icon = 'fi fi-rr-trophy-star';
-            $itemTitle = 'Converted to Sales';
-            break;
-        case 'duplicate':
-            $icon = 'fi fi-rr-copy';
-            $itemTitle = 'Marked Duplicate';
-            break;
-        case 'itinerary':
-            $icon = 'fi fi-rr-paper-plane';
-            $itemTitle = 'Itinerary Sent';
-            break;
-        default:
-            $icon = 'fi fi-rr-comment-dots';
-            $itemTitle = !empty($noteType) ? ucwords(str_replace('_', ' ', $noteType)) : 'Note';
-            break;
+    if ($isFollowup) {
+        $finalType = 'followup';
+        $icon = 'fi fi-rr-alarm-clock';
+        $itemTitle = 'Follow-Up';
+    } else {
+        switch ($noteType) {
+            case 'assign':
+                $icon = 'fi fi-rr-user-add';
+                $itemTitle = 'Lead Assigned';
+                break;
+            case 'payment':
+                $icon = 'fi fi-rr-indian-rupee-sign';
+                $itemTitle = 'Payment Recorded';
+                break;
+            case 'generate':
+                $icon = 'fi fi-rr-plus';
+                $itemTitle = 'Lead Created';
+                break;
+            case 'update':
+                $icon = 'fi fi-rr-refresh';
+                $itemTitle = 'Lead Updated';
+                break;
+            case 'sales':
+                $icon = 'fi fi-rr-trophy-star';
+                $itemTitle = 'Converted to Sales';
+                break;
+            case 'duplicate':
+                $icon = 'fi fi-rr-copy';
+                $itemTitle = 'Marked Duplicate';
+                break;
+            case 'itinerary':
+                $icon = 'fi fi-rr-paper-plane';
+                $itemTitle = 'Itinerary Sent';
+                break;
+            default:
+                $icon = 'fi fi-rr-comment-alt';
+                $itemTitle = 'Note';
+                $finalType = 'note';
+                break;
+        }
     }
 
     $quoteInfo = null;
@@ -326,9 +376,12 @@ foreach ($rawTimelineRows as $tRow) {
 
     $timeline[] = [
         'id'            => (int)$tRow['enquiry_notes_id'],
-        'type'          => $noteType,
+        'type'          => $finalType,
         'title'         => $itemTitle,
+        'category'      => $category,
+        'followup_time' => $followupTimeFormatted,
         'description'   => $itemDesc,
+        'payment_data'  => $paymentDetails,
         'quotation'     => $quoteInfo,
         'user_name'     => $updatedBy,
         'time'          => $updatedAt ? date('d M Y, h:i A', strtotime($updatedAt)) : '',
@@ -498,6 +551,7 @@ if (!empty($lead['enquiry_followup']) && $lead['enquiry_followup'] !== '0000-00-
         $nextFollowup = [
             'is_scheduled' => true,
             'datetime' => date('Y-m-d H:i:s', $fTs),
+            'raw_time' => date('Y-m-d H:i:s', $fTs),
             'time_formatted' => date('d M Y, h:i A', $fTs),
             'status_badge' => $badge,
             'label' => $badgeLabel
@@ -614,6 +668,7 @@ $response = [
         'payments' => $payments,
         'agents' => $agents,
         'access_type' => $accessType,
+        'current_user_id' => (int)$currentUserId,
     ]
 ];
 

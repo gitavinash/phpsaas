@@ -88,7 +88,7 @@ define('IMAGE_THUMBNAIL_HEIGHT', ((isset($site_thumbnail_height)) ? $site_thumbn
 // Google service-account JSON must be used instead (see assign.php for planned migration).
 define(
 	'NOTIFICATION_KEY',
-	'AAAA022yuIE:APA91bGmpLAcWlFEJB731Z-pTMjYvQu0xPBLQTtElWwsK83HM5mS-Ua0dnYaykR2QIhlxqRfH1vhgX2KHnsNpVZ_lQUbyHk-f7K9CGXcgFPkfIufQ5zbqp7mQfoF1qHoapHxyllk1U76'
+	'pNnQ2Eo0uFLT0ifd2P2xEpNF9BQrgt50mvVALNfkj4k'
 );
 define('NOTIFICATION_SENDER', '782586665015'); // New project sender ID: aleya-notification
 define(

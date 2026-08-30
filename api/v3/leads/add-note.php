@@ -52,9 +52,27 @@ if (!$checkRes || mysqli_num_rows($checkRes) === 0) {
 
 $leadData = mysqli_fetch_assoc($checkRes);
 
+$category = isset($_POST['category']) ? trim($_POST['category']) : $title;
+if (empty($category) || $category === 'Note') {
+    $category = 'General Follow-up';
+}
+
+if (!empty($followupTime)) {
+    $metaType = 'followup';
+    $fTimeFormatted = date('Y-m-d H:i:s', strtotime($followupTime));
+    $followupObj = [
+        'category' => $category,
+        'note' => $msg,
+        'followup_time' => $fTimeFormatted,
+        'followup_formatted' => date('d M Y, h:i A', strtotime($followupTime))
+    ];
+    $metaVal = mysqli_real_escape_string($connection, json_encode($followupObj));
+} else {
+    $metaType = 'note';
+    $metaVal  = mysqli_real_escape_string($connection, $msg);
+}
+
 // Insert note into enquiry_notes
-$metaType = $title;
-$metaVal  = $msg;
 $insertNoteSql = "INSERT INTO {$tblPrefix}enquiry_notes (enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) 
                   VALUES ('{$leadId}', '{$currentUserId}', '{$metaType}', '{$metaVal}')";
 

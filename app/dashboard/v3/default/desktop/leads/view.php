@@ -15,6 +15,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
 ?>
 <div id="leadViewApp" class="lead-view-wrapper"
     data-lead-id="<?php echo htmlspecialchars($rawLeadId); ?>"
+    data-user-id="<?php echo htmlspecialchars(defined('USER_ID') ? USER_ID : 0); ?>"
     data-user-role="<?php echo htmlspecialchars(isset($site_access_type) ? $site_access_type : 'administrator'); ?>"
     data-site-name="<?php echo htmlspecialchars(defined('SITE_NAME') ? SITE_NAME : ''); ?>"
     data-site-logo="<?php echo htmlspecialchars(defined('SITE_LOGO') ? SITE_LOGO : ''); ?>"

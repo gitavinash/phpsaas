@@ -4797,3 +4797,462 @@ $(document).ready(function (e) {
     });
   });
 })();
+
+/* ==========================================================================
+   GLOBAL AGENT FOLLOW-UP NOTIFICATION & REMINDER MONITOR
+   ========================================================================== */
+(function () {
+  let monitorInterval = null;
+
+  function playAgentChime() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        const audioCtx = new AudioCtx();
+        const doPlay = function () {
+          const playTone = (freq, start, dur) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + start);
+            gain.gain.setValueAtTime(0.35, audioCtx.currentTime + start);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + start + dur);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(audioCtx.currentTime + start);
+            osc.stop(audioCtx.currentTime + start + dur);
+          };
+          playTone(880.0, 0, 0.18);
+          playTone(1174.66, 0.12, 0.18);
+          playTone(1479.98, 0.24, 0.35);
+          console.log("[Global Agent Reminder] 🔔 Notification chime played for assigned agent.");
+        };
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume().then(doPlay).catch(doPlay);
+        } else {
+          doPlay();
+        }
+      }
+    } catch (e) {
+      console.warn("[Global Agent Reminder] Audio chime error:", e);
+    }
+  }
+
+  function triggerBrowserPushNotification(title, body, url, tag) {
+    if (!("Notification" in window)) return;
+    
+    if (Notification.permission === "default") {
+      try {
+        Notification.requestPermission().then(function (perm) {
+          if (perm === "granted") {
+            triggerBrowserPushNotification(title, body, url, tag);
+          }
+        });
+      } catch (e) {}
+      return;
+    }
+    
+    if (Notification.permission !== "granted") {
+      console.log("[Global Agent Reminder] ℹ️ Browser push notification skipped: permission is " + Notification.permission);
+      return;
+    }
+
+    const safeIcon = "https://cdn-icons-png.flaticon.com/512/3602/3602145.png";
+    const options = {
+      body: body,
+      icon: safeIcon,
+      badge: safeIcon,
+      tag: tag || ("followup-" + Date.now()),
+      data: { url: url },
+      requireInteraction: true,
+      silent: false
+    };
+
+    console.log("[Global Agent Reminder] 📱 Dispatching OS desktop push notification:", title);
+
+    var notificationCreated = false;
+    try {
+      var notif = new Notification(title, options);
+      notif.onclick = function () {
+        window.focus();
+        if (url) window.location.href = url;
+        this.close();
+      };
+      notificationCreated = true;
+      console.log("[Global Agent Reminder] ✅ Desktop notification created successfully.");
+    } catch (e) {
+      console.warn("[Global Agent Reminder] ⚠️ Direct new Notification failed, attempting ServiceWorker:", e);
+    }
+
+    if (!notificationCreated && "serviceWorker" in navigator && navigator.serviceWorker.ready) {
+      navigator.serviceWorker.ready.then(function (reg) {
+        return reg.showNotification(title, options);
+      }).catch(function (err) {
+        console.error("[Global Agent Reminder] ❌ ServiceWorker showNotification failed:", err);
+      });
+    }
+  }
+
+  function checkUpcomingFollowups() {
+    $.ajax({
+      url: "/api/v3/dashboard/agent-followup-alerts/",
+      type: "GET",
+      dataType: "json",
+      success: function (res) {
+        if (!res || res.status !== "success" || !Array.isArray(res.alerts) || res.alerts.length === 0) {
+          return;
+        }
+
+        // Filter alerts that have not yet been presented to the user in any open tab/session
+        const unalerted = res.alerts.filter(function (alert) {
+          const storageKey = "v3_alert_" + alert.lead_id + "_" + (alert.followup_time || "");
+          try {
+            return !(localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey));
+          } catch (e) {
+            return true;
+          }
+        });
+
+        if (unalerted.length === 0) {
+          return;
+        }
+
+        console.log("[Global Agent Reminder] 🚨 Found " + unalerted.length + " new upcoming follow-up(s) for assigned agent.");
+
+        // Mark all as notified in localStorage & sessionStorage to prevent duplicate alerts across tabs
+        unalerted.forEach(function (alert) {
+          const storageKey = "v3_alert_" + alert.lead_id + "_" + (alert.followup_time || "");
+          try {
+            localStorage.setItem(storageKey, String(Date.now()));
+            sessionStorage.setItem(storageKey, "1");
+          } catch (e) {}
+
+          // Dispatch FCM Push & Email Alert via backend
+          $.ajax({
+            url: "/api/v3/leads/send-followup-alert/",
+            type: "POST",
+            data: {
+              lead_id: alert.lead_id,
+              agent_id: res.user_id,
+              customer_name: alert.customer_name,
+              followup_time: alert.followup_time
+            },
+            dataType: "json",
+            success: function (r) {
+              console.log("[Global Agent Reminder] 📬 Push/Email API response for lead #" + alert.lead_id + ":", r);
+            }
+          });
+        });
+
+        // 1. Play audio chime once
+        playAgentChime();
+
+        // 2. Dispatch OS Browser Native Push Notification
+        const topAlert = unalerted[0];
+        const notifTitle = unalerted.length === 1
+          ? `🔔 Follow-Up in 5 Minutes: ${topAlert.customer_name}`
+          : `🔔 Follow-Up Reminders (${unalerted.length} Due)`;
+        const notifBody = unalerted.length === 1
+          ? `Scheduled follow-up is due at ${topAlert.followup_formatted}.`
+          : `You have ${unalerted.length} customer follow-ups scheduled right now.`;
+        const targetUrl = unalerted.length === 1
+          ? "/dashboard/leads/view/?id=" + topAlert.encoded_id
+          : "/dashboard/leads/list/?status=3";
+
+        triggerBrowserPushNotification(notifTitle, notifBody, targetUrl, "followup-" + topAlert.lead_id);
+
+        // 3. Display EXACTLY ONE In-App SweetAlert Modal (avoid spamming multiple popups)
+        if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+          if (Swal.isVisible && Swal.isVisible()) {
+            console.log("[Global Agent Reminder] ℹ️ A SweetAlert is already open. Suppressing duplicate popup.");
+            return;
+          }
+
+          console.log("[Global Agent Reminder] 💬 Displaying single in-app reminder modal.");
+
+          if (unalerted.length === 1) {
+            Swal.fire({
+              title: "🔔 Follow-Up in 5 Minutes!",
+              text: `Your scheduled follow-up with ${topAlert.customer_name} is due at ${topAlert.followup_formatted}.`,
+              icon: "warning",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#ea580c",
+              cancelButtonColor: "#64748b",
+              confirmButtonText: "Open Lead Details",
+              cancelButtonText: "Dismiss"
+            }).then(function (result) {
+              if (result.value || result.isConfirmed) {
+                window.location.href = "/dashboard/leads/view/?id=" + topAlert.encoded_id;
+              }
+            });
+          } else {
+            const customerNames = unalerted
+              .map(function (a) { return a.customer_name; })
+              .slice(0, 3)
+              .join(", ") + (unalerted.length > 3 ? "..." : "");
+
+            Swal.fire({
+              title: `🔔 ${unalerted.length} Follow-Ups Due!`,
+              text: `Upcoming follow-ups due for: ${customerNames}`,
+              icon: "warning",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#ea580c",
+              cancelButtonColor: "#64748b",
+              confirmButtonText: "View Follow-Up Leads",
+              cancelButtonText: "Dismiss"
+            }).then(function (result) {
+              if (result.value || result.isConfirmed) {
+                window.location.href = "/dashboard/leads/list/?status=3";
+              }
+            });
+          }
+        }
+      },
+      error: function () {}
+    });
+  }
+
+  function updateNotificationPromptBanner() {
+    if (!("Notification" in window)) return;
+
+    // Apply ONLY to agents user type
+    const isAgent = (typeof siteAdminType !== "undefined" && siteAdminType.toLowerCase() === "agent");
+    if (!isAgent) {
+      $("#v3PushHeroNotificationCard").remove();
+      return;
+    }
+
+    if (Notification.permission === "granted") {
+      $("#v3PushHeroNotificationCard").slideUp(200, function () {
+        $(this).remove();
+      });
+      return;
+    }
+
+    const isDenied = Notification.permission === "denied";
+    const $target = $("main > .container").first();
+    if (!$target.length) return;
+
+    if ($("#v3PushHeroNotificationCard").length) {
+      if (isDenied) {
+        $("#v3PushHeroNotificationCard")
+          .addClass("is-denied")
+          .find(".v3-push-hero-badge")
+          .html('<span class="v3-push-hero-badge-dot"></span> Notifications Blocked in Browser');
+        $("#v3PushHeroNotificationCard")
+          .find(".v3-push-hero-title")
+          .text("Desktop Notifications are Currently Blocked");
+        $("#v3PushHeroNotificationCard")
+          .find(".v3-push-hero-desc")
+          .text("Your browser has blocked push notifications for this site. You will miss urgent customer calls, new lead assignments, and upcoming follow-up reminders. Follow the visual steps on the right to allow alerts.");
+        $("#v3PushHeroNotificationCard")
+          .find("#btnEnableHeroPush")
+          .html('<i class="fi fi-rr-settings"></i> How to Enable in Settings');
+      }
+      return;
+    }
+
+    const domainName = window.location.hostname || "aleya.in";
+
+    const heroCardHtml = `
+      <div id="v3PushHeroNotificationCard" class="v3-push-hero-card ${isDenied ? "is-denied" : ""}">
+        <div class="v3-push-hero-header">
+          <div class="v3-push-hero-badge-wrap">
+            <span class="v3-push-hero-badge">
+              <span class="v3-push-hero-badge-dot"></span>
+              ${isDenied ? "Action Required: Notifications Blocked" : "Action Required: Enable Desktop Alerts"}
+            </span>
+          </div>
+          <button type="button" id="btnClosePushHeroCard" class="btn-v3-hero-close" title="Hide on this screen">
+            <i class="fi fi-rr-cross-small"></i> Hide for now
+          </button>
+        </div>
+
+        <div class="v3-push-hero-body">
+          <div class="v3-push-hero-info">
+            <h3 class="v3-push-hero-title">
+              ${isDenied ? "Desktop Notifications are Blocked in Your Browser" : "Never Miss a Lead or Follow-Up Reminder"}
+            </h3>
+            <p class="v3-push-hero-desc">
+              ${
+                isDenied
+                  ? "Your browser is blocking notifications for <strong>" + domainName + "</strong>. To ensure you never miss newly assigned leads or due follow-ups, please enable notifications using the quick 3-step guide."
+                  : "Turn on browser push notifications to get real-time audio and desktop alerts whenever a new lead is assigned to you or an upcoming customer follow-up is due."
+              }
+            </p>
+            <div class="v3-push-hero-note">
+              <i class="fi fi-rr-info"></i> Note: This notice will appear on each page until desktop notifications are enabled.
+            </div>
+          </div>
+
+          <div class="v3-push-browser-mockup">
+            <div class="v3-push-mockup-header">
+              <div class="v3-push-mockup-dots">
+                <div class="v3-push-mockup-dot"></div>
+                <div class="v3-push-mockup-dot"></div>
+                <div class="v3-push-mockup-dot"></div>
+              </div>
+              <div class="v3-push-mockup-url-bar">
+                <span>https://${domainName}</span>
+                <span class="v3-push-mockup-lock-highlight"><i class="fi fi-rr-lock"></i> Click Lock</span>
+              </div>
+            </div>
+            <div class="v3-push-mockup-steps">
+              <div class="v3-push-step-item">
+                <span class="v3-push-step-num">1</span>
+                <span>Click the <strong>padlock / tune</strong> icon in your browser URL bar.</span>
+              </div>
+              <div class="v3-push-step-item">
+                <span class="v3-push-step-num">2</span>
+                <span>Locate <strong>Notifications</strong> and toggle/select <strong>Allow</strong>.</span>
+              </div>
+              <div class="v3-push-step-item">
+                <span class="v3-push-step-num">3</span>
+                <span>Click <strong>Verify Permission</strong> below to activate.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="v3-push-hero-footer">
+          <div class="v3-push-hero-actions-left">
+            <button type="button" id="btnEnableHeroPush" class="btn-v3-enable-hero">
+              <i class="fi fi-rr-bell-ring"></i> ${isDenied ? "Open Settings Guide" : "Enable Desktop Notifications"}
+            </button>
+            <button type="button" id="btnVerifyHeroPush" class="btn-v3-verify-hero">
+              <i class="fi fi-rr-refresh"></i> Verify Permission
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    $target.prepend(heroCardHtml);
+  }
+
+  // Click handler to hide on current screen (re-shows on next page/navigation or refresh)
+  $(document).on("click", "#btnClosePushHeroCard, #btnDismissPushBottom", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const $card = $("#v3PushHeroNotificationCard");
+    $card.slideUp(200, function () {
+      $card.addClass("is-hidden").remove();
+    });
+  });
+
+  // Click handler for primary Enable button
+  $(document).on("click", "#btnEnableHeroPush", function () {
+    if (!("Notification" in window)) {
+      if (typeof Swal !== "undefined") {
+        Swal.fire({
+          title: "Browser Unsupported",
+          text: "Your current browser does not support Web Push notifications.",
+          icon: "warning",
+          type: "warning"
+        });
+      }
+      return;
+    }
+
+    if (Notification.permission === "denied") {
+      if (typeof Swal !== "undefined") {
+        Swal.fire({
+          title: "How to Enable in Browser",
+          html: "<div style='text-align:left;font-size:14px;line-height:1.7;padding:6px;'>" +
+                "<b>1.</b> Look at the left side of your browser URL bar.<br>" +
+                "<b>2.</b> Click the <b>Padlock 🔒 or Settings/Tune</b> icon.<br>" +
+                "<b>3.</b> Find <b>Notifications</b> and set it to <b>Allow</b>.<br>" +
+                "<b>4.</b> Click <b>Verify Permission</b> on the card to finish.</div>",
+          icon: "info",
+          type: "info",
+          confirmButtonColor: "#ea580c",
+          confirmButtonText: "Got it, I'll allow"
+        });
+      }
+      return;
+    }
+
+    Notification.requestPermission().then(function (perm) {
+      if (perm === "granted") {
+        playAgentChime();
+        updateNotificationPromptBanner();
+
+        if (typeof Swal !== "undefined") {
+          Swal.fire({
+            title: "✅ Notifications Activated!",
+            text: "You will now receive instant desktop lead reminders and follow-up alerts.",
+            icon: "success",
+            type: "success",
+            timer: 2500,
+            showConfirmButton: false
+          });
+        }
+
+        triggerBrowserPushNotification(
+          "🔔 Notifications Enabled",
+          "You will now receive instant customer follow-ups and lead updates.",
+          window.location.href,
+          "welcome-push"
+        );
+      } else {
+        updateNotificationPromptBanner();
+      }
+    });
+  });
+
+  // Click handler to re-verify permission after user allowed in browser settings
+  $(document).on("click", "#btnVerifyHeroPush", function () {
+    if (!("Notification" in window)) return;
+
+    if (Notification.permission === "granted") {
+      playAgentChime();
+      updateNotificationPromptBanner();
+      if (typeof Swal !== "undefined") {
+        Swal.fire({
+          title: "✅ Permission Verified!",
+          text: "Desktop push notifications are successfully active for your account.",
+          icon: "success",
+          type: "success",
+          timer: 2500,
+          showConfirmButton: false
+        });
+      }
+    } else if (Notification.permission === "denied") {
+      if (typeof Swal !== "undefined") {
+        Swal.fire({
+          title: "Still Blocked in Browser",
+          text: "Notifications are still blocked in your browser site settings. Please click the padlock icon in your address bar, switch Notifications to 'Allow', and click Verify again.",
+          icon: "warning",
+          type: "warning",
+          confirmButtonColor: "#ea580c",
+          confirmButtonText: "Check Settings"
+        });
+      }
+    } else {
+      Notification.requestPermission().then(function (perm) {
+        if (perm === "granted") {
+          playAgentChime();
+          updateNotificationPromptBanner();
+        }
+      });
+    }
+  });
+
+  // Re-check banner on every SPA page transition
+  $(document).on("spa:loaded", function () {
+    updateNotificationPromptBanner();
+  });
+
+  // Ask for notification permission once on dashboard & render banner
+  document.addEventListener("DOMContentLoaded", function () {
+    updateNotificationPromptBanner();
+
+    // Initial check after 2.5 seconds, then every 60 seconds
+    setTimeout(checkUpcomingFollowups, 2500);
+    if (!monitorInterval) {
+      monitorInterval = setInterval(checkUpcomingFollowups, 60000);
+    }
+  });
+})();

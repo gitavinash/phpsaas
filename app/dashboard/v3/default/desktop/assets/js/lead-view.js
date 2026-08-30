@@ -60,13 +60,90 @@
       }
     },
 
-    scheduleClientReminder: function (followupTimeStr, customerName) {
+    playNotificationSound: function () {
+      console.log("[Follow-Up Reminder] 🔊 Playing notification sound for assigned user...");
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          const audioCtx = new AudioContextClass();
+          const playAudioChime = function () {
+            const playTone = (freq, startTime, duration) => {
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = "sine";
+              osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+              gain.gain.setValueAtTime(0.35, audioCtx.currentTime + startTime);
+              gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + startTime + duration);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start(audioCtx.currentTime + startTime);
+              osc.stop(audioCtx.currentTime + startTime + duration);
+            };
+            // 3-tone bright chime
+            playTone(880.00, 0, 0.18);
+            playTone(1174.66, 0.12, 0.18);
+            playTone(1479.98, 0.24, 0.35);
+            console.log("[Follow-Up Reminder] 🔔 Notification chime successfully played.");
+          };
+
+          if (audioCtx.state === "suspended") {
+            audioCtx.resume().then(playAudioChime).catch(playAudioChime);
+          } else {
+            playAudioChime();
+          }
+        }
+      } catch (e) {
+        console.warn("[Follow-Up Reminder] ⚠️ Audio playback error:", e);
+      }
+    },
+
+    scheduleClientReminder: function (followupTimeStr, customerName, agentId, leadId) {
       if (!followupTimeStr) return;
 
+      const self = this;
+      const currentUserId = parseInt(
+        $("#leadViewApp").data("user-id") ||
+        (self.leadData && self.leadData.current_user_id) ||
+        0,
+        10
+      );
+      const assignedAgentId = parseInt(
+        agentId !== undefined ? agentId : (self.leadData ? self.leadData.agent_id : 0),
+        10
+      );
+      const userRole = (
+        (self.leadData && self.leadData.access_type) ||
+        $("#leadViewApp").data("user-role") ||
+        (typeof siteAdminType !== "undefined" ? siteAdminType : "administrator")
+      ).toLowerCase().trim();
+
+      const isAssignedAgent = (assignedAgentId > 0 && currentUserId > 0 && currentUserId === assignedAgentId);
+      const leadIdentifier = leadId || self.getLeadId();
+
+      console.log("[Follow-Up Reminder] 🔍 Evaluating follow-up reminder schedule:", {
+        leadId: leadIdentifier,
+        customerName: customerName,
+        followupTime: followupTimeStr,
+        currentUserId: currentUserId,
+        assignedAgentId: assignedAgentId,
+        userRole: userRole,
+        isAssignedAgent: isAssignedAgent
+      });
+
+      const storageKey = "v3_alert_" + leadIdentifier + "_" + (followupTimeStr || "");
+      try {
+        if (localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey)) {
+          console.log("[Follow-Up Reminder] ℹ️ Reminder already presented in this session. Skipping redundant scheduling.");
+          return;
+        }
+      } catch (e) {}
+
       // Ask for browser notification permission if not yet decided
-      if ("Notification" in window && Notification.permission === "default") {
+      if (isAssignedAgent && "Notification" in window && Notification.permission === "default") {
         try {
-          Notification.requestPermission();
+          Notification.requestPermission().then(function (perm) {
+            console.log("[Follow-Up Reminder] 🔔 Browser notification permission status:", perm);
+          });
         } catch (e) {}
       }
 
@@ -75,30 +152,90 @@
       const targetTimeMs = followupDate.getTime() - (5 * 60 * 1000);
       const delayMs = targetTimeMs - Date.now();
 
-      // Only schedule if within the next 24 hours and still in the future
-      if (delayMs > 0 && delayMs < 24 * 60 * 60 * 1000) {
-        setTimeout(() => {
-          // 1. Browser Native Notification
-          if ("Notification" in window && Notification.permission === "granted") {
-            try {
-              new Notification(`🔔 Follow-Up in 5 Minutes: ${customerName}`, {
-                body: `Scheduled follow-up is due at ${followupDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}.`,
-                icon: "/favicon.ico",
-              });
-            } catch (e) {}
-          }
+      console.log(`[Follow-Up Reminder] ⏱️ Calculated delay: ${Math.round(delayMs / 1000)}s until 5-minute reminder window.`);
 
-          // 2. In-App SweetAlert Toast Modal
-          if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+      const triggerReminder = () => {
+        try {
+          if (localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey)) return;
+          localStorage.setItem(storageKey, String(Date.now()));
+          sessionStorage.setItem(storageKey, "1");
+        } catch (e) {}
+
+        console.log(`[Follow-Up Reminder] 🚨 REMINDER TRIGGERED for Lead #${leadIdentifier} (${customerName})!`);
+
+        // 1. Dispatch FCM Push Notification & Email via backend API to assigned agent
+        if (assignedAgentId > 0) {
+          console.log("[Follow-Up Reminder] 📤 Dispatching push notification and email alert to assigned agent (Agent ID: " + assignedAgentId + ")...");
+          $.ajax({
+            url: "/api/v3/leads/send-followup-alert/",
+            type: "POST",
+            data: {
+              lead_id: leadIdentifier,
+              agent_id: assignedAgentId,
+              customer_name: customerName,
+              followup_time: followupTimeStr
+            },
+            dataType: "json",
+            success: function (res) {
+              console.log("[Follow-Up Reminder] 📬 Push Notification & Email API response:", res);
+            }
+          });
+        }
+
+        // 2. Play notification sound ONLY to the assigned agent
+        if (isAssignedAgent) {
+          self.playNotificationSound();
+        } else {
+          console.log("[Follow-Up Reminder] 🚫 Sound suppressed: Current logged-in user (ID: " + currentUserId + ") is not the assigned agent (Agent ID: " + assignedAgentId + ").");
+        }
+
+        // 3. Browser Native Notification ONLY to the assigned agent
+        if (isAssignedAgent && "Notification" in window && Notification.permission === "granted") {
+          try {
+            const notif = new Notification(`🔔 Follow-Up in 5 Minutes: ${customerName}`, {
+              body: `Scheduled follow-up is due at ${followupDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}.`,
+              icon: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png",
+              tag: "followup-" + leadIdentifier,
+            });
+            notif.onclick = function () {
+              window.focus();
+              this.close();
+            };
+            console.log("[Follow-Up Reminder] 📱 Native browser notification displayed to assigned agent.");
+          } catch (e) {
+            console.error("[Follow-Up Reminder] Native browser notification error:", e);
+          }
+        }
+
+        // 4. In-App SweetAlert Modal ONLY to the assigned agent (if no modal is open)
+        if (isAssignedAgent) {
+          if (typeof Swal !== "undefined" && typeof Swal.fire === "function" && (!Swal.isVisible || !Swal.isVisible())) {
+            console.log("[Follow-Up Reminder] 💬 Displaying single in-app SweetAlert reminder modal.");
             Swal.fire({
               title: "🔔 Follow-Up in 5 Minutes!",
               text: `Your scheduled follow-up with ${customerName} is due in 5 minutes.`,
               icon: "warning",
+              type: "warning",
+              showCancelButton: true,
               confirmButtonColor: "#ea580c",
+              cancelButtonColor: "#64748b",
               confirmButtonText: "View Activity",
+              cancelButtonText: "Dismiss"
             });
           }
-        }, delayMs);
+        }
+      };
+
+      // Schedule timer if in the future within 24h
+      if (delayMs > 0 && delayMs < 24 * 60 * 60 * 1000) {
+        if (self.reminderTimer) {
+          clearTimeout(self.reminderTimer);
+        }
+        self.reminderTimer = setTimeout(triggerReminder, delayMs);
+        console.log(`[Follow-Up Reminder] ⏳ Reminder scheduled to fire in ${Math.round(delayMs / 1000)} seconds for assigned user.`);
+      } else if (delayMs <= 0 && delayMs > -10 * 60 * 1000) {
+        // Due right now or within the last 10 minutes
+        triggerReminder();
       }
     },
 
@@ -236,10 +373,51 @@
       if (lead.timeline && lead.timeline.length > 0) {
         timelineHtml = '<div class="v3-timeline-stream">';
         lead.timeline.forEach((t) => {
+          const type = (t.type || "note").toLowerCase();
           let extraContent = "";
-          let cardExtraClass = "";
+          let cardExtraClass = `v3-timeline-card-${type}`;
+          let categoryHtml = "";
 
-          if (t.type === "itinerary") {
+          if (type === "followup") {
+            const cat = t.category || "General Follow-up";
+            categoryHtml = `<span class="v3-timeline-category-pill pill-followup"><i class="fi fi-rr-flag"></i> ${cat}</span>`;
+            
+            let timeChip = "";
+            if (t.followup_time) {
+              timeChip = `
+                <div class="v3-timeline-followup-time-box">
+                  <i class="fi fi-rr-calendar-clock"></i>
+                  <span>Follow-Up Due: <strong>${t.followup_time}</strong></span>
+                </div>
+              `;
+            }
+            
+            extraContent = `
+              <div class="v3-timeline-followup-body">
+                ${timeChip}
+                ${t.description ? `<div class="v3-timeline-note-text">${t.description}</div>` : ""}
+              </div>
+            `;
+          } else if (type === "payment") {
+            const p = t.payment_data || {};
+            const amt = p.amount ? parseFloat(p.amount) : 0;
+            const method = p.method || "Standard";
+            const ref = p.reference || "";
+            const status = (p.status || "verified").toLowerCase();
+            const statusLabel = (status === "pending") ? "Pending Verification" : (status === "rejected" ? "Rejected" : "Verified");
+            const statusClass = (status === "pending") ? "status-pending" : (status === "rejected" ? "status-rejected" : "status-verified");
+
+            categoryHtml = `<span class="v3-status-pill ${statusClass} v3-tl-status-badge">${statusLabel}</span>`;
+            extraContent = `
+              <div class="v3-timeline-payment-card">
+                <div class="v3-tl-pay-top">
+                  <div class="v3-tl-pay-amount">₹ ${amt > 0 ? amt.toLocaleString("en-IN", { minimumFractionDigits: 2 }) : (t.description ? t.description.replace(/^Recorded payment of /, "") : "0.00")}</div>
+                  <span class="v3-tl-pay-method"><i class="fi fi-rr-credit-card"></i> ${method}</span>
+                </div>
+                ${ref ? `<div class="v3-tl-pay-ref">Reference / Transaction ID: <strong>${ref}</strong></div>` : ""}
+              </div>
+            `;
+          } else if (t.type === "itinerary") {
             const q = t.quotation || {};
             const encId = q.encoded_id || (t.description && !isNaN(t.description) ? btoa(t.description) : "");
             const title = q.title || (t.description ? (isNaN(t.description) ? t.description : `Tour Itinerary #${t.description}`) : "Tour Itinerary");
@@ -249,6 +427,7 @@
             const downloadUrl = q.download_url || (encId ? `/download-itinerary/${encId}/` : "#");
             const hasMeta = !!(q.destination || q.duration || q.theme);
 
+            categoryHtml = `<span class="v3-timeline-category-pill pill-itinerary"><i class="fi fi-rr-route"></i> Itinerary Proposal</span>`;
             cardExtraClass = "v3-timeline-card-itinerary";
             extraContent = `
               <div class="v3-timeline-itinerary-card">
@@ -288,19 +467,27 @@
                 ` : ""}
               </div>
             `.trim();
-          } else if (t.type === "payment" && t.description) {
-            extraContent = `<div class="v3-timeline-payment-text"><i class="fi fi-rr-check-circle"></i> ${t.description}</div>`;
-          } else if (t.description) {
-            extraContent = t.description;
+          } else if (type === "note") {
+            categoryHtml = `<span class="v3-timeline-category-pill pill-note"><i class="fi fi-rr-comment"></i> Note</span>`;
+            extraContent = `<div class="v3-timeline-note-text">${t.description || "Note logged"}</div>`;
+          } else if (type === "update") {
+            categoryHtml = `<span class="v3-timeline-category-pill pill-update"><i class="fi fi-rr-refresh"></i> Update</span>`;
+            extraContent = `<div class="v3-timeline-update-text">${t.description || "Lead details updated."}</div>`;
+          } else if (type === "assign") {
+            categoryHtml = `<span class="v3-timeline-category-pill pill-assign"><i class="fi fi-rr-user-check"></i> Assignment</span>`;
+            extraContent = `<div class="v3-timeline-assign-text">${t.description || "Lead assigned to agent."}</div>`;
+          } else {
+            extraContent = t.description ? `<div class="v3-timeline-note-text">${t.description}</div>` : "";
           }
 
           timelineHtml += `
-            <div class="v3-timeline-row">
-              <div class="v3-timeline-bullet"><i class="${t.icon}"></i></div>
+            <div class="v3-timeline-row type-${type}">
+              <div class="v3-timeline-bullet"><i class="${t.icon || "fi fi-rr-comment"}"></i></div>
               <div class="v3-timeline-row-meta">
                 <span class="v3-timeline-tag">${t.title}</span>
+                ${categoryHtml}
                 <span>•</span>
-                <span>${t.user_name}</span>
+                <span class="v3-timeline-author">${t.user_name}</span>
                 <span>•</span>
                 <span class="v3-timeline-time-ago">${t.time_relative || t.time}</span>
               </div>
@@ -1060,6 +1247,21 @@
           });
         }
       }
+
+      // Check & schedule upcoming follow-up reminder if assigned to current user
+      if (
+        lead.kpis &&
+        lead.kpis.next_followup &&
+        lead.kpis.next_followup.is_scheduled &&
+        lead.kpis.next_followup.raw_time
+      ) {
+        self.scheduleClientReminder(
+          lead.kpis.next_followup.raw_time,
+          lead.name || "Customer",
+          lead.agent_id,
+          self.leadId
+        );
+      }
     },
 
     // Render structured day cards inside the full screen itinerary customizer
@@ -1301,11 +1503,12 @@
         const $btn = $(this);
         $btn.prop("disabled", true).text("Posting...");
 
+        const followupReason = $("#composerFollowupReason").val() || "General Follow-up";
         const postData = {
           leadId: self.leadId,
-          title:
-            type === "followup" ? $("#composerFollowupReason").val() : "Note",
-          msg: msg || "Follow-up reminder set",
+          title: type === "followup" ? followupReason : "Note",
+          category: type === "followup" ? followupReason : "Note",
+          msg: msg,
         };
 
         if (type === "followup") {
@@ -1326,7 +1529,12 @@
               self.notify(res.message || "Update logged successfully", "success");
               
               if (res.followup_time) {
-                self.scheduleClientReminder(res.followup_time, self.leadData ? self.leadData.name : "Customer");
+                self.scheduleClientReminder(
+                  res.followup_time,
+                  self.leadData ? self.leadData.name : "Customer",
+                  self.leadData ? self.leadData.agent_id : 0,
+                  self.leadId
+                );
               }
               
               self.loadLeadDetails();
