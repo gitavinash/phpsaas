@@ -214,16 +214,39 @@ foreach ($rawTimelineRows as $tRow) {
     if ($noteType === 'payment') {
         $payData = json_decode($noteVal, true);
         if (is_array($payData)) {
+            $rawImg = $payData['paymentImages'] ?? '';
+            $imgUrl = '';
+            $imgName = '';
+            if (!empty($rawImg)) {
+                if (is_array($rawImg)) {
+                    $imgUrl  = $rawImg['path'] ?? '';
+                    $imgName = $rawImg['name'] ?? '';
+                } elseif (is_string($rawImg)) {
+                    $dec = json_decode($rawImg, true);
+                    if (is_string($dec)) {
+                        $dec = json_decode($dec, true);
+                    }
+                    if (is_array($dec)) {
+                        $imgUrl  = $dec['path'] ?? '';
+                        $imgName = $dec['name'] ?? '';
+                    } else {
+                        $imgUrl = $rawImg;
+                    }
+                }
+            }
+
             $payments[] = [
-                'id' => (int)$tRow['enquiry_notes_id'],
-                'amount' => $payData['paymentAmount'] ?? '0',
-                'method' => $payData['paymentMethod'] ?? 'Standard',
-                'date' => $payData['paymentDate'] ?? date('d-m-Y', strtotime($updatedAt)),
-                'reference' => $payData['paymentReference'] ?? '',
-                'notes' => $payData['paymentMsg'] ?? '',
-                'image' => $payData['paymentImages'] ?? '',
+                'id'          => (int)$tRow['enquiry_notes_id'],
+                'amount'      => $payData['paymentAmount'] ?? '0',
+                'method'      => $payData['paymentMethod'] ?? 'Standard',
+                'date'        => $payData['paymentDate'] ?? date('d-m-Y', strtotime($updatedAt)),
+                'reference'   => $payData['paymentReference'] ?? '',
+                'notes'       => $payData['paymentMsg'] ?? '',
+                'image'       => $rawImg,
+                'image_url'   => $imgUrl,
+                'image_name'  => $imgName,
                 'recorded_by' => $updatedBy,
-                'created_at' => $updatedAt,
+                'created_at'  => $updatedAt,
             ];
             $itemDesc = "Recorded payment of ₹ " . number_format((float)($payData['paymentAmount'] ?? 0), 2) . " via " . ($payData['paymentMethod'] ?? 'Standard') . (!empty($payData['paymentReference']) ? " (Ref: {$payData['paymentReference']})" : "");
         } else {
@@ -319,7 +342,6 @@ $quoteSql = "SELECT quotation_id, quotation_price
              FROM {$tblPrefix}quotation 
              WHERE quotation_ref_id = '{$leadId}' 
                AND quotation_ref_type = 'enquiry' 
-               AND quotation_status = 0 
                AND quotation_site_id = {$siteId} 
              ORDER BY quotation_id DESC 
              LIMIT 1";
@@ -333,6 +355,19 @@ if ($qRes = mysqli_query($connection, $quoteSql)) {
             'price' => $qPrice,
             'min_payment' => round(($qPrice * $minPercent) / 100, 2),
         ];
+    }
+}
+
+// Fallback to itinerary quotation price if direct quotation record is 0
+if ($quotation['price'] <= 0 && !empty($quotationsMap)) {
+    foreach ($quotationsMap as $qm) {
+        if (!empty($qm['price']) && (float)$qm['price'] > 0) {
+            $quotation['price'] = (float)$qm['price'];
+            $quotation['id']    = (int)($qm['id'] ?? 0);
+            $minPercent = defined('MINIMUM_PAYMENT') ? (float)MINIMUM_PAYMENT : 30;
+            $quotation['min_payment'] = round(($quotation['price'] * $minPercent) / 100, 2);
+            break;
+        }
     }
 }
 

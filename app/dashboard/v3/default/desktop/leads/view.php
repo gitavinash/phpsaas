@@ -511,6 +511,21 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                 <label class="v3-modal-label">Remarks / Description</label>
                 <textarea id="modalPayNotes" class="v3-modal-textarea" placeholder="Payment remarks..."></textarea>
             </div>
+            <div class="v3-modal-form-group">
+                <div class="v3-form-label-row">
+                    <label class="v3-modal-label">Payment Receipt / Screenshot</label>
+                    <span class="v3-label-hint">Optional (PNG, JPG, PDF)</span>
+                </div>
+                <div class="v3-file-upload-box" id="payReceiptUploadBox">
+                    <input type="file" id="modalPayFile" name="files" class="v3-file-input" accept="image/png, image/jpeg, image/jpg, image/webp, application/pdf">
+                    <label for="modalPayFile" class="v3-file-upload-label" id="modalPayFileLabel">
+                        <i class="fi fi-rr-cloud-upload"></i>
+                        <span class="v3-file-upload-text" id="modalPayFileText">Click to upload payment receipt or screenshot</span>
+                    </label>
+                    <button type="button" class="btn-clear-uploaded-file v3-hidden" id="btnClearPayFile" title="Remove file">✕</button>
+                </div>
+                <div id="modalPayFilePreview" class="v3-file-preview-row v3-hidden"></div>
+            </div>
         </div>
         <div class="v3-modal-footer">
             <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
@@ -557,6 +572,83 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
         <div class="v3-modal-footer">
             <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
             <button type="button" class="btn-v3-action btn-red" id="btnSubmitModalCloseLead">Close Lead</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: View Payment Receipt & Breakdown -->
+<div class="v3-modal-overlay" id="modalViewPaymentReceipt">
+    <div class="v3-modal-dialog v3-modal-dialog-receipt v3-modal-dialog-lg">
+        <div class="v3-modal-header">
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box icon-payment">
+                    <i class="fi fi-rr-receipt"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Payment Confirmation & Receipt</h4>
+                    <span class="v3-modal-subtitle" id="receiptModalSubtitle">Transaction Details</span>
+                </div>
+            </div>
+            <div class="v3-modal-header-right-group">
+                <div class="v3-receipt-nav-bar" id="receiptNavBar">
+                    <button type="button" class="btn-receipt-nav" id="btnReceiptNavPrev" title="Previous Payment (Left Arrow)">
+                        <i class="fi fi-rr-angle-left"></i>
+                    </button>
+                    <span class="v3-receipt-nav-counter" id="receiptNavCounter">1 of 1</span>
+                    <button type="button" class="btn-receipt-nav" id="btnReceiptNavNext" title="Next Payment (Right Arrow)">
+                        <i class="fi fi-rr-angle-right"></i>
+                    </button>
+                </div>
+                <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close (Press Esc)"><i class="fi fi-rr-cross"></i></button>
+            </div>
+        </div>
+        <div class="v3-receipt-modal-content-wrap">
+            <!-- Left Side: Image / Receipt Preview -->
+            <div class="v3-receipt-col-left" id="receiptPreviewPane">
+                <div class="v3-receipt-img-container" id="receiptImgContainer">
+                    <!-- Dynamic preview image or PDF placeholder -->
+                </div>
+            </div>
+            <!-- Right Side: Structured Payment Information -->
+            <div class="v3-receipt-col-right" id="receiptInfoPane">
+                <div class="v3-receipt-amount-card">
+                    <span class="v3-receipt-amount-label">Amount Received</span>
+                    <h2 class="v3-receipt-amount-val" id="receiptModalAmount">₹ 0</h2>
+                    <span class="v3-lead-badge badge-confirmed" id="receiptModalStatusBadge"><i class="fi fi-rr-check"></i> Recorded</span>
+                </div>
+
+                <div class="v3-receipt-details-list">
+                    <div class="v3-receipt-detail-item">
+                        <span class="v3-receipt-detail-label"><i class="fi fi-rr-calendar"></i> Payment Date</span>
+                        <span class="v3-receipt-detail-val" id="receiptModalDate">-</span>
+                    </div>
+                    <div class="v3-receipt-detail-item">
+                        <span class="v3-receipt-detail-label"><i class="fi fi-rr-credit-card"></i> Payment Method</span>
+                        <span class="v3-receipt-detail-val" id="receiptModalMethod">-</span>
+                    </div>
+                    <div class="v3-receipt-detail-item">
+                        <span class="v3-receipt-detail-label"><i class="fi fi-rr-hashtag"></i> Transaction / UTR Ref</span>
+                        <div class="v3-receipt-ref-row">
+                            <span class="v3-receipt-detail-val monospace" id="receiptModalRef">-</span>
+                            <button type="button" class="btn-copy-receipt-ref" id="btnCopyReceiptRef" title="Copy Reference"><i class="fi fi-rr-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="v3-receipt-detail-item">
+                        <span class="v3-receipt-detail-label"><i class="fi fi-rr-user"></i> Recorded By</span>
+                        <span class="v3-receipt-detail-val" id="receiptModalRecordedBy">-</span>
+                    </div>
+                    <div class="v3-receipt-detail-item full-width" id="receiptModalNotesWrap">
+                        <span class="v3-receipt-detail-label"><i class="fi fi-rr-comment-alt"></i> Remarks / Description</span>
+                        <p class="v3-receipt-notes-text" id="receiptModalNotes">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="v3-modal-footer">
+            <a href="#" target="_blank" class="btn-v3-action btn-outline" id="receiptModalDownloadBtn" download>
+                <i class="fi fi-rr-download"></i> Download Image
+            </a>
+            <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Close</button>
         </div>
     </div>
 </div>

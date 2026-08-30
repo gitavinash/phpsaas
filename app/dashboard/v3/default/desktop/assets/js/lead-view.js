@@ -320,35 +320,146 @@
       }
 
       // 3. Build Payment Ledger
-      let paymentsHtml = "";
-      if (lead.payments && lead.payments.length > 0) {
-        paymentsHtml = `
-          <table class="v3-payments-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Method</th>
-                <th>Reference</th>
-                <th>Recorded By</th>
-                <th>Remarks</th>
-              </tr>
-            </thead>
-            <tbody>
+      self.leadPayments = lead.payments || [];
+      let totalPaid = 0;
+      self.leadPayments.forEach((p) => {
+        totalPaid += parseFloat(p.amount || 0);
+      });
+
+      // Calculate Total Package Value & Pending Amount
+      let quotePrice = parseFloat((lead.quotation && lead.quotation.price) || (self.leadData && self.leadData.quotation && self.leadData.quotation.price) || 0);
+      if (quotePrice <= 0 && lead.timeline && lead.timeline.length > 0) {
+        lead.timeline.forEach((t) => {
+          if (t.quotation && t.quotation.price && parseFloat(t.quotation.price) > 0 && quotePrice <= 0) {
+            quotePrice = parseFloat(t.quotation.price);
+          }
+        });
+      }
+
+      let pendingAmount = 0;
+      let pendingHtml = "";
+
+      if (quotePrice > 0) {
+        pendingAmount = Math.max(0, quotePrice - totalPaid);
+        if (pendingAmount > 0) {
+          pendingHtml = `
+            <div class="v3-pay-stat-pill stat-pending">
+              <i class="fi fi-rr-clock"></i>
+              <span class="v3-pay-stat-label">Pending</span>
+              <span class="v3-pay-stat-val">₹ ${pendingAmount.toLocaleString("en-IN")}</span>
+            </div>
+          `;
+        } else {
+          pendingHtml = `
+            <div class="v3-pay-stat-pill stat-settled">
+              <i class="fi fi-rr-badge-check"></i>
+              <span class="v3-pay-stat-label">Pending</span>
+              <span class="v3-pay-stat-val">₹ 0 (Paid in Full)</span>
+            </div>
+          `;
+        }
+      } else {
+        pendingHtml = `
+          <div class="v3-pay-stat-pill stat-pending">
+            <i class="fi fi-rr-clock"></i>
+            <span class="v3-pay-stat-label">Pending</span>
+            <span class="v3-pay-stat-val">₹ 0</span>
+          </div>
         `;
-        lead.payments.forEach((p) => {
+      }
+
+      function getPaymentMethodBadge(method) {
+        const m = (method || "").toLowerCase();
+        let icon = "fi-rr-wallet";
+        let cls = "badge-method-default";
+        if (m.includes("upi") || m.includes("qr")) {
+          icon = "fi-rr-qr-scan";
+          cls = "badge-method-upi";
+        } else if (m.includes("bank") || m.includes("neft") || m.includes("imps")) {
+          icon = "fi-rr-bank";
+          cls = "badge-method-bank";
+        } else if (m.includes("card")) {
+          icon = "fi-rr-credit-card";
+          cls = "badge-method-card";
+        } else if (m.includes("cash")) {
+          icon = "fi-rr-money-bill-wave";
+          cls = "badge-method-cash";
+        } else if (m.includes("cheque") || m.includes("dd")) {
+          icon = "fi-rr-document";
+          cls = "badge-method-cheque";
+        }
+        return `<span class="v3-payment-method-chip ${cls}"><i class="fi ${icon}"></i> ${method || "Standard"}</span>`;
+      }
+
+      let paymentsHtml = "";
+      if (self.leadPayments.length > 0) {
+        paymentsHtml = `
+          <div class="v3-payments-container-card">
+            <div class="v3-payments-header-bar">
+              <div class="v3-payments-summary-group">
+                ${quotePrice > 0 ? `
+                  <div class="v3-pay-stat-pill stat-package">
+                    <i class="fi fi-rr-box-alt"></i>
+                    <span class="v3-pay-stat-label">Package Total</span>
+                    <span class="v3-pay-stat-val">₹ ${quotePrice.toLocaleString("en-IN")}</span>
+                  </div>
+                ` : ""}
+                <div class="v3-pay-stat-pill stat-collected">
+                  <i class="fi fi-rr-check-circle"></i>
+                  <span class="v3-pay-stat-label">Collected</span>
+                  <span class="v3-pay-stat-val">₹ ${totalPaid.toLocaleString("en-IN")}</span>
+                </div>
+                ${pendingHtml}
+                <div class="v3-pay-stat-pill stat-entries">
+                  <i class="fi fi-rr-receipt"></i>
+                  <span class="v3-pay-stat-label">Entries</span>
+                  <span class="v3-pay-stat-val">${self.leadPayments.length}</span>
+                </div>
+              </div>
+              <button type="button" class="btn-v3-action btn-green" id="btnOpenPaymentModalTab" data-tooltip="Record Payment">
+                <i class="fi fi-rr-plus"></i> Record Payment
+              </button>
+            </div>
+            <div class="v3-table-responsive-wrapper">
+              <table class="v3-payments-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Reference / UTR</th>
+                    <th>Receipt Proof</th>
+                    <th>Recorded By</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+        `;
+        self.leadPayments.forEach((p, idx) => {
+          const imgUrl = p.image_url || (p.image && typeof p.image === "object" ? p.image.path : (typeof p.image === "string" && (p.image.includes("/") || p.image.includes(".")) ? p.image : ""));
+          const receiptHtml = imgUrl
+            ? `<button type="button" class="v3-payment-receipt-btn btn-view-payment-receipt" data-payment-idx="${idx}" title="Click to view receipt image and payment details">
+                <i class="fi fi-rr-picture"></i> View Receipt
+               </button>`
+            : `<span class="v3-receipt-none-chip"><i class="fi fi-rr-cross-small"></i> None</span>`;
+
+          const refHtml = p.reference
+            ? `<span class="v3-pay-ref-text monospace" title="${p.reference}">${p.reference}</span>`
+            : `<span class="v3-text-muted">-</span>`;
+
           paymentsHtml += `
-            <tr>
-              <td>${p.date}</td>
-              <td><strong>₹ ${parseFloat(p.amount).toLocaleString("en-IN")}</strong></td>
-              <td><span class="v3-lead-badge badge-fresh">${p.method}</span></td>
-              <td>${p.reference || "-"}</td>
-              <td>${p.recorded_by}</td>
-              <td>${p.notes || "-"}</td>
+            <tr class="v3-payment-row">
+              <td><span class="v3-pay-date-text"><i class="fi fi-rr-calendar"></i> ${p.date}</span></td>
+              <td><strong class="v3-pay-amount-text">₹ ${parseFloat(p.amount).toLocaleString("en-IN")}</strong></td>
+              <td>${getPaymentMethodBadge(p.method)}</td>
+              <td>${refHtml}</td>
+              <td>${receiptHtml}</td>
+              <td><span class="v3-pay-recorded-by"><i class="fi fi-rr-user"></i> ${p.recorded_by}</span></td>
+              <td><span class="v3-pay-remarks-text">${p.notes || "-"}</span></td>
             </tr>
           `;
         });
-        paymentsHtml += `</tbody></table>`;
+        paymentsHtml += `</tbody></table></div></div>`;
       } else {
         paymentsHtml = `
           <div class="v3-leads-empty-state v3-empty-compact">
@@ -754,11 +865,6 @@
                   ${
                     isAssigned
                       ? `
-                    <div class="v3-flex-end-row">
-                      <button type="button" class="btn-v3-action btn-green" id="btnOpenPaymentModalTab" data-tooltip="Record Payment">
-                        <i class="fi fi-rr-plus"></i> Record Payment
-                      </button>
-                    </div>
                     ${paymentsHtml}
                   `
                       : `
@@ -2458,10 +2564,149 @@
         "click",
         "#btnOpenPaymentModal, #btnOpenPaymentModalTab, #btnSideRecordPayment",
         function () {
+          const fileInput = document.getElementById("modalPayFile");
+          if (fileInput) fileInput.value = "";
+          $("#modalPayFileText").text("Click to upload payment receipt or screenshot");
+          $("#btnClearPayFile").addClass("v3-hidden");
+          $("#modalPayFilePreview").empty().addClass("v3-hidden");
           $("#modalUpdatePayment").addClass("is-active");
           self.initSingleDatePickers();
         },
       );
+
+      // Payment Receipt File Change & Clear Handlers
+      $(document).on("change", "#modalPayFile", function () {
+        const file = this.files && this.files[0];
+        const $preview = $("#modalPayFilePreview");
+        const $text = $("#modalPayFileText");
+        const $clearBtn = $("#btnClearPayFile");
+
+        if (file) {
+          const fileSizeKb = Math.round(file.size / 1024);
+          const sizeStr = fileSizeKb > 1024 ? (fileSizeKb / 1024).toFixed(1) + " MB" : fileSizeKb + " KB";
+          $text.html(`<strong>${file.name}</strong> <span class="v3-file-size">(${sizeStr})</span>`);
+          $clearBtn.removeClass("v3-hidden");
+
+          if (file.type && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              $preview
+                .html(`<img src="${e.target.result}" alt="Preview" class="v3-receipt-thumb-img">`)
+                .removeClass("v3-hidden");
+            };
+            reader.readAsDataURL(file);
+          } else {
+            $preview
+              .html(`<div class="v3-receipt-doc-chip"><i class="fi fi-rr-document"></i> <span>${file.name}</span></div>`)
+              .removeClass("v3-hidden");
+          }
+        } else {
+          $text.text("Click to upload payment receipt or screenshot");
+          $clearBtn.addClass("v3-hidden");
+          $preview.empty().addClass("v3-hidden");
+        }
+      });
+
+      $(document).on("click", "#btnClearPayFile", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const fileInput = document.getElementById("modalPayFile");
+        if (fileInput) fileInput.value = "";
+        $("#modalPayFileText").text("Click to upload payment receipt or screenshot");
+        $("#btnClearPayFile").addClass("v3-hidden");
+        $("#modalPayFilePreview").empty().addClass("v3-hidden");
+      });
+
+      // Open Payment Receipt & Breakdown Modal on current page with Infinite Navigation
+      self.currentReceiptIdx = 0;
+
+      self.renderReceiptDetails = function (idx) {
+        if (!self.leadPayments || self.leadPayments.length === 0) return;
+        const total = self.leadPayments.length;
+        const wrappedIdx = ((idx % total) + total) % total;
+        self.currentReceiptIdx = wrappedIdx;
+        const p = self.leadPayments[wrappedIdx];
+        if (!p) return;
+
+        const rawImg = p.image_url || (p.image && typeof p.image === "object" ? p.image.path : (typeof p.image === "string" && (p.image.includes("/") || p.image.includes(".")) ? p.image : ""));
+        const $imgContainer = $("#receiptImgContainer");
+        const $downloadBtn = $("#receiptModalDownloadBtn");
+
+        if (rawImg) {
+          const isPdf = rawImg.toLowerCase().includes(".pdf");
+          if (isPdf) {
+            $imgContainer.html(`
+              <div class="v3-receipt-pdf-placeholder">
+                <i class="fi fi-rr-file-pdf"></i>
+                <h5>PDF Document Attached</h5>
+                <p>Click below to preview or download the receipt PDF.</p>
+                <a href="${rawImg}" target="_blank" class="btn-v3-action btn-green"><i class="fi fi-rr-eye"></i> View PDF Document</a>
+              </div>
+            `);
+          } else {
+            $imgContainer.html(`
+              <img src="${rawImg}" alt="Payment Receipt" class="v3-receipt-full-preview">
+            `);
+          }
+          $downloadBtn.attr("href", rawImg).show();
+        } else {
+          $imgContainer.html(`
+            <div class="v3-receipt-empty-preview">
+              <i class="fi fi-rr-picture"></i>
+              <p>No receipt image attached for this transaction.</p>
+            </div>
+          `);
+          $downloadBtn.hide();
+        }
+
+        $("#receiptModalAmount").text(`₹ ${parseFloat(p.amount || 0).toLocaleString("en-IN")}`);
+        $("#receiptModalDate").text(p.date || "-");
+        $("#receiptModalMethod").text(p.method || "Standard");
+        $("#receiptModalRef").text(p.reference || "None");
+        $("#receiptModalRecordedBy").text(p.recorded_by || "System");
+        $("#receiptModalNotes").text(p.notes || "No remarks provided.");
+        $("#receiptModalSubtitle").text(`Recorded on ${p.date || "recent"} by ${p.recorded_by || "Representative"}`);
+        $("#receiptNavCounter").text(`${wrappedIdx + 1} of ${total}`);
+
+        if (total <= 1) {
+          $("#receiptNavBar").hide();
+        } else {
+          $("#receiptNavBar").show();
+        }
+      };
+
+      $(document).on("click", ".btn-view-payment-receipt", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const idx = parseInt($(this).data("payment-idx"), 10) || 0;
+        self.renderReceiptDetails(idx);
+        $("#modalViewPaymentReceipt").addClass("is-active");
+      });
+
+      // Infinite Left / Right Navigation Handlers
+      $(document).on("click", "#btnReceiptNavPrev", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.renderReceiptDetails(self.currentReceiptIdx - 1);
+      });
+
+      $(document).on("click", "#btnReceiptNavNext", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.renderReceiptDetails(self.currentReceiptIdx + 1);
+      });
+
+      // Copy UTR / Reference from Receipt Modal
+      $(document).on("click", "#btnCopyReceiptRef", function (e) {
+        e.preventDefault();
+        const ref = $("#receiptModalRef").text().trim();
+        if (!ref || ref === "None" || ref === "-") return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(ref).then(function () {
+            self.notify("Reference copied to clipboard!", "success");
+          });
+        }
+      });
 
       $(document).on("click", "#btnSideCloseLeadModal", function () {
         $("#modalCloseLead").addClass("is-active");
@@ -2471,8 +2716,20 @@
         $(".v3-modal-overlay").removeClass("is-active");
       });
 
-      // Close any active modal when user presses Escape key
+      // Close modal on Escape key or navigate with Left/Right Arrow keys
       $(document).on("keydown", function (e) {
+        if ($("#modalViewPaymentReceipt").hasClass("is-active")) {
+          if (e.key === "ArrowLeft" || e.keyCode === 37) {
+            e.preventDefault();
+            self.renderReceiptDetails(self.currentReceiptIdx - 1);
+            return;
+          } else if (e.key === "ArrowRight" || e.keyCode === 39) {
+            e.preventDefault();
+            self.renderReceiptDetails(self.currentReceiptIdx + 1);
+            return;
+          }
+        }
+
         if (e.key === "Escape" || e.keyCode === 27) {
           if ($(".v3-modal-overlay.is-active").length) {
             $(".v3-modal-overlay.is-active").removeClass("is-active");
@@ -2490,6 +2747,7 @@
         const date = $("#modalPayDate").val();
         const ref = $("#modalPayRef").val().trim();
         const notes = $("#modalPayNotes").val().trim();
+        const fileInput = document.getElementById("modalPayFile");
 
         if (!amount || parseFloat(amount) <= 0) {
           self.notify("Please enter a valid payment amount.", "warning");
@@ -2499,23 +2757,38 @@
         const $btn = $(this);
         $btn.prop("disabled", true).text("Saving...");
 
+        const formData = new FormData();
+        formData.append("leadId", self.leadId);
+        formData.append("amount", amount);
+        formData.append("payment_method", method);
+        formData.append("payment_date", date);
+        formData.append("reference_number", ref);
+        formData.append("payment_notes", notes);
+
+        if (fileInput && fileInput.files && fileInput.files.length > 0) {
+          formData.append("files", fileInput.files[0]);
+        }
+
         $.ajax({
           url: "/api/v3/leads/payment-record/",
           type: "POST",
-          data: {
-            leadId: self.leadId,
-            amount: amount,
-            payment_method: method,
-            payment_date: date,
-            reference_number: ref,
-            payment_notes: notes,
-          },
+          data: formData,
+          processData: false,
+          contentType: false,
           dataType: "json",
           success: function (res) {
             $btn.prop("disabled", false).text("Record Payment");
             $(".v3-modal-overlay").removeClass("is-active");
             if (res.status === "success") {
               self.notify("Payment recorded successfully", "success");
+              // Reset modal inputs
+              $("#modalPayAmount").val("");
+              $("#modalPayRef").val("");
+              $("#modalPayNotes").val("");
+              if (fileInput) fileInput.value = "";
+              $("#modalPayFileText").text("Click to upload payment receipt or screenshot");
+              $("#btnClearPayFile").addClass("v3-hidden");
+              $("#modalPayFilePreview").empty().addClass("v3-hidden");
               self.loadLeadDetails();
             } else {
               self.notify(res.message || "Failed to record payment.", "error");

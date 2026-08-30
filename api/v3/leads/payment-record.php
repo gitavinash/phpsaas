@@ -40,13 +40,19 @@ if (empty($amount) || !is_numeric($amount) || (float)$amount <= 0) {
     exit();
 }
 
-// Handle file upload if present
+// Handle optional file/receipt upload if present
 $paymentImages = '';
-if (isset($_FILES['files']) && !empty($_FILES['files']['name'])) {
+$uploadedFileKey = isset($_FILES['files']) ? 'files' : (isset($_FILES['file']) ? 'file' : (isset($_FILES['payment_image']) ? 'payment_image' : ''));
+
+if (!empty($uploadedFileKey) && !empty($_FILES[$uploadedFileKey]['name']) && $_FILES[$uploadedFileKey]['error'] === 0) {
+    // If not named 'files', alias it for singleFileUploader
+    if ($uploadedFileKey !== 'files') {
+        $_FILES['files'] = $_FILES[$uploadedFileKey];
+    }
     if (defined('MODULES') && file_exists(MODULES . 'singleFileUploader.php')) {
         require_once MODULES . 'singleFileUploader.php';
-        if (isset($files)) {
-            $paymentImages = json_encode($files, true);
+        if (isset($files) && !empty($files)) {
+            $paymentImages = is_array($files) ? json_encode($files) : $files;
         }
     }
 }
@@ -74,9 +80,23 @@ if (!mysqli_query($connection, $insertSql)) {
     exit();
 }
 
-// Update lead status to Payment Initiated / Partial (6) or Confirmed (1)
-$updateLead = "UPDATE {$tblPrefix}enquiry SET enquiry_status = 6, enquiry_update = NOW() WHERE enquiry_id = {$leadId} AND enquiry_site_id = {$siteId}";
-mysqli_query($connection, $updateLead);
+// Check current lead status and mark as Confirmed (1) if it is not already confirmed
+$currentStatus = null;
+$siteFilter = ($siteId > 0) ? " AND enquiry_site_id = {$siteId}" : "";
+$checkStatusSql = "SELECT enquiry_status FROM {$tblPrefix}enquiry WHERE enquiry_id = {$leadId}{$siteFilter} LIMIT 1";
+$checkRes = mysqli_query($connection, $checkStatusSql);
+if ($checkRes && mysqli_num_rows($checkRes) > 0) {
+    $row = mysqli_fetch_assoc($checkRes);
+    $currentStatus = (int)($row['enquiry_status'] ?? 0);
+}
+
+if ($currentStatus !== 1) {
+    $updateLead = "UPDATE {$tblPrefix}enquiry SET enquiry_status = 1, enquiry_update = NOW() WHERE enquiry_id = {$leadId}{$siteFilter}";
+    mysqli_query($connection, $updateLead);
+} else {
+    $updateLead = "UPDATE {$tblPrefix}enquiry SET enquiry_update = NOW() WHERE enquiry_id = {$leadId}{$siteFilter}";
+    mysqli_query($connection, $updateLead);
+}
 
 mysqli_query($connection, 'COMMIT');
 
@@ -84,5 +104,6 @@ echo json_encode([
     'status' => 'success',
     'message' => 'Payment record added successfully.',
     'lead_id' => $leadId,
+    'new_status' => 1,
 ]);
 exit();
