@@ -430,6 +430,7 @@
                     <th>Reference / UTR</th>
                     <th>Receipt Proof</th>
                     <th>Recorded By</th>
+                    <th>Status</th>
                     <th>Remarks</th>
                   </tr>
                 </thead>
@@ -447,6 +448,20 @@
             ? `<span class="v3-pay-ref-text monospace" title="${p.reference}">${p.reference}</span>`
             : `<span class="v3-text-muted">-</span>`;
 
+          let statusBadge = `<span class="v3-lead-badge badge-confirmed" style="font-size: 11px;"><i class="fi fi-rr-check"></i> Verified</span>`;
+          if (p.status === "pending") {
+            statusBadge = `
+              <div style="display: inline-flex; align-items: center; gap: 6px;">
+                <span class="v3-lead-badge badge-pending-approval" style="font-size: 11px;"><i class="fi fi-rr-clock"></i> Pending</span>
+                <button type="button" class="btn-v3-action btn-green btn-xs btn-lead-approve-payment" data-note-id="${p.id}" title="Approve & Verify Payment">
+                  <i class="fi fi-rr-check"></i> Verify
+                </button>
+              </div>
+            `;
+          } else if (p.status === "rejected") {
+            statusBadge = `<span class="v3-lead-badge badge-cancelled" style="font-size: 11px;"><i class="fi fi-rr-cross-circle"></i> Rejected</span>`;
+          }
+
           paymentsHtml += `
             <tr class="v3-payment-row">
               <td><span class="v3-pay-date-text"><i class="fi fi-rr-calendar"></i> ${p.date}</span></td>
@@ -455,6 +470,7 @@
               <td>${refHtml}</td>
               <td>${receiptHtml}</td>
               <td><span class="v3-pay-recorded-by"><i class="fi fi-rr-user"></i> ${p.recorded_by}</span></td>
+              <td>${statusBadge}</td>
               <td><span class="v3-pay-remarks-text">${p.notes || "-"}</span></td>
             </tr>
           `;
@@ -2797,6 +2813,41 @@
           error: function () {
             $btn.prop("disabled", false).text("Record Payment");
             self.notify("Network connection error.", "error");
+          },
+        });
+      });
+
+      // Quick verify payment from Lead Payments table
+      $(document).on("click", ".btn-lead-approve-payment", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const noteId = $(this).data("note-id");
+        const $btn = $(this);
+        if (!noteId) return;
+
+        if (!confirm("Are you sure you want to verify and approve this payment record? This will mark the lead as Confirmed.")) {
+          return;
+        }
+
+        $btn.prop("disabled", true).html('<i class="fi fi-rr-refresh fa-spin"></i>');
+
+        $.ajax({
+          url: "/api/v3/accounts/verify-payment/",
+          type: "POST",
+          data: { note_id: noteId, action: "approve" },
+          dataType: "json",
+          success: function (res) {
+            if (res.status === "success") {
+              self.notify(res.message || "Payment verified successfully!", "success");
+              self.loadLeadDetails();
+            } else {
+              $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify');
+              self.notify(res.message || "Could not verify payment.", "error");
+            }
+          },
+          error: function () {
+            $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify');
+            self.notify("Error connecting to server.", "error");
           },
         });
       });

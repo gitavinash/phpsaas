@@ -57,6 +57,11 @@ if (!empty($uploadedFileKey) && !empty($_FILES[$uploadedFileKey]['name']) && $_F
     }
 }
 
+$siteAccessRole = strtolower(trim(isset($site_access_type) ? $site_access_type : (defined('USER_TYPE') ? USER_TYPE : 'agent')));
+$isAgent = ($siteAccessRole === 'agent');
+$paymentStatus = $isAgent ? 'pending' : 'verified';
+$userName = defined('PROFILE_DISPLAY_NAME') ? PROFILE_DISPLAY_NAME : 'Representative';
+
 $payData = [
     'paymentAmount' => $amount,
     'paymentImages' => $paymentImages,
@@ -64,7 +69,12 @@ $payData = [
     'paymentDate' => $date,
     'paymentReference' => $ref,
     'paymentMsg' => $notes,
+    'paymentStatus' => $paymentStatus,
     'paymentByCustomer' => false,
+    'recordedBy' => $userName,
+    'recordedByRole' => $siteAccessRole,
+    'verifiedBy' => $isAgent ? null : $userName,
+    'verifiedAt' => $isAgent ? null : date('Y-m-d H:i:s'),
 ];
 
 $encodedPayData = mysqli_real_escape_string($connection, json_encode($payData));
@@ -80,8 +90,8 @@ if (!mysqli_query($connection, $insertSql)) {
     exit();
 }
 
-// Check current lead status and mark as Confirmed (1) if it is not already confirmed
-$currentStatus = null;
+// Fetch current lead status
+$currentStatus = 0;
 $siteFilter = ($siteId > 0) ? " AND enquiry_site_id = {$siteId}" : "";
 $checkStatusSql = "SELECT enquiry_status FROM {$tblPrefix}enquiry WHERE enquiry_id = {$leadId}{$siteFilter} LIMIT 1";
 $checkRes = mysqli_query($connection, $checkStatusSql);
@@ -90,9 +100,17 @@ if ($checkRes && mysqli_num_rows($checkRes) > 0) {
     $currentStatus = (int)($row['enquiry_status'] ?? 0);
 }
 
-if ($currentStatus !== 1) {
-    $updateLead = "UPDATE {$tblPrefix}enquiry SET enquiry_status = 1, enquiry_update = NOW() WHERE enquiry_id = {$leadId}{$siteFilter}";
-    mysqli_query($connection, $updateLead);
+// Only confirm lead (status = 1) if recorded by Admin / Accountant / Operations
+$newStatus = $currentStatus;
+if (!$isAgent) {
+    if ($currentStatus !== 1) {
+        $updateLead = "UPDATE {$tblPrefix}enquiry SET enquiry_status = 1, enquiry_update = NOW() WHERE enquiry_id = {$leadId}{$siteFilter}";
+        mysqli_query($connection, $updateLead);
+        $newStatus = 1;
+    } else {
+        $updateLead = "UPDATE {$tblPrefix}enquiry SET enquiry_update = NOW() WHERE enquiry_id = {$leadId}{$siteFilter}";
+        mysqli_query($connection, $updateLead);
+    }
 } else {
     $updateLead = "UPDATE {$tblPrefix}enquiry SET enquiry_update = NOW() WHERE enquiry_id = {$leadId}{$siteFilter}";
     mysqli_query($connection, $updateLead);
@@ -102,8 +120,10 @@ mysqli_query($connection, 'COMMIT');
 
 echo json_encode([
     'status' => 'success',
-    'message' => 'Payment record added successfully.',
+    'message' => $isAgent ? 'Payment record submitted for accountant verification.' : 'Payment record added & verified successfully.',
     'lead_id' => $leadId,
-    'new_status' => 1,
+    'payment_status' => $paymentStatus,
+    'new_status' => $newStatus,
+    'is_confirmed' => ($newStatus === 1),
 ]);
 exit();

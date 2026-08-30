@@ -134,6 +134,7 @@
 				<script src="<?php echo ADMIN_JS ?>policy-list.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>policy-form.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>integration.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>accounts.js?v=<?php echo time(); ?>"></script>
 				<?php
 				$appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
 				$appJSScript = ADMIN_JS . SITE_APP . '.js';

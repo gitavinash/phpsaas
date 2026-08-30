@@ -235,18 +235,24 @@ foreach ($rawTimelineRows as $tRow) {
                 }
             }
 
+            $pStatus = strtolower(trim($payData['paymentStatus'] ?? 'verified'));
             $payments[] = [
-                'id'          => (int)$tRow['enquiry_notes_id'],
-                'amount'      => $payData['paymentAmount'] ?? '0',
-                'method'      => $payData['paymentMethod'] ?? 'Standard',
-                'date'        => $payData['paymentDate'] ?? date('d-m-Y', strtotime($updatedAt)),
-                'reference'   => $payData['paymentReference'] ?? '',
-                'notes'       => $payData['paymentMsg'] ?? '',
-                'image'       => $rawImg,
-                'image_url'   => $imgUrl,
-                'image_name'  => $imgName,
-                'recorded_by' => $updatedBy,
-                'created_at'  => $updatedAt,
+                'id'               => (int)$tRow['enquiry_notes_id'],
+                'amount'           => $payData['paymentAmount'] ?? '0',
+                'method'           => $payData['paymentMethod'] ?? 'Standard',
+                'date'             => $payData['paymentDate'] ?? date('d-m-Y', strtotime($updatedAt)),
+                'reference'        => $payData['paymentReference'] ?? '',
+                'notes'            => $payData['paymentMsg'] ?? '',
+                'status'           => $pStatus,
+                'status_label'     => ($pStatus === 'pending') ? 'Pending Verification' : (($pStatus === 'rejected') ? 'Rejected' : 'Verified'),
+                'image'            => $rawImg,
+                'image_url'        => $imgUrl,
+                'image_name'       => $imgName,
+                'recorded_by'      => $updatedBy,
+                'recorded_by_role' => $payData['recordedByRole'] ?? '',
+                'verified_by'      => $payData['verifiedBy'] ?? null,
+                'verified_at'      => $payData['verifiedAt'] ?? null,
+                'created_at'       => $updatedAt,
             ];
             $itemDesc = "Recorded payment of ₹ " . number_format((float)($payData['paymentAmount'] ?? 0), 2) . " via " . ($payData['paymentMethod'] ?? 'Standard') . (!empty($payData['paymentReference']) ? " (Ref: {$payData['paymentReference']})" : "");
         } else {

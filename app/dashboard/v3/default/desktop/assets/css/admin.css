@@ -25248,6 +25248,924 @@ body.v3-editor-fs-locked {
   }
 }
 
+/* ==========================================================================
+   Accounts & Transactions Ledger Module
+   ========================================================================== */
+.accounts-page-wrapper {
+  padding-bottom: 40px !important;
+}
+
+.v3-accounts-filter-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 14px 18px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  margin-top: 14px !important;
+}
+
+.v3-accounts-filter-grid {
+  display: grid !important;
+  grid-template-columns: 2fr 1.2fr 1.2fr 1.2fr auto !important;
+  gap: 12px !important;
+  align-items: center !important;
+}
+
+@media (max-width: 992px) {
+  .v3-accounts-filter-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .v3-accounts-filter-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.filter-field-wrap {
+  position: relative !important;
+}
+
+.filter-field-wrap.search-wrap .filter-icon {
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: #94a3b8 !important;
+  font-size: 14px !important;
+  pointer-events: none !important;
+}
+
+.filter-field-wrap.search-wrap .v3-form-input {
+  padding-left: 36px !important;
+}
+
+.btn-clear-search {
+  position: absolute !important;
+  right: 10px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  background: transparent !important;
+  border: 0 !important;
+  color: #94a3b8 !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+}
+
+.badge-count-amber {
+  background: #ea580c !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  padding: 1px 6px !important;
+  border-radius: 10px !important;
+  margin-left: 4px !important;
+}
+
+.badge-pending-approval {
+  background: #fff7ed !important;
+  color: #c2410c !important;
+  border: 1px solid #fed7aa !important;
+}
+
+.v3-cell-customer-wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.v3-customer-name-link {
+  color: #0284c7 !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  text-decoration: none !important;
+}
+
+.v3-customer-name-link:hover {
+  text-decoration: underline !important;
+}
+
+.v3-customer-meta-sub {
+  color: #64748b !important;
+  font-size: 11.5px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.v3-tx-amount-val {
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  font-size: 14px !important;
+}
+
+.v3-cell-agent-wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.v3-agent-name {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+}
+
+.v3-agent-role-pill {
+  font-size: 10.5px !important;
+  color: #64748b !important;
+  text-transform: capitalize !important;
+}
+
+.v3-tx-actions-wrap {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  justify-content: flex-end !important;
+}
+
+.v3-accounts-pagination-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 14px 20px !important;
+  border-top: 1px solid #e2e8f0 !important;
+  background: #f8fafc !important;
+  border-bottom-left-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+}
+
+.pagination-info {
+  font-size: 12.5px !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+.pagination-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.pagination-current-badge {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  padding: 4px 10px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+}
+
+/* ==========================================================================
+   Modern Table Skeleton Shimmer Loader
+   ========================================================================== */
+.v3-skeleton-row td {
+  padding: 14px 16px !important;
+  vertical-align: middle !important;
+}
+
+.v3-skeleton-block,
+.v3-skeleton-line {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%) !important;
+  background-size: 200% 100% !important;
+  animation: v3SkeletonShimmer 1.5s infinite ease-in-out !important;
+  border-radius: 6px !important;
+  display: block !important;
+}
+
+.v3-skeleton-line {
+  height: 13px !important;
+}
+
+.v3-skeleton-line.h-10 { height: 10px !important; }
+.v3-skeleton-line.h-16 { height: 16px !important; }
+.v3-skeleton-line.h-22 { height: 22px !important; }
+
+.v3-skeleton-pill {
+  height: 22px !important;
+  border-radius: 14px !important;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%) !important;
+  background-size: 200% 100% !important;
+  animation: v3SkeletonShimmer 1.5s infinite ease-in-out !important;
+  display: inline-block !important;
+}
+
+.v3-skeleton-btn {
+  height: 26px !important;
+  border-radius: 6px !important;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%) !important;
+  background-size: 200% 100% !important;
+  animation: v3SkeletonShimmer 1.5s infinite ease-in-out !important;
+  display: inline-block !important;
+}
+
+.v3-skeleton-line.w-20 { width: 20% !important; }
+.v3-skeleton-line.w-30 { width: 30% !important; }
+.v3-skeleton-line.w-40 { width: 40% !important; }
+.v3-skeleton-line.w-50 { width: 50% !important; }
+.v3-skeleton-line.w-60 { width: 60% !important; }
+.v3-skeleton-line.w-70 { width: 70% !important; }
+.v3-skeleton-line.w-80 { width: 80% !important; }
+.v3-skeleton-line.w-90 { width: 90% !important; }
+.v3-skeleton-line.w-100 { width: 100% !important; }
+
+@keyframes v3SkeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ==========================================================================
+   Streamlined Accounts Ledger & Transaction Detail Page
+   ========================================================================== */
+.v3-acc-row:hover {
+  background: #f8fafc !important;
+}
+
+.v3-tx-id-tag {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  background: #f1f5f9 !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  display: inline-block !important;
+  margin-top: 3px !important;
+  width: fit-content !important;
+}
+
+.v3-lead-num-chip {
+  font-size: 11px !important;
+  color: #0284c7 !important;
+  background: #e0f2fe !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+  margin-left: 4px !important;
+}
+
+.v3-cell-amount-wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.v3-cell-agent-wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.v3-agent-role-pill {
+  font-size: 10.5px !important;
+  color: #64748b !important;
+  text-transform: capitalize !important;
+}
+
+/* --- Transaction Detail Page Layout --- */
+.accounts-detail-wrapper {
+  padding-bottom: 40px !important;
+}
+
+.tx-id-badge {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  vertical-align: middle !important;
+  margin-left: 6px !important;
+}
+
+.acc-detail-grid {
+  display: grid !important;
+  grid-template-columns: 1.15fr 0.85fr !important;
+  gap: 20px !important;
+  align-items: start !important;
+}
+
+@media (max-width: 991px) {
+  .acc-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.acc-card-box {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  margin-bottom: 20px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+.acc-card-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 16px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.acc-card-title {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.acc-card-title i {
+  color: #e76317 !important;
+}
+
+/* Highlight Card */
+.tx-highlight-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+}
+
+.tx-highlight-header {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  padding-bottom: 16px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  margin-bottom: 16px !important;
+}
+
+.tx-highlight-label {
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  display: block !important;
+  margin-bottom: 4px !important;
+}
+
+.tx-highlight-val {
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+  line-height: 1.1 !important;
+}
+
+.acc-details-meta-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 16px !important;
+}
+
+.acc-details-meta-grid .meta-item.full-width {
+  grid-column: 1 / -1 !important;
+}
+
+.meta-label {
+  font-size: 11.5px !important;
+  color: #64748b !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-bottom: 4px !important;
+}
+
+.meta-val {
+  font-size: 13.5px !important;
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+.ref-copy-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.btn-copy-ref {
+  background: none !important;
+  border: none !important;
+  color: #64748b !important;
+  cursor: pointer !important;
+  padding: 4px !important;
+  border-radius: 4px !important;
+  transition: all 0.15s ease !important;
+}
+
+.btn-copy-ref:hover {
+  color: #0284c7 !important;
+  background: #e0f2fe !important;
+}
+
+.notes-box {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #334155 !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+}
+
+/* Receipt Proof Area */
+.acc-receipt-view-area {
+  min-height: 220px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+}
+
+.acc-receipt-full-preview-box {
+  width: 100% !important;
+  text-align: center !important;
+  padding: 12px !important;
+}
+
+.acc-receipt-img-tag {
+  max-width: 100% !important;
+  max-height: 380px !important;
+  object-fit: contain !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Customer Context Card */
+.customer-info-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  margin-bottom: 16px !important;
+}
+
+.customer-avatar-box {
+  width: 46px !important;
+  height: 46px !important;
+  background: linear-gradient(135deg, #e76317, #f97316) !important;
+  color: #ffffff !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.customer-name {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0 0 4px 0 !important;
+}
+
+.customer-contacts {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.customer-contacts .contact-item {
+  font-size: 12.5px !important;
+  color: #64748b !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.customer-package-snippet {
+  background: #f1f5f9 !important;
+  border-radius: 8px !important;
+  padding: 10px 14px !important;
+}
+
+.pkg-snippet-label {
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  display: block !important;
+}
+
+.pkg-snippet-title {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin: 3px 0 0 0 !important;
+}
+
+/* Financial summary pills */
+.fin-pills-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 10px !important;
+}
+
+@media (max-width: 576px) {
+  .fin-pills-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Customer Payment History Table */
+.acc-history-table-wrap {
+  overflow-x: auto !important;
+}
+
+.acc-history-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+.acc-history-table th {
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  color: #64748b !important;
+  padding: 10px 12px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  text-align: left !important;
+}
+
+.acc-history-table td {
+  font-size: 13px !important;
+  padding: 12px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  vertical-align: middle !important;
+}
+
+.highlight-current-row {
+  background: #f0fdf4 !important;
+}
+
+.current-tx-pill {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  background: #10b981 !important;
+  color: #ffffff !important;
+  padding: 2px 6px !important;
+  border-radius: 10px !important;
+  margin-left: 6px !important;
+  vertical-align: middle !important;
+}
+
+/* Status Badges */
+.v3-status-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 5px 12px !important;
+  border-radius: 20px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.2px !important;
+  white-space: nowrap !important;
+}
+
+.v3-status-pill.status-verified {
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+
+.v3-status-pill.status-pending {
+  background: #fff7ed !important;
+  color: #c2410c !important;
+  border: 1px solid #fed7aa !important;
+}
+
+.v3-status-pill.status-rejected {
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  border: 1px solid #fecaca !important;
+}
+
+/* Action Button */
+.btn-table-details {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 14px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0284c7 !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.btn-table-details i {
+  font-size: 13px !important;
+}
+
+.btn-table-details:hover {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25) !important;
+}
+
+/* Date Range Picker Box */
+.v3-daterange-picker-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  cursor: pointer !important;
+  font-size: 13px !important;
+  color: #334155 !important;
+  font-weight: 500 !important;
+  min-width: 170px !important;
+  height: 38px !important;
+  transition: all 0.15s ease !important;
+  box-sizing: border-box !important;
+}
+
+.v3-daterange-picker-box:hover {
+  border-color: #94a3b8 !important;
+}
+
+.v3-daterange-picker-box .filter-icon-static {
+  color: #64748b !important;
+  font-size: 14px !important;
+}
+
+.v3-daterange-picker-box .filter-icon-caret {
+  margin-left: auto !important;
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+}
+
+.btn-quick-wa,
+.btn-quick-call {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  text-decoration: none !important;
+  margin-left: 6px !important;
+  font-size: 12px !important;
+  transition: transform 0.15s ease !important;
+}
+
+.btn-quick-wa {
+  background: #25d366 !important;
+  color: #ffffff !important;
+}
+
+.btn-quick-wa svg {
+  width: 13px !important;
+  height: 13px !important;
+  fill: #ffffff !important;
+  display: block !important;
+}
+
+.btn-quick-call {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+.btn-quick-wa:hover,
+.btn-quick-call:hover {
+  transform: scale(1.15) !important;
+}
+
+.current-active-chip {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #0284c7 !important;
+  background: #e0f2fe !important;
+  padding: 3px 8px !important;
+  border-radius: 12px !important;
+  display: inline-block !important;
+}
+
+.monospace-ref {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  background: #f1f5f9 !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  color: #334155 !important;
+  font-size: 12.5px !important;
+}
+
+/* Open Lead CRM Highlight Button */
+.btn-lead-crm-highlight {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border: 1px solid #0284c7 !important;
+  font-weight: 600 !important;
+  padding: 7px 16px !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25) !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-lead-crm-highlight:hover {
+  background: #0369a1 !important;
+  border-color: #0369a1 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn-lead-crm-highlight i {
+  font-size: 13px !important;
+}
+
+/* Recorded Agent Box */
+.recorded-agent-box {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.agent-name-main {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+}
+
+.agent-contact-line {
+  font-size: 12px !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.agent-contact-line i {
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+}
+
+/* ==========================================================================
+   Financial Ledger Grid & Cards
+   ========================================================================== */
+.acc-fin-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+}
+
+@media (max-width: 768px) {
+  .acc-fin-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.acc-fin-card {
+  border-radius: 10px !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  min-height: 76px !important;
+  transition: all 0.2s ease !important;
+}
+
+.acc-fin-card.card-quoted {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.acc-fin-card.card-quoted .acc-fin-icon {
+  background: #eff6ff !important;
+  color: #2563eb !important;
+}
+
+.acc-fin-card.card-quoted .acc-fin-amount {
+  color: #1e293b !important;
+}
+
+.acc-fin-card.card-paid {
+  background: #f0fdf4 !important;
+  border: 1px solid #bbf7d0 !important;
+}
+
+.acc-fin-card.card-paid .acc-fin-icon {
+  background: #dcfce7 !important;
+  color: #16a34a !important;
+}
+
+.acc-fin-card.card-paid .acc-fin-amount {
+  color: #15803d !important;
+}
+
+.acc-fin-card.card-balance.is-due {
+  background: #fff7ed !important;
+  border: 1px solid #fed7aa !important;
+}
+
+.acc-fin-card.card-balance.is-due .acc-fin-icon {
+  background: #ffedd5 !important;
+  color: #ea580c !important;
+}
+
+.acc-fin-card.card-balance.is-due .acc-fin-amount {
+  color: #c2410c !important;
+}
+
+.acc-fin-card.card-balance.is-settled {
+  background: #f0fdfa !important;
+  border: 1px solid #99f6e4 !important;
+}
+
+.acc-fin-card.card-balance.is-settled .acc-fin-icon {
+  background: #ccfbf1 !important;
+  color: #0d9488 !important;
+}
+
+.acc-fin-card.card-balance.is-settled .acc-fin-amount {
+  color: #0f766e !important;
+}
+
+.acc-fin-card-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
+  margin-bottom: 6px !important;
+}
+
+.acc-fin-label-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.acc-fin-icon {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 11px !important;
+  flex-shrink: 0 !important;
+}
+
+.acc-fin-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.4px !important;
+  color: #64748b !important;
+}
+
+.acc-fin-card-body {
+  display: block !important;
+}
+
+.acc-fin-amount {
+  font-size: 19px !important;
+  font-weight: 800 !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.acc-fin-status-tag {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: #0d9488 !important;
+  background: #ccfbf1 !important;
+  padding: 2px 6px !important;
+  border-radius: 6px !important;
+  white-space: nowrap !important;
+}
+
+
 
 
 

@@ -48,6 +48,28 @@ $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboa
 </li>
 
 <?php
+// 1.5 ACCOUNTS & FINANCE (Administrator & Accountant)
+if ($site_access_type == 'administrator' || $site_access_type == 'accountant') { ?>
+<li <?php echo (strpos($currentUrl, '/accounts') !== false ? 'class="active"' : ''); ?>>
+    <a href="/dashboard/accounts/"><i class="fi fi-rr-wallet"></i> Accounts &amp; Ledger</a>
+    <div class="side-menu">
+        <ul>
+            <li><a href="/dashboard/accounts/"><i class="fi-rr-apps-sort"></i> All Transactions</a></li>
+            <li><a href="/dashboard/accounts/?status=pending"><i class="fi-rr-clock"></i> Pending Verification</a></li>
+            <li><a href="/dashboard/accounts/?status=verified"><i class="fi-rr-badge-check"></i> Verified Collections</a></li>
+        </ul>
+    </div>
+    <div class="bottom-menu">
+        <ul>
+            <li><a href="/dashboard/accounts/"><i class="fi-rr-apps-sort"></i> All Transactions</a></li>
+            <li><a href="/dashboard/accounts/?status=pending"><i class="fi-rr-clock"></i> Pending Verification</a></li>
+            <li><a href="/dashboard/accounts/?status=verified"><i class="fi-rr-badge-check"></i> Verified Collections</a></li>
+        </ul>
+    </div>
+</li>
+<?php } ?>
+
+<?php
 // 2. PACKAGES & ITINERARIES
 if ($site_access_type == 'administrator' || $site_access_type == 'operations') { ?>
 
