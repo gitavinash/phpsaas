@@ -31,21 +31,31 @@ function loadExternalJS(filePath) {
   // but Object.assign misses prototype / non-enumerable methods like .fire().
   // Ensure window.Swal always has a working .fire() method.
 
-  var sw2 = window.Sweetalert2 || null;
+  var sw2 = window.Sweetalert2 || window.Swal || window.swal || null;
 
-  if (
-    !sw2 &&
-    typeof window.swal === "function" &&
-    typeof window.swal.fire === "function"
-  ) {
-    // SweetAlert2 loaded directly as window.swal with .fire already
-    sw2 = window.swal;
-  }
+  if (sw2) {
+    if (typeof sw2.argsToParams === "function") {
+      var origArgsToParams = sw2.argsToParams;
+      sw2.argsToParams = function (args) {
+        var params = origArgsToParams.call(this, args);
+        if (params && typeof params === "object") {
+          var copy = Object.assign({}, params);
+          if (copy.icon && !copy.type) {
+            copy.type = copy.icon;
+          }
+          if (copy.type && !copy.icon) {
+            copy.icon = copy.type;
+          }
+          return copy;
+        }
+        return params;
+      };
+    }
 
-  if (sw2 && typeof sw2.fire === "function") {
-    // Canonical SweetAlert2 — expose consistently as both Swal and swal
     window.Swal = sw2;
     window.swal = sw2;
+    window.SweetAlert = sw2;
+    window.Sweetalert2 = sw2;
     return;
   }
 
@@ -56,7 +66,10 @@ function loadExternalJS(filePath) {
       if (typeof firstArg === "object" && firstArg !== null) {
         var opts = Object.assign({}, firstArg);
         if (opts.icon && !opts.type) {
-          opts.type = opts.icon;
+          opts.type = opts.icon === "question" ? "warning" : opts.icon;
+        }
+        if (opts.type === "question") {
+          opts.type = "warning";
         }
         if (opts.type && !opts.icon) {
           opts.icon = opts.type;

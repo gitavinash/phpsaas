@@ -322,8 +322,16 @@
       // 3. Build Payment Ledger
       self.leadPayments = lead.payments || [];
       let totalPaid = 0;
+      let totalPendingVerification = 0;
+
       self.leadPayments.forEach((p) => {
-        totalPaid += parseFloat(p.amount || 0);
+        const pStatus = String(p.status || "verified").toLowerCase().trim();
+        const amt = parseFloat(p.amount || 0);
+        if (pStatus === "verified") {
+          totalPaid += amt;
+        } else if (pStatus === "pending" || pStatus === "pending approval" || pStatus === "unverified") {
+          totalPendingVerification += amt;
+        }
       });
 
       // Calculate Total Package Value & Pending Amount
@@ -358,6 +366,14 @@
             </div>
           `;
         }
+      } else if (totalPendingVerification > 0) {
+        pendingHtml = `
+          <div class="v3-pay-stat-pill stat-pending">
+            <i class="fi fi-rr-clock"></i>
+            <span class="v3-pay-stat-label">Pending</span>
+            <span class="v3-pay-stat-val">₹ ${totalPendingVerification.toLocaleString("en-IN")}</span>
+          </div>
+        `;
       } else {
         pendingHtml = `
           <div class="v3-pay-stat-pill stat-pending">
@@ -436,6 +452,13 @@
                 </thead>
                 <tbody>
         `;
+        const userRole = (
+          (self.leadData && self.leadData.access_type) ||
+          $("#leadViewApp").data("user-role") ||
+          (typeof siteAdminType !== "undefined" ? siteAdminType : "")
+        ).toLowerCase().trim();
+        const canVerifyPayment = (userRole === "administrator" || userRole === "accountant" || userRole === "superadmin");
+
         self.leadPayments.forEach((p, idx) => {
           const imgUrl = p.image_url || (p.image && typeof p.image === "object" ? p.image.path : (typeof p.image === "string" && (p.image.includes("/") || p.image.includes(".")) ? p.image : ""));
           const receiptHtml = imgUrl
@@ -448,18 +471,22 @@
             ? `<span class="v3-pay-ref-text monospace" title="${p.reference}">${p.reference}</span>`
             : `<span class="v3-text-muted">-</span>`;
 
-          let statusBadge = `<span class="v3-lead-badge badge-confirmed" style="font-size: 11px;"><i class="fi fi-rr-check"></i> Verified</span>`;
+          let statusBadge = `<span class="v3-status-pill status-verified"><i class="fi fi-rr-check"></i> Verified</span>`;
           if (p.status === "pending") {
-            statusBadge = `
-              <div style="display: inline-flex; align-items: center; gap: 6px;">
-                <span class="v3-lead-badge badge-pending-approval" style="font-size: 11px;"><i class="fi fi-rr-clock"></i> Pending</span>
-                <button type="button" class="btn-v3-action btn-green btn-xs btn-lead-approve-payment" data-note-id="${p.id}" title="Approve & Verify Payment">
-                  <i class="fi fi-rr-check"></i> Verify
-                </button>
-              </div>
-            `;
+            if (canVerifyPayment) {
+              statusBadge = `
+                <div style="display: inline-flex; align-items: center; gap: 6px;">
+                  <span class="v3-status-pill status-pending"><i class="fi fi-rr-clock"></i> Pending</span>
+                  <button type="button" class="btn-v3-action btn-green btn-xs btn-lead-approve-payment" data-note-id="${p.id}" title="Approve & Verify Payment">
+                    <i class="fi fi-rr-check"></i> Verify
+                  </button>
+                </div>
+              `;
+            } else {
+              statusBadge = `<span class="v3-status-pill status-pending"><i class="fi fi-rr-clock"></i> Pending</span>`;
+            }
           } else if (p.status === "rejected") {
-            statusBadge = `<span class="v3-lead-badge badge-cancelled" style="font-size: 11px;"><i class="fi fi-rr-cross-circle"></i> Rejected</span>`;
+            statusBadge = `<span class="v3-status-pill status-rejected"><i class="fi fi-rr-cross-circle"></i> Rejected</span>`;
           }
 
           paymentsHtml += `
@@ -2817,7 +2844,7 @@
         });
       });
 
-      // Quick verify payment from Lead Payments table
+      // Quick verify payment from Lead Payments table with SweetAlert
       $(document).on("click", ".btn-lead-approve-payment", function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -2825,31 +2852,70 @@
         const $btn = $(this);
         if (!noteId) return;
 
-        if (!confirm("Are you sure you want to verify and approve this payment record? This will mark the lead as Confirmed.")) {
-          return;
-        }
+        const doApproveLeadPayment = function () {
+          $btn.prop("disabled", true).html('<i class="fi fi-rr-refresh fa-spin"></i>');
 
-        $btn.prop("disabled", true).html('<i class="fi fi-rr-refresh fa-spin"></i>');
-
-        $.ajax({
-          url: "/api/v3/accounts/verify-payment/",
-          type: "POST",
-          data: { note_id: noteId, action: "approve" },
-          dataType: "json",
-          success: function (res) {
-            if (res.status === "success") {
-              self.notify(res.message || "Payment verified successfully!", "success");
-              self.loadLeadDetails();
-            } else {
+          $.ajax({
+            url: "/api/v3/accounts/verify-payment/",
+            type: "POST",
+            data: { note_id: noteId, action: "approve" },
+            dataType: "json",
+            success: function (res) {
+              if (res.status === "success") {
+                if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+                  Swal.fire({
+                    icon: "success",
+                    type: "success",
+                    title: "Payment Verified!",
+                    text: res.message || "Payment verified and lead marked as Confirmed.",
+                    showConfirmButton: false,
+                    timer: 1800,
+                  });
+                } else {
+                  self.notify(res.message || "Payment verified successfully!", "success");
+                }
+                self.loadLeadDetails();
+              } else {
+                if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+                  Swal.fire({
+                    icon: "error",
+                    type: "error",
+                    title: "Verification Failed",
+                    text: res.message || "Could not verify payment.",
+                    confirmButtonColor: "#dc2626",
+                  });
+                } else {
+                  self.notify(res.message || "Could not verify payment.", "error");
+                }
+                $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify');
+              }
+            },
+            error: function () {
               $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify');
-              self.notify(res.message || "Could not verify payment.", "error");
+              self.notify("Error communicating with server.", "error");
+            },
+          });
+        };
+
+        if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+          Swal.fire({
+            title: "Verify & Approve Payment?",
+            text: "Are you sure you want to verify and approve this payment record? This will mark the lead as Confirmed.",
+            icon: "warning",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#059669",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, Approve Payment",
+            cancelButtonText: "Cancel",
+          }).then(function (result) {
+            if (result && (result.isConfirmed || result.value)) {
+              doApproveLeadPayment();
             }
-          },
-          error: function () {
-            $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify');
-            self.notify("Error connecting to server.", "error");
-          },
-        });
+          });
+        } else if (confirm("Are you sure you want to verify and approve this payment record? This will mark the lead as Confirmed.")) {
+          doApproveLeadPayment();
+        }
       });
 
       // 11. Submit Close Lead Modal

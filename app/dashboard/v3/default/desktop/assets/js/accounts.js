@@ -283,44 +283,134 @@
         const $btn = $(this);
         if (!noteId) return;
 
-        if (!confirm("Are you sure you want to verify and approve this payment record? This will mark the lead as Confirmed.")) {
-          return;
-        }
+        const doApprove = function () {
+          $btn.prop("disabled", true).html('<i class="fi fi-rr-refresh fa-spin"></i>');
 
-        $btn.prop("disabled", true).html('<i class="fi fi-rr-refresh fa-spin"></i>');
+          $.ajax({
+            url: "/api/v3/accounts/verify-payment/",
+            type: "POST",
+            data: { note_id: noteId, action: "approve" },
+            dataType: "json",
+            success: function (res) {
+              if (res.status === "success") {
+                if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+                  Swal.fire({
+                    icon: "success",
+                    type: "success",
+                    title: "Payment Verified!",
+                    text: res.message || "Payment verified successfully!",
+                    showConfirmButton: false,
+                    timer: 1800,
+                  });
+                } else {
+                  self.notify(res.message || "Payment verified successfully!", "success");
+                }
+                self.loadTransactions();
+              } else {
+                $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i>');
+                if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+                  Swal.fire({
+                    icon: "error",
+                    type: "error",
+                    title: "Verification Failed",
+                    text: res.message || "Could not verify payment.",
+                    confirmButtonColor: "#dc2626",
+                  });
+                } else {
+                  self.notify(res.message || "Could not verify payment.", "error");
+                }
+              }
+            },
+            error: function () {
+              $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i>');
+              self.notify("Error connecting to server.", "error");
+            },
+          });
+        };
 
-        $.ajax({
-          url: "/api/v3/accounts/verify-payment/",
-          type: "POST",
-          data: { note_id: noteId, action: "approve" },
-          dataType: "json",
-          success: function (res) {
-            if (res.status === "success") {
-              self.notify(res.message || "Payment verified successfully!", "success");
-              self.loadTransactions();
-            } else {
-              $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify');
-              self.notify(res.message || "Could not verify payment.", "error");
+        if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+          Swal.fire({
+            title: "Verify & Approve Payment?",
+            text: "Are you sure you want to verify and approve this payment record? This will mark the lead as Confirmed.",
+            icon: "warning",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#059669",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, Approve Payment",
+            cancelButtonText: "Cancel",
+          }).then(function (result) {
+            if (result && (result.isConfirmed || result.value)) {
+              doApprove();
             }
-          },
-          error: function () {
-            $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify');
-            self.notify("Error connecting to server.", "error");
-          },
-        });
+          });
+        } else if (confirm("Are you sure you want to verify and approve this payment record? This will mark the lead as Confirmed.")) {
+          doApprove();
+        }
       });
 
-      // Open Reject Payment Modal
+      // Open Reject Payment with SweetAlert
       $(document).on("click", ".btn-acc-reject-payment", function (e) {
         e.preventDefault();
         const noteId = $(this).data("note-id");
         if (!noteId) return;
-        $("#accRejectNoteId").val(noteId);
-        $("#accRejectReason").val("");
-        $("#modalAccountsRejectPayment").addClass("is-active");
+
+        if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+          Swal.fire({
+            title: "Reject Payment Record?",
+            text: "Please provide a reason or remarks for rejecting this payment (optional):",
+            input: "textarea",
+            inputPlaceholder: "Enter rejection reason...",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, Reject Payment",
+            cancelButtonText: "Cancel",
+          }).then(function (result) {
+            if (result && (result.isConfirmed || result.value !== undefined)) {
+              const reason = (result.value || "").trim();
+
+              $.ajax({
+                url: "/api/v3/accounts/verify-payment/",
+                type: "POST",
+                data: { note_id: noteId, action: "reject", reason: reason },
+                dataType: "json",
+                success: function (res) {
+                  if (res.status === "success") {
+                    Swal.fire({
+                      icon: "success",
+                      type: "success",
+                      title: "Payment Rejected",
+                      text: res.message || "Payment marked as rejected.",
+                      showConfirmButton: false,
+                      timer: 1800,
+                    });
+                    self.loadTransactions();
+                  } else {
+                    Swal.fire({
+                      icon: "error",
+                      type: "error",
+                      title: "Rejection Failed",
+                      text: res.message || "Failed to reject payment.",
+                      confirmButtonColor: "#dc2626",
+                    });
+                  }
+                },
+                error: function () {
+                  self.notify("Error communicating with server.", "error");
+                },
+              });
+            }
+          });
+        } else {
+          $("#accRejectNoteId").val(noteId);
+          $("#accRejectReason").val("");
+          $("#modalAccountsRejectPayment").addClass("is-active");
+        }
       });
 
-      // Confirm Reject Payment
+      // Confirm Reject Payment from fallback modal
       $(document).on("click", "#btnConfirmRejectPayment", function () {
         const noteId = $("#accRejectNoteId").val();
         const reason = $("#accRejectReason").val().trim();
@@ -872,42 +962,136 @@
     bindDetailEvents: function (txId) {
       const self = this;
 
-      // Approve action
+      // Approve action with SweetAlert
       $(document).on("click", "#dtlApproveBtn", function () {
-        if (!confirm("Are you sure you want to verify and approve this payment record? This will mark the customer lead as Confirmed.")) {
-          return;
-        }
-        const $btn = $(this);
-        $btn.prop("disabled", true).html('<i class="fi fi-rr-refresh fa-spin"></i> Approving...');
+        const doApprove = function () {
+          const $btn = $("#dtlApproveBtn");
+          $btn.prop("disabled", true).html('<i class="fi fi-rr-refresh fa-spin"></i> Approving...');
 
-        $.ajax({
-          url: "/api/v3/accounts/verify-payment/",
-          type: "POST",
-          data: { note_id: txId, action: "approve" },
-          dataType: "json",
-          success: function (res) {
-            $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify &amp; Approve');
-            if (res.status === "success") {
-              self.notify(res.message || "Payment verified successfully!", "success");
-              self.loadTransactionDetail(txId);
-            } else {
-              self.notify(res.message || "Could not verify payment.", "error");
+          $.ajax({
+            url: "/api/v3/accounts/verify-payment/",
+            type: "POST",
+            data: { note_id: txId, action: "approve" },
+            dataType: "json",
+            success: function (res) {
+              $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify &amp; Approve');
+              if (res.status === "success") {
+                if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+                  Swal.fire({
+                    icon: "success",
+                    type: "success",
+                    title: "Payment Verified!",
+                    text: res.message || "Payment verified and customer lead marked as Confirmed.",
+                    showConfirmButton: false,
+                    timer: 1800,
+                  });
+                } else {
+                  self.notify(res.message || "Payment verified successfully!", "success");
+                }
+                self.loadTransactionDetail(txId);
+              } else {
+                if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+                  Swal.fire({
+                    icon: "error",
+                    type: "error",
+                    title: "Verification Failed",
+                    text: res.message || "Could not verify payment.",
+                    confirmButtonColor: "#dc2626",
+                  });
+                } else {
+                  self.notify(res.message || "Could not verify payment.", "error");
+                }
+              }
+            },
+            error: function () {
+              $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify &amp; Approve');
+              self.notify("Error communicating with server.", "error");
+            },
+          });
+        };
+
+        if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+          Swal.fire({
+            title: "Verify & Approve Payment?",
+            text: "Are you sure you want to verify and approve this payment record? This will mark the customer lead as Confirmed.",
+            icon: "warning",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#059669",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, Approve Payment",
+            cancelButtonText: "Cancel",
+          }).then(function (result) {
+            if (result && (result.isConfirmed || result.value)) {
+              doApprove();
             }
-          },
-          error: function () {
-            $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify &amp; Approve');
-            self.notify("Error communicating with server.", "error");
-          },
-        });
+          });
+        } else if (confirm("Are you sure you want to verify and approve this payment record? This will mark the customer lead as Confirmed.")) {
+          doApprove();
+        }
       });
 
-      // Open Reject modal
+      // Open Reject action with SweetAlert prompt
       $(document).on("click", "#dtlRejectBtn", function () {
-        $("#dtlRejectReason").val("");
-        $("#modalDtlRejectPayment").addClass("is-active");
+        if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+          Swal.fire({
+            title: "Reject Payment Record?",
+            text: "Please provide a reason or remarks for rejecting this payment (optional):",
+            input: "textarea",
+            inputPlaceholder: "Enter rejection reason...",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, Reject Payment",
+            cancelButtonText: "Cancel",
+          }).then(function (result) {
+            if (result && (result.isConfirmed || result.value !== undefined)) {
+              const reason = (result.value || "").trim();
+              const $btn = $("#dtlRejectBtn");
+              $btn.prop("disabled", true).html('<i class="fi fi-rr-refresh fa-spin"></i> Rejecting...');
+
+              $.ajax({
+                url: "/api/v3/accounts/verify-payment/",
+                type: "POST",
+                data: { note_id: txId, action: "reject", reason: reason },
+                dataType: "json",
+                success: function (res) {
+                  $btn.prop("disabled", false).html('<i class="fi fi-rr-cross"></i> Reject');
+                  if (res.status === "success") {
+                    Swal.fire({
+                      icon: "success",
+                      type: "success",
+                      title: "Payment Rejected",
+                      text: res.message || "Payment marked as rejected.",
+                      showConfirmButton: false,
+                      timer: 1800,
+                    });
+                    self.loadTransactionDetail(txId);
+                  } else {
+                    Swal.fire({
+                      icon: "error",
+                      type: "error",
+                      title: "Rejection Failed",
+                      text: res.message || "Failed to reject payment.",
+                      confirmButtonColor: "#dc2626",
+                    });
+                  }
+                },
+                error: function () {
+                  $btn.prop("disabled", false).html('<i class="fi fi-rr-cross"></i> Reject');
+                  self.notify("Error connecting to server.", "error");
+                },
+              });
+            }
+          });
+        } else {
+          $("#dtlRejectReason").val("");
+          $("#modalDtlRejectPayment").addClass("is-active");
+        }
       });
 
-      // Confirm Reject
+      // Confirm Reject from fallback modal
       $(document).on("click", "#btnConfirmDtlReject", function () {
         const reason = $("#dtlRejectReason").val().trim();
         const $btn = $(this);

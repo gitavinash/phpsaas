@@ -17,8 +17,8 @@ $currentUserId = defined('USER_ID')   ? (int) USER_ID : 0;
 $userRole   = strtolower(trim(isset($site_access_type) ? $site_access_type : (defined('USER_TYPE') ? USER_TYPE : 'agent')));
 $userName   = defined('PROFILE_DISPLAY_NAME') ? PROFILE_DISPLAY_NAME : 'Accountant';
 
-// Restrict to Admin, Accountant, Operations, Manager
-if (!in_array($userRole, ['administrator', 'accountant', 'operations', 'manager'])) {
+// Restrict exclusively to Administrator and Accountant
+if (!in_array($userRole, ['administrator', 'accountant', 'superadmin'])) {
     echo json_encode([
         'status'  => 'error',
         'message' => 'Unauthorized. Only administrators and accountants can verify payments.',

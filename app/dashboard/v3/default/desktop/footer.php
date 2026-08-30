@@ -139,7 +139,7 @@
 				$appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
 				$appJSScript = ADMIN_JS . SITE_APP . '.js';
 				if (file_exists($appJSPath)) {
-					echo "<script src='{$appJSScript}'></script>";
+					echo "<script src='{$appJSScript}?v=" . time() . "'></script>";
 				}
 				?>
 				<?php require_once PWA . 'footer.php'; ?>
