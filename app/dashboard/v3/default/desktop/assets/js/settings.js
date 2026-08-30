@@ -590,7 +590,7 @@
     bindContactEvents: function () {
       const self = this;
 
-      $(document).off("input change", "#contactCompanyName, #contactIntro, #contactMobile, #contactWhatsapp, #contactEmail, #contactAddress").on("input change", "#contactCompanyName, #contactIntro, #contactMobile, #contactWhatsapp, #contactEmail, #contactAddress", function () {
+      $(document).off("input change", "#contactCompanyName, #contactCompanySiteDomain, #contactCompanyIntro, #contactSiteMobile, #contactCompanyWhatsappNumber, #contactSiteEmail, #contactCompanyAddress").on("input change", "#contactCompanyName, #contactCompanySiteDomain, #contactCompanyIntro, #contactSiteMobile, #contactCompanyWhatsappNumber, #contactSiteEmail, #contactCompanyAddress", function () {
         self.updateContactPreview();
       });
 
@@ -615,21 +615,22 @@
           if (res && res.status === "success" && res.data) {
             const d = res.data;
             $("#contactCompanyName").val(d.company_name || "");
-            $("#contactOwnerName").val(d.owner_name || "");
-            $("#contactIntro").val(d.intro || "");
-            $("#contactEmail").val(d.email || "");
-            $("#contactEmailNotify").val(d.email_notify || "");
-            $("#contactMobile").val(d.mobile || "");
-            $("#contactMobileNotify").val(d.mobile_notify || "");
-            $("#contactWhatsapp").val(d.whatsapp || "");
-            $("#contactWhatsappNotify").val(d.whatsapp_notify || "");
-            $("#contactAddress").val(d.address || "");
-            $("#contactMapsUrl").val(d.maps_url || "");
-            $("#contactFacebook").val(d.facebook || "");
-            $("#contactInstagram").val(d.instagram || "");
-            $("#contactX").val(d.x || "");
-            $("#contactLinkedin").val(d.linkedin || "");
-            $("#contactYoutube").val(d.youtube || "");
+            $("#contactContactPerson").val(d.company_contact_person || d.owner_name || "");
+            $("#contactSiteMobile").val(d.site_mobile || d.mobile || "");
+            $("#contactCompanyWhatsappNumber").val(d.company_whatsapp_number || d.whatsapp || "");
+            $("#contactSiteEmail").val(d.site_email || d.email || "");
+            $("#contactCompanySiteDomain").val(d.company_site_domain || d.site_domain || "");
+            $("#contactCompanyIntro").val(d.company_intro || d.intro || "");
+            $("#contactCompanyAddress").val(d.company_address || d.address || "");
+            $("#contactCompanyGmap").val(d.company_google_map || d.maps_url || "");
+
+            // Social media
+            const soc = d.company_social_media || {};
+            $("#contactFacebook").val(soc.facebook || d.facebook || "");
+            $("#contactInstagram").val(soc.instagram || d.instagram || "");
+            $("#contactX").val(soc.x || d.x || "");
+            $("#contactLinkedin").val(soc.linkedin || d.linkedin || "");
+            $("#contactYoutube").val(soc.youtube || d.youtube || "");
 
             self.updateContactPreview();
           }
@@ -647,13 +648,15 @@
 
     updateContactPreview: function () {
       const name = (typeof $("#contactCompanyName").val() === "string" ? $("#contactCompanyName").val().trim() : "") || "Company Name";
-      const intro = (typeof $("#contactIntro").val() === "string" ? $("#contactIntro").val().trim() : "") || "Company description and tagline will appear here...";
-      const mob = typeof $("#contactMobile").val() === "string" ? $("#contactMobile").val().trim() : "";
-      const wa = typeof $("#contactWhatsapp").val() === "string" ? $("#contactWhatsapp").val().trim() : "";
-      const em = typeof $("#contactEmail").val() === "string" ? $("#contactEmail").val().trim() : "";
-      const addr = typeof $("#contactAddress").val() === "string" ? $("#contactAddress").val().trim() : "";
+      const domain = typeof $("#contactCompanySiteDomain").val() === "string" ? $("#contactCompanySiteDomain").val().trim() : "";
+      const intro = (typeof $("#contactCompanyIntro").val() === "string" ? $("#contactCompanyIntro").val().trim() : "") || "Company description and tagline will appear here...";
+      const mob = typeof $("#contactSiteMobile").val() === "string" ? $("#contactSiteMobile").val().trim() : "";
+      const wa = typeof $("#contactCompanyWhatsappNumber").val() === "string" ? $("#contactCompanyWhatsappNumber").val().trim() : "";
+      const em = typeof $("#contactSiteEmail").val() === "string" ? $("#contactSiteEmail").val().trim() : "";
+      const addr = typeof $("#contactCompanyAddress").val() === "string" ? $("#contactCompanyAddress").val().trim() : "";
 
       $("#previewContactCompany").text(name);
+      $("#previewContactDomain").text(domain || "No website domain");
       $("#previewContactIntro").text(intro);
       $("#previewContactMobile").text(mob ? "+91 " + mob : "+91 \u2014");
       $("#previewContactWhatsapp").text(wa ? "+91 " + wa : "+91 \u2014");
@@ -671,7 +674,7 @@
       };
 
       const companyName = safeVal("#contactCompanyName");
-      const mobile = safeVal("#contactMobile");
+      const siteMobile = safeVal("#contactSiteMobile");
 
       if (!companyName) {
         self.showAlert("warning", "Company / Trade Name is required.");
@@ -679,24 +682,29 @@
         return;
       }
 
-      if (!mobile) {
-        self.showAlert("warning", "Customer Helpline Mobile number is required.");
-        $("#contactMobile").focus();
+      if (!siteMobile) {
+        self.showAlert("warning", "Customer Helpline No. is required.");
+        $("#contactSiteMobile").focus();
         return;
       }
 
       const postData = {
         company_name: companyName,
-        owner_name: safeVal("#contactOwnerName"),
-        intro: safeVal("#contactIntro"),
-        email: safeVal("#contactEmail"),
-        email_notify: safeVal("#contactEmailNotify"),
-        mobile: mobile,
-        mobile_notify: safeVal("#contactMobileNotify"),
-        whatsapp: safeVal("#contactWhatsapp"),
-        whatsapp_notify: safeVal("#contactWhatsappNotify"),
-        address: safeVal("#contactAddress"),
-        maps_url: safeVal("#contactMapsUrl"),
+        company_contact_person: safeVal("#contactContactPerson"),
+        site_mobile: siteMobile,
+        company_whatsapp_number: safeVal("#contactCompanyWhatsappNumber"),
+        site_email: safeVal("#contactSiteEmail"),
+        company_site_domain: safeVal("#contactCompanySiteDomain"),
+        company_intro: safeVal("#contactCompanyIntro"),
+        company_address: safeVal("#contactCompanyAddress"),
+        company_google_map: safeVal("#contactCompanyGmap"),
+        company_social_media: {
+          facebook: safeVal("#contactFacebook"),
+          instagram: safeVal("#contactInstagram"),
+          x: safeVal("#contactX"),
+          linkedin: safeVal("#contactLinkedin"),
+          youtube: safeVal("#contactYoutube")
+        },
         facebook: safeVal("#contactFacebook"),
         instagram: safeVal("#contactInstagram"),
         x: safeVal("#contactX"),
@@ -962,21 +970,21 @@
       }
 
       const postData = {
-        email_notification: $("#notifyEmailEnabled").is(":checked") ? "1" : "0",
-        admin_email_notification: $("#notifyEmailEnabled").is(":checked") ? "1" : "0",
-        admin_email: adminEmail,
-        enquiry_email: $("#notifyEnquiryEmail").val().trim(),
-        site_email_alert: $("#notifySiteEmailAlert").val().trim(),
-        enable_whatsapp_business_api: $("#notifyWhatsappEnabled").is(":checked") ? "1" : "0",
-        admin_whatsapp_number: adminWhatsapp,
-        company_whatsapp_number: $("#notifyCompanyWhatsapp").val().trim(),
-        sms_enable: $("#notifySmsEnabled").is(":checked") ? "1" : "0",
-        sms_default: $("#notifySmsDefault").val().trim(),
-        enable_push_notification: $("#notifyPushEnabled").is(":checked") ? "1" : "0",
-        enable_inapp_notification: $("#notifyInAppEnabled").is(":checked") ? "1" : "0",
-        company_whatsapp_enquiry_thank_you: $("#evtEnquiry").is(":checked") ? "1" : "0",
-        company_whatsapp_payment_request: $("#evtPayment").is(":checked") ? "1" : "0",
-        company_whatsapp_itinerary_sent: $("#evtItinerary").is(":checked") ? "1" : "0"
+        notification_email_notification: $("#notifyEmailEnabled").is(":checked") ? "1" : "0",
+        notification_admin_email_notification: $("#notifyEmailEnabled").is(":checked") ? "1" : "0",
+        notification_admin_email: adminEmail,
+        notification_enquiry_email: $("#notifyEnquiryEmail").val().trim(),
+        notification_site_email_alert: $("#notifySiteEmailAlert").val().trim(),
+        notification_enable_whatsapp_business_api: $("#notifyWhatsappEnabled").is(":checked") ? "1" : "0",
+        notification_admin_whatsapp_number: adminWhatsapp,
+        notification_company_whatsapp_number: $("#notifyCompanyWhatsapp").val().trim(),
+        notification_sms_enable: $("#notifySmsEnabled").is(":checked") ? "1" : "0",
+        notification_sms_default: $("#notifySmsDefault").val().trim(),
+        notification_enable_push_notification: $("#notifyPushEnabled").is(":checked") ? "1" : "0",
+        notification_enable_inapp_notification: $("#notifyInAppEnabled").is(":checked") ? "1" : "0",
+        notification_company_whatsapp_enquiry_thank_you: $("#evtEnquiry").is(":checked") ? "1" : "0",
+        notification_company_whatsapp_payment_request: $("#evtPayment").is(":checked") ? "1" : "0",
+        notification_company_whatsapp_itinerary_sent: $("#evtItinerary").is(":checked") ? "1" : "0"
       };
 
       const $btn = $("#btnSaveNotify");

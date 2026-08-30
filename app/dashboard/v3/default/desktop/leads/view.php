@@ -177,6 +177,9 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                 </div>
             </div>
             <div class="v3-modal-fullscreen-actions">
+                <button type="button" class="btn-v3-action btn-outline v3-hidden" id="btnChangeItinerary">
+                    <i class="fi fi-rr-refresh"></i> Change Itinerary
+                </button>
                 <button type="button" class="btn-v3-action btn-green v3-hidden" id="btnPreviewItinerary">
                     <i class="fi fi-rr-eye"></i> Preview Itinerary
                 </button>
@@ -189,7 +192,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
             <div class="v3-itin-canvas-container">
 
                 <!-- 1. Search & Template Selector -->
-                <div class="v3-itin-section-card">
+                <div class="v3-itin-section-card" id="itinerarySearchSection">
                     <div class="v3-itin-section-header">
                         <div class="v3-itin-section-title">
                             <i class="fi fi-rr-search"></i>
@@ -270,35 +273,145 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                             </div>
                         </div>
 
-                        <div class="v3-form-grid-2">
-                            <div class="v3-modal-form-group">
-                                <label class="v3-modal-label">Itinerary Title *</label>
-                                <input type="text" id="itineraryCustomTitle" class="v3-modal-input" placeholder="e.g. 5 Nights 6 Days Spectacular Dubai Holiday">
+                        <div class="v3-itin-pricing-config-wrap">
+                            <!-- Itinerary Title & Travel Date Row -->
+                            <div class="v3-form-grid-2 v3-mb-20">
+                                <div class="v3-modal-form-group">
+                                    <label class="v3-modal-label"><i class="fi fi-rr-edit"></i> Itinerary Title *</label>
+                                    <input type="text" id="itineraryCustomTitle" class="v3-modal-input v3-modal-input-lg" placeholder="e.g. 5 Nights 6 Days Spectacular Dubai Holiday">
+                                </div>
+                                <div class="v3-modal-form-group">
+                                    <label class="v3-modal-label"><i class="fi fi-rr-calendar"></i> Travel Date / Departure *</label>
+                                    <input type="text" id="itineraryCustomTravelDate" class="v3-modal-input v3-modal-input-lg v3-single-datepicker-input" data-future-only="true" placeholder="Select departure date" readonly style="cursor:pointer;background:#fff;">
+                                </div>
                             </div>
-                            <div class="v3-modal-form-group">
-                                <label class="v3-modal-label">Total Quotation Value (₹) *</label>
-                                <input type="number" id="itineraryCustomTotalPrice" class="v3-modal-input" placeholder="0">
-                            </div>
-                        </div>
 
-                        <div class="v3-form-grid-3 v3-mt-12">
-                            <div class="v3-modal-form-group">
-                                <label class="v3-modal-label">Adult Price / person (₹)</label>
-                                <input type="number" id="itineraryCustomAdultPrice" class="v3-modal-input" placeholder="0">
+                            <!-- Pickup, Drop & Travel Theme Row -->
+                            <div class="v3-form-grid-3 v3-mb-20">
+                                <div class="v3-modal-form-group">
+                                    <label class="v3-modal-label"><i class="fi fi-rr-map-marker"></i> Pickup Location</label>
+                                    <select id="itineraryCustomPickup" class="leads-filter-select v3-select-full"></select>
+                                </div>
+                                <div class="v3-modal-form-group">
+                                    <label class="v3-modal-label"><i class="fi fi-rr-map-marker-home"></i> Drop Location</label>
+                                    <select id="itineraryCustomDrop" class="leads-filter-select v3-select-full"></select>
+                                </div>
+                                <div class="v3-modal-form-group">
+                                    <label class="v3-modal-label"><i class="fi fi-rr-compass"></i> Travel Theme / Style</label>
+                                    <select id="itineraryCustomTheme" class="leads-filter-select v3-select-full">
+                                        <option value="standard">Standard / General</option>
+                                        <option value="family">Family Vacation</option>
+                                        <option value="honeymoon">Honeymoon & Romantic</option>
+                                        <option value="adventure">Adventure & Trekking</option>
+                                        <option value="cultural">Cultural & Heritage</option>
+                                        <option value="luxury">Luxury & Premium</option>
+                                        <option value="spiritual">Spiritual & Pilgrimage</option>
+                                        <option value="wildlife">Wildlife & Nature</option>
+                                        <option value="beach">Beach & Relaxation</option>
+                                        <option value="budget">Budget Friendly</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="v3-modal-form-group">
-                                <label class="v3-modal-label">Child Price / person (₹)</label>
-                                <input type="number" id="itineraryCustomChildPrice" class="v3-modal-input" placeholder="0">
-                            </div>
-                            <div class="v3-modal-form-group">
-                                <label class="v3-modal-label">Infant Price / person (₹)</label>
-                                <input type="number" id="itineraryCustomInfantPrice" class="v3-modal-input" value="0">
-                            </div>
-                        </div>
 
-                        <div class="v3-modal-form-group v3-mt-12">
-                            <label class="v3-modal-label">Tour Overview & Highlights</label>
-                            <textarea id="itineraryCustomOverview" class="v3-modal-textarea" rows="3" placeholder="Brief introduction and trip summary for the traveler..."></textarea>
+                            <!-- Commercials & Pricing Breakdown Card -->
+                            <div class="v3-itin-pricing-panel">
+                                <div class="v3-itin-pricing-panel-header">
+                                    <div class="v3-itin-pricing-panel-title">
+                                        <i class="fi fi-rr-receipt"></i> Commercials & Quotation Breakdown
+                                    </div>
+                                    <span class="v3-itin-pricing-panel-hint" id="itinTravelerCountBadge">Auto-calculates per traveler</span>
+                                </div>
+
+                                <div class="v3-itin-commercials-grid">
+                                    <!-- Total Quotation Price Hero Field -->
+                                    <div class="v3-itin-price-hero-card">
+                                        <div class="v3-price-hero-top">
+                                            <span class="v3-price-hero-label">Total Quotation Value (₹) *</span>
+                                            <span class="v3-calc-badge"><i class="fi fi-rr-calculator"></i> Auto</span>
+                                        </div>
+                                        <div class="v3-input-currency-group hero-currency-group">
+                                            <span class="v3-currency-addon">₹</span>
+                                            <input type="number" id="itineraryCustomTotalPrice" class="v3-modal-input v3-currency-input bold-price" placeholder="0">
+                                        </div>
+                                        <span class="v3-hero-subtext">Includes all travelers & taxes</span>
+                                    </div>
+
+                                    <!-- Adults Card -->
+                                    <div class="v3-itin-traveler-price-card">
+                                        <div class="v3-price-label-wrap">
+                                            <div class="v3-traveler-type-title">
+                                                <i class="fi fi-rr-user"></i> Adults
+                                            </div>
+                                            <span class="v3-age-tag">12+ yrs</span>
+                                        </div>
+                                        <div class="v3-traveler-fields-row">
+                                            <div class="v3-field-col count-col">
+                                                <label class="v3-sub-field-label">Pax</label>
+                                                <input type="number" id="itineraryCustomAdultCount" class="v3-modal-input v3-count-input" min="1" value="2" placeholder="2">
+                                            </div>
+                                            <div class="v3-field-col rate-col">
+                                                <label class="v3-sub-field-label">Rate / Adult (₹)</label>
+                                                <div class="v3-input-currency-group">
+                                                    <span class="v3-currency-addon">₹</span>
+                                                    <input type="number" id="itineraryCustomAdultPrice" class="v3-modal-input v3-currency-input" placeholder="0">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Children Card -->
+                                    <div class="v3-itin-traveler-price-card">
+                                        <div class="v3-price-label-wrap">
+                                            <div class="v3-traveler-type-title">
+                                                <i class="fi fi-rr-child"></i> Children
+                                            </div>
+                                            <span class="v3-age-tag">2-12 yrs</span>
+                                        </div>
+                                        <div class="v3-traveler-fields-row">
+                                            <div class="v3-field-col count-col">
+                                                <label class="v3-sub-field-label">Pax</label>
+                                                <input type="number" id="itineraryCustomChildCount" class="v3-modal-input v3-count-input" min="0" value="0" placeholder="0">
+                                            </div>
+                                            <div class="v3-field-col rate-col">
+                                                <label class="v3-sub-field-label">Rate / Child (₹)</label>
+                                                <div class="v3-input-currency-group">
+                                                    <span class="v3-currency-addon">₹</span>
+                                                    <input type="number" id="itineraryCustomChildPrice" class="v3-modal-input v3-currency-input" placeholder="0">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Infants Card -->
+                                    <div class="v3-itin-traveler-price-card">
+                                        <div class="v3-price-label-wrap">
+                                            <div class="v3-traveler-type-title">
+                                                <i class="fi fi-rr-baby"></i> Infants
+                                            </div>
+                                            <span class="v3-age-tag">&lt;2 yrs</span>
+                                        </div>
+                                        <div class="v3-traveler-fields-row">
+                                            <div class="v3-field-col count-col">
+                                                <label class="v3-sub-field-label">Pax</label>
+                                                <input type="number" id="itineraryCustomInfantCount" class="v3-modal-input v3-count-input" min="0" value="0" placeholder="0">
+                                            </div>
+                                            <div class="v3-field-col rate-col">
+                                                <label class="v3-sub-field-label">Rate / Infant (₹)</label>
+                                                <div class="v3-input-currency-group">
+                                                    <span class="v3-currency-addon">₹</span>
+                                                    <input type="number" id="itineraryCustomInfantPrice" class="v3-modal-input v3-currency-input" value="0">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Overview & Highlights -->
+                            <div class="v3-modal-form-group v3-mt-16">
+                                <label class="v3-modal-label"><i class="fi fi-rr-document"></i> Tour Overview & Highlights</label>
+                                <textarea id="itineraryCustomOverview" class="v3-modal-textarea" rows="3" placeholder="Brief introduction and trip summary for the traveler..."></textarea>
+                            </div>
                         </div>
                     </div>
 
@@ -337,12 +450,12 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
 
                         <div class="v3-form-grid-2">
                             <div class="v3-modal-form-group">
-                                <label class="v3-modal-label"><i class="fi fi-rr-check-circle v3-text-green"></i> What's Included</label>
-                                <textarea id="itineraryCustomInclusions" class="v3-modal-textarea" rows="4" placeholder="Hotel accommodation, Daily breakfast, Airport transfers, Sightseeing tours..."></textarea>
+                                <label class="v3-modal-label"><i class="fi fi-rr-check-circle v3-text-green"></i> What's Included <span class="v3-modal-hint">(One item per line)</span></label>
+                                <textarea id="itineraryCustomInclusions" class="v3-modal-textarea" rows="5" placeholder="• Hotel accommodation with breakfast&#10;• Airport & sightseeing transfers&#10;• All toll taxes and parking charges"></textarea>
                             </div>
                             <div class="v3-modal-form-group">
-                                <label class="v3-modal-label"><i class="fi fi-rr-cross-circle v3-text-red"></i> What's Excluded</label>
-                                <textarea id="itineraryCustomExclusions" class="v3-modal-textarea" rows="4" placeholder="Flight tickets, Personal expenses, Visa fees, Travel insurance..."></textarea>
+                                <label class="v3-modal-label"><i class="fi fi-rr-cross-circle v3-text-red"></i> What's Excluded <span class="v3-modal-hint">(One item per line)</span></label>
+                                <textarea id="itineraryCustomExclusions" class="v3-modal-textarea" rows="5" placeholder="• Airfare / Train tickets&#10;• Personal expenses & tips&#10;• Entry fees and camera tickets"></textarea>
                             </div>
                         </div>
                     </div>
@@ -367,8 +480,16 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
         <!-- Preview Header -->
         <div class="v3-preview-modal-header">
             <div class="v3-preview-header-left">
-                <div class="v3-preview-badge"><i class="fi fi-rr-eye"></i> Real Itinerary Preview</div>
-                <h4 class="v3-preview-header-title" id="livePreviewHeaderTitle">Custom Tour Proposal</h4>
+                <div class="v3-preview-header-icon">
+                    <i class="fi fi-rr-eye"></i>
+                </div>
+                <div class="v3-preview-header-meta">
+                    <div class="v3-preview-header-title-wrap">
+                        <h4 class="v3-preview-header-title" id="livePreviewHeaderTitle">Custom Tour Proposal</h4>
+                        <span class="v3-preview-badge"><i class="fi fi-rr-sparkles"></i> Live Proposal Preview</span>
+                    </div>
+                    <span class="v3-preview-subtitle">Client-ready presentation & Multi-Page A4 PDF document</span>
+                </div>
             </div>
             <div class="v3-preview-header-actions">
                 <button type="button" class="btn-v3-action btn-outline" id="btnLivePreviewDownloadPdf">
@@ -382,9 +503,13 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
         </div>
         <!-- Scrollable Document Preview Body -->
         <div class="v3-preview-modal-body">
-            <div class="v3-preview-sheet" id="livePreviewSheet">
-                <!-- Injected via JavaScript -->
+            <div id="livePreviewLoader" class="v3-itinerary-preview-loader v3-hidden">
+                <div class="v3-table-spinner">
+                    <div class="v3-spinner-ring"></div>
+                </div>
+                <span>Rendering template proposal...</span>
             </div>
+            <iframe id="livePreviewIframe" class="v3-live-preview-iframe" title="Itinerary Live Proposal Preview"></iframe>
         </div>
     </div>
 </div>

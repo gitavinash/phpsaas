@@ -1361,14 +1361,22 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
         .lightbox-close:hover, .lightbox-nav:hover { background: rgba(255, 255, 255, 0.4); }
 
         /* --- PDF & Print Optimizations (A4 Pagination) --- */
+        @page {
+            size: A4 portrait;
+            margin: 12mm 10mm 12mm 10mm;
+        }
+
         @media print {
-            body {
+            html, body {
                 background: #ffffff !important;
                 padding: 0 !important;
-                font-size: 12pt !important;
+                font-size: 11pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
             .v3-pdf-actions-bar,
+            .no-print,
             .lightbox-modal {
                 display: none !important;
             }
@@ -1381,21 +1389,28 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
 
             .luxury-card,
             .hero-card,
-            .company-contact-card {
+            .company-contact-card,
+            .price-table-card,
+            .inc-card,
+            .exc-card,
+            .property-card {
                 box-shadow: none !important;
-                page-break-inside: avoid;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
                 margin-bottom: 20px !important;
                 border: 1px solid #e2e8f0 !important;
             }
 
             .hero-card {
-                min-height: 280px !important;
+                min-height: 260px !important;
                 background-color: #0f172a !important;
                 color: #ffffff !important;
             }
 
-            .timeline-item {
-                page-break-inside: avoid;
+            .timeline-item,
+            .day-card {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
         }
     </style>
@@ -1403,6 +1418,7 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
 <body>
 
     <!-- Floating PDF Export Action Bar -->
+    <?php if (empty($hideActions) && empty($isPreview)): ?>
     <div class="v3-pdf-actions-bar">
         <button type="button" class="btn-pdf-action btn-pdf-download" id="btnDownloadAleyaPDF">
             <i class="ri-file-download-line"></i> Download Itinerary PDF
@@ -1411,6 +1427,7 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
             <i class="ri-printer-line"></i> Print
         </button>
     </div>
+    <?php endif; ?>
 
     <!-- Main Itinerary Document Container -->
     <div class="luxury-wrapper" id="itineraryDocument">
@@ -1986,6 +2003,22 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
                 btn.innerHTML = origText;
             }
         });
+
+        // Auto-Download on page load if requested (?download=true or ?pdf=1)
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dlParam = urlParams.get('download');
+            const pdfParam = urlParams.get('pdf');
+            const shouldAutoDownload = dlParam === 'true' || dlParam === '1' || dlParam === 'yes' || pdfParam === '1' || pdfParam === 'true' || <?php echo (!empty($autoDownload) || !empty($isDownload)) ? 'true' : 'false'; ?>;
+            if (shouldAutoDownload) {
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        const btn = document.getElementById('btnDownloadAleyaPDF');
+                        if (btn) btn.click();
+                    }, 600);
+                });
+            }
+        })();
     </script>
 </body>
 </html>

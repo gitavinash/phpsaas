@@ -93,7 +93,7 @@
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-id-badge input-icon"></i>
-                                    <input type="text" id="profileDisplayName" name="display_name" class="v3-form-input" placeholder="e.g. Ravindra Sharma">
+                                    <input type="text" id="profileDisplayName" name="display_name" class="v3-form-input" placeholder="e.g. Avinash Kumar">
                                 </div>
                             </div>
 

@@ -75,12 +75,12 @@ if (!function_exists('cleanProposalLabel')) {
 }
 
 // Dynamic Site & Company Info
-$siteName    = defined('SITE_NAME') ? SITE_NAME : ($company_name ?? 'Musafir India Trip');
+$siteName    = defined('SITE_NAME') ? SITE_NAME : ($company_name ?? 'Company Name');
 $sitePhone   = defined('SITE_MOBILE') ? SITE_MOBILE : (defined('SITE_PHONE') ? SITE_PHONE : ($company_phone ?? ''));
 $siteEmail   = defined('SITE_EMAIL') ? SITE_EMAIL : ($company_email ?? '');
 $siteAddress = defined('SITE_ADDRESS') ? SITE_ADDRESS : ($company_address ?? '');
 $siteUrl     = defined('SITE_URL') ? SITE_URL : ($company_url ?? '');
-$siteDomain  = defined('SITE_DOMAIN') ? SITE_DOMAIN : ($company_site_domain ?? parse_url($siteUrl, PHP_URL_HOST) ?? 'musafirindiatrip.com');
+$siteDomain  = defined('SITE_DOMAIN') ? SITE_DOMAIN : ($company_site_domain ?? parse_url($siteUrl, PHP_URL_HOST) ?? 'blumox.com');
 $siteLogo    = fixImageUrl(defined('SITE_LOGO') ? SITE_LOGO : ($company_logo ?? ''));
 $themeColor  = defined('SITE_THEME_COLOUR') ? SITE_THEME_COLOUR : '#e76317';
 $bgColor     = defined('SITE_BACKGROUND_COLOUR') ? SITE_BACKGROUND_COLOUR : '#26679c';
@@ -226,8 +226,10 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         /* A4 Page Configuration */
         .page {
             position: relative;
-            width: 210mm; /* A4 width */
-            min-height: 297mm; /* A4 height */
+            width: 210mm;
+            /* A4 width */
+            min-height: 297mm;
+            /* A4 height */
             height: 297mm;
             margin: 0 auto 30px auto;
             background: #ffffff;
@@ -322,19 +324,53 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         }
 
         /* Cycle gradients per day matching download-itinerary-mit.php */
-        .days-page:nth-of-type(1) .hero .default-day-image { background: linear-gradient(135deg, #5e1ba9, #c2185b); }
-        .days-page:nth-of-type(2) .hero .default-day-image { background: linear-gradient(135deg, #1565c0, #0277bd); }
-        .days-page:nth-of-type(3) .hero .default-day-image { background: linear-gradient(135deg, #0288d1, #7b1fa2); }
-        .days-page:nth-of-type(4) .hero .default-day-image { background: linear-gradient(135deg, #00796b, #558b2f); }
-        .days-page:nth-of-type(5) .hero .default-day-image { background: linear-gradient(135deg, #e65100, #c62828); }
-        .days-page:nth-of-type(6) .hero .default-day-image { background: linear-gradient(135deg, #c2185b, #6a1b9a); }
-        .days-page:nth-of-type(7) .hero .default-day-image { background: linear-gradient(135deg, #00695c, #004d40); }
-        .days-page:nth-of-type(8) .hero .default-day-image { background: linear-gradient(135deg, #1565c0, #1976d2); }
-        .days-page:nth-of-type(9) .hero .default-day-image { background: linear-gradient(135deg, #0277bd, #00838f); }
-        .days-page:nth-of-type(10) .hero .default-day-image { background: linear-gradient(135deg, #6a1b9a, #1565c0); }
+        .days-page:nth-of-type(1) .hero .default-day-image {
+            background: linear-gradient(135deg, #5e1ba9, #c2185b);
+        }
 
-        .greenGradient { background: linear-gradient(135deg, #00796b, #558b2f) !important; }
-        .redGradient { background: linear-gradient(135deg, #e65100, #c62828) !important; }
+        .days-page:nth-of-type(2) .hero .default-day-image {
+            background: linear-gradient(135deg, #1565c0, #0277bd);
+        }
+
+        .days-page:nth-of-type(3) .hero .default-day-image {
+            background: linear-gradient(135deg, #0288d1, #7b1fa2);
+        }
+
+        .days-page:nth-of-type(4) .hero .default-day-image {
+            background: linear-gradient(135deg, #00796b, #558b2f);
+        }
+
+        .days-page:nth-of-type(5) .hero .default-day-image {
+            background: linear-gradient(135deg, #e65100, #c62828);
+        }
+
+        .days-page:nth-of-type(6) .hero .default-day-image {
+            background: linear-gradient(135deg, #c2185b, #6a1b9a);
+        }
+
+        .days-page:nth-of-type(7) .hero .default-day-image {
+            background: linear-gradient(135deg, #00695c, #004d40);
+        }
+
+        .days-page:nth-of-type(8) .hero .default-day-image {
+            background: linear-gradient(135deg, #1565c0, #1976d2);
+        }
+
+        .days-page:nth-of-type(9) .hero .default-day-image {
+            background: linear-gradient(135deg, #0277bd, #00838f);
+        }
+
+        .days-page:nth-of-type(10) .hero .default-day-image {
+            background: linear-gradient(135deg, #6a1b9a, #1565c0);
+        }
+
+        .greenGradient {
+            background: linear-gradient(135deg, #00796b, #558b2f) !important;
+        }
+
+        .redGradient {
+            background: linear-gradient(135deg, #e65100, #c62828) !important;
+        }
 
         /* Container Layout */
         .container {
@@ -712,14 +748,16 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
 <body>
 
     <!-- Floating Top Action Bar -->
-    <div class="v3-pdf-actions-bar">
-        <button type="button" class="btn-pdf-action btn-pdf-download" id="btnDownloadPDF" onclick="downloadItineraryPDF()">
-            <i class="ri-file-pdf-line"></i> Download PDF
-        </button>
-        <button type="button" class="btn-pdf-action btn-pdf-print" onclick="window.print()">
-            <i class="ri-printer-line"></i> Print
-        </button>
-    </div>
+    <?php if (empty($hideActions) && empty($isPreview)): ?>
+        <div class="v3-pdf-actions-bar">
+            <button type="button" class="btn-pdf-action btn-pdf-download" id="btnDownloadPDF" onclick="downloadItineraryPDF()">
+                <i class="ri-file-pdf-line"></i> Download PDF
+            </button>
+            <button type="button" class="btn-pdf-action btn-pdf-print" onclick="window.print()">
+                <i class="ri-printer-line"></i> Print
+            </button>
+        </div>
+    <?php endif; ?>
 
     <div id="pdfContentWrapper">
 
@@ -965,7 +1003,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 const footer = document.createElement('div');
                 footer.className = 'page-footer-decor';
                 const pageNumber = "Page " + (index + 1) + " of " + totalPages;
-                
+
                 footer.innerHTML = `
                     <div class="bottom-decor">
                         <?php if (!empty($siteLogo)): ?>
@@ -1000,7 +1038,10 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                     const baseHeight = 22 + Math.random() * 8;
                     const y = Math.max(4, Math.min(52, baseHeight + wave1 + wave2));
 
-                    points.push({ x, y });
+                    points.push({
+                        x,
+                        y
+                    });
                 }
 
                 let pathData = 'M 0,100 L 0,100';
@@ -1064,9 +1105,20 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             const opt = {
                 margin: 0,
                 filename: '<?php echo preg_replace('/[^a-zA-Z0-9_-]/', '_', $pkgTitle); ?>_Itinerary.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, logging: false },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait'
+                }
             };
 
             html2pdf().set(opt).from(element).save().then(() => {
@@ -1083,6 +1135,21 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 window.print();
             });
         }
+
+        // 4. Auto-Download on page load if requested (?download=true or ?pdf=1)
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dlParam = urlParams.get('download');
+            const pdfParam = urlParams.get('pdf');
+            const shouldAutoDownload = dlParam === 'true' || dlParam === '1' || dlParam === 'yes' || pdfParam === '1' || pdfParam === 'true' || <?php echo (!empty($autoDownload) || !empty($isDownload)) ? 'true' : 'false'; ?>;
+            if (shouldAutoDownload) {
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        downloadItineraryPDF();
+                    }, 600);
+                });
+            }
+        })();
     </script>
 </body>
 

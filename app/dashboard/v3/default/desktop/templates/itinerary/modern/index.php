@@ -522,16 +522,46 @@ $excList = parseBulletList($pkgExclusions);
 
         .credit-note a { color: var(--mod-primary); text-decoration: none; font-weight: 700; }
 
+        @page {
+            size: A4 portrait;
+            margin: 12mm 10mm 12mm 10mm;
+        }
+
         @media print {
-            body { background: #ffffff !important; padding: 0 !important; }
-            .v3-pdf-actions-bar { display: none !important; }
-            .modern-wrapper { max-width: 100% !important; padding: 0 !important; }
-            .mod-card, .company-contact-card, .day-block { page-break-inside: avoid; margin-bottom: 16px !important; }
+            html, body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                font-size: 11pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .v3-pdf-actions-bar,
+            .no-print {
+                display: none !important;
+            }
+            .modern-wrapper {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .mod-card,
+            .hero-card,
+            .company-contact-card,
+            .day-block,
+            .stay-pill-card,
+            .inc-exc-grid {
+                box-shadow: none !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin-bottom: 16px !important;
+                border: 1px solid #e2e8f0 !important;
+            }
         }
     </style>
 </head>
 <body>
 
+    <?php if (empty($hideActions) && empty($isPreview)): ?>
     <div class="v3-pdf-actions-bar">
         <button type="button" class="btn-pdf-action btn-pdf-download" id="btnDownloadModernPDF">
             <i class="ri-file-download-line"></i> Download Itinerary PDF
@@ -540,6 +570,7 @@ $excList = parseBulletList($pkgExclusions);
             <i class="ri-printer-line"></i> Print
         </button>
     </div>
+    <?php endif; ?>
 
     <div class="modern-wrapper" id="itineraryDocument">
 
@@ -765,6 +796,22 @@ $excList = parseBulletList($pkgExclusions);
                 btn.innerHTML = orig;
             }
         });
+
+        // Auto-Download on page load if requested (?download=true or ?pdf=1)
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dlParam = urlParams.get('download');
+            const pdfParam = urlParams.get('pdf');
+            const shouldAutoDownload = dlParam === 'true' || dlParam === '1' || dlParam === 'yes' || pdfParam === '1' || pdfParam === 'true' || <?php echo (!empty($autoDownload) || !empty($isDownload)) ? 'true' : 'false'; ?>;
+            if (shouldAutoDownload) {
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        const btn = document.getElementById('btnDownloadModernPDF');
+                        if (btn) btn.click();
+                    }, 600);
+                });
+            }
+        })();
     </script>
 </body>
 </html>

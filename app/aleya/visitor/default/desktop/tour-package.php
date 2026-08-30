@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Luxury Tour Package Landing Page
  * Dynamically rendered from database data
@@ -17,13 +18,13 @@ if (!function_exists('fixImageUrl')) {
             return $url;
         }
         if (strpos($url, '/upload/crm.') === 0) {
-            return 'https://crm.musafirindiatrip.com' . $url;
+            return 'https://app.aleya.in' . $url;
         }
         if (strpos($url, '/upload/') === 0) {
             if (defined('ROOT') && file_exists(ROOT . $url)) {
                 return $url;
             }
-            return 'https://crm.musafirindiatrip.com' . $url;
+            return 'https://app.aleya.in' . $url;
         }
         return $url;
     }
@@ -1278,8 +1279,15 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
         }
 
         @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.92); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .share-modal-header {
@@ -1374,10 +1382,25 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
             transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
         }
 
-        .copy-icon { background: #e0f2fe; color: #0284c7; }
-        .wa-icon { background: #25d366; color: #ffffff; }
-        .email-icon { background: #fef3c7; color: #d97706; }
-        .fb-icon { background: #dbeafe; color: #2563eb; }
+        .copy-icon {
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .wa-icon {
+            background: #25d366;
+            color: #ffffff;
+        }
+
+        .email-icon {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .fb-icon {
+            background: #dbeafe;
+            color: #2563eb;
+        }
 
         .share-option-btn.wa-btn:hover .wa-icon {
             background: rgba(255, 255, 255, 0.25);
@@ -1813,7 +1836,8 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                 gap: 12px;
             }
 
-            .inc-card, .exc-card {
+            .inc-card,
+            .exc-card {
                 padding: 14px;
             }
 
@@ -1827,7 +1851,8 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                 gap: 8px;
             }
 
-            .luxury-table th, .luxury-table td {
+            .luxury-table th,
+            .luxury-table td {
                 padding: 10px 10px;
                 font-size: 0.8rem;
             }
@@ -1848,10 +1873,30 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                 font-size: 0.8rem;
             }
 
-            .lightbox-prev { left: 8px; width: 40px; height: 40px; font-size: 1.4rem; }
-            .lightbox-next { right: 8px; width: 40px; height: 40px; font-size: 1.4rem; }
-            .lightbox-close { top: 14px; right: 14px; width: 38px; height: 38px; }
-            .share-options-grid { grid-template-columns: 1fr; }
+            .lightbox-prev {
+                left: 8px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+
+            .lightbox-next {
+                right: 8px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+
+            .lightbox-close {
+                top: 14px;
+                right: 14px;
+                width: 38px;
+                height: 38px;
+            }
+
+            .share-options-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* --- Print Styling --- */
@@ -2000,23 +2045,23 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
 
         <!-- Tour Overview Section (Outside Hero) -->
         <?php if (!empty($tour_package_overview)): ?>
-        <section class="luxury-card">
-            <div class="section-header">
-                <div class="section-icon">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
+            <section class="luxury-card">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="section-title">Tour Overview</h2>
                 </div>
-                <h2 class="section-title">Tour Overview</h2>
-            </div>
-            <div class="overview-content">
-                <?php echo $tour_package_overview; ?>
-            </div>
-        </section>
+                <div class="overview-content">
+                    <?php echo $tour_package_overview; ?>
+                </div>
+            </section>
         <?php endif; ?>
 
         <!-- Unassigned Photo Gallery (With Initial Limit & View More) -->
-        <?php if (!empty($unassignedGalleryImages)): 
+        <?php if (!empty($unassignedGalleryImages)):
             $initialLimit = 6;
             $totalCount = count($unassignedGalleryImages);
         ?>
@@ -2031,12 +2076,12 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                 </div>
 
                 <div class="gallery-grid" id="main-gallery-grid">
-                    <?php foreach ($unassignedGalleryImages as $iIndex => $imgItem): 
+                    <?php foreach ($unassignedGalleryImages as $iIndex => $imgItem):
                         $isHidden = $iIndex >= $initialLimit;
                     ?>
-                        <div class="gallery-item <?php echo $isHidden ? 'gallery-hidden-item' : ''; ?>" 
-                             style="<?php echo $isHidden ? 'display: none;' : ''; ?>"
-                             onclick="openLightboxIndex(<?php echo $iIndex; ?>)">
+                        <div class="gallery-item <?php echo $isHidden ? 'gallery-hidden-item' : ''; ?>"
+                            style="<?php echo $isHidden ? 'display: none;' : ''; ?>"
+                            onclick="openLightboxIndex(<?php echo $iIndex; ?>)">
                             <img src="<?php echo htmlspecialchars($imgItem['url']); ?>" alt="<?php echo htmlspecialchars($imgItem['title']); ?>" loading="lazy" />
                             <?php if (!empty($imgItem['title'])): ?>
                                 <div class="gallery-caption"><?php echo htmlspecialchars($imgItem['title']); ?></div>
@@ -2046,14 +2091,14 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                 </div>
 
                 <?php if ($totalCount > $initialLimit): ?>
-                <div class="gallery-more-wrapper">
-                    <button id="btn-toggle-gallery" class="btn-action-outline btn-gallery-more" onclick="toggleGalleryMore()">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        <span>View All Photos (+<?php echo ($totalCount - $initialLimit); ?>)</span>
-                    </button>
-                </div>
+                    <div class="gallery-more-wrapper">
+                        <button id="btn-toggle-gallery" class="btn-action-outline btn-gallery-more" onclick="toggleGalleryMore()">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>View All Photos (+<?php echo ($totalCount - $initialLimit); ?>)</span>
+                        </button>
+                    </div>
                 <?php endif; ?>
             </section>
         <?php endif; ?>
@@ -2155,7 +2200,7 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                                                 </p>
                                                 <div class="farewell-tag">
                                                     <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                     </svg>
                                                     Wishing You Safe Travels & Happy Journeys Ahead!
                                                 </div>
@@ -2166,47 +2211,54 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                                             <div class="day-hotel-card assigned-hotel">
                                                 <div class="hotel-card-header">
                                                     <div class="hotel-badge-tag">
-                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V5m0 0h2M9 5h2"></path></svg>
+                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V5m0 0h2M9 5h2"></path>
+                                                        </svg>
                                                         Night Stay in <?php echo htmlspecialchars($stayCity); ?>
                                                     </div>
                                                     <span class="hotel-type-pill"><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $assignedHotel['property_type'] ?? 'Hotel'))); ?></span>
                                                 </div>
 
                                                 <div class="hotel-card-body">
-                                                    <?php 
+                                                    <?php
                                                     $hotelThumb = fixImageUrl($assignedHotel['property_thumbnail'] ?? '');
-                                                    if (!empty($hotelThumb)): 
+                                                    if (!empty($hotelThumb)):
                                                     ?>
-                                                    <div class="hotel-thumb-box" onclick="openLightboxUrl('<?php echo htmlspecialchars($hotelThumb); ?>')">
-                                                        <img src="<?php echo htmlspecialchars($hotelThumb); ?>" alt="<?php echo htmlspecialchars($assignedHotel['property_title']); ?>" loading="lazy" />
-                                                    </div>
+                                                        <div class="hotel-thumb-box" onclick="openLightboxUrl('<?php echo htmlspecialchars($hotelThumb); ?>')">
+                                                            <img src="<?php echo htmlspecialchars($hotelThumb); ?>" alt="<?php echo htmlspecialchars($assignedHotel['property_title']); ?>" loading="lazy" />
+                                                        </div>
                                                     <?php endif; ?>
 
                                                     <div class="hotel-details-box">
                                                         <h4 class="hotel-name"><?php echo htmlspecialchars($assignedHotel['property_title']); ?></h4>
-                                                        
-                                                        <?php 
+
+                                                        <?php
                                                         $locParts = array_filter([$assignedHotel['property_address'] ?? '', $assignedHotel['property_city'] ?? '', $assignedHotel['property_state'] ?? '', $assignedHotel['property_country'] ?? '']);
                                                         if (!empty($locParts)):
                                                         ?>
-                                                        <div class="hotel-location">
-                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                                            <span><?php echo htmlspecialchars(implode(', ', $locParts)); ?></span>
-                                                        </div>
+                                                            <div class="hotel-location">
+                                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                                    <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                                                    <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                                </svg>
+                                                                <span><?php echo htmlspecialchars(implode(', ', $locParts)); ?></span>
+                                                            </div>
                                                         <?php endif; ?>
 
                                                         <?php if (!empty($assignedHotel['tph_room_type'])): ?>
-                                                        <div class="hotel-room-type">
-                                                            <strong>Room Type:</strong> <?php echo htmlspecialchars(ucwords($assignedHotel['tph_room_type'])); ?>
-                                                        </div>
+                                                            <div class="hotel-room-type">
+                                                                <strong>Room Type:</strong> <?php echo htmlspecialchars(ucwords($assignedHotel['tph_room_type'])); ?>
+                                                            </div>
                                                         <?php endif; ?>
 
-                                                        <?php 
+                                                        <?php
                                                         $hLink = !empty($assignedHotel['link_url']) ? $assignedHotel['link_url'] : ('/hotel/' . $assignedHotel['property_id'] . '/');
                                                         ?>
                                                         <a href="<?php echo htmlspecialchars($hLink); ?>" class="btn-hotel-link" target="_blank" rel="noopener">
                                                             View Hotel Details
-                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                                <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                                            </svg>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -2216,13 +2268,15 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                                                 </div>
                                             </div>
                                         <?php else: ?>
-                                            <?php 
+                                            <?php
                                             $catName = !empty($tour_package_hotel) ? ucwords(str_replace('_', ' ', $tour_package_hotel)) : (!empty($dbPackagePrices[0]['tour_package_price_hotel']) ? $dbPackagePrices[0]['tour_package_price_hotel'] : '3 Star / Deluxe Category Hotel');
                                             ?>
                                             <div class="day-hotel-card category-hotel">
                                                 <div class="hotel-card-header">
                                                     <div class="hotel-badge-tag">
-                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V5m0 0h2M9 5h2"></path></svg>
+                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V5m0 0h2M9 5h2"></path>
+                                                        </svg>
                                                         Night Stay in <?php echo htmlspecialchars($stayCity); ?>
                                                     </div>
                                                     <span class="hotel-type-pill"><?php echo htmlspecialchars($catName); ?></span>
@@ -2472,7 +2526,7 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                 <a id="share-wa-link" href="#" target="_blank" rel="noopener" class="share-option-btn wa-btn">
                     <div class="share-icon wa-icon">
                         <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.758.459 3.474 1.33 4.982l-1.413 5.163 5.284-1.385c1.455.793 3.096 1.21 4.782 1.211h.005c5.505 0 9.988-4.479 9.989-9.985 0-2.667-1.037-5.176-2.922-7.062-1.886-1.886-4.394-2.923-7.065-2.923zm5.834 14.162c-.247.692-1.229 1.309-1.996 1.474-.526.113-1.212.203-3.522-.751-2.956-1.223-4.858-4.228-5.006-4.425-.148-.197-1.203-1.603-1.203-3.056 0-1.453.762-2.167 1.032-2.463.27-.296.59-.37.787-.37.197 0 .394.002.566.01.182.008.431-.069.674.514.247.592.838 2.046.912 2.194.074.148.123.321.025.518-.099.197-.148.32-.296.493-.148.173-.311.387-.444.519-.148.148-.302.309-.13.604.173.296.767 1.267 1.649 2.052 1.133 1.01 2.088 1.323 2.384 1.471.296.148.468.123.641-.074.173-.197.739-.863.936-1.159.197-.296.394-.247.665-.148.271.099 1.724.814 2.02 1.011.296.197.493.296.566.419.074.123.074.715-.173 1.407z"/>
+                            <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.758.459 3.474 1.33 4.982l-1.413 5.163 5.284-1.385c1.455.793 3.096 1.21 4.782 1.211h.005c5.505 0 9.988-4.479 9.989-9.985 0-2.667-1.037-5.176-2.922-7.062-1.886-1.886-4.394-2.923-7.065-2.923zm5.834 14.162c-.247.692-1.229 1.309-1.996 1.474-.526.113-1.212.203-3.522-.751-2.956-1.223-4.858-4.228-5.006-4.425-.148-.197-1.203-1.603-1.203-3.056 0-1.453.762-2.167 1.032-2.463.27-.296.59-.37.787-.37.197 0 .394.002.566.01.182.008.431-.069.674.514.247.592.838 2.046.912 2.194.074.148.123.321.025.518-.099.197-.148.32-.296.493-.148.173-.311.387-.444.519-.148.148-.302.309-.13.604.173.296.767 1.267 1.649 2.052 1.133 1.01 2.088 1.323 2.384 1.471.296.148.468.123.641-.074.173-.197.739-.863.936-1.159.197-.296.394-.247.665-.148.271.099 1.724.814 2.02 1.011.296.197.493.296.566.419.074.123.074.715-.173 1.407z" />
                         </svg>
                     </div>
                     <span>WhatsApp</span>
@@ -2490,7 +2544,7 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                 <a id="share-fb-link" href="#" target="_blank" rel="noopener" class="share-option-btn fb-btn">
                     <div class="share-icon fb-icon">
                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                         </svg>
                     </div>
                     <span>Facebook</span>
@@ -2546,8 +2600,12 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
                 navigator.clipboard.writeText(url).then(() => {
                     const btnText = document.getElementById('copy-btn-text');
                     btnText.innerText = 'Copied!';
-                    setTimeout(() => { btnText.innerText = 'Copy Link'; }, 2000);
-                }).catch(() => { fallbackCopyText(url); });
+                    setTimeout(() => {
+                        btnText.innerText = 'Copy Link';
+                    }, 2000);
+                }).catch(() => {
+                    fallbackCopyText(url);
+                });
             } else {
                 fallbackCopyText(url);
             }
@@ -2562,7 +2620,9 @@ if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && !empt
             document.body.removeChild(dummy);
             const btnText = document.getElementById('copy-btn-text');
             btnText.innerText = 'Copied!';
-            setTimeout(() => { btnText.innerText = 'Copy Link'; }, 2000);
+            setTimeout(() => {
+                btnText.innerText = 'Copy Link';
+            }, 2000);
         }
 
         function openLightboxIndex(index) {

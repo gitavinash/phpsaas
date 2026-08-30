@@ -43,7 +43,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                         </div>
                         <div style="margin-left: auto;">
                             <label class="v3-toggle-switch" title="Toggle Email Channel">
-                                <input type="checkbox" id="notifyEmailEnabled" name="email_notification" value="1" checked>
+                                <input type="checkbox" id="notifyEmailEnabled" name="notification_email_notification" value="1" checked>
                                 <span class="v3-toggle-slider"></span>
                             </label>
                         </div>
@@ -58,7 +58,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-envelope input-icon"></i>
-                                    <input type="email" id="notifyAdminEmail" name="admin_email" class="v3-form-input" placeholder="admin@yourdomain.com" required>
+                                    <input type="email" id="notifyAdminEmail" name="notification_admin_email" class="v3-form-input" placeholder="admin@yourdomain.com" required>
                                 </div>
                                 <span class="v3-field-error" id="errNotifyAdminEmail"></span>
                             </div>
@@ -70,7 +70,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-inbox input-icon"></i>
-                                    <input type="email" id="notifyEnquiryEmail" name="enquiry_email" class="v3-form-input" placeholder="leads@yourdomain.com">
+                                    <input type="email" id="notifyEnquiryEmail" name="notification_enquiry_email" class="v3-form-input" placeholder="leads@yourdomain.com">
                                 </div>
                             </div>
 
@@ -81,7 +81,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-shield-check input-icon"></i>
-                                    <input type="email" id="notifySiteEmailAlert" name="site_email_alert" class="v3-form-input" placeholder="security@yourdomain.com">
+                                    <input type="email" id="notifySiteEmailAlert" name="notification_site_email_alert" class="v3-form-input" placeholder="security@yourdomain.com">
                                 </div>
                             </div>
                         </div>
@@ -92,7 +92,9 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                 <div class="v3-card-section">
                     <div class="v3-card-header">
                         <div class="v3-card-header-icon emerald">
-                            <span class="v3-wa-icon-svg header-icon"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></span>
+                            <span class="v3-wa-icon-svg header-icon"><svg viewBox="0 0 24 24">
+                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                                </svg></span>
                         </div>
                         <div class="v3-card-header-text">
                             <h3>WhatsApp Alert Channel</h3>
@@ -100,7 +102,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                         </div>
                         <div style="margin-left: auto;">
                             <label class="v3-toggle-switch" title="Toggle WhatsApp Channel">
-                                <input type="checkbox" id="notifyWhatsappEnabled" name="enable_whatsapp_business_api" value="1" checked>
+                                <input type="checkbox" id="notifyWhatsappEnabled" name="notification_enable_whatsapp_business_api" value="1" checked>
                                 <span class="v3-toggle-slider emerald"></span>
                             </label>
                         </div>
@@ -114,8 +116,10 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                     Admin WhatsApp Alert Number <span class="required">*</span>
                                 </label>
                                 <div class="v3-input-icon-wrap">
-                                    <span class="v3-wa-icon-svg input-icon-svg"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></span>
-                                    <input type="tel" id="notifyAdminWhatsapp" name="admin_whatsapp_number" class="v3-form-input" placeholder="e.g. 9958719998" required>
+                                    <span class="v3-wa-icon-svg input-icon-svg"><svg viewBox="0 0 24 24">
+                                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                                        </svg></span>
+                                    <input type="tel" id="notifyAdminWhatsapp" name="notification_admin_whatsapp_number" class="v3-form-input" placeholder="e.g. 9990026008" required>
                                 </div>
                                 <span class="v3-field-error" id="errNotifyAdminWhatsapp"></span>
                             </div>
@@ -126,8 +130,10 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                     Company Sender WhatsApp Number
                                 </label>
                                 <div class="v3-input-icon-wrap">
-                                    <span class="v3-wa-icon-svg input-icon-svg"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></span>
-                                    <input type="tel" id="notifyCompanyWhatsapp" name="company_whatsapp_number" class="v3-form-input" placeholder="e.g. 9958719998">
+                                    <span class="v3-wa-icon-svg input-icon-svg"><svg viewBox="0 0 24 24">
+                                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                                        </svg></span>
+                                    <input type="tel" id="notifyCompanyWhatsapp" name="notification_company_whatsapp_number" class="v3-form-input" placeholder="e.g. 9990026008">
                                 </div>
                             </div>
                         </div>
@@ -146,7 +152,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                         </div>
                         <div style="margin-left: auto;">
                             <label class="v3-toggle-switch" title="Toggle SMS Channel">
-                                <input type="checkbox" id="notifySmsEnabled" name="sms_enable" value="1">
+                                <input type="checkbox" id="notifySmsEnabled" name="notification_sms_enable" value="1">
                                 <span class="v3-toggle-slider"></span>
                             </label>
                         </div>
@@ -160,7 +166,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-mobile input-icon"></i>
-                                    <input type="tel" id="notifySmsDefault" name="sms_default" class="v3-form-input" placeholder="e.g. 9958719998">
+                                    <input type="tel" id="notifySmsDefault" name="notification_sms_default" class="v3-form-input" placeholder="e.g. 9990026008">
                                 </div>
                             </div>
                         </div>
@@ -197,7 +203,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                         <i class="fi fi-rr-paper-plane"></i> <span>Test</span>
                                     </button>
                                     <label class="v3-toggle-switch" title="Toggle Web Push">
-                                        <input type="checkbox" id="notifyPushEnabled" name="enable_push_notification" value="1">
+                                        <input type="checkbox" id="notifyPushEnabled" name="notification_enable_push_notification" value="1">
                                         <span class="v3-toggle-slider"></span>
                                     </label>
                                 </div>
@@ -219,7 +225,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                         <i class="fi fi-rr-volume"></i> <span>Play Sound</span>
                                     </button>
                                     <label class="v3-toggle-switch" title="Toggle In-App Audio">
-                                        <input type="checkbox" id="notifyInAppEnabled" name="enable_inapp_notification" value="1" checked>
+                                        <input type="checkbox" id="notifyInAppEnabled" name="notification_enable_inapp_notification" value="1" checked>
                                         <span class="v3-toggle-slider emerald"></span>
                                     </label>
                                 </div>
@@ -254,7 +260,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                     </div>
                                 </div>
                                 <label class="v3-toggle-switch" title="Toggle Inquiries Alert">
-                                    <input type="checkbox" id="evtEnquiry" name="company_whatsapp_enquiry_thank_you" value="1" checked>
+                                    <input type="checkbox" id="evtEnquiry" name="notification_company_whatsapp_enquiry_thank_you" value="1" checked>
                                     <span class="v3-toggle-slider"></span>
                                 </label>
                             </div>
@@ -271,7 +277,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                     </div>
                                 </div>
                                 <label class="v3-toggle-switch" title="Toggle Payment Alert">
-                                    <input type="checkbox" id="evtPayment" name="company_whatsapp_payment_request" value="1" checked>
+                                    <input type="checkbox" id="evtPayment" name="notification_company_whatsapp_payment_request" value="1" checked>
                                     <span class="v3-toggle-slider emerald"></span>
                                 </label>
                             </div>
@@ -288,7 +294,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                     </div>
                                 </div>
                                 <label class="v3-toggle-switch" title="Toggle Itinerary Alert">
-                                    <input type="checkbox" id="evtItinerary" name="company_whatsapp_itinerary_sent" value="1" checked>
+                                    <input type="checkbox" id="evtItinerary" name="notification_company_whatsapp_itinerary_sent" value="1" checked>
                                     <span class="v3-toggle-slider"></span>
                                 </label>
                             </div>
@@ -324,7 +330,9 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                             <span id="badgeStatusEmail" class="v3-status-badge status-active" style="font-size: 10px;">Active</span>
                         </div>
                         <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f8fafc;">
-                            <span style="display: flex; align-items: center; gap: 8px; color: #334155;"><span class="v3-wa-icon-svg" style="width: 14px; height: 14px; color: #10b981;"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></span> WhatsApp Alerts</span>
+                            <span style="display: flex; align-items: center; gap: 8px; color: #334155;"><span class="v3-wa-icon-svg" style="width: 14px; height: 14px; color: #10b981;"><svg viewBox="0 0 24 24">
+                                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                                    </svg></span> WhatsApp Alerts</span>
                             <span id="badgeStatusWhatsapp" class="v3-status-badge status-active" style="font-size: 10px;">Active</span>
                         </div>
                         <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f8fafc;">

@@ -21,7 +21,7 @@ $email_footer = "
 
 								<div id='address' class='mktEditable'>
 
-									<a href='https://aleya.in?utm_source=" . SITE_NAME . "&utm_medium=email'><img class='top-image' src='https://crm.musafirindiatrip.com//upload/others/aleya-logo.png' style='line-height: 1; height: 50px; padding: 5px 0px 5px 10px' ></a>
+									<a href='https://aleya.in?utm_source=" . SITE_NAME . "&utm_medium=email'><img class='top-image' src='https://crm.blumox.com//upload/others/aleya-logo.png' style='line-height: 1; height: 50px; padding: 5px 0px 5px 10px' ></a>
 									<p><strong><a href='https://aleya.in'>Aleya - Travel ERP Software</a></strong></p>
 									
 								</div>

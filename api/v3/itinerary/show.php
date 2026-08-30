@@ -15,13 +15,6 @@ if (!isset($connection)) {
     }
 }
 
-if (!defined('LOGIN_CHECK')) {
-    define('LOGIN_CHECK', $_SERVER['DOCUMENT_ROOT'] . '/lib/session/index.php');
-}
-if (file_exists(LOGIN_CHECK)) {
-    require_once LOGIN_CHECK;
-}
-
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
 
@@ -45,6 +38,15 @@ if (is_numeric($rawId) && (int)$rawId > 0) {
 
 $requestedTemplate = trim((string)($postData['template'] ?? ($_GET['template'] ?? '')));
 $format = strtolower(trim((string)($postData['format'] ?? ($_GET['format'] ?? 'html'))));
+
+// Hide floating actions bar when previewing inside modal
+$hideActions = isset($postData['hideActions']) ? !empty($postData['hideActions']) : (!empty($_GET['hide_actions']) || !empty($_GET['preview']) || !empty($postData['preview']) || $format === 'preview');
+$isPreview = $hideActions;
+
+// Parse auto-download parameter (?download=true|false or ?pdf=1)
+$downloadParam = $postData['download'] ?? ($_GET['download'] ?? ($postData['pdf'] ?? ($_GET['pdf'] ?? 'false')));
+$autoDownload = ($downloadParam === true || $downloadParam === 'true' || $downloadParam === '1' || $downloadParam === 'yes' || !empty($_GET['auto_download']));
+$isDownload = $autoDownload;
 
 // List of available template directories
 $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : (defined('ROOT') ? ROOT : realpath(__DIR__ . '/../../../'));
@@ -133,7 +135,11 @@ if (!empty($quotationData)) {
     $tour_package_state = $quotationData['tour_package_state'] ?? '';
     $tour_package_country = $quotationData['tour_package_country'] ?? '';
     $tour_package_hotel = $parsedDescription['hotel'] ?? ($quotationData['tour_package_hotel'] ?? '');
-    $tour_package_theme = $parsedDescription['theme'] ?? ($quotationData['tour_package_theme'] ?? 'Standard');
+    $tour_package_theme = $parsedDescription['travel_theme'] ?? ($parsedDescription['theme'] ?? ($quotationData['tour_package_theme'] ?? 'Standard'));
+    $pickup_location = $parsedDescription['pickup_location'] ?? ($postData['pickupLocation'] ?? ($postData['pickup_location'] ?? ''));
+    $drop_location = $parsedDescription['drop_location'] ?? ($postData['dropLocation'] ?? ($postData['drop_location'] ?? ''));
+    $pickupLocation = $pickup_location;
+    $dropLocation = $drop_location;
     $tour_package_outstation_vehicle = $parsedDescription['outstation_vehicle'] ?? ($quotationData['tour_package_outstation_vehicle'] ?? '');
     $tour_package_localsightseen_vehicle = $parsedDescription['localsightseen_vehicle'] ?? ($quotationData['tour_package_localsightseen_vehicle'] ?? '');
     $itinerary_overview = $parsedDescription['overview'] ?? ($quotationData['tour_package_overview'] ?? '');
@@ -160,7 +166,7 @@ if (!empty($quotationData)) {
 
     $quoteId = '#' . (defined('SITE_NAME') ? substr(strtoupper(preg_replace('/[^a-zA-Z]/', '', SITE_NAME)), 0, 3) : 'MIT') . '/' . $quotationId;
     $quotation_time = $quotationData['quotation_time'] ?? date('Y-m-d H:i:s');
-    $travelDate = $quotationData['quotation_travel_date'] ?? '';
+    $travelDate = $parsedDescription['travel_date'] ?? ($quotationData['quotation_travel_date'] ?? '');
     $numberOfDays = (int)($quotationData['tour_package_duration'] ?? (count($itineraries) > 0 ? count($itineraries) - 1 : 0));
     $tour_package_duration = $numberOfDays;
 
@@ -186,7 +192,11 @@ if (!empty($quotationData)) {
     $tour_package_state = $postData['state'] ?? '';
     $tour_package_country = $postData['country'] ?? '';
     $tour_package_hotel = $postData['hotel'] ?? '';
-    $tour_package_theme = $postData['theme'] ?? 'Standard';
+    $tour_package_theme = $postData['travel_theme'] ?? ($postData['theme'] ?? 'Standard');
+    $pickup_location = $postData['pickupLocation'] ?? ($postData['pickup_location'] ?? '');
+    $drop_location = $postData['dropLocation'] ?? ($postData['drop_location'] ?? '');
+    $pickupLocation = $pickup_location;
+    $dropLocation = $drop_location;
     $tour_package_outstation_vehicle = $postData['outstationVehicle'] ?? ($postData['outstation_vehicle'] ?? '');
     $tour_package_localsightseen_vehicle = $postData['localSightseeingVehicle'] ?? ($postData['localsightseen_vehicle'] ?? '');
     $itinerary_overview = $postData['overview'] ?? '';
@@ -210,16 +220,23 @@ if (!empty($quotationData)) {
     $tour_package_image = $postData['coverImage'] ?? ($postData['image'] ?? '');
     $quoteId = '#DRAFT-PROPOSAL';
     $quotation_time = date('Y-m-d H:i:s');
-    $travelDate = date('Y-m-d', strtotime('+7 days'));
+    $travelDate = $postData['travelDate'] ?? ($postData['travel_date'] ?? date('Y-m-d', strtotime('+7 days')));
     $numberOfDays = count($itineraries) > 0 ? count($itineraries) - 1 : 1;
     $tour_package_duration = $numberOfDays;
 
-    $quotationPriceWithOutGST = '0.00';
-    $gstPercent = 5;
-    $gstAmount = '0.00';
-    $quotationPriceWithGST = '0.00';
+    $price = (float)($postData['totalPrice'] ?? ($postData['price'] ?? 0));
+    $tour_package_price_selling_adult = (float)($postData['adultPrice'] ?? ($postData['adult_price'] ?? ($price > 0 ? $price : 0)));
+    $tour_package_price_selling_child = (float)($postData['childPrice'] ?? ($postData['child_price'] ?? 0));
+    $tour_package_price_selling_infant = (float)($postData['infantPrice'] ?? ($postData['infant_price'] ?? 0));
+    $selling_price = $price;
+
+    $gstPercent = defined('GST_PERCENTAGE') ? (float)GST_PERCENTAGE : 5.0;
+    $basePrice = $price > 0 ? round($price / (1 + ($gstPercent / 100)), 2) : 0;
+    $quotationPriceWithOutGST = number_format($basePrice, 2);
+    $gstAmount = number_format($price - $basePrice, 2);
+    $quotationPriceWithGST = number_format($price, 2);
     $total_discount = '0.00';
-    $passangerInfo = 'Valued Traveler';
+    $passangerInfo = !empty($postData['clientName']) ? $postData['clientName'] : 'Valued Traveler';
 }
 
 // Locate template file
@@ -236,6 +253,10 @@ ob_start();
 include $templateFile;
 $renderedHtml = ob_get_clean();
 
+if (!empty($hideActions) || !empty($isPreview)) {
+    $renderedHtml = preg_replace('/<div\s+class=["\']v3-pdf-actions-bar["\'].*?<\/div>/is', '', $renderedHtml);
+}
+
 // Deliver output according to requested format
 if ($format === 'json') {
     $previewHtml = preg_replace('/<div\s+class=["\']v3-pdf-actions-bar["\'].*?<\/div>/is', '', $renderedHtml);
@@ -248,8 +269,9 @@ if ($format === 'json') {
         'template'     => $templateToUse,
         'title'        => $itinerary_title,
         'html'         => $previewHtml,
-        'view_url'     => (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/view-itinerary/{$encodedId}/",
-        'pdf_url'      => (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/download-itinerary/{$encodedId}/",
+        'view_url'     => (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/itinerary/{$encodedId}/",
+        'pdf_url'      => (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/itinerary/{$encodedId}/?download=true",
+        'download_url' => (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/download-itinerary/{$encodedId}/",
         'available_templates' => $availableTemplates
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } else {

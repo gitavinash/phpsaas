@@ -50,6 +50,11 @@ $query = "SELECT p.property_id, p.property_title, p.property_thumbnail, p.proper
                  p.property_mobile, p.property_address, p.property_city, p.property_pincode,
                  p.property_type, COALESCE(p.property_status, 0) AS property_status,
                  COALESCE(l.link_is_featured, 0) AS is_featured,
+                 (SELECT TRIM(s2.state_name)
+                  FROM isw_city ic2
+                  LEFT JOIN isw_state s2 ON ic2.city_state_id = s2.state_id
+                  WHERE LOWER(TRIM(ic2.city_name)) = LOWER(TRIM(p.property_city))
+                  LIMIT 1) AS property_state,
                  (SELECT COUNT(*) FROM {$prefix}room r WHERE r.room_property_id = p.property_id AND r.room_site_id = {$siteId}) AS room_count
           FROM {$prefix}property p
           LEFT JOIN {$prefix}link l ON l.link_relation_id = p.property_id AND l.link_type = 'property' AND l.link_site_id = {$siteId}
@@ -85,6 +90,7 @@ if ($result) while ($row = mysqli_fetch_assoc($result)) {
         'address'    => trim($row['property_address'] ?? ''),
         'city'       => $city,
         'pincode'    => trim($row['property_pincode'] ?? ''),
+        'state'      => trim($row['property_state'] ?? ''),
         'type'       => $row['property_type'] ?: 'hotel',
         'status'     => (int) $row['property_status'],
         'is_featured'=> (int) $row['is_featured'],

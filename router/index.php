@@ -270,6 +270,14 @@ switch ($urlStructure[0]) {
 		require_once 'sitemap.php';
 		break;
 
+	/** For Public Itinerary / Proposal view and PDF download */
+
+	case 'itinerary':
+	case 'view-itinerary':
+	case 'download-itinerary':
+		require_once 'itinerary.php';
+		break;
+
 	/** For all type of payment process */
 
 	case 'payment':

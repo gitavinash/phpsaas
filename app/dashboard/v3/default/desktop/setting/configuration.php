@@ -50,7 +50,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-building input-icon"></i>
-                                    <input type="text" id="configSiteName" name="site_name" class="v3-form-input" placeholder="e.g. Musafir India Trip" required autofocus>
+                                    <input type="text" id="configSiteName" name="site_name" class="v3-form-input" placeholder="e.g. Company Name" required autofocus>
                                 </div>
                                 <span class="v3-field-error" id="errConfigSiteName"></span>
                             </div>

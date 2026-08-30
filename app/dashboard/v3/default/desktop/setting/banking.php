@@ -126,7 +126,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-at input-icon"></i>
-                                    <input type="text" id="upiDetails" name="upi_details" class="v3-form-input" placeholder="e.g. yourcompany@hdfcbank or 9958719998@upi" required>
+                                    <input type="text" id="upiDetails" name="upi_details" class="v3-form-input" placeholder="e.g. yourcompany@hdfcbank or 9990026008@upi" required>
                                 </div>
                                 <span class="v3-field-error" id="errUpiDetails"></span>
                             </div>

@@ -1264,6 +1264,467 @@
       }
     },
 
+    // Load and cache active hotel properties, vehicles, and stay cities
+    loadItineraryMeta: function (callback) {
+      const self = this;
+      let pending = 2;
+      const done = () => {
+        pending--;
+        if (pending <= 0 && typeof callback === "function") {
+          callback();
+        }
+      };
+
+      if (self.propertiesList && self.propertiesList.length > 0) {
+        pending--;
+      } else {
+        $.ajax({
+          url: "/api/v3/properties/?status=active&limit=200",
+          type: "GET",
+          dataType: "json",
+          success: function (res) {
+            if (res && res.properties) {
+              self.propertiesList = res.properties;
+              const citySet = new Set();
+              res.properties.forEach((p) => {
+                if (p.city && p.city.trim()) {
+                  citySet.add(p.city.trim());
+                }
+              });
+              if (res.locations && Array.isArray(res.locations)) {
+                res.locations.forEach((loc) => {
+                  if (loc && loc.trim()) citySet.add(loc.trim());
+                });
+              }
+              self.availableStayCities = Array.from(citySet).sort();
+            }
+            done();
+          },
+          error: function () {
+            self.propertiesList = self.propertiesList || [];
+            self.availableStayCities = self.availableStayCities || [];
+            done();
+          },
+        });
+      }
+
+      if (self.vehiclesList && self.vehiclesList.length > 0) {
+        pending--;
+      } else {
+        $.ajax({
+          url: "/api/v3/vehicles/list/",
+          type: "GET",
+          dataType: "json",
+          success: function (vRes) {
+            if (vRes && (vRes.vehicles || vRes.data)) {
+              self.vehiclesList = vRes.vehicles || vRes.data || [];
+            }
+            done();
+          },
+          error: function () {
+            self.vehiclesList = self.vehiclesList || [];
+            done();
+          },
+        });
+      }
+
+      if (pending <= 0 && typeof callback === "function") {
+        callback();
+      }
+    },
+
+    buildCitySelectHtml: function (currentCity, dayIndex) {
+      const self = this;
+      const cities = self.availableStayCities || [];
+      const curr = (currentCity || "").toLowerCase().trim();
+
+      let destCity = "";
+      if (
+        self.leadData &&
+        self.leadData.travel_details &&
+        self.leadData.travel_details.destination
+      ) {
+        destCity = self.leadData.travel_details.destination.trim();
+      } else if (self.selectedPackage && self.selectedPackage.tour_package_city) {
+        destCity = self.selectedPackage.tour_package_city.trim();
+      }
+
+      const allOptions = new Set(cities);
+      if (destCity) allOptions.add(destCity);
+      if (
+        currentCity &&
+        currentCity.trim() &&
+        !currentCity.toLowerCase().includes("overnight") &&
+        !currentCity.toLowerCase().includes("trip end") &&
+        !currentCity.toLowerCase().includes("tour end") &&
+        !currentCity.toLowerCase().includes("no stay") &&
+        !currentCity.toLowerCase().includes("transit")
+      ) {
+        allOptions.add(currentCity.trim());
+      }
+
+      const isOvernight =
+        curr.includes("overnight") ||
+        curr.includes("in transit") ||
+        curr === "overnight_journey";
+      const isTripEnd =
+        curr.includes("trip end") ||
+        curr.includes("tour end") ||
+        curr.includes("departure (no stay)") ||
+        curr === "trip_end";
+      const isSelfNoStay =
+        curr.includes("self / no") ||
+        curr.includes("no hotel") ||
+        curr === "no_stay";
+
+      let html = `<option value="">Select Stay City</option>`;
+
+      // Special Transit / Non-Stay Options
+      html += `<optgroup label="Transit & Tour Status (No Hotel Stay)">`;
+      html += `<option value="Overnight Journey (In Transit)" ${isOvernight ? "selected" : ""}>🚌 Overnight Journey (In Transit)</option>`;
+      html += `<option value="Tour End / Departure (No Stay)" ${isTripEnd ? "selected" : ""}>🏁 Tour End / Departure (No Stay)</option>`;
+      html += `<option value="Self / No Hotel Stay Needed" ${isSelfNoStay ? "selected" : ""}>❌ Self / No Hotel Stay Needed</option>`;
+      html += `</optgroup>`;
+
+      // Regular Destination Cities
+      html += `<optgroup label="Stay Cities & Destinations">`;
+      Array.from(allOptions)
+        .sort()
+        .forEach((c) => {
+          const isSel = c.toLowerCase().trim() === curr ? "selected" : "";
+          html += `<option value="${escapeHtml(c)}" ${isSel}>${escapeHtml(c)}</option>`;
+        });
+      html += `</optgroup>`;
+
+      return html;
+    },
+
+    setupPickupDropSelects: function (pickupVal, dropVal) {
+      const self = this;
+      const cities = self.availableStayCities || [];
+
+      const buildOptions = (selectedVal, defaultLabel) => {
+        const valLower = (selectedVal || "").toLowerCase().trim();
+        let html = `<option value="">-- ${defaultLabel} --</option>`;
+        const allOpts = new Set(cities);
+        if (selectedVal && selectedVal.trim()) allOpts.add(selectedVal.trim());
+
+        Array.from(allOpts)
+          .sort()
+          .forEach((c) => {
+            const isSel = c.toLowerCase().trim() === valLower ? "selected" : "";
+            html += `<option value="${escapeHtml(c)}" ${isSel}>${escapeHtml(c)}</option>`;
+          });
+        return html;
+      };
+
+      const $pickup = $("#itineraryCustomPickup");
+      const $drop = $("#itineraryCustomDrop");
+
+      if ($pickup.hasClass("select2-hidden-accessible")) {
+        $pickup.select2("destroy");
+      }
+      if ($drop.hasClass("select2-hidden-accessible")) {
+        $drop.select2("destroy");
+      }
+
+      $pickup.html(buildOptions(pickupVal, "Select or Type Pickup Location"));
+      $drop.html(buildOptions(dropVal, "Select or Type Drop Location"));
+
+      if (typeof $.fn.select2 !== "undefined") {
+        $pickup.select2({
+          dropdownParent: $("#modalSendItinerary"),
+          width: "100%",
+          tags: true,
+          placeholder: "Select or type pickup location...",
+        });
+
+        $drop.select2({
+          dropdownParent: $("#modalSendItinerary"),
+          width: "100%",
+          tags: true,
+          placeholder: "Select or type drop location...",
+        });
+      }
+    },
+
+    getPropertyCategoryOptionsHtml: function (selectedCategory) {
+      const cats = [
+        { id: "all",            label: "All Categories" },
+        { id: "3_star_hotel",   label: "3 Star (Comfort)" },
+        { id: "4_star_hotel",   label: "4 Star (First Class)" },
+        { id: "5_star_hotel",   label: "5 Star (Luxury)" },
+        { id: "resorts",        label: "Resort & Spa" },
+        { id: "heritage_hotel", label: "Heritage Hotel" },
+        { id: "home_stay",      label: "Homestay / Villa" },
+        { id: "tent",           label: "Camp / Tent" },
+        { id: "2_star_hotel",   label: "2 Star (Standard)" },
+      ];
+      const sel = (selectedCategory || "3_star_hotel").toLowerCase().trim();
+      let html = "";
+      cats.forEach((c) => {
+        const isSel =
+          c.id === sel ||
+          (sel === "3" && c.id === "3_star_hotel") ||
+          (sel === "4" && c.id === "4_star_hotel") ||
+          (sel === "5" && c.id === "5_star_hotel") ||
+          (sel === "luxury" && c.id === "5_star_hotel");
+        html += `<option value="${c.id}" ${isSel ? "selected" : ""}>${c.label}</option>`;
+      });
+      return html;
+    },
+
+    buildHotelSelectHtml: function (currentCity, selectedCategory, selectedHotelName) {
+      const self = this;
+      const props = self.propertiesList || [];
+      const currCityLower = (currentCity || "").toLowerCase().trim();
+      const selHotelLower = (selectedHotelName || "").toLowerCase().trim();
+      const selCatLower = (selectedCategory || "all").toLowerCase().trim();
+
+      // City-based no-stay detection (driven by Stay City selection)
+      const isNoStayOption =
+        currCityLower.includes("overnight") ||
+        currCityLower.includes("transit") ||
+        currCityLower.includes("tour end") ||
+        currCityLower.includes("trip end") ||
+        currCityLower.includes("no stay") ||
+        currCityLower.includes("no hotel");
+
+      if (isNoStayOption) {
+        let label = "No Hotel Required";
+        if (currCityLower.includes("overnight") || currCityLower.includes("transit")) {
+          label = "Overnight / In Transit — No Hotel Stay";
+        } else if (currCityLower.includes("end") || currCityLower.includes("departure")) {
+          label = "Tour End / Departure — No Hotel Stay";
+        } else if (currCityLower.includes("self")) {
+          label = "Self Arranged — No Hotel Stay";
+        }
+        return `<option value="no_hotel" selected>${label}</option>`;
+      }
+
+      let matchedProps = [];
+
+      props.forEach((p) => {
+        const pCity = (p.city || "").toLowerCase().trim();
+        if (currCityLower && pCity === currCityLower) {
+          if (selCatLower && selCatLower !== "all") {
+            const pType = (p.type || "").toLowerCase().trim();
+            if (
+              pType === selCatLower ||
+              (selCatLower === "3_star_hotel" && pType.includes("3")) ||
+              (selCatLower === "4_star_hotel" && pType.includes("4")) ||
+              (selCatLower === "5_star_hotel" && (pType.includes("5") || pType.includes("luxury"))) ||
+              (selCatLower === "resorts" && pType.includes("resort"))
+            ) {
+              matchedProps.push(p);
+            }
+          } else {
+            matchedProps.push(p);
+          }
+        }
+      });
+
+      let html = `<option value="">-- Choose Hotel in ${escapeHtml(currentCity || 'Stay City')} (${matchedProps.length} Available) --</option>`;
+
+      if (matchedProps.length > 0) {
+        matchedProps.forEach((p) => {
+          const isSel =
+            p.title.toLowerCase().trim() === selHotelLower ? "selected" : "";
+          const stateLabel = p.state ? `, ${escapeHtml(p.state)}` : "";
+          html += `<option value="${p.id}" data-type="${escapeHtml(p.type || "")}" data-city="${escapeHtml(p.city || "")}" data-state="${escapeHtml(p.state || "")}" ${isSel}>${escapeHtml(p.title)} — ${escapeHtml(p.city || "")}${stateLabel}</option>`;
+        });
+      } else {
+        html += `<option value="" disabled>No properties found in ${escapeHtml(currentCity || 'selected city')}</option>`;
+      }
+
+      const isCustomSelected =
+        selectedHotelName &&
+        !matchedProps.some((p) => p.title.toLowerCase().trim() === selHotelLower);
+
+      html += `<option value="custom" ${isCustomSelected ? "selected" : ""}>Enter Custom Hotel Name</option>`;
+
+      return html;
+    },
+
+    getHotelSelect2Opts: function ($parentModal) {
+      return {
+        dropdownParent: $parentModal || $("#modalSendItinerary"),
+        width: "100%",
+        placeholder: "-- Select Property / Hotel --",
+        templateResult: function (data) {
+          if (!data.id || !data.element) return data.text;
+          const $el = $(data.element);
+          const city  = $el.attr("data-city")  || "";
+          const state = $el.attr("data-state") || "";
+          // Strip the appended " — City, State" from the raw option text to get just the name
+          const rawText = data.text || "";
+          const name = rawText.replace(/\s+—\s+.*$/, "").trim() || rawText;
+          const locationLine = [city, state].filter(Boolean).join(", ");
+          if (!locationLine) return $("<span>").text(name);
+          return $(
+            `<span class="v3-hotel-opt">
+               <span class="v3-hotel-opt-name">${$("<span>").text(name).html()}</span>
+               <span class="v3-hotel-opt-loc"><i class="fi fi-rr-marker"></i> ${$("<span>").text(locationLine).html()}</span>
+             </span>`
+          );
+        },
+        templateSelection: function (data) {
+          if (!data.id) return data.text;
+          // Show only the hotel name (strip " — City, State" suffix)
+          return (data.text || "").replace(/\s+—\s+.*$/, "").trim() || data.text;
+        },
+      };
+    },
+
+    buildVehicleSelectHtml: function (selectedVehicle) {
+
+      const self = this;
+      const vehicles = self.vehiclesList || [];
+      const selLower = (selectedVehicle || "").toLowerCase().trim();
+
+      let html = `<option value="">-- Choose Transport / Fleet --</option>`;
+
+      if (vehicles.length > 0) {
+        html += `<optgroup label="Fleet Vehicles">`;
+        vehicles.forEach((v) => {
+          const vTitle = v.title || v.name;
+          const vType = v.type_label || v.type || "";
+          const isSel =
+            vTitle.toLowerCase() === selLower ||
+            (selLower && selLower.includes(vTitle.toLowerCase()));
+          html += `<option value="${escapeHtml(vTitle)}" ${isSel ? "selected" : ""}>${escapeHtml(vTitle)}${vType ? ` (${escapeHtml(vType)})` : ""}</option>`;
+        });
+        html += `</optgroup>`;
+      }
+
+      const standardTransports = [
+        "Private Sedan (Dzire / Etios)",
+        "SUV (Innova / Ertiga)",
+        "Tempo Traveller",
+        "Luxury Coach",
+        "Speedboat / Ferry",
+        "Flight / Air Transfer",
+      ];
+
+      html += `<optgroup label="Standard Categories">`;
+      standardTransports.forEach((st) => {
+        const isSel =
+          st.toLowerCase() === selLower ||
+          (selLower && st.toLowerCase().includes(selLower));
+        html += `<option value="${escapeHtml(st)}" ${isSel ? "selected" : ""}>${escapeHtml(st)}</option>`;
+      });
+      html += `</optgroup>`;
+
+      const isCustomSelected =
+        selectedVehicle &&
+        !vehicles.some((v) => (v.title || "").toLowerCase() === selLower) &&
+        !standardTransports.some((st) => st.toLowerCase() === selLower);
+
+      html += `<option value="custom" ${isCustomSelected ? "selected" : ""}>Enter Custom Transport</option>`;
+
+      return html;
+    },
+
+    loadRoomTypesForHotel: function (propertyId, $roomSelect, selectedRoomType) {
+      const selRoomLower = (selectedRoomType || "deluxe room")
+        .toLowerCase()
+        .trim();
+
+      const renderDefaultRooms = () => {
+        const defaultRooms = [
+          "Deluxe Room",
+          "Standard Room",
+          "Superior Room",
+          "Executive Suite",
+          "Family Room",
+        ];
+        let html = `<option value="">-- Select Room Type --</option>`;
+        defaultRooms.forEach((r) => {
+          const isSel = r.toLowerCase() === selRoomLower ? "selected" : "";
+          html += `<option value="${r}" ${isSel}>${r}</option>`;
+        });
+        html += `<option value="custom">Enter Custom Room</option>`;
+        $roomSelect.prop("disabled", false).html(html);
+        if (
+          typeof $.fn.select2 !== "undefined" &&
+          $roomSelect.hasClass("select2-hidden-accessible")
+        ) {
+          $roomSelect.trigger("change.select2");
+        }
+      };
+
+      if (!propertyId || propertyId === "" || propertyId === "0" || propertyId === "no_hotel") {
+        const placeholderText =
+          propertyId === "no_hotel"
+            ? "Not Applicable (No Stay)"
+            : "Select Hotel First";
+        $roomSelect
+          .prop("disabled", true)
+          .html(`<option value="${placeholderText}">${placeholderText}</option>`);
+        if (
+          typeof $.fn.select2 !== "undefined" &&
+          $roomSelect.hasClass("select2-hidden-accessible")
+        ) {
+          $roomSelect.trigger("change.select2");
+        }
+        return;
+      }
+
+      if (propertyId === "custom" || parseInt(propertyId) <= 0) {
+        renderDefaultRooms();
+        return;
+      }
+
+      $roomSelect
+        .prop("disabled", false)
+        .html('<option value="">Loading room types...</option>');
+      if (
+        typeof $.fn.select2 !== "undefined" &&
+        $roomSelect.hasClass("select2-hidden-accessible")
+      ) {
+        $roomSelect.trigger("change.select2");
+      }
+
+      $.ajax({
+        url: `/api/v3/properties/rooms/?property_id=${propertyId}`,
+        type: "GET",
+        dataType: "json",
+        success: function (res) {
+          $roomSelect.prop("disabled", false);
+          if (res && res.rooms && res.rooms.length > 0) {
+            let html = `<option value="">-- Select Room Type (${res.rooms.length} Available) --</option>`;
+            let found = false;
+            res.rooms.forEach((rm) => {
+              const rName = rm.type_label || rm.type || "Deluxe Room";
+              const isSel =
+                rName.toLowerCase().trim() === selRoomLower ||
+                (rm.type && rm.type.toLowerCase() === selRoomLower);
+              if (isSel) found = true;
+              html += `<option value="${escapeHtml(rName)}" ${isSel ? "selected" : ""}>${escapeHtml(rName)}</option>`;
+            });
+            if (!found && selectedRoomType && selectedRoomType !== "Deluxe Room") {
+              html =
+                `<option value="${escapeHtml(selectedRoomType)}" selected>${escapeHtml(selectedRoomType)}</option>` +
+                html;
+            }
+            html += `<option value="custom">Enter Custom Room</option>`;
+            $roomSelect.html(html);
+            if (
+              typeof $.fn.select2 !== "undefined" &&
+              $roomSelect.hasClass("select2-hidden-accessible")
+            ) {
+              $roomSelect.trigger("change.select2");
+            }
+          } else {
+            renderDefaultRooms();
+          }
+        },
+        error: function () {
+          renderDefaultRooms();
+        },
+      });
+    },
+
     // Render structured day cards inside the full screen itinerary customizer
     renderItineraryDays: function (days) {
       const self = this;
@@ -1289,25 +1750,50 @@
         ];
       }
 
-      days.forEach((d, idx) => {
-        self.appendDayCard(d, idx + 1);
+      self.loadItineraryMeta(function () {
+        days.forEach((d, idx) => {
+          self.appendDayCard(d, idx + 1);
+        });
       });
     },
 
     appendDayCard: function (d, num) {
+      const self = this;
       const title = d.day || `Day ${num} - Tour Plan`;
       const overview = d.overview || "";
+      const city = d.city || d.stay_city || "";
       const hotel = d.hotel || "";
-      const hotelStars = d.hotel_stars || "4";
+      const hotelStars = d.hotel_stars || "3_star_hotel";
       const roomType = d.room_type || "Deluxe Room";
       const mealPlan = d.meal_plan || "CP";
       const vehicle = d.vehicle || "Private Sedan";
       const transferNotes = d.transfer_notes || "";
 
+      const cityLower = city.toLowerCase();
+      const isNoStayCity =
+        cityLower.includes("overnight") ||
+        cityLower.includes("transit") ||
+        cityLower.includes("tour end") ||
+        cityLower.includes("trip end") ||
+        cityLower.includes("no stay") ||
+        cityLower.includes("no hotel");
+
+      const citySelectHtml = self.buildCitySelectHtml(city, num);
+      const categorySelectHtml = self.getPropertyCategoryOptionsHtml(hotelStars);
+      const hotelSelectHtml = self.buildHotelSelectHtml(city, hotelStars, hotel);
+      const vehicleSelectHtml = self.buildVehicleSelectHtml(vehicle);
+
       const html = `
         <div class="v3-itin-day-card" data-day-index="${num}">
           <div class="v3-itin-day-card-header">
             <span class="v3-itin-day-badge">Day ${num}</span>
+            <div class="v3-itin-stay-city-chip" title="Select stay city or transit status for this day">
+              <i class="fi fi-rr-marker"></i>
+              <span class="stay-city-label">Night Stay / City:</span>
+              <select class="itin-day-city-select" data-day-index="${num}">
+                ${citySelectHtml}
+              </select>
+            </div>
             <input type="text" class="v3-itin-day-title-input itin-day-title" value="${title}" placeholder="e.g. Day ${num} - Arrival & City Tour">
             <button type="button" class="v3-itin-day-delete-btn btn-delete-itin-day" title="Delete Day ${num}">
               <i class="fi fi-rr-trash"></i>
@@ -1325,22 +1811,30 @@
               <div class="v3-itin-sub-box-title">
                 <i class="fi fi-rr-bed"></i> Hotel & Stay
               </div>
-              <div class="v3-modal-form-group">
-                <input type="text" class="v3-modal-input itin-day-hotel-name" value="${hotel}" placeholder="Hotel Name (e.g. Holiday Inn / Grand Palace)">
-              </div>
-              <div class="v3-form-grid-3">
+              
+              <div class="v3-form-grid-2 v3-mb-10">
                 <div>
-                  <label class="v3-modal-label">Star Rating</label>
+                  <label class="v3-modal-label">Stay Type / Rating</label>
                   <select class="leads-filter-select v3-select-full itin-day-hotel-stars">
-                    <option value="3" ${hotelStars === "3" ? "selected" : ""}>3 Star</option>
-                    <option value="4" ${hotelStars === "4" ? "selected" : ""}>4 Star</option>
-                    <option value="5" ${hotelStars === "5" ? "selected" : ""}>5 Star</option>
-                    <option value="luxury" ${hotelStars === "luxury" ? "selected" : ""}>Luxury</option>
+                    ${categorySelectHtml}
                   </select>
                 </div>
                 <div>
+                  <label class="v3-modal-label">Property / Hotel</label>
+                  <select class="leads-filter-select v3-select-full itin-day-hotel-select" data-day-index="${num}" ${isNoStayCity ? 'disabled' : ''}>
+                    ${hotelSelectHtml}
+                  </select>
+                  <input type="text" class="v3-modal-input itin-day-hotel-custom ${hotel && !hotelSelectHtml.includes('selected') ? '' : 'v3-hidden'}" value="${hotel}" placeholder="Enter custom hotel name...">
+                </div>
+              </div>
+
+              <div class="v3-form-grid-2">
+                <div>
                   <label class="v3-modal-label">Room Type</label>
-                  <input type="text" class="v3-modal-input itin-day-room-type" value="${roomType}" placeholder="Deluxe">
+                  <select class="leads-filter-select v3-select-full itin-day-room-type" ${(!hotel || isNoStayCity) ? 'disabled' : ''}>
+                    <!-- Populated dynamically based on property -->
+                  </select>
+                  <input type="text" class="v3-modal-input itin-day-room-type-custom v3-hidden" value="${roomType}" placeholder="Enter custom room">
                 </div>
                 <div>
                   <label class="v3-modal-label">Meal Plan</label>
@@ -1362,13 +1856,9 @@
               <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Transport Type</label>
                 <select class="leads-filter-select v3-select-full itin-day-vehicle-type">
-                  <option value="Private Sedan" ${vehicle.includes("Sedan") ? "selected" : ""}>Private Sedan (Dzire / Etios)</option>
-                  <option value="SUV / Innova" ${vehicle.includes("SUV") || vehicle.includes("Innova") ? "selected" : ""}>SUV (Innova / Ertiga)</option>
-                  <option value="Tempo Traveller" ${vehicle.includes("Tempo") ? "selected" : ""}>Tempo Traveller</option>
-                  <option value="Luxury Coach" ${vehicle.includes("Coach") ? "selected" : ""}>Luxury Coach</option>
-                  <option value="Speedboat / Ferry" ${vehicle.includes("Boat") || vehicle.includes("Ferry") ? "selected" : ""}>Speedboat / Ferry</option>
-                  <option value="Flight / Air Transfer" ${vehicle.includes("Flight") ? "selected" : ""}>Flight / Air Transfer</option>
+                  ${vehicleSelectHtml}
                 </select>
+                <input type="text" class="v3-modal-input itin-day-vehicle-custom ${vehicle && !vehicleSelectHtml.includes('selected') ? '' : 'v3-hidden'}" value="${vehicle}" placeholder="Enter custom transport...">
               </div>
               <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Transfer Route / Notes</label>
@@ -1378,8 +1868,68 @@
           </div>
         </div>
       `;
+      const $card = $(html);
+      $("#itinDaysStack").append($card);
 
-      $("#itinDaysStack").append(html);
+      // Load initial room types for selected hotel
+      const selectedPropId = $card.find(".itin-day-hotel-select").val();
+      self.loadRoomTypesForHotel(
+        selectedPropId,
+        $card.find(".itin-day-room-type"),
+        roomType,
+      );
+
+      // Initialize Select2 on all Day Card Dropdowns
+      if (typeof $.fn.select2 !== "undefined") {
+        $card.find(".itin-day-city-select").select2({
+          dropdownParent: $("#modalSendItinerary"),
+          width: "100%",
+          placeholder: "Stay City",
+        });
+
+        $card.find(".itin-day-hotel-select").select2(self.getHotelSelect2Opts($("#modalSendItinerary")));
+
+        $card.find(".itin-day-hotel-stars").select2({
+          dropdownParent: $("#modalSendItinerary"),
+          width: "100%",
+          minimumResultsForSearch: Infinity,
+        });
+
+        $card.find(".itin-day-room-type").select2({
+          dropdownParent: $("#modalSendItinerary"),
+          width: "100%",
+          placeholder: "Select Room Type",
+        });
+
+        $card.find(".itin-day-meal-plan").select2({
+          dropdownParent: $("#modalSendItinerary"),
+          width: "100%",
+          minimumResultsForSearch: Infinity,
+        });
+
+        $card.find(".itin-day-vehicle-type").select2({
+          dropdownParent: $("#modalSendItinerary"),
+          width: "100%",
+          placeholder: "-- Choose Transport / Fleet --",
+        });
+      }
+
+      const $overviewTextarea = $card.find(".itin-day-overview");
+      if (typeof $.fn.v3Editor === "function") {
+        $overviewTextarea.v3Editor({
+          minHeight: 60,
+          placeholder: "Describe the day's schedule, sightseeing spots, and activities...",
+          toolbar: [
+            "history",
+            "format",
+            "styling",
+            "colors",
+            "alignment",
+            "lists",
+            "inserts",
+          ],
+        });
+      }
     },
 
     reindexDays: function () {
@@ -1925,6 +2475,8 @@
           $("#modalSendItinerary").addClass("is-active");
 
           // Reset state
+          $("#itinerarySearchSection").removeClass("v3-hidden");
+          $("#btnChangeItinerary").addClass("v3-hidden");
           $("#itinerarySearchLoader").addClass("v3-hidden");
           $("#itineraryNotFoundBox").addClass("v3-hidden");
           $("#itineraryResultContainer").addClass("v3-hidden");
@@ -2027,7 +2579,7 @@
                 }
                 options += `<option value="${idx}" data-title="${pkg.tour_package_title}" data-duration="${duration}" data-price="${adultRate}">${pkg.tour_package_title} • ${duration} • ₹${adultRate}/person</option>`;
               });
-              options += `<option value="custom" data-title="+ Create Custom Itinerary from Scratch" data-duration="Custom" data-price="0">+ Create Custom Itinerary from Scratch</option>`;
+              options += `<option value="custom" data-title="Create Custom Itinerary from Scratch" data-duration="Custom" data-price="0">Create Custom Itinerary from Scratch</option>`;
 
               const $pkgSelect = $("#itineraryPackageSelect");
               if ($pkgSelect.hasClass("select2-hidden-accessible")) {
@@ -2180,23 +2732,14 @@
         self.reindexDays();
       });
 
-      // Recalculate total price on per-person rate change
+      // Recalculate total price on traveler count or per-person rate change
       $(document).on(
-        "input",
-        "#itineraryCustomAdultPrice, #itineraryCustomChildPrice, #itineraryCustomInfantPrice",
+        "input change",
+        "#itineraryCustomAdultCount, #itineraryCustomChildCount, #itineraryCustomInfantCount, #itineraryCustomAdultPrice, #itineraryCustomChildPrice, #itineraryCustomInfantPrice",
         function () {
-          const adults =
-            self.leadData && self.leadData.travel_details
-              ? parseInt(self.leadData.travel_details.adults || 1)
-              : 1;
-          const children =
-            self.leadData && self.leadData.travel_details
-              ? parseInt(self.leadData.travel_details.children || 0)
-              : 0;
-          const infants =
-            self.leadData && self.leadData.travel_details
-              ? parseInt(self.leadData.travel_details.infants || 0)
-              : 0;
+          const adults = parseInt($("#itineraryCustomAdultCount").val()) || 0;
+          const children = parseInt($("#itineraryCustomChildCount").val()) || 0;
+          const infants = parseInt($("#itineraryCustomInfantCount").val()) || 0;
 
           const ap = parseFloat($("#itineraryCustomAdultPrice").val()) || 0;
           const cp = parseFloat($("#itineraryCustomChildPrice").val()) || 0;
@@ -2204,8 +2747,153 @@
 
           const total = ap * adults + cp * children + ip * infants;
           $("#itineraryCustomTotalPrice").val(total);
+
+          const travelerParts = [];
+          if (adults) travelerParts.push(`${adults} Adults`);
+          if (children) travelerParts.push(`${children} Children`);
+          if (infants) travelerParts.push(`${infants} Infants`);
+          $("#itinTravelerCountBadge").text(
+            travelerParts.join(", ") || "0 Travelers",
+          );
         },
       );
+
+      // Night Stay / City Dropdown Change on Itinerary Day
+      $(document).on("change", ".itin-day-city-select", function () {
+        const $card = $(this).closest(".v3-itin-day-card");
+        const selectedCity = $(this).val();
+        const selectedCategory = $card.find(".itin-day-hotel-stars").val();
+        const $hotelSelect = $card.find(".itin-day-hotel-select");
+        const $roomSelect  = $card.find(".itin-day-room-type");
+        const $customInput = $card.find(".itin-day-hotel-custom");
+
+        const cityLower = (selectedCity || "").toLowerCase();
+        const noStayCity =
+          cityLower.includes("overnight") ||
+          cityLower.includes("transit")   ||
+          cityLower.includes("tour end")  ||
+          cityLower.includes("trip end")  ||
+          cityLower.includes("no stay")   ||
+          cityLower.includes("no hotel");
+
+        if ($hotelSelect.hasClass("select2-hidden-accessible")) {
+          $hotelSelect.select2("destroy");
+        }
+
+        if (noStayCity) {
+          // Lock hotel & room — no stay needed for this city
+          let noStayLabel = "No Hotel Stay";
+          if (cityLower.includes("overnight") || cityLower.includes("transit")) {
+            noStayLabel = "Overnight / In Transit \u2014 No Hotel Stay";
+          } else if (cityLower.includes("end") || cityLower.includes("departure")) {
+            noStayLabel = "Tour End / Departure \u2014 No Hotel Stay";
+          } else if (cityLower.includes("self")) {
+            noStayLabel = "Self Arranged \u2014 No Hotel Stay";
+          }
+          $hotelSelect
+            .html(`<option value="no_hotel" selected>${noStayLabel}</option>`)
+            .prop("disabled", true);
+          $customInput.addClass("v3-hidden");
+          $roomSelect
+            .prop("disabled", true)
+            .html(`<option value="">Not Applicable (No Stay)</option>`);
+          if (typeof $.fn.select2 !== "undefined" && $roomSelect.hasClass("select2-hidden-accessible")) {
+            $roomSelect.trigger("change.select2");
+          }
+          return;
+        }
+
+        // Normal city — re-enable and rebuild hotel list
+        $hotelSelect.prop("disabled", false);
+        $hotelSelect.html(
+          self.buildHotelSelectHtml(selectedCity, selectedCategory, ""),
+        );
+
+        if (typeof $.fn.select2 !== "undefined") {
+          $hotelSelect.select2(self.getHotelSelect2Opts($("#modalSendItinerary")));
+        }
+        $hotelSelect.trigger("change");
+      });
+
+      // Stay Type / Rating Change -> Filter Hotels
+      $(document).on("change", ".itin-day-hotel-stars", function () {
+        const $card = $(this).closest(".v3-itin-day-card");
+        const selectedCategory = $(this).val();
+        const selectedCity = $card.find(".itin-day-city-select").val();
+        const $hotelSelect = $card.find(".itin-day-hotel-select");
+        const currentHotelName = $hotelSelect
+          .find("option:selected")
+          .text()
+          .replace(/\s+—\s+.*$/, "")
+          .trim();
+
+        if ($hotelSelect.hasClass("select2-hidden-accessible")) {
+          $hotelSelect.select2("destroy");
+        }
+
+        $hotelSelect.html(
+          self.buildHotelSelectHtml(selectedCity, selectedCategory, currentHotelName),
+        );
+
+        if (typeof $.fn.select2 !== "undefined") {
+          $hotelSelect.select2(self.getHotelSelect2Opts($("#modalSendItinerary")));
+        }
+        $hotelSelect.trigger("change");
+      });
+
+      // Hotel Select Change on Itinerary Day
+      $(document).on("change", ".itin-day-hotel-select", function () {
+        const $card = $(this).closest(".v3-itin-day-card");
+        const propId = $(this).val();
+        const $customInput = $card.find(".itin-day-hotel-custom");
+        const $roomSelect = $card.find(".itin-day-room-type");
+        const $starSelect = $card.find(".itin-day-hotel-stars");
+
+        if (propId === "custom") {
+          $customInput.removeClass("v3-hidden").focus();
+        } else {
+          $customInput.addClass("v3-hidden");
+        }
+
+        const selectedOption = $(this).find("option:selected");
+        const pType = (selectedOption.data("type") || "").toLowerCase();
+        const pCity = selectedOption.data("city");
+
+        if (pCity && !$card.find(".itin-day-city-select").val()) {
+          $card.find(".itin-day-city-select").val(pCity).trigger("change.select2");
+        }
+
+        // Sync star rating/category if property has a valid type and category is 'all'
+        if (pType && $starSelect.val() === "all") {
+          $starSelect.val(pType).trigger("change.select2");
+        }
+
+        self.loadRoomTypesForHotel(propId, $roomSelect, $roomSelect.val());
+      });
+
+      // Room Type Custom Toggle
+      $(document).on("change", ".itin-day-room-type", function () {
+        const $card = $(this).closest(".v3-itin-day-card");
+        const val = $(this).val();
+        const $custom = $card.find(".itin-day-room-type-custom");
+        if (val === "custom") {
+          $custom.removeClass("v3-hidden").focus();
+        } else {
+          $custom.addClass("v3-hidden");
+        }
+      });
+
+      // Vehicle Type Custom Toggle
+      $(document).on("change", ".itin-day-vehicle-type", function () {
+        const $card = $(this).closest(".v3-itin-day-card");
+        const val = $(this).val();
+        const $custom = $card.find(".itin-day-vehicle-custom");
+        if (val === "custom") {
+          $custom.removeClass("v3-hidden").focus();
+        } else {
+          $custom.addClass("v3-hidden");
+        }
+      });
 
       // Helper: Publish/Download Itinerary
       self.publishItinerary = function (isDownload, $btn, onSuccess) {
@@ -2228,12 +2916,44 @@
         const structuredItin = [];
         $("#itinDaysStack .v3-itin-day-card").each(function () {
           const dayTitle = $(this).find(".itin-day-title").val().trim();
-          const dayOverview = $(this).find(".itin-day-overview").val().trim();
-          const hotelName = $(this).find(".itin-day-hotel-name").val().trim();
+          const $overviewTextarea = $(this).find(".itin-day-overview");
+          const editor = $overviewTextarea.data("v3Editor");
+          const dayOverview = (
+            editor ? editor.getContent() : $overviewTextarea.val()
+          ).trim();
+          const stayCity = $(this).find(".itin-day-city-select").val() || "";
+
+          let hotelName = "";
+          const $hotelSel = $(this).find(".itin-day-hotel-select");
+          const hotelVal = $hotelSel.val();
+          if (hotelVal === "custom") {
+            hotelName = $(this).find(".itin-day-hotel-custom").val().trim();
+          } else if (hotelVal && hotelVal !== "no_hotel") {
+            hotelName = $hotelSel
+              .find("option:selected")
+              .text()
+              .replace(/\s+—\s+.*$/, "")
+              .trim();
+          } else {
+            hotelName = $(this).find(".itin-day-hotel-custom").val().trim() || "";
+          }
+
           const hotelStars = $(this).find(".itin-day-hotel-stars").val();
-          const roomType = $(this).find(".itin-day-room-type").val().trim();
+
+          let roomType = $(this).find(".itin-day-room-type").val() || "Deluxe Room";
+          if (roomType === "custom") {
+            roomType =
+              $(this).find(".itin-day-room-type-custom").val().trim() ||
+              "Deluxe Room";
+          }
+
           const mealPlan = $(this).find(".itin-day-meal-plan").val();
-          const vehicleType = $(this).find(".itin-day-vehicle-type").val();
+          let vehicleType = $(this).find(".itin-day-vehicle-type").val();
+          if (vehicleType === "custom" || !vehicleType) {
+            vehicleType =
+              $(this).find(".itin-day-vehicle-custom").val().trim() ||
+              "Private Sedan (Dzire / Etios)";
+          }
           const transferNotes = $(this)
             .find(".itin-day-transfer-notes")
             .val()
@@ -2241,8 +2961,11 @@
 
           structuredItin.push({
             day: dayTitle,
+            city: stayCity,
+            stay_city: stayCity,
             overview: dayOverview,
             hotel: hotelName,
+            stay: hotelName,
             hotel_stars: hotelStars,
             room_type: roomType,
             meal_plan: mealPlan,
@@ -2272,6 +2995,26 @@
             ? self.selectedPackage.tour_package_id
             : 1;
 
+        const templateToUse =
+          (self.selectedPackage && self.selectedPackage.tour_package_template) ||
+          self.selectedPackageTemplate ||
+          "mit";
+
+        const travelDate =
+          $("#itineraryCustomTravelDate").val().trim() ||
+          (self.leadData &&
+          self.leadData.travel_details &&
+          self.leadData.travel_details.date_of_travel
+            ? self.leadData.travel_details.date_of_travel
+            : "Flexible");
+
+        const adults = parseInt($("#itineraryCustomAdultCount").val()) || 1;
+        const children = parseInt($("#itineraryCustomChildCount").val()) || 0;
+        const infants = parseInt($("#itineraryCustomInfantCount").val()) || 0;
+        const pickupLocation = $("#itineraryCustomPickup").val() || "";
+        const dropLocation = $("#itineraryCustomDrop").val() || "";
+        const travelTheme = $("#itineraryCustomTheme").val();
+
         const postData = {
           id: pkgId,
           refId: self.leadData ? self.leadData.id : self.leadId,
@@ -2280,6 +3023,15 @@
           isDownload: !!isDownload,
           content: {
             title: title,
+            travel_date: travelDate,
+            pickup_location: pickupLocation,
+            drop_location: dropLocation,
+            travel_theme: travelTheme,
+            theme: travelTheme,
+            adults_count: adults,
+            children_count: children,
+            infants_count: infants,
+            template: templateToUse,
             adult_per_person: adultPrice || 0,
             child_per_person: childPrice || 0,
             infant_per_person: infantPrice || 0,
@@ -2318,7 +3070,18 @@
         });
       };
 
-      // Preview Itinerary CTA in Builder Modal (Client-side Real Preview matching download-itinerary-mit/)
+      // Change Itinerary CTA in Builder Modal
+      $(document).on("click", "#btnChangeItinerary", function (e) {
+        e.preventDefault();
+        $("#itinerarySearchSection").removeClass("v3-hidden");
+        $("#btnChangeItinerary").addClass("v3-hidden");
+        $("#modalSendItinerary .v3-modal-fullscreen-body").animate(
+          { scrollTop: 0 },
+          250,
+        );
+      });
+
+      // Preview Itinerary CTA in Builder Modal (Server-driven Iframe Preview using Selected Package Template)
       $(document).on(
         "click",
         "#btnPreviewItinerary, #btnPreviewItineraryBottom",
@@ -2326,6 +3089,13 @@
           e.preventDefault();
           const title =
             $("#itineraryCustomTitle").val().trim() || "Custom Tour Itinerary";
+          const travelDate =
+            $("#itineraryCustomTravelDate").val().trim() ||
+            (self.leadData &&
+            self.leadData.travel_details &&
+            self.leadData.travel_details.date_of_travel
+              ? self.leadData.travel_details.date_of_travel
+              : "Flexible");
           const totalPrice =
             parseFloat($("#itineraryCustomTotalPrice").val()) || 0;
           const adultPrice =
@@ -2343,42 +3113,63 @@
           const clientName = self.leadData
             ? self.leadData.name
             : "Valued Customer";
-          const travelDate =
-            self.leadData &&
-            self.leadData.travel_details &&
-            self.leadData.travel_details.date_of_travel
-              ? self.leadData.travel_details.date_of_travel
-              : "Flexible";
           const adults =
-            self.leadData && self.leadData.travel_details
+            parseInt($("#itineraryCustomAdultCount").val()) ||
+            (self.leadData && self.leadData.travel_details
               ? parseInt(self.leadData.travel_details.adults || 1)
-              : 1;
+              : 1);
           const children =
-            self.leadData && self.leadData.travel_details
+            parseInt($("#itineraryCustomChildCount").val()) ||
+            (self.leadData && self.leadData.travel_details
               ? parseInt(self.leadData.travel_details.children || 0)
-              : 0;
+              : 0);
           const infants =
-            self.leadData && self.leadData.travel_details
+            parseInt($("#itineraryCustomInfantCount").val()) ||
+            (self.leadData && self.leadData.travel_details
               ? parseInt(self.leadData.travel_details.infants || 0)
-              : 0;
-
-          const $app = $("#leadViewApp");
-          const siteName = $app.data("site-name") || "Travel";
-          const siteLogo = $app.data("site-logo") || "";
-          const siteDomain = $app.data("site-domain") || "travel.com";
-          const siteTheme = $app.data("site-theme") || "#e76317";
-          const siteBg = $app.data("site-bg") || "#fb923c";
-          const leadId = self.leadData ? self.leadData.id : self.leadId;
+              : 0);
 
           const structuredItin = [];
           $("#itinDaysStack .v3-itin-day-card").each(function () {
             const dayTitle = $(this).find(".itin-day-title").val().trim();
-            const dayOverview = $(this).find(".itin-day-overview").val().trim();
-            const hotelName = $(this).find(".itin-day-hotel-name").val().trim();
+            const $overviewTextarea = $(this).find(".itin-day-overview");
+            const editor = $overviewTextarea.data("v3Editor");
+            const dayOverview = (
+              editor ? editor.getContent() : $overviewTextarea.val()
+            ).trim();
+            const stayCity = $(this).find(".itin-day-city-select").val() || "";
+
+            let hotelName = "";
+            const $hotelSel = $(this).find(".itin-day-hotel-select");
+            const hotelVal = $hotelSel.val();
+            if (hotelVal === "custom") {
+              hotelName = $(this).find(".itin-day-hotel-custom").val().trim();
+            } else if (hotelVal) {
+              hotelName = $hotelSel
+                .find("option:selected")
+                .text()
+                .replace(/\s*\(.*?\)\s*$/, "")
+                .trim();
+            } else {
+              hotelName = $(this).find(".itin-day-hotel-custom").val().trim() || "";
+            }
+
             const hotelStars = $(this).find(".itin-day-hotel-stars").val();
-            const roomType = $(this).find(".itin-day-room-type").val().trim();
+
+            let roomType = $(this).find(".itin-day-room-type").val() || "Deluxe Room";
+            if (roomType === "custom") {
+              roomType =
+                $(this).find(".itin-day-room-type-custom").val().trim() ||
+                "Deluxe Room";
+            }
+
             const mealPlan = $(this).find(".itin-day-meal-plan").val();
-            const vehicleType = $(this).find(".itin-day-vehicle-type").val();
+            let vehicleType = $(this).find(".itin-day-vehicle-type").val();
+            if (vehicleType === "custom" || !vehicleType) {
+              vehicleType =
+                $(this).find(".itin-day-vehicle-custom").val().trim() ||
+                "Private Sedan (Dzire / Etios)";
+            }
             const transferNotes = $(this)
               .find(".itin-day-transfer-notes")
               .val()
@@ -2386,8 +3177,11 @@
 
             structuredItin.push({
               day: dayTitle,
+              city: stayCity,
+              stay_city: stayCity,
               overview: dayOverview,
               hotel: hotelName,
+              stay: hotelName,
               hotel_stars: hotelStars,
               room_type: roomType,
               meal_plan: mealPlan,
@@ -2404,368 +3198,76 @@
             return;
           }
 
-          const totalDays = structuredItin.length;
-          const totalNights = Math.max(1, totalDays - 1);
-          const totalPages = totalDays + 4; // Cover + Days + Inclusions + Exclusions + Pricing
-          let currentPageNum = 1;
+          const templateToUse =
+            (self.selectedPackage && self.selectedPackage.tour_package_template) ||
+            self.selectedPackageTemplate ||
+            "mit";
 
-          function makeFooter(pageNum) {
-            return `
-            <footer style="position: absolute; bottom: 20px; width: 100%; text-align: center;">
-              <div class="bottom-decor" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;">
-                ${siteLogo ? `<img src="${siteLogo}" class="center-logo" style="max-height: 28px; width: auto; object-fit: contain;">` : ""}
-                <span style="font-size: 11px; color: #666; letter-spacing: 1px; white-space: nowrap;">${escapeHtml(siteDomain)}</span>
-              </div>
-              <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:nowrap; margin: 6px 50px 0 50px;">
-                <span style="font-size: 11px; color: #666; white-space: nowrap;">Powered by Aleya.in</span>
-                <span style="font-size: 11px; color: #666; white-space: nowrap;">Page ${pageNum} of ${totalPages}</span>
-              </div>
-            </footer>
-          `;
-          }
+          const pickupLocation = $("#itineraryCustomPickup").val() || "";
+          const dropLocation = $("#itineraryCustomDrop").val() || "";
+          const travelTheme = $("#itineraryCustomTheme").val() || "standard";
 
-          // Page 1: Overview & Stats
-          let pagesHtml = `
-          <section class="page">
-            <header class="hero">
-              <div class="default-day-image" style="background: linear-gradient(135deg, ${siteTheme}, ${siteBg}); width: 100%; height: 100%; display: grid; place-items: center; text-align: center; color: #fff;">
-                <h2 style="font-size: 2.8rem; font-weight: 700; text-transform: uppercase; text-shadow: 0 4px 15px rgba(0,0,0,0.3); padding: 0 40px;">${escapeHtml(title)}</h2>
-              </div>
-              <div class="refid">Ref. id: ${leadId ? `Lead #${leadId}` : "Custom Quote"}</div>
-            </header>
-            <div class="container" style="padding: 24px 30px;">
-              <div class="title-section" style="display:flex; align-items:center; justify-content:center; text-align:center;">
-                <span class="line-left">|</span>
-                <h1 style="font-size: 28px; font-weight: 700; padding: 0 12px; color: #111;">${escapeHtml(title)}</h1>
-                <span class="line-right">|</span>
-              </div>
-
-              <div class="stats" style="margin-top: 24px; margin-bottom: 30px; display: flex; gap: 16px; justify-content: center; text-align: center;">
-                <div class="box" style="background: ${siteTheme}; width: 180px; padding: 10px 14px; border-radius: 8px; color: #fff;">
-                  <p style="font-size: 0.8rem; margin-bottom: 2px;">Travel date</p>
-                  <p style="font-size: 1.05rem; font-weight: 700; margin: 0;">${escapeHtml(travelDate)}</p>
-                </div>
-                <div class="box" style="background: ${siteTheme}; width: 180px; padding: 10px 14px; border-radius: 8px; color: #fff;">
-                  <p style="font-size: 0.8rem; margin-bottom: 2px;">Travel Duration</p>
-                  <p style="font-size: 1.05rem; font-weight: 700; margin: 0;">${totalNights} Nights / ${totalDays} Days</p>
-                </div>
-                <div class="box" style="background: ${siteTheme}; width: 180px; padding: 10px 14px; border-radius: 8px; color: #fff;">
-                  <p style="font-size: 0.8rem; margin-bottom: 2px;">Travel Location</p>
-                  <p style="font-size: 1.05rem; font-weight: 700; margin: 0;">${escapeHtml(dest)}</p>
-                </div>
-              </div>
-
-              <div class="top-section" style="padding: 0 10px;">
-                <div class="top-heading" style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                  <h2 style="font-size: 22px; font-weight: 700; color: #111; margin: 0;">Tour Overview</h2>
-                </div>
-                <p class="paragraph" style="font-size: 15px; line-height: 1.7; color: #333;">${overview ? escapeHtml(overview).replace(/\n/g, "<br>") : "Discover unforgettable sights, carefully curated accommodations, and hassle-free transfers on this personalized tour package."}</p>
-              </div>
-            </div>
-            ${makeFooter(currentPageNum++)}
-          </section>
-        `;
-
-          // Day Pages
-          structuredItin.forEach(function (day, idx) {
-            const padDay = String(idx + 1).padStart(2, "0");
-            const titleParts = (day.day || `Day ${idx + 1}`).split(" - ");
-            const dayTitleClean =
-              titleParts.length > 1
-                ? titleParts.slice(1).join(" - ")
-                : titleParts[0];
-
-            let stayTags = "";
-            if (day.hotel) {
-              stayTags += `<div style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:#92400e; background:#fef3c7; border:1px solid #fde68a; padding:4px 10px; border-radius:6px;"><i class="ri-hotel-line"></i> ${escapeHtml(day.hotel)} (${day.hotel_stars || 3}★) - ${escapeHtml(day.room_type || "Deluxe")}</div>`;
-            }
-            if (day.meal_plan) {
-              stayTags += `<div style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; padding:4px 10px; border-radius:6px;"><i class="ri-restaurant-line"></i> ${escapeHtml(day.meal_plan)} Plan</div>`;
-            }
-            if (day.vehicle) {
-              stayTags += `<div style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:#1e40af; background:#eff6ff; border:1px solid #bfdbfe; padding:4px 10px; border-radius:6px;"><i class="ri-car-line"></i> ${escapeHtml(day.vehicle)}</div>`;
-            }
-
-            pagesHtml += `
-            <section class="page days-page">
-              <header class="hero">
-                <div class="default-day-image">
-                  <h2>Day ${padDay}</h2>
-                </div>
-              </header>
-              <div class="container" style="padding: 24px 30px;">
-                <div class="day-header" style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
-                  <div class="day-number-badge" style="background: ${siteTheme}; color: #fff; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 14px;">Day ${padDay}</div>
-                  <h2 class="day-title" style="font-size: 22px; font-weight: 700; color: #111; margin: 0;">${escapeHtml(dayTitleClean)}</h2>
-                </div>
-                <div class="day-content">
-                  <p class="day-description" style="font-size: 15px; line-height: 1.7; color: #333; margin-bottom: 16px;">${day.overview ? escapeHtml(day.overview).replace(/\n/g, "<br>") : "Sightseeing, exploration and leisure activities."}</p>
-                  ${stayTags ? `<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">${stayTags}</div>` : ""}
-                </div>
-              </div>
-              ${makeFooter(currentPageNum++)}
-            </section>
-          `;
-          });
-
-          // Inclusions Page
-          const incLines = inclusions.split("\n").filter(Boolean);
-          let incItemsHtml = "";
-          (incLines.length
-            ? incLines
-            : [
-                "Hotel accommodation with breakfast",
-                "Airport and sightseeing transfers",
-                "All toll taxes and parking charges",
-              ]
-          ).forEach(function (inc) {
-            incItemsHtml += `
-            <li class="flex items-center" style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 15px; color: #333;">
-              <div class="tour_check" style="width: 22px; height: 22px; border-radius: 50%; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <i class="ri-check-line" style="font-size: 14px; font-weight: bold;"></i>
-              </div>
-              <span>${escapeHtml(inc.trim())}</span>
-            </li>
-          `;
-          });
-
-          pagesHtml += `
-          <section class="page days-page">
-            <header class="hero">
-              <div class="default-day-image greenGradient">
-                <h2>Inclusions</h2>
-              </div>
-            </header>
-            <div class="container" style="padding: 24px 30px;">
-              <div class="climax-section">
-                <div class="tour_info_wrapper">
-                  <div class="tour_info_card tour_included" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 24px;">
-                    <h3 class="tour_info_title" style="font-size: 18px; font-weight: 700; color: #166534; margin-bottom: 16px;">What's Included:</h3>
-                    <div class="tour_info_grid">
-                      <ul class="tour_info_list" style="list-style: none; padding: 0; margin: 0;">
-                        ${incItemsHtml}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            ${makeFooter(currentPageNum++)}
-          </section>
-        `;
-
-          // Exclusions Page
-          const excLines = exclusions.split("\n").filter(Boolean);
-          let excItemsHtml = "";
-          (excLines.length
-            ? excLines
-            : [
-                "Airfare / Train tickets",
-                "Personal expenses & tips",
-                "Entry fees and camera tickets",
-              ]
-          ).forEach(function (exc) {
-            excItemsHtml += `
-            <li class="flex items-center" style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 15px; color: #333;">
-              <div class="tour_cross" style="width: 22px; height: 22px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <i class="ri-close-line" style="font-size: 14px; font-weight: bold;"></i>
-              </div>
-              <span>${escapeHtml(exc.trim())}</span>
-            </li>
-          `;
-          });
-
-          pagesHtml += `
-          <section class="page days-page">
-            <header class="hero">
-              <div class="default-day-image redGradient">
-                <h2>Exclusions</h2>
-              </div>
-            </header>
-            <div class="container" style="padding: 24px 30px;">
-              <div class="climax-section">
-                <div class="tour_info_wrapper">
-                  <div class="tour_info_card tour_excluded" style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 24px;">
-                    <h3 class="tour_info_title" style="font-size: 18px; font-weight: 700; color: #991b1b; margin-bottom: 16px;">Not Included in Package:</h3>
-                    <div class="tour_info_grid">
-                      <ul class="tour_info_list" style="list-style: none; padding: 0; margin: 0;">
-                        ${excItemsHtml}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            ${makeFooter(currentPageNum++)}
-          </section>
-        `;
-
-          // Pricing Page
-          const passangerInfo = `${adults} Adults${children > 0 ? `, ${children} Children` : ""}${infants > 0 ? `, ${infants} Infants` : ""}`;
-          const basePrice = Math.round(totalPrice / 1.05);
-          const gstAmount = Math.round(totalPrice - basePrice);
-          const validDate = new Date(
-            Date.now() + 7 * 86400000,
-          ).toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          });
-
-          pagesHtml += `
-          <section class="page days-page">
-            <header class="hero">
-              <div class="default-day-image">
-                <h2>Pricing</h2>
-              </div>
-            </header>
-            <div class="container" style="padding: 24px 30px;">
-              <div class="climax-section">
-                <div class="tour_container">
-                  <h2 class="tour_title" style="font-size: 22px; font-weight: 700; color: #111; margin-bottom: 16px;">Tour Pricing</h2>
-                  <div class="tour_card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                    <div class="tour_card_header" style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;">
-                      <div>
-                        <h3 class="tour_package_title" style="font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">${escapeHtml(title)} - Quotation</h3>
-                        <p class="tour_package_meta" style="font-size: 13px; color: #64748b; margin: 0;">
-                          ${passangerInfo} | Deluxe Accommodation | ${totalNights} Nights, ${totalDays} Days
-                        </p>
-                      </div>
-                      <span class="tour_badge" style="background: #dbeafe; color: #1e40af; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; text-transform: uppercase;">Best Value</span>
-                    </div>
-                    <hr class="tour_divider" style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;" />
-                    <div class="tour_price_row" style="display: flex; justify-content: space-between; font-size: 14.5px; color: #334155; margin-bottom: 10px;">
-                      <span><i class="ri-hotel-line"></i> Base Price ( ${passangerInfo} )</span>
-                      <span style="font-weight: 600;">₹ ${basePrice.toLocaleString("en-IN")}</span>
-                    </div>
-                    <div class="tour_price_row" style="display: flex; justify-content: space-between; font-size: 14.5px; color: #334155; margin-bottom: 10px;">
-                      <span><i class="ri-percent-line text-primary"></i> GST ( 5% )</span>
-                      <span style="font-weight: 600;">+ ₹ ${gstAmount.toLocaleString("en-IN")}</span>
-                    </div>
-                    <div class="tour_total_section" style="display: flex; justify-content: flex-end; margin: 20px 0 16px 0;">
-                      <div class="text-right" style="text-align: right;">
-                        <div class="tour_total_text">
-                          <p style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; margin: 0;">Total Price</p>
-                          <h1 style="font-size: 28px; font-weight: 800; color: #0f172a; margin: 4px 0 0 0;">₹ ${totalPrice.toLocaleString("en-IN")}</h1>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="tour_btn" style="display: block; width: 100%; text-align: center; background: ${siteTheme}; color: #fff; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 15px; margin-bottom: 16px;">
-                      Click here to Book Now
-                    </div>
-                    <div class="tour_notes_section" style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #64748b;">
-                      <div class="tour_note_item" style="display: flex; align-items: center; gap: 6px;">
-                        <i class="ri-calendar-line"></i>
-                        <span>Prices valid until <strong>${validDate}</strong></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            ${makeFooter(currentPageNum++)}
-          </section>
-        `;
-
-          const fullPreviewHtml = `
-          <div class="itinerary-mit-preview-container" style="--primary-color: ${siteTheme}; --secondary-color: ${siteBg};">
-            ${pagesHtml}
-          </div>
-        `;
+          const payload = {
+            title: title,
+            city: dest,
+            theme: travelTheme,
+            travelTheme: travelTheme,
+            pickupLocation: pickupLocation,
+            dropLocation: dropLocation,
+            pickup_location: pickupLocation,
+            drop_location: dropLocation,
+            adults: adults,
+            children: children,
+            infants: infants,
+            template: templateToUse,
+            hotel: self.selectedPackage
+              ? self.selectedPackage.tour_package_hotel
+              : "",
+            totalPrice: totalPrice,
+            adultPrice: adultPrice,
+            childPrice: childPrice,
+            infantPrice: infantPrice,
+            clientName: clientName,
+            travelDate: travelDate,
+            overview: overview,
+            inclusions: inclusions,
+            exclusions: exclusions,
+            days: structuredItin,
+            coverImage: self.selectedPackage
+              ? self.selectedPackage.tour_package_image ||
+                self.selectedPackage.gallery_image
+              : "",
+            format: "html",
+            hideActions: true,
+            preview: true,
+          };
 
           $("#livePreviewHeaderTitle").text(title);
-          const $sheet = $("#livePreviewSheet").html(fullPreviewHtml);
-
-          // Apply dynamic mountain curves to hero headers
-          function generateWavePath(heroIndex) {
-            const steps = 25 + Math.floor(Math.random() * 15);
-            const points = [];
-            for (let i = 0; i <= steps; i++) {
-              const progress = i / steps;
-              const x = progress * 100;
-              const peakFreq1 = 1.5 + Math.random() * 2.5;
-              const peakFreq2 = 2 + Math.random() * 3;
-              const peakFreq3 = 0.5 + Math.random() * 1.5;
-              const amplitude1 = 8 + Math.random() * 18;
-              const amplitude2 = 5 + Math.random() * 12;
-              const amplitude3 = 3 + Math.random() * 8;
-              const wave1 =
-                Math.sin(progress * Math.PI * peakFreq1) * amplitude1;
-              const wave2 =
-                Math.cos(progress * Math.PI * peakFreq2 + Math.random() * 0.3) *
-                amplitude2;
-              const wave3 =
-                Math.sin(progress * Math.PI * peakFreq3 + Math.random() * 0.5) *
-                amplitude3;
-              const dramaticPeak =
-                Math.random() > 0.75 ? Math.random() * 15 : 0;
-              const noise = (Math.random() - 0.5) * 5;
-              const baseHeight = 20 + Math.random() * 8;
-              const y = Math.max(
-                3,
-                Math.min(
-                  55,
-                  baseHeight + wave1 + wave2 + wave3 + dramaticPeak + noise,
-                ),
-              );
-              points.push({ x, y });
-            }
-            let pathData = "M 0,100 L 0,100";
-            for (let i = 0; i < points.length; i++) {
-              if (i === 0) {
-                pathData += ` L ${points[i].x.toFixed(2)},${points[i].y.toFixed(2)}`;
-              } else {
-                const prevPoint = points[i - 1];
-                const currPoint = points[i];
-                const tension = 0.3 + Math.random() * 0.2;
-                const dx = currPoint.x - prevPoint.x;
-                const cp1x = prevPoint.x + dx * tension;
-                const cp1y = prevPoint.y;
-                const cp2x = currPoint.x - dx * tension;
-                const cp2y = currPoint.y;
-                pathData += ` C ${cp1x.toFixed(2)},${cp1y.toFixed(2)} ${cp2x.toFixed(2)},${cp2y.toFixed(2)} ${currPoint.x.toFixed(2)},${currPoint.y.toFixed(2)}`;
-              }
-            }
-            pathData += " L 100,100 Z";
-            return pathData;
-          }
-
-          $sheet.find(".hero").each(function (index) {
-            const waveContainer = document.createElement("div");
-            waveContainer.className = "hero-wave-container";
-            waveContainer.style.position = "absolute";
-            waveContainer.style.bottom = "0";
-            waveContainer.style.left = "0";
-            waveContainer.style.width = "100%";
-            waveContainer.style.height = "40px";
-            waveContainer.style.zIndex = "5";
-            waveContainer.style.overflow = "hidden";
-
-            const wavePath = generateWavePath(index);
-            const svg = document.createElementNS(
-              "http://www.w3.org/2000/svg",
-              "svg",
-            );
-            svg.setAttribute("viewBox", "0 0 100 100");
-            svg.setAttribute("preserveAspectRatio", "none");
-            svg.style.width = "100%";
-            svg.style.height = "100%";
-            svg.style.display = "block";
-
-            const path = document.createElementNS(
-              "http://www.w3.org/2000/svg",
-              "path",
-            );
-            path.setAttribute("d", wavePath);
-            path.setAttribute("fill", "#ffffff");
-            path.setAttribute("stroke", "none");
-
-            svg.appendChild(path);
-            waveContainer.appendChild(svg);
-            this.appendChild(waveContainer);
-          });
-
           $("#modalItineraryLivePreview").addClass("is-active");
+
+          const iframe = document.getElementById("livePreviewIframe");
+          if (iframe) {
+            iframe.srcdoc = "";
+          }
+          $("#livePreviewLoader").removeClass("v3-hidden");
+
+          $.ajax({
+            url: "/api/v3/itinerary/show/",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(payload),
+            dataType: "html",
+            success: function (renderedHtml) {
+              $("#livePreviewLoader").addClass("v3-hidden");
+              if (iframe) {
+                iframe.srcdoc = renderedHtml;
+              }
+            },
+            error: function () {
+              $("#livePreviewLoader").addClass("v3-hidden");
+              self.notify("Failed to render preview template.", "error");
+            },
+          });
         },
       );
 
@@ -3181,13 +3683,18 @@
       const childPrice = parseFloat(pkg.tour_package_price_child || 0);
       const adults =
         self.leadData && self.leadData.travel_details
-          ? parseInt(self.leadData.travel_details.adults || 1)
-          : 1;
+          ? parseInt(self.leadData.travel_details.adults || 2)
+          : 2;
       const children =
         self.leadData && self.leadData.travel_details
           ? parseInt(self.leadData.travel_details.children || 0)
           : 0;
-      const totalPrice = adultPrice * adults + childPrice * children;
+      const infants =
+        self.leadData && self.leadData.travel_details
+          ? parseInt(self.leadData.travel_details.infants || 0)
+          : 0;
+      const totalPrice =
+        adultPrice * (adults > 0 ? adults : 2) + childPrice * children;
 
       // Parse structured day-wise itinerary
       let daysList = [];
@@ -3217,26 +3724,235 @@
 
       const stripHtml = (s) => (s ? s.replace(/<[^>]*>?/gm, "").trim() : "");
 
+      const formatBulletList = (input, defaultFallback = "") => {
+        if (!input) return defaultFallback;
+        if (Array.isArray(input)) {
+          return input.map((s) => formatBulletList(s)).filter(Boolean).join("\n");
+        }
+        let str = String(input);
+        // Replace HTML break and list tags with newlines
+        str = str.replace(/<\/?(li|p|div|br|tr|td)[^>]*>/gi, "\n");
+        // Remove remaining HTML tags
+        str = str.replace(/<[^>]*>?/gm, "");
+        // Remove intro prefix phrases
+        str = str.replace(/^(our\s+)?(package\s+)?(inclusions?\s*(cover|include|includes|are|:)?|exclusions?\s*(cover|covers|include|includes|are|:)?)\s*/i, "");
+        str = str.replace(/^(our\s+)?package\s+includes\s+/i, "");
+        str = str.replace(/^(inclusions?|exclusions?)\s*:\s*/i, "");
+        // Split on comma / and if not already multiline
+        if (!str.includes("\n") || str.split("\n").length <= 1) {
+          str = str.replace(/,\s*and\s+/gi, "\n");
+          str = str.replace(/;\s*/g, "\n");
+          str = str.replace(/,\s*/g, "\n");
+        }
+
+        const lines = str
+          .split("\n")
+          .map((line) => {
+            let l = line.trim();
+            // Remove leading bullets/numbers/checks/dashes
+            l = l.replace(/^[•\-*✓✗✔✕\d.):\s]+/u, "").trim();
+            // Remove leading 'and '
+            l = l.replace(/^and\s+/i, "").trim();
+            // Remove trailing period
+            l = l.replace(/\.$/, "").trim();
+            // Capitalize first letter
+            if (l.length > 0) {
+              l = l.charAt(0).toUpperCase() + l.slice(1);
+            }
+            return l;
+          })
+          .filter((line) => line.length > 1);
+
+        const unique = [...new Set(lines)];
+        return unique.length > 0 ? unique.join("\n") : defaultFallback;
+      };
+
+      // Validate travel date — must be a real future date, else default to +7 days
+      let resolvedTravelDate = "";
+      const rawTravelDate =
+        self.leadData &&
+        self.leadData.travel_details &&
+        self.leadData.travel_details.date_of_travel
+          ? (self.leadData.travel_details.date_of_travel || "").trim()
+          : "";
+      if (
+        rawTravelDate &&
+        rawTravelDate.toLowerCase() !== "flexible" &&
+        typeof moment !== "undefined" &&
+        moment(rawTravelDate, "YYYY-MM-DD", true).isValid() &&
+        moment(rawTravelDate, "YYYY-MM-DD").isSameOrAfter(moment().startOf("day"))
+      ) {
+        resolvedTravelDate = rawTravelDate;
+      } else if (typeof moment !== "undefined") {
+        resolvedTravelDate = moment().add(7, "days").format("YYYY-MM-DD");
+      }
+      $("#itineraryCustomTravelDate").val(resolvedTravelDate);
+      self.initSingleDatePickers();
+
+
+      const defaultPickup =
+        (pkg.tour_package_pickup || "").trim() ||
+        (self.leadData &&
+        self.leadData.travel_details &&
+        (self.leadData.travel_details.departure_city ||
+          self.leadData.travel_details.pickup_location)
+          ? self.leadData.travel_details.departure_city ||
+            self.leadData.travel_details.pickup_location
+          : "");
+
+      const defaultDrop =
+        (pkg.tour_package_drop || "").trim() ||
+        (self.leadData &&
+        self.leadData.travel_details &&
+        (self.leadData.travel_details.drop_location ||
+          self.leadData.travel_details.destination)
+          ? self.leadData.travel_details.drop_location ||
+            self.leadData.travel_details.destination
+          : "");
+
+      self.loadItineraryMeta(function () {
+        self.setupPickupDropSelects(defaultPickup, defaultDrop);
+      });
+
+      const defaultTheme = (
+        pkg.tour_package_theme ||
+        pkg.tour_package_travel_style ||
+        $("#itineraryTravelStyle").val() ||
+        "standard"
+      )
+        .toLowerCase()
+        .trim();
+      if ($("#itineraryCustomTheme option[value='" + defaultTheme + "']").length > 0) {
+        $("#itineraryCustomTheme").val(defaultTheme);
+      } else {
+        $("#itineraryCustomTheme").val("standard");
+      }
+
+      if (typeof $.fn.select2 !== "undefined") {
+        $("#itineraryCustomTheme").select2({
+          dropdownParent: $("#modalSendItinerary"),
+          width: "100%",
+          minimumResultsForSearch: Infinity,
+        });
+      }
+
       $("#itineraryCustomTitle").val(pkg.tour_package_title || "");
+      $("#itineraryCustomAdultCount").val(adults > 0 ? adults : 2);
+      $("#itineraryCustomChildCount").val(children);
+      $("#itineraryCustomInfantCount").val(infants);
+
       $("#itineraryCustomAdultPrice").val(adultPrice);
       $("#itineraryCustomChildPrice").val(childPrice);
       $("#itineraryCustomInfantPrice").val(0);
       $("#itineraryCustomTotalPrice").val(
-        totalPrice > 0 ? totalPrice : adultPrice,
+        totalPrice > 0 ? totalPrice : adultPrice * (adults > 0 ? adults : 2),
       );
       $("#itineraryCustomOverview").val(stripHtml(pkg.tour_package_overview));
       $("#itineraryCustomInclusions").val(
-        stripHtml(pkg.tour_package_inclusions) ||
+        formatBulletList(
+          pkg.tour_package_inclusions,
           "Hotel accommodation with breakfast\nAirport & sightseeing transfers\nAll toll taxes and parking charges",
+        ),
       );
       $("#itineraryCustomExclusions").val(
-        stripHtml(pkg.tour_package_exclusions) ||
+        formatBulletList(
+          pkg.tour_package_exclusions,
           "Airfare / Train tickets\nPersonal expenses & tips\nEntry fees and camera tickets",
+        ),
       );
 
-      self.selectedPackageTemplate = pkg.tour_package_template || "mit";
-      self.renderItineraryDays(daysList);
+      const travelerParts = [];
+      if (adults) travelerParts.push(`${adults} Adults`);
+      if (children) travelerParts.push(`${children} Children`);
+      if (infants) travelerParts.push(`${infants} Infants`);
+      $("#itinTravelerCountBadge").text(travelerParts.join(", ") || "Auto-calculates per traveler");
 
+      const packageCity = (pkg.tour_package_city || "").trim();
+      const leadDest = (
+        self.leadData &&
+        self.leadData.travel_details &&
+        self.leadData.travel_details.destination
+          ? self.leadData.travel_details.destination
+          : ""
+      ).trim();
+      const defaultCity = packageCity || leadDest;
+
+      // Smart city extractor from day title or overview text
+      const detectCityFromText = (txt) => {
+        if (!txt) return "";
+        const allCities = self.availableStayCities || [];
+        const lowerTxt = txt.toLowerCase();
+
+        // 1. Check for direct "to [City]" pattern
+        for (const c of allCities) {
+          const cLower = c.toLowerCase();
+          const toPattern = new RegExp(
+            `(?:to|in|at|stay\\s+in|arrive\\s+in|reach)\\s+${cLower}\\b`,
+            "i",
+          );
+          if (toPattern.test(txt)) {
+            return c;
+          }
+        }
+        // 2. Check if city name is in text
+        for (const c of allCities) {
+          if (lowerTxt.includes(c.toLowerCase())) {
+            return c;
+          }
+        }
+        return "";
+      };
+
+      daysList = daysList.map((d, i) => {
+        if (!d.city && !d.stay_city) {
+          const detected =
+            detectCityFromText(d.day) || detectCityFromText(d.overview);
+          d.city = detected || defaultCity || "";
+          d.stay_city = d.city;
+        }
+        return d;
+      });
+
+      self.selectedPackageTemplate = pkg.tour_package_template || "mit";
+
+      if (pkg.tour_package_id && parseInt(pkg.tour_package_id) > 0) {
+        $.ajax({
+          url: `/api/v3/packages/hotels.php?package_id=${pkg.tour_package_id}`,
+          type: "GET",
+          dataType: "json",
+          success: function (hRes) {
+            if (hRes && hRes.hotels && hRes.hotels.length > 0) {
+              const assignedMap = {};
+              hRes.hotels.forEach((h) => {
+                if (h.assigned_night > 0) {
+                  assignedMap[h.assigned_night] = h;
+                }
+              });
+              daysList = daysList.map((d, i) => {
+                const nightNum = i + 1;
+                if (assignedMap[nightNum]) {
+                  const hObj = assignedMap[nightNum];
+                  if (!d.hotel) d.hotel = hObj.title;
+                  if (!d.city || d.city === defaultCity) d.city = hObj.city || d.city;
+                  if (hObj.assigned_room_type && !d.room_type) {
+                    d.room_type = hObj.assigned_room_type;
+                  }
+                }
+                return d;
+              });
+            }
+            self.renderItineraryDays(daysList);
+          },
+          error: function () {
+            self.renderItineraryDays(daysList);
+          },
+        });
+      } else {
+        self.renderItineraryDays(daysList);
+      }
+
+      $("#itinerarySearchSection").addClass("v3-hidden");
+      $("#btnChangeItinerary").removeClass("v3-hidden");
       $("#itineraryCustomSection").removeClass("v3-hidden");
       $("#btnPreviewItinerary").removeClass("v3-hidden");
     },
@@ -3455,6 +4171,12 @@
     initCitySelect2: function ($el, $dropdownParent, placeholder) {
       if (!$el || !$el.length || typeof $.fn.select2 === "undefined") return;
 
+      if ($el.hasClass("select2-hidden-accessible") || $el.data("select2")) {
+        try {
+          $el.select2("destroy");
+        } catch (e) {}
+      }
+
       $el.select2({
         placeholder: placeholder || "-- Search Destination City / Country --",
         allowClear: true,
@@ -3464,6 +4186,7 @@
           $dropdownParent && $dropdownParent.length
             ? $dropdownParent
             : undefined,
+        minimumInputLength: 0,
         ajax: {
           url: "/api/v3/cities/",
           dataType: "json",

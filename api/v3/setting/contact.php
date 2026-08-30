@@ -43,40 +43,44 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 $contactKeys = [
     'company_name',
-    'owner_name',
-    'intro',
+    'company_contact_person',
+    'site_mobile',
+    'site_email',
+    'company_whatsapp_number',
+    'company_intro',
     'company_address',
-    'address',
-    'company_email',
-    'email',
-    'email_notify',
-    'company_email_support',
-    'company_mobile',
-    'mobile',
-    'mobile_notify',
-    'company_mobile_helpline',
-    'company_whatsapp',
-    'whatsapp',
-    'whatsapp_notify',
     'company_google_map',
+    'company_social_media',
+    'company_site_domain',
+    // Fallback legacy keys
+    'owner_name',
+    'mobile',
+    'company_mobile',
+    'email',
+    'company_email',
+    'whatsapp',
+    'intro',
+    'address',
     'maps_url',
-    'social_facebook',
+    'company_google_map',
+    'site_domain',
     'facebook',
-    'social_instagram',
+    'social_facebook',
     'instagram',
-    'social_youtube',
-    'youtube',
-    'social_linkedin',
-    'linkedin',
+    'social_instagram',
+    'x',
     'social_twitter',
-    'x'
+    'linkedin',
+    'social_linkedin',
+    'youtube',
+    'social_youtube'
 ];
 
 // --------------------------------------------------------------------------
 // 1. GET: Fetch Current Contact Details & Site Company Info
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
-    $escKeys = "'" . implode("','", array_map(function($k) use ($connection) {
+    $escKeys = "'" . implode("','", array_map(function ($k) use ($connection) {
         return mysqli_real_escape_string($connection, $k);
     }, $contactKeys)) . "'";
 
@@ -95,52 +99,70 @@ if ($method === 'GET') {
         }
     }
 
-    $siteRes = mysqli_query($connection, "SELECT site_name, site_description FROM {$tblPrefix}site WHERE site_id = {$siteId} LIMIT 1");
+    $siteRes = mysqli_query($connection, "SELECT site_name, site_description, site_domain FROM {$tblPrefix}site WHERE site_id = {$siteId} LIMIT 1");
     $siteRow = $siteRes ? mysqli_fetch_assoc($siteRes) : [];
 
-    $companyName = $configMap['company_name'] ?? ($siteRow['site_name'] ?? '');
-    $intro       = $configMap['intro'] ?? ($siteRow['site_description'] ?? '');
-    $email       = $configMap['email'] ?? ($configMap['company_email'] ?? '');
-    $mobile      = $configMap['mobile'] ?? ($configMap['company_mobile'] ?? '');
-    $whatsapp    = $configMap['whatsapp'] ?? ($configMap['company_whatsapp'] ?? ($mobile));
-    $address     = $configMap['address'] ?? ($configMap['company_address'] ?? '');
-    $mapsUrl     = $configMap['maps_url'] ?? ($configMap['company_google_map'] ?? '');
-    $facebook    = $configMap['facebook'] ?? ($configMap['social_facebook'] ?? '');
-    $instagram   = $configMap['instagram'] ?? ($configMap['social_instagram'] ?? '');
-    $x           = $configMap['x'] ?? ($configMap['social_twitter'] ?? '');
-    $linkedin    = $configMap['linkedin'] ?? ($configMap['social_linkedin'] ?? '');
-    $youtube     = $configMap['youtube'] ?? ($configMap['social_youtube'] ?? '');
+    $siteDomainDefault = $siteRow['site_domain'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : '');
+    $companySiteDomain = !empty($configMap['company_site_domain']) ? $configMap['company_site_domain'] : (!empty($configMap['site_domain']) ? $configMap['site_domain'] : $siteDomainDefault);
+
+    $companyName    = $configMap['company_name'] ?? ($siteRow['site_name'] ?? '');
+    $contactPerson  = $configMap['company_contact_person'] ?? ($configMap['owner_name'] ?? '');
+    $siteMobile     = $configMap['site_mobile'] ?? ($configMap['mobile'] ?? ($configMap['company_mobile'] ?? ''));
+    $siteEmail      = $configMap['site_email'] ?? ($configMap['email'] ?? ($configMap['company_email'] ?? ''));
+    $whatsappNumber = $configMap['company_whatsapp_number'] ?? ($configMap['whatsapp'] ?? ($configMap['company_whatsapp_number'] ?? $siteMobile));
+    $intro          = $configMap['company_intro'] ?? ($configMap['intro'] ?? ($siteRow['site_description'] ?? ''));
+    $address        = $configMap['company_address'] ?? ($configMap['address'] ?? '');
+    $gmap           = $configMap['company_google_map'] ?? ($configMap['maps_url'] ?? ($configMap['company_google_map'] ?? ''));
+
+    // Social media JSON
+    $socialMedia = [];
+    if (!empty($configMap['company_social_media'])) {
+        $decoded = json_decode($configMap['company_social_media'], true);
+        if (is_array($decoded)) {
+            $socialMedia = $decoded;
+        }
+    }
+
+    $facebook  = $socialMedia['facebook'] ?? ($configMap['facebook'] ?? ($configMap['social_facebook'] ?? ''));
+    $instagram = $socialMedia['instagram'] ?? ($configMap['instagram'] ?? ($configMap['social_instagram'] ?? ''));
+    $x         = $socialMedia['x'] ?? ($configMap['x'] ?? ($configMap['social_twitter'] ?? ''));
+    $linkedin  = $socialMedia['linkedin'] ?? ($configMap['linkedin'] ?? ($configMap['social_linkedin'] ?? ''));
+    $youtube   = $socialMedia['youtube'] ?? ($configMap['youtube'] ?? ($configMap['social_youtube'] ?? ''));
+
+    $socialMedia = [
+        'facebook'  => $facebook,
+        'instagram' => $instagram,
+        'x'         => $x,
+        'linkedin'  => $linkedin,
+        'youtube'   => $youtube
+    ];
 
     $data = [
         'company_name'            => $companyName,
-        'owner_name'               => $configMap['owner_name'] ?? '',
-        'intro'                    => $intro,
-        'email'                    => $email,
-        'email_notify'             => $configMap['email_notify'] ?? '',
-        'company_email_support'    => $configMap['company_email_support'] ?? '',
-        'mobile'                   => $mobile,
-        'mobile_notify'            => $configMap['mobile_notify'] ?? '',
-        'company_mobile_helpline'  => $configMap['company_mobile_helpline'] ?? '',
-        'whatsapp'                 => $whatsapp,
-        'whatsapp_notify'          => $configMap['whatsapp_notify'] ?? '',
-        'address'                  => $address,
-        'maps_url'                 => $mapsUrl,
-        'facebook'                 => $facebook,
-        'instagram'                => $instagram,
-        'x'                        => $x,
-        'linkedin'                 => $linkedin,
-        'youtube'                  => $youtube,
+        'company_contact_person'  => $contactPerson,
+        'site_mobile'             => $siteMobile,
+        'site_email'              => $siteEmail,
+        'company_whatsapp_number' => $whatsappNumber,
+        'company_intro'           => $intro,
+        'company_address'         => $address,
+        'company_google_map'            => $gmap,
+        'company_site_domain'     => $companySiteDomain,
+        'company_social_media'    => $socialMedia,
+        // Direct keys for convenience
+        'facebook'                => $facebook,
+        'instagram'               => $instagram,
+        'x'                       => $x,
+        'linkedin'                => $linkedin,
+        'youtube'                 => $youtube,
         // Aliases for compatibility
-        'company_address'          => $address,
-        'company_email'            => $email,
-        'company_mobile'           => $mobile,
-        'company_whatsapp'         => $whatsapp,
-        'company_google_map'       => $mapsUrl,
-        'social_facebook'          => $facebook,
-        'social_instagram'         => $instagram,
-        'social_twitter'           => $x,
-        'social_linkedin'          => $linkedin,
-        'social_youtube'           => $youtube
+        'owner_name'              => $contactPerson,
+        'mobile'                  => $siteMobile,
+        'email'                   => $siteEmail,
+        'whatsapp'                => $whatsappNumber,
+        'intro'                   => $intro,
+        'address'                 => $address,
+        'maps_url'                => $gmap,
+        'site_domain'             => $companySiteDomain
     ];
 
     echo json_encode([
@@ -158,65 +180,77 @@ if ($method === 'POST' || $method === 'PUT') {
     $jsonData = json_decode($rawInput, true) ?? [];
     $data = !empty($_POST) ? $_POST : $jsonData;
 
-    $updatedKeys = [];
-    foreach ($data as $key => $value) {
-        $val = trim((string)$value);
-        $escVal = mysqli_real_escape_string($connection, $val);
-        $escKey = mysqli_real_escape_string($connection, $key);
-
-        $upsertSql = "
-            INSERT INTO {$tblPrefix}site_configuration 
-                (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status)
-            VALUES 
-                ({$siteId}, '{$escKey}', '{$escVal}', 1)
-            ON DUPLICATE KEY UPDATE 
-                site_configuration_value = '{$escVal}', 
-                site_configuration_status = 1
-        ";
-        mysqli_query($connection, $upsertSql);
-        $updatedKeys[] = $key;
+    // Social media JSON object assembly
+    $socialInput = $data['company_social_media'] ?? [];
+    if (!is_array($socialInput)) {
+        $socialInput = json_decode((string)$socialInput, true) ?: [];
     }
 
-    // Also mirror specific fields for standard compatibility
-    $syncedAliases = [
-        'company_name'    => $data['company_name'] ?? '',
-        'company_address' => $data['address'] ?? ($data['company_address'] ?? ''),
-        'company_email'   => $data['email'] ?? ($data['company_email'] ?? ''),
-        'company_mobile'  => $data['mobile'] ?? ($data['company_mobile'] ?? ''),
-        'company_whatsapp'=> $data['whatsapp'] ?? ($data['company_whatsapp'] ?? ''),
-        'company_google_map' => $data['maps_url'] ?? ($data['company_google_map'] ?? ''),
-        'social_facebook' => $data['facebook'] ?? ($data['social_facebook'] ?? ''),
-        'social_instagram'=> $data['instagram'] ?? ($data['social_instagram'] ?? ''),
-        'social_twitter'  => $data['x'] ?? ($data['social_twitter'] ?? ''),
-        'social_linkedin' => $data['linkedin'] ?? ($data['social_linkedin'] ?? ''),
-        'social_youtube'  => $data['youtube'] ?? ($data['social_youtube'] ?? '')
+    $socialMedia = [
+        'facebook'  => trim((string)($data['facebook'] ?? ($socialInput['facebook'] ?? ''))),
+        'instagram' => trim((string)($data['instagram'] ?? ($socialInput['instagram'] ?? ''))),
+        'x'         => trim((string)($data['x'] ?? ($socialInput['x'] ?? ''))),
+        'linkedin'  => trim((string)($data['linkedin'] ?? ($socialInput['linkedin'] ?? ''))),
+        'youtube'   => trim((string)($data['youtube'] ?? ($socialInput['youtube'] ?? ''))),
+    ];
+    $companySocialMediaJson = json_encode($socialMedia, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+    // Target predefined keys
+    $targetKeys = [
+        'company_name'            => trim((string)($data['company_name'] ?? '')),
+        'company_contact_person'  => trim((string)($data['company_contact_person'] ?? ($data['owner_name'] ?? ''))),
+        'site_mobile'             => trim((string)($data['site_mobile'] ?? ($data['mobile'] ?? ''))),
+        'site_email'              => trim((string)($data['site_email'] ?? ($data['email'] ?? ''))),
+        'company_whatsapp_number' => trim((string)($data['company_whatsapp_number'] ?? ($data['whatsapp'] ?? ''))),
+        'company_site_domain'     => trim((string)($data['company_site_domain'] ?? ($data['site_domain'] ?? ''))),
+        'company_intro'           => trim((string)($data['company_intro'] ?? ($data['intro'] ?? ''))),
+        'company_address'         => trim((string)($data['company_address'] ?? ($data['address'] ?? ''))),
+        'company_google_map'            => trim((string)($data['company_google_map'] ?? ($data['maps_url'] ?? ''))),
+        'company_social_media'    => $companySocialMediaJson
     ];
 
-    foreach ($syncedAliases as $aliasKey => $aliasVal) {
-        if ($aliasVal !== '') {
-            $escVal = mysqli_real_escape_string($connection, (string)$aliasVal);
-            $escKey = mysqli_real_escape_string($connection, $aliasKey);
+    $updatedKeys = [];
+    foreach ($targetKeys as $key => $val) {
+        $escKey = mysqli_real_escape_string($connection, $key);
+        $escVal = mysqli_real_escape_string($connection, $val);
+
+        $checkQuery = mysqli_query($connection, "
+            SELECT site_configuration_id 
+            FROM {$tblPrefix}site_configuration 
+            WHERE site_configuration_site_id = {$siteId} 
+              AND site_configuration_key = '{$escKey}' 
+            LIMIT 1
+        ");
+
+        if ($checkQuery && mysqli_num_rows($checkQuery) > 0) {
+            $row = mysqli_fetch_assoc($checkQuery);
+            $cfgId = (int)$row['site_configuration_id'];
+            mysqli_query($connection, "
+                UPDATE {$tblPrefix}site_configuration 
+                SET site_configuration_value = '{$escVal}', 
+                    site_configuration_status = 1 
+                WHERE site_configuration_id = {$cfgId}
+            ");
+        } else {
             mysqli_query($connection, "
                 INSERT INTO {$tblPrefix}site_configuration 
                     (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status)
                 VALUES 
                     ({$siteId}, '{$escKey}', '{$escVal}', 1)
-                ON DUPLICATE KEY UPDATE 
-                    site_configuration_value = '{$escVal}', 
-                    site_configuration_status = 1
             ");
         }
+        $updatedKeys[] = $key;
     }
 
     // Optionally update site_name in site table if company_name was provided
-    if (!empty($data['company_name'])) {
-        $escSiteName = mysqli_real_escape_string($connection, trim($data['company_name']));
+    if (!empty($targetKeys['company_name'])) {
+        $escSiteName = mysqli_real_escape_string($connection, $targetKeys['company_name']);
         mysqli_query($connection, "UPDATE {$tblPrefix}site SET site_name = '{$escSiteName}' WHERE site_id = {$siteId}");
     }
 
     echo json_encode([
         'status' => 'success',
-        'msg'    => 'Public contact information and social handles saved successfully.',
+        'msg'    => 'Public contact information and business profile saved successfully.',
         'keys'   => $updatedKeys
     ]);
     exit;

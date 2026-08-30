@@ -37,7 +37,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                         </div>
                         <div class="v3-card-header-text">
                             <h3>Business Identity &amp; Helplines</h3>
-                            <p>Official trade name, proprietor identity, and primary communication numbers.</p>
+                            <p>Official trade name, contact person, helpline numbers, support email, and website domain.</p>
                         </div>
                     </div>
 
@@ -55,109 +55,110 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                 <span class="v3-field-error" id="errContactCompanyName"></span>
                             </div>
 
-                            <!-- Owner / Proprietor Name -->
+                            <!-- Owner / Contact Person -->
                             <div class="v3-form-group">
-                                <label for="contactOwnerName" class="v3-form-label">
-                                    Owner / Proprietor Name
+                                <label for="contactContactPerson" class="v3-form-label">
+                                    Owner / Contact Person
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-user input-icon"></i>
-                                    <input type="text" id="contactOwnerName" name="owner_name" class="v3-form-input" placeholder="e.g. Ravindra Sharma">
+                                    <input type="text" id="contactContactPerson" name="company_contact_person" class="v3-form-input" placeholder="e.g. Ravindra Sharma">
                                 </div>
                             </div>
 
-                            <!-- Primary Mobile -->
+                            <!-- Customer Helpline Phone -->
                             <div class="v3-form-group">
-                                <label for="contactMobile" class="v3-form-label">
-                                    Customer Helpline Phone <span class="required">*</span>
+                                <label for="contactSiteMobile" class="v3-form-label">
+                                    Customer Helpline No. <span class="required">*</span>
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-phone-call input-icon"></i>
-                                    <input type="tel" id="contactMobile" name="mobile" class="v3-form-input" placeholder="e.g. 9958719998" required>
+                                    <input type="tel" id="contactSiteMobile" name="site_mobile" class="v3-form-input" placeholder="e.g. 9958719998" required>
                                 </div>
-                                <span class="v3-field-error" id="errContactMobile"></span>
+                                <span class="v3-field-error" id="errContactSiteMobile"></span>
                             </div>
 
-                            <!-- WhatsApp Number -->
+                            <!-- Official WhatsApp Number -->
                             <div class="v3-form-group">
-                                <label for="contactWhatsapp" class="v3-form-label">
-                                    Official WhatsApp Number
+                                <label for="contactCompanyWhatsappNumber" class="v3-form-label">
+                                    Official WhatsApp No.
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-comment-alt input-icon"></i>
-                                    <input type="tel" id="contactWhatsapp" name="whatsapp" class="v3-form-input" placeholder="e.g. 9958719998">
+                                    <input type="tel" id="contactCompanyWhatsappNumber" name="company_whatsapp_number" class="v3-form-input" placeholder="e.g. 9958719998">
                                 </div>
+                            </div>
+
+                            <!-- Support Email -->
+                            <div class="v3-form-group">
+                                <label for="contactSiteEmail" class="v3-form-label">
+                                    Support Email
+                                </label>
+                                <div class="v3-input-icon-wrap">
+                                    <i class="fi fi-rr-envelope input-icon"></i>
+                                    <input type="email" id="contactSiteEmail" name="site_email" class="v3-form-input" placeholder="info@example.com">
+                                </div>
+                            </div>
+
+                            <!-- Website Domain -->
+                            <div class="v3-form-group">
+                                <label for="contactCompanySiteDomain" class="v3-form-label">
+                                    Website Domain
+                                </label>
+                                <div class="v3-input-icon-wrap">
+                                    <i class="fi fi-rr-globe input-icon"></i>
+                                    <input type="text" id="contactCompanySiteDomain" name="company_site_domain" class="v3-form-input" placeholder="e.g. musafirindiatrip.com">
+                                </div>
+                                <span class="v3-field-error" id="errContactCompanySiteDomain"></span>
                             </div>
 
                             <!-- Short Intro -->
                             <div class="v3-form-group span-2">
-                                <label for="contactIntro" class="v3-form-label">
+                                <label for="contactCompanyIntro" class="v3-form-label">
                                     Company Tagline / Short Intro
                                 </label>
                                 <div class="v3-input-icon-wrap textarea-wrap">
                                     <i class="fi fi-rr-document input-icon"></i>
-                                    <textarea id="contactIntro" name="intro" class="v3-form-textarea" rows="2" placeholder="Brief 1-2 line intro about your travel services, packages, or enterprise offerings..."></textarea>
+                                    <textarea id="contactCompanyIntro" name="company_intro" class="v3-form-textarea" rows="2" placeholder="Brief 1-2 line intro about your travel services, packages, or enterprise offerings..."></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2: Support Email & Physical Address -->
+                <!-- Card 2: Registered Office & Location -->
                 <div class="v3-card-section">
                     <div class="v3-card-header">
                         <div class="v3-card-header-icon emerald">
                             <i class="fi fi-rr-marker"></i>
                         </div>
                         <div class="v3-card-header-text">
-                            <h3>Support Email &amp; Office Address</h3>
-                            <p>Official support email addresses, alert notifications, and office location.</p>
+                            <h3>Registered Office &amp; Location</h3>
+                            <p>Official registered office address and Google Maps location.</p>
                         </div>
                     </div>
 
                     <div class="v3-card-body">
                         <div class="v3-form-grid">
-                            <!-- Public Email -->
-                            <div class="v3-form-group">
-                                <label for="contactEmail" class="v3-form-label">
-                                    Public Support Email
-                                </label>
-                                <div class="v3-input-icon-wrap">
-                                    <i class="fi fi-rr-envelope input-icon"></i>
-                                    <input type="email" id="contactEmail" name="email" class="v3-form-input" placeholder="info@example.com">
-                                </div>
-                            </div>
-
-                            <!-- Notification Email -->
-                            <div class="v3-form-group">
-                                <label for="contactEmailNotify" class="v3-form-label">
-                                    Alert &amp; Booking Notification Email
-                                </label>
-                                <div class="v3-input-icon-wrap">
-                                    <i class="fi fi-rr-bell input-icon"></i>
-                                    <input type="email" id="contactEmailNotify" name="email_notify" class="v3-form-input" placeholder="alerts@example.com">
-                                </div>
-                            </div>
-
                             <!-- Physical Address -->
                             <div class="v3-form-group span-2">
-                                <label for="contactAddress" class="v3-form-label">
+                                <label for="contactCompanyAddress" class="v3-form-label">
                                     Registered Office Address
                                 </label>
                                 <div class="v3-input-icon-wrap textarea-wrap">
                                     <i class="fi fi-rr-building input-icon"></i>
-                                    <textarea id="contactAddress" name="address" class="v3-form-textarea" rows="2" placeholder="Complete street address, building/suite, city, state, and postal code..."></textarea>
+                                    <textarea id="contactCompanyAddress" name="company_address" class="v3-form-textarea" rows="2" placeholder="Complete street address, building/suite, city, state, and postal code..."></textarea>
                                 </div>
                             </div>
 
                             <!-- Google Maps URL -->
                             <div class="v3-form-group span-2">
-                                <label for="contactMapsUrl" class="v3-form-label">
+                                <label for="contactCompanyGmap" class="v3-form-label">
                                     Google Maps Location Link
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-map-marker input-icon"></i>
-                                    <input type="url" id="contactMapsUrl" name="maps_url" class="v3-form-input" placeholder="https://maps.google.com/?q=...">
+                                    <input type="url" id="contactCompanyGmap" name="company_google_map" class="v3-form-input" placeholder="https://maps.google.com/?q=...">
                                 </div>
                             </div>
                         </div>
@@ -266,6 +267,10 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 10px; background: #f8fafc; border-radius: 10px; padding: 14px; border: 1px solid #edf2f7; font-size: 12.5px;">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #334155; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <i class="fi fi-rr-globe" style="color: #6366f1; font-size: 13px; width: 16px;"></i>
+                            <span id="previewContactDomain" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis;">No website domain</span>
+                        </div>
                         <div style="display: flex; align-items: center; gap: 10px; color: #334155;">
                             <i class="fi fi-rr-phone-call" style="color: #0284c7; font-size: 13px; width: 16px;"></i>
                             <span id="previewContactMobile" style="font-weight: 600;">+91 &mdash;</span>

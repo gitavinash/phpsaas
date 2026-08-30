@@ -49,7 +49,7 @@
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-at input-icon"></i>
-                                    <input type="text" id="upiDetails" name="upi_details" class="v3-form-input" placeholder="e.g. musafirindiatrip@icici" required>
+                                    <input type="text" id="upiDetails" name="upi_details" class="v3-form-input" placeholder="e.g. blumox@sbi" required>
                                 </div>
                             </div>
 
@@ -60,7 +60,7 @@
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-user input-icon"></i>
-                                    <input type="text" id="upiPayeeName" name="bank_ac_name" class="v3-form-input" placeholder="e.g. Musafir India Trip Pvt Ltd">
+                                    <input type="text" id="upiPayeeName" name="bank_ac_name" class="v3-form-input" placeholder="e.g. Company Name Pvt Ltd">
                                 </div>
                             </div>
 
@@ -96,7 +96,7 @@
                 <!-- QR Card -->
                 <div class="v3-card-section" style="padding: 22px; text-align: center;">
                     <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8; display: block; margin-bottom: 12px;">Live Invoice QR Preview</span>
-                    
+
                     <div style="background: #ffffff; border: 2px dashed #e2e8f0; border-radius: 12px; padding: 14px; display: inline-block; margin-bottom: 12px;">
                         <img id="previewUpiQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi%3A%2F%2Fpay%3Fpa%3Dcompany%40upi" alt="UPI QR" style="width: 140px; height: 140px; display: block;">
                     </div>
