@@ -19,22 +19,44 @@ if ($currentUserId <= 0) {
     exit();
 }
 
-$siteFilter = ($siteId > 0) ? "enquiry_site_id = {$siteId}" : "1=1";
+$siteFilter = ($siteId > 0) ? "e.enquiry_site_id = {$siteId}" : "1=1";
 // Check followups assigned to this user
-$agentFilter = "enquiry_agent = '{$currentUserId}'";
+$agentFilter = "e.enquiry_agent = '{$currentUserId}'";
 
-// Due within next 5 minutes or in the past 15 minutes
-$sql = "SELECT enquiry_id, enquiry_agent, enquiry_first_name AS name, enquiry_mobile,
-               enquiry_subject, enquiry_followup
-        FROM {$tblPrefix}enquiry
+// Ensure tracking table exists
+$createTableSql = "CREATE TABLE IF NOT EXISTS `{$tblPrefix}enquiry_reminder` (
+  `reminder_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `reminder_enquiry_id` INT NOT NULL,
+  `reminder_agent_id` INT NOT NULL,
+  `reminder_followup_time` DATETIME NOT NULL,
+  `reminder_push_sent` TINYINT(1) DEFAULT 0,
+  `reminder_email_sent` TINYINT(1) DEFAULT 0,
+  `reminder_sent_at` DATETIME NULL,
+  `reminder_created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX (`reminder_enquiry_id`),
+  INDEX (`reminder_agent_id`),
+  INDEX (`reminder_followup_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+mysqli_query($connection, $createTableSql);
+
+// Only select follow-ups due in the 5-minute reminder window (between now - 60s and now + 300s)
+// and exclude any lead that has already had a reminder recorded
+$sql = "SELECT e.enquiry_id, e.enquiry_agent, e.enquiry_first_name AS name, e.enquiry_mobile,
+               e.enquiry_subject, e.enquiry_followup
+        FROM {$tblPrefix}enquiry e
+        LEFT JOIN {$tblPrefix}enquiry_reminder r 
+            ON r.reminder_enquiry_id = e.enquiry_id 
+            AND r.reminder_followup_time = e.enquiry_followup
+            AND (r.reminder_email_sent = 1 OR r.reminder_push_sent = 1)
         WHERE {$siteFilter}
           AND {$agentFilter}
-          AND enquiry_status = 3
-          AND enquiry_followup IS NOT NULL
-          AND enquiry_followup != '0000-00-00 00:00:00'
-          AND enquiry_followup <= DATE_ADD(NOW(), INTERVAL 330 SECOND)
-          AND enquiry_followup >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)
-        ORDER BY enquiry_followup ASC
+          AND e.enquiry_status = 3
+          AND e.enquiry_followup IS NOT NULL
+          AND e.enquiry_followup != '0000-00-00 00:00:00'
+          AND e.enquiry_followup <= DATE_ADD(NOW(), INTERVAL 300 SECOND)
+          AND e.enquiry_followup >= DATE_SUB(NOW(), INTERVAL 60 SECOND)
+          AND r.reminder_id IS NULL
+        ORDER BY e.enquiry_followup ASC
         LIMIT 10";
 
 $alerts = [];

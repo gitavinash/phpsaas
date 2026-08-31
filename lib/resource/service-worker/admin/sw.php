@@ -75,27 +75,28 @@ self.registration.showNotification(title, { body, icon, image, data: { click_act
 }
 
 self.addEventListener("notificationclick", (event) => {
-event.notification.close();
-const openUrl =
-(event.notification && event.notification.data && event.notification.data.click_action) ||
-(event.notification && event.notification.data && event.notification.data.FCM_MSG &&
-event.notification.data.FCM_MSG.notification && event.notification.data.FCM_MSG.notification.click_action) ||
-(<?php echo $js_BASE; ?> + "/");
+  event.notification.close();
+  const d = (event.notification && event.notification.data) || {};
+  const fcmMsg = d.FCM_MSG || {};
+  const fcmNotif = fcmMsg.notification || {};
+  const openUrl = d.click_action || d.url || fcmNotif.click_action || fcmNotif.url || (<?php echo $js_BASE; ?> + "/");
 
-event.waitUntil((async () => {
-const all = await clients.matchAll({ type: "window", includeUncontrolled: true });
-for (const c of all) {
-try {
-const u = new URL(c.url);
-if (u.origin === location.origin && u.pathname.startsWith(<?php echo $js_BASE; ?> + "/")) {
-await c.focus();
-await c.navigate(openUrl);
-return;
-}
-} catch {}
-}
-await clients.openWindow(openUrl);
-})());
+  event.waitUntil((async () => {
+    const all = await clients.matchAll({ type: "window", includeUncontrolled: true });
+    for (const c of all) {
+      try {
+        const u = new URL(c.url);
+        if (u.origin === location.origin) {
+          await c.focus();
+          await c.navigate(openUrl);
+          return;
+        }
+      } catch {}
+    }
+    if (clients.openWindow) {
+      await clients.openWindow(openUrl);
+    }
+  })());
 });
 
 // ---------------- Caching Names & Constants ----------------

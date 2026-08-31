@@ -98,145 +98,8 @@
     },
 
     scheduleClientReminder: function (followupTimeStr, customerName, agentId, leadId) {
-      if (!followupTimeStr) return;
-
-      const self = this;
-      const currentUserId = parseInt(
-        $("#leadViewApp").data("user-id") ||
-        (self.leadData && self.leadData.current_user_id) ||
-        0,
-        10
-      );
-      const assignedAgentId = parseInt(
-        agentId !== undefined ? agentId : (self.leadData ? self.leadData.agent_id : 0),
-        10
-      );
-      const userRole = (
-        (self.leadData && self.leadData.access_type) ||
-        $("#leadViewApp").data("user-role") ||
-        (typeof siteAdminType !== "undefined" ? siteAdminType : "administrator")
-      ).toLowerCase().trim();
-
-      const isAssignedAgent = (assignedAgentId > 0 && currentUserId > 0 && currentUserId === assignedAgentId);
-      const leadIdentifier = leadId || self.getLeadId();
-
-      console.log("[Follow-Up Reminder] 🔍 Evaluating follow-up reminder schedule:", {
-        leadId: leadIdentifier,
-        customerName: customerName,
-        followupTime: followupTimeStr,
-        currentUserId: currentUserId,
-        assignedAgentId: assignedAgentId,
-        userRole: userRole,
-        isAssignedAgent: isAssignedAgent
-      });
-
-      const storageKey = "v3_alert_" + leadIdentifier + "_" + (followupTimeStr || "");
-      try {
-        if (localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey)) {
-          console.log("[Follow-Up Reminder] ℹ️ Reminder already presented in this session. Skipping redundant scheduling.");
-          return;
-        }
-      } catch (e) {}
-
-      // Ask for browser notification permission if not yet decided
-      if (isAssignedAgent && "Notification" in window && Notification.permission === "default") {
-        try {
-          Notification.requestPermission().then(function (perm) {
-            console.log("[Follow-Up Reminder] 🔔 Browser notification permission status:", perm);
-          });
-        } catch (e) {}
-      }
-
-      // Compute 5 minutes before follow-up in milliseconds
-      const followupDate = new Date(followupTimeStr.replace(/-/g, "/"));
-      const targetTimeMs = followupDate.getTime() - (5 * 60 * 1000);
-      const delayMs = targetTimeMs - Date.now();
-
-      console.log(`[Follow-Up Reminder] ⏱️ Calculated delay: ${Math.round(delayMs / 1000)}s until 5-minute reminder window.`);
-
-      const triggerReminder = () => {
-        try {
-          if (localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey)) return;
-          localStorage.setItem(storageKey, String(Date.now()));
-          sessionStorage.setItem(storageKey, "1");
-        } catch (e) {}
-
-        console.log(`[Follow-Up Reminder] 🚨 REMINDER TRIGGERED for Lead #${leadIdentifier} (${customerName})!`);
-
-        // 1. Dispatch FCM Push Notification & Email via backend API to assigned agent
-        if (assignedAgentId > 0) {
-          console.log("[Follow-Up Reminder] 📤 Dispatching push notification and email alert to assigned agent (Agent ID: " + assignedAgentId + ")...");
-          $.ajax({
-            url: "/api/v3/leads/send-followup-alert/",
-            type: "POST",
-            data: {
-              lead_id: leadIdentifier,
-              agent_id: assignedAgentId,
-              customer_name: customerName,
-              followup_time: followupTimeStr
-            },
-            dataType: "json",
-            success: function (res) {
-              console.log("[Follow-Up Reminder] 📬 Push Notification & Email API response:", res);
-            }
-          });
-        }
-
-        // 2. Play notification sound ONLY to the assigned agent
-        if (isAssignedAgent) {
-          self.playNotificationSound();
-        } else {
-          console.log("[Follow-Up Reminder] 🚫 Sound suppressed: Current logged-in user (ID: " + currentUserId + ") is not the assigned agent (Agent ID: " + assignedAgentId + ").");
-        }
-
-        // 3. Browser Native Notification ONLY to the assigned agent
-        if (isAssignedAgent && "Notification" in window && Notification.permission === "granted") {
-          try {
-            const notif = new Notification(`🔔 Follow-Up in 5 Minutes: ${customerName}`, {
-              body: `Scheduled follow-up is due at ${followupDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}.`,
-              icon: "/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
-              tag: "followup-" + leadIdentifier,
-            });
-            notif.onclick = function () {
-              window.focus();
-              this.close();
-            };
-            console.log("[Follow-Up Reminder] 📱 Native browser notification displayed to assigned agent.");
-          } catch (e) {
-            console.error("[Follow-Up Reminder] Native browser notification error:", e);
-          }
-        }
-
-        // 4. In-App SweetAlert Modal ONLY to the assigned agent (if no modal is open)
-        if (isAssignedAgent) {
-          if (typeof Swal !== "undefined" && typeof Swal.fire === "function" && (!Swal.isVisible || !Swal.isVisible())) {
-            console.log("[Follow-Up Reminder] 💬 Displaying single in-app SweetAlert reminder modal.");
-            Swal.fire({
-              title: "🔔 Follow-Up in 5 Minutes!",
-              text: `Your scheduled follow-up with ${customerName} is due in 5 minutes.`,
-              icon: "warning",
-              type: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#ea580c",
-              cancelButtonColor: "#64748b",
-              confirmButtonText: "View Activity",
-              cancelButtonText: "Dismiss"
-            });
-          }
-        }
-      };
-
-      // Schedule timer if in the future within 24h
-      if (delayMs > 0 && delayMs < 24 * 60 * 60 * 1000) {
-        if (self.reminderTimer) {
-          clearTimeout(self.reminderTimer);
-        }
-        self.reminderTimer = setTimeout(triggerReminder, delayMs);
-        console.log(`[Follow-Up Reminder] ⏳ Reminder scheduled to fire in ${Math.round(delayMs / 1000)} seconds for assigned user.`);
-      } else if (delayMs <= 0 && delayMs > -10 * 60 * 1000) {
-        // Due right now or within the last 10 minutes
-        triggerReminder();
-      }
+      // Global follow-up reminders are coordinated by app.js across the dashboard
+      // to avoid duplicate notification banners, popups, and audio triggers.
     },
 
     getLeadId: function () {
@@ -726,6 +589,11 @@
       const st = parseInt(lead.status || 0);
       const isAssigned = parseInt(lead.agent_id || 0) > 0;
 
+      const defaultFollowupMoment = self.getDefaultFollowupDateTime();
+      const defaultFollowupStr = typeof moment !== "undefined" && defaultFollowupMoment && defaultFollowupMoment.format
+        ? defaultFollowupMoment.format("YYYY-MM-DD, hh:mm A")
+        : "";
+
       // Role check: Only Administrator and Operational can see/manage Assigned Representative
       const userRole = (lead.access_type || $("#leadViewApp").data("user-role") || "").toLowerCase().trim();
       const canManageAgent = (
@@ -1050,19 +918,35 @@
                     <textarea id="composerNoteInput" class="v3-composer-input" placeholder="Type a note, call log, or customer update..."></textarea>
 
                     <div class="v3-composer-followup-row" id="composerFollowupRow">
-                      <div class="v3-modal-form-group">
-                        <label class="v3-modal-label">Reminder Date & Time *</label>
-                        <input type="datetime-local" id="composerFollowupTime" class="v3-modal-input" value="${new Date(Date.now() + 86400000).toISOString().slice(0, 16)}">
+                      <div class="v3-followup-presets-wrap">
+                        <span class="v3-preset-label"><i class="fi fi-rr-clock"></i> Quick Presets:</span>
+                        <div class="v3-preset-chips" data-target="#composerFollowupTime">
+                          <button type="button" class="v3-preset-chip" data-preset="in_2_hours"><i class="fi fi-rr-bolt"></i> In 2 Hours</button>
+                          <button type="button" class="v3-preset-chip active" data-preset="tomorrow_morning"><i class="fi fi-rr-sun"></i> Tomorrow 10:30 AM</button>
+                          <button type="button" class="v3-preset-chip" data-preset="tomorrow_afternoon"><i class="fi fi-rr-sun"></i> Tomorrow 3:00 PM</button>
+                          <button type="button" class="v3-preset-chip" data-preset="tomorrow_evening"><i class="fi fi-rr-sunset"></i> Tomorrow 6:00 PM</button>
+                          <button type="button" class="v3-preset-chip" data-preset="in_2_days"><i class="fi fi-rr-calendar"></i> In 2 Days 11:00 AM</button>
+                          <button type="button" class="v3-preset-chip" data-preset="next_monday"><i class="fi fi-rr-calendar-clock"></i> Next Mon 10:30 AM</button>
+                        </div>
                       </div>
-                      <div class="v3-modal-form-group">
-                        <label class="v3-modal-label">Reason / Objective *</label>
-                        <select id="composerFollowupReason" class="leads-filter-select v3-select-full">
-                          <option value="Interested - Price Discussion">Price Discussion</option>
-                          <option value="Itinerary Customization">Itinerary Customization</option>
-                          <option value="Call Back Request">Call Back Request</option>
-                          <option value="Payment Follow-up">Payment Follow-up</option>
-                          <option value="General Follow-up" selected>General Follow-up</option>
-                        </select>
+                      <div class="v3-composer-followup-grid">
+                        <div class="v3-modal-form-group">
+                          <label class="v3-modal-label">Reminder Date & Time *</label>
+                          <div class="v3-input-icon-wrap">
+                            <i class="fi fi-rr-calendar input-icon"></i>
+                            <input type="text" id="composerFollowupTime" class="v3-datetimepicker-input" placeholder="Select follow-up date and time" value="${defaultFollowupStr}">
+                          </div>
+                        </div>
+                        <div class="v3-modal-form-group">
+                          <label class="v3-modal-label">Reason / Objective *</label>
+                          <select id="composerFollowupReason" class="leads-filter-select v3-select-full">
+                            <option value="Interested - Price Discussion">Price Discussion</option>
+                            <option value="Itinerary Customization">Itinerary Customization</option>
+                            <option value="Call Back Request">Call Back Request</option>
+                            <option value="Payment Follow-up">Payment Follow-up</option>
+                            <option value="General Follow-up" selected>General Follow-up</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
 
@@ -1230,8 +1114,9 @@
 
       $container.html(html);
 
-      // Initialize Single Datepickers
+      // Initialize Single Datepickers & Follow-up DateTime Pickers
       self.initSingleDatePickers();
+      self.initDateTimePicker();
 
       if (typeof $.fn.select2 !== "undefined") {
         if (canManageAgent && $("#leadDetailAgentSelect").length) {
@@ -2016,6 +1901,7 @@
 
         if (type === "followup") {
           $("#composerFollowupRow").addClass("is-visible");
+          self.initDateTimePicker();
           $("#composerNoteInput").attr(
             "placeholder",
             "Add instructions for this follow-up reminder...",
@@ -3297,11 +3183,130 @@
         $("#modalItineraryLivePreview").removeClass("is-active");
       });
 
-      // 9. Other Modals
+      // 9. Other Modals & Follow-up Presets
       $(document).on("click", "#btnHeroSetFollowUp, #btnSideSetFollowUp", function () {
         $(".v3-tab-link[data-tab='tab-activity']").trigger("click");
         $(".v3-composer-type-btn[data-type='followup']").trigger("click");
         $("#composerNoteInput").focus();
+        self.initDateTimePicker();
+      });
+
+      // Follow-Up Quick Preset Chips Click
+      $(document).on("click", ".v3-preset-chip", function (e) {
+        e.preventDefault();
+        const $chip = $(this);
+        const $wrap = $chip.closest(".v3-followup-presets-wrap");
+        const targetSelector = $chip.closest(".v3-preset-chips").data("target");
+        const $targetInput = $(targetSelector);
+        const preset = $chip.data("preset");
+
+        $wrap.find(".v3-preset-chip").removeClass("active");
+        $chip.addClass("active");
+
+        const now = typeof moment !== "undefined" ? moment() : null;
+        if (!now) return;
+
+        let targetMoment;
+
+        switch (preset) {
+          case "in_2_hours": {
+            targetMoment = now.clone().add(2, "hours");
+            const remMin = targetMoment.minute() % 15;
+            if (remMin > 0) targetMoment.add(15 - remMin, "minutes");
+            targetMoment.second(0);
+            if (targetMoment.hour() >= 21 || targetMoment.hour() < 9) {
+              targetMoment = now.clone().add(1, "days").hour(10).minute(0).second(0);
+            }
+            break;
+          }
+          case "tomorrow_morning": {
+            let nextDay = now.clone().add(1, "days");
+            if (now.day() === 6) nextDay = now.clone().add(2, "days");
+            targetMoment = nextDay.hour(10).minute(30).second(0);
+            break;
+          }
+          case "tomorrow_afternoon": {
+            let nextDay = now.clone().add(1, "days");
+            if (now.day() === 6) nextDay = now.clone().add(2, "days");
+            targetMoment = nextDay.hour(15).minute(0).second(0);
+            break;
+          }
+          case "tomorrow_evening": {
+            let nextDay = now.clone().add(1, "days");
+            if (now.day() === 6) nextDay = now.clone().add(2, "days");
+            targetMoment = nextDay.hour(18).minute(0).second(0);
+            break;
+          }
+          case "in_2_days": {
+            targetMoment = now.clone().add(2, "days").hour(11).minute(0).second(0);
+            break;
+          }
+          case "next_monday": {
+            const daysUntilMon = (1 + 7 - now.day()) % 7 || 7;
+            targetMoment = now.clone().add(daysUntilMon, "days").hour(10).minute(30).second(0);
+            break;
+          }
+          default: {
+            targetMoment = self.getDefaultFollowupDateTime();
+          }
+        }
+
+        const formattedStr = targetMoment.format("YYYY-MM-DD, hh:mm A");
+        $targetInput.val(formattedStr);
+
+        const picker = $targetInput.data("daterangepicker");
+        if (picker) {
+          picker.setStartDate(targetMoment);
+          picker.setEndDate(targetMoment);
+        }
+        $targetInput.trigger("change");
+      });
+
+      // Submit Schedule Follow-Up Modal (if opened directly)
+      $(document).on("click", "#btnSubmitModalFollowUp", function () {
+        if (!self.leadData || !(parseInt(self.leadData.agent_id || 0) > 0)) {
+          self.notify("Lead is unassigned. Please assign an agent first.", "warning");
+          return;
+        }
+
+        const reason = $("#modalFollowUpReason").val() || "General Follow-up";
+        const fTime = $("#modalFollowUpTime").val();
+        const comment = $("#modalFollowUpComment").val().trim();
+
+        if (!fTime) {
+          self.notify("Please select a valid follow-up date and time.", "warning");
+          return;
+        }
+
+        const $btn = $(this);
+        $btn.prop("disabled", true).text("Scheduling...");
+
+        $.ajax({
+          url: "/api/v3/leads/add-note/",
+          type: "POST",
+          data: {
+            leadId: self.leadId,
+            title: reason,
+            category: reason,
+            msg: comment || ("Scheduled callback for " + reason),
+            followupTime: fTime,
+          },
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false).text("Set Reminder");
+            if (res && res.status === "success") {
+              self.notify(res.message || "Follow-up reminder set successfully.", "success");
+              $("#modalSetFollowUp").removeClass("is-active");
+              self.loadLeadDetails();
+            } else {
+              self.notify((res && res.message) || "Failed to set follow-up reminder.", "error");
+            }
+          },
+          error: function () {
+            $btn.prop("disabled", false).text("Set Reminder");
+            self.notify("Network error while setting follow-up reminder.", "error");
+          }
+        });
       });
 
       $(document).on("click", "#btnSideSendPaymentLink", function () {
@@ -4347,6 +4352,132 @@
             picker.container.find(".drp-calendar.right").css("display", "none");
             picker.container.find(".ranges").css("display", "none");
             picker.container.find(".drp-buttons").css("display", "none");
+          }
+        });
+
+        // Ensure container is strictly hidden upon instantiation
+        const pickerObj = $el.data("daterangepicker");
+        if (pickerObj && pickerObj.container) {
+          pickerObj.container.hide().css("display", "none");
+        }
+      });
+    },
+
+    getDefaultFollowupDateTime: function () {
+      if (typeof moment !== "undefined") {
+        const now = moment();
+        const currentHour = now.hour();
+        const dayOfWeek = now.day(); // 0 = Sunday, 6 = Saturday
+
+        // Calculate next working day
+        let nextDay = now.clone().add(1, "days");
+        if (dayOfWeek === 6) {
+          // Saturday -> Monday
+          nextDay = now.clone().add(2, "days");
+        } else if (dayOfWeek === 0) {
+          // Sunday -> Monday
+          nextDay = now.clone().add(1, "days");
+        }
+
+        // Determine default hour within morning 9 AM to evening 9 PM (09:00 - 21:00)
+        let defaultHour = 10;
+        let defaultMinute = 30;
+
+        if (currentHour >= 9 && currentHour < 18) {
+          // Active working hours: same time next working day (rounded to neat 15/30 min slot)
+          defaultHour = currentHour;
+          defaultMinute = now.minute() >= 30 ? 30 : 0;
+        } else if (currentHour >= 18 && currentHour <= 21) {
+          // Evening hours (6 PM - 9 PM) -> Next working day 11:00 AM
+          defaultHour = 11;
+          defaultMinute = 0;
+        } else {
+          // Night or early morning (before 9 AM or after 9 PM) -> 10:30 AM
+          defaultHour = 10;
+          defaultMinute = 30;
+        }
+
+        nextDay.hour(defaultHour).minute(defaultMinute).second(0);
+        return nextDay;
+      }
+
+      // Plain Date fallback
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      d.setHours(10, 30, 0, 0);
+      return {
+        format: function (fmt) {
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, "0");
+          const day = String(d.getDate()).padStart(2, "0");
+          return `${y}-${m}-${day} 10:30 AM`;
+        }
+      };
+    },
+
+    initDateTimePicker: function () {
+      if (typeof $.fn.daterangepicker === "undefined") return;
+
+      const self = this;
+      $(".v3-datetimepicker-input").each(function () {
+        const $el = $(this);
+        if ($el.data("daterangepicker")) {
+          $el.data("daterangepicker").remove();
+        }
+
+        const defaultMoment = self.getDefaultFollowupDateTime();
+        const initialVal = $el.val();
+        let startMoment = defaultMoment;
+
+        if (
+          initialVal &&
+          typeof moment !== "undefined" &&
+          moment(initialVal, ["YYYY-MM-DD HH:mm:ss", "YYYY-MM-DDTHH:mm", "YYYY-MM-DD hh:mm A", "YYYY-MM-DD h:mm A", "YYYY-MM-DD"], true).isValid()
+        ) {
+          startMoment = moment(initialVal, ["YYYY-MM-DD HH:mm:ss", "YYYY-MM-DDTHH:mm", "YYYY-MM-DD hh:mm A", "YYYY-MM-DD h:mm A", "YYYY-MM-DD"]);
+        }
+
+        if (typeof moment !== "undefined" && startMoment && startMoment.format) {
+          $el.val(startMoment.format("YYYY-MM-DD, hh:mm A"));
+        }
+
+        const curYear = typeof moment !== "undefined" ? moment().year() : 2026;
+
+        $el.daterangepicker(
+          {
+            singleDatePicker: true,
+            timePicker: true,
+            timePicker24Hour: false,
+            timePickerIncrement: 15,
+            showDropdowns: true,
+            minDate: typeof moment !== "undefined" ? moment().startOf("minute") : false,
+            minYear: curYear,
+            maxYear: curYear + 5,
+            autoApply: false,
+            autoUpdateInput: false,
+            startDate: startMoment,
+            opens: "left",
+            drops: "down",
+            locale: {
+              format: "YYYY-MM-DD, hh:mm A",
+              applyLabel: "Set Time",
+              cancelLabel: "Cancel"
+            },
+          },
+          function (chosen) {
+            $el.val(chosen.format("YYYY-MM-DD, hh:mm A")).trigger("change");
+          }
+        );
+
+        $el.on("apply.daterangepicker", function (ev, picker) {
+          $(this).val(picker.startDate.format("YYYY-MM-DD, hh:mm A")).trigger("change");
+        });
+
+        $el.on("show.daterangepicker", function (ev, picker) {
+          if (picker && picker.container) {
+            picker.container.addClass("v3-datetimepicker-popover");
+            picker.container.find(".drp-calendar.right").css("display", "none");
+            picker.container.find(".ranges").css("display", "none");
           }
         });
 

@@ -533,18 +533,31 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
             <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Reason / Objective *</label>
                 <select id="modalFollowUpReason" class="leads-filter-select v3-select-full">
-                    <option value="">Select reason</option>
                     <option value="Interested - Price Discussion">Interested - Price Discussion</option>
                     <option value="Itinerary Customization Request">Itinerary Customization Request</option>
                     <option value="Client Asked to Call Later">Client Asked to Call Later</option>
                     <option value="Mobile Not Reachable / Busy">Mobile Not Reachable / Busy</option>
                     <option value="Payment Confirmation Follow-up">Payment Confirmation Follow-up</option>
-                    <option value="General Follow-up">General Follow-up</option>
+                    <option value="General Follow-up" selected>General Follow-up</option>
                 </select>
             </div>
             <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Follow-Up Date & Time *</label>
-                <input type="datetime-local" id="modalFollowUpTime" class="v3-modal-input" value="<?php echo date('Y-m-d\TH:i', strtotime('+1 day 11:00')); ?>">
+                <div class="v3-followup-presets-wrap">
+                    <span class="v3-preset-label"><i class="fi fi-rr-clock"></i> Quick Presets:</span>
+                    <div class="v3-preset-chips" data-target="#modalFollowUpTime">
+                        <button type="button" class="v3-preset-chip" data-preset="in_2_hours"><i class="fi fi-rr-bolt"></i> In 2 Hours</button>
+                        <button type="button" class="v3-preset-chip active" data-preset="tomorrow_morning"><i class="fi fi-rr-sun"></i> Tomorrow 10:30 AM</button>
+                        <button type="button" class="v3-preset-chip" data-preset="tomorrow_afternoon"><i class="fi fi-rr-sun"></i> Tomorrow 3:00 PM</button>
+                        <button type="button" class="v3-preset-chip" data-preset="tomorrow_evening"><i class="fi fi-rr-sunset"></i> Tomorrow 6:00 PM</button>
+                        <button type="button" class="v3-preset-chip" data-preset="in_2_days"><i class="fi fi-rr-calendar"></i> In 2 Days 11:00 AM</button>
+                        <button type="button" class="v3-preset-chip" data-preset="next_monday"><i class="fi fi-rr-calendar-clock"></i> Next Mon 10:30 AM</button>
+                    </div>
+                </div>
+                <div class="v3-input-icon-wrap">
+                    <i class="fi fi-rr-calendar input-icon"></i>
+                    <input type="text" id="modalFollowUpTime" class="v3-datetimepicker-input" placeholder="Select follow-up date and time">
+                </div>
             </div>
             <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Notes / Instructions</label>

@@ -20,6 +20,21 @@ if (!$srcUrl) {
 
 function fetch_bytes($url, $timeout = 10, $maxBytes = 20 * 1024 * 1024)
 {
+    // 1. Try local file read first if path is local
+    $parsed = parse_url($url);
+    $path = isset($parsed['path']) ? $parsed['path'] : $url;
+    $docRoot = isset($_SERVER['DOCUMENT_ROOT']) && !empty($_SERVER['DOCUMENT_ROOT'])
+        ? rtrim($_SERVER['DOCUMENT_ROOT'], '/')
+        : dirname(__DIR__, 2);
+    
+    if (!empty($path)) {
+        $localFile = $docRoot . '/' . ltrim($path, '/');
+        if (file_exists($localFile) && is_file($localFile) && filesize($localFile) <= $maxBytes) {
+            return @file_get_contents($localFile);
+        }
+    }
+
+    // 2. Fallback to cURL for remote URLs
     $ch = curl_init($url);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,

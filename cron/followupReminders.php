@@ -141,9 +141,10 @@ while ($row = mysqli_fetch_assoc($res)) {
     $followupRaw = $row['enquiry_followup'];
     $followupTimeFormatted = date('d M Y, h:i A', strtotime($followupRaw));
     
-    $siteName = !empty($row['site_name']) ? $row['site_name'] : 'Aleya Workspace';
-    $siteDomain = !empty($row['site_domain']) ? $row['site_domain'] : 'aleya.in';
-    $leadViewUrl = "https://{$siteDomain}/dashboard/leads/view/?id=" . base64_encode((string)$realLeadId);
+    $siteDomain = !empty($row['site_domain']) ? $row['site_domain'] : (defined('SITE_DOMAIN') ? SITE_DOMAIN : 'aleya.in');
+    $encodedLeadId = base64_encode((string)$realLeadId);
+    $siteBaseUrl = defined('SITE_URL') && !empty(SITE_URL) ? rtrim(SITE_URL, '/') : ('https://' . $siteDomain);
+    $leadViewUrl = $siteBaseUrl . '/dashboard/leads/view/?id=' . $encodedLeadId;
 
     // Fetch site SMTP settings
     $siteSmtp = [];

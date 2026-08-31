@@ -79,13 +79,67 @@ $followupTimeFormatted = !empty($followupRaw) ? date('d M Y, h:i A', strtotime($
 $siteName = !empty($lead['site_name']) ? $lead['site_name'] : (defined('SITE_NAME') ? SITE_NAME : 'Aleya Workspace');
 $siteDomain = !empty($lead['site_domain']) ? $lead['site_domain'] : (defined('SITE_DOMAIN') ? SITE_DOMAIN : 'aleya.in');
 $realLeadId = $leadId;
-$leadViewUrl = "https://{$siteDomain}/dashboard/leads/view/?id=" . base64_encode((string)$realLeadId);
+$encodedLeadId = base64_encode((string)$realLeadId);
+
+if (defined('SITE_URL') && !empty(SITE_URL)) {
+    $siteBaseUrl = rtrim(SITE_URL, '/');
+} elseif (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+    $siteBaseUrl = $protocol . $_SERVER['HTTP_HOST'];
+} else {
+    $siteBaseUrl = 'https://' . $siteDomain;
+}
+
+$leadViewUrl = $siteBaseUrl . '/dashboard/leads/view/?id=' . $encodedLeadId;
 
 if ($agentId <= 0) {
     echo json_encode([
         'status' => 'skipped',
         'message' => 'No representative assigned to this lead.',
         'lead_id' => $leadId
+    ]);
+    exit();
+}
+
+// 2. Ensure Reminder Tracking Table exists
+$createTableSql = "CREATE TABLE IF NOT EXISTS `{$tblPrefix}enquiry_reminder` (
+  `reminder_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `reminder_enquiry_id` INT NOT NULL,
+  `reminder_agent_id` INT NOT NULL,
+  `reminder_followup_time` DATETIME NOT NULL,
+  `reminder_push_sent` TINYINT(1) DEFAULT 0,
+  `reminder_email_sent` TINYINT(1) DEFAULT 0,
+  `reminder_sent_at` DATETIME NULL,
+  `reminder_created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX (`reminder_enquiry_id`),
+  INDEX (`reminder_agent_id`),
+  INDEX (`reminder_followup_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+mysqli_query($connection, $createTableSql);
+
+// Check if email or push notification was already sent for this lead and exact follow-up time
+$followupDbTime = !empty($followupRaw) ? date('Y-m-d H:i:s', strtotime($followupRaw)) : $lead['enquiry_followup'];
+$followupEsc = mysqli_real_escape_string($connection, (string)$followupDbTime);
+
+$remCheckSql = "SELECT reminder_id, reminder_email_sent, reminder_push_sent 
+                FROM {$tblPrefix}enquiry_reminder 
+                WHERE reminder_enquiry_id = {$leadId} 
+                  AND reminder_followup_time = '{$followupEsc}' 
+                LIMIT 1";
+$remCheckRes = mysqli_query($connection, $remCheckSql);
+$existingReminder = ($remCheckRes && mysqli_num_rows($remCheckRes) > 0) ? mysqli_fetch_assoc($remCheckRes) : null;
+
+$alreadyEmailSent = $existingReminder && (int)$existingReminder['reminder_email_sent'] === 1;
+$alreadyPushSent  = $existingReminder && (int)$existingReminder['reminder_push_sent'] === 1;
+
+if ($alreadyEmailSent && $alreadyPushSent) {
+    echo json_encode([
+        'status' => 'skipped',
+        'message' => 'Reminder already sent for this follow-up.',
+        'lead_id' => $leadId,
+        'email_sent' => false,
+        'push_sent' => false,
+        'already_sent' => true
     ]);
     exit();
 }
@@ -108,21 +162,22 @@ $emailSent = false;
 $deviceCount = 0;
 
 // ----------------------------------------------------
-// 1. Send FCM Web Push Notification to Agent
+// 1. Send FCM Web Push Notification to Agent (if not already sent)
 // ----------------------------------------------------
-$deviceTokens = [];
-$agentUserIdEsc = mysqli_real_escape_string($connection, (string)$agentId);
-$devSql = "SELECT DISTINCT device_token FROM {$tblPrefix}device 
-           WHERE (device_user_id = '{$agentUserIdEsc}' OR device_user_id = {$agentId}) 
-             AND device_status = 1";
-if ($resDev = mysqli_query($connection, $devSql)) {
-    while ($dRow = mysqli_fetch_assoc($resDev)) {
-        if (!empty($dRow['device_token'])) {
-            $deviceTokens[] = $dRow['device_token'];
+if (!$alreadyPushSent) {
+    $deviceTokens = [];
+    $agentUserIdEsc = mysqli_real_escape_string($connection, (string)$agentId);
+    $devSql = "SELECT DISTINCT device_token FROM {$tblPrefix}device 
+               WHERE (device_user_id = '{$agentUserIdEsc}' OR device_user_id = {$agentId}) 
+                 AND device_status = 1";
+    if ($resDev = mysqli_query($connection, $devSql)) {
+        while ($dRow = mysqli_fetch_assoc($resDev)) {
+            if (!empty($dRow['device_token'])) {
+                $deviceTokens[] = $dRow['device_token'];
+            }
         }
     }
-}
-$deviceCount = count($deviceTokens);
+    $deviceCount = count($deviceTokens);
 
 $fcmKey = defined('NOTIFICATION_KEY') && !empty(NOTIFICATION_KEY)
     ? NOTIFICATION_KEY
@@ -190,11 +245,12 @@ if (!empty($deviceTokens)) {
         }
     }
 }
+}
 
 // ----------------------------------------------------
-// 2. Send HTML Email Alert to Assigned Agent
+// 2. Send HTML Email Alert to Assigned Agent (if not already sent)
 // ----------------------------------------------------
-if (!empty($agentEmail) && filter_var($agentEmail, FILTER_VALIDATE_EMAIL)) {
+if (!$alreadyEmailSent && !empty($agentEmail) && filter_var($agentEmail, FILTER_VALIDATE_EMAIL)) {
     $followupReason = "Follow-Up on " . $leadSubject;
     $templatePath = dirname(__DIR__, 3) . '/lib/resource/email/followup-reminder.php';
     
@@ -284,6 +340,25 @@ if (!empty($agentEmail) && filter_var($agentEmail, FILTER_VALIDATE_EMAIL)) {
     }
 }
 
+// ----------------------------------------------------
+// 3. Record Reminder in Database Log (Deduplication)
+// ----------------------------------------------------
+$pushSentVal  = ($pushSent || $alreadyPushSent) ? 1 : 0;
+$emailSentVal = ($emailSent || $alreadyEmailSent) ? 1 : 0;
+
+if ($existingReminder && isset($existingReminder['reminder_id'])) {
+    $remId = (int)$existingReminder['reminder_id'];
+    mysqli_query($connection, "UPDATE {$tblPrefix}enquiry_reminder 
+                               SET reminder_push_sent = {$pushSentVal}, 
+                                   reminder_email_sent = {$emailSentVal}, 
+                                   reminder_sent_at = NOW() 
+                               WHERE reminder_id = {$remId}");
+} else {
+    mysqli_query($connection, "INSERT INTO {$tblPrefix}enquiry_reminder 
+                               (reminder_enquiry_id, reminder_agent_id, reminder_followup_time, reminder_push_sent, reminder_email_sent, reminder_sent_at) 
+                               VALUES ({$leadId}, {$agentId}, '{$followupEsc}', {$pushSentVal}, {$emailSentVal}, NOW())");
+}
+
 echo json_encode([
     'status' => 'success',
     'message' => 'Follow-up alert processed for assigned user.',
@@ -294,6 +369,8 @@ echo json_encode([
     'push_sent' => $pushSent,
     'device_count' => $deviceCount,
     'email_sent' => $emailSent,
+    'already_email_sent' => $alreadyEmailSent,
+    'already_push_sent' => $alreadyPushSent,
     'followup_time' => $followupTimeFormatted
 ]);
 exit();

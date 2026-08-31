@@ -4925,6 +4925,7 @@ $(document).ready(function (e) {
           try {
             localStorage.setItem(storageKey, String(Date.now()));
             sessionStorage.setItem(storageKey, "1");
+            sessionStorage.setItem("v3_alert_" + alert.lead_id + "_active", "1");
           } catch (e) {}
 
           // Dispatch FCM Push & Email Alert via backend
@@ -4956,8 +4957,8 @@ $(document).ready(function (e) {
           ? `Scheduled follow-up is due at ${topAlert.followup_formatted}.`
           : `You have ${unalerted.length} customer follow-ups scheduled right now.`;
         const targetUrl = unalerted.length === 1
-          ? "/dashboard/leads/view/?id=" + topAlert.encoded_id
-          : "/dashboard/leads/list/?status=3";
+          ? (window.location.origin + "/dashboard/leads/view/?id=" + topAlert.encoded_id)
+          : (window.location.origin + "/dashboard/leads/list/?status=3");
 
         triggerBrowserPushNotification(notifTitle, notifBody, targetUrl, "followup-" + topAlert.lead_id);
 
