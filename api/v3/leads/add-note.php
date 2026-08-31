@@ -42,7 +42,7 @@ if (empty($msg) && empty($title)) {
 mysqli_query($connection, 'START TRANSACTION');
 
 // Check if lead exists
-$checkSql = "SELECT enquiry_id, enquiry_status FROM {$tblPrefix}enquiry WHERE enquiry_id = {$leadId} AND enquiry_site_id = {$siteId} LIMIT 1";
+$checkSql = "SELECT enquiry_id, enquiry_status, enquiry_agent FROM {$tblPrefix}enquiry WHERE enquiry_id = {$leadId} AND enquiry_site_id = {$siteId} LIMIT 1";
 $checkRes = mysqli_query($connection, $checkSql);
 if (!$checkRes || mysqli_num_rows($checkRes) === 0) {
     mysqli_query($connection, 'ROLLBACK');
@@ -58,6 +58,42 @@ if (empty($category) || $category === 'Note') {
 }
 
 if (!empty($followupTime)) {
+    $forceOverride = isset($_POST['force_override']) && ($_POST['force_override'] === '1' || $_POST['force_override'] === 'true' || $_POST['force_override'] === true);
+    $fTimeFormatted = date('Y-m-d H:i:s', strtotime($followupTime));
+    $agentId = (isset($leadData['enquiry_agent']) && (int)$leadData['enquiry_agent'] > 0) ? (int)$leadData['enquiry_agent'] : $currentUserId;
+
+    if (!$forceOverride) {
+        $clashSql = "SELECT enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_mobile, enquiry_subject 
+                     FROM {$tblPrefix}enquiry 
+                     WHERE enquiry_site_id = {$siteId} 
+                       AND enquiry_agent = '{$agentId}' 
+                       AND enquiry_id != {$leadId} 
+                       AND enquiry_status = 3 
+                       AND enquiry_followup = '{$fTimeFormatted}' 
+                     LIMIT 1";
+        $clashRes = mysqli_query($connection, $clashSql);
+        if ($clashRes && mysqli_num_rows($clashRes) > 0) {
+            mysqli_query($connection, 'ROLLBACK');
+            $clashRow = mysqli_fetch_assoc($clashRes);
+            $custName = trim(($clashRow['enquiry_first_name'] ?? '') . ' ' . ($clashRow['enquiry_last_name'] ?? ''));
+            if (empty($custName)) {
+                $custName = 'Lead #' . $clashRow['enquiry_id'];
+            }
+            $timeStr = date('h:i A', strtotime($followupTime));
+            $dateStr = date('d M Y', strtotime($followupTime));
+            echo json_encode([
+                'status' => 'conflict',
+                'has_conflict' => true,
+                'conflict_lead_id' => (int)$clashRow['enquiry_id'],
+                'conflict_customer' => $custName,
+                'conflict_time' => $timeStr,
+                'conflict_date' => $dateStr,
+                'message' => "Time Conflict: You already have a follow-up scheduled with {$custName} (Lead #{$clashRow['enquiry_id']}) at {$timeStr} on {$dateStr}. Please select a different time slot."
+            ]);
+            exit();
+        }
+    }
+
     $metaType = 'followup';
     $fTimeFormatted = date('Y-m-d H:i:s', strtotime($followupTime));
     $followupObj = [

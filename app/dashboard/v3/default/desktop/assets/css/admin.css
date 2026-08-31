@@ -2296,7 +2296,7 @@ textarea:not(.v3-form-control):not(.v3-form-textarea) {
   background: #ffffff;
   border: 1px solid var(--slate-200);
   border-radius: var(--radius-md) !important;
-  padding: 0 10px !important;
+  /* padding: 0 10px !important; */
   font-size: 13px !important;
   color: var(--slate-800) !important;
   font-family: inherit !important;
@@ -27639,42 +27639,201 @@ body.v3-editor-fs-locked {
   box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
 }
 
-.v3-input-icon-wrap .input-icon {
+.v3-input-icon-wrap .input-icon,
+.v3-input-icon-wrap > i {
   position: absolute !important;
-  left: 12px !important;
+  left: 14px !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
   color: #059669 !important;
   font-size: 16px !important;
   pointer-events: none !important;
-  z-index: 5 !important;
+  z-index: 10 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 20px !important;
-  height: 20px !important;
+  width: 18px !important;
+  height: 18px !important;
   line-height: 1 !important;
 }
 
-.v3-input-icon-wrap .v3-datetimepicker-input {
-  width: 100% !important;
-  height: 40px !important;
-  padding: 0 14px 0 38px !important;
-  background: transparent !important;
-  border: none !important;
-  outline: none !important;
-  cursor: pointer !important;
-  font-weight: 600 !important;
-  color: #0f172a !important;
-  font-size: 13.5px !important;
+.v3-followup-schedule-card {
+  background: #f8fafc !important;
+  border: 1.2px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 14px 16px !important;
+  margin-top: 6px !important;
+  margin-bottom: 12px !important;
   box-sizing: border-box !important;
-  box-shadow: none !important;
 }
 
-.v3-input-icon-wrap .v3-datetimepicker-input::-webkit-calendar-picker-indicator {
-  display: none !important;
-  -webkit-appearance: none !important;
+.v3-datetime-split-grid {
+  display: grid !important;
+  grid-template-columns: 1.15fr 1fr !important;
+  gap: 12px !important;
+  width: 100% !important;
+  margin-top: 10px !important;
 }
+
+@media (max-width: 600px) {
+  .v3-datetime-split-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.v3-datetime-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+}
+
+.v3-sub-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #475569 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.v3-sub-label i {
+  font-size: 13px !important;
+  color: #059669 !important;
+}
+
+.v3-native-input-wrap {
+  position: relative !important;
+  width: 100% !important;
+}
+
+.v3-native-datetime-input {
+  width: 100% !important;
+  height: 42px !important;
+  padding: 0 12px !important;
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+}
+
+.v3-native-datetime-input:focus {
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
+  background: #ffffff !important;
+}
+
+.v3-native-datetime-input::-webkit-calendar-picker-indicator {
+  cursor: pointer !important;
+  opacity: 0.7 !important;
+  transition: opacity 0.15s ease !important;
+  padding: 4px !important;
+}
+
+.v3-native-datetime-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1 !important;
+}
+
+.v3-time-quick-pills {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-top: 10px !important;
+}
+
+.v3-time-pills-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  margin-right: 2px !important;
+}
+
+.v3-time-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 4px 10px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.v3-time-pill:hover {
+  background: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+  color: #047857 !important;
+}
+
+.v3-time-pill.active {
+  background: #059669 !important;
+  border-color: #047857 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+
+.v3-slot-status-box {
+  margin-top: 8px !important;
+}
+
+.v3-slot-conflict-alert {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 12px !important;
+  background: #fffbeb !important;
+  border: 1px solid #fde68a !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  color: #b45309 !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+}
+
+.v3-slot-conflict-alert i {
+  color: #d97706 !important;
+  font-size: 14px !important;
+  flex-shrink: 0 !important;
+}
+
+.v3-slot-conflict-alert strong {
+  font-weight: 700 !important;
+  color: #92400e !important;
+}
+
+.v3-slot-available-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 4px 10px !important;
+  background: #f0fdf4 !important;
+  border: 1px solid #bbf7d0 !important;
+  border-radius: 6px !important;
+  font-size: 11.5px !important;
+  color: #15803d !important;
+  font-weight: 600 !important;
+}
+
+.v3-slot-available-pill i {
+  color: #16a34a !important;
+  font-size: 13px !important;
+  flex-shrink: 0 !important;
+}
+
+
 
 
 

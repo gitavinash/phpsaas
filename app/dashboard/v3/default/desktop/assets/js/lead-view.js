@@ -918,35 +918,53 @@
                     <textarea id="composerNoteInput" class="v3-composer-input" placeholder="Type a note, call log, or customer update..."></textarea>
 
                     <div class="v3-composer-followup-row" id="composerFollowupRow">
-                      <div class="v3-followup-presets-wrap">
-                        <span class="v3-preset-label"><i class="fi fi-rr-clock"></i> Quick Presets:</span>
-                        <div class="v3-preset-chips" data-target="#composerFollowupTime">
-                          <button type="button" class="v3-preset-chip" data-preset="in_2_hours"><i class="fi fi-rr-bolt"></i> In 2 Hours</button>
-                          <button type="button" class="v3-preset-chip active" data-preset="tomorrow_morning"><i class="fi fi-rr-sun"></i> Tomorrow 10:30 AM</button>
-                          <button type="button" class="v3-preset-chip" data-preset="tomorrow_afternoon"><i class="fi fi-rr-sun"></i> Tomorrow 3:00 PM</button>
-                          <button type="button" class="v3-preset-chip" data-preset="tomorrow_evening"><i class="fi fi-rr-sunset"></i> Tomorrow 6:00 PM</button>
-                          <button type="button" class="v3-preset-chip" data-preset="in_2_days"><i class="fi fi-rr-calendar"></i> In 2 Days 11:00 AM</button>
-                          <button type="button" class="v3-preset-chip" data-preset="next_monday"><i class="fi fi-rr-calendar-clock"></i> Next Mon 10:30 AM</button>
-                        </div>
-                      </div>
-                      <div class="v3-composer-followup-grid">
-                        <div class="v3-modal-form-group">
-                          <label class="v3-modal-label">Reminder Date & Time *</label>
-                          <div class="v3-input-icon-wrap">
-                            <i class="fi fi-rr-calendar input-icon"></i>
-                            <input type="text" id="composerFollowupTime" class="v3-datetimepicker-input" placeholder="Select follow-up date and time" value="${defaultFollowupStr}">
+                      <div class="v3-followup-schedule-card">
+                        <div class="v3-followup-presets-wrap">
+                          <span class="v3-preset-label"><i class="fi fi-rr-bolt"></i> Quick Presets:</span>
+                          <div class="v3-preset-chips" data-target="#composerFollowupTime">
+                            <button type="button" class="v3-preset-chip" data-preset="in_2_hours"><i class="fi fi-rr-bolt"></i> In 2 Hours</button>
+                            <button type="button" class="v3-preset-chip active" data-preset="tomorrow_morning"><i class="fi fi-rr-sun"></i> Tomorrow 10:30 AM</button>
+                            <button type="button" class="v3-preset-chip" data-preset="tomorrow_afternoon"><i class="fi fi-rr-sun"></i> Tomorrow 3:00 PM</button>
+                            <button type="button" class="v3-preset-chip" data-preset="tomorrow_evening"><i class="fi fi-rr-sunset"></i> Tomorrow 6:00 PM</button>
+                            <button type="button" class="v3-preset-chip" data-preset="in_2_days"><i class="fi fi-rr-calendar"></i> In 2 Days 11:00 AM</button>
+                            <button type="button" class="v3-preset-chip" data-preset="next_monday"><i class="fi fi-rr-calendar-clock"></i> Next Mon 10:30 AM</button>
                           </div>
                         </div>
-                        <div class="v3-modal-form-group">
-                          <label class="v3-modal-label">Reason / Objective *</label>
-                          <select id="composerFollowupReason" class="leads-filter-select v3-select-full">
-                            <option value="Interested - Price Discussion">Price Discussion</option>
-                            <option value="Itinerary Customization">Itinerary Customization</option>
-                            <option value="Call Back Request">Call Back Request</option>
-                            <option value="Payment Follow-up">Payment Follow-up</option>
-                            <option value="General Follow-up" selected>General Follow-up</option>
-                          </select>
+                        <div class="v3-datetime-split-grid">
+                          <div class="v3-datetime-col">
+                            <label class="v3-sub-label" for="composerFollowupDate"><i class="fi fi-rr-calendar"></i> Date</label>
+                            <div class="v3-native-input-wrap">
+                              <input type="date" id="composerFollowupDate" class="v3-native-datetime-input">
+                            </div>
+                          </div>
+                          <div class="v3-datetime-col">
+                            <label class="v3-sub-label" for="composerFollowupTimeInput"><i class="fi fi-rr-clock"></i> Time</label>
+                            <div class="v3-native-input-wrap">
+                              <input type="time" id="composerFollowupTimeInput" class="v3-native-datetime-input">
+                            </div>
+                          </div>
                         </div>
+                        <input type="hidden" id="composerFollowupTime" value="${defaultFollowupStr}">
+                        <div class="v3-time-quick-pills" data-target="#composerFollowupTimeInput">
+                          <span class="v3-time-pills-label">Popular slots:</span>
+                          <button type="button" class="v3-time-pill" data-time="10:00">10:00 AM</button>
+                          <button type="button" class="v3-time-pill active" data-time="10:30">10:30 AM</button>
+                          <button type="button" class="v3-time-pill" data-time="14:30">02:30 PM</button>
+                          <button type="button" class="v3-time-pill" data-time="16:00">04:00 PM</button>
+                          <button type="button" class="v3-time-pill" data-time="18:00">06:00 PM</button>
+                          <button type="button" class="v3-time-pill" data-time="19:30">07:30 PM</button>
+                        </div>
+                        <div class="v3-slot-status-box" id="composerSlotStatus"></div>
+                      </div>
+                      <div class="v3-modal-form-group" style="margin-top: 10px;">
+                        <label class="v3-modal-label">Reason / Objective *</label>
+                        <select id="composerFollowupReason" class="leads-filter-select v3-select-full">
+                          <option value="Interested - Price Discussion">Price Discussion</option>
+                          <option value="Itinerary Customization">Itinerary Customization</option>
+                          <option value="Call Back Request">Call Back Request</option>
+                          <option value="Payment Follow-up">Payment Follow-up</option>
+                          <option value="General Follow-up" selected>General Follow-up</option>
+                        </select>
                       </div>
                     </div>
 
@@ -1951,40 +1969,7 @@
           postData.followupTime = $("#composerFollowupTime").val();
         }
 
-        $.ajax({
-          url: "/api/v3/leads/add-note/",
-          type: "POST",
-          data: postData,
-          dataType: "json",
-          success: function (res) {
-            $btn
-              .prop("disabled", false)
-              .html('<i class="fi fi-rr-check"></i> Post Update');
-            if (res.status === "success") {
-              $("#composerNoteInput").val("");
-              self.notify(res.message || "Update logged successfully", "success");
-              
-              if (res.followup_time) {
-                self.scheduleClientReminder(
-                  res.followup_time,
-                  self.leadData ? self.leadData.name : "Customer",
-                  self.leadData ? self.leadData.agent_id : 0,
-                  self.leadId
-                );
-              }
-              
-              self.loadLeadDetails();
-            } else {
-              self.notify(res.message || "Failed to post update.", "error");
-            }
-          },
-          error: function () {
-            $btn
-              .prop("disabled", false)
-              .html('<i class="fi fi-rr-check"></i> Post Update');
-            self.notify("Network connection error.", "error");
-          },
-        });
+        self.submitComposerNote(postData, $btn);
       });
 
       // 5. Agent Re-assign with SweetAlert Confirmation
@@ -3251,15 +3236,82 @@
           }
         }
 
-        const formattedStr = targetMoment.format("YYYY-MM-DD, hh:mm A");
+        const datePart = targetMoment.format("YYYY-MM-DD");
+        const time24Part = targetMoment.format("HH:mm");
+        const time12Part = targetMoment.format("hh:mm A");
+        const formattedStr = datePart + ", " + time12Part;
+
         $targetInput.val(formattedStr);
 
-        const picker = $targetInput.data("daterangepicker");
-        if (picker) {
-          picker.setStartDate(targetMoment);
-          picker.setEndDate(targetMoment);
+        // Sync native date and time inputs
+        if (targetSelector === "#modalFollowUpTime") {
+          $("#modalFollowUpDate").val(datePart);
+          $("#modalFollowUpTimeInput").val(time24Part);
+          const $pills = $('.v3-time-quick-pills[data-target="#modalFollowUpTimeInput"]');
+          $pills.find(".v3-time-pill").removeClass("active");
+          $pills.find(`.v3-time-pill[data-time="${time24Part}"]`).addClass("active");
+          self.checkSlotConflict(formattedStr, $("#modalSlotStatus"));
+        } else if (targetSelector === "#composerFollowupTime") {
+          $("#composerFollowupDate").val(datePart);
+          $("#composerFollowupTimeInput").val(time24Part);
+          const $pills = $('.v3-time-quick-pills[data-target="#composerFollowupTimeInput"]');
+          $pills.find(".v3-time-pill").removeClass("active");
+          $pills.find(`.v3-time-pill[data-time="${time24Part}"]`).addClass("active");
+          self.checkSlotConflict(formattedStr, $("#composerSlotStatus"));
         }
+
         $targetInput.trigger("change");
+      });
+
+      // Quick Time Pill Click
+      $(document).on("click", ".v3-time-pill", function (e) {
+        e.preventDefault();
+        const $pill = $(this);
+        const time24 = $pill.data("time");
+        const targetSelect = $pill.closest(".v3-time-quick-pills").data("target");
+        const $input = $(targetSelect);
+
+        $pill.siblings(".v3-time-pill").removeClass("active");
+        $pill.addClass("active");
+
+        if ($input.length) {
+          $input.val(time24).trigger("change");
+        }
+      });
+
+      // Native Date/Time input changes: Sync master hidden input
+      $(document).on("change", "#modalFollowUpDate, #modalFollowUpTimeInput", function () {
+        const dateVal = $("#modalFollowUpDate").val() || (typeof moment !== "undefined" ? moment().add(1, "days").format("YYYY-MM-DD") : "");
+        const time24Val = $("#modalFollowUpTimeInput").val() || "10:30";
+        let time12 = "10:30 AM";
+        if (typeof moment !== "undefined") {
+          time12 = moment("2000-01-01 " + time24Val).format("hh:mm A");
+        }
+        const combined = dateVal + ", " + time12;
+        $("#modalFollowUpTime").val(combined);
+
+        const $pills = $('.v3-time-quick-pills[data-target="#modalFollowUpTimeInput"]');
+        $pills.find(".v3-time-pill").removeClass("active");
+        $pills.find(`.v3-time-pill[data-time="${time24Val}"]`).addClass("active");
+
+        self.checkSlotConflict(combined, $("#modalSlotStatus"));
+      });
+
+      $(document).on("change", "#composerFollowupDate, #composerFollowupTimeInput", function () {
+        const dateVal = $("#composerFollowupDate").val() || (typeof moment !== "undefined" ? moment().add(1, "days").format("YYYY-MM-DD") : "");
+        const time24Val = $("#composerFollowupTimeInput").val() || "10:30";
+        let time12 = "10:30 AM";
+        if (typeof moment !== "undefined") {
+          time12 = moment("2000-01-01 " + time24Val).format("hh:mm A");
+        }
+        const combined = dateVal + ", " + time12;
+        $("#composerFollowupTime").val(combined);
+
+        const $pills = $('.v3-time-quick-pills[data-target="#composerFollowupTimeInput"]');
+        $pills.find(".v3-time-pill").removeClass("active");
+        $pills.find(`.v3-time-pill[data-time="${time24Val}"]`).addClass("active");
+
+        self.checkSlotConflict(combined, $("#composerSlotStatus"));
       });
 
       // Submit Schedule Follow-Up Modal (if opened directly)
@@ -3279,34 +3331,15 @@
         }
 
         const $btn = $(this);
-        $btn.prop("disabled", true).text("Scheduling...");
+        const postData = {
+          leadId: self.leadId,
+          title: reason,
+          category: reason,
+          msg: comment || ("Scheduled callback for " + reason),
+          followupTime: fTime,
+        };
 
-        $.ajax({
-          url: "/api/v3/leads/add-note/",
-          type: "POST",
-          data: {
-            leadId: self.leadId,
-            title: reason,
-            category: reason,
-            msg: comment || ("Scheduled callback for " + reason),
-            followupTime: fTime,
-          },
-          dataType: "json",
-          success: function (res) {
-            $btn.prop("disabled", false).text("Set Reminder");
-            if (res && res.status === "success") {
-              self.notify(res.message || "Follow-up reminder set successfully.", "success");
-              $("#modalSetFollowUp").removeClass("is-active");
-              self.loadLeadDetails();
-            } else {
-              self.notify((res && res.message) || "Failed to set follow-up reminder.", "error");
-            }
-          },
-          error: function () {
-            $btn.prop("disabled", false).text("Set Reminder");
-            self.notify("Network error while setting follow-up reminder.", "error");
-          }
-        });
+        self.submitModalFollowUp(postData, $btn);
       });
 
       $(document).on("click", "#btnSideSendPaymentLink", function () {
@@ -4416,75 +4449,204 @@
     },
 
     initDateTimePicker: function () {
-      if (typeof $.fn.daterangepicker === "undefined") return;
-
       const self = this;
-      $(".v3-datetimepicker-input").each(function () {
-        const $el = $(this);
-        if ($el.data("daterangepicker")) {
-          $el.data("daterangepicker").remove();
-        }
+      const defaultMoment = self.getDefaultFollowupDateTime();
+      const defaultDateStr = typeof moment !== "undefined" && defaultMoment && defaultMoment.format ? defaultMoment.format("YYYY-MM-DD") : "";
+      const defaultTime24Str = typeof moment !== "undefined" && defaultMoment && defaultMoment.format ? defaultMoment.format("HH:mm") : "10:30";
+      const defaultTime12Str = typeof moment !== "undefined" && defaultMoment && defaultMoment.format ? defaultMoment.format("hh:mm A") : "10:30 AM";
+      const defaultFullStr = typeof moment !== "undefined" && defaultMoment && defaultMoment.format ? defaultMoment.format("YYYY-MM-DD, hh:mm A") : "";
+      const todayStr = typeof moment !== "undefined" ? moment().format("YYYY-MM-DD") : "";
 
-        const defaultMoment = self.getDefaultFollowupDateTime();
-        const initialVal = $el.val();
-        let startMoment = defaultMoment;
+      // 1. Initialize Native Date Inputs
+      if (todayStr) {
+        $("#modalFollowUpDate, #composerFollowupDate").attr("min", todayStr);
+      }
 
-        if (
-          initialVal &&
-          typeof moment !== "undefined" &&
-          moment(initialVal, ["YYYY-MM-DD HH:mm:ss", "YYYY-MM-DDTHH:mm", "YYYY-MM-DD hh:mm A", "YYYY-MM-DD h:mm A", "YYYY-MM-DD"], true).isValid()
-        ) {
-          startMoment = moment(initialVal, ["YYYY-MM-DD HH:mm:ss", "YYYY-MM-DDTHH:mm", "YYYY-MM-DD hh:mm A", "YYYY-MM-DD h:mm A", "YYYY-MM-DD"]);
-        }
+      if (!$("#modalFollowUpDate").val()) $("#modalFollowUpDate").val(defaultDateStr);
+      if (!$("#modalFollowUpTimeInput").val()) $("#modalFollowUpTimeInput").val(defaultTime24Str);
+      if (!$("#modalFollowUpTime").val()) $("#modalFollowUpTime").val(defaultFullStr);
 
-        if (typeof moment !== "undefined" && startMoment && startMoment.format) {
-          $el.val(startMoment.format("YYYY-MM-DD, hh:mm A"));
-        }
+      if (!$("#composerFollowupDate").val()) $("#composerFollowupDate").val(defaultDateStr);
+      if (!$("#composerFollowupTimeInput").val()) $("#composerFollowupTimeInput").val(defaultTime24Str);
+      if (!$("#composerFollowupTime").val()) $("#composerFollowupTime").val(defaultFullStr);
 
-        const curYear = typeof moment !== "undefined" ? moment().year() : 2026;
+      // Initial conflict check
+      if ($("#modalSlotStatus").length && $("#modalFollowUpTime").val()) {
+        self.checkSlotConflict($("#modalFollowUpTime").val(), $("#modalSlotStatus"));
+      }
+      if ($("#composerSlotStatus").length && $("#composerFollowupTime").val()) {
+        self.checkSlotConflict($("#composerFollowupTime").val(), $("#composerSlotStatus"));
+      }
+    },
 
-        $el.daterangepicker(
-          {
-            singleDatePicker: true,
-            timePicker: true,
-            timePicker24Hour: false,
-            timePickerIncrement: 15,
-            showDropdowns: true,
-            minDate: typeof moment !== "undefined" ? moment().startOf("minute") : false,
-            minYear: curYear,
-            maxYear: curYear + 5,
-            autoApply: false,
-            autoUpdateInput: false,
-            startDate: startMoment,
-            opens: "left",
-            drops: "down",
-            locale: {
-              format: "YYYY-MM-DD, hh:mm A",
-              applyLabel: "Set Time",
-              cancelLabel: "Cancel"
-            },
-          },
-          function (chosen) {
-            $el.val(chosen.format("YYYY-MM-DD, hh:mm A")).trigger("change");
+    checkSlotConflict: function (datetimeStr, $statusBox) {
+      const self = this;
+      if (!datetimeStr || !$statusBox || !$statusBox.length) return;
+      const agentId = self.leadData ? (self.leadData.agent_id || 0) : 0;
+
+      $.ajax({
+        url: "/api/v3/leads/check-slot/",
+        type: "GET",
+        data: {
+          lead_id: self.leadId,
+          agent_id: agentId,
+          datetime: datetimeStr
+        },
+        dataType: "json",
+        success: function (res) {
+          if (res && res.status === "conflict") {
+            $statusBox.html(`
+              <div class="v3-slot-conflict-alert">
+                <i class="fi fi-rr-exclamation"></i>
+                <div>
+                  <strong>Slot Conflict:</strong> Already scheduled with <span>${res.conflict_customer}</span> (Lead #${res.conflict_lead_id}) at ${res.conflict_time}.
+                </div>
+              </div>
+            `);
+          } else if (res && res.status === "available") {
+            $statusBox.html(`
+              <div class="v3-slot-available-pill">
+                <i class="fi fi-rr-check"></i> Time slot is available (${res.time_formatted})
+              </div>
+            `);
+          } else {
+            $statusBox.empty();
           }
-        );
+        },
+        error: function () {
+          $statusBox.empty();
+        }
+      });
+    },
 
-        $el.on("apply.daterangepicker", function (ev, picker) {
-          $(this).val(picker.startDate.format("YYYY-MM-DD, hh:mm A")).trigger("change");
-        });
+    submitComposerNote: function (postData, $btn) {
+      const self = this;
+      $btn.prop("disabled", true).text("Posting...");
 
-        $el.on("show.daterangepicker", function (ev, picker) {
-          if (picker && picker.container) {
-            picker.container.addClass("v3-datetimepicker-popover");
-            picker.container.find(".drp-calendar.right").css("display", "none");
-            picker.container.find(".ranges").css("display", "none");
+      $.ajax({
+        url: "/api/v3/leads/add-note/",
+        type: "POST",
+        data: postData,
+        dataType: "json",
+        success: function (res) {
+          $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Post Note');
+
+          if (res && res.status === "conflict") {
+            if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+              Swal.fire({
+                title: "⚠️ Time Slot Conflict",
+                html: `<div style="text-align:left; font-size:13.5px; line-height:1.5;">
+                        <p style="margin-bottom:8px;">You already have another follow-up scheduled with <strong>${res.conflict_customer}</strong> (Lead #${res.conflict_lead_id}) at <strong>${res.conflict_time}</strong>.</p>
+                        <p style="color:#64748b; font-size:12.5px;">Would you like to select a different follow-up time or schedule anyway?</p>
+                       </div>`,
+                type: "warning",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#059669",
+                cancelButtonColor: "#64748b",
+                confirmButtonText: "Schedule Anyway",
+                cancelButtonText: "Change Time"
+              }).then(function (result) {
+                if (result.value || result.isConfirmed) {
+                  postData.force_override = 1;
+                  self.submitComposerNote(postData, $btn);
+                } else {
+                  $("#composerFollowupTimeSelect").focus();
+                }
+              });
+            } else {
+              if (confirm(res.message + "\n\nDo you want to schedule anyway?")) {
+                postData.force_override = 1;
+                self.submitComposerNote(postData, $btn);
+              } else {
+                $("#composerFollowupTimeSelect").focus();
+              }
+            }
+            return;
           }
-        });
 
-        // Ensure container is strictly hidden upon instantiation
-        const pickerObj = $el.data("daterangepicker");
-        if (pickerObj && pickerObj.container) {
-          pickerObj.container.hide().css("display", "none");
+          if (res && res.status === "success") {
+            $("#composerNoteInput").val("");
+            self.notify(res.message || "Update logged successfully", "success");
+            
+            if (res.followup_time) {
+              self.scheduleClientReminder(
+                res.followup_time,
+                self.leadData ? self.leadData.name : "Customer",
+                self.leadData ? self.leadData.agent_id : 0,
+                self.leadId
+              );
+            }
+            
+            self.loadLeadDetails();
+          } else {
+            self.notify((res && res.message) || "Failed to post update.", "error");
+          }
+        },
+        error: function () {
+          $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Post Note');
+          self.notify("Network connection error.", "error");
+        }
+      });
+    },
+
+    submitModalFollowUp: function (postData, $btn) {
+      const self = this;
+      $btn.prop("disabled", true).text("Scheduling...");
+
+      $.ajax({
+        url: "/api/v3/leads/add-note/",
+        type: "POST",
+        data: postData,
+        dataType: "json",
+        success: function (res) {
+          $btn.prop("disabled", false).text("Set Reminder");
+
+          if (res && res.status === "conflict") {
+            if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+              Swal.fire({
+                title: "⚠️ Time Slot Conflict",
+                html: `<div style="text-align:left; font-size:13.5px; line-height:1.5;">
+                        <p style="margin-bottom:8px;">You already have another follow-up scheduled with <strong>${res.conflict_customer}</strong> (Lead #${res.conflict_lead_id}) at <strong>${res.conflict_time}</strong>.</p>
+                        <p style="color:#64748b; font-size:12.5px;">Would you like to select a different follow-up time or schedule anyway?</p>
+                       </div>`,
+                type: "warning",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#059669",
+                cancelButtonColor: "#64748b",
+                confirmButtonText: "Schedule Anyway",
+                cancelButtonText: "Change Time"
+              }).then(function (result) {
+                if (result.value || result.isConfirmed) {
+                  postData.force_override = 1;
+                  self.submitModalFollowUp(postData, $btn);
+                } else {
+                  $("#modalFollowUpTimeSelect").focus();
+                }
+              });
+            } else {
+              if (confirm(res.message + "\n\nDo you want to schedule anyway?")) {
+                postData.force_override = 1;
+                self.submitModalFollowUp(postData, $btn);
+              } else {
+                $("#modalFollowUpTimeSelect").focus();
+              }
+            }
+            return;
+          }
+
+          if (res && res.status === "success") {
+            self.notify(res.message || "Follow-up reminder set successfully.", "success");
+            $("#modalSetFollowUp").removeClass("is-active");
+            self.loadLeadDetails();
+          } else {
+            self.notify((res && res.message) || "Failed to set follow-up reminder.", "error");
+          }
+        },
+        error: function () {
+          $btn.prop("disabled", false).text("Set Reminder");
+          self.notify("Network error while setting follow-up reminder.", "error");
         }
       });
     },
