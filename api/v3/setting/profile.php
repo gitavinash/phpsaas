@@ -194,6 +194,7 @@ if ($method === 'POST' || $method === 'PUT') {
     $altMobile   = trim($data['alt_mobile'] ?? ($data['profile_alt_mobile'] ?? ''));
     $altEmail    = trim($data['alt_email'] ?? ($data['profile_alt_email'] ?? ''));
     $existingAvatar = trim($data['profile_image'] ?? ($data['avatar'] ?? ''));
+    $isRemovePhoto  = !empty($data['remove_profile_image']) && ($data['remove_profile_image'] == '1' || $data['remove_profile_image'] === 'true');
 
     if ($displayName === '') {
         $displayName = trim($firstName . ' ' . $lastName);
@@ -211,33 +212,152 @@ if ($method === 'POST' || $method === 'PUT') {
         exit;
     }
 
-    // Handle Profile Photo Upload if present in $_FILES
+    // Handle Profile Photo Upload taking exact reference from lib/modules/imageUploader.php
     $uploadedAvatarUrl = '';
     if (!empty($_FILES['profile_image']['name']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
         $file = $_FILES['profile_image'];
-        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        $validFileExtensions = ['png', 'gif', 'jpg', 'jpeg', 'webp'];
+        $filename = strtolower(str_replace("'", "_", str_replace('-', '_', str_replace(' ', '_', $file['name']))));
+        $filetype = $file['type'] ?? mime_content_type($file['tmp_name']);
+        $extension = explode('.', $filename);
+        $fileExtension = end($extension);
 
-        if (in_array($ext, $allowedExts)) {
-            $rootDir    = defined('ROOT') ? ROOT : (!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3));
-            $siteDomain = defined('SITE_DOMAIN') ? SITE_DOMAIN : 'default';
-            $uploadSubDir = '/upload/' . date('Y/m/');
-            $targetDir = $rootDir . $uploadSubDir;
+        if (in_array($fileExtension, $validFileExtensions)) {
+            $rootDir = defined('ROOT') ? ROOT : (!empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3));
+            $siteDomain = defined('SITE_DOMAIN') && !empty(SITE_DOMAIN) ? SITE_DOMAIN : ($_SERVER['HTTP_HOST'] ?? 'default');
+            $siteDomain = preg_replace('/:\d+$/', '', $siteDomain);
 
-            if (!is_dir($targetDir)) {
-                @mkdir($targetDir, 0755, true);
+            /* Upload directory paths */
+            $uploadPath = $rootDir . '/upload/' . $siteDomain . '/' . date('Y/m/');
+            $originalUploadDir = $uploadPath . 'original/';
+            $thumbnailUploadDir = $uploadPath . 'thumbnail/';
+
+            // Ensure directories exist
+            if (!is_dir($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            if (!is_dir($originalUploadDir)) {
+                @mkdir($originalUploadDir, 0755, true);
+            }
+            if (!is_dir($thumbnailUploadDir)) {
+                @mkdir($thumbnailUploadDir, 0755, true);
             }
 
-            $newFileName = time() . '_user_' . $userId . '_' . uniqid() . '.' . $ext;
-            $destination = $targetDir . $newFileName;
+            $uniquePrefix = time() . '_' . bin2hex(random_bytes(5));
+            $cleanName = strtolower(preg_replace('~[^\p{L}\p{N}\._-]+~u', '', $filename));
+            $uploadFile = $uploadPath . $uniquePrefix . '_' . $cleanName;
+            $originalUploadFile = $originalUploadDir . $uniquePrefix . '_' . $cleanName;
+            $thumbnailUploadFile = $thumbnailUploadDir . $uniquePrefix . '_' . $cleanName;
+            $uploadMediaPath = str_replace($rootDir, '', $uploadFile);
+            $uploadMediaLink = '/attachment' . str_replace('.' . $fileExtension, '', $uploadMediaPath) . '/';
+            $uploadFileName = ucwords(preg_replace('/[_]+/', ' ', str_replace($fileExtension, '', preg_replace('~[^\p{M}\s\w-]+~u', '', $filename))));
 
-            if (move_uploaded_file($file['tmp_name'], $destination)) {
-                $uploadedAvatarUrl = $uploadSubDir . $newFileName;
+            $processed = false;
+
+            // Compress & resize image with GD
+            if (function_exists('getimagesize')) {
+                $imgInfo = @getimagesize($file['tmp_name']);
+                if ($imgInfo) {
+                    $origWidth = (int)$imgInfo[0];
+                    $origHeight = (int)$imgInfo[1];
+
+                    // Process based on mime
+                    $srcImg = null;
+                    if ($fileExtension === 'png' && function_exists('imagecreatefrompng')) {
+                        $srcImg = @imagecreatefrompng($file['tmp_name']);
+                    } elseif ($fileExtension === 'webp' && function_exists('imagecreatefromwebp')) {
+                        $srcImg = @imagecreatefromwebp($file['tmp_name']);
+                    } elseif ($fileExtension === 'gif' && function_exists('imagecreatefromgif')) {
+                        $srcImg = @imagecreatefromgif($file['tmp_name']);
+                    } elseif (function_exists('imagecreatefromjpeg')) {
+                        $srcImg = @imagecreatefromjpeg($file['tmp_name']);
+                    }
+
+                    if ($srcImg) {
+                        // Max dimension 500px for avatar display
+                        $maxDim = 500;
+                        if ($origWidth > $maxDim || $origHeight > $maxDim) {
+                            if ($origWidth > $origHeight) {
+                                $newW = $maxDim;
+                                $newH = (int)round(($origHeight / $origWidth) * $maxDim);
+                            } else {
+                                $newH = $maxDim;
+                                $newW = (int)round(($origWidth / $origHeight) * $maxDim);
+                            }
+                        } else {
+                            $newW = $origWidth;
+                            $newH = $origHeight;
+                        }
+
+                        $dstImg = imagecreatetruecolor($newW, $newH);
+
+                        if ($fileExtension === 'png' || $fileExtension === 'webp') {
+                            imagealphablending($dstImg, false);
+                            imagesavealpha($dstImg, true);
+                            $transparent = imagecolorallocatealpha($dstImg, 0, 0, 0, 127);
+                            imagefilledrectangle($dstImg, 0, 0, $newW, $newH, $transparent);
+                        }
+
+                        imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $newW, $newH, $origWidth, $origHeight);
+
+                        // Save main upload file and thumbnail
+                        if ($fileExtension === 'png') {
+                            imagepng($dstImg, $uploadFile, 9);
+                            imagepng($dstImg, $thumbnailUploadFile, 9);
+                        } elseif ($fileExtension === 'webp') {
+                            imagewebp($dstImg, $uploadFile, 85);
+                            imagewebp($dstImg, $thumbnailUploadFile, 85);
+                        } else {
+                            imagejpeg($dstImg, $uploadFile, 90);
+                            imagejpeg($dstImg, $thumbnailUploadFile, 90);
+                        }
+
+                        imagedestroy($dstImg);
+                        imagedestroy($srcImg);
+                        $processed = true;
+                    }
+                }
+            }
+
+            if (!$processed) {
+                // Fallback copy if GD did not process
+                @copy($file['tmp_name'], $uploadFile);
+                @copy($file['tmp_name'], $thumbnailUploadFile);
+            }
+
+            // Move original to originalUploadFile
+            if (@move_uploaded_file($file['tmp_name'], $originalUploadFile) || file_exists($uploadFile)) {
+                $uploadedAvatarUrl = $uploadMediaPath;
+
+                // Save to tbl_media & tbl_link
+                $escMediaUrl = mysqli_real_escape_string($connection, $uploadMediaPath);
+                $escMediaTitle = mysqli_real_escape_string($connection, $uploadFileName);
+                $escMediaType = mysqli_real_escape_string($connection, $filetype);
+                $escMediaExt = mysqli_real_escape_string($connection, $fileExtension);
+                $escMediaLink = mysqli_real_escape_string($connection, $uploadMediaLink);
+
+                $insertMedia = mysqli_query($connection, "
+                    INSERT INTO {$tblPrefix}media 
+                        (media_url, media_title, media_type, media_ext, media_owner_id, media_status, media_site_id) 
+                    VALUES 
+                        ('{$escMediaUrl}', '{$escMediaTitle}', '{$escMediaType}', '{$escMediaExt}', {$userId}, 1, {$siteId})
+                ");
+                if ($insertMedia) {
+                    $mediaId = mysqli_insert_id($connection);
+                    mysqli_query($connection, "
+                        INSERT INTO {$tblPrefix}link 
+                            (link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published, link_modified) 
+                        VALUES 
+                            ('{$escMediaLink}', {$mediaId}, 200, 'media', {$userId}, {$siteId}, NOW(), NOW(), NOW())
+                    ");
+                }
             }
         }
     }
 
-    if (!empty($uploadedAvatarUrl)) {
+    if ($isRemovePhoto) {
+        $finalAvatar = '';
+    } elseif (!empty($uploadedAvatarUrl)) {
         $finalAvatar = $uploadedAvatarUrl;
     } else {
         $finalAvatar = $existingAvatar;
@@ -247,12 +367,9 @@ if ($method === 'POST' || $method === 'PUT') {
         $escMobile = mysqli_real_escape_string($connection, $mobile);
 
         // 1. Update user primary mobile
-        $userSql = "UPDATE {$tblPrefix}user 
-                    SET user_mobile = '{$escMobile}' 
-                    WHERE user_id = {$userId}";
-        mysqli_query($connection, $userSql);
+        mysqli_query($connection, "UPDATE {$tblPrefix}user SET user_mobile = '{$escMobile}' WHERE user_id = {$userId}");
 
-        // 2. Insert or update profile
+        // 2. Update or insert into tbl_profile
         $escFirst     = mysqli_real_escape_string($connection, $firstName);
         $escLast      = mysqli_real_escape_string($connection, $lastName);
         $escDisplay   = mysqli_real_escape_string($connection, $displayName);
@@ -260,21 +377,37 @@ if ($method === 'POST' || $method === 'PUT') {
         $escAltEmail  = mysqli_real_escape_string($connection, $altEmail);
         $escAvatar    = mysqli_real_escape_string($connection, $finalAvatar);
 
-        $profSql = "
-            INSERT INTO {$tblPrefix}profile 
-                (profile_user_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_alt_mobile, profile_alt_email, profile_image)
-            VALUES 
-                ({$userId}, '{$escFirst}', '{$escLast}', '{$escDisplay}', '{$escMobile}', '{$escAltMobile}', '{$escAltEmail}', '{$escAvatar}')
-            ON DUPLICATE KEY UPDATE 
-                profile_first_name   = '{$escFirst}',
-                profile_last_name    = '{$escLast}',
-                profile_display_name = '{$escDisplay}',
-                profile_mobile       = '{$escMobile}',
-                profile_alt_mobile   = '{$escAltMobile}',
-                profile_alt_email    = '{$escAltEmail}',
-                profile_image        = IF('{$escAvatar}' != '', '{$escAvatar}', profile_image)
-        ";
-        mysqli_query($connection, $profSql);
+        $checkExisting = mysqli_query($connection, "SELECT profile_id FROM {$tblPrefix}profile WHERE profile_user_id = {$userId} LIMIT 1");
+
+        if ($checkExisting && mysqli_num_rows($checkExisting) > 0) {
+            $profSql = "
+                UPDATE {$tblPrefix}profile 
+                SET 
+                    profile_first_name   = '{$escFirst}',
+                    profile_last_name    = '{$escLast}',
+                    profile_display_name = '{$escDisplay}',
+                    profile_mobile       = '{$escMobile}',
+                    profile_alt_mobile   = '{$escAltMobile}',
+                    profile_alt_email    = '{$escAltEmail}',
+                    profile_image        = '{$escAvatar}'
+                WHERE profile_user_id = {$userId}
+            ";
+            mysqli_query($connection, $profSql);
+        } else {
+            // Get user email
+            $userMailQuery = mysqli_query($connection, "SELECT user_email FROM {$tblPrefix}user WHERE user_id = {$userId} LIMIT 1");
+            $userMailRow = $userMailQuery ? mysqli_fetch_assoc($userMailQuery) : null;
+            $userMail = $userMailRow['user_email'] ?? ($data['email'] ?? '');
+            $escUserMail = mysqli_real_escape_string($connection, $userMail);
+
+            $profSql = "
+                INSERT INTO {$tblPrefix}profile 
+                    (profile_user_id, profile_first_name, profile_last_name, profile_display_name, profile_mobile, profile_alt_mobile, profile_email, profile_alt_email, profile_image)
+                VALUES 
+                    ({$userId}, '{$escFirst}', '{$escLast}', '{$escDisplay}', '{$escMobile}', '{$escAltMobile}', '{$escUserMail}', '{$escAltEmail}', '{$escAvatar}')
+            ";
+            mysqli_query($connection, $profSql);
+        }
 
         // 3. Update bio in site_access_meta
         $saRes = mysqli_query($connection, "SELECT site_access_meta FROM {$tblPrefix}site_access WHERE site_access_user_id = {$userId} AND site_access_site_id = {$siteId} LIMIT 1");
@@ -294,6 +427,28 @@ if ($method === 'POST' || $method === 'PUT') {
             SET site_access_meta = '{$escMeta}' 
             WHERE site_access_user_id = {$userId} AND site_access_site_id = {$siteId}
         ");
+
+        // 4. Update session & cookies for seamless persistence across reloads/relogins
+        $cookieExpiry = time() + (30 * 24 * 60 * 60);
+        $mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : ($_SERVER['HTTP_HOST'] ?? '');
+        $mainDomain = preg_replace('/:\d+$/', '', $mainDomain);
+        $cookieDomain = '.' . ltrim($mainDomain, '.');
+        if (filter_var($mainDomain, FILTER_VALIDATE_IP) || strpos($mainDomain, 'localhost') !== false) {
+            $cookieDomain = '';
+        }
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+
+        @setcookie('user_image', base64_encode($finalAvatar), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
+        @setcookie('user_name', base64_encode($displayName), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
+        @setcookie('user_mobile', base64_encode($mobile), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
+
+        $_COOKIE['user_image'] = base64_encode($finalAvatar);
+        $_COOKIE['user_name'] = base64_encode($displayName);
+        $_COOKIE['user_mobile'] = base64_encode($mobile);
+
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $_SESSION['display_name'] = $displayName;
+        }
     }
 
     echo json_encode([

@@ -24,7 +24,7 @@ if (!isset($_COOKIE['user_data'])) {
 
 	$activeSiteID = ((SITE_ID == 234 || SITE_ID == 49) ? " IN (49, 234)" : "=" . SITE_ID);
 
-	$checkUserAccessQuery = "SELECT user_id, user_email, user_mobile, user_salt_key, user_status, site_domain, site_url, site_name, site_icon, site_status, site_app_id, site_access_site_id, site_access_type, site_dashboard_version, profile_display_name as logginUserName, company_id, vendor_id FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "user ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_access_site_id=site_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id LEFT JOIN " . TABLE_PREFIX . "company ON company_user_id=user_id LEFT JOIN " . TABLE_PREFIX . "vendor ON vendor_user_id=user_id WHERE user_salt_key='{$user_salt_key}' AND site_access_site_id{$activeSiteID}";
+	$checkUserAccessQuery = "SELECT user_id, user_email, user_mobile, user_salt_key, user_status, site_domain, site_url, site_name, site_icon, site_status, site_app_id, site_access_site_id, site_access_type, site_dashboard_version, profile_display_name as logginUserName, company_id, vendor_id, profile_image FROM " . TABLE_PREFIX . "site_access INNER JOIN " . TABLE_PREFIX . "user ON site_access_user_id=user_id INNER JOIN " . TABLE_PREFIX . "site ON site_access_site_id=site_id INNER JOIN " . TABLE_PREFIX . "profile ON profile_user_id=user_id LEFT JOIN " . TABLE_PREFIX . "company ON company_user_id=user_id LEFT JOIN " . TABLE_PREFIX . "vendor ON vendor_user_id=user_id WHERE user_salt_key='{$user_salt_key}' AND site_access_site_id{$activeSiteID}";
 
 	if ($checkUserIsReal = mysqli_query($connection, $checkUserAccessQuery)) {
 
@@ -63,6 +63,22 @@ if (!isset($_COOKIE['user_data'])) {
 				}
 				if (!defined('VENDOR_ID')) {
 					define('VENDOR_ID', (($vendor_id != '') ? $vendor_id : '0'));
+				}
+
+				/** Sync profile image and display name cookies if needed */
+				if (isset($profile_image)) {
+					$cookieImg = isset($_COOKIE['user_image']) ? base64_decode($_COOKIE['user_image']) : null;
+					if ($cookieImg !== $profile_image) {
+						@setcookie('user_image', base64_encode($profile_image), time() + 30 * 24 * 60 * 60, '/');
+						$_COOKIE['user_image'] = base64_encode($profile_image);
+					}
+				}
+				if (isset($logginUserName)) {
+					$cookieName = isset($_COOKIE['user_name']) ? base64_decode($_COOKIE['user_name']) : null;
+					if ($cookieName !== $logginUserName) {
+						@setcookie('user_name', base64_encode($logginUserName), time() + 30 * 24 * 60 * 60, '/');
+						$_COOKIE['user_name'] = base64_encode($logginUserName);
+					}
 				}
 
 				/** Define new cookie for logged in user */

@@ -358,6 +358,7 @@
         }
 
         $("#profileImageFileName").text(file.name);
+        self.isPhotoRemoved = false;
 
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -371,7 +372,9 @@
       $(document).off("click", "#btnRemoveProfileImage").on("click", "#btnRemoveProfileImage", function () {
         $("#profileImageInput").val("");
         $("#profileImageFileName").text("");
-        self.displayAvatar(self.currentProfileImage || "");
+        self.currentProfileImage = "";
+        self.isPhotoRemoved = true;
+        self.displayAvatar("");
       });
 
       // Submit Profile Form
@@ -526,6 +529,8 @@
       const fileInput = document.getElementById("profileImageInput");
       if (fileInput && fileInput.files && fileInput.files[0]) {
         formData.append("profile_image", fileInput.files[0]);
+      } else if (self.isPhotoRemoved) {
+        formData.append("remove_profile_image", "1");
       }
 
       const $btn = $("#btnSaveProfile");
@@ -545,12 +550,16 @@
           $btn.prop("disabled", false).html(origHtml);
 
           if (res && res.status === "success") {
-            if (res.profile_image) {
-              self.currentProfileImage = res.profile_image;
-              self.displayAvatar(res.profile_image);
-              $("#profileImageFileName").text("");
-              // Update top header profile photo if present
-              $(".profile-img img").attr("src", res.profile_image);
+            self.currentProfileImage = res.profile_image || "";
+            self.displayAvatar(self.currentProfileImage);
+            self.isPhotoRemoved = false;
+            $("#profileImageFileName").text("");
+
+            // Update top header profile photo
+            if (self.currentProfileImage) {
+              $(".profile-img img").attr("src", self.currentProfileImage);
+            } else {
+              $(".profile-img img").attr("src", "/upload/library/default-profile.png");
             }
 
             const swalFn = window.swal || window.Swal;
