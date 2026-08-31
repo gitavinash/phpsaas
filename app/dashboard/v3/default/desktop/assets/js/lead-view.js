@@ -2185,6 +2185,17 @@
         $("#editLeadSelectedPkgCard").slideUp(150);
       });
 
+      // Duration input change in modal: dynamically update snapshot badge (Nights / Days)
+      $(document).on("input change keyup", "#editLeadDuration", function () {
+        const nights = parseInt($(this).val(), 10);
+        if (!isNaN(nights) && nights > 0) {
+          const days = nights + 1;
+          $("#editCardPkgDuration").html(`<i class="fi fi-rr-moon"></i> <strong>${nights}N / ${days}D</strong>`).show();
+        } else {
+          $("#editCardPkgDuration").hide();
+        }
+      });
+
       $(document).on("change", "#editLeadPackage", function () {
         if (!$(this).val()) {
           $("#editLeadSelectedPkgCard").slideUp(150);

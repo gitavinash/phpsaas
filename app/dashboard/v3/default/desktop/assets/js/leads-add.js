@@ -195,7 +195,12 @@
           // Auto-fill duration input
           $("#leadNumberOfDays").val(duration);
         } else {
-          $("#cardPkgDuration").hide();
+          const currentNights = parseInt($("#leadNumberOfDays").val(), 10);
+          if (!isNaN(currentNights) && currentNights > 0) {
+            $("#cardPkgDuration").html(`<i class="fi fi-rr-moon"></i> <strong>${currentNights}N / ${currentNights + 1}D</strong>`).show();
+          } else {
+            $("#cardPkgDuration").hide();
+          }
         }
 
         if (city) {
@@ -211,6 +216,17 @@
         }
 
         $card.slideDown(200);
+      });
+
+      // Duration input change: dynamically update selected package preview badge (Nights / Days)
+      $(document).on("input change keyup", "#leadNumberOfDays", function () {
+        const nights = parseInt($(this).val(), 10);
+        if (!isNaN(nights) && nights > 0) {
+          const days = nights + 1;
+          $("#cardPkgDuration").html(`<i class="fi fi-rr-moon"></i> <strong>${nights}N / ${days}D</strong>`).show();
+        } else {
+          $("#cardPkgDuration").hide();
+        }
       });
 
       // Clear package selection from preview card
