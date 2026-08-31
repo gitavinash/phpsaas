@@ -4857,7 +4857,7 @@ $(document).ready(function (e) {
       return;
     }
 
-    const safeIcon = "https://cdn-icons-png.flaticon.com/512/3602/3602145.png";
+    const safeIcon = "/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png";
     const options = {
       body: body,
       icon: safeIcon,

@@ -194,7 +194,7 @@
           try {
             const notif = new Notification(`🔔 Follow-Up in 5 Minutes: ${customerName}`, {
               body: `Scheduled follow-up is due at ${followupDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}.`,
-              icon: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png",
+              icon: "/app/aleya/visitor/aleya/desktop/assets/images/aleya_favicon.png",
               tag: "followup-" + leadIdentifier,
             });
             notif.onclick = function () {
