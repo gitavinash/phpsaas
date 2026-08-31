@@ -19,45 +19,90 @@ $userFilter = ($accessType !== 'administrator' && $userId > 0)
     ? " AND (enquiry_agent = '{$userId}')"
     : "";
 
-$daterangeFilter = "";
-$t1 = date('Y-m-d 00:00:00', strtotime('-1 month'));
+$t1 = date('Y-m-d 00:00:00', strtotime('-30 days'));
 $t2 = date('Y-m-d 23:59:59');
 
 if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'] !== 'null') {
     $dates = explode(' - ', trim($_GET['daterange']));
     if (count($dates) == 2) {
-        $t1 = date('Y-m-d 00:00:00', strtotime($dates[0]));
-        $t2 = date('Y-m-d 23:59:59', strtotime($dates[1]));
+        $parsedT1 = strtotime($dates[0]);
+        $parsedT2 = strtotime($dates[1]);
+        if ($parsedT1 && $parsedT2) {
+            if ($parsedT1 > $parsedT2) {
+                $tmp = $parsedT1;
+                $parsedT1 = $parsedT2;
+                $parsedT2 = $tmp;
+            }
+            $t1 = date('Y-m-d 00:00:00', $parsedT1);
+            $t2 = date('Y-m-d 23:59:59', $parsedT2);
+        }
     }
 }
-$daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
 
-$flowLabels = [];
-$flowData   = [];
-$diffDays   = (int) ceil(abs(strtotime($t2) - strtotime($t1)) / 86400) + 1;
+$startTs = strtotime($t1);
+$endTs   = strtotime($t2);
+$diffDays = (int) ceil(abs($endTs - $startTs) / 86400);
+
+$timeSlots = [];
 
 if ($diffDays <= 2) {
-    $flowFmt = "DATE_FORMAT(enquiry_time,'%H:00')";
-    $orderBy = "enquiry_time ASC";
+    // Hourly granularity (e.g. today / 2-day period)
+    $sqlFmt = "DATE_FORMAT(enquiry_time, '%Y-%m-%d %H:00')";
+    $curr = strtotime(date('Y-m-d H:00:00', $startTs));
+    $endHour = strtotime(date('Y-m-d H:00:00', $endTs));
+    while ($curr <= $endHour) {
+        $slotKey = date('Y-m-d H:00', $curr);
+        $label   = ($diffDays > 1) ? date('d M H:00', $curr) : date('H:00', $curr);
+        $timeSlots[$slotKey] = ['label' => $label, 'count' => 0];
+        $curr += 3600;
+    }
 } elseif ($diffDays <= 90) {
-    $flowFmt = "DATE_FORMAT(enquiry_time,'%d %b')";
-    $orderBy = "MIN(enquiry_time) ASC";
+    // Daily granularity (e.g. 7 days, 30 days, 3 months)
+    $sqlFmt = "DATE_FORMAT(enquiry_time, '%Y-%m-%d')";
+    $curr = strtotime(date('Y-m-d 00:00:00', $startTs));
+    $endDay = strtotime(date('Y-m-d 00:00:00', $endTs));
+    while ($curr <= $endDay) {
+        $slotKey = date('Y-m-d', $curr);
+        $label   = date('d M', $curr);
+        $timeSlots[$slotKey] = ['label' => $label, 'count' => 0];
+        $curr = strtotime('+1 day', $curr);
+    }
 } else {
-    $flowFmt = "DATE_FORMAT(enquiry_time,'%b %Y')";
-    $orderBy = "MIN(enquiry_time) ASC";
+    // Monthly granularity (e.g. > 90 days / multi-month view)
+    $sqlFmt = "DATE_FORMAT(enquiry_time, '%Y-%m')";
+    $curr = strtotime(date('Y-m-01 00:00:00', $startTs));
+    $endMonth = strtotime(date('Y-m-01 00:00:00', $endTs));
+    while ($curr <= $endMonth) {
+        $slotKey = date('Y-m', $curr);
+        $label   = date('M Y', $curr);
+        $timeSlots[$slotKey] = ['label' => $label, 'count' => 0];
+        $curr = strtotime('+1 month', $curr);
+    }
 }
 
-$sqlFlow = "SELECT {$flowFmt} AS label, COUNT(*) AS count
+$daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
+
+$sqlFlow = "SELECT {$sqlFmt} AS slot_key, COUNT(*) AS count
             FROM {$tblPrefix}enquiry
             WHERE {$siteFilter}{$userFilter}{$daterangeFilter}
-            GROUP BY label
-            ORDER BY {$orderBy}";
+            GROUP BY slot_key
+            ORDER BY MIN(enquiry_time) ASC";
 
 if (isset($connection) && $connection && ($resFlow = mysqli_query($connection, $sqlFlow))) {
     while ($row = mysqli_fetch_assoc($resFlow)) {
-        $flowLabels[] = $row['label'];
-        $flowData[]   = intval($row['count']);
+        $key = $row['slot_key'];
+        if (isset($timeSlots[$key])) {
+            $timeSlots[$key]['count'] = (int) $row['count'];
+        }
     }
+}
+
+$flowLabels = [];
+$flowData   = [];
+
+foreach ($timeSlots as $slot) {
+    $flowLabels[] = $slot['label'];
+    $flowData[]   = $slot['count'];
 }
 
 echo json_encode([
