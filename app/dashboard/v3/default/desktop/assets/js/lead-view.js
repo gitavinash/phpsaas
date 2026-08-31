@@ -1628,11 +1628,46 @@
       });
     },
 
+    showItinDaysLoader: function () {
+      const $stack = $("#itinDaysStack");
+      if (!$stack.length) return;
+      $stack.html(`
+        <div class="v3-itin-skeleton-card">
+          <div class="v3-itin-skeleton-header">
+            <div class="v3-skeleton-shimmer v3-sk-pill-sm"></div>
+            <div class="v3-skeleton-shimmer v3-sk-pill-md"></div>
+            <div class="v3-skeleton-shimmer v3-sk-input"></div>
+          </div>
+          <div class="v3-itin-skeleton-body">
+            <div class="v3-skeleton-shimmer v3-sk-textarea"></div>
+            <div class="v3-itin-skeleton-grid">
+              <div class="v3-skeleton-shimmer v3-sk-box"></div>
+              <div class="v3-skeleton-shimmer v3-sk-box"></div>
+            </div>
+          </div>
+          <div class="v3-itin-skeleton-loading-text">
+            <div class="v3-table-spinner"><div class="v3-spinner-ring"></div></div>
+            <span>Loading day-wise itinerary, accommodations & transfers...</span>
+          </div>
+        </div>
+        <div class="v3-itin-skeleton-card v3-sk-dimmed">
+          <div class="v3-itin-skeleton-header">
+            <div class="v3-skeleton-shimmer v3-sk-pill-sm"></div>
+            <div class="v3-skeleton-shimmer v3-sk-pill-md"></div>
+            <div class="v3-skeleton-shimmer v3-sk-input"></div>
+          </div>
+          <div class="v3-itin-skeleton-body">
+            <div class="v3-skeleton-shimmer v3-sk-textarea-sm"></div>
+          </div>
+        </div>
+      `);
+    },
+
     // Render structured day cards inside the full screen itinerary customizer
     renderItineraryDays: function (days) {
       const self = this;
       const $stack = $("#itinDaysStack");
-      $stack.empty();
+      self.showItinDaysLoader();
 
       if (!days || days.length === 0) {
         days = [
@@ -1654,6 +1689,7 @@
       }
 
       self.loadItineraryMeta(function () {
+        $stack.empty();
         days.forEach((d, idx) => {
           self.appendDayCard(d, idx + 1);
         });
@@ -1842,6 +1878,73 @@
         $(this).find(".v3-itin-day-badge").text(`Day ${num}`);
         $(this).find(".btn-delete-itin-day").attr("title", `Delete Day ${num}`);
       });
+    },
+
+    resolvePrimaryCity: function (structuredItin) {
+      const self = this;
+      if (self.selectedPackage && (self.selectedPackage.tour_package_city || self.selectedPackage.city)) {
+        const pkgCity = (self.selectedPackage.tour_package_city || self.selectedPackage.city).trim();
+        if (pkgCity) return pkgCity;
+      }
+      if (Array.isArray(structuredItin) && structuredItin.length > 0) {
+        for (const day of structuredItin) {
+          const c = (day.city || day.stay_city || "").trim();
+          const cLower = c.toLowerCase();
+          if (
+            c &&
+            !cLower.includes("overnight") &&
+            !cLower.includes("transit") &&
+            !cLower.includes("tour end") &&
+            !cLower.includes("trip end") &&
+            !cLower.includes("no stay") &&
+            !cLower.includes("no hotel")
+          ) {
+            return c;
+          }
+        }
+      }
+      if (self.leadData && self.leadData.travel_details && self.leadData.travel_details.destination) {
+        const leadDest = self.leadData.travel_details.destination.trim();
+        if (leadDest) return leadDest;
+      }
+      const inputVal = ($("#itineraryDestinationInput").val() || "").trim();
+      if (inputVal) return inputVal;
+
+      return "Tour Destination";
+    },
+
+    resolvePrimaryHotel: function (structuredItin) {
+      const self = this;
+      if (Array.isArray(structuredItin) && structuredItin.length > 0) {
+        const hotels = [];
+        for (const day of structuredItin) {
+          const h = (day.hotel || day.stay || "").trim();
+          if (h && h !== "no_hotel" && !h.toLowerCase().includes("no hotel") && !hotels.includes(h)) {
+            hotels.push(h);
+          }
+        }
+        if (hotels.length > 0) {
+          return hotels.slice(0, 3).join(" / ");
+        }
+      }
+      if (self.selectedPackage && self.selectedPackage.tour_package_hotel) {
+        return self.selectedPackage.tour_package_hotel;
+      }
+      return "";
+    },
+
+    resolvePrimaryVehicle: function (structuredItin) {
+      const self = this;
+      if (Array.isArray(structuredItin) && structuredItin.length > 0) {
+        for (const day of structuredItin) {
+          const v = (day.vehicle || "").trim();
+          if (v && v !== "custom") return v;
+        }
+      }
+      if (self.selectedPackage && self.selectedPackage.tour_package_outstation_vehicle) {
+        return self.selectedPackage.tour_package_outstation_vehicle;
+      }
+      return "Private Sedan (Dzire / Etios)";
     },
 
     bindEvents: function () {
@@ -2897,19 +3000,36 @@
         const dropLocation = $("#itineraryCustomDrop").val() || "";
         const travelTheme = $("#itineraryCustomTheme").val();
 
+        const rawRefId =
+          self.leadData && (self.leadData.id || self.leadData.lead_id)
+            ? self.leadData.id || self.leadData.lead_id
+            : self.leadId || (self.getLeadId ? self.getLeadId() : "");
+
+        const primaryCity = self.resolvePrimaryCity(structuredItin);
+        const primaryHotel = self.resolvePrimaryHotel(structuredItin);
+        const primaryVehicle = self.resolvePrimaryVehicle(structuredItin);
+        const durationDays = structuredItin.length;
+        const durationNights = durationDays > 1 ? durationDays - 1 : 1;
+
         const postData = {
           id: pkgId,
-          refId: self.leadData ? self.leadData.id : self.leadId,
+          refId: rawRefId,
           refType: "enquiry",
           mrp: adultPrice || 0,
           isDownload: !!isDownload,
           content: {
             title: title,
+            city: primaryCity,
+            destination: primaryCity,
+            tour_package_city: primaryCity,
             travel_date: travelDate,
             pickup_location: pickupLocation,
             drop_location: dropLocation,
             travel_theme: travelTheme,
             theme: travelTheme,
+            hotel: primaryHotel,
+            vehicle: primaryVehicle,
+            outstation_vehicle: primaryVehicle,
             adults_count: adults,
             children_count: children,
             infants_count: infants,
@@ -2918,6 +3038,9 @@
             child_per_person: childPrice || 0,
             infant_per_person: infantPrice || 0,
             total_price: totalPrice || 0,
+            duration: durationNights > 0 ? `${durationNights} Nights / ${durationDays} Days` : `${durationDays} Days`,
+            duration_days: durationDays,
+            number_of_days: durationNights,
             overview: $("#itineraryCustomOverview").val().trim(),
             itinerary: structuredItin,
             inclusions: $("#itineraryCustomInclusions").val().trim(),
@@ -2940,14 +3063,24 @@
                 onSuccess(res);
               }
             } else {
+              if (typeof onError === "function") {
+                onError(res);
+              }
               self.notify(res.msg || "Failed to process itinerary.", "error");
             }
           },
-          error: function () {
+          error: function (xhr) {
             if ($btn) {
               $btn.prop("disabled", false).html(originalBtnHtml);
             }
-            self.notify("Network error while processing itinerary.", "error");
+            if (typeof onError === "function") {
+              onError(xhr);
+            }
+            let errorMsg = "Network error while processing itinerary.";
+            if (xhr && xhr.responseJSON && (xhr.responseJSON.msg || xhr.responseJSON.message)) {
+              errorMsg = xhr.responseJSON.msg || xhr.responseJSON.message;
+            }
+            self.notify(errorMsg, "error");
           },
         });
       };
@@ -2989,9 +3122,6 @@
           const overview = $("#itineraryCustomOverview").val().trim();
           const inclusions = $("#itineraryCustomInclusions").val().trim();
           const exclusions = $("#itineraryCustomExclusions").val().trim();
-          const dest =
-            $("#itineraryDestinationInput").val() ||
-            (self.leadData ? self.leadData.subject : "Custom Destination");
           const clientName = self.leadData
             ? self.leadData.name
             : "Valued Customer";
@@ -3026,11 +3156,11 @@
             const hotelVal = $hotelSel.val();
             if (hotelVal === "custom") {
               hotelName = $(this).find(".itin-day-hotel-custom").val().trim();
-            } else if (hotelVal) {
+            } else if (hotelVal && hotelVal !== "no_hotel") {
               hotelName = $hotelSel
                 .find("option:selected")
                 .text()
-                .replace(/\s*\(.*?\)\s*$/, "")
+                .replace(/\s+—\s+.*$/, "")
                 .trim();
             } else {
               hotelName = $(this).find(".itin-day-hotel-custom").val().trim() || "";
@@ -3085,15 +3215,29 @@
             self.selectedPackageTemplate ||
             "mit";
 
+          const primaryCity = self.resolvePrimaryCity(structuredItin);
+          const primaryHotel = self.resolvePrimaryHotel(structuredItin);
+          const primaryVehicle = self.resolvePrimaryVehicle(structuredItin);
+          const pkgState = self.selectedPackage ? (self.selectedPackage.tour_package_state || self.selectedPackage.state || "") : "";
+          const pkgCountry = self.selectedPackage ? (self.selectedPackage.tour_package_country || self.selectedPackage.country || "") : "";
+          const durationDays = structuredItin.length;
+          const durationNights = durationDays > 1 ? durationDays - 1 : 1;
+
           const pickupLocation = $("#itineraryCustomPickup").val() || "";
           const dropLocation = $("#itineraryCustomDrop").val() || "";
           const travelTheme = $("#itineraryCustomTheme").val() || "standard";
 
           const payload = {
             title: title,
-            city: dest,
+            package_title: title,
+            city: primaryCity,
+            destination: primaryCity,
+            tour_package_city: primaryCity,
+            state: pkgState,
+            country: pkgCountry,
             theme: travelTheme,
             travelTheme: travelTheme,
+            travel_theme: travelTheme,
             pickupLocation: pickupLocation,
             dropLocation: dropLocation,
             pickup_location: pickupLocation,
@@ -3101,23 +3245,42 @@
             adults: adults,
             children: children,
             infants: infants,
+            adults_count: adults,
+            children_count: children,
+            infants_count: infants,
             template: templateToUse,
-            hotel: self.selectedPackage
-              ? self.selectedPackage.tour_package_hotel
-              : "",
+            hotel: primaryHotel,
+            tour_package_hotel: primaryHotel,
+            outstationVehicle: primaryVehicle,
+            outstation_vehicle: primaryVehicle,
+            vehicle: primaryVehicle,
             totalPrice: totalPrice,
+            total_price: totalPrice,
+            price: totalPrice,
             adultPrice: adultPrice,
+            adult_price: adultPrice,
+            adult_per_person: adultPrice,
             childPrice: childPrice,
+            child_price: childPrice,
+            child_per_person: childPrice,
             infantPrice: infantPrice,
+            infant_price: infantPrice,
+            infant_per_person: infantPrice,
             clientName: clientName,
             travelDate: travelDate,
+            travel_date: travelDate,
+            duration: durationNights > 0 ? `${durationNights} Nights / ${durationDays} Days` : `${durationDays} Days`,
+            duration_days: durationDays,
+            number_of_days: durationNights,
             overview: overview,
             inclusions: inclusions,
             exclusions: exclusions,
             days: structuredItin,
+            itinerary: structuredItin,
             coverImage: self.selectedPackage
               ? self.selectedPackage.tour_package_image ||
-                self.selectedPackage.gallery_image
+                self.selectedPackage.gallery_image ||
+                ""
               : "",
             format: "html",
             hideActions: true,
@@ -3155,12 +3318,32 @@
 
       // Actions inside Live Proposal Preview Modal
       $(document).on("click", "#btnLivePreviewDownloadPdf", function () {
-        self.publishItinerary(true, $(this), function (res) {
-          const encId = res.encodedId || btoa(res.itineraryId);
-          const downloadUrl = `/download-itinerary/${encId}/`;
-          window.open(downloadUrl, "_blank");
-          self.notify("Itinerary PDF opened in new tab!", "success");
-        });
+        const newTab = window.open("about:blank", "_blank");
+        if (newTab) {
+          try {
+            newTab.document.write("<p style='font-family:sans-serif;padding:24px;color:#475569;font-size:14px;'>Preparing your Tour Itinerary PDF document...</p>");
+            newTab.document.close();
+          } catch (e) {}
+        }
+        self.publishItinerary(
+          true,
+          $(this),
+          function (res) {
+            const encId = res.encodedId || btoa(String(res.itineraryId));
+            const downloadUrl = `/download-itinerary/${encId}/`;
+            if (newTab && !newTab.closed) {
+              newTab.location.href = downloadUrl;
+            } else {
+              window.open(downloadUrl, "_blank");
+            }
+            self.notify("Itinerary PDF opened in new tab!", "success");
+          },
+          function () {
+            if (newTab && !newTab.closed) {
+              newTab.close();
+            }
+          },
+        );
       });
 
       $(document).on("click", "#btnLivePreviewSendItinerary", function () {
@@ -3963,6 +4146,8 @@
       });
 
       self.selectedPackageTemplate = pkg.tour_package_template || "mit";
+
+      self.showItinDaysLoader();
 
       if (pkg.tour_package_id && parseInt(pkg.tour_package_id) > 0) {
         $.ajax({

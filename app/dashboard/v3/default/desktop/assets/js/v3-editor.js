@@ -31,6 +31,8 @@
     this.id = this.$textarea.attr("id") || "v3_editor_" + Math.random().toString(36).substring(2, 9);
     this.isSourceMode = false;
     this.isFullscreen = false;
+    this.savedRange = null;   // stores selection before toolbar button steals focus
+    this.isExecuting = false;
     this.init();
   }
 
@@ -141,26 +143,28 @@
       // Group: Alignment
       tb.append(`
         <div class="v3-tb-group">
-          <button type="button" class="v3-tb-btn" data-command="justifyLeft" title="Align Left"><i class="fi fi-rr-align-left"></i></button>
-          <button type="button" class="v3-tb-btn" data-command="justifyCenter" title="Align Center"><i class="fi fi-rr-align-center"></i></button>
-          <button type="button" class="v3-tb-btn" data-command="justifyRight" title="Align Right"><i class="fi fi-rr-align-right"></i></button>
-          <button type="button" class="v3-tb-btn" data-command="justifyFull" title="Justify"><i class="fi fi-rr-align-justify"></i></button>
+          <button type="button" class="v3-tb-btn" data-command="justifyLeft" title="Align Left"><i class="ri-align-left"></i></button>
+          <button type="button" class="v3-tb-btn" data-command="justifyCenter" title="Align Center"><i class="ri-align-center"></i></button>
+          <button type="button" class="v3-tb-btn" data-command="justifyRight" title="Align Right"><i class="ri-align-right"></i></button>
+          <button type="button" class="v3-tb-btn" data-command="justifyFull" title="Justify"><i class="ri-align-justify"></i></button>
         </div>
       `);
 
       // Group: Lists & Indents
       tb.append(`
         <div class="v3-tb-group">
-          <button type="button" class="v3-tb-btn" data-command="insertUnorderedList" title="Bullet List"><i class="fi fi-rr-list"></i></button>
-          <button type="button" class="v3-tb-btn" data-command="insertOrderedList" title="Numbered List"><i class="fi fi-rr-list-number"></i></button>
+          <button type="button" class="v3-tb-btn" data-command="insertUnorderedList" title="Bullet List"><i class="ri-list-unordered"></i></button>
+          <button type="button" class="v3-tb-btn" data-command="insertOrderedList" title="Numbered List"><i class="ri-list-ordered"></i></button>
+          <button type="button" class="v3-tb-btn" data-command="indent" title="Indent (Tab)"><i class="ri-indent-increase"></i></button>
+          <button type="button" class="v3-tb-btn" data-command="outdent" title="Outdent (Shift+Tab)"><i class="ri-indent-decrease"></i></button>
         </div>
       `);
 
       // Group: Inserts (Link, Table, Line)
       tb.append(`
         <div class="v3-tb-group">
-          <button type="button" class="v3-tb-btn v3-btn-link" title="Insert Link"><i class="fi fi-rr-link-alt"></i></button>
-          <button type="button" class="v3-tb-btn" data-command="unlink" title="Remove Link"><i class="fi fi-rr-unlink"></i></button>
+          <button type="button" class="v3-tb-btn v3-btn-link" title="Insert Link"><i class="ri-link"></i></button>
+          <button type="button" class="v3-tb-btn" data-command="unlink" title="Remove Link"><i class="ri-link-unlink"></i></button>
           <button type="button" class="v3-tb-btn v3-btn-table" title="Insert Table"><i class="fi fi-rr-table"></i></button>
           <button type="button" class="v3-tb-btn" data-command="insertHorizontalRule" title="Insert Horizontal Line"><i class="fi fi-rr-minus"></i></button>
         </div>
@@ -178,7 +182,12 @@
     bindEvents: function () {
       const self = this;
 
-      // 1. Standard Commands
+      // 1. Standard Commands: Save selection and prevent button from stealing focus
+      this.$toolbar.on("mousedown", ".v3-tb-btn", function (e) {
+        self.saveSelection();
+        e.preventDefault();
+      });
+
       this.$toolbar.on("click", ".v3-tb-btn[data-command]", function (e) {
         e.preventDefault();
         const cmd = $(this).data("command");
@@ -187,18 +196,22 @@
       });
 
       // 2. Format Select (p, h1, h2, etc.)
+      this.$toolbar.on("mousedown focus", ".v3-format-select", function () {
+        self.saveSelection();
+      });
+
       this.$toolbar.on("change", ".v3-format-select", function () {
         const val = $(this).val();
-        if (val === "p" || val.startsWith("h")) {
-          self.execCommand("formatBlock", `<${val}>`);
-        } else if (val === "blockquote") {
-          self.execCommand("formatBlock", "<blockquote>");
-        } else if (val === "pre") {
-          self.execCommand("formatBlock", "<pre>");
+        if (val) {
+          self.formatBlock(val);
         }
       });
 
       // 3. Font Size Select
+      this.$toolbar.on("mousedown focus", ".v3-size-select", function () {
+        self.saveSelection();
+      });
+
       this.$toolbar.on("change", ".v3-size-select", function () {
         const size = $(this).val();
         if (size) {
@@ -239,10 +252,25 @@
         self.toggleFullscreen();
       });
 
-      // 9. Input & Keyup events in content area
-      this.$content.on("input keyup paste blur", function () {
+      // 9. Input, Keyup, Mouseup events in content area
+      this.$content.on("input keyup mouseup paste blur", function () {
+        self.saveSelection();
         self.syncToTextarea();
         self.updateActiveButtons();
+      });
+
+      // Tab key indent/outdent inside list items
+      this.$content.on("keydown", function (e) {
+        if (e.key === "Tab") {
+          const sel = window.getSelection();
+          if (sel && sel.anchorNode) {
+            const $li = $(sel.anchorNode).closest("li");
+            if ($li.length && $.contains(self.$content[0], $li[0])) {
+              e.preventDefault();
+              self.execCommand(e.shiftKey ? "outdent" : "indent");
+            }
+          }
+        }
       });
 
       // Source textarea input
@@ -252,18 +280,206 @@
         self.$textarea.val(html).trigger("input").trigger("change");
       });
 
-      // Selection change updates active button states
+      // Selection change updates active button states and cached range
       $(document).on("selectionchange.v3editor_" + self.id, function () {
-        if ($.contains(self.$content[0], window.getSelection().anchorNode)) {
+        if (self.isExecuting) return;
+        const sel = window.getSelection();
+        if (sel && sel.anchorNode && ($.contains(self.$content[0], sel.anchorNode) || self.$content[0] === sel.anchorNode)) {
+          self.saveSelection();
           self.updateActiveButtons();
         }
       });
     },
 
     execCommand: function (command, value) {
-      this.$content.focus();
-      document.execCommand(command, false, value || null);
+      if (this.isSourceMode) return;
+
+      if (command === "insertUnorderedList" || command === "insertOrderedList") {
+        this.applyList(command === "insertOrderedList" ? "ol" : "ul");
+        return;
+      }
+
+      this.isExecuting = true;
+      try {
+        if (document.activeElement !== this.$content[0]) {
+          this.$content[0].focus();
+        }
+        this.restoreSelection();
+        document.execCommand(command, false, value !== undefined ? value : null);
+      } catch (err) {
+        console.warn("V3Editor execCommand error:", err);
+      } finally {
+        this.isExecuting = false;
+      }
+
+      this.saveSelection();
       this.syncToTextarea();
+      this.updateActiveButtons();
+    },
+
+    applyList: function (listType) {
+      if (this.isSourceMode) return;
+      this.isExecuting = true;
+
+      try {
+        if (document.activeElement !== this.$content[0]) {
+          this.$content[0].focus();
+        }
+        this.restoreSelection();
+
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) {
+          this.isExecuting = false;
+          return;
+        }
+
+        const range = sel.getRangeAt(0);
+
+        // 1. If editor is empty, insert fresh list
+        const text = this.$content.text().trim();
+        const html = this.$content.html().trim();
+        if (!text && (!html || html === "<br>" || html === "<p><br></p>")) {
+          this.$content.html(`<${listType}><li><br></li></${listType}>`);
+          const li = this.$content.find("li")[0];
+          if (li) {
+            const newRange = document.createRange();
+            newRange.setStart(li, 0);
+            newRange.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(newRange);
+            this.savedRange = newRange.cloneRange();
+          }
+          this.syncToTextarea();
+          this.updateActiveButtons();
+          return;
+        }
+
+        // 2. Check if cursor/selection is already inside an existing list
+        let node = range.commonAncestorContainer;
+        if (node.nodeType === Node.TEXT_NODE) node = node.parentNode;
+        const $closestList = $(node).closest("ul, ol");
+        const insideEditor = $closestList.length && ($.contains(this.$content[0], $closestList[0]) || this.$content[0] === $closestList[0]);
+
+        if (insideEditor) {
+          document.execCommand(listType === "ol" ? "insertOrderedList" : "insertUnorderedList", false, null);
+          this.saveSelection();
+          this.syncToTextarea();
+          this.updateActiveButtons();
+          return;
+        }
+
+        // 3. Multi-line selection handling
+        if (!range.collapsed) {
+          const fragment = range.cloneContents();
+          const temp = document.createElement("div");
+          temp.appendChild(fragment);
+
+          const fragmentHtml = temp.innerHTML;
+          const hasBreaks = /<br\s*\/?>/i.test(fragmentHtml) || /<\/(p|div|li|h[1-6])>/i.test(fragmentHtml) || /\r?\n/.test(temp.textContent || "");
+
+          if (hasBreaks) {
+            let cleaned = fragmentHtml
+              .replace(/<br\s*\/?>/gi, "\n")
+              .replace(/<\/(p|div|li|h[1-6]|tr)>/gi, "\n")
+              .replace(/<(p|div|li|h[1-6]|tr)[^>]*>/gi, "");
+
+            let lines = cleaned
+              .split(/\r?\n/)
+              .map(l => l.trim().replace(/^[\*\-\•\–\—]\s*/, "").replace(/^\d+[\.\)]\s*/, ""))
+              .filter(l => l.length > 0 && l !== "<br>");
+
+            if (lines.length > 1) {
+              range.deleteContents();
+
+              const listEl = document.createElement(listType);
+              lines.forEach(lineText => {
+                const li = document.createElement("li");
+                li.innerHTML = lineText;
+                listEl.appendChild(li);
+              });
+
+              range.insertNode(listEl);
+
+              // Lift list out of parent <p> or <div> if wrapped
+              const parent = listEl.parentNode;
+              if (parent && parent !== this.$content[0]) {
+                if (parent.tagName === "P" || parent.tagName === "DIV") {
+                  parent.parentNode.insertBefore(listEl, parent);
+                  if (!parent.textContent.trim() && !parent.querySelector("img, input, table")) {
+                    parent.parentNode.removeChild(parent);
+                  }
+                }
+              }
+
+              // Place caret at end of the last list item
+              const lastLi = $(listEl).find("li").last()[0];
+              if (lastLi) {
+                const newRange = document.createRange();
+                newRange.selectNodeContents(lastLi);
+                newRange.collapse(false);
+                sel.removeAllRanges();
+                sel.addRange(newRange);
+                this.savedRange = newRange.cloneRange();
+              }
+
+              this.syncToTextarea();
+              this.updateActiveButtons();
+              return;
+            }
+          }
+        }
+
+        // 4. Default: invoke native browser command
+        document.execCommand(listType === "ol" ? "insertOrderedList" : "insertUnorderedList", false, null);
+        this.saveSelection();
+        this.syncToTextarea();
+        this.updateActiveButtons();
+      } catch (err) {
+        console.warn("applyList error:", err);
+      } finally {
+        this.isExecuting = false;
+      }
+    },
+
+    saveSelection: function () {
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        const range = sel.getRangeAt(0);
+        if (
+          $.contains(this.$content[0], range.commonAncestorContainer) ||
+          this.$content[0] === range.commonAncestorContainer
+        ) {
+          this.savedRange = range.cloneRange();
+        }
+      }
+    },
+
+    restoreSelection: function () {
+      const sel = window.getSelection();
+      if (!sel) return;
+
+      if (this.savedRange) {
+        try {
+          if (
+            $.contains(this.$content[0], this.savedRange.commonAncestorContainer) ||
+            this.$content[0] === this.savedRange.commonAncestorContainer
+          ) {
+            sel.removeAllRanges();
+            sel.addRange(this.savedRange);
+            return;
+          }
+        } catch (e) {}
+      }
+
+      // If no valid saved range, place caret at the end of content
+      try {
+        const range = document.createRange();
+        range.selectNodeContents(this.$content[0]);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        this.savedRange = range.cloneRange();
+      } catch (e) {}
     },
 
     syncToTextarea: function () {
@@ -272,14 +488,88 @@
       this.$textarea.val(html).trigger("input").trigger("change");
     },
 
+    formatBlock: function (tag) {
+      if (this.isSourceMode) return;
+      this.isExecuting = true;
+
+      try {
+        if (document.activeElement !== this.$content[0]) {
+          this.$content[0].focus();
+        }
+        this.restoreSelection();
+
+        const cleanTag = String(tag).toLowerCase().replace(/[<>]/g, "");
+
+        let success = false;
+        try {
+          success = document.execCommand("formatBlock", false, `<${cleanTag}>`);
+        } catch (e) {}
+
+        if (!success) {
+          try {
+            document.execCommand("formatBlock", false, cleanTag);
+          } catch (e) {}
+        }
+      } catch (err) {
+        console.warn("formatBlock error:", err);
+      } finally {
+        this.isExecuting = false;
+      }
+
+      this.saveSelection();
+      this.syncToTextarea();
+      this.updateActiveButtons();
+    },
+
     updateActiveButtons: function () {
       const self = this;
-      const commands = ["bold", "italic", "underline", "strikeThrough", "justifyLeft", "justifyCenter", "justifyRight", "justifyFull", "insertUnorderedList", "insertOrderedList"];
+      const commands = [
+        "bold", "italic", "underline", "strikeThrough",
+        "justifyLeft", "justifyCenter", "justifyRight", "justifyFull",
+        "insertUnorderedList", "insertOrderedList"
+      ];
 
       commands.forEach(function (cmd) {
-        const isActive = document.queryCommandState ? document.queryCommandState(cmd) : false;
+        let isActive = false;
+        try {
+          isActive = document.queryCommandState ? document.queryCommandState(cmd) : false;
+        } catch (e) {}
         self.$toolbar.find(`.v3-tb-btn[data-command='${cmd}']`).toggleClass("active", !!isActive);
       });
+
+      // Synchronize format select dropdown with current block element
+      try {
+        let blockVal = "p";
+        let formatName = "";
+        try {
+          formatName = document.queryCommandValue ? document.queryCommandValue("formatBlock") : "";
+        } catch (e) {}
+
+        if (formatName) {
+          blockVal = String(formatName).toLowerCase().replace(/[<>]/g, "");
+        } else {
+          const sel = window.getSelection();
+          if (sel && sel.rangeCount > 0) {
+            let node = sel.anchorNode;
+            if (node) {
+              if (node.nodeType === Node.TEXT_NODE) node = node.parentNode;
+              const $block = $(node).closest("p, h1, h2, h3, h4, h5, h6, blockquote, pre", self.$content[0]);
+              if ($block.length && ($.contains(self.$content[0], $block[0]) || self.$content[0] === $block[0])) {
+                blockVal = $block[0].tagName.toLowerCase();
+              }
+            }
+          }
+        }
+
+        const $formatSelect = self.$toolbar.find(".v3-format-select");
+        if ($formatSelect.length && !document.activeElement.classList.contains("v3-format-select")) {
+          if ($formatSelect.find(`option[value='${blockVal}']`).length) {
+            $formatSelect.val(blockVal);
+          } else {
+            $formatSelect.val("p");
+          }
+        }
+      } catch (e) {}
     },
 
     openLinkModal: function () {

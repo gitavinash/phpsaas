@@ -32,17 +32,26 @@ if (!is_array($data) || empty($data)) {
     $data = !empty($_POST) ? $_POST : $_GET;
 }
 
-$packageId = isset($data['id']) ? (int)$data['id'] : 0;
-$refId     = isset($data['refId']) ? (int)$data['refId'] : 0;
+$rawPkgId = isset($data['id']) ? trim((string)$data['id']) : (isset($data['package_id']) ? trim((string)$data['package_id']) : '0');
+$packageId = is_numeric($rawPkgId) ? (int)$rawPkgId : 0;
+
+$rawRefId = isset($data['refId']) ? trim((string)$data['refId']) : (isset($data['ref_id']) ? trim((string)$data['ref_id']) : (isset($data['lead_id']) ? trim((string)$data['lead_id']) : ''));
+if (empty($rawRefId) && isset($_GET['refId'])) {
+    $rawRefId = trim((string)$_GET['refId']);
+}
+$decodedRefId = base64_decode($rawRefId, true);
+$refId = ($decodedRefId !== false && is_numeric($decodedRefId)) ? (int)$decodedRefId : (int)$rawRefId;
+
 $refType   = isset($data['refType']) ? mysqli_real_escape_string($connection, trim($data['refType'])) : 'enquiry';
 $mrp       = isset($data['mrp']) ? (float)$data['mrp'] : 0;
 $content   = isset($data['content']) && is_array($data['content']) ? $data['content'] : [];
+$isDownload = !empty($data['isDownload']);
 
-if ($packageId <= 0 || $refId <= 0) {
+if ($refId <= 0) {
     http_response_code(400);
     echo json_encode([
         'status' => 'error',
-        'msg'    => 'Missing package ID or Lead reference ID.'
+        'msg'    => 'Missing or invalid Lead reference ID.'
     ]);
     exit;
 }
@@ -145,8 +154,6 @@ if (mysqli_query($connection, $insertQuery)) {
           AND enquiry_site_id = {$siteId}
         LIMIT 1
     ");
-
-    $isDownload = !empty($payload['isDownload']);
 
     if ($customerQuery && mysqli_num_rows($customerQuery) > 0) {
         $customerData = mysqli_fetch_assoc($customerQuery);

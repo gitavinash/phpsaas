@@ -74,16 +74,117 @@ if (!function_exists('cleanProposalLabel')) {
     }
 }
 
+if (!function_exists('renderPolicyContent')) {
+    /**
+     * Renders policy content in Word-document style.
+     * - If DB content exists: outputs it directly (HTML stripped of inline styles, or plain text as <p>).
+     * - If empty: outputs the $fallbackHtml string as-is.
+     */
+    function renderPolicyContent($rawContent, $fallbackHtml = '')
+    {
+        if (empty($rawContent) || !is_string($rawContent) || trim($rawContent) === '') {
+            if (!empty($fallbackHtml)) {
+                echo $fallbackHtml;
+            }
+            return;
+        }
+
+        $trimmed = trim($rawContent);
+        if (strpos($trimmed, '<') !== false && strpos($trimmed, '>') !== false) {
+            // Strip only inline style attributes to keep HTML structure
+            $cleaned = preg_replace('/\s*style="[^"]*"/i', '', $trimmed);
+            echo $cleaned;
+        } else {
+            // Plain text: split into lines and render as <p> blocks
+            $lines = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $trimmed)));
+            foreach ($lines as $line) {
+                echo '<p>' . htmlspecialchars($line) . '</p>';
+            }
+        }
+    }
+}
+if (!function_exists('renderPolicyFormattedContent')) {
+    function renderPolicyFormattedContent($rawContent, $fallbackHtml = '')
+    {
+        renderPolicyContent($rawContent, $fallbackHtml);
+    }
+}
+
 // Dynamic Site & Company Info
-$siteName    = defined('SITE_NAME') ? SITE_NAME : ($company_name ?? 'Company Name');
-$sitePhone   = defined('SITE_MOBILE') ? SITE_MOBILE : (defined('SITE_PHONE') ? SITE_PHONE : ($company_phone ?? ''));
-$siteEmail   = defined('SITE_EMAIL') ? SITE_EMAIL : ($company_email ?? '');
-$siteAddress = defined('SITE_ADDRESS') ? SITE_ADDRESS : ($company_address ?? '');
-$siteUrl     = defined('SITE_URL') ? SITE_URL : ($company_url ?? '');
-$siteDomain  = defined('SITE_DOMAIN') ? SITE_DOMAIN : ($company_site_domain ?? parse_url($siteUrl, PHP_URL_HOST) ?? 'blumox.com');
-$siteLogo    = fixImageUrl(defined('SITE_LOGO') ? SITE_LOGO : ($company_logo ?? ''));
-$themeColor  = defined('SITE_THEME_COLOUR') ? SITE_THEME_COLOUR : '#e76317';
-$bgColor     = defined('SITE_BACKGROUND_COLOUR') ? SITE_BACKGROUND_COLOUR : '#26679c';
+$siteName     = defined('SITE_NAME') ? SITE_NAME : ($company_name ?? 'Company Name');
+$sitePhone    = defined('SITE_MOBILE') ? SITE_MOBILE : (defined('SITE_PHONE') ? SITE_PHONE : ($company_phone ?? ''));
+$siteEmail    = defined('SITE_EMAIL') ? SITE_EMAIL : ($company_email ?? '');
+$siteAddress  = defined('COMPANY_ADDRESS') ? COMPANY_ADDRESS : (defined('SITE_ADDRESS') ? SITE_ADDRESS : ($company_address ?? ''));
+$siteWhatsapp = defined('COMPANY_WHATSAPP_NUMBER') ? COMPANY_WHATSAPP_NUMBER : (defined('SITE_WHATSAPP') ? SITE_WHATSAPP : ($company_whatsapp_number ?? ($whatsappNumber ?? '')));
+$siteUrl      = defined('SITE_URL') ? SITE_URL : ($company_url ?? '');
+$siteDomain   = defined('COMPANY_SITE_DOMAIN') ? COMPANY_SITE_DOMAIN : (defined('SITE_DOMAIN') ? SITE_DOMAIN : ($company_site_domain ?? parse_url($siteUrl, PHP_URL_HOST) ?? 'blumox.com'));
+$siteLogo     = fixImageUrl(defined('SITE_LOGO') ? SITE_LOGO : ($company_logo ?? ''));
+$themeColor   = defined('SITE_THEME_COLOUR') ? SITE_THEME_COLOUR : '#e76317';
+$bgColor      = defined('SITE_BACKGROUND_COLOUR') ? SITE_BACKGROUND_COLOUR : '#26679c';
+
+// Social media JSON object handling
+$socialMediaList = [];
+if (!empty($company_social_media)) {
+    $socialMediaList = is_array($company_social_media) ? $company_social_media : (json_decode($company_social_media, true) ?: []);
+} elseif (defined('COMPANY_SOCIAL_MEDIA')) {
+    $rawSoc = COMPANY_SOCIAL_MEDIA;
+    $socialMediaList = is_array($rawSoc) ? $rawSoc : (json_decode($rawSoc, true) ?: []);
+} elseif (defined('SETTING_COMPANY_PROFILE')) {
+    $prof = json_decode(SETTING_COMPANY_PROFILE, true);
+    if (is_array($prof)) {
+        if (!empty($prof['companyFacebookProfile'])) $socialMediaList['facebook'] = $prof['companyFacebookProfile'];
+        if (!empty($prof['companyTwitterProfile'])) $socialMediaList['x'] = $prof['companyTwitterProfile'];
+        if (!empty($prof['companyLinkedinProfile'])) $socialMediaList['linkedin'] = $prof['companyLinkedinProfile'];
+        if (!empty($prof['companyInstagramProfile'])) $socialMediaList['instagram'] = $prof['companyInstagramProfile'];
+        if (!empty($prof['companyYoutubeProfile'])) $socialMediaList['youtube'] = $prof['companyYoutubeProfile'];
+    }
+}
+
+// Pricing & Payment Overview Cost Variables
+$totalPriceVal  = (float)($selling_price ?? ($price ?? ($totalPrice ?? ($pkgPriceAdult ?? 0))));
+$adultCount     = max(1, (int)($adults ?? ($adults_count ?? 1)));
+$childCount     = (int)($children ?? ($children_count ?? 0));
+$infantCount    = (int)($infants ?? ($infants_count ?? 0));
+
+$adultPriceVal  = (float)($tour_package_price_selling_adult ?? ($adultPrice ?? ($pkgPriceAdult ?? 0)));
+if ($adultPriceVal <= 0 && $totalPriceVal > 0) {
+    $adultPriceVal = round($totalPriceVal / $adultCount, 2);
+}
+$childPriceVal  = (float)($tour_package_price_selling_child ?? ($childPrice ?? 0));
+$infantPriceVal = (float)($tour_package_price_selling_infant ?? ($infantPrice ?? 0));
+
+$adultSubtotal  = $adultPriceVal * $adultCount;
+$childSubtotal  = $childPriceVal * $childCount;
+$infantSubtotal = $infantPriceVal * $infantCount;
+
+$advance30Percent = round($totalPriceVal * 0.30, 2);
+$balance70Percent = $totalPriceVal - $advance30Percent;
+
+$gstPercentVal  = defined('GST_PERCENTAGE') ? (float)GST_PERCENTAGE : 5.0;
+$basePriceVal   = $totalPriceVal > 0 ? round($totalPriceVal / (1 + ($gstPercentVal / 100)), 2) : 0;
+$gstAmountVal   = $totalPriceVal - $basePriceVal;
+
+// Clean quote reference
+$rawQuoteRef = $quoteId ?? ($quotationId ?? ($tour_package_id ?? rand(1000, 9999)));
+$cleanQuoteRef = '#' . ltrim((string)$rawQuoteRef, '#');
+
+// Construct Pay Now URL & WhatsApp payment link
+$cleanWhatsappDigits = preg_replace('/[^\d]/', '', (string)$siteWhatsapp);
+$payNowUrl = '';
+if (!empty($payment_link)) {
+    $payNowUrl = $payment_link;
+} elseif (!empty($quotationId) && (int)$quotationId > 0) {
+    $encodedQuoteId = base64_encode((string)$quotationId);
+    $payNowUrl = (defined('SITE_URL') ? rtrim(SITE_URL, '/') : '') . "/payment/{$encodedQuoteId}/";
+} elseif (!empty($cleanWhatsappDigits)) {
+    $payNowUrl = "https://wa.me/" . $cleanWhatsappDigits . "?text=" . rawurlencode("Hello " . $siteName . ", I would like to make payment for Quotation " . $cleanQuoteRef . " (" . ($tour_package_title ?? 'Tour Package') . ") - Amount: INR " . number_format($totalPriceVal, 2));
+} else {
+    $payNowUrl = "tel:" . preg_replace('/[^\d\+]/', '', (string)$sitePhone);
+}
+
+$waPayUrl = !empty($cleanWhatsappDigits)
+    ? "https://wa.me/" . $cleanWhatsappDigits . "?text=" . rawurlencode("Hello " . $siteName . ", I am confirming quotation " . $cleanQuoteRef . " (" . ($tour_package_title ?? 'Tour Package') . "). Please share payment link / QR code for INR " . number_format($totalPriceVal, 2))
+    : '';
 
 // Package Variables
 $pkgTitle       = $tour_package_title ?? ($itinerary_title ?? ($title ?? 'Tour Package Itinerary'));
@@ -101,6 +202,41 @@ $pkgInclusions  = $tour_package_inclusions ?? ($inclusions ?? '');
 $pkgExclusions  = $tour_package_exclusions ?? ($exclusions ?? '');
 $pkgDays        = $itineraries ?? ($itinerary ?? ($days ?? []));
 $quoteRef       = $quoteId ?? ($quotationId ?? ($tour_package_id ?? rand(1000, 9999)));
+
+// Company Bank & UPI Details
+$companyBankName      = defined('COMPANY_BANK_NAME') ? COMPANY_BANK_NAME : ($bank_name ?? ($bankDetailsMap['bank_name'] ?? ''));
+$companyBankAcName    = defined('COMPANY_BANK_AC_NAME') ? COMPANY_BANK_AC_NAME : ($bank_ac_name ?? ($bankDetailsMap['bank_ac_name'] ?? ''));
+$companyBankAcNumber  = defined('COMPANY_BANK_AC_NUMBER') ? COMPANY_BANK_AC_NUMBER : ($bank_ac_number ?? ($bankDetailsMap['bank_ac_number'] ?? ''));
+$companyBankIfsc      = defined('COMPANY_BANK_IFSC') ? COMPANY_BANK_IFSC : ($bank_ifsc ?? ($bankDetailsMap['bank_ifsc'] ?? ''));
+$companyBankAddress   = defined('COMPANY_BANK_ADDRESS') ? COMPANY_BANK_ADDRESS : ($bank_address ?? ($bankDetailsMap['bank_address'] ?? ''));
+$companyBankDetails   = defined('COMPANY_BANK_DETAILS') ? COMPANY_BANK_DETAILS : ($bank_details ?? ($bankDetailsMap['bank_details'] ?? ''));
+$companyUpiId         = defined('COMPANY_UPI_ID') ? COMPANY_UPI_ID : ($upi_id ?? ($bankDetailsMap['upi_id'] ?? ($upi_details ?? ($bankDetailsMap['upi_details'] ?? ''))));
+$hasBankDetails       = !empty($companyBankAcNumber) || !empty($companyBankName) || !empty($companyUpiId) || !empty($companyBankDetails);
+
+// Dynamic UPI QR Code URL Generation
+$upiPayeeName = !empty($companyBankAcName) ? $companyBankAcName : $siteName;
+$upiPayAmt    = ($advance30Percent > 0) ? $advance30Percent : $totalPriceVal;
+$upiQrUrl     = '';
+if (!empty($companyUpiId)) {
+    $upiPayload = "upi://pay?pa=" . rawurlencode($companyUpiId) . "&pn=" . rawurlencode($upiPayeeName) . "&am=" . number_format($upiPayAmt, 2, '.', '') . "&cu=INR&tn=" . rawurlencode("Quote " . $cleanQuoteRef);
+    $upiQrUrl   = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=2&data=" . urlencode($upiPayload);
+} elseif (!empty($payNowUrl) && strpos($payNowUrl, 'http') === 0) {
+    $upiQrUrl   = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=2&data=" . urlencode($payNowUrl);
+}
+
+// Quote Validity & Pax Summary for Pricing Card
+$validUntilDate = date('F j, Y', strtotime('+7 days'));
+$paxSummaryParts = [];
+if ($adultCount > 0) $paxSummaryParts[] = "{$adultCount} Adult" . ($adultCount > 1 ? 's' : '');
+if ($childCount > 0) $paxSummaryParts[] = "{$childCount} Child" . ($childCount > 1 ? 'ren' : '');
+if ($infantCount > 0) $paxSummaryParts[] = "{$infantCount} Infant" . ($infantCount > 1 ? 's' : '');
+$paxSummaryText = !empty($paxSummaryParts) ? implode(', ', $paxSummaryParts) : '2 Adults';
+
+// Policy & Terms Variables
+$rawItineraryPolicy    = $itinerary_policy ?? '';
+$rawPaymentPolicy      = ($payment_policy ?? ($tour_package_payment_policy ?? ''));
+$rawCancellationPolicy = ($cancellation_policy ?? ($tour_package_cancellation_policy ?? ''));
+$rawTermsConditions    = ($terms_and_conditions ?? ($tour_package_terms_and_conditions ?? ''));
 
 if (is_string($pkgDays)) {
     $pkgDays = json_decode($pkgDays, true) ?: [];
@@ -621,6 +757,513 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             flex-shrink: 0;
         }
 
+        .costGradient {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+        }
+
+        .policyGradient {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)) !important;
+        }
+
+        /* Tour Pricing Section */
+        #page-payment .hero {
+            height: 48mm !important;
+            min-height: 70mm !important;
+            max-height: 48mm !important;
+        }
+
+        #page-payment .container {
+            padding: 10px 45px 14px 45px;
+            max-height: calc(297mm - 48mm - 28mm);
+            overflow: visible;
+        }
+
+        #page-payment .top-heading {
+            margin-bottom: 6px;
+        }
+
+        .pricing-main-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 11px 16px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+            box-sizing: border-box;
+            width: 100%;
+            font-family: "Mulish", sans-serif;
+        }
+
+        /* Top Quotation Banner */
+        .pricing-header-banner {
+            background: #fff8f3;
+            border: 1px solid #fed7aa;
+            border-left: 3.5px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 9px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 11px;
+        }
+
+        .pricing-header-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .pricing-header-type {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 2px;
+        }
+
+        .pricing-header-type .quote-ref-tag {
+            color: #64748b;
+            font-weight: 600;
+            margin-left: 4px;
+            background: #ffffff;
+            padding: 1px 6px;
+            border-radius: 4px;
+            border: 1px solid #fed7aa;
+            font-size: 10px;
+        }
+
+        .pricing-package-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 3px 0;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pricing-package-meta {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 500;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pricing-package-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pricing-package-meta span i {
+            color: var(--primary-color);
+            font-size: 13px;
+        }
+
+        .badge-best-value {
+            background: var(--primary-color);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: none !important;
+        }
+
+        /* Breakdown Price Rows */
+        .pricing-breakdown-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 9px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .pricing-breakdown-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 15px;
+            color: #334155;
+        }
+
+        .pricing-breakdown-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #475569;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .pricing-breakdown-label i {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .pricing-breakdown-val {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 15px;
+        }
+
+        .pricing-breakdown-val.gst-highlight {
+            color: #15803d;
+        }
+
+        /* Total Price Section */
+        .pricing-total-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-bottom: 9px;
+        }
+
+        .pricing-total-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 1px;
+        }
+
+        .pricing-total-amount {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--primary-color);
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+        }
+
+        /* Large CTA Button (No Shadow) */
+        .btn-book-now {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            background: var(--primary-color);
+            color: #ffffff !important;
+            padding: 10px 16px;
+            border-radius: 9px;
+            font-size: 13.5px;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: none !important;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+            text-align: center;
+            font-family: "Mulish", sans-serif;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-book-now:hover {
+            box-shadow: none !important;
+            opacity: 0.92;
+        }
+
+        .pricing-validity {
+            font-size: 10.5px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 6px;
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        .pricing-validity strong {
+            color: #1e293b;
+        }
+
+        /* 2-Column Bank Remittance & UPI QR Section (Outside Main Pricing Card) */
+        .bank-upi-section {
+            display: grid;
+            grid-template-columns: 1fr 190px;
+            gap: 14px;
+            margin-top: 10px;
+            align-items: stretch;
+            font-family: "Mulish", sans-serif;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .bank-details-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 18px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .section-micro-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding-bottom: 8px;
+            margin-bottom: 4px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .section-micro-title i {
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+
+        .bank-details-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .bank-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 15px;
+            padding: 5px 0;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .bank-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .bank-label {
+            color: #64748b;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .bank-value {
+            color: #1e293b;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .bank-value strong {
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .ac-num-highlight {
+            letter-spacing: 0.5px;
+            color: #0f172a;
+            font-weight: 800;
+            font-size: 15px;
+        }
+
+        /* Right Column: QR Code + UPI Address below QR */
+        .upi-qr-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .qr-box-wrapper {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upi-qr-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .qr-placeholder {
+            font-size: 11px;
+            color: #94a3b8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .qr-placeholder i {
+            font-size: 32px;
+            color: var(--primary-color);
+        }
+
+        .qr-details {
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .qr-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .qr-title i {
+            font-size: 15px;
+            color: var(--primary-color);
+        }
+
+        .upi-address-text {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 4px;
+            background: #fff7ed;
+            padding: 3px 8px;
+            border-radius: 5px;
+            border: 1px solid #fed7aa;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .upi-address-text i {
+            font-size: 9px;
+        }
+
+        /* Legal Policies & Terms Page Layout */
+        /* ── Important Policies – plain document layout ── */
+        #page-policies .hero {
+            height: 42mm !important;
+            min-height: 42mm !important;
+            max-height: 42mm !important;
+        }
+
+        #page-policies .container {
+            padding: 8px 50px 10px 50px;
+            max-height: calc(297mm - 42mm - 28mm);
+            overflow: visible;
+        }
+
+        #page-policies .top-heading {
+            margin-bottom: 6px;
+        }
+
+        /* Plain document body */
+        .legal-doc-body {
+            /* font-family: "Mulish", Georgia, serif; */
+            font-size: 12px;
+            color: #111111;
+            line-height: 1.75;
+            width: 100%;
+        }
+
+        .legal-doc-section {
+            margin-bottom: 8px;
+        }
+
+        .legal-doc-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .legal-doc-section-title {
+            font-size: 10px;
+            font-weight: 800;
+            color: #000000;
+            margin: 0 0 3px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            border-bottom: 0.5px solid #aaaaaa;
+            padding-bottom: 2px;
+        }
+
+        .legal-doc-body p {
+            margin: 0 0 2px 0;
+            font-size: 12px;
+            color: #111111;
+            line-height: 1.75;
+        }
+
+        .legal-doc-body ul,
+        .legal-doc-body ol {
+            margin: 0 0 2px 0;
+            padding-left: 16px;
+        }
+
+        .legal-doc-body li {
+            font-size: 12px;
+            color: #111111;
+            line-height: 1.75;
+            margin-bottom: 1px;
+        }
+
+        .legal-doc-body strong {
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .legal-doc-body h3,
+        .legal-doc-body h4,
+        .legal-doc-body h5 {
+            font-size: 12px;
+            font-weight: 700;
+            color: #000000;
+            margin: 2px 0 1px 0;
+        }
+
+        .legal-doc-footer-note {
+            margin-top: 8px;
+            padding-top: 5px;
+            border-top: 0.5px solid #aaaaaa;
+            font-size: 8.8px;
+            color: #444444;
+            line-height: 1.4;
+        }
+
         /* Company & Contact Card */
         .company-contact-card {
             background: #f8fafc;
@@ -647,6 +1290,149 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
 
         .contact-item i {
             font-size: 18px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        .contact-item-full {
+            grid-column: 1 / -1;
+        }
+
+        /* Company Social Section */
+        .company-social-section {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .social-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .company-social-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .social-badge-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .social-badge-btn i {
+            font-size: 15px;
+            color: var(--badge-accent, #0284c7);
+        }
+
+        .social-badge-btn:hover {
+            border-color: var(--badge-accent, #0284c7);
+            background: #f8fafc;
+            transform: translateY(-1px);
+        }
+
+        /* ── Salesperson / Booking Manager Card ── */
+        .sp-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 16px;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            border-left: 3.5px solid var(--primary-color);
+            border-radius: 10px;
+        }
+
+        .sp-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid var(--primary-color);
+        }
+
+        .sp-avatar-initials {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            font-family: "Mulish", sans-serif;
+        }
+
+        .sp-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sp-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--primary-color);
+            margin-bottom: 2px;
+        }
+
+        .sp-name {
+            font-size: 15px;
+            font-weight: 800;
+            color: #0f172a;
+            font-family: "Mulish", sans-serif;
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+
+        .sp-desig {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .sp-contacts {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .sp-contact-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12.5px;
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .sp-contact-item i {
+            font-size: 14px;
             color: var(--primary-color);
         }
 
@@ -736,6 +1522,18 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 page-break-inside: avoid;
             }
 
+            #page-payment .hero {
+                min-height: 48mm !important;
+                max-height: 48mm !important;
+                height: 48mm !important;
+            }
+
+            #page-policies .hero {
+                min-height: 42mm !important;
+                max-height: 42mm !important;
+                height: 42mm !important;
+            }
+
             .hero img {
                 width: 100%;
                 height: 100%;
@@ -748,7 +1546,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
 <body>
 
     <!-- Floating Top Action Bar -->
-    <?php if (empty($hideActions) && empty($isPreview)): ?>
+    <!-- <?php if (empty($hideActions) && empty($isPreview)): ?>
         <div class="v3-pdf-actions-bar">
             <button type="button" class="btn-pdf-action btn-pdf-download" id="btnDownloadPDF" onclick="downloadItineraryPDF()">
                 <i class="ri-file-pdf-line"></i> Download PDF
@@ -757,7 +1555,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 <i class="ri-printer-line"></i> Print
             </button>
         </div>
-    <?php endif; ?>
+    <?php endif; ?> -->
 
     <div id="pdfContentWrapper">
 
@@ -872,6 +1670,175 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         endforeach;
         ?>
 
+        <!-- PAYMENT & TOUR PACKAGE OVERVIEW COST PAGE -->
+        <section class="page days-page" id="page-payment">
+            <header class="hero">
+                <div class="default-day-image costGradient">
+                    <h2>Pricing</h2>
+                </div>
+            </header>
+
+            <div class="container">
+                <div class="top-heading">
+                    <span class="bar">|</span>
+                    <h2>Tour Pricing</h2>
+                </div>
+
+                <div class="payment-summary-wrapper">
+                    <!-- Pricing Card -->
+                    <div class="pricing-main-card">
+
+                        <!-- 1. Top Quotation Banner -->
+                        <div class="pricing-header-banner">
+                            <div class="pricing-header-content">
+                                <div class="pricing-header-type">
+                                    <i class="ri-file-text-line"></i> Tour Proposal Quotation
+                                    <span class="quote-ref-tag"><?php echo htmlspecialchars($cleanQuoteRef); ?></span>
+                                </div>
+                                <h3 class="pricing-package-title"><?php echo htmlspecialchars($pkgTitle); ?></h3>
+                                <div class="pricing-package-meta">
+                                    <span><i class="ri-group-line"></i> <?php echo htmlspecialchars($paxSummaryText); ?></span>
+                                    <span>•</span>
+                                    <span><i class="ri-calendar-2-line"></i> <?php echo $totalNightsCount; ?> Nights, <?php echo $totalDaysCount; ?> Days</span>
+                                    <?php if (!empty($pkgCity)): ?>
+                                        <span>•</span>
+                                        <span><i class="ri-map-pin-2-line"></i> <?php echo htmlspecialchars($pkgCity); ?></span>
+                                    <?php endif; ?>
+                                    <?php if (!empty($pkgHotel)): ?>
+                                        <span>•</span>
+                                        <span><i class="ri-hotel-line"></i> <?php echo htmlspecialchars(cleanProposalLabel($pkgHotel)); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <span class="badge-best-value"><i class="ri-sparkling-fill"></i> Best Value</span>
+                        </div>
+
+                        <!-- 2. Clean Price Breakdown (Adult, Child, Infant & GST) -->
+                        <div class="pricing-breakdown-list">
+                            <div class="pricing-breakdown-row">
+                                <span class="pricing-breakdown-label">Adult Price ( <?php echo max(1, $adultCount); ?> Adult<?php echo $adultCount > 1 ? 's' : ''; ?><?php if ($adultPriceVal > 0): ?> @ &#8377;<?php echo number_format($adultPriceVal, 2); ?><?php endif; ?> )
+                                </span>
+                                <span class="pricing-breakdown-val">&#8377;<?php echo number_format($adultSubtotal > 0 ? $adultSubtotal : $basePriceVal, 2); ?></span>
+                            </div>
+
+                            <?php if ($childCount > 0): ?>
+                                <div class="pricing-breakdown-row">
+                                    <span class="pricing-breakdown-label">
+                                        Child Price ( <?php echo $childCount; ?> Child<?php echo $childCount > 1 ? 'ren' : ''; ?><?php if ($childPriceVal > 0): ?> @ &#8377;<?php echo number_format($childPriceVal, 2); ?><?php endif; ?> )
+                                    </span>
+                                    <span class="pricing-breakdown-val">&#8377;<?php echo number_format($childSubtotal, 2); ?></span>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($infantCount > 0): ?>
+                                <div class="pricing-breakdown-row">
+                                    <span class="pricing-breakdown-label">
+                                        Infant Price ( <?php echo $infantCount; ?> Infant<?php echo $infantCount > 1 ? 's' : ''; ?><?php if ($infantPriceVal > 0): ?> @ &#8377;<?php echo number_format($infantPriceVal, 2); ?><?php endif; ?> )
+                                    </span>
+                                    <span class="pricing-breakdown-val">&#8377;<?php echo number_format($infantSubtotal, 2); ?></span>
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="pricing-breakdown-row">
+                                <span class="pricing-breakdown-label">
+                                    GST ( <?php echo $gstPercentVal; ?>% )
+                                </span>
+                                <span class="pricing-breakdown-val gst-highlight">+ &#8377;<?php echo number_format($gstAmountVal, 2); ?></span>
+                            </div>
+                        </div>
+
+                        <!-- 3. Total Price Block (Clean & Minimal) -->
+                        <div class="pricing-total-block">
+                            <span class="pricing-total-label">Total Price</span>
+                            <span class="pricing-total-amount">&#8377;<?php echo number_format($totalPriceVal, 2); ?></span>
+                        </div>
+
+                        <!-- 4. Prominent CTA Button (No Shadow) -->
+                        <?php if (!empty($payNowUrl)): ?>
+                            <a href="<?php echo htmlspecialchars($payNowUrl); ?>" target="_blank" rel="noopener" class="btn-book-now">
+                                <span>Click here to Book Now</span>
+                            </a>
+                        <?php endif; ?>
+
+                        <!-- 5. Validity Date (Matching Reference Design) -->
+                        <div class="pricing-validity">
+                            <i class="ri-calendar-event-line"></i> Prices valid until <strong><?php echo $validUntilDate; ?></strong>
+                        </div>
+
+                    </div>
+
+                    <!-- 6. Direct Bank Remittance & Dynamic UPI QR Section (Outside Box, 2 Columns) -->
+                    <?php if ($hasBankDetails || !empty($upiQrUrl)): ?>
+                        <div class="bank-upi-section">
+                            <!-- Left Column: Bank Details -->
+                            <div class="bank-details-box">
+                                <div class="section-micro-title">
+                                    <i class="ri-bank-line"></i>
+                                    <span>Direct Bank Transfer Details</span>
+                                </div>
+                                <div class="bank-details-stack">
+                                    <?php if (!empty($companyBankAcName)): ?>
+                                        <div class="bank-row">
+                                            <span class="bank-label">Account Holder</span>
+                                            <span class="bank-value"><strong><?php echo htmlspecialchars($companyBankAcName); ?></strong></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (!empty($companyBankAcNumber)): ?>
+                                        <div class="bank-row">
+                                            <span class="bank-label">Account Number</span>
+                                            <span class="bank-value"><strong class="ac-num-highlight"><?php echo htmlspecialchars($companyBankAcNumber); ?></strong></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (!empty($companyBankIfsc)): ?>
+                                        <div class="bank-row">
+                                            <span class="bank-label">IFSC Code</span>
+                                            <span class="bank-value"><strong><?php echo htmlspecialchars($companyBankIfsc); ?></strong></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (!empty($companyBankName)): ?>
+                                        <div class="bank-row">
+                                            <span class="bank-label">Bank Name</span>
+                                            <span class="bank-value"><?php echo htmlspecialchars($companyBankName); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (!empty($companyBankAddress)): ?>
+                                        <div class="bank-row">
+                                            <span class="bank-label">Branch</span>
+                                            <span class="bank-value"><?php echo htmlspecialchars($companyBankAddress); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: QR Code + UPI Address below QR -->
+                            <div class="upi-qr-box">
+                                <div class="qr-box-wrapper">
+                                    <?php if (!empty($upiQrUrl)): ?>
+                                        <img src="<?php echo htmlspecialchars($upiQrUrl); ?>" alt="UPI QR Code" class="upi-qr-img" />
+                                    <?php else: ?>
+                                        <div class="qr-placeholder">
+                                            <i class="ri-qr-code-line"></i>
+                                            <span>Scan &amp; Pay</span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="qr-details">
+                                    <div class="qr-title"><i class="ri-qr-scan-2-line"></i> Scan &amp; Pay</div>
+                                    <?php if (!empty($companyUpiId)): ?>
+                                        <div class="upi-address-text" title="<?php echo htmlspecialchars($companyUpiId); ?>">
+                                            <i class="ri-wallet-3-line"></i> <?php echo htmlspecialchars($companyUpiId); ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="qr-sub">GPay • PhonePe • UPI</div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </section>
+
         <!-- INCLUSIONS PAGE -->
         <?php if (!empty($incList)): ?>
             <section class="page days-page" id="page-inclusions">
@@ -957,34 +1924,238 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                     </p>
 
                     <div class="company-contact-grid">
-                        <?php if (!empty($sitePhone)): ?>
+                        <?php if (defined('SITE_MOBILE') && !empty(SITE_MOBILE)): ?>
+                            <div class="contact-item">
+                                <i class="ri-phone-line"></i>
+                                <span><strong>Phone:</strong> <?php echo htmlspecialchars(SITE_MOBILE); ?></span>
+                            </div>
+                        <?php elseif (!empty($sitePhone)): ?>
                             <div class="contact-item">
                                 <i class="ri-phone-line"></i>
                                 <span><strong>Phone:</strong> <?php echo htmlspecialchars($sitePhone); ?></span>
                             </div>
                         <?php endif; ?>
 
-                        <?php if (!empty($siteEmail)): ?>
+                        <?php if (defined('COMPANY_WHATSAPP_NUMBER') && !empty(COMPANY_WHATSAPP_NUMBER)): ?>
+                            <div class="contact-item">
+                                <i class="ri-whatsapp-line" style="color: #25D366;"></i>
+                                <span><strong>WhatsApp:</strong> <?php echo htmlspecialchars(COMPANY_WHATSAPP_NUMBER); ?></span>
+                            </div>
+                        <?php elseif (!empty($siteWhatsapp)): ?>
+                            <div class="contact-item">
+                                <i class="ri-whatsapp-line" style="color: #25D366;"></i>
+                                <span><strong>WhatsApp:</strong> <?php echo htmlspecialchars($siteWhatsapp); ?></span>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (defined('SITE_EMAIL') && !empty(SITE_EMAIL)): ?>
+                            <div class="contact-item">
+                                <i class="ri-mail-line"></i>
+                                <span><strong>Email:</strong> <?php echo htmlspecialchars(SITE_EMAIL); ?></span>
+                            </div>
+                        <?php elseif (!empty($siteEmail)): ?>
                             <div class="contact-item">
                                 <i class="ri-mail-line"></i>
                                 <span><strong>Email:</strong> <?php echo htmlspecialchars($siteEmail); ?></span>
                             </div>
                         <?php endif; ?>
 
-                        <?php if (!empty($siteUrl) || !empty($siteDomain)): ?>
+                        <?php if (defined('COMPANY_SITE_DOMAIN') && !empty(COMPANY_SITE_DOMAIN)): ?>
+                            <div class="contact-item">
+                                <i class="ri-global-line"></i>
+                                <span><strong>Website:</strong> <?php echo htmlspecialchars(COMPANY_SITE_DOMAIN); ?></span>
+                            </div>
+                        <?php elseif (!empty($siteUrl) || !empty($siteDomain)): ?>
                             <div class="contact-item">
                                 <i class="ri-global-line"></i>
                                 <span><strong>Website:</strong> <?php echo htmlspecialchars($siteDomain); ?></span>
                             </div>
                         <?php endif; ?>
 
-                        <?php if (!empty($pkgOutVehicle)): ?>
-                            <div class="contact-item">
-                                <i class="ri-car-line"></i>
-                                <span><strong>Vehicle:</strong> <?php echo htmlspecialchars($pkgOutVehicle); ?></span>
+                        <?php if (defined('COMPANY_ADDRESS') && !empty(COMPANY_ADDRESS)): ?>
+                            <div class="contact-item contact-item-full">
+                                <i class="ri-map-pin-line" style="color: var(--primary-color);"></i>
+                                <span><strong>Address:</strong> <?php echo htmlspecialchars(COMPANY_ADDRESS); ?></span>
+                            </div>
+                        <?php elseif (!empty($siteAddress)): ?>
+                            <div class="contact-item contact-item-full">
+                                <i class="ri-map-pin-line" style="color: var(--primary-color);"></i>
+                                <span><strong>Address:</strong> <?php echo htmlspecialchars($siteAddress); ?></span>
                             </div>
                         <?php endif; ?>
+
                     </div>
+
+                    <?php
+                    $socialIcons = [
+                        'facebook'  => ['icon' => 'ri-facebook-circle-fill', 'color' => '#1877F2', 'label' => 'Facebook'],
+                        'instagram' => ['icon' => 'ri-instagram-fill',       'color' => '#E4405F', 'label' => 'Instagram'],
+                        'x'         => ['icon' => 'ri-twitter-x-fill',       'color' => '#0f172a', 'label' => 'X (Twitter)'],
+                        'twitter'   => ['icon' => 'ri-twitter-x-fill',       'color' => '#0f172a', 'label' => 'Twitter'],
+                        'linkedin'  => ['icon' => 'ri-linkedin-box-fill',    'color' => '#0A66C2', 'label' => 'LinkedIn'],
+                        'youtube'   => ['icon' => 'ri-youtube-fill',         'color' => '#FF0000', 'label' => 'YouTube'],
+                    ];
+                    $hasSocial = false;
+                    if (!empty($socialMediaList) && is_array($socialMediaList)) {
+                        foreach ($socialMediaList as $p => $u) {
+                            if (!empty($u) && is_string($u) && trim($u) !== '') {
+                                $hasSocial = true;
+                                break;
+                            }
+                        }
+                    }
+                    ?>
+                    <?php if ($hasSocial): ?>
+                        <div class="company-social-section">
+                            <h4 class="social-section-title">Follow &amp; Connect</h4>
+                            <div class="company-social-links">
+                                <?php foreach ($socialMediaList as $platform => $url):
+                                    if (empty($url) || !is_string($url) || trim($url) === '') continue;
+                                    $pKey = strtolower(trim($platform));
+                                    $meta = $socialIcons[$pKey] ?? ['icon' => 'ri-share-forward-line', 'color' => '#0284c7', 'label' => ucfirst($pKey)];
+                                ?>
+                                    <a href="<?php echo htmlspecialchars(trim($url)); ?>" target="_blank" rel="noopener" class="social-badge-btn" style="--badge-accent: <?php echo $meta['color']; ?>;">
+                                        <i class="<?php echo $meta['icon']; ?>"></i>
+                                        <span><?php echo htmlspecialchars($meta['label']); ?></span>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <?php
+                $spName   = $salesPersonName  ?? '';
+                $spEmail  = $salesPersonEmail  ?? '';
+                $spMobile = $salesPersonMobile ?? '';
+                $spImage  = $salesPersonImage  ?? '';
+                $spDesig  = $salesPersonDesig  ?? 'Travel Consultant';
+                if (!empty($spName)):
+                    $spWords    = preg_split('/\s+/', trim($spName));
+                    $spInitials = strtoupper(mb_substr($spWords[0], 0, 1) . (count($spWords) > 1 ? mb_substr(end($spWords), 0, 1) : ''));
+                ?>
+                    <!-- Salesperson / Booking Manager Card -->
+                    <div class="sp-card">
+                        <?php if (!empty($spImage)): ?>
+                            <img src="<?php echo htmlspecialchars($spImage); ?>" alt="<?php echo htmlspecialchars($spName); ?>" class="sp-avatar">
+                        <?php else: ?>
+                            <div class="sp-avatar-initials"><?php echo htmlspecialchars($spInitials); ?></div>
+                        <?php endif; ?>
+                        <div class="sp-info">
+                            <div class="sp-label">Your Booking Manager</div>
+                            <div class="sp-name"><?php echo htmlspecialchars($spName); ?></div>
+                            <div class="sp-desig"><?php echo htmlspecialchars($spDesig); ?></div>
+                            <div class="sp-contacts">
+                                <?php if (!empty($spMobile)): ?>
+                                    <span class="sp-contact-item">
+                                        <i class="ri-phone-fill"></i>
+                                        <?php echo htmlspecialchars($spMobile); ?>
+                                    </span>
+                                <?php endif; ?>
+                                <?php if (!empty($spEmail)): ?>
+                                    <span class="sp-contact-item">
+                                        <i class="ri-mail-fill"></i>
+                                        <?php echo htmlspecialchars($spEmail); ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+            </div>
+        </section>
+
+        <!-- BOOKING POLICIES, CANCELLATION & TERMS PAGE (LAST PAGE) -->
+        <section class="page days-page" id="page-policies">
+            <header class="hero">
+                <div class="default-day-image policyGradient">
+                    <h2>Our Policies</h2>
+                </div>
+            </header>
+
+            <div class="container">
+                <!-- <div class="top-heading">
+                    <span class="bar">|</span>
+                    <h2>Terms, Policies &amp; Booking Conditions</h2>
+                </div> -->
+
+                <div class="legal-doc-body">
+
+                    <?php if (!empty($rawItineraryPolicy)): ?>
+                        <!-- Itinerary Policy from DB (/itinenary-policy/) -->
+                        <div class="legal-doc-section">
+                            <!-- <h3 class="legal-doc-section-title">Itinerary &amp; Booking Policy</h3> -->
+                            <?php renderPolicyContent($rawItineraryPolicy); ?>
+                        </div>
+                    <?php else: ?>
+
+                        <!-- 1. Payment Policy -->
+                        <div class="legal-doc-section">
+                            <h3 class="legal-doc-section-title">1. Payment Policy</h3>
+                            <?php
+                            $fallbackPayment = implode('', [
+                                '<ul>',
+                                '<li><strong>Booking Advance:</strong> A non-refundable 50% advance payment is required at the time of booking confirmation to block hotel rooms, vehicles, and permits.</li>',
+                                '<li><strong>Balance Payment:</strong> The remaining 50% must be paid on or before arrival at the first hotel / destination check-in.</li>',
+                                '<li><strong>Accepted Modes:</strong> Payments are accepted via company bank transfer, verified UPI, or official payment gateway link only. Cash payments to field staff are not accepted.</li>',
+                                '<li><strong>Invoice:</strong> A GST invoice will be issued upon receipt of advance payment.</li>',
+                                '</ul>'
+                            ]);
+                            renderPolicyContent($rawPaymentPolicy, $fallbackPayment);
+                            ?>
+                        </div>
+
+                        <!-- 2. Cancellation & Refund Policy -->
+                        <div class="legal-doc-section">
+                            <h3 class="legal-doc-section-title">2. Cancellation &amp; Refund Policy</h3>
+                            <?php
+                            $fallbackCancel = implode('', [
+                                '<ul>',
+                                '<li><strong>More than 15 days before departure:</strong> 20% of total package cost is retained as booking/admin fee.</li>',
+                                '<li><strong>7 to 14 days before departure:</strong> 50% of total package cost is non-refundable.</li>',
+                                '<li><strong>Less than 7 days / No-Show:</strong> 100% of the package cost is forfeited. No refund is applicable.</li>',
+                                '<li><strong>Non-Refundable Components:</strong> Flight tickets, peak-season hotel bookings, wildlife park entry permits, and monument fees are non-refundable as per third-party supplier terms.</li>',
+                                '<li><strong>Refund Processing:</strong> Eligible refunds are processed to the original payment source within 5&ndash;7 business working days.</li>',
+                                '</ul>'
+                            ]);
+                            renderPolicyContent($rawCancellationPolicy, $fallbackCancel);
+                            ?>
+                        </div>
+
+                        <!-- 3. Terms & Conditions -->
+                        <div class="legal-doc-section">
+                            <h3 class="legal-doc-section-title">3. Terms &amp; Conditions</h3>
+                            <?php
+                            $fallbackTerms = implode('', [
+                                '<ul>',
+                                '<li><strong>Hotel Check-In / Check-Out:</strong> Standard check-in time is 12:00 PM&ndash;2:00 PM; check-out is 11:00 AM. Early check-in or late check-out is subject to room availability and may incur additional charges.</li>',
+                                '<li><strong>Vehicle Usage:</strong> Private vehicles are deployed on a point-to-point basis for the agreed itinerary route only. 24-hour disposal or unscheduled stops are not included.</li>',
+                                '<li><strong>Photo ID:</strong> All travelers must carry a valid Government-issued photo ID (Aadhaar, Passport, or Voter ID) throughout the trip.</li>',
+                                '<li><strong>Package Amendments:</strong> Changes to dates, destinations, or services after confirmation are subject to availability and may attract amendment charges.</li>',
+                                '<li><strong>Responsibility:</strong> The company acts as a facilitator and is not responsible for losses arising from third-party service failures, including airlines, hotels, or transport operators.</li>',
+                                '</ul>'
+                            ]);
+                            renderPolicyContent($rawTermsConditions, $fallbackTerms);
+                            ?>
+                        </div>
+
+                        <!-- 4. Force Majeure & Jurisdiction -->
+                        <!-- <div class="legal-doc-section">
+                            <h3 class="legal-doc-section-title">4. Force Majeure &amp; Jurisdiction</h3>
+                            <ul>
+                                <li><strong>Force Majeure:</strong> <?php echo htmlspecialchars($siteName); ?> shall not be liable for delays, cancellations, or additional costs arising from events beyond its control, including but not limited to natural disasters, government orders, strikes, roadblocks, weather disruptions, or flight cancellations.</li>
+                                <li><strong>Governing Law:</strong> This agreement is governed by the laws of India under the Indian Contract Act, 1872.</li>
+                                <li><strong>Jurisdiction:</strong> Any dispute arising from this booking shall be subject to the exclusive jurisdiction of courts at the registered office of <?php echo htmlspecialchars($siteName); ?>.</li>
+                            </ul>
+                        </div> -->
+
+                    <?php endif; ?>
+
+                    <!-- <div class="legal-doc-footer-note">
+                        By remitting the booking advance or providing written/digital confirmation of this itinerary, the client agrees to and accepts all terms, cancellation schedules, and booking conditions stated above.
+                    </div> -->
+
                 </div>
             </div>
         </section>

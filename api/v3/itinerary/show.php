@@ -18,6 +18,120 @@ if (!isset($connection)) {
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
 
+// Fetch company profile / contact / banking / policy configurations if DB is connected
+$company_social_media = [];
+$bankDetailsMap = [];
+if (isset($connection) && $siteId > 0) {
+    $cfgRes = @mysqli_query($connection, "
+        SELECT site_configuration_key, site_configuration_value 
+        FROM {$tblPrefix}site_configuration 
+        WHERE site_configuration_site_id = {$siteId} 
+          AND site_configuration_key IN (
+              'company_name', 'site_mobile', 'company_mobile', 'site_email', 'company_email', 
+              'company_whatsapp_number', 'company_address', 'company_site_domain', 'company_social_media',
+              'bank_name', 'bank_ac_name', 'bank_ac_number', 'bank_ifsc', 'bank_address', 'bank_details', 
+              'upi_id', 'upi_details', 'pg_upi_address',
+              'payment_policy', 'cancellation_policy', 'terms_and_conditions'
+          )
+          AND site_configuration_status = 1
+    ");
+    $dbConfigMap = [];
+    if ($cfgRes) {
+        while ($cRow = mysqli_fetch_assoc($cfgRes)) {
+            $dbConfigMap[$cRow['site_configuration_key']] = $cRow['site_configuration_value'];
+        }
+    }
+
+    if (!defined('COMPANY_WHATSAPP_NUMBER')) {
+        $cWa = $dbConfigMap['company_whatsapp_number'] ?? ($dbConfigMap['site_mobile'] ?? ($dbConfigMap['company_mobile'] ?? ''));
+        define('COMPANY_WHATSAPP_NUMBER', $cWa);
+    }
+    if (!defined('COMPANY_ADDRESS')) {
+        $cAddr = $dbConfigMap['company_address'] ?? '';
+        define('COMPANY_ADDRESS', $cAddr);
+    }
+    if (!defined('COMPANY_SITE_DOMAIN')) {
+        $cDom = $dbConfigMap['company_site_domain'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : '');
+        define('COMPANY_SITE_DOMAIN', $cDom);
+    }
+    if (!empty($dbConfigMap['company_social_media'])) {
+        $company_social_media = json_decode($dbConfigMap['company_social_media'], true) ?: $dbConfigMap['company_social_media'];
+    }
+
+    // Company Bank Account Details
+    if (!defined('COMPANY_BANK_NAME') && !empty($dbConfigMap['bank_name'])) define('COMPANY_BANK_NAME', $dbConfigMap['bank_name']);
+    if (!defined('COMPANY_BANK_AC_NAME') && !empty($dbConfigMap['bank_ac_name'])) define('COMPANY_BANK_AC_NAME', $dbConfigMap['bank_ac_name']);
+    if (!defined('COMPANY_BANK_AC_NUMBER') && !empty($dbConfigMap['bank_ac_number'])) define('COMPANY_BANK_AC_NUMBER', $dbConfigMap['bank_ac_number']);
+    if (!defined('COMPANY_BANK_IFSC') && !empty($dbConfigMap['bank_ifsc'])) define('COMPANY_BANK_IFSC', $dbConfigMap['bank_ifsc']);
+    if (!defined('COMPANY_BANK_ADDRESS') && !empty($dbConfigMap['bank_address'])) define('COMPANY_BANK_ADDRESS', $dbConfigMap['bank_address']);
+    if (!defined('COMPANY_BANK_DETAILS') && !empty($dbConfigMap['bank_details'])) define('COMPANY_BANK_DETAILS', $dbConfigMap['bank_details']);
+    
+    $resolvedUpi = $dbConfigMap['upi_id'] ?? ($dbConfigMap['upi_details'] ?? ($dbConfigMap['pg_upi_address'] ?? ''));
+    if (!defined('COMPANY_UPI_ID') && !empty($resolvedUpi)) define('COMPANY_UPI_ID', $resolvedUpi);
+
+    // Standard Policies from site configuration
+    if (!defined('COMPANY_PAYMENT_POLICY') && !empty($dbConfigMap['payment_policy'])) define('COMPANY_PAYMENT_POLICY', $dbConfigMap['payment_policy']);
+    if (!defined('COMPANY_CANCELLATION_POLICY') && !empty($dbConfigMap['cancellation_policy'])) define('COMPANY_CANCELLATION_POLICY', $dbConfigMap['cancellation_policy']);
+    if (!defined('COMPANY_TERMS_AND_CONDITIONS') && !empty($dbConfigMap['terms_and_conditions'])) define('COMPANY_TERMS_AND_CONDITIONS', $dbConfigMap['terms_and_conditions']);
+
+    // Fetch Policy Pages from DB (tbl_page where page_type = 'policy' matching api/v3/policy API)
+    $dbPolicyPages = [
+        'payment_policy'       => $dbConfigMap['payment_policy'] ?? '',
+        'cancellation_policy'  => $dbConfigMap['cancellation_policy'] ?? '',
+        'terms_and_conditions' => $dbConfigMap['terms_and_conditions'] ?? '',
+        'itinerary_policy'     => '',
+        'privacy_policy'       => ''
+    ];
+
+    $polQuery = @mysqli_query($connection, "
+        SELECT p.page_id, p.page_title, p.page_description, l.link_url 
+        FROM {$tblPrefix}page p
+        INNER JOIN {$tblPrefix}link l ON l.link_relation_id = p.page_id
+        WHERE p.page_type = 'policy' 
+          AND l.link_type = 'page' 
+          AND p.page_status = '1' 
+          " . ($siteId > 0 ? "AND l.link_site_id = {$siteId}" : "") . "
+        ORDER BY p.page_id ASC
+    ");
+
+    if ($polQuery && mysqli_num_rows($polQuery) > 0) {
+        while ($pRow = mysqli_fetch_assoc($polQuery)) {
+            $pTitle = strtolower(trim($pRow['page_title'] ?? ''));
+            $pSlug  = strtolower(trim($pRow['link_url'] ?? ''));
+            $pDesc  = trim($pRow['page_description'] ?? '');
+            if (empty($pDesc)) continue;
+
+            if (strpos($pTitle, 'payment') !== false || strpos($pSlug, 'payment') !== false) {
+                $dbPolicyPages['payment_policy'] = $pDesc;
+            } elseif (strpos($pTitle, 'cancellation') !== false || strpos($pTitle, 'refund') !== false || strpos($pSlug, 'cancellation') !== false || strpos($pSlug, 'refund') !== false) {
+                $dbPolicyPages['cancellation_policy'] = $pDesc;
+            } elseif (strpos($pTitle, 'terms') !== false || strpos($pTitle, 'condition') !== false || strpos($pSlug, 'terms') !== false) {
+                $dbPolicyPages['terms_and_conditions'] = $pDesc;
+            } elseif (strpos($pSlug, 'itinenary-policy') !== false || strpos($pSlug, 'itinerary-policy') !== false || strpos($pTitle, 'itinenary') !== false || strpos($pTitle, 'itinerary policy') !== false) {
+                $dbPolicyPages['itinerary_policy'] = $pDesc;
+            } elseif (strpos($pTitle, 'privacy') !== false || strpos($pSlug, 'privacy') !== false) {
+                $dbPolicyPages['privacy_policy'] = $pDesc;
+            }
+        }
+    }
+
+    $payment_policy       = !empty($dbPolicyPages['payment_policy']) ? $dbPolicyPages['payment_policy'] : (defined('COMPANY_PAYMENT_POLICY') ? COMPANY_PAYMENT_POLICY : '');
+    $cancellation_policy  = !empty($dbPolicyPages['cancellation_policy']) ? $dbPolicyPages['cancellation_policy'] : (defined('COMPANY_CANCELLATION_POLICY') ? COMPANY_CANCELLATION_POLICY : '');
+    $terms_and_conditions = !empty($dbPolicyPages['terms_and_conditions']) ? $dbPolicyPages['terms_and_conditions'] : (defined('COMPANY_TERMS_AND_CONDITIONS') ? COMPANY_TERMS_AND_CONDITIONS : '');
+    $itinerary_policy     = $dbPolicyPages['itinerary_policy'] ?? '';
+
+    $bankDetailsMap = [
+        'bank_name'       => $dbConfigMap['bank_name'] ?? '',
+        'bank_ac_name'    => $dbConfigMap['bank_ac_name'] ?? '',
+        'bank_ac_number'  => $dbConfigMap['bank_ac_number'] ?? '',
+        'bank_ifsc'       => $dbConfigMap['bank_ifsc'] ?? '',
+        'bank_address'    => $dbConfigMap['bank_address'] ?? '',
+        'bank_details'    => $dbConfigMap['bank_details'] ?? '',
+        'upi_id'          => $resolvedUpi,
+        'upi_details'     => $resolvedUpi
+    ];
+}
+
 // Read JSON or GET/POST inputs
 $rawInput = file_get_contents('php://input');
 $postData = json_decode($rawInput, true);
@@ -111,6 +225,34 @@ if ($quotationId > 0) {
     if ($res && mysqli_num_rows($res) > 0) {
         $quotationData = mysqli_fetch_assoc($res);
     }
+
+    // Fetch salesperson (quotation_sent_by) profile
+    $salesPersonName   = '';
+    $salesPersonEmail  = '';
+    $salesPersonMobile = '';
+    $salesPersonImage  = '';
+    $salesPersonDesig  = 'Travel Consultant';
+    $sentById = (int)($quotationData['quotation_sent_by'] ?? 0);
+    if ($sentById > 0 && isset($connection)) {
+        $spRes = @mysqli_query($connection, "
+            SELECT p.profile_display_name, p.profile_first_name, p.profile_last_name,
+                   p.profile_email, p.profile_mobile, p.profile_image
+            FROM {$tblPrefix}profile p
+            WHERE p.profile_user_id = {$sentById}
+            LIMIT 1
+        ");
+        if ($spRes && mysqli_num_rows($spRes) > 0) {
+            $spRow = mysqli_fetch_assoc($spRes);
+            $salesPersonName   = trim($spRow['profile_display_name'] ?? trim(($spRow['profile_first_name'] ?? '') . ' ' . ($spRow['profile_last_name'] ?? '')));
+            $salesPersonEmail  = trim($spRow['profile_email'] ?? '');
+            $salesPersonMobile = trim($spRow['profile_mobile'] ?? '');
+            $rawSpImg = $spRow['profile_image'] ?? '';
+            if (!empty($rawSpImg)) {
+                $siteBase = defined('SITE_URL') ? rtrim(SITE_URL, '/') : '';
+                $salesPersonImage = filter_var($rawSpImg, FILTER_VALIDATE_URL) ? $rawSpImg : $siteBase . '/' . ltrim($rawSpImg, '/');
+            }
+        }
+    }
 }
 
 // If quotation found, populate template variables
@@ -131,24 +273,43 @@ if (!empty($quotationData)) {
     // Set standard template variables
     $itinerary_title   = $parsedDescription['title'] ?? ($quotationData['tour_package_title'] ?? 'Tour Itinerary');
     $tour_package_title = $itinerary_title;
-    $tour_package_city = $quotationData['tour_package_city'] ?? '';
-    $tour_package_state = $quotationData['tour_package_state'] ?? '';
-    $tour_package_country = $quotationData['tour_package_country'] ?? '';
-    $tour_package_hotel = $parsedDescription['hotel'] ?? ($quotationData['tour_package_hotel'] ?? '');
-    $tour_package_theme = $parsedDescription['travel_theme'] ?? ($parsedDescription['theme'] ?? ($quotationData['tour_package_theme'] ?? 'Standard'));
-    $pickup_location = $parsedDescription['pickup_location'] ?? ($postData['pickupLocation'] ?? ($postData['pickup_location'] ?? ''));
-    $drop_location = $parsedDescription['drop_location'] ?? ($postData['dropLocation'] ?? ($postData['drop_location'] ?? ''));
-    $pickupLocation = $pickup_location;
-    $dropLocation = $drop_location;
-    $tour_package_outstation_vehicle = $parsedDescription['outstation_vehicle'] ?? ($quotationData['tour_package_outstation_vehicle'] ?? '');
-    $tour_package_localsightseen_vehicle = $parsedDescription['localsightseen_vehicle'] ?? ($quotationData['tour_package_localsightseen_vehicle'] ?? '');
-    $itinerary_overview = $parsedDescription['overview'] ?? ($quotationData['tour_package_overview'] ?? '');
-    $tour_package_overview = $itinerary_overview;
 
     $itineraries = $parsedDescription['itinerary'] ?? ($quotationData['tour_package_itinerary'] ?? []);
     if (is_string($itineraries)) {
         $itineraries = json_decode($itineraries, true) ?: [];
     }
+
+    $tour_package_city = !empty($parsedDescription['city'])
+        ? $parsedDescription['city']
+        : (!empty($parsedDescription['destination']) ? $parsedDescription['destination'] : (!empty($parsedDescription['tour_package_city']) ? $parsedDescription['tour_package_city'] : ($quotationData['tour_package_city'] ?? '')));
+
+    // Auto-discover stay city from itineraries if missing
+    if ((empty($tour_package_city) || strtolower($tour_package_city) === 'destination' || strtolower($tour_package_city) === 'tour destination') && !empty($itineraries) && is_array($itineraries)) {
+        foreach ($itineraries as $day) {
+            $c = trim((string)($day['city'] ?? ($day['stay_city'] ?? '')));
+            $cLower = strtolower($c);
+            if ($c !== '' && !str_contains($cLower, 'overnight') && !str_contains($cLower, 'transit') && !str_contains($cLower, 'tour end') && !str_contains($cLower, 'trip end') && !str_contains($cLower, 'no stay') && !str_contains($cLower, 'no hotel')) {
+                $tour_package_city = $c;
+                break;
+            }
+        }
+    }
+    if (empty($tour_package_city)) {
+        $tour_package_city = 'Tour Destination';
+    }
+
+    $tour_package_state = $parsedDescription['state'] ?? ($quotationData['tour_package_state'] ?? '');
+    $tour_package_country = $parsedDescription['country'] ?? ($quotationData['tour_package_country'] ?? '');
+    $tour_package_hotel = $parsedDescription['hotel'] ?? ($parsedDescription['tour_package_hotel'] ?? ($quotationData['tour_package_hotel'] ?? ''));
+    $tour_package_theme = $parsedDescription['travel_theme'] ?? ($parsedDescription['theme'] ?? ($quotationData['tour_package_theme'] ?? 'Standard'));
+    $pickup_location = $parsedDescription['pickup_location'] ?? ($parsedDescription['pickupLocation'] ?? ($postData['pickupLocation'] ?? ($postData['pickup_location'] ?? '')));
+    $drop_location = $parsedDescription['drop_location'] ?? ($parsedDescription['dropLocation'] ?? ($postData['dropLocation'] ?? ($postData['drop_location'] ?? '')));
+    $pickupLocation = $pickup_location;
+    $dropLocation = $drop_location;
+    $tour_package_outstation_vehicle = $parsedDescription['outstation_vehicle'] ?? ($parsedDescription['vehicle'] ?? ($parsedDescription['outstationVehicle'] ?? ($quotationData['tour_package_outstation_vehicle'] ?? '')));
+    $tour_package_localsightseen_vehicle = $parsedDescription['localsightseen_vehicle'] ?? ($parsedDescription['localSightseeingVehicle'] ?? ($quotationData['tour_package_localsightseen_vehicle'] ?? ''));
+    $itinerary_overview = $parsedDescription['overview'] ?? ($quotationData['tour_package_overview'] ?? '');
+    $tour_package_overview = $itinerary_overview;
 
     $inclusions = $parsedDescription['inclusions'] ?? ($quotationData['tour_package_inclusions'] ?? []);
     if (is_string($inclusions)) {
@@ -166,46 +327,72 @@ if (!empty($quotationData)) {
 
     $quoteId = '#' . (defined('SITE_NAME') ? substr(strtoupper(preg_replace('/[^a-zA-Z]/', '', SITE_NAME)), 0, 3) : 'MIT') . '/' . $quotationId;
     $quotation_time = $quotationData['quotation_time'] ?? date('Y-m-d H:i:s');
-    $travelDate = $parsedDescription['travel_date'] ?? ($quotationData['quotation_travel_date'] ?? '');
-    $numberOfDays = (int)($quotationData['tour_package_duration'] ?? (count($itineraries) > 0 ? count($itineraries) - 1 : 0));
+    $travelDate = $parsedDescription['travel_date'] ?? ($parsedDescription['travelDate'] ?? ($quotationData['quotation_travel_date'] ?? ''));
+    $numberOfDays = (int)($quotationData['tour_package_duration'] ?? (count($itineraries) > 0 ? (count($itineraries) > 1 ? count($itineraries) - 1 : 1) : 0));
     $tour_package_duration = $numberOfDays;
 
     $price = (float)($quotationData['quotation_price'] ?? 0);
-    $quotationPriceWithOutGST = number_format($price, 2);
+    $tour_package_price_selling_adult = (float)($quotationData['quotation_per_adult'] ?? ($parsedDescription['adult_per_person'] ?? ($parsedDescription['adultPrice'] ?? ($parsedDescription['adult_price'] ?? ($price > 0 ? $price : 0)))));
+    $tour_package_price_selling_child = (float)($quotationData['quotation_per_child'] ?? ($parsedDescription['child_per_person'] ?? ($parsedDescription['childPrice'] ?? ($parsedDescription['child_price'] ?? 0))));
+    $tour_package_price_selling_infant = (float)($quotationData['quotation_per_infant'] ?? ($parsedDescription['infant_per_person'] ?? ($parsedDescription['infantPrice'] ?? ($parsedDescription['infant_price'] ?? 0))));
+    $selling_price = $price;
+    $adults = (int)($parsedDescription['adults_count'] ?? ($parsedDescription['adults'] ?? 1));
+    $children = (int)($parsedDescription['children_count'] ?? ($parsedDescription['children'] ?? 0));
+    $infants = (int)($parsedDescription['infants_count'] ?? ($parsedDescription['infants'] ?? 0));
+    $payment_link = $parsedDescription['payment_url'] ?? ($parsedDescription['payment_link'] ?? ($parsedDescription['pay_url'] ?? ''));
+
     $gstPercent = defined('GST_PERCENTAGE') ? (float)GST_PERCENTAGE : 5.0;
-    $gstAmount = number_format($price * ($gstPercent / 100), 2);
-    $quotationPriceWithGST = number_format($price + ($price * ($gstPercent / 100)), 2);
+    $basePrice = $price > 0 ? round($price / (1 + ($gstPercent / 100)), 2) : 0;
+    $quotationPriceWithOutGST = number_format($basePrice, 2);
+    $gstAmount = number_format($price - $basePrice, 2);
+    $quotationPriceWithGST = number_format($price, 2);
     $total_discount = number_format((float)($quotationData['quotation_discount'] ?? 0), 2);
 
     $passangerInfo = 'Custom Quotation';
     if (!empty($quotationData['enquiry_first_name'])) {
         $passangerInfo = trim($quotationData['enquiry_first_name'] . ' ' . ($quotationData['enquiry_last_name'] ?? ''));
     }
-
 } else {
-    // If raw draft content was posted without a quotation ID
+    // If raw draft content was posted without a quotation ID (Preview Mode)
     $templateToUse = in_array(strtolower($requestedTemplate), $availableTemplates) ? strtolower($requestedTemplate) : 'mit';
-    
-    $itinerary_title   = $postData['title'] ?? 'Tour Itinerary Proposal';
+
+    $itinerary_title   = $postData['title'] ?? ($postData['package_title'] ?? 'Tour Itinerary Proposal');
     $tour_package_title = $itinerary_title;
-    $tour_package_city = $postData['city'] ?? 'Destination';
-    $tour_package_state = $postData['state'] ?? '';
-    $tour_package_country = $postData['country'] ?? '';
-    $tour_package_hotel = $postData['hotel'] ?? '';
-    $tour_package_theme = $postData['travel_theme'] ?? ($postData['theme'] ?? 'Standard');
-    $pickup_location = $postData['pickupLocation'] ?? ($postData['pickup_location'] ?? '');
-    $drop_location = $postData['dropLocation'] ?? ($postData['drop_location'] ?? '');
-    $pickupLocation = $pickup_location;
-    $dropLocation = $drop_location;
-    $tour_package_outstation_vehicle = $postData['outstationVehicle'] ?? ($postData['outstation_vehicle'] ?? '');
-    $tour_package_localsightseen_vehicle = $postData['localSightseeingVehicle'] ?? ($postData['localsightseen_vehicle'] ?? '');
-    $itinerary_overview = $postData['overview'] ?? '';
-    $tour_package_overview = $itinerary_overview;
 
     $itineraries = $postData['days'] ?? ($postData['itinerary'] ?? []);
     if (is_string($itineraries)) {
         $itineraries = json_decode($itineraries, true) ?: [];
     }
+
+    $tour_package_city = trim((string)($postData['city'] ?? ($postData['destination'] ?? ($postData['tour_package_city'] ?? ''))));
+
+    // Auto-discover stay city from itineraries if missing or default
+    if ((empty($tour_package_city) || strtolower($tour_package_city) === 'destination' || strtolower($tour_package_city) === 'tour destination') && !empty($itineraries) && is_array($itineraries)) {
+        foreach ($itineraries as $day) {
+            $c = trim((string)($day['city'] ?? ($day['stay_city'] ?? '')));
+            $cLower = strtolower($c);
+            if ($c !== '' && !str_contains($cLower, 'overnight') && !str_contains($cLower, 'transit') && !str_contains($cLower, 'tour end') && !str_contains($cLower, 'trip end') && !str_contains($cLower, 'no stay') && !str_contains($cLower, 'no hotel')) {
+                $tour_package_city = $c;
+                break;
+            }
+        }
+    }
+    if (empty($tour_package_city)) {
+        $tour_package_city = 'Tour Destination';
+    }
+
+    $tour_package_state = $postData['state'] ?? '';
+    $tour_package_country = $postData['country'] ?? '';
+    $tour_package_hotel = $postData['hotel'] ?? ($postData['tour_package_hotel'] ?? '');
+    $tour_package_theme = $postData['travel_theme'] ?? ($postData['travelTheme'] ?? ($postData['theme'] ?? 'Standard'));
+    $pickup_location = $postData['pickupLocation'] ?? ($postData['pickup_location'] ?? '');
+    $drop_location = $postData['dropLocation'] ?? ($postData['drop_location'] ?? '');
+    $pickupLocation = $pickup_location;
+    $dropLocation = $drop_location;
+    $tour_package_outstation_vehicle = $postData['outstationVehicle'] ?? ($postData['outstation_vehicle'] ?? ($postData['vehicle'] ?? ''));
+    $tour_package_localsightseen_vehicle = $postData['localSightseeingVehicle'] ?? ($postData['localsightseen_vehicle'] ?? '');
+    $itinerary_overview = $postData['overview'] ?? '';
+    $tour_package_overview = $itinerary_overview;
 
     $inclusions = $postData['inclusions'] ?? [];
     if (is_string($inclusions)) {
@@ -221,14 +408,24 @@ if (!empty($quotationData)) {
     $quoteId = '#DRAFT-PROPOSAL';
     $quotation_time = date('Y-m-d H:i:s');
     $travelDate = $postData['travelDate'] ?? ($postData['travel_date'] ?? date('Y-m-d', strtotime('+7 days')));
-    $numberOfDays = count($itineraries) > 0 ? count($itineraries) - 1 : 1;
+
+    $numberOfDays = count($itineraries) > 0 ? (count($itineraries) > 1 ? count($itineraries) - 1 : 1) : 1;
+    if (!empty($postData['number_of_days']) && is_numeric($postData['number_of_days'])) {
+        $numberOfDays = (int)$postData['number_of_days'];
+    } elseif (!empty($postData['duration_days']) && is_numeric($postData['duration_days'])) {
+        $numberOfDays = (int)$postData['duration_days'] > 1 ? (int)$postData['duration_days'] - 1 : 1;
+    }
     $tour_package_duration = $numberOfDays;
 
-    $price = (float)($postData['totalPrice'] ?? ($postData['price'] ?? 0));
-    $tour_package_price_selling_adult = (float)($postData['adultPrice'] ?? ($postData['adult_price'] ?? ($price > 0 ? $price : 0)));
-    $tour_package_price_selling_child = (float)($postData['childPrice'] ?? ($postData['child_price'] ?? 0));
-    $tour_package_price_selling_infant = (float)($postData['infantPrice'] ?? ($postData['infant_price'] ?? 0));
+    $price = (float)($postData['totalPrice'] ?? ($postData['total_price'] ?? ($postData['price'] ?? 0)));
+    $tour_package_price_selling_adult = (float)($postData['adultPrice'] ?? ($postData['adult_price'] ?? ($postData['adult_per_person'] ?? ($price > 0 ? $price : 0))));
+    $tour_package_price_selling_child = (float)($postData['childPrice'] ?? ($postData['child_price'] ?? ($postData['child_per_person'] ?? 0)));
+    $tour_package_price_selling_infant = (float)($postData['infantPrice'] ?? ($postData['infant_price'] ?? ($postData['infant_per_person'] ?? 0)));
     $selling_price = $price;
+    $adults = (int)($postData['adults_count'] ?? ($postData['adults'] ?? 1));
+    $children = (int)($postData['children_count'] ?? ($postData['children'] ?? 0));
+    $infants = (int)($postData['infants_count'] ?? ($postData['infants'] ?? 0));
+    $payment_link = $postData['payment_url'] ?? ($postData['payment_link'] ?? ($postData['pay_url'] ?? ($postData['paymentUrl'] ?? '')));
 
     $gstPercent = defined('GST_PERCENTAGE') ? (float)GST_PERCENTAGE : 5.0;
     $basePrice = $price > 0 ? round($price / (1 + ($gstPercent / 100)), 2) : 0;
