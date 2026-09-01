@@ -27,6 +27,10 @@ if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'
         $t2 = date('Y-m-d 23:59:59', strtotime($dates[1]));
         $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
     }
+} else {
+    $t1 = date('Y-m-d 00:00:00', strtotime('-29 days'));
+    $t2 = date('Y-m-d 23:59:59');
+    $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
 }
 
 $searchFilter = "";

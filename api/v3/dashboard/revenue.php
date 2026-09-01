@@ -12,7 +12,7 @@ if (!isset($connection)) {
 $tblPrefix  = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId     = defined('SITE_ID')      ? (int) SITE_ID : 0;
 
-$t1 = date('Y-m-d 00:00:00', strtotime('-1 month'));
+$t1 = date('Y-m-d 00:00:00', strtotime('-29 days'));
 $t2 = date('Y-m-d 23:59:59');
 
 if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'] !== 'null') {

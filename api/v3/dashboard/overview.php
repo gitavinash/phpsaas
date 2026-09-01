@@ -22,7 +22,7 @@ $userFilter  = ($accessType !== 'administrator' && $userId > 0)
 
 // Date Duration Logic: Default to Last 30 Days if no daterange query provided
 $daterangeFilter = "";
-$t1 = date('Y-m-d 00:00:00', strtotime('-1 month'));
+$t1 = date('Y-m-d 00:00:00', strtotime('-29 days'));
 $t2 = date('Y-m-d 23:59:59');
 
 if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'] !== 'null') {

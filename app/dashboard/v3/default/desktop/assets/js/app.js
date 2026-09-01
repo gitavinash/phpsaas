@@ -426,8 +426,16 @@ $(document).ready(function (e) {
   initSelect2Components();
   initGalleryUploaders();
 
+  if (!dateRangeParams && (window.location.pathname.indexOf("/dashboard") !== -1 || $("#dashboardReportingDateRangePicker").length || $(".kpi-grid").length)) {
+    if (typeof moment !== "undefined") {
+      dateRangeParams =
+        moment().subtract(29, "days").format("DD-MMM-YYYY") +
+        " - " +
+        moment().format("DD-MMM-YYYY");
+    }
+  }
   dateRangeParams = dateRangeParams === "" ? "" : dateRangeParams;
-  if (dateRangeParams == null) {
+  if (dateRangeParams == null || dateRangeParams === "") {
     dateRangeValue = "";
   } else {
     dateRangeValue = dateRangeParams;
@@ -1562,8 +1570,12 @@ $(document).ready(function (e) {
 
   // Dashboard Aggregator Orchestrator
   function loadDashboardV3Data(force) {
-    const daterange =
-      typeof dateRangeParams !== "undefined" ? dateRangeParams : "";
+    let daterange =
+      typeof dateRangeParams !== "undefined" && dateRangeParams
+        ? dateRangeParams
+        : (typeof moment !== "undefined"
+            ? moment().subtract(29, "days").format("DD-MMM-YYYY") + " - " + moment().format("DD-MMM-YYYY")
+            : "");
     if (!force && lastLoadedDashboardRange === daterange) {
       return;
     }
@@ -2505,8 +2517,8 @@ $(document).ready(function (e) {
     )
       return;
 
-    let start = moment().startOf("month");
-    let end = moment().endOf("month");
+    let start = moment().subtract(29, "days").startOf("day");
+    let end = moment().endOf("day");
 
     if (dateRangeParams) {
       const parts = dateRangeParams.split(" - ");
@@ -2529,7 +2541,7 @@ $(document).ready(function (e) {
     }
 
     function getFriendlyPeriodLabel(s, e) {
-      if (!s || !e) return "This Month";
+      if (!s || !e) return "Last 30 Days";
       const today = moment().startOf("day");
       const sDay = s.clone().startOf("day");
       const eDay = e.clone().startOf("day");
@@ -2572,6 +2584,8 @@ $(document).ready(function (e) {
       let durationText = `${diffDays} Days`;
       if (diffDays === 1) {
         durationText = "1 Day";
+      } else if (friendlyLabel === "Last 30 Days" || diffDays === 30) {
+        durationText = "30 Days";
       } else if (diffDays >= 28 && diffDays <= 31) {
         durationText = "1 Month";
       } else if (diffDays > 31) {
@@ -2603,13 +2617,13 @@ $(document).ready(function (e) {
           startDate: start,
           endDate: end,
           ranges: {
+            "Last 30 Days": [moment().subtract(29, "days"), moment()],
             Today: [moment(), moment()],
             Yesterday: [
               moment().subtract(1, "days"),
               moment().subtract(1, "days"),
             ],
             "Last 7 Days": [moment().subtract(6, "days"), moment()],
-            "Last 30 Days": [moment().subtract(29, "days"), moment()],
             "This Month": [moment().startOf("month"), moment().endOf("month")],
             "Last Month": [
               moment().subtract(1, "month").startOf("month"),
@@ -3911,6 +3925,19 @@ $(document).ready(function (e) {
     // 1. Sync URL Query Parameters
     const urlParams = new URLSearchParams(window.location.search);
     dateRangeParams = urlParams.get("daterange") || "";
+    if (
+      !dateRangeParams &&
+      (window.location.pathname.indexOf("/dashboard") !== -1 ||
+        $("#dashboardReportingDateRangePicker").length ||
+        $(".kpi-grid").length)
+    ) {
+      if (typeof moment !== "undefined") {
+        dateRangeParams =
+          moment().subtract(29, "days").format("DD-MMM-YYYY") +
+          " - " +
+          moment().format("DD-MMM-YYYY");
+      }
+    }
     dateRangeValue = dateRangeParams;
     leadId = urlParams.get("id");
     if (typeof tempId !== "undefined" && tempId) {

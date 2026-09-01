@@ -1,6 +1,12 @@
 <?php
-$displayDateRange = 'This Month';
-$displayDuration = '1 Month';
+$displayDateRange = 'Last 30 Days';
+$displayDuration = '30 Days';
+
+if (!isset($daterange) || empty($daterange)) {
+    $defaultStart = date('d-M-Y', strtotime('-29 days'));
+    $defaultEnd = date('d-M-Y');
+    $daterange = $defaultStart . ' - ' . $defaultEnd;
+}
 
 if (isset($daterange) && !empty($daterange)) {
     $dates = explode(' - ', trim($daterange));
@@ -32,6 +38,8 @@ if (isset($daterange) && !empty($daterange)) {
 
             if ($days == 1) {
                 $displayDuration = '1 Day';
+            } elseif ($displayDateRange == 'Last 30 Days' || $days == 30) {
+                $displayDuration = '30 Days';
             } elseif ($days >= 28 && $days <= 31) {
                 $displayDuration = '1 Month';
             } elseif ($days > 31) {
