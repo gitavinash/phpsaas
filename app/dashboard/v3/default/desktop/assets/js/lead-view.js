@@ -1190,7 +1190,7 @@
         pending--;
       } else {
         $.ajax({
-          url: "/api/v3/properties/?status=active&limit=200",
+          url: "/api/v3/properties/?status=active&limit=1000",
           type: "GET",
           dataType: "json",
           success: function (res) {
@@ -1385,11 +1385,12 @@
       return html;
     },
 
-    buildHotelSelectHtml: function (currentCity, selectedCategory, selectedHotelName) {
+    buildHotelSelectHtml: function (currentCity, selectedCategory, selectedHotelName, selectedHotelId) {
       const self = this;
       const props = self.propertiesList || [];
       const currCityLower = (currentCity || "").toLowerCase().trim();
       const selHotelLower = (selectedHotelName || "").toLowerCase().trim();
+      const selHotelIdStr = selectedHotelId ? String(selectedHotelId).trim() : (parseInt(selectedHotelName) > 0 ? String(selectedHotelName).trim() : "");
       const selCatLower = (selectedCategory || "all").toLowerCase().trim();
 
       // City-based no-stay detection (driven by Stay City selection)
@@ -1417,15 +1418,25 @@
 
       props.forEach((p) => {
         const pCity = (p.city || "").toLowerCase().trim();
-        if (currCityLower && pCity === currCityLower) {
+        const cityMatches = !currCityLower || pCity === currCityLower || pCity.includes(currCityLower) || currCityLower.includes(pCity);
+
+        if (cityMatches) {
+          const isTargetHotel = (selHotelIdStr && String(p.id) === selHotelIdStr) ||
+                                (selHotelLower && (p.title.toLowerCase().trim() === selHotelLower || selHotelLower.includes(p.title.toLowerCase().trim())));
+
           if (selCatLower && selCatLower !== "all") {
             const pType = (p.type || "").toLowerCase().trim();
             if (
+              isTargetHotel ||
               pType === selCatLower ||
               (selCatLower === "3_star_hotel" && pType.includes("3")) ||
               (selCatLower === "4_star_hotel" && pType.includes("4")) ||
               (selCatLower === "5_star_hotel" && (pType.includes("5") || pType.includes("luxury"))) ||
-              (selCatLower === "resorts" && pType.includes("resort"))
+              (selCatLower === "resorts" && pType.includes("resort")) ||
+              (selCatLower === "heritage_hotel" && pType.includes("heritage")) ||
+              (selCatLower === "home_stay" && (pType.includes("home") || pType.includes("stay") || pType.includes("villa"))) ||
+              (selCatLower === "tent" && (pType.includes("tent") || pType.includes("camp"))) ||
+              (selCatLower === "2_star_hotel" && pType.includes("2"))
             ) {
               matchedProps.push(p);
             }
@@ -1435,14 +1446,30 @@
         }
       });
 
-      let html = `<option value="">-- Choose Hotel in ${escapeHtml(currentCity || 'Stay City')} (${matchedProps.length} Available) --</option>`;
+      // Deduplicate matchedProps by id
+      const uniqueProps = [];
+      const seenIds = new Set();
+      matchedProps.forEach((p) => {
+        if (!seenIds.has(p.id)) {
+          seenIds.add(p.id);
+          uniqueProps.push(p);
+        }
+      });
+      matchedProps = uniqueProps;
 
+      const cityDisplay = currentCity ? (currentCity.charAt(0).toUpperCase() + currentCity.slice(1)) : "Stay City";
+      let html = `<option value="">-- Choose Hotel in ${escapeHtml(cityDisplay)} (${matchedProps.length} Available) --</option>`;
+
+      let foundSelected = false;
       if (matchedProps.length > 0) {
         matchedProps.forEach((p) => {
-          const isSel =
-            p.title.toLowerCase().trim() === selHotelLower ? "selected" : "";
+          const isSel = !foundSelected && (
+            (selHotelIdStr && String(p.id) === selHotelIdStr) ||
+            (selHotelLower && (p.title.toLowerCase().trim() === selHotelLower || selHotelLower.includes(p.title.toLowerCase().trim())))
+          );
+          if (isSel) foundSelected = true;
           const stateLabel = p.state ? `, ${escapeHtml(p.state)}` : "";
-          html += `<option value="${p.id}" data-type="${escapeHtml(p.type || "")}" data-city="${escapeHtml(p.city || "")}" data-state="${escapeHtml(p.state || "")}" ${isSel}>${escapeHtml(p.title)} — ${escapeHtml(p.city || "")}${stateLabel}</option>`;
+          html += `<option value="${p.id}" data-type="${escapeHtml(p.type || "")}" data-city="${escapeHtml(p.city || "")}" data-state="${escapeHtml(p.state || "")}" ${isSel ? "selected" : ""}>${escapeHtml(p.title)} — ${escapeHtml(p.city || "")}${stateLabel}</option>`;
         });
       } else {
         html += `<option value="" disabled>No properties found in ${escapeHtml(currentCity || 'selected city')}</option>`;
@@ -1450,6 +1477,7 @@
 
       const isCustomSelected =
         selectedHotelName &&
+        !foundSelected &&
         !matchedProps.some((p) => p.title.toLowerCase().trim() === selHotelLower);
 
       html += `<option value="custom" ${isCustomSelected ? "selected" : ""}>Enter Custom Hotel Name</option>`;
@@ -1537,25 +1565,72 @@
     },
 
     loadRoomTypesForHotel: function (propertyId, $roomSelect, selectedRoomType) {
-      const selRoomLower = (selectedRoomType || "deluxe room")
-        .toLowerCase()
-        .trim();
+      const self = this;
+      self.hotelRoomsCache = self.hotelRoomsCache || {};
 
-      const renderDefaultRooms = () => {
-        const defaultRooms = [
-          "Deluxe Room",
-          "Standard Room",
-          "Superior Room",
-          "Executive Suite",
-          "Family Room",
-        ];
-        let html = `<option value="">-- Select Room Type --</option>`;
-        defaultRooms.forEach((r) => {
-          const isSel = r.toLowerCase() === selRoomLower ? "selected" : "";
-          html += `<option value="${r}" ${isSel}>${r}</option>`;
+      const rawSel = (selectedRoomType || "").toString().trim();
+      const cleanSel = rawSel.replace(/^\d+:/, "").toLowerCase().replace(/room/g, "").trim();
+
+      const renderRoomsHtml = (roomsList) => {
+        $roomSelect.prop("disabled", false);
+        if (!roomsList || roomsList.length === 0) {
+          const defaultRooms = [
+            "Deluxe Room",
+            "Standard Room",
+            "Superior Room",
+            "Executive Suite",
+            "Family Room",
+          ];
+          let html = `<option value="">-- Select Room Type --</option>`;
+          defaultRooms.forEach((r) => {
+            const isSel = cleanSel && (r.toLowerCase().includes(cleanSel) || cleanSel.includes(r.toLowerCase().replace(/room/g, "").trim()));
+            html += `<option value="${r}" ${isSel ? "selected" : ""}>${r}</option>`;
+          });
+          html += `<option value="custom">Enter Custom Room</option>`;
+          $roomSelect.html(html);
+          if (
+            typeof $.fn.select2 !== "undefined" &&
+            $roomSelect.hasClass("select2-hidden-accessible")
+          ) {
+            $roomSelect.trigger("change.select2");
+          }
+          return;
+        }
+
+        let html = `<option value="">-- Select Room Type (${roomsList.length} Available) --</option>`;
+        let foundMatch = false;
+
+        roomsList.forEach((rm) => {
+          const rName = (rm.name || rm.type_label || rm.type || "Deluxe Room").trim();
+          const cleanName = rName.toLowerCase().replace(/room/g, "").trim();
+          const isSel = !foundMatch && cleanSel && (
+            cleanName === cleanSel ||
+            cleanSel.includes(cleanName) ||
+            cleanName.includes(cleanSel) ||
+            String(rm.id) === rawSel ||
+            (rm.val && rm.val.toLowerCase() === rawSel.toLowerCase())
+          );
+          if (isSel) foundMatch = true;
+          html += `<option value="${escapeHtml(rName)}" data-id="${rm.id || 0}" ${isSel ? "selected" : ""}>${escapeHtml(rName)}</option>`;
         });
+
+        // By default room type mentioned in itinerary: if not in list, add it as selected
+        if (!foundMatch && rawSel && rawSel !== "custom" && rawSel !== "0") {
+          const customRName = rawSel.replace(/^\d+:/, "").trim();
+          html = `<option value="${escapeHtml(customRName)}" selected>${escapeHtml(customRName)}</option>` + html;
+          foundMatch = true;
+        }
+
+        // Auto-select if only 1 room type available and none selected
+        if (!foundMatch && roomsList.length === 1) {
+          const onlyRName = (roomsList[0].name || roomsList[0].type_label || roomsList[0].type || "").trim();
+          if (onlyRName) {
+            html = html.replace(`value="${escapeHtml(onlyRName)}"`, `value="${escapeHtml(onlyRName)}" selected`);
+          }
+        }
+
         html += `<option value="custom">Enter Custom Room</option>`;
-        $roomSelect.prop("disabled", false).html(html);
+        $roomSelect.html(html);
         if (
           typeof $.fn.select2 !== "undefined" &&
           $roomSelect.hasClass("select2-hidden-accessible")
@@ -1571,7 +1646,7 @@
             : "Select Hotel First";
         $roomSelect
           .prop("disabled", true)
-          .html(`<option value="${placeholderText}">${placeholderText}</option>`);
+          .html(`<option value="">${placeholderText}</option>`);
         if (
           typeof $.fn.select2 !== "undefined" &&
           $roomSelect.hasClass("select2-hidden-accessible")
@@ -1582,7 +1657,21 @@
       }
 
       if (propertyId === "custom" || parseInt(propertyId) <= 0) {
-        renderDefaultRooms();
+        renderRoomsHtml([]);
+        return;
+      }
+
+      // Check cache first
+      if (self.hotelRoomsCache[propertyId] && self.hotelRoomsCache[propertyId].length > 0) {
+        renderRoomsHtml(self.hotelRoomsCache[propertyId]);
+        return;
+      }
+
+      // Check if property in propertiesList already has rooms
+      const propObj = (self.propertiesList || []).find(p => String(p.id) === String(propertyId));
+      if (propObj && Array.isArray(propObj.rooms) && propObj.rooms.length > 0) {
+        self.hotelRoomsCache[propertyId] = propObj.rooms;
+        renderRoomsHtml(propObj.rooms);
         return;
       }
 
@@ -1601,37 +1690,12 @@
         type: "GET",
         dataType: "json",
         success: function (res) {
-          $roomSelect.prop("disabled", false);
-          if (res && res.rooms && res.rooms.length > 0) {
-            let html = `<option value="">-- Select Room Type (${res.rooms.length} Available) --</option>`;
-            let found = false;
-            res.rooms.forEach((rm) => {
-              const rName = rm.type_label || rm.type || "Deluxe Room";
-              const isSel =
-                rName.toLowerCase().trim() === selRoomLower ||
-                (rm.type && rm.type.toLowerCase() === selRoomLower);
-              if (isSel) found = true;
-              html += `<option value="${escapeHtml(rName)}" ${isSel ? "selected" : ""}>${escapeHtml(rName)}</option>`;
-            });
-            if (!found && selectedRoomType && selectedRoomType !== "Deluxe Room") {
-              html =
-                `<option value="${escapeHtml(selectedRoomType)}" selected>${escapeHtml(selectedRoomType)}</option>` +
-                html;
-            }
-            html += `<option value="custom">Enter Custom Room</option>`;
-            $roomSelect.html(html);
-            if (
-              typeof $.fn.select2 !== "undefined" &&
-              $roomSelect.hasClass("select2-hidden-accessible")
-            ) {
-              $roomSelect.trigger("change.select2");
-            }
-          } else {
-            renderDefaultRooms();
-          }
+          const loadedRooms = (res && res.rooms) || [];
+          self.hotelRoomsCache[propertyId] = loadedRooms;
+          renderRoomsHtml(loadedRooms);
         },
         error: function () {
-          renderDefaultRooms();
+          renderRoomsHtml([]);
         },
       });
     },
@@ -1708,10 +1772,12 @@
       const self = this;
       const title = d.day || `Day ${num} - Tour Plan`;
       const overview = d.overview || "";
-      const city = d.city || d.stay_city || "";
-      const hotel = d.hotel || "";
-      const hotelStars = d.hotel_stars || "3_star_hotel";
-      const roomType = d.room_type || "Deluxe Room";
+      const city = (d.stay || d.city || d.stay_city || "").trim();
+      const hotelId = parseInt(d.hotel_id || d.assigned_hotel_id || 0) || 0;
+      const hotelTitle = d.hotel_title || d.hotel || "";
+      const hotel = hotelTitle || (hotelId ? String(hotelId) : "");
+      const hotelStars = d.hotel_stars || d.hotel_type || "all";
+      const roomType = d.room_type || d.room_type_name || d.assigned_room_type || "";
       const mealPlan = d.meal_plan || "CP";
       const vehicle = d.vehicle || "Private Sedan";
       const transferNotes = d.transfer_notes || "";
@@ -1727,7 +1793,7 @@
 
       const citySelectHtml = self.buildCitySelectHtml(city, num);
       const categorySelectHtml = self.getPropertyCategoryOptionsHtml(hotelStars);
-      const hotelSelectHtml = self.buildHotelSelectHtml(city, hotelStars, hotel);
+      const hotelSelectHtml = self.buildHotelSelectHtml(city, hotelStars, hotelTitle, hotelId);
       const vehicleSelectHtml = self.buildVehicleSelectHtml(vehicle);
       let dayImg = d.feature_image || d.image || d.day_image || "";
       if (!dayImg && self.selectedPackage && self.selectedPackage.gallery_image_list) {
@@ -1832,7 +1898,7 @@
       $("#itinDaysStack").append($card);
 
       // Load initial room types for selected hotel
-      const selectedPropId = $card.find(".itin-day-hotel-select").val();
+      const selectedPropId = $card.find(".itin-day-hotel-select").val() || hotelId;
       self.loadRoomTypesForHotel(
         selectedPropId,
         $card.find(".itin-day-room-type"),
@@ -2768,12 +2834,12 @@
       $(document).on("change", ".itin-day-city-select", function () {
         const $card = $(this).closest(".v3-itin-day-card");
         const selectedCity = $(this).val();
-        const selectedCategory = $card.find(".itin-day-hotel-stars").val();
+        const selectedCategory = $card.find(".itin-day-hotel-stars").val() || "all";
         const $hotelSelect = $card.find(".itin-day-hotel-select");
         const $roomSelect  = $card.find(".itin-day-room-type");
         const $customInput = $card.find(".itin-day-hotel-custom");
 
-        const cityLower = (selectedCity || "").toLowerCase();
+        const cityLower = (selectedCity || "").toLowerCase().trim();
         const noStayCity =
           cityLower.includes("overnight") ||
           cityLower.includes("transit")   ||
@@ -2790,11 +2856,11 @@
           // Lock hotel & room — no stay needed for this city
           let noStayLabel = "No Hotel Stay";
           if (cityLower.includes("overnight") || cityLower.includes("transit")) {
-            noStayLabel = "Overnight / In Transit \u2014 No Hotel Stay";
+            noStayLabel = "Overnight / In Transit — No Hotel Stay";
           } else if (cityLower.includes("end") || cityLower.includes("departure")) {
-            noStayLabel = "Tour End / Departure \u2014 No Hotel Stay";
+            noStayLabel = "Tour End / Departure — No Hotel Stay";
           } else if (cityLower.includes("self")) {
-            noStayLabel = "Self Arranged \u2014 No Hotel Stay";
+            noStayLabel = "Self Arranged — No Hotel Stay";
           }
           $hotelSelect
             .html(`<option value="no_hotel" selected>${noStayLabel}</option>`)
@@ -2811,14 +2877,48 @@
 
         // Normal city — re-enable and rebuild hotel list
         $hotelSelect.prop("disabled", false);
-        $hotelSelect.html(
-          self.buildHotelSelectHtml(selectedCity, selectedCategory, ""),
+
+        const updateDropdown = () => {
+          $hotelSelect.html(
+            self.buildHotelSelectHtml(selectedCity, selectedCategory, "", 0),
+          );
+          if (typeof $.fn.select2 !== "undefined") {
+            $hotelSelect.select2(self.getHotelSelect2Opts($("#modalSendItinerary")));
+          }
+          $hotelSelect.trigger("change");
+        };
+
+        // If properties for this city are not in self.propertiesList, fetch them dynamically
+        const hasCityProps = (self.propertiesList || []).some(
+          p => (p.city || "").toLowerCase().trim() === cityLower
         );
 
-        if (typeof $.fn.select2 !== "undefined") {
-          $hotelSelect.select2(self.getHotelSelect2Opts($("#modalSendItinerary")));
+        if (!hasCityProps && selectedCity) {
+          $.ajax({
+            url: `/api/v3/packages/hotels/?city=${encodeURIComponent(selectedCity)}`,
+            type: "GET",
+            dataType: "json",
+            success: function (cRes) {
+              if (cRes && cRes.hotels && cRes.hotels.length > 0) {
+                cRes.hotels.forEach(h => {
+                  if (!self.propertiesList.some(p => p.id === h.id)) {
+                    self.propertiesList.push(h);
+                  }
+                  if (h.rooms && Array.isArray(h.rooms)) {
+                    self.hotelRoomsCache = self.hotelRoomsCache || {};
+                    self.hotelRoomsCache[h.id] = h.rooms;
+                  }
+                });
+              }
+              updateDropdown();
+            },
+            error: function () {
+              updateDropdown();
+            }
+          });
+        } else {
+          updateDropdown();
         }
-        $hotelSelect.trigger("change");
       });
 
       // Stay Type / Rating Change -> Filter Hotels
@@ -2827,6 +2927,7 @@
         const selectedCategory = $(this).val();
         const selectedCity = $card.find(".itin-day-city-select").val();
         const $hotelSelect = $card.find(".itin-day-hotel-select");
+        const currentHotelVal = $hotelSelect.val();
         const currentHotelName = $hotelSelect
           .find("option:selected")
           .text()
@@ -2838,7 +2939,7 @@
         }
 
         $hotelSelect.html(
-          self.buildHotelSelectHtml(selectedCity, selectedCategory, currentHotelName),
+          self.buildHotelSelectHtml(selectedCity, selectedCategory, currentHotelName, currentHotelVal),
         );
 
         if (typeof $.fn.select2 !== "undefined") {
@@ -2869,12 +2970,12 @@
           $card.find(".itin-day-city-select").val(pCity).trigger("change.select2");
         }
 
-        // Sync star rating/category if property has a valid type and category is 'all'
-        if (pType && $starSelect.val() === "all") {
+        // Sync star rating/category if property has a valid type
+        if (pType && $starSelect.length) {
           $starSelect.val(pType).trigger("change.select2");
         }
 
-        self.loadRoomTypesForHotel(propId, $roomSelect, $roomSelect.val());
+        self.loadRoomTypesForHotel(propId, $roomSelect, "");
       });
 
       // Room Type Custom Toggle
@@ -2966,6 +3067,8 @@
             .trim();
 
           const dayImage = $(this).attr("data-day-image") || "";
+          const hotelId = parseInt(hotelVal) > 0 ? parseInt(hotelVal) : 0;
+          const roomTypeId = parseInt($(this).find(".itin-day-room-type option:selected").data("id") || 0) || 0;
 
           structuredItin.push({
             day: dayTitle,
@@ -2973,9 +3076,12 @@
             stay_city: stayCity,
             overview: dayOverview,
             hotel: hotelName,
+            hotel_id: hotelId,
+            hotel_title: hotelName,
             stay: hotelName,
             hotel_stars: hotelStars,
             room_type: roomType,
+            room_type_id: roomTypeId,
             meal_plan: mealPlan,
             vehicle: vehicleType,
             transfer_notes: transferNotes,
@@ -3239,6 +3345,8 @@
             .trim();
 
           const dayImage = $(this).attr("data-day-image") || "";
+          const hotelId = parseInt(hotelVal) > 0 ? parseInt(hotelVal) : 0;
+          const roomTypeId = parseInt($(this).find(".itin-day-room-type option:selected").data("id") || 0) || 0;
 
           structuredItin.push({
             day: dayTitle,
@@ -3246,9 +3354,12 @@
             stay_city: stayCity,
             overview: dayOverview,
             hotel: hotelName,
+            hotel_id: hotelId,
+            hotel_title: hotelName,
             stay: hotelName,
             hotel_stars: hotelStars,
             room_type: roomType,
+            room_type_id: roomTypeId,
             meal_plan: mealPlan,
             vehicle: vehicleType,
             transfer_notes: transferNotes,
@@ -4270,37 +4381,127 @@
       self.showItinDaysLoader();
 
       if (pkg.tour_package_id && parseInt(pkg.tour_package_id) > 0) {
-        $.ajax({
-          url: `/api/v3/packages/hotels.php?package_id=${pkg.tour_package_id}`,
-          type: "GET",
-          dataType: "json",
-          success: function (hRes) {
-            if (hRes && hRes.hotels && hRes.hotels.length > 0) {
-              const assignedMap = {};
-              hRes.hotels.forEach((h) => {
-                if (h.assigned_night > 0) {
+        const pkgId = pkg.tour_package_id;
+
+        $.when(
+          $.ajax({
+            url: `/api/v3/packages/get/?id=${encodeURIComponent(pkgId)}`,
+            type: "GET",
+            dataType: "json",
+          }),
+          $.ajax({
+            url: `/api/v3/packages/hotels/?package_id=${encodeURIComponent(pkgId)}`,
+            type: "GET",
+            dataType: "json",
+          }),
+        )
+          .done(function (getResArr, hotResArr) {
+            const getRes = getResArr && getResArr[0] ? getResArr[0] : getResArr || {};
+            const hotRes = hotResArr && hotResArr[0] ? hotResArr[0] : hotResArr || {};
+
+            // Merge hotels into self.propertiesList and cache rooms
+            if (hotRes && hotRes.hotels && hotRes.hotels.length > 0) {
+              self.propertiesList = self.propertiesList || [];
+              self.hotelRoomsCache = self.hotelRoomsCache || {};
+              hotRes.hotels.forEach((h) => {
+                if (!self.propertiesList.some((p) => p.id === h.id)) {
+                  self.propertiesList.push(h);
+                }
+                if (h.rooms && Array.isArray(h.rooms) && h.rooms.length > 0) {
+                  self.hotelRoomsCache[h.id] = h.rooms;
+                }
+              });
+            }
+
+            // Build assigned hotels map from getRes package_hotels and hotRes
+            const assignedMap = {};
+            const rawPkgHotels =
+              (getRes && getRes.package && getRes.package.package_hotels) ||
+              (getRes && getRes.package_hotels) ||
+              null;
+            if (rawPkgHotels) {
+              const pHotelsArr = Array.isArray(rawPkgHotels)
+                ? rawPkgHotels
+                : Object.values(rawPkgHotels);
+              pHotelsArr.forEach((ph) => {
+                const night = parseInt(ph.night || ph.assigned_night || 0);
+                if (night > 0) {
+                  assignedMap[night] = {
+                    id: ph.hotel_id || ph.id,
+                    title: ph.hotel_title || ph.title,
+                    city: ph.city || "",
+                    assigned_room_type: ph.room_type || ph.assigned_room_type || "",
+                    type: ph.property_type || ph.type || "",
+                  };
+                }
+              });
+            }
+            if (hotRes && hotRes.hotels) {
+              hotRes.hotels.forEach((h) => {
+                if (h.assigned_night > 0 && !assignedMap[h.assigned_night]) {
                   assignedMap[h.assigned_night] = h;
                 }
               });
-              daysList = daysList.map((d, i) => {
-                const nightNum = i + 1;
-                if (assignedMap[nightNum]) {
-                  const hObj = assignedMap[nightNum];
-                  if (!d.hotel) d.hotel = hObj.title;
-                  if (!d.city || d.city === defaultCity) d.city = hObj.city || d.city;
-                  if (hObj.assigned_room_type && !d.room_type) {
-                    d.room_type = hObj.assigned_room_type;
-                  }
-                }
-                return d;
-              });
             }
+
+            // If get.php returned an enriched itinerary, use it as baseline
+            if (
+              getRes &&
+              getRes.status === "success" &&
+              getRes.package &&
+              Array.isArray(getRes.package.itinerary) &&
+              getRes.package.itinerary.length > 0
+            ) {
+              daysList = getRes.package.itinerary;
+            }
+
+            // Map daysList to ensure hotel_id, hotel, room_type, city are properly populated
+            daysList = daysList.map((d, i) => {
+              const nightNum = i + 1;
+              const assignedH = assignedMap[nightNum];
+
+              // 1. Stay City
+              if (!d.stay && !d.city && !d.stay_city) {
+                const detected =
+                  detectCityFromText(d.day) || detectCityFromText(d.overview);
+                d.stay =
+                  (assignedH && assignedH.city) || detected || defaultCity || "";
+                d.city = d.stay;
+              } else {
+                d.stay =
+                  d.stay ||
+                  d.city ||
+                  d.stay_city ||
+                  (assignedH && assignedH.city) ||
+                  "";
+                d.city = d.stay;
+              }
+
+              // 2. Hotel & Room Type
+              if (assignedH) {
+                if (!d.hotel_id) d.hotel_id = assignedH.id;
+                if (!d.hotel_title) d.hotel_title = assignedH.title;
+                if (!d.hotel) d.hotel = assignedH.title;
+                if (assignedH.assigned_room_type && !d.room_type) {
+                  d.room_type = assignedH.assigned_room_type;
+                }
+                if (assignedH.type && !d.hotel_stars) {
+                  d.hotel_stars = assignedH.type;
+                }
+              }
+
+              if (d.hotel_id && !d.hotel) {
+                d.hotel = d.hotel_title || d.hotel_id;
+              }
+
+              return d;
+            });
+
             self.renderItineraryDays(daysList);
-          },
-          error: function () {
+          })
+          .fail(function () {
             self.renderItineraryDays(daysList);
-          },
-        });
+          });
       } else {
         self.renderItineraryDays(daysList);
       }
