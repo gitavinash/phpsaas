@@ -1793,7 +1793,7 @@
 
       const citySelectHtml = self.buildCitySelectHtml(city, num);
       const categorySelectHtml = self.getPropertyCategoryOptionsHtml(hotelStars);
-      const hotelSelectHtml = self.buildHotelSelectHtml(city, hotelStars, hotelTitle, hotelId);
+      const hotelSelectHtml = self.buildHotelSelectHtml(city, "all", hotelTitle, hotelId);
       const vehicleSelectHtml = self.buildVehicleSelectHtml(vehicle);
       let dayImg = d.feature_image || d.image || d.day_image || "";
       if (!dayImg && self.selectedPackage && self.selectedPackage.gallery_image_list) {
@@ -4485,8 +4485,9 @@
                 if (assignedH.assigned_room_type && !d.room_type) {
                   d.room_type = assignedH.assigned_room_type;
                 }
-                if (assignedH.type && !d.hotel_stars) {
-                  d.hotel_stars = assignedH.type;
+                if (!d.hotel_stars) {
+                  const defaultPkgHotel = (pkg.tour_package_hotel || pkg.hotel || "3_star_hotel").trim() || "3_star_hotel";
+                  d.hotel_stars = (assignedH.type && assignedH.type !== "home_stay") ? assignedH.type : defaultPkgHotel;
                 }
               }
 
