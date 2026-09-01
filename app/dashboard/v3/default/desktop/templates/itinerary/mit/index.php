@@ -658,18 +658,136 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             line-height: 1.7;
         }
 
-        .day-stay-box {
+        /* ── Day Stay & Property Information (Plain Layout) ── */
+        .day-stay-plain-wrap {
             margin-top: 16px;
-            display: inline-flex;
+            padding-top: 12px;
+            border-top: 1px dashed #cbd5e1;
+            page-break-inside: avoid;
+        }
+
+        /* First Row: Stay City */
+        .stay-city-plain-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #334155;
+            margin-bottom: 10px;
+        }
+
+        .stay-city-plain-row i {
+            font-size: 15px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        .stay-city-title {
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+        }
+
+        .stay-city-val {
+            font-weight: 800;
+            color: #0f172a;
+            font-size: 13.5px;
+            font-family: "Mulish", sans-serif;
+        }
+
+        /* Second Row: Property Information */
+        .stay-property-plain-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 14px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .stay-property-thumb-wrap {
+            width: 78px;
+            height: 56px;
+            border-radius: 6px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stay-property-thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .stay-property-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .stay-property-top {
+            display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            background: #f1f8ff;
-            border: 1px solid #bfdbfe;
-            color: #1e40af;
-            font-size: 13px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .stay-property-title {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 800;
+            color: #0f172a;
+            font-family: "Mulish", sans-serif;
+            line-height: 1.2;
+        }
+
+        .stay-property-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 1px 7px;
+            border-radius: 4px;
+            font-size: 10.5px;
             font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .category-tag {
+            background: #fef3c7;
+            color: #b45309;
+            border: 1px solid #fde68a;
+        }
+
+        .category-tag i {
+            font-size: 10px;
+            color: #f59e0b;
+        }
+
+        .stay-property-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 11.5px;
+            color: #64748b;
+        }
+
+        .stay-property-meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stay-property-meta-item i {
+            font-size: 13px;
+            color: var(--primary-color);
         }
 
         /* Inclusions / Exclusions */
@@ -1177,19 +1295,32 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
 
         /* Legal Policies & Terms Page Layout */
         /* ── Important Policies – plain document layout ── */
-        #page-policies .hero {
+        #page-policies .hero,
+        .page-policies-page .hero,
+        #page-contact .hero {
             height: 42mm !important;
             min-height: 42mm !important;
             max-height: 42mm !important;
         }
 
-        #page-policies .container {
+        #page-policies .hero .default-day-image h2,
+        .page-policies-page .hero .default-day-image h2,
+        #page-contact .hero .default-day-image h2 {
+            font-size: 2.2em !important;
+            padding: 0 20px !important;
+        }
+
+        #page-policies .container,
+        .page-policies-page .container,
+        #page-contact .container {
             padding: 8px 50px 10px 50px;
             max-height: calc(297mm - 42mm - 28mm);
             overflow: visible;
         }
 
-        #page-policies .top-heading {
+        #page-policies .top-heading,
+        .page-policies-page .top-heading,
+        #page-contact .top-heading {
             margin-bottom: 6px;
         }
 
@@ -1268,28 +1399,28 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         .company-contact-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            padding: 24px;
-            margin-top: 20px;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-top: 10px;
         }
 
         .company-contact-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            margin-top: 14px;
+            gap: 8px 14px;
+            margin-top: 10px;
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 13.5px;
+            gap: 8px;
+            font-size: 12px;
             color: #334155;
         }
 
         .contact-item i {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--primary-color);
             flex-shrink: 0;
         }
@@ -1300,36 +1431,36 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
 
         /* Company Social Section */
         .company-social-section {
-            margin-top: 18px;
-            padding-top: 14px;
+            margin-top: 10px;
+            padding-top: 8px;
             border-top: 1px solid #e2e8f0;
         }
 
         .social-section-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         .company-social-links {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
         }
 
         .social-badge-btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 8px;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 6px;
             background: #ffffff;
             border: 1px solid #e2e8f0;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: #334155;
             text-decoration: none;
@@ -1337,7 +1468,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         }
 
         .social-badge-btn i {
-            font-size: 15px;
+            font-size: 13px;
             color: var(--badge-accent, #0284c7);
         }
 
@@ -1347,93 +1478,173 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             transform: translateY(-1px);
         }
 
-        /* ── Salesperson / Booking Manager Card ── */
+        /* ── Large Executive Salesperson Card ── */
         .sp-card {
+            margin-top: 18px;
+            padding: 20px 24px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4.5px solid var(--primary-color);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+            box-sizing: border-box;
+        }
+
+        .sp-card-top {
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-top: 16px;
-            padding: 14px 18px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid #e2e8f0;
-            border-left: 3.5px solid var(--primary-color);
-            border-radius: 10px;
+        }
+
+        .sp-avatar-col {
+            flex-shrink: 0;
         }
 
         .sp-avatar {
-            width: 52px;
-            height: 52px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
             object-fit: cover;
-            flex-shrink: 0;
             border: 2px solid var(--primary-color);
+            display: block;
         }
 
         .sp-avatar-initials {
-            width: 52px;
-            height: 52px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
-            flex-shrink: 0;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
             color: #ffffff;
             letter-spacing: 0.5px;
             font-family: "Mulish", sans-serif;
+            flex-shrink: 0;
         }
 
-        .sp-info {
+        .sp-identity-col {
             flex: 1;
             min-width: 0;
         }
 
-        .sp-label {
+        .sp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.6px;
             color: var(--primary-color);
-            margin-bottom: 2px;
+            margin-bottom: 3px;
+        }
+
+        .sp-badge i {
+            font-size: 13px;
         }
 
         .sp-name {
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 800;
             color: #0f172a;
             font-family: "Mulish", sans-serif;
             line-height: 1.2;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
         }
 
         .sp-desig {
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: 600;
             color: #64748b;
-            margin-bottom: 6px;
         }
 
-        .sp-contacts {
+        /* 2-Column Large Contact Grid with Full-Width Email */
+        .sp-contacts-large-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .sp-contact-box {
             display: flex;
             align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            text-decoration: none;
+            color: inherit;
+            box-sizing: border-box;
+            min-width: 0;
+            transition: all 0.15s ease;
         }
 
-        .sp-contact-item {
-            display: inline-flex;
+        .sp-contact-box-full {
+            grid-column: 1 / -1;
+        }
+
+        .sp-contact-box:hover {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+        }
+
+        .sp-icon-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 12.5px;
-            color: #334155;
-            font-weight: 500;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
         }
 
-        .sp-contact-item i {
-            font-size: 14px;
-            color: var(--primary-color);
+        .sp-phone-circle {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .sp-wa-circle {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .sp-email-circle {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .sp-contact-details {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .sp-field-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94a3b8;
+            line-height: 1.1;
+            margin-bottom: 2px;
+        }
+
+        .sp-field-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1e293b;
+            white-space: normal;
+            word-break: break-word;
         }
 
         /* Page Footer */
@@ -1480,7 +1691,121 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         }
 
         /* Print Media Styles */
+        /* Full-screen Loading Animation Overlay */
+        .itinerary-loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(241, 245, 249, 0.96);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 9999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .itinerary-loader-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 32px 36px;
+            max-width: 360px;
+            width: 88%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.04);
+            border: 1px solid #e2e8f0;
+        }
+
+        .loader-brand-logo {
+            max-height: 44px;
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 16px;
+        }
+
+        .loader-spinner-ring {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 3.5px solid #e2e8f0;
+            border-top-color: var(--primary-color);
+            animation: ringSpin 0.8s linear infinite;
+            margin-bottom: 14px;
+        }
+
+        @keyframes ringSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loader-heading {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4px;
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+
+        .loader-subtext {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 14px;
+        }
+
+        .loader-progress-track {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .loader-progress-bar {
+            position: absolute;
+            height: 100%;
+            width: 40%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 999px;
+            animation: indeterminateSlide 1.4s ease-in-out infinite;
+        }
+
+        @keyframes indeterminateSlide {
+            0% {
+                left: -40%;
+                width: 30%;
+            }
+            50% {
+                left: 30%;
+                width: 50%;
+            }
+            100% {
+                left: 100%;
+                width: 30%;
+            }
+        }
+
+        .loader-tagline {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         @media print {
+            .itinerary-loader-overlay {
+                display: none !important;
+            }
             @page {
                 size: A4 portrait;
                 margin: 0;
@@ -1502,17 +1827,20 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 width: 210mm;
                 height: 297mm;
                 min-height: 297mm;
+                max-height: 297mm;
                 margin: 0;
                 padding: 0;
-                page-break-before: always;
                 page-break-after: always;
+                break-after: page;
                 page-break-inside: avoid;
+                break-inside: avoid;
                 box-shadow: none;
                 border-radius: 0;
             }
 
-            .page:first-child {
-                page-break-before: auto;
+            .page:last-child {
+                page-break-after: auto;
+                break-after: auto;
             }
 
             .hero {
@@ -1528,7 +1856,9 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 height: 48mm !important;
             }
 
-            #page-policies .hero {
+            #page-policies .hero,
+            .page-policies-page .hero,
+            #page-contact .hero {
                 min-height: 42mm !important;
                 max-height: 42mm !important;
                 height: 42mm !important;
@@ -1544,6 +1874,22 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
 </head>
 
 <body>
+
+    <!-- Full-Screen Initial Loading Overlay -->
+    <div id="itinerary-page-loader" class="itinerary-loader-overlay">
+        <div class="itinerary-loader-card">
+            <?php if (!empty($siteLogo)): ?>
+                <img src="<?php echo htmlspecialchars($siteLogo); ?>" class="loader-brand-logo" alt="<?php echo htmlspecialchars($siteName); ?>">
+            <?php endif; ?>
+            <div class="loader-spinner-ring"></div>
+            <div class="loader-heading">Preparing Your Itinerary</div>
+            <div class="loader-subtext" id="loaderStatusMsg">Formatting pages &amp; travel details...</div>
+            <div class="loader-progress-track">
+                <div class="loader-progress-bar" id="loaderProgressBar"></div>
+            </div>
+            <div class="loader-tagline">Powered by Aleya.in</div>
+        </div>
+    </div>
 
     <!-- Floating Top Action Bar -->
     <!-- <?php if (empty($hideActions) && empty($isPreview)): ?>
@@ -1619,6 +1965,192 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
 
         <!-- DAY-WISE PAGES (1 PAGE PER DAY) -->
         <?php
+        // Preload assigned package hotels if available in DB
+        $dayWiseHotels = [];
+        $packageIdForHotels = (int)($quotationData['quotation_type_id'] ?? ($tour_package_id ?? ($postData['package_id'] ?? ($postData['tour_package_id'] ?? 0))));
+        if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX') && $packageIdForHotels > 0) {
+            // Preload gallery_image_list if empty
+            if (empty($gallery_image_list)) {
+                $galQ = "SELECT gallery_image_list FROM " . TABLE_PREFIX . "gallery WHERE gallery_category = {$packageIdForHotels} AND gallery_site_id = " . (int)SITE_ID . " AND gallery_type = 'tour_package' AND gallery_status = 1 LIMIT 1";
+                if ($gRes = @mysqli_query($connection, $galQ)) {
+                    if ($gRow = mysqli_fetch_assoc($gRes)) {
+                        $gallery_image_list = $gRow['gallery_image_list'];
+                    }
+                }
+            }
+
+            $hotelDbQuery = "
+                SELECT 
+                    tph.tph_night,
+                    tph.tph_room_type,
+                    p.property_id,
+                    p.property_title,
+                    p.property_thumbnail,
+                    p.property_address,
+                    p.property_city,
+                    p.property_state,
+                    p.property_type
+                FROM " . TABLE_PREFIX . "tour_package_hotel tph
+                INNER JOIN " . TABLE_PREFIX . "property p ON p.property_id = tph.tph_hotel_id
+                WHERE tph.tph_package_id = '{$packageIdForHotels}' AND tph.tph_site_id = " . SITE_ID;
+            $hotelResult = @mysqli_query($connection, $hotelDbQuery);
+            if ($hotelResult && mysqli_num_rows($hotelResult) > 0) {
+                while ($hRow = mysqli_fetch_assoc($hotelResult)) {
+                    $nightNum = (int)$hRow['tph_night'];
+                    if ($nightNum > 0) {
+                        $dayWiseHotels[$nightNum] = $hRow;
+                    }
+                }
+            }
+        }
+
+        $propertyLookupCache = [];
+
+        // Check if day represents transit / journey / trip conclusion
+        $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
+            $combined = strtolower(trim((string)$title . ' ' . (string)$overview));
+            $cityStr = strtolower(trim((string)($d['city'] ?? ($d['stay_city'] ?? ''))));
+            $stayStr = strtolower(trim((string)($d['stay'] ?? ($d['hotel'] ?? ''))));
+
+            if ($stayStr !== '' && (
+                str_contains($stayStr, 'no stay') || 
+                str_contains($stayStr, 'no hotel') || 
+                str_contains($stayStr, 'overnight journey') || 
+                str_contains($stayStr, 'tour end') || 
+                str_contains($stayStr, 'trip end') || 
+                str_contains($stayStr, 'conclude')
+            )) {
+                return true;
+            }
+
+            if ($cityStr !== '' && (
+                str_contains($cityStr, 'transit') || 
+                str_contains($cityStr, 'overnight') || 
+                str_contains($cityStr, 'no stay') || 
+                str_contains($cityStr, 'tour end') || 
+                str_contains($cityStr, 'trip end')
+            )) {
+                return true;
+            }
+
+            $transitPhrases = [
+                'onward journey',
+                'proceed to onward journey',
+                'proceed to your onward journey',
+                'overnight journey',
+                'overnight bus',
+                'overnight volvo',
+                'overnight train',
+                'board the volvo',
+                'board the bus',
+                'board the train',
+                'board your bus',
+                'board your volvo',
+                'bus stand. proceed',
+                'bus stand',
+                'tour concludes',
+                'tour conclude',
+                'trip concludes',
+                'trip conclude',
+                'trip ends',
+                'tour ends',
+                'airport drop',
+                'railway station drop',
+                'drop at airport',
+                'drop at railway station',
+                'drop at bus stand'
+            ];
+
+            foreach ($transitPhrases as $tp) {
+                if (str_contains($combined, $tp)) {
+                    return true;
+                }
+            }
+
+            // If last day and mentions departure / drop / return
+            if ($idx === $total) {
+                if (
+                    str_contains($combined, 'departure') || 
+                    str_contains($combined, 'depart') || 
+                    str_contains($combined, 'drop') || 
+                    str_contains($combined, 'return') || 
+                    str_contains($combined, 'fly back') || 
+                    str_contains($combined, 'back home') ||
+                    str_contains($combined, 'delhi')
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        // Format hotel category
+        $formatCategoryName = function($rawCategory, $stars = '') {
+            $cat = trim((string)$rawCategory);
+            if (empty($cat) && !empty($stars)) {
+                $cat = $stars;
+            }
+            if (empty($cat)) {
+                return 'Standard Hotel';
+            }
+            $catLower = strtolower($cat);
+            $catMap = [
+                '3_star_hotel' => '3 Star Hotel',
+                '4_star_hotel' => '4 Star Hotel',
+                '5_star_hotel' => '5 Star Hotel',
+                'budget_hotel' => 'Budget Hotel',
+                'deluxe_hotel' => 'Deluxe Hotel',
+                'luxury_hotel' => 'Luxury Hotel',
+                'resort'       => 'Resort / Retreat',
+                'houseboat'    => 'Deluxe Houseboat',
+                'camp'         => 'Luxury Camp / Tent',
+                'hotel'        => 'Hotel'
+            ];
+            if (isset($catMap[$catLower])) {
+                return $catMap[$catLower];
+            }
+            $cleaned = ucwords(str_replace(['_', '-'], ' ', $catLower));
+            if (is_numeric(substr($cleaned, 0, 1)) && !str_contains(strtolower($cleaned), 'star')) {
+                $cleaned .= ' Star Hotel';
+            }
+            return $cleaned;
+        };
+
+        // Format meal plan
+        $formatMealPlanName = function($rawMeal) {
+            $m = strtoupper(trim((string)$rawMeal));
+            if (empty($m)) return '';
+            $mealMap = [
+                'CP'  => 'CP (Breakfast Included)',
+                'MAP' => 'MAP (Breakfast & Dinner)',
+                'AP'  => 'AP (All Meals Included)',
+                'EP'  => 'EP (Room Only)'
+            ];
+            return $mealMap[$m] ?? $rawMeal;
+        };
+
+        // Category default thumbnail
+        $getCategoryThumbnail = function($categoryName, $stayName = '') {
+            $combined = strtolower($categoryName . ' ' . $stayName);
+            if (str_contains($combined, 'houseboat')) {
+                return 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&auto=format&fit=crop&q=80';
+            }
+            if (str_contains($combined, 'camp') || str_contains($combined, 'tent')) {
+                return 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&auto=format&fit=crop&q=80';
+            }
+            if (str_contains($combined, '5 star') || str_contains($combined, 'luxury')) {
+                return 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&auto=format&fit=crop&q=80';
+            }
+            if (str_contains($combined, 'resort') || str_contains($combined, 'retreat')) {
+                return 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&auto=format&fit=crop&q=80';
+            }
+            if (str_contains($combined, '4 star')) {
+                return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&auto=format&fit=crop&q=80';
+            }
+            return 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&auto=format&fit=crop&q=80';
+        };
+
         $dayIndex = 1;
         foreach ($pkgDays as $day):
             $dayNumStr = str_pad($dayIndex, 2, '0', STR_PAD_LEFT);
@@ -1627,15 +2159,111 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             $titleParts = explode(' - ', $dayTitle, 2);
             $cleanTitle = isset($titleParts[1]) ? trim($titleParts[1]) : trim($dayTitle);
 
-            $dayImg = fixImageUrl($day['feature_image'] ?? ($day['image'] ?? ''));
+            $dayImg = fixImageUrl($day['feature_image'] ?? ($day['image'] ?? ($day['day_image'] ?? '')));
             if (empty($dayImg) && !empty($gallery_image_list)) {
                 $galList = is_string($gallery_image_list) ? json_decode($gallery_image_list, true) : $gallery_image_list;
-                if (is_array($galList) && isset($galList[$dayIndex - 1]['path'])) {
-                    $dayImg = fixImageUrl($galList[$dayIndex - 1]['path']);
+                if (is_array($galList)) {
+                    // Try to match by explicit day field first
+                    foreach ($galList as $gItem) {
+                        if (isset($gItem['day']) && (int)$gItem['day'] === $dayIndex && !empty($gItem['path'])) {
+                            $dayImg = fixImageUrl($gItem['path']);
+                            break;
+                        }
+                    }
+                    // Positional fallback
+                    if (empty($dayImg) && isset($galList[$dayIndex - 1]['path'])) {
+                        $dayImg = fixImageUrl($galList[$dayIndex - 1]['path']);
+                    }
                 }
             }
             $dayOverview = $day['overview'] ?? ($day['description'] ?? '');
-            $dayStay = $day['stay'] ?? '';
+
+            // Determine if transit / trip end
+            $isTransitOrTripEnd = $checkTransitOrTripEnd($day, $dayIndex, count($pkgDays), $cleanTitle, $dayOverview);
+
+            // 1. First Row: Stay City (only if not transit or trip end)
+            $rawDayCity = trim((string)($day['city'] ?? ($day['stay_city'] ?? ($day['destination'] ?? ''))));
+            $stayCityClean = '';
+            if (!$isTransitOrTripEnd) {
+                if (!empty($rawDayCity) && !in_array(strtolower($rawDayCity), ['destination', 'tour destination', 'no stay', 'transit'])) {
+                    $stayCityClean = cleanProposalLabel($rawDayCity);
+                } elseif (!empty($tour_package_city) && !in_array(strtolower($tour_package_city), ['destination', 'tour destination'])) {
+                    $stayCityClean = cleanProposalLabel($tour_package_city);
+                }
+            }
+
+            // 2. Second Row: Property Information
+            $propImage = '';
+            $propTitle = '';
+            $propLocation = '';
+            $propCategory = '';
+            $propRoomType = '';
+            $propMealPlan = '';
+
+            if (!$isTransitOrTripEnd) {
+                // Check if assigned in package hotels
+                $assignedHotel = $dayWiseHotels[$dayIndex] ?? null;
+                if (!empty($assignedHotel)) {
+                    $propTitle = $assignedHotel['property_title'] ?? '';
+                    $propImage = fixImageUrl($assignedHotel['property_thumbnail'] ?? '');
+                    $locArr = array_filter([$assignedHotel['property_address'] ?? '', $assignedHotel['property_city'] ?? '']);
+                    $propLocation = implode(', ', $locArr);
+                    $propCategory = $formatCategoryName($assignedHotel['property_type'] ?? '', $day['hotel_stars'] ?? '');
+                    $propRoomType = !empty($assignedHotel['tph_room_type']) ? ucwords(str_replace('_', ' ', $assignedHotel['tph_room_type'])) : '';
+                }
+
+                // Check day-specific stay or general package hotel
+                if (empty($propTitle)) {
+                    $rawStay = trim((string)($day['stay'] ?? ($day['hotel'] ?? ($day['stay_option'] ?? ($day['hotel_name'] ?? '')))));
+                    if (!empty($rawStay) && !in_array(strtolower($rawStay), ['no stay', 'transit', 'overnight journey'])) {
+                        $propTitle = cleanProposalLabel($rawStay);
+
+                        // Look up property details in database
+                        if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX')) {
+                            $cacheKey = strtolower($propTitle);
+                            if (!isset($propertyLookupCache[$cacheKey])) {
+                                $cleanEscName = mysqli_real_escape_string($connection, $propTitle);
+                                $pQuery = "SELECT property_thumbnail, property_address, property_city, property_type FROM " . TABLE_PREFIX . "property WHERE property_site_id = " . SITE_ID . " AND (property_title = '{$cleanEscName}' OR property_title LIKE '{$cleanEscName}%') LIMIT 1";
+                                $pRes = @mysqli_query($connection, $pQuery);
+                                $propertyLookupCache[$cacheKey] = ($pRes && mysqli_num_rows($pRes) > 0) ? mysqli_fetch_assoc($pRes) : false;
+                            }
+                            if (!empty($propertyLookupCache[$cacheKey])) {
+                                $dbProp = $propertyLookupCache[$cacheKey];
+                                if (empty($propImage) && !empty($dbProp['property_thumbnail'])) {
+                                    $propImage = fixImageUrl($dbProp['property_thumbnail']);
+                                }
+                                if (empty($propLocation)) {
+                                    $propLocation = implode(', ', array_filter([$dbProp['property_address'] ?? '', $dbProp['property_city'] ?? '']));
+                                }
+                                if (empty($propCategory) && !empty($dbProp['property_type'])) {
+                                    $propCategory = $formatCategoryName($dbProp['property_type']);
+                                }
+                            }
+                        }
+                    } elseif (!empty($tour_package_hotel) && is_string($tour_package_hotel) && trim($tour_package_hotel) !== '') {
+                        $propTitle = cleanProposalLabel($tour_package_hotel);
+                    }
+                }
+
+                // Populate remaining property metadata
+                if (!empty($propTitle)) {
+                    if (empty($propCategory)) {
+                        $propCategory = $formatCategoryName($day['hotel_stars'] ?? ($pkgHotel ?? ''));
+                    }
+                    if (empty($propLocation)) {
+                        $propLocation = $stayCityClean;
+                    }
+                    if (empty($propRoomType) && !empty($day['room_type'])) {
+                        $propRoomType = ucwords(str_replace('_', ' ', trim((string)$day['room_type'])));
+                    }
+                    if (!empty($day['meal_plan'])) {
+                        $propMealPlan = $formatMealPlanName($day['meal_plan']);
+                    }
+                    if (empty($propImage)) {
+                        $propImage = $getCategoryThumbnail($propCategory, $propTitle);
+                    }
+                }
+            }
         ?>
             <section class="page days-page" id="page-day-<?php echo $dayIndex; ?>">
                 <header class="hero">
@@ -1658,9 +2286,58 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                         <?php echo !empty($dayOverview) ? (strpos($dayOverview, '<') !== false ? $dayOverview : nl2br(htmlspecialchars($dayOverview))) : '<p>Sightseeing, transfers, and exploration according to custom schedule.</p>'; ?>
                     </div>
 
-                    <?php if (!empty($dayStay)): ?>
-                        <div class="day-stay-box">
-                            <i class="ri-hotel-bed-line"></i> Overnight Stay: <?php echo htmlspecialchars(cleanProposalLabel($dayStay)); ?>
+                    <?php if (!$isTransitOrTripEnd && (!empty($stayCityClean) || !empty($propTitle))): ?>
+                        <div class="day-stay-plain-wrap">
+                            <!-- First Row: Stay City (only shown if not transit or trip end) -->
+                            <?php if (!empty($stayCityClean)): ?>
+                                <div class="stay-city-plain-row">
+                                    <i class="ri-map-pin-2-fill"></i>
+                                    <span class="stay-city-title">Stay City:</span>
+                                    <span class="stay-city-val"><?php echo htmlspecialchars($stayCityClean); ?></span>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Second Row: Property Information -->
+                            <?php if (!empty($propTitle)): ?>
+                                <div class="stay-property-plain-card">
+                                    <?php if (!empty($propImage)): ?>
+                                        <div class="stay-property-thumb-wrap">
+                                            <img src="<?php echo htmlspecialchars($propImage); ?>" alt="<?php echo htmlspecialchars($propTitle); ?>" class="stay-property-thumb" loading="lazy">
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <div class="stay-property-details">
+                                        <div class="stay-property-top">
+                                            <h4 class="stay-property-title"><?php echo htmlspecialchars($propTitle); ?></h4>
+                                            <?php if (!empty($propCategory)): ?>
+                                                <span class="stay-property-tag category-tag">
+                                                    <i class="ri-star-fill"></i> <?php echo htmlspecialchars($propCategory); ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <div class="stay-property-meta-row">
+                                            <?php if (!empty($propLocation)): ?>
+                                                <span class="stay-property-meta-item">
+                                                    <i class="ri-map-pin-line"></i> <?php echo htmlspecialchars($propLocation); ?>
+                                                </span>
+                                            <?php endif; ?>
+
+                                            <?php if (!empty($propRoomType)): ?>
+                                                <span class="stay-property-meta-item">
+                                                    <i class="ri-door-open-line"></i> <?php echo htmlspecialchars($propRoomType); ?>
+                                                </span>
+                                            <?php endif; ?>
+
+                                            <?php if (!empty($propMealPlan)): ?>
+                                                <span class="stay-property-meta-item">
+                                                    <i class="ri-restaurant-line"></i> <?php echo htmlspecialchars($propMealPlan); ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -2030,38 +2707,164 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 $spMobile = $salesPersonMobile ?? '';
                 $spImage  = $salesPersonImage  ?? '';
                 $spDesig  = $salesPersonDesig  ?? 'Travel Consultant';
-                if (!empty($spName)):
-                    $spWords    = preg_split('/\s+/', trim($spName));
-                    $spInitials = strtoupper(mb_substr($spWords[0], 0, 1) . (count($spWords) > 1 ? mb_substr(end($spWords), 0, 1) : ''));
+
+                // If salesperson details are not passed in directly, dynamically discover from quotation, enquiry, session, or site profile
+                if (empty($spName) && isset($connection) && $connection) {
+                    $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+                    $siteIdVal = defined('SITE_ID') ? (int)SITE_ID : 0;
+                    $targetUserId = 0;
+
+                    // 1. Check posted/previewed assigned agent ID
+                    if (!empty($postData['agent_id']) && (int)$postData['agent_id'] > 0) {
+                        $targetUserId = (int)$postData['agent_id'];
+                    } elseif (!empty($postData['assigned_agent']) && (int)$postData['assigned_agent'] > 0) {
+                        $targetUserId = (int)$postData['assigned_agent'];
+                    }
+
+                    // 2. Check quotation record for assigned enquiry agent FIRST
+                    $qId = (int)($quotationId ?? ($quoteId ?? 0));
+                    if ($targetUserId === 0 && $qId > 0) {
+                        $qRes = @mysqli_query($connection, "
+                            SELECT q.quotation_sent_by, q.quotation_ref_id, e.enquiry_agent 
+                            FROM {$tblPrefix}quotation q 
+                            LEFT JOIN {$tblPrefix}enquiry e ON e.enquiry_id = q.quotation_ref_id 
+                            WHERE q.quotation_id = {$qId} 
+                            LIMIT 1
+                        ");
+                        if ($qRes && $qRow = mysqli_fetch_assoc($qRes)) {
+                            // Prioritize assigned enquiry agent over quotation creator
+                            if (!empty($qRow['enquiry_agent']) && (int)$qRow['enquiry_agent'] > 0) {
+                                $targetUserId = (int)$qRow['enquiry_agent'];
+                            } elseif (!empty($qRow['quotation_sent_by']) && (int)$qRow['quotation_sent_by'] > 0) {
+                                $targetUserId = (int)$qRow['quotation_sent_by'];
+                            }
+                        }
+                    }
+
+                    // 3. Check lead / enquiry ID from postData or params
+                    $rawLeadRef = $postData['lead_id'] ?? ($postData['enquiry_id'] ?? ($postData['refId'] ?? ($postData['ref_id'] ?? 0)));
+                    $leadIdVal = 0;
+                    if (is_numeric($rawLeadRef) && (int)$rawLeadRef > 0) {
+                        $leadIdVal = (int)$rawLeadRef;
+                    } elseif (!empty($rawLeadRef)) {
+                        $dec = @base64_decode((string)$rawLeadRef, true);
+                        if ($dec !== false && is_numeric($dec)) {
+                            $leadIdVal = (int)$dec;
+                        }
+                    }
+
+                    if ($targetUserId === 0 && $leadIdVal > 0) {
+                        $eRes = @mysqli_query($connection, "SELECT enquiry_agent FROM {$tblPrefix}enquiry WHERE enquiry_id = {$leadIdVal} LIMIT 1");
+                        if ($eRes && $eRow = mysqli_fetch_assoc($eRes)) {
+                            if (!empty($eRow['enquiry_agent']) && (int)$eRow['enquiry_agent'] > 0) {
+                                $targetUserId = (int)$eRow['enquiry_agent'];
+                            }
+                        }
+                    }
+
+                    // 4. Check session / current user
+                    if ($targetUserId === 0) {
+                        if (!empty($_SESSION['user_id'])) {
+                            $targetUserId = (int)$_SESSION['user_id'];
+                        } elseif (defined('USER_ID') && (int)USER_ID > 0) {
+                            $targetUserId = (int)USER_ID;
+                        }
+                    }
+
+                    // 5. Query profile by user ID
+                    if ($targetUserId > 0) {
+                        $spRes = @mysqli_query($connection, "
+                            SELECT profile_display_name, profile_first_name, profile_last_name,
+                                   profile_email, profile_mobile, profile_image
+                            FROM {$tblPrefix}profile
+                            WHERE profile_user_id = {$targetUserId}
+                            LIMIT 1
+                        ");
+                        if ($spRes && $spRow = mysqli_fetch_assoc($spRes)) {
+                            $spName   = trim($spRow['profile_display_name'] ?? trim(($spRow['profile_first_name'] ?? '') . ' ' . ($spRow['profile_last_name'] ?? '')));
+                            $spEmail  = trim($spRow['profile_email'] ?? '');
+                            $spMobile = trim($spRow['profile_mobile'] ?? '');
+                            $rawImg   = $spRow['profile_image'] ?? '';
+                            if (!empty($rawImg)) {
+                                $siteBase = defined('SITE_URL') ? rtrim(SITE_URL, '/') : '';
+                                $spImage  = filter_var($rawImg, FILTER_VALIDATE_URL) ? $rawImg : $siteBase . '/' . ltrim($rawImg, '/');
+                            }
+                        }
+                    }
+                }
+
+                // 5. Fallback: company dedicated booking & itinerary consultant desk
+                if (empty($spName)) {
+                    $spName   = !empty($siteName) ? $siteName . ' Travel Consultant' : 'Dedicated Travel Consultant';
+                    $spDesig  = 'Senior Destination Specialist';
+                    $spMobile = !empty($siteWhatsapp) ? $siteWhatsapp : (!empty($sitePhone) ? $sitePhone : '');
+                    $spEmail  = !empty($siteEmail) ? $siteEmail : '';
+                    $spImage  = !empty($siteLogo) ? $siteLogo : '';
+                }
+
+                $spWhatsappDisplay = !empty($salesPersonWhatsapp) ? $salesPersonWhatsapp : $spMobile;
+                $cleanSpMobileDigits = preg_replace('/[^\d]/', '', (string)$spMobile);
+                $cleanSpWhatsappDigits = preg_replace('/[^\d]/', '', (string)$spWhatsappDisplay);
+                $spWords    = preg_split('/\s+/', trim($spName));
+                $spInitials = strtoupper(mb_substr($spWords[0], 0, 1) . (count($spWords) > 1 ? mb_substr(end($spWords), 0, 1) : ''));
                 ?>
-                    <!-- Salesperson / Booking Manager Card -->
+                    <!-- Salesperson / Dedicated Specialist Card -->
                     <div class="sp-card">
-                        <?php if (!empty($spImage)): ?>
-                            <img src="<?php echo htmlspecialchars($spImage); ?>" alt="<?php echo htmlspecialchars($spName); ?>" class="sp-avatar">
-                        <?php else: ?>
-                            <div class="sp-avatar-initials"><?php echo htmlspecialchars($spInitials); ?></div>
-                        <?php endif; ?>
-                        <div class="sp-info">
-                            <div class="sp-label">Your Booking Manager</div>
-                            <div class="sp-name"><?php echo htmlspecialchars($spName); ?></div>
-                            <div class="sp-desig"><?php echo htmlspecialchars($spDesig); ?></div>
-                            <div class="sp-contacts">
-                                <?php if (!empty($spMobile)): ?>
-                                    <span class="sp-contact-item">
-                                        <i class="ri-phone-fill"></i>
-                                        <?php echo htmlspecialchars($spMobile); ?>
-                                    </span>
-                                <?php endif; ?>
-                                <?php if (!empty($spEmail)): ?>
-                                    <span class="sp-contact-item">
-                                        <i class="ri-mail-fill"></i>
-                                        <?php echo htmlspecialchars($spEmail); ?>
-                                    </span>
+                        <div class="sp-card-top">
+                            <div class="sp-avatar-col">
+                                <?php if (!empty($spImage)): ?>
+                                    <img src="<?php echo htmlspecialchars($spImage); ?>" alt="<?php echo htmlspecialchars($spName); ?>" class="sp-avatar">
+                                <?php else: ?>
+                                    <div class="sp-avatar-initials"><?php echo htmlspecialchars($spInitials); ?></div>
                                 <?php endif; ?>
                             </div>
+                            <div class="sp-identity-col">
+                                <div class="sp-badge">
+                                    <i class="ri-user-star-fill"></i> Your Dedicated Travel Specialist
+                                </div>
+                                <div class="sp-name"><?php echo htmlspecialchars($spName); ?></div>
+                                <div class="sp-desig"><?php echo htmlspecialchars($spDesig); ?> &bull; Direct Tour Coordinator</div>
+                            </div>
+                        </div>
+
+                        <div class="sp-contacts-large-grid">
+                            <?php if (!empty($spMobile)): ?>
+                                <a href="tel:<?php echo htmlspecialchars($cleanSpMobileDigits); ?>" class="sp-contact-box" title="Call <?php echo htmlspecialchars($spName); ?>">
+                                    <div class="sp-icon-circle sp-phone-circle">
+                                        <i class="ri-phone-fill"></i>
+                                    </div>
+                                    <div class="sp-contact-details">
+                                        <span class="sp-field-label">Direct Calling</span>
+                                        <span class="sp-field-value"><?php echo htmlspecialchars($spMobile); ?></span>
+                                    </div>
+                                </a>
+
+                                <?php if (!empty($cleanSpWhatsappDigits)): ?>
+                                    <a href="https://wa.me/<?php echo htmlspecialchars($cleanSpWhatsappDigits); ?>?text=<?php echo rawurlencode("Hello " . $spName . ", I have a query regarding itinerary " . $cleanQuoteRef); ?>" target="_blank" rel="noopener" class="sp-contact-box" title="Chat on WhatsApp">
+                                        <div class="sp-icon-circle sp-wa-circle">
+                                            <i class="ri-whatsapp-fill"></i>
+                                        </div>
+                                        <div class="sp-contact-details">
+                                            <span class="sp-field-label">WhatsApp Number</span>
+                                            <span class="sp-field-value"><?php echo htmlspecialchars($spWhatsappDisplay); ?></span>
+                                        </div>
+                                    </a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+
+                            <?php if (!empty($spEmail)): ?>
+                                <a href="mailto:<?php echo htmlspecialchars($spEmail); ?>" class="sp-contact-box sp-contact-box-full" title="Email <?php echo htmlspecialchars($spName); ?>">
+                                    <div class="sp-icon-circle sp-email-circle">
+                                        <i class="ri-mail-fill"></i>
+                                    </div>
+                                    <div class="sp-contact-details">
+                                        <span class="sp-field-label">Email Address</span>
+                                        <span class="sp-field-value"><?php echo htmlspecialchars($spEmail); ?></span>
+                                    </div>
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
-                <?php endif; ?>
 
             </div>
         </section>
@@ -2164,7 +2967,195 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
 
     <!-- Procedural Wave Generator & Page Number Injection Script -->
     <script>
+        // Auto-paginate policy content if it overflows the single A4 page
+        function paginatePolicyPages() {
+            const initialPage = document.getElementById('page-policies');
+            if (!initialPage) return;
+
+            initialPage.classList.add('page-policies-page');
+
+            const container = initialPage.querySelector('.container');
+            const docBody = initialPage.querySelector('.legal-doc-body');
+            if (!container || !docBody) return;
+
+            // 1. Cache pristine, original HTML of policies section so re-runs never lose content
+            if (!initialPage.hasAttribute('data-original-policies-html')) {
+                initialPage.setAttribute('data-original-policies-html', docBody.innerHTML);
+            }
+            const sourceHtml = initialPage.getAttribute('data-original-policies-html');
+            if (!sourceHtml || !sourceHtml.trim()) return;
+
+            // 2. Remove any previously created continuation pages on re-run
+            document.querySelectorAll('.page-policies-page').forEach(p => {
+                if (p !== initialPage) p.remove();
+            });
+
+            // 3. Remove existing footer decors before measuring
+            document.querySelectorAll('.page-footer-decor').forEach(f => f.remove());
+
+            // 4. Parse pristine sourceHtml in an off-DOM container and recursively extract all content blocks
+            const sandbox = document.createElement('div');
+            sandbox.innerHTML = sourceHtml;
+
+            function extractBlockItems(node) {
+                const blocks = [];
+                Array.from(node.children).forEach(child => {
+                    // Unpack generic wrapper divs or sections
+                    if (child.tagName === 'DIV' && child.children.length > 0 && !child.classList.contains('sp-card')) {
+                        blocks.push(...extractBlockItems(child));
+                    } else {
+                        blocks.push(child);
+                    }
+                });
+                return blocks;
+            }
+
+            function isHeadingOrTitle(el) {
+                if (!el || !el.tagName) return false;
+                const tag = el.tagName.toUpperCase();
+                if (/^H[1-6]$/.test(tag)) return true;
+                if (el.classList.contains('legal-doc-section-title') || el.classList.contains('title') || el.classList.contains('heading')) return true;
+
+                const text = el.textContent.trim();
+                if (text.length > 0 && text.length < 100) {
+                    // Starts with number/bullet like "8. Force..." or "1. Payment..."
+                    if (/^(\d+[\.\:\)]|[A-Z][\.\:\)]|[IVXLCDM]+[\.\:\)])\s+/i.test(text)) return true;
+                    // Or entire element is bold / strong
+                    if (el.querySelector('strong, b') && el.textContent.trim() === el.querySelector('strong, b').textContent.trim()) return true;
+                }
+                return false;
+            }
+
+            const allItems = extractBlockItems(sandbox);
+            if (allItems.length === 0) return;
+
+            // 5. Reset initialPage docBody
+            docBody.innerHTML = '';
+            let currentSection = document.createElement('div');
+            currentSection.className = 'legal-doc-section';
+            docBody.appendChild(currentSection);
+
+            let currentPage = initialPage;
+            let currentDocBody = docBody;
+            let pageCounter = 1;
+
+            // Max content height in pixels allowed inside legal-doc-body
+            // A4 page: 1122px. Hero: 159px. Footer decor: 90px. Padding: 18px.
+            // A threshold of 740px leaves generous, elegant spacing above the company logo.
+            const MAX_DOC_HEIGHT = 740;
+
+            function appendNewPolicyPage() {
+                pageCounter++;
+                const newPage = document.createElement('section');
+                newPage.className = 'page days-page page-policies-page';
+                newPage.id = 'page-policies-' + pageCounter;
+
+                // Clone hero banner from initialPage
+                const heroClone = initialPage.querySelector('.hero').cloneNode(true);
+                const oldWave = heroClone.querySelector('.hero-wave-container');
+                if (oldWave) oldWave.remove();
+                newPage.appendChild(heroClone);
+
+                const newContainer = document.createElement('div');
+                newContainer.className = 'container';
+
+                const newBody = document.createElement('div');
+                newBody.className = 'legal-doc-body';
+
+                const newSec = document.createElement('div');
+                newSec.className = 'legal-doc-section';
+                newBody.appendChild(newSec);
+
+                newContainer.appendChild(newBody);
+                newPage.appendChild(newContainer);
+
+                // Insert directly after currentPage
+                currentPage.parentNode.insertBefore(newPage, currentPage.nextSibling);
+
+                currentPage = newPage;
+                currentDocBody = newBody;
+                currentSection = newSec;
+            }
+
+            for (let i = 0; i < allItems.length; i++) {
+                const item = allItems[i];
+
+                // If this item is a section heading, check if there is room for it AND at least 70px of content
+                if (isHeadingOrTitle(item) && currentSection.children.length > 0) {
+                    if (currentDocBody.offsetHeight + 70 > MAX_DOC_HEIGHT) {
+                        appendNewPolicyPage();
+                        currentSection.appendChild(item);
+                        continue;
+                    }
+                }
+
+                currentSection.appendChild(item);
+
+                // Check if currentDocBody has exceeded the printable page limit
+                if (currentDocBody.offsetHeight > MAX_DOC_HEIGHT) {
+                    // Check if this is a list with multiple <li> items that can be split
+                    if ((item.tagName === 'UL' || item.tagName === 'OL') && item.children.length > 0) {
+                        const allLis = Array.from(item.children);
+                        item.innerHTML = '';
+
+                        let splitIndex = 0;
+                        for (let j = 0; j < allLis.length; j++) {
+                            item.appendChild(allLis[j]);
+                            if (currentDocBody.offsetHeight > MAX_DOC_HEIGHT) {
+                                allLis[j].remove();
+                                splitIndex = j;
+                                break;
+                            }
+                            splitIndex = j + 1;
+                        }
+
+                        if (splitIndex > 0 && splitIndex < allLis.length) {
+                            // Part of the list fits on currentPage. Move remaining items to new page
+                            appendNewPolicyPage();
+
+                            const nextList = document.createElement(item.tagName);
+                            if (item.tagName === 'OL') {
+                                nextList.setAttribute('start', splitIndex + 1);
+                            }
+                            for (let k = splitIndex; k < allLis.length; k++) {
+                                nextList.appendChild(allLis[k]);
+                            }
+                            currentSection.appendChild(nextList);
+                            continue;
+                        } else if (splitIndex === 0) {
+                            // NONE of the lis fit on current page: restore ALL lis back into item
+                            for (let k = 0; k < allLis.length; k++) {
+                                item.appendChild(allLis[k]);
+                            }
+                            item.remove();
+                        }
+                    } else {
+                        // Whole non-list item cannot fit on current page
+                        item.remove();
+                    }
+
+                    // Check for orphan heading (if the item above is a heading with no content below it)
+                    const lastEl = currentSection.lastElementChild;
+                    let orphanHeading = null;
+                    if (lastEl && isHeadingOrTitle(lastEl)) {
+                        orphanHeading = lastEl;
+                        orphanHeading.remove();
+                    }
+
+                    appendNewPolicyPage();
+
+                    if (orphanHeading) {
+                        currentSection.appendChild(orphanHeading);
+                    }
+                    currentSection.appendChild(item);
+                }
+            }
+        }
+
         function initMitTemplateEffects() {
+            // 0. Auto-paginate policies across multiple A4 pages if content overflows
+            paginatePolicyPages();
+
             const pages = document.querySelectorAll('.page');
             const totalPages = pages.length;
 
@@ -2256,6 +3247,20 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 waveContainer.appendChild(svg);
                 hero.appendChild(waveContainer);
             });
+
+            // Dismiss loader once effects, layout, and pagination are ready
+            hidePageLoader();
+        }
+
+        function hidePageLoader() {
+            const loader = document.getElementById('itinerary-page-loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+                setTimeout(() => {
+                    if (loader.parentNode) loader.style.display = 'none';
+                }, 380);
+            }
         }
 
         if (document.readyState === 'loading') {
@@ -2264,47 +3269,87 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             initMitTemplateEffects();
         }
 
-        // 3. Client-side PDF Exporter Function
-        function downloadItineraryPDF() {
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => {
+                initMitTemplateEffects();
+                hidePageLoader();
+            });
+        }
+
+        // Safety fallback: ensure loader is always dismissed even on very slow assets
+        setTimeout(hidePageLoader, 2500);
+
+        // 3. Client-side PDF Exporter Function (High-Fidelity Page-by-Page)
+        async function downloadItineraryPDF() {
             const btn = document.getElementById('btnDownloadPDF');
             if (btn) {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Generating PDF...';
             }
 
-            const element = document.getElementById('pdfContentWrapper');
-            const opt = {
-                margin: 0,
-                filename: '<?php echo preg_replace('/[^a-zA-Z0-9_-]/', '_', $pkgTitle); ?>_Itinerary.pdf',
-                image: {
-                    type: 'jpeg',
-                    quality: 0.98
-                },
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false
-                },
-                jsPDF: {
-                    unit: 'mm',
-                    format: 'a4',
-                    orientation: 'portrait'
-                }
-            };
+            const loader = document.getElementById('itinerary-page-loader');
+            const msg = document.getElementById('loaderStatusMsg');
+            if (loader) {
+                loader.style.display = 'flex';
+                loader.style.visibility = 'visible';
+                loader.style.opacity = '1';
+                if (msg) msg.textContent = 'Preparing PDF document...';
+            }
 
-            html2pdf().set(opt).from(element).save().then(() => {
+            try {
+                // Allow styles, fonts, and wave SVGs to finish painting
+                await new Promise(resolve => setTimeout(resolve, 350));
+
+                const pages = document.querySelectorAll(".page");
+                if (!pages || pages.length === 0) {
+                    throw new Error("No itinerary pages found to export.");
+                }
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'pt', 'a4');
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+
+                for (let i = 0; i < pages.length; i++) {
+                    if (msg) msg.textContent = `Rendering page ${i + 1} of ${pages.length}...`;
+
+                    const canvas = await html2canvas(pages[i], {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        windowWidth: pages[i].scrollWidth || 794,
+                        windowHeight: pages[i].scrollHeight || 1123
+                    });
+
+                    const imgData = canvas.toDataURL('image/jpeg', 0.96);
+                    const imgProps = pdf.getImageProperties(imgData);
+                    const pdfImgHeight = (imgProps.height * pageWidth) / imgProps.width;
+
+                    pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, Math.min(pageHeight, pdfImgHeight));
+
+                    if (i < pages.length - 1) {
+                        pdf.addPage();
+                    }
+                }
+
+                if (msg) msg.textContent = 'Saving PDF file...';
+                const fileName = '<?php echo preg_replace('/[^a-zA-Z0-9_-]/', '_', $pkgTitle); ?>_Itinerary.pdf';
+                pdf.save(fileName);
+
+                await new Promise(resolve => setTimeout(resolve, 600));
+            } catch (err) {
+                console.error('PDF export error:', err);
+                if (msg) msg.textContent = 'PDF generation encountered an error.';
+                await new Promise(resolve => setTimeout(resolve, 1500));
+            } finally {
                 if (btn) {
                     btn.disabled = false;
                     btn.innerHTML = '<i class="ri-file-pdf-line"></i> Download PDF';
                 }
-            }).catch((err) => {
-                console.error(err);
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="ri-file-pdf-line"></i> Download PDF';
-                }
-                window.print();
-            });
+                hidePageLoader();
+            }
         }
 
         // 4. Auto-Download on page load if requested (?download=true or ?pdf=1)

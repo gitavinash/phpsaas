@@ -205,7 +205,8 @@ if ($quotationId > 0) {
             e.enquiry_last_name,
             e.enquiry_mobile,
             e.enquiry_email,
-            e.enquiry_message
+            e.enquiry_message,
+            e.enquiry_agent
         FROM {$tblPrefix}quotation q
         LEFT JOIN {$tblPrefix}tour_package tp
             ON tp.tour_package_id = q.quotation_type_id
@@ -226,32 +227,63 @@ if ($quotationId > 0) {
         $quotationData = mysqli_fetch_assoc($res);
     }
 
-    // Fetch salesperson (quotation_sent_by) profile
-    $salesPersonName   = '';
-    $salesPersonEmail  = '';
-    $salesPersonMobile = '';
-    $salesPersonImage  = '';
-    $salesPersonDesig  = 'Travel Consultant';
-    $sentById = (int)($quotationData['quotation_sent_by'] ?? 0);
-    if ($sentById > 0 && isset($connection)) {
+    // Fetch salesperson (assigned enquiry_agent / quotation_sent_by / session user / site consultant)
+    $salesPersonName     = '';
+    $salesPersonEmail    = '';
+    $salesPersonMobile   = '';
+    $salesPersonWhatsapp = '';
+    $salesPersonImage    = '';
+    $salesPersonDesig    = 'Travel Consultant';
+
+    // Priority 1: Assigned agent on enquiry
+    $assignedAgentId = (int)($quotationData['enquiry_agent'] ?? 0);
+    if ($assignedAgentId === 0 && !empty($quotationData['quotation_ref_id'])) {
+        $enqRefId = (int)$quotationData['quotation_ref_id'];
+        $eRes = @mysqli_query($connection, "SELECT enquiry_agent FROM {$tblPrefix}enquiry WHERE enquiry_id = {$enqRefId} LIMIT 1");
+        if ($eRes && $eRow = mysqli_fetch_assoc($eRes)) {
+            $assignedAgentId = (int)($eRow['enquiry_agent'] ?? 0);
+        }
+    }
+    // Priority 2: Quotation sent by
+    if ($assignedAgentId === 0 && !empty($quotationData['quotation_sent_by'])) {
+        $assignedAgentId = (int)$quotationData['quotation_sent_by'];
+    }
+    // Priority 3: Current session user
+    if ($assignedAgentId === 0 && !empty($_SESSION['user_id'])) {
+        $assignedAgentId = (int)$_SESSION['user_id'];
+    }
+    if ($assignedAgentId === 0 && defined('USER_ID') && (int)USER_ID > 0) {
+        $assignedAgentId = (int)USER_ID;
+    }
+
+    if ($assignedAgentId > 0 && isset($connection)) {
         $spRes = @mysqli_query($connection, "
             SELECT p.profile_display_name, p.profile_first_name, p.profile_last_name,
                    p.profile_email, p.profile_mobile, p.profile_image
             FROM {$tblPrefix}profile p
-            WHERE p.profile_user_id = {$sentById}
+            WHERE p.profile_user_id = {$assignedAgentId}
             LIMIT 1
         ");
         if ($spRes && mysqli_num_rows($spRes) > 0) {
             $spRow = mysqli_fetch_assoc($spRes);
             $salesPersonName   = trim($spRow['profile_display_name'] ?? trim(($spRow['profile_first_name'] ?? '') . ' ' . ($spRow['profile_last_name'] ?? '')));
-            $salesPersonEmail  = trim($spRow['profile_email'] ?? '');
-            $salesPersonMobile = trim($spRow['profile_mobile'] ?? '');
+            $salesPersonEmail    = trim($spRow['profile_email'] ?? '');
+            $salesPersonMobile   = trim($spRow['profile_mobile'] ?? '');
+            $salesPersonWhatsapp = $salesPersonMobile;
             $rawSpImg = $spRow['profile_image'] ?? '';
             if (!empty($rawSpImg)) {
                 $siteBase = defined('SITE_URL') ? rtrim(SITE_URL, '/') : '';
                 $salesPersonImage = filter_var($rawSpImg, FILTER_VALIDATE_URL) ? $rawSpImg : $siteBase . '/' . ltrim($rawSpImg, '/');
             }
         }
+    }
+
+    // Fallback: company consultant desk if no specific salesperson found
+    if (empty($salesPersonName)) {
+        $salesPersonName     = !empty($company_name) ? $company_name . ' Travel Desk' : 'Dedicated Travel Specialist';
+        $salesPersonEmail    = $site_email ?? ($company_email ?? '');
+        $salesPersonMobile   = $site_mobile ?? ($company_mobile ?? '');
+        $salesPersonWhatsapp = $salesPersonMobile;
     }
 }
 
@@ -434,7 +466,115 @@ if (!empty($quotationData)) {
     $quotationPriceWithGST = number_format($price, 2);
     $total_discount = '0.00';
     $passangerInfo = !empty($postData['clientName']) ? $postData['clientName'] : 'Valued Traveler';
+
+    // Resolve assigned salesperson in preview mode
+    $salesPersonName     = '';
+    $salesPersonEmail    = '';
+    $salesPersonMobile   = '';
+    $salesPersonWhatsapp = '';
+    $salesPersonImage    = '';
+    $salesPersonDesig    = 'Travel Consultant';
+
+    $rawRefId = $postData['lead_id'] ?? ($postData['enquiry_id'] ?? ($postData['refId'] ?? ($postData['ref_id'] ?? 0)));
+    $leadRefId = 0;
+    if (is_numeric($rawRefId) && (int)$rawRefId > 0) {
+        $leadRefId = (int)$rawRefId;
+    } elseif (!empty($rawRefId)) {
+        $dec = @base64_decode((string)$rawRefId, true);
+        if ($dec !== false && is_numeric($dec)) {
+            $leadRefId = (int)$dec;
+        }
+    }
+
+    $previewAgentId = 0;
+    // Priority 1: Check assigned agent directly on the enquiry
+    if ($leadRefId > 0 && isset($connection)) {
+        $eRes = @mysqli_query($connection, "SELECT enquiry_agent FROM {$tblPrefix}enquiry WHERE enquiry_id = {$leadRefId} LIMIT 1");
+        if ($eRes && $eRow = mysqli_fetch_assoc($eRes)) {
+            $assignedOnEnq = (int)($eRow['enquiry_agent'] ?? 0);
+            if ($assignedOnEnq > 0) {
+                $previewAgentId = $assignedOnEnq;
+            }
+        }
+    }
+
+    // Priority 2: Check posted agent_id / assigned_agent
+    if ($previewAgentId === 0) {
+        $previewAgentId = (int)($postData['agent_id'] ?? ($postData['assigned_agent'] ?? ($postData['enquiry_agent'] ?? 0)));
+    }
+
+    // Priority 3: Current session user
+    if ($previewAgentId === 0 && !empty($_SESSION['user_id'])) {
+        $previewAgentId = (int)$_SESSION['user_id'];
+    }
+    if ($previewAgentId === 0 && defined('USER_ID') && (int)USER_ID > 0) {
+        $previewAgentId = (int)USER_ID;
+    }
+
+    if ($previewAgentId > 0 && isset($connection)) {
+        $spRes = @mysqli_query($connection, "
+            SELECT p.profile_display_name, p.profile_first_name, p.profile_last_name,
+                   p.profile_email, p.profile_mobile, p.profile_image
+            FROM {$tblPrefix}profile p
+            WHERE p.profile_user_id = {$previewAgentId}
+            LIMIT 1
+        ");
+        if ($spRes && mysqli_num_rows($spRes) > 0) {
+            $spRow = mysqli_fetch_assoc($spRes);
+            $salesPersonName     = trim($spRow['profile_display_name'] ?? trim(($spRow['profile_first_name'] ?? '') . ' ' . ($spRow['profile_last_name'] ?? '')));
+            $salesPersonEmail    = trim($spRow['profile_email'] ?? '');
+            $salesPersonMobile   = trim($spRow['profile_mobile'] ?? '');
+            $salesPersonWhatsapp = $salesPersonMobile;
+            $rawSpImg = $spRow['profile_image'] ?? '';
+            if (!empty($rawSpImg)) {
+                $siteBase = defined('SITE_URL') ? rtrim(SITE_URL, '/') : '';
+                $salesPersonImage = filter_var($rawSpImg, FILTER_VALIDATE_URL) ? $rawSpImg : $siteBase . '/' . ltrim($rawSpImg, '/');
+            }
+        }
+    }
+
+    // Fallback: company consultant desk if no specific salesperson found
+    if (empty($salesPersonName)) {
+        $salesPersonName     = !empty($company_name) ? $company_name . ' Travel Desk' : 'Dedicated Travel Specialist';
+        $salesPersonEmail    = $site_email ?? ($company_email ?? '');
+        $salesPersonMobile   = $site_mobile ?? ($company_mobile ?? '');
+        $salesPersonWhatsapp = $salesPersonMobile;
+    }
+
+    // Resolve package and gallery images in preview mode
+    $packageId = (int)($postData['package_id'] ?? ($postData['tour_package_id'] ?? ($postData['id'] ?? 0)));
+    $tour_package_id = $packageId;
+    $gallery_image_list = $postData['gallery_image_list'] ?? '';
+
+    if ($packageId === 0 && $leadRefId > 0 && isset($connection)) {
+        $pqRes = @mysqli_query($connection, "SELECT quotation_type_id FROM {$tblPrefix}quotation WHERE quotation_ref_id = {$leadRefId} AND quotation_type_id > 0 ORDER BY quotation_id DESC LIMIT 1");
+        if ($pqRes && $pqRow = mysqli_fetch_assoc($pqRes)) {
+            $packageId = (int)$pqRow['quotation_type_id'];
+            $tour_package_id = $packageId;
+        }
+    }
+
+    if ($packageId > 0 && isset($connection)) {
+        if (empty($gallery_image_list)) {
+            $gRes = @mysqli_query($connection, "
+                SELECT gallery_image_list, gallery_image 
+                FROM {$tblPrefix}gallery 
+                WHERE gallery_category = {$packageId} 
+                  AND gallery_site_id = {$siteId} 
+                  AND gallery_type = 'tour_package' 
+                  AND gallery_status = 1 
+                LIMIT 1
+            ");
+            if ($gRes && $gRow = mysqli_fetch_assoc($gRes)) {
+                $gallery_image_list = $gRow['gallery_image_list'];
+                if (empty($tour_package_image) && !empty($gRow['gallery_image'])) {
+                    $tour_package_image = $gRow['gallery_image'];
+                }
+            }
+        }
+    }
 }
+
 
 // Locate template file
 $templateFile = $templatesBaseDir . '/' . $templateToUse . '/index.php';
