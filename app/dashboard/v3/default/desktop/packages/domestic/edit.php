@@ -377,6 +377,13 @@ if (empty($availableTemplates)) {
                 <button type="button" class="btn-add-day-bottom" id="btnAddDayBottom">
                     <i class="fi fi-rr-plus"></i> Add Another Day to Itinerary
                 </button>
+
+                <!-- Update All Days Footer Actions -->
+                <div class="v3-tab-footer-actions v3-itinerary-footer-actions">
+                    <button type="button" class="btn-v3-primary btn-update-all-days" id="btnUpdateAllDays">
+                        <i class="fi fi-rr-disk"></i> Update All Days Details
+                    </button>
+                </div>
             </div>
 
             <!-- TAB 3: Inclusions & Exclusions -->

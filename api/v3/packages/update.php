@@ -65,6 +65,8 @@ if (empty($packageName)) {
 $dayTitles       = isset($_POST['dayTitle']) && is_array($_POST['dayTitle']) ? $_POST['dayTitle'] : [];
 $dayContents     = isset($_POST['dayContent']) && is_array($_POST['dayContent']) ? $_POST['dayContent'] : [];
 $dayStays        = isset($_POST['dayStay']) && is_array($_POST['dayStay']) ? $_POST['dayStay'] : [];
+$dayHotels       = isset($_POST['dayHotel']) && is_array($_POST['dayHotel']) ? $_POST['dayHotel'] : [];
+$dayRoomTypes    = isset($_POST['dayRoomType']) && is_array($_POST['dayRoomType']) ? $_POST['dayRoomType'] : [];
 $dayFeatureImgs  = isset($_POST['dayFeatureImage']) && is_array($_POST['dayFeatureImage']) ? $_POST['dayFeatureImage'] : [];
 $dayGalleries    = isset($_POST['dayGallery']) && is_array($_POST['dayGallery']) ? $_POST['dayGallery'] : [];
 
@@ -76,12 +78,58 @@ if (!empty($dayTitles)) {
     $itineraryList = [];
     $totalDays = count($dayTitles);
 
+    // If day hotels are supplied, prepare to sync tour_package_hotel
+    if (!empty($dayHotels)) {
+        mysqli_query($connection, "DELETE FROM {$tblPrefix}tour_package_hotel WHERE tph_package_id = '{$packageId}' AND tph_site_id = {$siteId}");
+    }
+
     for ($i = 0; $i < $totalDays; $i++) {
         $dayNum     = $i + 1;
         $title      = stripslashes(trim($dayTitles[$i] ?? "Day {$dayNum}"));
         $overview   = stripslashes(trim($dayContents[$i] ?? ""));
         $stay       = stripslashes(trim($dayStays[$i] ?? ""));
         $featureImg = trim($dayFeatureImgs[$i] ?? "");
+
+        $hotelRaw    = trim($dayHotels[$i] ?? "");
+        $roomTypeRaw = trim($dayRoomTypes[$i] ?? "");
+
+        $hotelId = 0;
+        $hotelTitle = '';
+        if (is_numeric($hotelRaw) && (int)$hotelRaw > 0) {
+            $hotelId = (int)$hotelRaw;
+            $hQ = mysqli_query($connection, "SELECT property_title FROM {$tblPrefix}property WHERE property_id = '{$hotelId}' AND property_site_id = {$siteId} LIMIT 1");
+            if ($hQ && ($hRow = mysqli_fetch_assoc($hQ))) {
+                $hotelTitle = stripslashes($hRow['property_title']);
+            }
+        } elseif (!empty($hotelRaw)) {
+            if (strpos($hotelRaw, ':') !== false) {
+                $parts = explode(':', $hotelRaw, 2);
+                if (is_numeric($parts[0])) {
+                    $hotelId = (int)$parts[0];
+                    $hotelTitle = trim($parts[1]);
+                } else {
+                    $hotelTitle = $hotelRaw;
+                }
+            } else {
+                $hotelTitle = $hotelRaw;
+            }
+        }
+
+        $roomTypeId = 0;
+        $roomTypeName = '';
+        if (!empty($roomTypeRaw)) {
+            if (strpos($roomTypeRaw, ':') !== false) {
+                $rParts = explode(':', $roomTypeRaw, 2);
+                if (is_numeric($rParts[0])) {
+                    $roomTypeId = (int)$rParts[0];
+                    $roomTypeName = trim($rParts[1]);
+                } else {
+                    $roomTypeName = $roomTypeRaw;
+                }
+            } else {
+                $roomTypeName = $roomTypeRaw;
+            }
+        }
         
         $rawGal = $dayGalleries[$i] ?? [];
         if (is_string($rawGal)) {
@@ -95,9 +143,21 @@ if (!empty($dayTitles)) {
             'day'           => $title,
             'overview'      => $overview,
             'stay'          => $stay,
+            'city'          => $stay,
+            'hotel_id'      => $hotelId,
+            'hotel_title'   => $hotelTitle,
+            'room_type_id'  => $roomTypeId,
+            'room_type'     => $roomTypeName,
             'feature_image' => $featureImg,
             'gallery'       => array_values($gallery)
         ];
+
+        if ($hotelId > 0 && !empty($dayHotels)) {
+            $escRoomType = mysqli_real_escape_string($connection, $roomTypeName);
+            $insertTph = "INSERT INTO {$tblPrefix}tour_package_hotel (tph_hotel_id, tph_package_id, tph_room_type_id, tph_room_type, tph_night, tph_status, tph_site_id) 
+                          VALUES ('{$hotelId}', '{$packageId}', '{$roomTypeId}', '{$escRoomType}', '{$dayNum}', 1, {$siteId})";
+            mysqli_query($connection, $insertTph);
+        }
     }
 
     $encodedItinerary = mysqli_real_escape_string($connection, json_encode($itineraryList, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));

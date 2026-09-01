@@ -134,73 +134,84 @@ if (is_numeric($rawPkgId) && (int)$rawPkgId > 0) {
     }
 }
 
-if ($packageId <= 0) {
+$requestedCity = trim($_GET['city'] ?? '');
+
+if ($packageId <= 0 && empty($requestedCity)) {
     http_response_code(400);
     echo json_encode([
         'status' => 'error',
-        'msg'    => 'Valid Package ID is required.'
+        'msg'    => 'Valid Package ID or City is required.'
     ], JSON_UNESCAPED_SLASHES);
     exit();
 }
 
-// 1. Fetch Package Info
-$pkgSql = "
-    SELECT 
-        p.tour_package_id,
-        p.tour_package_title, 
-        p.tour_package_theme,
-        p.tour_package_city, 
-        p.tour_package_state, 
-        p.tour_package_country, 
-        p.tour_package_duration, 
-        p.tour_package_hotel, 
-        p.tour_package_itinerary,
-        p.tour_package_type,
-        l.link_url
-    FROM {$tblPrefix}tour_package p
-    LEFT JOIN {$tblPrefix}link l 
-      ON l.link_relation_id = p.tour_package_id 
-     AND l.link_type = 'tour_package'
-     AND l.link_site_id = {$siteId}
-    WHERE p.tour_package_id = '{$packageId}' AND p.tour_package_site_id = {$siteId}
-    LIMIT 1
-";
+$pkgTitle = 'Tour Package';
+$pkgTheme = 'Standard';
+$pkgCity  = '';
+$pkgState = '';
+$pkgCountry = '';
+$pkgDuration = 1;
+$pkgDays = 2;
+$pkgItinerary = '';
+$pkgCategory = 'domestic';
+$linkUrl = '';
 
-$pkgRes = mysqli_query($connection, $pkgSql);
-if (!$pkgRes || mysqli_num_rows($pkgRes) === 0) {
-    http_response_code(404);
-    echo json_encode([
-        'status' => 'error',
-        'msg'    => 'Tour package not found.'
-    ], JSON_UNESCAPED_SLASHES);
-    exit();
+// 1. Fetch Package Info (if packageId > 0)
+if ($packageId > 0) {
+    $pkgSql = "
+        SELECT 
+            p.tour_package_id,
+            p.tour_package_title, 
+            p.tour_package_theme,
+            p.tour_package_city, 
+            p.tour_package_state, 
+            p.tour_package_country, 
+            p.tour_package_duration, 
+            p.tour_package_hotel, 
+            p.tour_package_itinerary,
+            p.tour_package_type,
+            l.link_url
+        FROM {$tblPrefix}tour_package p
+        LEFT JOIN {$tblPrefix}link l 
+          ON l.link_relation_id = p.tour_package_id 
+         AND l.link_type = 'tour_package'
+         AND l.link_site_id = {$siteId}
+        WHERE p.tour_package_id = '{$packageId}' AND p.tour_package_site_id = {$siteId}
+        LIMIT 1
+    ";
+
+    $pkgRes = mysqli_query($connection, $pkgSql);
+    if ($pkgRes && mysqli_num_rows($pkgRes) > 0) {
+        $pkgRow = mysqli_fetch_assoc($pkgRes);
+        $pkgTitle = $pkgRow['tour_package_title'] ?? 'Tour Package';
+        $pkgTheme = trim($pkgRow['tour_package_theme'] ?? 'Standard');
+        $pkgCity  = trim($pkgRow['tour_package_city'] ?? '');
+        $pkgState = trim($pkgRow['tour_package_state'] ?? '');
+        $pkgCountry = trim($pkgRow['tour_package_country'] ?? '');
+        $pkgDuration = max(1, (int)($pkgRow['tour_package_duration'] ?? 1));
+        $pkgDays = $pkgDuration + 1;
+        $pkgItinerary = trim($pkgRow['tour_package_itinerary'] ?? '');
+        $pkgCategory = strtolower(trim($pkgRow['tour_package_type'] ?? 'domestic'));
+        $linkUrl = $pkgRow['link_url'] ?? '';
+    }
 }
-
-$pkgRow = mysqli_fetch_assoc($pkgRes);
-$pkgTitle = $pkgRow['tour_package_title'] ?? 'Tour Package';
-$pkgTheme = trim($pkgRow['tour_package_theme'] ?? 'Standard');
-$pkgCity  = trim($pkgRow['tour_package_city'] ?? '');
-$pkgState = trim($pkgRow['tour_package_state'] ?? '');
-$pkgCountry = trim($pkgRow['tour_package_country'] ?? '');
-$pkgDuration = max(1, (int)($pkgRow['tour_package_duration'] ?? 1));
-$pkgDays = $pkgDuration + 1;
-$pkgItinerary = trim($pkgRow['tour_package_itinerary'] ?? '');
-$pkgCategory = strtolower(trim($pkgRow['tour_package_type'] ?? 'domestic'));
 
 // 2. Fetch Existing Hotel Night Assignments for this Package
 $assignedNightMap = [];
 $hotelAssignmentMap = [];
-$assignedQuery = "
-    SELECT tph_id, tph_hotel_id, tph_room_type_id, tph_room_type, tph_night 
-    FROM {$tblPrefix}tour_package_hotel 
-    WHERE tph_package_id = '{$packageId}' AND tph_site_id = {$siteId}
-";
-if ($assignedRes = mysqli_query($connection, $assignedQuery)) {
-    while ($aRow = mysqli_fetch_assoc($assignedRes)) {
-        $n = (int)$aRow['tph_night'];
-        $hId = (int)$aRow['tph_hotel_id'];
-        $assignedNightMap[$n] = $aRow;
-        $hotelAssignmentMap[$hId] = $aRow;
+if ($packageId > 0) {
+    $assignedQuery = "
+        SELECT tph_id, tph_hotel_id, tph_room_type_id, tph_room_type, tph_night 
+        FROM {$tblPrefix}tour_package_hotel 
+        WHERE tph_package_id = '{$packageId}' AND tph_site_id = {$siteId}
+    ";
+    if ($assignedRes = mysqli_query($connection, $assignedQuery)) {
+        while ($aRow = mysqli_fetch_assoc($assignedRes)) {
+            $n = (int)$aRow['tph_night'];
+            $hId = (int)$aRow['tph_hotel_id'];
+            $assignedNightMap[$n] = $aRow;
+            $hotelAssignmentMap[$hId] = $aRow;
+        }
     }
 }
 
@@ -241,30 +252,52 @@ $whereConditions = [
 $assignedIds = array_keys($hotelAssignmentMap);
 $assignedIdsStr = !empty($assignedIds) ? implode(',', $assignedIds) : '0';
 
+$escapedReqCity = !empty($requestedCity) ? mysqli_real_escape_string($connection, strtoupper(trim($requestedCity))) : '';
 $escapedCities = array_map(function ($c) use ($connection) {
     return "'" . mysqli_real_escape_string($connection, strtoupper(trim($c))) . "'";
 }, $mentionedCities);
 $citiesInStr = !empty($escapedCities) ? implode(',', $escapedCities) : "''";
+$escapedState = !empty($pkgState) ? mysqli_real_escape_string($connection, strtoupper(trim($pkgState))) : '';
 
-$escapedState = mysqli_real_escape_string($connection, strtoupper($pkgState));
-
-if (!empty($mentionedCities) || !empty($pkgState) || !empty($assignedIds)) {
-    $locationOrs = [];
+if (!empty($escapedReqCity)) {
+    // If specific city requested, match that city or any assigned hotel for this package
     if (!empty($assignedIds)) {
-        $locationOrs[] = "p.property_id IN ({$assignedIdsStr})";
+        $whereConditions[] = "(UPPER(TRIM(p.property_city)) = '{$escapedReqCity}' OR UPPER(TRIM(p.property_city)) LIKE '%{$escapedReqCity}%' OR p.property_id IN ({$assignedIdsStr}))";
+    } else {
+        $whereConditions[] = "(UPPER(TRIM(p.property_city)) = '{$escapedReqCity}' OR UPPER(TRIM(p.property_city)) LIKE '%{$escapedReqCity}%')";
     }
-    if (!empty($mentionedCities)) {
-        $locationOrs[] = "UPPER(TRIM(p.property_city)) IN ({$citiesInStr})";
-    }
-    if (!empty($pkgState)) {
-        $locationOrs[] = "UPPER(TRIM(p.property_state)) = '{$escapedState}'";
-    }
-    if (!empty($locationOrs)) {
-        $whereConditions[] = "(" . implode(" OR ", $locationOrs) . ")";
+} else {
+    if (!empty($mentionedCities) || !empty($pkgState) || !empty($assignedIds)) {
+        $locationOrs = [];
+        if (!empty($assignedIds)) {
+            $locationOrs[] = "p.property_id IN ({$assignedIdsStr})";
+        }
+        if (!empty($mentionedCities) && $citiesInStr !== "''") {
+            $locationOrs[] = "UPPER(TRIM(p.property_city)) IN ({$citiesInStr})";
+        }
+        if (!empty($pkgState)) {
+            $locationOrs[] = "UPPER(TRIM(p.property_state)) = '{$escapedState}'";
+        }
+        if (!empty($locationOrs)) {
+            $whereConditions[] = "(" . implode(" OR ", $locationOrs) . ")";
+        }
     }
 }
 
 $whereClause = "WHERE " . implode(" AND ", $whereConditions);
+
+$priorityCases = [];
+$priorityCases[] = "WHEN p.property_id IN ({$assignedIdsStr}) THEN 1";
+if (!empty($escapedReqCity)) {
+    $priorityCases[] = "WHEN UPPER(TRIM(p.property_city)) = '{$escapedReqCity}' THEN 2";
+}
+if ($citiesInStr !== "''") {
+    $priorityCases[] = "WHEN UPPER(TRIM(p.property_city)) IN ({$citiesInStr}) THEN 3";
+}
+if (!empty($escapedState)) {
+    $priorityCases[] = "WHEN UPPER(TRIM(p.property_state)) = '{$escapedState}' THEN 4";
+}
+$priorityCasesStr = implode("\n          ", $priorityCases);
 
 $query = "
     SELECT 
@@ -277,9 +310,7 @@ $query = "
         TRIM(p.property_country)  AS property_country, 
         p.property_type,
         CASE 
-          WHEN p.property_id IN ({$assignedIdsStr}) THEN 1
-          WHEN UPPER(TRIM(p.property_city)) IN ({$citiesInStr}) THEN 2
-          WHEN UPPER(TRIM(p.property_state)) = '{$escapedState}' THEN 3
+          {$priorityCasesStr}
           ELSE 99
         END AS match_priority,
         GROUP_CONCAT(

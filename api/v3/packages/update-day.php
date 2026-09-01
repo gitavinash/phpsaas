@@ -61,6 +61,46 @@ $existingItinerary = json_decode($row['tour_package_itinerary'] ?? '[]', true) ?
 $dayTitle    = isset($_POST['dayTitle']) ? trim($_POST['dayTitle']) : "Day {$dayNumber}";
 $dayOverview = isset($_POST['dayContent']) ? trim($_POST['dayContent']) : (isset($_POST['dayOverview']) ? trim($_POST['dayOverview']) : '');
 $dayStay     = isset($_POST['dayStay']) ? trim($_POST['dayStay']) : '';
+$dayHotelRaw = isset($_POST['dayHotel']) ? trim($_POST['dayHotel']) : (isset($_POST['hotel']) ? trim($_POST['hotel']) : '');
+$dayRoomTypeRaw = isset($_POST['dayRoomType']) ? trim($_POST['dayRoomType']) : (isset($_POST['roomType']) ? trim($_POST['roomType']) : '');
+
+$hotelId = 0;
+$hotelTitle = '';
+if (is_numeric($dayHotelRaw) && (int)$dayHotelRaw > 0) {
+    $hotelId = (int)$dayHotelRaw;
+    $hQuery = mysqli_query($connection, "SELECT property_title FROM {$tblPrefix}property WHERE property_id = '{$hotelId}' AND property_site_id = {$siteId} LIMIT 1");
+    if ($hQuery && ($hRow = mysqli_fetch_assoc($hQuery))) {
+        $hotelTitle = stripslashes($hRow['property_title']);
+    }
+} elseif (!empty($dayHotelRaw)) {
+    if (strpos($dayHotelRaw, ':') !== false) {
+        $parts = explode(':', $dayHotelRaw, 2);
+        if (is_numeric($parts[0])) {
+            $hotelId = (int)$parts[0];
+            $hotelTitle = trim($parts[1]);
+        } else {
+            $hotelTitle = $dayHotelRaw;
+        }
+    } else {
+        $hotelTitle = $dayHotelRaw;
+    }
+}
+
+$roomTypeId = 0;
+$roomTypeName = '';
+if (!empty($dayRoomTypeRaw)) {
+    if (strpos($dayRoomTypeRaw, ':') !== false) {
+        $rParts = explode(':', $dayRoomTypeRaw, 2);
+        if (is_numeric($rParts[0])) {
+            $roomTypeId = (int)$rParts[0];
+            $roomTypeName = trim($rParts[1]);
+        } else {
+            $roomTypeName = $dayRoomTypeRaw;
+        }
+    } else {
+        $roomTypeName = $dayRoomTypeRaw;
+    }
+}
 
 // 3. Update ONLY the target day in the itinerary array
 $targetIndex = $dayNumber - 1;
@@ -69,6 +109,11 @@ while (count($existingItinerary) <= $targetIndex) {
         'day'           => "Day " . (count($existingItinerary) + 1),
         'overview'      => '',
         'stay'          => '',
+        'city'          => '',
+        'hotel_id'      => 0,
+        'hotel_title'   => '',
+        'room_type_id'  => 0,
+        'room_type'     => '',
         'feature_image' => '',
         'gallery'       => []
     ];
@@ -82,9 +127,25 @@ $existingItinerary[$targetIndex] = [
     'day'           => $dayTitle,
     'overview'      => $dayOverview,
     'stay'          => $dayStay,
+    'city'          => $dayStay,
+    'hotel_id'      => $hotelId,
+    'hotel_title'   => $hotelTitle,
+    'room_type_id'  => $roomTypeId,
+    'room_type'     => $roomTypeName,
     'feature_image' => $prevFeature,
     'gallery'       => $prevGallery
 ];
+
+// Synchronize tour_package_hotel for this night
+$clearTph = "DELETE FROM {$tblPrefix}tour_package_hotel WHERE tph_package_id = '{$packageId}' AND tph_night = '{$dayNumber}' AND tph_site_id = {$siteId}";
+mysqli_query($connection, $clearTph);
+
+if ($hotelId > 0) {
+    $escRoomType = mysqli_real_escape_string($connection, $roomTypeName);
+    $insertTph = "INSERT INTO {$tblPrefix}tour_package_hotel (tph_hotel_id, tph_package_id, tph_room_type_id, tph_room_type, tph_night, tph_status, tph_site_id) 
+                  VALUES ('{$hotelId}', '{$packageId}', '{$roomTypeId}', '{$escRoomType}', '{$dayNumber}', 1, {$siteId})";
+    mysqli_query($connection, $insertTph);
+}
 
 $encodedItinerary = mysqli_real_escape_string($connection, json_encode($existingItinerary, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 $totalDays = count($existingItinerary);

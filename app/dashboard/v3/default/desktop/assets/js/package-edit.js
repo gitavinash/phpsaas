@@ -401,20 +401,69 @@
     });
   }
 
-  const activeHotelRequests = {};
+  function initHotelSelect2($el) {
+    if (!$el || !$el.length || typeof $.fn.select2 === 'undefined') return;
+    $el.select2({
+      placeholder: '-- Choose Hotel --',
+      allowClear: true,
+      width: '100%',
+      templateResult: formatHotelOption,
+      templateSelection: formatHotelSelection,
+      escapeMarkup: function (m) { return m; }
+    });
+  }
 
-  function fetchDayHotels(dayNum, stayCity, stayCategory, currentVal) {
+  function initRoomSelect2($el) {
+    if (!$el || !$el.length || typeof $.fn.select2 === 'undefined') return;
+    $el.select2({
+      placeholder: '-- Choose Room Type --',
+      allowClear: true,
+      width: '100%'
+    });
+  }
+
+  const activeHotelRequests = {};
+  const activeRoomRequests = {};
+  const cityHotelsCache = {};
+  const hotelRoomsCache = {};
+
+  const STANDARD_ROOM_TYPES = [
+    'Deluxe Room',
+    'Super Deluxe Room',
+    'Suite Room',
+    'Executive Suite',
+    'Standard Room',
+    'Family Suite',
+    'Luxury Tent / Camp'
+  ];
+
+  function fetchDayHotels(dayNum, stayCity, selectedHotelVal, selectedRoomTypeVal) {
     const $hotelSelect = $(`#dayHotelSelect_${dayNum}`);
+    const $roomSelect = $(`#dayRoomSelect_${dayNum}`);
     if (!$hotelSelect.length) return;
 
     stayCity = (stayCity || '').trim();
-    stayCategory = stayCategory || $(`#dayStayTypeSelect_${dayNum}`).val() || 'all';
-    currentVal = currentVal || $(`#dayStayInput_${dayNum}`).val() || '';
+    selectedHotelVal = selectedHotelVal !== undefined && selectedHotelVal !== null ? String(selectedHotelVal).trim() : ($(`#dayHotelInput_${dayNum}`).val() || '').trim();
+    selectedRoomTypeVal = selectedRoomTypeVal !== undefined && selectedRoomTypeVal !== null ? String(selectedRoomTypeVal).trim() : ($(`#dayRoomTypeInput_${dayNum}`).val() || '').trim();
 
-    // Show loading indication and disable dropdown to prevent double click
+    if (!stayCity) {
+      $hotelSelect.prop('disabled', true).html('<option value="">-- Choose Stay City First --</option>');
+      $roomSelect.prop('disabled', true).html('<option value="">-- Choose Hotel First --</option>');
+      $(`#dayHotelInput_${dayNum}`).val('');
+      $(`#dayRoomTypeInput_${dayNum}`).val('');
+      if (typeof $.fn.select2 !== 'undefined' && $hotelSelect.hasClass('select2-hidden-accessible')) {
+        $hotelSelect.trigger('change.select2');
+      }
+      if (typeof $.fn.select2 !== 'undefined' && $roomSelect.hasClass('select2-hidden-accessible')) {
+        $roomSelect.trigger('change.select2');
+      }
+      return;
+    }
+
+    // Show loading indication
     $hotelSelect.prop('disabled', true);
-    $hotelSelect.html(`<option value="" disabled selected>⏳ Loading hotels${stayCity ? ' in ' + escapeHtml(capitalizeWords(stayCity)) : ''}...</option>`);
-    if (typeof $.fn.select2 !== 'undefined') {
+    $hotelSelect.html(`<option value="" disabled selected>⏳ Loading hotels in ${escapeHtml(capitalizeWords(stayCity))}...</option>`);
+    if (typeof $.fn.select2 !== 'undefined' && $hotelSelect.hasClass('select2-hidden-accessible')) {
       $hotelSelect.trigger('change.select2');
     }
 
@@ -422,11 +471,10 @@
       activeHotelRequests[dayNum].abort();
     }
 
+    const pkgId = $('#hiddenPackageId').val() || (window.V3PackageEdit && window.V3PackageEdit.packageId) || '';
     const params = new URLSearchParams();
     if (stayCity) params.append('city', stayCity);
-    if (stayCategory && !['all', 'custom', 'transit', 'none'].includes(stayCategory)) {
-      params.append('category', stayCategory);
-    }
+    if (pkgId) params.append('package_id', pkgId);
 
     activeHotelRequests[dayNum] = $.ajax({
       url: `/api/v3/packages/hotels/?${params.toString()}`,
@@ -436,23 +484,186 @@
         delete activeHotelRequests[dayNum];
         $hotelSelect.prop('disabled', false);
         const hotelsList = (res && res.hotels) || [];
-        const countLabel = hotelsList.length ? ` (${hotelsList.length} available)` : ' (0 available)';
-        $hotelSelect.html(`<option value="">-- Choose Hotel${countLabel} --</option>` + renderHotelOptionsHtml(hotelsList, currentVal, stayCity));
-        if (typeof $.fn.select2 !== 'undefined') {
+        cityHotelsCache[stayCity.toLowerCase()] = hotelsList;
+
+        let optionsHtml = `<option value="">-- Choose Hotel (${hotelsList.length} available) --</option>`;
+        optionsHtml += `<option value="0" ${selectedHotelVal === '0' ? 'selected' : ''}>No Hotel / Transit / Overnight Journey</option>`;
+
+        let matchedHotel = null;
+        hotelsList.forEach(function (h) {
+          const isSelected = selectedHotelVal && (
+            String(h.id) === selectedHotelVal || 
+            (h.title && h.title.toLowerCase().trim() === selectedHotelVal.toLowerCase().trim()) ||
+            selectedHotelVal.includes(String(h.id))
+          );
+          if (isSelected) {
+            matchedHotel = h;
+          }
+          const capTitle = capitalizeWords(h.title);
+          const capCity = capitalizeWords(h.city || '');
+          const loc = capCity ? ` (${capCity})` : '';
+          const typeLabel = h.type_label || PROPERTY_TYPES[h.type] || h.type || 'Hotel';
+          optionsHtml += `
+            <option value="${h.id}" 
+                    data-id="${h.id}"
+                    data-title="${escapeHtml(capTitle)}" 
+                    data-city="${escapeHtml(capCity)}" 
+                    data-type-label="${escapeHtml(typeLabel)}" 
+                    data-thumb="${escapeHtml(h.thumbnail || '')}" 
+                    ${isSelected ? 'selected' : ''}>
+              ${escapeHtml(capTitle)}${escapeHtml(loc)}
+            </option>
+          `;
+        });
+
+        $hotelSelect.html(optionsHtml);
+        if (typeof $.fn.select2 !== 'undefined' && $hotelSelect.hasClass('select2-hidden-accessible')) {
           $hotelSelect.trigger('change.select2');
+        }
+
+        const currentSelectedHotel = $hotelSelect.val();
+        $(`#dayHotelInput_${dayNum}`).val(currentSelectedHotel || '');
+
+        if (currentSelectedHotel && currentSelectedHotel !== '0') {
+          fetchDayRooms(dayNum, currentSelectedHotel, selectedRoomTypeVal, matchedHotel);
+        } else if (currentSelectedHotel === '0') {
+          $roomSelect.prop('disabled', true).html('<option value="0:Not Applicable" selected>Not Applicable (No Stay)</option>');
+          $(`#dayRoomTypeInput_${dayNum}`).val('Not Applicable');
+          if (typeof $.fn.select2 !== 'undefined' && $roomSelect.hasClass('select2-hidden-accessible')) {
+            $roomSelect.trigger('change.select2');
+          }
+        } else {
+          $roomSelect.prop('disabled', true).html('<option value="">-- Choose Hotel First --</option>');
+          $(`#dayRoomTypeInput_${dayNum}`).val('');
+          if (typeof $.fn.select2 !== 'undefined' && $roomSelect.hasClass('select2-hidden-accessible')) {
+            $roomSelect.trigger('change.select2');
+          }
         }
       },
       error: function (xhr, status) {
         delete activeHotelRequests[dayNum];
         if (status === 'abort') return;
         $hotelSelect.prop('disabled', false);
-        const allHotels = (window.V3PackageEdit && window.V3PackageEdit.hotels) || [];
-        const dayHotels = getHotelsForDay(allHotels, $(`#dayCard_${dayNum} .v3-day-title-input`).val(), $(`#editor-${dayNum}`).val(), stayCategory);
-        const countLabel = dayHotels.length ? ` (${dayHotels.length} available)` : ' (0 available)';
-        $hotelSelect.html(`<option value="">-- Choose Hotel${countLabel} --</option>` + renderHotelOptionsHtml(dayHotels, currentVal, stayCity));
-        if (typeof $.fn.select2 !== 'undefined') {
+        $hotelSelect.html('<option value="">-- Choose Hotel (0 available) --</option><option value="0">No Hotel / Transit</option>');
+        if (typeof $.fn.select2 !== 'undefined' && $hotelSelect.hasClass('select2-hidden-accessible')) {
           $hotelSelect.trigger('change.select2');
         }
+      }
+    });
+  }
+
+  function fetchDayRooms(dayNum, hotelId, selectedRoomTypeVal, hotelObj) {
+    const $roomSelect = $(`#dayRoomSelect_${dayNum}`);
+    if (!$roomSelect.length) return;
+
+    hotelId = hotelId ? String(hotelId).trim() : '';
+    selectedRoomTypeVal = selectedRoomTypeVal ? String(selectedRoomTypeVal).trim().toLowerCase() : ($(`#dayRoomTypeInput_${dayNum}`).val() || '').trim().toLowerCase();
+
+    if (!hotelId || hotelId === '0') {
+      const placeholder = hotelId === '0' ? 'Not Applicable (No Stay)' : '-- Choose Hotel First --';
+      $roomSelect.prop('disabled', true).html(`<option value="">${placeholder}</option>`);
+      if (hotelId === '0') {
+        $(`#dayRoomTypeInput_${dayNum}`).val('Not Applicable');
+      } else {
+        $(`#dayRoomTypeInput_${dayNum}`).val('');
+      }
+      if (typeof $.fn.select2 !== 'undefined' && $roomSelect.hasClass('select2-hidden-accessible')) {
+        $roomSelect.trigger('change.select2');
+      }
+      return;
+    }
+
+    function populateRooms(roomsList) {
+      if (!roomsList || roomsList.length === 0) {
+        $roomSelect.prop('disabled', false).html('<option value="">-- No specific rooms configured for this hotel --</option><option value="0:Standard Room">Standard Room (Default)</option>');
+        const chosenVal = $roomSelect.val();
+        $(`#dayRoomTypeInput_${dayNum}`).val(chosenVal || '');
+        if (typeof $.fn.select2 !== 'undefined' && $roomSelect.hasClass('select2-hidden-accessible')) {
+          $roomSelect.trigger('change.select2');
+        }
+        return;
+      }
+
+      let html = `<option value="">-- Select Room Type (${roomsList.length} Available) --</option>`;
+      let autoSelectVal = '';
+
+      roomsList.forEach(function (rm) {
+        const rId = rm.id || 0;
+        const rawName = rm.name || rm.type_label || rm.type || 'Standard Room';
+        const rName = capitalizeWords(rawName.replace(/_/g, ' '));
+        const rVal = `${rId}:${rName}`;
+
+        const isSel = selectedRoomTypeVal && (
+          selectedRoomTypeVal === String(rId) || 
+          selectedRoomTypeVal === rName.toLowerCase() || 
+          selectedRoomTypeVal === (rm.type || '').toLowerCase() ||
+          selectedRoomTypeVal === rVal.toLowerCase() ||
+          selectedRoomTypeVal.startsWith(String(rId) + ':') ||
+          selectedRoomTypeVal.includes(rName.toLowerCase())
+        );
+
+        if (isSel) {
+          autoSelectVal = rVal;
+        }
+
+        html += `<option value="${escapeHtml(rVal)}" data-id="${rId}" data-name="${escapeHtml(rName)}" ${isSel ? 'selected' : ''}>${escapeHtml(rName)}</option>`;
+      });
+
+      // If only 1 room type exists for this hotel and none was previously chosen, auto-select it
+      if (!autoSelectVal && roomsList.length === 1) {
+        const singleRm = roomsList[0];
+        const singleId = singleRm.id || 0;
+        const singleName = capitalizeWords((singleRm.name || singleRm.type_label || singleRm.type || 'Standard Room').replace(/_/g, ' '));
+        autoSelectVal = `${singleId}:${singleName}`;
+      }
+
+      $roomSelect.prop('disabled', false).html(html);
+
+      if (autoSelectVal) {
+        $roomSelect.val(autoSelectVal);
+      }
+
+      const chosenVal = $roomSelect.val();
+      $(`#dayRoomTypeInput_${dayNum}`).val(chosenVal || '');
+
+      if (typeof $.fn.select2 !== 'undefined' && $roomSelect.hasClass('select2-hidden-accessible')) {
+        $roomSelect.trigger('change.select2');
+      }
+    }
+
+    if (hotelRoomsCache[hotelId] && hotelRoomsCache[hotelId].length > 0) {
+      populateRooms(hotelRoomsCache[hotelId]);
+      return;
+    }
+
+    if (hotelObj && Array.isArray(hotelObj.rooms) && hotelObj.rooms.length > 0) {
+      hotelRoomsCache[hotelId] = hotelObj.rooms;
+      populateRooms(hotelObj.rooms);
+      return;
+    }
+
+    $roomSelect.prop('disabled', true).html('<option value="" disabled selected>⏳ Loading room types...</option>');
+    if (typeof $.fn.select2 !== 'undefined' && $roomSelect.hasClass('select2-hidden-accessible')) {
+      $roomSelect.trigger('change.select2');
+    }
+
+    if (activeRoomRequests[dayNum] && typeof activeRoomRequests[dayNum].abort === 'function') {
+      activeRoomRequests[dayNum].abort();
+    }
+
+    activeRoomRequests[dayNum] = $.ajax({
+      url: `/api/v3/properties/rooms/?property_id=${encodeURIComponent(hotelId)}`,
+      type: 'GET',
+      dataType: 'json',
+      success: function (res) {
+        delete activeRoomRequests[dayNum];
+        const loadedRooms = (res && res.rooms) || [];
+        hotelRoomsCache[hotelId] = loadedRooms;
+        populateRooms(loadedRooms);
+      },
+      error: function () {
+        delete activeRoomRequests[dayNum];
+        populateRooms([]);
       }
     });
   }
@@ -488,7 +699,9 @@
     }
 
     return html;
-  }  function buildDayCardHtml(dayNum, dayItem, hotelsList) {
+  }
+
+  function buildDayCardHtml(dayNum, dayItem, hotelsList) {
     dayItem = dayItem || {};
     const dayTitle = dayItem.day || `Day ${dayNum}`;
     const dayOverview = dayItem.overview || '';
@@ -497,6 +710,8 @@
     const dayFeatureImg = (dayItem.feature_image || '').trim();
     const dayCity = detectDayCity(dayTitle, dayOverview);
     const initialCity = (dayStay && !dayStay.toLowerCase().includes('hotel') && !dayStay.toLowerCase().includes('resort')) ? dayStay : (dayCity || dayStay);
+    const dayHotelVal = dayItem.hotel_id || dayItem.hotel || '';
+    const dayRoomTypeVal = dayItem.room_type || dayItem.room_type_id || '';
 
     return `
       <div class="v3-day-card" id="dayCard_${dayNum}" data-day="${dayNum}">
@@ -518,18 +733,46 @@
               </div>
           </div>
           <div class="v3-day-card-body">
-              <!-- Stay City Option Selector -->
+              <!-- Accommodation Stay Configuration Panel -->
               <div class="v3-stay-config-panel">
                   <div class="v3-stay-panel-title">
-                      <i class="fi fi-rr-marker"></i> Stay City
+                      <i class="fi fi-rr-bed"></i> Accommodation & Stay Details
+                      <span class="v3-badge-city-tag" id="dayCityBadge_${dayNum}">
+                          <i class="fi fi-rr-marker"></i> ${escapeHtml(initialCity ? capitalizeWords(initialCity) : 'No City')}
+                      </span>
                   </div>
                   <div class="v3-day-stay-row">
-                      <div class="v3-day-stay-field" style="flex: 1; width: 100%;">
-                          <label class="v3-form-label-xs"><i class="fi fi-rr-marker"></i> Select or Search Stay City</label>
+                      <!-- 1. Stay City -->
+                      <div class="v3-day-stay-field">
+                          <label class="v3-form-label-xs" for="dayCitySelect_${dayNum}">
+                              <i class="fi fi-rr-marker"></i> Stay City
+                          </label>
                           <select class="v3-select selectJS v3-day-city-select select2-stay-city" data-day="${dayNum}" id="dayCitySelect_${dayNum}">
                               ${renderCityOptionsHtml(initialCity, window.V3PackageEdit ? window.V3PackageEdit.stateCities : [], window.V3PackageEdit ? window.V3PackageEdit.otherCities : [], window.V3PackageEdit ? window.V3PackageEdit.packageState : '')}
                           </select>
-                          <input type="hidden" name="dayStay[]" id="dayStayInput_${dayNum}" class="v3-day-stay-input" value="${escapeHtml(dayStay)}" />
+                          <input type="hidden" name="dayStay[]" id="dayStayInput_${dayNum}" class="v3-day-stay-input" value="${escapeHtml(dayStay || initialCity)}" />
+                      </div>
+
+                      <!-- 2. Hotel Selection based on City -->
+                      <div class="v3-day-stay-field">
+                          <label class="v3-form-label-xs" for="dayHotelSelect_${dayNum}">
+                              <i class="fi fi-rr-building"></i> Hotel / Property
+                          </label>
+                          <select class="v3-select selectJS v3-day-hotel-select select2-day-hotel" data-day="${dayNum}" id="dayHotelSelect_${dayNum}">
+                              <option value="">${initialCity ? 'Loading hotels...' : '-- Choose Stay City First --'}</option>
+                          </select>
+                          <input type="hidden" name="dayHotel[]" id="dayHotelInput_${dayNum}" class="v3-day-hotel-input" value="${escapeHtml(dayHotelVal)}" />
+                      </div>
+
+                      <!-- 3. Room Type Selection based on Hotel -->
+                      <div class="v3-day-stay-field">
+                          <label class="v3-form-label-xs" for="dayRoomSelect_${dayNum}">
+                              <i class="fi fi-rr-bed"></i> Room Type
+                          </label>
+                          <select class="v3-select selectJS v3-day-room-select select2-day-room" data-day="${dayNum}" id="dayRoomSelect_${dayNum}">
+                              <option value="">${dayHotelVal ? 'Loading room types...' : '-- Choose Hotel First --'}</option>
+                          </select>
+                          <input type="hidden" name="dayRoomType[]" id="dayRoomTypeInput_${dayNum}" class="v3-day-room-input" value="${escapeHtml(dayRoomTypeVal)}" />
                       </div>
                   </div>
               </div>
@@ -672,9 +915,11 @@
       }
     }
 
-    // Init Select2 on new Stay City dropdown
+    // Init Select2 on new Stay City, Hotel & Room Type dropdowns
     if (typeof $.fn.select2 !== 'undefined') {
       initCitySelect2($(`#dayCitySelect_${newDayNum}`));
+      initHotelSelect2($(`#dayHotelSelect_${newDayNum}`));
+      initRoomSelect2($(`#dayRoomSelect_${newDayNum}`));
     }
 
     // Update Counts, Jumper Menu & Durations on the UI
@@ -748,7 +993,7 @@
           $targetCard.remove();
           window.reindexDayCards();
           if (typeof popUpMessage === 'function') {
-            popUpMessage('center', `Day ${dayNum} removed from the itinerary.`, 'success');
+            popUpMessage('center', `Day ${dayNum} removed.`, 'success');
           }
         });
       }
@@ -797,9 +1042,13 @@
       $editorWrap.find('textarea').attr('id', `editor-${dayNum}`);
 
       $card.find('.v3-day-city-select').attr('id', `dayCitySelect_${dayNum}`).attr('data-day', dayNum);
-      $card.find('.v3-day-stay-type-select').attr('id', `dayStayTypeSelect_${dayNum}`).attr('data-day', dayNum);
       $card.find('.v3-day-hotel-select').attr('id', `dayHotelSelect_${dayNum}`).attr('data-day', dayNum);
+      $card.find('.v3-day-hotel-input').attr('id', `dayHotelInput_${dayNum}`);
+      $card.find('.v3-day-room-select').attr('id', `dayRoomSelect_${dayNum}`).attr('data-day', dayNum);
+      $card.find('.v3-day-room-input').attr('id', `dayRoomTypeInput_${dayNum}`);
       $card.find('.v3-day-stay-input').attr('id', `dayStayInput_${dayNum}`);
+      $card.find('.v3-badge-city-tag').attr('id', `dayCityBadge_${dayNum}`);
+      $card.find('.btn-save-day-cta').attr('data-day', dayNum);
       $card.find('.v3-day-bulk-file-input').attr('data-day', dayNum);
       $card.find('.v3-day-photos-grid').attr('id', `dayGalleryGrid_${dayNum}`);
       $card.find('.v3-day-feat-input').attr('id', `dayFeatInput_${dayNum}`);
@@ -845,6 +1094,8 @@
     hotelsXhr: null,
     eventsBound: false,
     dayPendingFiles: {},
+    fetchDayHotels: fetchDayHotels,
+    fetchDayRooms: fetchDayRooms,
 
     autoInit: function () {
       const $app = $('#packageEditApp, .package-edit-wrapper');
@@ -1168,9 +1419,32 @@
       // 6. Initialize Select2
       this.initSelects();
 
-      // 7. Show Form Content
+      // 7. Show Form Content immediately so user is never stuck in loader
       $('#packageEditLoading').hide();
       $('#packageEditContent').fadeIn(150);
+
+      // 8. Initialize Hotel and Room Type Cascades for all days
+      try {
+        itineraryList.forEach(function (dayItem, idx) {
+          const dayNum = idx + 1;
+          const dayStay = (dayItem.stay || dayItem.city || '').trim();
+          const dayHotel = dayItem.hotel_id || dayItem.hotel || '';
+          const dayRoom = dayItem.room_type || dayItem.room_type_id || '';
+          const initialCity = dayStay || detectDayCity(dayItem.day || '', dayItem.overview || '');
+          if (initialCity) {
+            fetchDayHotels(dayNum, initialCity, dayHotel, dayRoom);
+          } else {
+            $(`#dayHotelSelect_${dayNum}`).prop('disabled', true).html('<option value="">-- Choose Stay City First --</option>');
+            $(`#dayRoomSelect_${dayNum}`).prop('disabled', true).html('<option value="">-- Choose Hotel First --</option>');
+            if (typeof $.fn.select2 !== 'undefined') {
+              $(`#dayHotelSelect_${dayNum}`).trigger('change.select2');
+              $(`#dayRoomSelect_${dayNum}`).trigger('change.select2');
+            }
+          }
+        });
+      } catch (err) {
+        console.warn('Day stay cascade init notice:', err);
+      }
     },
 
     initEditors: function (pkg, itineraryList) {
@@ -1268,14 +1542,21 @@
 
     initSelects: function () {
       if (typeof $.fn.select2 !== 'undefined') {
-        if ($('#packageEditApp .selectJS:not(.select2-stay-city)').length) {
-          $('#packageEditApp .selectJS:not(.select2-stay-city)').select2({
+        const $generalSelects = $('#packageEditApp .selectJS:not(.select2-stay-city):not(.select2-day-hotel):not(.select2-day-room)');
+        if ($generalSelects.length) {
+          $generalSelects.select2({
             placeholder: 'Select option',
             width: '100%'
           });
         }
         if ($('.select2-stay-city').length) {
           initCitySelect2($('.select2-stay-city'));
+        }
+        if ($('.select2-day-hotel').length) {
+          initHotelSelect2($('.select2-day-hotel'));
+        }
+        if ($('.select2-day-room').length) {
+          initRoomSelect2($('.select2-day-room'));
         }
       }
     },
@@ -1403,6 +1684,33 @@
         const dayNum = $(this).data('day');
         const selectedCity = ($(this).val() || '').trim();
         $(`#dayStayInput_${dayNum}`).val(selectedCity);
+        $(`#dayCityBadge_${dayNum}`).html(`<i class="fi fi-rr-marker"></i> ${selectedCity ? escapeHtml(capitalizeWords(selectedCity)) : 'No City'}`);
+        $(`#dayHotelInput_${dayNum}`).val('');
+        $(`#dayRoomTypeInput_${dayNum}`).val('');
+        fetchDayHotels(dayNum, selectedCity, '', '');
+      });
+
+      // 9b. Day Hotel Select Change Handler
+      $(document).off('change.v3pkgDayHotel', '.select2-day-hotel');
+      $(document).on('change.v3pkgDayHotel', '.select2-day-hotel', function () {
+        const dayNum = $(this).data('day');
+        const selectedHotel = ($(this).val() || '').trim();
+        $(`#dayHotelInput_${dayNum}`).val(selectedHotel);
+        $(`#dayRoomTypeInput_${dayNum}`).val('');
+
+        const currentCity = ($(`#dayCitySelect_${dayNum}`).val() || '').trim().toLowerCase();
+        const cachedHotels = cityHotelsCache[currentCity] || [];
+        const hotelObj = cachedHotels.find(h => String(h.id) === selectedHotel) || null;
+
+        fetchDayRooms(dayNum, selectedHotel, '', hotelObj);
+      });
+
+      // 9c. Day Room Type Select Change Handler
+      $(document).off('change.v3pkgDayRoom', '.select2-day-room');
+      $(document).on('change.v3pkgDayRoom', '.select2-day-room', function () {
+        const dayNum = $(this).data('day');
+        const selectedRoom = ($(this).val() || '').trim();
+        $(`#dayRoomTypeInput_${dayNum}`).val(selectedRoom);
       });
 
       // 10. Dedicated Save Day Details CTA (Updates ONLY the particular day)
@@ -1425,7 +1733,12 @@
         const dayOverview = dayEl ? dayEl.innerHTML : ($(`#editor-${dayNum}`).val() || '');
         const dayTitle = $card.find('.v3-day-title-input').val() || `Day ${dayNum}`;
         const dayStay = ($(`#dayCitySelect_${dayNum}`).val() || $(`#dayStayInput_${dayNum}`).val() || '').trim();
+        const dayHotel = ($(`#dayHotelSelect_${dayNum}`).val() || $(`#dayHotelInput_${dayNum}`).val() || '').trim();
+        const dayRoomType = ($(`#dayRoomSelect_${dayNum}`).val() || $(`#dayRoomTypeInput_${dayNum}`).val() || '').trim();
+
         $(`#dayStayInput_${dayNum}`).val(dayStay);
+        $(`#dayHotelInput_${dayNum}`).val(dayHotel);
+        $(`#dayRoomTypeInput_${dayNum}`).val(dayRoomType);
 
         const originalBtnHtml = $btn.html();
         $btn.prop('disabled', true).html(`<i class="fi fi-rr-spinner" style="animation: spin 1s linear infinite;"></i> Saving Day ${dayNum}...`);
@@ -1436,6 +1749,8 @@
         dayData.append('dayTitle', dayTitle);
         dayData.append('dayContent', dayOverview);
         dayData.append('dayStay', dayStay);
+        dayData.append('dayHotel', dayHotel);
+        dayData.append('dayRoomType', dayRoomType);
 
         $.ajax({
           url: '/api/v3/packages/update-day/',
@@ -1460,6 +1775,103 @@
           error: function (xhr) {
             $btn.prop('disabled', false).html(originalBtnHtml);
             let errMsg = `Failed to update Day ${dayNum}.`;
+            if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+              errMsg = xhr.responseJSON.message;
+            }
+            if (typeof popUpMessage === 'function') {
+              popUpMessage('center', errMsg, 'error');
+            }
+          }
+        });
+      });
+
+      // 10b. Dedicated CTA for Tab 2 Day-Wise Itinerary (Updates ALL days in a single click)
+      $(document).off('click.v3pkgUpdateAllDays', '#btnUpdateAllDays');
+      $(document).on('click.v3pkgUpdateAllDays', '#btnUpdateAllDays', function (e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const pkgId = $('#hiddenPackageId').val() || (window.V3PackageEdit && window.V3PackageEdit.packageId);
+
+        if (!pkgId) {
+          if (typeof popUpMessage === 'function') {
+            popUpMessage('center', 'Invalid package ID.', 'error');
+          }
+          return;
+        }
+
+        const $cards = $('#daysContainer .v3-day-card');
+        if ($cards.length === 0) {
+          if (typeof popUpMessage === 'function') {
+            popUpMessage('center', 'No days found in the itinerary.', 'warning');
+          }
+          return;
+        }
+
+        const originalBtnHtml = $btn.html();
+        $btn.prop('disabled', true).html('<i class="fi fi-rr-spinner" style="animation: spin 1s linear infinite;"></i> Updating All Days...');
+
+        const formData = new FormData();
+        formData.append('packageId', pkgId);
+
+        $cards.each(function () {
+          const dayNum = $(this).data('day');
+          const $card = $(this);
+
+          const dayEl = document.querySelector(`#dayEditor_${dayNum} .ql-editor`);
+          const dayOverview = dayEl ? dayEl.innerHTML : ($(`#editor-${dayNum}`).val() || '');
+          const dayTitle = $card.find('.v3-day-title-input').val() || `Day ${dayNum}`;
+          const dayStay = ($(`#dayCitySelect_${dayNum}`).val() || $(`#dayStayInput_${dayNum}`).val() || '').trim();
+          const dayHotel = ($(`#dayHotelSelect_${dayNum}`).val() || $(`#dayHotelInput_${dayNum}`).val() || '').trim();
+          const dayRoomType = ($(`#dayRoomSelect_${dayNum}`).val() || $(`#dayRoomTypeInput_${dayNum}`).val() || '').trim();
+          const dayFeatImg = $(`#dayFeatInput_${dayNum}`).val() || '';
+          const dayGal = $(`#dayGalInput_${dayNum}`).val() || '[]';
+
+          // Synchronize hidden inputs
+          $(`#dayStayInput_${dayNum}`).val(dayStay);
+          $(`#dayHotelInput_${dayNum}`).val(dayHotel);
+          $(`#dayRoomTypeInput_${dayNum}`).val(dayRoomType);
+
+          formData.append('dayTitle[]', dayTitle);
+          formData.append('dayContent[]', dayOverview);
+          formData.append('dayStay[]', dayStay);
+          formData.append('dayHotel[]', dayHotel);
+          formData.append('dayRoomType[]', dayRoomType);
+          formData.append('dayFeatureImage[]', dayFeatImg);
+          formData.append('dayGallery[]', dayGal);
+        });
+
+        $.ajax({
+          url: '/api/v3/packages/update-days/',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          dataType: 'json',
+          success: function (res) {
+            $btn.prop('disabled', false).html(originalBtnHtml);
+            if (res && res.status === 'success') {
+              if (typeof res.totalDays !== 'undefined') {
+                $('#tabItineraryCountBadge').text(`${res.totalDays} Days`);
+                $('#jumperMenuDayCount').text(`${res.totalDays} Days`);
+              }
+              if (typeof res.duration !== 'undefined') {
+                $('#hiddenDuration').val(res.duration);
+                const totalD = (res.totalDays || (res.duration + 1));
+                $('#pkgMetaDuration').html(`<i class="fi-rr-moon icon-moon"></i> ${res.duration}N / <i class="fi-rr-sun icon-sun"></i> ${totalD}D`);
+              }
+              if (typeof popUpMessage === 'function') {
+                popUpMessage('center', res.message || 'All days itinerary updated successfully!', 'success');
+              }
+            } else {
+              const errMsg = (res && res.message) ? res.message : 'Failed to update all days.';
+              if (typeof popUpMessage === 'function') {
+                popUpMessage('center', errMsg, 'error');
+              }
+            }
+          },
+          error: function (xhr) {
+            $btn.prop('disabled', false).html(originalBtnHtml);
+            let errMsg = 'Failed to update all days.';
             if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
               errMsg = xhr.responseJSON.message;
             }
@@ -1564,6 +1976,8 @@
             e.preventDefault();
             if ($('#tabGeneral').is(':visible')) {
               $('#btnUpdateGeneral').click();
+            } else if ($('#tabItinerary').is(':visible')) {
+              $('#btnUpdateAllDays').click();
             } else if ($('#tabPolicies').is(':visible')) {
               $('#btnUpdatePolicies').click();
             }

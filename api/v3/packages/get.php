@@ -197,6 +197,67 @@ foreach ($rawItinerary as $idx => &$dayItem) {
 }
 unset($dayItem);
 
+// 6. Fetch Existing Hotel Assignments from tour_package_hotel
+$packageHotels = [];
+$tphQuery = "
+    SELECT 
+        tph.tph_id,
+        tph.tph_night,
+        tph.tph_hotel_id,
+        tph.tph_room_type_id,
+        tph.tph_room_type,
+        p.property_title,
+        p.property_city,
+        p.property_state,
+        p.property_thumbnail,
+        p.property_type
+    FROM {$tblPrefix}tour_package_hotel tph
+    INNER JOIN {$tblPrefix}property p 
+        ON p.property_id = tph.tph_hotel_id
+       AND p.property_site_id = {$siteId}
+    WHERE tph.tph_package_id = '{$packageId}' 
+      AND tph.tph_site_id = {$siteId}
+    ORDER BY tph.tph_night ASC
+";
+if ($tphRes = mysqli_query($connection, $tphQuery)) {
+    while ($tRow = mysqli_fetch_assoc($tphRes)) {
+        $night = (int)$tRow['tph_night'];
+        $packageHotels[$night] = [
+            'id'            => (int)$tRow['tph_id'],
+            'night'         => $night,
+            'hotel_id'      => (int)$tRow['tph_hotel_id'],
+            'hotel_title'   => stripslashes($tRow['property_title'] ?? ''),
+            'city'          => stripslashes($tRow['property_city'] ?? ''),
+            'state'         => stripslashes($tRow['property_state'] ?? ''),
+            'thumbnail'     => $tRow['property_thumbnail'] ?? '',
+            'property_type' => $tRow['property_type'] ?? 'hotel',
+            'room_type_id'  => (int)$tRow['tph_room_type_id'],
+            'room_type'     => stripslashes($tRow['tph_room_type'] ?? '')
+        ];
+    }
+}
+
+// Enrich raw itinerary days with assigned hotel and room type
+foreach ($rawItinerary as $idx => &$dItem) {
+    $dayNum = $idx + 1;
+    if (isset($packageHotels[$dayNum])) {
+        $pHotel = $packageHotels[$dayNum];
+        $dItem['hotel_id'] = $pHotel['hotel_id'];
+        $dItem['hotel_title'] = $pHotel['hotel_title'];
+        $dItem['room_type_id'] = $pHotel['room_type_id'];
+        $dItem['room_type'] = $pHotel['room_type'];
+        if (empty($dItem['stay']) && !empty($pHotel['city'])) {
+            $dItem['stay'] = $pHotel['city'];
+        }
+    } else {
+        if (!isset($dItem['hotel_id'])) $dItem['hotel_id'] = 0;
+        if (!isset($dItem['hotel_title'])) $dItem['hotel_title'] = '';
+        if (!isset($dItem['room_type_id'])) $dItem['room_type_id'] = 0;
+        if (!isset($dItem['room_type'])) $dItem['room_type'] = '';
+    }
+}
+unset($dItem);
+
 $coverImg = !empty($row['gallery_image']) ? $row['gallery_image'] : (!empty($row['tour_package_image']) ? $row['tour_package_image'] : '');
 if (empty($coverImg) && !empty($galleryImageList[0]['path'])) {
     $coverImg = $galleryImageList[0]['path'];
@@ -262,8 +323,10 @@ $response = [
         'gallery_image_list'     => $galleryImageList,
         'status'                 => (int)($row['tour_package_status'] ?? 1),
         'link_url'               => $row['link_url'] ?? '',
-        'is_published'           => (!isset($row['tour_package_status']) || (int)$row['tour_package_status'] !== 0)
+        'is_published'           => (!isset($row['tour_package_status']) || (int)$row['tour_package_status'] !== 0),
+        'package_hotels'         => $packageHotels
     ],
+    'package_hotels' => $packageHotels,
     'templates_list' => $discoveredTemplates,
     'vehicles'      => $vehiclesList,
     'travel_styles' => $travelStyles,
