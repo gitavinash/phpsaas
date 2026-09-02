@@ -1516,21 +1516,27 @@
     },
 
     buildVehicleSelectHtml: function (selectedVehicle) {
-
       const self = this;
       const vehicles = self.vehiclesList || [];
       const selLower = (selectedVehicle || "").toLowerCase().trim();
 
       let html = `<option value="">-- Choose Transport / Fleet --</option>`;
+      let foundSelected = false;
 
       if (vehicles.length > 0) {
         html += `<optgroup label="Fleet Vehicles">`;
         vehicles.forEach((v) => {
           const vTitle = v.title || v.name;
           const vType = v.type_label || v.type || "";
+          const rawType = (v.type || "").toLowerCase().trim();
           const isSel =
-            vTitle.toLowerCase() === selLower ||
-            (selLower && selLower.includes(vTitle.toLowerCase()));
+            !foundSelected &&
+            selLower &&
+            (vTitle.toLowerCase() === selLower ||
+              selLower.includes(vTitle.toLowerCase()) ||
+              vTitle.toLowerCase().includes(selLower) ||
+              (rawType && (rawType === selLower || selLower.includes(rawType))));
+          if (isSel) foundSelected = true;
           html += `<option value="${escapeHtml(vTitle)}" ${isSel ? "selected" : ""}>${escapeHtml(vTitle)}${vType ? ` (${escapeHtml(vType)})` : ""}</option>`;
         });
         html += `</optgroup>`;
@@ -1548,16 +1554,19 @@
       html += `<optgroup label="Standard Categories">`;
       standardTransports.forEach((st) => {
         const isSel =
-          st.toLowerCase() === selLower ||
-          (selLower && st.toLowerCase().includes(selLower));
+          !foundSelected &&
+          selLower &&
+          (st.toLowerCase() === selLower ||
+            selLower.includes(st.toLowerCase()) ||
+            st.toLowerCase().includes(selLower));
+        if (isSel) foundSelected = true;
         html += `<option value="${escapeHtml(st)}" ${isSel ? "selected" : ""}>${escapeHtml(st)}</option>`;
       });
       html += `</optgroup>`;
 
       const isCustomSelected =
         selectedVehicle &&
-        !vehicles.some((v) => (v.title || "").toLowerCase() === selLower) &&
-        !standardTransports.some((st) => st.toLowerCase() === selLower);
+        !foundSelected;
 
       html += `<option value="custom" ${isCustomSelected ? "selected" : ""}>Enter Custom Transport</option>`;
 
@@ -1762,7 +1771,10 @@
 
       self.loadItineraryMeta(function () {
         $stack.empty();
+        const totalDays = days.length;
         days.forEach((d, idx) => {
+          d.is_last_day = (idx === totalDays - 1);
+          d.total_days = totalDays;
           self.appendDayCard(d, idx + 1);
         });
       });
@@ -1779,7 +1791,21 @@
       const hotelStars = d.hotel_stars || d.hotel_type || "all";
       const roomType = d.room_type || d.room_type_name || d.assigned_room_type || "";
       const mealPlan = d.meal_plan || "CP";
-      const vehicle = d.vehicle || "Private Sedan";
+
+      // Pre-default vehicles day-wise: package outstation vehicle for day 1 and last day, local sightseeing vehicle for other days
+      let vehicle = (d.vehicle || "").trim();
+      if (!vehicle || vehicle === "Private Sedan") {
+        const pkg = self.selectedPackage || {};
+        const outstation = (pkg.outstation_vehicle || pkg.tour_package_outstation_vehicle || "").trim();
+        const local = (pkg.localsightseen_vehicle || pkg.tour_package_localsightseen_vehicle || "").trim();
+
+        if (num === 1 || d.is_last_day || (d.total_days && num === d.total_days)) {
+          vehicle = outstation || local || vehicle || "Private Sedan";
+        } else {
+          vehicle = local || outstation || vehicle || "Private Sedan";
+        }
+      }
+
       const transferNotes = d.transfer_notes || "";
 
       const cityLower = city.toLowerCase();
@@ -2783,7 +2809,7 @@
               overview: "",
               hotel: "",
               meal_plan: "CP",
-              vehicle: "Private Sedan",
+              vehicle: "",
               transfer_notes: "",
             },
             nextNum,
@@ -4366,12 +4392,35 @@
         return "";
       };
 
+      // Save vehicle preferences on self.selectedPackage
+      self.selectedPackage = self.selectedPackage || {};
+      self.selectedPackage.outstation_vehicle =
+        pkg.tour_package_outstation_vehicle || pkg.outstation_vehicle || "";
+      self.selectedPackage.localsightseen_vehicle =
+        pkg.tour_package_localsightseen_vehicle || pkg.localsightseen_vehicle || "";
+
+      const initialOutstation = (self.selectedPackage.outstation_vehicle || "").trim();
+      const initialLocal = (self.selectedPackage.localsightseen_vehicle || "").trim();
+      const initialTotalDays = daysList.length;
+
       daysList = daysList.map((d, i) => {
         if (!d.city && !d.stay_city) {
           const detected =
             detectCityFromText(d.day) || detectCityFromText(d.overview);
           d.city = detected || defaultCity || "";
           d.stay_city = d.city;
+        }
+
+        // Vehicles: outstation vehicle for day 1 and last day, local sightseeing for other days
+        const isFirstOrLast = (i === 0 || i === initialTotalDays - 1);
+        const defaultVeh = isFirstOrLast
+          ? (initialOutstation || initialLocal || "")
+          : (initialLocal || initialOutstation || "");
+
+        if (!d.vehicle || d.vehicle === "Private Sedan") {
+          if (defaultVeh) {
+            d.vehicle = defaultVeh;
+          }
         }
         return d;
       });
@@ -4448,14 +4497,36 @@
             if (
               getRes &&
               getRes.status === "success" &&
-              getRes.package &&
-              Array.isArray(getRes.package.itinerary) &&
-              getRes.package.itinerary.length > 0
+              getRes.package
             ) {
-              daysList = getRes.package.itinerary;
+              if (Array.isArray(getRes.package.itinerary) && getRes.package.itinerary.length > 0) {
+                daysList = getRes.package.itinerary;
+              }
+              if (getRes.package.outstation_vehicle || getRes.package.tour_package_outstation_vehicle) {
+                self.selectedPackage.outstation_vehicle =
+                  getRes.package.outstation_vehicle || getRes.package.tour_package_outstation_vehicle;
+              }
+              if (getRes.package.localsightseen_vehicle || getRes.package.tour_package_localsightseen_vehicle) {
+                self.selectedPackage.localsightseen_vehicle =
+                  getRes.package.localsightseen_vehicle || getRes.package.tour_package_localsightseen_vehicle;
+              }
             }
 
-            // Map daysList to ensure hotel_id, hotel, room_type, city are properly populated
+            const pkgOutstation = (
+              self.selectedPackage.outstation_vehicle ||
+              pkg.tour_package_outstation_vehicle ||
+              pkg.outstation_vehicle ||
+              ""
+            ).trim();
+            const pkgLocal = (
+              self.selectedPackage.localsightseen_vehicle ||
+              pkg.tour_package_localsightseen_vehicle ||
+              pkg.localsightseen_vehicle ||
+              ""
+            ).trim();
+            const totalDays = daysList.length;
+
+            // Map daysList to ensure hotel_id, hotel, room_type, city, and vehicles are properly populated
             daysList = daysList.map((d, i) => {
               const nightNum = i + 1;
               const assignedH = assignedMap[nightNum];
@@ -4493,6 +4564,18 @@
 
               if (d.hotel_id && !d.hotel) {
                 d.hotel = d.hotel_title || d.hotel_id;
+              }
+
+              // 3. Vehicles: outstation vehicle for Day 1 and last day, local sightseeing for other days
+              const isFirstOrLast = (i === 0 || i === totalDays - 1);
+              const defaultVeh = isFirstOrLast
+                ? (pkgOutstation || pkgLocal || "")
+                : (pkgLocal || pkgOutstation || "");
+
+              if (!d.vehicle || d.vehicle === "Private Sedan") {
+                if (defaultVeh) {
+                  d.vehicle = defaultVeh;
+                }
               }
 
               return d;

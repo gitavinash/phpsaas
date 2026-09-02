@@ -98,6 +98,8 @@ $query = "
         tp.tour_package_itinerary,
         tp.tour_package_inclusions,
         tp.tour_package_exclusions,
+        tp.tour_package_outstation_vehicle,
+        tp.tour_package_localsightseen_vehicle,
         tpp.tour_package_price_id,
         tpp.tour_package_price_type,
         tpp.tour_package_price_mrp_adult,
