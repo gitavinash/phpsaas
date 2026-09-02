@@ -333,6 +333,7 @@ if (!empty($quotationData)) {
     $tour_package_state = $parsedDescription['state'] ?? ($quotationData['tour_package_state'] ?? '');
     $tour_package_country = $parsedDescription['country'] ?? ($quotationData['tour_package_country'] ?? '');
     $tour_package_hotel = $parsedDescription['hotel'] ?? ($parsedDescription['tour_package_hotel'] ?? ($quotationData['tour_package_hotel'] ?? ''));
+    $tour_package_hotel_category = $parsedDescription['hotel_category'] ?? ($parsedDescription['stay_category'] ?? '');
     $tour_package_theme = $parsedDescription['travel_theme'] ?? ($parsedDescription['theme'] ?? ($quotationData['tour_package_theme'] ?? 'Standard'));
     $pickup_location = $parsedDescription['pickup_location'] ?? ($parsedDescription['pickupLocation'] ?? ($postData['pickupLocation'] ?? ($postData['pickup_location'] ?? '')));
     $drop_location = $parsedDescription['drop_location'] ?? ($parsedDescription['dropLocation'] ?? ($postData['dropLocation'] ?? ($postData['drop_location'] ?? '')));

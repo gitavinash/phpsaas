@@ -211,17 +211,17 @@ $companyBankIfsc      = defined('COMPANY_BANK_IFSC') ? COMPANY_BANK_IFSC : ($ban
 $companyBankAddress   = defined('COMPANY_BANK_ADDRESS') ? COMPANY_BANK_ADDRESS : ($bank_address ?? ($bankDetailsMap['bank_address'] ?? ''));
 $companyBankDetails   = defined('COMPANY_BANK_DETAILS') ? COMPANY_BANK_DETAILS : ($bank_details ?? ($bankDetailsMap['bank_details'] ?? ''));
 $companyUpiId         = defined('COMPANY_UPI_ID') ? COMPANY_UPI_ID : ($upi_id ?? ($bankDetailsMap['upi_id'] ?? ($upi_details ?? ($bankDetailsMap['upi_details'] ?? ''))));
-$hasBankDetails       = !empty($companyBankAcNumber) || !empty($companyBankName) || !empty($companyUpiId) || !empty($companyBankDetails);
+$hasRealBankDetails   = !empty($companyBankAcNumber) || !empty($companyBankName) || !empty($companyBankDetails);
+$hasUpiDetails        = !empty($companyUpiId);
+$hasBankDetails       = $hasRealBankDetails;
 
-// Dynamic UPI QR Code URL Generation
+// Dynamic UPI QR Code URL Generation - ONLY when company UPI ID is configured
 $upiPayeeName = !empty($companyBankAcName) ? $companyBankAcName : $siteName;
 $upiPayAmt    = ($advance30Percent > 0) ? $advance30Percent : $totalPriceVal;
 $upiQrUrl     = '';
-if (!empty($companyUpiId)) {
+if ($hasUpiDetails) {
     $upiPayload = "upi://pay?pa=" . rawurlencode($companyUpiId) . "&pn=" . rawurlencode($upiPayeeName) . "&am=" . number_format($upiPayAmt, 2, '.', '') . "&cu=INR&tn=" . rawurlencode("Quote " . $cleanQuoteRef);
     $upiQrUrl   = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=2&data=" . urlencode($upiPayload);
-} elseif (!empty($payNowUrl) && strpos($payNowUrl, 'http') === 0) {
-    $upiQrUrl   = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=2&data=" . urlencode($payNowUrl);
 }
 
 // Quote Validity & Pax Summary for Pricing Card
@@ -238,8 +238,121 @@ $rawPaymentPolicy      = ($payment_policy ?? ($tour_package_payment_policy ?? ''
 $rawCancellationPolicy = ($cancellation_policy ?? ($tour_package_cancellation_policy ?? ''));
 $rawTermsConditions    = ($terms_and_conditions ?? ($tour_package_terms_and_conditions ?? ''));
 
+// Helper: Format hotel category
+$formatCategoryName = function($rawCategory, $stars = '') {
+    $cat = trim((string)$rawCategory);
+    if (empty($cat) && !empty($stars)) {
+        $cat = $stars;
+    }
+    if (empty($cat)) {
+        return '3 Star Hotel';
+    }
+    $catLower = strtolower($cat);
+    $catMap = [
+        '3_star_hotel' => '3 Star Hotel',
+        '4_star_hotel' => '4 Star Hotel',
+        '5_star_hotel' => '5 Star Hotel',
+        'budget_hotel' => 'Budget Hotel',
+        'deluxe_hotel' => 'Deluxe Hotel',
+        'luxury_hotel' => 'Luxury Hotel',
+        'resort'       => 'Resort / Retreat',
+        'houseboat'    => 'Deluxe Houseboat',
+        'camp'         => 'Luxury Camp / Tent',
+        'home_stay'    => 'Homestay / Cottage',
+        'hotel'        => 'Standard Hotel'
+    ];
+    if (isset($catMap[$catLower])) {
+        return $catMap[$catLower];
+    }
+    $cleaned = ucwords(str_replace(['_', '-'], ' ', $catLower));
+    if (is_numeric(substr($cleaned, 0, 1)) && !str_contains(strtolower($cleaned), 'star')) {
+        $cleaned .= ' Star Hotel';
+    }
+    return $cleaned;
+};
+
+// Helper: Format meal plan
+$formatMealPlanName = function($rawMeal) {
+    $m = strtoupper(trim((string)$rawMeal));
+    if (empty($m)) return '';
+    $mealMap = [
+        'CP'  => 'CP (Breakfast Included)',
+        'MAP' => 'MAP (Breakfast & Dinner)',
+        'AP'  => 'AP (All Meals Included)',
+        'EP'  => 'EP (Room Only)'
+    ];
+    return $mealMap[$m] ?? $rawMeal;
+};
+
+// Helper: Category default thumbnail
+$getCategoryThumbnail = function($categoryName, $stayName = '') {
+    $combined = strtolower($categoryName . ' ' . $stayName);
+    if (str_contains($combined, 'houseboat')) {
+        return 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&auto=format&fit=crop&q=80';
+    }
+    if (str_contains($combined, 'camp') || str_contains($combined, 'tent')) {
+        return 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&auto=format&fit=crop&q=80';
+    }
+    if (str_contains($combined, '5 star') || str_contains($combined, 'luxury')) {
+        return 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&auto=format&fit=crop&q=80';
+    }
+    if (str_contains($combined, 'resort') || str_contains($combined, 'retreat')) {
+        return 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&auto=format&fit=crop&q=80';
+    }
+    if (str_contains($combined, '4 star')) {
+        return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&auto=format&fit=crop&q=80';
+    }
+    return 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&auto=format&fit=crop&q=80';
+};
+
+// Helper: Transit or trip end detection
+$isTransitOrTripEnd = function($dayTitle, $dayOverview = '', $stayCity = '') {
+    $combined = strtolower(trim((string)$dayTitle . ' ' . (string)$dayOverview . ' ' . (string)$stayCity));
+    if (str_contains($combined, 'transit') || 
+        str_contains($combined, 'overnight journey') || 
+        str_contains($combined, 'overnight travel') || 
+        str_contains($combined, 'night journey') || 
+        str_contains($combined, 'no hotel') || 
+        str_contains($combined, 'no stay') || 
+        str_contains($combined, 'trip end') || 
+        str_contains($combined, 'tour end') || 
+        str_contains($combined, 'departure') || 
+        str_contains($combined, 'drop') || 
+        str_contains($combined, 'return') || 
+        str_contains($combined, 'fly back') || 
+        str_contains($combined, 'back home')
+    ) {
+        return true;
+    }
+    return false;
+};
+
 if (is_string($pkgDays)) {
     $pkgDays = json_decode($pkgDays, true) ?: [];
+}
+
+// Resolve Stay Category for Hero Section
+$stayCategory = '';
+if (!empty($tour_package_hotel_category)) {
+    $stayCategory = $formatCategoryName($tour_package_hotel_category);
+}
+if (empty($stayCategory) && !empty($pkgDays) && is_array($pkgDays)) {
+    foreach ($pkgDays as $d) {
+        $hs = trim((string)($d['hotel_stars'] ?? ''));
+        if (!empty($hs) && strtolower($hs) !== 'all' && strtolower($hs) !== 'no_hotel') {
+            $stayCategory = $formatCategoryName($hs);
+            break;
+        }
+    }
+}
+if (empty($stayCategory) && !empty($tour_package_hotel)) {
+    $cleanH = strtolower(trim((string)$tour_package_hotel));
+    if (str_contains($cleanH, 'star') || str_contains($cleanH, 'hotel') || str_contains($cleanH, 'resort') || str_contains($cleanH, 'stay') || str_contains($cleanH, 'camp')) {
+        $stayCategory = $formatCategoryName($tour_package_hotel);
+    }
+}
+if (empty($stayCategory)) {
+    $stayCategory = '3 Star Hotel';
 }
 
 $heroFeatureImage = fixImageUrl($tour_package_image ?? ($gallery_image ?? ($featureImage ?? '')));
@@ -697,26 +810,36 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             font-family: "Mulish", sans-serif;
         }
 
-        /* Second Row: Property Information */
+        /* Second Row: Property & Transportation Information (Increased Card Height) */
         .stay-property-plain-card {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 10px 14px;
+            gap: 18px;
+            padding: 16px 20px;
+            min-height: 104px;
             background: #ffffff;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 10px;
             box-sizing: border-box;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
         }
 
         .stay-property-thumb-wrap {
-            width: 78px;
-            height: 56px;
-            border-radius: 6px;
+            width: 124px;
+            height: 84px;
+            border-radius: 8px;
             overflow: hidden;
             flex-shrink: 0;
             background: #f1f5f9;
             border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .transport-thumb-wrap {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+            border-color: #bae6fd;
         }
 
         .stay-property-thumb {
@@ -734,27 +857,27 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         .stay-property-top {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 4px;
+            margin-bottom: 7px;
         }
 
         .stay-property-title {
             margin: 0;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 800;
             color: #0f172a;
             font-family: "Mulish", sans-serif;
-            line-height: 1.2;
+            line-height: 1.25;
         }
 
         .stay-property-tag {
             display: inline-flex;
             align-items: center;
-            gap: 3px;
-            padding: 1px 7px;
+            gap: 4px;
+            padding: 2px 8px;
             border-radius: 4px;
-            font-size: 10.5px;
+            font-size: 11px;
             font-weight: 700;
             line-height: 1.2;
         }
@@ -766,28 +889,54 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         }
 
         .category-tag i {
-            font-size: 10px;
+            font-size: 11px;
             color: #f59e0b;
         }
 
         .stay-property-meta-row {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
-            font-size: 11.5px;
-            color: #64748b;
+            font-size: 12px;
+            color: #475569;
+            line-height: 1.4;
         }
 
         .stay-property-meta-item {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
 
         .stay-property-meta-item i {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--primary-color);
+        }
+
+        .stay-transport-meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 700;
+            color: #0369a1;
+            background: #f0f9ff;
+            padding: 3px 9px;
+            border-radius: 5px;
+            border: 1px solid #bae6fd;
+        }
+
+        .stay-transport-meta-item i {
+            color: #0284c7;
+            font-size: 14px;
+        }
+
+        .stay-transfer-notes-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #64748b;
+            font-style: italic;
         }
 
         /* Inclusions / Exclusions */
@@ -1126,6 +1275,10 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             box-sizing: border-box;
         }
 
+        .bank-upi-section.single-col {
+            grid-template-columns: 1fr;
+        }
+
         .bank-details-box {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -1455,8 +1608,8 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         .social-badge-btn {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
+            gap: 6px;
+            padding: 5px 12px;
             border-radius: 6px;
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -1468,8 +1621,19 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         }
 
         .social-badge-btn i {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--badge-accent, #0284c7);
+            flex-shrink: 0;
+        }
+
+        .social-url-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: #334155;
+            max-width: 280px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .social-badge-btn:hover {
@@ -1943,10 +2107,10 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                         <p><strong><?php echo htmlspecialchars(cleanProposalLabel($pkgTheme)); ?></strong></p>
                     </div>
 
-                    <?php if (!empty($pkgHotel)): ?>
+                    <?php if (!empty($stayCategory)): ?>
                         <div class="box">
                             <p>Stay Option</p>
-                            <p><strong><?php echo htmlspecialchars(cleanProposalLabel($pkgHotel)); ?></strong></p>
+                            <p><strong><?php echo htmlspecialchars($stayCategory); ?></strong></p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -2178,23 +2342,19 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             }
             $dayOverview = $day['overview'] ?? ($day['description'] ?? '');
 
-            // Determine if transit / trip end
+            // Check if day is transit or trip conclusion
             $isTransitOrTripEnd = $checkTransitOrTripEnd($day, $dayIndex, count($pkgDays), $cleanTitle, $dayOverview);
 
-            // 1. First Row: Stay City (only if not transit or trip end)
-            $rawDayCity = trim((string)($day['city'] ?? ($day['stay_city'] ?? ($day['destination'] ?? ''))));
-            $stayCityClean = '';
-            if (!$isTransitOrTripEnd) {
-                if (!empty($rawDayCity) && !in_array(strtolower($rawDayCity), ['destination', 'tour destination', 'no stay', 'transit'])) {
-                    $stayCityClean = cleanProposalLabel($rawDayCity);
-                } elseif (!empty($tour_package_city) && !in_array(strtolower($tour_package_city), ['destination', 'tour destination'])) {
-                    $stayCityClean = cleanProposalLabel($tour_package_city);
-                }
+            // Stay City
+            $rawStayCity = trim((string)($day['city'] ?? ($day['stay_city'] ?? '')));
+            $stayCityClean = cleanProposalLabel($rawStayCity);
+            if (empty($stayCityClean) && !$isTransitOrTripEnd) {
+                $stayCityClean = $pkgCity;
             }
 
-            // 2. Second Row: Property Information
-            $propImage = '';
+            // Resolve Property for the day
             $propTitle = '';
+            $propImage = '';
             $propLocation = '';
             $propCategory = '';
             $propRoomType = '';
@@ -2264,6 +2424,20 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                     }
                 }
             }
+
+            // Resolve day transportation option
+            $dayVehicle = trim((string)($day['vehicle'] ?? ($day['transport'] ?? ($day['transportation'] ?? ''))));
+            if (empty($dayVehicle) || strtolower($dayVehicle) === 'custom' || strtolower($dayVehicle) === 'private sedan') {
+                $isFirstDay = ($dayIndex === 1);
+                $isLastDay  = ($dayIndex === count($pkgDays));
+                if ($isFirstDay || $isLastDay) {
+                    $dayVehicle = !empty($pkgOutVehicle) ? $pkgOutVehicle : (!empty($pkgLocVehicle) ? $pkgLocVehicle : ($dayVehicle ?: 'Private Sedan'));
+                } else {
+                    $dayVehicle = !empty($pkgLocVehicle) ? $pkgLocVehicle : (!empty($pkgOutVehicle) ? $pkgOutVehicle : ($dayVehicle ?: 'Private Sedan'));
+                }
+            }
+            $dayVehicleClean = cleanProposalLabel($dayVehicle);
+            $dayTransferNotes = trim((string)($day['transfer_notes'] ?? ''));
         ?>
             <section class="page days-page" id="page-day-<?php echo $dayIndex; ?>">
                 <header class="hero">
@@ -2286,18 +2460,16 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                         <?php echo !empty($dayOverview) ? (strpos($dayOverview, '<') !== false ? $dayOverview : nl2br(htmlspecialchars($dayOverview))) : '<p>Sightseeing, transfers, and exploration according to custom schedule.</p>'; ?>
                     </div>
 
-                    <?php if (!$isTransitOrTripEnd && (!empty($stayCityClean) || !empty($propTitle))): ?>
+                    <?php if (!empty($stayCityClean) || !empty($propTitle) || !empty($dayVehicleClean)): ?>
                         <div class="day-stay-plain-wrap">
-                            <!-- First Row: Stay City (only shown if not transit or trip end) -->
-                            <?php if (!empty($stayCityClean)): ?>
-                                <div class="stay-city-plain-row">
-                                    <i class="ri-map-pin-2-fill"></i>
-                                    <span class="stay-city-title">Stay City:</span>
-                                    <span class="stay-city-val"><?php echo htmlspecialchars($stayCityClean); ?></span>
-                                </div>
-                            <?php endif; ?>
+                            <!-- First Row: Stay City & Transport header -->
+                            <div class="stay-city-plain-row">
+                                <i class="ri-hotel-bed-line"></i>
+                                <span class="stay-city-title">Hotel &amp; Transportation:</span>
+                                <span class="stay-city-val"><?php echo htmlspecialchars($stayCityClean ?: ($isTransitOrTripEnd ? 'Overnight / In Transit' : $pkgCity)); ?></span>
+                            </div>
 
-                            <!-- Second Row: Property Information -->
+                            <!-- Second Row: Property & Vehicle Information Card -->
                             <?php if (!empty($propTitle)): ?>
                                 <div class="stay-property-plain-card">
                                     <?php if (!empty($propImage)): ?>
@@ -2332,6 +2504,48 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                                             <?php if (!empty($propMealPlan)): ?>
                                                 <span class="stay-property-meta-item">
                                                     <i class="ri-restaurant-line"></i> <?php echo htmlspecialchars($propMealPlan); ?>
+                                                </span>
+                                            <?php endif; ?>
+
+                                            <?php if (!empty($dayVehicleClean)): ?>
+                                                <span class="stay-property-meta-item stay-transport-meta-item">
+                                                    <i class="ri-car-line"></i> <strong>Transport:</strong> <?php echo htmlspecialchars($dayVehicleClean); ?>
+                                                </span>
+                                            <?php endif; ?>
+
+                                            <?php if (!empty($dayTransferNotes)): ?>
+                                                <span class="stay-property-meta-item stay-transfer-notes-item" title="<?php echo htmlspecialchars($dayTransferNotes); ?>">
+                                                    <i class="ri-route-line"></i> <?php echo htmlspecialchars($dayTransferNotes); ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php elseif (!empty($dayVehicleClean)): ?>
+                                <div class="stay-property-plain-card">
+                                    <div class="stay-property-thumb-wrap transport-thumb-wrap">
+                                        <i class="ri-roadster-fill" style="font-size: 38px; color: #0284c7;"></i>
+                                    </div>
+
+                                    <div class="stay-property-details">
+                                        <div class="stay-property-top">
+                                            <h4 class="stay-property-title"><?php echo htmlspecialchars($dayVehicleClean); ?></h4>
+                                            <span class="stay-property-tag category-tag" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">
+                                                <i class="ri-car-line"></i> Daily Transport
+                                            </span>
+                                        </div>
+
+                                        <div class="stay-property-meta-row">
+                                            <span class="stay-property-meta-item">
+                                                <i class="ri-map-pin-line"></i> <?php echo htmlspecialchars($stayCityClean ?: 'Route Journey / Transfer'); ?>
+                                            </span>
+                                            <?php if (!empty($dayTransferNotes)): ?>
+                                                <span class="stay-property-meta-item">
+                                                    <i class="ri-route-line"></i> <?php echo htmlspecialchars($dayTransferNotes); ?>
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="stay-property-meta-item">
+                                                    <i class="ri-shield-check-line"></i> Dedicated Transport &amp; Transfers Included
                                                 </span>
                                             <?php endif; ?>
                                         </div>
@@ -2444,72 +2658,77 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
 
                     </div>
 
-                    <!-- 6. Direct Bank Remittance & Dynamic UPI QR Section (Outside Box, 2 Columns) -->
-                    <?php if ($hasBankDetails || !empty($upiQrUrl)): ?>
-                        <div class="bank-upi-section">
+                    <!-- 6. Direct Bank Remittance & Dynamic UPI QR Section (Hidden if both empty) -->
+                    <?php 
+                    $hasAnyBank = !empty($companyBankAcNumber) || !empty($companyBankName) || !empty($companyBankDetails);
+                    $hasAnyUpi  = !empty($companyUpiId);
+                    if ($hasAnyBank || $hasAnyUpi): 
+                        $bankUpiClass = ($hasAnyBank && $hasAnyUpi) ? '' : 'single-col';
+                    ?>
+                        <div class="bank-upi-section <?php echo $bankUpiClass; ?>">
                             <!-- Left Column: Bank Details -->
-                            <div class="bank-details-box">
-                                <div class="section-micro-title">
-                                    <i class="ri-bank-line"></i>
-                                    <span>Direct Bank Transfer Details</span>
+                            <?php if ($hasAnyBank): ?>
+                                <div class="bank-details-box">
+                                    <div class="section-micro-title">
+                                        <i class="ri-bank-line"></i>
+                                        <span>Direct Bank Transfer Details</span>
+                                    </div>
+                                    <div class="bank-details-stack">
+                                        <?php if (!empty($companyBankAcName)): ?>
+                                            <div class="bank-row">
+                                                <span class="bank-label">Account Holder</span>
+                                                <span class="bank-value"><strong><?php echo htmlspecialchars($companyBankAcName); ?></strong></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if (!empty($companyBankAcNumber)): ?>
+                                            <div class="bank-row">
+                                                <span class="bank-label">Account Number</span>
+                                                <span class="bank-value"><strong class="ac-num-highlight"><?php echo htmlspecialchars($companyBankAcNumber); ?></strong></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if (!empty($companyBankIfsc)): ?>
+                                            <div class="bank-row">
+                                                <span class="bank-label">IFSC Code</span>
+                                                <span class="bank-value"><strong><?php echo htmlspecialchars($companyBankIfsc); ?></strong></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if (!empty($companyBankName)): ?>
+                                            <div class="bank-row">
+                                                <span class="bank-label">Bank Name</span>
+                                                <span class="bank-value"><?php echo htmlspecialchars($companyBankName); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if (!empty($companyBankAddress)): ?>
+                                            <div class="bank-row">
+                                                <span class="bank-label">Branch</span>
+                                                <span class="bank-value"><?php echo htmlspecialchars($companyBankAddress); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
-                                <div class="bank-details-stack">
-                                    <?php if (!empty($companyBankAcName)): ?>
-                                        <div class="bank-row">
-                                            <span class="bank-label">Account Holder</span>
-                                            <span class="bank-value"><strong><?php echo htmlspecialchars($companyBankAcName); ?></strong></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if (!empty($companyBankAcNumber)): ?>
-                                        <div class="bank-row">
-                                            <span class="bank-label">Account Number</span>
-                                            <span class="bank-value"><strong class="ac-num-highlight"><?php echo htmlspecialchars($companyBankAcNumber); ?></strong></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if (!empty($companyBankIfsc)): ?>
-                                        <div class="bank-row">
-                                            <span class="bank-label">IFSC Code</span>
-                                            <span class="bank-value"><strong><?php echo htmlspecialchars($companyBankIfsc); ?></strong></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if (!empty($companyBankName)): ?>
-                                        <div class="bank-row">
-                                            <span class="bank-label">Bank Name</span>
-                                            <span class="bank-value"><?php echo htmlspecialchars($companyBankName); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if (!empty($companyBankAddress)): ?>
-                                        <div class="bank-row">
-                                            <span class="bank-label">Branch</span>
-                                            <span class="bank-value"><?php echo htmlspecialchars($companyBankAddress); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+                            <?php endif; ?>
 
                             <!-- Right Column: QR Code + UPI Address below QR -->
-                            <div class="upi-qr-box">
-                                <div class="qr-box-wrapper">
-                                    <?php if (!empty($upiQrUrl)): ?>
-                                        <img src="<?php echo htmlspecialchars($upiQrUrl); ?>" alt="UPI QR Code" class="upi-qr-img" />
-                                    <?php else: ?>
-                                        <div class="qr-placeholder">
-                                            <i class="ri-qr-code-line"></i>
-                                            <span>Scan &amp; Pay</span>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="qr-details">
-                                    <div class="qr-title"><i class="ri-qr-scan-2-line"></i> Scan &amp; Pay</div>
-                                    <?php if (!empty($companyUpiId)): ?>
+                            <?php if ($hasAnyUpi): ?>
+                                <div class="upi-qr-box">
+                                    <div class="qr-box-wrapper">
+                                        <?php if (!empty($upiQrUrl)): ?>
+                                            <img src="<?php echo htmlspecialchars($upiQrUrl); ?>" alt="UPI QR Code" class="upi-qr-img" />
+                                        <?php else: ?>
+                                            <div class="qr-placeholder">
+                                                <i class="ri-qr-code-line"></i>
+                                                <span>Scan &amp; Pay</span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="qr-details">
+                                        <div class="qr-title"><i class="ri-qr-scan-2-line"></i> Scan &amp; Pay</div>
                                         <div class="upi-address-text" title="<?php echo htmlspecialchars($companyUpiId); ?>">
                                             <i class="ri-wallet-3-line"></i> <?php echo htmlspecialchars($companyUpiId); ?>
                                         </div>
-                                    <?php else: ?>
-                                        <div class="qr-sub">GPay • PhonePe • UPI</div>
-                                    <?php endif; ?>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -2582,14 +2801,14 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         <section class="page days-page" id="page-contact">
             <header class="hero">
                 <div class="default-day-image">
-                    <h2>Important Info</h2>
+                    <h2>Company Details &amp; Support</h2>
                 </div>
             </header>
 
             <div class="container">
                 <div class="top-heading">
                     <span class="bar">|</span>
-                    <h2>Company &amp; Reservation Support</h2>
+                    <h2>Company Details &amp; Reservation Support</h2>
                 </div>
 
                 <div class="company-contact-card">
@@ -2690,10 +2909,12 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                                     if (empty($url) || !is_string($url) || trim($url) === '') continue;
                                     $pKey = strtolower(trim($platform));
                                     $meta = $socialIcons[$pKey] ?? ['icon' => 'ri-share-forward-line', 'color' => '#0284c7', 'label' => ucfirst($pKey)];
+                                    $rawUrl = trim($url);
+                                    $cleanUrl = preg_replace('#^https?://(www\.)?#i', '', rtrim($rawUrl, '/'));
                                 ?>
-                                    <a href="<?php echo htmlspecialchars(trim($url)); ?>" target="_blank" rel="noopener" class="social-badge-btn" style="--badge-accent: <?php echo $meta['color']; ?>;">
+                                    <a href="<?php echo htmlspecialchars($rawUrl); ?>" target="_blank" rel="noopener" class="social-badge-btn" style="--badge-accent: <?php echo $meta['color']; ?>;" title="<?php echo htmlspecialchars($rawUrl); ?>">
                                         <i class="<?php echo $meta['icon']; ?>"></i>
-                                        <span><?php echo htmlspecialchars($meta['label']); ?></span>
+                                        <span class="social-url-text"><?php echo htmlspecialchars($cleanUrl); ?></span>
                                     </a>
                                 <?php endforeach; ?>
                             </div>

@@ -221,6 +221,329 @@
       });
     },
 
+    parseRequirementsJson: function (raw) {
+      if (!raw && raw !== 0) return null;
+      if (typeof raw === "object" && raw !== null) {
+        return raw;
+      }
+      if (typeof raw !== "string") return null;
+      const trimmed = raw.trim();
+      if (!trimmed) return null;
+
+      if (
+        (!trimmed.startsWith("{") || !trimmed.endsWith("}")) &&
+        (!trimmed.startsWith("[") || !trimmed.endsWith("]"))
+      ) {
+        return null;
+      }
+
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (typeof parsed === "object" && parsed !== null) {
+          return parsed;
+        }
+      } catch (e) {
+        try {
+          const doc = new DOMParser().parseFromString(trimmed, "text/html");
+          const unescaped = doc.body.textContent || "";
+          if (unescaped && unescaped !== trimmed) {
+            const parsed2 = JSON.parse(unescaped);
+            if (typeof parsed2 === "object" && parsed2 !== null) {
+              return parsed2;
+            }
+          }
+        } catch (e2) {
+          return null;
+        }
+      }
+      return null;
+    },
+
+    formatFieldLabel: function (key) {
+      if (!key && key !== 0) return "";
+      const s = String(key)
+        .replace(/_/g, " ")
+        .replace(/-/g, " ")
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/\?/g, "")
+        .trim();
+      return s.replace(/\b\w/g, function (c) {
+        return c.toUpperCase();
+      });
+    },
+
+    formatFieldValue: function (val) {
+      if (val === null || val === undefined || val === "") {
+        return '<span class="v3-req-val-empty">-</span>';
+      }
+      if (typeof val === "boolean") {
+        return val
+          ? '<span class="v3-badge badge-confirmed">Yes</span>'
+          : '<span class="v3-badge badge-cancelled">No</span>';
+      }
+      if (typeof val === "number") {
+        return `<span class="v3-req-val-num">${val}</span>`;
+      }
+      if (typeof val === "object") {
+        if (Array.isArray(val)) {
+          if (val.length === 0) {
+            return '<span class="v3-req-val-empty">-</span>';
+          }
+          const isAllPrimitive = val.every(function (x) {
+            return typeof x !== "object";
+          });
+          if (isAllPrimitive) {
+            return val
+              .map(function (x) {
+                return `<span class="v3-req-badge-pill">${escapeHtml(String(x))}</span>`;
+              })
+              .join(" ");
+          }
+          return `<pre class="v3-req-val-json"><code>${escapeHtml(JSON.stringify(val, null, 2))}</code></pre>`;
+        }
+        return `<pre class="v3-req-val-json"><code>${escapeHtml(JSON.stringify(val, null, 2))}</code></pre>`;
+      }
+      const str = String(val).trim();
+      if (str === "#" || str === "") {
+        return '<span class="v3-req-val-empty">-</span>';
+      }
+      if (/^https?:\/\//i.test(str)) {
+        const displayUrl = str.length > 55 ? str.substring(0, 52) + "..." : str;
+        return `<a href="${escapeHtml(str)}" target="_blank" rel="noopener noreferrer" class="v3-req-link"><i class="fi fi-rr-link"></i> ${escapeHtml(displayUrl)}</a>`;
+      }
+      return `<span class="v3-req-val-text">${escapeHtml(str)}</span>`;
+    },
+
+    renderRequirementsTable: function (parsed) {
+      const self = this;
+      if (parsed && parsed.field_data && Array.isArray(parsed.field_data)) {
+        const rows = parsed.field_data
+          .map(function (item) {
+            const label = self.formatFieldLabel(item.name || "Field");
+            const val = Array.isArray(item.values)
+              ? item.values.join(", ")
+              : item.values || "-";
+            return `
+              <tr>
+                <td class="req-key-col">
+                  <span class="req-key-bullet"></span>
+                  <span class="req-key-text">${escapeHtml(label)}</span>
+                </td>
+                <td class="req-val-col">${self.formatFieldValue(val)}</td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        let metaRows = "";
+        ["created_time", "inbox_url", "ad_name", "campaign_name"].forEach(
+          function (k) {
+            if (parsed[k]) {
+              const label = self.formatFieldLabel(k);
+              metaRows += `
+              <tr>
+                <td class="req-key-col">
+                  <span class="req-key-bullet"></span>
+                  <span class="req-key-text">${escapeHtml(label)}</span>
+                </td>
+                <td class="req-val-col">${self.formatFieldValue(parsed[k])}</td>
+              </tr>
+            `;
+            }
+          },
+        );
+
+        return `
+          <div class="v3-requirements-table-wrapper">
+            <table class="v3-requirements-table">
+              <thead>
+                <tr>
+                  <th>Field / Lead Question</th>
+                  <th>Customer Response / Details</th>
+                </tr>
+              </thead>
+              <tbody>${rows}${metaRows}</tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      if (Array.isArray(parsed)) {
+        if (parsed.length === 0) {
+          return '<div class="v3-requirements-empty-note"><i class="fi fi-rr-info"></i><span>Empty list of requirements.</span></div>';
+        }
+        const allKeys = [];
+        parsed.forEach(function (item) {
+          if (typeof item === "object" && item !== null) {
+            Object.keys(item).forEach(function (k) {
+              if (!allKeys.includes(k)) allKeys.push(k);
+            });
+          }
+        });
+
+        if (allKeys.length > 0) {
+          const thead = `<tr>${allKeys.map(function (k) { return `<th>${escapeHtml(self.formatFieldLabel(k))}</th>`; }).join("")}</tr>`;
+          const tbody = parsed
+            .map(function (item) {
+              return `<tr>${allKeys.map(function (k) { return `<td>${self.formatFieldValue(item[k])}</td>`; }).join("")}</tr>`;
+            })
+            .join("");
+          return `
+            <div class="v3-requirements-table-wrapper">
+              <table class="v3-requirements-table">
+                <thead>${thead}</thead>
+                <tbody>${tbody}</tbody>
+              </table>
+            </div>
+          `;
+        } else {
+          const tbody = parsed
+            .map(function (val, idx) {
+              return `
+                <tr>
+                  <td class="req-key-col">#${idx + 1}</td>
+                  <td class="req-val-col">${self.formatFieldValue(val)}</td>
+                </tr>
+              `;
+            })
+            .join("");
+          return `
+            <div class="v3-requirements-table-wrapper">
+              <table class="v3-requirements-table">
+                <thead>
+                  <tr>
+                    <th style="width: 80px;">#</th>
+                    <th>Requirement Item</th>
+                  </tr>
+                </thead>
+                <tbody>${tbody}</tbody>
+              </table>
+            </div>
+          `;
+        }
+      }
+
+      if (typeof parsed === "object" && parsed !== null) {
+        const keys = Object.keys(parsed);
+        if (keys.length === 0) {
+          return '<div class="v3-requirements-empty-note"><i class="fi fi-rr-info"></i><span>Empty structured data.</span></div>';
+        }
+        const tbody = keys
+          .map(function (k) {
+            const label = self.formatFieldLabel(k);
+            const val = parsed[k];
+            return `
+              <tr>
+                <td class="req-key-col">
+                  <span class="req-key-bullet"></span>
+                  <span class="req-key-text">${escapeHtml(label)}</span>
+                </td>
+                <td class="req-val-col">${self.formatFieldValue(val)}</td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        return `
+          <div class="v3-requirements-table-wrapper">
+            <table class="v3-requirements-table">
+              <thead>
+                <tr>
+                  <th>Field / Specification</th>
+                  <th>Value / Details</th>
+                </tr>
+              </thead>
+              <tbody>${tbody}</tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      return `<div class="v3-requirements-box">${escapeHtml(String(parsed))}</div>`;
+    },
+
+    renderRequirementsSection: function (req) {
+      const self = this;
+      const hasContent =
+        req !== null && req !== undefined && String(req).trim() !== "";
+
+      if (!hasContent) {
+        return `
+          <div class="v3-requirements-section-wrap" id="requirementsSectionWrap">
+            <div class="v3-requirements-header-wrap">
+              <div class="v3-requirements-header-left">
+                <h4 class="v3-info-section-heading">Special Notes & Requirements</h4>
+              </div>
+              <div class="v3-requirements-header-actions">
+                <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnEditRequirements" data-tooltip="Add or edit requirements">
+                  <i class="fi fi-rr-edit"></i> Edit
+                </button>
+              </div>
+            </div>
+            <div class="v3-requirements-empty-note">
+              <i class="fi fi-rr-info"></i>
+              <span>No special notes or requirements specified. Click <strong>Edit</strong> to add details.</span>
+            </div>
+          </div>
+        `;
+      }
+
+      const parsedJson = self.parseRequirementsJson(req);
+      if (parsedJson) {
+        const rawJsonString =
+          typeof req === "string"
+            ? req
+            : JSON.stringify(parsedJson, null, 2);
+        let prettyJson = "";
+        try {
+          prettyJson = JSON.stringify(parsedJson, null, 2);
+        } catch (e) {
+          prettyJson = rawJsonString;
+        }
+
+        return `
+          <div class="v3-requirements-section-wrap" id="requirementsSectionWrap">
+            <div class="v3-requirements-header-wrap">
+              <div class="v3-requirements-header-left">
+                <h4 class="v3-info-section-heading">Special Notes & Requirements</h4>
+                <span class="v3-req-type-pill"><i class="fi fi-rr-brackets-curly"></i> Structured JSON</span>
+              </div>
+              <div class="v3-requirements-header-actions">
+                <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnToggleReqRawJson" title="Toggle between Table and Raw JSON">
+                  <i class="fi fi-rr-code-simple"></i> <span id="lblToggleReqRaw">Raw JSON</span>
+                </button>
+                <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnEditRequirements" data-tooltip="Edit Special Notes & Requirements">
+                  <i class="fi fi-rr-edit"></i> Edit
+                </button>
+              </div>
+            </div>
+            <div class="v3-requirements-view-tabular" id="reqTabularView">
+              ${self.renderRequirementsTable(parsedJson)}
+            </div>
+            <div class="v3-requirements-view-raw v3-hidden" id="reqRawJsonView">
+              <pre class="v3-req-raw-json-box"><code>${escapeHtml(prettyJson)}</code></pre>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="v3-requirements-section-wrap" id="requirementsSectionWrap">
+          <div class="v3-requirements-header-wrap">
+            <div class="v3-requirements-header-left">
+              <h4 class="v3-info-section-heading">Special Notes & Requirements</h4>
+            </div>
+            <div class="v3-requirements-header-actions">
+              <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnEditRequirements" data-tooltip="Edit Special Notes & Requirements">
+                <i class="fi fi-rr-edit"></i> Edit
+              </button>
+            </div>
+          </div>
+          <div class="v3-requirements-box">${escapeHtml(String(req))}</div>
+        </div>
+      `;
+    },
+
     renderView: function (lead) {
       const self = this;
       const $container = $("#leadViewMainContainer");
@@ -897,14 +1220,7 @@
                     </div>
                   </div>
 
-                  ${
-                    travel.requirements
-                      ? `
-                    <h4 class="v3-info-section-heading">Special Notes & Requirements</h4>
-                    <div class="v3-requirements-box">${travel.requirements}</div>
-                  `
-                      : ""
-                  }
+                  ${self.renderRequirementsSection(travel.requirements)}
                 </div>
 
                 <!-- Tab 2: Activity & Notes (HubSpot/Linear Style) -->
@@ -2046,6 +2362,22 @@
       return "";
     },
 
+    resolvePrimaryHotelCategory: function (structuredItin) {
+      const self = this;
+      if (Array.isArray(structuredItin) && structuredItin.length > 0) {
+        for (const day of structuredItin) {
+          const s = (day.hotel_stars || "").trim();
+          if (s && s !== "all" && s !== "no_hotel") {
+            return s;
+          }
+        }
+      }
+      if (self.selectedPackage && self.selectedPackage.tour_package_hotel) {
+        return self.selectedPackage.tour_package_hotel;
+      }
+      return "3_star_hotel";
+    },
+
     resolvePrimaryVehicle: function (structuredItin) {
       const self = this;
       if (Array.isArray(structuredItin) && structuredItin.length > 0) {
@@ -2233,11 +2565,12 @@
       // 7. Edit Lead Modal Trigger & Submission
       $(document).on(
         "click",
-        "#btnHeroEditLead, #btnTabEditLead, #btnSideEditLead",
+        "#btnHeroEditLead, #btnTabEditLead, #btnSideEditLead, #btnEditRequirements",
         function () {
           if (!self.leadData) return;
           const d = self.leadData;
           const t = d.travel_details || {};
+          const isReqTrigger = $(this).is("#btnEditRequirements");
 
           let fName = (d.first_name || d.name || "").trim();
           let lName = (d.last_name || "").trim();
@@ -2262,9 +2595,25 @@
           $("#editLeadChildren").val(t.children || 0);
           $("#editLeadInfants").val(t.infants || 0);
 
-          $("#editLeadRequirements").val(t.requirements || "");
+          const rawReq = t.requirements || "";
+          const parsedReq = self.parseRequirementsJson(rawReq);
+          if (parsedReq) {
+            $("#editLeadRequirements").val(JSON.stringify(parsedReq, null, 2));
+          } else {
+            $("#editLeadRequirements").val(rawReq);
+          }
 
           $("#modalEditLead").addClass("is-active");
+
+          if (isReqTrigger) {
+            setTimeout(function () {
+              const reqEl = document.getElementById("editLeadRequirements");
+              if (reqEl) {
+                reqEl.focus();
+                reqEl.scrollIntoView({ behavior: "smooth", block: "center" });
+              }
+            }, 180);
+          }
 
           // Initialize Select2 for Tour Package / Destination via Packages API
           self.initPackageSelect2(
@@ -2559,6 +2908,41 @@
             self.notify(err, "error");
           },
         });
+      });
+
+      // 7b. Toggle Tabular vs Raw JSON view for Requirements
+      $(document).on("click", "#btnToggleReqRawJson", function () {
+        const $raw = $("#reqRawJsonView");
+        const $tab = $("#reqTabularView");
+        const $lbl = $("#lblToggleReqRaw");
+        const $icon = $(this).find("i");
+        if ($raw.hasClass("v3-hidden")) {
+          $raw.removeClass("v3-hidden");
+          $tab.addClass("v3-hidden");
+          $lbl.text("Tabular View");
+          $icon.removeClass("fi-rr-code-simple").addClass("fi-rr-table");
+        } else {
+          $raw.addClass("v3-hidden");
+          $tab.removeClass("v3-hidden");
+          $lbl.text("Raw JSON");
+          $icon.removeClass("fi-rr-table").addClass("fi-rr-code-simple");
+        }
+      });
+
+      // 7c. Format JSON helper in Edit Lead modal
+      $(document).on("click", "#btnBeautifyReqJson", function () {
+        const val = $("#editLeadRequirements").val().trim();
+        if (!val) {
+          self.notify("Special Requirements field is empty.", "info");
+          return;
+        }
+        const parsed = self.parseRequirementsJson(val);
+        if (parsed) {
+          $("#editLeadRequirements").val(JSON.stringify(parsed, null, 2));
+          self.notify("JSON formatted successfully.", "success");
+        } else {
+          self.notify("Content is plain text (not valid JSON).", "info");
+        }
       });
 
       // 8. Full Screen Itinerary Modal Trigger & Logic
@@ -3186,6 +3570,8 @@
             travel_theme: travelTheme,
             theme: travelTheme,
             hotel: primaryHotel,
+            hotel_category: self.resolvePrimaryHotelCategory(structuredItin),
+            stay_category: self.resolvePrimaryHotelCategory(structuredItin),
             vehicle: primaryVehicle,
             outstation_vehicle: primaryVehicle,
             adults_count: adults,
@@ -3477,6 +3863,8 @@
           template: templateToUse,
           hotel: primaryHotel,
           tour_package_hotel: primaryHotel,
+          hotel_category: self.resolvePrimaryHotelCategory(structuredItin),
+          stay_category: self.resolvePrimaryHotelCategory(structuredItin),
           outstationVehicle: primaryVehicle,
           outstation_vehicle: primaryVehicle,
           vehicle: primaryVehicle,

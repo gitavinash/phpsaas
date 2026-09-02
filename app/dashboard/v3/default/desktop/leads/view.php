@@ -149,8 +149,15 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
             </div>
 
             <div class="v3-modal-form-group">
-                <label class="v3-modal-label">Special Requirements / Notes</label>
-                <textarea id="editLeadRequirements" class="v3-modal-textarea" placeholder="Add specific requirements (e.g. 4-star hotel, vegetarian food, beach view)..."></textarea>
+                <div class="v3-form-label-row">
+                    <label class="v3-modal-label">Special Requirements / Notes</label>
+                    <div class="v3-req-modal-actions">
+                        <button type="button" class="btn-v3-action btn-outline btn-xs" id="btnBeautifyReqJson" title="Format JSON with indentation">
+                            <i class="fi fi-rr-magic-wand"></i> Format JSON
+                        </button>
+                    </div>
+                </div>
+                <textarea id="editLeadRequirements" class="v3-modal-textarea" placeholder="Add specific requirements (e.g. 4-star hotel, vegetarian food, beach view, or JSON object)..."></textarea>
             </div>
         </div>
         <div class="v3-modal-footer">
