@@ -2345,15 +2345,29 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             }
             $dayOverview = $day['overview'] ?? ($day['description'] ?? '');
 
-            // Check if day is transit or trip conclusion
-            $isTransitOrTripEnd = $checkTransitOrTripEnd($day, $dayIndex, count($pkgDays), $cleanTitle, $dayOverview);
-
-            // Stay City
-            $rawStayCity = trim((string)($day['city'] ?? ($day['stay_city'] ?? '')));
+            // Stay City from Itinerary Builder
+            $rawStayCity = trim((string)($day['stay_city'] ?? ($day['city'] ?? '')));
             $stayCityClean = cleanProposalLabel($rawStayCity);
-            if (empty($stayCityClean) && !$isTransitOrTripEnd) {
-                $stayCityClean = $pkgCity;
-            }
+            $stayCityLower = strtolower($rawStayCity);
+
+            // Hotel from Itinerary Builder
+            $builderHotelId = (int)($day['hotel_id'] ?? ($day['property_id'] ?? 0));
+            $rawBuilderHotel = trim((string)($day['hotel_title'] ?? ($day['hotel'] ?? ($day['stay'] ?? ($day['stay_option'] ?? ($day['hotel_name'] ?? ''))))));
+            $builderHotelClean = cleanProposalLabel($rawBuilderHotel);
+            $builderHotelLower = strtolower($rawBuilderHotel);
+
+            // Check if stay is explicitly in transit or no hotel
+            $isTransitStay = (
+                str_contains($stayCityLower, 'transit') || 
+                str_contains($stayCityLower, 'overnight') || 
+                str_contains($stayCityLower, 'no stay') || 
+                str_contains($stayCityLower, 'no hotel') ||
+                str_contains($stayCityLower, 'trip end') ||
+                str_contains($stayCityLower, 'tour end') ||
+                in_array($builderHotelLower, ['no stay', 'no hotel', 'no_hotel', 'transit', 'in transit', 'overnight', 'overnight journey', 'overnight / in transit', 'tour end', 'trip end', 'self arranged', 'self / no hotel stay needed', 'overnight journey (in transit)', 'tour end / departure (no stay)']) ||
+                str_contains($builderHotelLower, 'no hotel') ||
+                str_contains($builderHotelLower, 'in transit')
+            );
 
             // Resolve Property for the day
             $propTitle = '';
@@ -2363,35 +2377,92 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             $propRoomType = '';
             $propMealPlan = '';
 
-            if (!$isTransitOrTripEnd) {
-                // Check if assigned in package hotels
-                $assignedHotel = $dayWiseHotels[$dayIndex] ?? null;
-                if (!empty($assignedHotel)) {
-                    $propTitle = $assignedHotel['property_title'] ?? '';
-                    $propImage = fixImageUrl($assignedHotel['property_thumbnail'] ?? '');
-                    $locArr = array_filter([$assignedHotel['property_address'] ?? '', $assignedHotel['property_city'] ?? '']);
-                    $propLocation = implode(', ', $locArr);
-                    $propCategory = $formatCategoryName($assignedHotel['property_type'] ?? '', $day['hotel_stars'] ?? '');
-                    $propRoomType = !empty($assignedHotel['tph_room_type']) ? ucwords(str_replace('_', ' ', $assignedHotel['tph_room_type'])) : '';
+            if ($isTransitStay) {
+                // If stay is in transit, do not mention any hotel name!
+                $isTransitOrTripEnd = true;
+                if (str_contains($stayCityLower, 'end') || str_contains($stayCityLower, 'departure')) {
+                    $stayCityClean = 'Tour End / Departure';
+                } else {
+                    $stayCityClean = 'Overnight / In Transit';
+                }
+            } else {
+                // 1. Priority 1: Use Existing Itinerary Builder Data (day hotel_title, hotel, stay, hotel_id)
+                if (!empty($builderHotelClean) || $builderHotelId > 0) {
+                    $propTitle = $builderHotelClean;
+
+                    // Lookup DB by ID or Title
+                    if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX')) {
+                        $pRow = null;
+                        if ($builderHotelId > 0) {
+                            $pQ = "SELECT property_id, property_title, property_thumbnail, property_address, property_city, property_type FROM " . TABLE_PREFIX . "property WHERE property_site_id = " . (int)SITE_ID . " AND property_id = {$builderHotelId} LIMIT 1";
+                            if ($pR = @mysqli_query($connection, $pQ)) {
+                                $pRow = mysqli_fetch_assoc($pR);
+                            }
+                        }
+                        if (!$pRow && !empty($propTitle)) {
+                            $cacheKey = strtolower($propTitle);
+                            if (!isset($propertyLookupCache[$cacheKey])) {
+                                $cleanEscName = mysqli_real_escape_string($connection, $propTitle);
+                                $pQuery = "SELECT property_id, property_title, property_thumbnail, property_address, property_city, property_type FROM " . TABLE_PREFIX . "property WHERE property_site_id = " . (int)SITE_ID . " AND (property_title = '{$cleanEscName}' OR property_title LIKE '{$cleanEscName}%') LIMIT 1";
+                                $pRes = @mysqli_query($connection, $pQuery);
+                                $propertyLookupCache[$cacheKey] = ($pRes && mysqli_num_rows($pRes) > 0) ? mysqli_fetch_assoc($pRes) : false;
+                            }
+                            $pRow = !empty($propertyLookupCache[$cacheKey]) ? $propertyLookupCache[$cacheKey] : null;
+                        }
+                        if (!empty($pRow)) {
+                            $propTitle = $pRow['property_title'];
+                            $propImage = fixImageUrl($pRow['property_thumbnail'] ?? '');
+                            $locArr = array_filter([$pRow['property_address'] ?? '', $pRow['property_city'] ?? '']);
+                            $propLocation = implode(', ', $locArr);
+                            $propCategory = $formatCategoryName($pRow['property_type'] ?? '', $day['hotel_stars'] ?? '');
+                        }
+                    }
+
+                    if (!empty($propTitle)) {
+                        if (empty($propCategory) && !empty($day['hotel_stars'])) {
+                            $propCategory = $formatCategoryName($day['hotel_stars']);
+                        }
+                        if (!empty($day['room_type'])) {
+                            $propRoomType = ucwords(str_replace('_', ' ', trim((string)$day['room_type'])));
+                        }
+                        if (!empty($day['meal_plan'])) {
+                            $propMealPlan = $formatMealPlanName($day['meal_plan']);
+                        }
+                    }
                 }
 
-                // Check day-specific stay or general package hotel
+                // 2. Priority 2: Fallback to Package Assigned Hotel (tour_package_hotel) ONLY if builder hotel is empty
                 if (empty($propTitle)) {
-                    $rawStay = trim((string)($day['stay'] ?? ($day['hotel'] ?? ($day['stay_option'] ?? ($day['hotel_name'] ?? '')))));
-                    if (!empty($rawStay) && !in_array(strtolower($rawStay), ['no stay', 'transit', 'overnight journey'])) {
-                        $propTitle = cleanProposalLabel($rawStay);
+                    $assignedHotel = $dayWiseHotels[$dayIndex] ?? null;
+                    if (!empty($assignedHotel)) {
+                        $propTitle = $assignedHotel['property_title'] ?? '';
+                        $propImage = fixImageUrl($assignedHotel['property_thumbnail'] ?? '');
+                        $locArr = array_filter([$assignedHotel['property_address'] ?? '', $assignedHotel['property_city'] ?? '']);
+                        $propLocation = implode(', ', $locArr);
+                        $propCategory = $formatCategoryName($assignedHotel['property_type'] ?? '', $day['hotel_stars'] ?? '');
+                        $propRoomType = !empty($day['room_type']) ? ucwords(str_replace('_', ' ', trim((string)$day['room_type']))) : (!empty($assignedHotel['tph_room_type']) ? ucwords(str_replace('_', ' ', $assignedHotel['tph_room_type'])) : '');
+                        if (!empty($day['meal_plan'])) {
+                            $propMealPlan = $formatMealPlanName($day['meal_plan']);
+                        }
+                    }
+                }
 
-                        // Look up property details in database
+                // 3. Priority 3: Fallback to General Package Hotel ($tour_package_hotel) ONLY if still empty
+                if (empty($propTitle)) {
+                    $isPotentialTransit = $checkTransitOrTripEnd($day, $dayIndex, count($pkgDays), $cleanTitle, $dayOverview);
+                    if (!$isPotentialTransit && !empty($tour_package_hotel) && is_string($tour_package_hotel) && trim($tour_package_hotel) !== '') {
+                        $propTitle = cleanProposalLabel($tour_package_hotel);
                         if (isset($connection) && defined('SITE_ID') && defined('TABLE_PREFIX')) {
                             $cacheKey = strtolower($propTitle);
                             if (!isset($propertyLookupCache[$cacheKey])) {
                                 $cleanEscName = mysqli_real_escape_string($connection, $propTitle);
-                                $pQuery = "SELECT property_thumbnail, property_address, property_city, property_type FROM " . TABLE_PREFIX . "property WHERE property_site_id = " . SITE_ID . " AND (property_title = '{$cleanEscName}' OR property_title LIKE '{$cleanEscName}%') LIMIT 1";
+                                $pQuery = "SELECT property_id, property_title, property_thumbnail, property_address, property_city, property_type FROM " . TABLE_PREFIX . "property WHERE property_site_id = " . (int)SITE_ID . " AND (property_title = '{$cleanEscName}' OR property_title LIKE '{$cleanEscName}%') LIMIT 1";
                                 $pRes = @mysqli_query($connection, $pQuery);
                                 $propertyLookupCache[$cacheKey] = ($pRes && mysqli_num_rows($pRes) > 0) ? mysqli_fetch_assoc($pRes) : false;
                             }
-                            if (!empty($propertyLookupCache[$cacheKey])) {
-                                $dbProp = $propertyLookupCache[$cacheKey];
+                            $dbProp = !empty($propertyLookupCache[$cacheKey]) ? $propertyLookupCache[$cacheKey] : null;
+                            if (!empty($dbProp)) {
+                                $propTitle = $dbProp['property_title'];
                                 if (empty($propImage) && !empty($dbProp['property_thumbnail'])) {
                                     $propImage = fixImageUrl($dbProp['property_thumbnail']);
                                 }
@@ -2403,23 +2474,28 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                                 }
                             }
                         }
-                    } elseif (!empty($tour_package_hotel) && is_string($tour_package_hotel) && trim($tour_package_hotel) !== '') {
-                        $propTitle = cleanProposalLabel($tour_package_hotel);
                     }
                 }
 
-                // Populate remaining property metadata
+                // Determine if transit day without hotel
+                $isTransitOrTripEnd = empty($propTitle) && $checkTransitOrTripEnd($day, $dayIndex, count($pkgDays), $cleanTitle, $dayOverview);
+
+                if (empty($stayCityClean)) {
+                    $stayCityClean = !$isTransitOrTripEnd ? $pkgCity : 'Overnight / In Transit';
+                }
+
+                // Populate remaining property metadata if property is resolved
                 if (!empty($propTitle)) {
                     if (empty($propCategory)) {
                         $propCategory = $formatCategoryName($day['hotel_stars'] ?? ($pkgHotel ?? ''));
                     }
                     if (empty($propLocation)) {
-                        $propLocation = $stayCityClean;
+                        $propLocation = $stayCityClean ?: $pkgCity;
                     }
                     if (empty($propRoomType) && !empty($day['room_type'])) {
                         $propRoomType = ucwords(str_replace('_', ' ', trim((string)$day['room_type'])));
                     }
-                    if (!empty($day['meal_plan'])) {
+                    if (empty($propMealPlan) && !empty($day['meal_plan'])) {
                         $propMealPlan = $formatMealPlanName($day['meal_plan']);
                     }
                     if (empty($propImage)) {
@@ -2588,9 +2664,9 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                                         <span>•</span>
                                         <span><i class="ri-map-pin-2-line"></i> <?php echo htmlspecialchars($pkgCity); ?></span>
                                     <?php endif; ?>
-                                    <?php if (!empty($pkgHotel)): ?>
+                                    <?php if (!empty($stayCategory) || !empty($pkgHotel)): ?>
                                         <span>•</span>
-                                        <span><i class="ri-hotel-line"></i> <?php echo htmlspecialchars(cleanProposalLabel($pkgHotel)); ?></span>
+                                        <span><i class="ri-hotel-line"></i> <?php echo htmlspecialchars($stayCategory ?: cleanProposalLabel($pkgHotel)); ?></span>
                                     <?php endif; ?>
                                 </div>
                             </div>

@@ -5040,8 +5040,15 @@
                 d.city = d.stay;
               }
 
-              // 2. Hotel & Room Type
-              if (assignedH) {
+              // 2. Hotel & Room Type (Prioritize existing itinerary builder day data over package defaults)
+              if (d.hotel_title || d.hotel) {
+                if (!d.hotel) d.hotel = d.hotel_title;
+                if (!d.hotel_title) d.hotel_title = d.hotel;
+                if (!d.hotel_id && self.propertiesList) {
+                  const match = self.propertiesList.find(p => p.title && p.title.toLowerCase().trim() === d.hotel.toLowerCase().trim());
+                  if (match) d.hotel_id = match.id;
+                }
+              } else if (assignedH) {
                 if (!d.hotel_id) d.hotel_id = assignedH.id;
                 if (!d.hotel_title) d.hotel_title = assignedH.title;
                 if (!d.hotel) d.hotel = assignedH.title;
