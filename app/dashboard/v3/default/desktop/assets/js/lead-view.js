@@ -5097,10 +5097,60 @@
 
     confirmConvertToSale: function () {
       const self = this;
+      if (self.isConvertingToSale || self.isUpdatingStatus) return;
+
+      const $heroBtn = $("#btnHeroConvertToSale");
+      const $sideBtn = $("#btnSideConvertToSale");
+
+      const setButtonsLoading = function () {
+        self.isConvertingToSale = true;
+        if ($heroBtn.length) {
+          if (!$heroBtn.data("orig-html")) {
+            $heroBtn.data("orig-html", $heroBtn.html());
+          }
+          $heroBtn
+            .prop("disabled", true)
+            .addClass("is-loading disabled")
+            .html('<i class="fi fi-rr-spinner fi-rr-spin"></i> <span>Converting...</span>');
+        }
+        if ($sideBtn.length) {
+          if (!$sideBtn.data("orig-title")) {
+            $sideBtn.data("orig-title", $sideBtn.find(".fast-tile-title").text());
+            $sideBtn.data("orig-sub", $sideBtn.find(".fast-tile-sub").text());
+          }
+          $sideBtn
+            .prop("disabled", true)
+            .addClass("is-loading disabled");
+          $sideBtn.find(".fast-tile-icon").html('<i class="fi fi-rr-spinner fi-rr-spin"></i>');
+          $sideBtn.find(".fast-tile-title").text("Converting...");
+          $sideBtn.find(".fast-tile-sub").text("Please wait...");
+        }
+      };
+
+      const resetButtons = function () {
+        self.isConvertingToSale = false;
+        if ($heroBtn.length && $heroBtn.data("orig-html")) {
+          $heroBtn
+            .prop("disabled", false)
+            .removeClass("is-loading disabled")
+            .html($heroBtn.data("orig-html"));
+        }
+        if ($sideBtn.length && $sideBtn.data("orig-title")) {
+          $sideBtn
+            .prop("disabled", false)
+            .removeClass("is-loading disabled");
+          $sideBtn.find(".fast-tile-icon").html('<i class="fi fi-rr-check-circle"></i>');
+          $sideBtn.find(".fast-tile-title").text($sideBtn.data("orig-title"));
+          $sideBtn.find(".fast-tile-sub").text($sideBtn.data("orig-sub"));
+        }
+      };
+
+      setButtonsLoading();
+
       if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
         Swal.fire({
           title: "Convert to Confirmed Sale?",
-          text: "This will transition the lead to confirmed status in your revenue pipeline.",
+          text: "This will transition the lead to confirmed status in your revenue pipeline and notify administration.",
           type: "warning",
           icon: "warning",
           showCancelButton: true,
@@ -5108,13 +5158,22 @@
           cancelButtonColor: "#64748b",
           confirmButtonText: "Yes, Confirm Sale",
           cancelButtonText: "Cancel",
+          allowOutsideClick: false,
         }).then((res) => {
           if (res.isConfirmed || res.value) {
-            self.updateStatus(1);
+            self.updateStatus(1, function () {
+              resetButtons();
+            });
+          } else {
+            resetButtons();
           }
         });
       } else if (confirm("Convert this lead to confirmed sale?")) {
-        self.updateStatus(1);
+        self.updateStatus(1, function () {
+          resetButtons();
+        });
+      } else {
+        resetButtons();
       }
     },
 
@@ -5199,26 +5258,49 @@
       });
     },
 
-    updateStatus: function (status) {
+    updateStatus: function (status, callback) {
       const self = this;
+      if (self.isUpdatingStatus) return;
+      self.isUpdatingStatus = true;
+
       $.ajax({
         url: "/api/v3/leads/update-status/",
         type: "POST",
         data: {
+          leadId: self.leadId,
           lead_id: self.leadId,
+          id: self.leadId,
           status: status,
         },
         dataType: "json",
         success: function (res) {
-          if (res.status === 200 || res.status === "success") {
-            self.notify("Status updated successfully", "success");
+          self.isUpdatingStatus = false;
+          if (typeof callback === "function") callback(null, res);
+
+          if (res.status === 200 || res.status === "success" || res.status_code === 200) {
+            const successMsg = res.msg || res.message || "Status updated successfully";
+            self.notify(successMsg, "success");
+
+            if (typeof Swal !== "undefined" && typeof Swal.fire === "function" && status === 1) {
+              Swal.fire({
+                title: "Lead Confirmed!",
+                text: "Lead has been marked as confirmed sale.",
+                type: "success",
+                icon: "success",
+                timer: 2200,
+                showConfirmButton: false,
+              });
+            }
+
             self.loadLeadDetails();
           } else {
-            self.notify(res.msg || "Failed to update status.", "error");
+            self.notify(res.msg || res.message || "Failed to update status.", "error");
           }
         },
         error: function () {
-          self.notify("Network error.", "error");
+          self.isUpdatingStatus = false;
+          if (typeof callback === "function") callback(new Error("Network error"));
+          self.notify("Network error during status update.", "error");
         },
       });
     },
