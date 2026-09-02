@@ -22,34 +22,34 @@ if (!is_array($jsonData)) {
 }
 
 // Retrieve lead identifier from all common aliases
-$rawLeadId = $_POST['leadId'] 
-    ?? ($_POST['lead_id'] 
-    ?? ($_POST['id'] 
-    ?? ($_POST['enquiry_id'] 
-    ?? ($jsonData['leadId'] 
-    ?? ($jsonData['lead_id'] 
-    ?? ($jsonData['id'] 
-    ?? ($jsonData['enquiry_id'] 
-    ?? ($_GET['leadId'] 
-    ?? ($_GET['lead_id'] 
-    ?? ($_GET['id'] 
-    ?? ($_REQUEST['leadId'] 
-    ?? ($_REQUEST['lead_id'] 
-    ?? ($_REQUEST['id'] 
-    ?? ($leadId ?? ''))))))))))))));
+$rawLeadId = $_POST['leadId']
+    ?? ($_POST['lead_id']
+        ?? ($_POST['id']
+            ?? ($_POST['enquiry_id']
+                ?? ($jsonData['leadId']
+                    ?? ($jsonData['lead_id']
+                        ?? ($jsonData['id']
+                            ?? ($jsonData['enquiry_id']
+                                ?? ($_GET['leadId']
+                                    ?? ($_GET['lead_id']
+                                        ?? ($_GET['id']
+                                            ?? ($_REQUEST['leadId']
+                                                ?? ($_REQUEST['lead_id']
+                                                    ?? ($_REQUEST['id']
+                                                        ?? ($leadId ?? ''))))))))))))));
 
 // Retrieve target status from all common aliases
-$rawStatus = $_POST['status'] 
-    ?? ($_POST['leadStatus'] 
-    ?? ($_POST['new_status'] 
-    ?? ($jsonData['status'] 
-    ?? ($jsonData['leadStatus'] 
-    ?? ($jsonData['new_status'] 
-    ?? ($_GET['status'] 
-    ?? ($_GET['leadStatus'] 
-    ?? ($_REQUEST['status'] 
-    ?? ($_REQUEST['leadStatus'] 
-    ?? ($status ?? null))))))))));
+$rawStatus = $_POST['status']
+    ?? ($_POST['leadStatus']
+        ?? ($_POST['new_status']
+            ?? ($jsonData['status']
+                ?? ($jsonData['leadStatus']
+                    ?? ($jsonData['new_status']
+                        ?? ($_GET['status']
+                            ?? ($_GET['leadStatus']
+                                ?? ($_REQUEST['status']
+                                    ?? ($_REQUEST['leadStatus']
+                                        ?? ($status ?? null))))))))));
 
 if ($rawLeadId !== '' && $rawLeadId !== null && $rawStatus !== null && is_numeric($rawStatus)) {
     $newStatus = intval($rawStatus);
@@ -105,7 +105,7 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawStatus !== null && is_numeri
         }
 
         // 4. Resolve current operating user
-        $currentUserId = (int)($_SESSION['user_id'] ?? ($_SESSION['account_id'] ?? 0));
+        $currentUserId = USER_ID;
         $currentUserName = 'System';
         if ($currentUserId > 0) {
             $userQ = mysqli_query($connection, "SELECT p.profile_display_name, p.profile_first_name, p.profile_last_name, u.user_username 
@@ -279,10 +279,10 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawStatus !== null && is_numeri
             }
 
             // --- B. Single Email Alert to Primary Administrator ---
-            $enableEmail = ($siteCfg['notification_admin_email_notification'] 
-                ?? ($siteCfg['admin_email_notification'] 
-                ?? ($siteCfg['notification_email_notification'] 
-                ?? ($siteCfg['email_notification'] ?? '1')))) !== '0';
+            $enableEmail = ($siteCfg['notification_admin_email_notification']
+                ?? ($siteCfg['admin_email_notification']
+                    ?? ($siteCfg['notification_email_notification']
+                        ?? ($siteCfg['email_notification'] ?? '1')))) !== '0';
 
             if ($enableEmail) {
                 // Determine the single primary administrator email
