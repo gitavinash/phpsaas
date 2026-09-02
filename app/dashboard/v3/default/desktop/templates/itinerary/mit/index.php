@@ -777,6 +777,9 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             padding-top: 12px;
             border-top: 1px dashed #cbd5e1;
             page-break-inside: avoid;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         /* First Row: Stay City */
@@ -786,7 +789,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             gap: 6px;
             font-size: 13px;
             color: #334155;
-            margin-bottom: 10px;
+            margin-bottom: 2px;
         }
 
         .stay-city-plain-row i {
@@ -2462,14 +2465,16 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
 
                     <?php if (!empty($stayCityClean) || !empty($propTitle) || !empty($dayVehicleClean)): ?>
                         <div class="day-stay-plain-wrap">
-                            <!-- First Row: Stay City & Transport header -->
-                            <div class="stay-city-plain-row">
-                                <i class="ri-hotel-bed-line"></i>
-                                <span class="stay-city-title">Hotel &amp; Transportation:</span>
-                                <span class="stay-city-val"><?php echo htmlspecialchars($stayCityClean ?: ($isTransitOrTripEnd ? 'Overnight / In Transit' : $pkgCity)); ?></span>
-                            </div>
+                            <!-- First Row: Stay City Header -->
+                            <?php if (!empty($stayCityClean) || $isTransitOrTripEnd): ?>
+                                <div class="stay-city-plain-row">
+                                    <i class="ri-map-pin-2-fill"></i>
+                                    <span class="stay-city-title">Stay City:</span>
+                                    <span class="stay-city-val"><?php echo htmlspecialchars($stayCityClean ?: ($isTransitOrTripEnd ? 'Overnight / In Transit' : $pkgCity)); ?></span>
+                                </div>
+                            <?php endif; ?>
 
-                            <!-- Second Row: Property & Vehicle Information Card -->
+                            <!-- Hotel Card (Separate Card) -->
                             <?php if (!empty($propTitle)): ?>
                                 <div class="stay-property-plain-card">
                                     <?php if (!empty($propImage)): ?>
@@ -2506,23 +2511,14 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                                                     <i class="ri-restaurant-line"></i> <?php echo htmlspecialchars($propMealPlan); ?>
                                                 </span>
                                             <?php endif; ?>
-
-                                            <?php if (!empty($dayVehicleClean)): ?>
-                                                <span class="stay-property-meta-item stay-transport-meta-item">
-                                                    <i class="ri-car-line"></i> <strong>Transport:</strong> <?php echo htmlspecialchars($dayVehicleClean); ?>
-                                                </span>
-                                            <?php endif; ?>
-
-                                            <?php if (!empty($dayTransferNotes)): ?>
-                                                <span class="stay-property-meta-item stay-transfer-notes-item" title="<?php echo htmlspecialchars($dayTransferNotes); ?>">
-                                                    <i class="ri-route-line"></i> <?php echo htmlspecialchars($dayTransferNotes); ?>
-                                                </span>
-                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
-                            <?php elseif (!empty($dayVehicleClean)): ?>
-                                <div class="stay-property-plain-card">
+                            <?php endif; ?>
+
+                            <!-- Transport Card (Separate Card, No 'Daily Transport' badge) -->
+                            <?php if (!empty($dayVehicleClean)): ?>
+                                <div class="stay-property-plain-card stay-transport-plain-card">
                                     <div class="stay-property-thumb-wrap transport-thumb-wrap">
                                         <i class="ri-roadster-fill" style="font-size: 38px; color: #0284c7;"></i>
                                     </div>
@@ -2530,9 +2526,6 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                                     <div class="stay-property-details">
                                         <div class="stay-property-top">
                                             <h4 class="stay-property-title"><?php echo htmlspecialchars($dayVehicleClean); ?></h4>
-                                            <span class="stay-property-tag category-tag" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">
-                                                <i class="ri-car-line"></i> Daily Transport
-                                            </span>
                                         </div>
 
                                         <div class="stay-property-meta-row">

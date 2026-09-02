@@ -84,12 +84,38 @@ function getLeadStatusMeta($status)
 
 $statusMeta = getLeadStatusMeta($lead['enquiry_status'] ?? 0);
 
+// Helper to filter out tracking parameters, Google Ads, reCAPTCHA, and submission artifacts
+function filterTrackingLeadData($data)
+{
+    if (!is_array($data)) return $data;
+    $trackingExact = [
+        'gclid', 'gad_source', 'wbraid', 'gbraid', 'dclid',
+        'fbclid', 'msclkid', 'ttclid', 'twclid', 'li_fat_id', 'mc_eid', 'igshid', 'yclid',
+        'btnsubmit', 'btn_submit', 'submit', 'submit_button', 'action'
+    ];
+    $filtered = [];
+    foreach ($data as $k => $v) {
+        $kLower = strtolower(trim((string)$k));
+        if (in_array($kLower, $trackingExact, true)) continue;
+        if (str_starts_with($kLower, 'utm_')) continue;
+        if (str_contains($kLower, 'recaptcha')) continue;
+        if (preg_match('/^(_ga|_gid|_fbp|_fbc|_gat|_gac|_clck|_clsk)/i', $kLower)) continue;
+
+        if (is_array($v)) {
+            $filtered[$k] = filterTrackingLeadData($v);
+        } else {
+            $filtered[$k] = $v;
+        }
+    }
+    return $filtered;
+}
+
 // Parse JSON inquiry message if present
 $extraDetails = [];
 if (!empty($lead['enquiry_message'])) {
     $parsed = json_decode($lead['enquiry_message'], true);
     if (is_array($parsed)) {
-        $extraDetails = $parsed;
+        $extraDetails = filterTrackingLeadData($parsed);
     }
 }
 
@@ -492,6 +518,22 @@ $currentLocation = trim($enquiryProfile['current_location'] ?? ($extraDetails['c
 $pickupLocation = trim($enquiryProfile['pickup_location'] ?? ($extraDetails['pickup_location'] ?? ''));
 $dropLocation = trim($enquiryProfile['drop_location'] ?? ($extraDetails['drop_location'] ?? ''));
 $requirements = trim($enquiryProfile['requirements'] ?? ($extraDetails['requirements'] ?? ($lead['enquiry_message'] ?? '')));
+if (!empty($requirements)) {
+    $parsedReq = json_decode($requirements, true);
+    if (is_array($parsedReq)) {
+        $cleanedReq = filterTrackingLeadData($parsedReq);
+        $hasMeaningfulData = false;
+        foreach ($cleanedReq as $k => $v) {
+            if (is_array($v)) {
+                if (!empty($v)) { $hasMeaningfulData = true; break; }
+            } else if (trim((string)$v) !== '' && trim((string)$v) !== '#') {
+                $hasMeaningfulData = true;
+                break;
+            }
+        }
+        $requirements = $hasMeaningfulData ? json_encode($cleanedReq) : '';
+    }
+}
 
 $createdAt = !empty($lead['enquiry_time']) && $lead['enquiry_time'] !== '0000-00-00 00:00:00' ? date('d M Y, h:i A', strtotime($lead['enquiry_time'])) : '';
 $updatedAt = !empty($lead['enquiry_update']) && $lead['enquiry_update'] !== '0000-00-00 00:00:00' ? date('d M Y, h:i A', strtotime($lead['enquiry_update'])) : $createdAt;

@@ -221,10 +221,89 @@
       });
     },
 
+    isTrackingKey: function (key) {
+      if (!key && key !== 0) return false;
+      const k = String(key).trim().toLowerCase();
+      const exactTracking = [
+        "gclid",
+        "gad_source",
+        "wbraid",
+        "gbraid",
+        "dclid",
+        "fbclid",
+        "msclkid",
+        "ttclid",
+        "twclid",
+        "li_fat_id",
+        "mc_eid",
+        "igshid",
+        "yclid",
+        "btnsubmit",
+        "btn_submit",
+        "submit",
+        "submit_button",
+        "action"
+      ];
+      if (exactTracking.indexOf(k) !== -1) return true;
+      if (k.startsWith("utm_")) return true;
+      if (k.indexOf("recaptcha") !== -1) return true;
+      if (k.indexOf("grecaptcha") !== -1) return true;
+      if (/^(_ga|_gid|_fbp|_fbc|_gat|_gac|_clck|_clsk)/i.test(k)) return true;
+      return false;
+    },
+
+    filterTrackingKeys: function (obj) {
+      if (!obj || typeof obj !== "object") return obj;
+      const self = this;
+      if (Array.isArray(obj)) {
+        return obj
+          .filter(function (item) {
+            if (item && typeof item === "object" && item.name) {
+              return !self.isTrackingKey(item.name);
+            }
+            return true;
+          })
+          .map(function (item) {
+            return typeof item === "object"
+              ? self.filterTrackingKeys(item)
+              : item;
+          });
+      }
+      const clean = {};
+      Object.keys(obj).forEach(function (k) {
+        if (!self.isTrackingKey(k)) {
+          clean[k] =
+            typeof obj[k] === "object" && obj[k] !== null
+              ? self.filterTrackingKeys(obj[k])
+              : obj[k];
+        }
+      });
+      return clean;
+    },
+
+    hasMeaningfulRequirements: function (parsed) {
+      if (!parsed) return false;
+      if (Array.isArray(parsed)) {
+        return parsed.length > 0;
+      }
+      if (typeof parsed === "object") {
+        const keys = Object.keys(parsed);
+        if (keys.length === 0) return false;
+        return keys.some(function (k) {
+          const val = parsed[k];
+          if (val === null || val === undefined) return false;
+          if (typeof val === "object") return true;
+          const s = String(val).trim();
+          return s !== "" && s !== "#";
+        });
+      }
+      return String(parsed).trim() !== "";
+    },
+
     parseRequirementsJson: function (raw) {
       if (!raw && raw !== 0) return null;
       if (typeof raw === "object" && raw !== null) {
-        return raw;
+        return this.filterTrackingKeys(raw);
       }
       if (typeof raw !== "string") return null;
       const trimmed = raw.trim();
@@ -240,7 +319,7 @@
       try {
         const parsed = JSON.parse(trimmed);
         if (typeof parsed === "object" && parsed !== null) {
-          return parsed;
+          return this.filterTrackingKeys(parsed);
         }
       } catch (e) {
         try {
@@ -249,7 +328,7 @@
           if (unescaped && unescaped !== trimmed) {
             const parsed2 = JSON.parse(unescaped);
             if (typeof parsed2 === "object" && parsed2 !== null) {
-              return parsed2;
+              return this.filterTrackingKeys(parsed2);
             }
           }
         } catch (e2) {
@@ -490,6 +569,27 @@
 
       const parsedJson = self.parseRequirementsJson(req);
       if (parsedJson) {
+        if (!self.hasMeaningfulRequirements(parsedJson)) {
+          return `
+            <div class="v3-requirements-section-wrap" id="requirementsSectionWrap">
+              <div class="v3-requirements-header-wrap">
+                <div class="v3-requirements-header-left">
+                  <h4 class="v3-info-section-heading">Special Notes & Requirements</h4>
+                </div>
+                <div class="v3-requirements-header-actions">
+                  <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnEditRequirements" data-tooltip="Add or edit requirements">
+                    <i class="fi fi-rr-edit"></i> Edit
+                  </button>
+                </div>
+              </div>
+              <div class="v3-requirements-empty-note">
+                <i class="fi fi-rr-info"></i>
+                <span>No special notes or requirements specified. Click <strong>Edit</strong> to add details.</span>
+              </div>
+            </div>
+          `;
+        }
+
         const rawJsonString =
           typeof req === "string"
             ? req
@@ -2598,7 +2698,11 @@
           const rawReq = t.requirements || "";
           const parsedReq = self.parseRequirementsJson(rawReq);
           if (parsedReq) {
-            $("#editLeadRequirements").val(JSON.stringify(parsedReq, null, 2));
+            if (self.hasMeaningfulRequirements(parsedReq)) {
+              $("#editLeadRequirements").val(JSON.stringify(parsedReq, null, 2));
+            } else {
+              $("#editLeadRequirements").val("");
+            }
           } else {
             $("#editLeadRequirements").val(rawReq);
           }
