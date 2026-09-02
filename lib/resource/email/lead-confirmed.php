@@ -11,7 +11,7 @@ if (!defined('SITE_NAME')) {
 }
 
 $themeColor = '#10b981'; // Emerald Green for Confirmed Sale
-$siteDomain = defined('COMPANY_SITE_DOMAIN') ? COMPANY_SITE_DOMAIN : (defined('SITE_DOMAIN') ? SITE_DOMAIN : ($_SERVER['HTTP_HOST'] ?? 'aleya.in'));
+$siteDomain = SITE_DOMAIN;
 
 $customerNameText = ucwords(!empty($customerName) ? htmlspecialchars($customerName) : 'Valued Customer');
 $customerMobileText = !empty($customerMobile) ? htmlspecialchars($customerMobile) : 'Not Provided';
@@ -20,7 +20,7 @@ $leadSubjectText = !empty($leadSubject) ? htmlspecialchars($leadSubject) : 'Conf
 $assignedAgentText = ucwords(!empty($agentName) ? htmlspecialchars($agentName) : 'Unassigned');
 $confirmedByText = ucwords(!empty($currentUserName) ? htmlspecialchars($currentUserName) : 'System');
 $confirmedDateText = date('d M Y, h:i A');
-$leadUrl = !empty($leadViewUrl) ? $leadViewUrl : "https://{$siteDomain}/dashboard/leads/view/?id=" . base64_encode((string)$realLeadId);
+$leadUrl = "https://{$siteDomain}/dashboard/leads/view/?id=" . base64_encode((string)$realLeadId);
 
 $subject = "🎉 Lead Confirmed: {$customerNameText} (Lead #{$realLeadId}) - {$siteName}";
 
