@@ -437,6 +437,21 @@
     'Luxury Tent / Camp'
   ];
 
+  function isTransitOrNoStay(city) {
+    if (!city) return false;
+    const c = String(city).toLowerCase().trim();
+    return c.includes('in transit') ||
+      c.includes('overnight') ||
+      c.includes('tour end') ||
+      c.includes('trip end') ||
+      c.includes('departure (no stay)') ||
+      c.includes('no stay') ||
+      c.includes('no hotel') ||
+      c === 'overnight_journey' ||
+      c === 'trip_end' ||
+      c === 'no_stay';
+  }
+
   function fetchDayHotels(dayNum, stayCity, selectedHotelVal, selectedRoomTypeVal) {
     const $hotelSelect = $(`#dayHotelSelect_${dayNum}`);
     const $roomSelect = $(`#dayRoomSelect_${dayNum}`);
@@ -445,6 +460,25 @@
     stayCity = (stayCity || '').trim();
     selectedHotelVal = selectedHotelVal !== undefined && selectedHotelVal !== null ? String(selectedHotelVal).trim() : ($(`#dayHotelInput_${dayNum}`).val() || '').trim();
     selectedRoomTypeVal = selectedRoomTypeVal !== undefined && selectedRoomTypeVal !== null ? String(selectedRoomTypeVal).trim() : ($(`#dayRoomTypeInput_${dayNum}`).val() || '').trim();
+
+    if (isTransitOrNoStay(stayCity)) {
+      $(`.hotel-select-field-${dayNum}, .room-select-field-${dayNum}`).hide();
+      $(`.transit-notice-${dayNum}`).show();
+      $hotelSelect.prop('disabled', true).html('<option value="0" selected>No Hotel Required (In Transit)</option>');
+      $roomSelect.prop('disabled', true).html('<option value="0" selected>No Room Required</option>');
+      $(`#dayHotelInput_${dayNum}`).val('0');
+      $(`#dayRoomTypeInput_${dayNum}`).val('0');
+      if (typeof $.fn.select2 !== 'undefined' && $hotelSelect.hasClass('select2-hidden-accessible')) {
+        $hotelSelect.trigger('change.select2');
+      }
+      if (typeof $.fn.select2 !== 'undefined' && $roomSelect.hasClass('select2-hidden-accessible')) {
+        $roomSelect.trigger('change.select2');
+      }
+      return;
+    }
+
+    $(`.hotel-select-field-${dayNum}, .room-select-field-${dayNum}`).show();
+    $(`.transit-notice-${dayNum}`).hide();
 
     if (!stayCity) {
       $hotelSelect.prop('disabled', true).html('<option value="">-- Choose Stay City First --</option>');
@@ -674,6 +708,10 @@
     otherCities = otherCities || (window.V3PackageEdit && window.V3PackageEdit.otherCities) || [];
     stateName = stateName || (window.V3PackageEdit && window.V3PackageEdit.packageState) || 'Package State';
 
+    const isOvernight = selectedCity.includes('overnight') || selectedCity.includes('in transit') || selectedCity === 'overnight_journey';
+    const isTripEnd = selectedCity.includes('trip end') || selectedCity.includes('tour end') || selectedCity.includes('departure (no stay)') || selectedCity === 'trip_end';
+    const isSelfNoStay = selectedCity.includes('self / no') || selectedCity.includes('no hotel') || (selectedCity.includes('no stay') && !isTripEnd) || selectedCity === 'no_stay';
+
     function formatCityOption(c) {
       const cap = capitalizeWords(c);
       const isSel = selectedCity && (selectedCity === c.toLowerCase() || selectedCity === cap.toLowerCase()) ? 'selected' : '';
@@ -682,7 +720,14 @@
 
     let html = '<option value="">-- Choose Stay City --</option>';
 
-    if (selectedCity && !stateCities.some(c => c.toLowerCase() === selectedCity) && !otherCities.some(c => c.toLowerCase() === selectedCity)) {
+    // Special Transit / Non-Stay Options
+    html += `<optgroup label="Transit & Tour Status (No Hotel Stay)">`;
+    html += `<option value="Overnight Journey (In Transit)" ${isOvernight ? 'selected' : ''}>🚌 Overnight Journey (In Transit)</option>`;
+    html += `<option value="Tour End / Departure (No Stay)" ${isTripEnd ? 'selected' : ''}>🏁 Tour End / Departure (No Stay)</option>`;
+    html += `<option value="Self / No Hotel Stay Needed" ${isSelfNoStay ? 'selected' : ''}>❌ Self / No Hotel Stay Needed</option>`;
+    html += `</optgroup>`;
+
+    if (selectedCity && !isOvernight && !isTripEnd && !isSelfNoStay && !stateCities.some(c => c.toLowerCase() === selectedCity) && !otherCities.some(c => c.toLowerCase() === selectedCity)) {
       html += `<option value="${escapeHtml(capitalizeWords(selectedCity))}" selected>${escapeHtml(capitalizeWords(selectedCity))}</option>`;
     }
 
@@ -712,6 +757,7 @@
     const initialCity = (dayStay && !dayStay.toLowerCase().includes('hotel') && !dayStay.toLowerCase().includes('resort')) ? dayStay : (dayCity || dayStay);
     const dayHotelVal = dayItem.hotel_id || dayItem.hotel || '';
     const dayRoomTypeVal = dayItem.room_type || dayItem.room_type_id || '';
+    const isTransit = isTransitOrNoStay(initialCity);
 
     return `
       <div class="v3-day-card" id="dayCard_${dayNum}" data-day="${dayNum}">
@@ -754,7 +800,7 @@
                       </div>
 
                       <!-- 2. Hotel Selection based on City -->
-                      <div class="v3-day-stay-field">
+                      <div class="v3-day-stay-field hotel-select-field hotel-select-field-${dayNum}" style="${isTransit ? 'display: none;' : ''}">
                           <label class="v3-form-label-xs" for="dayHotelSelect_${dayNum}">
                               <i class="fi fi-rr-building"></i> Hotel / Property
                           </label>
@@ -765,7 +811,7 @@
                       </div>
 
                       <!-- 3. Room Type Selection based on Hotel -->
-                      <div class="v3-day-stay-field">
+                      <div class="v3-day-stay-field room-select-field room-select-field-${dayNum}" style="${isTransit ? 'display: none;' : ''}">
                           <label class="v3-form-label-xs" for="dayRoomSelect_${dayNum}">
                               <i class="fi fi-rr-bed"></i> Room Type
                           </label>
@@ -773,6 +819,11 @@
                               <option value="">${dayHotelVal ? 'Loading room types...' : '-- Choose Hotel First --'}</option>
                           </select>
                           <input type="hidden" name="dayRoomType[]" id="dayRoomTypeInput_${dayNum}" class="v3-day-room-input" value="${escapeHtml(dayRoomTypeVal)}" />
+                      </div>
+
+                      <!-- Transit / No Stay Badge Notice -->
+                      <div class="v3-day-transit-notice transit-notice-${dayNum}" style="${isTransit ? '' : 'display: none;'}">
+                          <span class="v3-transit-pill"><i class="fi fi-rr-bus"></i> No Hotel Stay Required (In Transit / Tour End)</span>
                       </div>
                   </div>
               </div>
@@ -1687,6 +1738,15 @@
         $(`#dayCityBadge_${dayNum}`).html(`<i class="fi fi-rr-marker"></i> ${selectedCity ? escapeHtml(capitalizeWords(selectedCity)) : 'No City'}`);
         $(`#dayHotelInput_${dayNum}`).val('');
         $(`#dayRoomTypeInput_${dayNum}`).val('');
+
+        if (isTransitOrNoStay(selectedCity)) {
+          $(`.hotel-select-field-${dayNum}, .room-select-field-${dayNum}`).hide();
+          $(`.transit-notice-${dayNum}`).show();
+        } else {
+          $(`.hotel-select-field-${dayNum}, .room-select-field-${dayNum}`).show();
+          $(`.transit-notice-${dayNum}`).hide();
+        }
+
         fetchDayHotels(dayNum, selectedCity, '', '');
       });
 

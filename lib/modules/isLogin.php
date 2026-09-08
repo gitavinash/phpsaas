@@ -1,23 +1,57 @@
 <?php
 
+$actualUrl = $_SERVER['REQUEST_URI'] ?? (defined('ACTIVE_URL') ? ACTIVE_URL : '');
+$isApiV3 = (stripos($actualUrl, '/api/v3/') !== false)
+	|| (isset($_SERVER['SCRIPT_NAME']) && stripos($_SERVER['SCRIPT_NAME'], '/api/v3/') !== false)
+	|| (isset($_SERVER['PHP_SELF']) && stripos($_SERVER['PHP_SELF'], '/api/v3/') !== false);
+
+if (!function_exists('isLoginHandleExit')) {
+	function isLoginHandleExit($isApiV3, $apiStatusCode, $apiMessage, $redirectUrl = null, $redirectHttpCode = null) {
+		if ($isApiV3) {
+			if (!headers_sent()) {
+				header('Content-Type: application/json; charset=utf-8');
+				http_response_code($apiStatusCode);
+			}
+			echo json_encode([
+				'status' => 'error',
+				'status_code' => $apiStatusCode,
+				'message' => $apiMessage,
+				'msg' => $apiMessage
+			]);
+			exit();
+		} else {
+			if ($redirectUrl === null) {
+				echo $apiMessage;
+				exit();
+			}
+			if ($redirectHttpCode !== null) {
+				header("Location: " . $redirectUrl, true, $redirectHttpCode);
+			} else {
+				header("Location: " . $redirectUrl);
+			}
+			exit();
+		}
+	}
+}
+
 if (!isset($connection)) {
 	$dbConnectionFile = dirname(__DIR__) . '/../dbConfig.php';
 	if (!file_exists($dbConnectionFile)) {
-		exit("Configuration file not found\n{$dbConnectionFile}");
+		isLoginHandleExit($isApiV3, 500, "Configuration file not found\n{$dbConnectionFile}");
 	} else {
 		if (!$connection = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME)) {
-			exit("Database connection failed\n");
+			isLoginHandleExit($isApiV3, 500, "Database connection failed\n");
 		}
 	}
 }
 
 $isMobile = ((isset($redirectToMobileAuth)) ? 'authby=mobile' : '');
+$activeUrlStr = defined('ACTIVE_URL') ? ACTIVE_URL : ($_SERVER['REQUEST_URI'] ?? '');
 
 if (!isset($_COOKIE['user_data'])) {
 	$regType = ((isset($regType)) ? $regType : 'subscriber');
 	// echo "invalid data cookie";
-	header("Location: /logout/?redirect_url=" . ACTIVE_URL . "&{$isMobile}&regType={$regType}");
-	exit();
+	isLoginHandleExit($isApiV3, 401, 'Authentication required / Session expired', "/logout/?redirect_url=" . $activeUrlStr . "&{$isMobile}&regType={$regType}");
 } else {
 
 	$user_salt_key = base64_decode($_COOKIE['user_data']);
@@ -37,20 +71,16 @@ if (!isset($_COOKIE['user_data'])) {
 			if (isset($_COOKIE['device_id'])) {
 				if ($checkSession = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "user_sessions WHERE us_user_id='{$user_id}' AND us_active_device='{$_COOKIE['device_id']}' AND us_site_id{$activeSiteID}")) {
 					if (mysqli_num_rows($checkSession) == 0) {
-						header("Location: /logout/?msg=invalid+session+token+or+expire", true, 301);
-						exit();
+						isLoginHandleExit($isApiV3, 401, 'Invalid session token or expired', "/logout/?msg=invalid+session+token+or+expire", 301);
 					}
 				}
 			} else {
 				// echo "Invalid deviceid";
-				header("Location: /logout/?msg=session_token%20not%20found", true, 301);
-				exit();
+				isLoginHandleExit($isApiV3, 401, 'Session token not found', "/logout/?msg=session_token%20not%20found", 301);
 			}
 
 			if ($user_status != 1 && SITE_APP_ID != 3) {
-
-				header("Location: /verify-account/?email={$encryptEmail}", true, 301);
-				exit();
+				isLoginHandleExit($isApiV3, 403, 'Account verification required', "/verify-account/?email={$encryptEmail}", 301);
 			} else {
 
 				/** Define new constant variable */
@@ -84,10 +114,13 @@ if (!isset($_COOKIE['user_data'])) {
 				/** Define new cookie for logged in user */
 
 				if (!isset($_COOKIE['site_app'])) {
-
-					setcookie('site_app', base64_encode($site_app), time() + 30 * 24 * 60 * 60, '/', SITE_DOMAIN);
-					header("Location: /login/");
-					exit();
+					if ($isApiV3) {
+						isLoginHandleExit($isApiV3, 401, 'Site application session not found');
+					} else {
+						setcookie('site_app', base64_encode($site_app), time() + 30 * 24 * 60 * 60, '/', SITE_DOMAIN);
+						header("Location: /login/");
+						exit();
+					}
 				} else {
 
 					/** Check website status */
@@ -97,15 +130,11 @@ if (!isset($_COOKIE['user_data'])) {
 						if ($site_access_type == 'administrator') {
 
 							/** if user type is Administrator Redirect to website setup page */
-
-							header("Location: /website-setup/?setup_id={$encryptEmail}");
-							exit();
+							isLoginHandleExit($isApiV3, 403, 'Site setup required', "/website-setup/?setup_id={$encryptEmail}");
 						} else {
 
 							/** Show Access Forbidden page to the use */
-
-							header("Location: " . ERROR_403, TRUE, 301);
-							exit();
+							isLoginHandleExit($isApiV3, 403, 'Access forbidden', (defined('ERROR_403') ? ERROR_403 : '/error-403/'), 301);
 						}
 					} else {
 
@@ -136,17 +165,12 @@ if (!isset($_COOKIE['user_data'])) {
 					/** Redirect to complete profile page */
 
 					if ($site_dashboard_version == 1) {
-						if ($site_name == '' && $site_icon == '' && ACTIVE_URL != '/dashboard/setting/?type=configuration') {
-
-							header("Location: /dashboard/setting/?type=configuration", TRUE, 301);
-							exit();
+						if ($site_name == '' && $site_icon == '' && $activeUrlStr != '/dashboard/setting/?type=configuration') {
+							isLoginHandleExit($isApiV3, 403, 'Site configuration incomplete', "/dashboard/setting/?type=configuration", 301);
 						}
 					} else {
-
-						if ($site_name == '' && $site_icon == '' && ACTIVE_URL != '/dashboard/setting/configuration/') {
-
-							header("Location: /dashboard/setting/configuration/", TRUE, 301);
-							exit();
+						if ($site_name == '' && $site_icon == '' && $activeUrlStr != '/dashboard/setting/configuration/') {
+							isLoginHandleExit($isApiV3, 403, 'Site configuration incomplete', "/dashboard/setting/configuration/", 301);
 						}
 					}
 
@@ -158,12 +182,10 @@ if (!isset($_COOKIE['user_data'])) {
 			}
 		} else {
 			// echo "invalid user found";
-			header("Location: /logout/?{$isMobile}");
-			exit();
+			isLoginHandleExit($isApiV3, 401, 'Invalid user credentials', "/logout/?{$isMobile}");
 		}
 	} else {
-
-		echo 'something is wrong while checking user session';
-		exit();
+		isLoginHandleExit($isApiV3, 500, 'Something went wrong while checking user session');
 	}
 }
+

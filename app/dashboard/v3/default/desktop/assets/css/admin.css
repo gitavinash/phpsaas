@@ -7799,6 +7799,32 @@ tr.row-selected td {
   align-items: flex-end !important;
 }
 
+.v3-day-transit-notice {
+  grid-column: 2 / -1 !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 8px 12px !important;
+  background: #f1f5f9 !important;
+  border: 1px dashed #cbd5e1 !important;
+  border-radius: 8px !important;
+  height: 38px !important;
+  min-width: 0 !important;
+}
+
+.v3-transit-pill {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.v3-transit-pill i {
+  color: #0284c7 !important;
+  font-size: 14px !important;
+}
+
 .v3-day-stay-field {
   display: flex !important;
   flex-direction: column !important;
