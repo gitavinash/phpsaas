@@ -110,6 +110,76 @@ function filterTrackingLeadData($data)
     return $filtered;
 }
 
+// Helper to identify standard lead fields from arbitrary JSON key names
+function mapLeadFieldFromKey($key)
+{
+    $norm = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', ' ', (string)$key)));
+    if (empty($norm)) return null;
+
+    // Names
+    if (in_array($norm, ['full name', 'fullname', 'name', 'customer name', 'lead name', 'client name', 'contact name', 'user name', 'username', 'traveller name', 'traveler name', 'person name', 'your name'], true)) {
+        return 'customer_name';
+    }
+    if (in_array($norm, ['first name', 'firstname', 'first', 'fname', 'given name'], true)) {
+        return 'first_name';
+    }
+    if (in_array($norm, ['last name', 'lastname', 'last', 'lname', 'surname', 'family name'], true)) {
+        return 'last_name';
+    }
+    // Mobile
+    if (in_array($norm, ['phone number', 'phonenumber', 'phone', 'mobile number', 'mobilenumber', 'mobile', 'contact number', 'contact no', 'phone no', 'cell', 'cell phone', 'whatsapp number', 'wa number', 'primary phone', 'primary mobile', 'enter your phone number', 'your phone number'], true)) {
+        return 'mobile';
+    }
+    // Alt Mobile
+    if (in_array($norm, ['alternate mobile', 'alt mobile', 'alternate phone', 'alt phone', 'secondary phone', 'secondary mobile', 'emergency contact', 'alternate contact'], true)) {
+        return 'alt_mobile';
+    }
+    // Email
+    if (in_array($norm, ['email', 'email address', 'e mail', 'mail', 'customer email', 'enter your email', 'your email'], true)) {
+        return 'email';
+    }
+    // City / Location
+    if (in_array($norm, ['current city', 'city', 'current location', 'location', 'residence', 'living in', 'from city', 'departure city', 'home town', 'hometown', 'state', 'your city'], true)) {
+        return 'current_location';
+    }
+    // Destination / Tour Package
+    if (in_array($norm, ['destination', 'tour package', 'package', 'subject', 'tour', 'holiday destination', 'travel destination', 'which destination', 'destination city', 'where do you want to go', 'where to go', 'preferred destination'], true) || str_contains($norm, 'destination') || (str_contains($norm, 'trip') && !str_contains($norm, 'date') && !str_contains($norm, 'when'))) {
+        return 'destination';
+    }
+    if (str_contains($norm, 'places to visit') || str_contains($norm, 'places you want to visit')) {
+        return 'destination';
+    }
+    // Date of travel
+    if (in_array($norm, ['date of travel', 'travel date', 'departure date', 'start date', 'trip date', 'travel month', 'tentative date', 'planning to travel', 'travel time'], true) || str_contains($norm, 'when are you planning') || str_contains($norm, 'planning your')) {
+        return 'date_of_travel';
+    }
+    // Duration
+    if (in_array($norm, ['duration', 'duration days', 'number of days', 'days', 'how many days', 'trip duration', 'total days'], true)) {
+        return 'duration_days';
+    }
+    // Adults / Pax
+    if (in_array($norm, ['adults', 'number of adults', 'no of adults', 'pax', 'number of persons', 'how many people', 'how many people are travelling', 'travelers', 'travellers', 'guests', 'passengers', 'group size', 'number of travelers'], true) || str_contains($norm, 'how many people')) {
+        return 'adults';
+    }
+    // Children
+    if (in_array($norm, ['children', 'number of children', 'number of childrens', 'kids', 'child', 'no of children', 'children count'], true)) {
+        return 'children';
+    }
+    // Infants
+    if (in_array($norm, ['infants', 'number of infants', 'baby', 'infant', 'infants count'], true)) {
+        return 'infants';
+    }
+    // Pickup
+    if (in_array($norm, ['pickup location', 'pickup point', 'pickup', 'boarding point', 'boarding city', 'departure point'], true)) {
+        return 'pickup_location';
+    }
+    // Drop
+    if (in_array($norm, ['drop location', 'drop point', 'drop', 'dropping point', 'destination drop'], true)) {
+        return 'drop_location';
+    }
+    return null;
+}
+
 // Parse JSON inquiry message if present
 $extraDetails = [];
 if (!empty($lead['enquiry_message'])) {
@@ -119,15 +189,71 @@ if (!empty($lead['enquiry_message'])) {
     }
 }
 
-// Clean names
+// Auto-map JSON keys for empty core fields without overriding existing values
+$mappedFromJson = [];
+if (!empty($extraDetails) && is_array($extraDetails)) {
+    // 1. Unpack field_data if present (e.g. Facebook Lead Ads form responses)
+    if (!empty($extraDetails['field_data']) && is_array($extraDetails['field_data'])) {
+        foreach ($extraDetails['field_data'] as $fItem) {
+            if (!is_array($fItem) || empty($fItem['name'])) continue;
+            $fName = (string)$fItem['name'];
+            $fVal = '';
+            if (isset($fItem['values']) && is_array($fItem['values'])) {
+                $fVal = trim(implode(', ', $fItem['values']));
+            } elseif (isset($fItem['values'])) {
+                $fVal = trim((string)$fItem['values']);
+            } elseif (isset($fItem['value'])) {
+                $fVal = trim((string)$fItem['value']);
+            }
+            if ($fVal === '') continue;
+            $targetField = mapLeadFieldFromKey($fName);
+            if ($targetField && !isset($mappedFromJson[$targetField])) {
+                $mappedFromJson[$targetField] = $fVal;
+            }
+        }
+    }
+
+    // 2. Map root-level keys
+    foreach ($extraDetails as $jsonKey => $jsonVal) {
+        if (is_array($jsonVal) || is_object($jsonVal)) continue;
+        $strVal = trim((string)$jsonVal);
+        if ($strVal === '') continue;
+
+        $targetField = mapLeadFieldFromKey($jsonKey);
+        if ($targetField && !isset($mappedFromJson[$targetField])) {
+            $mappedFromJson[$targetField] = $strVal;
+        }
+    }
+}
+
+// Clean names — only auto-fill if existing name fields are empty
 $firstName = ucwords(strtolower(trim($lead['enquiry_first_name'] ?? '')));
 $middleName = ucwords(strtolower(trim($lead['enquiry_middle_name'] ?? '')));
 $lastName  = ucwords(strtolower(trim($lead['enquiry_last_name'] ?? '')));
+
+if (empty($firstName) && empty($lastName)) {
+    if (!empty($mappedFromJson['customer_name'])) {
+        $nameParts = preg_split('/\s+/', trim($mappedFromJson['customer_name']), 2);
+        $firstName = ucwords(strtolower($nameParts[0]));
+        $lastName = isset($nameParts[1]) ? ucwords(strtolower($nameParts[1])) : '';
+    } elseif (!empty($mappedFromJson['first_name'])) {
+        $firstName = ucwords(strtolower($mappedFromJson['first_name']));
+        if (!empty($mappedFromJson['last_name'])) {
+            $lastName = ucwords(strtolower($mappedFromJson['last_name']));
+        }
+    }
+}
+
 $fullName  = trim("{$firstName} {$middleName} {$lastName}");
 if (empty($fullName)) $fullName = 'Lead #' . $leadId;
 
-// Format Mobile for WhatsApp
-$cleanMobile = preg_replace('/[^0-9]/', '', $lead['enquiry_mobile'] ?? '');
+// Format Mobile for WhatsApp — auto-fill from mapped JSON only if mobile is empty
+$rawMobile = trim($lead['enquiry_mobile'] ?? '');
+if (empty($rawMobile) && !empty($mappedFromJson['mobile'])) {
+    $rawMobile = $mappedFromJson['mobile'];
+    $lead['enquiry_mobile'] = $rawMobile;
+}
+$cleanMobile = preg_replace('/[^0-9]/', '', $rawMobile);
 $waMobile = '';
 if (!empty($cleanMobile)) {
     if (strlen($cleanMobile) === 10) {
@@ -135,6 +261,11 @@ if (!empty($cleanMobile)) {
     } elseif (strlen($cleanMobile) >= 11) {
         $waMobile = $cleanMobile;
     }
+}
+
+// Email — auto-fill from mapped JSON only if empty
+if (empty($lead['enquiry_email']) && !empty($mappedFromJson['email'])) {
+    $lead['enquiry_email'] = $mappedFromJson['email'];
 }
 
 // 2. Fetch Follow-up & Activity Timeline
@@ -492,7 +623,7 @@ if ($pRes = mysqli_query($connection, $profileQuery)) {
 // Format Dates
 $travelDateRaw = !empty($enquiryProfile['date_of_travel']) && $enquiryProfile['date_of_travel'] !== '0000-00-00'
     ? $enquiryProfile['date_of_travel']
-    : ($extraDetails['date_of_travel'] ?? ($extraDetails['travel_date'] ?? ''));
+    : ($extraDetails['date_of_travel'] ?? ($extraDetails['travel_date'] ?? ($mappedFromJson['date_of_travel'] ?? '')));
 
 $travelDate = (!empty($travelDateRaw) && strtotime($travelDateRaw) && date('Y', strtotime($travelDateRaw)) > 1970)
     ? date('d M Y', strtotime($travelDateRaw))
@@ -501,22 +632,54 @@ $travelDate = (!empty($travelDateRaw) && strtotime($travelDateRaw) && date('Y', 
 $durationDays = isset($enquiryProfile['number_of_days']) && (int)$enquiryProfile['number_of_days'] > 0
     ? (int)$enquiryProfile['number_of_days']
     : (int)($extraDetails['number_of_days'] ?? 0);
+if ($durationDays <= 0 && !empty($mappedFromJson['duration_days'])) {
+    if (preg_match('/(\d+)/', $mappedFromJson['duration_days'], $mDur)) {
+        $durationDays = (int)$mDur[1];
+    }
+}
 
 $adults = isset($enquiryProfile['number_of_adults']) && (int)$enquiryProfile['number_of_adults'] > 0
     ? (int)$enquiryProfile['number_of_adults']
-    : (isset($extraDetails['number_of_adults']) && (int)$extraDetails['number_of_adults'] > 0 ? (int)$extraDetails['number_of_adults'] : 2);
+    : (isset($extraDetails['number_of_adults']) && (int)$extraDetails['number_of_adults'] > 0 ? (int)$extraDetails['number_of_adults'] : 0);
+if ($adults <= 0 && !empty($mappedFromJson['adults'])) {
+    if (preg_match('/(\d+)/', $mappedFromJson['adults'], $mAd)) {
+        $adults = (int)$mAd[1];
+    }
+}
+if ($adults <= 0) $adults = 2;
 
 $children = isset($enquiryProfile['number_of_childrens'])
     ? (int)$enquiryProfile['number_of_childrens']
     : (int)($extraDetails['number_of_childrens'] ?? ($extraDetails['number_of_children'] ?? 0));
+if ($children <= 0 && !empty($mappedFromJson['children'])) {
+    if (preg_match('/(\d+)/', $mappedFromJson['children'], $mCh)) {
+        $children = (int)$mCh[1];
+    }
+}
 
 $infants = isset($enquiryProfile['number_of_infants'])
     ? (int)$enquiryProfile['number_of_infants']
     : (int)($extraDetails['number_of_infants'] ?? 0);
+if ($infants <= 0 && !empty($mappedFromJson['infants'])) {
+    if (preg_match('/(\d+)/', $mappedFromJson['infants'], $mInf)) {
+        $infants = (int)$mInf[1];
+    }
+}
 
 $currentLocation = trim($enquiryProfile['current_location'] ?? ($extraDetails['current_location'] ?? ($lead['enquiry_city'] ?? '')));
+if (empty($currentLocation) && !empty($mappedFromJson['current_location'])) {
+    $currentLocation = $mappedFromJson['current_location'];
+}
+
 $pickupLocation = trim($enquiryProfile['pickup_location'] ?? ($extraDetails['pickup_location'] ?? ''));
+if (empty($pickupLocation) && !empty($mappedFromJson['pickup_location'])) {
+    $pickupLocation = $mappedFromJson['pickup_location'];
+}
+
 $dropLocation = trim($enquiryProfile['drop_location'] ?? ($extraDetails['drop_location'] ?? ''));
+if (empty($dropLocation) && !empty($mappedFromJson['drop_location'])) {
+    $dropLocation = $mappedFromJson['drop_location'];
+}
 $requirements = trim($enquiryProfile['requirements'] ?? ($extraDetails['requirements'] ?? ($lead['enquiry_message'] ?? '')));
 if (!empty($requirements)) {
     $parsedReq = json_decode($requirements, true);

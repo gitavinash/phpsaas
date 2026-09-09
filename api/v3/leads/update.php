@@ -131,6 +131,21 @@ $emailEsc = mysqli_real_escape_string($connection, $email);
 $mobileEsc = mysqli_real_escape_string($connection, $cleanMobile);
 $packageEsc = mysqli_real_escape_string($connection, $package);
 
+// Extract removed keys (keys mapped to lead fields that must be deleted from JSON)
+$removedKeys = [];
+if (!empty($inputData['removed_keys'])) {
+    if (is_array($inputData['removed_keys'])) {
+        $removedKeys = $inputData['removed_keys'];
+    } else {
+        $decoded = json_decode($inputData['removed_keys'], true);
+        if (is_array($decoded)) {
+            $removedKeys = $decoded;
+        } else {
+            $removedKeys = array_filter(array_map('trim', explode(',', $inputData['removed_keys'])));
+        }
+    }
+}
+
 // Preserve and update JSON in enquiry_message
 $existingMsg = [];
 $msgRes = mysqli_query($connection, "SELECT enquiry_message FROM {$tblPrefix}enquiry WHERE enquiry_id = {$realLeadId} LIMIT 1");
@@ -140,6 +155,71 @@ if ($msgRes && $msgRow = mysqli_fetch_assoc($msgRes)) {
         $existingMsg = $parsed;
     }
 }
+
+// Purge mapped keys from JSON
+if (!empty($removedKeys) && is_array($existingMsg)) {
+    foreach ($removedKeys as $rk) {
+        $rkStr = (string)$rk;
+        unset($existingMsg[$rkStr]);
+        foreach ($existingMsg as $exK => $exV) {
+            if (strcasecmp(trim((string)$exK), trim($rkStr)) === 0) {
+                unset($existingMsg[$exK]);
+            }
+        }
+        if (isset($existingMsg['requirements']) && is_array($existingMsg['requirements'])) {
+            unset($existingMsg['requirements'][$rkStr]);
+        }
+    }
+    // Also purge from field_data if present (Facebook Lead Ads)
+    if (!empty($existingMsg['field_data']) && is_array($existingMsg['field_data'])) {
+        $existingMsg['field_data'] = array_values(array_filter($existingMsg['field_data'], function ($item) use ($removedKeys) {
+            if (!is_array($item) || empty($item['name'])) return true;
+            $itemName = trim((string)$item['name']);
+            foreach ($removedKeys as $rk) {
+                if (strcasecmp($itemName, trim((string)$rk)) === 0) {
+                    return false;
+                }
+            }
+            return true;
+        }));
+        if (empty($existingMsg['field_data'])) {
+            unset($existingMsg['field_data']);
+        }
+    }
+}
+
+// If requirements is JSON, ensure removed keys are pruned from it too
+if (!empty($requirements)) {
+    $parsedReq = json_decode($requirements, true);
+    if (is_array($parsedReq)) {
+        foreach ($removedKeys as $rk) {
+            $rkStr = (string)$rk;
+            unset($parsedReq[$rkStr]);
+            foreach ($parsedReq as $pK => $pV) {
+                if (strcasecmp(trim((string)$pK), trim($rkStr)) === 0) {
+                    unset($parsedReq[$pK]);
+                }
+            }
+        }
+        if (!empty($parsedReq['field_data']) && is_array($parsedReq['field_data'])) {
+            $parsedReq['field_data'] = array_values(array_filter($parsedReq['field_data'], function ($item) use ($removedKeys) {
+                if (!is_array($item) || empty($item['name'])) return true;
+                $itemName = trim((string)$item['name']);
+                foreach ($removedKeys as $rk) {
+                    if (strcasecmp($itemName, trim((string)$rk)) === 0) {
+                        return false;
+                    }
+                }
+                return true;
+            }));
+            if (empty($parsedReq['field_data'])) {
+                unset($parsedReq['field_data']);
+            }
+        }
+        $requirements = !empty($parsedReq) ? json_encode($parsedReq) : '';
+    }
+}
+
 $existingMsg['destination'] = $destination;
 $existingMsg['date_of_travel'] = $dateOfTravel;
 $existingMsg['number_of_days'] = $durationDays;

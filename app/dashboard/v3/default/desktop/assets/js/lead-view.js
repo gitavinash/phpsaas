@@ -69,9 +69,12 @@
     },
 
     playNotificationSound: function () {
-      console.log("[Follow-Up Reminder] 🔊 Playing notification sound for assigned user...");
+      console.log(
+        "[Follow-Up Reminder] 🔊 Playing notification sound for assigned user...",
+      );
       try {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        const AudioContextClass =
+          window.AudioContext || window.webkitAudioContext;
         if (AudioContextClass) {
           const audioCtx = new AudioContextClass();
           const playAudioChime = function () {
@@ -79,19 +82,27 @@
               const osc = audioCtx.createOscillator();
               const gain = audioCtx.createGain();
               osc.type = "sine";
-              osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+              osc.frequency.setValueAtTime(
+                freq,
+                audioCtx.currentTime + startTime,
+              );
               gain.gain.setValueAtTime(0.35, audioCtx.currentTime + startTime);
-              gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + startTime + duration);
+              gain.gain.exponentialRampToValueAtTime(
+                0.0001,
+                audioCtx.currentTime + startTime + duration,
+              );
               osc.connect(gain);
               gain.connect(audioCtx.destination);
               osc.start(audioCtx.currentTime + startTime);
               osc.stop(audioCtx.currentTime + startTime + duration);
             };
             // 3-tone bright chime
-            playTone(880.00, 0, 0.18);
+            playTone(880.0, 0, 0.18);
             playTone(1174.66, 0.12, 0.18);
             playTone(1479.98, 0.24, 0.35);
-            console.log("[Follow-Up Reminder] 🔔 Notification chime successfully played.");
+            console.log(
+              "[Follow-Up Reminder] 🔔 Notification chime successfully played.",
+            );
           };
 
           if (audioCtx.state === "suspended") {
@@ -105,7 +116,12 @@
       }
     },
 
-    scheduleClientReminder: function (followupTimeStr, customerName, agentId, leadId) {
+    scheduleClientReminder: function (
+      followupTimeStr,
+      customerName,
+      agentId,
+      leadId,
+    ) {
       // Global follow-up reminders are coordinated by app.js across the dashboard
       // to avoid duplicate notification banners, popups, and audio triggers.
     },
@@ -242,7 +258,7 @@
         "btn_submit",
         "submit",
         "submit_button",
-        "action"
+        "action",
       ];
       if (exactTracking.indexOf(k) !== -1) return true;
       if (k.startsWith("utm_")) return true;
@@ -338,6 +354,37 @@
       return null;
     },
 
+    cleanLeadStringValue: function (val) {
+      if (val === null || val === undefined) return "";
+      let str = "";
+      if (typeof val === "object") {
+        if (Array.isArray(val)) {
+          str = val
+            .map((x) => (typeof x === "object" ? JSON.stringify(x) : String(x)))
+            .join(", ");
+        } else {
+          str = JSON.stringify(val);
+        }
+      } else {
+        str = String(val);
+      }
+      str = str.trim();
+      // Fix unicode @ artifact e.g. u0040 or \u0040
+      str = str.replace(/\\u0040/gi, "@").replace(/\bu0040/gi, "@");
+      // Fix unicode dash artifacts
+      str = str.replace(/\\u2013/gi, "–").replace(/\bu2013/gi, "–");
+      str = str.replace(/\\u2014/gi, "—").replace(/\bu2014/gi, "—");
+      // If it's a JSON quoted string like "\"Md Koushar Ali\""
+      if (str.startsWith('"') && str.endsWith('"') && str.length >= 2) {
+        try {
+          str = JSON.parse(str);
+        } catch (e) {
+          str = str.slice(1, -1);
+        }
+      }
+      return String(str).trim();
+    },
+
     formatFieldLabel: function (key) {
       if (!key && key !== 0) return "";
       const s = String(key)
@@ -352,6 +399,7 @@
     },
 
     formatFieldValue: function (val) {
+      const self = this;
       if (val === null || val === undefined || val === "") {
         return '<span class="v3-req-val-empty">-</span>';
       }
@@ -374,7 +422,7 @@
           if (isAllPrimitive) {
             return val
               .map(function (x) {
-                return `<span class="v3-req-badge-pill">${escapeHtml(String(x))}</span>`;
+                return `<span class="v3-req-badge-pill">${escapeHtml(self.cleanLeadStringValue(x))}</span>`;
               })
               .join(" ");
           }
@@ -382,7 +430,7 @@
         }
         return `<pre class="v3-req-val-json"><code>${escapeHtml(JSON.stringify(val, null, 2))}</code></pre>`;
       }
-      const str = String(val).trim();
+      const str = self.cleanLeadStringValue(val);
       if (str === "#" || str === "") {
         return '<span class="v3-req-val-empty">-</span>';
       }
@@ -461,10 +509,18 @@
         });
 
         if (allKeys.length > 0) {
-          const thead = `<tr>${allKeys.map(function (k) { return `<th>${escapeHtml(self.formatFieldLabel(k))}</th>`; }).join("")}</tr>`;
+          const thead = `<tr>${allKeys
+            .map(function (k) {
+              return `<th>${escapeHtml(self.formatFieldLabel(k))}</th>`;
+            })
+            .join("")}</tr>`;
           const tbody = parsed
             .map(function (item) {
-              return `<tr>${allKeys.map(function (k) { return `<td>${self.formatFieldValue(item[k])}</td>`; }).join("")}</tr>`;
+              return `<tr>${allKeys
+                .map(function (k) {
+                  return `<td>${self.formatFieldValue(item[k])}</td>`;
+                })
+                .join("")}</tr>`;
             })
             .join("");
           return `
@@ -541,6 +597,881 @@
       return `<div class="v3-requirements-box">${escapeHtml(String(parsed))}</div>`;
     },
 
+    matchJsonKeyToLeadField: function (key) {
+      if (!key) return null;
+      const norm = String(key)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+      if (!norm) return null;
+
+      // 1. Full Customer Name
+      const nameExact = [
+        "full name",
+        "fullname",
+        "name",
+        "customer name",
+        "lead name",
+        "client name",
+        "contact name",
+        "user name",
+        "username",
+        "traveller name",
+        "traveler name",
+        "person name",
+        "your name",
+      ];
+      if (nameExact.includes(norm)) {
+        return {
+          field: "customer_name",
+          label: "Customer Full Name (First + Last)",
+        };
+      }
+      // 2. First Name
+      const fNameExact = [
+        "first name",
+        "firstname",
+        "first",
+        "fname",
+        "given name",
+      ];
+      if (fNameExact.includes(norm)) {
+        return { field: "first_name", label: "First Name" };
+      }
+      // 3. Last Name
+      const lNameExact = [
+        "last name",
+        "lastname",
+        "last",
+        "lname",
+        "surname",
+        "family name",
+      ];
+      if (lNameExact.includes(norm)) {
+        return { field: "last_name", label: "Last Name" };
+      }
+      // 4. Primary Mobile / Phone
+      const mobileExact = [
+        "phone number",
+        "phonenumber",
+        "phone",
+        "mobile number",
+        "mobilenumber",
+        "mobile",
+        "contact number",
+        "contact no",
+        "phone no",
+        "cell",
+        "cell phone",
+        "whatsapp number",
+        "wa number",
+        "primary phone",
+        "primary mobile",
+        "enter your phone number",
+        "your phone number",
+      ];
+      if (
+        mobileExact.includes(norm) ||
+        (norm.includes("phone") && !norm.includes("alt"))
+      ) {
+        return { field: "mobile", label: "Primary Mobile" };
+      }
+      // 5. Alternate Mobile
+      const altMobileExact = [
+        "alternate mobile",
+        "alt mobile",
+        "alternate phone",
+        "alt phone",
+        "secondary phone",
+        "secondary mobile",
+        "emergency contact",
+        "alternate contact",
+      ];
+      if (
+        altMobileExact.includes(norm) ||
+        norm.includes("alternate") ||
+        norm.includes("alt mobile")
+      ) {
+        return { field: "alt_mobile", label: "Alternate Mobile" };
+      }
+      // 6. Email
+      const emailExact = [
+        "email",
+        "email address",
+        "e mail",
+        "mail",
+        "customer email",
+        "enter your email",
+        "your email",
+      ];
+      if (emailExact.includes(norm) || norm.includes("email")) {
+        return { field: "email", label: "Email Address" };
+      }
+      // 7. City / Current Location
+      const cityExact = [
+        "current city",
+        "city",
+        "current location",
+        "location",
+        "residence",
+        "living in",
+        "from city",
+        "departure city",
+        "home town",
+        "hometown",
+        "state",
+        "your city",
+      ];
+      if (
+        cityExact.includes(norm) ||
+        norm.includes("current city") ||
+        norm.includes("current location")
+      ) {
+        return { field: "current_location", label: "Current City / Location" };
+      }
+      // 8. Destination / Tour Package
+      const destExact = [
+        "destination",
+        "tour package",
+        "package",
+        "subject",
+        "tour",
+        "holiday destination",
+        "travel destination",
+        "which destination",
+        "destination city",
+        "where do you want to go",
+        "where to go",
+        "preferred destination",
+      ];
+      if (
+        destExact.includes(norm) ||
+        norm.includes("destination") ||
+        (norm.includes("trip") &&
+          !norm.includes("when") &&
+          !norm.includes("date")) ||
+        norm.includes("places to visit") ||
+        norm.includes("places you want to visit")
+      ) {
+        return { field: "destination", label: "Tour Package / Destination" };
+      }
+      // 9. Date of Travel
+      const dateExact = [
+        "date of travel",
+        "travel date",
+        "departure date",
+        "start date",
+        "trip date",
+        "travel month",
+        "tentative date",
+        "planning to travel",
+        "travel time",
+      ];
+      if (
+        dateExact.includes(norm) ||
+        norm.includes("when are you planning") ||
+        norm.includes("planning your")
+      ) {
+        return { field: "date_of_travel", label: "Date of Travel" };
+      }
+      // 10. Duration
+      const durExact = [
+        "duration",
+        "duration days",
+        "number of days",
+        "days",
+        "how many days",
+        "trip duration",
+        "total days",
+      ];
+      if (
+        durExact.includes(norm) ||
+        norm.includes("duration") ||
+        norm.includes("how many days")
+      ) {
+        return { field: "duration_days", label: "Duration (Days)" };
+      }
+      // 11. Adults / Pax
+      const adultExact = [
+        "adults",
+        "number of adults",
+        "no of adults",
+        "pax",
+        "number of persons",
+        "how many people",
+        "how many people are travelling",
+        "travelers",
+        "travellers",
+        "guests",
+        "passengers",
+        "group size",
+        "number of travelers",
+      ];
+      if (
+        adultExact.includes(norm) ||
+        norm.includes("how many people") ||
+        norm.includes("adult")
+      ) {
+        return { field: "adults", label: "Adults / Pax" };
+      }
+      // 12. Children
+      const childExact = [
+        "children",
+        "number of children",
+        "number of childrens",
+        "kids",
+        "child",
+        "no of children",
+        "children count",
+      ];
+      if (
+        childExact.includes(norm) ||
+        norm.includes("child") ||
+        norm.includes("kid")
+      ) {
+        return { field: "children", label: "Children" };
+      }
+      // 13. Infants
+      const infantExact = [
+        "infants",
+        "number of infants",
+        "baby",
+        "infant",
+        "infants count",
+      ];
+      if (
+        infantExact.includes(norm) ||
+        norm.includes("infant") ||
+        norm.includes("baby")
+      ) {
+        return { field: "infants", label: "Infants" };
+      }
+      // 14. Pickup Location
+      const pickupExact = [
+        "pickup location",
+        "pickup point",
+        "pickup",
+        "boarding point",
+        "boarding city",
+        "departure point",
+      ];
+      if (pickupExact.includes(norm) || norm.includes("pickup")) {
+        return { field: "pickup_location", label: "Pickup Location" };
+      }
+      // 15. Drop Location
+      const dropExact = [
+        "drop location",
+        "drop point",
+        "drop",
+        "dropping point",
+        "destination drop",
+      ];
+      if (
+        dropExact.includes(norm) ||
+        norm.includes("drop point") ||
+        norm.includes("drop location")
+      ) {
+        return { field: "drop_location", label: "Drop Location" };
+      }
+
+      return null;
+    },
+
+    autoFillFieldIfEmpty: function (field, val) {
+      if (!val) return false;
+      const strVal = String(val).trim();
+      if (!strVal) return false;
+
+      switch (field) {
+        case "customer_name": {
+          const $f = $("#editLeadFirstName");
+          const $l = $("#editLeadLastName");
+          if (!$f.val().trim() && !$l.val().trim()) {
+            const parts = strVal.split(/\s+/);
+            $f.val(parts[0] || "");
+            $l.val(parts.slice(1).join(" ") || "");
+            return true;
+          }
+          return false;
+        }
+        case "first_name": {
+          const $f = $("#editLeadFirstName");
+          if (!$f.val().trim()) {
+            $f.val(strVal);
+            return true;
+          }
+          return false;
+        }
+        case "last_name": {
+          const $l = $("#editLeadLastName");
+          if (!$l.val().trim()) {
+            $l.val(strVal);
+            return true;
+          }
+          return false;
+        }
+        case "mobile": {
+          const $m = $("#editLeadMobile");
+          if (!$m.val().trim()) {
+            const clean = strVal.replace(/[^0-9+]/g, "");
+            $m.val(clean || strVal);
+            return true;
+          }
+          return false;
+        }
+        case "alt_mobile": {
+          const $am = $("#editLeadAltMobile");
+          if (!$am.val().trim()) {
+            const clean = strVal.replace(/[^0-9+]/g, "");
+            $am.val(clean || strVal);
+            return true;
+          }
+          return false;
+        }
+        case "email": {
+          const $e = $("#editLeadEmail");
+          if (!$e.val().trim()) {
+            const clean = strVal.replace(/[\s\u200B-\u200D\uFEFF]/g, "");
+            $e.val(clean);
+            return true;
+          }
+          return false;
+        }
+        case "current_location": {
+          const $loc = $("#editLeadCurrentLocation");
+          if (!$loc.val()) {
+            $loc
+              .append(new Option(strVal, strVal, true, true))
+              .trigger("change");
+            return true;
+          }
+          return false;
+        }
+        case "destination": {
+          const $pkg = $("#editLeadPackage");
+          if (!$pkg.val()) {
+            let dest = strVal;
+            const matchCity = strVal.match(
+              /\b(himachal|kashmir|kerala|goa|dubai|bali|thailand|singapore|maldives|andaman|rajasthan|ladakh|manali|shimla|ooty|sikkim)\b/i,
+            );
+            if (matchCity) {
+              dest =
+                matchCity[0].charAt(0).toUpperCase() +
+                matchCity[0].slice(1).toLowerCase();
+            }
+            $pkg.append(new Option(dest, dest, true, true)).trigger("change");
+            if (!$("#editLeadSubject").val().trim()) {
+              $("#editLeadSubject").val(dest);
+            }
+            return true;
+          }
+          return false;
+        }
+        case "date_of_travel": {
+          const $d = $("#editLeadTravelDate");
+          if (!$d.val()) {
+            if (
+              typeof moment !== "undefined" &&
+              moment(
+                strVal,
+                ["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY", "MM/DD/YYYY"],
+                true,
+              ).isValid()
+            ) {
+              $d.val(moment(strVal).format("YYYY-MM-DD"));
+              return true;
+            }
+          }
+          return false;
+        }
+        case "duration_days": {
+          const $dur = $("#editLeadDuration");
+          if (parseInt($dur.val(), 10) <= 0) {
+            const m = strVal.match(/\d+/);
+            if (m) {
+              $dur.val(parseInt(m[0], 10));
+              return true;
+            }
+          }
+          return false;
+        }
+        case "adults": {
+          const $ad = $("#editLeadAdults");
+          if (parseInt($ad.val(), 10) <= 1) {
+            const m = strVal.match(/\d+/);
+            if (m) {
+              $ad.val(parseInt(m[0], 10));
+              return true;
+            }
+          }
+          return false;
+        }
+        case "children": {
+          const $ch = $("#editLeadChildren");
+          if (parseInt($ch.val(), 10) <= 0) {
+            const m = strVal.match(/\d+/);
+            if (m) {
+              $ch.val(parseInt(m[0], 10));
+              return true;
+            }
+          }
+          return false;
+        }
+        case "infants": {
+          const $inf = $("#editLeadInfants");
+          if (parseInt($inf.val(), 10) <= 0) {
+            const m = strVal.match(/\d+/);
+            if (m) {
+              $inf.val(parseInt(m[0], 10));
+              return true;
+            }
+          }
+          return false;
+        }
+        case "pickup_location": {
+          const $p = $("#editLeadPickup");
+          if (!$p.val()) {
+            $p.append(new Option(strVal, strVal, true, true)).trigger("change");
+            return true;
+          }
+          return false;
+        }
+        case "drop_location": {
+          const $dr = $("#editLeadDrop");
+          if (!$dr.val()) {
+            $dr
+              .append(new Option(strVal, strVal, true, true))
+              .trigger("change");
+            return true;
+          }
+          return false;
+        }
+        default:
+          return false;
+      }
+    },
+
+    applyMappedValueToField: function (field, val) {
+      if (!val) return;
+      const strVal = String(val).trim();
+      if (!strVal) return;
+
+      switch (field) {
+        case "customer_name": {
+          const parts = strVal.split(/\s+/);
+          $("#editLeadFirstName").val(parts[0] || "");
+          $("#editLeadLastName").val(parts.slice(1).join(" ") || "");
+          break;
+        }
+        case "first_name": {
+          $("#editLeadFirstName").val(strVal);
+          break;
+        }
+        case "last_name": {
+          $("#editLeadLastName").val(strVal);
+          break;
+        }
+        case "mobile": {
+          const clean = strVal.replace(/[^0-9+]/g, "");
+          $("#editLeadMobile").val(clean || strVal);
+          break;
+        }
+        case "alt_mobile": {
+          const clean = strVal.replace(/[^0-9+]/g, "");
+          $("#editLeadAltMobile").val(clean || strVal);
+          break;
+        }
+        case "email": {
+          const clean = strVal.replace(/[\s\u200B-\u200D\uFEFF]/g, "");
+          $("#editLeadEmail").val(clean);
+          break;
+        }
+        case "current_location": {
+          $("#editLeadCurrentLocation")
+            .empty()
+            .append(new Option(strVal, strVal, true, true))
+            .trigger("change");
+          break;
+        }
+        case "destination": {
+          let dest = strVal;
+          const matchCity = strVal.match(
+            /\b(himachal|kashmir|kerala|goa|dubai|bali|thailand|singapore|maldives|andaman|rajasthan|ladakh|manali|shimla|ooty|sikkim)\b/i,
+          );
+          if (matchCity) {
+            dest =
+              matchCity[0].charAt(0).toUpperCase() +
+              matchCity[0].slice(1).toLowerCase();
+          }
+          $("#editLeadPackage")
+            .empty()
+            .append(new Option(dest, dest, true, true))
+            .trigger("change");
+          $("#editLeadSubject").val(dest);
+          break;
+        }
+        case "date_of_travel": {
+          if (
+            typeof moment !== "undefined" &&
+            moment(
+              strVal,
+              ["YYYY-MM-DD", "DD-MM-YYYY", "DD/MM/YYYY", "MM/DD/YYYY"],
+              true,
+            ).isValid()
+          ) {
+            $("#editLeadTravelDate").val(moment(strVal).format("YYYY-MM-DD"));
+          } else {
+            $("#editLeadTravelDate").val(strVal);
+          }
+          break;
+        }
+        case "duration_days": {
+          const m = strVal.match(/\d+/);
+          if (m) $("#editLeadDuration").val(parseInt(m[0], 10));
+          break;
+        }
+        case "adults": {
+          const m = strVal.match(/\d+/);
+          if (m) $("#editLeadAdults").val(parseInt(m[0], 10));
+          break;
+        }
+        case "children": {
+          const m = strVal.match(/\d+/);
+          if (m) $("#editLeadChildren").val(parseInt(m[0], 10));
+          break;
+        }
+        case "infants": {
+          const m = strVal.match(/\d+/);
+          if (m) $("#editLeadInfants").val(parseInt(m[0], 10));
+          break;
+        }
+        case "pickup_location": {
+          $("#editLeadPickup")
+            .empty()
+            .append(new Option(strVal, strVal, true, true))
+            .trigger("change");
+          break;
+        }
+        case "drop_location": {
+          $("#editLeadDrop")
+            .empty()
+            .append(new Option(strVal, strVal, true, true))
+            .trigger("change");
+          break;
+        }
+      }
+    },
+
+    buildReqMapRowHtml: function (key, val, selectedField, isFromFieldData) {
+      const self = this;
+      const strKey = String(key || "");
+      const cleanVal = self.cleanLeadStringValue(
+        typeof val === "object" && val !== null
+          ? Array.isArray(val)
+            ? val.join(", ")
+            : JSON.stringify(val)
+          : String(val || ""),
+      );
+      const field = selectedField || "do_not_map";
+      const fromFd = isFromFieldData ? "1" : "0";
+
+      const options = [
+        { val: "do_not_map", text: "— Keep in Notes (Do not map) —" },
+        { val: "customer_name", text: "Customer Full Name (First + Last)" },
+        { val: "first_name", text: "First Name" },
+        { val: "last_name", text: "Last Name" },
+        { val: "mobile", text: "Primary Mobile" },
+        { val: "alt_mobile", text: "Alternate Mobile" },
+        { val: "email", text: "Email Address" },
+        { val: "current_location", text: "Current City / Location" },
+        { val: "destination", text: "Tour Package / Destination" },
+        { val: "date_of_travel", text: "Date of Travel" },
+        { val: "duration_days", text: "Duration (Days)" },
+        { val: "adults", text: "Adults / Pax" },
+        { val: "children", text: "Children" },
+        { val: "infants", text: "Infants" },
+        { val: "pickup_location", text: "Pickup Location" },
+        { val: "drop_location", text: "Drop Location" },
+      ];
+
+      const optHtml = options
+        .map(function (opt) {
+          const isSel = opt.val === field ? "selected" : "";
+          return `<option value="${opt.val}" ${isSel}>${opt.text}</option>`;
+        })
+        .join("");
+
+      let statusBadge = "";
+      if (field === "do_not_map") {
+        statusBadge = `<span class="v3-mapping-status-pill unmapped"><i class="fi fi-rr-document"></i> Retained in JSON</span>`;
+      } else {
+        statusBadge = `<span class="v3-mapping-status-pill mapped"><i class="fi fi-rr-check"></i> Maps to Field</span>`;
+      }
+
+      return `
+        <div class="v3-req-map-row" data-json-key="${escapeHtml(strKey)}" data-from-field-data="${fromFd}">
+          <div class="v3-req-map-td col-key">
+            <span class="v3-req-key-badge">${escapeHtml(self.formatFieldLabel(strKey))}</span>
+            <input type="hidden" class="v3-req-key-input" value="${escapeHtml(strKey)}">
+            <input type="hidden" class="v3-req-from-field-data" value="${fromFd}">
+          </div>
+          <div class="v3-req-map-td col-val">
+            <input type="text" class="v3-req-val-input v3-modal-input" value="${escapeHtml(cleanVal)}" placeholder="Value...">
+          </div>
+          <div class="v3-req-map-td col-map">
+            <select class="v3-req-map-select v3-modal-select">
+              ${optHtml}
+            </select>
+            <div class="v3-req-map-status-wrap">
+              ${statusBadge}
+            </div>
+          </div>
+          <div class="v3-req-map-td col-act">
+            <button type="button" class="btn-remove-req-row" title="Delete Note Row">
+              <i class="fi fi-rr-trash"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    },
+
+    buildCustomReqRowHtml: function () {
+      const options = [
+        { val: "do_not_map", text: "— Keep in Notes (Do not map) —" },
+        { val: "customer_name", text: "Customer Full Name (First + Last)" },
+        { val: "first_name", text: "First Name" },
+        { val: "last_name", text: "Last Name" },
+        { val: "mobile", text: "Primary Mobile" },
+        { val: "alt_mobile", text: "Alternate Mobile" },
+        { val: "email", text: "Email Address" },
+        { val: "current_location", text: "Current City / Location" },
+        { val: "destination", text: "Tour Package / Destination" },
+        { val: "date_of_travel", text: "Date of Travel" },
+        { val: "duration_days", text: "Duration (Days)" },
+        { val: "adults", text: "Adults / Pax" },
+        { val: "children", text: "Children" },
+        { val: "infants", text: "Infants" },
+        { val: "pickup_location", text: "Pickup Location" },
+        { val: "drop_location", text: "Drop Location" },
+      ];
+
+      const optHtml = options
+        .map(function (opt) {
+          return `<option value="${opt.val}">${opt.text}</option>`;
+        })
+        .join("");
+
+      return `
+        <div class="v3-req-map-row is-custom-row" data-from-field-data="0">
+          <div class="v3-req-map-td col-key">
+            <input type="text" class="v3-req-key-input v3-modal-input" placeholder="Field / Note Name...">
+            <input type="hidden" class="v3-req-from-field-data" value="0">
+          </div>
+          <div class="v3-req-map-td col-val">
+            <input type="text" class="v3-req-val-input v3-modal-input" placeholder="Value / Requirement...">
+          </div>
+          <div class="v3-req-map-td col-map">
+            <select class="v3-req-map-select v3-modal-select">
+              ${optHtml}
+            </select>
+            <div class="v3-req-map-status-wrap">
+              <span class="v3-mapping-status-pill unmapped"><i class="fi fi-rr-document"></i> Retained in JSON</span>
+            </div>
+          </div>
+          <div class="v3-req-map-td col-act">
+            <button type="button" class="btn-remove-req-row" title="Delete Note Row">
+              <i class="fi fi-rr-trash"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    },
+
+    renderModalRequirementsTable: function (parsedData, rawText) {
+      const self = this;
+      const $container = $("#editLeadRequirementsTabularWrap");
+      if (!$container.length) return;
+
+      let entries = [];
+      if (parsedData && typeof parsedData === "object") {
+        // 1. Unpack field_data array if present (e.g. Facebook Lead Ads)
+        if (parsedData.field_data && Array.isArray(parsedData.field_data)) {
+          parsedData.field_data.forEach(function (item) {
+            if (!item) return;
+            const k = item.name || "Field";
+            let v = "";
+            if (Array.isArray(item.values)) {
+              v = item.values.join(", ");
+            } else if (item.values !== null && item.values !== undefined) {
+              v = String(item.values);
+            } else if (item.value !== null && item.value !== undefined) {
+              v = String(item.value);
+            }
+            entries.push({
+              key: k,
+              value: self.cleanLeadStringValue(v),
+              fromFieldData: true,
+            });
+          });
+
+          // Also unpack any top-level metadata keys (e.g. inbox_url, created_time, ad_name)
+          Object.keys(parsedData).forEach(function (k) {
+            if (k === "field_data") return;
+            const val = parsedData[k];
+            if (val !== null && val !== undefined && val !== "") {
+              entries.push({
+                key: k,
+                value:
+                  typeof val === "object"
+                    ? JSON.stringify(val)
+                    : self.cleanLeadStringValue(val),
+                fromFieldData: false,
+              });
+            }
+          });
+        } else if (Array.isArray(parsedData)) {
+          // Check if it's an array of { name, values/value }
+          const hasNamedItems = parsedData.some(function (it) {
+            return (
+              it &&
+              typeof it === "object" &&
+              it.name !== undefined &&
+              (it.values !== undefined || it.value !== undefined)
+            );
+          });
+          if (hasNamedItems) {
+            parsedData.forEach(function (item) {
+              if (!item) return;
+              if (item.name !== undefined) {
+                let v = "";
+                if (Array.isArray(item.values)) {
+                  v = item.values.join(", ");
+                } else if (item.values !== null && item.values !== undefined) {
+                  v = String(item.values);
+                } else if (item.value !== null && item.value !== undefined) {
+                  v = String(item.value);
+                }
+                entries.push({
+                  key: item.name,
+                  value: self.cleanLeadStringValue(v),
+                  fromFieldData: true,
+                });
+              } else if (typeof item === "object") {
+                Object.keys(item).forEach(function (k) {
+                  entries.push({
+                    key: k,
+                    value: self.cleanLeadStringValue(item[k]),
+                    fromFieldData: false,
+                  });
+                });
+              }
+            });
+          } else {
+            parsedData.forEach(function (item, idx) {
+              if (item && typeof item === "object") {
+                Object.keys(item).forEach(function (k) {
+                  entries.push({
+                    key: k,
+                    value: self.cleanLeadStringValue(item[k]),
+                    fromFieldData: false,
+                  });
+                });
+              } else if (item !== null && item !== undefined) {
+                entries.push({
+                  key: `Item #${idx + 1}`,
+                  value: self.cleanLeadStringValue(item),
+                  fromFieldData: false,
+                });
+              }
+            });
+          }
+        } else {
+          // Standard flat object
+          Object.keys(parsedData).forEach(function (k) {
+            const val = parsedData[k];
+            entries.push({
+              key: k,
+              value:
+                typeof val === "object"
+                  ? JSON.stringify(val)
+                  : self.cleanLeadStringValue(val),
+              fromFieldData: false,
+            });
+          });
+        }
+      }
+
+      if (entries.length === 0 && rawText && String(rawText).trim() !== "") {
+        const testJson = self.parseRequirementsJson(rawText);
+        if (testJson && typeof testJson === "object") {
+          return self.renderModalRequirementsTable(testJson, "");
+        }
+        $container.html(`
+          <div class="v3-plain-notes-editor-wrap">
+            <textarea id="editLeadPlainNotes" class="v3-modal-textarea" rows="4" placeholder="Enter special requirements or notes...">${escapeHtml(String(rawText).trim())}</textarea>
+            <div class="v3-plain-notes-hint">
+              <i class="fi fi-rr-info"></i>
+              <span>Plain text notes detected. Click <strong>+ Add Note</strong> above to add structured key-value pairs.</span>
+            </div>
+          </div>
+        `);
+        return;
+      }
+
+      if (entries.length === 0) {
+        $container.html(`
+          <div class="v3-req-mapping-empty">
+            <i class="fi fi-rr-document"></i>
+            <p>No special requirements or JSON keys currently attached.</p>
+            <button type="button" class="btn-v3-action btn-outline btn-xs" id="btnAddFirstReqRow">
+              <i class="fi fi-rr-plus"></i> Add Note
+            </button>
+          </div>
+        `);
+        return;
+      }
+
+      // First pass: auto-map entries to lead fields without overriding existing values
+      entries.forEach(function (entry) {
+        const match = self.matchJsonKeyToLeadField(entry.key);
+        if (match) {
+          entry.matchField = match.field;
+          entry.matchLabel = match.label;
+          self.autoFillFieldIfEmpty(match.field, entry.value);
+        } else {
+          entry.matchField = "do_not_map";
+          entry.matchLabel = "Keep in Notes";
+        }
+      });
+
+      const rowsHtml = entries
+        .map(function (entry) {
+          return self.buildReqMapRowHtml(
+            entry.key,
+            entry.value,
+            entry.matchField,
+            entry.fromFieldData,
+          );
+        })
+        .join("");
+
+      const tableHtml = `
+        <div class="v3-req-mapping-table-card">
+          <div class="v3-req-mapping-table-header">
+            <div class="v3-req-map-th col-key">Form / JSON Key</div>
+            <div class="v3-req-map-th col-val">Customer Response / Value</div>
+            <div class="v3-req-map-th col-map">Map to Lead Field</div>
+            <div class="v3-req-map-th col-act">Action</div>
+          </div>
+          <div class="v3-req-mapping-table-body" id="reqMappingTableBody">
+            ${rowsHtml}
+          </div>
+        </div>
+      `;
+
+      $container.html(tableHtml);
+    },
+
     renderRequirementsSection: function (req) {
       const self = this;
       const hasContent =
@@ -590,38 +1521,21 @@
           `;
         }
 
-        const rawJsonString =
-          typeof req === "string"
-            ? req
-            : JSON.stringify(parsedJson, null, 2);
-        let prettyJson = "";
-        try {
-          prettyJson = JSON.stringify(parsedJson, null, 2);
-        } catch (e) {
-          prettyJson = rawJsonString;
-        }
-
         return `
           <div class="v3-requirements-section-wrap" id="requirementsSectionWrap">
             <div class="v3-requirements-header-wrap">
               <div class="v3-requirements-header-left">
                 <h4 class="v3-info-section-heading">Special Notes & Requirements</h4>
-                <span class="v3-req-type-pill"><i class="fi fi-rr-brackets-curly"></i> Structured JSON</span>
+                <span class="v3-req-type-pill"><i class="fi fi-rr-brackets-curly"></i> Structured Form Data</span>
               </div>
               <div class="v3-requirements-header-actions">
-                <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnToggleReqRawJson" title="Toggle between Table and Raw JSON">
-                  <i class="fi fi-rr-code-simple"></i> <span id="lblToggleReqRaw">Raw JSON</span>
-                </button>
-                <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnEditRequirements" data-tooltip="Edit Special Notes & Requirements">
-                  <i class="fi fi-rr-edit"></i> Edit
+                <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnEditRequirements" data-tooltip="Edit & Map Requirements to Lead Fields">
+                  <i class="fi fi-rr-edit"></i> Edit & Map Fields
                 </button>
               </div>
             </div>
             <div class="v3-requirements-view-tabular" id="reqTabularView">
               ${self.renderRequirementsTable(parsedJson)}
-            </div>
-            <div class="v3-requirements-view-raw v3-hidden" id="reqRawJsonView">
-              <pre class="v3-req-raw-json-box"><code>${escapeHtml(prettyJson)}</code></pre>
             </div>
           </div>
         `;
@@ -650,7 +1564,7 @@
 
       document.title =
         (lead.name ? lead.name + " - Lead Details" : "Lead Details") +
-        " | V3 Dashboard";
+        " | Dashboard";
 
       const travel = lead.travel_details || {};
       const quote = lead.quotation || {};
@@ -675,7 +1589,7 @@
           if (type === "followup") {
             const cat = t.category || "General Follow-up";
             categoryHtml = `<span class="v3-timeline-category-pill pill-followup"><i class="fi fi-rr-flag"></i> ${cat}</span>`;
-            
+
             let timeChip = "";
             if (t.followup_time) {
               timeChip = `
@@ -685,7 +1599,7 @@
                 </div>
               `;
             }
-            
+
             extraContent = `
               <div class="v3-timeline-followup-body">
                 ${timeChip}
@@ -698,14 +1612,24 @@
             const method = p.method || "Standard";
             const ref = p.reference || "";
             const status = (p.status || "verified").toLowerCase();
-            const statusLabel = (status === "pending") ? "Pending Verification" : (status === "rejected" ? "Rejected" : "Verified");
-            const statusClass = (status === "pending") ? "status-pending" : (status === "rejected" ? "status-rejected" : "status-verified");
+            const statusLabel =
+              status === "pending"
+                ? "Pending Verification"
+                : status === "rejected"
+                  ? "Rejected"
+                  : "Verified";
+            const statusClass =
+              status === "pending"
+                ? "status-pending"
+                : status === "rejected"
+                  ? "status-rejected"
+                  : "status-verified";
 
             categoryHtml = `<span class="v3-status-pill ${statusClass} v3-tl-status-badge">${statusLabel}</span>`;
             extraContent = `
               <div class="v3-timeline-payment-card">
                 <div class="v3-tl-pay-top">
-                  <div class="v3-tl-pay-amount">₹ ${amt > 0 ? amt.toLocaleString("en-IN", { minimumFractionDigits: 2 }) : (t.description ? t.description.replace(/^Recorded payment of /, "") : "0.00")}</div>
+                  <div class="v3-tl-pay-amount">₹ ${amt > 0 ? amt.toLocaleString("en-IN", { minimumFractionDigits: 2 }) : t.description ? t.description.replace(/^Recorded payment of /, "") : "0.00"}</div>
                   <span class="v3-tl-pay-method"><i class="fi fi-rr-credit-card"></i> ${method}</span>
                 </div>
                 ${ref ? `<div class="v3-tl-pay-ref">Reference / Transaction ID: <strong>${ref}</strong></div>` : ""}
@@ -713,12 +1637,24 @@
             `;
           } else if (t.type === "itinerary") {
             const q = t.quotation || {};
-            const encId = q.encoded_id || (t.description && !isNaN(t.description) ? btoa(t.description) : "");
-            const title = q.title || (t.description ? (isNaN(t.description) ? t.description : `Tour Itinerary #${t.description}`) : "Tour Itinerary");
+            const encId =
+              q.encoded_id ||
+              (t.description && !isNaN(t.description)
+                ? btoa(t.description)
+                : "");
+            const title =
+              q.title ||
+              (t.description
+                ? isNaN(t.description)
+                  ? t.description
+                  : `Tour Itinerary #${t.description}`
+                : "Tour Itinerary");
             const price = parseFloat(q.price || 0);
             const mrp = parseFloat(q.mrp || 0);
-            const viewUrl = q.view_url || (encId ? `/view-itinerary/${encId}/` : "#");
-            const downloadUrl = q.download_url || (encId ? `/download-itinerary/${encId}/` : "#");
+            const viewUrl =
+              q.view_url || (encId ? `/view-itinerary/${encId}/` : "#");
+            const downloadUrl =
+              q.download_url || (encId ? `/download-itinerary/${encId}/` : "#");
             const hasMeta = !!(q.destination || q.duration || q.theme);
 
             categoryHtml = `<span class="v3-timeline-category-pill pill-itinerary"><i class="fi fi-rr-route"></i> Itinerary Proposal</span>`;
@@ -731,22 +1667,32 @@
                       <span class="v3-tin-title"><i class="fi fi-rr-route"></i> ${title}</span>
                       ${q.id || (t.description && !isNaN(t.description)) ? `<span class="v3-tin-chip">#${q.id || t.description}</span>` : ""}
                     </div>
-                    ${hasMeta ? `
+                    ${
+                      hasMeta
+                        ? `
                       <div class="v3-tin-tags">
                         ${q.destination ? `<span class="v3-tin-tag"><i class="fi fi-rr-marker"></i> ${q.destination}</span>` : ""}
                         ${q.duration ? `<span class="v3-tin-tag"><i class="fi fi-rr-moon"></i> ${q.duration}</span>` : ""}
                         ${q.theme ? `<span class="v3-tin-tag theme"><i class="fi fi-rr-star"></i> ${q.theme}</span>` : ""}
                       </div>
-                    ` : ""}
+                    `
+                        : ""
+                    }
                   </div>
-                  ${price > 0 ? `
+                  ${
+                    price > 0
+                      ? `
                     <div class="v3-tin-price-box">
                       <span class="v3-tin-price-val">₹ ${price.toLocaleString("en-IN")}</span>
                       ${mrp > price ? `<span class="v3-tin-price-mrp">₹ ${mrp.toLocaleString("en-IN")}</span>` : ""}
                     </div>
-                  ` : ""}
+                  `
+                      : ""
+                  }
                 </div>
-                ${encId ? `
+                ${
+                  encId
+                    ? `
                   <div class="v3-tin-actions-row">
                     <a href="${viewUrl}" target="_blank" class="v3-tin-action-btn primary" title="View interactive itinerary webpage">
                       <i class="fi fi-rr-eye"></i> View Itinerary
@@ -758,7 +1704,9 @@
                       <i class="fi fi-rr-copy"></i> Copy Link
                     </button>
                   </div>
-                ` : ""}
+                `
+                    : ""
+                }
               </div>
             `.trim();
           } else if (type === "note") {
@@ -771,7 +1719,9 @@
             categoryHtml = `<span class="v3-timeline-category-pill pill-assign"><i class="fi fi-rr-user-check"></i> Assignment</span>`;
             extraContent = `<div class="v3-timeline-assign-text">${t.description || "Lead assigned to agent."}</div>`;
           } else {
-            extraContent = t.description ? `<div class="v3-timeline-note-text">${t.description}</div>` : "";
+            extraContent = t.description
+              ? `<div class="v3-timeline-note-text">${t.description}</div>`
+              : "";
           }
 
           timelineHtml += `
@@ -806,20 +1756,37 @@
       let totalPendingVerification = 0;
 
       self.leadPayments.forEach((p) => {
-        const pStatus = String(p.status || "verified").toLowerCase().trim();
+        const pStatus = String(p.status || "verified")
+          .toLowerCase()
+          .trim();
         const amt = parseFloat(p.amount || 0);
         if (pStatus === "verified") {
           totalPaid += amt;
-        } else if (pStatus === "pending" || pStatus === "pending approval" || pStatus === "unverified") {
+        } else if (
+          pStatus === "pending" ||
+          pStatus === "pending approval" ||
+          pStatus === "unverified"
+        ) {
           totalPendingVerification += amt;
         }
       });
 
       // Calculate Total Package Value & Pending Amount
-      let quotePrice = parseFloat((lead.quotation && lead.quotation.price) || (self.leadData && self.leadData.quotation && self.leadData.quotation.price) || 0);
+      let quotePrice = parseFloat(
+        (lead.quotation && lead.quotation.price) ||
+          (self.leadData &&
+            self.leadData.quotation &&
+            self.leadData.quotation.price) ||
+          0,
+      );
       if (quotePrice <= 0 && lead.timeline && lead.timeline.length > 0) {
         lead.timeline.forEach((t) => {
-          if (t.quotation && t.quotation.price && parseFloat(t.quotation.price) > 0 && quotePrice <= 0) {
+          if (
+            t.quotation &&
+            t.quotation.price &&
+            parseFloat(t.quotation.price) > 0 &&
+            quotePrice <= 0
+          ) {
             quotePrice = parseFloat(t.quotation.price);
           }
         });
@@ -872,7 +1839,11 @@
         if (m.includes("upi") || m.includes("qr")) {
           icon = "fi-rr-qr-scan";
           cls = "badge-method-upi";
-        } else if (m.includes("bank") || m.includes("neft") || m.includes("imps")) {
+        } else if (
+          m.includes("bank") ||
+          m.includes("neft") ||
+          m.includes("imps")
+        ) {
           icon = "fi-rr-bank";
           cls = "badge-method-bank";
         } else if (m.includes("card")) {
@@ -894,13 +1865,17 @@
           <div class="v3-payments-container-card">
             <div class="v3-payments-header-bar">
               <div class="v3-payments-summary-group">
-                ${quotePrice > 0 ? `
+                ${
+                  quotePrice > 0
+                    ? `
                   <div class="v3-pay-stat-pill stat-package">
                     <i class="fi fi-rr-box-alt"></i>
                     <span class="v3-pay-stat-label">Package Total</span>
                     <span class="v3-pay-stat-val">₹ ${quotePrice.toLocaleString("en-IN")}</span>
                   </div>
-                ` : ""}
+                `
+                    : ""
+                }
                 <div class="v3-pay-stat-pill stat-collected">
                   <i class="fi fi-rr-check-circle"></i>
                   <span class="v3-pay-stat-label">Collected</span>
@@ -937,11 +1912,23 @@
           (self.leadData && self.leadData.access_type) ||
           $("#leadViewApp").data("user-role") ||
           (typeof siteAdminType !== "undefined" ? siteAdminType : "")
-        ).toLowerCase().trim();
-        const canVerifyPayment = (userRole === "administrator" || userRole === "accountant" || userRole === "superadmin");
+        )
+          .toLowerCase()
+          .trim();
+        const canVerifyPayment =
+          userRole === "administrator" ||
+          userRole === "accountant" ||
+          userRole === "superadmin";
 
         self.leadPayments.forEach((p, idx) => {
-          const imgUrl = p.image_url || (p.image && typeof p.image === "object" ? p.image.path : (typeof p.image === "string" && (p.image.includes("/") || p.image.includes(".")) ? p.image : ""));
+          const imgUrl =
+            p.image_url ||
+            (p.image && typeof p.image === "object"
+              ? p.image.path
+              : typeof p.image === "string" &&
+                  (p.image.includes("/") || p.image.includes("."))
+                ? p.image
+                : "");
           const receiptHtml = imgUrl
             ? `<button type="button" class="v3-payment-receipt-btn btn-view-payment-receipt" data-payment-idx="${idx}" title="Click to view receipt image and payment details">
                 <i class="fi fi-rr-picture"></i> View Receipt
@@ -1021,18 +2008,26 @@
       const isAssigned = parseInt(lead.agent_id || 0) > 0;
 
       const defaultFollowupMoment = self.getDefaultFollowupDateTime();
-      const defaultFollowupStr = typeof moment !== "undefined" && defaultFollowupMoment && defaultFollowupMoment.format
-        ? defaultFollowupMoment.format("YYYY-MM-DD, hh:mm A")
-        : "";
+      const defaultFollowupStr =
+        typeof moment !== "undefined" &&
+        defaultFollowupMoment &&
+        defaultFollowupMoment.format
+          ? defaultFollowupMoment.format("YYYY-MM-DD, hh:mm A")
+          : "";
 
       // Role check: Only Administrator and Operational can see/manage Assigned Representative
-      const userRole = (lead.access_type || $("#leadViewApp").data("user-role") || "").toLowerCase().trim();
-      const canManageAgent = (
+      const userRole = (
+        lead.access_type ||
+        $("#leadViewApp").data("user-role") ||
+        ""
+      )
+        .toLowerCase()
+        .trim();
+      const canManageAgent =
         userRole === "administrator" ||
         userRole === "operations" ||
         userRole === "superadmin" ||
-        userRole === "operational"
-      );
+        userRole === "operational";
 
       const agentSidebarHtml = canManageAgent
         ? `
@@ -1586,7 +2581,7 @@
           lead.kpis.next_followup.raw_time,
           lead.name || "Customer",
           lead.agent_id,
-          self.leadId
+          self.leadId,
         );
       }
     },
@@ -1672,7 +2667,10 @@
         self.leadData.travel_details.destination
       ) {
         destCity = self.leadData.travel_details.destination.trim();
-      } else if (self.selectedPackage && self.selectedPackage.tour_package_city) {
+      } else if (
+        self.selectedPackage &&
+        self.selectedPackage.tour_package_city
+      ) {
         destCity = self.selectedPackage.tour_package_city.trim();
       }
 
@@ -1777,15 +2775,15 @@
 
     getPropertyCategoryOptionsHtml: function (selectedCategory) {
       const cats = [
-        { id: "all",            label: "All Categories" },
-        { id: "3_star_hotel",   label: "3 Star (Comfort)" },
-        { id: "4_star_hotel",   label: "4 Star (First Class)" },
-        { id: "5_star_hotel",   label: "5 Star (Luxury)" },
-        { id: "resorts",        label: "Resort & Spa" },
+        { id: "all", label: "All Categories" },
+        { id: "3_star_hotel", label: "3 Star (Comfort)" },
+        { id: "4_star_hotel", label: "4 Star (First Class)" },
+        { id: "5_star_hotel", label: "5 Star (Luxury)" },
+        { id: "resorts", label: "Resort & Spa" },
         { id: "heritage_hotel", label: "Heritage Hotel" },
-        { id: "home_stay",      label: "Homestay / Villa" },
-        { id: "tent",           label: "Camp / Tent" },
-        { id: "2_star_hotel",   label: "2 Star (Standard)" },
+        { id: "home_stay", label: "Homestay / Villa" },
+        { id: "tent", label: "Camp / Tent" },
+        { id: "2_star_hotel", label: "2 Star (Standard)" },
       ];
       const sel = (selectedCategory || "3_star_hotel").toLowerCase().trim();
       let html = "";
@@ -1801,12 +2799,21 @@
       return html;
     },
 
-    buildHotelSelectHtml: function (currentCity, selectedCategory, selectedHotelName, selectedHotelId) {
+    buildHotelSelectHtml: function (
+      currentCity,
+      selectedCategory,
+      selectedHotelName,
+      selectedHotelId,
+    ) {
       const self = this;
       const props = self.propertiesList || [];
       const currCityLower = (currentCity || "").toLowerCase().trim();
       const selHotelLower = (selectedHotelName || "").toLowerCase().trim();
-      const selHotelIdStr = selectedHotelId ? String(selectedHotelId).trim() : (parseInt(selectedHotelName) > 0 ? String(selectedHotelName).trim() : "");
+      const selHotelIdStr = selectedHotelId
+        ? String(selectedHotelId).trim()
+        : parseInt(selectedHotelName) > 0
+          ? String(selectedHotelName).trim()
+          : "";
       const selCatLower = (selectedCategory || "all").toLowerCase().trim();
 
       // City-based no-stay detection (driven by Stay City selection)
@@ -1820,9 +2827,15 @@
 
       if (isNoStayOption) {
         let label = "No Hotel Required";
-        if (currCityLower.includes("overnight") || currCityLower.includes("transit")) {
+        if (
+          currCityLower.includes("overnight") ||
+          currCityLower.includes("transit")
+        ) {
           label = "Overnight / In Transit — No Hotel Stay";
-        } else if (currCityLower.includes("end") || currCityLower.includes("departure")) {
+        } else if (
+          currCityLower.includes("end") ||
+          currCityLower.includes("departure")
+        ) {
           label = "Tour End / Departure — No Hotel Stay";
         } else if (currCityLower.includes("self")) {
           label = "Self Arranged — No Hotel Stay";
@@ -1834,11 +2847,18 @@
 
       props.forEach((p) => {
         const pCity = (p.city || "").toLowerCase().trim();
-        const cityMatches = !currCityLower || pCity === currCityLower || pCity.includes(currCityLower) || currCityLower.includes(pCity);
+        const cityMatches =
+          !currCityLower ||
+          pCity === currCityLower ||
+          pCity.includes(currCityLower) ||
+          currCityLower.includes(pCity);
 
         if (cityMatches) {
-          const isTargetHotel = (selHotelIdStr && String(p.id) === selHotelIdStr) ||
-                                (selHotelLower && (p.title.toLowerCase().trim() === selHotelLower || selHotelLower.includes(p.title.toLowerCase().trim())));
+          const isTargetHotel =
+            (selHotelIdStr && String(p.id) === selHotelIdStr) ||
+            (selHotelLower &&
+              (p.title.toLowerCase().trim() === selHotelLower ||
+                selHotelLower.includes(p.title.toLowerCase().trim())));
 
           if (selCatLower && selCatLower !== "all") {
             const pType = (p.type || "").toLowerCase().trim();
@@ -1847,11 +2867,17 @@
               pType === selCatLower ||
               (selCatLower === "3_star_hotel" && pType.includes("3")) ||
               (selCatLower === "4_star_hotel" && pType.includes("4")) ||
-              (selCatLower === "5_star_hotel" && (pType.includes("5") || pType.includes("luxury"))) ||
+              (selCatLower === "5_star_hotel" &&
+                (pType.includes("5") || pType.includes("luxury"))) ||
               (selCatLower === "resorts" && pType.includes("resort")) ||
-              (selCatLower === "heritage_hotel" && pType.includes("heritage")) ||
-              (selCatLower === "home_stay" && (pType.includes("home") || pType.includes("stay") || pType.includes("villa"))) ||
-              (selCatLower === "tent" && (pType.includes("tent") || pType.includes("camp"))) ||
+              (selCatLower === "heritage_hotel" &&
+                pType.includes("heritage")) ||
+              (selCatLower === "home_stay" &&
+                (pType.includes("home") ||
+                  pType.includes("stay") ||
+                  pType.includes("villa"))) ||
+              (selCatLower === "tent" &&
+                (pType.includes("tent") || pType.includes("camp"))) ||
               (selCatLower === "2_star_hotel" && pType.includes("2"))
             ) {
               matchedProps.push(p);
@@ -1873,28 +2899,34 @@
       });
       matchedProps = uniqueProps;
 
-      const cityDisplay = currentCity ? (currentCity.charAt(0).toUpperCase() + currentCity.slice(1)) : "Stay City";
+      const cityDisplay = currentCity
+        ? currentCity.charAt(0).toUpperCase() + currentCity.slice(1)
+        : "Stay City";
       let html = `<option value="">-- Choose Hotel in ${escapeHtml(cityDisplay)} (${matchedProps.length} Available) --</option>`;
 
       let foundSelected = false;
       if (matchedProps.length > 0) {
         matchedProps.forEach((p) => {
-          const isSel = !foundSelected && (
-            (selHotelIdStr && String(p.id) === selHotelIdStr) ||
-            (selHotelLower && (p.title.toLowerCase().trim() === selHotelLower || selHotelLower.includes(p.title.toLowerCase().trim())))
-          );
+          const isSel =
+            !foundSelected &&
+            ((selHotelIdStr && String(p.id) === selHotelIdStr) ||
+              (selHotelLower &&
+                (p.title.toLowerCase().trim() === selHotelLower ||
+                  selHotelLower.includes(p.title.toLowerCase().trim()))));
           if (isSel) foundSelected = true;
           const stateLabel = p.state ? `, ${escapeHtml(p.state)}` : "";
           html += `<option value="${p.id}" data-type="${escapeHtml(p.type || "")}" data-city="${escapeHtml(p.city || "")}" data-state="${escapeHtml(p.state || "")}" ${isSel ? "selected" : ""}>${escapeHtml(p.title)} — ${escapeHtml(p.city || "")}${stateLabel}</option>`;
         });
       } else {
-        html += `<option value="" disabled>No properties found in ${escapeHtml(currentCity || 'selected city')}</option>`;
+        html += `<option value="" disabled>No properties found in ${escapeHtml(currentCity || "selected city")}</option>`;
       }
 
       const isCustomSelected =
         selectedHotelName &&
         !foundSelected &&
-        !matchedProps.some((p) => p.title.toLowerCase().trim() === selHotelLower);
+        !matchedProps.some(
+          (p) => p.title.toLowerCase().trim() === selHotelLower,
+        );
 
       html += `<option value="custom" ${isCustomSelected ? "selected" : ""}>Enter Custom Hotel Name</option>`;
 
@@ -1909,7 +2941,7 @@
         templateResult: function (data) {
           if (!data.id || !data.element) return data.text;
           const $el = $(data.element);
-          const city  = $el.attr("data-city")  || "";
+          const city = $el.attr("data-city") || "";
           const state = $el.attr("data-state") || "";
           // Strip the appended " — City, State" from the raw option text to get just the name
           const rawText = data.text || "";
@@ -1920,13 +2952,15 @@
             `<span class="v3-hotel-opt">
                <span class="v3-hotel-opt-name">${$("<span>").text(name).html()}</span>
                <span class="v3-hotel-opt-loc"><i class="fi fi-rr-marker"></i> ${$("<span>").text(locationLine).html()}</span>
-             </span>`
+             </span>`,
           );
         },
         templateSelection: function (data) {
           if (!data.id) return data.text;
           // Show only the hotel name (strip " — City, State" suffix)
-          return (data.text || "").replace(/\s+—\s+.*$/, "").trim() || data.text;
+          return (
+            (data.text || "").replace(/\s+—\s+.*$/, "").trim() || data.text
+          );
         },
       };
     },
@@ -1951,7 +2985,8 @@
             (vTitle.toLowerCase() === selLower ||
               selLower.includes(vTitle.toLowerCase()) ||
               vTitle.toLowerCase().includes(selLower) ||
-              (rawType && (rawType === selLower || selLower.includes(rawType))));
+              (rawType &&
+                (rawType === selLower || selLower.includes(rawType))));
           if (isSel) foundSelected = true;
           html += `<option value="${escapeHtml(vTitle)}" ${isSel ? "selected" : ""}>${escapeHtml(vTitle)}${vType ? ` (${escapeHtml(vType)})` : ""}</option>`;
         });
@@ -1980,21 +3015,27 @@
       });
       html += `</optgroup>`;
 
-      const isCustomSelected =
-        selectedVehicle &&
-        !foundSelected;
+      const isCustomSelected = selectedVehicle && !foundSelected;
 
       html += `<option value="custom" ${isCustomSelected ? "selected" : ""}>Enter Custom Transport</option>`;
 
       return html;
     },
 
-    loadRoomTypesForHotel: function (propertyId, $roomSelect, selectedRoomType) {
+    loadRoomTypesForHotel: function (
+      propertyId,
+      $roomSelect,
+      selectedRoomType,
+    ) {
       const self = this;
       self.hotelRoomsCache = self.hotelRoomsCache || {};
 
       const rawSel = (selectedRoomType || "").toString().trim();
-      const cleanSel = rawSel.replace(/^\d+:/, "").toLowerCase().replace(/room/g, "").trim();
+      const cleanSel = rawSel
+        .replace(/^\d+:/, "")
+        .toLowerCase()
+        .replace(/room/g, "")
+        .trim();
 
       const renderRoomsHtml = (roomsList) => {
         $roomSelect.prop("disabled", false);
@@ -2008,7 +3049,10 @@
           ];
           let html = `<option value="">-- Select Room Type --</option>`;
           defaultRooms.forEach((r) => {
-            const isSel = cleanSel && (r.toLowerCase().includes(cleanSel) || cleanSel.includes(r.toLowerCase().replace(/room/g, "").trim()));
+            const isSel =
+              cleanSel &&
+              (r.toLowerCase().includes(cleanSel) ||
+                cleanSel.includes(r.toLowerCase().replace(/room/g, "").trim()));
             html += `<option value="${r}" ${isSel ? "selected" : ""}>${r}</option>`;
           });
           html += `<option value="custom">Enter Custom Room</option>`;
@@ -2026,15 +3070,21 @@
         let foundMatch = false;
 
         roomsList.forEach((rm) => {
-          const rName = (rm.name || rm.type_label || rm.type || "Deluxe Room").trim();
+          const rName = (
+            rm.name ||
+            rm.type_label ||
+            rm.type ||
+            "Deluxe Room"
+          ).trim();
           const cleanName = rName.toLowerCase().replace(/room/g, "").trim();
-          const isSel = !foundMatch && cleanSel && (
-            cleanName === cleanSel ||
-            cleanSel.includes(cleanName) ||
-            cleanName.includes(cleanSel) ||
-            String(rm.id) === rawSel ||
-            (rm.val && rm.val.toLowerCase() === rawSel.toLowerCase())
-          );
+          const isSel =
+            !foundMatch &&
+            cleanSel &&
+            (cleanName === cleanSel ||
+              cleanSel.includes(cleanName) ||
+              cleanName.includes(cleanSel) ||
+              String(rm.id) === rawSel ||
+              (rm.val && rm.val.toLowerCase() === rawSel.toLowerCase()));
           if (isSel) foundMatch = true;
           html += `<option value="${escapeHtml(rName)}" data-id="${rm.id || 0}" ${isSel ? "selected" : ""}>${escapeHtml(rName)}</option>`;
         });
@@ -2042,15 +3092,25 @@
         // By default room type mentioned in itinerary: if not in list, add it as selected
         if (!foundMatch && rawSel && rawSel !== "custom" && rawSel !== "0") {
           const customRName = rawSel.replace(/^\d+:/, "").trim();
-          html = `<option value="${escapeHtml(customRName)}" selected>${escapeHtml(customRName)}</option>` + html;
+          html =
+            `<option value="${escapeHtml(customRName)}" selected>${escapeHtml(customRName)}</option>` +
+            html;
           foundMatch = true;
         }
 
         // Auto-select if only 1 room type available and none selected
         if (!foundMatch && roomsList.length === 1) {
-          const onlyRName = (roomsList[0].name || roomsList[0].type_label || roomsList[0].type || "").trim();
+          const onlyRName = (
+            roomsList[0].name ||
+            roomsList[0].type_label ||
+            roomsList[0].type ||
+            ""
+          ).trim();
           if (onlyRName) {
-            html = html.replace(`value="${escapeHtml(onlyRName)}"`, `value="${escapeHtml(onlyRName)}" selected`);
+            html = html.replace(
+              `value="${escapeHtml(onlyRName)}"`,
+              `value="${escapeHtml(onlyRName)}" selected`,
+            );
           }
         }
 
@@ -2064,7 +3124,12 @@
         }
       };
 
-      if (!propertyId || propertyId === "" || propertyId === "0" || propertyId === "no_hotel") {
+      if (
+        !propertyId ||
+        propertyId === "" ||
+        propertyId === "0" ||
+        propertyId === "no_hotel"
+      ) {
         const placeholderText =
           propertyId === "no_hotel"
             ? "Not Applicable (No Stay)"
@@ -2087,13 +3152,18 @@
       }
 
       // Check cache first
-      if (self.hotelRoomsCache[propertyId] && self.hotelRoomsCache[propertyId].length > 0) {
+      if (
+        self.hotelRoomsCache[propertyId] &&
+        self.hotelRoomsCache[propertyId].length > 0
+      ) {
         renderRoomsHtml(self.hotelRoomsCache[propertyId]);
         return;
       }
 
       // Check if property in propertiesList already has rooms
-      const propObj = (self.propertiesList || []).find(p => String(p.id) === String(propertyId));
+      const propObj = (self.propertiesList || []).find(
+        (p) => String(p.id) === String(propertyId),
+      );
       if (propObj && Array.isArray(propObj.rooms) && propObj.rooms.length > 0) {
         self.hotelRoomsCache[propertyId] = propObj.rooms;
         renderRoomsHtml(propObj.rooms);
@@ -2189,7 +3259,7 @@
         $stack.empty();
         const totalDays = days.length;
         days.forEach((d, idx) => {
-          d.is_last_day = (idx === totalDays - 1);
+          d.is_last_day = idx === totalDays - 1;
           d.total_days = totalDays;
           self.appendDayCard(d, idx + 1);
         });
@@ -2205,17 +3275,30 @@
       const hotelTitle = d.hotel_title || d.hotel || "";
       const hotel = hotelTitle || (hotelId ? String(hotelId) : "");
       const hotelStars = d.hotel_stars || d.hotel_type || "all";
-      const roomType = d.room_type || d.room_type_name || d.assigned_room_type || "";
+      const roomType =
+        d.room_type || d.room_type_name || d.assigned_room_type || "";
       const mealPlan = d.meal_plan || "CP";
 
       // Pre-default vehicles day-wise: package outstation vehicle for day 1 and last day, local sightseeing vehicle for other days
       let vehicle = (d.vehicle || "").trim();
       if (!vehicle || vehicle === "Private Sedan") {
         const pkg = self.selectedPackage || {};
-        const outstation = (pkg.outstation_vehicle || pkg.tour_package_outstation_vehicle || "").trim();
-        const local = (pkg.localsightseen_vehicle || pkg.tour_package_localsightseen_vehicle || "").trim();
+        const outstation = (
+          pkg.outstation_vehicle ||
+          pkg.tour_package_outstation_vehicle ||
+          ""
+        ).trim();
+        const local = (
+          pkg.localsightseen_vehicle ||
+          pkg.tour_package_localsightseen_vehicle ||
+          ""
+        ).trim();
 
-        if (num === 1 || d.is_last_day || (d.total_days && num === d.total_days)) {
+        if (
+          num === 1 ||
+          d.is_last_day ||
+          (d.total_days && num === d.total_days)
+        ) {
           vehicle = outstation || local || vehicle || "Private Sedan";
         } else {
           vehicle = local || outstation || vehicle || "Private Sedan";
@@ -2234,17 +3317,32 @@
         cityLower.includes("no hotel");
 
       const citySelectHtml = self.buildCitySelectHtml(city, num);
-      const categorySelectHtml = self.getPropertyCategoryOptionsHtml(hotelStars);
-      const hotelSelectHtml = self.buildHotelSelectHtml(city, "all", hotelTitle, hotelId);
+      const categorySelectHtml =
+        self.getPropertyCategoryOptionsHtml(hotelStars);
+      const hotelSelectHtml = self.buildHotelSelectHtml(
+        city,
+        "all",
+        hotelTitle,
+        hotelId,
+      );
       const vehicleSelectHtml = self.buildVehicleSelectHtml(vehicle);
       let dayImg = d.feature_image || d.image || d.day_image || "";
-      if (!dayImg && self.selectedPackage && self.selectedPackage.gallery_image_list) {
+      if (
+        !dayImg &&
+        self.selectedPackage &&
+        self.selectedPackage.gallery_image_list
+      ) {
         let gList = self.selectedPackage.gallery_image_list;
         if (typeof gList === "string") {
-          try { gList = JSON.parse(gList); } catch (e) { gList = []; }
+          try {
+            gList = JSON.parse(gList);
+          } catch (e) {
+            gList = [];
+          }
         }
         if (Array.isArray(gList)) {
-          const match = gList.find(item => parseInt(item.day) === num) || gList[num - 1];
+          const match =
+            gList.find((item) => parseInt(item.day) === num) || gList[num - 1];
           if (match && match.path) {
             dayImg = match.path;
           }
@@ -2289,17 +3387,17 @@
                 </div>
                 <div>
                   <label class="v3-modal-label">Property / Hotel</label>
-                  <select class="leads-filter-select v3-select-full itin-day-hotel-select" data-day-index="${num}" ${isNoStayCity ? 'disabled' : ''}>
+                  <select class="leads-filter-select v3-select-full itin-day-hotel-select" data-day-index="${num}" ${isNoStayCity ? "disabled" : ""}>
                     ${hotelSelectHtml}
                   </select>
-                  <input type="text" class="v3-modal-input itin-day-hotel-custom ${hotel && !hotelSelectHtml.includes('selected') ? '' : 'v3-hidden'}" value="${hotel}" placeholder="Enter custom hotel name...">
+                  <input type="text" class="v3-modal-input itin-day-hotel-custom ${hotel && !hotelSelectHtml.includes("selected") ? "" : "v3-hidden"}" value="${hotel}" placeholder="Enter custom hotel name...">
                 </div>
               </div>
 
               <div class="v3-form-grid-2">
                 <div>
                   <label class="v3-modal-label">Room Type</label>
-                  <select class="leads-filter-select v3-select-full itin-day-room-type" ${(!hotel || isNoStayCity) ? 'disabled' : ''}>
+                  <select class="leads-filter-select v3-select-full itin-day-room-type" ${!hotel || isNoStayCity ? "disabled" : ""}>
                     <!-- Populated dynamically based on property -->
                   </select>
                   <input type="text" class="v3-modal-input itin-day-room-type-custom v3-hidden" value="${roomType}" placeholder="Enter custom room">
@@ -2326,7 +3424,7 @@
                 <select class="leads-filter-select v3-select-full itin-day-vehicle-type">
                   ${vehicleSelectHtml}
                 </select>
-                <input type="text" class="v3-modal-input itin-day-vehicle-custom ${vehicle && !vehicleSelectHtml.includes('selected') ? '' : 'v3-hidden'}" value="${vehicle}" placeholder="Enter custom transport...">
+                <input type="text" class="v3-modal-input itin-day-vehicle-custom ${vehicle && !vehicleSelectHtml.includes("selected") ? "" : "v3-hidden"}" value="${vehicle}" placeholder="Enter custom transport...">
               </div>
               <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Transfer Route / Notes</label>
@@ -2340,7 +3438,8 @@
       $("#itinDaysStack").append($card);
 
       // Load initial room types for selected hotel
-      const selectedPropId = $card.find(".itin-day-hotel-select").val() || hotelId;
+      const selectedPropId =
+        $card.find(".itin-day-hotel-select").val() || hotelId;
       self.loadRoomTypesForHotel(
         selectedPropId,
         $card.find(".itin-day-room-type"),
@@ -2355,7 +3454,9 @@
           placeholder: "Stay City",
         });
 
-        $card.find(".itin-day-hotel-select").select2(self.getHotelSelect2Opts($("#modalSendItinerary")));
+        $card
+          .find(".itin-day-hotel-select")
+          .select2(self.getHotelSelect2Opts($("#modalSendItinerary")));
 
         $card.find(".itin-day-hotel-stars").select2({
           dropdownParent: $("#modalSendItinerary"),
@@ -2386,7 +3487,8 @@
       if (typeof $.fn.v3Editor === "function") {
         $overviewTextarea.v3Editor({
           minHeight: 60,
-          placeholder: "Describe the day's schedule, sightseeing spots, and activities...",
+          placeholder:
+            "Describe the day's schedule, sightseeing spots, and activities...",
           toolbar: [
             "history",
             "format",
@@ -2411,8 +3513,13 @@
 
     resolvePrimaryCity: function (structuredItin) {
       const self = this;
-      if (self.selectedPackage && (self.selectedPackage.tour_package_city || self.selectedPackage.city)) {
-        const pkgCity = (self.selectedPackage.tour_package_city || self.selectedPackage.city).trim();
+      if (
+        self.selectedPackage &&
+        (self.selectedPackage.tour_package_city || self.selectedPackage.city)
+      ) {
+        const pkgCity = (
+          self.selectedPackage.tour_package_city || self.selectedPackage.city
+        ).trim();
         if (pkgCity) return pkgCity;
       }
       if (Array.isArray(structuredItin) && structuredItin.length > 0) {
@@ -2432,7 +3539,11 @@
           }
         }
       }
-      if (self.leadData && self.leadData.travel_details && self.leadData.travel_details.destination) {
+      if (
+        self.leadData &&
+        self.leadData.travel_details &&
+        self.leadData.travel_details.destination
+      ) {
         const leadDest = self.leadData.travel_details.destination.trim();
         if (leadDest) return leadDest;
       }
@@ -2448,7 +3559,12 @@
         const hotels = [];
         for (const day of structuredItin) {
           const h = (day.hotel || day.stay || "").trim();
-          if (h && h !== "no_hotel" && !h.toLowerCase().includes("no hotel") && !hotels.includes(h)) {
+          if (
+            h &&
+            h !== "no_hotel" &&
+            !h.toLowerCase().includes("no hotel") &&
+            !hotels.includes(h)
+          ) {
             hotels.push(h);
           }
         }
@@ -2486,7 +3602,10 @@
           if (v && v !== "custom") return v;
         }
       }
-      if (self.selectedPackage && self.selectedPackage.tour_package_outstation_vehicle) {
+      if (
+        self.selectedPackage &&
+        self.selectedPackage.tour_package_outstation_vehicle
+      ) {
         return self.selectedPackage.tour_package_outstation_vehicle;
       }
       return "Private Sedan (Dzire / Etios)";
@@ -2501,11 +3620,14 @@
         const url = $(this).data("url") || $(this).attr("data-url");
         if (!url) return;
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(function () {
-            self.notify("Itinerary link copied to clipboard!", "success");
-          }).catch(function () {
-            self.notify("Failed to copy itinerary link.", "error");
-          });
+          navigator.clipboard
+            .writeText(url)
+            .then(function () {
+              self.notify("Itinerary link copied to clipboard!", "success");
+            })
+            .catch(function () {
+              self.notify("Failed to copy itinerary link.", "error");
+            });
         } else {
           const $temp = $("<input>");
           $("body").append($temp);
@@ -2518,7 +3640,10 @@
 
       $(document).on("click", ".v3-tab-link", function () {
         if ($(this).hasClass("v3-tab-disabled") || $(this).prop("disabled")) {
-          self.notify("Please assign an agent to this lead before accessing payments.", "warning");
+          self.notify(
+            "Please assign an agent to this lead before accessing payments.",
+            "warning",
+          );
           return;
         }
         const tabId = $(this).data("tab");
@@ -2590,7 +3715,10 @@
       // 4. Submit Composer Update
       $(document).on("click", "#btnSubmitComposer", function () {
         if (!self.leadData || !(parseInt(self.leadData.agent_id || 0) > 0)) {
-          self.notify("Lead is unassigned. Please assign an agent first.", "warning");
+          self.notify(
+            "Lead is unassigned. Please assign an agent first.",
+            "warning",
+          );
           return;
         }
 
@@ -2605,7 +3733,8 @@
         const $btn = $(this);
         $btn.prop("disabled", true).text("Posting...");
 
-        const followupReason = $("#composerFollowupReason").val() || "General Follow-up";
+        const followupReason =
+          $("#composerFollowupReason").val() || "General Follow-up";
         const postData = {
           leadId: self.leadId,
           title: type === "followup" ? followupReason : "Note",
@@ -2658,9 +3787,13 @@
       });
 
       // 6. Convert to Sale
-      $(document).on("click", "#btnHeroConvertToSale, #btnSideConvertToSale", function () {
-        self.confirmConvertToSale();
-      });
+      $(document).on(
+        "click",
+        "#btnHeroConvertToSale, #btnSideConvertToSale",
+        function () {
+          self.confirmConvertToSale();
+        },
+      );
 
       // 7. Edit Lead Modal Trigger & Submission
       $(document).on(
@@ -2697,26 +3830,23 @@
 
           const rawReq = t.requirements || "";
           const parsedReq = self.parseRequirementsJson(rawReq);
-          if (parsedReq) {
-            if (self.hasMeaningfulRequirements(parsedReq)) {
-              $("#editLeadRequirements").val(JSON.stringify(parsedReq, null, 2));
-            } else {
-              $("#editLeadRequirements").val("");
-            }
-          } else {
-            $("#editLeadRequirements").val(rawReq);
-          }
+          $("#editLeadRequirements").val(rawReq);
+          self.renderModalRequirementsTable(parsedReq, rawReq);
 
           $("#modalEditLead").addClass("is-active");
 
           if (isReqTrigger) {
             setTimeout(function () {
-              const reqEl = document.getElementById("editLeadRequirements");
-              if (reqEl) {
-                reqEl.focus();
-                reqEl.scrollIntoView({ behavior: "smooth", block: "center" });
+              const $modalBody = $("#modalEditLead .v3-modal-body-scrollable");
+              const $reqEl = $("#editLeadRequirementsTabularWrap");
+              if ($modalBody.length && $reqEl.length) {
+                const targetTop =
+                  $reqEl.position().top + $modalBody.scrollTop() - 20;
+                $modalBody.animate({ scrollTop: Math.max(0, targetTop) }, 200);
               }
             }, 180);
+          } else {
+            $("#modalEditLead .v3-modal-body-scrollable").scrollTop(0);
           }
 
           // Initialize Select2 for Tour Package / Destination via Packages API
@@ -2756,10 +3886,16 @@
           const pickupVal = t.pickup_location || "Delhi";
           const dropVal = t.drop_location || pickupVal;
 
-          setSelect2Val($("#editLeadCurrentLocation"), t.current_location || "");
+          setSelect2Val(
+            $("#editLeadCurrentLocation"),
+            t.current_location || "",
+          );
           setSelect2Val($("#editLeadPickup"), pickupVal, pickupVal);
           setSelect2Val($("#editLeadDrop"), dropVal, dropVal);
-          $("#editLeadDrop").data("userModified", t.drop_location && t.drop_location !== pickupVal);
+          $("#editLeadDrop").data(
+            "userModified",
+            t.drop_location && t.drop_location !== pickupVal,
+          );
 
           const initialSubject = (d.subject || "").trim();
           const initialDest = (t.destination || "").trim();
@@ -2770,33 +3906,55 @@
 
             // Fetch package details from API to populate snapshot card if exact or matching package
             $.ajax({
-              url: "/api/v3/packages/options/?q=" + encodeURIComponent(initialPkgVal),
+              url:
+                "/api/v3/packages/options/?q=" +
+                encodeURIComponent(initialPkgVal),
               dataType: "json",
               success: function (res) {
-                if (res && res.data && res.data.all && res.data.all.length > 0) {
-                  const match = res.data.all.find(
-                    (p) =>
-                      p.title.toLowerCase() === initialPkgVal.toLowerCase() ||
-                      p.city.toLowerCase() === initialPkgVal.toLowerCase() ||
-                      initialPkgVal.toLowerCase().includes(p.title.toLowerCase())
-                  ) || res.data.all[0];
+                if (
+                  res &&
+                  res.data &&
+                  res.data.all &&
+                  res.data.all.length > 0
+                ) {
+                  const match =
+                    res.data.all.find(
+                      (p) =>
+                        p.title.toLowerCase() === initialPkgVal.toLowerCase() ||
+                        p.city.toLowerCase() === initialPkgVal.toLowerCase() ||
+                        initialPkgVal
+                          .toLowerCase()
+                          .includes(p.title.toLowerCase()),
+                    ) || res.data.all[0];
 
                   if (match) {
-                    const isIntl = (match.type || "").toLowerCase() === "international";
+                    const isIntl =
+                      (match.type || "").toLowerCase() === "international";
                     const dur = match.duration || 0;
                     const days = match.days || (dur > 0 ? dur + 1 : 1);
                     $("#editCardPkgTitle").text(match.title);
                     $("#editCardPkgTypeBadge")
                       .text(isIntl ? "International" : "Domestic")
-                      .attr("class", `v3-pkg-type-pill ${isIntl ? "intl" : "dom"}`);
-                    $("#editCardPkgDuration").html(`<i class="fi fi-rr-moon"></i> <strong>${dur}N / ${days}D</strong>`);
-                    $("#editCardPkgLocation").html(`<i class="fi fi-rr-marker"></i> ${match.city}`);
-                    $("#editCardPkgTheme").html(`<i class="fi fi-rr-star"></i> ${match.theme}`);
-                    $("#editCardPkgIcon").html(`<i class="fi ${isIntl ? 'fi-rr-plane' : 'fi-rr-route'}"></i>`);
+                      .attr(
+                        "class",
+                        `v3-pkg-type-pill ${isIntl ? "intl" : "dom"}`,
+                      );
+                    $("#editCardPkgDuration").html(
+                      `<i class="fi fi-rr-moon"></i> <strong>${dur}N / ${days}D</strong>`,
+                    );
+                    $("#editCardPkgLocation").html(
+                      `<i class="fi fi-rr-marker"></i> ${match.city}`,
+                    );
+                    $("#editCardPkgTheme").html(
+                      `<i class="fi fi-rr-star"></i> ${match.theme}`,
+                    );
+                    $("#editCardPkgIcon").html(
+                      `<i class="fi ${isIntl ? "fi-rr-plane" : "fi-rr-route"}"></i>`,
+                    );
                     $("#editLeadSelectedPkgCard").show();
                   }
                 }
-              }
+              },
             });
           } else {
             setSelect2Val($("#editLeadPackage"), "");
@@ -2804,10 +3962,20 @@
           }
 
           self.initSingleDatePickers();
-          if (t.date_of_travel && $("#editLeadTravelDate").data("daterangepicker")) {
-            if (typeof moment !== "undefined" && moment(t.date_of_travel, "YYYY-MM-DD", true).isValid()) {
-              $("#editLeadTravelDate").data("daterangepicker").setStartDate(moment(t.date_of_travel, "YYYY-MM-DD"));
-              $("#editLeadTravelDate").data("daterangepicker").setEndDate(moment(t.date_of_travel, "YYYY-MM-DD"));
+          if (
+            t.date_of_travel &&
+            $("#editLeadTravelDate").data("daterangepicker")
+          ) {
+            if (
+              typeof moment !== "undefined" &&
+              moment(t.date_of_travel, "YYYY-MM-DD", true).isValid()
+            ) {
+              $("#editLeadTravelDate")
+                .data("daterangepicker")
+                .setStartDate(moment(t.date_of_travel, "YYYY-MM-DD"));
+              $("#editLeadTravelDate")
+                .data("daterangepicker")
+                .setEndDate(moment(t.date_of_travel, "YYYY-MM-DD"));
             }
           }
         },
@@ -2838,10 +4006,16 @@
           $("#editCardPkgTypeBadge")
             .text(isIntl ? "International" : "Domestic")
             .attr("class", `v3-pkg-type-pill ${isIntl ? "intl" : "dom"}`);
-          $("#editCardPkgDuration").html(`<i class="fi fi-rr-moon"></i> <strong>${duration}N / ${days}D</strong>`);
-          $("#editCardPkgLocation").html(`<i class="fi fi-rr-marker"></i> ${city}`);
+          $("#editCardPkgDuration").html(
+            `<i class="fi fi-rr-moon"></i> <strong>${duration}N / ${days}D</strong>`,
+          );
+          $("#editCardPkgLocation").html(
+            `<i class="fi fi-rr-marker"></i> ${city}`,
+          );
           $("#editCardPkgTheme").html(`<i class="fi fi-rr-star"></i> ${theme}`);
-          $("#editCardPkgIcon").html(`<i class="fi ${isIntl ? 'fi-rr-plane' : 'fi-rr-route'}"></i>`);
+          $("#editCardPkgIcon").html(
+            `<i class="fi ${isIntl ? "fi-rr-plane" : "fi-rr-route"}"></i>`,
+          );
           $("#editLeadSelectedPkgCard").slideDown(150);
         } else {
           $("#editLeadSelectedPkgCard").slideUp(150);
@@ -2859,7 +4033,11 @@
         const nights = parseInt($(this).val(), 10);
         if (!isNaN(nights) && nights > 0) {
           const days = nights + 1;
-          $("#editCardPkgDuration").html(`<i class="fi fi-rr-moon"></i> <strong>${nights}N / ${days}D</strong>`).show();
+          $("#editCardPkgDuration")
+            .html(
+              `<i class="fi fi-rr-moon"></i> <strong>${nights}N / ${days}D</strong>`,
+            )
+            .show();
         } else {
           $("#editCardPkgDuration").hide();
         }
@@ -2876,7 +4054,11 @@
         const pickupVal = $(this).val();
         if (pickupVal) {
           const currentDrop = $("#editLeadDrop").val();
-          if (!currentDrop || currentDrop === pickupVal || !$("#editLeadDrop").data("userModified")) {
+          if (
+            !currentDrop ||
+            currentDrop === pickupVal ||
+            !$("#editLeadDrop").data("userModified")
+          ) {
             $("#editLeadDrop")
               .empty()
               .append(new Option(pickupVal, pickupVal, true, true))
@@ -2918,6 +4100,72 @@
           return;
         }
 
+        // Process tabular requirements & key mapping
+        let retainedFieldData = [];
+        let retainedRootKeys = {};
+        let removedKeys = [];
+        let hasTabularRows = false;
+        let hadFieldDataOrigin = false;
+
+        $("#editLeadRequirementsTabularWrap .v3-req-map-row").each(function () {
+          hasTabularRows = true;
+          const $row = $(this);
+          const rowKey = (
+            $row.find(".v3-req-key-input").val() ||
+            $row.data("json-key") ||
+            ""
+          ).trim();
+          const rowVal = ($row.find(".v3-req-val-input").val() || "").trim();
+          const mapping = $row.find(".v3-req-map-select").val();
+          const isFromFd =
+            $row.attr("data-from-field-data") === "1" ||
+            $row.find(".v3-req-from-field-data").val() === "1";
+
+          if (isFromFd) {
+            hadFieldDataOrigin = true;
+          }
+
+          if (!rowKey) return;
+
+          if (mapping && mapping !== "do_not_map") {
+            // Apply mapped value to modal field
+            self.applyMappedValueToField(mapping, rowVal);
+            // Collect removed key so it is deleted from JSON
+            removedKeys.push(rowKey);
+          } else {
+            // Keep in JSON requirements
+            if (isFromFd) {
+              retainedFieldData.push({ name: rowKey, values: [rowVal] });
+            } else {
+              retainedRootKeys[rowKey] = rowVal;
+            }
+          }
+        });
+
+        let finalReq = "";
+        if (hasTabularRows) {
+          if (hadFieldDataOrigin) {
+            let payload = {};
+            if (retainedFieldData.length > 0) {
+              payload.field_data = retainedFieldData;
+            }
+            Object.keys(retainedRootKeys).forEach(function (rk) {
+              payload[rk] = retainedRootKeys[rk];
+            });
+            finalReq =
+              Object.keys(payload).length > 0 ? JSON.stringify(payload) : "";
+          } else {
+            finalReq =
+              Object.keys(retainedRootKeys).length > 0
+                ? JSON.stringify(retainedRootKeys)
+                : "";
+          }
+        } else {
+          finalReq = $("#editLeadPlainNotes").length
+            ? $("#editLeadPlainNotes").val().trim()
+            : $("#editLeadRequirements").val().trim();
+        }
+
         let firstName = $("#editLeadFirstName").val().trim();
         let lastName = $("#editLeadLastName").val().trim();
 
@@ -2943,7 +4191,10 @@
         if (travelDate && typeof moment !== "undefined") {
           const mDate = moment(travelDate, "YYYY-MM-DD", true);
           if (mDate.isValid() && mDate.isBefore(moment().startOf("day"))) {
-            self.notify("Date of travel must be today or a future date.", "warning");
+            self.notify(
+              "Date of travel must be today or a future date.",
+              "warning",
+            );
             return;
           }
         }
@@ -2981,7 +4232,8 @@
           adults: $("#editLeadAdults").val(),
           children: $("#editLeadChildren").val(),
           infants: $("#editLeadInfants").val(),
-          requirements: $("#editLeadRequirements").val().trim(),
+          requirements: finalReq,
+          removed_keys: JSON.stringify(removedKeys),
         };
 
         $.ajax({
@@ -2995,7 +4247,14 @@
               .html('<i class="fi fi-rr-check"></i> Save Changes');
             if (res.status === "success") {
               $("#modalEditLead").removeClass("is-active");
-              self.notify("Lead updated successfully", "success");
+              if (removedKeys.length > 0) {
+                self.notify(
+                  `Lead updated. Mapped ${removedKeys.length} key(s) to lead profile and removed from JSON.`,
+                  "success",
+                );
+              } else {
+                self.notify("Lead updated successfully", "success");
+              }
               self.loadLeadDetails();
             } else {
               self.notify(res.message || "Failed to update lead.", "error");
@@ -3014,39 +4273,71 @@
         });
       });
 
-      // 7b. Toggle Tabular vs Raw JSON view for Requirements
-      $(document).on("click", "#btnToggleReqRawJson", function () {
-        const $raw = $("#reqRawJsonView");
-        const $tab = $("#reqTabularView");
-        const $lbl = $("#lblToggleReqRaw");
-        const $icon = $(this).find("i");
-        if ($raw.hasClass("v3-hidden")) {
-          $raw.removeClass("v3-hidden");
-          $tab.addClass("v3-hidden");
-          $lbl.text("Tabular View");
-          $icon.removeClass("fi-rr-code-simple").addClass("fi-rr-table");
+      // 7b. Tabular Requirements & Field Mapping Event Handlers
+      $(document).on("click", "#btnAddReqRow, #btnAddFirstReqRow", function () {
+        let $body = $("#reqMappingTableBody");
+        if (!$body.length) {
+          const wrapHtml = `
+            <div class="v3-req-mapping-table-card">
+              <div class="v3-req-mapping-table-header">
+                <div class="v3-req-map-th col-key">Form / JSON Key</div>
+                <div class="v3-req-map-th col-val">Customer Response / Value</div>
+                <div class="v3-req-map-th col-map">Map to Lead Field</div>
+                <div class="v3-req-map-th col-act">Action</div>
+              </div>
+              <div class="v3-req-mapping-table-body" id="reqMappingTableBody">
+              </div>
+            </div>
+          `;
+          $("#editLeadRequirementsTabularWrap").html(wrapHtml);
+          $body = $("#reqMappingTableBody");
+        }
+        const newRow = $(self.buildCustomReqRowHtml());
+        $body.append(newRow);
+        newRow.find(".v3-req-key-input").focus();
+      });
+
+      $(document).on("change", ".v3-req-map-select", function () {
+        const $select = $(this);
+        const $row = $select.closest(".v3-req-map-row");
+        const val = $select.val();
+        const rowVal = $row.find(".v3-req-val-input").val();
+        const $statusWrap = $row.find(".v3-req-map-status-wrap");
+
+        if (val === "do_not_map") {
+          $statusWrap.html(
+            `<span class="v3-mapping-status-pill unmapped"><i class="fi fi-rr-document"></i> Retained in JSON</span>`,
+          );
         } else {
-          $raw.addClass("v3-hidden");
-          $tab.removeClass("v3-hidden");
-          $lbl.text("Raw JSON");
-          $icon.removeClass("fi-rr-table").addClass("fi-rr-code-simple");
+          const wasFilled = self.autoFillFieldIfEmpty(val, rowVal);
+          if (wasFilled) {
+            $statusWrap.html(
+              `<span class="v3-mapping-status-pill mapped"><i class="fi fi-rr-check"></i> Auto-mapped</span>`,
+            );
+          } else {
+            $statusWrap.html(
+              `<span class="v3-mapping-status-pill existing"><i class="fi fi-rr-check"></i> Maps to Field</span>`,
+            );
+          }
         }
       });
 
-      // 7c. Format JSON helper in Edit Lead modal
-      $(document).on("click", "#btnBeautifyReqJson", function () {
-        const val = $("#editLeadRequirements").val().trim();
-        if (!val) {
-          self.notify("Special Requirements field is empty.", "info");
-          return;
-        }
-        const parsed = self.parseRequirementsJson(val);
-        if (parsed) {
-          $("#editLeadRequirements").val(JSON.stringify(parsed, null, 2));
-          self.notify("JSON formatted successfully.", "success");
-        } else {
-          self.notify("Content is plain text (not valid JSON).", "info");
-        }
+      $(document).on("click", ".btn-remove-req-row", function () {
+        const $row = $(this).closest(".v3-req-map-row");
+        $row.slideUp(150, function () {
+          $row.remove();
+          if ($("#reqMappingTableBody .v3-req-map-row").length === 0) {
+            $("#editLeadRequirementsTabularWrap").html(`
+              <div class="v3-req-mapping-empty">
+                <i class="fi fi-rr-document"></i>
+                <p>All JSON keys were removed or mapped.</p>
+                <button type="button" class="btn-v3-action btn-outline btn-xs" id="btnAddFirstReqRow">
+                  <i class="fi fi-rr-plus"></i> Add Note
+                </button>
+              </div>
+            `);
+          }
+        });
       });
 
       // 8. Full Screen Itinerary Modal Trigger & Logic
@@ -3086,7 +4377,10 @@
             );
             if (dest) {
               const $destInput = $("#itineraryDestinationInput");
-              $destInput.empty().append(new Option(dest, dest, true, true)).trigger("change");
+              $destInput
+                .empty()
+                .append(new Option(dest, dest, true, true))
+                .trigger("change");
             }
           }
 
@@ -3348,18 +4642,19 @@
       $(document).on("change", ".itin-day-city-select", function () {
         const $card = $(this).closest(".v3-itin-day-card");
         const selectedCity = $(this).val();
-        const selectedCategory = $card.find(".itin-day-hotel-stars").val() || "all";
+        const selectedCategory =
+          $card.find(".itin-day-hotel-stars").val() || "all";
         const $hotelSelect = $card.find(".itin-day-hotel-select");
-        const $roomSelect  = $card.find(".itin-day-room-type");
+        const $roomSelect = $card.find(".itin-day-room-type");
         const $customInput = $card.find(".itin-day-hotel-custom");
 
         const cityLower = (selectedCity || "").toLowerCase().trim();
         const noStayCity =
           cityLower.includes("overnight") ||
-          cityLower.includes("transit")   ||
-          cityLower.includes("tour end")  ||
-          cityLower.includes("trip end")  ||
-          cityLower.includes("no stay")   ||
+          cityLower.includes("transit") ||
+          cityLower.includes("tour end") ||
+          cityLower.includes("trip end") ||
+          cityLower.includes("no stay") ||
           cityLower.includes("no hotel");
 
         if ($hotelSelect.hasClass("select2-hidden-accessible")) {
@@ -3369,9 +4664,15 @@
         if (noStayCity) {
           // Lock hotel & room — no stay needed for this city
           let noStayLabel = "No Hotel Stay";
-          if (cityLower.includes("overnight") || cityLower.includes("transit")) {
+          if (
+            cityLower.includes("overnight") ||
+            cityLower.includes("transit")
+          ) {
             noStayLabel = "Overnight / In Transit — No Hotel Stay";
-          } else if (cityLower.includes("end") || cityLower.includes("departure")) {
+          } else if (
+            cityLower.includes("end") ||
+            cityLower.includes("departure")
+          ) {
             noStayLabel = "Tour End / Departure — No Hotel Stay";
           } else if (cityLower.includes("self")) {
             noStayLabel = "Self Arranged — No Hotel Stay";
@@ -3383,7 +4684,10 @@
           $roomSelect
             .prop("disabled", true)
             .html(`<option value="">Not Applicable (No Stay)</option>`);
-          if (typeof $.fn.select2 !== "undefined" && $roomSelect.hasClass("select2-hidden-accessible")) {
+          if (
+            typeof $.fn.select2 !== "undefined" &&
+            $roomSelect.hasClass("select2-hidden-accessible")
+          ) {
             $roomSelect.trigger("change.select2");
           }
           return;
@@ -3397,14 +4701,16 @@
             self.buildHotelSelectHtml(selectedCity, selectedCategory, "", 0),
           );
           if (typeof $.fn.select2 !== "undefined") {
-            $hotelSelect.select2(self.getHotelSelect2Opts($("#modalSendItinerary")));
+            $hotelSelect.select2(
+              self.getHotelSelect2Opts($("#modalSendItinerary")),
+            );
           }
           $hotelSelect.trigger("change");
         };
 
         // If properties for this city are not in self.propertiesList, fetch them dynamically
         const hasCityProps = (self.propertiesList || []).some(
-          p => (p.city || "").toLowerCase().trim() === cityLower
+          (p) => (p.city || "").toLowerCase().trim() === cityLower,
         );
 
         if (!hasCityProps && selectedCity) {
@@ -3414,8 +4720,8 @@
             dataType: "json",
             success: function (cRes) {
               if (cRes && cRes.hotels && cRes.hotels.length > 0) {
-                cRes.hotels.forEach(h => {
-                  if (!self.propertiesList.some(p => p.id === h.id)) {
+                cRes.hotels.forEach((h) => {
+                  if (!self.propertiesList.some((p) => p.id === h.id)) {
                     self.propertiesList.push(h);
                   }
                   if (h.rooms && Array.isArray(h.rooms)) {
@@ -3428,7 +4734,7 @@
             },
             error: function () {
               updateDropdown();
-            }
+            },
           });
         } else {
           updateDropdown();
@@ -3453,11 +4759,18 @@
         }
 
         $hotelSelect.html(
-          self.buildHotelSelectHtml(selectedCity, selectedCategory, currentHotelName, currentHotelVal),
+          self.buildHotelSelectHtml(
+            selectedCity,
+            selectedCategory,
+            currentHotelName,
+            currentHotelVal,
+          ),
         );
 
         if (typeof $.fn.select2 !== "undefined") {
-          $hotelSelect.select2(self.getHotelSelect2Opts($("#modalSendItinerary")));
+          $hotelSelect.select2(
+            self.getHotelSelect2Opts($("#modalSendItinerary")),
+          );
         }
         $hotelSelect.trigger("change");
       });
@@ -3481,7 +4794,10 @@
         const pCity = selectedOption.data("city");
 
         if (pCity && !$card.find(".itin-day-city-select").val()) {
-          $card.find(".itin-day-city-select").val(pCity).trigger("change.select2");
+          $card
+            .find(".itin-day-city-select")
+            .val(pCity)
+            .trigger("change.select2");
         }
 
         // Sync star rating/category if property has a valid type
@@ -3556,12 +4872,14 @@
               .replace(/\s+—\s+.*$/, "")
               .trim();
           } else {
-            hotelName = $(this).find(".itin-day-hotel-custom").val().trim() || "";
+            hotelName =
+              $(this).find(".itin-day-hotel-custom").val().trim() || "";
           }
 
           const hotelStars = $(this).find(".itin-day-hotel-stars").val();
 
-          let roomType = $(this).find(".itin-day-room-type").val() || "Deluxe Room";
+          let roomType =
+            $(this).find(".itin-day-room-type").val() || "Deluxe Room";
           if (roomType === "custom") {
             roomType =
               $(this).find(".itin-day-room-type-custom").val().trim() ||
@@ -3582,7 +4900,11 @@
 
           const dayImage = $(this).attr("data-day-image") || "";
           const hotelId = parseInt(hotelVal) > 0 ? parseInt(hotelVal) : 0;
-          const roomTypeId = parseInt($(this).find(".itin-day-room-type option:selected").data("id") || 0) || 0;
+          const roomTypeId =
+            parseInt(
+              $(this).find(".itin-day-room-type option:selected").data("id") ||
+                0,
+            ) || 0;
 
           structuredItin.push({
             day: dayTitle,
@@ -3627,7 +4949,8 @@
             : 1;
 
         const templateToUse =
-          (self.selectedPackage && self.selectedPackage.tour_package_template) ||
+          (self.selectedPackage &&
+            self.selectedPackage.tour_package_template) ||
           self.selectedPackageTemplate ||
           "mit";
 
@@ -3657,10 +4980,22 @@
         const durationDays = structuredItin.length;
         const durationNights = durationDays > 1 ? durationDays - 1 : 1;
 
+        const customerEmail =
+          (self.leadData && self.leadData.email) ||
+          $("#editLeadEmail").val() ||
+          "";
+        const customerMobile =
+          (self.leadData &&
+            (self.leadData.mobile || self.leadData.clean_mobile)) ||
+          $("#editLeadPhone").val() ||
+          "";
+
         const postData = {
           id: pkgId,
           refId: rawRefId,
           refType: "enquiry",
+          email: customerEmail,
+          mobile: customerMobile,
           mrp: adultPrice || 0,
           isDownload: !!isDownload,
           content: {
@@ -3686,7 +5021,10 @@
             child_per_person: childPrice || 0,
             infant_per_person: infantPrice || 0,
             total_price: totalPrice || 0,
-            duration: durationNights > 0 ? `${durationNights} Nights / ${durationDays} Days` : `${durationDays} Days`,
+            duration:
+              durationNights > 0
+                ? `${durationNights} Nights / ${durationDays} Days`
+                : `${durationDays} Days`,
             duration_days: durationDays,
             number_of_days: durationNights,
             overview: $("#itineraryCustomOverview").val().trim(),
@@ -3725,7 +5063,11 @@
               onError(xhr);
             }
             let errorMsg = "Network error while processing itinerary.";
-            if (xhr && xhr.responseJSON && (xhr.responseJSON.msg || xhr.responseJSON.message)) {
+            if (
+              xhr &&
+              xhr.responseJSON &&
+              (xhr.responseJSON.msg || xhr.responseJSON.message)
+            ) {
               errorMsg = xhr.responseJSON.msg || xhr.responseJSON.message;
             }
             self.notify(errorMsg, "error");
@@ -3747,306 +5089,345 @@
       // Preview Itinerary CTA in Builder Modal (Server-driven Iframe Preview using Selected Package Template)
       $(document).off("click", "#btnPreviewItinerary");
       $(document).off("click", "#btnPreviewItineraryBottom");
-      $(document).off("click", "#btnPreviewItinerary, #btnPreviewItineraryBottom");
+      $(document).off(
+        "click",
+        "#btnPreviewItinerary, #btnPreviewItineraryBottom",
+      );
       $(document).off(".v3ItinPreview");
       $("#btnPreviewItinerary, #btnPreviewItineraryBottom").off("click");
 
-      $(document).on("click.v3ItinPreview", "#btnPreviewItinerary, #btnPreviewItineraryBottom", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (typeof e.stopImmediatePropagation === "function") {
-          e.stopImmediatePropagation();
-        }
+      $(document).on(
+        "click.v3ItinPreview",
+        "#btnPreviewItinerary, #btnPreviewItineraryBottom",
+        function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (typeof e.stopImmediatePropagation === "function") {
+            e.stopImmediatePropagation();
+          }
 
-        // 1. Strict global timestamp debounce (rejects any call within 2.5s)
-        const now = Date.now();
-        if (window.__v3LastShowApiCallTime && (now - window.__v3LastShowApiCallTime < 2500)) {
-          return false;
-        }
-        window.__v3LastShowApiCallTime = now;
+          // 1. Strict global timestamp debounce (rejects any call within 2.5s)
+          const now = Date.now();
+          if (
+            window.__v3LastShowApiCallTime &&
+            now - window.__v3LastShowApiCallTime < 2500
+          ) {
+            return false;
+          }
+          window.__v3LastShowApiCallTime = now;
 
-        // 2. Global mutex across all script instances and rapid clicks
-        if (window._isV3ItineraryShowLoading || self.isPreviewLoading) {
-          return false;
-        }
-        window._isV3ItineraryShowLoading = true;
-        self.isPreviewLoading = true;
+          // 2. Global mutex across all script instances and rapid clicks
+          if (window._isV3ItineraryShowLoading || self.isPreviewLoading) {
+            return false;
+          }
+          window._isV3ItineraryShowLoading = true;
+          self.isPreviewLoading = true;
 
-        const $btns = $("#btnPreviewItinerary, #btnPreviewItineraryBottom");
-        $btns.prop("disabled", true);
+          const $btns = $("#btnPreviewItinerary, #btnPreviewItineraryBottom");
+          $btns.prop("disabled", true);
 
-        const title =
-          $("#itineraryCustomTitle").val().trim() || "Custom Tour Itinerary";
-        const travelDate =
-          $("#itineraryCustomTravelDate").val().trim() ||
-          (self.leadData &&
-          self.leadData.travel_details &&
-          self.leadData.travel_details.date_of_travel
-            ? self.leadData.travel_details.date_of_travel
-            : "Flexible");
-        const totalPrice =
-          parseFloat($("#itineraryCustomTotalPrice").val()) || 0;
-        const adultPrice =
-          parseFloat($("#itineraryCustomAdultPrice").val()) || 0;
-        const childPrice =
-          parseFloat($("#itineraryCustomChildPrice").val()) || 0;
-        const infantPrice =
-          parseFloat($("#itineraryCustomInfantPrice").val()) || 0;
-        const overview = $("#itineraryCustomOverview").val().trim();
-        const inclusions = $("#itineraryCustomInclusions").val().trim();
-        const exclusions = $("#itineraryCustomExclusions").val().trim();
-        const clientName = self.leadData
-          ? self.leadData.name
-          : "Valued Customer";
-        const adults =
-          parseInt($("#itineraryCustomAdultCount").val()) ||
-          (self.leadData && self.leadData.travel_details
-            ? parseInt(self.leadData.travel_details.adults || 1)
-            : 1);
-        const children =
-          parseInt($("#itineraryCustomChildCount").val()) ||
-          (self.leadData && self.leadData.travel_details
-            ? parseInt(self.leadData.travel_details.children || 0)
-            : 0);
-        const infants =
-          parseInt($("#itineraryCustomInfantCount").val()) ||
-          (self.leadData && self.leadData.travel_details
-            ? parseInt(self.leadData.travel_details.infants || 0)
-            : 0);
+          const title =
+            $("#itineraryCustomTitle").val().trim() || "Custom Tour Itinerary";
+          const travelDate =
+            $("#itineraryCustomTravelDate").val().trim() ||
+            (self.leadData &&
+            self.leadData.travel_details &&
+            self.leadData.travel_details.date_of_travel
+              ? self.leadData.travel_details.date_of_travel
+              : "Flexible");
+          const totalPrice =
+            parseFloat($("#itineraryCustomTotalPrice").val()) || 0;
+          const adultPrice =
+            parseFloat($("#itineraryCustomAdultPrice").val()) || 0;
+          const childPrice =
+            parseFloat($("#itineraryCustomChildPrice").val()) || 0;
+          const infantPrice =
+            parseFloat($("#itineraryCustomInfantPrice").val()) || 0;
+          const overview = $("#itineraryCustomOverview").val().trim();
+          const inclusions = $("#itineraryCustomInclusions").val().trim();
+          const exclusions = $("#itineraryCustomExclusions").val().trim();
+          const clientName = self.leadData
+            ? self.leadData.name
+            : "Valued Customer";
+          const adults =
+            parseInt($("#itineraryCustomAdultCount").val()) ||
+            (self.leadData && self.leadData.travel_details
+              ? parseInt(self.leadData.travel_details.adults || 1)
+              : 1);
+          const children =
+            parseInt($("#itineraryCustomChildCount").val()) ||
+            (self.leadData && self.leadData.travel_details
+              ? parseInt(self.leadData.travel_details.children || 0)
+              : 0);
+          const infants =
+            parseInt($("#itineraryCustomInfantCount").val()) ||
+            (self.leadData && self.leadData.travel_details
+              ? parseInt(self.leadData.travel_details.infants || 0)
+              : 0);
 
-        const structuredItin = [];
-        $("#itinDaysStack .v3-itin-day-card").each(function () {
-          const dayTitle = $(this).find(".itin-day-title").val().trim();
-          const $overviewTextarea = $(this).find(".itin-day-overview");
-          const editor = $overviewTextarea.data("v3Editor");
-          const dayOverview = (
-            editor ? editor.getContent() : $overviewTextarea.val()
-          ).trim();
-          const stayCity = $(this).find(".itin-day-city-select").val() || "";
+          const structuredItin = [];
+          $("#itinDaysStack .v3-itin-day-card").each(function () {
+            const dayTitle = $(this).find(".itin-day-title").val().trim();
+            const $overviewTextarea = $(this).find(".itin-day-overview");
+            const editor = $overviewTextarea.data("v3Editor");
+            const dayOverview = (
+              editor ? editor.getContent() : $overviewTextarea.val()
+            ).trim();
+            const stayCity = $(this).find(".itin-day-city-select").val() || "";
 
-          let hotelName = "";
-          const $hotelSel = $(this).find(".itin-day-hotel-select");
-          const hotelVal = $hotelSel.val();
-          if (hotelVal === "custom") {
-            hotelName = $(this).find(".itin-day-hotel-custom").val().trim();
-          } else if (hotelVal && hotelVal !== "no_hotel") {
-            hotelName = $hotelSel
-              .find("option:selected")
-              .text()
-              .replace(/\s+—\s+.*$/, "")
+            let hotelName = "";
+            const $hotelSel = $(this).find(".itin-day-hotel-select");
+            const hotelVal = $hotelSel.val();
+            if (hotelVal === "custom") {
+              hotelName = $(this).find(".itin-day-hotel-custom").val().trim();
+            } else if (hotelVal && hotelVal !== "no_hotel") {
+              hotelName = $hotelSel
+                .find("option:selected")
+                .text()
+                .replace(/\s+—\s+.*$/, "")
+                .trim();
+            } else {
+              hotelName =
+                $(this).find(".itin-day-hotel-custom").val().trim() || "";
+            }
+
+            const hotelStars = $(this).find(".itin-day-hotel-stars").val();
+
+            let roomType =
+              $(this).find(".itin-day-room-type").val() || "Deluxe Room";
+            if (roomType === "custom") {
+              roomType =
+                $(this).find(".itin-day-room-type-custom").val().trim() ||
+                "Deluxe Room";
+            }
+
+            const mealPlan = $(this).find(".itin-day-meal-plan").val();
+            let vehicleType = $(this).find(".itin-day-vehicle-type").val();
+            if (vehicleType === "custom" || !vehicleType) {
+              vehicleType =
+                $(this).find(".itin-day-vehicle-custom").val().trim() ||
+                "Private Sedan (Dzire / Etios)";
+            }
+            const transferNotes = $(this)
+              .find(".itin-day-transfer-notes")
+              .val()
               .trim();
-          } else {
-            hotelName = $(this).find(".itin-day-hotel-custom").val().trim() || "";
-          }
 
-          const hotelStars = $(this).find(".itin-day-hotel-stars").val();
+            const dayImage = $(this).attr("data-day-image") || "";
+            const hotelId = parseInt(hotelVal) > 0 ? parseInt(hotelVal) : 0;
+            const roomTypeId =
+              parseInt(
+                $(this)
+                  .find(".itin-day-room-type option:selected")
+                  .data("id") || 0,
+              ) || 0;
 
-          let roomType = $(this).find(".itin-day-room-type").val() || "Deluxe Room";
-          if (roomType === "custom") {
-            roomType =
-              $(this).find(".itin-day-room-type-custom").val().trim() ||
-              "Deluxe Room";
-          }
-
-          const mealPlan = $(this).find(".itin-day-meal-plan").val();
-          let vehicleType = $(this).find(".itin-day-vehicle-type").val();
-          if (vehicleType === "custom" || !vehicleType) {
-            vehicleType =
-              $(this).find(".itin-day-vehicle-custom").val().trim() ||
-              "Private Sedan (Dzire / Etios)";
-          }
-          const transferNotes = $(this)
-            .find(".itin-day-transfer-notes")
-            .val()
-            .trim();
-
-          const dayImage = $(this).attr("data-day-image") || "";
-          const hotelId = parseInt(hotelVal) > 0 ? parseInt(hotelVal) : 0;
-          const roomTypeId = parseInt($(this).find(".itin-day-room-type option:selected").data("id") || 0) || 0;
-
-          structuredItin.push({
-            day: dayTitle,
-            city: stayCity,
-            stay_city: stayCity,
-            overview: dayOverview,
-            hotel: hotelName,
-            hotel_id: hotelId,
-            hotel_title: hotelName,
-            stay: hotelName,
-            hotel_stars: hotelStars,
-            room_type: roomType,
-            room_type_id: roomTypeId,
-            meal_plan: mealPlan,
-            vehicle: vehicleType,
-            transfer_notes: transferNotes,
-            image: dayImage,
-            feature_image: dayImage,
-            day_image: dayImage,
+            structuredItin.push({
+              day: dayTitle,
+              city: stayCity,
+              stay_city: stayCity,
+              overview: dayOverview,
+              hotel: hotelName,
+              hotel_id: hotelId,
+              hotel_title: hotelName,
+              stay: hotelName,
+              hotel_stars: hotelStars,
+              room_type: roomType,
+              room_type_id: roomTypeId,
+              meal_plan: mealPlan,
+              vehicle: vehicleType,
+              transfer_notes: transferNotes,
+              image: dayImage,
+              feature_image: dayImage,
+              day_image: dayImage,
+            });
           });
-        });
 
-        if (structuredItin.length === 0) {
-          self.isPreviewLoading = false;
-          window._isV3ItineraryShowLoading = false;
-          $btns.prop("disabled", false);
-          self.notify(
-            "Please add at least 1 day to preview itinerary.",
-            "warning",
-          );
-          return;
-        }
-
-        const templateToUse =
-          (self.selectedPackage && self.selectedPackage.tour_package_template) ||
-          self.selectedPackageTemplate ||
-          "mit";
-
-        const primaryCity = self.resolvePrimaryCity(structuredItin);
-        const primaryHotel = self.resolvePrimaryHotel(structuredItin);
-        const primaryVehicle = self.resolvePrimaryVehicle(structuredItin);
-        const pkgState = self.selectedPackage ? (self.selectedPackage.tour_package_state || self.selectedPackage.state || "") : "";
-        const pkgCountry = self.selectedPackage ? (self.selectedPackage.tour_package_country || self.selectedPackage.country || "") : "";
-        const durationDays = structuredItin.length;
-        const durationNights = durationDays > 1 ? durationDays - 1 : 1;
-
-        const pickupLocation = $("#itineraryCustomPickup").val() || "";
-        const dropLocation = $("#itineraryCustomDrop").val() || "";
-        const travelTheme = $("#itineraryCustomTheme").val() || "standard";
-
-        const numericLeadId = (self.leadData && self.leadData.id)
-          ? parseInt(self.leadData.id)
-          : (function () {
-              try {
-                const dec = atob(self.leadId);
-                return /^\d+$/.test(dec) ? parseInt(dec) : self.leadId;
-              } catch (e) {
-                return self.leadId;
-              }
-            })();
-
-        const currentAgentId = parseInt(
-          (self.leadData && self.leadData.agent_id) ||
-          $("#heroAssignAgentSelect").val() ||
-          0
-        );
-
-        const pkgId = self.selectedPackage
-          ? parseInt(self.selectedPackage.tour_package_id || self.selectedPackage.id || 0)
-          : 0;
-
-        const payload = {
-          title: title,
-          package_title: title,
-          package_id: pkgId,
-          tour_package_id: pkgId,
-          gallery_image_list: self.selectedPackage ? (self.selectedPackage.gallery_image_list || "") : "",
-          refId: numericLeadId,
-          leadId: numericLeadId,
-          lead_id: numericLeadId,
-          enquiry_id: numericLeadId,
-          agent_id: currentAgentId,
-          assigned_agent: currentAgentId,
-          city: primaryCity,
-          destination: primaryCity,
-          tour_package_city: primaryCity,
-          state: pkgState,
-          country: pkgCountry,
-          theme: travelTheme,
-          travelTheme: travelTheme,
-          travel_theme: travelTheme,
-          pickupLocation: pickupLocation,
-          dropLocation: dropLocation,
-          pickup_location: pickupLocation,
-          drop_location: dropLocation,
-          adults: adults,
-          children: children,
-          infants: infants,
-          adults_count: adults,
-          children_count: children,
-          infants_count: infants,
-          template: templateToUse,
-          hotel: primaryHotel,
-          tour_package_hotel: primaryHotel,
-          hotel_category: self.resolvePrimaryHotelCategory(structuredItin),
-          stay_category: self.resolvePrimaryHotelCategory(structuredItin),
-          outstationVehicle: primaryVehicle,
-          outstation_vehicle: primaryVehicle,
-          vehicle: primaryVehicle,
-          totalPrice: totalPrice,
-          total_price: totalPrice,
-          price: totalPrice,
-          adultPrice: adultPrice,
-          adult_price: adultPrice,
-          adult_per_person: adultPrice,
-          childPrice: childPrice,
-          child_price: childPrice,
-          child_per_person: childPrice,
-          infantPrice: infantPrice,
-          infant_price: infantPrice,
-          infant_per_person: infantPrice,
-          clientName: clientName,
-          travelDate: travelDate,
-          travel_date: travelDate,
-          duration: durationNights > 0 ? `${durationNights} Nights / ${durationDays} Days` : `${durationDays} Days`,
-          duration_days: durationDays,
-          number_of_days: durationNights,
-          overview: overview,
-          inclusions: inclusions,
-          exclusions: exclusions,
-          days: structuredItin,
-          itinerary: structuredItin,
-          coverImage: self.selectedPackage
-            ? self.selectedPackage.tour_package_image ||
-              self.selectedPackage.gallery_image ||
-              ""
-            : "",
-          format: "html",
-          hideActions: true,
-          preview: true,
-        };
-
-        $("#livePreviewHeaderTitle").text(title);
-        $("#modalItineraryLivePreview").addClass("is-active");
-
-        const iframe = document.getElementById("livePreviewIframe");
-        if (iframe) {
-          iframe.srcdoc = "";
-        }
-        $("#livePreviewLoader").removeClass("v3-hidden");
-
-        if (self.activePreviewXhr && typeof self.activePreviewXhr.abort === "function") {
-          try {
-            self.activePreviewXhr.abort();
-          } catch (err) {}
-        }
-
-        self.activePreviewXhr = $.ajax({
-          url: "/api/v3/itinerary/show/",
-          type: "POST",
-          contentType: "application/json",
-          data: JSON.stringify(payload),
-          dataType: "html",
-          success: function (renderedHtml) {
-            if (iframe) {
-              iframe.srcdoc = renderedHtml;
-            }
-          },
-          error: function (xhr, status) {
-            if (status !== "abort") {
-              self.notify("Failed to render preview template.", "error");
-            }
-          },
-          complete: function () {
-            self.activePreviewXhr = null;
+          if (structuredItin.length === 0) {
             self.isPreviewLoading = false;
-            setTimeout(function () {
-              window._isV3ItineraryShowLoading = false;
-              $btns.prop("disabled", false);
-            }, 400);
-            $("#livePreviewLoader").addClass("v3-hidden");
-          },
-        });
-      });
+            window._isV3ItineraryShowLoading = false;
+            $btns.prop("disabled", false);
+            self.notify(
+              "Please add at least 1 day to preview itinerary.",
+              "warning",
+            );
+            return;
+          }
+
+          const templateToUse =
+            (self.selectedPackage &&
+              self.selectedPackage.tour_package_template) ||
+            self.selectedPackageTemplate ||
+            "mit";
+
+          const primaryCity = self.resolvePrimaryCity(structuredItin);
+          const primaryHotel = self.resolvePrimaryHotel(structuredItin);
+          const primaryVehicle = self.resolvePrimaryVehicle(structuredItin);
+          const pkgState = self.selectedPackage
+            ? self.selectedPackage.tour_package_state ||
+              self.selectedPackage.state ||
+              ""
+            : "";
+          const pkgCountry = self.selectedPackage
+            ? self.selectedPackage.tour_package_country ||
+              self.selectedPackage.country ||
+              ""
+            : "";
+          const durationDays = structuredItin.length;
+          const durationNights = durationDays > 1 ? durationDays - 1 : 1;
+
+          const pickupLocation = $("#itineraryCustomPickup").val() || "";
+          const dropLocation = $("#itineraryCustomDrop").val() || "";
+          const travelTheme = $("#itineraryCustomTheme").val() || "standard";
+
+          const numericLeadId =
+            self.leadData && self.leadData.id
+              ? parseInt(self.leadData.id)
+              : (function () {
+                  try {
+                    const dec = atob(self.leadId);
+                    return /^\d+$/.test(dec) ? parseInt(dec) : self.leadId;
+                  } catch (e) {
+                    return self.leadId;
+                  }
+                })();
+
+          const currentAgentId = parseInt(
+            (self.leadData && self.leadData.agent_id) ||
+              $("#heroAssignAgentSelect").val() ||
+              0,
+          );
+
+          const pkgId = self.selectedPackage
+            ? parseInt(
+                self.selectedPackage.tour_package_id ||
+                  self.selectedPackage.id ||
+                  0,
+              )
+            : 0;
+
+          const payload = {
+            title: title,
+            package_title: title,
+            package_id: pkgId,
+            tour_package_id: pkgId,
+            gallery_image_list: self.selectedPackage
+              ? self.selectedPackage.gallery_image_list || ""
+              : "",
+            refId: numericLeadId,
+            leadId: numericLeadId,
+            lead_id: numericLeadId,
+            enquiry_id: numericLeadId,
+            agent_id: currentAgentId,
+            assigned_agent: currentAgentId,
+            city: primaryCity,
+            destination: primaryCity,
+            tour_package_city: primaryCity,
+            state: pkgState,
+            country: pkgCountry,
+            theme: travelTheme,
+            travelTheme: travelTheme,
+            travel_theme: travelTheme,
+            pickupLocation: pickupLocation,
+            dropLocation: dropLocation,
+            pickup_location: pickupLocation,
+            drop_location: dropLocation,
+            adults: adults,
+            children: children,
+            infants: infants,
+            adults_count: adults,
+            children_count: children,
+            infants_count: infants,
+            template: templateToUse,
+            hotel: primaryHotel,
+            tour_package_hotel: primaryHotel,
+            hotel_category: self.resolvePrimaryHotelCategory(structuredItin),
+            stay_category: self.resolvePrimaryHotelCategory(structuredItin),
+            outstationVehicle: primaryVehicle,
+            outstation_vehicle: primaryVehicle,
+            vehicle: primaryVehicle,
+            totalPrice: totalPrice,
+            total_price: totalPrice,
+            price: totalPrice,
+            adultPrice: adultPrice,
+            adult_price: adultPrice,
+            adult_per_person: adultPrice,
+            childPrice: childPrice,
+            child_price: childPrice,
+            child_per_person: childPrice,
+            infantPrice: infantPrice,
+            infant_price: infantPrice,
+            infant_per_person: infantPrice,
+            clientName: clientName,
+            travelDate: travelDate,
+            travel_date: travelDate,
+            duration:
+              durationNights > 0
+                ? `${durationNights} Nights / ${durationDays} Days`
+                : `${durationDays} Days`,
+            duration_days: durationDays,
+            number_of_days: durationNights,
+            overview: overview,
+            inclusions: inclusions,
+            exclusions: exclusions,
+            days: structuredItin,
+            itinerary: structuredItin,
+            coverImage: self.selectedPackage
+              ? self.selectedPackage.tour_package_image ||
+                self.selectedPackage.gallery_image ||
+                ""
+              : "",
+            format: "html",
+            hideActions: true,
+            preview: true,
+          };
+
+          $("#livePreviewHeaderTitle").text(title);
+          $("#modalItineraryLivePreview").addClass("is-active");
+
+          const iframe = document.getElementById("livePreviewIframe");
+          if (iframe) {
+            iframe.srcdoc = "";
+          }
+          $("#livePreviewLoader").removeClass("v3-hidden");
+
+          if (
+            self.activePreviewXhr &&
+            typeof self.activePreviewXhr.abort === "function"
+          ) {
+            try {
+              self.activePreviewXhr.abort();
+            } catch (err) {}
+          }
+
+          self.activePreviewXhr = $.ajax({
+            url: "/api/v3/itinerary/show/",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(payload),
+            dataType: "html",
+            success: function (renderedHtml) {
+              if (iframe) {
+                iframe.srcdoc = renderedHtml;
+              }
+            },
+            error: function (xhr, status) {
+              if (status !== "abort") {
+                self.notify("Failed to render preview template.", "error");
+              }
+            },
+            complete: function () {
+              self.activePreviewXhr = null;
+              self.isPreviewLoading = false;
+              setTimeout(function () {
+                window._isV3ItineraryShowLoading = false;
+                $btns.prop("disabled", false);
+              }, 400);
+              $("#livePreviewLoader").addClass("v3-hidden");
+            },
+          });
+        },
+      );
 
       // Actions inside Live Proposal Preview Modal
       $(document)
@@ -4058,7 +5439,9 @@
           const newTab = window.open("about:blank", "_blank");
           if (newTab) {
             try {
-              newTab.document.write("<p style='font-family:sans-serif;padding:24px;color:#475569;font-size:14px;'>Preparing your Tour Itinerary PDF document...</p>");
+              newTab.document.write(
+                "<p style='font-family:sans-serif;padding:24px;color:#475569;font-size:14px;'>Preparing your Tour Itinerary PDF document...</p>",
+              );
               newTab.document.close();
             } catch (e) {}
           }
@@ -4087,23 +5470,32 @@
 
       $(document)
         .off("click.v3LiveSendItin", "#btnLivePreviewSendItinerary")
-        .on("click.v3LiveSendItin", "#btnLivePreviewSendItinerary", function () {
-          if (self.isPublishingItin) return;
-          self.isPublishingItin = true;
+        .on(
+          "click.v3LiveSendItin",
+          "#btnLivePreviewSendItinerary",
+          function () {
+            if (self.isPublishingItin) return;
+            self.isPublishingItin = true;
 
-          self.publishItinerary(false, $(this), function (res) {
-            self.isPublishingItin = false;
-            $("#modalItineraryLivePreview").removeClass("is-active");
-            $("#modalSendItinerary").removeClass("is-active");
-            self.notify(
-              "Itinerary published and shared with customer!",
-              "success",
+            self.publishItinerary(
+              false,
+              $(this),
+              function (res) {
+                self.isPublishingItin = false;
+                $("#modalItineraryLivePreview").removeClass("is-active");
+                $("#modalSendItinerary").removeClass("is-active");
+                self.notify(
+                  res.msg || "Itinerary published and shared with customer!",
+                  "success",
+                );
+                self.loadLeadDetails();
+              },
+              function () {
+                self.isPublishingItin = false;
+              },
             );
-            self.loadLeadDetails();
-          }, function() {
-            self.isPublishingItin = false;
-          });
-        });
+          },
+        );
 
       $(document)
         .off("click.v3LiveCloseModal", ".v3-preview-close-trigger")
@@ -4112,12 +5504,16 @@
         });
 
       // 9. Other Modals & Follow-up Presets
-      $(document).on("click", "#btnHeroSetFollowUp, #btnSideSetFollowUp", function () {
-        $(".v3-tab-link[data-tab='tab-activity']").trigger("click");
-        $(".v3-composer-type-btn[data-type='followup']").trigger("click");
-        $("#composerNoteInput").focus();
-        self.initDateTimePicker();
-      });
+      $(document).on(
+        "click",
+        "#btnHeroSetFollowUp, #btnSideSetFollowUp",
+        function () {
+          $(".v3-tab-link[data-tab='tab-activity']").trigger("click");
+          $(".v3-composer-type-btn[data-type='followup']").trigger("click");
+          $("#composerNoteInput").focus();
+          self.initDateTimePicker();
+        },
+      );
 
       // Follow-Up Quick Preset Chips Click
       $(document).on("click", ".v3-preset-chip", function (e) {
@@ -4143,7 +5539,12 @@
             if (remMin > 0) targetMoment.add(15 - remMin, "minutes");
             targetMoment.second(0);
             if (targetMoment.hour() >= 21 || targetMoment.hour() < 9) {
-              targetMoment = now.clone().add(1, "days").hour(10).minute(0).second(0);
+              targetMoment = now
+                .clone()
+                .add(1, "days")
+                .hour(10)
+                .minute(0)
+                .second(0);
             }
             break;
           }
@@ -4166,12 +5567,22 @@
             break;
           }
           case "in_2_days": {
-            targetMoment = now.clone().add(2, "days").hour(11).minute(0).second(0);
+            targetMoment = now
+              .clone()
+              .add(2, "days")
+              .hour(11)
+              .minute(0)
+              .second(0);
             break;
           }
           case "next_monday": {
             const daysUntilMon = (1 + 7 - now.day()) % 7 || 7;
-            targetMoment = now.clone().add(daysUntilMon, "days").hour(10).minute(30).second(0);
+            targetMoment = now
+              .clone()
+              .add(daysUntilMon, "days")
+              .hour(10)
+              .minute(30)
+              .second(0);
             break;
           }
           default: {
@@ -4190,16 +5601,24 @@
         if (targetSelector === "#modalFollowUpTime") {
           $("#modalFollowUpDate").val(datePart);
           $("#modalFollowUpTimeInput").val(time24Part);
-          const $pills = $('.v3-time-quick-pills[data-target="#modalFollowUpTimeInput"]');
+          const $pills = $(
+            '.v3-time-quick-pills[data-target="#modalFollowUpTimeInput"]',
+          );
           $pills.find(".v3-time-pill").removeClass("active");
-          $pills.find(`.v3-time-pill[data-time="${time24Part}"]`).addClass("active");
+          $pills
+            .find(`.v3-time-pill[data-time="${time24Part}"]`)
+            .addClass("active");
           self.checkSlotConflict(formattedStr, $("#modalSlotStatus"));
         } else if (targetSelector === "#composerFollowupTime") {
           $("#composerFollowupDate").val(datePart);
           $("#composerFollowupTimeInput").val(time24Part);
-          const $pills = $('.v3-time-quick-pills[data-target="#composerFollowupTimeInput"]');
+          const $pills = $(
+            '.v3-time-quick-pills[data-target="#composerFollowupTimeInput"]',
+          );
           $pills.find(".v3-time-pill").removeClass("active");
-          $pills.find(`.v3-time-pill[data-time="${time24Part}"]`).addClass("active");
+          $pills
+            .find(`.v3-time-pill[data-time="${time24Part}"]`)
+            .addClass("active");
           self.checkSlotConflict(formattedStr, $("#composerSlotStatus"));
         }
 
@@ -4211,7 +5630,9 @@
         e.preventDefault();
         const $pill = $(this);
         const time24 = $pill.data("time");
-        const targetSelect = $pill.closest(".v3-time-quick-pills").data("target");
+        const targetSelect = $pill
+          .closest(".v3-time-quick-pills")
+          .data("target");
         const $input = $(targetSelect);
 
         $pill.siblings(".v3-time-pill").removeClass("active");
@@ -4223,44 +5644,71 @@
       });
 
       // Native Date/Time input changes: Sync master hidden input
-      $(document).on("change", "#modalFollowUpDate, #modalFollowUpTimeInput", function () {
-        const dateVal = $("#modalFollowUpDate").val() || (typeof moment !== "undefined" ? moment().add(1, "days").format("YYYY-MM-DD") : "");
-        const time24Val = $("#modalFollowUpTimeInput").val() || "10:30";
-        let time12 = "10:30 AM";
-        if (typeof moment !== "undefined") {
-          time12 = moment("2000-01-01 " + time24Val).format("hh:mm A");
-        }
-        const combined = dateVal + ", " + time12;
-        $("#modalFollowUpTime").val(combined);
+      $(document).on(
+        "change",
+        "#modalFollowUpDate, #modalFollowUpTimeInput",
+        function () {
+          const dateVal =
+            $("#modalFollowUpDate").val() ||
+            (typeof moment !== "undefined"
+              ? moment().add(1, "days").format("YYYY-MM-DD")
+              : "");
+          const time24Val = $("#modalFollowUpTimeInput").val() || "10:30";
+          let time12 = "10:30 AM";
+          if (typeof moment !== "undefined") {
+            time12 = moment("2000-01-01 " + time24Val).format("hh:mm A");
+          }
+          const combined = dateVal + ", " + time12;
+          $("#modalFollowUpTime").val(combined);
 
-        const $pills = $('.v3-time-quick-pills[data-target="#modalFollowUpTimeInput"]');
-        $pills.find(".v3-time-pill").removeClass("active");
-        $pills.find(`.v3-time-pill[data-time="${time24Val}"]`).addClass("active");
+          const $pills = $(
+            '.v3-time-quick-pills[data-target="#modalFollowUpTimeInput"]',
+          );
+          $pills.find(".v3-time-pill").removeClass("active");
+          $pills
+            .find(`.v3-time-pill[data-time="${time24Val}"]`)
+            .addClass("active");
 
-        self.checkSlotConflict(combined, $("#modalSlotStatus"));
-      });
+          self.checkSlotConflict(combined, $("#modalSlotStatus"));
+        },
+      );
 
-      $(document).on("change", "#composerFollowupDate, #composerFollowupTimeInput", function () {
-        const dateVal = $("#composerFollowupDate").val() || (typeof moment !== "undefined" ? moment().add(1, "days").format("YYYY-MM-DD") : "");
-        const time24Val = $("#composerFollowupTimeInput").val() || "10:30";
-        let time12 = "10:30 AM";
-        if (typeof moment !== "undefined") {
-          time12 = moment("2000-01-01 " + time24Val).format("hh:mm A");
-        }
-        const combined = dateVal + ", " + time12;
-        $("#composerFollowupTime").val(combined);
+      $(document).on(
+        "change",
+        "#composerFollowupDate, #composerFollowupTimeInput",
+        function () {
+          const dateVal =
+            $("#composerFollowupDate").val() ||
+            (typeof moment !== "undefined"
+              ? moment().add(1, "days").format("YYYY-MM-DD")
+              : "");
+          const time24Val = $("#composerFollowupTimeInput").val() || "10:30";
+          let time12 = "10:30 AM";
+          if (typeof moment !== "undefined") {
+            time12 = moment("2000-01-01 " + time24Val).format("hh:mm A");
+          }
+          const combined = dateVal + ", " + time12;
+          $("#composerFollowupTime").val(combined);
 
-        const $pills = $('.v3-time-quick-pills[data-target="#composerFollowupTimeInput"]');
-        $pills.find(".v3-time-pill").removeClass("active");
-        $pills.find(`.v3-time-pill[data-time="${time24Val}"]`).addClass("active");
+          const $pills = $(
+            '.v3-time-quick-pills[data-target="#composerFollowupTimeInput"]',
+          );
+          $pills.find(".v3-time-pill").removeClass("active");
+          $pills
+            .find(`.v3-time-pill[data-time="${time24Val}"]`)
+            .addClass("active");
 
-        self.checkSlotConflict(combined, $("#composerSlotStatus"));
-      });
+          self.checkSlotConflict(combined, $("#composerSlotStatus"));
+        },
+      );
 
       // Submit Schedule Follow-Up Modal (if opened directly)
       $(document).on("click", "#btnSubmitModalFollowUp", function () {
         if (!self.leadData || !(parseInt(self.leadData.agent_id || 0) > 0)) {
-          self.notify("Lead is unassigned. Please assign an agent first.", "warning");
+          self.notify(
+            "Lead is unassigned. Please assign an agent first.",
+            "warning",
+          );
           return;
         }
 
@@ -4269,7 +5717,10 @@
         const comment = $("#modalFollowUpComment").val().trim();
 
         if (!fTime) {
-          self.notify("Please select a valid follow-up date and time.", "warning");
+          self.notify(
+            "Please select a valid follow-up date and time.",
+            "warning",
+          );
           return;
         }
 
@@ -4278,7 +5729,7 @@
           leadId: self.leadId,
           title: reason,
           category: reason,
-          msg: comment || ("Scheduled callback for " + reason),
+          msg: comment || "Scheduled callback for " + reason,
           followupTime: fTime,
         };
 
@@ -4300,7 +5751,9 @@
         function () {
           const fileInput = document.getElementById("modalPayFile");
           if (fileInput) fileInput.value = "";
-          $("#modalPayFileText").text("Click to upload payment receipt or screenshot");
+          $("#modalPayFileText").text(
+            "Click to upload payment receipt or screenshot",
+          );
           $("#btnClearPayFile").addClass("v3-hidden");
           $("#modalPayFilePreview").empty().addClass("v3-hidden");
           $("#modalUpdatePayment").addClass("is-active");
@@ -4317,21 +5770,30 @@
 
         if (file) {
           const fileSizeKb = Math.round(file.size / 1024);
-          const sizeStr = fileSizeKb > 1024 ? (fileSizeKb / 1024).toFixed(1) + " MB" : fileSizeKb + " KB";
-          $text.html(`<strong>${file.name}</strong> <span class="v3-file-size">(${sizeStr})</span>`);
+          const sizeStr =
+            fileSizeKb > 1024
+              ? (fileSizeKb / 1024).toFixed(1) + " MB"
+              : fileSizeKb + " KB";
+          $text.html(
+            `<strong>${file.name}</strong> <span class="v3-file-size">(${sizeStr})</span>`,
+          );
           $clearBtn.removeClass("v3-hidden");
 
           if (file.type && file.type.startsWith("image/")) {
             const reader = new FileReader();
             reader.onload = function (e) {
               $preview
-                .html(`<img src="${e.target.result}" alt="Preview" class="v3-receipt-thumb-img">`)
+                .html(
+                  `<img src="${e.target.result}" alt="Preview" class="v3-receipt-thumb-img">`,
+                )
                 .removeClass("v3-hidden");
             };
             reader.readAsDataURL(file);
           } else {
             $preview
-              .html(`<div class="v3-receipt-doc-chip"><i class="fi fi-rr-document"></i> <span>${file.name}</span></div>`)
+              .html(
+                `<div class="v3-receipt-doc-chip"><i class="fi fi-rr-document"></i> <span>${file.name}</span></div>`,
+              )
               .removeClass("v3-hidden");
           }
         } else {
@@ -4346,7 +5808,9 @@
         e.stopPropagation();
         const fileInput = document.getElementById("modalPayFile");
         if (fileInput) fileInput.value = "";
-        $("#modalPayFileText").text("Click to upload payment receipt or screenshot");
+        $("#modalPayFileText").text(
+          "Click to upload payment receipt or screenshot",
+        );
         $("#btnClearPayFile").addClass("v3-hidden");
         $("#modalPayFilePreview").empty().addClass("v3-hidden");
       });
@@ -4362,7 +5826,14 @@
         const p = self.leadPayments[wrappedIdx];
         if (!p) return;
 
-        const rawImg = p.image_url || (p.image && typeof p.image === "object" ? p.image.path : (typeof p.image === "string" && (p.image.includes("/") || p.image.includes(".")) ? p.image : ""));
+        const rawImg =
+          p.image_url ||
+          (p.image && typeof p.image === "object"
+            ? p.image.path
+            : typeof p.image === "string" &&
+                (p.image.includes("/") || p.image.includes("."))
+              ? p.image
+              : "");
         const $imgContainer = $("#receiptImgContainer");
         const $downloadBtn = $("#receiptModalDownloadBtn");
 
@@ -4393,13 +5864,17 @@
           $downloadBtn.hide();
         }
 
-        $("#receiptModalAmount").text(`₹ ${parseFloat(p.amount || 0).toLocaleString("en-IN")}`);
+        $("#receiptModalAmount").text(
+          `₹ ${parseFloat(p.amount || 0).toLocaleString("en-IN")}`,
+        );
         $("#receiptModalDate").text(p.date || "-");
         $("#receiptModalMethod").text(p.method || "Standard");
         $("#receiptModalRef").text(p.reference || "None");
         $("#receiptModalRecordedBy").text(p.recorded_by || "System");
         $("#receiptModalNotes").text(p.notes || "No remarks provided.");
-        $("#receiptModalSubtitle").text(`Recorded on ${p.date || "recent"} by ${p.recorded_by || "Representative"}`);
+        $("#receiptModalSubtitle").text(
+          `Recorded on ${p.date || "recent"} by ${p.recorded_by || "Representative"}`,
+        );
         $("#receiptNavCounter").text(`${wrappedIdx + 1} of ${total}`);
 
         if (total <= 1) {
@@ -4520,7 +5995,9 @@
               $("#modalPayRef").val("");
               $("#modalPayNotes").val("");
               if (fileInput) fileInput.value = "";
-              $("#modalPayFileText").text("Click to upload payment receipt or screenshot");
+              $("#modalPayFileText").text(
+                "Click to upload payment receipt or screenshot",
+              );
               $("#btnClearPayFile").addClass("v3-hidden");
               $("#modalPayFilePreview").empty().addClass("v3-hidden");
               self.loadLeadDetails();
@@ -4544,7 +6021,9 @@
         if (!noteId) return;
 
         const doApproveLeadPayment = function () {
-          $btn.prop("disabled", true).html('<i class="fi fi-rr-refresh fa-spin"></i>');
+          $btn
+            .prop("disabled", true)
+            .html('<i class="fi fi-rr-refresh fa-spin"></i>');
 
           $.ajax({
             url: "/api/v3/accounts/verify-payment/",
@@ -4553,21 +6032,32 @@
             dataType: "json",
             success: function (res) {
               if (res.status === "success") {
-                if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+                if (
+                  typeof Swal !== "undefined" &&
+                  typeof Swal.fire === "function"
+                ) {
                   Swal.fire({
                     icon: "success",
                     type: "success",
                     title: "Payment Verified!",
-                    text: res.message || "Payment verified and lead marked as Confirmed.",
+                    text:
+                      res.message ||
+                      "Payment verified and lead marked as Confirmed.",
                     showConfirmButton: false,
                     timer: 1800,
                   });
                 } else {
-                  self.notify(res.message || "Payment verified successfully!", "success");
+                  self.notify(
+                    res.message || "Payment verified successfully!",
+                    "success",
+                  );
                 }
                 self.loadLeadDetails();
               } else {
-                if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+                if (
+                  typeof Swal !== "undefined" &&
+                  typeof Swal.fire === "function"
+                ) {
                   Swal.fire({
                     icon: "error",
                     type: "error",
@@ -4576,13 +6066,20 @@
                     confirmButtonColor: "#dc2626",
                   });
                 } else {
-                  self.notify(res.message || "Could not verify payment.", "error");
+                  self.notify(
+                    res.message || "Could not verify payment.",
+                    "error",
+                  );
                 }
-                $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify');
+                $btn
+                  .prop("disabled", false)
+                  .html('<i class="fi fi-rr-check"></i> Verify');
               }
             },
             error: function () {
-              $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Verify');
+              $btn
+                .prop("disabled", false)
+                .html('<i class="fi fi-rr-check"></i> Verify');
               self.notify("Error communicating with server.", "error");
             },
           });
@@ -4604,7 +6101,11 @@
               doApproveLeadPayment();
             }
           });
-        } else if (confirm("Are you sure you want to verify and approve this payment record? This will mark the lead as Confirmed.")) {
+        } else if (
+          confirm(
+            "Are you sure you want to verify and approve this payment record? This will mark the lead as Confirmed.",
+          )
+        ) {
           doApproveLeadPayment();
         }
       });
@@ -4708,7 +6209,10 @@
       const formatBulletList = (input, defaultFallback = "") => {
         if (!input) return defaultFallback;
         if (Array.isArray(input)) {
-          return input.map((s) => formatBulletList(s)).filter(Boolean).join("\n");
+          return input
+            .map((s) => formatBulletList(s))
+            .filter(Boolean)
+            .join("\n");
         }
         let str = String(input);
         // Replace HTML break and list tags with newlines
@@ -4716,7 +6220,10 @@
         // Remove remaining HTML tags
         str = str.replace(/<[^>]*>?/gm, "");
         // Remove intro prefix phrases
-        str = str.replace(/^(our\s+)?(package\s+)?(inclusions?\s*(cover|include|includes|are|:)?|exclusions?\s*(cover|covers|include|includes|are|:)?)\s*/i, "");
+        str = str.replace(
+          /^(our\s+)?(package\s+)?(inclusions?\s*(cover|include|includes|are|:)?|exclusions?\s*(cover|covers|include|includes|are|:)?)\s*/i,
+          "",
+        );
         str = str.replace(/^(our\s+)?package\s+includes\s+/i, "");
         str = str.replace(/^(inclusions?|exclusions?)\s*:\s*/i, "");
         // Split on comma / and if not already multiline
@@ -4761,7 +6268,9 @@
         rawTravelDate.toLowerCase() !== "flexible" &&
         typeof moment !== "undefined" &&
         moment(rawTravelDate, "YYYY-MM-DD", true).isValid() &&
-        moment(rawTravelDate, "YYYY-MM-DD").isSameOrAfter(moment().startOf("day"))
+        moment(rawTravelDate, "YYYY-MM-DD").isSameOrAfter(
+          moment().startOf("day"),
+        )
       ) {
         resolvedTravelDate = rawTravelDate;
       } else if (typeof moment !== "undefined") {
@@ -4769,7 +6278,6 @@
       }
       $("#itineraryCustomTravelDate").val(resolvedTravelDate);
       self.initSingleDatePickers();
-
 
       const defaultPickup =
         (pkg.tour_package_pickup || "").trim() ||
@@ -4803,7 +6311,10 @@
       )
         .toLowerCase()
         .trim();
-      if ($("#itineraryCustomTheme option[value='" + defaultTheme + "']").length > 0) {
+      if (
+        $("#itineraryCustomTheme option[value='" + defaultTheme + "']").length >
+        0
+      ) {
         $("#itineraryCustomTheme").val(defaultTheme);
       } else {
         $("#itineraryCustomTheme").val("standard");
@@ -4846,7 +6357,9 @@
       if (adults) travelerParts.push(`${adults} Adults`);
       if (children) travelerParts.push(`${children} Children`);
       if (infants) travelerParts.push(`${infants} Infants`);
-      $("#itinTravelerCountBadge").text(travelerParts.join(", ") || "Auto-calculates per traveler");
+      $("#itinTravelerCountBadge").text(
+        travelerParts.join(", ") || "Auto-calculates per traveler",
+      );
 
       const packageCity = (pkg.tour_package_city || "").trim();
       const leadDest = (
@@ -4889,10 +6402,16 @@
       self.selectedPackage.outstation_vehicle =
         pkg.tour_package_outstation_vehicle || pkg.outstation_vehicle || "";
       self.selectedPackage.localsightseen_vehicle =
-        pkg.tour_package_localsightseen_vehicle || pkg.localsightseen_vehicle || "";
+        pkg.tour_package_localsightseen_vehicle ||
+        pkg.localsightseen_vehicle ||
+        "";
 
-      const initialOutstation = (self.selectedPackage.outstation_vehicle || "").trim();
-      const initialLocal = (self.selectedPackage.localsightseen_vehicle || "").trim();
+      const initialOutstation = (
+        self.selectedPackage.outstation_vehicle || ""
+      ).trim();
+      const initialLocal = (
+        self.selectedPackage.localsightseen_vehicle || ""
+      ).trim();
       const initialTotalDays = daysList.length;
 
       daysList = daysList.map((d, i) => {
@@ -4904,10 +6423,10 @@
         }
 
         // Vehicles: outstation vehicle for day 1 and last day, local sightseeing for other days
-        const isFirstOrLast = (i === 0 || i === initialTotalDays - 1);
+        const isFirstOrLast = i === 0 || i === initialTotalDays - 1;
         const defaultVeh = isFirstOrLast
-          ? (initialOutstation || initialLocal || "")
-          : (initialLocal || initialOutstation || "");
+          ? initialOutstation || initialLocal || ""
+          : initialLocal || initialOutstation || "";
 
         if (!d.vehicle || d.vehicle === "Private Sedan") {
           if (defaultVeh) {
@@ -4937,8 +6456,10 @@
           }),
         )
           .done(function (getResArr, hotResArr) {
-            const getRes = getResArr && getResArr[0] ? getResArr[0] : getResArr || {};
-            const hotRes = hotResArr && hotResArr[0] ? hotResArr[0] : hotResArr || {};
+            const getRes =
+              getResArr && getResArr[0] ? getResArr[0] : getResArr || {};
+            const hotRes =
+              hotResArr && hotResArr[0] ? hotResArr[0] : hotResArr || {};
 
             // Merge hotels into self.propertiesList and cache rooms
             if (hotRes && hotRes.hotels && hotRes.hotels.length > 0) {
@@ -4971,7 +6492,8 @@
                     id: ph.hotel_id || ph.id,
                     title: ph.hotel_title || ph.title,
                     city: ph.city || "",
-                    assigned_room_type: ph.room_type || ph.assigned_room_type || "",
+                    assigned_room_type:
+                      ph.room_type || ph.assigned_room_type || "",
                     type: ph.property_type || ph.type || "",
                   };
                 }
@@ -4986,21 +6508,28 @@
             }
 
             // If get.php returned an enriched itinerary, use it as baseline
-            if (
-              getRes &&
-              getRes.status === "success" &&
-              getRes.package
-            ) {
-              if (Array.isArray(getRes.package.itinerary) && getRes.package.itinerary.length > 0) {
+            if (getRes && getRes.status === "success" && getRes.package) {
+              if (
+                Array.isArray(getRes.package.itinerary) &&
+                getRes.package.itinerary.length > 0
+              ) {
                 daysList = getRes.package.itinerary;
               }
-              if (getRes.package.outstation_vehicle || getRes.package.tour_package_outstation_vehicle) {
+              if (
+                getRes.package.outstation_vehicle ||
+                getRes.package.tour_package_outstation_vehicle
+              ) {
                 self.selectedPackage.outstation_vehicle =
-                  getRes.package.outstation_vehicle || getRes.package.tour_package_outstation_vehicle;
+                  getRes.package.outstation_vehicle ||
+                  getRes.package.tour_package_outstation_vehicle;
               }
-              if (getRes.package.localsightseen_vehicle || getRes.package.tour_package_localsightseen_vehicle) {
+              if (
+                getRes.package.localsightseen_vehicle ||
+                getRes.package.tour_package_localsightseen_vehicle
+              ) {
                 self.selectedPackage.localsightseen_vehicle =
-                  getRes.package.localsightseen_vehicle || getRes.package.tour_package_localsightseen_vehicle;
+                  getRes.package.localsightseen_vehicle ||
+                  getRes.package.tour_package_localsightseen_vehicle;
               }
             }
 
@@ -5028,7 +6557,10 @@
                 const detected =
                   detectCityFromText(d.day) || detectCityFromText(d.overview);
                 d.stay =
-                  (assignedH && assignedH.city) || detected || defaultCity || "";
+                  (assignedH && assignedH.city) ||
+                  detected ||
+                  defaultCity ||
+                  "";
                 d.city = d.stay;
               } else {
                 d.stay =
@@ -5045,7 +6577,12 @@
                 if (!d.hotel) d.hotel = d.hotel_title;
                 if (!d.hotel_title) d.hotel_title = d.hotel;
                 if (!d.hotel_id && self.propertiesList) {
-                  const match = self.propertiesList.find(p => p.title && p.title.toLowerCase().trim() === d.hotel.toLowerCase().trim());
+                  const match = self.propertiesList.find(
+                    (p) =>
+                      p.title &&
+                      p.title.toLowerCase().trim() ===
+                        d.hotel.toLowerCase().trim(),
+                  );
                   if (match) d.hotel_id = match.id;
                 }
               } else if (assignedH) {
@@ -5056,8 +6593,16 @@
                   d.room_type = assignedH.assigned_room_type;
                 }
                 if (!d.hotel_stars) {
-                  const defaultPkgHotel = (pkg.tour_package_hotel || pkg.hotel || "3_star_hotel").trim() || "3_star_hotel";
-                  d.hotel_stars = (assignedH.type && assignedH.type !== "home_stay") ? assignedH.type : defaultPkgHotel;
+                  const defaultPkgHotel =
+                    (
+                      pkg.tour_package_hotel ||
+                      pkg.hotel ||
+                      "3_star_hotel"
+                    ).trim() || "3_star_hotel";
+                  d.hotel_stars =
+                    assignedH.type && assignedH.type !== "home_stay"
+                      ? assignedH.type
+                      : defaultPkgHotel;
                 }
               }
 
@@ -5066,10 +6611,10 @@
               }
 
               // 3. Vehicles: outstation vehicle for Day 1 and last day, local sightseeing for other days
-              const isFirstOrLast = (i === 0 || i === totalDays - 1);
+              const isFirstOrLast = i === 0 || i === totalDays - 1;
               const defaultVeh = isFirstOrLast
-                ? (pkgOutstation || pkgLocal || "")
-                : (pkgLocal || pkgOutstation || "");
+                ? pkgOutstation || pkgLocal || ""
+                : pkgLocal || pkgOutstation || "";
 
               if (!d.vehicle || d.vehicle === "Private Sedan") {
                 if (defaultVeh) {
@@ -5111,17 +6656,22 @@
           $heroBtn
             .prop("disabled", true)
             .addClass("is-loading disabled")
-            .html('<i class="fi fi-rr-spinner fi-rr-spin"></i> <span>Converting...</span>');
+            .html(
+              '<i class="fi fi-rr-spinner fi-rr-spin"></i> <span>Converting...</span>',
+            );
         }
         if ($sideBtn.length) {
           if (!$sideBtn.data("orig-title")) {
-            $sideBtn.data("orig-title", $sideBtn.find(".fast-tile-title").text());
+            $sideBtn.data(
+              "orig-title",
+              $sideBtn.find(".fast-tile-title").text(),
+            );
             $sideBtn.data("orig-sub", $sideBtn.find(".fast-tile-sub").text());
           }
+          $sideBtn.prop("disabled", true).addClass("is-loading disabled");
           $sideBtn
-            .prop("disabled", true)
-            .addClass("is-loading disabled");
-          $sideBtn.find(".fast-tile-icon").html('<i class="fi fi-rr-spinner fi-rr-spin"></i>');
+            .find(".fast-tile-icon")
+            .html('<i class="fi fi-rr-spinner fi-rr-spin"></i>');
           $sideBtn.find(".fast-tile-title").text("Converting...");
           $sideBtn.find(".fast-tile-sub").text("Please wait...");
         }
@@ -5136,10 +6686,10 @@
             .html($heroBtn.data("orig-html"));
         }
         if ($sideBtn.length && $sideBtn.data("orig-title")) {
+          $sideBtn.prop("disabled", false).removeClass("is-loading disabled");
           $sideBtn
-            .prop("disabled", false)
-            .removeClass("is-loading disabled");
-          $sideBtn.find(".fast-tile-icon").html('<i class="fi fi-rr-check-circle"></i>');
+            .find(".fast-tile-icon")
+            .html('<i class="fi fi-rr-check-circle"></i>');
           $sideBtn.find(".fast-tile-title").text($sideBtn.data("orig-title"));
           $sideBtn.find(".fast-tile-sub").text($sideBtn.data("orig-sub"));
         }
@@ -5277,11 +6827,20 @@
           self.isUpdatingStatus = false;
           if (typeof callback === "function") callback(null, res);
 
-          if (res.status === 200 || res.status === "success" || res.status_code === 200) {
-            const successMsg = res.msg || res.message || "Status updated successfully";
+          if (
+            res.status === 200 ||
+            res.status === "success" ||
+            res.status_code === 200
+          ) {
+            const successMsg =
+              res.msg || res.message || "Status updated successfully";
             self.notify(successMsg, "success");
 
-            if (typeof Swal !== "undefined" && typeof Swal.fire === "function" && status === 1) {
+            if (
+              typeof Swal !== "undefined" &&
+              typeof Swal.fire === "function" &&
+              status === 1
+            ) {
               Swal.fire({
                 title: "Lead Confirmed!",
                 text: "Lead has been marked as confirmed sale.",
@@ -5294,12 +6853,16 @@
 
             self.loadLeadDetails();
           } else {
-            self.notify(res.msg || res.message || "Failed to update status.", "error");
+            self.notify(
+              res.msg || res.message || "Failed to update status.",
+              "error",
+            );
           }
         },
         error: function () {
           self.isUpdatingStatus = false;
-          if (typeof callback === "function") callback(new Error("Network error"));
+          if (typeof callback === "function")
+            callback(new Error("Network error"));
           self.notify("Network error during status update.", "error");
         },
       });
@@ -5313,7 +6876,10 @@
       for (let i = 0; i < results.length; i++) {
         const item = results[i];
         const cityName = (item.city || item.id || "").toLowerCase().trim();
-        if (cityName && (lower.includes(cityName) || cityName.includes(lower))) {
+        if (
+          cityName &&
+          (lower.includes(cityName) || cityName.includes(lower))
+        ) {
           return item;
         }
       }
@@ -5322,7 +6888,10 @@
       for (let i = 0; i < results.length; i++) {
         const item = results[i];
         const stateName = (item.state || "").toLowerCase().trim();
-        if (stateName && (lower.includes(stateName) || stateName.includes(lower))) {
+        if (
+          stateName &&
+          (lower.includes(stateName) || stateName.includes(lower))
+        ) {
           return item;
         }
       }
@@ -5340,13 +6909,22 @@
 
       // Clean common tourism noise words
       const cleanText = subjectText
-        .replace(/\b(\d+N\/?\d*D|\d+\s*(nights?|days?)|tour|package|holiday|trip|honeymoon|special|custom|itinerary|vacation|group|couple|family|deluxe|standard|premium|budget|super|luxury|stay|resort|hotel|enquiry|booking)\b/gi, " ")
+        .replace(
+          /\b(\d+N\/?\d*D|\d+\s*(nights?|days?)|tour|package|holiday|trip|honeymoon|special|custom|itinerary|vacation|group|couple|family|deluxe|standard|premium|budget|super|luxury|stay|resort|hotel|enquiry|booking)\b/gi,
+          " ",
+        )
         .replace(/[^a-zA-Z\s]/g, " ")
         .replace(/\s+/g, " ")
         .trim();
 
-      const candidateWords = cleanText ? cleanText.split(/\s+/).filter(function (w) { return w.length >= 3; }) : [];
-      const searchTerm = cleanText || (candidateWords.length ? candidateWords[0] : subjectText.trim());
+      const candidateWords = cleanText
+        ? cleanText.split(/\s+/).filter(function (w) {
+            return w.length >= 3;
+          })
+        : [];
+      const searchTerm =
+        cleanText ||
+        (candidateWords.length ? candidateWords[0] : subjectText.trim());
 
       if (!searchTerm) {
         if (callback) callback(null);
@@ -5430,7 +7008,8 @@
       if (!$el || !$el.length || typeof $.fn.select2 === "undefined") return;
 
       $el.select2({
-        placeholder: placeholder || "Choose a tour package or type custom destination...",
+        placeholder:
+          placeholder || "Choose a tour package or type custom destination...",
         allowClear: true,
         width: "100%",
         tags: true,
@@ -5472,7 +7051,7 @@
           }
 
           const duration = data.duration;
-          const days = data.days || (parseInt(duration) + 1);
+          const days = data.days || parseInt(duration) + 1;
           const city = data.city || "";
           const type = data.type || "domestic";
           const theme = data.theme || "";
@@ -5480,16 +7059,16 @@
 
           return $(`
             <div class="v3-pkg-option-item">
-              <div class="v3-pkg-option-icon ${isIntl ? 'intl' : 'dom'}">
-                <i class="fi ${isIntl ? 'fi-rr-plane' : 'fi-rr-route'}"></i>
+              <div class="v3-pkg-option-icon ${isIntl ? "intl" : "dom"}">
+                <i class="fi ${isIntl ? "fi-rr-plane" : "fi-rr-route"}"></i>
               </div>
               <div class="v3-pkg-option-details">
                 <div class="v3-pkg-option-title">${data.text}</div>
                 <div class="v3-pkg-option-badges">
-                  ${duration ? `<span class="v3-pkg-badge duration"><i class="fi fi-rr-moon"></i> ${duration}N / ${days}D</span>` : ''}
-                  ${city ? `<span class="v3-pkg-badge destination"><i class="fi fi-rr-marker"></i> ${city}</span>` : ''}
-                  ${theme ? `<span class="v3-pkg-badge theme"><i class="fi fi-rr-star"></i> ${theme}</span>` : ''}
-                  <span class="v3-pkg-badge type ${isIntl ? 'intl' : 'dom'}">${isIntl ? 'International' : 'Domestic'}</span>
+                  ${duration ? `<span class="v3-pkg-badge duration"><i class="fi fi-rr-moon"></i> ${duration}N / ${days}D</span>` : ""}
+                  ${city ? `<span class="v3-pkg-badge destination"><i class="fi fi-rr-marker"></i> ${city}</span>` : ""}
+                  ${theme ? `<span class="v3-pkg-badge theme"><i class="fi fi-rr-star"></i> ${theme}</span>` : ""}
+                  <span class="v3-pkg-badge type ${isIntl ? "intl" : "dom"}">${isIntl ? "International" : "Domestic"}</span>
                 </div>
               </div>
             </div>
@@ -5497,7 +7076,7 @@
         },
         templateSelection: function (data) {
           return data.text || data.id;
-        }
+        },
       });
     },
 
@@ -5529,9 +7108,14 @@
         let minDateOpt = false;
         let minYearOpt = curYear - 10;
         if (isFutureOnly) {
-          minDateOpt = typeof moment !== "undefined" ? moment().startOf("day") : false;
+          minDateOpt =
+            typeof moment !== "undefined" ? moment().startOf("day") : false;
           minYearOpt = curYear;
-          if (startMoment && typeof moment !== "undefined" && startMoment.isBefore(moment().startOf("day"))) {
+          if (
+            startMoment &&
+            typeof moment !== "undefined" &&
+            startMoment.isBefore(moment().startOf("day"))
+          ) {
             startMoment = moment().startOf("day");
           }
         }
@@ -5554,7 +7138,7 @@
           },
           function (chosen) {
             $el.val(chosen.format("YYYY-MM-DD")).trigger("change");
-          }
+          },
         );
 
         $el.on("apply.daterangepicker", function (ev, picker) {
@@ -5626,45 +7210,70 @@
           const m = String(d.getMonth() + 1).padStart(2, "0");
           const day = String(d.getDate()).padStart(2, "0");
           return `${y}-${m}-${day} 10:30 AM`;
-        }
+        },
       };
     },
 
     initDateTimePicker: function () {
       const self = this;
       const defaultMoment = self.getDefaultFollowupDateTime();
-      const defaultDateStr = typeof moment !== "undefined" && defaultMoment && defaultMoment.format ? defaultMoment.format("YYYY-MM-DD") : "";
-      const defaultTime24Str = typeof moment !== "undefined" && defaultMoment && defaultMoment.format ? defaultMoment.format("HH:mm") : "10:30";
-      const defaultTime12Str = typeof moment !== "undefined" && defaultMoment && defaultMoment.format ? defaultMoment.format("hh:mm A") : "10:30 AM";
-      const defaultFullStr = typeof moment !== "undefined" && defaultMoment && defaultMoment.format ? defaultMoment.format("YYYY-MM-DD, hh:mm A") : "";
-      const todayStr = typeof moment !== "undefined" ? moment().format("YYYY-MM-DD") : "";
+      const defaultDateStr =
+        typeof moment !== "undefined" && defaultMoment && defaultMoment.format
+          ? defaultMoment.format("YYYY-MM-DD")
+          : "";
+      const defaultTime24Str =
+        typeof moment !== "undefined" && defaultMoment && defaultMoment.format
+          ? defaultMoment.format("HH:mm")
+          : "10:30";
+      const defaultTime12Str =
+        typeof moment !== "undefined" && defaultMoment && defaultMoment.format
+          ? defaultMoment.format("hh:mm A")
+          : "10:30 AM";
+      const defaultFullStr =
+        typeof moment !== "undefined" && defaultMoment && defaultMoment.format
+          ? defaultMoment.format("YYYY-MM-DD, hh:mm A")
+          : "";
+      const todayStr =
+        typeof moment !== "undefined" ? moment().format("YYYY-MM-DD") : "";
 
       // 1. Initialize Native Date Inputs
       if (todayStr) {
         $("#modalFollowUpDate, #composerFollowupDate").attr("min", todayStr);
       }
 
-      if (!$("#modalFollowUpDate").val()) $("#modalFollowUpDate").val(defaultDateStr);
-      if (!$("#modalFollowUpTimeInput").val()) $("#modalFollowUpTimeInput").val(defaultTime24Str);
-      if (!$("#modalFollowUpTime").val()) $("#modalFollowUpTime").val(defaultFullStr);
+      if (!$("#modalFollowUpDate").val())
+        $("#modalFollowUpDate").val(defaultDateStr);
+      if (!$("#modalFollowUpTimeInput").val())
+        $("#modalFollowUpTimeInput").val(defaultTime24Str);
+      if (!$("#modalFollowUpTime").val())
+        $("#modalFollowUpTime").val(defaultFullStr);
 
-      if (!$("#composerFollowupDate").val()) $("#composerFollowupDate").val(defaultDateStr);
-      if (!$("#composerFollowupTimeInput").val()) $("#composerFollowupTimeInput").val(defaultTime24Str);
-      if (!$("#composerFollowupTime").val()) $("#composerFollowupTime").val(defaultFullStr);
+      if (!$("#composerFollowupDate").val())
+        $("#composerFollowupDate").val(defaultDateStr);
+      if (!$("#composerFollowupTimeInput").val())
+        $("#composerFollowupTimeInput").val(defaultTime24Str);
+      if (!$("#composerFollowupTime").val())
+        $("#composerFollowupTime").val(defaultFullStr);
 
       // Initial conflict check
       if ($("#modalSlotStatus").length && $("#modalFollowUpTime").val()) {
-        self.checkSlotConflict($("#modalFollowUpTime").val(), $("#modalSlotStatus"));
+        self.checkSlotConflict(
+          $("#modalFollowUpTime").val(),
+          $("#modalSlotStatus"),
+        );
       }
       if ($("#composerSlotStatus").length && $("#composerFollowupTime").val()) {
-        self.checkSlotConflict($("#composerFollowupTime").val(), $("#composerSlotStatus"));
+        self.checkSlotConflict(
+          $("#composerFollowupTime").val(),
+          $("#composerSlotStatus"),
+        );
       }
     },
 
     checkSlotConflict: function (datetimeStr, $statusBox) {
       const self = this;
       if (!datetimeStr || !$statusBox || !$statusBox.length) return;
-      const agentId = self.leadData ? (self.leadData.agent_id || 0) : 0;
+      const agentId = self.leadData ? self.leadData.agent_id || 0 : 0;
 
       $.ajax({
         url: "/api/v3/leads/check-slot/",
@@ -5672,7 +7281,7 @@
         data: {
           lead_id: self.leadId,
           agent_id: agentId,
-          datetime: datetimeStr
+          datetime: datetimeStr,
         },
         dataType: "json",
         success: function (res) {
@@ -5697,7 +7306,7 @@
         },
         error: function () {
           $statusBox.empty();
-        }
+        },
       });
     },
 
@@ -5711,10 +7320,15 @@
         data: postData,
         dataType: "json",
         success: function (res) {
-          $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Post Note');
+          $btn
+            .prop("disabled", false)
+            .html('<i class="fi fi-rr-check"></i> Post Note');
 
           if (res && res.status === "conflict") {
-            if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+            if (
+              typeof Swal !== "undefined" &&
+              typeof Swal.fire === "function"
+            ) {
               Swal.fire({
                 title: "⚠️ Time Slot Conflict",
                 html: `<div style="text-align:left; font-size:13.5px; line-height:1.5;">
@@ -5727,7 +7341,7 @@
                 confirmButtonColor: "#059669",
                 cancelButtonColor: "#64748b",
                 confirmButtonText: "Schedule Anyway",
-                cancelButtonText: "Change Time"
+                cancelButtonText: "Change Time",
               }).then(function (result) {
                 if (result.value || result.isConfirmed) {
                   postData.force_override = 1;
@@ -5737,7 +7351,9 @@
                 }
               });
             } else {
-              if (confirm(res.message + "\n\nDo you want to schedule anyway?")) {
+              if (
+                confirm(res.message + "\n\nDo you want to schedule anyway?")
+              ) {
                 postData.force_override = 1;
                 self.submitComposerNote(postData, $btn);
               } else {
@@ -5750,25 +7366,30 @@
           if (res && res.status === "success") {
             $("#composerNoteInput").val("");
             self.notify(res.message || "Update logged successfully", "success");
-            
+
             if (res.followup_time) {
               self.scheduleClientReminder(
                 res.followup_time,
                 self.leadData ? self.leadData.name : "Customer",
                 self.leadData ? self.leadData.agent_id : 0,
-                self.leadId
+                self.leadId,
               );
             }
-            
+
             self.loadLeadDetails();
           } else {
-            self.notify((res && res.message) || "Failed to post update.", "error");
+            self.notify(
+              (res && res.message) || "Failed to post update.",
+              "error",
+            );
           }
         },
         error: function () {
-          $btn.prop("disabled", false).html('<i class="fi fi-rr-check"></i> Post Note');
+          $btn
+            .prop("disabled", false)
+            .html('<i class="fi fi-rr-check"></i> Post Note');
           self.notify("Network connection error.", "error");
-        }
+        },
       });
     },
 
@@ -5785,7 +7406,10 @@
           $btn.prop("disabled", false).text("Set Reminder");
 
           if (res && res.status === "conflict") {
-            if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
+            if (
+              typeof Swal !== "undefined" &&
+              typeof Swal.fire === "function"
+            ) {
               Swal.fire({
                 title: "⚠️ Time Slot Conflict",
                 html: `<div style="text-align:left; font-size:13.5px; line-height:1.5;">
@@ -5798,7 +7422,7 @@
                 confirmButtonColor: "#059669",
                 cancelButtonColor: "#64748b",
                 confirmButtonText: "Schedule Anyway",
-                cancelButtonText: "Change Time"
+                cancelButtonText: "Change Time",
               }).then(function (result) {
                 if (result.value || result.isConfirmed) {
                   postData.force_override = 1;
@@ -5808,7 +7432,9 @@
                 }
               });
             } else {
-              if (confirm(res.message + "\n\nDo you want to schedule anyway?")) {
+              if (
+                confirm(res.message + "\n\nDo you want to schedule anyway?")
+              ) {
                 postData.force_override = 1;
                 self.submitModalFollowUp(postData, $btn);
               } else {
@@ -5819,17 +7445,26 @@
           }
 
           if (res && res.status === "success") {
-            self.notify(res.message || "Follow-up reminder set successfully.", "success");
+            self.notify(
+              res.message || "Follow-up reminder set successfully.",
+              "success",
+            );
             $("#modalSetFollowUp").removeClass("is-active");
             self.loadLeadDetails();
           } else {
-            self.notify((res && res.message) || "Failed to set follow-up reminder.", "error");
+            self.notify(
+              (res && res.message) || "Failed to set follow-up reminder.",
+              "error",
+            );
           }
         },
         error: function () {
           $btn.prop("disabled", false).text("Set Reminder");
-          self.notify("Network error while setting follow-up reminder.", "error");
-        }
+          self.notify(
+            "Network error while setting follow-up reminder.",
+            "error",
+          );
+        },
       });
     },
   };

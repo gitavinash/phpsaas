@@ -5,13 +5,14 @@ if (defined('COMPANY_WHATSAPP_ITINERARY_SENT')) {
     $templateName = COMPANY_WHATSAPP_ITINERARY_SENT;
 
     if ($templateName != '') {
-        // Helper to sanitize any input (convert array to string, trim strings)
-        function sanitize_input($value, $default = 'N/A')
-        {
-            if (is_array($value)) {
-                return implode(' ', array_map('trim', $value));
+        if (!function_exists('sanitize_input')) {
+            function sanitize_input($value, $default = 'N/A')
+            {
+                if (is_array($value)) {
+                    return implode(' ', array_map('trim', $value));
+                }
+                return trim($value ?? $default);
             }
-            return trim($value ?? $default);
         }
 
         // Clean and sanitize values
