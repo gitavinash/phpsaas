@@ -2587,9 +2587,10 @@
     },
 
     // Load and cache active hotel properties, vehicles, and stay cities
+    // Load and cache active hotel properties, vehicles, and stay cities from Cities API
     loadItineraryMeta: function (callback) {
       const self = this;
-      let pending = 2;
+      let pending = 3;
       const done = () => {
         pending--;
         if (pending <= 0 && typeof callback === "function") {
@@ -2597,6 +2598,73 @@
         }
       };
 
+      // 1. Fetch all cities from Cities API
+      if (self.availableStayCities && self.availableStayCities.length > 0) {
+        pending--;
+      } else {
+        const countryParam =
+          (self.selectedPackage &&
+            (self.selectedPackage.tour_package_country ||
+              self.selectedPackage.country)) ||
+          (self.leadData &&
+            self.leadData.travel_details &&
+            self.leadData.travel_details.country) ||
+          "";
+        const citiesUrl = countryParam
+          ? `/api/v3/cities/?limit=100&country=${encodeURIComponent(countryParam)}`
+          : "/api/v3/cities/?limit=100";
+
+        $.ajax({
+          url: citiesUrl,
+          type: "GET",
+          dataType: "json",
+          success: function (cRes) {
+            const citySet = new Set(self.availableStayCities || []);
+            if (cRes) {
+              if (Array.isArray(cRes.cities)) {
+                cRes.cities.forEach((c) => {
+                  if (c && typeof c === "string" && c.trim()) {
+                    citySet.add(c.trim());
+                  }
+                });
+              } else if (Array.isArray(cRes.results)) {
+                cRes.results.forEach((item) => {
+                  const cName = item.city || item.name || item.id;
+                  if (cName && typeof cName === "string" && cName.trim()) {
+                    citySet.add(cName.trim());
+                  }
+                });
+              }
+            }
+            self.availableStayCities = Array.from(citySet).sort();
+
+            // If day cards already exist in DOM, update their stay city dropdowns
+            $("#itinDaysStack .v3-itin-day-card").each(function () {
+              const $select = $(this).find(".itin-day-city-select");
+              if ($select.length) {
+                const currentVal = $select.val();
+                const dayIdx = $(this).data("day-index") || 1;
+                $select.html(self.buildCitySelectHtml(currentVal, dayIdx));
+                if (currentVal) $select.val(currentVal);
+                if (
+                  typeof $.fn.select2 !== "undefined" &&
+                  $select.hasClass("select2-hidden-accessible")
+                ) {
+                  $select.trigger("change.select2");
+                }
+              }
+            });
+
+            done();
+          },
+          error: function () {
+            self.availableStayCities = self.availableStayCities || [];
+            done();
+          },
+        });
+      }
+
+      // 2. Fetch properties
       if (self.propertiesList && self.propertiesList.length > 0) {
         pending--;
       } else {
@@ -2607,7 +2675,7 @@
           success: function (res) {
             if (res && res.properties) {
               self.propertiesList = res.properties;
-              const citySet = new Set();
+              const citySet = new Set(self.availableStayCities || []);
               res.properties.forEach((p) => {
                 if (p.city && p.city.trim()) {
                   citySet.add(p.city.trim());
@@ -2630,6 +2698,7 @@
         });
       }
 
+      // 3. Fetch vehicles
       if (self.vehiclesList && self.vehiclesList.length > 0) {
         pending--;
       } else {
@@ -2674,7 +2743,7 @@
         destCity = self.selectedPackage.tour_package_city.trim();
       }
 
-      const allOptions = new Set(cities);
+      const allOptions = new Set();
       if (destCity) allOptions.add(destCity);
       if (
         currentCity &&
@@ -2686,6 +2755,21 @@
         !currentCity.toLowerCase().includes("transit")
       ) {
         allOptions.add(currentCity.trim());
+      }
+
+      // Add top popular tour destinations / hubs
+      const hubs = [
+        "Manali", "Shimla", "Kasol", "Jibhi", "Kullu", "Dharamshala", "Dalhousie", "Amritsar",
+        "Chandigarh", "Delhi", "Agra", "Jaipur", "Udaipur", "Goa", "Srinagar", "Gulmarg",
+        "Pahalgam", "Leh", "Ladakh", "Munnar", "Alleppey", "Thekkady", "Wayanad", "Ooty",
+        "Kodaikanal", "Rishikesh", "Haridwar", "Nainital", "Mussoorie", "Jim Corbett",
+        "Varanasi", "Darjeeling", "Gangtok", "Port Blair", "Havelock"
+      ];
+      hubs.forEach((h) => allOptions.add(h));
+
+      // Add cities from self.availableStayCities (up to 100)
+      for (let i = 0; i < Math.min(cities.length, 100); i++) {
+        if (cities[i]) allOptions.add(cities[i]);
       }
 
       const isOvernight =
@@ -2726,23 +2810,6 @@
 
     setupPickupDropSelects: function (pickupVal, dropVal) {
       const self = this;
-      const cities = self.availableStayCities || [];
-
-      const buildOptions = (selectedVal, defaultLabel) => {
-        const valLower = (selectedVal || "").toLowerCase().trim();
-        let html = `<option value="">-- ${defaultLabel} --</option>`;
-        const allOpts = new Set(cities);
-        if (selectedVal && selectedVal.trim()) allOpts.add(selectedVal.trim());
-
-        Array.from(allOpts)
-          .sort()
-          .forEach((c) => {
-            const isSel = c.toLowerCase().trim() === valLower ? "selected" : "";
-            html += `<option value="${escapeHtml(c)}" ${isSel}>${escapeHtml(c)}</option>`;
-          });
-        return html;
-      };
-
       const $pickup = $("#itineraryCustomPickup");
       const $drop = $("#itineraryCustomDrop");
 
@@ -2753,24 +2820,17 @@
         $drop.select2("destroy");
       }
 
-      $pickup.html(buildOptions(pickupVal, "Select or Type Pickup Location"));
-      $drop.html(buildOptions(dropVal, "Select or Type Drop Location"));
-
-      if (typeof $.fn.select2 !== "undefined") {
-        $pickup.select2({
-          dropdownParent: $("#modalSendItinerary"),
-          width: "100%",
-          tags: true,
-          placeholder: "Select or type pickup location...",
-        });
-
-        $drop.select2({
-          dropdownParent: $("#modalSendItinerary"),
-          width: "100%",
-          tags: true,
-          placeholder: "Select or type drop location...",
-        });
+      $pickup.empty();
+      if (pickupVal && pickupVal.trim()) {
+        $pickup.append(new Option(pickupVal.trim(), pickupVal.trim(), true, true));
       }
+      $drop.empty();
+      if (dropVal && dropVal.trim()) {
+        $drop.append(new Option(dropVal.trim(), dropVal.trim(), true, true));
+      }
+
+      self.initCitySelect2($pickup, $("#modalSendItinerary"), "Select or type pickup location...");
+      self.initCitySelect2($drop, $("#modalSendItinerary"), "Select or type drop location...");
     },
 
     getPropertyCategoryOptionsHtml: function (selectedCategory) {
@@ -2853,12 +2913,13 @@
           pCity.includes(currCityLower) ||
           currCityLower.includes(pCity);
 
-        if (cityMatches) {
-          const isTargetHotel =
-            (selHotelIdStr && String(p.id) === selHotelIdStr) ||
-            (selHotelLower &&
-              (p.title.toLowerCase().trim() === selHotelLower ||
-                selHotelLower.includes(p.title.toLowerCase().trim())));
+        const isTargetHotel =
+          (selHotelIdStr && String(p.id) === selHotelIdStr) ||
+          (selHotelLower &&
+            (p.title.toLowerCase().trim() === selHotelLower ||
+              selHotelLower.includes(p.title.toLowerCase().trim())));
+
+        if (cityMatches || isTargetHotel) {
 
           if (selCatLower && selCatLower !== "all") {
             const pType = (p.type || "").toLowerCase().trim();
@@ -3314,7 +3375,8 @@
         cityLower.includes("tour end") ||
         cityLower.includes("trip end") ||
         cityLower.includes("no stay") ||
-        cityLower.includes("no hotel");
+        cityLower.includes("no hotel") ||
+        cityLower.includes("departure");
 
       const citySelectHtml = self.buildCitySelectHtml(city, num);
       const categorySelectHtml =
@@ -3349,6 +3411,36 @@
         }
       }
 
+      const hotelLower = (hotel || "").toLowerCase();
+      const isNoHotel =
+        hotel === "no_hotel" ||
+        hotelLower.includes("no hotel") ||
+        hotelLower.includes("no stay") ||
+        hotelLower.includes("transit") ||
+        hotelLower.includes("tour end") ||
+        hotelLower.includes("trip end") ||
+        hotelLower.includes("departure") ||
+        hotelLower.includes("self arranged");
+
+      const isNoHotelStay = isNoStayCity || isNoHotel;
+
+      const explicitShow =
+        d.show_hotel === 1 || d.show_hotel === true || d.show_hotel === "1";
+      const explicitHide =
+        d.show_hotel === 0 ||
+        d.show_hotel === false ||
+        d.show_hotel === "0" ||
+        d.is_hotel_hidden === 1 ||
+        d.is_hotel_hidden === true ||
+        d.hide_hotel === 1 ||
+        d.hide_hotel === true;
+
+      const showHotel = explicitShow
+        ? true
+        : explicitHide || isNoHotelStay
+          ? false
+          : true;
+
       const html = `
         <div class="v3-itin-day-card" data-day-index="${num}" data-day-image="${dayImg}">
           <div class="v3-itin-day-card-header">
@@ -3373,44 +3465,59 @@
 
           <div class="v3-itin-meta-boxes-grid">
             <!-- Hotel & Accommodation -->
-            <div class="v3-itin-sub-box">
+            <div class="v3-itin-sub-box v3-itin-hotel-sub-box">
               <div class="v3-itin-sub-box-title">
-                <i class="fi fi-rr-bed"></i> Hotel & Stay
-              </div>
-              
-              <div class="v3-form-grid-2 v3-mb-10">
-                <div>
-                  <label class="v3-modal-label">Stay Type / Rating</label>
-                  <select class="leads-filter-select v3-select-full itin-day-hotel-stars">
-                    ${categorySelectHtml}
-                  </select>
-                </div>
-                <div>
-                  <label class="v3-modal-label">Property / Hotel</label>
-                  <select class="leads-filter-select v3-select-full itin-day-hotel-select" data-day-index="${num}" ${isNoStayCity ? "disabled" : ""}>
-                    ${hotelSelectHtml}
-                  </select>
-                  <input type="text" class="v3-modal-input itin-day-hotel-custom ${hotel && !hotelSelectHtml.includes("selected") ? "" : "v3-hidden"}" value="${hotel}" placeholder="Enter custom hotel name...">
+                <div class="v3-itin-sub-box-header">
+                  <span><i class="fi fi-rr-bed"></i> Hotel & Stay</span>
+                  <label class="v3-hotel-visibility-toggle" title="Toggle hotel in customer itinerary proposal for Day ${num}">
+                    <span class="v3-switch-label">Show in Itinerary</span>
+                    <span class="v3-switch-slider-wrap">
+                      <input type="checkbox" class="itin-day-show-hotel-toggle" data-day-index="${num}" ${showHotel ? 'checked' : ''}>
+                      <span class="v3-switch-slider"></span>
+                    </span>
+                  </label>
                 </div>
               </div>
 
-              <div class="v3-form-grid-2">
-                <div>
-                  <label class="v3-modal-label">Room Type</label>
-                  <select class="leads-filter-select v3-select-full itin-day-room-type" ${!hotel || isNoStayCity ? "disabled" : ""}>
-                    <!-- Populated dynamically based on property -->
-                  </select>
-                  <input type="text" class="v3-modal-input itin-day-room-type-custom v3-hidden" value="${roomType}" placeholder="Enter custom room">
+              <div class="v3-itin-hotel-fields-wrap ${!showHotel ? 'is-hotel-hidden' : ''}">
+                <div class="v3-form-grid-2 v3-mb-10">
+                  <div>
+                    <label class="v3-modal-label">Stay Type / Rating</label>
+                    <select class="leads-filter-select v3-select-full itin-day-hotel-stars">
+                      ${categorySelectHtml}
+                    </select>
+                  </div>
+                  <div>
+                    <label class="v3-modal-label">Property / Hotel</label>
+                    <select class="leads-filter-select v3-select-full itin-day-hotel-select" data-day-index="${num}">
+                      ${hotelSelectHtml}
+                    </select>
+                    <input type="text" class="v3-modal-input itin-day-hotel-custom ${hotel && !hotelSelectHtml.includes("selected") ? "" : "v3-hidden"}" value="${hotel}" placeholder="Enter custom hotel name...">
+                  </div>
                 </div>
-                <div>
-                  <label class="v3-modal-label">Meal Plan</label>
-                  <select class="leads-filter-select v3-select-full itin-day-meal-plan">
-                    <option value="EP" ${mealPlan === "EP" ? "selected" : ""}>EP (Room Only)</option>
-                    <option value="CP" ${mealPlan === "CP" ? "selected" : ""}>CP (Breakfast)</option>
-                    <option value="MAP" ${mealPlan === "MAP" ? "selected" : ""}>MAP (Breakfast + Dinner)</option>
-                    <option value="AP" ${mealPlan === "AP" ? "selected" : ""}>AP (All Meals)</option>
-                  </select>
+
+                <div class="v3-form-grid-2">
+                  <div>
+                    <label class="v3-modal-label">Room Type</label>
+                    <select class="leads-filter-select v3-select-full itin-day-room-type" ${!hotel && !showHotel ? "disabled" : ""}>
+                      <!-- Populated dynamically based on property -->
+                    </select>
+                    <input type="text" class="v3-modal-input itin-day-room-type-custom v3-hidden" value="${roomType}" placeholder="Enter custom room">
+                  </div>
+                  <div>
+                    <label class="v3-modal-label">Meal Plan</label>
+                    <select class="leads-filter-select v3-select-full itin-day-meal-plan">
+                      <option value="EP" ${mealPlan === "EP" ? "selected" : ""}>EP (Room Only)</option>
+                      <option value="CP" ${mealPlan === "CP" ? "selected" : ""}>CP (Breakfast)</option>
+                      <option value="MAP" ${mealPlan === "MAP" ? "selected" : ""}>MAP (Breakfast + Dinner)</option>
+                      <option value="AP" ${mealPlan === "AP" ? "selected" : ""}>AP (All Meals)</option>
+                    </select>
+                  </div>
                 </div>
+              </div>
+
+              <div class="v3-itin-hotel-hidden-notice ${!showHotel ? '' : 'v3-hidden'}">
+                <i class="fi fi-rr-info"></i> Hotel details hidden from customer itinerary proposal for Day ${num}.
               </div>
             </div>
 
@@ -3452,6 +3559,76 @@
           dropdownParent: $("#modalSendItinerary"),
           width: "100%",
           placeholder: "Stay City",
+          tags: true,
+          minimumInputLength: 0,
+          createTag: function (params) {
+            const term = $.trim(params.term);
+            if (!term) return null;
+            return {
+              id: term,
+              text: `${term} (Add New)`,
+              city: term,
+              isNewTag: true,
+            };
+          },
+          insertTag: function (data, tag) {
+            // Place search keyword with (Add New) at the LAST of dropdown options
+            data.push(tag);
+          },
+          templateResult: function (opt) {
+            if (!opt.id) return opt.text;
+            if (opt.isNewTag || (opt.text && opt.text.endsWith("(Add New)"))) {
+              return $(
+                `<div class="v3-select2-add-new-opt"><i class="fi fi-rr-plus"></i> ${escapeHtml(opt.text)}</div>`,
+              );
+            }
+            return opt.text;
+          },
+          templateSelection: function (item) {
+            if (!item.id) return item.text;
+            const clean = (item.city || item.id || item.text || "")
+              .replace(/\s*\(Add New\)$/i, "")
+              .trim();
+            return clean || item.text;
+          },
+          ajax: {
+            url: "/api/v3/cities/",
+            dataType: "json",
+            delay: 150,
+            data: function (params) {
+              return {
+                q: params.term || "",
+                package_id:
+                  (self.selectedPackage &&
+                    self.selectedPackage.tour_package_id) ||
+                  0,
+              };
+            },
+            processResults: function (data, params) {
+              const rawResults = (data && data.results) || [];
+              const term = (params.term || "").trim();
+              if (!term) {
+                return {
+                  results: [
+                    {
+                      text: "Transit & Tour Status (No Hotel Stay)",
+                      children: [
+                        { id: "Overnight Journey (In Transit)", text: "🚌 Overnight Journey (In Transit)" },
+                        { id: "Tour End / Departure (No Stay)", text: "🏁 Tour End / Departure (No Stay)" },
+                        { id: "Self / No Hotel Stay Needed", text: "❌ Self / No Hotel Stay Needed" }
+                      ]
+                    },
+                    {
+                      text: "Cities & Destinations",
+                      children: rawResults
+                    }
+                  ]
+                };
+              }
+              return { results: rawResults };
+            },
+            cache: true,
+          },
         });
 
         $card
@@ -3508,6 +3685,9 @@
         $(this).attr("data-day-index", num);
         $(this).find(".v3-itin-day-badge").text(`Day ${num}`);
         $(this).find(".btn-delete-itin-day").attr("title", `Delete Day ${num}`);
+        $(this).find(".itin-day-show-hotel-toggle").attr("data-day-index", num);
+        $(this).find(".v3-hotel-visibility-toggle").attr("title", `Toggle hotel in customer itinerary proposal for Day ${num}`);
+        $(this).find(".v3-itin-hotel-hidden-notice").html(`<i class="fi fi-rr-info"></i> Hotel details hidden from customer itinerary proposal for Day ${num}.`);
       });
     },
 
@@ -3556,8 +3736,15 @@
     resolvePrimaryHotel: function (structuredItin) {
       const self = this;
       if (Array.isArray(structuredItin) && structuredItin.length > 0) {
+        const allHidden = structuredItin.every(
+          (d) => d.show_hotel === 0 || d.is_hotel_hidden === 1,
+        );
+        if (allHidden) {
+          return "";
+        }
         const hotels = [];
         for (const day of structuredItin) {
+          if (day.show_hotel === 0 || day.is_hotel_hidden === 1) continue;
           const h = (day.hotel || day.stay || "").trim();
           if (
             h &&
@@ -3581,7 +3768,14 @@
     resolvePrimaryHotelCategory: function (structuredItin) {
       const self = this;
       if (Array.isArray(structuredItin) && structuredItin.length > 0) {
+        const allHidden = structuredItin.every(
+          (d) => d.show_hotel === 0 || d.is_hotel_hidden === 1,
+        );
+        if (allHidden) {
+          return "";
+        }
         for (const day of structuredItin) {
+          if (day.show_hotel === 0 || day.is_hotel_hidden === 1) continue;
           const s = (day.hotel_stars || "").trim();
           if (s && s !== "all" && s !== "no_hotel") {
             return s;
@@ -4351,6 +4545,9 @@
 
           $("#modalSendItinerary").addClass("is-active");
 
+          // Preload stay cities from Cities API, vehicles, and properties in parallel
+          self.loadItineraryMeta();
+
           // Reset state
           $("#itinerarySearchSection").removeClass("v3-hidden");
           $("#btnChangeItinerary").addClass("v3-hidden");
@@ -4511,6 +4708,9 @@
                     );
                   },
                 });
+                $pkgSelect.off("select2:select").on("select2:select", function () {
+                  $(this).trigger("change");
+                });
               }
             } else {
               // Show Inline No Package Found Box
@@ -4554,13 +4754,28 @@
       });
 
       // Package Select Change - Reveal customization options only after an option is selected
-      $(document).on("change", "#itineraryPackageSelect", function () {
-        const val = $(this).val();
-        if (!val) {
+      $(document).on("change select2:select", "#itineraryPackageSelect", function (e) {
+        let val = $(this).val();
+        if (
+          (val === null || val === undefined || val === "") &&
+          e &&
+          e.params &&
+          e.params.data &&
+          e.params.data.id !== undefined
+        ) {
+          val = e.params.data.id;
+          $(this).val(val);
+        }
+
+        if (val === null || val === undefined || val === "") {
           $("#itineraryCustomSection").addClass("v3-hidden");
           $("#btnPreviewItinerary").addClass("v3-hidden");
           self.selectedPackage = null;
           return;
+        }
+
+        if ($(this).hasClass("select2-hidden-accessible")) {
+          $(this).select2("close");
         }
 
         if (val === "custom") {
@@ -4598,6 +4813,84 @@
           );
         },
       );
+
+      // Hotel Show / Hide Switch Slider Toggle on Day Card
+      $(document).on("change", ".itin-day-show-hotel-toggle", function () {
+        const isShow = $(this).is(":checked");
+        const $card = $(this).closest(".v3-itin-day-card");
+        const $box = $(this).closest(".v3-itin-hotel-sub-box");
+        const $fields = $box.find(".v3-itin-hotel-fields-wrap");
+        const $notice = $box.find(".v3-itin-hotel-hidden-notice");
+
+        if (isShow) {
+          $fields.removeClass("is-hotel-hidden");
+          $notice.addClass("v3-hidden");
+
+          // Ensure form controls inside fields wrap are enabled so user can edit/pick hotels
+          const $hotelSelect = $fields.find(".itin-day-hotel-select");
+          const $roomSelect = $fields.find(".itin-day-room-type");
+          $hotelSelect.prop("disabled", false);
+          $roomSelect.prop("disabled", false);
+
+          const curVal = ($hotelSelect.val() || "").trim();
+          if (
+            !curVal ||
+            curVal === "no_hotel" ||
+            $hotelSelect.find("option").length <= 1
+          ) {
+            const selectedCity = $card.find(".itin-day-city-select").val() || "";
+            const selectedCategory =
+              $fields.find(".itin-day-hotel-stars").val() || "all";
+            const cityLower = (selectedCity || "").toLowerCase().trim();
+            const isNoStay =
+              cityLower.includes("overnight") ||
+              cityLower.includes("transit") ||
+              cityLower.includes("tour end") ||
+              cityLower.includes("trip end") ||
+              cityLower.includes("no stay") ||
+              cityLower.includes("no hotel") ||
+              cityLower.includes("departure");
+
+            const targetCity = isNoStay
+              ? self.resolvePrimaryCity() || ""
+              : selectedCity;
+            $hotelSelect.html(
+              self.buildHotelSelectHtml(targetCity, selectedCategory, "", 0),
+            );
+            if (typeof $.fn.select2 !== "undefined") {
+              if ($hotelSelect.hasClass("select2-hidden-accessible")) {
+                $hotelSelect.select2("destroy");
+              }
+              $hotelSelect.select2(
+                self.getHotelSelect2Opts($("#modalSendItinerary")),
+              );
+            }
+            $hotelSelect.trigger("change");
+          }
+        } else {
+          $fields.addClass("is-hotel-hidden");
+          $notice.removeClass("v3-hidden");
+        }
+      });
+
+      // Bulk Show / Hide Hotels across all days
+      $(document).on("click", "#btnBulkShowHotels", function () {
+        $("#itinDaysStack .v3-itin-day-card").each(function () {
+          const $toggle = $(this).find(".itin-day-show-hotel-toggle");
+          if (!$toggle.is(":checked")) {
+            $toggle.prop("checked", true).trigger("change");
+          }
+        });
+      });
+
+      $(document).on("click", "#btnBulkHideHotels", function () {
+        $("#itinDaysStack .v3-itin-day-card").each(function () {
+          const $toggle = $(this).find(".itin-day-show-hotel-toggle");
+          if ($toggle.is(":checked")) {
+            $toggle.prop("checked", false).trigger("change");
+          }
+        });
+      });
 
       // Delete Day
       $(document).on("click", ".btn-delete-itin-day", function () {
@@ -4647,6 +4940,7 @@
         const $hotelSelect = $card.find(".itin-day-hotel-select");
         const $roomSelect = $card.find(".itin-day-room-type");
         const $customInput = $card.find(".itin-day-hotel-custom");
+        const $toggle = $card.find(".itin-day-show-hotel-toggle");
 
         const cityLower = (selectedCity || "").toLowerCase().trim();
         const noStayCity =
@@ -4655,14 +4949,20 @@
           cityLower.includes("tour end") ||
           cityLower.includes("trip end") ||
           cityLower.includes("no stay") ||
-          cityLower.includes("no hotel");
+          cityLower.includes("no hotel") ||
+          cityLower.includes("departure");
 
         if ($hotelSelect.hasClass("select2-hidden-accessible")) {
           $hotelSelect.select2("destroy");
         }
 
         if (noStayCity) {
-          // Lock hotel & room — no stay needed for this city
+          // Disable toggle switch by default (Hide in itinerary)
+          // The toggle switch itself remains interactive so user can re-enable at any time
+          if ($toggle.is(":checked")) {
+            $toggle.prop("checked", false).trigger("change");
+          }
+
           let noStayLabel = "No Hotel Stay";
           if (
             cityLower.includes("overnight") ||
@@ -4678,11 +4978,9 @@
             noStayLabel = "Self Arranged — No Hotel Stay";
           }
           $hotelSelect
-            .html(`<option value="no_hotel" selected>${noStayLabel}</option>`)
-            .prop("disabled", true);
+            .html(`<option value="no_hotel" selected>${noStayLabel}</option>`);
           $customInput.addClass("v3-hidden");
           $roomSelect
-            .prop("disabled", true)
             .html(`<option value="">Not Applicable (No Stay)</option>`);
           if (
             typeof $.fn.select2 !== "undefined" &&
@@ -4693,8 +4991,13 @@
           return;
         }
 
-        // Normal city — re-enable and rebuild hotel list
+        // Normal city — re-enable toggle switch if it was disabled due to no-stay
+        if (!$toggle.is(":checked")) {
+          $toggle.prop("checked", true).trigger("change");
+        }
+
         $hotelSelect.prop("disabled", false);
+        $roomSelect.prop("disabled", false);
 
         const updateDropdown = () => {
           $hotelSelect.html(
@@ -4906,19 +5209,34 @@
                 0,
             ) || 0;
 
+          const $toggle = $(this).find(".itin-day-show-hotel-toggle");
+          const isHotelShown =
+            $toggle.length > 0
+              ? $toggle.is(":checked")
+              : $(this).find(".itin-day-show-hotel-radio:checked").val() !== "0";
+
           structuredItin.push({
             day: dayTitle,
             city: stayCity,
             stay_city: stayCity,
             overview: dayOverview,
-            hotel: hotelName,
-            hotel_id: hotelId,
-            hotel_title: hotelName,
-            stay: hotelName,
-            hotel_stars: hotelStars,
-            room_type: roomType,
-            room_type_id: roomTypeId,
-            meal_plan: mealPlan,
+            hotel: isHotelShown ? hotelName : "",
+            hotel_id: isHotelShown ? hotelId : 0,
+            hotel_title: isHotelShown ? hotelName : "",
+            stay: isHotelShown ? hotelName : "",
+            hotel_stars: isHotelShown ? hotelStars : "",
+            room_type: isHotelShown ? roomType : "",
+            room_type_id: isHotelShown ? roomTypeId : 0,
+            meal_plan: isHotelShown ? mealPlan : "",
+            show_hotel: isHotelShown ? 1 : 0,
+            is_hotel_hidden: isHotelShown ? 0 : 1,
+            hide_hotel: isHotelShown ? 0 : 1,
+            saved_hotel: hotelName,
+            saved_hotel_id: hotelId,
+            saved_hotel_stars: hotelStars,
+            saved_room_type: roomType,
+            saved_room_type_id: roomTypeId,
+            saved_meal_plan: mealPlan,
             vehicle: vehicleType,
             transfer_notes: transferNotes,
             image: dayImage,
@@ -5222,19 +5540,34 @@
                   .data("id") || 0,
               ) || 0;
 
+            const $toggle = $(this).find(".itin-day-show-hotel-toggle");
+            const isHotelShown =
+              $toggle.length > 0
+                ? $toggle.is(":checked")
+                : $(this).find(".itin-day-show-hotel-radio:checked").val() !== "0";
+
             structuredItin.push({
               day: dayTitle,
               city: stayCity,
               stay_city: stayCity,
               overview: dayOverview,
-              hotel: hotelName,
-              hotel_id: hotelId,
-              hotel_title: hotelName,
-              stay: hotelName,
-              hotel_stars: hotelStars,
-              room_type: roomType,
-              room_type_id: roomTypeId,
-              meal_plan: mealPlan,
+              hotel: isHotelShown ? hotelName : "",
+              hotel_id: isHotelShown ? hotelId : 0,
+              hotel_title: isHotelShown ? hotelName : "",
+              stay: isHotelShown ? hotelName : "",
+              hotel_stars: isHotelShown ? hotelStars : "",
+              room_type: isHotelShown ? roomType : "",
+              room_type_id: isHotelShown ? roomTypeId : 0,
+              meal_plan: isHotelShown ? mealPlan : "",
+              show_hotel: isHotelShown ? 1 : 0,
+              is_hotel_hidden: isHotelShown ? 0 : 1,
+              hide_hotel: isHotelShown ? 0 : 1,
+              saved_hotel: hotelName,
+              saved_hotel_id: hotelId,
+              saved_hotel_stars: hotelStars,
+              saved_room_type: roomType,
+              saved_room_type_id: roomTypeId,
+              saved_meal_plan: mealPlan,
               vehicle: vehicleType,
               transfer_notes: transferNotes,
               image: dayImage,
@@ -6374,23 +6707,47 @@
       // Smart city extractor from day title or overview text
       const detectCityFromText = (txt) => {
         if (!txt) return "";
-        const allCities = self.availableStayCities || [];
         const lowerTxt = txt.toLowerCase();
 
-        // 1. Check for direct "to [City]" pattern
-        for (const c of allCities) {
-          const cLower = c.toLowerCase();
-          const toPattern = new RegExp(
-            `(?:to|in|at|stay\\s+in|arrive\\s+in|reach)\\s+${cLower}\\b`,
-            "i",
-          );
-          if (toPattern.test(txt)) {
-            return c;
+        // 1. Prioritized destination candidates (default city, package city, lead dest, top tour hubs)
+        const candidates = [];
+        if (defaultCity) candidates.push(defaultCity);
+        if (packageCity && packageCity !== defaultCity) candidates.push(packageCity);
+        if (leadDest && leadDest !== defaultCity) candidates.push(leadDest);
+
+        const popularHubs = [
+          "Manali", "Shimla", "Kasol", "Jibhi", "Kullu", "Dharamshala", "Dalhousie", "Amritsar",
+          "Chandigarh", "Delhi", "Agra", "Jaipur", "Udaipur", "Goa", "Srinagar", "Gulmarg",
+          "Pahalgam", "Leh", "Ladakh", "Munnar", "Alleppey", "Thekkady", "Wayanad", "Ooty",
+          "Kodaikanal", "Rishikesh", "Haridwar", "Nainital", "Mussoorie", "Jim Corbett",
+          "Varanasi", "Darjeeling", "Gangtok", "Port Blair", "Havelock"
+        ];
+        popularHubs.forEach((h) => {
+          if (!candidates.includes(h)) candidates.push(h);
+        });
+
+        if (Array.isArray(self.availableStayCities)) {
+          for (let i = 0; i < Math.min(self.availableStayCities.length, 100); i++) {
+            const c = self.availableStayCities[i];
+            if (c && !candidates.includes(c)) candidates.push(c);
           }
         }
-        // 2. Check if city name is in text
-        for (const c of allCities) {
-          if (lowerTxt.includes(c.toLowerCase())) {
+
+        // Check for direct "to [City]" or "in [City]" pattern
+        for (const c of candidates) {
+          const cLower = c.toLowerCase();
+          const prefixes = ["to ", "in ", "at ", "stay in ", "reach ", "arrive in "];
+          for (const p of prefixes) {
+            if (lowerTxt.indexOf(p + cLower) !== -1) {
+              return c;
+            }
+          }
+        }
+
+        // Check if candidate city name is mentioned directly
+        for (const c of candidates) {
+          const cLower = c.toLowerCase();
+          if (cLower.length > 2 && lowerTxt.indexOf(cLower) !== -1) {
             return c;
           }
         }
@@ -6499,10 +6856,18 @@
                 }
               });
             }
-            if (hotRes && hotRes.hotels) {
+            if (hotRes && hotRes.hotels && Array.isArray(hotRes.hotels)) {
               hotRes.hotels.forEach((h) => {
-                if (h.assigned_night > 0 && !assignedMap[h.assigned_night]) {
-                  assignedMap[h.assigned_night] = h;
+                const n = parseInt(h.assigned_night || 0);
+                if (n > 0) {
+                  assignedMap[n] = {
+                    id: parseInt(h.id) || 0,
+                    title: h.title || "",
+                    city: h.city || "",
+                    assigned_room_type: h.assigned_room_type || "",
+                    assigned_room_id: parseInt(h.assigned_room_id) || 0,
+                    type: h.type || "",
+                  };
                 }
               });
             }
@@ -6552,57 +6917,76 @@
               const nightNum = i + 1;
               const assignedH = assignedMap[nightNum];
 
-              // 1. Stay City
-              if (!d.stay && !d.city && !d.stay_city) {
-                const detected =
-                  detectCityFromText(d.day) || detectCityFromText(d.overview);
-                d.stay =
-                  (assignedH && assignedH.city) ||
-                  detected ||
-                  defaultCity ||
-                  "";
-                d.city = d.stay;
-              } else {
-                d.stay =
-                  d.stay ||
-                  d.city ||
-                  d.stay_city ||
-                  (assignedH && assignedH.city) ||
-                  "";
-                d.city = d.stay;
-              }
-
-              // 2. Hotel & Room Type (Prioritize existing itinerary builder day data over package defaults)
-              if (d.hotel_title || d.hotel) {
-                if (!d.hotel) d.hotel = d.hotel_title;
-                if (!d.hotel_title) d.hotel_title = d.hotel;
-                if (!d.hotel_id && self.propertiesList) {
-                  const match = self.propertiesList.find(
-                    (p) =>
-                      p.title &&
-                      p.title.toLowerCase().trim() ===
-                        d.hotel.toLowerCase().trim(),
-                  );
-                  if (match) d.hotel_id = match.id;
+              // 1. Stay City & Assigned Hotel (Package day-wise hotel assignment has top priority for default display)
+              if (assignedH && assignedH.id) {
+                d.hotel_id = parseInt(assignedH.id) || 0;
+                d.hotel_title = assignedH.title || "";
+                d.hotel = assignedH.title || "";
+                if (assignedH.city) {
+                  d.stay = assignedH.city;
+                  d.stay_city = assignedH.city;
+                  d.city = assignedH.city;
                 }
-              } else if (assignedH) {
-                if (!d.hotel_id) d.hotel_id = assignedH.id;
-                if (!d.hotel_title) d.hotel_title = assignedH.title;
-                if (!d.hotel) d.hotel = assignedH.title;
-                if (assignedH.assigned_room_type && !d.room_type) {
+                if (assignedH.assigned_room_type) {
                   d.room_type = assignedH.assigned_room_type;
                 }
-                if (!d.hotel_stars) {
+                if (assignedH.assigned_room_id) {
+                  d.room_type_id = parseInt(assignedH.assigned_room_id) || 0;
+                }
+                if (assignedH.type && assignedH.type !== "home_stay") {
+                  d.hotel_stars = assignedH.type;
+                } else if (!d.hotel_stars) {
                   const defaultPkgHotel =
                     (
                       pkg.tour_package_hotel ||
                       pkg.hotel ||
                       "3_star_hotel"
                     ).trim() || "3_star_hotel";
-                  d.hotel_stars =
-                    assignedH.type && assignedH.type !== "home_stay"
-                      ? assignedH.type
-                      : defaultPkgHotel;
+                  d.hotel_stars = defaultPkgHotel;
+                }
+                d.show_hotel = 1;
+                d.is_hotel_hidden = 0;
+                d.hide_hotel = 0;
+              } else {
+                // Fallback for days without an assigned hotel in package
+                if (!d.stay && !d.city && !d.stay_city) {
+                  const detected =
+                    detectCityFromText(d.day) || detectCityFromText(d.overview);
+                  d.stay = detected || defaultCity || "";
+                  d.city = d.stay;
+                } else {
+                  d.stay = d.stay || d.city || d.stay_city || defaultCity || "";
+                  d.city = d.stay;
+                }
+
+                const sLower = (d.stay || "").toLowerCase().trim();
+                const isNoStayFallback =
+                  sLower.includes("overnight") ||
+                  sLower.includes("transit") ||
+                  sLower.includes("tour end") ||
+                  sLower.includes("trip end") ||
+                  sLower.includes("no stay") ||
+                  sLower.includes("no hotel") ||
+                  sLower.includes("departure");
+
+                if (isNoStayFallback) {
+                  d.show_hotel = 0;
+                  d.is_hotel_hidden = 1;
+                  d.hide_hotel = 1;
+                }
+
+                if (d.hotel_title || d.hotel) {
+                  if (!d.hotel) d.hotel = d.hotel_title;
+                  if (!d.hotel_title) d.hotel_title = d.hotel;
+                  if (!d.hotel_id && self.propertiesList) {
+                    const match = self.propertiesList.find(
+                      (p) =>
+                        p.title &&
+                        p.title.toLowerCase().trim() ===
+                          d.hotel.toLowerCase().trim(),
+                    );
+                    if (match) d.hotel_id = match.id;
+                  }
                 }
               }
 
@@ -6610,7 +6994,7 @@
                 d.hotel = d.hotel_title || d.hotel_id;
               }
 
-              // 3. Vehicles: outstation vehicle for Day 1 and last day, local sightseeing for other days
+              // 2. Vehicles: outstation vehicle for Day 1 and last day, local sightseeing for other days
               const isFirstOrLast = i === 0 || i === totalDays - 1;
               const defaultVeh = isFirstOrLast
                 ? pkgOutstation || pkgLocal || ""
@@ -6985,6 +7369,36 @@
             ? $dropdownParent
             : undefined,
         minimumInputLength: 0,
+        createTag: function (params) {
+          const term = $.trim(params.term);
+          if (!term) return null;
+          return {
+            id: term,
+            text: `${term} (Add New)`,
+            city: term,
+            isNewTag: true,
+          };
+        },
+        insertTag: function (data, tag) {
+          // Place search keyword with (Add New) at the LAST of dropdown options
+          data.push(tag);
+        },
+        templateResult: function (opt) {
+          if (!opt.id) return opt.text;
+          if (opt.isNewTag || (opt.text && opt.text.endsWith("(Add New)"))) {
+            return $(
+              `<div class="v3-select2-add-new-opt"><i class="fi fi-rr-plus"></i> ${escapeHtml(opt.text)}</div>`,
+            );
+          }
+          return opt.text;
+        },
+        templateSelection: function (item) {
+          if (!item.id) return item.text;
+          const clean = (item.city || item.id || item.text || "")
+            .replace(/\s*\(Add New\)$/i, "")
+            .trim();
+          return clean || item.text;
+        },
         ajax: {
           url: "/api/v3/cities/",
           dataType: "json",

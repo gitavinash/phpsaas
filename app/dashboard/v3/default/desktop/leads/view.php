@@ -434,9 +434,16 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                                 <i class="fi fi-rr-calendar"></i>
                                 <span>3. Detailed Day-Wise Itinerary, Accommodation & Transport</span>
                             </div>
-                            <button type="button" class="btn-v3-action btn-outline" id="btnAddItinDayTop">
-                                <i class="fi fi-rr-plus"></i> Add Day
-                            </button>
+                            <div class="v3-flex-gap-8">
+                                <div class="v3-itin-bulk-hotel-toggle" title="Quickly show or hide hotel details across all days">
+                                    <span class="v3-bulk-hotel-label">Hotels:</span>
+                                    <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnBulkShowHotels"><i class="fi fi-rr-eye"></i> Show All</button>
+                                    <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnBulkHideHotels"><i class="fi fi-rr-eye-crossed"></i> Hide All</button>
+                                </div>
+                                <button type="button" class="btn-v3-action btn-outline" id="btnAddItinDayTop">
+                                    <i class="fi fi-rr-plus"></i> Add Day
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Dynamic Days Stack -->

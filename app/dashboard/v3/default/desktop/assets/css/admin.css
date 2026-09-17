@@ -13976,6 +13976,11 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   gap: 12px !important;
   width: 100% !important;
   padding: 4px 0 !important;
+  pointer-events: none !important;
+}
+
+.v3-select2-pkg-row * {
+  pointer-events: none !important;
 }
 
 .v3-select2-pkg-title {
@@ -14026,6 +14031,22 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   color: #059669 !important;
   border: 1px solid #a7f3d0 !important;
   line-height: 1 !important;
+}
+
+/* Custom Select2 Add-New Item */
+.v3-select2-add-new-opt {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: #0284c7 !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  pointer-events: none !important;
+}
+
+.v3-select2-add-new-opt i {
+  font-size: 13px !important;
+  color: #0284c7 !important;
 }
 
 /* Itinerary Section Card */
@@ -14174,6 +14195,132 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
 
 .v3-itin-sub-box-title i {
   color: #0284c7 !important;
+}
+
+/* Hotel Visibility Switch Slider */
+.v3-itin-sub-box-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+.v3-hotel-visibility-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.v3-switch-label {
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  color: #1e293b !important;
+  letter-spacing: -0.1px !important;
+  user-select: none !important;
+  transition: color 0.2s ease !important;
+}
+
+.v3-switch-slider-wrap {
+  display: inline-flex !important;
+  align-items: center !important;
+  position: relative !important;
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+.v3-switch-slider-wrap input[type="checkbox"] {
+  position: absolute !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+}
+
+.v3-switch-slider {
+  position: relative !important;
+  display: inline-block !important;
+  width: 46px !important;
+  height: 24px !important;
+  background-color: #cbd5e1 !important;
+  border-radius: 9999px !important;
+  transition: background-color 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.v3-switch-slider::before {
+  content: "" !important;
+  position: absolute !important;
+  height: 18px !important;
+  width: 18px !important;
+  left: 3px !important;
+  top: 3px !important;
+  background-color: #ffffff !important;
+  border-radius: 50% !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Checked (Show) State - Exact Mint Green from Ref Image */
+.v3-switch-slider-wrap input[type="checkbox"]:checked + .v3-switch-slider {
+  background-color: #6fe5a9 !important;
+}
+
+.v3-switch-slider-wrap input[type="checkbox"]:checked + .v3-switch-slider::before {
+  transform: translateX(22px) !important;
+}
+
+.v3-switch-slider-wrap input[type="checkbox"]:focus + .v3-switch-slider {
+  box-shadow: 0 0 0 2px rgba(111, 229, 169, 0.4) !important;
+}
+
+.v3-itin-hotel-fields-wrap {
+  transition: opacity 0.2s ease, filter 0.2s ease !important;
+}
+
+.v3-itin-hotel-fields-wrap.is-hotel-hidden {
+  opacity: 0.4 !important;
+  filter: grayscale(0.5) !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+.v3-itin-hotel-hidden-notice {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 10px !important;
+  font-size: 11.5px !important;
+  color: #b91c1c !important;
+  background: #fff5f5 !important;
+  border: 1px dashed #fca5a5 !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  animation: fadeInNotice 0.2s ease-in-out !important;
+}
+
+@keyframes fadeInNotice {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.v3-itin-bulk-hotel-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.v3-bulk-hotel-label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
 }
 
 .v3-btn-add-day-full {

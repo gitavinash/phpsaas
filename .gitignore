@@ -2,6 +2,7 @@
 upload/
 logs/
 cache/
+postman/
 *.DS_Store
 node_modules
 custom.log

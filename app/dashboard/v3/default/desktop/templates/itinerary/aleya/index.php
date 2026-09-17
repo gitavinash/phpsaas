@@ -1549,12 +1549,17 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
                 foreach ($pkgDays as $item):
                     $dayRawLabel = is_array($item) ? ($item['day'] ?? ($item['title'] ?? ("Day " . $dayIndex))) : ("Day " . $dayIndex);
                     $overview = is_array($item) ? ($item['overview'] ?? ($item['content'] ?? '')) : '';
-                    $stayName = is_array($item) ? ($item['stay'] ?? ($item['hotel'] ?? '')) : '';
+                    $isHotelHidden = is_array($item) && (
+                        (isset($item['show_hotel']) && ($item['show_hotel'] === 0 || $item['show_hotel'] === '0' || $item['show_hotel'] === false)) ||
+                        !empty($item['hide_hotel']) ||
+                        !empty($item['is_hotel_hidden'])
+                    );
+                    $stayName = (!$isHotelHidden && is_array($item)) ? ($item['stay'] ?? ($item['hotel'] ?? '')) : '';
                     $currentDayNum = $dayIndex;
                     $isLastDay = ($dayIndex === $totalDaysCount);
 
                     $dayPhotos = $dayWiseImages[$currentDayNum] ?? [];
-                    $assignedHotel = $dayWiseHotels[$currentDayNum] ?? null;
+                    $assignedHotel = !$isHotelHidden ? ($dayWiseHotels[$currentDayNum] ?? null) : null;
 
                     // Determine stay city
                     $stayCity = is_array($item) ? ($item['city'] ?? '') : '';

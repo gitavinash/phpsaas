@@ -51,8 +51,57 @@ function formatCityTitle($str) {
     return mb_convert_case(trim($str), MB_CASE_TITLE, "UTF-8");
 }
 
+// Check if all cities are requested
+$isAll = (isset($_GET['all']) && ($_GET['all'] == '1' || $_GET['all'] === 'true'))
+    || (isset($_GET['limit']) && strtolower(trim((string)$_GET['limit'])) === 'all');
+
+$cityTbl = !empty($tblPrefix) ? "{$tblPrefix}city" : 'isw_city';
+$stateTbl = !empty($tblPrefix) ? "{$tblPrefix}state" : 'isw_state';
+$countryTbl = !empty($tblPrefix) ? "{$tblPrefix}country" : 'isw_country';
+
+if ($isAll) {
+    $allWhere = ["c.city_name IS NOT NULL", "c.city_name <> ''", "c.city_status = 1"];
+    if (!empty($escapedCountry)) {
+        $allWhere[] = "(co.country_name = '{$escapedCountry}' OR co.country_id = '{$escapedCountry}')";
+    }
+    $allWhereSql = implode(' AND ', $allWhere);
+    $allQuery = "
+        SELECT DISTINCT TRIM(c.city_name) AS city_name
+        FROM {$cityTbl} c
+        LEFT JOIN {$stateTbl} s ON c.city_state_id = s.state_id
+        LEFT JOIN {$countryTbl} co ON s.state_country_id = co.country_id
+        WHERE {$allWhereSql}
+        ORDER BY c.city_name ASC
+    ";
+    $allRes = mysqli_query($connection, $allQuery);
+    $allCities = [];
+    if ($allRes) {
+        while ($cRow = mysqli_fetch_assoc($allRes)) {
+            $cn = formatCityTitle($cRow['city_name'] ?? '');
+            if (!empty($cn)) {
+                $allCities[] = $cn;
+            }
+        }
+    }
+    $allCities = array_values(array_unique($allCities));
+    echo json_encode([
+        'status'  => 'success',
+        'total'   => count($allCities),
+        'cities'  => $allCities,
+        'results' => array_map(function ($c) {
+            return ['id' => $c, 'text' => $c, 'city' => $c];
+        }, array_slice($allCities, 0, 100))
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+$limitVal = 50;
+if (isset($_GET['limit']) && is_numeric($_GET['limit']) && (int)$_GET['limit'] > 0) {
+    $limitVal = (int)$_GET['limit'];
+}
+
 // Build Query on isw_city joined with isw_state and isw_country
-$whereClauses = ["c.city_name IS NOT NULL", "c.city_name <> ''"];
+$whereClauses = ["c.city_name IS NOT NULL", "c.city_name <> ''", "c.city_status = 1"];
 if (!empty($escapedSearch)) {
     $whereClauses[] = "(c.city_name LIKE '%{$escapedSearch}%' OR s.state_name LIKE '%{$escapedSearch}%' OR co.country_name LIKE '%{$escapedSearch}%')";
 }
@@ -62,9 +111,16 @@ if (!empty($escapedCountry)) {
 
 $whereSql = implode(' AND ', $whereClauses);
 
-// Priority Ordering: 1. Current State first, 2. Name match position, 3. Alphabetical
-$stateOrderSql = !empty($escapedState) ? "CASE WHEN UPPER(TRIM(s.state_name)) = UPPER('{$escapedState}') THEN 0 ELSE 1 END," : "";
-$matchOrderSql = !empty($escapedSearch) ? "CASE WHEN c.city_name LIKE '{$escapedSearch}%' THEN 0 ELSE 1 END," : "";
+// Priority Ordering:
+// 1. Current State first (if package or state param specified)
+// 2. Exact city match
+// 3. Top tourism hub states (Himachal Pradesh, Uttarakhand, J&K, Ladakh, Goa, Rajasthan, Kerala, Sikkim, etc.)
+// 4. Prefix match (starts with search term)
+// 5. Alphabetical
+$stateOrderSql  = !empty($escapedState) ? "CASE WHEN UPPER(TRIM(s.state_name)) = UPPER('{$escapedState}') THEN 0 ELSE 1 END," : "";
+$exactMatchSql  = !empty($escapedSearch) ? "CASE WHEN LOWER(TRIM(c.city_name)) = LOWER('{$escapedSearch}') THEN 0 ELSE 1 END," : "";
+$touristSql     = "CASE WHEN s.state_name IN ('Himachal Pradesh', 'Uttarakhand', 'Jammu and Kashmir', 'Jammu & Kashmir', 'Ladakh', 'Goa', 'Rajasthan', 'Kerala', 'Sikkim', 'Andaman and Nicobar Islands') THEN 0 ELSE 1 END,";
+$matchOrderSql  = !empty($escapedSearch) ? "CASE WHEN c.city_name LIKE '{$escapedSearch}%' THEN 0 ELSE 1 END," : "";
 
 $query = "
     SELECT 
@@ -72,12 +128,12 @@ $query = "
         TRIM(c.city_name) AS city_name,
         TRIM(s.state_name) AS state_name,
         TRIM(co.country_name) AS country_name
-    FROM isw_city c
-    LEFT JOIN isw_state s ON c.city_state_id = s.state_id
-    LEFT JOIN isw_country co ON s.state_country_id = co.country_id
+    FROM {$cityTbl} c
+    LEFT JOIN {$stateTbl} s ON c.city_state_id = s.state_id
+    LEFT JOIN {$countryTbl} co ON s.state_country_id = co.country_id
     WHERE {$whereSql}
-    ORDER BY {$stateOrderSql} {$matchOrderSql} c.city_name ASC
-    LIMIT 50
+    ORDER BY {$stateOrderSql} {$exactMatchSql} {$touristSql} {$matchOrderSql} c.city_name ASC, s.state_name ASC
+    LIMIT {$limitVal}
 ";
 
 // Common destination city pincode dictionary for fast accurate fallbacks
@@ -159,10 +215,10 @@ if ($res = mysqli_query($connection, $query)) {
         if (empty($cName)) continue;
 
         $cKey = strtolower($cName . '_' . $sName . '_' . $coName);
-        if (in_array($cKey, $seen, true)) {
+        if (isset($seen[$cKey])) {
             continue;
         }
-        $seen[] = $cKey;
+        $seen[$cKey] = true;
 
         // Determine Pincode
         $lowerCity = strtolower(trim($cName));

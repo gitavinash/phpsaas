@@ -332,27 +332,45 @@ if (is_string($pkgDays)) {
 }
 
 // Resolve Stay Category for Hero Section
-$stayCategory = '';
-if (!empty($tour_package_hotel_category)) {
-    $stayCategory = $formatCategoryName($tour_package_hotel_category);
-}
-if (empty($stayCategory) && !empty($pkgDays) && is_array($pkgDays)) {
+$allHotelsHidden = false;
+if (!empty($pkgDays) && is_array($pkgDays)) {
+    $allHotelsHidden = true;
     foreach ($pkgDays as $d) {
-        $hs = trim((string)($d['hotel_stars'] ?? ''));
-        if (!empty($hs) && strtolower($hs) !== 'all' && strtolower($hs) !== 'no_hotel') {
-            $stayCategory = $formatCategoryName($hs);
+        $hsHidden = (isset($d['show_hotel']) && ($d['show_hotel'] === 0 || $d['show_hotel'] === '0' || $d['show_hotel'] === false)) || !empty($d['hide_hotel']) || !empty($d['is_hotel_hidden']);
+        if (!$hsHidden) {
+            $allHotelsHidden = false;
             break;
         }
     }
 }
-if (empty($stayCategory) && !empty($tour_package_hotel)) {
-    $cleanH = strtolower(trim((string)$tour_package_hotel));
-    if (str_contains($cleanH, 'star') || str_contains($cleanH, 'hotel') || str_contains($cleanH, 'resort') || str_contains($cleanH, 'stay') || str_contains($cleanH, 'camp')) {
-        $stayCategory = $formatCategoryName($tour_package_hotel);
+
+$stayCategory = '';
+if ($allHotelsHidden) {
+    $pkgHotel = '';
+} else {
+    if (!empty($tour_package_hotel_category)) {
+        $stayCategory = $formatCategoryName($tour_package_hotel_category);
     }
-}
-if (empty($stayCategory)) {
-    $stayCategory = '3 Star Hotel';
+    if (empty($stayCategory) && !empty($pkgDays) && is_array($pkgDays)) {
+        foreach ($pkgDays as $d) {
+            $hsHidden = (isset($d['show_hotel']) && ($d['show_hotel'] === 0 || $d['show_hotel'] === '0' || $d['show_hotel'] === false)) || !empty($d['hide_hotel']) || !empty($d['is_hotel_hidden']);
+            if ($hsHidden) continue;
+            $hs = trim((string)($d['hotel_stars'] ?? ''));
+            if (!empty($hs) && strtolower($hs) !== 'all' && strtolower($hs) !== 'no_hotel') {
+                $stayCategory = $formatCategoryName($hs);
+                break;
+            }
+        }
+    }
+    if (empty($stayCategory) && !empty($tour_package_hotel)) {
+        $cleanH = strtolower(trim((string)$tour_package_hotel));
+        if (str_contains($cleanH, 'star') || str_contains($cleanH, 'hotel') || str_contains($cleanH, 'resort') || str_contains($cleanH, 'stay') || str_contains($cleanH, 'camp')) {
+            $stayCategory = $formatCategoryName($tour_package_hotel);
+        }
+    }
+    if (empty($stayCategory)) {
+        $stayCategory = '3 Star Hotel';
+    }
 }
 
 $heroFeatureImage = fixImageUrl($tour_package_image ?? ($gallery_image ?? ($featureImage ?? '')));
@@ -2356,6 +2374,13 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             $builderHotelClean = cleanProposalLabel($rawBuilderHotel);
             $builderHotelLower = strtolower($rawBuilderHotel);
 
+            // Check if hotel is explicitly hidden in Itinerary Builder
+            $isHotelExplicitlyHidden = (
+                (isset($day['show_hotel']) && ($day['show_hotel'] === 0 || $day['show_hotel'] === '0' || $day['show_hotel'] === false)) ||
+                !empty($day['hide_hotel']) ||
+                !empty($day['is_hotel_hidden'])
+            );
+
             // Check if stay is explicitly in transit or no hotel
             $isTransitStay = (
                 str_contains($stayCityLower, 'transit') || 
@@ -2377,7 +2402,12 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             $propRoomType = '';
             $propMealPlan = '';
 
-            if ($isTransitStay) {
+            if ($isHotelExplicitlyHidden) {
+                // Hotel explicitly hidden by user in Itinerary Builder
+                $propTitle = '';
+                $builderHotelClean = '';
+                $builderHotelId = 0;
+            } else if ($isTransitStay) {
                 // If stay is in transit, do not mention any hotel name!
                 $isTransitOrTripEnd = true;
                 if (str_contains($stayCityLower, 'end') || str_contains($stayCityLower, 'departure')) {

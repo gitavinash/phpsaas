@@ -61,6 +61,21 @@ if (is_string($pkgDays)) {
     $pkgDays = json_decode($pkgDays, true) ?: [];
 }
 
+$allHotelsHidden = false;
+if (!empty($pkgDays) && is_array($pkgDays)) {
+    $allHotelsHidden = true;
+    foreach ($pkgDays as $d) {
+        $hsHidden = (isset($d['show_hotel']) && ($d['show_hotel'] === 0 || $d['show_hotel'] === '0' || $d['show_hotel'] === false)) || !empty($d['hide_hotel']) || !empty($d['is_hotel_hidden']);
+        if (!$hsHidden) {
+            $allHotelsHidden = false;
+            break;
+        }
+    }
+}
+if ($allHotelsHidden) {
+    $pkgHotel = '';
+}
+
 $heroFeatureImage = fixImageUrl($tour_package_image ?? ($gallery_image ?? ($featureImage ?? '')));
 
 $totalDaysCount = !empty($pkgDays) ? count($pkgDays) : 1;
@@ -605,7 +620,9 @@ $excList = parseBulletList($pkgExclusions);
                 <div class="hero-meta-row">
                     <span class="hero-pill"><i class="ri-time-line"></i> <?php echo $totalNightsCount; ?>N / <?php echo $totalDaysCount; ?>D</span>
                     <span class="hero-pill"><i class="ri-map-pin-line"></i> <?php echo htmlspecialchars($pkgCity); ?></span>
-                    <span class="hero-pill"><i class="ri-hotel-line"></i> <?php echo !empty($pkgHotel) ? htmlspecialchars(ucfirst($pkgHotel)) : 'Deluxe Hotel'; ?></span>
+                    <?php if (!$allHotelsHidden && !empty($pkgHotel)): ?>
+                        <span class="hero-pill"><i class="ri-hotel-line"></i> <?php echo htmlspecialchars(ucfirst($pkgHotel)); ?></span>
+                    <?php endif; ?>
                     <?php if (!empty($pkgPriceAdult)): ?>
                         <span class="hero-pill" style="background: rgba(2, 132, 199, 0.4);"><i class="ri-money-rupee-circle-line"></i> ₹ <?php echo number_format((float)$pkgPriceAdult); ?></span>
                     <?php endif; ?>
@@ -637,7 +654,12 @@ $excList = parseBulletList($pkgExclusions);
                 foreach ($pkgDays as $d): 
                     $dayLabel = is_array($d) ? ($d['day'] ?? ($d['title'] ?? "Day $dayIdx")) : "Day $dayIdx";
                     $overview = is_array($d) ? ($d['overview'] ?? ($d['content'] ?? '')) : '';
-                    $stay = is_array($d) ? ($d['stay'] ?? ($d['hotel'] ?? '')) : '';
+                    $isHotelHidden = is_array($d) && (
+                        (isset($d['show_hotel']) && ($d['show_hotel'] === 0 || $d['show_hotel'] === '0' || $d['show_hotel'] === false)) ||
+                        !empty($d['hide_hotel']) ||
+                        !empty($d['is_hotel_hidden'])
+                    );
+                    $stay = (!$isHotelHidden && is_array($d)) ? ($d['stay'] ?? ($d['hotel'] ?? '')) : '';
                     $img = is_array($d) ? fixImageUrl($d['feature_image'] ?? ($d['image'] ?? '')) : '';
                     $isLast = ($dayIdx === $totalDaysCount);
                 ?>

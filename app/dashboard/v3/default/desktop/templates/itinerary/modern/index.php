@@ -628,7 +628,12 @@ $excList = parseBulletList($pkgExclusions);
                 foreach ($pkgDays as $d): 
                     $dayLabel = is_array($d) ? ($d['day'] ?? ($d['title'] ?? "Day $dayIdx")) : "Day $dayIdx";
                     $overview = is_array($d) ? ($d['overview'] ?? ($d['content'] ?? '')) : '';
-                    $stay = is_array($d) ? ($d['stay'] ?? ($d['hotel'] ?? '')) : '';
+                    $isHotelHidden = is_array($d) && (
+                        (isset($d['show_hotel']) && ($d['show_hotel'] === 0 || $d['show_hotel'] === '0' || $d['show_hotel'] === false)) ||
+                        !empty($d['hide_hotel']) ||
+                        !empty($d['is_hotel_hidden'])
+                    );
+                    $stay = (!$isHotelHidden && is_array($d)) ? ($d['stay'] ?? ($d['hotel'] ?? '')) : '';
                     $img = is_array($d) ? fixImageUrl($d['feature_image'] ?? ($d['image'] ?? '')) : '';
                     $isLast = ($dayIdx === $totalDaysCount);
                 ?>
