@@ -28715,6 +28715,110 @@ body.v3-editor-fs-locked {
   color: #475569 !important;
 }
 
+/* Executive Volume Flow Trend Chart */
+#enquiryFlowContainer {
+  height: 230px !important;
+  position: relative !important;
+  width: 100% !important;
+}
+
+.chart-card-header.flow-trend-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  padding-bottom: 8px !important;
+}
+
+.flow-header-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.flow-header-legend {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.flow-legend-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 4px 11px !important;
+  border-radius: 9999px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: all 0.2s ease !important;
+  border: 1px solid transparent !important;
+  line-height: 1.4 !important;
+}
+
+.flow-legend-pill.pill-enquiry {
+  background: rgba(99, 102, 241, 0.08) !important;
+  color: #4f46e5 !important;
+  border-color: rgba(99, 102, 241, 0.2) !important;
+}
+.flow-legend-pill.pill-enquiry:hover {
+  background: rgba(99, 102, 241, 0.16) !important;
+}
+.flow-legend-pill.pill-enquiry.is-muted {
+  opacity: 0.4 !important;
+  text-decoration: line-through !important;
+  filter: grayscale(0.6) !important;
+}
+
+.flow-legend-pill.pill-confirmed {
+  background: rgba(16, 185, 129, 0.08) !important;
+  color: #059669 !important;
+  border-color: rgba(16, 185, 129, 0.2) !important;
+}
+.flow-legend-pill.pill-confirmed:hover {
+  background: rgba(16, 185, 129, 0.16) !important;
+}
+.flow-legend-pill.pill-confirmed.is-muted {
+  opacity: 0.4 !important;
+  text-decoration: line-through !important;
+  filter: grayscale(0.6) !important;
+}
+
+.flow-legend-pill.pill-rate {
+  background: rgba(245, 158, 11, 0.08) !important;
+  color: #d97706 !important;
+  border-color: rgba(245, 158, 11, 0.2) !important;
+  cursor: default !important;
+}
+
+.flow-legend-pill .pill-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+}
+.flow-legend-pill .pill-dot.dot-enquiry {
+  background: #6366f1 !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25) !important;
+}
+.flow-legend-pill .pill-dot.dot-confirmed {
+  background: #10b981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25) !important;
+}
+
+.flow-legend-pill .pill-title {
+  color: #64748b !important;
+  font-size: 11.5px !important;
+}
+.flow-legend-pill .pill-val {
+  font-weight: 700 !important;
+  color: inherit !important;
+}
+
+
 
 
 

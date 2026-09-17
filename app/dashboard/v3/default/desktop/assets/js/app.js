@@ -1170,7 +1170,7 @@ $(document).ready(function (e) {
     });
   }
 
-  // 12. Modular Timeline Flow Chart
+  // 12. Modular Timeline Flow Chart (Enquiries & Confirmations Dual-Series)
   function loadDashboardFlow(daterange) {
     const flowContainer = document.getElementById("enquiryFlowContainer");
     if (!flowContainer && !document.getElementById("enquiryFlowCanvas")) return;
@@ -1181,6 +1181,25 @@ $(document).ready(function (e) {
       dataType: "json",
       success: function (res) {
         if (!res || res.status !== 200) return;
+
+        // Update Header KPI Summary Pills
+        const totalEnquiries =
+          res.total_enquiries !== undefined
+            ? res.total_enquiries
+            : res.total || 0;
+        const totalConfirmed =
+          res.total_confirmed !== undefined ? res.total_confirmed : 0;
+        const convRate =
+          res.conversion_rate !== undefined
+            ? res.conversion_rate
+            : totalEnquiries > 0
+              ? ((totalConfirmed / totalEnquiries) * 100).toFixed(1)
+              : 0;
+
+        $("#flowTotalEnquiries").text(Number(totalEnquiries).toLocaleString());
+        $("#flowTotalConfirmed").text(Number(totalConfirmed).toLocaleString());
+        $("#flowConversionRate").text(convRate + "%");
+
         let flowCanvas = document.getElementById("enquiryFlowCanvas");
         if (!flowCanvas && flowContainer) {
           flowContainer.innerHTML = '<canvas id="enquiryFlowCanvas"></canvas>';
@@ -1202,24 +1221,40 @@ $(document).ready(function (e) {
         }
 
         const flowLabels = res.labels || [];
-        const flowData = res.data || [];
+        const enquiryData = res.enquiry_data || res.data || [];
+        const confirmedData = res.confirmed_data || [];
 
         if (flowLabels.length > 0) {
+          // Reset legend pill states
+          $(".flow-legend-pill[data-dataset-index]").removeClass("is-muted");
+
           window.enquiryFlowChartInstance = new Chart(flowCtx, {
             type: "line",
             data: {
               labels: flowLabels,
               datasets: [
                 {
-                  label: "Enquiries",
-                  data: flowData,
+                  label: "Total Enquiries",
+                  data: enquiryData,
                   borderColor: "#6366f1",
                   backgroundColor: "rgba(99, 102, 241, 0.08)",
                   borderWidth: 2.5,
                   fill: true,
                   tension: 0.35,
-                  pointRadius: 4,
+                  pointRadius: 3.5,
                   pointBackgroundColor: "#6366f1",
+                  pointHoverRadius: 6,
+                },
+                {
+                  label: "Confirmed Leads",
+                  data: confirmedData,
+                  borderColor: "#10b981",
+                  backgroundColor: "rgba(16, 185, 129, 0.12)",
+                  borderWidth: 2.5,
+                  fill: true,
+                  tension: 0.35,
+                  pointRadius: 3.5,
+                  pointBackgroundColor: "#10b981",
                   pointHoverRadius: 6,
                 },
               ],
@@ -1227,12 +1262,21 @@ $(document).ready(function (e) {
             options: {
               responsive: true,
               maintainAspectRatio: false,
+              interaction: {
+                mode: "index",
+                intersect: false,
+              },
               plugins: {
                 legend: { display: false },
                 tooltip: {
                   mode: "index",
                   intersect: false,
                   padding: 10,
+                  callbacks: {
+                    label: function (ctx) {
+                      return " " + ctx.dataset.label + ": " + ctx.parsed.y;
+                    },
+                  },
                 },
               },
               scales: {
@@ -1243,7 +1287,11 @@ $(document).ready(function (e) {
                 y: {
                   beginAtZero: true,
                   grid: { color: "#f1f5f9" },
-                  ticks: { font: { size: 11 }, color: "#64748b" },
+                  ticks: {
+                    font: { size: 11 },
+                    color: "#64748b",
+                    precision: 0,
+                  },
                 },
               },
             },
@@ -1261,6 +1309,29 @@ $(document).ready(function (e) {
       },
     });
   }
+
+  // Interactive Flow Legend Pill Click to Toggle Datasets
+  $(document).on(
+    "click",
+    ".flow-legend-pill[data-dataset-index]",
+    function () {
+      const idx = parseInt($(this).data("dataset-index"));
+      if (window.enquiryFlowChartInstance && !isNaN(idx)) {
+        const chart = window.enquiryFlowChartInstance;
+        const isVisible = chart.isDatasetVisible
+          ? chart.isDatasetVisible(idx)
+          : !chart.data.datasets[idx].hidden;
+        if (chart.setDatasetVisibility) {
+          chart.setDatasetVisibility(idx, !isVisible);
+        } else {
+          const meta = chart.getDatasetMeta(idx);
+          meta.hidden = isVisible ? true : null;
+        }
+        chart.update();
+        $(this).toggleClass("is-muted", isVisible);
+      }
+    },
+  );
 
   // 13. Modular Upcoming Follow-ups Table
   function loadDashboardFollowups() {

@@ -53,7 +53,7 @@ if ($diffDays <= 2) {
     while ($curr <= $endHour) {
         $slotKey = date('Y-m-d H:00', $curr);
         $label   = ($diffDays > 1) ? date('d M H:00', $curr) : date('H:00', $curr);
-        $timeSlots[$slotKey] = ['label' => $label, 'count' => 0];
+        $timeSlots[$slotKey] = ['label' => $label, 'count' => 0, 'confirmed' => 0];
         $curr += 3600;
     }
 } elseif ($diffDays <= 90) {
@@ -64,7 +64,7 @@ if ($diffDays <= 2) {
     while ($curr <= $endDay) {
         $slotKey = date('Y-m-d', $curr);
         $label   = date('d M', $curr);
-        $timeSlots[$slotKey] = ['label' => $label, 'count' => 0];
+        $timeSlots[$slotKey] = ['label' => $label, 'count' => 0, 'confirmed' => 0];
         $curr = strtotime('+1 day', $curr);
     }
 } else {
@@ -75,14 +75,16 @@ if ($diffDays <= 2) {
     while ($curr <= $endMonth) {
         $slotKey = date('Y-m', $curr);
         $label   = date('M Y', $curr);
-        $timeSlots[$slotKey] = ['label' => $label, 'count' => 0];
+        $timeSlots[$slotKey] = ['label' => $label, 'count' => 0, 'confirmed' => 0];
         $curr = strtotime('+1 month', $curr);
     }
 }
 
 $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
 
-$sqlFlow = "SELECT {$sqlFmt} AS slot_key, COUNT(*) AS count
+$sqlFlow = "SELECT {$sqlFmt} AS slot_key, 
+                   COUNT(*) AS count,
+                   SUM(CASE WHEN enquiry_status = 1 THEN 1 ELSE 0 END) AS confirmed_count
             FROM {$tblPrefix}enquiry
             WHERE {$siteFilter}{$userFilter}{$daterangeFilter}
             GROUP BY slot_key
@@ -92,23 +94,35 @@ if (isset($connection) && $connection && ($resFlow = mysqli_query($connection, $
     while ($row = mysqli_fetch_assoc($resFlow)) {
         $key = $row['slot_key'];
         if (isset($timeSlots[$key])) {
-            $timeSlots[$key]['count'] = (int) $row['count'];
+            $timeSlots[$key]['count']     = (int) $row['count'];
+            $timeSlots[$key]['confirmed'] = (int) $row['confirmed_count'];
         }
     }
 }
 
-$flowLabels = [];
-$flowData   = [];
+$flowLabels    = [];
+$flowData      = [];
+$confirmedData = [];
 
 foreach ($timeSlots as $slot) {
-    $flowLabels[] = $slot['label'];
-    $flowData[]   = $slot['count'];
+    $flowLabels[]    = $slot['label'];
+    $flowData[]      = $slot['count'];
+    $confirmedData[] = $slot['confirmed'];
 }
 
+$totalEnquiries = array_sum($flowData);
+$totalConfirmed = array_sum($confirmedData);
+$conversionRate = ($totalEnquiries > 0) ? round(($totalConfirmed / $totalEnquiries) * 100, 1) : 0;
+
 echo json_encode([
-    'status' => 200,
-    'labels' => $flowLabels,
-    'data'   => $flowData,
-    'total'  => array_sum($flowData),
+    'status'          => 200,
+    'labels'          => $flowLabels,
+    'data'            => $flowData,
+    'enquiry_data'    => $flowData,
+    'confirmed_data'  => $confirmedData,
+    'total'           => $totalEnquiries,
+    'total_enquiries' => $totalEnquiries,
+    'total_confirmed' => $totalConfirmed,
+    'conversion_rate' => $conversionRate,
 ]);
 exit();

@@ -94,13 +94,32 @@ if (isset($daterange) && !empty($daterange)) {
 
 <?php if ($site_access_type == 'administrator') { ?>
 
-    <!-- Executive Volume Flow Trend Chart -->
+    <!-- Executive Volume Flow & Confirmation Trend Chart -->
     <div class="charts-grid-full">
         <div class="widget-info chart-card">
-            <div class="chart-card-header">
-                <p class="kpi-label">Enquiry Volume Flow (Trend Timeline)</p>
+            <div class="chart-card-header flow-trend-header">
+                <div class="flow-header-left">
+                    <p class="kpi-label">Enquiry & Confirmation Flow Trend</p>
+                </div>
+                <div class="flow-header-legend" id="enquiryFlowLegend">
+                    <span class="flow-legend-pill pill-enquiry" data-dataset-index="0" title="Click to toggle Enquiries">
+                        <span class="pill-dot dot-enquiry"></span>
+                        <span class="pill-title">Enquiries:</span>
+                        <strong class="pill-val" id="flowTotalEnquiries">0</strong>
+                    </span>
+                    <span class="flow-legend-pill pill-confirmed" data-dataset-index="1" title="Click to toggle Confirmed">
+                        <span class="pill-dot dot-confirmed"></span>
+                        <span class="pill-title">Confirmed:</span>
+                        <strong class="pill-val" id="flowTotalConfirmed">0</strong>
+                    </span>
+                    <span class="flow-legend-pill pill-rate" title="Overall conversion rate for selected period">
+                        <i class="fi fi-rr-chart-line-up"></i>
+                        <span class="pill-title">Conversion:</span>
+                        <strong class="pill-val" id="flowConversionRate">0%</strong>
+                    </span>
+                </div>
             </div>
-            <div class="chart-card-body" id="enquiryFlowContainer" style="height: 220px; position: relative;">
+            <div class="chart-card-body" id="enquiryFlowContainer">
                 <canvas id="enquiryFlowCanvas"></canvas>
             </div>
         </div>
