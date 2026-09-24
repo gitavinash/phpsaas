@@ -29,14 +29,17 @@
     eventsBound: false,
     activeAjaxRequest: null,
     isAdmin: false,
+    appElement: null,
 
     init: function () {
       const $app = $("#leadsListApp");
       if (!$app.length) return;
 
-      if ($app.data("v3-leads-inited") === true && this.eventsBound) {
+      if (this.appElement === $app[0] && $app.data("v3-leads-inited") === true && this.eventsBound) {
         return;
       }
+      this.appElement = $app[0];
+      this.eventsBound = false;
       $app.data("v3-leads-inited", true);
 
       // Determine user role from data attribute (set by PHP)
