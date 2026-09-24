@@ -4478,10 +4478,19 @@
             $btn
               .prop("disabled", false)
               .html('<i class="fi fi-rr-check"></i> Save Changes');
+            let responseData = xhr.responseJSON;
+            if (!responseData && xhr.responseText) {
+              try {
+                responseData = JSON.parse(xhr.responseText);
+              } catch (e) {
+                responseData = null;
+              }
+            }
             const err =
-              xhr.responseJSON && xhr.responseJSON.message
-                ? xhr.responseJSON.message
-                : "Network error while updating lead.";
+              (responseData && (responseData.message || responseData.msg)) ||
+              (xhr.status
+                ? `Unable to save lead (server error ${xhr.status}).`
+                : "Network error while updating lead.");
             self.notify(err, "error");
           },
         });

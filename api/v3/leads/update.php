@@ -4,6 +4,22 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once LOGIN_CHECK;
 
+if (!isset($connection)) {
+    $configPath = $_SERVER['DOCUMENT_ROOT'] . '/lib/configuration/index.php';
+    if (file_exists($configPath)) {
+        require_once $configPath;
+    }
+}
+
+if (!isset($connection) || !$connection) {
+    http_response_code(500);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Database connection unavailable.'
+    ]);
+    exit();
+}
+
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId = defined('SITE_ID') ? intval(SITE_ID) : 0;
 $userId = defined('USER_ID') ? intval(USER_ID) : 0;
