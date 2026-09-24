@@ -164,6 +164,8 @@ $gstPercentVal  = defined('GST_PERCENTAGE') ? (float)GST_PERCENTAGE : 5.0;
 $basePriceVal   = $totalPriceVal > 0 ? round($totalPriceVal / (1 + ($gstPercentVal / 100)), 2) : 0;
 $gstAmountVal   = $totalPriceVal - $basePriceVal;
 
+$finalPriceVal   = $totalPriceVal + $gstAmountVal;
+
 // Clean quote reference
 $rawQuoteRef = $quoteId ?? ($quotationId ?? ($tour_package_id ?? rand(1000, 9999)));
 $cleanQuoteRef = '#' . ltrim((string)$rawQuoteRef, '#');
@@ -2740,7 +2742,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                         <!-- 3. Total Price Block (Clean & Minimal) -->
                         <div class="pricing-total-block">
                             <span class="pricing-total-label">Total Price</span>
-                            <span class="pricing-total-amount">&#8377;<?php echo number_format($totalPriceVal, 2); ?></span>
+                            <span class="pricing-total-amount">&#8377;<?php echo number_format($finalPriceVal, 2); ?></span>
                         </div>
 
                         <!-- 4. Prominent CTA Button (No Shadow) -->
