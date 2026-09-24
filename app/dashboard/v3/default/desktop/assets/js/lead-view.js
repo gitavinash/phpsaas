@@ -40,6 +40,8 @@
     leadData: null,
     isLoading: false,
     eventsBound: false,
+    viewElement: null,
+    loadTimeoutTimer: null,
     activeComposerType: "note", // "note" | "followup"
     availablePackages: [],
     selectedPackage: null,
@@ -161,6 +163,13 @@
         return;
       }
 
+      const isNewView = this.viewElement !== $app[0];
+      if (isNewView) {
+        this.viewElement = $app[0];
+        this.leadId = null;
+        this.leadData = null;
+      }
+
       // If we are ALREADY fetching or already loaded for this exact leadId, ignore redundant calls
       if (this.leadId === currentId && (this.isLoading || this.leadData)) {
         return;
@@ -196,15 +205,25 @@
           </div>
           <h4 class="v3-loader-title">Loading Lead Details...</h4>
           <p class="v3-loader-subtitle">Fetching customer profile, timeline, and booking records.</p>
+          <button type="button" class="btn-empty-reset-filters v3-lead-loader-retry" id="btnRetryLeadView" style="display: none;"><i class="fi fi-rr-refresh"></i> Reload Lead</button>
         </div>
       `);
+
+      clearTimeout(self.loadTimeoutTimer);
+      self.loadTimeoutTimer = setTimeout(function () {
+        if (self.isLoading && self.leadId) {
+          $("#btnRetryLeadView").stop(true, true).fadeIn(150);
+        }
+      }, 3000);
 
       self.activeXhr = $.ajax({
         url: "/api/v3/leads/view/",
         type: "GET",
         data: { id: self.leadId },
         dataType: "json",
+        cache: false,
         success: function (res) {
+          clearTimeout(self.loadTimeoutTimer);
           self.isLoading = false;
           self.activeXhr = null;
           if (res.status === "success" && res.data) {
@@ -223,6 +242,7 @@
         },
         error: function (xhr, status) {
           if (status === "abort") return;
+          clearTimeout(self.loadTimeoutTimer);
           self.isLoading = false;
           self.activeXhr = null;
           $container.html(`

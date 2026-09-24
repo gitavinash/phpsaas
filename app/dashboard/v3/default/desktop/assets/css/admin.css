@@ -22104,6 +22104,10 @@ tr:hover .vehicle-table-thumb {
   line-height: 1.45 !important;
 }
 
+.v3-lead-loader-retry {
+  margin-top: 16px !important;
+}
+
 /* =====================================================
    DateRangePicker Popup — Executive V3 Theme System
    ===================================================== */
