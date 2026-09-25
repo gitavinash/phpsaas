@@ -95,6 +95,7 @@ $query = "
         tp.tour_package_city,
         tp.tour_package_state,
         tp.tour_package_country,
+        tp.tour_package_overview,
         tp.tour_package_itinerary,
         tp.tour_package_inclusions,
         tp.tour_package_exclusions,
@@ -144,6 +145,8 @@ if ($res) {
                 $row['parsed_itinerary'] = $decodedItin;
             }
         }
+        $row['tour_package_overview'] = stripslashes($row['tour_package_overview'] ?? '');
+        $row['overview'] = $row['tour_package_overview'];
         // Ensure template identifier is present
         $row['tour_package_template'] = !empty($row['tour_package_template']) ? $row['tour_package_template'] : 'mit';
         $itineraryList[] = $row;

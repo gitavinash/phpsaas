@@ -4588,6 +4588,7 @@
           $("#itineraryPackageSelect").html(
             '<option value="">-- Choose an Itinerary Package --</option>',
           );
+          $("#itineraryCustomOverview").val("");
           self.selectedPackage = null;
 
           // Initialize V3 Cities API for destination
@@ -6596,6 +6597,33 @@
 
       const stripHtml = (s) => (s ? s.replace(/<[^>]*>?/gm, "").trim() : "");
 
+      const formatOverviewText = (s) => {
+        if (!s) return "";
+        let str = String(s);
+        // Normalize paragraph & line break tags to readable newlines
+        str = str
+          .replace(/<br\s*[\/]?>/gi, "\n")
+          .replace(/<\/p>/gi, "\n\n")
+          .replace(/<\/div>/gi, "\n")
+          .replace(/<li[^>]*>/gi, "• ")
+          .replace(/<\/li>/gi, "\n")
+          .replace(/<[^>]*>?/gm, "");
+        // Decode HTML entities
+        if (typeof DOMParser !== "undefined") {
+          try {
+            const doc = new DOMParser().parseFromString(str, "text/html");
+            str = doc.body.textContent || "";
+          } catch (e) {}
+        } else {
+          try {
+            const txt = document.createElement("textarea");
+            txt.innerHTML = str;
+            str = txt.value;
+          } catch (e) {}
+        }
+        return str.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+      };
+
       const formatBulletList = (input, defaultFallback = "") => {
         if (!input) return defaultFallback;
         if (Array.isArray(input)) {
@@ -6729,7 +6757,10 @@
       $("#itineraryCustomTotalPrice").val(
         totalPrice > 0 ? totalPrice : adultPrice * (adults > 0 ? adults : 2),
       );
-      $("#itineraryCustomOverview").val(stripHtml(pkg.tour_package_overview));
+      const defaultOverview = formatOverviewText(
+        pkg.tour_package_overview || pkg.overview || "",
+      );
+      $("#itineraryCustomOverview").val(defaultOverview);
       $("#itineraryCustomInclusions").val(
         formatBulletList(
           pkg.tour_package_inclusions,
@@ -6952,6 +6983,23 @@
                 self.selectedPackage.localsightseen_vehicle =
                   getRes.package.localsightseen_vehicle ||
                   getRes.package.tour_package_localsightseen_vehicle;
+              }
+              const enrichedOverview =
+                getRes.package.tour_package_overview ||
+                getRes.package.overview ||
+                "";
+              if (enrichedOverview) {
+                self.selectedPackage.tour_package_overview = enrichedOverview;
+                self.selectedPackage.overview = enrichedOverview;
+                const $currentOverview = $("#itineraryCustomOverview");
+                const currentVal = ($currentOverview.val() || "").trim();
+                const initialVal = formatOverviewText(
+                  pkg.tour_package_overview || pkg.overview || "",
+                );
+                // If textarea is currently empty or still has initial un-enriched overview, update it
+                if (!currentVal || currentVal === initialVal) {
+                  $currentOverview.val(formatOverviewText(enrichedOverview));
+                }
               }
             }
 

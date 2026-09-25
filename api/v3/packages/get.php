@@ -313,6 +313,7 @@ $response = [
         'outstation_vehicle'     => $row['tour_package_outstation_vehicle'] ?? '',
         'localsightseen_vehicle' => $row['tour_package_localsightseen_vehicle'] ?? '',
         'overview'               => stripslashes($row['tour_package_overview'] ?? ''),
+        'tour_package_overview'  => stripslashes($row['tour_package_overview'] ?? ''),
         'itinerary'              => $rawItinerary,
         'inclusions'             => stripslashes($row['tour_package_inclusions'] ?? ''),
         'exclusions'             => stripslashes($row['tour_package_exclusions'] ?? ''),
