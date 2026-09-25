@@ -77,7 +77,7 @@
           if (isFiltered) {
             return `
               <tr class="no-filter-match">
-                <td colspan="4">
+                <td colspan="5">
                   <div class="empty-state">
                     <i class="fi-rr-search"></i>
                     <span>No packages matching your filter criteria. Try adjusting your filters or search terms.</span>
@@ -89,7 +89,7 @@
           const typeLabel = self.type === "international" ? "international" : "domestic";
           return `
             <tr>
-              <td colspan="4">
+              <td colspan="5">
                 <div class="empty-state">
                   <i class="fi-rr-folder-open"></i>
                   <span>No ${typeLabel} packages found. Click "+ Add Package" to create your first package.</span>
@@ -215,10 +215,15 @@
       const durationD = pkg.durationD;
       const location = pkg.location;
       const hotelLabel = pkg.hotelLabel;
-      const hotelRaw = pkg.hotel;
+      const hotelRaw = pkg.hotel || "";
+      const hotelCount = pkg.hotelCount || 0;
+      const route = pkg.route || "";
+      const vehicle = pkg.vehicle || "";
       const statusClass = pkg.statusClass;
       const statusLabel = pkg.statusLabel;
+      const updatedAtHuman = pkg.updatedAtHuman || "";
       const liveUrl = pkg.linkUrl;
+      const pricing = pkg.pricing || null;
 
       let liveBtnHtml = "";
       if (liveUrl) {
@@ -226,6 +231,88 @@
           <a href="${liveUrl}" target="_blank" class="btn-action-icon preview" data-tooltip="View Live Itinerary" title="View Live Itinerary">
             <i class="fi fi-rr-eye"></i>
           </a>
+        `;
+      }
+
+      // 1. Vehicle Meta Badge
+      let vehicleHtml = "";
+      if (vehicle) {
+        vehicleHtml = `
+          <span class="pkg-vehicle-badge" title="Fleet / Vehicles: ${vehicle}">
+            <i class="fi fi-rr-car-alt"></i> ${vehicle}
+          </span>
+        `;
+      }
+
+      // 2. Route Meta Line
+      let routeHtml = "";
+      if (route && route.toLowerCase() !== location.toLowerCase()) {
+        routeHtml = `
+          <div class="pkg-route-line" title="Route: ${route}">
+            <i class="fi fi-rr-route route-icon"></i>
+            <span>${route}</span>
+          </div>
+        `;
+      }
+
+      // 3. Hotel Count Tag
+      let hotelCountHtml = "";
+      if (hotelCount > 0) {
+        hotelCountHtml = `
+          <span class="pkg-assigned-hotels-chip" title="${hotelCount} specific property/properties configured">
+            <i class="fi fi-rr-bed"></i> ${hotelCount}
+          </span>
+        `;
+      }
+
+      // 4. Pricing Block Construction
+      let pricingHtml = "";
+      if (pricing && pricing.hasPricing) {
+        const mrpHtml = (pricing.mrpDisplay && pricing.minMrp > pricing.minSelling)
+          ? `<span class="pkg-price-mrp" title="Rack Rate / MRP">${pricing.mrpDisplay}</span>`
+          : "";
+
+        let b2bHtml = "";
+        if (pricing.netDisplay || pricing.agentDisplay) {
+          const netPart = pricing.netDisplay
+            ? `<span class="pkg-net-tag" title="Net Cost to Company (Supplier Base)">Net: <strong>${pricing.netDisplay}</strong></span>`
+            : "";
+          const agentPart = pricing.agentDisplay
+            ? `<span class="pkg-agent-tag" title="B2B Agent Price">B2B: <strong>${pricing.agentDisplay}</strong></span>`
+            : "";
+          b2bHtml = `${netPart}${agentPart}`;
+        }
+
+        const typesPart = pricing.types
+          ? `<span class="pkg-slab-types">(${pricing.types})</span>`
+          : "";
+        const slabsCountLabel = `${pricing.totalSlabs} Plan${pricing.totalSlabs > 1 ? "s" : ""}`;
+
+        pricingHtml = `
+          <div class="pkg-pricing-block">
+            <div class="pkg-price-main-line">
+              <span class="pkg-price-amount">${pricing.sellingDisplay || "₹0"}</span>
+              <span class="pkg-price-unit">/ adult</span>
+              ${mrpHtml}
+            </div>
+            <div class="pkg-price-sub-line">
+              ${b2bHtml}
+              <a href="${editBasePath}price-list/?id=${encodedId}" class="pkg-slabs-tag" title="Click to view & manage pricing plans">
+                <i class="fi fi-rr-layers"></i> <span>${slabsCountLabel}</span> ${typesPart}
+              </a>
+            </div>
+          </div>
+        `;
+      } else {
+        pricingHtml = `
+          <div class="pkg-no-price-block">
+            <span class="pkg-price-missing" title="No pricing slabs configured yet">
+              <i class="fi fi-rr-exclamation"></i> No price set
+            </span>
+            <a href="${editBasePath}price-list/?id=${encodedId}" class="btn-quick-add-price" title="Add Pricing Plans">
+              <i class="fi fi-rr-plus"></i> Set Price
+            </a>
+          </div>
         `;
       }
 
@@ -242,12 +329,14 @@
                 ${title}
               </a>
               <div class="pkg-meta-row">
+                <span class="pkg-id-chip" title="Package ID">#${pkgId}</span>
                 <span class="pkg-theme-pill ${themeClass}">
                   ${themeLabel}
                 </span>
                 <span class="pkg-duration-badge">
                   <i class="fi-rr-moon pkg-duration-moon"></i> ${durationN}N / <i class="fi-rr-sun pkg-duration-sun"></i> ${durationD}D
                 </span>
+                ${vehicleHtml}
               </div>
             </div>
           </td>
@@ -259,21 +348,28 @@
                 <i class="fi-rr-marker loc-icon"></i>
                 <span class="loc-text">${location}</span>
               </div>
+              ${routeHtml}
               <div class="pkg-hotel-line">
                 <i class="fi-rr-hotel hotel-icon"></i>
                 <span class="hotel-text">${hotelLabel}</span>
+                ${hotelCountHtml}
               </div>
             </div>
           </td>
 
-          <!-- 3. Status Badge -->
+          <!-- 3. Pricing & Plans (New Dedicated Column for Backend Team) -->
+          <td class="col-pkg-pricing">
+            ${pricingHtml}
+          </td>
+
+          <!-- 4. Status -->
           <td class="col-pkg-status">
             <span class="v3-status-badge ${statusClass}">
               <span class="status-pulse-dot"></span> ${statusLabel}
             </span>
           </td>
 
-          <!-- 4. Actions Toolbar -->
+          <!-- 5. Actions Toolbar -->
           <td class="col-pkg-actions">
             <div class="pkg-actions-toolbar">
               <a href="${editBasePath}edit/?id=${encodedId}" class="btn-action-pill" data-tooltip="Edit Package Details" title="Edit Package Details">

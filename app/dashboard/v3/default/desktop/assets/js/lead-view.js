@@ -4676,12 +4676,40 @@
                 const adultRate = parseFloat(
                   pkg.tour_package_price_adult || 0,
                 ).toLocaleString("en-IN");
-                let duration = pkg.tour_package_duration
-                  ? String(pkg.tour_package_duration).trim()
-                  : "Standard";
-                if (/^\d+$/.test(duration)) {
-                  const d = parseInt(duration, 10);
-                  duration = d > 1 ? `${d} Days / ${d - 1} Nights` : `${d} Day`;
+                let duration = "";
+                const rawDur =
+                  pkg.tour_package_duration !== undefined &&
+                  pkg.tour_package_duration !== null
+                    ? String(pkg.tour_package_duration).trim()
+                    : "";
+
+                let nights = 0;
+                let days = 0;
+
+                if (/^\d+$/.test(rawDur)) {
+                  nights = parseInt(rawDur, 10);
+                } else if (
+                  Array.isArray(pkg.parsed_itinerary) &&
+                  pkg.parsed_itinerary.length > 1
+                ) {
+                  nights = pkg.parsed_itinerary.length - 1;
+                }
+
+                if (
+                  Array.isArray(pkg.parsed_itinerary) &&
+                  pkg.parsed_itinerary.length > 0
+                ) {
+                  days = pkg.parsed_itinerary.length;
+                } else {
+                  days = nights > 0 ? nights + 1 : 1;
+                }
+
+                if (nights > 0) {
+                  duration = `${nights} Night${nights > 1 ? "s" : ""} / ${days} Day${days > 1 ? "s" : ""}`;
+                } else if (days > 0) {
+                  duration = `${days} Day${days > 1 ? "s" : ""}`;
+                } else {
+                  duration = "Standard";
                 }
                 options += `<option value="${idx}" data-title="${pkg.tour_package_title}" data-duration="${duration}" data-price="${adultRate}">${pkg.tour_package_title} • ${duration} • ₹${adultRate}/person</option>`;
               });

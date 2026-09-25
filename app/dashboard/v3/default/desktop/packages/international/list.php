@@ -123,13 +123,14 @@
                     <tr>
                         <th class="col-pkg-main">Package & Details</th>
                         <th class="col-pkg-location">Country & Lodging</th>
+                        <th class="col-pkg-pricing">Pricing & Plans</th>
                         <th class="col-pkg-status">Status</th>
                         <th class="col-pkg-actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="packageTableBody">
                     <tr>
-                        <td colspan="4" class="table-loading-state">
+                        <td colspan="5" class="table-loading-state">
                             <div class="table-loading-spinner"></div>
                             <span>Loading tour packages...</span>
                         </td>

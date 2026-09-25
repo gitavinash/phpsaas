@@ -158,12 +158,19 @@ $listQuery = "
         tp.tour_package_title, 
         tp.tour_package_type, 
         tp.tour_package_city, 
+        tp.tour_package_state,
         tp.tour_package_country,
+        tp.tour_package_start_from,
+        tp.tour_package_end_to,
         tp.tour_package_theme, 
+        tp.tour_package_template,
         tp.tour_package_duration, 
         tp.tour_package_hotel, 
+        tp.tour_package_outstation_vehicle,
+        tp.tour_package_localsightseen_vehicle,
         tp.tour_package_status, 
         tp.tour_package_created_at,
+        tp.tour_package_updated_at,
         l.link_url 
     FROM {$tblPrefix}tour_package AS tp
     LEFT JOIN {$tblPrefix}link AS l 
@@ -176,62 +183,199 @@ $listQuery = "
     LIMIT {$limit} OFFSET {$offset}
 ";
 
-$packages = [];
+$rawRows = [];
+$pkgIds = [];
 $listRes = mysqli_query($connection, $listQuery);
 if ($listRes) {
     while ($row = mysqli_fetch_assoc($listRes)) {
-        $pkgId = (int)$row['tour_package_id'];
-        $encodedId = base64_encode($pkgId);
-        $title = stripslashes($row['tour_package_title'] ?? 'Untitled Package');
-        $pkgType = strtolower($row['tour_package_type'] ?? 'domestic');
-        $city = stripslashes($row['tour_package_city'] ?? '');
-        $country = stripslashes($row['tour_package_country'] ?? '');
-        $locDisplay = ($pkgType === 'international') ? ($country ?: $city ?: 'International') : ($city ?: 'Multiple Destinations');
-        $theme = strtolower(trim($row['tour_package_theme'] ?? 'standard'));
-        $themeClass = 'pkg-theme-' . preg_replace('/[^a-z0-9_-]/', '_', $theme);
-        $themeLabel = ucwords(str_replace('_', ' ', $theme));
-        $durationN = (int)($row['tour_package_duration'] ?? 0);
-        $durationD = $durationN + 1;
-        $hotelRaw = str_replace('_', ' ', $row['tour_package_hotel'] ?: 'Standard');
-        $hotelLabel = ucwords($hotelRaw);
-
-        switch ((int)$row['tour_package_status']) {
-            case 1:
-                $statusClass = 'status-active';
-                $statusLabel = 'Active';
-                break;
-            case 2:
-                $statusClass = 'status-draft';
-                $statusLabel = 'Draft';
-                break;
-            default:
-                $statusClass = 'status-pending';
-                $statusLabel = 'Pending';
-                break;
-        }
-
-        $packages[] = [
-            'id'           => $pkgId,
-            'encodedId'    => $encodedId,
-            'title'        => $title,
-            'type'         => $pkgType,
-            'city'         => $city,
-            'country'      => $country,
-            'location'     => $locDisplay,
-            'theme'        => $theme,
-            'themeClass'   => $themeClass,
-            'themeLabel'   => $themeLabel,
-            'durationN'    => $durationN,
-            'durationD'    => $durationD,
-            'hotel'        => $hotelRaw,
-            'hotelLabel'   => $hotelLabel,
-            'status'       => (int)$row['tour_package_status'],
-            'statusClass'  => $statusClass,
-            'statusLabel'  => $statusLabel,
-            'createdAt'    => $row['tour_package_created_at'] ?? '',
-            'linkUrl'      => $row['link_url'] ?? ''
-        ];
+        $rawRows[] = $row;
+        $pkgIds[] = (int)$row['tour_package_id'];
     }
+}
+
+// 6. Batch Fetch Pricing Details for Current Page Packages
+$pricesMap = [];
+if (!empty($pkgIds)) {
+    $idsInSql = implode(',', $pkgIds);
+    $priceBatchSql = "
+        SELECT 
+            tour_package_price_parent_id,
+            COUNT(*) as total_slabs,
+            SUM(CASE WHEN tour_package_price_status = 1 THEN 1 ELSE 0 END) as active_slabs,
+            MIN(CASE WHEN tour_package_price_selling_adult > 0 THEN tour_package_price_selling_adult ELSE NULL END) as min_selling,
+            MAX(CASE WHEN tour_package_price_selling_adult > 0 THEN tour_package_price_selling_adult ELSE NULL END) as max_selling,
+            MIN(CASE WHEN tour_package_price_mrp_adult > 0 THEN tour_package_price_mrp_adult ELSE NULL END) as min_mrp,
+            MIN(CASE WHEN tour_package_price_net_adult > 0 THEN tour_package_price_net_adult ELSE NULL END) as min_net,
+            MIN(CASE WHEN tour_package_price_agent_adult > 0 THEN tour_package_price_agent_adult ELSE NULL END) as min_agent,
+            GROUP_CONCAT(DISTINCT tour_package_price_type ORDER BY tour_package_price_type SEPARATOR ', ') as price_types,
+            MIN(tour_package_price_date_start) as date_start,
+            MAX(tour_package_price_date_end) as date_end
+        FROM {$tblPrefix}tour_package_price
+        WHERE tour_package_price_status != 3
+          AND tour_package_price_parent_id IN ({$idsInSql})
+          AND tour_package_price_site_id = {$siteId}
+        GROUP BY tour_package_price_parent_id
+    ";
+
+    $priceBatchRes = mysqli_query($connection, $priceBatchSql);
+    if ($priceBatchRes) {
+        while ($pRow = mysqli_fetch_assoc($priceBatchRes)) {
+            $pricesMap[(int)$pRow['tour_package_price_parent_id']] = $pRow;
+        }
+    }
+}
+
+// 7. Batch Fetch Assigned Hotels Count
+$hotelsMap = [];
+if (!empty($pkgIds)) {
+    $idsInSql = implode(',', $pkgIds);
+    $hotelBatchSql = "
+        SELECT 
+            tph_package_id,
+            COUNT(DISTINCT tph_hotel_id) as hotel_count
+        FROM {$tblPrefix}tour_package_hotel
+        WHERE tph_package_id IN ({$idsInSql})
+          AND tph_site_id = {$siteId}
+        GROUP BY tph_package_id
+    ";
+    $hotelBatchRes = mysqli_query($connection, $hotelBatchSql);
+    if ($hotelBatchRes) {
+        while ($hRow = mysqli_fetch_assoc($hotelBatchRes)) {
+            $hotelsMap[(int)$hRow['tph_package_id']] = (int)$hRow['hotel_count'];
+        }
+    }
+}
+
+$packages = [];
+foreach ($rawRows as $row) {
+    $pkgId = (int)$row['tour_package_id'];
+    $encodedId = base64_encode($pkgId);
+    $title = stripslashes($row['tour_package_title'] ?? 'Untitled Package');
+    $pkgType = strtolower($row['tour_package_type'] ?? 'domestic');
+    $city = stripslashes($row['tour_package_city'] ?? '');
+    $state = stripslashes($row['tour_package_state'] ?? '');
+    $country = stripslashes($row['tour_package_country'] ?? '');
+    $locDisplay = ($pkgType === 'international') ? ($country ?: $city ?: 'International') : ($city ?: 'Multiple Destinations');
+    $theme = strtolower(trim($row['tour_package_theme'] ?? 'standard'));
+    $themeClass = 'pkg-theme-' . preg_replace('/[^a-z0-9_-]/', '_', $theme);
+    $themeLabel = ucwords(str_replace('_', ' ', $theme));
+    $durationN = (int)($row['tour_package_duration'] ?? 0);
+    $durationD = $durationN + 1;
+    $hotelRaw = str_replace('_', ' ', $row['tour_package_hotel'] ?: 'Standard');
+    $hotelLabel = ucwords($hotelRaw);
+
+    switch ((int)$row['tour_package_status']) {
+        case 1:
+            $statusClass = 'status-active';
+            $statusLabel = 'Active';
+            break;
+        case 2:
+            $statusClass = 'status-draft';
+            $statusLabel = 'Draft';
+            break;
+        default:
+            $statusClass = 'status-pending';
+            $statusLabel = 'Pending';
+            break;
+    }
+
+    // Pricing parsing
+    $pData = $pricesMap[$pkgId] ?? null;
+    $hasPricing = ($pData !== null && (int)($pData['total_slabs'] ?? 0) > 0);
+    $minSelling = $hasPricing && $pData['min_selling'] !== null ? (float)$pData['min_selling'] : 0;
+    $maxSelling = $hasPricing && $pData['max_selling'] !== null ? (float)$pData['max_selling'] : 0;
+    $minMrp     = $hasPricing && $pData['min_mrp'] !== null ? (float)$pData['min_mrp'] : 0;
+    $minNet     = $hasPricing && $pData['min_net'] !== null ? (float)$pData['min_net'] : 0;
+    $minAgent   = $hasPricing && $pData['min_agent'] !== null ? (float)$pData['min_agent'] : 0;
+
+    $sellingDisplay = '';
+    if ($minSelling > 0) {
+        if ($maxSelling > $minSelling) {
+            $sellingDisplay = '₹' . number_format($minSelling) . ' - ₹' . number_format($maxSelling);
+        } else {
+            $sellingDisplay = '₹' . number_format($minSelling);
+        }
+    }
+
+    $mrpDisplay = ($minMrp > 0) ? '₹' . number_format($minMrp) : '';
+    $netDisplay = ($minNet > 0) ? '₹' . number_format($minNet) : '';
+    $agentDisplay = ($minAgent > 0) ? '₹' . number_format($minAgent) : '';
+
+    $pricing = [
+        'hasPricing'     => $hasPricing,
+        'totalSlabs'     => $hasPricing ? (int)$pData['total_slabs'] : 0,
+        'activeSlabs'    => $hasPricing ? (int)$pData['active_slabs'] : 0,
+        'minSelling'     => $minSelling,
+        'maxSelling'     => $maxSelling,
+        'sellingDisplay' => $sellingDisplay,
+        'minMrp'         => $minMrp,
+        'mrpDisplay'     => $mrpDisplay,
+        'minNet'         => $minNet,
+        'netDisplay'     => $netDisplay,
+        'minAgent'       => $minAgent,
+        'agentDisplay'   => $agentDisplay,
+        'types'          => $hasPricing && !empty($pData['price_types']) ? ucwords($pData['price_types']) : '',
+        'dateStart'      => $pData['date_start'] ?? '',
+        'dateEnd'        => $pData['date_end'] ?? ''
+    ];
+
+    // Route & Vehicles
+    $startFrom = stripslashes(trim($row['tour_package_start_from'] ?? ''));
+    $endTo = stripslashes(trim($row['tour_package_end_to'] ?? ''));
+    $routeDisplay = '';
+    if (!empty($startFrom) || !empty($endTo)) {
+        if ($startFrom === $endTo) {
+            $routeDisplay = $startFrom;
+        } elseif (!empty($startFrom) && !empty($endTo)) {
+            $routeDisplay = $startFrom . ' → ' . $endTo;
+        } else {
+            $routeDisplay = $startFrom ?: $endTo;
+        }
+    }
+
+    $outstationVeh = stripslashes(trim($row['tour_package_outstation_vehicle'] ?? ''));
+    $localVeh = stripslashes(trim($row['tour_package_localsightseen_vehicle'] ?? ''));
+    $vehiclesList = [];
+    if (!empty($outstationVeh) && $outstationVeh !== 'select') $vehiclesList[] = ucwords($outstationVeh);
+    if (!empty($localVeh) && $localVeh !== 'select' && strtolower($localVeh) !== strtolower($outstationVeh)) $vehiclesList[] = ucwords($localVeh);
+    $vehicleDisplay = implode(' + ', $vehiclesList);
+
+    $createdAt = $row['tour_package_created_at'] ?? '';
+    $updatedAt = $row['tour_package_updated_at'] ?? '';
+    $displayDate = (!empty($updatedAt) && $updatedAt !== '0000-00-00 00:00:00') ? $updatedAt : $createdAt;
+    $updatedAtHuman = !empty($displayDate) ? date('d M Y', strtotime($displayDate)) : '';
+
+    $packages[] = [
+        'id'             => $pkgId,
+        'encodedId'      => $encodedId,
+        'title'          => $title,
+        'type'           => $pkgType,
+        'city'           => $city,
+        'state'          => $state,
+        'country'        => $country,
+        'location'       => $locDisplay,
+        'theme'          => $theme,
+        'themeClass'     => $themeClass,
+        'themeLabel'     => $themeLabel,
+        'durationN'      => $durationN,
+        'durationD'      => $durationD,
+        'hotel'          => $hotelRaw,
+        'hotelLabel'     => $hotelLabel,
+        'hotelCount'     => $hotelsMap[$pkgId] ?? 0,
+        'route'          => $routeDisplay,
+        'vehicle'        => $vehicleDisplay,
+        'template'       => $row['tour_package_template'] ?? 'mit',
+        'status'         => (int)$row['tour_package_status'],
+        'statusClass'    => $statusClass,
+        'statusLabel'    => $statusLabel,
+        'createdAt'      => $createdAt,
+        'updatedAt'      => $updatedAt,
+        'updatedAtHuman' => $updatedAtHuman,
+        'linkUrl'        => $row['link_url'] ?? '',
+        'pricing'        => $pricing,
+        'price'          => $minSelling,
+        'priceDisplay'   => $sellingDisplay
+    ];
 }
 
 echo json_encode([
