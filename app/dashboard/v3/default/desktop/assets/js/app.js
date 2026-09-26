@@ -1381,6 +1381,13 @@ $(document).ready(function (e) {
 
   // 14. Modular Kanban Board Data & Interactive CTAs
   function renderKanbanCard(item, st) {
+    if (!item) return "";
+    const s = parseInt(item.status !== undefined ? item.status : st, 10);
+    // Explicit exclusion: Never render Closed / Lost / Cancelled / Duplicate leads (statuses 4, 5, 6, 7, 8)
+    if ([4, 5, 6, 7, 8].includes(s) || ![0, 1, 2, 3].includes(s)) {
+      return "";
+    }
+
     const rawName =
       item.name && item.name.trim() !== ""
         ? item.name.trim()
@@ -1388,6 +1395,9 @@ $(document).ready(function (e) {
     const customerName = rawName
       .toLowerCase()
       .replace(/\b\w/g, (c) => c.toUpperCase());
+    const leadNumHtml = item.id
+      ? `<span class="kanban-lead-id">#${item.id}</span> `
+      : "";
     const sourceTag = item.source
       ? `<span class="kanban-source-pill">${item.source}</span>`
       : "";
@@ -1469,7 +1479,7 @@ $(document).ready(function (e) {
     return `
       <div class="kanban-card" draggable="true" data-lead-id="${item.encoded_id}" data-status="${st}" data-lead-json="${jsonStr}">
         <div class="kanban-card-head">
-          <span class="kanban-customer-name">${customerName}</span>
+          <span class="kanban-customer-name">${leadNumHtml}${customerName}</span>
           <div class="kanban-card-drag-indicator">
             ${sourceTag}
             <i class="fi fi-rr-apps-sort drag-grip-icon" title="Drag card"></i>
@@ -1526,6 +1536,13 @@ $(document).ready(function (e) {
     if (!$card.length) return;
 
     const st = String(targetStatus);
+    const validStatuses = ["0", "2", "3", "1"];
+    // Never show close / cancelled / lost leads (4, 5, 8) in kanban
+    if (!validStatuses.includes(st) || ["4", "5", "8"].includes(st)) {
+      removeKanbanCardDom(leadId);
+      return;
+    }
+
     const targetContainer = $(`#kanban-container-${st}`);
     targetContainer.find(".kanban-empty-drop-zone").remove();
 
@@ -1584,7 +1601,12 @@ $(document).ready(function (e) {
     statuses.forEach((st) => {
       const container = $(`#kanban-container-${st}`);
       const countPill = $(`#kanban-count-${st}`);
-      const items = Array.isArray(boardData[st]) ? boardData[st] : [];
+      const rawItems = Array.isArray(boardData[st]) ? boardData[st] : [];
+      // Explicitly filter out closed / cancelled / lost / duplicate leads (statuses 4, 5, 6, 7, 8)
+      const items = rawItems.filter((item) => {
+        const s = parseInt(item.status, 10);
+        return s !== 4 && s !== 5 && s !== 6 && s !== 7 && s !== 8 && [0, 1, 2, 3].includes(s);
+      });
 
       countPill.text(items.length);
       const columnCol = container.closest(".kanban-column");
@@ -1622,17 +1644,20 @@ $(document).ready(function (e) {
       type: "GET",
       url: "/api/v3/leads/kanban/?daterange=" + encodeURIComponent(daterange),
       dataType: "json",
+      cache: false,
       success: function (res) {
         if (!res) return;
         let boardData = res.data || res.grouped;
-        if (Array.isArray(res.data) && !res.grouped) {
-          boardData = { 0: [], 2: [], 3: [], 1: [] };
-          res.data.forEach((lead) => {
-            const st = String(lead.status);
-            if (boardData[st]) {
-              boardData[st].push(lead);
-            }
+        if (boardData && typeof boardData === "object") {
+          const cleanGrouped = { 0: [], 2: [], 3: [], 1: [] };
+          ["0", "2", "3", "1"].forEach((k) => {
+            const arr = Array.isArray(boardData[k]) ? boardData[k] : [];
+            cleanGrouped[k] = arr.filter((lead) => {
+              const s = parseInt(lead.status, 10);
+              return s !== 4 && s !== 5 && s !== 6 && s !== 7 && s !== 8 && [0, 1, 2, 3].includes(s);
+            });
           });
+          boardData = cleanGrouped;
         }
         renderKanbanBoardGrouped(boardData);
       },
@@ -1721,10 +1746,14 @@ $(document).ready(function (e) {
           typeof dateRangeParams !== "undefined" ? dateRangeParams : "",
         ),
       dataType: "json",
+      cache: false,
       success: function (res) {
         if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
           res.data.forEach((item) => {
-            container.append(renderKanbanCard(item, status));
+            const s = parseInt(item.status, 10);
+            if (s !== 4 && s !== 5 && s !== 6 && s !== 7 && s !== 8 && [0, 1, 2, 3].includes(s)) {
+              container.append(renderKanbanCard(item, status));
+            }
           });
           btn.text("Load More");
         } else {
@@ -2723,13 +2752,18 @@ $(document).ready(function (e) {
         "/api/v3/leads/kanban/?daterange=" +
         encodeURIComponent(dateRangeParams),
       dataType: "json",
+      cache: false,
       success: function (res) {
         if (res && res.data) {
           const statuses = ["0", "2", "3", "1"];
           statuses.forEach((st) => {
             const container = $(`#kanban-container-${st}`);
             const countPill = $(`#kanban-count-${st}`);
-            const items = res.data[st] || [];
+            const rawItems = res.data[st] || [];
+            const items = rawItems.filter((item) => {
+              const s = parseInt(item.status, 10);
+              return s !== 4 && s !== 5 && s !== 6 && s !== 7 && s !== 8 && [0, 1, 2, 3].includes(s);
+            });
 
             countPill.text(items.length);
             container.empty();
@@ -2943,6 +2977,7 @@ $(document).ready(function (e) {
           type: "GET",
           url: "/api/v3/leads/kanban/?search=" + encodeURIComponent(query),
           dataType: "json",
+          cache: false,
           success: function (res) {
             // Verify user hasn't changed query while request was in-flight
             const currentVal = $("#kanbanSearchInput, .kanban-search-input")

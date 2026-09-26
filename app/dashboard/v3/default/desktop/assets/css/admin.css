@@ -1586,6 +1586,17 @@ main .container .heading span {
   gap: 8px !important;
 }
 
+.kanban-lead-id {
+  display: inline-block !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--slate-500) !important;
+  background: var(--slate-100) !important;
+  padding: 1px 5px !important;
+  border-radius: var(--radius-sm) !important;
+  margin-right: 3px !important;
+}
+
 .kanban-customer-name {
   font-size: 13.5px !important;
   font-weight: 700 !important;

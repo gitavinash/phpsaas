@@ -189,12 +189,18 @@ $sqlKanban = "SELECT enquiry_id, enquiry_first_name AS name, enquiry_mobile,
                      enquiry_subject, enquiry_time, enquiry_status, enquiry_source
               FROM {$tblPrefix}enquiry
               WHERE {$siteFilter}{$userFilter}
+                AND enquiry_status IN (0, 1, 2, 3)
+                AND enquiry_status NOT IN (4, 5, 8)
               ORDER BY enquiry_time DESC
               LIMIT 150";
 
 if (isset($connection) && $connection && ($resKanban = mysqli_query($connection, $sqlKanban))) {
     while ($row = mysqli_fetch_assoc($resKanban)) {
-        $st   = (string) $row['enquiry_status'];
+        $stInt = (int)$row['enquiry_status'];
+        if (in_array($stInt, [4, 5, 8], true) || !in_array($stInt, [0, 1, 2, 3], true)) {
+            continue;
+        }
+        $st   = (string)$stInt;
         $item = [
             'id'         => $row['enquiry_id'],
             'encoded_id' => base64_encode($row['enquiry_id']),
@@ -203,12 +209,10 @@ if (isset($connection) && $connection && ($resKanban = mysqli_query($connection,
             'subject'    => !empty($row['enquiry_subject'])    ? $row['enquiry_subject']     : 'Enquiry',
             'source'     => !empty($row['enquiry_source'])     ? $row['enquiry_source']      : 'Direct',
             'time'       => date('d M, h:i A', strtotime($row['enquiry_time'])),
-            'status'     => $row['enquiry_status'],
+            'status'     => $stInt,
         ];
         if (isset($kanbanLeads[$st])) {
             $kanbanLeads[$st][] = $item;
-        } else {
-            $kanbanLeads['0'][] = $item;
         }
     }
 }

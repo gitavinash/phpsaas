@@ -1,6 +1,10 @@
 <?php
 
-header("Content-type: application/json; charset=utf-8");
+header("Content-Type: application/json; charset=utf-8");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 require_once LOGIN_CHECK;
 if (!isset($connection)) {
     $configPath = $_SERVER['DOCUMENT_ROOT'] . '/lib/configuration/index.php';
@@ -21,13 +25,20 @@ $userFilter = ($accessType !== 'administrator' && $userId > 0)
 
 $daterangeFilter = "";
 if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'] !== 'null') {
-    $dates = explode(' - ', trim($_GET['daterange']));
-    if (count($dates) == 2) {
-        $t1 = date('Y-m-d 00:00:00', strtotime($dates[0]));
-        $t2 = date('Y-m-d 23:59:59', strtotime($dates[1]));
-        $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
+    $dr = trim($_GET['daterange']);
+    if (($ampPos = strpos($dr, '&')) !== false) {
+        $dr = substr($dr, 0, $ampPos);
     }
-} else {
+    $dates = explode(' - ', $dr);
+    if (count($dates) == 2) {
+        $t1 = date('Y-m-d 00:00:00', strtotime(trim($dates[0])));
+        $t2 = date('Y-m-d 23:59:59', strtotime(trim($dates[1])));
+        if ($t1 && $t2 && strtotime(trim($dates[0])) !== false && strtotime(trim($dates[1])) !== false) {
+            $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
+        }
+    }
+}
+if (empty($daterangeFilter) && (!isset($_GET['search']) || trim($_GET['search']) === '')) {
     $t1 = date('Y-m-d 00:00:00', strtotime('-29 days'));
     $t2 = date('Y-m-d 23:59:59');
     $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
@@ -63,27 +74,50 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
     $offset = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;
     $limit  = isset($_GET['limit'])  ? min(max(1, intval($_GET['limit'])), 50) : 10;
 
-    $sql = "SELECT enquiry_id, enquiry_first_name AS name, enquiry_mobile, enquiry_email,
+    // Safety check: Never return close / cancelled / lost leads (4, 5, 6, 7, 8) in kanban
+    if (!in_array($targetStatus, [0, 1, 2, 3], true) || in_array($targetStatus, [4, 5, 6, 7, 8], true)) {
+        echo json_encode([
+            'status' => 200,
+            'data'   => [],
+            'offset' => $offset,
+            'limit'  => $limit,
+            'total'  => 0,
+        ]);
+        exit();
+    }
+
+    $sql = "SELECT enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_mobile, enquiry_email,
                    enquiry_subject, enquiry_time, enquiry_status, enquiry_source
             FROM {$tblPrefix}enquiry
             WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
               AND enquiry_status = {$targetStatus}
+              AND enquiry_status NOT IN (4, 5, 6, 7, 8)
             ORDER BY enquiry_time DESC
             LIMIT {$offset}, {$limit}";
 
     $leads = [];
     if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
         while ($row = mysqli_fetch_assoc($res)) {
+            $stInt = (int)$row['enquiry_status'];
+            if (in_array($stInt, [4, 5, 6, 7, 8], true) || !in_array($stInt, [0, 1, 2, 3], true)) {
+                continue;
+            }
+            $fullName = trim(($row['enquiry_first_name'] ?? '') . ' ' . ($row['enquiry_last_name'] ?? ''));
+            if (empty($fullName)) {
+                $fullName = 'Lead #' . $row['enquiry_id'];
+            }
             $leads[] = [
                 'id'         => (int)$row['enquiry_id'],
                 'encoded_id' => base64_encode($row['enquiry_id']),
-                'name'       => !empty($row['name'])           ? $row['name']                  : 'Lead #' . $row['enquiry_id'],
+                'name'       => $fullName,
+                'first_name' => $row['enquiry_first_name'] ?? '',
+                'last_name'  => $row['enquiry_last_name'] ?? '',
                 'mobile'     => !empty($row['enquiry_mobile']) ? $row['enquiry_mobile']        : '',
                 'email'      => !empty($row['enquiry_email'])  ? $row['enquiry_email']         : '',
                 'subject'    => !empty($row['enquiry_subject']) ? $row['enquiry_subject']       : 'General Enquiry',
                 'source'     => cleanLeadSource($row['enquiry_source']),
                 'time'       => date('d M, h:i A', strtotime($row['enquiry_time'])),
-                'status'     => (int)$row['enquiry_status'],
+                'status'     => $stInt,
             ];
         }
     }
@@ -104,27 +138,38 @@ $flatLeads = [];
 
 $limitClause = !empty($searchFilter) ? "LIMIT 100" : "LIMIT 150";
 
-$sql = "SELECT enquiry_id, enquiry_first_name AS name, enquiry_mobile, enquiry_email,
+$sql = "SELECT enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_mobile, enquiry_email,
                enquiry_subject, enquiry_time, enquiry_status, enquiry_source
         FROM {$tblPrefix}enquiry
         WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
           AND enquiry_status IN (0, 1, 2, 3)
+          AND enquiry_status NOT IN (4, 5, 6, 7, 8)
         ORDER BY enquiry_time DESC
         {$limitClause}";
 
 if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
     while ($row = mysqli_fetch_assoc($res)) {
-        $st   = (string)$row['enquiry_status'];
+        $stInt = (int)$row['enquiry_status'];
+        if (in_array($stInt, [4, 5, 6, 7, 8], true) || !in_array($stInt, [0, 1, 2, 3], true)) {
+            continue;
+        }
+        $st   = (string)$stInt;
+        $fullName = trim(($row['enquiry_first_name'] ?? '') . ' ' . ($row['enquiry_last_name'] ?? ''));
+        if (empty($fullName)) {
+            $fullName = 'Lead #' . $row['enquiry_id'];
+        }
         $item = [
             'id'         => (int)$row['enquiry_id'],
             'encoded_id' => base64_encode($row['enquiry_id']),
-            'name'       => !empty($row['name'])           ? $row['name']                  : 'Lead #' . $row['enquiry_id'],
+            'name'       => $fullName,
+            'first_name' => $row['enquiry_first_name'] ?? '',
+            'last_name'  => $row['enquiry_last_name'] ?? '',
             'mobile'     => !empty($row['enquiry_mobile']) ? $row['enquiry_mobile']        : '',
             'email'      => !empty($row['enquiry_email'])  ? $row['enquiry_email']         : '',
             'subject'    => !empty($row['enquiry_subject']) ? $row['enquiry_subject']       : 'General Enquiry',
             'source'     => cleanLeadSource($row['enquiry_source']),
             'time'       => date('d M, h:i A', strtotime($row['enquiry_time'])),
-            'status'     => (int)$row['enquiry_status'],
+            'status'     => $stInt,
         ];
         $flatLeads[] = $item;
         if (isset($grouped[$st])) {
