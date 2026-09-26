@@ -67,14 +67,16 @@
       // Read initial filters from URL query parameters or DOM data attributes
       const urlParams = new URLSearchParams(window.location.search);
       const initialStatus = urlParams.get("leadStatus") || urlParams.get("status") || $app.data("initial-status") || $("#filterLeadStatus").val() || "all";
-      const initialAgent = urlParams.get("agent_id") || urlParams.get("agent") || $("#filterLeadAgent").val() || "all";
+      const initialAgent = urlParams.get("agentId") || urlParams.get("agent_id") || urlParams.get("agent") || $app.data("initial-agent") || $("#filterLeadAgent").val() || "all";
       const initialSource = urlParams.get("source") || $("#filterLeadSource").val() || "all";
       const initialSearch = urlParams.get("search") || urlParams.get("q") || $("#leadTableSearch").val() || "";
+      const initialDateRange = urlParams.get("daterange") || "";
 
       this.activeStatus = String(initialStatus);
       this.activeAgent = String(initialAgent);
       this.activeSource = String(initialSource);
       this.activeSearch = String(initialSearch);
+      this.activeDateRange = String(initialDateRange);
 
       if (this.activeStatus !== "all") {
         $("#filterLeadStatus").val(this.activeStatus);
@@ -123,6 +125,10 @@
           dropdownAutoWidth: true,
           width: "130px",
         });
+
+        if (self.activeAgent && self.activeAgent !== "all") {
+          $("#filterLeadAgent").val(self.activeAgent).trigger("change.select2");
+        }
 
         $("#filterLeadSource").select2({
           dropdownAutoWidth: true,
@@ -174,11 +180,16 @@
         },
       });
 
-      // Clear any pre-selected date on initial load so it defaults to all dates
-      $dateInput.val("").attr("placeholder", "Select date range");
-      self.activeDateRange = "";
-      $("#clearLeadDateRangeBtn").hide();
-      $("#leadDateRangeWrap").removeClass("has-date");
+      if (self.activeDateRange) {
+        $dateInput.val(self.activeDateRange);
+        $("#clearLeadDateRangeBtn").show();
+        $("#leadDateRangeWrap").addClass("has-date");
+      } else {
+        $dateInput.val("").attr("placeholder", "Select date range");
+        self.activeDateRange = "";
+        $("#clearLeadDateRangeBtn").hide();
+        $("#leadDateRangeWrap").removeClass("has-date");
+      }
 
       $dateInput.on("show.daterangepicker", function (event, picker) {
         picker.container.addClass("leads-date-picker");
@@ -673,6 +684,7 @@
           search: self.activeSearch,
           status: self.activeStatus,
           agent_id: self.activeAgent,
+          agentId: self.activeAgent,
           source: self.activeSource,
           daterange:
             self.activeDateRange ||
@@ -734,23 +746,27 @@
     },
 
     populateAgentDropdowns: function (agents) {
+      const self = this;
       const $filter = $("#filterLeadAgent");
-      if (
-        $filter.length &&
-        $filter.children("option").length <= 2 &&
-        agents &&
-        agents.length > 0
-      ) {
-        agents.forEach(function (ag) {
-          if (!$filter.find(`option[value="${ag.id}"]`).length) {
-            $filter.append(
-              `<option value="${ag.id}">${ag.name} (${ag.role})</option>`,
-            );
-          }
-        });
-        if (typeof $.fn.select2 !== "undefined") {
-          $filter.trigger("change.select2");
+      if (!$filter.length || !agents || !agents.length) return;
+
+      agents.forEach(function (ag) {
+        const $existing = $filter.find(`option[value="${ag.id}"]`);
+        if ($existing.length) {
+          $existing.text(`${ag.name} (${ag.role})`);
+        } else {
+          $filter.append(
+            `<option value="${ag.id}">${ag.name} (${ag.role})</option>`,
+          );
         }
+      });
+
+      if (self.activeAgent && self.activeAgent !== "all") {
+        $filter.val(String(self.activeAgent));
+      }
+
+      if (typeof $.fn.select2 !== "undefined") {
+        $filter.trigger("change.select2");
       }
     },
 

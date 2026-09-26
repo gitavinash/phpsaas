@@ -32,11 +32,12 @@ $userFilter = ($accessType === 'agent' && $userId > 0)
     : "";
 
 // Specific agent filter from request
-if (isset($reqData['agent_id']) && $reqData['agent_id'] !== '' && $reqData['agent_id'] !== 'all') {
-    if ($reqData['agent_id'] === '0' || $reqData['agent_id'] === 'unassigned') {
+$reqAgent = $reqData['agentId'] ?? ($reqData['agent_id'] ?? ($reqData['agent'] ?? ''));
+if ($reqAgent !== '' && $reqAgent !== 'all') {
+    if ($reqAgent === '0' || $reqAgent === 'unassigned') {
         $userFilter .= " AND (e.enquiry_agent = '0' OR e.enquiry_agent = '' OR e.enquiry_agent IS NULL)";
-    } elseif (is_numeric($reqData['agent_id']) && (int)$reqData['agent_id'] > 0) {
-        $filterAgentId = (int)$reqData['agent_id'];
+    } elseif (is_numeric($reqAgent) && (int)$reqAgent > 0) {
+        $filterAgentId = (int)$reqAgent;
         $userFilter .= " AND e.enquiry_agent = '{$filterAgentId}'";
     }
 }

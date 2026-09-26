@@ -9,8 +9,9 @@
 
 <?php
 $initialLeadStatus = isset($_GET['leadStatus']) ? (string)$_GET['leadStatus'] : (isset($_GET['status']) ? (string)$_GET['status'] : 'all');
+$initialAgentId    = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset($_GET['agent_id']) ? (string)$_GET['agent_id'] : (isset($_GET['agent']) ? (string)$_GET['agent'] : 'all'));
 ?>
-<div class="package-page-wrapper leads-page-wrapper" id="leadsListApp" data-user-role="<?php echo htmlspecialchars($site_access_type ?? '', ENT_QUOTES); ?>" data-initial-status="<?php echo htmlspecialchars($initialLeadStatus, ENT_QUOTES); ?>">
+<div class="package-page-wrapper leads-page-wrapper" id="leadsListApp" data-user-role="<?php echo htmlspecialchars($site_access_type ?? '', ENT_QUOTES); ?>" data-initial-status="<?php echo htmlspecialchars($initialLeadStatus, ENT_QUOTES); ?>" data-initial-agent="<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?>">
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
@@ -109,8 +110,11 @@ $initialLeadStatus = isset($_GET['leadStatus']) ? (string)$_GET['leadStatus'] : 
                 <!-- Assigned Agent Filter (Select2) -->
                 <div class="leads-select-holder">
                     <select id="filterLeadAgent" class="leads-filter-select">
-                        <option value="all" selected>All Assignees</option>
-                        <option value="0">Unassigned Only</option>
+                        <option value="all" <?php echo ($initialAgentId === 'all' ? 'selected' : ''); ?>>All Assignees</option>
+                        <option value="0" <?php echo ($initialAgentId === '0' ? 'selected' : ''); ?>>Unassigned Only</option>
+                        <?php if ($initialAgentId !== 'all' && $initialAgentId !== '0' && $initialAgentId !== ''): ?>
+                            <option value="<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?>" selected>Agent #<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?></option>
+                        <?php endif; ?>
                     </select>
                 </div>
 
