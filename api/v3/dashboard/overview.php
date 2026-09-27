@@ -201,11 +201,12 @@ if (isset($connection) && $connection && ($resKanban = mysqli_query($connection,
             continue;
         }
         $st   = (string)$stInt;
+        $mobileVal = ($accessType === 'digital_marketing') ? '' : (!empty($row['enquiry_mobile']) ? $row['enquiry_mobile'] : 'N/A');
         $item = [
             'id'         => $row['enquiry_id'],
             'encoded_id' => base64_encode($row['enquiry_id']),
             'name'       => !empty($row['name'])               ? $row['name']               : 'Lead #' . $row['enquiry_id'],
-            'mobile'     => !empty($row['enquiry_mobile'])     ? $row['enquiry_mobile']      : 'N/A',
+            'mobile'     => $mobileVal,
             'subject'    => !empty($row['enquiry_subject'])    ? $row['enquiry_subject']     : 'Enquiry',
             'source'     => !empty($row['enquiry_source'])     ? $row['enquiry_source']      : 'Direct',
             'time'       => date('d M, h:i A', strtotime($row['enquiry_time'])),
@@ -228,11 +229,12 @@ $sqlFollowups = "SELECT enquiry_id, enquiry_agent, enquiry_first_name AS name, e
 
 if (isset($connection) && $connection && ($resFollow = mysqli_query($connection, $sqlFollowups))) {
     while ($row = mysqli_fetch_assoc($resFollow)) {
+        $followupMobile = ($accessType === 'digital_marketing') ? '' : (!empty($row['enquiry_mobile']) ? $row['enquiry_mobile'] : 'N/A');
         $followups[] = [
             'id'          => $row['enquiry_id'],
             'encoded_id'  => base64_encode($row['enquiry_id']),
             'name'        => !empty($row['name']) ? $row['name'] : 'Lead #' . $row['enquiry_id'],
-            'mobile'      => !empty($row['enquiry_mobile']) ? $row['enquiry_mobile'] : 'N/A',
+            'mobile'      => $followupMobile,
             'subject'     => !empty($row['enquiry_subject']) ? $row['enquiry_subject'] : 'Enquiry',
             'source'      => !empty($row['enquiry_source']) ? $row['enquiry_source'] : 'Direct',
             'time'        => !empty($row['enquiry_followup']) ? date('d-m-Y h:i A', strtotime($row['enquiry_followup'])) : 'N/A',

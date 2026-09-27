@@ -34,6 +34,20 @@ $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboa
         </div>
     </li>
 
+    <li <?php echo (strpos($currentUrl, '/integration/google_ads') !== false ? 'class="active"' : ''); ?>>
+        <a href="/dashboard/integration/google_ads/"><i class="fi fi-rr-search-alt"></i> Google Leads</a>
+        <div class="side-menu">
+            <ul>
+                <li><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads Leads</a></li>
+            </ul>
+        </div>
+        <div class="bottom-menu">
+            <ul>
+                <li><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads Leads</a></li>
+            </ul>
+        </div>
+    </li>
+
 <?php } else { ?>
     <li class="header-section-name">
         <p>Sales CRM<span>Daily Operations &amp; Leads</span></p>
