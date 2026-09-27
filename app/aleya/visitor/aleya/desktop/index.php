@@ -44,33 +44,33 @@
 
     <!-- Schema.org -->
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Aleya",
-        "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Web",
-        "description": "Travel CRM & ERP Software for travel agencies",
-        "url": "https://aleya.in",
-        "offers": [{
-                "@type": "Offer",
-                "name": "CRM",
-                "price": "999",
-                "priceCurrency": "INR"
-            },
-            {
-                "@type": "Offer",
-                "name": "ERP",
-                "price": "2499",
-                "priceCurrency": "INR"
+        {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Aleya",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "description": "Travel CRM & ERP Software for travel agencies",
+            "url": "https://aleya.in",
+            "offers": [{
+                    "@type": "Offer",
+                    "name": "CRM",
+                    "price": "999",
+                    "priceCurrency": "INR"
+                },
+                {
+                    "@type": "Offer",
+                    "name": "ERP",
+                    "price": "2499",
+                    "priceCurrency": "INR"
+                }
+            ],
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.9",
+                "reviewCount": "127"
             }
-        ],
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "127"
         }
-    }
     </script>
 </head>
 
@@ -92,7 +92,7 @@
                 <a href="#testimonials" class="nav-link">Reviews</a>
 
                 <div class="nav-actions">
-                    <a href="https://calendar.app.google/TWyKTqQXWfd1oyuK6" target="_blank" class="nav-btn primary">
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn primary">
                         Book Demo
                         <span class="btn-arrow">→</span>
                     </a>
@@ -100,7 +100,7 @@
             </div>
 
             <div class="nav-actions">
-                <a href="https://calendar.app.google/TWyKTqQXWfd1oyuK6" target="_blank" class="nav-btn primary">
+                <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn primary">
                     Book Demo
                     <span class="btn-arrow">→</span>
                 </a>
@@ -140,7 +140,7 @@
                 </p>
 
                 <div class="hero-cta">
-                    <a href="https://calendar.app.google/TWyKTqQXWfd1oyuK6" target="_blank"
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank"
                         class="cta-primary magnetic">
                         <span>Book Free Demo</span>
                         <div class="cta-glow"></div>
@@ -631,7 +631,7 @@
                             <i class="fas fa-info-circle"></i> +₹99/user after 10 users
                         </li>
                     </ul>
-                    <a href="https://calendar.app.google/TWyKTqQXWfd1oyuK6" target="_blank"
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank"
                         class="card-btn outline">Book Free Demo</a>
                 </div>
 
@@ -662,7 +662,7 @@
                             <i class="fas fa-info-circle"></i> +₹249/user after 10 users
                         </li>
                     </ul>
-                    <a href="https://calendar.app.google/TWyKTqQXWfd1oyuK6" target="_blank"
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank"
                         class="card-btn primary">Book Free Demo</a>
                 </div>
             </div>
@@ -1011,7 +1011,7 @@
                     demo to see how Aleya can transform your workflow.
                 </p>
 
-                <a href="https://calendar.app.google/TWyKTqQXWfd1oyuK6" target="_blank" class="cta-primary cta-large">
+                <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="cta-primary cta-large">
                     Book Free Demo
                     <span class="btn-arrow">→</span>
                 </a>

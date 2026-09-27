@@ -35,7 +35,7 @@
                 <a href="/contact-us/" class="nav-link">Contact</a>
 
                 <div class="nav-actions">
-                    <a href="https://calendar.app.google/TWyKTqQXWfd1oyuK6" target="_blank" class="nav-btn primary">
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn primary">
                         Book Demo
                         <span class="btn-arrow">→</span>
                     </a>
@@ -43,7 +43,7 @@
             </div>
 
             <div class="nav-actions">
-                <a href="https://calendar.app.google/TWyKTqQXWfd1oyuK6" target="_blank" class="nav-btn primary">
+                <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn primary">
                     Book Demo
                     <span class="btn-arrow">→</span>
                 </a>
@@ -108,7 +108,7 @@
                     </div>
 
                     <div class="contact-actions">
-                        <a href="https://calendar.app.google/TWyKTqQXWfd1oyuK6" target="_blank" class="nav-btn primary">
+                        <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn primary">
                             Book Demo
                             <span class="btn-arrow">→</span>
                         </a>
