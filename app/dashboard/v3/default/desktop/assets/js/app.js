@@ -2704,6 +2704,15 @@ $(document).ready(function (e) {
       ) {
         loadDashboardV3Data();
       }
+
+      if ($("#digitalMarketingDashboardApp").length) {
+        if (
+          window.MarketingDashboard &&
+          typeof window.MarketingDashboard.fetchData === "function"
+        ) {
+          window.MarketingDashboard.fetchData(dateRangeParams);
+        }
+      }
     }
 
     $(".dateRangePicker").each(function () {
@@ -4067,6 +4076,16 @@ $(document).ready(function (e) {
       loadDashboardV3Data();
     }
 
+    // 3b. Auto-initialize Digital Marketing Dashboard if on marketing dashboard
+    if ($("#digitalMarketingDashboardApp").length) {
+      if (
+        window.MarketingDashboard &&
+        typeof window.MarketingDashboard.init === "function"
+      ) {
+        window.MarketingDashboard.init();
+      }
+    }
+
     // 4. Auto-initialize DataTables
     if (typeof initDataTables === "function") {
       initDataTables();
@@ -4644,11 +4663,37 @@ $(document).ready(function (e) {
         );
       }
     }
+
+    // 7. Digital Marketing Dashboard Module
+    const $mktDashboard = $("#digitalMarketingDashboardApp");
+    if ($mktDashboard.length > 0) {
+      if (
+        window.MarketingDashboard &&
+        typeof window.MarketingDashboard.init === "function"
+      ) {
+        window.MarketingDashboard.init();
+      } else {
+        ensureScriptLoaded(
+          ADMIN_JS + "marketing-dashboard.js?v=" + Date.now(),
+          function () {
+            if (
+              window.MarketingDashboard &&
+              typeof window.MarketingDashboard.init === "function"
+            ) {
+              window.MarketingDashboard.init();
+            }
+          },
+        );
+      }
+    }
   };
 
   // Re-run component initialization on every SPA page load
   $(document).on("spa:loaded", function () {
     lastLoadedDashboardRange = null;
+    if (window.MarketingDashboard) {
+      window.MarketingDashboard.lastFetchedRange = null;
+    }
     if (typeof window.initAppComponents === "function") {
       window.initAppComponents();
     }

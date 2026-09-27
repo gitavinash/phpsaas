@@ -11,6 +11,9 @@
     timelineChart: null,
     sourceChart: null,
     currentDateRange: "",
+    lastFetchTime: 0,
+    isFetching: false,
+    lastFetchedRange: null,
 
     init: function () {
       const $root = $("#digitalMarketingDashboardApp");
@@ -25,39 +28,17 @@
       const self = this;
 
       // Refresh Button
-      $(document).off("click.mktRefresh").on("click.mktRefresh", "#mktRefreshBtn", function (e) {
+      $(document).off("click.mktRefresh", "#mktRefreshBtn").on("click.mktRefresh", "#mktRefreshBtn", function (e) {
         e.preventDefault();
         const $btn = $(this);
         $btn.addClass("is-loading");
         self.fetchData(self.currentDateRange, function () {
           $btn.removeClass("is-loading");
-        });
-      });
-
-      // Copy Webhook Endpoints
-      $(document).off("click.mktCopy").on("click.mktCopy", ".mkt-btn-copy-endpoint", function (e) {
-        e.preventDefault();
-        const textToCopy = $(this).attr("data-copy");
-        if (!textToCopy) return;
-
-        const $btn = $(this);
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(textToCopy).then(function () {
-            self.showCopySuccess($btn);
-          });
-        } else {
-          // Fallback
-          const $temp = $("<input>");
-          $("body").append($temp);
-          $temp.val(textToCopy).select();
-          document.execCommand("copy");
-          $temp.remove();
-          self.showCopySuccess($btn);
-        }
+        }, true);
       });
 
       // Quick Date Range Filter Submission (Prevent full page reload, SPA behavior)
-      $(document).off("submit.mktDateForm").on("submit.mktDateForm", "#mktDateRangeForm", function (e) {
+      $(document).off("submit.mktDateForm", "#mktDateRangeForm").on("submit.mktDateForm", "#mktDateRangeForm", function (e) {
         e.preventDefault();
         const selectedRange = $("#mktDaterangeInput").val();
         self.currentDateRange = selectedRange;
@@ -65,7 +46,7 @@
       });
 
       // Date Range Picker Change Trigger
-      $("#mktDaterangeInput").on("apply.daterangepicker", function (ev, picker) {
+      $("#mktDaterangeInput").off("apply.daterangepicker.mkt").on("apply.daterangepicker.mkt", function (ev, picker) {
         const val = picker.startDate.format("DD-MMM-YYYY") + " - " + picker.endDate.format("DD-MMM-YYYY");
         $(this).val(val);
         self.currentDateRange = val;
@@ -73,16 +54,20 @@
       });
     },
 
-    showCopySuccess: function ($btn) {
-      const originalHtml = $btn.html();
-      $btn.html('<i class="fi fi-rr-check" style="color:#10b981;"></i>');
-      setTimeout(function () {
-        $btn.html(originalHtml);
-      }, 1800);
-    },
-
-    fetchData: function (daterange, callback) {
+    fetchData: function (daterange, callback, force) {
       const self = this;
+      const now = Date.now();
+      // Debounce only if actively fetching the exact same daterange within 400ms
+      if (!force && this.isFetching && this.lastFetchedRange === daterange && (now - this.lastFetchTime < 400)) {
+        if (typeof callback === "function") callback();
+        return;
+      }
+
+      this.lastFetchTime = now;
+      this.isFetching = true;
+      this.lastFetchedRange = daterange;
+      this.currentDateRange = daterange || "";
+
       const apiUrl = "/api/v3/dashboard/marketing.php" + (daterange ? "?daterange=" + encodeURIComponent(daterange) : "");
 
       $.ajax({
@@ -90,15 +75,16 @@
         type: "GET",
         dataType: "json",
         success: function (res) {
+          self.isFetching = false;
           if (res && res.status === "success") {
             self.renderKPIs(res.kpis);
             self.renderCharts(res.charts);
             self.renderRecentInquiries(res.recentInquiries);
-            self.renderIntegrations(res.integrations);
           }
           if (typeof callback === "function") callback();
         },
         error: function (err) {
+          self.isFetching = false;
           console.error("Failed to load marketing dashboard data", err);
           if (typeof callback === "function") callback();
         }
@@ -158,11 +144,18 @@
       // 1. Timeline Line Chart
       const timelineCanvas = document.getElementById("mktTimelineCanvas");
       if (timelineCanvas && window.Chart && charts.timeline) {
-        const ctx = timelineCanvas.getContext("2d");
-
-        if (this.timelineChart) {
-          this.timelineChart.destroy();
+        if (typeof Chart.getChart === "function") {
+          const existingTimeline = Chart.getChart(timelineCanvas);
+          if (existingTimeline) {
+            try { existingTimeline.destroy(); } catch (e) {}
+          }
         }
+        if (this.timelineChart) {
+          try { this.timelineChart.destroy(); } catch (e) {}
+          this.timelineChart = null;
+        }
+
+        const ctx = timelineCanvas.getContext("2d");
 
         const gradientFb = ctx.createLinearGradient(0, 0, 0, 240);
         gradientFb.addColorStop(0, "rgba(24, 119, 242, 0.2)");
@@ -178,7 +171,7 @@
             labels: charts.timeline.labels || [],
             datasets: [
               {
-                label: "Facebook Leads",
+                label: "Facebook & IG Leads",
                 data: charts.timeline.facebook || [],
                 borderColor: "#1877f2",
                 backgroundColor: gradientFb,
@@ -262,11 +255,18 @@
       // 2. Channel Distribution Doughnut Chart & Bars
       const distCanvas = document.getElementById("mktSourceCanvas");
       if (distCanvas && window.Chart && charts.channelDistribution) {
-        const ctxDist = distCanvas.getContext("2d");
-
-        if (this.sourceChart) {
-          this.sourceChart.destroy();
+        if (typeof Chart.getChart === "function") {
+          const existingSource = Chart.getChart(distCanvas);
+          if (existingSource) {
+            try { existingSource.destroy(); } catch (e) {}
+          }
         }
+        if (this.sourceChart) {
+          try { this.sourceChart.destroy(); } catch (e) {}
+          this.sourceChart = null;
+        }
+
+        const ctxDist = distCanvas.getContext("2d");
 
         const colors = ["#1877f2", "#f59e0b", "#10b981", "#8b5cf6", "#ec4899", "#64748b"];
 
@@ -316,7 +316,7 @@
           charts.channelDistribution.bars.forEach(function (bar) {
             let fillClass = "other";
             const low = bar.source.toLowerCase();
-            if (low.includes("facebook") || low.includes("fb")) fillClass = "fb";
+            if (low.includes("facebook") || low.includes("fb") || low.includes("ig")) fillClass = "fb";
             else if (low.includes("google")) fillClass = "google";
             else if (low.includes("whatsapp")) fillClass = "whatsapp";
 
@@ -388,7 +388,29 @@
     }
   };
 
+  // Expose globally for SPA router integration
+  window.MarketingDashboard = MarketingDashboard;
+
+  // SPA navigation listener - auto reload data whenever user lands on digital marketing dashboard
+  $(document).on("spa:loaded", function () {
+    if ($("#digitalMarketingDashboardApp").length) {
+      MarketingDashboard.init();
+    }
+  });
+
+  // Popstate history listener (browser back / forward navigation)
+  window.addEventListener("popstate", function () {
+    setTimeout(function () {
+      if ($("#digitalMarketingDashboardApp").length) {
+        MarketingDashboard.init();
+      }
+    }, 50);
+  });
+
+  // Initial page load
   $(document).ready(function () {
-    MarketingDashboard.init();
+    if ($("#digitalMarketingDashboardApp").length) {
+      MarketingDashboard.init();
+    }
   });
 })(jQuery);
