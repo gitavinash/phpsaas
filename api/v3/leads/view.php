@@ -14,6 +14,12 @@ $siteId     = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $currentUserId = defined('USER_ID')   ? (int) USER_ID : 0;
 $accessType = isset($site_access_type) ? $site_access_type : 'administrator';
 
+if ($accessType === 'digital_marketing') {
+    http_response_code(403);
+    echo json_encode(['status' => 'error', 'message' => 'Access denied: Digital marketing users cannot view lead contact details.']);
+    exit();
+}
+
 $rawId = isset($_GET['id']) ? trim($_GET['id']) : (isset($_POST['id']) ? trim($_POST['id']) : '');
 if (empty($rawId)) {
     echo json_encode(['status' => 'error', 'message' => 'Lead ID is required.']);

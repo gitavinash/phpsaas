@@ -16,6 +16,15 @@ $siteId     = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $userId     = defined('USER_ID')      ? (int) USER_ID : 0;
 $accessType = isset($site_access_type) ? $site_access_type : 'customer';
 
+if ($accessType === 'digital_marketing') {
+    http_response_code(403);
+    echo json_encode([
+        'status'  => 'error',
+        'message' => 'Access denied. Leads page is restricted for digital marketing.'
+    ]);
+    exit;
+}
+
 $reqData = $_POST;
 $rawInput = file_get_contents('php://input');
 if (!empty($rawInput)) {
@@ -57,13 +66,21 @@ if (isset($reqData['daterange']) && !empty($reqData['daterange']) && $reqData['d
 $searchFilter = "";
 if (isset($reqData['search']) && trim($reqData['search']) !== '') {
     $searchKey = mysqli_real_escape_string($connection, trim($reqData['search']));
-    $searchFilter = " AND (e.enquiry_first_name LIKE '%{$searchKey}%' 
-                       OR e.enquiry_last_name LIKE '%{$searchKey}%'
-                       OR e.enquiry_mobile LIKE '%{$searchKey}%' 
-                       OR e.enquiry_email LIKE '%{$searchKey}%' 
-                       OR e.enquiry_subject LIKE '%{$searchKey}%' 
-                       OR e.enquiry_source LIKE '%{$searchKey}%'
-                       OR e.enquiry_id = '{$searchKey}')";
+    if ($accessType === 'digital_marketing') {
+        $searchFilter = " AND (e.enquiry_first_name LIKE '%{$searchKey}%' 
+                           OR e.enquiry_last_name LIKE '%{$searchKey}%'
+                           OR e.enquiry_subject LIKE '%{$searchKey}%' 
+                           OR e.enquiry_source LIKE '%{$searchKey}%'
+                           OR e.enquiry_id = '{$searchKey}')";
+    } else {
+        $searchFilter = " AND (e.enquiry_first_name LIKE '%{$searchKey}%' 
+                           OR e.enquiry_last_name LIKE '%{$searchKey}%'
+                           OR e.enquiry_mobile LIKE '%{$searchKey}%' 
+                           OR e.enquiry_email LIKE '%{$searchKey}%' 
+                           OR e.enquiry_subject LIKE '%{$searchKey}%' 
+                           OR e.enquiry_source LIKE '%{$searchKey}%'
+                           OR e.enquiry_id = '{$searchKey}')";
+    }
 }
 
 // Status Filter
@@ -219,17 +236,18 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
         $agentId = (int)($row['enquiry_agent'] ?? 0);
         $agentName = !empty($row['agent_name']) ? trim($row['agent_name']) : '';
 
-        $cleanMobile = preg_replace('/[^0-9]/', '', (string)($row['enquiry_mobile'] ?? ''));
-        $waMobile = (strlen($cleanMobile) == 10) ? ('91' . $cleanMobile) : $cleanMobile;
+        $isDigMkt = ($accessType === 'digital_marketing');
+        $cleanMobile = $isDigMkt ? '' : preg_replace('/[^0-9]/', '', (string)($row['enquiry_mobile'] ?? ''));
+        $waMobile = ($isDigMkt || empty($cleanMobile)) ? '' : ((strlen($cleanMobile) == 10) ? ('91' . $cleanMobile) : $cleanMobile);
 
         $leadsList[] = [
             'id'               => $leadId,
             'encoded_id'       => base64_encode($leadId),
             'name'             => ucwords(strtolower($fullName)),
             'first_name'       => ucwords(strtolower($firstName)),
-            'email'            => trim($row['enquiry_email'] ?? ''),
-            'mobile'           => trim($row['enquiry_mobile'] ?? ''),
-            'alt_mobile'       => trim($row['enquiry_alt_mobile'] ?? ''),
+            'email'            => $isDigMkt ? '' : trim($row['enquiry_email'] ?? ''),
+            'mobile'           => $isDigMkt ? '' : trim($row['enquiry_mobile'] ?? ''),
+            'alt_mobile'       => $isDigMkt ? '' : trim($row['enquiry_alt_mobile'] ?? ''),
             'wa_mobile'        => $waMobile,
             'subject'          => !empty($row['enquiry_subject']) ? ucwords(strtolower(trim($row['enquiry_subject']))) : 'Tour Package Enquiry',
             'source'           => cleanLeadSource($row['enquiry_source'] ?? ''),

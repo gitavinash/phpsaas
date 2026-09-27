@@ -363,6 +363,12 @@ if ($method === 'GET') {
         ]
     ];
 
+    if (isset($site_access_type) && $site_access_type === 'digital_marketing') {
+        $plugins = array_values(array_filter($plugins, function ($p) {
+            return ($p['category'] ?? '') !== 'payments';
+        }));
+    }
+
     echo json_encode([
         'status'  => 'success',
         'plugins' => $plugins
@@ -391,6 +397,17 @@ if ($method === 'POST' || $method === 'PUT') {
             'webhooks'     => 'enable_webhooks'
         ], $paymentGateways);
         $toggleKey = $slugMap[$pluginSlug] ?? '';
+    }
+
+    if (isset($site_access_type) && $site_access_type === 'digital_marketing') {
+        if (in_array($pluginSlug, array_keys($paymentGateways), true) || in_array($toggleKey, array_values($paymentGateways), true) || $pluginSlug === 'upi' || $toggleKey === 'enable_upi') {
+            http_response_code(403);
+            echo json_encode([
+                'status' => 'error',
+                'msg'    => 'Access denied: Digital marketing team cannot modify payment gateways.'
+            ]);
+            exit;
+        }
     }
 
     if (empty($toggleKey)) {

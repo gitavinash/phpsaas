@@ -275,7 +275,7 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                     <div>
                         <div class="integration-search-box" style="margin: 0;">
                             <i class="fi fi-rr-search"></i>
-                            <input type="text" id="leadSearchInput" placeholder="Search leads by name, phone, email..." class="integration-search-input" style="padding: 6px 12px 6px 34px; font-size: 12.5px; min-width: 250px;">
+                            <input type="text" id="leadSearchInput" placeholder="<?php echo ((isset($site_access_type) && $site_access_type === 'digital_marketing') ? 'Search leads by name, id...' : 'Search leads by name, phone, email...'); ?>" class="integration-search-input" style="padding: 6px 12px 6px 34px; font-size: 12.5px; min-width: 250px;">
                         </div>
                     </div>
                 </div>
@@ -294,6 +294,7 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                         </thead>
                         <tbody id="fbLeadsTableBody">
                             <?php 
+                            $isDigitalMarketing = (isset($site_access_type) && $site_access_type === 'digital_marketing');
                             foreach ($leads as $lead) {
                                 $createdTime = !empty($lead['created_time']) ? date('d M Y, h:i A', strtotime($lead['created_time'])) : 'N/A';
                                 $leadIdVal = $lead['id'] ?? 'N/A';
@@ -312,14 +313,15 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                         if (in_array($fieldName, ['full_name', 'name', 'first_name', 'your_name'])) {
                                             $fullName = $fieldValStr;
                                         } elseif (in_array($fieldName, ['email', 'email_address', 'your_email'])) {
-                                            $emailVal = $fieldValStr;
+                                            $emailVal = $isDigitalMarketing ? '' : $fieldValStr;
                                         } elseif (in_array($fieldName, ['phone_number', 'phone', 'mobile_number', 'mobile', 'whatsapp_number'])) {
-                                            $phoneVal = $fieldValStr;
+                                            $phoneVal = $isDigitalMarketing ? '' : $fieldValStr;
                                         } else {
                                             $cleanKey = ucwords(str_replace(['_', '-'], ' ', $fieldName));
+                                            $isContactField = preg_match('/(phone|mobile|email|contact|whatsapp)/i', $fieldName);
                                             $customResponses[] = [
                                                 'label' => $cleanKey,
-                                                'val'   => $fieldValStr
+                                                'val'   => ($isDigitalMarketing && $isContactField) ? '[Protected]' : $fieldValStr
                                             ];
                                         }
                                     }
@@ -336,8 +338,8 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                     'id'           => $leadIdVal,
                                     'created_time' => $createdTime,
                                     'full_name'    => $fullName,
-                                    'phone'        => $phoneVal,
-                                    'email'        => $emailVal,
+                                    'phone'        => $isDigitalMarketing ? '' : $phoneVal,
+                                    'email'        => $isDigitalMarketing ? '' : $emailVal,
                                     'questions'    => $customResponses
                                 ];
                                 $jsonEncodedLead = rawurlencode(json_encode($leadPayload));
@@ -362,15 +364,22 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                     </td>
                                     <td>
                                         <div class="fb-contact-cell">
-                                            <?php if (!empty($phoneVal)) { ?>
-                                                <a href="tel:<?php echo htmlspecialchars($phoneVal); ?>" class="fb-contact-link phone">
-                                                    <i class="fi fi-rr-phone-call"></i> <span><?php echo htmlspecialchars($phoneVal); ?></span>
-                                                </a>
-                                            <?php } ?>
-                                            <?php if (!empty($emailVal)) { ?>
-                                                <a href="mailto:<?php echo htmlspecialchars($emailVal); ?>" class="fb-contact-link email">
-                                                    <i class="fi fi-rr-envelope"></i> <span><?php echo htmlspecialchars($emailVal); ?></span>
-                                                </a>
+                                            <?php if ($isDigitalMarketing) { ?>
+                                                <span class="v3-badge v3-badge-gray" title="Contact details protected for digital marketing">Protected</span>
+                                            <?php } else { ?>
+                                                <?php if (!empty($phoneVal)) { ?>
+                                                    <a href="tel:<?php echo htmlspecialchars($phoneVal); ?>" class="fb-contact-link phone">
+                                                        <i class="fi fi-rr-phone-call"></i> <span><?php echo htmlspecialchars($phoneVal); ?></span>
+                                                    </a>
+                                                <?php } ?>
+                                                <?php if (!empty($emailVal)) { ?>
+                                                    <a href="mailto:<?php echo htmlspecialchars($emailVal); ?>" class="fb-contact-link email">
+                                                        <i class="fi fi-rr-envelope"></i> <span><?php echo htmlspecialchars($emailVal); ?></span>
+                                                    </a>
+                                                <?php } ?>
+                                                <?php if (empty($phoneVal) && empty($emailVal)) { ?>
+                                                    <span class="fb-contact-empty">—</span>
+                                                <?php } ?>
                                             <?php } ?>
                                         </div>
                                     </td>
@@ -478,9 +487,11 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                 <button type="button" class="v3-btn-secondary btn-modal-dismiss">
                     Close
                 </button>
+                <?php if (!$isDigitalMarketing) { ?>
                 <a href="/dashboard/leads/list/" class="v3-btn-primary">
                     <i class="fi fi-rr-arrow-right"></i> <span>Open CRM Leads</span>
                 </a>
+                <?php } ?>
             </div>
         </div>
     </div>

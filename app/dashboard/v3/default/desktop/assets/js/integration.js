@@ -1330,6 +1330,11 @@
               '</div>'
             );
           }
+          if (!lead.phone && !lead.email) {
+            $contactCard.append(
+              '<div style="color:#64748b; font-size:12.5px; font-style:italic;">Contact details are not available or restricted for this role.</div>'
+            );
+          }
 
           const $qaList = $("#fbModalQAList");
           $qaList.empty();

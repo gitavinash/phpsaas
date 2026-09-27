@@ -31,7 +31,7 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
                 </div>
                 <div class="package-header-titles">
                     <h2>Integrations &amp; Connected Channels</h2>
-                    <p>Connect your advertising campaigns, instant messaging, and payment gateways.</p>
+                    <p><?php echo ($site_access_type === 'digital_marketing' ? 'Connect and manage your marketing campaigns, lead acquisition ads, and messaging channels.' : 'Connect your advertising campaigns, instant messaging, and payment gateways.'); ?></p>
                 </div>
             </div>
             <div class="package-header-actions">
@@ -46,7 +46,7 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
         <div class="integration-toolbar-row">
             <div class="integration-category-tabs">
                 <button type="button" class="integration-cat-tab active" data-category="all">
-                    <i class="fi fi-rr-apps"></i> All Channels <span class="tab-count" id="countAll">13</span>
+                    <i class="fi fi-rr-apps"></i> All Channels <span class="tab-count" id="countAll"><?php echo ($site_access_type === 'digital_marketing' ? '4' : '13'); ?></span>
                 </button>
                 <button type="button" class="integration-cat-tab" data-category="leadgen">
                     <i class="fi fi-rr-bullseye-arrow"></i> Lead Gen &amp; Ads <span class="tab-count" id="countLeadgen">2</span>
@@ -54,9 +54,11 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
                 <button type="button" class="integration-cat-tab" data-category="messaging">
                     <i class="fi fi-rr-comment-alt-middle"></i> Messaging &amp; Email <span class="tab-count" id="countMessaging">2</span>
                 </button>
+                <?php if ($site_access_type !== 'digital_marketing') { ?>
                 <button type="button" class="integration-cat-tab" data-category="payments">
                     <i class="fi fi-rr-credit-card"></i> Payments &amp; Banking <span class="tab-count" id="countPayments">9</span>
                 </button>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -160,6 +162,7 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
             </div>
         </div>
 
+        <?php if ($site_access_type !== 'digital_marketing') { ?>
         <!-- 4. Razorpay Payment Gateway -->
         <div class="integration-card" data-category="payments" data-slug="razorpay">
             <div class="integration-card-main">
@@ -375,6 +378,7 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
                 </div>
             </div>
         </div>
+        <?php } ?>
 
     </div>
 </div>

@@ -11,62 +11,87 @@ $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboa
 
 // 1. CORE & SALES CRM
 ?>
-<li class="header-section-name">
-    <p>Sales CRM<span>Daily Operations &amp; Leads</span></p>
-</li>
+<?php if ($site_access_type === 'digital_marketing') { ?>
+    <li class="header-section-name">
+        <p>Ad Leads<span>Campaigns &amp; Inquiries</span></p>
+    </li>
 
-<li <?php echo ($isDashboardActive ? 'class="active"' : ''); ?>>
-    <a href="/dashboard/"><i class="fi fi-rr-apps"></i> Dashboard</a>
-</li>
+    <li <?php echo ($isDashboardActive ? 'class="active"' : ''); ?>>
+        <a href="/dashboard/"><i class="fi fi-rr-apps"></i> Dashboard</a>
+    </li>
 
-<li <?php echo (strpos($currentUrl, '/leads/') !== false ? 'class="active"' : ''); ?>>
-    <a href="/dashboard/leads/"><i class="fi fi-rr-chart-network"></i> Leads &amp; Inquiries</a>
-    <div class="side-menu">
-        <ul>
-            <li><a href="/dashboard/leads/list/"><i class="fi-rr-apps-sort"></i> All Leads</a></li>
-            <li><a href="/dashboard/leads/add/"><i class="fi fi-rr-add"></i> Add New Lead</a></li>
-            <li><a href="/dashboard/leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed Leads</a></li>
-            <li><a href="/dashboard/leads/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending / Quotations</a></li>
-            <li><a href="/dashboard/leads/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow-ups</a></li>
-            <li><a href="/dashboard/leads/list/?leadStatus=4"><i class="fi-rr-cross-circle"></i> Cancelled Leads</a></li>
-        </ul>
-    </div>
-    <div class="bottom-menu">
-        <ul>
-            <li><a href="/dashboard/leads/list/"><i class="fi-rr-apps-sort"></i> All Leads</a></li>
-            <li><a href="/dashboard/leads/add/"><i class="fi fi-rr-add"></i> Add New Lead</a></li>
-            <li><a href="/dashboard/leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed Leads</a></li>
-            <li><a href="/dashboard/leads/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending / Quotations</a></li>
-            <li><a href="/dashboard/leads/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow-ups</a></li>
-            <li><a href="/dashboard/leads/list/?leadStatus=4"><i class="fi-rr-cross-circle"></i> Cancelled Leads</a></li>
-        </ul>
-    </div>
-</li>
+    <li <?php echo (strpos($currentUrl, '/integration/facebook') !== false ? 'class="active"' : ''); ?>>
+        <a href="/dashboard/integration/facebook/"><i class="fi fi-rr-bullseye-arrow"></i> Facebook Leads</a>
+        <div class="side-menu">
+            <ul>
+                <li><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Lead Ads</a></li>
+            </ul>
+        </div>
+        <div class="bottom-menu">
+            <ul>
+                <li><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Lead Ads</a></li>
+            </ul>
+        </div>
+    </li>
 
-<li class="aside-menu-disabled">
-    <a href="javascript:void(0)"><i class="fi fi-rr-receipt"></i> Bookings &amp; Vouchers <span class="aside-badge-soon">Soon</span></a>
-</li>
+<?php } else { ?>
+    <li class="header-section-name">
+        <p>Sales CRM<span>Daily Operations &amp; Leads</span></p>
+    </li>
+
+    <li <?php echo ($isDashboardActive ? 'class="active"' : ''); ?>>
+        <a href="/dashboard/"><i class="fi fi-rr-apps"></i> Dashboard</a>
+    </li>
+
+    <li <?php echo (strpos($currentUrl, '/leads/') !== false ? 'class="active"' : ''); ?>>
+        <a href="/dashboard/leads/"><i class="fi fi-rr-chart-network"></i> Leads &amp; Inquiries</a>
+        <div class="side-menu">
+            <ul>
+                <li><a href="/dashboard/leads/list/"><i class="fi-rr-apps-sort"></i> All Leads</a></li>
+                <li><a href="/dashboard/leads/add/"><i class="fi fi-rr-add"></i> Add New Lead</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed Leads</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending / Quotations</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow-ups</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=4"><i class="fi-rr-cross-circle"></i> Cancelled Leads</a></li>
+            </ul>
+        </div>
+        <div class="bottom-menu">
+            <ul>
+                <li><a href="/dashboard/leads/list/"><i class="fi-rr-apps-sort"></i> All Leads</a></li>
+                <li><a href="/dashboard/leads/add/"><i class="fi fi-rr-add"></i> Add New Lead</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed Leads</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending / Quotations</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow-ups</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=4"><i class="fi-rr-cross-circle"></i> Cancelled Leads</a></li>
+            </ul>
+        </div>
+    </li>
+
+    <li class="aside-menu-disabled">
+        <a href="javascript:void(0)"><i class="fi fi-rr-receipt"></i> Bookings &amp; Vouchers <span class="aside-badge-soon">Soon</span></a>
+    </li>
+<?php } ?>
 
 <?php
 // 1.5 ACCOUNTS & FINANCE (Administrator & Accountant)
 if ($site_access_type == 'administrator' || $site_access_type == 'accountant') { ?>
-<li <?php echo (strpos($currentUrl, '/accounts') !== false ? 'class="active"' : ''); ?>>
-    <a href="/dashboard/accounts/"><i class="fi fi-rr-wallet"></i> Accounts &amp; Ledger</a>
-    <div class="side-menu">
-        <ul>
-            <li><a href="/dashboard/accounts/"><i class="fi-rr-apps-sort"></i> All Transactions</a></li>
-            <li><a href="/dashboard/accounts/?status=pending"><i class="fi-rr-clock"></i> Pending Verification</a></li>
-            <li><a href="/dashboard/accounts/?status=verified"><i class="fi-rr-badge-check"></i> Verified Collections</a></li>
-        </ul>
-    </div>
-    <div class="bottom-menu">
-        <ul>
-            <li><a href="/dashboard/accounts/"><i class="fi-rr-apps-sort"></i> All Transactions</a></li>
-            <li><a href="/dashboard/accounts/?status=pending"><i class="fi-rr-clock"></i> Pending Verification</a></li>
-            <li><a href="/dashboard/accounts/?status=verified"><i class="fi-rr-badge-check"></i> Verified Collections</a></li>
-        </ul>
-    </div>
-</li>
+    <li <?php echo (strpos($currentUrl, '/accounts') !== false ? 'class="active"' : ''); ?>>
+        <a href="/dashboard/accounts/"><i class="fi fi-rr-wallet"></i> Accounts &amp; Ledger</a>
+        <div class="side-menu">
+            <ul>
+                <li><a href="/dashboard/accounts/"><i class="fi-rr-apps-sort"></i> All Transactions</a></li>
+                <li><a href="/dashboard/accounts/?status=pending"><i class="fi-rr-clock"></i> Pending Verification</a></li>
+                <li><a href="/dashboard/accounts/?status=verified"><i class="fi-rr-badge-check"></i> Verified Collections</a></li>
+            </ul>
+        </div>
+        <div class="bottom-menu">
+            <ul>
+                <li><a href="/dashboard/accounts/"><i class="fi-rr-apps-sort"></i> All Transactions</a></li>
+                <li><a href="/dashboard/accounts/?status=pending"><i class="fi-rr-clock"></i> Pending Verification</a></li>
+                <li><a href="/dashboard/accounts/?status=verified"><i class="fi-rr-badge-check"></i> Verified Collections</a></li>
+            </ul>
+        </div>
+    </li>
 <?php } ?>
 
 <?php
@@ -206,8 +231,10 @@ if ($site_access_type == 'administrator') { ?>
             </ul>
         </div>
     </li>
+<?php } ?>
 
-    <!-- 6. SYSTEM & SETTINGS -->
+<!-- 6. SYSTEM & SETTINGS (Administrator) -->
+<?php if ($site_access_type == 'administrator') { ?>
     <li class="header-section-name">
         <p>System &amp; Settings<span>Team, Channels &amp; Policies</span></p>
     </li>
@@ -254,8 +281,11 @@ if ($site_access_type == 'administrator') { ?>
             </ul>
         </div>
     </li>
+<?php } ?>
 
-    <?php
+<?php
+// Plugins & Integrations: Visible to Administrator AND Digital Marketing
+if ($site_access_type == 'administrator') {
     $activeAsidePg = 'razorpay';
     if (defined('PG_NAME') && !empty(PG_NAME)) {
         $activeAsidePg = strtolower(PG_NAME);
@@ -276,47 +306,53 @@ if ($site_access_type == 'administrator') { ?>
     } elseif (defined('ENABLE_RAZORPAY') && ENABLE_RAZORPAY == '1') {
         $activeAsidePg = 'razorpay';
     }
-    ?>
+?>
     <li <?php echo (strpos($currentUrl, '/integration/') !== false ? 'class="active"' : ''); ?>>
         <a href="/dashboard/integration/"><i class="fi fi-rr-plug-connection"></i> Plugins &amp; Integrations</a>
         <div class="side-menu">
             <ul>
                 <li><a href="/dashboard/integration/"><i class="fi-rr-apps-sort"></i> All Plugins</a></li>
                 <li data-aside-plugin="facebook" <?php echo ((!defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Ads</a></li>
+                <li data-aside-plugin="google_ads" <?php echo ((defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
                 <li data-aside-plugin="whatsapp" <?php echo ((!defined('ENABLE_WHATSAPP_BUSINESS_API') || ENABLE_WHATSAPP_BUSINESS_API == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/whatsapp/"><i class="fi-rr-comment-alt-middle"></i> WhatsApp API</a></li>
                 <li data-aside-plugin="smtp" <?php echo ((!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/smtp/"><i class="fi-rr-envelope"></i> SMTP Email</a></li>
-                <li data-aside-plugin="google_ads" <?php echo ((defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
-                <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
-                <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
-                <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>
-                <li data-aside-plugin="phonepe" <?php echo ($activeAsidePg === 'phonepe' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phonepe/"><i class="fi-rr-credit-card"></i> PhonePe</a></li>
-                <li data-aside-plugin="worldline" <?php echo ($activeAsidePg === 'worldline' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/worldline/"><i class="fi-rr-credit-card"></i> Worldline</a></li>
-                <li data-aside-plugin="payu" <?php echo ($activeAsidePg === 'payu' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/payu/"><i class="fi-rr-credit-card"></i> PayU</a></li>
-                <li data-aside-plugin="phi_commerce" <?php echo ($activeAsidePg === 'phi_commerce' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phi_commerce/"><i class="fi-rr-credit-card"></i> Phi Commerce</a></li>
-                <li data-aside-plugin="cashfree" <?php echo ($activeAsidePg === 'cashfree' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/cashfree/"><i class="fi-rr-credit-card"></i> Cashfree</a></li>
-                <li data-aside-plugin="upi" <?php echo ((!defined('ENABLE_UPI') || ENABLE_UPI == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/upi/"><i class="fi-rr-qr-scan"></i> UPI &amp; QR</a></li>
+                <?php if ($site_access_type !== 'digital_marketing') { ?>
+                    <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
+                    <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
+                    <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>
+                    <li data-aside-plugin="phonepe" <?php echo ($activeAsidePg === 'phonepe' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phonepe/"><i class="fi-rr-credit-card"></i> PhonePe</a></li>
+                    <li data-aside-plugin="worldline" <?php echo ($activeAsidePg === 'worldline' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/worldline/"><i class="fi-rr-credit-card"></i> Worldline</a></li>
+                    <li data-aside-plugin="payu" <?php echo ($activeAsidePg === 'payu' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/payu/"><i class="fi-rr-credit-card"></i> PayU</a></li>
+                    <li data-aside-plugin="phi_commerce" <?php echo ($activeAsidePg === 'phi_commerce' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phi_commerce/"><i class="fi-rr-credit-card"></i> Phi Commerce</a></li>
+                    <li data-aside-plugin="cashfree" <?php echo ($activeAsidePg === 'cashfree' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/cashfree/"><i class="fi-rr-credit-card"></i> Cashfree</a></li>
+                    <li data-aside-plugin="upi" <?php echo ((!defined('ENABLE_UPI') || ENABLE_UPI == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/upi/"><i class="fi-rr-qr-scan"></i> UPI &amp; QR</a></li>
+                <?php } ?>
             </ul>
         </div>
         <div class="bottom-menu">
             <ul>
                 <li><a href="/dashboard/integration/"><i class="fi-rr-apps-sort"></i> All Plugins</a></li>
                 <li data-aside-plugin="facebook" <?php echo ((!defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Ads</a></li>
+                <li data-aside-plugin="google_ads" <?php echo ((defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
                 <li data-aside-plugin="whatsapp" <?php echo ((!defined('ENABLE_WHATSAPP_BUSINESS_API') || ENABLE_WHATSAPP_BUSINESS_API == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/whatsapp/"><i class="fi-rr-comment-alt-middle"></i> WhatsApp API</a></li>
                 <li data-aside-plugin="smtp" <?php echo ((!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/smtp/"><i class="fi-rr-envelope"></i> SMTP Email</a></li>
-                <li data-aside-plugin="google_ads" <?php echo ((defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
-                <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
-                <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
-                <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>
-                <li data-aside-plugin="phonepe" <?php echo ($activeAsidePg === 'phonepe' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phonepe/"><i class="fi-rr-credit-card"></i> PhonePe</a></li>
-                <li data-aside-plugin="worldline" <?php echo ($activeAsidePg === 'worldline' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/worldline/"><i class="fi-rr-credit-card"></i> Worldline</a></li>
-                <li data-aside-plugin="payu" <?php echo ($activeAsidePg === 'payu' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/payu/"><i class="fi-rr-credit-card"></i> PayU</a></li>
-                <li data-aside-plugin="phi_commerce" <?php echo ($activeAsidePg === 'phi_commerce' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phi_commerce/"><i class="fi-rr-credit-card"></i> Phi Commerce</a></li>
-                <li data-aside-plugin="cashfree" <?php echo ($activeAsidePg === 'cashfree' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/cashfree/"><i class="fi-rr-credit-card"></i> Cashfree</a></li>
-                <li data-aside-plugin="upi" <?php echo ((!defined('ENABLE_UPI') || ENABLE_UPI == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/upi/"><i class="fi-rr-qr-scan"></i> UPI &amp; QR</a></li>
+                <?php if ($site_access_type !== 'digital_marketing') { ?>
+                    <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
+                    <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
+                    <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>
+                    <li data-aside-plugin="phonepe" <?php echo ($activeAsidePg === 'phonepe' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phonepe/"><i class="fi-rr-credit-card"></i> PhonePe</a></li>
+                    <li data-aside-plugin="worldline" <?php echo ($activeAsidePg === 'worldline' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/worldline/"><i class="fi-rr-credit-card"></i> Worldline</a></li>
+                    <li data-aside-plugin="payu" <?php echo ($activeAsidePg === 'payu' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/payu/"><i class="fi-rr-credit-card"></i> PayU</a></li>
+                    <li data-aside-plugin="phi_commerce" <?php echo ($activeAsidePg === 'phi_commerce' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phi_commerce/"><i class="fi-rr-credit-card"></i> Phi Commerce</a></li>
+                    <li data-aside-plugin="cashfree" <?php echo ($activeAsidePg === 'cashfree' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/cashfree/"><i class="fi-rr-credit-card"></i> Cashfree</a></li>
+                    <li data-aside-plugin="upi" <?php echo ((!defined('ENABLE_UPI') || ENABLE_UPI == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/upi/"><i class="fi-rr-qr-scan"></i> UPI &amp; QR</a></li>
+                <?php } ?>
             </ul>
         </div>
     </li>
+<?php } ?>
 
+<?php if ($site_access_type == 'administrator') { ?>
     <li <?php echo (strpos($currentUrl, '/policy/') !== false ? 'class="active"' : ''); ?>>
         <a href="/dashboard/policy/"><i class="fi fi-rr-memo"></i> Company Policies</a>
         <div class="side-menu">
@@ -332,7 +368,4 @@ if ($site_access_type == 'administrator') { ?>
             </ul>
         </div>
     </li>
-
-<?php
-}
-?>
+<?php } ?>

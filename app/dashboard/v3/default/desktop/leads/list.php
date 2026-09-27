@@ -8,10 +8,16 @@
 ?>
 
 <?php
-$initialLeadStatus = isset($_GET['leadStatus']) ? (string)$_GET['leadStatus'] : (isset($_GET['status']) ? (string)$_GET['status'] : 'all');
-$initialAgentId    = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset($_GET['agent_id']) ? (string)$_GET['agent_id'] : (isset($_GET['agent']) ? (string)$_GET['agent'] : 'all'));
+$initialLeadStatus   = isset($_GET['leadStatus']) ? (string)$_GET['leadStatus'] : (isset($_GET['status']) ? (string)$_GET['status'] : 'all');
+$initialAgentId      = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset($_GET['agent_id']) ? (string)$_GET['agent_id'] : (isset($_GET['agent']) ? (string)$_GET['agent'] : 'all'));
+$isDigitalMarketing  = (isset($site_access_type) && $site_access_type === 'digital_marketing');
+
+if ($isDigitalMarketing) {
+    header("Location: /dashboard/integration/facebook/");
+    exit;
+}
 ?>
-<div class="package-page-wrapper leads-page-wrapper" id="leadsListApp" data-user-role="<?php echo htmlspecialchars($site_access_type ?? '', ENT_QUOTES); ?>" data-initial-status="<?php echo htmlspecialchars($initialLeadStatus, ENT_QUOTES); ?>" data-initial-agent="<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?>">
+<div class="package-page-wrapper leads-page-wrapper<?php echo $isDigitalMarketing ? ' leads-digital-marketing-view' : ''; ?>" id="leadsListApp" data-user-role="<?php echo htmlspecialchars($site_access_type ?? '', ENT_QUOTES); ?>" data-initial-status="<?php echo htmlspecialchars($initialLeadStatus, ENT_QUOTES); ?>" data-initial-agent="<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?>">
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
@@ -20,7 +26,7 @@ $initialAgentId    = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset
             </div>
             <div class="package-header-titles">
                 <h2>Leads &amp; Enquiries Pipeline</h2>
-                <p>Manage, track, and convert traveler inquiries and sales prospects.</p>
+                <p><?php echo $isDigitalMarketing ? 'Track campaign inquiries, lead generation sources, and conversion milestones.' : 'Manage, track, and convert traveler inquiries and sales prospects.'; ?></p>
             </div>
         </div>
         <div class="package-header-actions">
@@ -32,9 +38,11 @@ $initialAgentId    = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset
                     <i class="fi fi-rr-apps"></i> <span>Kanban</span>
                 </a>
             </div>
+            <?php if (!$isDigitalMarketing): ?>
             <a href="/dashboard/leads/add/" class="btn-add-pkg-v3" title="Add New Enquiry">
                 <i class="fi fi-rr-plus"></i> <span>Add New Lead</span>
             </a>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -80,7 +88,7 @@ $initialAgentId    = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" id="leadTableSearch" class="filter-search-input" placeholder="Search by name, mobile, email, subject..." autocomplete="off">
+                <input type="text" id="leadTableSearch" class="filter-search-input" placeholder="<?php echo $isDigitalMarketing ? 'Search by name, subject, source...' : 'Search by name, mobile, email, subject...'; ?>" autocomplete="off">
                 <button type="button" id="clearLeadSearchBtn" class="clear-search-btn" title="Clear search">✕</button>
             </div>
 
@@ -107,6 +115,7 @@ $initialAgentId    = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset
                     </select>
                 </div>
 
+                <?php if (!$isDigitalMarketing): ?>
                 <!-- Assigned Agent Filter (Select2) -->
                 <div class="leads-select-holder">
                     <select id="filterLeadAgent" class="leads-filter-select">
@@ -117,6 +126,7 @@ $initialAgentId    = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset
                         <?php endif; ?>
                     </select>
                 </div>
+                <?php endif; ?>
 
                 <!-- Source Filter (Select2) -->
                 <div class="leads-select-holder">
@@ -139,6 +149,7 @@ $initialAgentId    = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset
             </div>
         </div>
 
+        <?php if (!$isDigitalMarketing): ?>
         <!-- Bulk Action Floating Bar -->
         <div class="leads-bulk-toolbar is-hidden" id="leadsBulkToolbar">
             <div class="bulk-toolbar-left">
@@ -157,6 +168,7 @@ $initialAgentId    = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset
                 <button type="button" class="btn-v3-primary" id="btnApplyBulkAction">Apply</button>
             </div>
         </div>
+        <?php endif; ?>
 
         <!-- Data Table Wrap -->
         <div class="list-box">
@@ -167,15 +179,19 @@ $initialAgentId    = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset
                             <input type="checkbox" id="selectAllLeads" title="Select all leads on this page">
                         </th>
                         <th class="th-customer">Customer &amp; Details</th>
+                        <?php if (!$isDigitalMarketing): ?>
                         <th class="th-contact">Contact Info</th>
+                        <?php endif; ?>
                         <th class="th-subject">Requirement / Notes</th>
+                        <?php if (!$isDigitalMarketing): ?>
                         <th class="th-agent">Assigned Agent</th>
                         <th class="th-actions text-right">Actions</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody id="leadsTableBody">
                     <tr>
-                        <td colspan="6" class="table-loading-state">
+                        <td colspan="<?php echo $isDigitalMarketing ? '3' : '6'; ?>" class="table-loading-state">
                             <div class="table-loading-spinner"></div>
                             <span>Loading leads pipeline...</span>
                         </td>

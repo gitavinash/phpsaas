@@ -4,6 +4,11 @@
  * File: app/dashboard/v3/default/desktop/leads/kanban.php
  * Workspace Compliant: External CSS/JS, unified package-header-bar, pipeline switcher (List/Kanban), Add Lead CTA.
  */
+
+if (isset($site_access_type) && $site_access_type === 'digital_marketing') {
+    header("Location: /dashboard/integration/facebook/");
+    exit;
+}
 ?>
 <div class="package-page-wrapper leads-page-wrapper leads-kanban-page-wrapper" id="kanbanApp">
     <!-- Header Banner -->
@@ -23,7 +28,7 @@
                 <span class="kanban-search-icon">
                     <i class="fi fi-rr-search"></i>
                 </span>
-                <input type="text" class="kanban-search-input" id="kanbanSearchInput" placeholder="Search leads by name, phone, destination...">
+                <input type="text" class="kanban-search-input" id="kanbanSearchInput" placeholder="<?php echo (isset($site_access_type) && $site_access_type === 'digital_marketing') ? 'Search leads by name, destination...' : 'Search leads by name, phone, destination...'; ?>">
                 <button type="button" class="kanban-search-clear-btn" id="kanbanSearchClearBtn" title="Clear search">&times;</button>
             </div>
 
@@ -37,10 +42,12 @@
                 </a>
             </div>
 
+            <?php if (!isset($site_access_type) || $site_access_type !== 'digital_marketing'): ?>
             <!-- Primary Add Lead CTA Button -->
             <a href="/dashboard/leads/add/" class="btn-add-pkg-v3" title="Add New Lead">
                 <i class="fi fi-rr-plus"></i> <span>Add New Lead</span>
             </a>
+            <?php endif; ?>
         </div>
     </div>
 

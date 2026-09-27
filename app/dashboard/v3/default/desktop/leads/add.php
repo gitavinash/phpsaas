@@ -10,6 +10,11 @@ $siteId = defined('SITE_ID') ? intval(SITE_ID) : 0;
 $userRole = isset($site_access_type) ? strtolower($site_access_type) : 'agent';
 $currentUserId = defined('USER_ID') ? intval(USER_ID) : 0;
 
+if ($userRole === 'digital_marketing') {
+    header("Location: /dashboard/integration/facebook/");
+    exit;
+}
+
 // 1. Fetch Agents for assignment dropdown if admin or operations
 $agentsList = [];
 if ($userRole !== 'agent' && isset($connection) && $connection) {

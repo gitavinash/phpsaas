@@ -43,22 +43,34 @@
       $app.data("v3-leads-inited", true);
 
       // Determine user role from data attribute (set by PHP)
-      const role =
+      const role = String(
         $app.data("user-role") ||
-        (typeof siteAdminType !== "undefined" ? siteAdminType : "");
+        (typeof siteAdminType !== "undefined" ? siteAdminType : "")
+      ).toLowerCase().trim();
+      this.userRole = role;
+      this.isDigitalMarketing = (role === "digital_marketing");
       this.isAdmin =
         role === "administrator" ||
         role === "superadmin" ||
         role === "operator";
       $app
         .toggleClass("leads-admin-view", this.isAdmin)
-        .toggleClass("leads-agent-view", !this.isAdmin);
+        .toggleClass("leads-agent-view", !this.isAdmin)
+        .toggleClass("leads-digital-marketing-view", this.isDigitalMarketing);
 
       // Immediately apply column visibility to <thead> (before data loads)
-      if (!this.isAdmin) {
+      if (this.isDigitalMarketing) {
+        $(".leads-data-table th.th-contact, .leads-data-table th.col-contact").hide();
         $(".leads-data-table th.th-agent, .leads-data-table th.col-agent").hide();
+        $(".leads-data-table th.th-actions, .leads-data-table th.col-actions").hide();
+      } else if (!this.isAdmin) {
+        $(".leads-data-table th.th-contact, .leads-data-table th.col-contact").show();
+        $(".leads-data-table th.th-agent, .leads-data-table th.col-agent").hide();
+        $(".leads-data-table th.th-actions, .leads-data-table th.col-actions").show();
       } else {
+        $(".leads-data-table th.th-contact, .leads-data-table th.col-contact").show();
         $(".leads-data-table th.th-agent, .leads-data-table th.col-agent").show();
+        $(".leads-data-table th.th-actions, .leads-data-table th.col-actions").show();
       }
 
       this.selectedLeads.clear();
@@ -865,6 +877,15 @@
           }
         }
 
+        let customerNameHtml = `<span class="lead-primary-text">${displayName}</span>`;
+        if (!self.isDigitalMarketing) {
+          customerNameHtml = `
+            <a href="/dashboard/leads/view/?id=${lead.encoded_id}" class="lead-primary-text" title="View ${lead.name}">
+              ${displayName}
+            </a>
+          `;
+        }
+
         html += `
           <tr class="${isChecked ? "row-selected" : ""}" data-lead-id="${lead.id}">
             <td class="td-checkbox">
@@ -876,9 +897,7 @@
                 <div class="lead-avatar">${initials}</div>
                 <div class="lead-cell-meta">
                   <div class="lead-name-row">
-                    <a href="/dashboard/leads/view/?id=${lead.encoded_id}" class="lead-primary-text" title="View ${lead.name}">
-                      ${displayName}
-                    </a>
+                    ${customerNameHtml}
                     ${statusBadge}
                   </div>
                   <div class="lead-sub-meta">
@@ -890,6 +909,7 @@
               </div>
             </td>
 
+            ${!self.isDigitalMarketing ? `
             <td class="td-contact">
               <div class="lead-cell-meta">
                 <div class="lead-phone-line">
@@ -901,6 +921,7 @@
                 </div>
               </div>
             </td>
+            ` : ""}
 
             <td class="td-subject">
               <div class="lead-cell-meta">
@@ -913,6 +934,7 @@
               </div>
             </td>
 
+            ${!self.isDigitalMarketing ? `
             <td class="td-agent">
               <div class="lead-assign-wrap">
                 <i class="fi fi-rr-user lead-assign-icon"></i>
@@ -935,6 +957,7 @@
                 </a>
               </div>
             </td>
+            ` : ""}
           </tr>
         `;
       });
@@ -942,7 +965,7 @@
       $tbody.html(html);
 
       // Apply Select2 to inline agent dropdowns
-      if (typeof $.fn.select2 !== "undefined") {
+      if (typeof $.fn.select2 !== "undefined" && !self.isDigitalMarketing) {
         $tbody.find(".inline-agent-select").each(function () {
           if (!$(this).data("select2")) {
             $(this).select2({
@@ -955,11 +978,19 @@
         });
       }
 
-      // Hide/show agent column based on user role
-      if (self.isAdmin) {
-        $(".leads-data-table th.th-agent, .leads-data-table td.td-agent").show();
-      } else {
+      // Hide/show columns based on user role
+      if (self.isDigitalMarketing) {
+        $(".leads-data-table th.th-contact, .leads-data-table td.td-contact").hide();
         $(".leads-data-table th.th-agent, .leads-data-table td.td-agent").hide();
+        $(".leads-data-table th.th-actions, .leads-data-table td.td-actions").hide();
+      } else if (self.isAdmin) {
+        $(".leads-data-table th.th-contact, .leads-data-table td.td-contact").show();
+        $(".leads-data-table th.th-agent, .leads-data-table td.td-agent").show();
+        $(".leads-data-table th.th-actions, .leads-data-table td.td-actions").show();
+      } else {
+        $(".leads-data-table th.th-contact, .leads-data-table td.td-contact").show();
+        $(".leads-data-table th.th-agent, .leads-data-table td.td-agent").hide();
+        $(".leads-data-table th.th-actions, .leads-data-table td.td-actions").show();
       }
     },
 
