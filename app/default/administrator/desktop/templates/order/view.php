@@ -76,8 +76,24 @@ if (isset($id)) {
                     $orderStatusChipClass = 'badge-rescheduled';
                 }
 
+                $orderDeliveryDate = '';
+                if ($checkDeliveryDate = mysqli_query($connection, "SELECT order_meta_value FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id='{$id}' AND REPLACE(REPLACE(LOWER(order_meta_key), '_', ''), ' ', '')='deliverydate' AND order_site_id" . $siteId . " LIMIT 1")) {
+                    if ($deliveryDateRow = mysqli_fetch_assoc($checkDeliveryDate)) {
+                        $metaVal = trim((string)$deliveryDateRow['order_meta_value']);
+                        if (!empty($metaVal)) {
+                            $time = strtotime($metaVal);
+                            $orderDeliveryDate = ($time !== false) ? date('Y-m-d', $time) : $metaVal;
+                        }
+                    }
+                }
+                if (empty($orderDeliveryDate) && !empty($order_generate)) {
+                    $time = strtotime($order_generate);
+                    $orderDeliveryDate = ($time !== false) ? date('Y-m-d', $time) : '';
+                }
+
 ?>
-                <div class="order-info-ui" data-order-id="<?php echo $id ?>">
+                <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.css">
+                <div class="order-info-ui" data-order-id="<?php echo $id ?>" data-delivery-date="<?php echo htmlspecialchars($orderDeliveryDate, ENT_QUOTES); ?>">
 
                     <div class="premium-header">
                         <div class="premium-header-left">
@@ -598,7 +614,7 @@ if (isset($id)) {
                 </div>
 
                 <!-- Order Action Modal -->
-                <div id="orderActionModal" class="order-action-modal">
+                <div id="orderActionModal" class="order-action-modal" data-delivery-date="<?php echo htmlspecialchars($orderDeliveryDate, ENT_QUOTES); ?>">
                     <div class="order-action-modal-backdrop"></div>
                     <div class="order-action-modal-content">
                         <div class="order-action-modal-header">
@@ -700,6 +716,7 @@ if (isset($id)) {
 
                 <script>
                     window.allProductsList = <?php echo json_encode($productListData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+                    window.orderDeliveryDate = <?php echo json_encode($orderDeliveryDate); ?>;
                 </script>
                 <script src="<?php echo JS_LIBRARY; ?>order_view.js"></script>
 

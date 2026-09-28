@@ -66,7 +66,7 @@ $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboa
                 <li><a href="/dashboard/leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed Leads</a></li>
                 <li><a href="/dashboard/leads/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending / Quotations</a></li>
                 <li><a href="/dashboard/leads/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow-ups</a></li>
-                <li><a href="/dashboard/leads/list/?leadStatus=4"><i class="fi-rr-cross-circle"></i> Cancelled Leads</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=16"><i class="fi-rr-cross-circle"></i> Cancelled Leads</a></li>
             </ul>
         </div>
         <div class="bottom-menu">
@@ -76,7 +76,7 @@ $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboa
                 <li><a href="/dashboard/leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed Leads</a></li>
                 <li><a href="/dashboard/leads/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending / Quotations</a></li>
                 <li><a href="/dashboard/leads/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow-ups</a></li>
-                <li><a href="/dashboard/leads/list/?leadStatus=4"><i class="fi-rr-cross-circle"></i> Cancelled Leads</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=16"><i class="fi-rr-cross-circle"></i> Cancelled Leads</a></li>
             </ul>
         </div>
     </li>

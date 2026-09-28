@@ -38,7 +38,7 @@ $count = 0;
 $sql = "SELECT COUNT(*) AS cnt
         FROM {$tblPrefix}enquiry
         WHERE {$siteFilter}{$userFilter}{$daterangeFilter}
-          AND enquiry_status = 5";
+          AND enquiry_status = 16";
 
 if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
     if ($row = mysqli_fetch_assoc($res)) {

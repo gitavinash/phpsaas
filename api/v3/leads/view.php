@@ -63,30 +63,7 @@ if (!$leadRes || mysqli_num_rows($leadRes) === 0) {
 
 $lead = mysqli_fetch_assoc($leadRes);
 
-// Helper for status badge metadata
-function getLeadStatusMeta($status)
-{
-    switch ((int)$status) {
-        case 0:
-            return ['label' => 'Pending', 'class' => 'badge-fresh', 'color' => '#0284c7'];
-        case 1:
-            return ['label' => 'Confirmed', 'class' => 'badge-confirmed', 'color' => '#10b981'];
-        case 2:
-            return ['label' => 'Itinerary Sent', 'class' => 'badge-pending', 'color' => '#6366f1'];
-        case 3:
-            return ['label' => 'Follow-Up', 'class' => 'badge-followup', 'color' => '#f59e0b'];
-        case 4:
-            return ['label' => 'Cancelled / Lost', 'class' => 'badge-cancelled', 'color' => '#ef4444'];
-        case 5:
-            return ['label' => 'Duplicate', 'class' => 'badge-duplicate', 'color' => '#8b5cf6'];
-        case 6:
-            return ['label' => 'Payment Initiated', 'class' => 'badge-payment-initiated', 'color' => '#06b6d4'];
-        case 8:
-            return ['label' => 'Closed', 'class' => 'badge-closed', 'color' => '#475569'];
-        default:
-            return ['label' => 'Pending', 'class' => 'badge-fresh', 'color' => '#0284c7'];
-    }
-}
+require_once __DIR__ . '/status-config.php';
 
 $statusMeta = getLeadStatusMeta($lead['enquiry_status'] ?? 0);
 

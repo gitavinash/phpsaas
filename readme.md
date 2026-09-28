@@ -67,6 +67,53 @@ SMS configuration values are saved in the database.
 |    `6` | Payment initiated                          |
 |    `7` | Sent for sales request                     |
 |    `8` | Upay done                                  |
+|    `9` | Itinerary sent                             |
+|   `10` | Quotation approved                         |
+|   `11` | Voucher issued                             |
+|   `12` | Payment received                           |
+|   `13` | Trip in progress                           |
+|   `14` | Trip completed                             |
+|   `15` | Closed                                     |
+|   `16` | Cancelled                                  |
+|   `17` | Lost                                       |
+|   `18` | Payment refund                             |
+
+### Aleya Lead Lifecycle Flow
+
+Each status has a unique identifier without overriding or combining existing statuses.
+
+```text
+Initiate (`0`)
+    ↓  (Assigned to Agent)
+Pending because it is assigned to an agent (`2`)
+    ↓  (Itinerary created and dispatched)
+Itinerary sent (`9`)
+    ↓  (Negotiation, date/destination adjustments)
+Follow-up (`3`)
+    ↓  (Quotation approved by traveler)
+Quotation approved (`10`)
+    ↓  (Payment link generated & sent)
+Payment initiated (`6`)
+    ↓  (Payment completed / verified)
+Payment received (`12`) / Upay done (`8`) / Success (`1`)
+    ↓  (Hotel, transport, and flight vouchers generated)
+Voucher issued (`11`)
+    ↓  (Travel commences)
+Trip in progress (`13`)
+    ↓  (Traveler returns safely)
+Trip completed (`14`)
+    ↓  (Final feedback & archiving)
+Closed (`15`)
+```
+
+### Exception & Drop-Off Flows
+
+- **Failed (`4`)**: Ingestion failure or uncontactable / invalid lead inquiry.
+- **Duplicate (`5`)**: Repeated inquiry submitted by the same client.
+- **Sent for Sales Request (`7`)**: Custom/complex inquiry forwarded to the specialized sales team.
+- **Cancelled (`16`)**: Booking or trip cancelled by traveler or agency.
+- **Lost (`17`)**: Traveler dropped out due to budget or selected a competitor.
+- **Payment Refund (`18`)**: Payment refunded back to traveler after cancellation.
 
 ---
 

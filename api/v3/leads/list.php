@@ -108,29 +108,7 @@ function cleanLeadSource($src)
     return ucfirst($c);
 }
 
-function getLeadStatusMeta($status)
-{
-    switch ((int)$status) {
-        case 0:
-            return ['label' => 'Pending', 'class' => 'status-fresh', 'icon' => 'fi-rr-time-fast'];
-        case 1:
-            return ['label' => 'Confirmed', 'class' => 'status-confirmed', 'icon' => 'fi-rr-check-circle'];
-        case 2:
-            return ['label' => 'Itinerary Sent', 'class' => 'status-pending', 'icon' => 'fi-rr-paper-plane'];
-        case 3:
-            return ['label' => 'Follow Up', 'class' => 'status-followup', 'icon' => 'fi-rr-phone-call'];
-        case 4:
-            return ['label' => 'Cancelled / Lost', 'class' => 'status-cancelled', 'icon' => 'fi-rr-cross-circle'];
-        case 5:
-            return ['label' => 'Duplicate', 'class' => 'status-duplicate', 'icon' => 'fi-rr-copy'];
-        case 6:
-            return ['label' => 'Payment Initiated', 'class' => 'status-payment', 'icon' => 'fi-rr-credit-card'];
-        case 8:
-            return ['label' => 'Closed', 'class' => 'status-closed', 'icon' => 'fi-rr-lock'];
-        default:
-            return ['label' => 'Pending', 'class' => 'status-fresh', 'icon' => 'fi-rr-time-fast'];
-    }
-}
+require_once __DIR__ . '/status-config.php';
 
 function getRelativeTime($timestamp)
 {
@@ -158,10 +136,10 @@ $stats = [
 $statsQuery = "SELECT 
     COUNT(*) AS total_count,
     SUM(CASE WHEN e.enquiry_status = 0 THEN 1 ELSE 0 END) AS fresh_count,
-    SUM(CASE WHEN e.enquiry_status = 2 THEN 1 ELSE 0 END) AS pending_count,
+    SUM(CASE WHEN e.enquiry_status IN (2, 9, 6) THEN 1 ELSE 0 END) AS pending_count,
     SUM(CASE WHEN e.enquiry_status = 3 THEN 1 ELSE 0 END) AS followup_count,
-    SUM(CASE WHEN e.enquiry_status = 1 THEN 1 ELSE 0 END) AS confirmed_count,
-    SUM(CASE WHEN e.enquiry_status IN (4, 5, 8) THEN 1 ELSE 0 END) AS closed_count
+    SUM(CASE WHEN e.enquiry_status IN (1, 8, 10, 11, 12, 13, 14) THEN 1 ELSE 0 END) AS confirmed_count,
+    SUM(CASE WHEN e.enquiry_status IN (4, 5, 7, 15, 16, 17, 18) THEN 1 ELSE 0 END) AS closed_count
 FROM {$tblPrefix}enquiry e
 WHERE {$siteFilter}{$userFilter}{$daterangeFilter}";
 
@@ -256,6 +234,7 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
             'status_label'     => $statusMeta['label'],
             'status_class'     => $statusMeta['class'],
             'status_icon'      => $statusMeta['icon'],
+            'status_color'     => $statusMeta['color'],
             'time'             => date('d M Y, h:i A', strtotime($row['enquiry_time'])),
             'time_relative'    => getRelativeTime($row['enquiry_time']),
             'agent_id'         => $agentId,

@@ -85,14 +85,16 @@ function cleanLeadSource($src)
     return ucfirst($c);
 }
 
+require_once __DIR__ . '/status-config.php';
+
 // Case 1: Fetching single column status (e.g. Load More pagination)
 if (isset($_GET['status']) && $_GET['status'] !== '') {
     $targetStatus = intval($_GET['status']);
     $offset = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;
     $limit  = isset($_GET['limit'])  ? min(max(1, intval($_GET['limit'])), 50) : 10;
 
-    // Safety check: Never return close / cancelled / lost leads (4, 5, 6, 7, 8) in kanban
-    if (!in_array($targetStatus, [0, 1, 2, 3], true) || in_array($targetStatus, [4, 5, 6, 7, 8], true)) {
+    // Allowed active kanban columns: 0 (Initiate), 2 (Pending), 3 (Follow-up), 1 (Success)
+    if (!in_array($targetStatus, [0, 1, 2, 3], true)) {
         echo json_encode([
             'status' => 200,
             'data'   => [],
@@ -108,7 +110,7 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
             FROM {$tblPrefix}enquiry
             WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
               AND enquiry_status = {$targetStatus}
-              AND enquiry_status NOT IN (4, 5, 6, 7, 8)
+              AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
             ORDER BY enquiry_time DESC
             LIMIT {$offset}, {$limit}";
 
@@ -116,26 +118,30 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
     if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
         while ($row = mysqli_fetch_assoc($res)) {
             $stInt = (int)$row['enquiry_status'];
-            if (in_array($stInt, [4, 5, 6, 7, 8], true) || !in_array($stInt, [0, 1, 2, 3], true)) {
+            if (!in_array($stInt, [0, 1, 2, 3], true)) {
                 continue;
             }
+            $meta = getLeadStatusMeta($stInt);
             $fullName = trim(($row['enquiry_first_name'] ?? '') . ' ' . ($row['enquiry_last_name'] ?? ''));
             if (empty($fullName)) {
                 $fullName = 'Lead #' . $row['enquiry_id'];
             }
             $isDigMkt = ($accessType === 'digital_marketing');
             $leads[] = [
-                'id'         => (int)$row['enquiry_id'],
-                'encoded_id' => base64_encode($row['enquiry_id']),
-                'name'       => $fullName,
-                'first_name' => $row['enquiry_first_name'] ?? '',
-                'last_name'  => $row['enquiry_last_name'] ?? '',
-                'mobile'     => ($isDigMkt || empty($row['enquiry_mobile'])) ? '' : $row['enquiry_mobile'],
-                'email'      => ($isDigMkt || empty($row['enquiry_email']))  ? '' : $row['enquiry_email'],
-                'subject'    => !empty($row['enquiry_subject']) ? $row['enquiry_subject']       : 'General Enquiry',
-                'source'     => cleanLeadSource($row['enquiry_source']),
-                'time'       => date('d M, h:i A', strtotime($row['enquiry_time'])),
-                'status'     => $stInt,
+                'id'           => (int)$row['enquiry_id'],
+                'encoded_id'   => base64_encode($row['enquiry_id']),
+                'name'         => $fullName,
+                'first_name'   => $row['enquiry_first_name'] ?? '',
+                'last_name'    => $row['enquiry_last_name'] ?? '',
+                'mobile'       => ($isDigMkt || empty($row['enquiry_mobile'])) ? '' : $row['enquiry_mobile'],
+                'email'        => ($isDigMkt || empty($row['enquiry_email']))  ? '' : $row['enquiry_email'],
+                'subject'      => !empty($row['enquiry_subject']) ? $row['enquiry_subject'] : 'General Enquiry',
+                'source'       => cleanLeadSource($row['enquiry_source']),
+                'time'         => date('d M, h:i A', strtotime($row['enquiry_time'])),
+                'status'       => $stInt,
+                'status_label' => $meta['label'],
+                'status_class' => $meta['class'],
+                'status_color' => $meta['color'],
             ];
         }
     }
@@ -161,16 +167,17 @@ $sql = "SELECT enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_mobile
         FROM {$tblPrefix}enquiry
         WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
           AND enquiry_status IN (0, 1, 2, 3)
-          AND enquiry_status NOT IN (4, 5, 6, 7, 8)
+          AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
         ORDER BY enquiry_time DESC
         {$limitClause}";
 
 if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
     while ($row = mysqli_fetch_assoc($res)) {
         $stInt = (int)$row['enquiry_status'];
-        if (in_array($stInt, [4, 5, 6, 7, 8], true) || !in_array($stInt, [0, 1, 2, 3], true)) {
+        if (!in_array($stInt, [0, 1, 2, 3], true)) {
             continue;
         }
+        $meta = getLeadStatusMeta($stInt);
         $st   = (string)$stInt;
         $fullName = trim(($row['enquiry_first_name'] ?? '') . ' ' . ($row['enquiry_last_name'] ?? ''));
         if (empty($fullName)) {
@@ -187,8 +194,11 @@ if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql)
             'email'      => ($isDigMkt || empty($row['enquiry_email']))  ? '' : $row['enquiry_email'],
             'subject'    => !empty($row['enquiry_subject']) ? $row['enquiry_subject']       : 'General Enquiry',
             'source'     => cleanLeadSource($row['enquiry_source']),
-            'time'       => date('d M, h:i A', strtotime($row['enquiry_time'])),
-            'status'     => $stInt,
+            'time'         => date('d M, h:i A', strtotime($row['enquiry_time'])),
+            'status'       => $stInt,
+            'status_label' => $meta['label'],
+            'status_class' => $meta['class'],
+            'status_color' => $meta['color'],
         ];
         $flatLeads[] = $item;
         if (isset($grouped[$st])) {

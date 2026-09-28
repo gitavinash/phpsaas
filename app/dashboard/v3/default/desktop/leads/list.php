@@ -55,24 +55,24 @@ if ($isDigitalMarketing) {
                 <h3 id="statTotalLeads">-</h3>
             </div>
         </div>
-        <div class="pkg-mini-kpi sky lead-kpi-clickable lead-kpi-filter-btn" data-status="0" title="Click to filter new inquiries">
+        <div class="pkg-mini-kpi sky lead-kpi-clickable lead-kpi-filter-btn" data-status="0" title="Click to filter initiated inquiries">
             <div class="kpi-icon"><i class="fi fi-rr-sparkles"></i></div>
             <div class="kpi-meta">
-                <p>New Inquiries</p>
+                <p>Initiate</p>
                 <h3 id="statFreshLeads">-</h3>
             </div>
         </div>
-        <div class="pkg-mini-kpi amber lead-kpi-clickable lead-kpi-filter-btn" data-status="2" title="Click to filter itinerary sent">
-            <div class="kpi-icon"><i class="fi fi-rr-paper-plane"></i></div>
+        <div class="pkg-mini-kpi amber lead-kpi-clickable lead-kpi-filter-btn" data-status="2" title="Click to filter pending assigned leads">
+            <div class="kpi-icon"><i class="fi fi-rr-user-time"></i></div>
             <div class="kpi-meta">
-                <p>Itinerary Sent</p>
+                <p>Pending (Assigned)</p>
                 <h3 id="statPendingLeads">-</h3>
             </div>
         </div>
-        <div class="pkg-mini-kpi emerald lead-kpi-clickable lead-kpi-filter-btn" data-status="1" title="Click to filter confirmed conversions">
+        <div class="pkg-mini-kpi emerald lead-kpi-clickable lead-kpi-filter-btn" data-status="1" title="Click to filter success conversions">
             <div class="kpi-icon"><i class="fi fi-rr-check-circle"></i></div>
             <div class="kpi-meta">
-                <p>Confirmed Sales</p>
+                <p>Success</p>
                 <h3 id="statConfirmedLeads">-</h3>
             </div>
         </div>
@@ -104,14 +104,29 @@ if ($isDigitalMarketing) {
                 <div class="leads-select-holder">
                     <select id="filterLeadStatus" class="leads-filter-select">
                         <option value="all" <?php echo ($initialLeadStatus === 'all' ? 'selected' : ''); ?>>All Statuses</option>
-                        <option value="0" <?php echo ($initialLeadStatus === '0' ? 'selected' : ''); ?>>New Inquiries</option>
-                        <option value="2" <?php echo ($initialLeadStatus === '2' ? 'selected' : ''); ?>>Itinerary Sent</option>
-                        <option value="3" <?php echo ($initialLeadStatus === '3' ? 'selected' : ''); ?>>Follow-Up</option>
-                        <option value="1" <?php echo ($initialLeadStatus === '1' ? 'selected' : ''); ?>>Confirmed</option>
-                        <option value="6" <?php echo ($initialLeadStatus === '6' ? 'selected' : ''); ?>>Payment Initiated</option>
-                        <option value="4" <?php echo ($initialLeadStatus === '4' ? 'selected' : ''); ?>>Cancelled / Lost</option>
-                        <option value="5" <?php echo ($initialLeadStatus === '5' ? 'selected' : ''); ?>>Duplicate</option>
-                        <option value="8" <?php echo ($initialLeadStatus === '8' ? 'selected' : ''); ?>>Closed</option>
+                        <optgroup label="Lifecycle Flow">
+                            <option value="0" <?php echo ($initialLeadStatus === '0' ? 'selected' : ''); ?>>0 — Initiate</option>
+                            <option value="2" <?php echo ($initialLeadStatus === '2' ? 'selected' : ''); ?>>2 — Pending (Assigned to Agent)</option>
+                            <option value="9" <?php echo ($initialLeadStatus === '9' ? 'selected' : ''); ?>>9 — Itinerary Sent</option>
+                            <option value="3" <?php echo ($initialLeadStatus === '3' ? 'selected' : ''); ?>>3 — Follow-up</option>
+                            <option value="10" <?php echo ($initialLeadStatus === '10' ? 'selected' : ''); ?>>10 — Quotation Approved</option>
+                            <option value="6" <?php echo ($initialLeadStatus === '6' ? 'selected' : ''); ?>>6 — Payment Initiated</option>
+                            <option value="12" <?php echo ($initialLeadStatus === '12' ? 'selected' : ''); ?>>12 — Payment Received</option>
+                            <option value="8" <?php echo ($initialLeadStatus === '8' ? 'selected' : ''); ?>>8 — Upay Done</option>
+                            <option value="1" <?php echo ($initialLeadStatus === '1' ? 'selected' : ''); ?>>1 — Success</option>
+                            <option value="11" <?php echo ($initialLeadStatus === '11' ? 'selected' : ''); ?>>11 — Voucher Issued</option>
+                            <option value="13" <?php echo ($initialLeadStatus === '13' ? 'selected' : ''); ?>>13 — Trip in Progress</option>
+                            <option value="14" <?php echo ($initialLeadStatus === '14' ? 'selected' : ''); ?>>14 — Trip Completed</option>
+                            <option value="15" <?php echo ($initialLeadStatus === '15' ? 'selected' : ''); ?>>15 — Closed</option>
+                        </optgroup>
+                        <optgroup label="Exception & Drop-Off Flows">
+                            <option value="4" <?php echo ($initialLeadStatus === '4' ? 'selected' : ''); ?>>4 — Failed</option>
+                            <option value="5" <?php echo ($initialLeadStatus === '5' ? 'selected' : ''); ?>>5 — Duplicate</option>
+                            <option value="7" <?php echo ($initialLeadStatus === '7' ? 'selected' : ''); ?>>7 — Sent for Sales Request</option>
+                            <option value="16" <?php echo ($initialLeadStatus === '16' ? 'selected' : ''); ?>>16 — Cancelled</option>
+                            <option value="17" <?php echo ($initialLeadStatus === '17' ? 'selected' : ''); ?>>17 — Lost</option>
+                            <option value="18" <?php echo ($initialLeadStatus === '18' ? 'selected' : ''); ?>>18 — Payment Refund</option>
+                        </optgroup>
                     </select>
                 </div>
 

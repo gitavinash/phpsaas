@@ -724,15 +724,25 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                     <i class="fi fi-rr-cross-circle"></i>
                 </div>
                 <div class="v3-modal-title-wrap">
-                    <h4 class="v3-modal-title">Close or Cancel Lead</h4>
-                    <span class="v3-modal-subtitle">Specify reason for closing or archiving lead</span>
+                    <h4 class="v3-modal-title">Close, Cancel, or Drop Lead</h4>
+                    <span class="v3-modal-subtitle">Specify outcome status and reason for archiving lead</span>
                 </div>
             </div>
             <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
         </div>
         <div class="v3-modal-body">
             <div class="v3-modal-form-group">
-                <label class="v3-modal-label">Reason for Closing *</label>
+                <label class="v3-modal-label">Outcome / Target Status *</label>
+                <select id="modalCloseStatus" class="leads-filter-select v3-select-full">
+                    <option value="15" selected>Closed (15)</option>
+                    <option value="16">Cancelled (16)</option>
+                    <option value="17">Lost (17)</option>
+                    <option value="4">Failed (4)</option>
+                    <option value="18">Payment Refund (18)</option>
+                </select>
+            </div>
+            <div class="v3-modal-form-group">
+                <label class="v3-modal-label">Reason *</label>
                 <select id="modalCloseReason" class="leads-filter-select v3-select-full">
                     <option value="">Select reason</option>
                     <option value="Not interested">Not Interested</option>
@@ -747,12 +757,12 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
             </div>
             <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Final Conclusion Notes</label>
-                <textarea id="modalCloseMsg" class="v3-modal-textarea" placeholder="Provide additional details on why this lead is being closed..."></textarea>
+                <textarea id="modalCloseMsg" class="v3-modal-textarea" placeholder="Provide additional details on why this lead is being closed or archived..."></textarea>
             </div>
         </div>
         <div class="v3-modal-footer">
             <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
-            <button type="button" class="btn-v3-action btn-red" id="btnSubmitModalCloseLead">Close Lead</button>
+            <button type="button" class="btn-v3-action btn-red" id="btnSubmitModalCloseLead">Confirm &amp; Archive</button>
         </div>
     </div>
 </div>

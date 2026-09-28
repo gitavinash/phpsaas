@@ -5,7 +5,7 @@
         $userFilter="?agentId={$user_id}&";
     }
 
-    $url="/dashboard/leads/list/{$userFilter}&leadStatus=duplicate&daterange={$startDate} - {$endDate}";
+    $url="/dashboard/leads/list/{$userFilter}leadStatus=5&daterange={$startDate} - {$endDate}";
 ?>
 <a href="<?php echo $url ?>">
     <div class="widget-info kpi-card kpi-rose" id="totalDuplicateLeads">

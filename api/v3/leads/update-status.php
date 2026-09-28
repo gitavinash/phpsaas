@@ -121,19 +121,12 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawStatus !== null && is_numeri
         }
 
         // 5. Log activity into enquiry_notes
-        $statusLabels = [
-            0 => 'Fresh',
-            1 => 'Confirmed (Sale)',
-            2 => 'Pending',
-            3 => 'Follow-Up',
-            4 => 'Closed / Cancelled',
-            5 => 'Lost',
-            8 => 'Duplicate'
-        ];
-        $statusLabel = $statusLabels[$newStatus] ?? ('Status ' . $newStatus);
+        require_once __DIR__ . '/status-config.php';
+        $statusMeta = getLeadStatusMeta($newStatus);
+        $statusLabel = $statusMeta['label'];
 
         $noteText = ($newStatus === 1)
-            ? "Lead converted to Confirmed Sale by {$currentUserName}"
+            ? "Lead converted to Confirmed Sale (Success) by {$currentUserName}"
             : "Lead status updated to {$statusLabel} by {$currentUserName}";
 
         $metaTypeEsc = 'status';
@@ -437,10 +430,11 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawStatus !== null && is_numeri
             'status'      => 200,
             'status_code' => 200,
             'success'     => true,
-            'msg'         => ($newStatus === 1) ? 'Lead converted to Confirmed Sale successfully!' : 'Lead status updated successfully',
-            'message'     => ($newStatus === 1) ? 'Lead converted to Confirmed Sale successfully!' : 'Lead status updated successfully',
+            'msg'         => ($newStatus === 1) ? 'Lead converted to Confirmed Sale (Success) successfully!' : 'Lead status updated successfully',
+            'message'     => ($newStatus === 1) ? 'Lead converted to Confirmed Sale (Success) successfully!' : 'Lead status updated successfully',
             'lead_id'     => $realId,
             'new_status'  => $newStatus,
+            'status_meta' => $statusMeta,
             'alerts'      => $alerts,
             'notification' => [
                 'title' => ($newStatus === 1) ? "🎉 Lead Confirmed: {$custName}" : "Status Updated",

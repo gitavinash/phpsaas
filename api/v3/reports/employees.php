@@ -187,10 +187,14 @@ foreach ($employeesRaw as $uid => $emp) {
 
     $stats = $leadsStatsMap[$uid] ?? [];
 
-    $confirmedCount = (int)($stats[1] ?? 0); // 1 = Confirmed / Won
-    $followupCount  = (int)($stats[3] ?? 0); // 3 = Follow-up
-    $pendingCount   = (int)($stats[2] ?? 0) + (int)($stats[0] ?? 0); // 2 = In-Progress / Pending, 0 = Fresh
-    $lostCount      = (int)($stats[4] ?? 0) + (int)($stats[5] ?? 0) + (int)($stats[8] ?? 0); // 4 = Cancelled / Lost, 5 = Spam, 8 = Closed
+    // Success & Converted: 1 (Success), 8 (Upay done), 10 (Quotation approved), 11 (Voucher issued), 12 (Payment received), 13 (Trip in progress), 14 (Trip completed)
+    $confirmedCount = (int)($stats[1] ?? 0) + (int)($stats[8] ?? 0) + (int)($stats[10] ?? 0) + (int)($stats[11] ?? 0) + (int)($stats[12] ?? 0) + (int)($stats[13] ?? 0) + (int)($stats[14] ?? 0);
+    // Follow-up: 3
+    $followupCount  = (int)($stats[3] ?? 0);
+    // In-progress & Pipeline: 0 (Initiate), 2 (Pending assigned), 6 (Payment initiated), 7 (Sales request), 9 (Itinerary sent)
+    $pendingCount   = (int)($stats[0] ?? 0) + (int)($stats[2] ?? 0) + (int)($stats[6] ?? 0) + (int)($stats[7] ?? 0) + (int)($stats[9] ?? 0);
+    // Drop-off / Lost: 4 (Failed), 5 (Duplicate), 15 (Closed), 16 (Cancelled), 17 (Lost), 18 (Payment refund)
+    $lostCount      = (int)($stats[4] ?? 0) + (int)($stats[5] ?? 0) + (int)($stats[15] ?? 0) + (int)($stats[16] ?? 0) + (int)($stats[17] ?? 0) + (int)($stats[18] ?? 0);
     $totalEmpLeads  = array_sum($stats);
 
     $conversionRate = $totalEmpLeads > 0 ? round(($confirmedCount / $totalEmpLeads) * 100, 1) : 0.0;
@@ -256,7 +260,7 @@ foreach ($employeesRaw as $uid => $emp) {
             'confirmed' => "/dashboard/leads/list/?agentId={$uid}&leadStatus=1&daterange=" . urlencode($urlDateParam),
             'followup'  => "/dashboard/leads/list/?agentId={$uid}&leadStatus=3&daterange=" . urlencode($urlDateParam),
             'pending'   => "/dashboard/leads/list/?agentId={$uid}&leadStatus=2&daterange=" . urlencode($urlDateParam),
-            'lost'      => "/dashboard/leads/list/?agentId={$uid}&leadStatus=4&daterange=" . urlencode($urlDateParam)
+            'lost'      => "/dashboard/leads/list/?agentId={$uid}&leadStatus=17&daterange=" . urlencode($urlDateParam)
         ]
     ];
 }

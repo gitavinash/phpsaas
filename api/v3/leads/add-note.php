@@ -125,7 +125,11 @@ if (!empty($followupTime)) {
     $updateFields[] = "enquiry_status = 3"; // Follow-Up status
     $updateFields[] = "enquiry_followup = '{$fTimeFormatted}'";
 } elseif ($isFinalNote) {
-    $updateFields[] = "enquiry_status = 4"; // Closed / Cancelled
+    $closeStatus = isset($_POST['close_status']) ? (int)$_POST['close_status'] : (isset($_POST['status']) ? (int)$_POST['status'] : 15);
+    if (!in_array($closeStatus, [4, 5, 15, 16, 17, 18], true)) {
+        $closeStatus = 15; // 15 = Closed
+    }
+    $updateFields[] = "enquiry_status = {$closeStatus}";
 }
 
 if (!empty($updateFields)) {

@@ -57,13 +57,24 @@ if (isset($connection) && $connection && ($res = mysqli_query($connection, $sqlK
     while ($row = mysqli_fetch_assoc($res)) {
         $cnt = intval($row['count']);
         $kpis['totalLeads'] += $cnt;
-        switch (intval($row['enquiry_status'])) {
-            case 0: $kpis['freshLeads']     = $cnt; break;
-            case 1: $kpis['confirmedLeads'] = $cnt; break;
-            case 2: $kpis['pendingLeads']   = $cnt; break;
-            case 3: $kpis['followupLeads']  = $cnt; break;
-            case 4: $kpis['duplicateLeads'] = $cnt; break;
-            case 5: $kpis['cancelLeads']    = $cnt; break;
+        $stVal = intval($row['enquiry_status']);
+        switch ($stVal) {
+            case 0: $kpis['freshLeads']     += $cnt; break;
+            case 1:
+            case 8:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+                $kpis['confirmedLeads'] += $cnt; break;
+            case 2:
+            case 6:
+            case 9:
+                $kpis['pendingLeads']   += $cnt; break;
+            case 3: $kpis['followupLeads']  += $cnt; break;
+            case 5: $kpis['duplicateLeads'] += $cnt; break;
+            case 16: $kpis['cancelLeads']   += $cnt; break;
         }
     }
 }
@@ -190,14 +201,14 @@ $sqlKanban = "SELECT enquiry_id, enquiry_first_name AS name, enquiry_mobile,
               FROM {$tblPrefix}enquiry
               WHERE {$siteFilter}{$userFilter}
                 AND enquiry_status IN (0, 1, 2, 3)
-                AND enquiry_status NOT IN (4, 5, 8)
+                AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
               ORDER BY enquiry_time DESC
               LIMIT 150";
 
 if (isset($connection) && $connection && ($resKanban = mysqli_query($connection, $sqlKanban))) {
     while ($row = mysqli_fetch_assoc($resKanban)) {
         $stInt = (int)$row['enquiry_status'];
-        if (in_array($stInt, [4, 5, 8], true) || !in_array($stInt, [0, 1, 2, 3], true)) {
+        if (in_array($stInt, [4, 5, 7, 15, 16, 17, 18], true) || !in_array($stInt, [0, 1, 2, 3], true)) {
             continue;
         }
         $st   = (string)$stInt;

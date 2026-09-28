@@ -5,7 +5,7 @@
         $userFilter="?agentId={$user_id}&";
     }
 
-    $url="/dashboard/leads/list/{$userFilter}leadStatus=4&daterange={$startDate} - {$endDate}";
+    $url="/dashboard/leads/list/{$userFilter}leadStatus=16&daterange={$startDate} - {$endDate}";
 ?>
 <a href="<?php echo $url ?>">
     <div class="widget-info kpi-card kpi-rose" id="totalCancelLeads">

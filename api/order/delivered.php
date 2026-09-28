@@ -28,6 +28,44 @@ if (!$checkOrder || mysqli_num_rows($checkOrder) === 0) {
     exit;
 }
 
+// Check delivery date for photo requirement
+$deliveryDate = '';
+$deliveryDateQuery = mysqli_query($connection, "SELECT order_meta_value FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id = '{$idEsc}' AND REPLACE(REPLACE(LOWER(order_meta_key), '_', ''), ' ', '') = 'deliverydate' LIMIT 1");
+if ($deliveryDateQuery && mysqli_num_rows($deliveryDateQuery) > 0) {
+    $metaRow = mysqli_fetch_assoc($deliveryDateQuery);
+    $metaVal = trim((string)($metaRow['order_meta_value'] ?? ''));
+    if (!empty($metaVal)) {
+        $time = strtotime($metaVal);
+        $deliveryDate = ($time !== false) ? date('Y-m-d', $time) : $metaVal;
+    }
+}
+if (empty($deliveryDate)) {
+    $genQuery = mysqli_query($connection, "SELECT order_delivery_date FROM " . TABLE_PREFIX . "order_generate WHERE order_generate_order_id = '{$idEsc}' LIMIT 1");
+    if ($genQuery && mysqli_num_rows($genQuery) > 0) {
+        $genRow = mysqli_fetch_assoc($genQuery);
+        $genVal = trim((string)($genRow['order_delivery_date'] ?? ''));
+        if (!empty($genVal)) {
+            $time = strtotime($genVal);
+            $deliveryDate = ($time !== false) ? date('Y-m-d', $time) : '';
+        }
+    }
+}
+
+// Condition: If order delivery date is today then photo upload is required else not required for past dates delivery.
+$todayStr = date('Y-m-d');
+$isPhotoRequired = true;
+if (!empty($deliveryDate) && $deliveryDate < $todayStr) {
+    $isPhotoRequired = false;
+}
+
+$fileInput = $_FILES['actionPhoto'] ?? $_FILES['photo'] ?? null;
+$hasPhotoFile = ($fileInput && !empty($fileInput['name']) && $fileInput['error'] === UPLOAD_ERR_OK);
+
+if ($isPhotoRequired && !$hasPhotoFile) {
+    echo json_encode(['status' => 'error', 'msg' => 'Delivery photo is required for today\'s delivery.']);
+    exit;
+}
+
 // Update order status to 6 (Delivered)
 $updateOrder = mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_status = 6 WHERE order_id = '{$idEsc}'");
 
