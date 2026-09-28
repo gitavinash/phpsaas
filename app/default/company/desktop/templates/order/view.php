@@ -24,7 +24,7 @@ if (isset($id)) {
             );
         }
 
-        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_vendor_id, order_product_qty, order_currency, order_product_price, order__charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol FROM isw_order LEFT JOIN isw_address ON order_address_id=address_id LEFT JOIN isw_user ON order_user_id=user_id LEFT JOIN isw_profile ON profile_user_id=user_id LEFT JOIN isw_city ON city_id=address_city_id LEFT JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
+        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_vendor_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol FROM isw_order LEFT JOIN isw_address ON order_address_id=address_id LEFT JOIN isw_user ON order_user_id=user_id LEFT JOIN isw_profile ON profile_user_id=user_id LEFT JOIN isw_city ON city_id=address_city_id LEFT JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
 
         $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id AND product_type='product' AND product_site_id" . $siteId;
         $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=order_product_id AND inventory_type='product' AND inventory_site_id" . $siteId;
@@ -69,6 +69,7 @@ if (isset($id)) {
                 }
 
 ?>
+                <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.css">
                 <div class="order-info-ui" data-order-id="<?php echo $id ?>">
 
                     <div class="premium-header">
@@ -303,15 +304,29 @@ if (isset($id)) {
                                             if (mysqli_num_rows($orderMeta) != 0) {
                                                 while ($orderMetaData = mysqli_fetch_assoc($orderMeta)) {
                                                     extract($orderMetaData);
-                                                    if ($order_meta_key == 'message') { ?>
+                                                    $cleanMetaKey = strtolower(trim(str_replace(['_', ' '], '', (string)$order_meta_key)));
+                                                    $isPhoto = ($cleanMetaKey == 'deliveryphoto' || strpos($cleanMetaKey, 'photo') !== false || strpos($cleanMetaKey, 'image') !== false || preg_match('/\.(jpg|jpeg|png|webp|gif)$/i', (string)$order_meta_value));
+
+                                                    if ($isPhoto) {
+                                                        if (!empty($order_meta_value)) { ?>
+                                                            <div class="premium-form-group" style="margin-bottom: 16px;">
+                                                                <label><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $order_meta_key)), ENT_QUOTES); ?></label>
+                                                                <div class="delivery-photo-wrapper">
+                                                                    <a href="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" target="_blank" rel="noopener noreferrer" class="delivery-photo-link" title="Click to view full image">
+                                                                        <img src="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" alt="Delivery Photo" class="delivery-photo-img">
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        <?php }
+                                                    } elseif ($cleanMetaKey == 'message') { ?>
                                                         <div class="premium-form-group" style="margin-bottom: 16px;">
-                                                            <label><?php echo ucwords(str_replace('_', ' ', $order_meta_key)) ?></label>
-                                                            <textarea class="premium-form-control" readonly><?php echo $order_meta_value ?></textarea>
+                                                            <label><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $order_meta_key)), ENT_QUOTES); ?></label>
+                                                            <textarea class="premium-form-control" readonly><?php echo htmlspecialchars($order_meta_value ?? '', ENT_QUOTES); ?></textarea>
                                                         </div>
                                                     <?php } else { ?>
                                                         <div class="premium-form-group" style="margin-bottom: 16px;">
-                                                            <label><?php echo ucwords(str_replace('_', ' ', $order_meta_key)) ?></label>
-                                                            <input type="text" class="premium-form-control" value="<?php echo $order_meta_value ?>" readonly>
+                                                            <label><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $order_meta_key)), ENT_QUOTES); ?></label>
+                                                            <input type="text" class="premium-form-control" value="<?php echo htmlspecialchars($order_meta_value ?? '', ENT_QUOTES); ?>" readonly>
                                                         </div>
                                         <?php }
                                                 }

@@ -555,13 +555,13 @@ if (isset($id)) {
                                                         <div class="premium-form-group" style="margin-bottom: 16px;">
                                                             <label><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $order_meta_key)), ENT_QUOTES); ?></label>
                                                             <?php if (!empty($order_meta_value)) { ?>
-                                                                <div class="delivery-photo-wrapper" style="margin-top: 6px;">
-                                                                    <a href="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" target="_blank" title="Click to view full image">
-                                                                        <img src="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" alt="Delivery Photo" style="max-width: 220px; max-height: 220px; border-radius: 10px; border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08); display: block; object-fit: cover;">
+                                                                <div class="delivery-photo-wrapper">
+                                                                    <a href="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" target="_blank" rel="noopener noreferrer" class="delivery-photo-link" title="Click to view full image">
+                                                                        <img src="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" alt="Delivery Photo" class="delivery-photo-img">
                                                                     </a>
                                                                 </div>
                                                             <?php } else { ?>
-                                                                <span class="text-muted" style="font-size: 13px; color: #64748b;">No photo available</span>
+                                                                <span class="delivery-photo-empty">No photo available</span>
                                                             <?php } ?>
                                                         </div>
                                                     <?php

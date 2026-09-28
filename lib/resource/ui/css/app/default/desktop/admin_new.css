@@ -8273,3 +8273,39 @@ textarea.premium-form-control {
 .order-action-feedback.is-error .order-action-feedback-toggle {
   background: #ef4444;
 }
+
+.delivery-photo-wrapper {
+  margin-top: 8px;
+}
+
+.delivery-photo-link {
+  display: inline-block;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  background: #f8fafc;
+}
+
+.delivery-photo-link:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.12);
+}
+
+.delivery-photo-img {
+  max-width: 240px;
+  max-height: 240px;
+  width: auto;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.delivery-photo-empty {
+  font-size: 13px;
+  color: #64748b;
+  font-style: italic;
+}
