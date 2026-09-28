@@ -154,8 +154,6 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
             <thead>
                 <tr>
                     <th style="width: 480px">Order</th>
-                    <th style="width: 130px">Amount</th>
-                    <th style="width: 120px">Payment</th>
                     <th style="width: 120px">Status</th>
                     <th style="width: 140px">Received Date</th>
                     <th style="width: 110px"></th>
@@ -281,10 +279,6 @@ $orderStatus = (($orderStatus == 'all') ? "" : "AND order_status='{$orderStatus}
                                         </div>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="amount-main"><?php echo $orderAmount; ?></div>
-                                </td>
-                                <td><?php echo htmlspecialchars($paymentLabel); ?></td>
                                 <td><span class="order-tag <?php echo $statusClass; ?>"><?php echo $order_status; ?></span></td>
                                 <td data-order="<?php echo (int)strtotime($order_generate); ?>"><?php echo date('d/m/Y h:i A', strtotime($order_generate)); ?></td>
                                 <td>

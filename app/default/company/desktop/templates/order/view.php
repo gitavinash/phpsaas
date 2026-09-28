@@ -85,10 +85,6 @@ if (isset($id)) {
 
                     <div class="premium-stats-bar">
                         <div class="premium-stat-item">
-                            <span class="premium-stat-label">Payment Mode</span>
-                            <span class="premium-stat-value"><?php echo ucwords((($order_payment_mode != '') ? $order_payment_mode : 'N/A')) ?></span>
-                        </div>
-                        <div class="premium-stat-item">
                             <span class="premium-stat-label">Items Count</span>
                             <span class="premium-stat-value"><?php echo sizeof(explode(',', $order_product_id)) ?> items</span>
                         </div>
@@ -293,25 +289,6 @@ if (isset($id)) {
 
                                 <!-- RIGHT PANEL: Billing summary and Receiver Info -->
                                 <div class="premium-grid-right">
-
-                                    <!-- Card 3: Payment Summary -->
-                                    <div class="premium-card">
-                                        <h3 class="premium-card-title"><i class="fas fa-credit-card"></i> Payment Summary</h3>
-                                        <div class="billing-summary">
-                                            <div class="billing-line">
-                                                <span>Subtotal</span>
-                                                <span style="font-weight: 600; color: var(--neutral-900);"><?php echo (($order_product_price != '') ? $inventory_currency_symbol . ' ' . $order_product_price : '-') ?></span>
-                                            </div>
-                                            <div class="billing-line">
-                                                <span>Delivery Charge</span>
-                                                <span style="font-weight: 600; color: var(--neutral-900);"><?php echo (($order_delivery_charges != '') ? $inventory_currency_symbol . ' ' . $order_delivery_charges : '-') ?></span>
-                                            </div>
-                                            <div class="billing-line total">
-                                                <span>Order Total</span>
-                                                <span><?php echo (($order_total_price != '') ? $inventory_currency_symbol . ' ' . $order_total_price : '-') ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     <!-- Card 4: Receiver Details -->
                                     <div class="premium-card">
