@@ -54,14 +54,14 @@
             "url": "https://aleya.in",
             "offers": [{
                     "@type": "Offer",
-                    "name": "CRM",
-                    "price": "999",
+                    "name": "CRM Starter",
+                    "price": "1499",
                     "priceCurrency": "INR"
                 },
                 {
                     "@type": "Offer",
-                    "name": "ERP",
-                    "price": "2499",
+                    "name": "ERP Complete",
+                    "price": "3999",
                     "priceCurrency": "INR"
                 }
             ],
@@ -92,16 +92,22 @@
                 <a href="#testimonials" class="nav-link">Reviews</a>
 
                 <div class="nav-actions">
-                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn primary">
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn ghost">
                         Book Demo
+                    </a>
+                    <a href="/onboarding/" class="nav-btn primary">
+                        Buy Now
                         <span class="btn-arrow">→</span>
                     </a>
                 </div>
             </div>
 
             <div class="nav-actions">
-                <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn primary">
+                <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn ghost">
                     Book Demo
+                </a>
+                <a href="/onboarding/" class="nav-btn primary">
+                    Buy Now
                     <span class="btn-arrow">→</span>
                 </a>
             </div>
@@ -140,14 +146,13 @@
                 </p>
 
                 <div class="hero-cta">
-                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank"
-                        class="cta-primary magnetic">
-                        <span>Book Free Demo</span>
+                    <a href="/onboarding/" class="cta-primary magnetic">
+                        <span>Buy Now</span>
                         <div class="cta-glow"></div>
                     </a>
-                    <a href="#features" class="cta-secondary">
-                        <span class="play-icon">▶</span>
-                        Explore Features
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="cta-secondary">
+                        <span class="play-icon">📅</span>
+                        Book Demo
                     </a>
                 </div>
 
@@ -613,7 +618,7 @@
                     </div>
                     <div class="card-price">
                         <span class="currency">₹</span>
-                        <span class="amount" data-yearly="999" data-monthly="1249">999</span>
+                        <span class="amount" data-yearly="1499" data-monthly="1874">1499</span>
                         <span class="period" data-monthly="/mo" data-yearly="/mo">/mo</span>
                         <span class="gst-label">+ 18% GST</span>
                     </div>
@@ -628,11 +633,11 @@
                         <li><i class="fas fa-check"></i> Up to 10 users included</li>
                         <li><i class="fas fa-check"></i> Email support</li>
                         <li class="extra-users">
-                            <i class="fas fa-info-circle"></i> +₹99/user after 10 users
+                            <i class="fas fa-info-circle"></i> +₹149/user after 10 users
                         </li>
                     </ul>
-                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank"
-                        class="card-btn outline">Book Free Demo</a>
+                    <a href="/onboarding/?plan=crm"
+                        class="card-btn outline">Buy CRM Starter</a>
                 </div>
 
                 <div class="pricing-card featured">
@@ -643,7 +648,7 @@
                     </div>
                     <div class="card-price">
                         <span class="currency">₹</span>
-                        <span class="amount" data-yearly="2499" data-monthly="3124">2499</span>
+                        <span class="amount" data-yearly="3999" data-monthly="4999">3999</span>
                         <span class="period" data-monthly="/mo" data-yearly="/mo">/mo</span>
                         <span class="gst-label">+ 18% GST</span>
                     </div>
@@ -659,11 +664,11 @@
                         <li><i class="fas fa-check"></i> Up to 10 users included</li>
                         <li><i class="fas fa-check"></i> Priority support</li>
                         <li class="extra-users">
-                            <i class="fas fa-info-circle"></i> +₹249/user after 10 users
+                            <i class="fas fa-info-circle"></i> +₹349/user after 10 users
                         </li>
                     </ul>
-                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank"
-                        class="card-btn primary">Book Free Demo</a>
+                    <a href="/onboarding/?plan=erp"
+                        class="card-btn primary">Buy ERP Complete</a>
                 </div>
             </div>
 
@@ -1011,10 +1016,16 @@
                     demo to see how Aleya can transform your workflow.
                 </p>
 
-                <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="cta-primary cta-large">
-                    Book Free Demo
-                    <span class="btn-arrow">→</span>
-                </a>
+                <div class="cta-actions">
+                    <a href="/onboarding/" class="cta-primary cta-large">
+                        Buy Now
+                        <span class="btn-arrow">→</span>
+                    </a>
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="cta-secondary">
+                        <span class="play-icon">📅</span>
+                        Book Demo
+                    </a>
+                </div>
             </div>
         </div>
     </section>

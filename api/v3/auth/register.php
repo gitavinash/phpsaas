@@ -131,23 +131,44 @@ if ($checkEmailQuery && mysqli_num_rows($checkEmailQuery) > 0) {
         $displayName = trim($firstName . ' ' . $lastName);
     }
 } else {
+    // Check if mobile already registered
+    if (!empty($mobile)) {
+        $checkMobileQuery = mysqli_query($connection, "SELECT user_id FROM {$tblPrefix}user WHERE user_mobile = '{$escMobile}' LIMIT 1");
+        if ($checkMobileQuery && mysqli_num_rows($checkMobileQuery) > 0) {
+            http_response_code(409);
+            echo json_encode([
+                'status' => 'warning',
+                'msg'    => 'An account with this mobile number already exists. Please sign in.'
+            ]);
+            exit;
+        }
+    }
     // Generate salt key for passwordless user
     $userSalt = hash('sha256', uniqid(mt_rand(), true) . $email . time());
     $autoPassword = hash('sha256', $userSalt . uniqid('pass_', true));
 
-    $rawUsername = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $firstName . $lastName));
-    if (empty($rawUsername)) {
-        $rawUsername = 'user' . time();
+    $baseUsername = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $firstName . $lastName));
+    if (empty($baseUsername)) {
+        $baseUsername = 'agency';
     }
 
+    $rawUsername = $baseUsername;
     $escUser = mysqli_real_escape_string($connection, $rawUsername);
-    $checkUser = mysqli_query($connection, "SELECT user_id FROM {$tblPrefix}user WHERE user_username = '{$escUser}' LIMIT 1");
-    if ($checkUser && mysqli_num_rows($checkUser) > 0) {
-        $rawUsername = $rawUsername . random_int(100, 999);
+    $attempts = 0;
+    while ($attempts < 10) {
+        $checkUser = mysqli_query($connection, "SELECT user_id FROM {$tblPrefix}user WHERE user_username = '{$escUser}' LIMIT 1");
+        if (!$checkUser || mysqli_num_rows($checkUser) === 0) {
+            break;
+        }
+        $attempts++;
+        $rawUsername = $baseUsername . random_int(100, 9999);
         $escUser = mysqli_real_escape_string($connection, $rawUsername);
     }
 
     $displayName = trim($firstName . ' ' . $lastName);
+    if (empty($displayName)) {
+        $displayName = $businessName ?: 'Travel Administrator';
+    }
     $escFirst = mysqli_real_escape_string($connection, $firstName);
     $escLast  = mysqli_real_escape_string($connection, $lastName);
     $escDisp  = mysqli_real_escape_string($connection, $displayName);
@@ -202,11 +223,12 @@ if ($checkEmailQuery && mysqli_num_rows($checkEmailQuery) > 0) {
                 ({$newSiteId}, {$userId}, 'administrator', 1, '')
         ");
 
+        $tenantThemeColor = ($appType === 'aleya') ? '#00647a' : '#4f46e5';
         mysqli_query($connection, "
             INSERT INTO {$tblPrefix}site_setting 
                 (site_setting_site_id, site_pagination_limit, site_sitemap_limit, site_feed_limit, site_image_quality, site_theme_color)
             VALUES 
-                ({$newSiteId}, 10, 10, 10, 85, '#4f46e5')
+                ({$newSiteId}, 10, 10, 10, 85, '{$tenantThemeColor}')
         ");
     }
 
@@ -218,7 +240,7 @@ if ($checkEmailQuery && mysqli_num_rows($checkEmailQuery) > 0) {
             ({$siteId}, {$userId}, '{$userType}', 1, '')
     ");
 
-    if ($insertUser && $insertProfile && $insertAccess) {
+    if ($insertUser && $insertProfile && $insertAccess && $insertNewSite) {
         mysqli_query($connection, "COMMIT");
     } else {
         mysqli_query($connection, "ROLLBACK");

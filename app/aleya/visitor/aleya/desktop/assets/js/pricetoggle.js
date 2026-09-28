@@ -9,26 +9,26 @@ const setAnnualPricing = () => {
   duration.forEach(
     (el) => (el.innerText = "/month, billed annually · up to 10 users"),
   );
-  price1.forEach((el) => (el.innerText = "999"));
+  price1.forEach((el) => (el.innerText = "1,499"));
   del1.forEach((el) => {
-    el.innerText = "₹1,249 /mo";
+    el.innerText = "₹1,874 /mo";
     el.style.display = "";
   });
-  price2.forEach((el) => (el.innerText = "2,499"));
+  price2.forEach((el) => (el.innerText = "3,999"));
   del2.forEach((el) => {
-    el.innerText = "₹3,124 /mo";
+    el.innerText = "₹4,999 /mo";
     el.style.display = "";
   });
 };
 
 const setMonthlyPricing = () => {
   duration.forEach((el) => (el.innerText = "/month · up to 10 users"));
-  price1.forEach((el) => (el.innerText = "1,249"));
+  price1.forEach((el) => (el.innerText = "1,874"));
   del1.forEach((el) => {
     el.innerText = "";
     el.style.display = "none";
   });
-  price2.forEach((el) => (el.innerText = "3,124"));
+  price2.forEach((el) => (el.innerText = "4,999"));
   del2.forEach((el) => {
     el.innerText = "";
     el.style.display = "none";

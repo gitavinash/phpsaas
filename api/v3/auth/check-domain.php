@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * V3 Authentication API - Real-time Workspace Domain & URL Availability Checker
+ * Path: /api/v3/auth/check-domain.php
+ */
+
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_WARNING);
+ini_set('display_errors', '0');
+header('Content-Type: application/json; charset=utf-8');
+
+if (!isset($connection)) {
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
+    if (file_exists($docRoot . '/config.php')) {
+        require_once $docRoot . '/config.php';
+    }
+    if (file_exists($docRoot . '/lib/modules/connection.php')) {
+        require_once $docRoot . '/lib/modules/connection.php';
+    }
+}
+
+$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+
+$subdomain = trim($_GET['subdomain'] ?? ($_POST['subdomain'] ?? ''));
+
+// Clean slug
+$cleanSlug = strtolower(preg_replace('/[^a-zA-Z0-9-]/', '', $subdomain));
+$cleanSlug = trim($cleanSlug, '-');
+
+if (empty($cleanSlug)) {
+    echo json_encode([
+        'status'    => 'error',
+        'available' => false,
+        'msg'       => 'Please enter a valid business name or subdomain.'
+    ]);
+    exit;
+}
+
+// Disallow reserved platform subdomains
+$reservedSubdomains = [
+    'www', 'api', 'admin', 'administrator', 'mail', 'app', 'dashboard',
+    'auth', 'login', 'signup', 'register', 'checkout', 'pay', 'billing',
+    'support', 'help', 'static', 'cdn', 'assets', 'portal', 'crm', 'erp'
+];
+
+if (in_array($cleanSlug, $reservedSubdomains, true)) {
+    echo json_encode([
+        'status'    => 'success',
+        'available' => false,
+        'subdomain' => $cleanSlug,
+        'msg'       => "The name '{$cleanSlug}' is reserved. Please choose another name."
+    ]);
+    exit;
+}
+
+$mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : 'isw.one';
+$fullDomain = $cleanSlug . '.' . $mainDomain;
+$escSlug    = mysqli_real_escape_string($connection, $cleanSlug);
+$escFull    = mysqli_real_escape_string($connection, $fullDomain);
+
+// Check availability in site table using site_url column
+$checkQuery = mysqli_query($connection, "
+    SELECT site_id, site_name, site_url 
+    FROM {$tblPrefix}site 
+    WHERE site_url LIKE '%//{$escSlug}.%' 
+       OR site_url = 'https://{$escFull}'
+       OR site_url = 'http://{$escFull}'
+       OR site_domain = '{$escFull}'
+       OR site_domain LIKE '{$escSlug}.%'
+    LIMIT 1
+");
+
+if ($checkQuery && mysqli_num_rows($checkQuery) > 0) {
+    echo json_encode([
+        'status'    => 'success',
+        'available' => false,
+        'subdomain' => $cleanSlug,
+        'display'   => $cleanSlug . '.aleya.in',
+        'msg'       => "Workspace URL '{$cleanSlug}.aleya.in' is already taken."
+    ]);
+} else {
+    echo json_encode([
+        'status'    => 'success',
+        'available' => true,
+        'subdomain' => $cleanSlug,
+        'display'   => $cleanSlug . '.aleya.in',
+        'msg'       => "Workspace URL '{$cleanSlug}.aleya.in' is available!"
+    ]);
+}
+exit;

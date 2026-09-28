@@ -90,9 +90,18 @@ if ($siteId <= 0 && isset($_SESSION['site_id']) && (int)$_SESSION['site_id'] > 0
     $siteId = (int)$_SESSION['site_id'];
 }
 
+if ($userId <= 0 && $siteId > 0) {
+    $ownerQuery = mysqli_query($connection, "SELECT site_owner_id FROM {$tblPrefix}site WHERE site_id = {$siteId} LIMIT 1");
+    if ($ownerQuery && $ownerRow = mysqli_fetch_assoc($ownerQuery)) {
+        $userId = (int)$ownerRow['site_owner_id'];
+    }
+}
+
 $escBizName = mysqli_real_escape_string($connection, $businessName);
 $escFullDomain = mysqli_real_escape_string($connection, $fullDomain);
 $escThemeColor = mysqli_real_escape_string($connection, $themeColor);
+
+$migrationResult = ['migrated_count' => 0, 'destinations_count' => 0];
 
 if ($siteId > 0) {
     // Update existing site
@@ -124,6 +133,23 @@ if ($siteId > 0) {
                 ({$siteId}, 10, 10, 10, 85, '{$escThemeColor}')
         ");
     }
+
+    // Migrate Master Tour Packages for Selected Destinations (Aleya Travel CRM/ERP)
+    $destinationsInput = $data['destinations'] ?? ($data['selected_destinations'] ?? []);
+    if (is_string($destinationsInput)) {
+        $destinationsInput = array_filter(array_map('trim', explode(',', $destinationsInput)));
+    }
+    if (!is_array($destinationsInput)) {
+        $destinationsInput = [];
+    }
+
+    $helperPath = dirname(__DIR__) . '/packages/destination-helper.php';
+    if (file_exists($helperPath)) {
+        require_once $helperPath;
+        if (function_exists('migrateMasterPackagesToSite')) {
+            $migrationResult = migrateMasterPackagesToSite($connection, $tblPrefix, $siteId, $userId, $destinationsInput);
+        }
+    }
 }
 
 // Update cookies
@@ -148,6 +174,7 @@ echo json_encode([
     'msg'          => 'Workspace initialized successfully! Welcome to your dashboard.',
     'url'          => '/dashboard/',
     'redirect_url' => '/dashboard/',
+    'packages'     => $migrationResult,
     'workspace'    => [
         'name'   => $businessName,
         'domain' => $fullDomain,
