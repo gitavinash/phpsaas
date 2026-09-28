@@ -24,7 +24,7 @@ if (isset($id)) {
             );
         }
 
-        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_vendor_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, transaction_status, product_title, product_image, inventory_currency_symbol FROM isw_order LEFT JOIN isw_address ON order_address_id=address_id LEFT JOIN isw_user ON order_user_id=user_id LEFT JOIN isw_profile ON profile_user_id=user_id LEFT JOIN isw_city ON city_id=address_city_id LEFT JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
+        $checkOrderSql = "SELECT profile_first_name, profile_last_name, profile_display_name, user_mobile, user_email, order_product_id, order_vendor_id, order_product_qty, order_currency, order_product_price, order_delivery_charges, order_total_price, order_payment_mode, address_name, address_house_no, address_area, address_landmark, city_name, state_id, address_pin_code, address_type, address_mobile, order_generate, order_status, product_title, product_image, inventory_currency_symbol FROM isw_order LEFT JOIN isw_address ON order_address_id=address_id LEFT JOIN isw_user ON order_user_id=user_id LEFT JOIN isw_profile ON profile_user_id=user_id LEFT JOIN isw_city ON city_id=address_city_id LEFT JOIN isw_state ON state_id=address_state_id LEFT JOIN " . TABLE_PREFIX . "transaction ON transaction_order_id=order_id";
 
         $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "product ON product_id=order_product_id AND product_type='product' AND product_site_id" . $siteId;
         $checkOrderSql .= " LEFT JOIN " . TABLE_PREFIX . "inventory ON inventory_relation_id=order_product_id AND inventory_type='product' AND inventory_site_id" . $siteId;
@@ -37,15 +37,18 @@ if (isset($id)) {
 
                 extract(mysqli_fetch_assoc($checkOrder));
 
-                $orderStatusValue = trim((string)$transaction_status);
+                $orderStatusValue = trim((string)$order_status);
                 $numericStatusMap = array(
-                    '' => 'Pending',
                     '0' => 'Pending',
-                    '1' => 'Confirmed',
-                    '2' => 'Waiting',
-                    '3' => 'Cancelled',
-                    '4' => 'Returned',
-                    '5' => 'Delivered',
+                    '1' => 'Order Accepted by Vendor',
+                    '2' => 'Assigned to Vendor',
+                    '3' => 'Processing',
+                    '4' => 'Shipped',
+                    '5' => 'Out for Delivery',
+                    '6' => 'Delivered',
+                    '7' => 'Cancelled',
+                    '8' => 'Returned',
+                    '9' => 'Rescheduled',
                 );
 
                 if (isset($numericStatusMap[$orderStatusValue])) {
@@ -62,10 +65,12 @@ if (isset($id)) {
 
                 if (in_array($orderStatusRaw, array('delivered', 'complete', 'completed', 'success', 'confirmed', 'confirm'))) {
                     $orderStatusChipClass = 'badge-delivered';
-                } elseif (in_array($orderStatusRaw, array('waiting', 'pending', 'processing', 'on_hold', 'in_progress'))) {
+                } elseif (in_array($orderStatusRaw, array('waiting', 'pending', 'processing', 'on_hold', 'in_progress', 'out_for_delivery', 'shipped'))) {
                     $orderStatusChipClass = 'badge-pending';
                 } elseif (in_array($orderStatusRaw, array('cancel', 'cancelled', 'return', 'returned', 'failed', 'rejected'))) {
                     $orderStatusChipClass = 'badge-cancelled';
+                } elseif (in_array($orderStatusRaw, array('rescheduled', 'reschedule'))) {
+                    $orderStatusChipClass = 'badge-rescheduled';
                 }
 
 ?>
