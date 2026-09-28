@@ -1,4 +1,5 @@
 <?php
+
 /**
  * V3 Lead Pipeline Kanban Workspace
  * File: app/dashboard/v3/default/desktop/leads/kanban.php
@@ -43,10 +44,10 @@ if (isset($site_access_type) && $site_access_type === 'digital_marketing') {
             </div>
 
             <?php if (!isset($site_access_type) || $site_access_type !== 'digital_marketing'): ?>
-            <!-- Primary Add Lead CTA Button -->
-            <a href="/dashboard/leads/add/" class="btn-add-pkg-v3" title="Add New Lead">
-                <i class="fi fi-rr-plus"></i> <span>Add New Lead</span>
-            </a>
+                <!-- Primary Add Lead CTA Button -->
+                <a href="/dashboard/leads/add/" class="btn-add-pkg-v3" title="Add New Lead">
+                    <i class="fi fi-rr-plus"></i> <span>Add New Lead</span>
+                </a>
             <?php endif; ?>
         </div>
     </div>
@@ -57,7 +58,7 @@ if (isset($site_access_type) && $site_access_type === 'digital_marketing') {
             <!-- Pending Column -->
             <div class="kanban-column col-fresh" data-status="0">
                 <div class="kanban-column-header">
-                    <span class="kanban-column-title"><i class="fi fi-rr-time-fast"></i> Pending</span>
+                    <span class="kanban-column-title"><i class="fi fi-rr-time-fast"></i> New Leads</span>
                     <span class="kanban-count-pill" id="kanban-count-0">0</span>
                 </div>
                 <div class="kanban-cards-container" id="kanban-container-0" data-status="0">

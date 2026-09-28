@@ -41,7 +41,7 @@
         <!-- Pending Column -->
         <div class="kanban-column col-fresh" data-status="0">
             <div class="kanban-column-header">
-                <span class="kanban-column-title"><i class="fi fi-rr-time-fast"></i> Pending</span>
+                <span class="kanban-column-title"><i class="fi fi-rr-time-fast"></i> New Leads</span>
                 <span class="kanban-count-pill" id="kanban-count-0">0</span>
             </div>
             <div class="kanban-cards-container" id="kanban-container-0" data-status="0">
