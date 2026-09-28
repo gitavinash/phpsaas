@@ -557,7 +557,7 @@ if (isset($id)) {
                                                             <?php if (!empty($order_meta_value)) { ?>
                                                                 <div class="delivery-photo-wrapper">
                                                                     <a href="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" target="_blank" rel="noopener noreferrer" class="delivery-photo-link" title="Click to view full image">
-                                                                        <img src="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" alt="Delivery Photo" class="delivery-photo-img">
+                                                                        <img src="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" alt="Delivery Photo" class="delivery-photo-img" width="120" height="120">
                                                                     </a>
                                                                 </div>
                                                             <?php } else { ?>

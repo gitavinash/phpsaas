@@ -69,7 +69,7 @@ if (isset($id)) {
                 }
 
 ?>
-                <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.css">
+                <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_CSS_LIBRARY ?>admin_new.min.css?v=<?php echo time(); ?>">
                 <div class="order-info-ui" data-order-id="<?php echo $id ?>">
 
                     <div class="premium-header">
@@ -313,7 +313,7 @@ if (isset($id)) {
                                                                 <label><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $order_meta_key)), ENT_QUOTES); ?></label>
                                                                 <div class="delivery-photo-wrapper">
                                                                     <a href="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" target="_blank" rel="noopener noreferrer" class="delivery-photo-link" title="Click to view full image">
-                                                                        <img src="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" alt="Delivery Photo" class="delivery-photo-img">
+                                                                        <img src="<?php echo htmlspecialchars($order_meta_value, ENT_QUOTES); ?>" alt="Delivery Photo" class="delivery-photo-img" width="120" height="120">
                                                                     </a>
                                                                 </div>
                                                             </div>
