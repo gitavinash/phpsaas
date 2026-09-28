@@ -70,24 +70,18 @@ if (isset($daterange) && !empty($daterange)) {
     </div>
 </div>
 
-<!-- Key Performance Indicators -->
+<!-- Key Performance Indicators (Pipeline order aligned with Kanban Board) -->
 <div class="kpi-grid">
-    <?php
-    if ($site_access_type == 'administrator') {
-        require_once ADMIN_PATH . 'dashboard/widgets/enquiry.php';
-    }
-    ?>
-    <?php require_once ADMIN_PATH . 'dashboard/widgets/confirmed-enquiry.php'; ?>
-    <?php require_once ADMIN_PATH . 'dashboard/widgets/pending-enquiry.php'; ?>
+    <?php require_once ADMIN_PATH . 'dashboard/widgets/enquiry.php'; ?>
     <?php require_once ADMIN_PATH . 'dashboard/widgets/follow-up-enquiry.php'; ?>
+    <?php require_once ADMIN_PATH . 'dashboard/widgets/pending-enquiry.php'; ?>
+    <?php require_once ADMIN_PATH . 'dashboard/widgets/confirmed-enquiry.php'; ?>
     <?php require_once ADMIN_PATH . 'dashboard/widgets/conversion-rate.php'; ?>
+    <?php require_once ADMIN_PATH . 'dashboard/widgets/cancle-enquiry.php'; ?>
     <?php
     if ($site_access_type == 'administrator') {
         require_once ADMIN_PATH . 'dashboard/widgets/revenue-summary.php';
         require_once ADMIN_PATH . 'dashboard/widgets/duplicate-enquiry.php';
-        require_once ADMIN_PATH . 'dashboard/widgets/cancle-enquiry.php';
-    } else {
-        require_once ADMIN_PATH . 'dashboard/widgets/cancle-enquiry.php';
     }
     ?>
 </div>

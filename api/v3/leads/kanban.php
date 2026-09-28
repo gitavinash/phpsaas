@@ -207,10 +207,27 @@ if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql)
     }
 }
 
+$statusCounts = ['0' => 0, '1' => 0, '2' => 0, '3' => 0];
+$countSql = "SELECT enquiry_status, COUNT(*) as cnt
+             FROM {$tblPrefix}enquiry
+             WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
+               AND enquiry_status IN (0, 1, 2, 3)
+               AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
+             GROUP BY enquiry_status";
+if (isset($connection) && $connection && ($cRes = mysqli_query($connection, $countSql))) {
+    while ($cRow = mysqli_fetch_assoc($cRes)) {
+        $stKey = (string)$cRow['enquiry_status'];
+        if (isset($statusCounts[$stKey])) {
+            $statusCounts[$stKey] = (int)$cRow['cnt'];
+        }
+    }
+}
+
 echo json_encode([
     'status'  => 200,
     'data'    => $grouped,
     'grouped' => $grouped,
+    'counts'  => $statusCounts,
     'leads'   => $flatLeads,
     'total'   => count($flatLeads),
 ]);

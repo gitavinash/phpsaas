@@ -1501,12 +1501,32 @@ $(document).ready(function (e) {
   }
 
   // SPA In-Place Kanban DOM Helpers
+  function refreshDashboardKpis() {
+    let daterange =
+      lastLoadedDashboardRange ||
+      (typeof dateRangeParams !== "undefined" && dateRangeParams ? dateRangeParams : "");
+    if (!daterange && typeof moment !== "undefined") {
+      daterange =
+        moment().subtract(29, "days").format("DD-MMM-YYYY") +
+        " - " +
+        moment().format("DD-MMM-YYYY");
+    }
+    loadKpiFresh(daterange);
+    loadKpiConfirmed(daterange);
+    loadKpiPending(daterange);
+    loadKpiFollowup(daterange);
+    loadKpiCancel(daterange);
+    loadKpiConversionRate(daterange);
+  }
+  window.refreshDashboardKpis = refreshDashboardKpis;
+
   function updateKanbanCounts() {
     const statuses = ["0", "2", "3", "1"];
     statuses.forEach((st) => {
       const count = $(`#kanban-container-${st}`).find(".kanban-card").length;
       $(`#kanban-count-${st}`).text(count);
     });
+    refreshDashboardKpis();
   }
 
   function checkKanbanEmptyStates() {
@@ -1581,6 +1601,7 @@ $(document).ready(function (e) {
       $(this).remove();
       updateKanbanCounts();
       checkKanbanEmptyStates();
+      refreshDashboardKpis();
     });
   }
 
@@ -1592,10 +1613,11 @@ $(document).ready(function (e) {
       $(this).remove();
       updateKanbanCounts();
       checkKanbanEmptyStates();
+      refreshDashboardKpis();
     });
   }
 
-  function renderKanbanBoardGrouped(boardData) {
+  function renderKanbanBoardGrouped(boardData, boardCounts) {
     if (!boardData) return;
     const statuses = ["0", "2", "3", "1"];
     statuses.forEach((st) => {
@@ -1608,7 +1630,11 @@ $(document).ready(function (e) {
         return s !== 4 && s !== 5 && s !== 6 && s !== 7 && s !== 8 && [0, 1, 2, 3].includes(s);
       });
 
-      countPill.text(items.length);
+      const totalCount =
+        boardCounts && boardCounts[st] !== undefined
+          ? boardCounts[st]
+          : items.length;
+      countPill.text(totalCount);
       const columnCol = container.closest(".kanban-column");
       columnCol.find(".kanban-load-more-btn").remove();
       container.empty();
@@ -1648,6 +1674,7 @@ $(document).ready(function (e) {
       success: function (res) {
         if (!res) return;
         let boardData = res.data || res.grouped;
+        let boardCounts = res.counts || null;
         if (boardData && typeof boardData === "object") {
           const cleanGrouped = { 0: [], 2: [], 3: [], 1: [] };
           ["0", "2", "3", "1"].forEach((k) => {
@@ -1659,7 +1686,7 @@ $(document).ready(function (e) {
           });
           boardData = cleanGrouped;
         }
-        renderKanbanBoardGrouped(boardData);
+        renderKanbanBoardGrouped(boardData, boardCounts);
       },
     });
   }
@@ -2774,7 +2801,11 @@ $(document).ready(function (e) {
               return s !== 4 && s !== 5 && s !== 6 && s !== 7 && s !== 8 && [0, 1, 2, 3].includes(s);
             });
 
-            countPill.text(items.length);
+            const totalCount =
+              res.counts && res.counts[st] !== undefined
+                ? res.counts[st]
+                : items.length;
+            countPill.text(totalCount);
             container.empty();
 
             if (items.length === 0) {

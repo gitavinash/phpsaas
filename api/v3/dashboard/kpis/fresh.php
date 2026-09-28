@@ -26,10 +26,14 @@ $t1 = date('Y-m-d 00:00:00', strtotime('-29 days'));
 $t2 = date('Y-m-d 23:59:59');
 
 if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'] !== 'null') {
-    $dates = explode(' - ', trim($_GET['daterange']));
+    $dr = trim($_GET['daterange']);
+    if (($ampPos = strpos($dr, '&')) !== false) {
+        $dr = substr($dr, 0, $ampPos);
+    }
+    $dates = explode(' - ', $dr);
     if (count($dates) == 2) {
-        $t1 = date('Y-m-d 00:00:00', strtotime($dates[0]));
-        $t2 = date('Y-m-d 23:59:59', strtotime($dates[1]));
+        $t1 = date('Y-m-d 00:00:00', strtotime(trim($dates[0])));
+        $t2 = date('Y-m-d 23:59:59', strtotime(trim($dates[1])));
     }
 }
 $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
@@ -38,7 +42,8 @@ $count = 0;
 $sql = "SELECT COUNT(*) AS cnt
         FROM {$tblPrefix}enquiry
         WHERE {$siteFilter}{$userFilter}{$daterangeFilter}
-          AND enquiry_agent = 0 AND enquiry_status = 0";
+          AND enquiry_status = 0
+          AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)";
 
 if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
     if ($row = mysqli_fetch_assoc($res)) {

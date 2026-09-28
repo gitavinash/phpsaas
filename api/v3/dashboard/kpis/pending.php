@@ -7,7 +7,7 @@ require_once LOGIN_CHECK;
 if (!isset($connection)) {
     $configPath = $_SERVER['DOCUMENT_ROOT'] . '/lib/configuration/index.php';
     if (file_exists($configPath)) {
-        require_once $c3onfigPath;
+        require_once $configPath;
     }
 }
 
@@ -26,10 +26,14 @@ $t1 = date('Y-m-d 00:00:00', strtotime('-29 days'));
 $t2 = date('Y-m-d 23:59:59');
 
 if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'] !== 'null') {
-    $dates = explode(' - ', trim($_GET['daterange']));
+    $dr = trim($_GET['daterange']);
+    if (($ampPos = strpos($dr, '&')) !== false) {
+        $dr = substr($dr, 0, $ampPos);
+    }
+    $dates = explode(' - ', $dr);
     if (count($dates) == 2) {
-        $t1 = date('Y-m-d 00:00:00', strtotime($dates[0]));
-        $t2 = date('Y-m-d 23:59:59', strtotime($dates[1]));
+        $t1 = date('Y-m-d 00:00:00', strtotime(trim($dates[0])));
+        $t2 = date('Y-m-d 23:59:59', strtotime(trim($dates[1])));
     }
 }
 $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
