@@ -60,14 +60,14 @@ if (!function_exists('getAleyaLeadStatuses')) {
             4 => [
                 'id'          => 4,
                 'code'        => 'failed',
-                'label'       => 'Failed',
+                'label'       => 'Cancelled',
                 'type'        => 'exception',
                 'class'       => 'status-failed',
                 'dot_class'   => 'failed',
-                'badge_class' => 'badge-failed',
+                'badge_class' => 'badge-cancelled',
                 'icon'        => 'fi-rr-cross-circle',
-                'color'       => '#e11d48',
-                'description' => 'Ingestion failure or uncontactable / invalid lead inquiry'
+                'color'       => '#dc2626',
+                'description' => 'Cancelled or failed lead inquiry'
             ],
             5 => [
                 'id'          => 5,

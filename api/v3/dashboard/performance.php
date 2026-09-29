@@ -37,7 +37,8 @@ $statusCounts = [
     2 => 0, // Pending
     3 => 0, // Follow Up
     1 => 0, // Confirmed
-    5 => 0, // Cancelled
+    4 => 0, // Cancelled / Failed
+    16 => 0, // Cancelled
 ];
 
 $sql = "SELECT enquiry_status, COUNT(*) AS count
@@ -61,7 +62,7 @@ $perfData   = [
     $statusCounts[2],
     $statusCounts[3],
     $statusCounts[1],
-    $statusCounts[5],
+    $statusCounts[4] + $statusCounts[16],
 ];
 
 echo json_encode([

@@ -85,10 +85,22 @@ if (isset($reqData['search']) && trim($reqData['search']) !== '') {
 
 // Status Filter
 $statusFilter = "";
-$rawStatus = isset($reqData['status']) ? $reqData['status'] : (isset($reqData['leadStatus']) ? $reqData['leadStatus'] : '');
+$rawStatus = isset($reqData['status']) ? trim((string)$reqData['status']) : (isset($reqData['leadStatus']) ? trim((string)$reqData['leadStatus']) : '');
 if ($rawStatus !== '' && $rawStatus !== 'all') {
-    $targetStatus = (int)$rawStatus;
-    $statusFilter = " AND e.enquiry_status = {$targetStatus}";
+    if (strpos($rawStatus, ',') !== false) {
+        $stParts = array_filter(array_map('intval', explode(',', $rawStatus)), function($v) {
+            return $v >= 0;
+        });
+        if (!empty($stParts)) {
+            $statusFilter = " AND e.enquiry_status IN (" . implode(',', $stParts) . ")";
+        }
+    } elseif ($rawStatus === 'cancel' || $rawStatus === 'cancelled' || $rawStatus === '16' || $rawStatus === '4') {
+        // Status 16 (Cancelled) and status 4 (historical failed/cancelled) both represent cancelled enquiries
+        $statusFilter = " AND e.enquiry_status IN (4, 16)";
+    } else {
+        $targetStatus = (int)$rawStatus;
+        $statusFilter = " AND e.enquiry_status = {$targetStatus}";
+    }
 }
 
 // Source Filter
@@ -136,9 +148,9 @@ $stats = [
 $statsQuery = "SELECT 
     COUNT(*) AS total_count,
     SUM(CASE WHEN e.enquiry_status = 0 THEN 1 ELSE 0 END) AS fresh_count,
-    SUM(CASE WHEN e.enquiry_status IN (2, 9, 6) THEN 1 ELSE 0 END) AS pending_count,
+    SUM(CASE WHEN e.enquiry_status = 2 THEN 1 ELSE 0 END) AS pending_count,
     SUM(CASE WHEN e.enquiry_status = 3 THEN 1 ELSE 0 END) AS followup_count,
-    SUM(CASE WHEN e.enquiry_status IN (1, 8, 10, 11, 12, 13, 14) THEN 1 ELSE 0 END) AS confirmed_count,
+    SUM(CASE WHEN e.enquiry_status = 1 THEN 1 ELSE 0 END) AS confirmed_count,
     SUM(CASE WHEN e.enquiry_status IN (4, 5, 7, 15, 16, 17, 18) THEN 1 ELSE 0 END) AS closed_count
 FROM {$tblPrefix}enquiry e
 WHERE {$siteFilter}{$userFilter}{$daterangeFilter}";

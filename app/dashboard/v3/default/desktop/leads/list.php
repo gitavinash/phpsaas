@@ -120,10 +120,10 @@ if ($isDigitalMarketing) {
                             <option value="15" <?php echo ($initialLeadStatus === '15' ? 'selected' : ''); ?>>15 — Closed</option>
                         </optgroup>
                         <optgroup label="Exception & Drop-Off Flows">
-                            <option value="4" <?php echo ($initialLeadStatus === '4' ? 'selected' : ''); ?>>4 — Failed</option>
+                            <option value="4" <?php echo ($initialLeadStatus === '4' ? 'selected' : ''); ?>>4 — Cancelled / Failed</option>
                             <option value="5" <?php echo ($initialLeadStatus === '5' ? 'selected' : ''); ?>>5 — Duplicate</option>
                             <option value="7" <?php echo ($initialLeadStatus === '7' ? 'selected' : ''); ?>>7 — Sent for Sales Request</option>
-                            <option value="16" <?php echo ($initialLeadStatus === '16' ? 'selected' : ''); ?>>16 — Cancelled</option>
+                            <option value="16" <?php echo ($initialLeadStatus === '16' || $initialLeadStatus === 'cancel' || $initialLeadStatus === '4,16' ? 'selected' : ''); ?>>16 — Cancelled</option>
                             <option value="17" <?php echo ($initialLeadStatus === '17' ? 'selected' : ''); ?>>17 — Lost</option>
                             <option value="18" <?php echo ($initialLeadStatus === '18' ? 'selected' : ''); ?>>18 — Payment Refund</option>
                         </optgroup>

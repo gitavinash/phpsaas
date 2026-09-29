@@ -11,7 +11,8 @@ if (!in_array($sortParam, $allowedSorts, true)) {
 
 $sortDirection = ($sortParam === 'oldest') ? 'ASC' : 'DESC';
 $orderByClause = "ORDER BY order_generate {$sortDirection}, order_id {$sortDirection}";
-$siteId = "IN (" . APP_SITE_ID . ", " . SITE_ID . ")";
+// $siteId = "IN (" . APP_SITE_ID . ", " . SITE_ID . ")";
+$siteId = "IN (" . SITE_ID . ")";
 $isApp32 = ((int)SITE_APP_ID === 32);
 
 $orderStatus = mysqli_real_escape_string($connection, $statusParam);

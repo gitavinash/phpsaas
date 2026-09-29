@@ -60,20 +60,11 @@ if (isset($connection) && $connection && ($res = mysqli_query($connection, $sqlK
         $stVal = intval($row['enquiry_status']);
         switch ($stVal) {
             case 0: $kpis['freshLeads']     += $cnt; break;
-            case 1:
-            case 8:
-            case 10:
-            case 11:
-            case 12:
-            case 13:
-            case 14:
-                $kpis['confirmedLeads'] += $cnt; break;
-            case 2:
-            case 6:
-            case 9:
-                $kpis['pendingLeads']   += $cnt; break;
+            case 1: $kpis['confirmedLeads'] += $cnt; break;
+            case 2: $kpis['pendingLeads']   += $cnt; break;
             case 3: $kpis['followupLeads']  += $cnt; break;
             case 5: $kpis['duplicateLeads'] += $cnt; break;
+            case 4:
             case 16: $kpis['cancelLeads']   += $cnt; break;
         }
     }
