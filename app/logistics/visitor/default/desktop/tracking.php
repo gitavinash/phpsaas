@@ -160,7 +160,7 @@
               <div class="meta-value" id="display-delivery-city">—</div>
             </div>
             <div class="meta-item" id="delivery-date-meta-item" style="display: none;">
-              <div class="meta-label">Delivery Date</div>
+              <div class="meta-label">Expected Delivery Date</div>
               <div class="meta-value" id="display-delivery-date">—</div>
             </div>
             <div class="meta-item" id="delivery-slot-meta-item" style="display: none;">
@@ -263,7 +263,7 @@
   <footer class="footer" role="contentinfo">
     <div class="footer-inner">
       <p class="footer-copy">
-        Developed by <a href="#" rel="noopener noreferrer">Blumox Technologies</a> &mdash; All rights reserved &copy; <span id="footer-year"></span>
+        Developed by <a href="https://blumox.com" title="IT Solutions, Software Development, Web & Mobile Apps and AI & ML Services" target="_blank" rel="noopener noreferrer">Blumox Technologies</a> &mdash; All rights reserved &copy; <span id="footer-year"></span>
       </p>
     </div>
   </footer>

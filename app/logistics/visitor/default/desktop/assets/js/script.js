@@ -272,7 +272,7 @@ function renderTracking(data) {
   const resCommentItem = document.getElementById("reschedule-comment-meta-item");
 
   if (order.deliveryDate) {
-    setText("display-delivery-date", formatDate(order.deliveryDate));
+    setText("display-delivery-date", formatDateOnly(order.deliveryDate));
     if (delDateItem) delDateItem.style.display = "block";
   } else if (delDateItem) {
     delDateItem.style.display = "none";
@@ -483,7 +483,7 @@ function renderTimeline(logs) {
       if (item.deliveryDate) {
         detailsHtml += `<div style="font-size:.8rem;color:#475569;margin-top:4px;display:flex;align-items:center;gap:4px;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Delivery Date: <strong style="color:#0f172a;">${escHtml(formatDate(item.deliveryDate))}</strong>
+          Delivery Date: <strong style="color:#0f172a;">${escHtml(formatDateOnly(item.deliveryDate))}</strong>
         </div>`;
       }
       if (item.deliverySlot) {
@@ -628,3 +628,38 @@ function formatDate(dateStr) {
     return dateStr;
   }
 }
+
+/**
+ * Format a date string into a date-only human-friendly format: "23 Jul 2026" (without time).
+ * Falls back to the raw string if parsing fails.
+ * @param {string} dateStr - Date string from the API.
+ * @returns {string} Formatted date string without time.
+ */
+function formatDateOnly(dateStr) {
+  if (!dateStr) return "—";
+  try {
+    const trimmed = String(dateStr).trim();
+    const match = trimmed.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (match) {
+      const year = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10) - 1;
+      const day = parseInt(match[3], 10);
+      const d = new Date(year, month, day);
+      return d.toLocaleDateString("en-IN", {
+        day:   "2-digit",
+        month: "short",
+        year:  "numeric",
+      });
+    }
+    const d = new Date(trimmed.replace(" ", "T"));
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString("en-IN", {
+      day:   "2-digit",
+      month: "short",
+      year:  "numeric",
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
