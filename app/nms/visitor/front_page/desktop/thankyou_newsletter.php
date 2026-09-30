@@ -5,6 +5,17 @@ require_once 'header.php';
 $subscriberEmail = isset($_GET['email']) ? trim($_GET['email']) : '';
 $cleanEmail = filter_var($subscriberEmail, FILTER_VALIDATE_EMAIL) ? htmlspecialchars($subscriberEmail) : '';
 
+$query = "INSERT INTO " . TABLE_PREFIX . "newsletter
+          (newsletter_email, newsletter_site_id, newsletter_status)
+          VALUES ('$cleanEmail', " . SITE_ID . ", 1)
+          ON DUPLICATE KEY UPDATE newsletter_status = 1";
+
+if (!mysqli_query($connection, $query)) {
+    $message = "There was an error processing your subscription. Please try again later.";
+    echo $message;
+    exit();
+}
+
 ?>
 
 <section class="ty-newsletter-section">
