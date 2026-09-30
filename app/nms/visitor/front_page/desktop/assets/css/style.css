@@ -8017,9 +8017,23 @@ article:hover .image-wrapper img {
 
 /* Thank You Newsletter Styles */
 .ty-newsletter-section {
-  padding: 50px 0 90px 0;
+  padding: 60px 0 90px 0;
   background-color: var(--bg-color, #fdfbf7);
+  background-image:
+    radial-gradient(
+      circle at 50% 10%,
+      rgba(16, 185, 129, 0.04) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(217, 48, 37, 0.03) 0%,
+      transparent 50%
+    );
   min-height: calc(100vh - 350px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(
     --font-body,
     "Inter",
@@ -8030,33 +8044,41 @@ article:hover .image-wrapper img {
 }
 
 .ty-newsletter-container {
-  max-width: 820px;
+  max-width: 860px;
+  width: 100%;
   margin: 0 auto;
 }
 
 .ty-newsletter-card {
   background: var(--white, #ffffff);
-  border: 1px solid var(--border-color, #e0e0e0);
+  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 20px;
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 20px 50px -15px rgba(15, 23, 42, 0.07),
+    0 4px 12px rgba(15, 23, 42, 0.02);
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .ty-card-top-accent {
   height: 5px;
-  background: var(--accent-color);
+  background: linear-gradient(90deg, #10b981 0%, #059669 40%, var(--accent-color, #d93025) 100%);
 }
 
 .ty-newsletter-header {
-  padding: 44px 40px 32px 40px;
+  padding: 48px 40px 36px 40px;
   text-align: center;
   border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.6) 0%, rgba(255, 255, 255, 1) 100%);
 }
 
 .ty-icon-wrapper {
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
   background: #ecfdf5;
   color: #10b981;
@@ -8064,9 +8086,294 @@ article:hover .image-wrapper img {
   align-items: center;
   justify-content: center;
   font-size: 2.2rem;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   position: relative;
   border: 2px solid #a7f3d0;
+  box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.22);
+}
+
+.ty-icon-pulse {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(16, 185, 129, 0.28);
+  animation: tyPulseRing 2.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.ty-kicker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #047857;
+  background: #dcfce7;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+  border: 1px solid #bbf7d0;
+}
+
+.ty-newsletter-title {
+  font-family: var(--font-heading, "Playfair Display", Georgia, serif);
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--primary-color, #0a0a0a);
+  margin: 0 0 12px 0;
+  line-height: 1.25;
+  letter-spacing: -0.4px;
+  text-align: center;
+}
+
+.ty-newsletter-subtitle {
+  font-size: 1.05rem;
+  color: #475569;
+  max-width: 580px;
+  line-height: 1.6;
+  margin: 0 auto 20px auto;
+  text-align: center;
+}
+
+.ty-email-pill-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 7px 16px;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  color: #64748b;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.ty-email-pill-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.ty-email-pill-address {
+  color: #0f172a;
+  font-weight: 600;
+  background: #e2e8f0;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.84rem;
+}
+
+.ty-benefits-section {
+  padding: 36px 40px;
+  background: #ffffff;
+}
+
+.ty-benefits-heading-wrap {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.ty-benefits-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.ty-benefits-heading {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  font-family: var(--font-body, "Inter", sans-serif);
+}
+
+.ty-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.ty-benefit-card {
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 14px;
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.ty-benefit-card:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  background: #ffffff;
+  box-shadow: 0 10px 25px -8px rgba(15, 23, 42, 0.06);
+}
+
+.ty-benefit-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #ecfdf5;
+  color: #059669;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 14px;
+  border: 1px solid #d1fae5;
+  flex-shrink: 0;
+}
+
+.ty-benefit-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  font-family: var(--font-body, "Inter", sans-serif);
+}
+
+.ty-benefit-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.ty-tip-banner {
+  margin: 0 40px 32px 40px;
+  padding: 14px 18px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ty-tip-icon {
+  color: #2563eb;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.ty-tip-content {
+  font-size: 0.86rem;
+  color: #1e3a8a;
+  line-height: 1.5;
+}
+
+.ty-tip-content code {
+  background: #dbeafe;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.84rem;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.ty-newsletter-actions {
+  padding: 0 40px 36px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ty-newsletter-actions .ty-btn-primary,
+.ty-newsletter-actions .ty-btn-secondary {
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 28px;
+}
+
+.ty-newsletter-footer {
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  padding: 16px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.ty-newsletter-footer-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ty-newsletter-footer-item i {
+  font-size: 1rem;
+  color: #94a3b8;
+}
+
+.ty-newsletter-footer-item a {
+  color: var(--accent-color, #d93025);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .ty-newsletter-section {
+    padding: 30px 16px 60px 16px;
+  }
+  .ty-newsletter-header {
+    padding: 36px 20px 28px 20px;
+  }
+  .ty-newsletter-title {
+    font-size: 1.75rem;
+  }
+  .ty-newsletter-subtitle {
+    font-size: 0.95rem;
+  }
+  .ty-benefits-section {
+    padding: 28px 20px;
+  }
+  .ty-benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .ty-tip-banner {
+    margin: 0 20px 24px 20px;
+    padding: 12px 14px;
+  }
+  .ty-newsletter-actions {
+    padding: 0 20px 30px 20px;
+    flex-direction: column;
+  }
+  .ty-newsletter-actions .ty-btn-primary,
+  .ty-newsletter-actions .ty-btn-secondary {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+  .ty-newsletter-footer {
+    padding: 16px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }
 
 /* Payment Failed Styles */
