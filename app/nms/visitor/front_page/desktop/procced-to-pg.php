@@ -163,10 +163,6 @@ if ($checkDetails = mysqli_query($connection, "SELECT order_cart_session_id, ord
                                                                 <div class="status-actions">
                                                                     <a href="' . htmlspecialchars($url) . '" class="auth-btn primary-btn">Click here if not redirected &rarr;</a>
                                                                 </div>
-                                                                <div class="status-footer-note">
-                                                                    <i class="ph ph-lock-key"></i>
-                                                                    <span>256-Bit SSL Encrypted &bull; Safe Checkout</span>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -7,7 +7,58 @@
 (function ($) {
   "use strict";
 
+  const showcaseData = {
+    aleya: {
+      badge: "Travel & Hospitality ERP",
+      heading: "The Operating System for Travel, Spa & Transport.",
+      subheading: "Aleya automates day-wise tour proposals, vehicle dispatch, spa bookings, WhatsApp follow-ups, and payment tracking.",
+      features: [
+        { icon: "fi fi-rr-route", title: "Tour Packages & Itinerary Engine", desc: "Generate beautiful day-wise proposals, vouchers and itineraries in seconds." },
+        { icon: "fi fi-rr-taxi", title: "Transporter & Fleet Operations", desc: "Manage cabs, drivers, vehicle assignments, duty slips and fuel tracking." },
+        { icon: "fi fi-rr-sparkles", title: "Spa & Wellness Management", desc: "Seamless appointment slots, therapist scheduling, treatment packages and guest billing." },
+        { icon: "fi fi-rr-paper-plane", title: "Multi-Channel Lead Follow-ups", desc: "Auto-capture leads from Meta Ads, Google & website with instant WhatsApp reminders." }
+      ],
+      stat_value: "500+",
+      stat_label: "Travel agencies, spas & transporters scaled with Aleya"
+    },
+    ecom: {
+      badge: "E-Commerce Cloud OS",
+      heading: "Scale your storefront with speed & intelligence",
+      subheading: "Manage product catalog, high-frequency customer orders, automated billing, and live store analytics.",
+      features: [
+        { icon: "fi fi-rr-shopping-bag", title: "Instant Checkout", desc: "High-conversion checkout with lightning-fast catalog search." },
+        { icon: "fi fi-rr-chart-line-up", title: "Real-Time Insights", desc: "Live revenue metrics, order velocity, and customer cohorts." },
+        { icon: "fi fi-rr-boxes", title: "Inventory & Billing", desc: "Automated stock management and instant digital tax invoices." }
+      ],
+      stat_value: "99.99%",
+      stat_label: "Uptime &bull; Powers modern digital storefronts"
+    },
+    ecom_gift: {
+      badge: "Gift & Bakery Studio",
+      heading: "Craft unforgettable orders, cakes & celebration gifts",
+      subheading: "Empower custom cake configurations, bespoke gift hampers, date-slot delivery, and greeting cards.",
+      features: [
+        { icon: "fi fi-rr-gift", title: "Hamper Customizer", desc: "Bespoke item mixing, packaging themes, and occasion selectors." },
+        { icon: "fi fi-rr-clock-three", title: "Delivery Slot Dispatch", desc: "Pinpoint date and time slot scheduling with rider routing." },
+        { icon: "fi fi-rr-cake-slice", title: "Flavor & Custom Modifiers", desc: "Eggless choices, weight options, and custom message cards." }
+      ],
+      stat_value: "250,000+",
+      stat_label: "Festive celebrations and hampers delivered"
+    }
+  };
+
   const appCategories = {
+    aleya: [
+      { val: "travel_agency", label: "Travel Agency & Tour Operator" },
+      { val: "transporter", label: "Transporter & Fleet Operator (Cabs, Coaches, Rentals)" },
+      { val: "spa_wellness", label: "Spa, Wellness & Retreat Center" },
+      { val: "dmc", label: "Destination Management Company (DMC)" },
+      { val: "hotel_resort", label: "Hotel, Resort & Homestay" },
+      { val: "adventure_tours", label: "Adventure, Trekking & Safari Organizer" },
+      { val: "sightseeing_excursions", label: "Day Tours & Sightseeing Excursions" },
+      { val: "corporate_mice", label: "Corporate Travel & MICE Organizers" },
+      { val: "other_travel", label: "Other Travel & Hospitality Business" }
+    ],
     ecom: [
       { val: "fashion", label: "Fashion & Apparel" },
       { val: "electronics", label: "Electronics & Gadgets" },
@@ -15,13 +66,6 @@
       { val: "home", label: "Home Decor & Living" },
       { val: "grocery", label: "Grocery & Gourmet" },
       { val: "general", label: "General Merchandise" }
-    ],
-    aleya: [
-      { val: "hair_salon", label: "Hair & Beauty Salon" },
-      { val: "luxury_spa", label: "Luxury Spa & Wellness" },
-      { val: "aesthetic_clinic", label: "Aesthetic & Skin Clinic" },
-      { val: "nail_bar", label: "Nail Art & Studio" },
-      { val: "barber_grooming", label: "Barber & Men's Grooming" }
     ],
     ecom_gift: [
       { val: "bakery_cakes", label: "Bakery, Cakes & Desserts" },
@@ -110,7 +154,7 @@
     },
 
     initAppChoices: function () {
-      const initialApp = $("#selectedAppType").val() || "ecom";
+      const initialApp = $("#selectedAppType").val() || "aleya";
       this.selectApp(initialApp);
     },
 
@@ -124,9 +168,9 @@
       const $categorySelect = $("#category");
 
       if (appType === "aleya") {
-        $lbl.text("Salon / Spa Brand Name");
-        $input.attr("placeholder", "e.g. Glow Beauty Lounge");
-        $("#iconBusiness").attr("class", "fi fi-rr-sparkles input-icon");
+        $lbl.text("Agency / Business Name");
+        $input.attr("placeholder", "e.g. Skyline Holidays & Travels / Royal Cabs / Lotus Spa");
+        $("#iconBusiness").attr("class", "fi fi-rr-briefcase input-icon");
       } else if (appType === "ecom_gift") {
         $lbl.text("Gift Studio / Bakery Name");
         $input.attr("placeholder", "e.g. Sweet Occasions Studio");
@@ -138,12 +182,35 @@
       }
 
       // Populate categories
-      const cats = appCategories[appType] || appCategories.ecom;
+      const cats = appCategories[appType] || appCategories.aleya;
       let html = "";
       cats.forEach(function (c) {
         html += `<option value="${c.val}">${c.label}</option>`;
       });
       $categorySelect.html(html);
+
+      // Update showcase panel if present on page
+      if (typeof showcaseData !== "undefined" && showcaseData[appType]) {
+        const sc = showcaseData[appType];
+        if ($("#showcaseBadge").length) $("#showcaseBadge").text(sc.badge);
+        if ($("#showcaseTitle").length) $("#showcaseTitle").text(sc.heading);
+        if ($("#showcaseDesc").length) $("#showcaseDesc").text(sc.subheading);
+        if ($("#showcaseFeatures").length) {
+          let featHtml = "";
+          sc.features.forEach(function (f) {
+            featHtml += `<div class="showcase-feature-item">
+              <div class="feature-icon-box"><i class="${f.icon}"></i></div>
+              <div class="feature-text-group">
+                <strong>${f.title}</strong>
+                <span>${f.desc}</span>
+              </div>
+            </div>`;
+          });
+          $("#showcaseFeatures").html(featHtml);
+        }
+        if ($("#showcaseStatValue").length) $("#showcaseStatValue").text(sc.stat_value);
+        if ($("#showcaseStatLabel").length) $("#showcaseStatLabel").html(sc.stat_label);
+      }
     },
 
     initOnboardingAutoSlug: function () {

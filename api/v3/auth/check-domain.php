@@ -53,20 +53,52 @@ if (in_array($cleanSlug, $reservedSubdomains, true)) {
     exit;
 }
 
+$appParam = strtolower(trim($_GET['app'] ?? ($_POST['app'] ?? 'aleya')));
+$domainSuffix = ($appParam === 'aleya') ? '.aleya.in' : '.isw.one';
+$displayDomain = $cleanSlug . $domainSuffix;
+
 $mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : 'isw.one';
 $fullDomain = $cleanSlug . '.' . $mainDomain;
 $escSlug    = mysqli_real_escape_string($connection, $cleanSlug);
 $escFull    = mysqli_real_escape_string($connection, $fullDomain);
 
-// Check availability in site table using site_url column
+// Optionally exclude current user's newly initialized site
+$excludeSiteClause = '';
+$userEmail = strtolower(trim($_GET['setup_email'] ?? ($_GET['email'] ?? '')));
+if (empty($userEmail) && !empty($_GET['setup_id'])) {
+    $decoded = base64_decode($_GET['setup_id']);
+    if ($decoded && filter_var($decoded, FILTER_VALIDATE_EMAIL)) {
+        $userEmail = strtolower(trim($decoded));
+    }
+}
+if (empty($userEmail) && !empty($_SESSION['user_email'])) {
+    $userEmail = strtolower(trim($_SESSION['user_email']));
+}
+
+if (!empty($userEmail)) {
+    $escUserEmail = mysqli_real_escape_string($connection, $userEmail);
+    $userQ = mysqli_query($connection, "SELECT user_id FROM {$tblPrefix}user WHERE user_email = '{$escUserEmail}' LIMIT 1");
+    if ($userQ && $userRow = mysqli_fetch_assoc($userQ)) {
+        $currUserId = (int)$userRow['user_id'];
+        $userSiteQ = mysqli_query($connection, "SELECT site_id FROM {$tblPrefix}site WHERE site_owner_id = {$currUserId} AND site_id > 1 LIMIT 1");
+        if ($userSiteQ && $siteRow = mysqli_fetch_assoc($userSiteQ)) {
+            $excludeSiteId = (int)$siteRow['site_id'];
+            $excludeSiteClause = " AND site_id != {$excludeSiteId} ";
+        }
+    }
+}
+
+// Check availability in site table
 $checkQuery = mysqli_query($connection, "
     SELECT site_id, site_name, site_url 
     FROM {$tblPrefix}site 
-    WHERE site_url LIKE '%//{$escSlug}.%' 
-       OR site_url = 'https://{$escFull}'
-       OR site_url = 'http://{$escFull}'
-       OR site_domain = '{$escFull}'
-       OR site_domain LIKE '{$escSlug}.%'
+    WHERE (
+        site_url LIKE '%//{$escSlug}.%' 
+        OR site_url = 'https://{$escFull}'
+        OR site_url = 'http://{$escFull}'
+        OR site_domain = '{$escFull}'
+        OR site_domain LIKE '{$escSlug}.%'
+    ) {$excludeSiteClause}
     LIMIT 1
 ");
 
@@ -75,16 +107,16 @@ if ($checkQuery && mysqli_num_rows($checkQuery) > 0) {
         'status'    => 'success',
         'available' => false,
         'subdomain' => $cleanSlug,
-        'display'   => $cleanSlug . '.aleya.in',
-        'msg'       => "Workspace URL '{$cleanSlug}.aleya.in' is already taken."
+        'display'   => $displayDomain,
+        'msg'       => "Workspace URL '{$displayDomain}' is already taken."
     ]);
 } else {
     echo json_encode([
         'status'    => 'success',
         'available' => true,
         'subdomain' => $cleanSlug,
-        'display'   => $cleanSlug . '.aleya.in',
-        'msg'       => "Workspace URL '{$cleanSlug}.aleya.in' is available!"
+        'display'   => $displayDomain,
+        'msg'       => "Workspace URL '{$displayDomain}' is available!"
     ]);
 }
 exit;

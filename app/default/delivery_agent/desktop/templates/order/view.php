@@ -83,6 +83,7 @@ if (isset($id)) {
                     .delivery-agent-view {
                         font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                     }
+
                     .btn-call-action {
                         display: inline-flex;
                         align-items: center;
@@ -100,11 +101,13 @@ if (isset($id)) {
                         border: none;
                         white-space: nowrap;
                     }
+
                     .btn-call-action:hover {
                         background: #059669;
                         transform: translateY(-1px);
                         box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
                     }
+
                     .badge-rescheduled {
                         background: rgba(59, 130, 246, 0.12) !important;
                         color: #2563eb !important;
@@ -338,7 +341,7 @@ if (isset($id)) {
                             <div class="premium-action-row">
                                 <input type="hidden" name="id" value="<?php echo $id ?>">
                                 <a href="#" id="orderRescheduleBtn" class="btn-premium-action btn-reschedule"><i class="fas fa-calendar-plus"></i> Reschedule Delivery</a>
-                                <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return"><i class="fas fa-undo"></i> Return</a>
+                                <a href="#" id="orderReturnBtn" class="btn-premium-action btn-return"><i class="fas fa-undo"></i> Unable to Deliver</a>
                                 <a href="#" id="orderDeliverBtn" class="btn-premium-action btn-delivered"><i class="fas fa-shipping-fast"></i> Delivered</a>
                             </div>
                         </form>
@@ -367,6 +370,7 @@ if (isset($id)) {
                                     <option value="Size Issue">Size Issue</option>
                                     <option value="Late Delivery">Late Delivery</option>
                                     <option value="Changed My Mind">Changed My Mind</option>
+                                    <option value="Not Deliverable Address">Not Deliverable Address</option>
                                     <option value="Other">Other</option>
                                 </select>
                             </div>

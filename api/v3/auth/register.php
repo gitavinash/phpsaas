@@ -56,7 +56,8 @@ $firstName    = trim($data['first_name'] ?? '');
 $lastName     = trim($data['last_name'] ?? '');
 $email        = strtolower(trim($data['email'] ?? ''));
 $mobile       = preg_replace('/\D/', '', (string)($data['mobile'] ?? ''));
-$appName      = trim($data['app_type'] ?? ($data['app'] ?? (defined('SITE_APP') ? SITE_APP : 'ecom')));
+$appName      = trim($data['app_type'] ?? ($data['app'] ?? (defined('SITE_APP') ? SITE_APP : 'aleya')));
+$appType      = strtolower($appName);
 $businessName = trim($data['business_name'] ?? ($data['store_name'] ?? ($data['salon_name'] ?? '')));
 $subdomain    = strtolower(trim($data['subdomain'] ?? ($data['domain'] ?? '')));
 $userType     = strtolower(trim($data['user_type'] ?? ($data['userType'] ?? 'administrator')));
@@ -103,33 +104,19 @@ $escMobile = mysqli_real_escape_string($connection, $mobile);
 
 // Check if email already registered
 $checkEmailQuery = mysqli_query($connection, "
-    SELECT u.user_id, u.user_salt_key, sa.site_access_id 
-    FROM {$tblPrefix}user u
-    LEFT JOIN {$tblPrefix}site_access sa ON sa.site_access_user_id = u.user_id AND sa.site_access_site_id = {$siteId}
-    WHERE u.user_email = '{$escEmail}'
+    SELECT user_id 
+    FROM {$tblPrefix}user 
+    WHERE user_email = '{$escEmail}'
     LIMIT 1
 ");
 
 if ($checkEmailQuery && mysqli_num_rows($checkEmailQuery) > 0) {
-    $existing = mysqli_fetch_assoc($checkEmailQuery);
-    if (!empty($existing['site_access_id'])) {
-        http_response_code(409);
-        echo json_encode([
-            'status' => 'warning',
-            'msg'    => 'An account with this email address already exists. Please sign in.'
-        ]);
-        exit;
-    } else {
-        $userId = (int)$existing['user_id'];
-        $userSalt = (string)$existing['user_salt_key'];
-        mysqli_query($connection, "
-            INSERT INTO {$tblPrefix}site_access 
-                (site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta) 
-            VALUES 
-                ({$siteId}, {$userId}, '{$userType}', 1, '')
-        ");
-        $displayName = trim($firstName . ' ' . $lastName);
-    }
+    http_response_code(409);
+    echo json_encode([
+        'status' => 'warning',
+        'msg'    => 'An account with this email address already exists. Please sign in.'
+    ]);
+    exit;
 } else {
     // Check if mobile already registered
     if (!empty($mobile)) {
@@ -191,19 +178,53 @@ if ($checkEmailQuery && mysqli_num_rows($checkEmailQuery) > 0) {
             ({$userId}, '{$escFirst}', '{$escLast}', '{$escDisp}', '{$escEmail}', '{$escMobile}')
     ");
 
-    // Create Site Record for this new tenant
-    $siteDomain = !empty($subdomain) ? $subdomain : $rawUsername;
-    $siteDomain = preg_replace('/[^a-zA-Z0-9-]/', '', strtolower($siteDomain));
+    // Generate unique slug and URL for this new tenant site
+    $baseSlug = !empty($subdomain) ? $subdomain : (!empty($businessName) ? preg_replace('/[^a-z0-9]/', '', strtolower($businessName)) : $rawUsername);
+    $baseSlug = preg_replace('/[^a-z0-9-]/', '', strtolower($baseSlug));
+    if (empty($baseSlug)) {
+        $baseSlug = 'agency';
+    }
+
     $mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : 'isw.one';
-    $siteFullDomain = $siteDomain . '.' . $mainDomain;
+    $candidateSlug = $baseSlug;
+    $suffix = 0;
+    $siteDomain = '';
+    $siteFullDomain = '';
+    $siteUrl = '';
+
+    while (true) {
+        $candidateDomain = $candidateSlug . '.' . $mainDomain;
+        $candidateUrl = 'https://' . $candidateDomain;
+        $escCandidateUrl = mysqli_real_escape_string($connection, $candidateUrl);
+        $escCandidateDomain = mysqli_real_escape_string($connection, $candidateDomain);
+
+        $checkSite = mysqli_query($connection, "
+            SELECT site_id 
+            FROM {$tblPrefix}site 
+            WHERE site_url = '{$escCandidateUrl}' OR site_domain = '{$escCandidateDomain}' 
+            LIMIT 1
+        ");
+
+        if (!$checkSite || mysqli_num_rows($checkSite) === 0) {
+            $siteDomain = $candidateSlug;
+            $siteFullDomain = $candidateDomain;
+            $siteUrl = $candidateUrl;
+            break;
+        }
+
+        $suffix++;
+        $candidateSlug = $baseSlug . $suffix;
+    }
+
     $escSiteDomain = mysqli_real_escape_string($connection, $siteFullDomain);
-    $escBizName = mysqli_real_escape_string($connection, !empty($businessName) ? $businessName : $displayName . "'s Workspace");
+    $escSiteUrl    = mysqli_real_escape_string($connection, $siteUrl);
+    $escBizName    = mysqli_real_escape_string($connection, !empty($businessName) ? $businessName : $displayName . "'s Workspace");
 
     $insertNewSite = mysqli_query($connection, "
         INSERT INTO {$tblPrefix}site 
-            (site_owner_id, site_domain, site_url, site_name, site_app_id, site_dashboard_version, site_status)
+            (site_owner_id, site_domain, site_url, site_name, site_app_id, site_theme_id, site_dashboard_version, site_status)
         VALUES 
-            ({$userId}, '{$escSiteDomain}', 'https://{$escSiteDomain}', '{$escBizName}', {$resolvedAppId}, 3, 1)
+            ({$userId}, '{$escSiteDomain}', '{$escSiteUrl}', '{$escBizName}', {$resolvedAppId}, 1, 3, 1)
     ");
     $newSiteId = mysqli_insert_id($connection);
 
@@ -216,6 +237,7 @@ if ($checkEmailQuery && mysqli_num_rows($checkEmailQuery) > 0) {
                 ({$newSiteId}, {$newSiteId}, {$userId}, {$resolvedAppId}, 1, '{$expiryDate}')
         ");
 
+        // Assign registered user exclusively to the newly created site as administrator
         mysqli_query($connection, "
             INSERT INTO {$tblPrefix}site_access 
                 (site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta)
@@ -223,7 +245,7 @@ if ($checkEmailQuery && mysqli_num_rows($checkEmailQuery) > 0) {
                 ({$newSiteId}, {$userId}, 'administrator', 1, '')
         ");
 
-        $tenantThemeColor = ($appType === 'aleya') ? '#00647a' : '#4f46e5';
+        $tenantThemeColor = ($resolvedAppId === 20 || $appType === 'aleya') ? '#00647a' : '#4f46e5';
         mysqli_query($connection, "
             INSERT INTO {$tblPrefix}site_setting 
                 (site_setting_site_id, site_pagination_limit, site_sitemap_limit, site_feed_limit, site_image_quality, site_theme_color)
@@ -232,15 +254,7 @@ if ($checkEmailQuery && mysqli_num_rows($checkEmailQuery) > 0) {
         ");
     }
 
-    // Grant access to current host site as well
-    $insertAccess = mysqli_query($connection, "
-        INSERT INTO {$tblPrefix}site_access 
-            (site_access_site_id, site_access_user_id, site_access_type, site_access_status, site_access_meta)
-        VALUES 
-            ({$siteId}, {$userId}, '{$userType}', 1, '')
-    ");
-
-    if ($insertUser && $insertProfile && $insertAccess && $insertNewSite) {
+    if ($insertUser && $insertProfile && $insertNewSite && $newSiteId > 0) {
         mysqli_query($connection, "COMMIT");
     } else {
         mysqli_query($connection, "ROLLBACK");
@@ -254,6 +268,7 @@ if ($checkEmailQuery && mysqli_num_rows($checkEmailQuery) > 0) {
 }
 
 // Establish Cookies & Session
+$activeTenantSiteId = (isset($newSiteId) && $newSiteId > 0) ? $newSiteId : $siteId;
 $cookieExpiry = time() + (30 * 24 * 60 * 60);
 $mainDomain = defined('MAIN_DOMAIN') ? MAIN_DOMAIN : ($_SERVER['HTTP_HOST'] ?? '');
 $mainDomain = preg_replace('/:\d+$/', '', $mainDomain);
@@ -270,39 +285,50 @@ $deviceId = !empty($_COOKIE['device_id']) ? (string)$_COOKIE['device_id'] : bin2
 @setcookie('device_id', $deviceId, $cookieExpiry, '/', $cookieDomain, $isHttps, false);
 $_COOKIE['device_id'] = $deviceId;
 
-// Record Session in isw_user_sessions
-mysqli_query($connection, "
-    INSERT INTO {$tblPrefix}user_sessions 
-        (us_site_id, us_user_id, us_analytics_id, us_active_device, us_status) 
-    VALUES 
-        ({$siteId}, {$userId}, 0, '{$deviceId}', 1)
-");
+// Record Session in isw_user_sessions for new tenant site only (do not assign to current host site)
+if (!empty($newSiteId) && $newSiteId > 0) {
+    mysqli_query($connection, "
+        INSERT INTO {$tblPrefix}user_sessions 
+            (us_site_id, us_user_id, us_analytics_id, us_active_device, us_status) 
+        VALUES 
+            ({$newSiteId}, {$userId}, 0, '{$deviceId}', 1)
+    ");
+}
 
 @setcookie('user_data', base64_encode($userSalt), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
 @setcookie('user_name', base64_encode($displayName), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
 @setcookie('user_email', base64_encode($email), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
 @setcookie('user_mobile', base64_encode($mobile), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
 @setcookie('user_type', base64_encode('administrator'), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
+@setcookie('user_site_id', base64_encode((string)$activeTenantSiteId), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
 @setcookie('user_meta', '', $cookieExpiry, '/', $cookieDomain, $isHttps, false);
 @setcookie('site_app', base64_encode($siteApp), $cookieExpiry, '/', $cookieDomain, $isHttps, false);
 @setcookie('isLogin', '1', $cookieExpiry, '/', $cookieDomain, $isHttps, false);
 
-$_COOKIE['user_data'] = base64_encode($userSalt);
+$_COOKIE['user_data']    = base64_encode($userSalt);
+$_COOKIE['user_site_id'] = base64_encode((string)$activeTenantSiteId);
 
 if (session_status() === PHP_SESSION_ACTIVE) {
-    $_SESSION['user_id'] = $userId;
-    $_SESSION['site_id'] = isset($newSiteId) && $newSiteId > 0 ? $newSiteId : $siteId;
-    $_SESSION['user_role'] = 'administrator';
-    $_SESSION['display_name'] = $displayName;
+    $_SESSION['user_id']       = $userId;
+    $_SESSION['site_id']       = $activeTenantSiteId;
+    $_SESSION['user_site_id']  = $activeTenantSiteId;
+    $_SESSION['user_role']     = 'administrator';
+    $_SESSION['user_type']     = 'administrator';
+    $_SESSION['display_name']  = $displayName;
+    $_SESSION['business_name'] = !empty($businessName) ? $businessName : '';
+    $_SESSION['site_name']     = !empty($businessName) ? $businessName : '';
 }
 
-$finalRedirect = !empty($redirectUrl) && $redirectUrl !== '#' ? $redirectUrl : '/dashboard/';
+$bizParam = !empty($businessName) ? '&biz=' . urlencode(base64_encode($businessName)) : '';
+$setupRedirect = '/website-setup/?setup_id=' . urlencode(base64_encode($email)) . $bizParam . '&app=' . urlencode($siteApp);
+$finalRedirect = (!empty($redirectUrl) && $redirectUrl !== '#' && $redirectUrl !== '/dashboard/') ? $redirectUrl : $setupRedirect;
 
 echo json_encode([
     'status'       => 'success',
-    'msg'          => 'Account created successfully! Welcome to your dashboard.',
+    'msg'          => 'Account created successfully! Welcome to workspace onboarding.',
     'url'          => $finalRedirect,
     'redirect_url' => $finalRedirect,
+    'site_id'      => $activeTenantSiteId,
     'user'         => [
         'id'    => $userId,
         'name'  => $displayName,

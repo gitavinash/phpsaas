@@ -174,6 +174,7 @@ switch ($urlStructure[0]) {
 		require_once 'css-theme.php';
 		break;
 
+	case 'onboarding':
 	case 'website-setup':
 		require_once 'website-setup.php';
 		break;

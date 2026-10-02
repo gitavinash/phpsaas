@@ -1,23 +1,21 @@
 <?php
 
-// User selected theme login template
+$pageName = in_array($urlStructure[0], ['onboarding', 'website-setup']) ? 'website-setup' : $urlStructure[0];
 
 $themeLoginFile = USER_PATH . $urlStructure[0] . '.php';
 
 if (!file_exists($themeLoginFile)) {
 
-    $themeLoginFile = str_replace('/default/', '/' . USER_TYPE . '/', ADMIN_PATH) . $urlStructure[0] . '.php';
+    $themeLoginFile = str_replace('/default/', '/' . USER_TYPE . '/', ADMIN_PATH) . $pageName . '.php';
 
     if (!file_exists($themeLoginFile)) {
 
-        $themeLoginFile = ADMIN_PATH . $urlStructure[0] . '.php';
+        $themeLoginFile = ADMIN_PATH . $pageName . '.php';
     }
 
     if (!file_exists($themeLoginFile)) {
 
-        // Default dashboard theme login template
-
-        $themeLoginFile = DEFAULT_VISITOR_PATH . $urlStructure[0] . '.php';
+        $themeLoginFile = DEFAULT_VISITOR_PATH . $pageName . '.php';
     }
 }
 

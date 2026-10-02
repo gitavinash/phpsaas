@@ -35,10 +35,6 @@
             </a>
 
             <div class="onboarding-header-right">
-                <div class="trust-badge-pill">
-                    <i class="fas fa-shield-halved"></i>
-                    <span>256-Bit SSL Encrypted</span>
-                </div>
                 <div>
                     Already using Aleya? <a href="/login/" class="onboarding-login-link">Sign In</a>
                 </div>
