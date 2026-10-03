@@ -213,7 +213,7 @@
                 state: ['state', 'province', 'region'],
                 product: ['product', 'item', 'sku', 'medicine', 'service'],
                 delivery_date: ['deliverydate', 'delivery', 'date', 'shipdate', 'shippingdate', 'scheduledate'],
-                order_status: ['status', 'orderstatus', 'state']
+                order_status: ['status', 'orderstatus', 'order_status', 'order status', 'delivery status', 'current status', 'orderstate']
             };
         }
 

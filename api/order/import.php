@@ -703,6 +703,7 @@ function buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate, $co
 
     $product = trim((string)$row['product']);
     $remarks = isset($row['remarks']) ? trim((string)$row['remarks']) : '';
+    $orderStatus = isset($row['order_status']) ? normalizeOrderStatus($row['order_status']) : '0';
     $extraMeta = array();
     if (!empty($row['__unmatched_meta']) && is_array($row['__unmatched_meta'])) {
         $extraMeta = $row['__unmatched_meta'];
@@ -828,7 +829,7 @@ function buildOrderRow($userId, $addressId, $row, $rowNumber, $deliveryDate, $co
         'order_msg' => $remarks,
         'order_ref_by' => $companyId > 0 ? (int)$companyId : 0,
         'order_ref_type' => $companyId > 0 ? 'company' : '',
-        'order_status' => '0',
+        'order_status' => $orderStatus,
         'order_payment_mode' => '',
         '__extra_meta' => $extraMeta,
         'deliveryDate' => $deliveryDate
@@ -951,12 +952,113 @@ function isValidStatus($status)
 
     if (ctype_digit($status)) {
         $num = (int)$status;
-        return $num >= 0 && $num <= 6;
+        return $num >= 0 && $num <= 9;
     }
 
-    $status = strtolower($status);
-    $validStatuses = array('pending', 'completed', 'cancelled', 'processing', 'confirmed', 'rejected', 'waiting', 'rto', 'delivered');
-    return in_array($status, $validStatuses, true);
+    $norm = strtolower($status);
+    $norm = str_replace(array('_', '-'), ' ', $norm);
+    $norm = preg_replace('/\s+/', ' ', $norm);
+    $norm = trim($norm);
+
+    $validStatuses = array(
+        'pending', 'new', 'open', 'created',
+        'confirm', 'confirmed', 'accept', 'accepted', 'order accepted', 'order accepted by vendor', 'approved',
+        'assigned', 'assigned to vendor', 'assigned to delivery agent', 'assigned vendor',
+        'processing', 'in progress', 'process',
+        'waiting', 'shipped', 'dispatch', 'dispatched',
+        'out for delivery', 'rto',
+        'delivered', 'complete', 'completed', 'success', 'done',
+        'cancel', 'cancelled', 'canceled', 'reject', 'rejected', 'declined', 'failed',
+        'return', 'returned',
+        'reschedule', 'rescheduled'
+    );
+    return in_array($norm, $validStatuses, true);
+}
+
+function normalizeOrderStatus($status)
+{
+    $raw = trim((string)$status);
+    if ($raw === '') {
+        return '0';
+    }
+
+    if (ctype_digit($raw)) {
+        $num = (int)$raw;
+        if ($num >= 0 && $num <= 9) {
+            return (string)$num;
+        }
+        return '0';
+    }
+
+    $norm = strtolower($raw);
+    $norm = str_replace(array('_', '-'), ' ', $norm);
+    $norm = preg_replace('/\s+/', ' ', $norm);
+    $norm = trim($norm);
+
+    switch ($norm) {
+        case 'pending':
+        case 'new':
+        case 'open':
+        case 'created':
+            return '0';
+
+        case 'confirm':
+        case 'confirmed':
+        case 'accept':
+        case 'accepted':
+        case 'order accepted':
+        case 'order accepted by vendor':
+        case 'approved':
+            return '1';
+
+        case 'assigned':
+        case 'assigned to vendor':
+        case 'assigned to delivery agent':
+        case 'assigned vendor':
+            return '2';
+
+        case 'processing':
+        case 'in progress':
+        case 'process':
+            return '3';
+
+        case 'shipped':
+        case 'waiting':
+        case 'dispatched':
+        case 'dispatch':
+            return '4';
+
+        case 'out for delivery':
+        case 'rto':
+            return '5';
+
+        case 'delivered':
+        case 'complete':
+        case 'completed':
+        case 'success':
+        case 'done':
+            return '6';
+
+        case 'cancel':
+        case 'cancelled':
+        case 'canceled':
+        case 'reject':
+        case 'rejected':
+        case 'declined':
+        case 'failed':
+            return '7';
+
+        case 'return':
+        case 'returned':
+            return '8';
+
+        case 'reschedule':
+        case 'rescheduled':
+            return '9';
+
+        default:
+            return '0';
+    }
 }
 
 function getOrderTableColumns()
