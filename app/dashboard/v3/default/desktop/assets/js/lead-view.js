@@ -1582,6 +1582,22 @@
       const self = this;
       const $container = $("#leadViewMainContainer");
 
+      const $app = $("#leadViewApp");
+      const pkgAttr = $app.data("package-id") || $app.attr("data-package-id");
+      const isPkg6Attr = $app.data("is-package-six") || $app.attr("data-is-package-six");
+      const apiPkgId = (lead && lead.site_package_id) || (self.leadData && self.leadData.site_package_id);
+      const globalPkgId = typeof SITE_PACKAGE_ID !== "undefined" ? parseInt(SITE_PACKAGE_ID, 10) : 0;
+
+      self.isPackageSix = (
+        pkgAttr == 6 ||
+        isPkg6Attr == 1 ||
+        isPkg6Attr == "1" ||
+        isPkg6Attr === true ||
+        apiPkgId == 6 ||
+        globalPkgId === 6 ||
+        $app.hasClass("is-package-six")
+      );
+
       document.title =
         (lead.name ? lead.name + " - Lead Details" : "Lead Details") +
         " | Dashboard";
@@ -1908,9 +1924,15 @@
                   <span class="v3-pay-stat-val">${self.leadPayments.length}</span>
                 </div>
               </div>
+              ${
+                !self.isPackageSix
+                  ? `
               <button type="button" class="btn-v3-action btn-green" id="btnOpenPaymentModalTab" data-tooltip="Record Payment">
                 <i class="fi fi-rr-plus"></i> Record Payment
               </button>
+              `
+                  : ""
+              }
             </div>
             <div class="v3-table-responsive-wrapper">
               <table class="v3-payments-table">
@@ -1997,9 +2019,15 @@
             <div class="v3-empty-icon-wrap v3-empty-icon-compact"><i class="fi fi-rr-indian-rupee-sign"></i></div>
             <h4 class="v3-empty-title">No Payments Recorded</h4>
             <p class="v3-empty-subtitle">No advance deposit or final settlement payment has been recorded yet.</p>
+            ${
+              !self.isPackageSix
+                ? `
             <button type="button" class="btn-v3-action btn-green" id="btnOpenPaymentModal" data-tooltip="Record Payment">
               <i class="fi fi-rr-plus"></i> Record Payment
             </button>
+            `
+                : ""
+            }
           </div>
         `;
       }
@@ -2270,9 +2298,15 @@
               ${
                 isAssigned
                   ? `
+                ${
+                  !self.isPackageSix
+                    ? `
                 <button type="button" class="btn-v3-action btn-outline" id="btnHeroSendItinerary" data-tooltip="Search, Customize & Send Itinerary">
                   <i class="fi fi-rr-paper-plane"></i> <span>Send Itinerary</span>
                 </button>
+                `
+                    : ""
+                }
                 <button type="button" class="btn-v3-action btn-orange" id="btnHeroSetFollowUp" data-tooltip="Set Follow-Up Reminder">
                   <i class="fi fi-rr-alarm-clock"></i> <span>Follow-Up</span>
                 </button>
@@ -2594,6 +2628,9 @@
                       </div>
                     </button>
 
+                    ${
+                      !self.isPackageSix
+                        ? `
                     <button type="button" class="btn-fast-tile tile-itinerary" id="btnSideSendItinerary" data-tooltip="Create and send tour proposal">
                       <div class="fast-tile-icon"><i class="fi fi-rr-paper-plane"></i></div>
                       <div class="fast-tile-meta">
@@ -2601,6 +2638,9 @@
                         <span class="fast-tile-sub">Build & share quotation</span>
                       </div>
                     </button>
+                    `
+                        : ""
+                    }
 
                     <button type="button" class="btn-fast-tile tile-edit" id="btnSideEditLead" data-tooltip="Edit customer information and trip requirements">
                       <div class="fast-tile-icon"><i class="fi fi-rr-edit"></i></div>
@@ -2610,6 +2650,9 @@
                       </div>
                     </button>
 
+                    ${
+                      !self.isPackageSix
+                        ? `
                     <button type="button" class="btn-fast-tile tile-pay-record" id="btnSideRecordPayment" data-tooltip="Record payment received from client">
                       <div class="fast-tile-icon"><i class="fi fi-rr-indian-rupee-sign"></i></div>
                       <div class="fast-tile-meta">
@@ -2625,6 +2668,9 @@
                         <span class="fast-tile-sub">Request online deposit</span>
                       </div>
                     </button>
+                    `
+                        : ""
+                    }
 
                     ${
                       st !== 1

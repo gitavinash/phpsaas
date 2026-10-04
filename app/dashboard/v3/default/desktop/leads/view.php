@@ -5,6 +5,12 @@ if (isset($site_access_type) && $site_access_type === 'digital_marketing') {
     exit();
 }
 
+$packageId = isset($site_package_id) ? (int)$site_package_id : (defined('SITE_PACKAGE_ID') ? (int)SITE_PACKAGE_ID : 7);
+if (!defined('SITE_PACKAGE_ID')) {
+    define('SITE_PACKAGE_ID', $packageId);
+}
+$isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PACKAGE_ID === 6));
+
 $rawLeadId = isset($id) ? $id : (isset($_GET['id']) ? $_GET['id'] : '');
 if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
     $lastSeg = end($urlStructure);
@@ -13,10 +19,12 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
     }
 }
 ?>
-<div id="leadViewApp" class="lead-view-wrapper"
+<div id="leadViewApp" class="lead-view-wrapper<?php echo $isPackageSix ? ' is-package-six' : ''; ?>"
     data-lead-id="<?php echo htmlspecialchars($rawLeadId); ?>"
     data-user-id="<?php echo htmlspecialchars(defined('USER_ID') ? USER_ID : 0); ?>"
     data-user-role="<?php echo htmlspecialchars(isset($site_access_type) ? $site_access_type : 'administrator'); ?>"
+    data-package-id="<?php echo $packageId; ?>"
+    data-is-package-six="<?php echo $isPackageSix ? '1' : '0'; ?>"
     data-site-name="<?php echo htmlspecialchars(defined('SITE_NAME') ? SITE_NAME : ''); ?>"
     data-site-logo="<?php echo htmlspecialchars(defined('SITE_LOGO') ? SITE_LOGO : ''); ?>"
     data-site-domain="<?php echo htmlspecialchars(defined('COMPANY_SITE_DOMAIN') ? COMPANY_SITE_DOMAIN : (defined('SITE_DOMAIN') ? SITE_DOMAIN : '')); ?>"

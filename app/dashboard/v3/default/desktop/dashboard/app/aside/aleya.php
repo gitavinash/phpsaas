@@ -9,46 +9,54 @@
 $currentUrl = defined('ADMIN_BASE_URL') ? ADMIN_BASE_URL : (defined('ACTIVE_URL') ? ACTIVE_URL : '');
 $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboard' || $currentUrl === '' || $currentUrl === '/');
 
-// 1. CORE & SALES CRM
+// 1. CORE & SALES CRM / DIGITAL MARKETING
 ?>
-<?php if ($site_access_type === 'digital_marketing') { ?>
+<?php if ($site_access_type === 'digital_marketing' || $isDigitalMarketingPackage) { ?>
+    <!-- 1. DIGITAL MARKETING SUITE (Package ID 6: Dashboard, Leads) -->
     <li class="header-section-name">
-        <p>Ad Leads<span>Campaigns &amp; Inquiries</span></p>
+        <p>Digital Marketing<span>Campaigns &amp; Leads</span></p>
     </li>
 
     <li <?php echo ($isDashboardActive ? 'class="active"' : ''); ?>>
         <a href="/dashboard/"><i class="fi fi-rr-apps"></i> Dashboard</a>
-    </li>
-
-    <li <?php echo (strpos($currentUrl, '/integration/facebook') !== false ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/integration/facebook/"><i class="fi fi-rr-bullseye-arrow"></i> Facebook Leads</a>
         <div class="side-menu">
             <ul>
-                <li><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Lead Ads</a></li>
+                <li><a href="/dashboard/"><i class="fi-rr-apps"></i> Overview</a></li>
             </ul>
         </div>
         <div class="bottom-menu">
             <ul>
-                <li><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Lead Ads</a></li>
+                <li><a href="/dashboard/"><i class="fi-rr-apps"></i> Overview</a></li>
             </ul>
         </div>
     </li>
 
-    <li <?php echo (strpos($currentUrl, '/integration/google_ads') !== false ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/integration/google_ads/"><i class="fi fi-rr-search-alt"></i> Google Leads</a>
+    <li <?php echo (strpos($currentUrl, '/leads/') !== false ? 'class="active"' : ''); ?>>
+        <a href="/dashboard/leads/"><i class="fi fi-rr-chart-network"></i> Leads &amp; Inquiries</a>
         <div class="side-menu">
             <ul>
-                <li><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads Leads</a></li>
+                <li><a href="/dashboard/leads/list/"><i class="fi-rr-apps-sort"></i> All Leads</a></li>
+                <li><a href="/dashboard/leads/add/"><i class="fi fi-rr-add"></i> Add New Lead</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed Leads</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending / Quotations</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow-ups</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=16"><i class="fi-rr-cross-circle"></i> Cancelled Leads</a></li>
             </ul>
         </div>
         <div class="bottom-menu">
             <ul>
-                <li><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads Leads</a></li>
+                <li><a href="/dashboard/leads/list/"><i class="fi-rr-apps-sort"></i> All Leads</a></li>
+                <li><a href="/dashboard/leads/add/"><i class="fi fi-rr-add"></i> Add New Lead</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=1"><i class="fi-rr-check"></i> Confirmed Leads</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=2"><i class="fi-rr-hourglass-end"></i> Pending / Quotations</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=3"><i class="fi-rr-comment"></i> Follow-ups</a></li>
+                <li><a href="/dashboard/leads/list/?leadStatus=16"><i class="fi-rr-cross-circle"></i> Cancelled Leads</a></li>
             </ul>
         </div>
     </li>
 
 <?php } else { ?>
+    <!-- 1. SALES CRM (Standard ERP Package) -->
     <li class="header-section-name">
         <p>Sales CRM<span>Daily Operations &amp; Leads</span></p>
     </li>
@@ -87,8 +95,8 @@ $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboa
 <?php } ?>
 
 <?php
-// 1.5 ACCOUNTS & FINANCE (Administrator & Accountant)
-if ($site_access_type == 'administrator' || $site_access_type == 'accountant') { ?>
+// 1.5 ACCOUNTS & FINANCE (Administrator & Accountant) - Hidden in Digital Marketing Package (ID 6)
+if (!$isDigitalMarketingPackage && ($site_access_type == 'administrator' || $site_access_type == 'accountant')) { ?>
     <li <?php echo (strpos($currentUrl, '/accounts') !== false ? 'class="active"' : ''); ?>>
         <a href="/dashboard/accounts/"><i class="fi fi-rr-wallet"></i> Accounts &amp; Ledger</a>
         <div class="side-menu">
@@ -109,8 +117,8 @@ if ($site_access_type == 'administrator' || $site_access_type == 'accountant') {
 <?php } ?>
 
 <?php
-// 2. PACKAGES & ITINERARIES
-if ($site_access_type == 'administrator' || $site_access_type == 'operations') { ?>
+// 2. PACKAGES, VENDORS & CMS - Hidden in Digital Marketing Package (ID 6)
+if (!$isDigitalMarketingPackage && ($site_access_type == 'administrator' || $site_access_type == 'operations')) { ?>
 
     <li class="header-section-name">
         <p>Tour Packages<span>Smart Itineraries &amp; Catalog</span></p>
@@ -247,8 +255,8 @@ if ($site_access_type == 'administrator') { ?>
     </li>
 <?php } ?>
 
-<!-- 6. SYSTEM & SETTINGS (Administrator) -->
-<?php if ($site_access_type == 'administrator') { ?>
+<!-- 6. SYSTEM & SETTINGS (Administrator & Digital Marketing) -->
+<?php if ($site_access_type == 'administrator' || $site_access_type == 'digital_marketing') { ?>
     <li class="header-section-name">
         <p>System &amp; Settings<span>Team, Channels &amp; Policies</span></p>
     </li>
@@ -257,49 +265,51 @@ if ($site_access_type == 'administrator') { ?>
 
     if (USER_TYPE == 'administrator') { ?>
         <li <?php echo (strpos($currentUrl, '/setting/') !== false ? 'class="active"' : ''); ?>>
-            <a href="/dashboard/setting/"><i class="fi fi-rr-users-alt"></i> Settings</a>
+            <a href="/dashboard/setting/"><i class="fi fi-rr-settings"></i> Settings</a>
         </li>
     <?php
     }
     ?>
 
-    <li <?php echo (strpos($currentUrl, '/user/') !== false ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/user/list/"><i class="fi fi-rr-users-alt"></i> Team &amp; Users</a>
-        <div class="side-menu">
-            <ul>
-                <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All Team Members</a></li>
-                <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add Team Member</a></li>
-            </ul>
-        </div>
-        <div class="bottom-menu">
-            <ul>
-                <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All Team Members</a></li>
-                <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add Team Member</a></li>
-            </ul>
-        </div>
-    </li>
+    <?php if ($site_access_type == 'administrator') { ?>
+        <li <?php echo (strpos($currentUrl, '/user/') !== false ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/user/list/"><i class="fi fi-rr-users-alt"></i> Team &amp; Users</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All Team Members</a></li>
+                    <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add Team Member</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All Team Members</a></li>
+                    <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add Team Member</a></li>
+                </ul>
+            </div>
+        </li>
 
 
-    <li <?php echo (strpos($currentUrl, '/company/') !== false ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/company/list/"><i class="fi fi-rr-shop"></i> Companies &amp; Branches</a>
-        <div class="side-menu">
-            <ul>
-                <li><a href="/dashboard/company/list/"><i class="fi-rr-apps-sort"></i> All Companies</a></li>
-                <li><a href="/dashboard/company/add/"><i class="fi fi-rr-add"></i> Add New Company</a></li>
-            </ul>
-        </div>
-        <div class="bottom-menu">
-            <ul>
-                <li><a href="/dashboard/company/list/"><i class="fi-rr-apps-sort"></i> All Companies</a></li>
-                <li><a href="/dashboard/company/add/"><i class="fi fi-rr-add"></i> Add New Company</a></li>
-            </ul>
-        </div>
-    </li>
+        <li <?php echo (strpos($currentUrl, '/company/') !== false ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/company/list/"><i class="fi fi-rr-shop"></i> Companies &amp; Branches</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="/dashboard/company/list/"><i class="fi-rr-apps-sort"></i> All Companies</a></li>
+                    <li><a href="/dashboard/company/add/"><i class="fi fi-rr-add"></i> Add New Company</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="/dashboard/company/list/"><i class="fi-rr-apps-sort"></i> All Companies</a></li>
+                    <li><a href="/dashboard/company/add/"><i class="fi fi-rr-add"></i> Add New Company</a></li>
+                </ul>
+            </div>
+        </li>
+    <?php } ?>
 <?php } ?>
 
 <?php
 // Plugins & Integrations: Visible to Administrator AND Digital Marketing
-if ($site_access_type == 'administrator') {
+if ($site_access_type == 'administrator' || $site_access_type == 'digital_marketing') {
     $activeAsidePg = 'razorpay';
     if (defined('PG_NAME') && !empty(PG_NAME)) {
         $activeAsidePg = strtolower(PG_NAME);
@@ -326,11 +336,11 @@ if ($site_access_type == 'administrator') {
         <div class="side-menu">
             <ul>
                 <li><a href="/dashboard/integration/"><i class="fi-rr-apps-sort"></i> All Plugins</a></li>
-                <li data-aside-plugin="facebook" <?php echo ((!defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Ads</a></li>
-                <li data-aside-plugin="google_ads" <?php echo ((defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
+                <li data-aside-plugin="facebook" <?php echo (($isDigitalMarketingPackage || !defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Ads</a></li>
+                <li data-aside-plugin="google_ads" <?php echo (($isDigitalMarketingPackage || (defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1')) ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
                 <li data-aside-plugin="whatsapp" <?php echo ((!defined('ENABLE_WHATSAPP_BUSINESS_API') || ENABLE_WHATSAPP_BUSINESS_API == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/whatsapp/"><i class="fi-rr-comment-alt-middle"></i> WhatsApp API</a></li>
                 <li data-aside-plugin="smtp" <?php echo ((!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/smtp/"><i class="fi-rr-envelope"></i> SMTP Email</a></li>
-                <?php if ($site_access_type !== 'digital_marketing') { ?>
+                <?php if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') { ?>
                     <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
                     <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
                     <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>
@@ -346,11 +356,11 @@ if ($site_access_type == 'administrator') {
         <div class="bottom-menu">
             <ul>
                 <li><a href="/dashboard/integration/"><i class="fi-rr-apps-sort"></i> All Plugins</a></li>
-                <li data-aside-plugin="facebook" <?php echo ((!defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Ads</a></li>
-                <li data-aside-plugin="google_ads" <?php echo ((defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
+                <li data-aside-plugin="facebook" <?php echo (($isDigitalMarketingPackage || !defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Ads</a></li>
+                <li data-aside-plugin="google_ads" <?php echo (($isDigitalMarketingPackage || (defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1')) ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
                 <li data-aside-plugin="whatsapp" <?php echo ((!defined('ENABLE_WHATSAPP_BUSINESS_API') || ENABLE_WHATSAPP_BUSINESS_API == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/whatsapp/"><i class="fi-rr-comment-alt-middle"></i> WhatsApp API</a></li>
                 <li data-aside-plugin="smtp" <?php echo ((!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/smtp/"><i class="fi-rr-envelope"></i> SMTP Email</a></li>
-                <?php if ($site_access_type !== 'digital_marketing') { ?>
+                <?php if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') { ?>
                     <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
                     <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
                     <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>

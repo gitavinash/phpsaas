@@ -857,6 +857,7 @@ $response = [
         'agents' => $agents,
         'access_type' => $accessType,
         'current_user_id' => (int)$currentUserId,
+        'site_package_id' => defined('SITE_PACKAGE_ID') ? (int)SITE_PACKAGE_ID : (isset($site_package_id) ? (int)$site_package_id : 7),
     ]
 ];
 

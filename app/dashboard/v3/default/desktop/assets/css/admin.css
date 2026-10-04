@@ -12486,6 +12486,22 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   background: #ffe4e6 !important;
 }
 
+/* Package 6 (Digital Marketing): Hide Tour Itinerary, Record Payment, and Send Payment Link */
+.lead-view-wrapper.is-package-six #btnHeroSendItinerary,
+.lead-view-wrapper.is-package-six #btnSideSendItinerary,
+.lead-view-wrapper.is-package-six #btnSideRecordPayment,
+.lead-view-wrapper.is-package-six #btnSideSendPaymentLink,
+.lead-view-wrapper.is-package-six #btnOpenPaymentModalTab,
+.lead-view-wrapper.is-package-six #btnOpenPaymentModal,
+[data-package-id="6"] #btnHeroSendItinerary,
+[data-package-id="6"] #btnSideSendItinerary,
+[data-package-id="6"] #btnSideRecordPayment,
+[data-package-id="6"] #btnSideSendPaymentLink,
+[data-package-id="6"] #btnOpenPaymentModalTab,
+[data-package-id="6"] #btnOpenPaymentModal {
+  display: none !important;
+}
+
 .btn-v3-action.is-loading,
 .btn-v3-action[disabled],
 .btn-fast-tile.is-loading,

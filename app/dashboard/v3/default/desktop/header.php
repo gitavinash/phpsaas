@@ -1,5 +1,11 @@
 <?php
 
+$packageId = isset($site_package_id) ? (int)$site_package_id : (defined('SITE_PACKAGE_ID') ? (int)SITE_PACKAGE_ID : 7);
+if (!defined('SITE_PACKAGE_ID')) {
+    define('SITE_PACKAGE_ID', $packageId);
+}
+$isDigitalMarketingPackage = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PACKAGE_ID === 6));
+
 require_once UTIL_FUNCTIONS;
 
 $appDashboardDirectory = ADMIN_PATH . 'dashboard/app/';
@@ -146,29 +152,29 @@ if (isset($daterange)) {
     </header>
 
     <?php if (!$isAgentAleya) { ?>
-    <aside id="sidebar">
-        <div class="logo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>"></a>
-        </div>
-        <nav class="side-nav">
-            <ul>
+        <aside id="sidebar">
+            <div class="logo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>"></a>
+            </div>
+            <nav class="side-nav">
+                <ul>
 
-                <?php
-                $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
+                    <?php
+                    $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
 
-                if (file_exists($appAsideFile)) {
-                    require_once $appAsideFile;
-                } else {
-                    require_once $appDashboardDirectory . 'aside/default.php';
-                }
-                ?>
+                    if (file_exists($appAsideFile)) {
+                        require_once $appAsideFile;
+                    } else {
+                        require_once $appDashboardDirectory . 'aside/default.php';
+                    }
+                    ?>
 
-                <li class="appVersion">
-                    <p>App version 3.0</p>
-                </li>
-            </ul>
-        </nav>
+                    <li class="appVersion">
+                        <p>App version 3.0</p>
+                    </li>
+                </ul>
+            </nav>
 
-    </aside>
+        </aside>
     <?php } ?>
 
     <?php
