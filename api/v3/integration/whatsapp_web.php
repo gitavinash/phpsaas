@@ -147,6 +147,19 @@ function saveWaWebConfig($connection, $siteId, $key, $value) {
 function callWaGateway($customUrl, $path, $method = 'GET', $body = null) {
     $gwUrl = !empty($customUrl) ? rtrim($customUrl, '/') : 'http://127.0.0.1:3001';
     $target = $gwUrl . '/' . ltrim($path, '/');
+
+    // Dynamic tenant domain resolution
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+        || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
+    $scheme = $isHttps ? 'https://' : 'http://';
+    $host = $_SERVER['HTTP_HOST'] ?? '127.0.0.1';
+    $dynamicWebhookUrl = $scheme . $host . '/api/v3/whatsapp/webhook.php';
+    $siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
+
+    $separator = (strpos($target, '?') !== false) ? '&' : '?';
+    $target .= $separator . 'webhook_url=' . urlencode($dynamicWebhookUrl) . '&site_id=' . $siteId;
+
     $opts = [
         'http' => [
             'method'  => $method,
@@ -155,6 +168,10 @@ function callWaGateway($customUrl, $path, $method = 'GET', $body = null) {
         ]
     ];
     if ($body !== null) {
+        if (is_array($body)) {
+            $body['webhook_url'] = $dynamicWebhookUrl;
+            $body['site_id'] = $siteId;
+        }
         $opts['http']['header'] = "Content-Type: application/json\r\n";
         $opts['http']['content'] = json_encode($body);
     }

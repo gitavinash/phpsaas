@@ -106,18 +106,32 @@ class WhatsAppSession {
     this.contactStore = new Map();
     this.lidPhoneMap = new Map();
 
+    this.webhookUrl = null;
+    this.siteId = null;
+
     this.loadStore();
     this.setupAutoSave();
+  }
+
+  notify(payload) {
+    const enriched = {
+      session_id: this.sessionId,
+      site_id: this.siteId || payload.site_id || null,
+      ...payload,
+    };
+    notifyCrm(enriched, this.webhookUrl);
   }
 
   loadStore() {
     try {
       if (fs.existsSync(this.storePath)) {
         const raw = JSON.parse(fs.readFileSync(this.storePath, "utf8"));
+        if (raw.webhookUrl) this.webhookUrl = raw.webhookUrl;
+        if (raw.siteId) this.siteId = raw.siteId;
         if (Array.isArray(raw.chats)) raw.chats.forEach((c) => { if (c && c.id) this.chatStore.set(c.id, c); });
         if (Array.isArray(raw.contacts)) raw.contacts.forEach((c) => { if (c && c.id) this.contactStore.set(c.id, c); });
         if (Array.isArray(raw.lidMap)) raw.lidMap.forEach(([k, v]) => this.lidPhoneMap.set(k, v));
-        console.log(`[WhatsApp Gateway:${this.sessionId}] Restored ${this.chatStore.size} chats, ${this.contactStore.size} contacts.`);
+        console.log(`[WhatsApp Gateway:${this.sessionId}] Restored ${this.chatStore.size} chats, ${this.contactStore.size} contacts, webhook: ${this.webhookUrl || 'default'}.`);
       }
     } catch (e) {
       console.error(`[WhatsApp Gateway:${this.sessionId}] Error reading store:`, e.message);
@@ -129,6 +143,8 @@ class WhatsAppSession {
       try {
         if (fs.existsSync(this.authDir)) {
           const data = {
+            webhookUrl: this.webhookUrl,
+            siteId: this.siteId,
             chats: Array.from(this.chatStore.values()),
             contacts: Array.from(this.contactStore.values()),
             lidMap: Array.from(this.lidPhoneMap.entries()),
@@ -291,8 +307,7 @@ class WhatsAppSession {
 
     if (batchPayload.length > 0) {
       console.log(`[WhatsApp Gateway:${this.sessionId}] Forwarding ${batchPayload.length} conversations to CRM Webhook...`);
-      notifyCrm({
-        session_id: this.sessionId,
+      this.notify({
         event: "batch_sync",
         chats: batchPayload,
       });
@@ -355,8 +370,7 @@ class WhatsAppSession {
 
           console.log(`[WhatsApp Gateway:${this.sessionId}] Connected successfully as ${formattedPhone}`);
 
-          notifyCrm({
-            session_id: this.sessionId,
+          this.notify({
             event: "device_connected",
             phone: formattedPhone,
             name: this.connectedUser.name,
@@ -459,8 +473,7 @@ class WhatsAppSession {
 
           console.log(`[WhatsApp Gateway:${this.sessionId}] Message (${isFromMe ? "OUT" : "IN"}) ${contactPhone}: ${body.substring(0, 40)}`);
 
-          notifyCrm({
-            session_id: this.sessionId,
+          this.notify({
             event: "message",
             direction: isFromMe ? "outgoing" : "incoming",
             phone: contactPhone,
@@ -508,14 +521,33 @@ class WhatsAppSession {
 // -----------------------------------------------------------------------------
 const sessions = new Map();
 
-function getSession(sessionId = "default") {
+function enrichSession(req, session) {
+  if (!session || !req) return;
+  const webhookUrl = req.query?.webhook_url || req.body?.webhook_url;
+  const siteId = req.query?.site_id || req.body?.site_id;
+  if (webhookUrl && typeof webhookUrl === "string" && webhookUrl.startsWith("http")) {
+    if (session.webhookUrl !== webhookUrl) {
+      console.log(`[WhatsApp Gateway:${session.sessionId}] Dynamic webhook registered: ${webhookUrl}`);
+      session.webhookUrl = webhookUrl;
+    }
+  }
+  if (siteId) {
+    session.siteId = siteId;
+  }
+}
+
+function getSession(sessionId = "default", req = null) {
   const cleanId = String(sessionId || "default").trim().replace(/[^a-zA-Z0-9_\-]/g, "");
   if (!sessions.has(cleanId)) {
     const s = new WhatsAppSession(cleanId);
     sessions.set(cleanId, s);
     s.startSocket();
   }
-  return sessions.get(cleanId);
+  const s = sessions.get(cleanId);
+  if (req) {
+    enrichSession(req, s);
+  }
+  return s;
 }
 
 // Initialize default session and any pre-existing sub-sessions on startup
@@ -534,10 +566,14 @@ try {
   }
 } catch (e) {}
 
-function notifyCrm(payload) {
+function notifyCrm(payload, targetOverrideUrl = null) {
   try {
     const data = JSON.stringify(payload);
-    const targetUrl = process.env.CRM_WEBHOOK_URL || CRM_WEBHOOK_URL;
+    const targetUrl = targetOverrideUrl || process.env.CRM_WEBHOOK_URL || CRM_WEBHOOK_URL;
+    if (!targetUrl) {
+      console.warn("[WhatsApp Gateway] No CRM_WEBHOOK_URL configured for webhook notification.");
+      return;
+    }
     const url = new URL(targetUrl);
     const client = url.protocol === "https:" ? https : http;
     const defaultPort = url.protocol === "https:" ? 443 : 80;
@@ -551,7 +587,7 @@ function notifyCrm(payload) {
         headers: {
           "Content-Type": "application/json",
           "Content-Length": Buffer.byteLength(data),
-          "Host": url.hostname,
+          "Host": url.host,
           "User-Agent": "WhatsApp-Gateway/1.0",
         },
         timeout: 8000,
@@ -561,14 +597,14 @@ function notifyCrm(payload) {
         res.on("data", (chunk) => (resBody += chunk));
         res.on("end", () => {
           if (res.statusCode >= 400) {
-            console.error(`[WhatsApp Gateway] CRM Webhook responded HTTP ${res.statusCode}:`, resBody);
+            console.error(`[WhatsApp Gateway] CRM Webhook responded HTTP ${res.statusCode} (${targetUrl}):`, resBody);
           }
         });
       }
     );
 
     req.on("error", (e) => {
-      console.error("[WhatsApp Gateway] Error connecting to CRM webhook:", e.message);
+      console.error(`[WhatsApp Gateway] Error connecting to CRM webhook (${targetUrl}):`, e.message);
     });
     req.write(data);
     req.end();
@@ -604,7 +640,7 @@ app.get("/devices", (req, res) => {
 
 // 1. Status & QR Info for specific session
 app.get("/status", (req, res) => {
-  const s = getSession(req.query.session_id);
+  const s = getSession(req.query.session_id, req);
   res.json({
     status: "success",
     session_id: s.sessionId,
@@ -618,7 +654,7 @@ app.get("/status", (req, res) => {
 
 // 2. Fetch live QR Code for specific session
 app.get("/qr", async (req, res) => {
-  const s = getSession(req.query.session_id);
+  const s = getSession(req.query.session_id, req);
 
   if (s.connectionStatus === "connected") {
     return res.json({
@@ -667,7 +703,7 @@ app.get("/qr", async (req, res) => {
 
 // 2b. Request Crockford 8-digit Pairing Code for specific session
 app.post("/pairing-code", async (req, res) => {
-  const s = getSession(req.body.session_id || req.query.session_id);
+  const s = getSession(req.body?.session_id || req.query?.session_id, req);
 
   if (s.connectionStatus === "connected") {
     return res.json({
@@ -715,7 +751,7 @@ app.post("/pairing-code", async (req, res) => {
 
 // 3. Send Outbound Message from CRM
 app.post("/send-message", async (req, res) => {
-  const s = getSession(req.body.session_id || req.query.session_id);
+  const s = getSession(req.body?.session_id || req.query?.session_id, req);
 
   if (s.connectionStatus !== "connected" || !s.sock) {
     return res.status(400).json({
@@ -774,7 +810,7 @@ app.post("/send-message", async (req, res) => {
 
 // 3b. Manual Sync Chats from WhatsApp to CRM
 app.all("/sync-chats", async (req, res) => {
-  const s = getSession(req.body?.session_id || req.query?.session_id);
+  const s = getSession(req.body?.session_id || req.query?.session_id, req);
 
   if (s.connectionStatus !== "connected" || !s.sock) {
     return res.status(400).json({ status: "error", message: "WhatsApp is not connected. Scan QR first." });
@@ -809,7 +845,7 @@ app.all("/sync-chats", async (req, res) => {
 
 // 4. Disconnect / Logout specific session
 app.all("/logout", async (req, res) => {
-  const s = getSession(req.body?.session_id || req.query?.session_id);
+  const s = getSession(req.body?.session_id || req.query?.session_id, req);
   await s.logout();
 
   res.json({

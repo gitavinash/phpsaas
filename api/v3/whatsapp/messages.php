@@ -260,13 +260,21 @@ if ($method === 'POST') {
     $gwErrorMsg = '';
     $gwResData = null;
 
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+        || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
+    $scheme = $isHttps ? 'https://' : 'http://';
+    $host = $_SERVER['HTTP_HOST'] ?? '127.0.0.1';
+    $dynamicWebhookUrl = $scheme . $host . '/api/v3/whatsapp/webhook.php';
+
     $payload = json_encode([
-        'site_id'    => $siteId,
-        'session_id' => $targetSessionId,
-        'to'         => $recipientPhone,
-        'message'    => $text,
-        'media'      => $mediaUrl,
-        'msg_id'     => $waMsgId
+        'site_id'     => $siteId,
+        'session_id'  => $targetSessionId,
+        'webhook_url' => $dynamicWebhookUrl,
+        'to'          => $recipientPhone,
+        'message'     => $text,
+        'media'       => $mediaUrl,
+        'msg_id'      => $waMsgId
     ]);
 
     $opts = [

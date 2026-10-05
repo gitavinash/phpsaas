@@ -25,29 +25,62 @@ if (empty($payload) && !empty($_POST)) {
 }
 
 $siteId = 0;
-if (isset($payload['site_id']) && is_numeric($payload['site_id'])) {
+if (isset($payload['site_id']) && is_numeric($payload['site_id']) && (int)$payload['site_id'] > 0) {
     $siteId = (int)$payload['site_id'];
-} elseif (isset($_GET['site_id']) && is_numeric($_GET['site_id'])) {
+} elseif (isset($_GET['site_id']) && is_numeric($_GET['site_id']) && (int)$_GET['site_id'] > 0) {
     $siteId = (int)$_GET['site_id'];
 } elseif (defined('SITE_ID') && (int)SITE_ID > 0) {
     $siteId = (int)SITE_ID;
-} else {
+}
+
+// Fallback 1: Resolve site from linked device session_id
+if ($siteId <= 0 && !empty($payload['session_id'])) {
+    $escSession = mysqli_real_escape_string($connection, trim($payload['session_id']));
+    $devQ = mysqli_query($connection, "SELECT device_site_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_session_id = '{$escSession}' LIMIT 1");
+    if ($devQ && mysqli_num_rows($devQ) > 0) {
+        $devRow = mysqli_fetch_assoc($devQ);
+        if (!empty($devRow['device_site_id'])) {
+            $siteId = (int)$devRow['device_site_id'];
+        }
+    }
+}
+
+// Fallback 2: Resolve site from sender/recipient phone number
+if ($siteId <= 0 && (!empty($payload['phone']) || !empty($payload['from']))) {
+    $rawPhone = preg_replace('/[^0-9]/', '', $payload['phone'] ?? $payload['from']);
+    if (!empty($rawPhone)) {
+        $escPhone = mysqli_real_escape_string($connection, $rawPhone);
+        $devQ2 = mysqli_query($connection, "SELECT device_site_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_phone = '{$escPhone}' LIMIT 1");
+        if ($devQ2 && mysqli_num_rows($devQ2) > 0) {
+            $devRow2 = mysqli_fetch_assoc($devQ2);
+            if (!empty($devRow2['device_site_id'])) {
+                $siteId = (int)$devRow2['device_site_id'];
+            }
+        }
+    }
+}
+
+// Fallback 3: Resolve site from incoming HTTP_HOST domain name
+if ($siteId <= 0) {
     $host = $_SERVER['HTTP_HOST'] ?? '';
     $host = preg_replace('/:\d+$/', '', $host);
-    $escapedHost = mysqli_real_escape_string($connection, $host);
-    $siteQuery = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
-    if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
-        $row = mysqli_fetch_assoc($siteQuery);
-        $siteId = (int)$row['site_id'];
+    if (!empty($host) && $host !== 'localhost' && $host !== '127.0.0.1') {
+        $escapedHost = mysqli_real_escape_string($connection, $host);
+        $siteQuery = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
+        if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
+            $row = mysqli_fetch_assoc($siteQuery);
+            $siteId = (int)$row['site_id'];
+        }
     }
-    // Fallback: Check which site is connected to WhatsApp Web
-    if ($siteId <= 0 || $host === 'localhost' || $host === '127.0.0.1') {
-        $connQ = mysqli_query($connection, "SELECT site_configuration_site_id FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key = 'whatsapp_web_status' AND site_configuration_value = 'connected' ORDER BY site_configuration_id DESC LIMIT 1");
-        if ($connQ && mysqli_num_rows($connQ) > 0) {
-            $cRow = mysqli_fetch_assoc($connQ);
-            if (!empty($cRow['site_configuration_site_id'])) {
-                $siteId = (int)$cRow['site_configuration_site_id'];
-            }
+}
+
+// Fallback 4: Fallback to active connected site configuration
+if ($siteId <= 0) {
+    $connQ = mysqli_query($connection, "SELECT site_configuration_site_id FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key = 'whatsapp_web_status' AND site_configuration_value = 'connected' ORDER BY site_configuration_id DESC LIMIT 1");
+    if ($connQ && mysqli_num_rows($connQ) > 0) {
+        $cRow = mysqli_fetch_assoc($connQ);
+        if (!empty($cRow['site_configuration_site_id'])) {
+            $siteId = (int)$cRow['site_configuration_site_id'];
         }
     }
 }
