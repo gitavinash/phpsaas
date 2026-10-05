@@ -7,6 +7,7 @@
 const {
   default: makeWASocket,
   useMultiFileAuthState,
+  makeCacheableSignalKeyStore,
   DisconnectReason,
   Browsers,
   fetchLatestBaileysVersion,
@@ -114,12 +115,35 @@ class WhatsAppSession {
     this.chatStore = new Map();
     this.contactStore = new Map();
     this.lidPhoneMap = new Map();
+    this.messageStore = new Map();
 
     this.webhookUrl = null;
     this.siteId = null;
 
     this.loadStore();
     this.setupAutoSave();
+  }
+
+  async getMessage(key) {
+    if (!key) return undefined;
+    const msgId = key.id;
+    if (msgId && this.messageStore.has(msgId)) {
+      return this.messageStore.get(msgId);
+    }
+    if (key.remoteJid && msgId) {
+      const combo = `${key.remoteJid}:${msgId}`;
+      if (this.messageStore.has(combo)) {
+        return this.messageStore.get(combo);
+      }
+    }
+    const cleanJid = key.remoteJid ? jidNormalizedUser(key.remoteJid) : null;
+    if (cleanJid) {
+      const chat = this.chatStore.get(cleanJid);
+      if (chat && chat.lastMessageText) {
+        return { conversation: chat.lastMessageText };
+      }
+    }
+    return undefined;
   }
 
   notify(payload) {
@@ -359,12 +383,20 @@ class WhatsAppSession {
 
       this.sock = makeWASocket({
         version,
-        auth: state,
+        auth: {
+          creds: state.creds,
+          keys: makeCacheableSignalKeyStore(state.keys, logger),
+        },
         logger: logger,
         browser: ["Aleya.in", "Chrome", "1.0.0"],
         syncFullHistory: true,
         connectTimeoutMs: 60000,
         keepAliveIntervalMs: 25000,
+        emitOwnEvents: true,
+        defaultQueryTimeoutMs: undefined,
+        getMessage: async (key) => {
+          return this.getMessage(key);
+        },
       });
 
       this.sock.ev.on("creds.update", saveCreds);
@@ -492,6 +524,16 @@ class WhatsAppSession {
           const altJid = msg.key?.remoteJidAlt;
           if (!rawJid) continue;
 
+          // Cache incoming message for encryption retry support
+          if (msg.key?.id && msg.message) {
+            this.messageStore.set(msg.key.id, msg.message);
+            this.messageStore.set(`${rawJid}:${msg.key.id}`, msg.message);
+            if (this.messageStore.size > 2500) {
+              const firstK = this.messageStore.keys().next().value;
+              this.messageStore.delete(firstK);
+            }
+          }
+
           if (altJid && rawJid.endsWith("@lid") && altJid.endsWith("@s.whatsapp.net")) {
             this.lidPhoneMap.set(rawJid, altJid);
           }
@@ -616,14 +658,22 @@ try {
   }
 } catch (e) {}
 
-function notifyCrm(payload, targetOverrideUrl = null) {
+function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
+  if (redirectCount > 3) {
+    console.error("[WhatsApp Gateway] CRM Webhook exceeded max redirects (3).");
+    return;
+  }
   try {
-    const data = JSON.stringify(payload);
-    const targetUrl = targetOverrideUrl || process.env.CRM_WEBHOOK_URL || CRM_WEBHOOK_URL;
+    let targetUrl = targetOverrideUrl || process.env.CRM_WEBHOOK_URL || CRM_WEBHOOK_URL;
     if (!targetUrl) {
       console.warn("[WhatsApp Gateway] No CRM_WEBHOOK_URL configured for webhook notification.");
       return;
     }
+
+    // Always canonicalize /webhook.php to /webhook/ to prevent Apache 301/302 redirects
+    targetUrl = targetUrl.replace(/\/webhook\.php(\?|$)/, "/webhook/$1");
+
+    const data = JSON.stringify(payload);
     const url = new URL(targetUrl);
     const client = url.protocol === "https:" ? https : http;
     const defaultPort = url.protocol === "https:" ? 443 : 80;
@@ -640,14 +690,23 @@ function notifyCrm(payload, targetOverrideUrl = null) {
           "Host": url.host,
           "User-Agent": "WhatsApp-Gateway/1.0",
         },
-        timeout: 8000,
+        timeout: 10000,
       },
       (res) => {
+        // Follow redirect if 301, 302, 307, 308
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          const redirectUrl = new URL(res.headers.location, targetUrl).toString();
+          console.log(`[WhatsApp Gateway] Webhook redirected (${res.statusCode}) to ${redirectUrl}`);
+          return notifyCrm(payload, redirectUrl, redirectCount + 1);
+        }
+
         let resBody = "";
         res.on("data", (chunk) => (resBody += chunk));
         res.on("end", () => {
           if (res.statusCode >= 400) {
             console.error(`[WhatsApp Gateway] CRM Webhook responded HTTP ${res.statusCode} (${targetUrl}):`, resBody);
+          } else {
+            console.log(`[WhatsApp Gateway] CRM Webhook delivered successfully (${res.statusCode}): ${payload.event || 'message'}`);
           }
         });
       }
@@ -889,12 +948,29 @@ app.post("/send-message", async (req, res) => {
       if (typeof s.sock.onWhatsApp === "function") {
         const results = await s.sock.onWhatsApp(cleanNumber);
         if (results && results.length > 0 && results[0].exists && results[0].jid) {
-          targetJid = results[0].jid;
+          if (!results[0].jid.endsWith("@lid")) {
+            targetJid = results[0].jid;
+          }
         }
       }
     } catch (e) {}
 
+    // Subscribe presence to establish connection before sending
+    try {
+      await s.sock.presenceSubscribe(targetJid);
+    } catch (e) {}
+
     const sent = await s.sock.sendMessage(targetJid, { text: message });
+
+    // Store in messageStore to resolve any encryption retry requests from recipient
+    if (sent?.key?.id && sent.message) {
+      s.messageStore.set(sent.key.id, sent.message);
+      s.messageStore.set(`${targetJid}:${sent.key.id}`, sent.message);
+      if (s.messageStore.size > 2500) {
+        const firstK = s.messageStore.keys().next().value;
+        s.messageStore.delete(firstK);
+      }
+    }
 
     // Update local chatStore
     const norm = jidNormalizedUser(targetJid);

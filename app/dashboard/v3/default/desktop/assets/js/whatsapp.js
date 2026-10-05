@@ -251,16 +251,20 @@
 
           let html = "";
           res.chats.forEach(function (chat) {
-            const prev = self.knownChats ? self.knownChats.get(chat.chat_id) : null;
-            if (prev && self.hasInitialLoaded) {
-              const hasIncreasedUnread = (chat.unread_count || 0) > (prev.unread_count || 0);
-              const hasNewMsg = chat.last_message && chat.last_message !== prev.last_message;
-              if ((hasNewMsg || hasIncreasedUnread) && chat.chat_id !== self.activeChatId) {
+            const isBrandNew = !prev && self.hasInitialLoaded && !!chat.last_message;
+            const hasIncreasedUnread = prev && (chat.unread_count || 0) > (prev.unread_count || 0);
+            const hasNewMsg = prev && chat.last_message && chat.last_message !== prev.last_message;
+
+            if (isBrandNew || hasNewMsg || hasIncreasedUnread) {
+              if (chat.chat_id !== self.activeChatId) {
                 newIncomingDetected = true;
                 latestMsgText = chat.last_message;
                 latestSenderName = chat.name || chat.phone;
                 latestChatId = chat.chat_id;
                 latestPhone = chat.phone;
+              } else if (hasNewMsg) {
+                // Silently refresh current chat stream if new message received on active chat
+                self.loadMessages(self.activeChatId, false);
               }
             }
             if (!self.knownChats) self.knownChats = new Map();

@@ -155,7 +155,7 @@ function callWaGateway($customUrl, $path, $method = 'GET', $body = null) {
         || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
     $scheme = $isHttps ? 'https://' : 'http://';
     $host = $_SERVER['HTTP_HOST'] ?? '127.0.0.1';
-    $dynamicWebhookUrl = $scheme . $host . '/api/v3/whatsapp/webhook.php';
+    $dynamicWebhookUrl = $scheme . $host . '/api/v3/whatsapp/webhook/';
     $siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
 
     $separator = (strpos($target, '?') !== false) ? '&' : '?';
