@@ -24,6 +24,26 @@ const pino = require("pino");
 const fs = require("fs");
 const path = require("path");
 const http = require("http");
+const https = require("https");
+
+// Auto-load .env file if present in gateway directory
+const envFile = path.join(__dirname, ".env");
+if (fs.existsSync(envFile)) {
+  try {
+    const lines = fs.readFileSync(envFile, "utf8").split(/\r?\n/);
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith("#")) {
+        const idx = trimmed.indexOf("=");
+        if (idx > 0) {
+          const k = trimmed.substring(0, idx).trim();
+          const v = trimmed.substring(idx + 1).trim().replace(/^["']|["']$/g, "");
+          if (!process.env[k]) process.env[k] = v;
+        }
+      }
+    }
+  } catch (e) {}
+}
 
 const PORT = process.env.PORT || 3001;
 const AUTH_DIR = path.join(__dirname, "auth_session");
@@ -517,19 +537,24 @@ try {
 function notifyCrm(payload) {
   try {
     const data = JSON.stringify(payload);
-    const url = new URL(CRM_WEBHOOK_URL);
+    const targetUrl = process.env.CRM_WEBHOOK_URL || CRM_WEBHOOK_URL;
+    const url = new URL(targetUrl);
+    const client = url.protocol === "https:" ? https : http;
+    const defaultPort = url.protocol === "https:" ? 443 : 80;
 
-    const req = http.request(
+    const req = client.request(
       {
         hostname: url.hostname,
-        port: url.port || 80,
+        port: url.port || defaultPort,
         path: url.pathname + url.search,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Content-Length": Buffer.byteLength(data),
+          "Host": url.hostname,
+          "User-Agent": "WhatsApp-Gateway/1.0",
         },
-        timeout: 5000,
+        timeout: 8000,
       },
       (res) => {
         let resBody = "";
