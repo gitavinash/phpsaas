@@ -285,18 +285,30 @@ if (strlen($last10) >= 8) {
         if (empty($name) && !empty($lRow['lead_name'])) {
             $name = $lRow['lead_name'];
         }
-    } elseif ($direction === 'incoming' && $configs['whatsapp_web_auto_create_lead'] === '1' && !empty($text)) {
-        // Auto-create new CRM enquiry for fresh inquiry
-        $leadName = !empty($name) ? $name : 'WhatsApp (' . $cleanPhone . ')';
-        $escLeadName = mysqli_real_escape_string($connection, $leadName);
+    } elseif ($direction === 'incoming') {
+        // Auto-create new CRM lead for fresh inquiry from new WhatsApp contact
+        $rawLeadName = !empty($name) ? $name : (!empty($pushName) ? $pushName : 'WhatsApp (' . $cleanPhone . ')');
+        $nameParts = preg_split('/\s+/', trim($rawLeadName), 2);
+        $firstName = $nameParts[0] ?? $rawLeadName;
+        $lastName = $nameParts[1] ?? '';
+
+        $escFirst = mysqli_real_escape_string($connection, $firstName);
+        $escLast  = mysqli_real_escape_string($connection, $lastName);
         $escLeadMobile = mysqli_real_escape_string($connection, $cleanPhone);
-        $escLeadMsg = mysqli_real_escape_string($connection, $text);
+        $msgContent = !empty($text) ? $text : (!empty($media) ? '[Media attachment]' : 'Incoming WhatsApp conversation');
+        $escLeadMsg = mysqli_real_escape_string($connection, $msgContent);
 
         $insLeadSql = "INSERT INTO " . TABLE_PREFIX . "enquiry 
-                       (enquiry_site_id, enquiry_first_name, enquiry_mobile, enquiry_subject, enquiry_message, enquiry_source, enquiry_status)
-                       VALUES ({$siteId}, '{$escLeadName}', '{$escLeadMobile}', 'WhatsApp Web Inquiry', '{$escLeadMsg}', 'WhatsApp Web', 1)";
+                       (enquiry_site_id, enquiry_user_id, enquiry_agent, enquiry_first_name, enquiry_last_name, enquiry_mobile, enquiry_subject, enquiry_message, enquiry_type, enquiry_source, enquiry_status, enquiry_time)
+                       VALUES ({$siteId}, 0, 0, '{$escFirst}', '{$escLast}', '{$escLeadMobile}', 'WhatsApp Inquiry', '{$escLeadMsg}', 'enquiry', 'WhatsApp', 0, NOW())";
         if (mysqli_query($connection, $insLeadSql)) {
             $leadId = (int)mysqli_insert_id($connection);
+
+            // Also create enquiry_profile record
+            @mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry_profile (enquiry_profile_ref_id, status) VALUES ({$leadId}, '1')");
+
+            // Also add initial activity log
+            @mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry_notes (enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) VALUES ({$leadId}, 0, 'Generate', 'Lead auto-created from incoming WhatsApp message')");
         }
     }
 }

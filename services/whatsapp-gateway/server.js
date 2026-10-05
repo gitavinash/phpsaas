@@ -127,15 +127,35 @@ class WhatsAppSession {
   async getMessage(key) {
     if (!key) return undefined;
     const msgId = key.id;
+
+    // 1. Direct msgId match
     if (msgId && this.messageStore.has(msgId)) {
       return this.messageStore.get(msgId);
     }
+
+    // 2. Exact combo lookup
     if (key.remoteJid && msgId) {
       const combo = `${key.remoteJid}:${msgId}`;
       if (this.messageStore.has(combo)) {
         return this.messageStore.get(combo);
       }
+      const normJid = jidNormalizedUser(key.remoteJid);
+      const normCombo = `${normJid}:${msgId}`;
+      if (this.messageStore.has(normCombo)) {
+        return this.messageStore.get(normCombo);
+      }
     }
+
+    // 3. Search across all stored keys for matching message ID
+    if (msgId) {
+      for (const [k, v] of this.messageStore.entries()) {
+        if (k === msgId || k.endsWith(`:${msgId}`)) {
+          return v;
+        }
+      }
+    }
+
+    // 4. Fallback: return last known text message from chatStore
     const cleanJid = key.remoteJid ? jidNormalizedUser(key.remoteJid) : null;
     if (cleanJid) {
       const chat = this.chatStore.get(cleanJid);
@@ -143,7 +163,7 @@ class WhatsAppSession {
         return { conversation: chat.lastMessageText };
       }
     }
-    return undefined;
+    return { conversation: "" };
   }
 
   notify(payload) {
@@ -609,12 +629,14 @@ class WhatsAppSession {
 // Session Manager
 // -----------------------------------------------------------------------------
 const sessions = new Map();
+let lastKnownWebhookUrl = null;
 
 function enrichSession(req, session) {
   if (!session || !req) return;
   const webhookUrl = req.query?.webhook_url || req.body?.webhook_url;
   const siteId = req.query?.site_id || req.body?.site_id;
   if (webhookUrl && typeof webhookUrl === "string" && webhookUrl.startsWith("http")) {
+    lastKnownWebhookUrl = webhookUrl;
     if (session.webhookUrl !== webhookUrl) {
       console.log(`[WhatsApp Gateway:${session.sessionId}] Dynamic webhook registered: ${webhookUrl}`);
       session.webhookUrl = webhookUrl;
@@ -664,7 +686,7 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
     return;
   }
   try {
-    let targetUrl = targetOverrideUrl || process.env.CRM_WEBHOOK_URL || CRM_WEBHOOK_URL;
+    let targetUrl = targetOverrideUrl || lastKnownWebhookUrl || process.env.CRM_WEBHOOK_URL || CRM_WEBHOOK_URL;
     if (!targetUrl) {
       console.warn("[WhatsApp Gateway] No CRM_WEBHOOK_URL configured for webhook notification.");
       return;
@@ -691,6 +713,7 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
           "User-Agent": "WhatsApp-Gateway/1.0",
         },
         timeout: 10000,
+        rejectUnauthorized: false,
       },
       (res) => {
         // Follow redirect if 301, 302, 307, 308
@@ -731,6 +754,7 @@ app.get("/devices", (req, res) => {
   try {
     const list = [];
     for (const [id, s] of sessions.entries()) {
+      enrichSession(req, s);
       const hasCreds = fs.existsSync(path.join(s.authDir, "creds.json"));
       const isConn = s.connectionStatus === "connected" || (hasCreds && s.connectionStatus === "reconnecting");
       list.push({
@@ -955,18 +979,22 @@ app.post("/send-message", async (req, res) => {
       }
     } catch (e) {}
 
-    // Subscribe presence to establish connection before sending
+    // Subscribe presence to establish connection and trigger key exchange before sending
     try {
       await s.sock.presenceSubscribe(targetJid);
+      await s.sock.sendPresenceUpdate("available", targetJid);
     } catch (e) {}
 
     const sent = await s.sock.sendMessage(targetJid, { text: message });
 
-    // Store in messageStore to resolve any encryption retry requests from recipient
+    // Store in messageStore under all key formats to resolve encryption retry requests from recipient
     if (sent?.key?.id && sent.message) {
-      s.messageStore.set(sent.key.id, sent.message);
-      s.messageStore.set(`${targetJid}:${sent.key.id}`, sent.message);
-      if (s.messageStore.size > 2500) {
+      const msgId = sent.key.id;
+      const normJid = jidNormalizedUser(targetJid);
+      s.messageStore.set(msgId, sent.message);
+      s.messageStore.set(`${targetJid}:${msgId}`, sent.message);
+      s.messageStore.set(`${normJid}:${msgId}`, sent.message);
+      if (s.messageStore.size > 3000) {
         const firstK = s.messageStore.keys().next().value;
         s.messageStore.delete(firstK);
       }

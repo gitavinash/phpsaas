@@ -34,6 +34,7 @@
       }
 
       this.stopPolling();
+      this.lastThreadsHtml = null;
       this.bindEvents();
       this.checkConnectionStatus();
       this.loadThreads();
@@ -54,17 +55,17 @@
         }
       });
 
-      // Filter tabs
-      $(".wa-filter-pill").on("click", function () {
+      // Filter tabs (delegated)
+      $(document).on("click", ".wa-filter-pill", function () {
         $(".wa-filter-pill").removeClass("active");
         $(this).addClass("active");
         self.currentFilter = $(this).data("filter") || "all";
         self.loadThreads();
       });
 
-      // Search input
+      // Search input (delegated)
       let searchTimeout = null;
-      $("#waThreadSearch").on("input", function () {
+      $(document).on("input", "#waThreadSearch", function () {
         const val = $(this).val().trim();
         self.searchQuery = val;
         if (val.length > 0) {
@@ -78,48 +79,48 @@
         }, 300);
       });
 
-      $("#btnClearSearch").on("click", function () {
+      $(document).on("click", "#btnClearSearch", function () {
         $("#waThreadSearch").val("").trigger("input");
       });
 
-      // Select thread
+      // Select thread (delegated)
       $(document).on("click", ".wa-thread-item", function () {
         const chatId = $(this).data("chat-id");
         const phone = $(this).data("phone");
         self.selectChat(chatId, phone);
       });
 
-      // Composer submit
-      $("#waMessageSendForm").on("submit", function (e) {
+      // Composer submit (delegated)
+      $(document).on("submit", "#waMessageSendForm", function (e) {
         e.preventDefault();
         self.sendMessage();
       });
 
-      // Composer keypress Enter to send (Shift+Enter for newline)
-      $("#waComposerText").on("keydown", function (e) {
+      // Composer keypress Enter to send (Shift+Enter for newline) (delegated)
+      $(document).on("keydown", "#waComposerText", function (e) {
         if (e.key === "Enter" && !e.shiftKey) {
           e.preventDefault();
           self.sendMessage();
         }
       });
 
-      // Quick response chips
-      $(".wa-quick-chip").on("click", function () {
+      // Quick response chips (delegated)
+      $(document).on("click", ".wa-quick-chip", function () {
         const text = $(this).data("text") || "";
         const $input = $("#waComposerText");
         const current = $input.val().trim();
         $input.val(current ? current + " " + text : text).focus();
       });
 
-      // Refresh active chat
-      $("#btnRefreshActiveChat").on("click", function () {
+      // Refresh active chat (delegated)
+      $(document).on("click", "#btnRefreshActiveChat", function () {
         if (self.activeChatId) {
           self.loadMessages(self.activeChatId, false);
         }
       });
 
-      // Sync chats from WhatsApp into inbox
-      $("#btnSyncChatsInbox").on("click", function () {
+      // Sync chats from WhatsApp into inbox (delegated)
+      $(document).on("click", "#btnSyncChatsInbox", function () {
         const $btn = $(this);
         $btn.prop("disabled", true).find("i").addClass("wa-spin");
         $.ajax({
@@ -137,25 +138,25 @@
         });
       });
 
-      // Modal: Start New Chat
-      $("#btnOpenNewChatModal, #btnEmptyStartChat, #btnSidebarNewChat").on("click", function () {
+      // Modal: Start New Chat (delegated)
+      $(document).on("click", "#btnOpenNewChatModal, #btnEmptyStartChat, #btnSidebarNewChat", function () {
         $("#waNewChatModal").addClass("is-active").attr("aria-hidden", "false");
         $("#newChatPhone").focus();
       });
 
-      $("#btnCloseNewChatModal, #btnCancelNewChat").on("click", function () {
+      $(document).on("click", "#btnCloseNewChatModal, #btnCancelNewChat", function () {
         $("#waNewChatModal").removeClass("is-active").attr("aria-hidden", "true");
         $("#waNewChatForm")[0].reset();
       });
 
-      // Submit New Chat
-      $("#waNewChatForm").on("submit", function (e) {
+      // Submit New Chat (delegated)
+      $(document).on("submit", "#waNewChatForm", function (e) {
         e.preventDefault();
         self.submitNewChat();
       });
 
-      // Recheck connection button in unlinked state card
-      $("#btnRecheckConnection").on("click", function () {
+      // Recheck connection button in unlinked state card (delegated)
+      $(document).on("click", "#btnRecheckConnection", function () {
         const $btn = $(this);
         $btn.prop("disabled", true).find("i").addClass("wa-spin");
         self.checkConnectionStatus(function (isConnected) {
@@ -672,5 +673,23 @@
 
   $(document).ready(function () {
     window.V3WhatsApp.init();
+  });
+
+  $(document).on("spa:loaded", function () {
+    if ($("#whatsappCrmApp").length) {
+      window.V3WhatsApp.init();
+    } else {
+      window.V3WhatsApp.stopPolling();
+    }
+  });
+
+  $(window).on("popstate", function () {
+    setTimeout(function () {
+      if ($("#whatsappCrmApp").length) {
+        window.V3WhatsApp.init();
+      } else {
+        window.V3WhatsApp.stopPolling();
+      }
+    }, 50);
   });
 });
