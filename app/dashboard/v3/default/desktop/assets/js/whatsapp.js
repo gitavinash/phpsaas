@@ -21,7 +21,7 @@
     currentFilter: "all",
     searchQuery: "",
     pollTimer: null,
-    isSending: false,
+    isDeviceLinked: false,
 
     init: function () {
       const $app = $("#whatsappCrmApp");
@@ -150,6 +150,7 @@
     },
 
     updateDeviceLinkedUI: function (isLinked, phone, msg) {
+      this.isDeviceLinked = !!isLinked;
       const $workspace = $("#waChatWorkspace");
       const $unlinked = $("#waUnlinkedStateCard");
       const $badge = $("#waHeaderStatusBadge");
@@ -216,7 +217,16 @@
         dataType: "json",
         success: function (res) {
           if (res && res.is_device_linked === false) {
-            self.updateDeviceLinkedUI(false, null);
+            // If already known to be linked, verify via checkConnectionStatus to prevent polling flicker
+            if (self.isDeviceLinked) {
+              self.checkConnectionStatus(function (actuallyConnected) {
+                if (!actuallyConnected) {
+                  self.updateDeviceLinkedUI(false, null);
+                }
+              });
+            } else {
+              self.updateDeviceLinkedUI(false, null);
+            }
             return;
           } else if (res && res.is_device_linked === true) {
             self.updateDeviceLinkedUI(true, res.linked_phone || "");

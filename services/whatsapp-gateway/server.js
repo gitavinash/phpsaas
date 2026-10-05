@@ -429,21 +429,26 @@ class WhatsAppSession {
           const statusCode = lastDisconnect?.error?.output?.statusCode;
           const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
 
-          this.connectionStatus = "disconnected";
-          this.connectedUser = null;
           this.currentQrSvg = null;
           this.currentQrString = null;
 
           console.log(`[WhatsApp Gateway:${this.sessionId}] Connection closed. StatusCode: ${statusCode}. Reconnect: ${shouldReconnect}`);
 
           if (statusCode === DisconnectReason.loggedOut) {
+            this.connectionStatus = "disconnected";
+            this.connectedUser = null;
             try {
               fs.rmSync(this.authDir, { recursive: true, force: true });
             } catch (e) {}
             setTimeout(() => this.startSocket(), 1500);
           } else if (shouldReconnect) {
+            // Keep connectedUser and mark reconnecting so momentary Baileys cycling does not wipe device status
+            this.connectionStatus = "reconnecting";
             const delay = statusCode === 408 ? 1000 : 2500;
             setTimeout(() => this.startSocket(), delay);
+          } else {
+            this.connectionStatus = "disconnected";
+            this.connectedUser = null;
           }
         }
       });
@@ -667,10 +672,13 @@ app.get("/devices", (req, res) => {
   try {
     const list = [];
     for (const [id, s] of sessions.entries()) {
+      const hasCreds = fs.existsSync(path.join(s.authDir, "creds.json"));
+      const isConn = s.connectionStatus === "connected" || (hasCreds && s.connectionStatus === "reconnecting");
       list.push({
         session_id: id,
         connection_status: s.connectionStatus,
-        is_connected: s.connectionStatus === "connected",
+        is_connected: isConn,
+        is_linked: hasCreds || isConn,
         has_qr: s.connectionStatus === "qr_ready" && !!s.currentQrSvg,
         user: s.connectedUser,
         last_sync: s.lastSyncTime,
@@ -692,11 +700,14 @@ app.get("/devices", (req, res) => {
 app.get("/status", (req, res) => {
   try {
     const s = getSession(req.query.session_id, req);
+    const hasCreds = fs.existsSync(path.join(s.authDir, "creds.json"));
+    const isConn = s.connectionStatus === "connected" || (hasCreds && s.connectionStatus === "reconnecting");
     res.json({
       status: "success",
       session_id: s.sessionId,
       connection_status: s.connectionStatus,
-      is_connected: s.connectionStatus === "connected",
+      is_connected: isConn,
+      is_linked: hasCreds || isConn,
       has_qr: s.connectionStatus === "qr_ready" && !!s.currentQrSvg,
       user: s.connectedUser,
       last_sync: s.lastSyncTime,

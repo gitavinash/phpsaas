@@ -62,17 +62,18 @@ require_once dirname(__DIR__) . '/whatsapp/qr_helper.php';
 initWhatsAppDatabase($connection);
 
 $currentUserId = defined('USER_ID') ? (int)USER_ID : (isset($user_id) ? (int)$user_id : 0);
-$userRole = isset($site_access_type) ? $site_access_type : '';
-$isAdmin = ($userRole === 'administrator');
+$userRole = isset($site_access_type) ? strtolower($site_access_type) : '';
+$isAdmin = in_array($userRole, ['administrator', 'admin', 'owner', 'superadmin']);
 
 if (!$isAdmin && $currentUserId > 0) {
     $saQ = mysqli_query($connection, "SELECT site_access_type FROM " . TABLE_PREFIX . "site_access WHERE site_access_site_id = {$siteId} AND site_access_user_id = {$currentUserId} AND site_access_status = 1 LIMIT 1");
     if ($saQ && mysqli_num_rows($saQ) > 0) {
         $saR = mysqli_fetch_assoc($saQ);
-        if ($saR['site_access_type'] === 'administrator') {
+        $roleCheck = strtolower($saR['site_access_type'] ?? '');
+        if (in_array($roleCheck, ['administrator', 'admin', 'owner', 'superadmin'])) {
             $isAdmin = true;
         }
-        $userRole = $saR['site_access_type'];
+        $userRole = $roleCheck;
     }
 }
 
@@ -221,7 +222,7 @@ if ($action === 'get_devices' || $action === 'devices') {
     if ($gwDevices && ($gwDevices['status'] ?? '') === 'success' && is_array($gwDevices['devices'] ?? null)) {
         foreach ($gwDevices['devices'] as $gDev) {
             $sess = mysqli_real_escape_string($connection, $gDev['session_id']);
-            $stat = ($gDev['is_connected'] || $gDev['connection_status'] === 'connected') ? 'connected' : ($gDev['has_qr'] ? 'qr_ready' : 'disconnected');
+            $stat = ($gDev['is_connected'] || $gDev['connection_status'] === 'connected' || !empty($gDev['is_linked'])) ? 'connected' : ($gDev['has_qr'] ? 'qr_ready' : 'disconnected');
             $ph   = mysqli_real_escape_string($connection, $gDev['user']['phone'] ?? '');
             $nm   = mysqli_real_escape_string($connection, $gDev['user']['name'] ?? '');
             $sync = !empty($gDev['last_sync']) ? date('Y-m-d H:i:s', strtotime($gDev['last_sync'])) : date('Y-m-d H:i:s');
@@ -524,17 +525,15 @@ if ($action === 'check_status' || $action === 'status') {
     $sessionId = trim($_GET['session_id'] ?? $_POST['session_id'] ?? '');
 
     if (empty($sessionId)) {
-        if (!$isAdmin && $userAssignedDevice) {
+        if ($userAssignedDevice) {
             $sessionId = $userAssignedDevice['device_session_id'];
-        } elseif (!$isAdmin) {
-            $sessionId = 'agent_' . $currentUserId;
         } else {
             $activeDevQ = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
             if ($activeDevQ && mysqli_num_rows($activeDevQ) > 0) {
                 $activeDevR = mysqli_fetch_assoc($activeDevQ);
                 $sessionId = $activeDevR['device_session_id'];
             } else {
-                $sessionId = 'default';
+                $sessionId = $isAdmin ? 'default' : ('agent_' . $currentUserId);
             }
         }
     }
@@ -544,7 +543,7 @@ if ($action === 'check_status' || $action === 'status') {
     $userPhone = '';
     $userName = '';
 
-    if ($gwStatus && !empty($gwStatus['is_connected']) && !empty($gwStatus['user'])) {
+    if ($gwStatus && (!empty($gwStatus['is_connected']) || !empty($gwStatus['is_linked'])) && !empty($gwStatus['user'])) {
         $isConnected = true;
         $userPhone = $gwStatus['user']['phone'] ?? '';
         $userName = $gwStatus['user']['name'] ?? '';
@@ -565,11 +564,11 @@ if ($action === 'check_status' || $action === 'status') {
                                   (device_site_id, device_session_id, device_phone, device_name, device_assigned_user_id, device_status, device_last_sync)
                                   VALUES ({$siteId}, '{$escSession}', '{$escPhone}', '{$escName}', {$assignedSql}, 'connected', '{$now}')
                                   ON DUPLICATE KEY UPDATE device_phone = '{$escPhone}', device_name = '{$escName}', device_status = 'connected', device_last_sync = '{$now}'");
-    } elseif (!$isConnected && $isAdmin) {
+    } elseif (!$isConnected) {
         $gwDevs = callWaGateway($configs['whatsapp_web_gateway_url'] ?? '', 'devices');
         if ($gwDevs && !empty($gwDevs['devices']) && is_array($gwDevs['devices'])) {
             foreach ($gwDevs['devices'] as $gd) {
-                if (!empty($gd['is_connected']) || ($gd['connection_status'] ?? '') === 'connected') {
+                if (!empty($gd['is_connected']) || ($gd['connection_status'] ?? '') === 'connected' || !empty($gd['is_linked'])) {
                     $isConnected = true;
                     $sessionId = $gd['session_id'];
                     $userPhone = $gd['user']['phone'] ?? '';
@@ -577,6 +576,19 @@ if ($action === 'check_status' || $action === 'status') {
                     break;
                 }
             }
+        }
+    }
+
+    // Fallback: If gateway check had a network blip or temporary Baileys restart, check database for connected device on site
+    if (!$isConnected) {
+        $dbCheckQ = mysqli_query($connection, "SELECT device_session_id, device_phone, device_name, device_last_sync FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY device_id DESC LIMIT 1");
+        if ($dbCheckQ && mysqli_num_rows($dbCheckQ) > 0) {
+            $dbRow = mysqli_fetch_assoc($dbCheckQ);
+            $isConnected = true;
+            $sessionId = $dbRow['device_session_id'];
+            $userPhone = $dbRow['device_phone'] ?: ($configs['whatsapp_web_phone'] ?? '');
+            $userName = $dbRow['device_name'] ?: ($configs['whatsapp_web_pushname'] ?? '');
+            $now = $dbRow['device_last_sync'] ?: date('Y-m-d H:i:s');
         }
     }
 
