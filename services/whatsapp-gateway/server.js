@@ -9,6 +9,7 @@ const {
   useMultiFileAuthState,
   DisconnectReason,
   Browsers,
+  fetchLatestBaileysVersion,
   ALL_WA_PATCH_NAMES,
   jidNormalizedUser,
   jidDecode,
@@ -326,13 +327,15 @@ class WhatsAppSession {
 
   async startSocket() {
     try {
+      const { version } = await fetchLatestBaileysVersion().catch(() => ({ version: [2, 3000, 1043857760] }));
       const { state, saveCreds } = await useMultiFileAuthState(this.authDir);
 
       this.sock = makeWASocket({
+        version,
         auth: state,
         logger: logger,
-        printQRInTerminal: false,
-        browser: Browsers.macOS("Chrome"),
+        printQRInTerminal: true,
+        browser: Browsers.ubuntu("Chrome"),
         syncFullHistory: true,
         connectTimeoutMs: 60000,
         keepAliveIntervalMs: 25000,
