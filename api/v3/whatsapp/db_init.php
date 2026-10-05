@@ -28,9 +28,11 @@ function initWhatsAppDatabase($connection) {
         PRIMARY KEY (chat_id),
         UNIQUE KEY uq_site_phone (chat_site_id, chat_phone),
         INDEX idx_site_updated (chat_site_id, chat_updated_at),
+        INDEX idx_site_msg_time (chat_site_id, chat_last_message_time),
         INDEX idx_lead_id (chat_lead_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
     @mysqli_query($connection, $chatTableSql);
+    @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat ADD INDEX idx_site_msg_time (chat_site_id, chat_last_message_time)");
 
     // 2. Messages table
     $msgTableSql = "CREATE TABLE IF NOT EXISTS " . $prefix . "whatsapp_message (

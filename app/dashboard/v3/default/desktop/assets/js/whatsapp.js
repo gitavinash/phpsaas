@@ -22,11 +22,18 @@
     searchQuery: "",
     pollTimer: null,
     isDeviceLinked: false,
+    eventsBound: false,
+    isLoadingThreads: false,
+    isLoadingMessages: false,
 
     init: function () {
       const $app = $("#whatsappCrmApp");
-      if (!$app.length) return;
+      if (!$app.length) {
+        this.stopPolling();
+        return;
+      }
 
+      this.stopPolling();
       this.bindEvents();
       this.checkConnectionStatus();
       this.loadThreads();
@@ -34,7 +41,18 @@
     },
 
     bindEvents: function () {
+      if (this.eventsBound) return;
+      this.eventsBound = true;
       const self = this;
+
+      // Tab visibility listener: resume immediately when user returns to tab
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden && $("#whatsappCrmApp").length) {
+          if (!self.isLoadingThreads) {
+            self.loadThreads();
+          }
+        }
+      });
 
       // Filter tabs
       $(".wa-filter-pill").on("click", function () {
@@ -203,8 +221,14 @@
       });
     },
 
-    loadThreads: function () {
+    loadThreads: function (callback) {
       const self = this;
+      if (this.isLoadingThreads) {
+        if (typeof callback === "function") callback();
+        return;
+      }
+      this.isLoadingThreads = true;
+
       const params = {
         filter: this.currentFilter,
         q: this.searchQuery
@@ -251,6 +275,7 @@
 
           let html = "";
           res.chats.forEach(function (chat) {
+            const prev = self.knownChats ? self.knownChats.get(chat.chat_id) : null;
             const isBrandNew = !prev && self.hasInitialLoaded && !!chat.last_message;
             const hasIncreasedUnread = prev && (chat.unread_count || 0) > (prev.unread_count || 0);
             const hasNewMsg = prev && chat.last_message && chat.last_message !== prev.last_message;
@@ -301,7 +326,24 @@
           }
           self.hasInitialLoaded = true;
 
+          if (self.lastThreadsHtml === html && $container.children(".wa-thread-item").length > 0) {
+            return;
+          }
+          self.lastThreadsHtml = html;
           $container.html(html);
+        },
+        error: function () {
+          const $container = $("#waThreadsContainer");
+          if (!self.hasInitialLoaded) {
+            $container.html('<div class="wa-loading-threads"><i class="fi fi-rr-refresh"></i><span>Unable to load chats. <a href="javascript:void(0)" id="waRetryLoadThreads" style="color:#25D366;text-decoration:underline;">Retry</a></span></div>');
+            $("#waRetryLoadThreads").on("click", function () { self.loadThreads(); });
+          }
+        },
+        complete: function () {
+          self.isLoadingThreads = false;
+          if (typeof callback === "function") {
+            callback();
+          }
         }
       });
     },
@@ -320,8 +362,18 @@
       this.loadMessages(chatId, true);
     },
 
-    loadMessages: function (chatId, scrollToBottom) {
+    loadMessages: function (chatId, scrollToBottom, callback) {
       const self = this;
+      if (!chatId) {
+        if (typeof callback === "function") callback();
+        return;
+      }
+      if (this.isLoadingMessages) {
+        if (typeof callback === "function") callback();
+        return;
+      }
+      this.isLoadingMessages = true;
+
       $.ajax({
         url: "/api/v3/whatsapp/messages/?chat_id=" + chatId,
         method: "GET",
@@ -369,6 +421,12 @@
 
           if (scrollToBottom) {
             $stream.scrollTop($stream[0].scrollHeight);
+          }
+        },
+        complete: function () {
+          self.isLoadingMessages = false;
+          if (typeof callback === "function") {
+            callback();
           }
         }
       });
@@ -490,17 +548,51 @@
       });
     },
 
+    stopPolling: function () {
+      if (this.pollTimer) {
+        clearTimeout(this.pollTimer);
+        this.pollTimer = null;
+      }
+    },
+
     startPolling: function () {
+      this.stopPolling();
       const self = this;
-      this.pollTimer = setInterval(function () {
-        if (self.activeChatId) {
-          // Poll messages silently without resetting scroll if user is viewing history
+      const pollDelay = 8000; // 8s cooldown between completed cycles
+
+      const runPollCycle = function () {
+        // Automatically stop polling if WhatsApp UI is no longer present in DOM (SPA navigation)
+        if (!$("#whatsappCrmApp").length) {
+          self.stopPolling();
+          return;
+        }
+
+        // If browser tab is in background, pause polling
+        if (document.hidden) {
+          self.pollTimer = setTimeout(runPollCycle, 5000);
+          return;
+        }
+
+        // Poll messages silently without resetting scroll if user is viewing history
+        if (self.activeChatId && !self.isLoadingMessages) {
           const $stream = $("#waMessagesStream");
           const isAtBottom = $stream.length ? ($stream[0].scrollHeight - $stream.scrollTop() <= $stream.outerHeight() + 80) : true;
           self.loadMessages(self.activeChatId, isAtBottom);
         }
-        self.loadThreads();
-      }, 4500);
+
+        // Poll threads, schedule next poll strictly AFTER current request completes
+        if (!self.isLoadingThreads) {
+          self.loadThreads(function () {
+            if ($("#whatsappCrmApp").length) {
+              self.pollTimer = setTimeout(runPollCycle, pollDelay);
+            }
+          });
+        } else {
+          self.pollTimer = setTimeout(runPollCycle, pollDelay);
+        }
+      };
+
+      this.pollTimer = setTimeout(runPollCycle, pollDelay);
     },
 
     getInitials: function (str) {
