@@ -361,7 +361,7 @@ class WhatsAppSession {
         version,
         auth: state,
         logger: logger,
-        browser: Browsers.ubuntu("Chrome"),
+        browser: ["Aleya.in", "Chrome", "1.0.0"],
         syncFullHistory: true,
         connectTimeoutMs: 60000,
         keepAliveIntervalMs: 25000,
@@ -406,7 +406,7 @@ class WhatsAppSession {
           this.connectedUser = {
             phone: formattedPhone,
             name: this.sock.user?.name || "WhatsApp Business",
-            device: "WhatsApp Web / macOS Chrome",
+            device: "Aleya.in",
             connected_at: this.lastSyncTime,
           };
 
