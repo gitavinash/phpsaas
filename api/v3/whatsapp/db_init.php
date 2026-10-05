@@ -6,8 +6,9 @@
  */
 
 function initWhatsAppDatabase($connection) {
-    if (!$connection) {
-        return false;
+    static $initialized = false;
+    if ($initialized || !$connection) {
+        return true;
     }
 
     $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
@@ -31,8 +32,18 @@ function initWhatsAppDatabase($connection) {
         INDEX idx_site_msg_time (chat_site_id, chat_last_message_time),
         INDEX idx_lead_id (chat_lead_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
-    @mysqli_query($connection, $chatTableSql);
-    @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat ADD INDEX idx_site_msg_time (chat_site_id, chat_last_message_time)");
+
+    try {
+        @mysqli_query($connection, $chatTableSql);
+    } catch (Throwable $e) {}
+
+    // Safely add idx_site_msg_time if table was created previously without it
+    try {
+        $idxRes = @mysqli_query($connection, "SHOW INDEX FROM " . $prefix . "whatsapp_chat WHERE Key_name = 'idx_site_msg_time'");
+        if ($idxRes && mysqli_num_rows($idxRes) === 0) {
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat ADD INDEX idx_site_msg_time (chat_site_id, chat_last_message_time)");
+        }
+    } catch (Throwable $e) {}
 
     // 2. Messages table
     $msgTableSql = "CREATE TABLE IF NOT EXISTS " . $prefix . "whatsapp_message (
@@ -53,7 +64,9 @@ function initWhatsAppDatabase($connection) {
         INDEX idx_wa_id (message_wa_id),
         INDEX idx_created (message_created_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
-    @mysqli_query($connection, $msgTableSql);
+    try {
+        @mysqli_query($connection, $msgTableSql);
+    } catch (Throwable $e) {}
 
     // 3. Multi-device table
     $devTableSql = "CREATE TABLE IF NOT EXISTS " . $prefix . "whatsapp_device (
@@ -72,7 +85,11 @@ function initWhatsAppDatabase($connection) {
         UNIQUE KEY uq_site_session (device_site_id, device_session_id),
         INDEX idx_site_user (device_site_id, device_assigned_user_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
-    @mysqli_query($connection, $devTableSql);
 
+    try {
+        @mysqli_query($connection, $devTableSql);
+    } catch (Throwable $e) {}
+
+    $initialized = true;
     return true;
 }
