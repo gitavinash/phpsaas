@@ -46,13 +46,13 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
         <div class="integration-toolbar-row">
             <div class="integration-category-tabs">
                 <button type="button" class="integration-cat-tab active" data-category="all">
-                    <i class="fi fi-rr-apps"></i> All Channels <span class="tab-count" id="countAll"><?php echo ($site_access_type === 'digital_marketing' ? '4' : '13'); ?></span>
+                    <i class="fi fi-rr-apps"></i> All Channels <span class="tab-count" id="countAll"><?php echo ($site_access_type === 'digital_marketing' ? '5' : '14'); ?></span>
                 </button>
                 <button type="button" class="integration-cat-tab" data-category="leadgen">
                     <i class="fi fi-rr-bullseye-arrow"></i> Lead Gen &amp; Ads <span class="tab-count" id="countLeadgen">2</span>
                 </button>
                 <button type="button" class="integration-cat-tab" data-category="messaging">
-                    <i class="fi fi-rr-comment-alt-middle"></i> Messaging &amp; Email <span class="tab-count" id="countMessaging">2</span>
+                    <i class="fi fi-rr-comment-alt-middle"></i> Messaging &amp; Email <span class="tab-count" id="countMessaging">3</span>
                 </button>
                 <?php if ($site_access_type !== 'digital_marketing') { ?>
                 <button type="button" class="integration-cat-tab" data-category="payments">
@@ -108,6 +108,30 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
                     <div class="integration-card-actions">
                         <a href="/dashboard/integration/whatsapp/" class="btn-integration-primary">
                             Configure plugin
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. WhatsApp Web API (QR Code) -->
+        <div class="integration-card" data-category="messaging" data-slug="whatsapp_web">
+            <div class="integration-card-main">
+                <div class="integration-brand-logo brand-whatsapp">
+                    <img src="/app/dashboard/v3/default/desktop/assets/images/integration/whatsapp.svg" alt="WhatsApp Web">
+                </div>
+                <div class="integration-card-content">
+                    <div class="integration-card-title-bar">
+                        <h3 class="integration-title">WhatsApp Web API</h3>
+                        <label class="v3-toggle-switch" title="Toggle WhatsApp Web Integration">
+                            <input type="checkbox" class="integration-active-toggle" data-slug="whatsapp_web" data-key="enable_whatsapp_web_api" <?php echo ((defined('ENABLE_WHATSAPP_WEB_API') && ENABLE_WHATSAPP_WEB_API == '1') ? 'checked' : '') ?>>
+                            <span class="v3-toggle-slider"></span>
+                        </label>
+                    </div>
+                    <p class="integration-desc">Connect your existing WhatsApp by scanning a QR code. Sync incoming messages directly into the CRM and chat with travelers from your dashboard.</p>
+                    <div class="integration-card-actions">
+                        <a href="/dashboard/integration/whatsapp_web/" class="btn-integration-primary">
+                            Configure &amp; Link Device
                         </a>
                     </div>
                 </div>

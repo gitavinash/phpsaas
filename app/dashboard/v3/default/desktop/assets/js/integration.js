@@ -244,6 +244,7 @@
     // -------------------------------------------------------------
     initPluginForms: function () {
       this.initWhatsappPlugin();
+      this.initWhatsappWebPlugin();
       this.initSmtpPlugin();
       this.initGoogleAdsPlugin();
       this.initWebhooksPlugin();
@@ -321,6 +322,534 @@
           },
         });
       });
+    },
+
+    // WhatsApp Web (QR Multi-Device)
+    initWhatsappWebPlugin: function () {
+      const self = this;
+      const $app = $("#pluginWhatsappWebApp");
+      if (!$app.length) return;
+
+      let qrInterval = null;
+      let countdown = 30;
+      let statusPollInterval = null;
+      let modalPollInterval = null;
+      let currentModalSessionId = null;
+      let stateDevices = [];
+      let stateAgents = [];
+      let isAdmin = false;
+
+      // 1. Load Devices and Initial State
+      function loadHubState() {
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/?action=get_devices",
+          method: "GET",
+          dataType: "json",
+          success: function (res) {
+            if (res && res.status === "success") {
+              isAdmin = !!res.is_admin;
+              stateDevices = res.devices || [];
+              stateAgents = res.agents || [];
+
+              $("#waWebActiveToggle").prop("checked", !!res.is_active);
+              self.updateAsidePluginState("whatsapp_web", !!res.is_active);
+
+              if (isAdmin) {
+                renderAdminView(res);
+              } else {
+                renderAgentView(res);
+              }
+            }
+          }
+        });
+
+        // Also fetch configs for sync settings
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/",
+          method: "GET",
+          dataType: "json",
+          success: function (res) {
+            if (res && res.status === "success" && res.data) {
+              const d = res.data;
+              $("#waWebSyncIncoming").prop("checked", d.whatsapp_web_sync_incoming === "1");
+              $("#waWebAutoCreateLead").prop("checked", d.whatsapp_web_auto_create_lead === "1");
+              if (d.whatsapp_web_gateway_url) {
+                $("#waWebGatewayUrl").val(d.whatsapp_web_gateway_url);
+              }
+              if (res.webhook_url) {
+                $("#waWebhookUrlDisplay").val(res.webhook_url);
+              }
+            }
+          }
+        });
+      }
+
+      // 2. Render Admin Multi-Device View
+      function renderAdminView(data) {
+        $("#waAgentAssignedSection").addClass("d-none");
+        $("#waAgentUnassignedSection").addClass("d-none");
+        $("#waAdminSection").removeClass("d-none");
+
+        const devices = data.devices || [];
+        $("#waAdminDeviceCount").text(devices.length);
+
+        const $grid = $("#waAdminDevicesGrid");
+        if (devices.length === 0) {
+          $grid.html('<div class="wa-qr-placeholder"><i class="fi fi-rr-smartphone"></i><span>No WhatsApp devices linked yet. Click "+ Add WhatsApp Device" above to connect your first number.</span></div>');
+          return;
+        }
+
+        let html = "";
+        devices.forEach(function (dev) {
+          const isConn = dev.status === "connected";
+          const statusClass = isConn ? "connected" : (dev.status === "qr_ready" ? "qr_ready" : "disconnected");
+          const statusLabel = isConn ? "Connected" : (dev.status === "qr_ready" ? "QR Ready" : "Disconnected");
+
+          let agentOptions = '<option value="0">-- Unassigned (Available) --</option>';
+          if (Array.isArray(stateAgents)) {
+            stateAgents.forEach(function (ag) {
+              const isSelected = (dev.assigned_user_id && Number(dev.assigned_user_id) === Number(ag.user_id));
+              // Check if agent is assigned to a different device
+              const isOtherAssigned = !isSelected && stateDevices.some(function (od) {
+                return od.device_id !== dev.device_id && Number(od.assigned_user_id) === Number(ag.user_id);
+              });
+              const disabledAttr = isOtherAssigned ? ' disabled="disabled"' : '';
+              const extraNote = isOtherAssigned ? ' (Already assigned)' : '';
+              const roleNote = ag.role ? ' [' + ag.role + ']' : '';
+              agentOptions += '<option value="' + ag.user_id + '"' + (isSelected ? ' selected="selected"' : '') + disabledAttr + '>' + ag.name + roleNote + extraNote + '</option>';
+            });
+          }
+
+          html += '<div class="wa-device-card" data-device-id="' + dev.device_id + '" data-session-id="' + dev.session_id + '">' +
+                    '<div class="wa-device-card-header">' +
+                      '<div class="wa-device-phone-wrap">' +
+                        '<div class="wa-device-icon"><i class="fi fi-rr-smartphone"></i></div>' +
+                        '<div>' +
+                          '<span class="wa-device-phone-number">' + (dev.phone || 'Device #' + dev.device_id) + '</span>' +
+                          '<span class="wa-device-pushname">' + (dev.name || 'WhatsApp Web') + '</span>' +
+                        '</div>' +
+                      '</div>' +
+                      '<span class="wa-device-badge ' + statusClass + '">' +
+                        '<span class="wa-device-badge-dot"></span> ' + statusLabel +
+                      '</span>' +
+                    '</div>' +
+                    '<div class="wa-device-assignment-box">' +
+                      '<label class="wa-device-assignment-label"><i class="fi fi-rr-user"></i> Assigned Sales Agent</label>' +
+                      '<select class="wa-agent-select" data-device-id="' + dev.device_id + '" title="Assign this WhatsApp number to a sales agent">' +
+                        agentOptions +
+                      '</select>' +
+                    '</div>' +
+                    '<div class="wa-device-card-meta">' +
+                      '<span>Session: ' + dev.session_id + '</span>' +
+                      '<span>Synced: ' + dev.last_sync + '</span>' +
+                    '</div>' +
+                    '<div class="wa-device-card-actions">' +
+                      '<button type="button" class="btn-device-action btn-device-sync" data-session-id="' + dev.session_id + '" title="Synchronize chats from this device">' +
+                        '<i class="fi fi-rr-refresh"></i> <span>Sync</span>' +
+                      '</button>' +
+                      '<button type="button" class="btn-device-action btn-device-disconnect" data-session-id="' + dev.session_id + '" data-device-id="' + dev.device_id + '" title="Disconnect this WhatsApp device">' +
+                        '<i class="fi fi-rr-exit"></i> <span>Disconnect</span>' +
+                      '</button>' +
+                    '</div>' +
+                  '</div>';
+        });
+
+        $grid.html(html);
+      }
+
+      // 3. Render Sales Agent View (Assigned vs Unassigned)
+      function renderAgentView(data) {
+        $("#waAdminSection").addClass("d-none");
+
+        if (data.has_assigned_device && data.assigned_device) {
+          // Rule: If whatsapp number is already assigned, DON'T show linked device option
+          $("#waAgentUnassignedSection").addClass("d-none");
+          $("#waAgentAssignedSection").removeClass("d-none");
+
+          const dev = data.assigned_device;
+          $("#waAgentDevicePhone").text(dev.phone || "Assigned WhatsApp Number");
+          $("#waAgentMetaPhone").text(dev.phone || "-");
+          $("#waAgentMetaName").text(dev.name || "Sales Agent WhatsApp");
+          $("#waAgentMetaStatus").text(dev.status === "connected" ? "Connected & Active" : "Offline");
+          $("#waAgentMetaSync").text(dev.last_sync || "Recent");
+
+          clearInterval(qrInterval);
+          clearInterval(statusPollInterval);
+        } else {
+          // Rule: If NO whatsapp number is assigned, SHOW linked device option (1 device limit)
+          $("#waAgentAssignedSection").addClass("d-none");
+          $("#waAgentUnassignedSection").removeClass("d-none");
+
+          loadAgentQrCode();
+          startAgentStatusPolling();
+        }
+      }
+
+      // 4. Load QR Code for Unassigned Agent
+      function loadAgentQrCode(force) {
+        $("#waAgentQrCodeContainer").html('<div class="wa-qr-placeholder"><i class="fi fi-rr-spinner wa-spin"></i><span>Generating your QR Code...</span></div>');
+        const url = "/api/v3/integration/whatsapp_web/?action=generate_qr" + (force ? "&force=1" : "");
+        $.ajax({
+          url: url,
+          method: "GET",
+          dataType: "json",
+          success: function (res) {
+            if (res && res.status === "success" && res.qr_svg) {
+              $("#waAgentQrCodeContainer").html(res.qr_svg);
+              resetAgentCountdown(res.expires_in || 30);
+            } else if (res && res.msg) {
+              $("#waAgentQrCodeContainer").html('<div class="wa-qr-placeholder"><span>' + res.msg + '</span></div>');
+            }
+          },
+          error: function (xhr) {
+            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Unable to generate QR code.";
+            $("#waAgentQrCodeContainer").html('<div class="wa-qr-placeholder"><span>' + err + '</span></div>');
+          }
+        });
+      }
+
+      function resetAgentCountdown(duration) {
+        clearInterval(qrInterval);
+        countdown = duration || 30;
+        $("#waAgentQrTimer").text(countdown);
+        qrInterval = setInterval(function () {
+          countdown--;
+          $("#waAgentQrTimer").text(countdown);
+          if (countdown <= 0) {
+            clearInterval(qrInterval);
+            loadAgentQrCode(false);
+          }
+        }, 1000);
+      }
+
+      function startAgentStatusPolling() {
+        clearInterval(statusPollInterval);
+        statusPollInterval = setInterval(function () {
+          if ($("#waAgentAssignedSection").is(":visible")) {
+            clearInterval(statusPollInterval);
+            return;
+          }
+          $.ajax({
+            url: "/api/v3/integration/whatsapp_web/?action=check_status",
+            method: "GET",
+            dataType: "json",
+            success: function (res) {
+              if (res && res.status === "success" && res.connection_status === "connected") {
+                clearInterval(statusPollInterval);
+                clearInterval(qrInterval);
+                self.showToast("WhatsApp device linked successfully!", "success");
+                loadHubState();
+              }
+            }
+          });
+        }, 3500);
+      }
+
+      // 5. Admin Assign Device to Sales Agent
+      $(document).on("change", ".wa-agent-select", function () {
+        const $select = $(this);
+        const deviceId = $select.data("device-id");
+        const userId = Number($select.val());
+
+        $select.prop("disabled", true);
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/?action=assign_device",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            device_id: deviceId,
+            user_id: userId
+          }),
+          dataType: "json",
+          success: function (res) {
+            $select.prop("disabled", false);
+            if (res && res.status === "success") {
+              self.showToast(res.msg || "Device assigned successfully.", "success");
+              loadHubState();
+            } else {
+              self.showToast(res.msg || "Failed to assign device.", "danger");
+              loadHubState();
+            }
+          },
+          error: function (xhr) {
+            $select.prop("disabled", false);
+            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to assign device.";
+            self.showToast(err, "danger");
+            loadHubState();
+          }
+        });
+      });
+
+      // 6. Admin Add Device Modal
+      $("#btnOpenAddDeviceModal").on("click", function () {
+        currentModalSessionId = "device_" + Date.now();
+        $("#waAddDeviceModal").addClass("is-active");
+        loadModalQrCode(currentModalSessionId);
+        startModalStatusPolling(currentModalSessionId);
+      });
+
+      $("#btnCloseAddDeviceModal").on("click", function () {
+        $("#waAddDeviceModal").removeClass("is-active");
+        clearInterval(modalPollInterval);
+      });
+
+      // Close modal on backdrop click
+      $("#waAddDeviceModal").on("click", function (e) {
+        if ($(e.target).is("#waAddDeviceModal")) {
+          $("#waAddDeviceModal").removeClass("is-active");
+          clearInterval(modalPollInterval);
+        }
+      });
+
+      function loadModalQrCode(sessId) {
+        $("#waModalQrCodeContainer").html('<div class="wa-qr-placeholder"><i class="fi fi-rr-spinner wa-spin"></i><span>Generating QR code...</span></div>');
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/?action=generate_qr&session_id=" + encodeURIComponent(sessId) + "&new_device=1",
+          method: "GET",
+          dataType: "json",
+          success: function (res) {
+            if (res && res.status === "success" && res.qr_svg) {
+              $("#waModalQrCodeContainer").html(res.qr_svg);
+              let modalCountdown = res.expires_in || 30;
+              $("#waModalQrTimer").text(modalCountdown);
+            }
+          }
+        });
+      }
+
+      function startModalStatusPolling(sessId) {
+        clearInterval(modalPollInterval);
+        modalPollInterval = setInterval(function () {
+          if (!$("#waAddDeviceModal").hasClass("is-active")) {
+            clearInterval(modalPollInterval);
+            return;
+          }
+          $.ajax({
+            url: "/api/v3/integration/whatsapp_web/?action=check_status&session_id=" + encodeURIComponent(sessId),
+            method: "GET",
+            dataType: "json",
+            success: function (res) {
+              if (res && res.status === "success" && res.connection_status === "connected") {
+                clearInterval(modalPollInterval);
+                $("#waAddDeviceModal").removeClass("is-active");
+                self.showToast("New WhatsApp device connected successfully!", "success");
+                loadHubState();
+              }
+            }
+          });
+        }, 3000);
+      }
+
+      $("#btnModalRefreshQr").on("click", function () {
+        if (currentModalSessionId) loadModalQrCode(currentModalSessionId);
+      });
+
+      // Modal Phone Pairing
+      $("#btnModalRequestPairingCode").on("click", function () {
+        const phone = $("#waModalPairingPhoneInput").val().trim();
+        if (!phone) {
+          self.showToast("Please enter phone number with country code.", "warning");
+          return;
+        }
+        const $btn = $(this);
+        $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner wa-spin"></i> Requesting...');
+
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/?action=pairing_code",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            phone: phone,
+            session_id: currentModalSessionId,
+            new_device: 1
+          }),
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false).html('<i class="fi fi-rr-key"></i> <span>Get Code</span>');
+            if (res && res.status === "success" && res.pairing_code) {
+              const code = res.pairing_code.match(/.{1,4}/g)?.join(" - ") || res.pairing_code;
+              $("#waModalPairingCodeValue").text(code);
+              $("#waModalPairingCodeResult").removeClass("d-none");
+              self.showToast("Code generated! Enter this in WhatsApp Linked Devices.", "success");
+            } else {
+              self.showToast(res.msg || "Failed to generate pairing code.", "danger");
+            }
+          },
+          error: function (xhr) {
+            $btn.prop("disabled", false).html('<i class="fi fi-rr-key"></i> <span>Get Code</span>');
+            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to generate pairing code.";
+            self.showToast(err, "danger");
+          }
+        });
+      });
+
+      // 7. Agent Request Pairing Code (Phone Linking)
+      $("#btnAgentRequestPairingCode").on("click", function () {
+        const phone = $("#waAgentPairingPhoneInput").val().trim();
+        if (!phone) {
+          self.showToast("Please enter your phone number with country code.", "warning");
+          $("#waAgentPairingPhoneInput").focus();
+          return;
+        }
+
+        const $btn = $(this);
+        $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner wa-spin"></i> Requesting...');
+
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/?action=pairing_code",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ phone: phone }),
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false).html('<i class="fi fi-rr-key"></i> <span>Get Pairing Code</span>');
+            if (res && res.status === "success" && res.pairing_code) {
+              const code = res.pairing_code.match(/.{1,4}/g)?.join(" - ") || res.pairing_code;
+              $("#waAgentPairingCodeValue").text(code);
+              $("#waAgentPairingCodeResult").removeClass("d-none");
+              self.showToast("Code generated! Enter this code on your WhatsApp app.", "success");
+            } else {
+              self.showToast(res.msg || "Failed to generate pairing code.", "danger");
+            }
+          },
+          error: function (xhr) {
+            $btn.prop("disabled", false).html('<i class="fi fi-rr-key"></i> <span>Get Pairing Code</span>');
+            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to generate pairing code.";
+            self.showToast(err, "danger");
+          }
+        });
+      });
+
+      $("#btnAgentRefreshQr").on("click", function () {
+        loadAgentQrCode(true);
+      });
+
+      // 8. Sync Chats
+      $(document).on("click", ".btn-device-sync, #btnAgentSyncChats", function () {
+        const $btn = $(this);
+        const sessId = $btn.data("session-id") || "";
+        $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner wa-spin"></i> Syncing...');
+
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/?action=sync_chats" + (sessId ? "&session_id=" + encodeURIComponent(sessId) : ""),
+          method: "GET",
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false).html('<i class="fi fi-rr-refresh"></i> Sync');
+            if (res && res.status === "success") {
+              self.showToast(res.msg || "Chats synchronized successfully!", "success");
+              loadHubState();
+            } else {
+              self.showToast(res.msg || "Failed to sync chats.", "danger");
+            }
+          },
+          error: function (xhr) {
+            $btn.prop("disabled", false).html('<i class="fi fi-rr-refresh"></i> Sync');
+            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to sync chats.";
+            self.showToast(err, "danger");
+          }
+        });
+      });
+
+      // 9. Disconnect Device
+      $(document).on("click", ".btn-device-disconnect", function () {
+        const sessId = $(this).data("session-id");
+        if (!confirm("Are you sure you want to disconnect this WhatsApp device?")) return;
+
+        const $btn = $(this);
+        $btn.prop("disabled", true);
+
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/?action=disconnect&session_id=" + encodeURIComponent(sessId),
+          method: "GET",
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false);
+            self.showToast(res.msg || "Device disconnected.", "info");
+            loadHubState();
+          },
+          error: function (xhr) {
+            $btn.prop("disabled", false);
+            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to disconnect device.";
+            self.showToast(err, "danger");
+          }
+        });
+      });
+
+      // 10. Pairing Mode Tabs
+      $(document).on("click", ".wa-pairing-mode-btn", function () {
+        const $btn = $(this);
+        const $nav = $btn.closest(".wa-pairing-mode-nav");
+        $nav.find(".wa-pairing-mode-btn").removeClass("active");
+        $btn.addClass("active");
+        const target = $btn.data("pane");
+        const $container = $btn.closest(".wa-pairing-container, .wa-modal-body");
+        $container.find(".wa-pairing-pane").addClass("d-none");
+        $(target).removeClass("d-none");
+      });
+
+      // 11. Refresh Devices List
+      $("#btnAdminRefreshDevices").on("click", function () {
+        loadHubState();
+        self.showToast("Refreshed WhatsApp devices list.", "info");
+      });
+
+      // 12. Copy Webhook
+      $("#btnCopyWebhook").on("click", function () {
+        const val = $("#waWebhookUrlDisplay").val();
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(val);
+          self.showToast("Webhook URL copied to clipboard!", "success");
+        } else {
+          $("#waWebhookUrlDisplay").select();
+          document.execCommand("copy");
+          self.showToast("Webhook URL copied to clipboard!", "success");
+        }
+      });
+
+      // 13. Active toggle switch
+      $("#waWebActiveToggle").on("change", function () {
+        const isChecked = $(this).is(":checked");
+        self.togglePlugin("whatsapp_web", "enable_whatsapp_web_api", isChecked);
+        self.updateAsidePluginState("whatsapp_web", isChecked);
+      });
+
+      // 14. Settings form submit
+      $("#waWebSettingsForm").on("submit", function (e) {
+        e.preventDefault();
+        const $btn = $("#btnSaveWaWebSettings");
+        $btn.prop("disabled", true);
+
+        const payload = {
+          enable_whatsapp_web_api: $("#waWebActiveToggle").is(":checked") ? "1" : "0",
+          whatsapp_web_sync_incoming: $("#waWebSyncIncoming").is(":checked") ? "1" : "0",
+          whatsapp_web_auto_create_lead: $("#waWebAutoCreateLead").is(":checked") ? "1" : "0",
+          whatsapp_web_gateway_url: $("#waWebGatewayUrl").val().trim()
+        };
+
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify(payload),
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false);
+            if (res && res.status === "success") {
+              self.showToast(res.msg || "Settings saved successfully.", "success");
+            } else {
+              self.showToast("Failed to save settings.", "error");
+            }
+          },
+          error: function () {
+            $btn.prop("disabled", false);
+            self.showToast("Network error saving settings.", "error");
+          }
+        });
+      });
+
+      // Initial load of hub state and devices
+      loadHubState();
     },
 
     // SMTP Email Server

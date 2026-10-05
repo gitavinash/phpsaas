@@ -64,6 +64,7 @@ if (isset($daterange)) {
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>admin.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>whatsapp.css?v=<?php echo time(); ?>">
     <?php
     if (SITE_VERSION == 'mobile') {
         echo "<link rel='stylesheet' type='text/css' href='" . ADMIN_STYLESHEET . "admin_mobile.css'>";
@@ -165,6 +166,11 @@ if (isset($daterange)) {
                         require_once $appAsideFile;
                     } else {
                         require_once $appDashboardDirectory . 'aside/default.php';
+                    }
+
+                    $waAsideSectionFile = $appDashboardDirectory . 'aside/whatsapp_section.php';
+                    if (file_exists($waAsideSectionFile)) {
+                        require_once $waAsideSectionFile;
                     }
                     ?>
 

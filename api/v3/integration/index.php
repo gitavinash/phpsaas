@@ -170,6 +170,25 @@ if ($method === 'GET') {
             ]
         ],
         [
+            'id'            => 'whatsapp_web',
+            'slug'          => 'whatsapp_web',
+            'title'         => 'WhatsApp Web API',
+            'category'      => 'messaging',
+            'category_name' => 'Messaging & Chat',
+            'description'   => 'Connect your existing WhatsApp by scanning a QR code. Sync incoming traveler messages directly into the CRM and send replies from your dashboard.',
+            'icon'          => 'whatsapp',
+            'config_url'    => '/dashboard/integration/whatsapp_web/',
+            'toggle_key'    => 'enable_whatsapp_web_api',
+            'is_active'     => ($configMap['enable_whatsapp_web_api'] ?? '0') === '1',
+            'status_label'  => !empty($configMap['whatsapp_web_phone']) ? 'Connected (' . $configMap['whatsapp_web_phone'] . ')' : (($configMap['enable_whatsapp_web_api'] ?? '0') === '1' ? 'Ready to Scan' : 'Available'),
+            'is_connected'  => !empty($configMap['whatsapp_web_phone']),
+            'features'      => [
+                'Scan QR code with existing personal or business WhatsApp',
+                'Real-time incoming message synchronization to CRM',
+                'Live interactive two-way WhatsApp chat inbox in CRM'
+            ]
+        ],
+        [
             'id'            => 'smtp',
             'slug'          => 'smtp',
             'title'         => 'SMTP Email Server',
@@ -392,6 +411,7 @@ if ($method === 'POST' || $method === 'PUT') {
         $slugMap = array_merge([
             'facebook'     => 'enable_facebook_lead_ads',
             'whatsapp'     => 'enable_whatsapp_business_api',
+            'whatsapp_web' => 'enable_whatsapp_web_api',
             'google_ads'   => 'enable_google_ads',
             'upi'          => 'enable_upi',
             'webhooks'     => 'enable_webhooks'

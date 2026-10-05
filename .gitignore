@@ -10,3 +10,5 @@ error.log
 *.log
 .ftpquota
 .agents
+services/whatsapp-gateway/auth_session/
+services/whatsapp-gateway/node_modules/
