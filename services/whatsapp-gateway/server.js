@@ -750,9 +750,19 @@ app.post("/pairing-code", async (req, res) => {
   }
 
   try {
-    if (!s.sock) {
+    if (!s.sock || s.connectionStatus === "disconnected") {
       await s.startSocket();
-      await new Promise((r) => setTimeout(r, 1500));
+    }
+
+    // Wait until socket has established initial handshake and is ready for pairing
+    let waited = 0;
+    while (!s.currentQrString && s.connectionStatus !== "connected" && waited < 8000) {
+      await new Promise((r) => setTimeout(r, 400));
+      waited += 400;
+    }
+
+    if (!s.sock) {
+      throw new Error("WhatsApp socket could not be initialized.");
     }
 
     const code = await s.sock.requestPairingCode(cleanPhone);
