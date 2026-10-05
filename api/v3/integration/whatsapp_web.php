@@ -160,24 +160,51 @@ function callWaGateway($customUrl, $path, $method = 'GET', $body = null) {
     $separator = (strpos($target, '?') !== false) ? '&' : '?';
     $target .= $separator . 'webhook_url=' . urlencode($dynamicWebhookUrl) . '&site_id=' . $siteId;
 
-    $opts = [
-        'http' => [
-            'method'  => $method,
-            'timeout' => 4,
-            'ignore_errors' => true
-        ]
-    ];
-    if ($body !== null) {
-        if (is_array($body)) {
-            $body['webhook_url'] = $dynamicWebhookUrl;
-            $body['site_id'] = $siteId;
-        }
-        $opts['http']['header'] = "Content-Type: application/json\r\n";
-        $opts['http']['content'] = json_encode($body);
+    if ($body !== null && is_array($body)) {
+        $body['webhook_url'] = $dynamicWebhookUrl;
+        $body['site_id'] = $siteId;
     }
-    $ctx = stream_context_create($opts);
-    $res = @file_get_contents($target, false, $ctx);
-    if ($res !== false) {
+
+    $res = false;
+
+    // Method 1: cURL (most reliable in hardened Apache/PHP production environments)
+    if (function_exists('curl_init')) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $target);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        if ($body !== null) {
+            $jsonPayload = json_encode($body);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonPayload);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($jsonPayload)
+            ]);
+        }
+        $res = curl_exec($ch);
+        curl_close($ch);
+    }
+
+    // Method 2: stream context fallback if allow_url_fopen is enabled
+    if ($res === false && ini_get('allow_url_fopen')) {
+        $opts = [
+            'http' => [
+                'method'  => $method,
+                'timeout' => 6,
+                'ignore_errors' => true
+            ]
+        ];
+        if ($body !== null) {
+            $opts['http']['header'] = "Content-Type: application/json\r\n";
+            $opts['http']['content'] = json_encode($body);
+        }
+        $ctx = stream_context_create($opts);
+        $res = @file_get_contents($target, false, $ctx);
+    }
+
+    if ($res !== false && $res !== '') {
         return json_decode($res, true);
     }
     return null;

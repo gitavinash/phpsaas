@@ -277,17 +277,38 @@ if ($method === 'POST') {
         'msg_id'      => $waMsgId
     ]);
 
-    $opts = [
-        'http' => [
-            'method'        => 'POST',
-            'header'        => "Content-Type: application/json\r\n",
-            'content'       => $payload,
-            'timeout'       => 6,
-            'ignore_errors' => true
-        ]
-    ];
-    $ctx = stream_context_create($opts);
-    $gwRawRes = @file_get_contents(rtrim($gwUrl, '/') . '/send-message', false, $ctx);
+    $targetGwEndpoint = rtrim($gwUrl, '/') . '/send-message';
+    $gwRawRes = false;
+
+    if (function_exists('curl_init')) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $targetGwEndpoint);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($payload)
+        ]);
+        $gwRawRes = curl_exec($ch);
+        curl_close($ch);
+    }
+
+    if ($gwRawRes === false && ini_get('allow_url_fopen')) {
+        $opts = [
+            'http' => [
+                'method'        => 'POST',
+                'header'        => "Content-Type: application/json\r\n",
+                'content'       => $payload,
+                'timeout'       => 8,
+                'ignore_errors' => true
+            ]
+        ];
+        $ctx = stream_context_create($opts);
+        $gwRawRes = @file_get_contents($targetGwEndpoint, false, $ctx);
+    }
     if ($gwRawRes !== false) {
         $gwResData = json_decode($gwRawRes, true);
         if (isset($gwResData['status']) && $gwResData['status'] === 'success') {
