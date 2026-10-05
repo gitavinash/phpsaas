@@ -184,8 +184,33 @@
             return;
           }
 
+          let newIncomingDetected = false;
+          let latestMsgText = "";
+          let latestSenderName = "";
+          let latestChatId = null;
+          let latestPhone = "";
+
           let html = "";
           res.chats.forEach(function (chat) {
+            const prev = self.knownChats ? self.knownChats.get(chat.chat_id) : null;
+            if (prev && self.hasInitialLoaded) {
+              const hasIncreasedUnread = (chat.unread_count || 0) > (prev.unread_count || 0);
+              const hasNewMsg = chat.last_message && chat.last_message !== prev.last_message;
+              if ((hasNewMsg || hasIncreasedUnread) && chat.chat_id !== self.activeChatId) {
+                newIncomingDetected = true;
+                latestMsgText = chat.last_message;
+                latestSenderName = chat.name || chat.phone;
+                latestChatId = chat.chat_id;
+                latestPhone = chat.phone;
+              }
+            }
+            if (!self.knownChats) self.knownChats = new Map();
+            self.knownChats.set(chat.chat_id, {
+              time_display: chat.time_display,
+              unread_count: chat.unread_count || 0,
+              last_message: chat.last_message
+            });
+
             const isActive = self.activeChatId === chat.chat_id;
             const hasLead = !!chat.lead;
             const avatarText = self.getInitials(chat.name || chat.phone);
@@ -206,6 +231,12 @@
               </div>
             `;
           });
+
+          if (newIncomingDetected && self.hasInitialLoaded) {
+            self.playNotificationSound();
+            self.showIncomingAlert(latestSenderName, latestMsgText, latestChatId, latestPhone);
+          }
+          self.hasInitialLoaded = true;
 
           $container.html(html);
         }
@@ -438,6 +469,49 @@
       return safe.replace(urlRegex, function (url) {
         return '<a href="' + url + '" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:underline;">' + url + "</a>";
       });
+    },
+
+    playNotificationSound: function () {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.32);
+      } catch (e) {}
+    },
+
+    showIncomingAlert: function (sender, text, chatId, phone) {
+      const self = this;
+      $(".wa-incoming-alert-toast").remove();
+      const $alert = $(`
+        <div class="wa-incoming-alert-toast" role="alert">
+          <span class="wa-incoming-alert-icon"><i class="fi fi-rr-comment-alt-check"></i></span>
+          <div>
+            <div class="wa-incoming-alert-title">${self.escapeHtml(sender || "New WhatsApp Message")}</div>
+            <div class="wa-incoming-alert-msg">${self.escapeHtml(text || "New message received")}</div>
+          </div>
+        </div>
+      `);
+      $("body").append($alert);
+      $alert.on("click", function () {
+        if (chatId) {
+          self.selectChat(chatId, phone);
+        }
+        $alert.fadeOut(200, function () { $(this).remove(); });
+      });
+      setTimeout(function () {
+        $alert.fadeOut(400, function () { $(this).remove(); });
+      }, 7000);
     }
   };
 

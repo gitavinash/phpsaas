@@ -426,13 +426,7 @@ if ($action === 'generate_qr' || $action === 'qr') {
     $gwRes = callWaGateway($configs['whatsapp_web_gateway_url'] ?? '', 'qr?session_id=' . urlencode($sessionId) . $forceParam);
 
     if ($gwRes && !empty($gwRes['qr_svg'])) {
-        // Pre-register or update device record
-        $escSession = mysqli_real_escape_string($connection, $sessionId);
-        $assignedSql = (!$isAdmin && $currentUserId > 0) ? $currentUserId : "NULL";
-        mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "whatsapp_device 
-                                  (device_site_id, device_session_id, device_assigned_user_id, device_status, device_created_by)
-                                  VALUES ({$siteId}, '{$escSession}', {$assignedSql}, 'qr_ready', {$currentUserId})
-                                  ON DUPLICATE KEY UPDATE device_status = 'qr_ready'");
+        // Do not pre-insert into whatsapp_device until device is connected
 
         echo json_encode([
             'status'     => 'success',
@@ -504,13 +498,7 @@ if ($action === 'pairing_code') {
     ]);
 
     if ($gwRes && !empty($gwRes['pairing_code'])) {
-        // Pre-register device in isw_whatsapp_device
-        $escSession = mysqli_real_escape_string($connection, $sessionId);
-        $assignedSql = (!$isAdmin && $currentUserId > 0) ? $currentUserId : "NULL";
-        mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "whatsapp_device 
-                                  (device_site_id, device_session_id, device_assigned_user_id, device_status, device_created_by)
-                                  VALUES ({$siteId}, '{$escSession}', {$assignedSql}, 'qr_ready', {$currentUserId})
-                                  ON DUPLICATE KEY UPDATE device_status = 'qr_ready'");
+        // Do not pre-insert into whatsapp_device until device is connected
 
         echo json_encode([
             'status'       => 'success',
@@ -610,8 +598,14 @@ if ($action === 'disconnect' || $action === 'delete_device') {
 
     @callWaGateway($configs['whatsapp_web_gateway_url'] ?? '', 'logout?session_id=' . urlencode($sessionId));
 
+    $devId = (int)($_GET['device_id'] ?? $_POST['device_id'] ?? 0);
     $escSession = mysqli_real_escape_string($connection, $sessionId);
-    mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_session_id = '{$escSession}'");
+    if ($devId > 0) {
+        mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_id = {$devId}");
+    }
+    if (!empty($escSession)) {
+        mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_session_id = '{$escSession}'");
+    }
 
     if ($sessionId === 'default') {
         saveWaWebConfig($connection, $siteId, 'whatsapp_web_status', 'disconnected');

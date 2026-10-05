@@ -763,25 +763,25 @@
         });
       });
 
-      // 9. Disconnect Device
-      $(document).on("click", ".btn-device-disconnect", function () {
+      // 9. Disconnect Device (No browser alerts, single binding)
+      $(document).off("click", ".btn-device-disconnect").on("click", ".btn-device-disconnect", function () {
         const sessId = $(this).data("session-id");
-        if (!confirm("Are you sure you want to disconnect this WhatsApp device?")) return;
+        const devId = $(this).data("device-id") || "";
 
         const $btn = $(this);
-        $btn.prop("disabled", true);
+        $btn.prop("disabled", true).addClass("loading");
 
         $.ajax({
-          url: "/api/v3/integration/whatsapp_web/?action=disconnect&session_id=" + encodeURIComponent(sessId),
+          url: "/api/v3/integration/whatsapp_web/?action=disconnect&session_id=" + encodeURIComponent(sessId) + "&device_id=" + encodeURIComponent(devId),
           method: "GET",
           dataType: "json",
           success: function (res) {
-            $btn.prop("disabled", false);
+            $btn.prop("disabled", false).removeClass("loading");
             self.showToast(res.msg || "Device disconnected.", "info");
             loadHubState();
           },
           error: function (xhr) {
-            $btn.prop("disabled", false);
+            $btn.prop("disabled", false).removeClass("loading");
             const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to disconnect device.";
             self.showToast(err, "danger");
           }

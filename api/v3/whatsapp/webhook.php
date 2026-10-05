@@ -45,7 +45,7 @@ if ($siteId <= 0 && !empty($payload['session_id'])) {
     }
 }
 
-// Fallback 2: Resolve site from sender/recipient phone number
+// Fallback 2: Resolve site from sender/recipient phone number or batch_sync
 if ($siteId <= 0 && (!empty($payload['phone']) || !empty($payload['from']))) {
     $rawPhone = preg_replace('/[^0-9]/', '', $payload['phone'] ?? $payload['from']);
     if (!empty($rawPhone)) {
@@ -55,6 +55,22 @@ if ($siteId <= 0 && (!empty($payload['phone']) || !empty($payload['from']))) {
             $devRow2 = mysqli_fetch_assoc($devQ2);
             if (!empty($devRow2['device_site_id'])) {
                 $siteId = (int)$devRow2['device_site_id'];
+            }
+        }
+    }
+}
+if ($siteId <= 0 && !empty($payload['chats']) && is_array($payload['chats'])) {
+    foreach ($payload['chats'] as $chItem) {
+        $p = preg_replace('/[^0-9]/', '', $chItem['phone'] ?? '');
+        if (!empty($p)) {
+            $escP = mysqli_real_escape_string($connection, $p);
+            $devQ3 = mysqli_query($connection, "SELECT device_site_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_phone = '{$escP}' LIMIT 1");
+            if ($devQ3 && mysqli_num_rows($devQ3) > 0) {
+                $devRow3 = mysqli_fetch_assoc($devQ3);
+                if (!empty($devRow3['device_site_id'])) {
+                    $siteId = (int)$devRow3['device_site_id'];
+                    break;
+                }
             }
         }
     }
@@ -221,7 +237,7 @@ if ($cfgQ) {
     }
 }
 
-if ($configs['enable_whatsapp_web_api'] !== '1' || $configs['whatsapp_web_sync_incoming'] !== '1') {
+if (($configs['enable_whatsapp_web_api'] ?? '1') === '0' || ($configs['whatsapp_web_sync_incoming'] ?? '1') === '0') {
     echo json_encode(['status' => 'ignored', 'msg' => 'WhatsApp Web incoming sync is currently disabled.']);
     exit;
 }

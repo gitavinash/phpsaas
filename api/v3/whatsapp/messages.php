@@ -255,6 +255,16 @@ if ($method === 'POST') {
             }
         }
     }
+    if ($targetSessionId === 'default') {
+        $anyDevQ = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
+        if ($anyDevQ && mysqli_num_rows($anyDevQ) > 0) {
+            $anyDevR = mysqli_fetch_assoc($anyDevQ);
+            $targetSessionId = $anyDevR['device_session_id'];
+            if (!empty($anyDevR['device_phone'])) {
+                $senderPhone = $anyDevR['device_phone'];
+            }
+        }
+    }
 
     $gwSuccess = false;
     $gwErrorMsg = '';

@@ -835,7 +835,19 @@ app.post("/pairing-code", async (req, res) => {
 
 // 3. Send Outbound Message from CRM
 app.post("/send-message", async (req, res) => {
-  const s = getSession(req.body?.session_id || req.query?.session_id, req);
+  let reqSid = req.body?.session_id || req.query?.session_id;
+  let s = reqSid ? getSession(reqSid, req) : null;
+  if (!s || s.connectionStatus !== "connected") {
+    for (const sess of sessions.values()) {
+      if (sess.connectionStatus === "connected") {
+        s = sess;
+        break;
+      }
+    }
+  }
+  if (!s) {
+    s = getSession("default", req);
+  }
 
   if (s.connectionStatus !== "connected" || !s.sock) {
     return res.status(400).json({

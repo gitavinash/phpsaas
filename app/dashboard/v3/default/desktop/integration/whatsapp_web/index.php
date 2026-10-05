@@ -301,17 +301,6 @@
                             </label>
                         </div>
 
-                        <div class="v3-form-group">
-                            <label for="waWebGatewayUrl" class="v3-form-label">
-                                WhatsApp Web Gateway Server URL <span class="optional">(Optional)</span>
-                            </label>
-                            <div class="v3-input-icon-wrap">
-                                <i class="fi fi-rr-link input-icon"></i>
-                                <input type="url" id="waWebGatewayUrl" name="whatsapp_web_gateway_url" class="v3-form-input" placeholder="e.g. http://localhost:3001">
-                            </div>
-                            <span class="v3-field-hint">Specify custom Baileys gateway endpoint. Leave empty to use default local daemon (port 3001).</span>
-                        </div>
-
                         <div class="v3-form-actions-bar">
                             <button type="submit" class="btn-integration-primary" id="btnSaveWaWebSettings">
                                 <i class="fi fi-rr-disk"></i> Save Sync Settings
