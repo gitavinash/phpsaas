@@ -334,7 +334,6 @@ class WhatsAppSession {
         version,
         auth: state,
         logger: logger,
-        printQRInTerminal: true,
         browser: Browsers.ubuntu("Chrome"),
         syncFullHistory: true,
         connectTimeoutMs: 60000,
@@ -356,6 +355,8 @@ class WhatsAppSession {
               width: 280,
               color: { dark: "#000000", light: "#ffffff" },
             });
+            const termQr = await QRCode.toString(qr, { type: "terminal", small: true });
+            console.log(`\n================== SCAN WHATSAPP QR [${this.sessionId}] ==================\n` + termQr + `\n========================================================================\n`);
             this.connectionStatus = "qr_ready";
           } catch (err) {
             console.error(`[WhatsApp Gateway:${this.sessionId}] Failed to generate QR SVG:`, err);
