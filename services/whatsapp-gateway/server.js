@@ -57,6 +57,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+process.on("uncaughtException", (err) => {
+  console.error("[WhatsApp Gateway] Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("[WhatsApp Gateway] Unhandled Rejection:", reason);
+});
+
 const logger = pino({ level: "error" });
 
 // Helper to decode message text across various WhatsApp formats
@@ -619,86 +627,101 @@ function notifyCrm(payload, targetOverrideUrl = null) {
 
 // 0. List all active WhatsApp device sessions
 app.get("/devices", (req, res) => {
-  const list = [];
-  for (const [id, s] of sessions.entries()) {
-    list.push({
-      session_id: id,
+  try {
+    const list = [];
+    for (const [id, s] of sessions.entries()) {
+      list.push({
+        session_id: id,
+        connection_status: s.connectionStatus,
+        is_connected: s.connectionStatus === "connected",
+        has_qr: s.connectionStatus === "qr_ready" && !!s.currentQrSvg,
+        user: s.connectedUser,
+        last_sync: s.lastSyncTime,
+        total_chats: s.chatStore.size,
+        total_contacts: s.contactStore.size,
+      });
+    }
+    res.json({
+      status: "success",
+      devices: list,
+    });
+  } catch (err) {
+    console.error("[WhatsApp Gateway] /devices error:", err);
+    res.status(500).json({ status: "error", message: err.message });
+  }
+});
+
+// 1. Status & QR Info for specific session
+app.get("/status", (req, res) => {
+  try {
+    const s = getSession(req.query.session_id, req);
+    res.json({
+      status: "success",
+      session_id: s.sessionId,
       connection_status: s.connectionStatus,
       is_connected: s.connectionStatus === "connected",
       has_qr: s.connectionStatus === "qr_ready" && !!s.currentQrSvg,
       user: s.connectedUser,
       last_sync: s.lastSyncTime,
-      total_chats: s.chatStore.size,
-      total_contacts: s.contactStore.size,
     });
+  } catch (err) {
+    console.error("[WhatsApp Gateway] /status error:", err);
+    res.status(500).json({ status: "error", message: err.message });
   }
-  res.json({
-    status: "success",
-    devices: list,
-  });
-});
-
-// 1. Status & QR Info for specific session
-app.get("/status", (req, res) => {
-  const s = getSession(req.query.session_id, req);
-  res.json({
-    status: "success",
-    session_id: s.sessionId,
-    connection_status: s.connectionStatus,
-    is_connected: s.connectionStatus === "connected",
-    has_qr: s.connectionStatus === "qr_ready" && !!s.currentQrSvg,
-    user: s.connectedUser,
-    last_sync: s.lastSyncTime,
-  });
 });
 
 // 2. Fetch live QR Code for specific session
 app.get("/qr", async (req, res) => {
-  const s = getSession(req.query.session_id, req);
+  try {
+    const s = getSession(req.query.session_id, req);
 
-  if (s.connectionStatus === "connected") {
-    return res.json({
-      status: "connected",
+    if (s.connectionStatus === "connected") {
+      return res.json({
+        status: "connected",
+        session_id: s.sessionId,
+        message: "Device is already connected.",
+        user: s.connectedUser,
+      });
+    }
+
+    const force = req.query.force === "1" || req.query.force === "true";
+    const isStale = (Date.now() - s.qrGeneratedAt) > 28000;
+
+    if (force && s.connectionStatus !== "connected") {
+      try {
+        if (s.sock) s.sock.end();
+      } catch (e) {}
+      s.currentQrSvg = null;
+      s.currentQrString = null;
+      setTimeout(() => s.startSocket(), 500);
+      return res.json({
+        status: "initializing",
+        session_id: s.sessionId,
+        message: "Refreshing QR code, please wait...",
+      });
+    }
+
+    if (s.currentQrSvg && !isStale) {
+      const elapsed = Math.floor((Date.now() - s.qrGeneratedAt) / 1000);
+      const remaining = Math.max(5, 30 - elapsed);
+      return res.json({
+        status: "qr_ready",
+        session_id: s.sessionId,
+        qr_svg: s.currentQrSvg,
+        qr_string: s.currentQrString,
+        expires_in: remaining,
+      });
+    }
+
+    res.json({
+      status: s.connectionStatus === "qr_ready" ? "qr_ready" : "initializing",
       session_id: s.sessionId,
-      message: "Device is already connected.",
-      user: s.connectedUser,
+      message: "Generating QR Code...",
     });
+  } catch (err) {
+    console.error("[WhatsApp Gateway] /qr error:", err);
+    res.status(500).json({ status: "error", message: err.message });
   }
-
-  const force = req.query.force === "1" || req.query.force === "true";
-  const isStale = (Date.now() - s.qrGeneratedAt) > 28000;
-
-  if (force && s.connectionStatus !== "connected") {
-    try {
-      if (s.sock) s.sock.end();
-    } catch (e) {}
-    s.currentQrSvg = null;
-    s.currentQrString = null;
-    setTimeout(() => s.startSocket(), 500);
-    return res.json({
-      status: "initializing",
-      session_id: s.sessionId,
-      message: "Refreshing QR code, please wait...",
-    });
-  }
-
-  if (s.currentQrSvg && !isStale) {
-    const elapsed = Math.floor((Date.now() - s.qrGeneratedAt) / 1000);
-    const remaining = Math.max(5, 30 - elapsed);
-    return res.json({
-      status: "qr_ready",
-      session_id: s.sessionId,
-      qr_svg: s.currentQrSvg,
-      qr_string: s.currentQrString,
-      expires_in: remaining,
-    });
-  }
-
-  res.json({
-    status: s.connectionStatus === "qr_ready" ? "qr_ready" : "initializing",
-    session_id: s.sessionId,
-    message: "Generating QR Code...",
-  });
 });
 
 // 2b. Request Crockford 8-digit Pairing Code for specific session
