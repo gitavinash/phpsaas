@@ -685,7 +685,7 @@ app.get("/qr", async (req, res) => {
     }
 
     const force = req.query.force === "1" || req.query.force === "true";
-    const isStale = (Date.now() - s.qrGeneratedAt) > 28000;
+    let isStale = (Date.now() - s.qrGeneratedAt) > 28000;
 
     if (force && s.connectionStatus !== "connected") {
       try {
@@ -693,11 +693,25 @@ app.get("/qr", async (req, res) => {
       } catch (e) {}
       s.currentQrSvg = null;
       s.currentQrString = null;
-      setTimeout(() => s.startSocket(), 500);
+      s.startSocket();
+    }
+
+    // If QR is missing or stale, wait up to 4.5s for the live socket to generate it
+    if (!s.currentQrSvg || isStale) {
+      let waited = 0;
+      while (!s.currentQrSvg && s.connectionStatus !== "connected" && waited < 4500) {
+        await new Promise((r) => setTimeout(r, 300));
+        waited += 300;
+      }
+      isStale = (Date.now() - s.qrGeneratedAt) > 28000;
+    }
+
+    if (s.connectionStatus === "connected") {
       return res.json({
-        status: "initializing",
+        status: "connected",
         session_id: s.sessionId,
-        message: "Refreshing QR code, please wait...",
+        message: "Device is already connected.",
+        user: s.connectedUser,
       });
     }
 
@@ -714,9 +728,9 @@ app.get("/qr", async (req, res) => {
     }
 
     res.json({
-      status: s.connectionStatus === "qr_ready" ? "qr_ready" : "initializing",
+      status: "initializing",
       session_id: s.sessionId,
-      message: "Generating QR Code...",
+      message: "Generating QR Code, please wait...",
     });
   } catch (err) {
     console.error("[WhatsApp Gateway] /qr error:", err);

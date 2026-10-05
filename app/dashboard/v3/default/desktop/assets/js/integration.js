@@ -497,6 +497,10 @@
             if (res && res.status === "success" && res.qr_svg) {
               $("#waAgentQrCodeContainer").html(res.qr_svg);
               resetAgentCountdown(res.expires_in || 30);
+            } else if (res && res.status === "initializing") {
+              setTimeout(function () {
+                loadAgentQrCode(false);
+              }, 1500);
             } else if (res && res.msg) {
               $("#waAgentQrCodeContainer").html('<div class="wa-qr-placeholder"><span>' + res.msg + '</span></div>');
             }
@@ -612,6 +616,14 @@
               $("#waModalQrCodeContainer").html(res.qr_svg);
               let modalCountdown = res.expires_in || 30;
               $("#waModalQrTimer").text(modalCountdown);
+            } else if (res && res.status === "initializing") {
+              setTimeout(function () {
+                if ($("#waAddDeviceModal").hasClass("is-active")) {
+                  loadModalQrCode(sessId);
+                }
+              }, 1500);
+            } else if (res && res.msg) {
+              $("#waModalQrCodeContainer").html('<div class="wa-qr-placeholder"><span>' + res.msg + '</span></div>');
             }
           }
         });

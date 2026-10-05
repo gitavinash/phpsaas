@@ -446,19 +446,19 @@ if ($action === 'generate_qr' || $action === 'qr') {
         exit;
     }
 
-    // Fallback internal QR generator
-    $timestamp = time();
-    $qrData = "2@{$sessionId}," . base64_encode(hash('sha256', $sessionId . $timestamp, true)) . ",{$timestamp}";
-    $qrSvg = generateSvgQrCode($qrData, 280);
+    if ($gwRes && ($gwRes['status'] ?? '') === 'connected') {
+        echo json_encode([
+            'status'     => 'connected',
+            'session_id' => $sessionId,
+            'msg'        => 'Device is already connected.'
+        ]);
+        exit;
+    }
 
     echo json_encode([
-        'status'     => 'success',
+        'status'     => 'initializing',
         'session_id' => $sessionId,
-        'qr_data'    => $qrData,
-        'qr_svg'     => $qrSvg,
-        'expires_in' => 30,
-        'is_live'    => false,
-        'created_at' => date('Y-m-d H:i:s')
+        'msg'        => 'Generating live WhatsApp QR code, please wait...'
     ]);
     exit;
 }
