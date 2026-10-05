@@ -149,6 +149,9 @@
                         <button type="button" class="btn-wa-secondary" id="btnAgentSyncChats">
                             <i class="fi fi-rr-refresh"></i> Sync My Chats
                         </button>
+                        <button type="button" class="btn-wa-danger btn-device-disconnect" id="btnAgentDisconnect" data-session-id="" data-device-id="" title="Disconnect this WhatsApp device">
+                            <i class="fi fi-rr-exit"></i> Disconnect
+                        </button>
                     </div>
                 </div>
             </div>

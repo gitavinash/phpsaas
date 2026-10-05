@@ -176,10 +176,51 @@ if ($method === 'GET') {
         }
     }
 
+    // Check if any device is linked for this user or site
+    $currentUserId = defined('USER_ID') ? (int)USER_ID : 0;
+    $isAdmin = false;
+    $roleQ = mysqli_query($connection, "SELECT site_access_type FROM " . TABLE_PREFIX . "site_access WHERE site_access_site_id = {$siteId} AND site_access_user_id = {$currentUserId} AND site_access_status = 1 LIMIT 1");
+    if ($roleQ && mysqli_num_rows($roleQ) > 0) {
+        $roleRow = mysqli_fetch_assoc($roleQ);
+        if (in_array(strtolower($roleRow['site_access_type'] ?? ''), ['admin', 'owner', 'superadmin'])) {
+            $isAdmin = true;
+        }
+    }
+
+    $isDeviceLinked = false;
+    $linkedPhone = '';
+
+    if ($isAdmin) {
+        $devCheck = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
+    } else {
+        $devCheck = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
+    }
+
+    if ($devCheck && mysqli_num_rows($devCheck) > 0) {
+        $devRow = mysqli_fetch_assoc($devCheck);
+        $isDeviceLinked = true;
+        $linkedPhone = $devRow['device_phone'] ?? '';
+    } else {
+        $cfgCheck = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key IN ('whatsapp_web_status', 'whatsapp_web_phone')");
+        $cfgs = [];
+        if ($cfgCheck) {
+            while ($cRow = mysqli_fetch_assoc($cfgCheck)) {
+                $cfgs[$cRow['site_configuration_key']] = $cRow['site_configuration_value'];
+            }
+        }
+        if (($cfgs['whatsapp_web_status'] ?? '') === 'connected' && !empty($cfgs['whatsapp_web_phone'])) {
+            $isDeviceLinked = true;
+            $linkedPhone = $cfgs['whatsapp_web_phone'];
+        }
+    }
+
     echo json_encode([
-        'status' => 'success',
-        'chats'  => $chats,
-        'count'  => count($chats)
+        'status'           => 'success',
+        'is_device_linked' => $isDeviceLinked,
+        'linked_phone'     => $linkedPhone,
+        'is_admin'         => $isAdmin,
+        'chats'            => $chats,
+        'count'            => count($chats)
     ]);
     exit;
 }

@@ -529,7 +529,13 @@ if ($action === 'check_status' || $action === 'status') {
         } elseif (!$isAdmin) {
             $sessionId = 'agent_' . $currentUserId;
         } else {
-            $sessionId = 'default';
+            $activeDevQ = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
+            if ($activeDevQ && mysqli_num_rows($activeDevQ) > 0) {
+                $activeDevR = mysqli_fetch_assoc($activeDevQ);
+                $sessionId = $activeDevR['device_session_id'];
+            } else {
+                $sessionId = 'default';
+            }
         }
     }
 
@@ -559,12 +565,26 @@ if ($action === 'check_status' || $action === 'status') {
                                   (device_site_id, device_session_id, device_phone, device_name, device_assigned_user_id, device_status, device_last_sync)
                                   VALUES ({$siteId}, '{$escSession}', '{$escPhone}', '{$escName}', {$assignedSql}, 'connected', '{$now}')
                                   ON DUPLICATE KEY UPDATE device_phone = '{$escPhone}', device_name = '{$escName}', device_status = 'connected', device_last_sync = '{$now}'");
+    } elseif (!$isConnected && $isAdmin) {
+        $gwDevs = callWaGateway($configs['whatsapp_web_gateway_url'] ?? '', 'devices');
+        if ($gwDevs && !empty($gwDevs['devices']) && is_array($gwDevs['devices'])) {
+            foreach ($gwDevs['devices'] as $gd) {
+                if (!empty($gd['is_connected']) || ($gd['connection_status'] ?? '') === 'connected') {
+                    $isConnected = true;
+                    $sessionId = $gd['session_id'];
+                    $userPhone = $gd['user']['phone'] ?? '';
+                    $userName = $gd['user']['name'] ?? '';
+                    break;
+                }
+            }
+        }
     }
 
     echo json_encode([
         'status'            => 'success',
         'session_id'        => $sessionId,
         'connection_status' => $isConnected ? 'connected' : ($gwStatus['connection_status'] ?? 'disconnected'),
+        'is_device_linked'  => $isConnected,
         'phone'             => $userPhone ?: ($configs['whatsapp_web_phone'] ?? ''),
         'pushname'          => $userName ?: ($configs['whatsapp_web_pushname'] ?? ''),
         'last_sync'         => $now ?? date('Y-m-d H:i:s'),

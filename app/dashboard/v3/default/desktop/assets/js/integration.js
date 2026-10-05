@@ -373,7 +373,7 @@
               const d = res.data;
               $("#waWebSyncIncoming").prop("checked", d.whatsapp_web_sync_incoming === "1");
               $("#waWebAutoCreateLead").prop("checked", d.whatsapp_web_auto_create_lead === "1");
-              if (d.whatsapp_web_gateway_url) {
+              if (d.whatsapp_web_gateway_url && $("#waWebGatewayUrl").length) {
                 $("#waWebGatewayUrl").val(d.whatsapp_web_gateway_url);
               }
               if (res.webhook_url) {
@@ -472,6 +472,7 @@
           $("#waAgentMetaName").text(dev.name || "Sales Agent WhatsApp");
           $("#waAgentMetaStatus").text(dev.status === "connected" ? "Connected & Active" : "Offline");
           $("#waAgentMetaSync").text(dev.last_sync || "Recent");
+          $("#btnAgentDisconnect").attr("data-session-id", dev.session_id || "").attr("data-device-id", dev.device_id || "");
 
           clearInterval(qrInterval);
           clearInterval(statusPollInterval);
@@ -763,12 +764,8 @@
         });
       });
 
-      // 9. Disconnect Device (No browser alerts, single binding)
-      $(document).off("click", ".btn-device-disconnect").on("click", ".btn-device-disconnect", function () {
-        const sessId = $(this).data("session-id");
-        const devId = $(this).data("device-id") || "";
-
-        const $btn = $(this);
+      // Helper: perform device disconnect
+      function performDisconnect(sessId, devId, $btn) {
         $btn.prop("disabled", true).addClass("loading");
 
         $.ajax({
@@ -786,6 +783,39 @@
             self.showToast(err, "danger");
           }
         });
+      }
+
+      // 9. Disconnect Device (SweetAlert confirmation)
+      $(document).off("click", ".btn-device-disconnect").on("click", ".btn-device-disconnect", function (e) {
+        e.preventDefault();
+        const sessId = $(this).data("session-id");
+        const devId = $(this).data("device-id") || "";
+        const $btn = $(this);
+
+        const swalInstance = (typeof Swal !== "undefined" && typeof Swal.fire === "function")
+          ? Swal
+          : ((typeof window.Swal !== "undefined" && typeof window.Swal.fire === "function") ? window.Swal : null);
+
+        if (swalInstance) {
+          swalInstance.fire({
+            title: "Disconnect WhatsApp Device?",
+            text: "Are you sure you want to disconnect this device? You will need to scan the QR code again to link it.",
+            icon: "warning",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, Disconnect",
+            cancelButtonText: "Cancel",
+            reverseButtons: true
+          }).then(function (result) {
+            if (result.isConfirmed || result.value) {
+              performDisconnect(sessId, devId, $btn);
+            }
+          });
+        } else {
+          performDisconnect(sessId, devId, $btn);
+        }
       });
 
       // 10. Pairing Mode Tabs
@@ -835,9 +865,11 @@
         const payload = {
           enable_whatsapp_web_api: $("#waWebActiveToggle").is(":checked") ? "1" : "0",
           whatsapp_web_sync_incoming: $("#waWebSyncIncoming").is(":checked") ? "1" : "0",
-          whatsapp_web_auto_create_lead: $("#waWebAutoCreateLead").is(":checked") ? "1" : "0",
-          whatsapp_web_gateway_url: $("#waWebGatewayUrl").val().trim()
+          whatsapp_web_auto_create_lead: $("#waWebAutoCreateLead").is(":checked") ? "1" : "0"
         };
+        if ($("#waWebGatewayUrl").length) {
+          payload.whatsapp_web_gateway_url = ($("#waWebGatewayUrl").val() || "").trim();
+        }
 
         $.ajax({
           url: "/api/v3/integration/whatsapp_web/",

@@ -135,26 +135,68 @@
         e.preventDefault();
         self.submitNewChat();
       });
+
+      // Recheck connection button in unlinked state card
+      $("#btnRecheckConnection").on("click", function () {
+        const $btn = $(this);
+        $btn.prop("disabled", true).find("i").addClass("wa-spin");
+        self.checkConnectionStatus(function (isConnected) {
+          $btn.prop("disabled", false).find("i").removeClass("wa-spin");
+          if (isConnected) {
+            self.loadThreads();
+          }
+        });
+      });
     },
 
-    checkConnectionStatus: function () {
+    updateDeviceLinkedUI: function (isLinked, phone, msg) {
+      const $workspace = $("#waChatWorkspace");
+      const $unlinked = $("#waUnlinkedStateCard");
+      const $badge = $("#waHeaderStatusBadge");
+      const $text = $("#waHeaderStatusText");
+      const $syncBtn = $("#btnSyncChatsInbox");
+      const $newChatBtn = $("#btnOpenNewChatModal");
+
+      if (isLinked) {
+        $workspace.removeClass("d-none");
+        $unlinked.addClass("d-none");
+        $syncBtn.removeClass("d-none");
+        $newChatBtn.removeClass("d-none");
+
+        $badge.addClass("is-connected");
+        $text.text("Linked: " + (phone || "Connected"));
+      } else {
+        $workspace.addClass("d-none");
+        $unlinked.removeClass("d-none");
+        $syncBtn.addClass("d-none");
+        $newChatBtn.addClass("d-none");
+
+        $badge.removeClass("is-connected");
+        $text.text("Device Not Linked");
+
+        if (msg) {
+          $("#waUnlinkedMessage").text(msg);
+        }
+      }
+    },
+
+    checkConnectionStatus: function (callback) {
+      const self = this;
       $.ajax({
         url: "/api/v3/integration/whatsapp_web/?action=check_status",
         method: "GET",
         dataType: "json",
         success: function (res) {
-          if (res && res.status === "success") {
-            const isConnected = res.connection_status === "connected";
-            const $badge = $("#waHeaderStatusBadge");
-            const $text = $("#waHeaderStatusText");
-
-            if (isConnected) {
-              $badge.addClass("is-connected");
-              $text.text("Linked: " + (res.phone || "Connected"));
-            } else {
-              $badge.removeClass("is-connected");
-              $text.text(res.is_active ? "Device Not Linked (Scan QR)" : "WhatsApp Web Disabled");
-            }
+          const isConnected = res && res.status === "success" && (res.connection_status === "connected" || res.is_device_linked === true);
+          self.updateDeviceLinkedUI(isConnected, res ? res.phone : null);
+          if (typeof callback === "function") {
+            callback(isConnected);
+          }
+        },
+        error: function () {
+          self.updateDeviceLinkedUI(false, null, "Unable to verify WhatsApp device connection status. Please ensure gateway is running.");
+          if (typeof callback === "function") {
+            callback(false);
           }
         }
       });
@@ -173,6 +215,13 @@
         data: params,
         dataType: "json",
         success: function (res) {
+          if (res && res.is_device_linked === false) {
+            self.updateDeviceLinkedUI(false, null);
+            return;
+          } else if (res && res.is_device_linked === true) {
+            self.updateDeviceLinkedUI(true, res.linked_phone || "");
+          }
+
           const $container = $("#waThreadsContainer");
           if (!res || res.status !== "success" || !Array.isArray(res.chats)) {
             $container.html('<div class="wa-loading-threads"><span>Failed to load chats.</span></div>');
