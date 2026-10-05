@@ -76,6 +76,14 @@ if ($method === 'GET') {
             }
         }
 
+        if (empty($sessParam)) {
+            $anyDevQ = mysqli_query($connection, "SELECT device_session_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
+            if ($anyDevQ && mysqli_num_rows($anyDevQ) > 0) {
+                $anyDevR = mysqli_fetch_assoc($anyDevQ);
+                $sessParam = '?session_id=' . urlencode($anyDevR['device_session_id']);
+            }
+        }
+
         $gwUrl = 'http://127.0.0.1:3001/sync-chats' . $sessParam;
         $gwQ = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_web_gateway_url' LIMIT 1");
         if ($gwQ && mysqli_num_rows($gwQ) > 0) {

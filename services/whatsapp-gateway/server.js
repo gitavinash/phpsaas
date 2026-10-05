@@ -186,7 +186,8 @@ class WhatsAppSession {
       let mapped = this.lidPhoneMap.get(normalized) || this.lidPhoneMap.get(decoded.user + "@lid");
       if (!mapped) {
         for (const [k, c] of this.contactStore.entries()) {
-          if (c.lid === normalized || c.lid === (decoded.user + "@lid")) {
+          const cLidNorm = c.lid ? jidNormalizedUser(c.lid) : null;
+          if (cLidNorm === normalized || c.lid === normalized || c.lid === (decoded.user + "@lid")) {
             mapped = k;
             this.lidPhoneMap.set(normalized, k);
             break;
@@ -200,9 +201,21 @@ class WhatsAppSession {
           if (digits.length >= 7) return "+" + digits;
         }
       }
+      // Check direct contact phone / phoneNumber
+      const directCt = this.contactStore.get(normalized) || this.contactStore.get(decoded.user + "@lid");
+      if (directCt) {
+        const p = directCt.phoneNumber || directCt.phone;
+        if (p) {
+          const digits = String(p).replace(/[^0-9]/g, "");
+          if (digits.length >= 7) return "+" + digits;
+        }
+      }
       if (this.connectedUser?.phone && this.sock?.user?.lid && normalized.startsWith(this.sock.user.lid.split(":")[0])) {
         return this.connectedUser.phone;
       }
+      // Fallback: Retain LID user identifier as phone so conversation is NEVER dropped from CRM!
+      const digits = decoded.user.replace(/[^0-9]/g, "");
+      if (digits.length >= 7) return "+" + digits;
       return null;
     }
 
@@ -228,7 +241,15 @@ class WhatsAppSession {
         if (!c || !c.id) continue;
         const normalized = jidNormalizedUser(c.id);
         this.contactStore.set(normalized, { ...(this.contactStore.get(normalized) || {}), ...c });
-        if (c.lid) this.lidPhoneMap.set(c.lid, normalized);
+        if (c.lid) {
+          const normLid = jidNormalizedUser(c.lid);
+          this.lidPhoneMap.set(normLid, normalized);
+          this.lidPhoneMap.set(c.lid, normalized);
+        }
+        if (c.phoneNumber) {
+          const phoneJid = jidNormalizedUser(c.phoneNumber.includes("@") ? c.phoneNumber : (c.phoneNumber + "@s.whatsapp.net"));
+          this.lidPhoneMap.set(normalized, phoneJid);
+        }
       }
     }
 
@@ -250,7 +271,9 @@ class WhatsAppSession {
         if (!rawJid) continue;
 
         if (altJid && rawJid.endsWith("@lid") && altJid.endsWith("@s.whatsapp.net")) {
-          this.lidPhoneMap.set(rawJid, altJid);
+          const normLid = jidNormalizedUser(rawJid);
+          const normPhone = jidNormalizedUser(altJid);
+          this.lidPhoneMap.set(normLid, normPhone);
         }
 
         const normalized = jidNormalizedUser(rawJid);
@@ -315,11 +338,15 @@ class WhatsAppSession {
     }
 
     if (batchPayload.length > 0) {
-      console.log(`[WhatsApp Gateway:${this.sessionId}] Forwarding ${batchPayload.length} conversations to CRM Webhook...`);
-      this.notify({
-        event: "batch_sync",
-        chats: batchPayload,
-      });
+      console.log(`[WhatsApp Gateway:${this.sessionId}] Forwarding ${batchPayload.length} conversations to CRM Webhook in chunks...`);
+      const CHUNK_SIZE = 150;
+      for (let i = 0; i < batchPayload.length; i += CHUNK_SIZE) {
+        const chunk = batchPayload.slice(i, i + CHUNK_SIZE);
+        this.notify({
+          event: "batch_sync",
+          chats: chunk,
+        });
+      }
     }
 
     return batchPayload.length;
@@ -355,8 +382,11 @@ class WhatsAppSession {
               width: 280,
               color: { dark: "#000000", light: "#ffffff" },
             });
-            const termQr = await QRCode.toString(qr, { type: "terminal", small: true });
-            console.log(`\n================== SCAN WHATSAPP QR [${this.sessionId}] ==================\n` + termQr + `\n========================================================================\n`);
+            const hasOtherConnected = Array.from(sessions.values()).some((sess) => sess.sessionId !== this.sessionId && sess.connectionStatus === "connected");
+            if (!hasOtherConnected) {
+              const termQr = await QRCode.toString(qr, { type: "terminal", small: true });
+              console.log(`\n================== SCAN WHATSAPP QR [${this.sessionId}] ==================\n` + termQr + `\n========================================================================\n`);
+            }
             this.connectionStatus = "qr_ready";
           } catch (err) {
             console.error(`[WhatsApp Gateway:${this.sessionId}] Failed to generate QR SVG:`, err);
@@ -562,8 +592,11 @@ function getSession(sessionId = "default", req = null) {
   return s;
 }
 
-// Initialize default session and any pre-existing sub-sessions on startup
-getSession("default");
+// Initialize any pre-existing connected sessions on startup
+const defaultHasCreds = fs.existsSync(path.join(AUTH_DIR, "creds.json"));
+if (defaultHasCreds) {
+  getSession("default");
+}
 
 try {
   const dirs = fs.readdirSync(AUTH_DIR, { withFileTypes: true });
@@ -861,7 +894,20 @@ app.post("/send-message", async (req, res) => {
 
 // 3b. Manual Sync Chats from WhatsApp to CRM
 app.all("/sync-chats", async (req, res) => {
-  const s = getSession(req.body?.session_id || req.query?.session_id, req);
+  let reqSid = req.body?.session_id || req.query?.session_id;
+  let s = reqSid ? getSession(reqSid, req) : null;
+  if (!s || s.connectionStatus !== "connected") {
+    // Pick the first connected session
+    for (const sess of sessions.values()) {
+      if (sess.connectionStatus === "connected") {
+        s = sess;
+        break;
+      }
+    }
+  }
+  if (!s) {
+    s = getSession("default", req);
+  }
 
   if (s.connectionStatus !== "connected" || !s.sock) {
     return res.status(400).json({ status: "error", message: "WhatsApp is not connected. Scan QR first." });

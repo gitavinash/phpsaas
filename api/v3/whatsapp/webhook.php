@@ -85,6 +85,15 @@ if ($siteId <= 0) {
     }
 }
 
+// Fallback 5: Fallback to first available site if single-tenant or default
+if ($siteId <= 0) {
+    $anySiteQ = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site ORDER BY site_id ASC LIMIT 1");
+    if ($anySiteQ && mysqli_num_rows($anySiteQ) > 0) {
+        $sRow = mysqli_fetch_assoc($anySiteQ);
+        $siteId = (int)$sRow['site_id'];
+    }
+}
+
 if ($siteId <= 0) {
     http_response_code(400);
     echo json_encode(['status' => 'error', 'msg' => 'Active site identifier could not be resolved.']);
