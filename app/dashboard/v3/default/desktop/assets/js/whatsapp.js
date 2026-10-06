@@ -302,16 +302,22 @@
 
             const isActive = self.activeChatId === chat.chat_id;
             const hasLead = !!chat.lead;
-            const avatarText = self.getInitials(chat.name || chat.phone);
+            const avatarContent = chat.avatar
+              ? `<img src="${self.escapeHtml(chat.avatar)}" alt="" class="wa-avatar-img" />`
+              : self.getInitials(chat.name || chat.phone);
+
+            const displayName = chat.name || chat.phone;
+            const hasDistinctName = chat.name && chat.name !== chat.phone && !chat.name.includes(chat.phone);
 
             html += `
               <div class="wa-thread-item ${isActive ? "active" : ""}" data-chat-id="${chat.chat_id}" data-phone="${self.escapeHtml(chat.phone)}">
-                <div class="wa-thread-avatar ${hasLead ? "has-lead" : ""}">${avatarText}</div>
+                <div class="wa-thread-avatar ${hasLead ? "has-lead" : ""}">${avatarContent}</div>
                 <div class="wa-thread-body">
                   <div class="wa-thread-top">
-                    <span class="wa-thread-name">${self.escapeHtml(chat.name)}</span>
+                    <span class="wa-thread-name">${self.escapeHtml(displayName)}</span>
                     <span class="wa-thread-time">${self.escapeHtml(chat.time_display)}</span>
                   </div>
+                  ${hasDistinctName ? `<div class="wa-thread-phone-sub">${self.escapeHtml(chat.phone)}</div>` : ""}
                   <div class="wa-thread-bottom">
                     <p class="wa-thread-preview">${self.escapeHtml(chat.last_message || "No messages yet")}</p>
                     ${chat.unread_count > 0 ? `<span class="wa-unread-badge">${chat.unread_count}</span>` : ""}
@@ -386,7 +392,11 @@
           if (chat) {
             $("#waActiveName").text(chat.chat_name || chat.chat_phone);
             $("#waActivePhone").text(chat.chat_phone);
-            $("#waActiveAvatar").text(self.getInitials(chat.chat_name || chat.chat_phone));
+            if (chat.chat_avatar) {
+              $("#waActiveAvatar").html(`<img src="${self.escapeHtml(chat.chat_avatar)}" alt="" class="wa-avatar-img" />`);
+            } else {
+              $("#waActiveAvatar").text(self.getInitials(chat.chat_name || chat.chat_phone));
+            }
 
             if (chat.chat_lead_id) {
               $("#waActiveLeadBadge").show();

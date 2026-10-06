@@ -20,6 +20,7 @@ function initWhatsAppDatabase($connection) {
         chat_phone VARCHAR(35) NOT NULL,
         chat_name VARCHAR(150) DEFAULT NULL,
         chat_pushname VARCHAR(150) DEFAULT NULL,
+        chat_avatar VARCHAR(500) DEFAULT NULL,
         chat_last_message TEXT DEFAULT NULL,
         chat_last_message_time DATETIME DEFAULT NULL,
         chat_unread_count INT(11) DEFAULT 0,
@@ -42,6 +43,14 @@ function initWhatsAppDatabase($connection) {
         $idxRes = @mysqli_query($connection, "SHOW INDEX FROM " . $prefix . "whatsapp_chat WHERE Key_name = 'idx_site_msg_time'");
         if ($idxRes && mysqli_num_rows($idxRes) === 0) {
             @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat ADD INDEX idx_site_msg_time (chat_site_id, chat_last_message_time)");
+        }
+    } catch (Throwable $e) {}
+
+    // Safely add chat_avatar column if not present
+    try {
+        $colRes = @mysqli_query($connection, "SHOW COLUMNS FROM " . $prefix . "whatsapp_chat LIKE 'chat_avatar'");
+        if ($colRes && mysqli_num_rows($colRes) === 0) {
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat ADD COLUMN chat_avatar VARCHAR(500) DEFAULT NULL AFTER chat_pushname");
         }
     } catch (Throwable $e) {}
 

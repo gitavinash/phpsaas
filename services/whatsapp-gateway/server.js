@@ -117,6 +117,7 @@ class WhatsAppSession {
     this.contactStore = new Map();
     this.lidPhoneMap = new Map();
     this.messageStore = new Map();
+    this.avatarCache = new Map();
 
     this.webhookUrl = null;
     this.siteId = null;
@@ -258,15 +259,61 @@ class WhatsAppSession {
       if (this.connectedUser?.phone && this.sock?.user?.lid && normalized.startsWith(this.sock.user.lid.split(":")[0])) {
         return this.connectedUser.phone;
       }
-      // Fallback: Retain LID user identifier as phone so conversation is NEVER dropped from CRM!
-      const digits = decoded.user.replace(/[^0-9]/g, "");
-      if (digits.length >= 7) return "+" + digits;
+      // Never return raw LID digits as a phone number
       return null;
     }
 
     const digits = decoded.user.replace(/[^0-9]/g, "");
     if (!digits || digits.length < 7) return null;
     return "+" + digits;
+  }
+
+  async resolvePhoneNumber(jid, altJid = null) {
+    const syncPhone = this.getPhoneNumber(jid, altJid);
+    if (syncPhone) return syncPhone;
+
+    if (!jid) return null;
+    const normalized = jidNormalizedUser(jid);
+    const decoded = jidDecode(normalized);
+    if (!decoded || !decoded.user) return null;
+
+    if (decoded.server === "lid") {
+      if (this.sock?.signalRepository?.lidMapping?.getPNForLID) {
+        try {
+          const pn = await this.sock.signalRepository.lidMapping.getPNForLID(normalized);
+          if (pn) {
+            const pnNorm = jidNormalizedUser(pn);
+            const pnDec = jidDecode(pnNorm);
+            if (pnDec?.user) {
+              const digits = pnDec.user.replace(/[^0-9]/g, "");
+              if (digits.length >= 7) {
+                this.lidPhoneMap.set(normalized, pnNorm);
+                this.lidPhoneMap.set(decoded.user + "@lid", pnNorm);
+                return "+" + digits;
+              }
+            }
+          }
+        } catch (e) {}
+      }
+    }
+
+    return null;
+  }
+
+  async getProfilePicUrl(jid) {
+    if (!jid || !this.sock) return null;
+    try {
+      const norm = jidNormalizedUser(jid);
+      const cached = this.avatarCache.get(norm);
+      if (cached && (Date.now() - cached.ts) < 24 * 60 * 60 * 1000) {
+        return cached.url;
+      }
+      const url = await this.sock.profilePictureUrl(norm, "preview").catch(() => null);
+      this.avatarCache.set(norm, { url: url || null, ts: Date.now() });
+      return url || null;
+    } catch (e) {
+      return null;
+    }
   }
 
   getContactName(jid, fallbackPushName = "") {
@@ -340,10 +387,16 @@ class WhatsAppSession {
 
     const batchPayload = [];
     const processedPhones = new Set();
+    const ownDigits = this.connectedUser?.phone ? this.connectedUser.phone.replace(/[^0-9]/g, "") : "";
 
     for (const [jid, c] of this.chatStore.entries()) {
       const phone = this.getPhoneNumber(jid);
       if (!phone) continue;
+
+      const pDigits = phone.replace(/[^0-9]/g, "");
+      if (ownDigits && (pDigits === ownDigits || pDigits.endsWith(ownDigits) || ownDigits.endsWith(pDigits))) {
+        continue;
+      }
       processedPhones.add(phone);
 
       const contact = this.contactStore.get(jid) || {};
@@ -353,11 +406,13 @@ class WhatsAppSession {
       let ts = c.conversationTimestamp;
       if (typeof ts === "object" && ts !== null) ts = ts.low || ts.seconds || 0;
       ts = Number(ts) || Math.floor(Date.now() / 1000);
+      const avatar = c.avatar || (this.avatarCache.get(jid)?.url) || "";
 
       batchPayload.push({
         phone: phone,
         name: name,
         pushname: pushname,
+        avatar: avatar,
         unread_count: Number(c.unreadCount) || 0,
         timestamp: ts,
         last_message: lastMsg,
@@ -367,15 +422,22 @@ class WhatsAppSession {
     for (const [jid, ct] of this.contactStore.entries()) {
       const phone = this.getPhoneNumber(jid);
       if (!phone || processedPhones.has(phone)) continue;
+
+      const pDigits = phone.replace(/[^0-9]/g, "");
+      if (ownDigits && (pDigits === ownDigits || pDigits.endsWith(ownDigits) || ownDigits.endsWith(pDigits))) {
+        continue;
+      }
       processedPhones.add(phone);
 
       const pushname = ct.notify || ct.verifiedName || "";
       const name = ct.name || "";
+      const avatar = (this.avatarCache.get(jid)?.url) || "";
 
       batchPayload.push({
         phone: phone,
         name: name,
         pushname: pushname,
+        avatar: avatar,
         unread_count: 0,
         timestamp: Math.floor(Date.now() / 1000),
         last_message: "",
@@ -568,11 +630,30 @@ class WhatsAppSession {
           const jid = jidNormalizedUser(rawJid);
           if (!jid || isJidBroadcast(jid) || isJidGroup(jid) || isJidStatusBroadcast(jid) || isJidNewsletter(jid)) continue;
 
-          const contactPhone = this.getPhoneNumber(jid, altJid);
+          const contactPhone = await this.resolvePhoneNumber(jid, altJid);
           if (!contactPhone) continue;
+
+          // Exclude messages to/from connected device's own number
+          if (this.connectedUser?.phone) {
+            const cleanUserPhone = this.connectedUser.phone.replace(/[^0-9]/g, "");
+            const cleanContact = contactPhone.replace(/[^0-9]/g, "");
+            if (cleanUserPhone && (cleanContact === cleanUserPhone || cleanContact.endsWith(cleanUserPhone) || cleanUserPhone.endsWith(cleanContact))) {
+              continue;
+            }
+          }
 
           const body = getMessageText(msg.message);
           if (!body) continue;
+
+          // Fetch profile picture avatar
+          let avatarUrl = null;
+          try {
+            avatarUrl = await this.getProfilePicUrl(jid);
+            if (!avatarUrl && contactPhone) {
+              const digits = contactPhone.replace(/[^0-9]/g, "");
+              avatarUrl = await this.getProfilePicUrl(`${digits}@s.whatsapp.net`);
+            }
+          } catch (e) {}
 
           const pushName = msg.pushName || this.getContactName(jid) || "";
           const isFromMe = !!msg.key.fromMe;
@@ -581,6 +662,7 @@ class WhatsAppSession {
           const existing = this.chatStore.get(jid) || { id: jid };
           existing.conversationTimestamp = ts;
           existing.lastMessageText = body;
+          if (avatarUrl && !existing.avatar) existing.avatar = avatarUrl;
           if (pushName && !existing.pushName) existing.pushName = pushName;
           if (!isFromMe) {
             existing.unreadCount = (existing.unreadCount || 0) + 1;
@@ -597,6 +679,7 @@ class WhatsAppSession {
             to: isFromMe ? contactPhone : (this.connectedUser?.phone || ""),
             name: isFromMe ? (this.connectedUser?.name || "") : "",
             pushname: pushName,
+            avatar: avatarUrl || "",
             text: body,
             msg_id: msg.key.id,
             timestamp: ts,
@@ -982,6 +1065,19 @@ app.post("/send-message", async (req, res) => {
           if (!results[0].jid.endsWith("@lid")) {
             targetJid = results[0].jid;
           }
+        }
+      }
+    } catch (e) {}
+
+    // Proactively pre-populate LID mapping for this recipient so immediate replies link cleanly
+    try {
+      if (s.sock?.signalRepository?.lidMapping?.getLIDForPN) {
+        const normTarget = jidNormalizedUser(targetJid);
+        const mappedLid = await s.sock.signalRepository.lidMapping.getLIDForPN(normTarget);
+        if (mappedLid) {
+          const normLid = jidNormalizedUser(mappedLid);
+          s.lidPhoneMap.set(normLid, normTarget);
+          s.lidPhoneMap.set(mappedLid, normTarget);
         }
       }
     } catch (e) {}

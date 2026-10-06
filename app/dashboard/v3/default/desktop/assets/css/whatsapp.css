@@ -984,6 +984,16 @@
   color: #065F46;
 }
 
+.wa-thread-avatar img,
+.wa-user-avatar img,
+.wa-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
 .wa-thread-body {
   flex: 1;
   min-width: 0;
@@ -1009,6 +1019,17 @@
   font-size: 11px;
   color: var(--wa-text-muted);
   flex-shrink: 0;
+}
+
+.wa-thread-phone-sub {
+  font-size: 11px;
+  color: #64748B;
+  margin-top: -1px;
+  margin-bottom: 3px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .wa-thread-bottom {
