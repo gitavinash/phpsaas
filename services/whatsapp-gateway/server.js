@@ -529,6 +529,19 @@ class WhatsAppSession {
 
   async startSocket() {
     try {
+      // Auto-purge desynchronized / poisoned session files on socket startup
+      try {
+        if (fs.existsSync(this.authDir)) {
+          const files = fs.readdirSync(this.authDir);
+          for (const f of files) {
+            if (f.startsWith("session-") && f.includes("187810329956513")) {
+              fs.unlinkSync(path.join(this.authDir, f));
+              console.log(`[WhatsApp Gateway:${this.sessionId}] Purged desynchronized Signal session: ${f}`);
+            }
+          }
+        }
+      } catch (e) {}
+
       const { version } = await fetchLatestBaileysVersion().catch(() => ({ version: [2, 3000, 1043857760] }));
       const { state, saveCreds } = await useMultiFileAuthState(this.authDir);
 
@@ -1261,6 +1274,36 @@ app.all("/sync-chats", async (req, res) => {
     contacts_in_store: allContacts.length,
     user: s.connectedUser,
     message: `Synchronized ${synced} conversations to CRM.`
+  });
+});
+
+// 3c. Repair broken Signal ratchets (deletes poisoned session-*.json while keeping creds.json intact)
+app.all("/repair-sessions", async (req, res) => {
+  let reqSid = req.body?.session_id || req.query?.session_id;
+  let targetSessions = reqSid ? [getSession(reqSid, req)] : Array.from(sessions.values());
+  if (!targetSessions.length) targetSessions = [getSession("default", req)];
+
+  let totalPurged = 0;
+  for (const s of targetSessions) {
+    try {
+      if (fs.existsSync(s.authDir)) {
+        const files = fs.readdirSync(s.authDir);
+        for (const f of files) {
+          if (f.startsWith("session-") && f.endsWith(".json")) {
+            fs.unlinkSync(path.join(s.authDir, f));
+            totalPurged++;
+          }
+        }
+      }
+      if (s.messageStore) s.messageStore.clear();
+    } catch (e) {}
+  }
+
+  console.log(`[WhatsApp Gateway] Repaired Signal sessions. Purged ${totalPurged} poisoned session files.`);
+  res.json({
+    status: "success",
+    purged_session_files: totalPurged,
+    message: "Corrupted Signal chat sessions successfully cleared. Credentials are preserved. Send a message to establish fresh ratchets."
   });
 });
 
