@@ -4717,6 +4717,34 @@ $(document).ready(function (e) {
         );
       }
     }
+
+    // 8. WhatsApp CRM Live Inbox Module
+    const $whatsapp = $("#whatsappCrmApp, .whatsapp-inbox-wrapper");
+    if ($whatsapp.length > 0) {
+      if (
+        window.V3WhatsApp &&
+        typeof window.V3WhatsApp.init === "function"
+      ) {
+        window.V3WhatsApp.init();
+      } else {
+        ensureScriptLoaded(
+          ADMIN_JS + "whatsapp.js?v=" + Date.now(),
+          function () {
+            if (
+              window.V3WhatsApp &&
+              typeof window.V3WhatsApp.init === "function"
+            ) {
+              window.V3WhatsApp.init();
+            }
+          },
+        );
+      }
+    } else if (
+      window.V3WhatsApp &&
+      typeof window.V3WhatsApp.stopPolling === "function"
+    ) {
+      window.V3WhatsApp.stopPolling();
+    }
   };
 
   // Re-run component initialization on every SPA page load

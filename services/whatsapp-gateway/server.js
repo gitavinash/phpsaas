@@ -111,6 +111,7 @@ class WhatsAppSession {
     this.connectionStatus = "disconnected"; // disconnected, qr_ready, connected
     this.connectedUser = null;
     this.lastSyncTime = null;
+    this.hasSyncedInitial = false;
 
     this.chatStore = new Map();
     this.contactStore = new Map();
@@ -163,7 +164,7 @@ class WhatsAppSession {
         return { conversation: chat.lastMessageText };
       }
     }
-    return { conversation: "" };
+    return undefined;
   }
 
   notify(payload) {
@@ -409,11 +410,12 @@ class WhatsAppSession {
         },
         logger: logger,
         browser: ["Aleya.in", "Chrome", "1.0.0"],
-        syncFullHistory: true,
-        connectTimeoutMs: 60000,
-        keepAliveIntervalMs: 25000,
+        syncFullHistory: false,
+        connectTimeoutMs: 30000,
+        keepAliveIntervalMs: 30000,
         emitOwnEvents: true,
-        defaultQueryTimeoutMs: undefined,
+        defaultQueryTimeoutMs: 60000,
+        markOnlineOnConnect: true,
         getMessage: async (key) => {
           return this.getMessage(key);
         },
@@ -471,20 +473,25 @@ class WhatsAppSession {
             device: this.connectedUser.device,
           });
 
-          setTimeout(() => {
-            const cachedChats = Array.from(this.chatStore.values());
-            this.syncBatchHistory(cachedChats, [], Array.from(this.contactStore.values()));
-          }, 2500);
+          if (!this.hasSyncedInitial && this.chatStore.size > 0) {
+            this.hasSyncedInitial = true;
+            setTimeout(() => {
+              const cachedChats = Array.from(this.chatStore.values());
+              this.syncBatchHistory(cachedChats, [], Array.from(this.contactStore.values()));
+            }, 3000);
+          }
         }
 
         if (connection === "close") {
           const statusCode = lastDisconnect?.error?.output?.statusCode;
           const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+          const err = lastDisconnect?.error;
+          const errMsg = err?.message || err?.output?.payload?.message || "";
 
           this.currentQrSvg = null;
           this.currentQrString = null;
 
-          console.log(`[WhatsApp Gateway:${this.sessionId}] Connection closed. StatusCode: ${statusCode}. Reconnect: ${shouldReconnect}`);
+          console.log(`[WhatsApp Gateway:${this.sessionId}] Connection closed. StatusCode: ${statusCode}. Reason: ${errMsg}. Reconnect: ${shouldReconnect}`);
 
           if (statusCode === DisconnectReason.loggedOut) {
             this.connectionStatus = "disconnected";
@@ -982,7 +989,7 @@ app.post("/send-message", async (req, res) => {
     // Subscribe presence to establish connection and trigger key exchange before sending
     try {
       await s.sock.presenceSubscribe(targetJid);
-      await s.sock.sendPresenceUpdate("available", targetJid);
+      await s.sock.sendPresenceUpdate("composing", targetJid);
     } catch (e) {}
 
     const sent = await s.sock.sendMessage(targetJid, { text: message });
