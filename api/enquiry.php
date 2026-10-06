@@ -181,7 +181,7 @@ foreach ($enquiryMeta as $key => $value) {
 </tr>";
 }
 
-$messageDB = json_encode($enquiryMeta, TRUE);
+$messageDB = json_encode($enquiryMeta, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 if ($mobile != '') {
 
@@ -191,8 +191,11 @@ if ($mobile != '') {
 
     if (is_numeric($mobile)) {
 
+        $escaped_subject = mysqli_real_escape_string($connection, (string)$subject);
+        $escaped_first_name = mysqli_real_escape_string($connection, (string)$first_name);
+
         if ($checkUserEnquiry = mysqli_query($connection, "SELECT enquiry_time FROM " . TABLE_PREFIX . "enquiry WHERE
-enquiry_subject='{$subject}' AND enquiry_mobile='{$mobile}' AND enquiry_first_name='{$first_name}' AND enquiry_site_id="
+enquiry_subject='{$escaped_subject}' AND enquiry_mobile='{$mobile}' AND enquiry_first_name='{$escaped_first_name}' AND enquiry_site_id="
             . SITE_ID . " ORDER BY enquiry_time DESC LIMIT 0, 1")) {
             if (mysqli_num_rows($checkUserEnquiry) != 0) {
                 extract(mysqli_fetch_assoc($checkUserEnquiry));
@@ -223,14 +226,15 @@ enquiry_subject='{$subject}' AND enquiry_mobile='{$mobile}' AND enquiry_first_na
 
             // Check user is exiting or not
 
-            $findUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_email='{$email}' OR
+            $escaped_email = mysqli_real_escape_string($connection, (string)$email);
+            $findUser = mysqli_query($connection, "SELECT user_id FROM " . TABLE_PREFIX . "user WHERE user_email='{$escaped_email}' OR
 user_mobile='{$mobile}' LIMIT 1");
 
             $userId = 0;
 
             if (mysqli_num_rows($findUser) != 0) {
                 $userInfo = mysqli_fetch_assoc($findUser);
-                $userId = $userInfo['user_id'];
+                $userId = (int)$userInfo['user_id'];
             }
 
             // track traffic resource
@@ -254,23 +258,21 @@ user_mobile='{$mobile}' LIMIT 1");
             $trafficCampaign = mysqli_real_escape_string($connection, ((isset($_GET['utm_campaign']) ? $_GET['utm_campaign'] :
                 '')));
 
-            if (SITE_ID == 35) {
-                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id,
+            $escaped_last_name = mysqli_real_escape_string($connection, (string)$last_name);
+            $escaped_alt_mobile = mysqli_real_escape_string($connection, (string)$alternate_mobile);
+            $escaped_messageDB = mysqli_real_escape_string($connection, (string)$messageDB);
+            $escaped_currentUrl = mysqli_real_escape_string($connection, (string)$currentUrl);
+            $escaped_ip = mysqli_real_escape_string($connection, (string)IP);
+
+            $enquiryStatus = (SITE_ID == 35) ? 1 : 0;
+
+            $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id,
 enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_alt_mobile,
 enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status,
-enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}',
-'{$email}', '{$mobile}', '{$alternate_mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}',
-'{$trafficMedium}', '{$trafficCampaign}', 1, NOW())");
-                $leadId = mysqli_insert_id($connection);
-            } else {
-                $addNewEnquiry = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry(enquiry_site_id, enquiry_user_id,
-enquiry_user_ip, enquiry_url, enquiry_first_name, enquiry_last_name, enquiry_email, enquiry_mobile, enquiry_alt_mobile,
-enquiry_message, enquiry_subject, enquiry_type, enquiry_source, enquiry_medium, enquiry_campaign, enquiry_status,
-enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}', '{$first_name}', '{$last_name}',
-'{$email}', '{$mobile}', '{$alternate_mobile}', '{$messageDB}', '{$subject}', 'enquiry', '{$trafficSource}',
-'{$trafficMedium}', '{$trafficCampaign}', 0, NOW())");
-                $leadId = mysqli_insert_id($connection);
-            }
+enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '{$escaped_ip}', '{$escaped_currentUrl}', '{$escaped_first_name}', '{$escaped_last_name}',
+'{$escaped_email}', '{$mobile}', '{$escaped_alt_mobile}', '{$escaped_messageDB}', '{$escaped_subject}', 'enquiry', '{$trafficSource}',
+'{$trafficMedium}', '{$trafficCampaign}', {$enquiryStatus}, NOW())");
+            $leadId = mysqli_insert_id($connection);
 
             if ($addNewEnquiry) {
                 mysqli_query($connection, "COMMIT");
@@ -308,16 +310,42 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}'
             }
         }
 
+        $isJsonRequest = (
+            (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') ||
+            (!empty($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) ||
+            (isset($_REQUEST['format']) && $_REQUEST['format'] === 'json')
+        );
+
         if (strpos($redirect_url, '/shipping/') !== false) {
 
             $postUrlValue = "&name=" . urlencode($first_name) . "&email=" . urlencode($email) . "&mobile=" . urlencode($mobile) .
                 "&pickup_date=" . urlencode($pickup_date) . "&pickup_time=" . urlencode($pickup_time) . "&address=" .
                 urlencode($address);
-            header("Location: {$redirect_url}{$postUrlValue}", TRUE, 303);
+            $targetUrl = "{$redirect_url}{$postUrlValue}";
+            if ($isJsonRequest) {
+                echo json_encode([
+                    'status' => 'success',
+                    'msg' => 'Enquiry submitted successfully',
+                    'leadId' => $leadId ?? 0,
+                    'redirect_url' => $targetUrl
+                ]);
+                exit();
+            }
+            header("Location: {$targetUrl}", TRUE, 303);
         } else {
 
             if (!isset($redirect_url)) {
                 $redirect_url = '/dashboard/leads/view/?id=' . base64_encode($leadId);
+            }
+
+            if ($isJsonRequest) {
+                echo json_encode([
+                    'status' => 'success',
+                    'msg' => 'Enquiry submitted successfully',
+                    'leadId' => $leadId ?? 0,
+                    'redirect_url' => $redirect_url
+                ]);
+                exit();
             }
 
             header("Location: " . $redirect_url, TRUE, 303);
@@ -325,9 +353,17 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '" . IP . "', '{$currentUrl}'
             // header("Refresh: 3; URL=" . $redirect_url);
         }
     } else {
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' || (!empty($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) || (isset($_REQUEST['format']) && $_REQUEST['format'] === 'json')) {
+            echo json_encode(['status' => 'error', 'msg' => 'Enter valid mobile number']);
+            exit();
+        }
         echo "<h2>Enter valid mobile number</h2>";
     }
 } else {
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' || (!empty($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) || (isset($_REQUEST['format']) && $_REQUEST['format'] === 'json')) {
+        echo json_encode(['status' => 'error', 'msg' => 'Enter mobile number']);
+        exit();
+    }
     echo "<h2>Enter mobile number</h2>";
 }
 
