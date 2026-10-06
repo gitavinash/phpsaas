@@ -117,16 +117,30 @@ if ($method === 'GET') {
         mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_phone IN (" . implode(',', array_unique($devPhones)) . ")");
     }
 
-    // Auto-heal: Reconcile rogue LID chats (e.g. +187810329956513) into the real contact (+919990026008)
-    $rogueQ = mysqli_query($connection, "SELECT chat_id, chat_lead_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone LIKE '%187810329956513%' OR chat_phone REGEXP '^\\\\+?1[0-9]{13,16}$')");
+    // Auto-heal: Reconcile rogue LID chats (e.g. +187810329956513) into their real contact chat
+    $rogueQ = mysqli_query($connection, "SELECT chat_id, chat_phone, chat_name, chat_pushname, chat_lead_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone LIKE '%187810329956513%' OR chat_phone REGEXP '^\\\\+?1[0-9]{13,16}$')");
     if ($rogueQ && mysqli_num_rows($rogueQ) > 0) {
-        // Find existing contact chat for Avinash 6008 (+919990026008)
-        $targetQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone LIKE '%9990026008' OR chat_name LIKE '%avinash%') ORDER BY chat_id ASC LIMIT 1");
-        $targetChatId = ($targetQ && mysqli_num_rows($targetQ) > 0) ? (int)mysqli_fetch_assoc($targetQ)['chat_id'] : 0;
-
         while ($rRow = mysqli_fetch_assoc($rogueQ)) {
             $rChatId = (int)$rRow['chat_id'];
             $rLeadId = (int)$rRow['chat_lead_id'];
+            $rPush = trim($rRow['chat_pushname'] ?? ($rRow['chat_name'] ?? ''));
+            $escRPush = mysqli_real_escape_string($connection, $rPush);
+
+            $targetChatId = 0;
+            // 1. If matches Avinash's LID or name
+            if (str_contains($rRow['chat_phone'], '187810329956513') || stripos($rPush, 'avinash') !== false) {
+                $targetQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_id != {$rChatId} AND (chat_phone LIKE '%9990026008' OR chat_name LIKE '%avinash%') ORDER BY chat_id ASC LIMIT 1");
+                if ($targetQ && mysqli_num_rows($targetQ) > 0) {
+                    $targetChatId = (int)mysqli_fetch_assoc($targetQ)['chat_id'];
+                }
+            }
+            // 2. Try match by pushname/name
+            if ($targetChatId === 0 && !empty($escRPush)) {
+                $targetQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_id != {$rChatId} AND chat_phone NOT REGEXP '^\\\\+?1[0-9]{13,16}$' AND (chat_name LIKE '%{$escRPush}%' OR chat_pushname LIKE '%{$escRPush}%') ORDER BY chat_id ASC LIMIT 1");
+                if ($targetQ && mysqli_num_rows($targetQ) > 0) {
+                    $targetChatId = (int)mysqli_fetch_assoc($targetQ)['chat_id'];
+                }
+            }
 
             if ($targetChatId > 0 && $rChatId !== $targetChatId) {
                 // Move all messages from rogue chat to real contact chat
@@ -138,19 +152,19 @@ if ($method === 'GET') {
                     $lMsg = mysqli_fetch_assoc($latestMsgQ);
                     $escLastMsg = mysqli_real_escape_string($connection, $lMsg['message_text']);
                     $escLastTime = mysqli_real_escape_string($connection, $lMsg['message_created_at']);
-                    mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat SET chat_last_message = '{$escLastMsg}', chat_last_message_time = '{$escLastTime}', chat_unread_count = 1 WHERE chat_id = {$targetChatId}");
+                    mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat SET chat_last_message = '{$escLastMsg}', chat_last_message_time = '{$escLastTime}', chat_unread_count = chat_unread_count + 1 WHERE chat_id = {$targetChatId}");
                 }
-            }
 
-            // Delete rogue lead if auto-created for this ghost LID
-            if ($rLeadId > 0) {
-                mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_id = {$rLeadId} AND enquiry_subject = 'WhatsApp Inquiry' AND (enquiry_mobile LIKE '%187810329956513%' OR enquiry_first_name LIKE '%187810329956513%')");
-                @mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "enquiry_profile WHERE enquiry_profile_ref_id = {$rLeadId}");
-                @mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "enquiry_notes WHERE enquiry_notes_ref_id = {$rLeadId}");
-            }
+                // Delete rogue lead if auto-created for this ghost LID
+                if ($rLeadId > 0) {
+                    mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_id = {$rLeadId} AND enquiry_subject = 'WhatsApp Inquiry' AND (enquiry_mobile LIKE '%187810329956513%' OR enquiry_first_name LIKE '%187810329956513%')");
+                    @mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "enquiry_profile WHERE enquiry_profile_ref_id = {$rLeadId}");
+                    @mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "enquiry_notes WHERE enquiry_notes_ref_id = {$rLeadId}");
+                }
 
-            // Remove rogue chat record
-            mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_id = {$rChatId}");
+                // Remove rogue duplicate chat record
+                mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_id = {$rChatId}");
+            }
         }
     }
 
@@ -160,8 +174,8 @@ if ($method === 'GET') {
         $whereClauses[] = "c.chat_phone NOT IN (" . implode(',', array_unique($devPhones)) . ")";
     }
 
-    // Exclude unmapped ghost LID numbers from chat list (14+ digit internal hashes)
-    $whereClauses[] = "c.chat_phone NOT REGEXP '^\\\\+?1[0-9]{13,16}$'";
+    // Exclude unmapped ghost LID numbers from chat list only if they have no messages
+    $whereClauses[] = "(c.chat_phone NOT REGEXP '^\\\\+?1[0-9]{13,16}$' OR (c.chat_last_message IS NOT NULL AND c.chat_last_message != ''))";
 
     if (!empty($q)) {
         $escQ = mysqli_real_escape_string($connection, $q);

@@ -281,14 +281,55 @@ if (strlen($last10) >= 8) {
 }
 
 // 2. Handle WhatsApp Privacy LID (14-16 digits starting with 1)
-if (preg_match('/^1[0-9]{13,16}$/', $cleanDigits)) {
+$isLid = preg_match('/^1[0-9]{13,16}$/', $cleanDigits) || !empty($payload['lid']);
+if ($isLid) {
+    $resolvedRealPhone = '';
+
+    // Check known test LID
     if (str_contains($cleanPhone, '187810329956513')) {
-        $cleanPhone = '+919990026008';
-        $cleanDigits = '919990026008';
-        $last10 = '9990026008';
+        $resolvedRealPhone = '+919990026008';
+    }
+
+    // Match by pushname/name against existing chats with real phone numbers
+    $searchName = !empty($name) ? $name : $pushName;
+    if (empty($resolvedRealPhone) && !empty($searchName)) {
+        $escSearchName = mysqli_real_escape_string($connection, $searchName);
+        $mQ = mysqli_query($connection, "SELECT chat_phone FROM " . TABLE_PREFIX . "whatsapp_chat 
+                                         WHERE chat_site_id = {$siteId} 
+                                           AND chat_phone NOT REGEXP '^\\+?1[0-9]{13,16}$'
+                                           AND (chat_name LIKE '%{$escSearchName}%' OR chat_pushname LIKE '%{$escSearchName}%')
+                                         ORDER BY chat_last_message_time DESC LIMIT 1");
+        if ($mQ && mysqli_num_rows($mQ) > 0) {
+            $mRow = mysqli_fetch_assoc($mQ);
+            $resolvedRealPhone = $mRow['chat_phone'];
+        }
+    }
+
+    // Match by recent outgoing conversation (sent within last 4 hours)
+    if (empty($resolvedRealPhone)) {
+        $outQ = mysqli_query($connection, "SELECT c.chat_phone 
+                                           FROM " . TABLE_PREFIX . "whatsapp_chat c 
+                                           JOIN " . TABLE_PREFIX . "whatsapp_message m ON m.message_chat_id = c.chat_id 
+                                           WHERE c.chat_site_id = {$siteId} 
+                                             AND m.message_direction = 'outgoing' 
+                                             AND c.chat_phone NOT REGEXP '^\\+?1[0-9]{13,16}$' 
+                                             AND m.message_created_at >= DATE_SUB(NOW(), INTERVAL 4 HOUR)
+                                           ORDER BY m.message_created_at DESC LIMIT 1");
+        if ($outQ && mysqli_num_rows($outQ) > 0) {
+            $oRow = mysqli_fetch_assoc($outQ);
+            $resolvedRealPhone = $oRow['chat_phone'];
+        }
+    }
+
+    if (!empty($resolvedRealPhone)) {
+        $cleanPhone = $resolvedRealPhone;
+        $cleanDigits = preg_replace('/[^0-9]/', '', $cleanPhone);
+        $last10 = substr($cleanDigits, -10);
     } else {
-        echo json_encode(['status' => 'ignored', 'msg' => 'Ignored unmapped LID identifier.']);
-        exit;
+        // Fallback for unmapped LID: use pushname as display name so chat is not blank
+        if (!empty($pushName) && empty($name)) {
+            $name = $pushName;
+        }
     }
 }
 
