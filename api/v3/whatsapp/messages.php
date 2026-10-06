@@ -87,11 +87,28 @@ if ($method === 'GET') {
     mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat SET chat_unread_count = 0 WHERE chat_id = {$chatId} AND chat_site_id = {$siteId}");
 
     // Fetch conversation info
-    $chatQ = mysqli_query($connection, "SELECT c.*, e.enquiry_id, TRIM(CONCAT(COALESCE(e.enquiry_first_name, ''), ' ', COALESCE(e.enquiry_last_name, ''))) as enquiry_name, e.enquiry_subject as enquiry_destination, e.enquiry_status 
-                                        FROM " . TABLE_PREFIX . "whatsapp_chat c 
-                                        LEFT JOIN " . TABLE_PREFIX . "enquiry e ON (e.enquiry_id = c.chat_lead_id AND e.enquiry_site_id = {$siteId})
-                                        WHERE c.chat_id = {$chatId} AND c.chat_site_id = {$siteId} LIMIT 1");
+    $chatQ = mysqli_query($connection, "SELECT c.*, 
+                                                e.enquiry_id, TRIM(CONCAT(COALESCE(e.enquiry_first_name, ''), ' ', COALESCE(e.enquiry_last_name, ''))) as enquiry_name, e.enquiry_subject as enquiry_destination, e.enquiry_status,
+                                                d.device_name, d.device_phone,
+                                                TRIM(CONCAT(COALESCE(p.profile_first_name, ''), ' ', COALESCE(p.profile_last_name, ''))) as agent_name,
+                                                u.user_username as agent_username
+                                         FROM " . TABLE_PREFIX . "whatsapp_chat c 
+                                         LEFT JOIN " . TABLE_PREFIX . "enquiry e ON (e.enquiry_id = c.chat_lead_id AND e.enquiry_site_id = {$siteId})
+                                         LEFT JOIN " . TABLE_PREFIX . "whatsapp_device d ON (d.device_site_id = {$siteId} AND (
+                                             (c.chat_device_phone IS NOT NULL AND c.chat_device_phone != '' AND (d.device_phone = c.chat_device_phone OR d.device_phone LIKE CONCAT('%', RIGHT(REPLACE(c.chat_device_phone, '+', ''), 10))))
+                                         ))
+                                         LEFT JOIN " . TABLE_PREFIX . "user u ON (u.user_id = d.device_assigned_user_id OR (d.device_assigned_user_id IS NULL AND e.enquiry_agent = u.user_id))
+                                         LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
+                                         WHERE c.chat_id = {$chatId} AND c.chat_site_id = {$siteId}
+                                         GROUP BY c.chat_id LIMIT 1");
     $chat = $chatQ ? mysqli_fetch_assoc($chatQ) : null;
+    if ($chat) {
+        $chat['device'] = [
+            'phone'      => !empty($chat['chat_device_phone']) ? $chat['chat_device_phone'] : (!empty($chat['device_phone']) ? $chat['device_phone'] : ''),
+            'name'       => !empty($chat['device_name']) ? $chat['device_name'] : 'WhatsApp Line',
+            'agent_name' => !empty($chat['agent_name']) ? trim($chat['agent_name']) : (!empty($chat['agent_username']) ? $chat['agent_username'] : 'Unassigned')
+        ];
+    }
 
     // Fetch messages (with automatic phone matching to ensure incoming messages are never missed)
     $chatPhone = !empty($chat['chat_phone']) ? $chat['chat_phone'] : $phone;
@@ -255,7 +272,8 @@ if ($method === 'POST') {
     mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat 
                               SET chat_last_message = '{$escPreview}', 
                                   chat_last_message_time = '{$now}',
-                                  chat_updated_at = '{$now}'
+                                  chat_updated_at = '{$now}',
+                                  chat_device_phone = IF(chat_device_phone IS NULL OR chat_device_phone = '', '{$escSender}', chat_device_phone)
                               WHERE chat_id = {$chatId} AND chat_site_id = {$siteId}");
 
     // Forward dispatch to WhatsApp Web Gateway Daemon

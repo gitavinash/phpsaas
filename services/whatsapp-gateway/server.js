@@ -341,7 +341,11 @@ class WhatsAppSession {
       msg?.key?.remoteJidAlt,
       msg?.key?.participantAlt,
       msg?.key?.participantPn,
+      msg?.key?.senderPn,
+      msg?.key?.sender_pn,
+      msg?.key?.remoteJidPn,
       msg?.senderPn,
+      msg?.sender_pn,
       msg?.key?.participant,
     ].filter(Boolean);
 
@@ -833,6 +837,7 @@ class WhatsAppSession {
             msg_id: msg.key.id,
             timestamp: ts,
             lid: rawJid.includes("@lid") ? rawJid : (altJid && altJid.includes("@lid") ? altJid : null),
+            sender_pn: msg?.key?.senderPn || msg?.senderPn || msg?.key?.remoteJidPn || null,
           });
         }
       });
@@ -849,7 +854,19 @@ class WhatsAppSession {
     } catch (e) {}
 
     try {
+      if (this.sock) {
+        this.sock.end(new Error("Logged out"));
+      }
+    } catch (e) {}
+
+    try {
       fs.rmSync(this.authDir, { recursive: true, force: true });
+    } catch (e) {}
+
+    try {
+      if (fs.existsSync(this.storePath)) {
+        fs.unlinkSync(this.storePath);
+      }
     } catch (e) {}
 
     this.chatStore.clear();
@@ -861,7 +878,11 @@ class WhatsAppSession {
     this.currentQrSvg = null;
     this.currentQrString = null;
 
-    setTimeout(() => this.startSocket(), 1500);
+    if (this.sessionId !== "default") {
+      sessions.delete(this.sessionId);
+    } else {
+      setTimeout(() => this.startSocket(), 1500);
+    }
   }
 }
 
@@ -1365,13 +1386,17 @@ app.all("/repair-sessions", async (req, res) => {
 
 // 4. Disconnect / Logout specific session
 app.all("/logout", async (req, res) => {
-  const s = getSession(req.body?.session_id || req.query?.session_id, req);
+  const reqSid = req.body?.session_id || req.query?.session_id || "default";
+  const s = getSession(reqSid, req);
   await s.logout();
+  if (reqSid !== "default") {
+    sessions.delete(reqSid);
+  }
 
   res.json({
     status: "success",
-    session_id: s.sessionId,
-    message: "Logged out successfully. Generating new QR...",
+    session_id: reqSid,
+    message: "Logged out successfully.",
   });
 });
 

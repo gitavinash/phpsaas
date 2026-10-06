@@ -54,6 +54,15 @@ function initWhatsAppDatabase($connection) {
         }
     } catch (Throwable $e) {}
 
+    // Safely add chat_device_phone column if not present
+    try {
+        $colRes2 = @mysqli_query($connection, "SHOW COLUMNS FROM " . $prefix . "whatsapp_chat LIKE 'chat_device_phone'");
+        if ($colRes2 && mysqli_num_rows($colRes2) === 0) {
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat ADD COLUMN chat_device_phone VARCHAR(35) DEFAULT NULL AFTER chat_phone");
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_chat ADD INDEX idx_device_phone (chat_site_id, chat_device_phone)");
+        }
+    } catch (Throwable $e) {}
+
     // 2. Messages table
     $msgTableSql = "CREATE TABLE IF NOT EXISTS " . $prefix . "whatsapp_message (
         message_id BIGINT(20) NOT NULL AUTO_INCREMENT,

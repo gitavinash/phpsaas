@@ -242,16 +242,14 @@
         dataType: "json",
         success: function (res) {
           if (res && res.is_device_linked === false) {
-            // If already known to be linked, verify via checkConnectionStatus to prevent polling flicker
-            if (self.isDeviceLinked) {
-              self.checkConnectionStatus(function (actuallyConnected) {
-                if (!actuallyConnected) {
-                  self.updateDeviceLinkedUI(false, null);
-                }
-              });
-            } else {
-              self.updateDeviceLinkedUI(false, null);
-            }
+            self.activeChatId = null;
+            self.activePhone = null;
+            if (self.knownChats) self.knownChats.clear();
+            $("#waThreadsContainer").empty();
+            $("#waMessagesStream").empty();
+            $("#waActiveChatWrapper").removeClass("is-open");
+            $("#waEmptyState").show();
+            self.updateDeviceLinkedUI(false, null);
             return;
           } else if (res && res.is_device_linked === true) {
             self.updateDeviceLinkedUI(true, res.linked_phone || "");
@@ -317,6 +315,22 @@
             const displayName = chat.name || chat.phone;
             const hasDistinctName = chat.name && chat.name !== chat.phone && !chat.name.includes(chat.phone);
 
+            const devInfo = chat.device || {};
+            const devPhone = devInfo.phone || "";
+            const devName = devInfo.name || "";
+            const agName = (devInfo.agent_name && devInfo.agent_name !== "Unassigned") ? devInfo.agent_name : "";
+            const devLabel = devName && devName !== "WhatsApp Line" ? `${devName} (${devPhone})` : devPhone;
+
+            let deviceTagHtml = "";
+            if (devLabel || agName) {
+              deviceTagHtml = `
+                <div class="wa-thread-device-tag">
+                  ${devLabel ? `<span class="wa-tag-device" title="WhatsApp Device / Line"><i class="fi fi-rr-smartphone"></i> ${self.escapeHtml(devLabel)}</span>` : ""}
+                  ${agName ? `<span class="wa-tag-agent" title="Handling Sales Agent"><i class="fi fi-rr-user"></i> ${self.escapeHtml(agName)}</span>` : ""}
+                </div>
+              `;
+            }
+
             html += `
               <div class="wa-thread-item ${isActive ? "active" : ""}" data-chat-id="${chat.chat_id}" data-phone="${self.escapeHtml(chat.phone)}">
                 <div class="wa-thread-avatar ${hasLead ? "has-lead" : ""}">${avatarContent}</div>
@@ -326,6 +340,7 @@
                     <span class="wa-thread-time">${self.escapeHtml(chat.time_display)}</span>
                   </div>
                   ${hasDistinctName ? `<div class="wa-thread-phone-sub">${self.escapeHtml(chat.phone)}</div>` : ""}
+                  ${deviceTagHtml}
                   <div class="wa-thread-bottom">
                     <p class="wa-thread-preview">${self.escapeHtml(chat.last_message || "No messages yet")}</p>
                     ${chat.unread_count > 0 ? `<span class="wa-unread-badge">${chat.unread_count}</span>` : ""}
@@ -414,6 +429,30 @@
             } else {
               $("#waActiveLeadBadge").hide();
               $("#waViewLeadLink").hide();
+            }
+
+            if (chat.device && (chat.device.phone || chat.device.name || chat.device.agent_name)) {
+              const devLine = chat.device.name && chat.device.name !== "WhatsApp Line"
+                ? `${chat.device.name} (${chat.device.phone || ""})`
+                : (chat.device.phone || "");
+              const agName = (chat.device.agent_name && chat.device.agent_name !== "Unassigned")
+                ? chat.device.agent_name
+                : "";
+              let badgeHtml = "";
+              if (devLine && agName) {
+                badgeHtml = `<i class="fi fi-rr-smartphone"></i> Line: <strong>${self.escapeHtml(devLine)}</strong> <span class="wa-badge-sep">•</span> <i class="fi fi-rr-user"></i> Agent: <strong>${self.escapeHtml(agName)}</strong>`;
+              } else if (devLine) {
+                badgeHtml = `<i class="fi fi-rr-smartphone"></i> Line: <strong>${self.escapeHtml(devLine)}</strong>`;
+              } else if (agName) {
+                badgeHtml = `<i class="fi fi-rr-user"></i> Agent: <strong>${self.escapeHtml(agName)}</strong>`;
+              }
+              if (badgeHtml) {
+                $("#waActiveDeviceBadge").html(badgeHtml).removeClass("d-none").show();
+              } else {
+                $("#waActiveDeviceBadge").addClass("d-none").hide();
+              }
+            } else {
+              $("#waActiveDeviceBadge").addClass("d-none").hide();
             }
           }
 

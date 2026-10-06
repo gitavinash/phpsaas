@@ -127,6 +127,7 @@
                                 <span class="wa-user-phone" id="waActivePhone">+91 ...</span>
                                 <span class="wa-dot-sep">•</span>
                                 <span class="wa-user-online-status" id="waActiveStatus">WhatsApp Connected</span>
+                                <span class="wa-header-device-badge d-none" id="waActiveDeviceBadge"></span>
                             </div>
                         </div>
                     </div>

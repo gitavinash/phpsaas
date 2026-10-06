@@ -604,7 +604,7 @@ if ($action === 'check_status' || $action === 'status') {
 
     // Fallback: If gateway check had a network blip or temporary Baileys restart, check database for connected device on site
     if (!$isConnected) {
-        $dbCheckQ = mysqli_query($connection, "SELECT device_session_id, device_phone, device_name, device_last_sync FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY device_id DESC LIMIT 1");
+        $dbCheckQ = mysqli_query($connection, "SELECT device_session_id, device_phone, device_name, device_last_sync FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' AND device_phone IS NOT NULL AND device_phone != '' ORDER BY device_id DESC LIMIT 1");
         if ($dbCheckQ && mysqli_num_rows($dbCheckQ) > 0) {
             $dbRow = mysqli_fetch_assoc($dbCheckQ);
             $isConnected = true;
@@ -661,8 +661,18 @@ if ($action === 'disconnect' || $action === 'delete_device') {
     if (!empty($escSession)) {
         mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_session_id = '{$escSession}'");
     }
+    if (!$isAdmin && $currentUserId > 0) {
+        mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId}");
+    }
 
-    if ($sessionId === 'default') {
+    // Update site-level config based on whether any connected device remains
+    $remDevQ = mysqli_query($connection, "SELECT device_phone, device_name FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' LIMIT 1");
+    if ($remDevQ && mysqli_num_rows($remDevQ) > 0) {
+        $remDev = mysqli_fetch_assoc($remDevQ);
+        saveWaWebConfig($connection, $siteId, 'whatsapp_web_status', 'connected');
+        saveWaWebConfig($connection, $siteId, 'whatsapp_web_phone', $remDev['device_phone']);
+        saveWaWebConfig($connection, $siteId, 'whatsapp_web_pushname', $remDev['device_name']);
+    } else {
         saveWaWebConfig($connection, $siteId, 'whatsapp_web_status', 'disconnected');
         saveWaWebConfig($connection, $siteId, 'whatsapp_web_phone', '');
         saveWaWebConfig($connection, $siteId, 'whatsapp_web_pushname', '');

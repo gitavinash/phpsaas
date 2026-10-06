@@ -791,9 +791,10 @@
       // 9. Disconnect Device (SweetAlert confirmation)
       $(document).off("click", ".btn-device-disconnect").on("click", ".btn-device-disconnect", function (e) {
         e.preventDefault();
-        const sessId = $(this).data("session-id");
-        const devId = $(this).data("device-id") || "";
+        e.stopPropagation();
         const $btn = $(this);
+        const sessId = $btn.attr("data-session-id") || $btn.data("session-id") || "default";
+        const devId = $btn.attr("data-device-id") || $btn.data("device-id") || "";
 
         const swalInstance = (typeof Swal !== "undefined" && typeof Swal.fire === "function")
           ? Swal
@@ -816,7 +817,22 @@
               performDisconnect(sessId, devId, $btn);
             }
           });
-        } else {
+        } else if (typeof swal === "function") {
+          swal({
+            title: "Disconnect WhatsApp Device?",
+            text: "Are you sure you want to disconnect this device? You will need to scan the QR code again to link it.",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            confirmButtonText: "Yes, Disconnect",
+            cancelButtonText: "Cancel",
+            closeOnConfirm: true
+          }, function (isConfirm) {
+            if (isConfirm) {
+              performDisconnect(sessId, devId, $btn);
+            }
+          });
+        } else if (confirm("Are you sure you want to disconnect this WhatsApp device?")) {
           performDisconnect(sessId, devId, $btn);
         }
       });
