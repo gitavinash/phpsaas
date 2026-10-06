@@ -282,15 +282,20 @@
             const hasNewMsg = prev && chat.last_message && chat.last_message !== prev.last_message;
 
             if (isBrandNew || hasNewMsg || hasIncreasedUnread) {
-              if (chat.chat_id !== self.activeChatId) {
+              const chatDigits = self.cleanDigits(chat.phone);
+              const activeDigits = self.cleanDigits(self.activePhone);
+              const isPhoneMatch = chatDigits && activeDigits && chatDigits === activeDigits;
+              const isActive = self.activeChatId && (String(chat.chat_id) === String(self.activeChatId) || isPhoneMatch);
+
+              if (!isActive) {
                 newIncomingDetected = true;
                 latestMsgText = chat.last_message;
                 latestSenderName = chat.name || chat.phone;
                 latestChatId = chat.chat_id;
                 latestPhone = chat.phone;
-              } else if (hasNewMsg) {
-                // Silently refresh current chat stream if new message received on active chat
-                self.loadMessages(self.activeChatId, false);
+              } else {
+                // Instantly refresh current chat stream and scroll to bottom
+                self.loadMessages(self.activeChatId, true);
               }
             }
             if (!self.knownChats) self.knownChats = new Map();
@@ -300,7 +305,7 @@
               last_message: chat.last_message
             });
 
-            const isActive = self.activeChatId === chat.chat_id;
+            const isActive = self.activeChatId && (String(self.activeChatId) === String(chat.chat_id));
             const hasLead = !!chat.lead;
             const avatarContent = chat.avatar
               ? `<img src="${self.escapeHtml(chat.avatar)}" alt="" class="wa-avatar-img" />`
@@ -358,6 +363,7 @@
     selectChat: function (chatId, phone) {
       this.activeChatId = chatId;
       this.activePhone = phone;
+      this.lastStreamHtml = null;
 
       $(".wa-thread-item").removeClass("active");
       $(`.wa-thread-item[data-chat-id="${chatId}"]`).addClass("active");
@@ -411,15 +417,30 @@
           const $stream = $("#waMessagesStream");
           if (!Array.isArray(res.messages) || res.messages.length === 0) {
             $stream.html('<div class="wa-loading-threads" style="color:rgba(0,0,0,0.5);"><span>No messages in this chat yet. Send the first message!</span></div>');
+            self.lastStreamHtml = "";
             return;
           }
 
           let html = "";
           res.messages.forEach(function (msg) {
             const isOut = msg.direction === "outgoing";
+            let contentHtml = "";
+            if (msg.media_url) {
+              if (msg.type === "image" || msg.media_url.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i)) {
+                contentHtml += `<div class="wa-msg-media"><img src="${self.escapeHtml(msg.media_url)}" alt="Media" style="max-width:100%;border-radius:8px;margin-bottom:4px;display:block;" /></div>`;
+              } else {
+                contentHtml += `<div class="wa-msg-media"><a href="${self.escapeHtml(msg.media_url)}" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:underline;"><i class="fi fi-rr-document"></i> View Attachment</a></div>`;
+              }
+            }
+            if (msg.text) {
+              contentHtml += `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
+            } else if (!msg.media_url) {
+              contentHtml += `<div class="wa-msg-text"><em>[Message]</em></div>`;
+            }
+
             html += `
               <div class="wa-msg-bubble ${isOut ? "outgoing" : "incoming"}">
-                <div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>
+                ${contentHtml}
                 <div class="wa-msg-meta">
                   <span>${self.escapeHtml(msg.time)}</span>
                   ${isOut ? '<span class="wa-ticks"><i class="fi fi-rr-check-double"></i></span>' : ""}
@@ -428,10 +449,20 @@
             `;
           });
 
+          if (self.lastStreamHtml === html && $stream.children(".wa-msg-bubble").length > 0) {
+            if (scrollToBottom) {
+              $stream.scrollTop($stream[0].scrollHeight);
+            }
+            return;
+          }
+          self.lastStreamHtml = html;
           $stream.html(html);
 
           if (scrollToBottom) {
             $stream.scrollTop($stream[0].scrollHeight);
+            setTimeout(function () {
+              if ($stream.length) $stream.scrollTop($stream[0].scrollHeight);
+            }, 60);
           }
         },
         complete: function () {
@@ -569,7 +600,6 @@
     startPolling: function () {
       this.stopPolling();
       const self = this;
-      const pollDelay = 8000; // 8s cooldown between completed cycles
 
       const runPollCycle = function () {
         // Automatically stop polling if WhatsApp UI is no longer present in DOM (SPA navigation)
@@ -583,6 +613,8 @@
           self.pollTimer = setTimeout(runPollCycle, 5000);
           return;
         }
+
+        const pollDelay = self.activeChatId ? 3000 : 7000;
 
         // Poll messages silently without resetting scroll if user is viewing history
         if (self.activeChatId && !self.isLoadingMessages) {
@@ -603,7 +635,13 @@
         }
       };
 
-      this.pollTimer = setTimeout(runPollCycle, pollDelay);
+      this.pollTimer = setTimeout(runPollCycle, 3000);
+    },
+
+    cleanDigits: function (p) {
+      if (!p) return "";
+      const d = String(p).replace(/[^0-9]/g, "");
+      return d.length >= 10 ? d.slice(-10) : d;
     },
 
     getInitials: function (str) {
