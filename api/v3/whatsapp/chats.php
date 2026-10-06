@@ -133,11 +133,11 @@ if ($method === 'GET') {
                 mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_chat_id = {$targetChatId} WHERE message_chat_id = {$rChatId}");
 
                 // Update latest message in target chat
-                $latestMsgQ = mysqli_query($connection, "SELECT message_text, message_time FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_chat_id = {$targetChatId} ORDER BY message_time DESC, message_id DESC LIMIT 1");
+                $latestMsgQ = mysqli_query($connection, "SELECT message_text, message_created_at FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_chat_id = {$targetChatId} ORDER BY message_created_at DESC, message_id DESC LIMIT 1");
                 if ($latestMsgQ && mysqli_num_rows($latestMsgQ) > 0) {
                     $lMsg = mysqli_fetch_assoc($latestMsgQ);
                     $escLastMsg = mysqli_real_escape_string($connection, $lMsg['message_text']);
-                    $escLastTime = mysqli_real_escape_string($connection, $lMsg['message_time']);
+                    $escLastTime = mysqli_real_escape_string($connection, $lMsg['message_created_at']);
                     mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat SET chat_last_message = '{$escLastMsg}', chat_last_message_time = '{$escLastTime}', chat_unread_count = 1 WHERE chat_id = {$targetChatId}");
                 }
             }

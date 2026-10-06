@@ -647,6 +647,9 @@
                 $("#waAddDeviceModal").removeClass("is-active");
                 self.showToast("New WhatsApp device connected successfully!", "success");
                 loadHubState();
+                setTimeout(function () {
+                  loadHubState();
+                }, 1000);
               }
             }
           });
