@@ -90,6 +90,9 @@ function getMessageText(message) {
   if (message.contactMessage) return `[Contact: ${message.contactMessage.displayName || ""}]`;
   if (message.locationMessage) return `[Location: ${message.locationMessage.name || message.locationMessage.address || ""}]`;
   if (message.stickerMessage) return "[Sticker]";
+  if (message.templateButtonReplyMessage?.selectedDisplayText) return message.templateButtonReplyMessage.selectedDisplayText;
+  if (message.buttonsResponseMessage?.selectedDisplayText) return message.buttonsResponseMessage.selectedDisplayText;
+  if (message.interactiveResponseMessage?.body?.text) return message.interactiveResponseMessage.body.text;
   return "";
 }
 
@@ -159,6 +162,22 @@ class WhatsAppSession {
         if (k === msgId || k.endsWith(`:${msgId}`)) {
           return v;
         }
+      }
+    }
+
+    // 4. Fallback: check chatStore for this contact so retries resolve "Waiting for this message"
+    const cleanJid = key.remoteJid ? jidNormalizedUser(key.remoteJid) : null;
+    if (cleanJid) {
+      const chat = this.chatStore.get(cleanJid);
+      if (chat && chat.lastMessageText) {
+        return { conversation: chat.lastMessageText };
+      }
+    }
+
+    // 5. Fallback across all recent stored chats
+    for (const [jid, c] of this.chatStore.entries()) {
+      if (c && c.lastMessageText) {
+        return { conversation: c.lastMessageText };
       }
     }
 
@@ -529,19 +548,6 @@ class WhatsAppSession {
 
   async startSocket() {
     try {
-      // Auto-purge desynchronized / poisoned session files on socket startup
-      try {
-        if (fs.existsSync(this.authDir)) {
-          const files = fs.readdirSync(this.authDir);
-          for (const f of files) {
-            if (f.startsWith("session-") && f.includes("187810329956513")) {
-              fs.unlinkSync(path.join(this.authDir, f));
-              console.log(`[WhatsApp Gateway:${this.sessionId}] Purged desynchronized Signal session: ${f}`);
-            }
-          }
-        }
-      } catch (e) {}
-
       const { version } = await fetchLatestBaileysVersion().catch(() => ({ version: [2, 3000, 1043857760] }));
       const { state, saveCreds } = await useMultiFileAuthState(this.authDir);
 
@@ -556,10 +562,10 @@ class WhatsAppSession {
         enableAutoSessionRecreation: true,
         enableRecentMessageCache: true,
         syncFullHistory: false,
-        connectTimeoutMs: 30000,
+        connectTimeoutMs: 60000,
         keepAliveIntervalMs: 30000,
         emitOwnEvents: true,
-        defaultQueryTimeoutMs: 60000,
+        defaultQueryTimeoutMs: 120000,
         markOnlineOnConnect: true,
         getMessage: async (key) => {
           return this.getMessage(key);
@@ -691,6 +697,8 @@ class WhatsAppSession {
       this.sock.ev.on("messages.upsert", async (m) => {
         if (!m.messages || !m.messages.length) return;
 
+        console.log(`[WhatsApp Gateway:${this.sessionId}] messages.upsert received ${m.messages.length} message(s) [type=${m.type}]`);
+
         for (const msg of m.messages) {
           const rawJid = msg.key?.remoteJid;
           const altJid = msg.key?.remoteJidAlt;
@@ -722,7 +730,10 @@ class WhatsAppSession {
           if (!jid || isJidBroadcast(jid) || isJidGroup(jid) || isJidStatusBroadcast(jid) || isJidNewsletter(jid)) continue;
 
           const contactPhone = await this.resolvePhoneNumber(jid, altJid, msg);
-          if (!contactPhone) continue;
+          if (!contactPhone) {
+            console.log(`[WhatsApp Gateway:${this.sessionId}] Could not resolve phone for ${jid}`);
+            continue;
+          }
 
           // Exclude messages to/from connected device's own number
           if (this.connectedUser?.phone) {
@@ -732,13 +743,17 @@ class WhatsAppSession {
               const u10 = cleanUserPhone.slice(-10);
               const c10 = cleanContact.slice(-10);
               if (u10 === c10) {
+                console.log(`[WhatsApp Gateway:${this.sessionId}] Skipping self-message for ${contactPhone}`);
                 continue;
               }
             }
           }
 
           const body = getMessageText(msg.message);
-          if (!body) continue;
+          if (!body) {
+            console.log(`[WhatsApp Gateway:${this.sessionId}] Skipping message ${msg.key?.id}: empty body or unhandled format`);
+            continue;
+          }
 
           // Fetch profile picture avatar
           let avatarUrl = null;
@@ -764,7 +779,7 @@ class WhatsAppSession {
           }
           this.chatStore.set(jid, existing);
 
-          console.log(`[WhatsApp Gateway:${this.sessionId}] Message (${isFromMe ? "OUT" : "IN"}) ${contactPhone}: ${body.substring(0, 40)}`);
+          console.log(`[WhatsApp Gateway:${this.sessionId}] Message (${isFromMe ? "OUT" : "IN"}) ${contactPhone}: "${body.substring(0, 40)}"`);
 
           this.notify({
             event: "message",
@@ -1198,12 +1213,14 @@ app.post("/send-message", async (req, res) => {
     }
 
     // Store in messageStore under all key formats to resolve encryption retry requests from recipient
-    if (sent?.key?.id && sent.message) {
+    if (sent?.key?.id) {
       const msgId = sent.key.id;
       const normJid = jidNormalizedUser(targetJid);
-      s.messageStore.set(msgId, sent.message);
-      s.messageStore.set(`${targetJid}:${msgId}`, sent.message);
-      s.messageStore.set(`${normJid}:${msgId}`, sent.message);
+      const msgPayload = sent.message || { conversation: message };
+      s.messageStore.set(msgId, msgPayload);
+      s.messageStore.set(`${targetJid}:${msgId}`, msgPayload);
+      s.messageStore.set(`${normJid}:${msgId}`, msgPayload);
+      s.messageStore.set(`${cleanNumber}:${msgId}`, msgPayload);
       if (s.messageStore.size > 3000) {
         const firstK = s.messageStore.keys().next().value;
         s.messageStore.delete(firstK);
