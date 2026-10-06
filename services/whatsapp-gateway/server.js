@@ -72,27 +72,61 @@ const logger = pino({ level: "error" });
 // Helper to decode message text across various WhatsApp formats
 function getMessageText(message) {
   if (!message) return "";
-  if (message.deviceSentMessage?.message) message = message.deviceSentMessage.message;
-  if (message.viewOnceMessage?.message) message = message.viewOnceMessage.message;
-  if (message.viewOnceMessageV2?.message) message = message.viewOnceMessageV2.message;
-  if (message.ephemeralMessage?.message) message = message.ephemeralMessage.message;
-  if (message.documentWithCaptionMessage?.message) message = message.documentWithCaptionMessage.message;
-  if (message.editedMessage?.message) message = message.editedMessage.message;
 
-  if (message.conversation) return message.conversation;
-  if (message.extendedTextMessage?.text) return message.extendedTextMessage.text;
-  if (message.imageMessage?.caption) return message.imageMessage.caption || "[Image]";
-  if (message.imageMessage) return "[Image]";
-  if (message.videoMessage?.caption) return message.videoMessage.caption || "[Video]";
-  if (message.videoMessage) return "[Video]";
-  if (message.audioMessage) return "[Voice Note]";
-  if (message.documentMessage) return message.documentMessage.title || message.documentMessage.fileName ? `[Doc: ${message.documentMessage.fileName || message.documentMessage.title}]` : "[Document]";
-  if (message.contactMessage) return `[Contact: ${message.contactMessage.displayName || ""}]`;
-  if (message.locationMessage) return `[Location: ${message.locationMessage.name || message.locationMessage.address || ""}]`;
-  if (message.stickerMessage) return "[Sticker]";
-  if (message.templateButtonReplyMessage?.selectedDisplayText) return message.templateButtonReplyMessage.selectedDisplayText;
-  if (message.buttonsResponseMessage?.selectedDisplayText) return message.buttonsResponseMessage.selectedDisplayText;
-  if (message.interactiveResponseMessage?.body?.text) return message.interactiveResponseMessage.body.text;
+  // Recursively unwrap envelope messages
+  let current = message;
+  let depth = 0;
+  while (depth < 5) {
+    if (current.deviceSentMessage?.message) {
+      current = current.deviceSentMessage.message;
+    } else if (current.viewOnceMessage?.message) {
+      current = current.viewOnceMessage.message;
+    } else if (current.viewOnceMessageV2?.message) {
+      current = current.viewOnceMessageV2.message;
+    } else if (current.viewOnceMessageV2Extension?.message) {
+      current = current.viewOnceMessageV2Extension.message;
+    } else if (current.ephemeralMessage?.message) {
+      current = current.ephemeralMessage.message;
+    } else if (current.documentWithCaptionMessage?.message) {
+      current = current.documentWithCaptionMessage.message;
+    } else if (current.editedMessage?.message) {
+      current = current.editedMessage.message;
+    } else {
+      break;
+    }
+    depth++;
+  }
+
+  if (current.conversation) return current.conversation;
+  if (current.extendedTextMessage?.text) return current.extendedTextMessage.text;
+  if (current.imageMessage?.caption) return current.imageMessage.caption || "[Image]";
+  if (current.imageMessage) return "[Image]";
+  if (current.videoMessage?.caption) return current.videoMessage.caption || "[Video]";
+  if (current.videoMessage) return "[Video]";
+  if (current.ptvMessage) return "[Video Note]";
+  if (current.audioMessage) return "[Voice Note]";
+  if (current.documentMessage) return current.documentMessage.title || current.documentMessage.fileName ? `[Doc: ${current.documentMessage.fileName || current.documentMessage.title}]` : "[Document]";
+  if (current.contactMessage) return `[Contact: ${current.contactMessage.displayName || ""}]`;
+  if (current.contactsArrayMessage) return `[Contacts: ${current.contactsArrayMessage.contacts?.length || 0} contacts]`;
+  if (current.locationMessage) return `[Location: ${current.locationMessage.name || current.locationMessage.address || ""}]`;
+  if (current.liveLocationMessage) return "[Live Location]";
+  if (current.stickerMessage) return "[Sticker]";
+  if (current.reactionMessage?.text) return `[Reaction: ${current.reactionMessage.text}]`;
+  if (current.pollCreationMessage?.name) return `[Poll: ${current.pollCreationMessage.name}]`;
+  if (current.pollCreationMessageV3?.name) return `[Poll: ${current.pollCreationMessageV3.name}]`;
+  if (current.templateButtonReplyMessage?.selectedDisplayText) return current.templateButtonReplyMessage.selectedDisplayText;
+  if (current.buttonsResponseMessage?.selectedDisplayText) return current.buttonsResponseMessage.selectedDisplayText;
+  if (current.listResponseMessage?.title) return current.listResponseMessage.title;
+  if (current.templateMessage?.hydratedTemplate?.hydratedContentText) return current.templateMessage.hydratedTemplate.hydratedContentText;
+  if (current.buttonsMessage?.contentText) return current.buttonsMessage.contentText;
+  if (current.interactiveMessage?.body?.text) return current.interactiveMessage.body.text;
+  if (current.interactiveResponseMessage?.body?.text) return current.interactiveResponseMessage.body.text;
+  if (current.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson) {
+    try {
+      const p = JSON.parse(current.interactiveResponseMessage.nativeFlowResponseMessage.paramsJson);
+      if (p.display_text || p.text) return p.display_text || p.text;
+    } catch (e) {}
+  }
   return "";
 }
 
@@ -751,7 +785,12 @@ class WhatsAppSession {
 
           const body = getMessageText(msg.message);
           if (!body) {
-            console.log(`[WhatsApp Gateway:${this.sessionId}] Skipping message ${msg.key?.id}: empty body or unhandled format`);
+            const msgKeys = msg.message ? Object.keys(msg.message) : [];
+            // Silently ignore internal WhatsApp protocol or sender key distribution packets
+            if (msgKeys.length === 1 && (msgKeys[0] === 'senderKeyDistributionMessage' || msgKeys[0] === 'messageContextInfo' || msgKeys[0] === 'protocolMessage')) {
+              continue;
+            }
+            console.log(`[WhatsApp Gateway:${this.sessionId}] Skipping message ${msg.key?.id}: empty body or unhandled format. Keys: [${msgKeys.join(", ")}], stubType=${msg.messageStubType || 'none'}`);
             continue;
           }
 
