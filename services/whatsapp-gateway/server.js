@@ -72,6 +72,7 @@ const logger = pino({ level: "error" });
 // Helper to decode message text across various WhatsApp formats
 function getMessageText(message) {
   if (!message) return "";
+  if (message.deviceSentMessage?.message) message = message.deviceSentMessage.message;
   if (message.viewOnceMessage?.message) message = message.viewOnceMessage.message;
   if (message.viewOnceMessageV2?.message) message = message.viewOnceMessageV2.message;
   if (message.ephemeralMessage?.message) message = message.ephemeralMessage.message;
@@ -161,14 +162,6 @@ class WhatsAppSession {
       }
     }
 
-    // 4. Fallback: return last known text message from chatStore
-    const cleanJid = key.remoteJid ? jidNormalizedUser(key.remoteJid) : null;
-    if (cleanJid) {
-      const chat = this.chatStore.get(cleanJid);
-      if (chat && chat.lastMessageText) {
-        return { conversation: chat.lastMessageText };
-      }
-    }
     return undefined;
   }
 
@@ -190,8 +183,9 @@ class WhatsAppSession {
         if (Array.isArray(raw.chats)) raw.chats.forEach((c) => { if (c && c.id) this.chatStore.set(c.id, c); });
         if (Array.isArray(raw.contacts)) raw.contacts.forEach((c) => { if (c && c.id) this.contactStore.set(c.id, c); });
         if (Array.isArray(raw.lidMap)) raw.lidMap.forEach(([k, v]) => this.lidPhoneMap.set(k, v));
+        if (Array.isArray(raw.messageStore)) raw.messageStore.forEach(([k, v]) => { if (k && v) this.messageStore.set(k, v); });
         if (raw.lastOutgoingPhone) this.lastOutgoingPhone = raw.lastOutgoingPhone;
-        console.log(`[WhatsApp Gateway:${this.sessionId}] Restored ${this.chatStore.size} chats, ${this.contactStore.size} contacts, webhook: ${this.webhookUrl || 'default'}.`);
+        console.log(`[WhatsApp Gateway:${this.sessionId}] Restored ${this.chatStore.size} chats, ${this.contactStore.size} contacts, ${this.messageStore.size} cached message keys, webhook: ${this.webhookUrl || 'default'}.`);
       }
     } catch (e) {
       console.error(`[WhatsApp Gateway:${this.sessionId}] Error reading store:`, e.message);
@@ -208,6 +202,7 @@ class WhatsAppSession {
             chats: Array.from(this.chatStore.values()),
             contacts: Array.from(this.contactStore.values()),
             lidMap: Array.from(this.lidPhoneMap.entries()),
+            messageStore: Array.from(this.messageStore.entries()).slice(-1000),
             lastOutgoingPhone: this.lastOutgoingPhone,
           };
           fs.writeFileSync(this.storePath, JSON.stringify(data));
@@ -268,8 +263,8 @@ class WhatsAppSession {
       if (this.connectedUser?.phone && this.sock?.user?.lid && normalized.startsWith(this.sock.user.lid.split(":")[0])) {
         return this.connectedUser.phone;
       }
-      // If we have a recent outgoing contact (from /send-message), link to it
-      if (this.lastOutgoingPhone) {
+      // If we have a recent outgoing contact (from /send-message within last 120s), link to it
+      if (this.lastOutgoingPhone && (Date.now() - this.lastOutgoingTime < 120000)) {
         return this.lastOutgoingPhone;
       }
       // Known test LID fallback
@@ -353,8 +348,8 @@ class WhatsAppSession {
         } catch (e) {}
       }
 
-      // 4. Try matching against recent outgoing activity
-      if (this.lastOutgoingPhone) {
+      // 4. Try matching against recent outgoing activity (within 120 seconds)
+      if (this.lastOutgoingPhone && (Date.now() - this.lastOutgoingTime < 120000)) {
         this.lidPhoneMap.set(normalized, this.lastOutgoingPhone);
         this.lidPhoneMap.set(decoded.user + "@lid", this.lastOutgoingPhone);
         this.lidPhoneMap.set(decoded.user, this.lastOutgoingPhone);
@@ -464,15 +459,18 @@ class WhatsAppSession {
       if (!phone) continue;
 
       const pDigits = phone.replace(/[^0-9]/g, "");
+      if (pDigits.length >= 13) continue;
       if (ownDigits && (pDigits === ownDigits || pDigits.endsWith(ownDigits) || ownDigits.endsWith(pDigits))) {
         continue;
       }
+
+      const lastMsg = c.lastMessageText || "";
+      if (!lastMsg) continue;
       processedPhones.add(phone);
 
       const contact = this.contactStore.get(jid) || {};
       const pushname = c.pushName || contact.notify || contact.verifiedName || "";
       const name = c.name || contact.name || "";
-      const lastMsg = c.lastMessageText || "";
       let ts = c.conversationTimestamp;
       if (typeof ts === "object" && ts !== null) ts = ts.low || ts.seconds || 0;
       ts = Number(ts) || Math.floor(Date.now() / 1000);
@@ -541,7 +539,9 @@ class WhatsAppSession {
           keys: makeCacheableSignalKeyStore(state.keys, logger),
         },
         logger: logger,
-        browser: ["Aleya.in", "Chrome", "1.0.0"],
+        browser: Browsers.macOS("Chrome"),
+        enableAutoSessionRecreation: true,
+        enableRecentMessageCache: true,
         syncFullHistory: false,
         connectTimeoutMs: 30000,
         keepAliveIntervalMs: 30000,
@@ -1174,12 +1174,6 @@ app.post("/send-message", async (req, res) => {
           s.lidPhoneMap.set(mappedLid, outPhone);
         }
       }
-    } catch (e) {}
-
-    // Subscribe presence to establish connection and trigger key exchange before sending
-    try {
-      await s.sock.presenceSubscribe(targetJid);
-      await s.sock.sendPresenceUpdate("composing", targetJid);
     } catch (e) {}
 
     const sent = await s.sock.sendMessage(targetJid, { text: message });

@@ -305,7 +305,10 @@
               last_message: chat.last_message
             });
 
-            const isActive = self.activeChatId && (String(self.activeChatId) === String(chat.chat_id));
+            const isActive = self.activeChatId && (String(self.activeChatId) === String(chat.chat_id) || (self.cleanDigits(chat.phone) && self.cleanDigits(self.activePhone) && self.cleanDigits(chat.phone) === self.cleanDigits(self.activePhone)));
+            if (isActive && String(self.activeChatId) !== String(chat.chat_id)) {
+              self.activeChatId = chat.chat_id;
+            }
             const hasLead = !!chat.lead;
             const avatarContent = chat.avatar
               ? `<img src="${self.escapeHtml(chat.avatar)}" alt="" class="wa-avatar-img" />`

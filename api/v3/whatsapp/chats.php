@@ -117,8 +117,15 @@ if ($method === 'GET') {
         mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_phone IN (" . implode(',', array_unique($devPhones)) . ")");
     }
 
+    // Auto-heal: Purge ghost LID chats with no messages or empty text
+    mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_chat 
+        WHERE chat_site_id = {$siteId} 
+          AND (chat_phone REGEXP '^\\\\+?[0-9]{13,17}$' OR chat_last_message IS NULL OR chat_last_message = '')
+          AND (chat_lead_id IS NULL OR chat_lead_id = 0)
+          AND chat_id NOT IN (SELECT DISTINCT message_chat_id FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_site_id = {$siteId})");
+
     // Auto-heal: Reconcile rogue LID chats (e.g. +187810329956513) into their real contact chat
-    $rogueQ = mysqli_query($connection, "SELECT chat_id, chat_phone, chat_name, chat_pushname, chat_lead_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone LIKE '%187810329956513%' OR chat_phone REGEXP '^\\\\+?1[0-9]{13,16}$')");
+    $rogueQ = mysqli_query($connection, "SELECT chat_id, chat_phone, chat_name, chat_pushname, chat_lead_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone LIKE '%187810329956513%' OR chat_phone REGEXP '^\\\\+?[0-9]{13,17}$' OR chat_phone REGEXP '^\\\\+?1[0-9]{13,16}$')");
     if ($rogueQ && mysqli_num_rows($rogueQ) > 0) {
         while ($rRow = mysqli_fetch_assoc($rogueQ)) {
             $rChatId = (int)$rRow['chat_id'];
@@ -136,7 +143,7 @@ if ($method === 'GET') {
             }
             // 2. Try match by pushname/name
             if ($targetChatId === 0 && !empty($escRPush)) {
-                $targetQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_id != {$rChatId} AND chat_phone NOT REGEXP '^\\\\+?1[0-9]{13,16}$' AND (chat_name LIKE '%{$escRPush}%' OR chat_pushname LIKE '%{$escRPush}%') ORDER BY chat_id ASC LIMIT 1");
+                $targetQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_id != {$rChatId} AND chat_phone NOT REGEXP '^\\\\+?[0-9]{13,17}$' AND (chat_name LIKE '%{$escRPush}%' OR chat_pushname LIKE '%{$escRPush}%') ORDER BY chat_id ASC LIMIT 1");
                 if ($targetQ && mysqli_num_rows($targetQ) > 0) {
                     $targetChatId = (int)mysqli_fetch_assoc($targetQ)['chat_id'];
                 }
@@ -168,6 +175,23 @@ if ($method === 'GET') {
         }
     }
 
+    // Auto-heal: Synchronize chat_last_message and chat_last_message_time with the latest message in message table
+    mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat c
+        JOIN (
+            SELECT message_chat_id, message_text, message_created_at
+            FROM " . TABLE_PREFIX . "whatsapp_message
+            WHERE message_id IN (
+                SELECT MAX(message_id)
+                FROM " . TABLE_PREFIX . "whatsapp_message
+                WHERE message_site_id = {$siteId}
+                GROUP BY message_chat_id
+            )
+        ) latest ON latest.message_chat_id = c.chat_id
+        SET c.chat_last_message = IF(latest.message_text != '', latest.message_text, c.chat_last_message),
+            c.chat_last_message_time = latest.message_created_at
+        WHERE c.chat_site_id = {$siteId}
+          AND (c.chat_last_message_time IS NULL OR c.chat_last_message_time < latest.message_created_at OR c.chat_last_message IS NULL OR c.chat_last_message = '')");
+
     $whereClauses = ["c.chat_site_id = {$siteId}"];
 
     if (!empty($devPhones)) {
@@ -175,7 +199,8 @@ if ($method === 'GET') {
     }
 
     // Exclude unmapped ghost LID numbers from chat list only if they have no messages
-    $whereClauses[] = "(c.chat_phone NOT REGEXP '^\\\\+?1[0-9]{13,16}$' OR (c.chat_last_message IS NOT NULL AND c.chat_last_message != ''))";
+    $whereClauses[] = "(c.chat_phone NOT REGEXP '^\\\\+?[0-9]{13,17}$' OR (c.chat_last_message IS NOT NULL AND c.chat_last_message != ''))";
+    $whereClauses[] = "((c.chat_last_message IS NOT NULL AND c.chat_last_message != '') OR (c.chat_lead_id IS NOT NULL AND c.chat_lead_id > 0))";
 
     if (!empty($q)) {
         $escQ = mysqli_real_escape_string($connection, $q);

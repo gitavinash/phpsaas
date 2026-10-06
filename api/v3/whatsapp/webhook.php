@@ -171,9 +171,10 @@ if (($payload['event'] ?? '') === 'batch_sync') {
         $cPhone = preg_replace('/[^0-9+]/', '', $c['phone'] ?? '');
         if (empty($cPhone) || strlen($cPhone) < 8) continue;
 
-        // Skip ghost/unmapped 14-16 digit LID numbers
+        // Skip ghost/unmapped 13-17 digit LID numbers and empty chats
         $cleanDigits = preg_replace('/[^0-9]/', '', $cPhone);
-        if (preg_match('/^1[0-9]{13,16}$/', $cleanDigits)) continue;
+        if (strlen($cleanDigits) >= 13) continue;
+        if (empty($c['last_message'])) continue;
 
         $cName = trim($c['name'] ?? '');
         $cPushName = trim($c['pushname'] ?? ($c['pushName'] ?? ''));
@@ -280,8 +281,8 @@ if (strlen($last10) >= 8) {
     }
 }
 
-// 2. Handle WhatsApp Privacy LID (14-16 digits starting with 1)
-$isLid = preg_match('/^1[0-9]{13,16}$/', $cleanDigits) || !empty($payload['lid']);
+// 2. Handle WhatsApp Privacy LID (13-17 digits)
+$isLid = preg_match('/^[0-9]{13,17}$/', $cleanDigits);
 if ($isLid) {
     $resolvedRealPhone = '';
 
@@ -296,7 +297,7 @@ if ($isLid) {
         $escSearchName = mysqli_real_escape_string($connection, $searchName);
         $mQ = mysqli_query($connection, "SELECT chat_phone FROM " . TABLE_PREFIX . "whatsapp_chat 
                                          WHERE chat_site_id = {$siteId} 
-                                           AND chat_phone NOT REGEXP '^\\+?1[0-9]{13,16}$'
+                                           AND chat_phone NOT REGEXP '^\\+?[0-9]{13,17}$'
                                            AND (chat_name LIKE '%{$escSearchName}%' OR chat_pushname LIKE '%{$escSearchName}%')
                                          ORDER BY chat_last_message_time DESC LIMIT 1");
         if ($mQ && mysqli_num_rows($mQ) > 0) {
@@ -312,7 +313,7 @@ if ($isLid) {
                                            JOIN " . TABLE_PREFIX . "whatsapp_message m ON m.message_chat_id = c.chat_id 
                                            WHERE c.chat_site_id = {$siteId} 
                                              AND m.message_direction = 'outgoing' 
-                                             AND c.chat_phone NOT REGEXP '^\\+?1[0-9]{13,16}$' 
+                                             AND c.chat_phone NOT REGEXP '^\\+?[0-9]{13,17}$' 
                                              AND m.message_created_at >= DATE_SUB(NOW(), INTERVAL 4 HOUR)
                                            ORDER BY m.message_created_at DESC LIMIT 1");
         if ($outQ && mysqli_num_rows($outQ) > 0) {
