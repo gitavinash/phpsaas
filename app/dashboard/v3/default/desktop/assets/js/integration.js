@@ -855,6 +855,33 @@
         self.showToast("Refreshed WhatsApp devices list.", "info");
       });
 
+      // 11b. Repair Signal Encryption Ratchets (Bad MAC Auto-Fix)
+      $(document).on("click", "#btnRepairSessions, #btnAgentRepairSessions", function () {
+        const $btn = $(this);
+        const origHtml = $btn.html();
+        $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner wa-spin"></i> Repairing...');
+
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/?action=repair_sessions",
+          method: "GET",
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false).html(origHtml);
+            if (res && res.status === "success") {
+              self.showToast(res.msg || "Encryption ratchets repaired! WhatsApp keys refreshed.", "success");
+              loadHubState();
+            } else {
+              self.showToast(res.msg || "Failed to repair session ratchets.", "danger");
+            }
+          },
+          error: function (xhr) {
+            $btn.prop("disabled", false).html(origHtml);
+            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to repair session ratchets.";
+            self.showToast(err, "danger");
+          }
+        });
+      });
+
       // 12. Copy Webhook
       $("#btnCopyWebhook").on("click", function () {
         const val = $("#waWebhookUrlDisplay").val();

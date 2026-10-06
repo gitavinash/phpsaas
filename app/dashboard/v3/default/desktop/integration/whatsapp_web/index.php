@@ -73,9 +73,14 @@
                             <span>Connected Devices</span>
                             <span class="wa-count-badge" id="waAdminDeviceCount">0</span>
                         </div>
-                        <button type="button" class="btn-wa-link" id="btnAdminRefreshDevices">
-                            <i class="fi fi-rr-refresh"></i> Refresh Device List
-                        </button>
+                        <div class="wa-devices-top-actions">
+                            <button type="button" class="btn-wa-link" id="btnRepairSessions" title="Repair Signal Session Ratchets / Refresh Encryption">
+                                <i class="fi fi-rr-shield-check"></i> Fix Encryption Ratchets
+                            </button>
+                            <button type="button" class="btn-wa-link" id="btnAdminRefreshDevices">
+                                <i class="fi fi-rr-refresh"></i> Refresh Device List
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Devices Grid (Populated dynamically) -->
@@ -148,6 +153,9 @@
                         </a>
                         <button type="button" class="btn-wa-secondary" id="btnAgentSyncChats">
                             <i class="fi fi-rr-refresh"></i> Sync My Chats
+                        </button>
+                        <button type="button" class="btn-wa-secondary" id="btnAgentRepairSessions" title="Repair Signal Ratchets / Fix Bad MAC">
+                            <i class="fi fi-rr-shield-check"></i> Repair Encryption
                         </button>
                         <button type="button" class="btn-wa-danger btn-device-disconnect" id="btnAgentDisconnect" data-session-id="" data-device-id="" title="Disconnect this WhatsApp device">
                             <i class="fi fi-rr-exit"></i> Disconnect

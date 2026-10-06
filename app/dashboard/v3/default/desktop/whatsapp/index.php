@@ -115,6 +115,9 @@
                 <!-- Chat Top Header -->
                 <div class="wa-active-chat-header">
                     <div class="wa-active-user-meta">
+                        <button type="button" class="btn-wa-back-to-list" id="btnBackToThreads" title="Back to conversations">
+                            <i class="fi fi-rr-arrow-small-left"></i>
+                        </button>
                         <div class="wa-user-avatar" id="waActiveAvatar">WA</div>
                         <div class="wa-user-details">
                             <div class="wa-user-name-row">
@@ -125,6 +128,9 @@
                             </div>
                             <div class="wa-user-sub-row">
                                 <span class="wa-user-phone" id="waActivePhone">+91 ...</span>
+                                <button type="button" class="btn-wa-copy-phone" id="btnCopyActivePhone" title="Copy Phone Number">
+                                    <i class="fi fi-rr-copy"></i>
+                                </button>
                                 <span class="wa-dot-sep">•</span>
                                 <span class="wa-user-online-status" id="waActiveStatus">WhatsApp Connected</span>
                                 <span class="wa-header-device-badge d-none" id="waActiveDeviceBadge"></span>
@@ -142,12 +148,18 @@
                     </div>
                 </div>
 
-                <!-- Chat Message Stream -->
-                <div class="wa-messages-stream" id="waMessagesStream">
-                    <div class="wa-stream-loading">
-                        <i class="fi fi-rr-spinner wa-spin"></i>
-                        <span>Loading messages...</span>
+                <!-- Chat Message Stream Wrap -->
+                <div class="wa-messages-stream-wrap">
+                    <div class="wa-messages-stream" id="waMessagesStream">
+                        <div class="wa-stream-loading">
+                            <i class="fi fi-rr-spinner wa-spin"></i>
+                            <span>Loading messages...</span>
+                        </div>
                     </div>
+                    <button type="button" class="btn-wa-scroll-bottom d-none" id="btnScrollToBottom" title="Scroll to latest messages">
+                        <i class="fi fi-rr-angle-small-down"></i>
+                        <span class="wa-scroll-unread-dot d-none" id="waScrollUnreadDot"></span>
+                    </button>
                 </div>
 
                 <!-- Chat Input Composer -->

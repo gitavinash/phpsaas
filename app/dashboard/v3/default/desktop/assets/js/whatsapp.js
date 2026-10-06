@@ -80,7 +80,7 @@
       });
 
       $(document).on("click", "#btnClearSearch", function () {
-        $("#waThreadSearch").val("").trigger("input");
+        $("#waThreadSearch").val("").trigger("input").focus();
       });
 
       // Select thread (delegated)
@@ -88,6 +88,65 @@
         const chatId = $(this).data("chat-id");
         const phone = $(this).data("phone");
         self.selectChat(chatId, phone);
+      });
+
+      // Mobile back button to thread list
+      $(document).on("click", "#btnBackToThreads", function () {
+        $("#waChatWorkspace").removeClass("mobile-chat-open");
+        $("#waActiveChatWrapper").removeClass("is-open");
+        $("#waEmptyState").show();
+        $(".wa-thread-item").removeClass("active");
+        self.activeChatId = null;
+        self.activePhone = null;
+      });
+
+      // Copy Active Phone Number
+      $(document).on("click", "#btnCopyActivePhone", function () {
+        const phone = self.activePhone || $("#waActivePhone").text().trim();
+        if (!phone) return;
+        const $btn = $(this);
+        const copySuccess = function () {
+          $btn.html('<i class="fi fi-rr-check" style="color:#10B981;"></i>');
+          setTimeout(function () {
+            $btn.html('<i class="fi fi-rr-copy"></i>');
+          }, 1800);
+        };
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(phone).then(copySuccess).catch(function () {
+            self.fallbackCopy(phone, copySuccess);
+          });
+        } else {
+          self.fallbackCopy(phone, copySuccess);
+        }
+      });
+
+      // Auto-expanding composer textarea
+      $(document).on("input", "#waComposerText", function () {
+        this.style.height = "auto";
+        this.style.height = Math.min(this.scrollHeight, 120) + "px";
+      });
+
+      // Scroll to bottom button
+      $(document).on("click", "#btnScrollToBottom", function () {
+        const $stream = $("#waMessagesStream");
+        if ($stream.length) {
+          $stream.stop().animate({ scrollTop: $stream[0].scrollHeight }, 200);
+          $("#btnScrollToBottom").addClass("d-none");
+          $("#waScrollUnreadDot").addClass("d-none");
+        }
+      });
+
+      // Stream scroll listener to toggle scroll-to-bottom button
+      $(document).on("scroll", "#waMessagesStream", function () {
+        const el = this;
+        const isScrolledUp = (el.scrollHeight - el.scrollTop) > (el.clientHeight + 120);
+        if (isScrolledUp) {
+          $("#btnScrollToBottom").removeClass("d-none");
+        } else {
+          $("#btnScrollToBottom").addClass("d-none");
+          $("#waScrollUnreadDot").addClass("d-none");
+        }
       });
 
       // Composer submit (delegated)
@@ -110,6 +169,11 @@
         const $input = $("#waComposerText");
         const current = $input.val().trim();
         $input.val(current ? current + " " + text : text).focus();
+        const el = $input[0];
+        if (el) {
+          el.style.height = "auto";
+          el.style.height = Math.min(el.scrollHeight, 120) + "px";
+        }
       });
 
       // Refresh active chat (delegated)
@@ -147,6 +211,21 @@
       $(document).on("click", "#btnCloseNewChatModal, #btnCancelNewChat", function () {
         $("#waNewChatModal").removeClass("is-active").attr("aria-hidden", "true");
         $("#waNewChatForm")[0].reset();
+      });
+
+      // Close modal on Escape or clicking outside
+      $(document).on("keydown", function (e) {
+        if (e.key === "Escape" && $("#waNewChatModal").hasClass("is-active")) {
+          $("#waNewChatModal").removeClass("is-active").attr("aria-hidden", "true");
+          $("#waNewChatForm")[0].reset();
+        }
+      });
+
+      $(document).on("click", "#waNewChatModal", function (e) {
+        if (e.target === this) {
+          $("#waNewChatModal").removeClass("is-active").attr("aria-hidden", "true");
+          $("#waNewChatForm")[0].reset();
+        }
       });
 
       // Submit New Chat (delegated)
@@ -389,6 +468,7 @@
 
       $("#waEmptyState").hide();
       $("#waActiveChatWrapper").addClass("is-open");
+      $("#waChatWorkspace").addClass("mobile-chat-open");
 
       this.loadMessages(chatId, true);
     },
@@ -505,6 +585,12 @@
             setTimeout(function () {
               if ($stream.length) $stream.scrollTop($stream[0].scrollHeight);
             }, 60);
+          } else {
+            const isScrolledUp = ($stream[0].scrollHeight - $stream.scrollTop()) > ($stream[0].clientHeight + 120);
+            if (isScrolledUp) {
+              $("#waScrollUnreadDot").removeClass("d-none");
+              $("#btnScrollToBottom").removeClass("d-none");
+            }
           }
         },
         complete: function () {
@@ -543,7 +629,7 @@
           $btn.prop("disabled", false).find("i").attr("class", "fi fi-rr-paper-plane");
 
           if (res && res.status === "success") {
-            $textarea.val("").focus();
+            $textarea.val("").css("height", "auto").focus();
             self.loadMessages(self.activeChatId, true);
             self.loadThreads();
           } else {
@@ -715,6 +801,20 @@
       return safe.replace(urlRegex, function (url) {
         return '<a href="' + url + '" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:underline;">' + url + "</a>";
       });
+    },
+
+    fallbackCopy: function (text, callback) {
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        if (typeof callback === "function") callback();
+      } catch (e) {}
     },
 
     playNotificationSound: function () {

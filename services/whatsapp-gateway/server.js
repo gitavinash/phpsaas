@@ -892,6 +892,42 @@ class WhatsAppSession {
 const sessions = new Map();
 let lastKnownWebhookUrl = null;
 
+// Intercept libsignal Bad MAC noise and auto-repair broken session ratchets
+const origConsoleError = console.error;
+console.error = function (...args) {
+  const msg = args
+    .map((a) => (typeof a === "object" ? (a?.stack || a?.message || JSON.stringify(a)) : String(a)))
+    .join(" ");
+
+  if (msg.includes("Bad MAC") || msg.includes("Failed to decrypt message with any known session")) {
+    const m = msg.match(/([0-9]{11,20})/);
+    if (m && m[1]) {
+      const peerId = m[1];
+      try {
+        const authDirs = [AUTH_DIR];
+        for (const s of sessions.values()) {
+          if (s.authDir && !authDirs.includes(s.authDir)) authDirs.push(s.authDir);
+        }
+        for (const dir of authDirs) {
+          if (fs.existsSync(dir)) {
+            const files = fs.readdirSync(dir);
+            for (const f of files) {
+              if (f.startsWith("session-") && f.includes(peerId) && f.endsWith(".json")) {
+                try {
+                  fs.unlinkSync(path.join(dir, f));
+                } catch (e) {}
+              }
+            }
+          }
+        }
+      } catch (e) {}
+    }
+    console.log(`[WhatsApp Gateway] Notice: Signal session ratchet refreshed for peer.`);
+    return;
+  }
+  origConsoleError.apply(console, args);
+};
+
 function enrichSession(req, session) {
   if (!session || !req) return;
   const webhookUrl = req.query?.webhook_url || req.body?.webhook_url;

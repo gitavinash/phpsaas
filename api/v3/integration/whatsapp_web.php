@@ -717,6 +717,28 @@ if ($action === 'sync_chats' || $action === 'sync') {
 }
 
 // --------------------------------------------------------------------------
+// 7b. ACTION: Repair Corrupted Signal Ratchets (Bad MAC Fix)
+// --------------------------------------------------------------------------
+if ($action === 'repair_sessions' || $action === 'repair') {
+    $configs = getWaWebConfigs($connection, $siteId, $configKeys);
+    $gwRes = callWaGateway($configs['whatsapp_web_gateway_url'] ?? '', 'repair-sessions');
+    if ($gwRes && ($gwRes['status'] ?? '') === 'success') {
+        echo json_encode([
+            'status'  => 'success',
+            'msg'     => $gwRes['message'] ?? 'Signal session ratchets repaired successfully. WhatsApp encryption keys refreshed.',
+            'details' => $gwRes
+        ]);
+        exit;
+    } else {
+        echo json_encode([
+            'status'  => 'error',
+            'msg'     => $gwRes['message'] ?? 'Could not contact WhatsApp gateway to repair sessions.'
+        ]);
+        exit;
+    }
+}
+
+// --------------------------------------------------------------------------
 // 8. GET: Fetch Complete Plugin Configuration & Hub State
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
