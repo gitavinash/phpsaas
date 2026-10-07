@@ -130,18 +130,6 @@ if (BASE_URL == '/start-application/') {
                     });
                 }
 
-                registration.addEventListener('updatefound', function() {
-                    const newWorker = registration.installing;
-                    if (!newWorker) return;
-
-                    newWorker.addEventListener('statechange', function() {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            registration.waiting && registration.waiting.postMessage({
-                                type: 'SKIP_WAITING'
-                            });
-                        }
-                    });
-                });
             }, function(err) {
                 console.log('Service Worker registration failed:', err);
             });
