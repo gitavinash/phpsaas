@@ -937,15 +937,28 @@ function enrichSession(req, session) {
   if (!session || !req) return;
   const webhookUrl = req.query?.webhook_url || req.body?.webhook_url;
   const siteId = req.query?.site_id || req.body?.site_id;
+
+  // Prevent cross-site session contamination:
+  // If session already belongs to another site, do NOT let a different site override its siteId or webhookUrl
+  if (siteId) {
+    if (session.siteId && String(session.siteId) !== String(siteId)) {
+      console.warn(`[WhatsApp Gateway:${session.sessionId}] Ignored cross-site enrich attempt from site ${siteId} (belongs to site ${session.siteId})`);
+      return;
+    }
+    const siteMatch = session.sessionId.match(/^site_(\d+)_/);
+    if (siteMatch && String(siteMatch[1]) !== String(siteId)) {
+      console.warn(`[WhatsApp Gateway:${session.sessionId}] Ignored cross-site enrich attempt from site ${siteId} (session belongs to site ${siteMatch[1]})`);
+      return;
+    }
+    session.siteId = siteId;
+  }
+
   if (webhookUrl && typeof webhookUrl === "string" && webhookUrl.startsWith("http")) {
     lastKnownWebhookUrl = webhookUrl;
     if (session.webhookUrl !== webhookUrl) {
       console.log(`[WhatsApp Gateway:${session.sessionId}] Dynamic webhook registered: ${webhookUrl}`);
       session.webhookUrl = webhookUrl;
     }
-  }
-  if (siteId) {
-    session.siteId = siteId;
   }
 }
 
@@ -1096,7 +1109,25 @@ app.get("/devices", (req, res) => {
 // 1. Status & QR Info for specific session
 app.get("/status", (req, res) => {
   try {
+    const filterSiteId = req.query?.site_id ? String(req.query.site_id) : null;
     const s = getSession(req.query.session_id, req);
+
+    if (filterSiteId) {
+      const sessSite = s.siteId ? String(s.siteId) : (s.sessionId.match(/^site_(\d+)_/) ? s.sessionId.match(/^site_(\d+)_/)[1] : null);
+      if (sessSite && sessSite !== filterSiteId) {
+        return res.json({
+          status: "disconnected",
+          session_id: s.sessionId,
+          connection_status: "disconnected",
+          is_connected: false,
+          is_linked: false,
+          has_qr: false,
+          user: null,
+          last_sync: null,
+        });
+      }
+    }
+
     const hasCreds = fs.existsSync(path.join(s.authDir, "creds.json"));
     const isConn = s.connectionStatus === "connected" || (hasCreds && s.connectionStatus === "reconnecting");
     res.json({

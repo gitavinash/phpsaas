@@ -335,6 +335,7 @@
       let statusPollInterval = null;
       let modalPollInterval = null;
       let currentModalSessionId = null;
+      let currentAgentSessionId = null;
       let stateDevices = [];
       let stateAgents = [];
       let isAdmin = false;
@@ -498,6 +499,10 @@
             if (res && res.status === "success" && res.qr_svg) {
               $("#waAgentQrCodeContainer").html(res.qr_svg);
               resetAgentCountdown(res.expires_in || 30);
+              if (res.session_id) {
+                currentAgentSessionId = res.session_id;
+                startAgentStatusPolling(res.session_id);
+              }
             } else if (res && res.status === "initializing") {
               setTimeout(function () {
                 loadAgentQrCode(false);
@@ -527,15 +532,19 @@
         }, 1000);
       }
 
-      function startAgentStatusPolling() {
+      function startAgentStatusPolling(sessId) {
+        if (sessId) currentAgentSessionId = sessId;
         clearInterval(statusPollInterval);
         statusPollInterval = setInterval(function () {
           if ($("#waAgentAssignedSection").is(":visible")) {
             clearInterval(statusPollInterval);
             return;
           }
+          const pollUrl = currentAgentSessionId
+            ? "/api/v3/integration/whatsapp_web/?action=check_status&session_id=" + encodeURIComponent(currentAgentSessionId)
+            : "/api/v3/integration/whatsapp_web/?action=check_status";
           $.ajax({
-            url: "/api/v3/integration/whatsapp_web/?action=check_status",
+            url: pollUrl,
             method: "GET",
             dataType: "json",
             success: function (res) {
