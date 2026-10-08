@@ -315,15 +315,20 @@ if (!empty($quotationIds)) {
             $qTheme = !empty($descData['theme']) ? $descData['theme'] : (!empty($qRow['tour_package_theme']) ? $qRow['tour_package_theme'] : '');
             $encodedQId = base64_encode((string)$qId);
 
+            $descData['package_id'] = (int)$qRow['quotation_type_id'];
+            $descData['id']         = $qId;
+
             $quotationsMap[$qId] = [
                 'id'           => $qId,
                 'encoded_id'   => $encodedQId,
+                'package_id'   => (int)$qRow['quotation_type_id'],
                 'title'        => $qTitle,
                 'price'        => $qPrice,
                 'mrp'          => $qMrp,
                 'duration'     => $qDuration,
                 'destination'  => $qDest,
                 'theme'        => $qTheme,
+                'content'      => $descData,
                 'view_url'     => "/view-itinerary/{$encodedQId}/",
                 'download_url' => "/download-itinerary/{$encodedQId}/",
             ];

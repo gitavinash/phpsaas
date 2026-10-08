@@ -13859,6 +13859,27 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   transform: translateY(-1px) !important;
 }
 
+.v3-tin-action-btn.edit-resend {
+  background: #fff7ed !important;
+  color: #ea580c !important;
+  border-color: #fdba74 !important;
+}
+.v3-tin-action-btn.edit-resend:hover {
+  background: #ea580c !important;
+  color: #ffffff !important;
+  border-color: #ea580c !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 6px rgba(234, 88, 12, 0.25) !important;
+}
+.v3-tin-action-btn.edit-resend:active {
+  transform: translateY(0) !important;
+}
+
+.v3-modal-lead-chip .v3-badge-resend {
+  color: #ea580c !important;
+  font-weight: 700 !important;
+}
+
 .v3-timeline-payment-text {
   display: inline-flex !important;
   align-items: center !important;
@@ -14825,6 +14846,9 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   border-color: #0284c7 !important;
 }
 
+.v3-mt-8 {
+  margin-top: 8px !important;
+}
 .v3-mt-12 {
   margin-top: 12px !important;
 }
@@ -29693,7 +29717,7 @@ body.v3-editor-fs-locked {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
   overflow: hidden !important;
   background: #ffffff !important;
-  z-index: 99999 !important;
+  z-index: 99999999 !important;
 }
 
 .select2-dropdown.v3-select2-stay-city-dropdown .select2-search--dropdown {
@@ -29730,14 +29754,31 @@ body.v3-editor-fs-locked {
 }
 
 /* Modal Select2 Dropdowns */
-#modalSendItinerary .select2-dropdown {
+#modalSendItinerary .select2-container--open,
+.select2-container--open {
+  z-index: 99999999 !important;
+}
+
+.v3-itinerary-search-row .select2-container {
+  width: 100% !important;
+  display: block !important;
+}
+
+.v3-itinerary-search-row .select2-container .select2-selection {
+  min-height: 38px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+#modalSendItinerary .select2-dropdown,
+.select2-dropdown {
   min-width: 200px !important;
   border-radius: 10px !important;
   border: 1px solid #cbd5e1 !important;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
   overflow: hidden !important;
   background: #ffffff !important;
-  z-index: 99999 !important;
+  z-index: 99999999 !important;
 }
 
 #modalSendItinerary .select2-dropdown .select2-search--dropdown {

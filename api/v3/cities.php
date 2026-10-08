@@ -2,8 +2,8 @@
 
 header("Content-type: application/json; charset=utf-8");
 
+$docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 2);
 if (!isset($connection)) {
-    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 2);
     if (file_exists($docRoot . '/config.php')) {
         require_once $docRoot . '/config.php';
     }
@@ -12,7 +12,7 @@ if (!isset($connection)) {
     }
 }
 
-$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
+$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
 
 $rawPkgId = $_GET['package_id'] ?? ($_GET['id'] ?? 0);
@@ -173,14 +173,15 @@ $otherCities = [];
 $seen = [];
 
 // If search term is present, also fetch matching States
+$resIdSeen = [];
 if (!empty($escapedSearch)) {
     $stateQuery = "
         SELECT 
             s.state_id,
             TRIM(s.state_name) AS state_name,
             TRIM(co.country_name) AS country_name
-        FROM isw_state s
-        LEFT JOIN isw_country co ON s.state_country_id = co.country_id
+        FROM {$stateTbl} s
+        LEFT JOIN {$countryTbl} co ON s.state_country_id = co.country_id
         WHERE s.state_name LIKE '%{$escapedSearch}%'
         ORDER BY s.state_name ASC
         LIMIT 10
@@ -193,8 +194,13 @@ if (!empty($escapedSearch)) {
             $sKey = 'state_' . strtolower($stName);
             if (!in_array($sKey, $seen, true)) {
                 $seen[] = $sKey;
+                $sId = $stName;
+                if (isset($resIdSeen[$sId])) {
+                    $sId = $stName . ' (' . $coName . ')';
+                }
+                $resIdSeen[$sId] = true;
                 $results[] = [
-                    'id'      => $stName,
+                    'id'      => $sId,
                     'text'    => $stName . ' (State, ' . $coName . ')',
                     'city'    => $stName,
                     'state'   => $stName,
@@ -238,8 +244,14 @@ if ($res = mysqli_query($connection, $query)) {
         $metaParts = array_filter([$sName, $coName]);
         $labelText = $cName . (!empty($metaParts) ? ' (' . implode(', ', $metaParts) . ')' : '');
 
+        $cId = $cName;
+        if (isset($resIdSeen[$cId])) {
+            $cId = $labelText;
+        }
+        $resIdSeen[$cId] = true;
+
         $cityItem = [
-            'id'      => $cName,
+            'id'      => $cId,
             'text'    => $labelText,
             'city'    => $cName,
             'state'   => $sName,

@@ -1854,6 +1854,10 @@
             const downloadUrl =
               q.download_url || (encId ? `/download-itinerary/${encId}/` : "#");
             const hasMeta = !!(q.destination || q.duration || q.theme);
+            if (q && q.id) {
+              self.quotationsCache = self.quotationsCache || {};
+              self.quotationsCache[q.id] = q;
+            }
 
             categoryHtml = `<span class="v3-timeline-category-pill pill-itinerary"><i class="fi fi-rr-route"></i> Itinerary Proposal</span>`;
             cardExtraClass = "v3-timeline-card-itinerary";
@@ -1889,18 +1893,36 @@
                   }
                 </div>
                 ${
-                  encId
+                  encId || q.id || (t.description && !isNaN(t.description))
                     ? `
                   <div class="v3-tin-actions-row">
+                    ${
+                      viewUrl && viewUrl !== "#"
+                        ? `
                     <a href="${viewUrl}" target="_blank" class="v3-tin-action-btn primary" title="View interactive itinerary webpage">
                       <i class="fi fi-rr-eye"></i> View Itinerary
-                    </a>
+                    </a>`
+                        : ""
+                    }
+                    <button type="button" class="v3-tin-action-btn edit-resend btn-edit-resend-itin" data-quotation-id="${q.id || (t.description && !isNaN(t.description) ? t.description : "")}" data-encoded-id="${encId}" title="Modify quotation details or price and resend itinerary">
+                      <i class="fi fi-rr-edit"></i> Modify &amp; Resend
+                    </button>
+                    ${
+                      downloadUrl && downloadUrl !== "#"
+                        ? `
                     <a href="${downloadUrl}" target="_blank" class="v3-tin-action-btn secondary" title="Download official PDF proposal">
                       <i class="fi fi-rr-file-pdf"></i> Download PDF
-                    </a>
+                    </a>`
+                        : ""
+                    }
+                    ${
+                      viewUrl && viewUrl !== "#"
+                        ? `
                     <button type="button" class="v3-tin-action-btn outline btn-copy-itin-link" data-url="${window.location.origin + viewUrl}" title="Copy itinerary link to clipboard">
                       <i class="fi fi-rr-copy"></i> Copy Link
-                    </button>
+                    </button>`
+                        : ""
+                    }
                   </div>
                 `
                     : ""
@@ -4930,37 +4952,25 @@
           $("#itineraryCustomOverview").val("");
           self.selectedPackage = null;
 
-          // Initialize V3 Cities API for destination
-          self.initCitySelect2(
-            $("#itineraryDestinationInput"),
-            $("#modalSendItinerary"),
-            "-- Search or Select Destination City / Country --",
-          );
+          // Initialize destination & travel style select2
+          self.initItineraryDestinationSelect2(dest);
 
           if (self.leadData) {
             $("#itinModalLeadBadge").text(
               `Lead #${self.leadData.id}: ${self.leadData.name}`,
             );
-            if (dest) {
-              const $destInput = $("#itineraryDestinationInput");
-              $destInput
-                .empty()
-                .append(new Option(dest, dest, true, true))
-                .val(dest)
-                .trigger("change");
-            }
-          }
-
-          // Initialize Select2 for travel style
-          if (typeof $.fn.select2 !== "undefined") {
-            $("#itineraryTravelStyle").select2({
-              dropdownParent: $("#modalSendItinerary"),
-              width: "100%",
-              minimumResultsForSearch: Infinity,
-            });
           }
         },
       );
+
+      // Click trigger for Edit & Resend button from itinerary sent card
+      $(document).on("click", ".btn-edit-resend-itin", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $btn = $(this);
+        const qId = $btn.data("quotation-id") || $btn.attr("data-quotation-id");
+        self.editAndResendItinerary(qId, $btn);
+      });
 
       // Find Itineraries in Modal
       $(document).on("click", "#btnFindItineraries", function () {
@@ -5815,6 +5825,10 @@
           }
         }
         self.selectedPackage = null;
+        self.activeItineraryDestination = null;
+
+        // Ensure Destination / Country / City dropdown and Travel Style are fresh and working!
+        self.initItineraryDestinationSelect2();
 
         // Scroll back to top of modal canvas
         $("#modalSendItinerary .v3-modal-fullscreen-body").animate(
@@ -7559,6 +7573,400 @@
       $("#btnPreviewItinerary").removeClass("v3-hidden");
     },
 
+    editAndResendItinerary: function (quotationId, $triggerBtn) {
+      const self = this;
+      const qId = parseInt(quotationId) || 0;
+      if (!qId && (!quotationId || isNaN(quotationId))) {
+        self.notify("Invalid quotation reference.", "warning");
+        return;
+      }
+
+      // Check if quotation data is available in cache or timeline
+      let qData = null;
+      if (self.quotationsCache && self.quotationsCache[qId]) {
+        qData = self.quotationsCache[qId];
+      } else if (self.leadData && Array.isArray(self.leadData.timeline)) {
+        const item = self.leadData.timeline.find(
+          (t) =>
+            t.type === "itinerary" &&
+            t.quotation &&
+            (t.quotation.id == qId || t.description == qId)
+        );
+        if (item && item.quotation) {
+          qData = item.quotation;
+        }
+      }
+
+      const openEditorWithData = function (data) {
+        if (!data) {
+          self.notify("Unable to load itinerary details.", "error");
+          return;
+        }
+
+        const content = data.content || data.parsed_content || {};
+
+        // 1. Open the Full Screen Itinerary Modal
+        const $modal = $("#modalSendItinerary");
+        $modal.addClass("is-active");
+
+        // Preload stay cities from Cities API, vehicles, and properties
+        self.loadItineraryMeta();
+
+        // 2. Direct jump into main customizer: Hide Search & Select section
+        $("#itinerarySearchSection").addClass("v3-hidden");
+        $("#itinerarySearchLoader").addClass("v3-hidden");
+        $("#itineraryNotFoundBox").addClass("v3-hidden");
+        $("#itineraryResultContainer").addClass("v3-hidden");
+
+        // 3. Reveal Customizer Form and Header Action Buttons
+        $("#itineraryCustomSection").removeClass("v3-hidden");
+        $("#btnChangeItinerary").removeClass("v3-hidden");
+        $("#btnPreviewItinerary").removeClass("v3-hidden");
+
+        // 4. Update Header Badge
+        const leadId =
+          (self.leadData && (self.leadData.id || self.leadData.lead_id)) || "";
+        const leadName = (self.leadData && self.leadData.name) || "Customer";
+        const displayQId = qId || data.id || "";
+        $("#itinModalLeadBadge").html(
+          `Lead #${leadId}: ${leadName} &bull; <span class="v3-badge-resend">Edit &amp; Resend Proposal #${displayQId}</span>`
+        );
+
+        // 5. Populate Overview & Logistics Fields
+        const rawTitle =
+          content.title ||
+          data.title ||
+          (data.tour_package_title ? data.tour_package_title : "") ||
+          "Tour Itinerary Proposal";
+        $("#itineraryCustomTitle").val(self.cleanLeadStringValue(rawTitle));
+
+        // Travel Date
+        let travelDate = content.travel_date || "";
+        if (
+          !travelDate &&
+          self.leadData &&
+          self.leadData.travel_details &&
+          self.leadData.travel_details.date_of_travel
+        ) {
+          travelDate = self.leadData.travel_details.date_of_travel;
+        }
+        if (
+          !travelDate ||
+          travelDate.toLowerCase() === "flexible" ||
+          (typeof moment !== "undefined" &&
+            !moment(travelDate, "YYYY-MM-DD", true).isValid())
+        ) {
+          if (typeof moment !== "undefined") {
+            travelDate = moment().add(7, "days").format("YYYY-MM-DD");
+          }
+        }
+        $("#itineraryCustomTravelDate").val(travelDate);
+        self.initSingleDatePickers();
+
+        // Pickup & Drop locations
+        const pickup =
+          content.pickup_location ||
+          (self.leadData &&
+          self.leadData.travel_details &&
+          (self.leadData.travel_details.departure_city ||
+            self.leadData.travel_details.pickup_location)
+            ? self.leadData.travel_details.departure_city ||
+              self.leadData.travel_details.pickup_location
+            : "");
+        const drop =
+          content.drop_location ||
+          (self.leadData &&
+          self.leadData.travel_details &&
+          (self.leadData.travel_details.drop_location ||
+            self.leadData.travel_details.destination)
+            ? self.leadData.travel_details.drop_location ||
+              self.leadData.travel_details.destination
+            : "");
+        self.setupPickupDropSelects(pickup, drop);
+
+        // Travel Theme / Style
+        const theme = (
+          content.travel_theme ||
+          content.theme ||
+          data.theme ||
+          "standard"
+        )
+          .toLowerCase()
+          .trim();
+        if ($("#itineraryCustomTheme option[value='" + theme + "']").length > 0) {
+          $("#itineraryCustomTheme").val(theme);
+        } else {
+          $("#itineraryCustomTheme").val("standard");
+        }
+        if (typeof $.fn.select2 !== "undefined") {
+          $("#itineraryCustomTheme").select2({
+            dropdownParent: $("#modalSendItinerary"),
+            width: "100%",
+            minimumResultsForSearch: Infinity,
+          });
+        }
+
+        // 6. Travelers & Commercials Breakdown
+        const adults =
+          parseInt(content.adults_count) ||
+          (self.leadData && self.leadData.travel_details
+            ? parseInt(self.leadData.travel_details.adults || 2)
+            : 2);
+        const children =
+          parseInt(content.children_count) ||
+          (self.leadData && self.leadData.travel_details
+            ? parseInt(self.leadData.travel_details.children || 0)
+            : 0);
+        const infants =
+          parseInt(content.infants_count) ||
+          (self.leadData && self.leadData.travel_details
+            ? parseInt(self.leadData.travel_details.infants || 0)
+            : 0);
+
+        const adultPrice =
+          parseFloat(content.adult_per_person || data.quotation_per_adult || 0) || 0;
+        const childPrice =
+          parseFloat(content.child_per_person || data.quotation_per_child || 0) || 0;
+        const infantPrice =
+          parseFloat(content.infant_per_person || data.quotation_per_infant || 0) || 0;
+        const totalPrice =
+          parseFloat(
+            content.total_price || data.price || data.quotation_price || 0
+          ) || (adultPrice * (adults > 0 ? adults : 2) + childPrice * children);
+
+        $("#itineraryCustomAdultCount").val(adults > 0 ? adults : 2);
+        $("#itineraryCustomChildCount").val(children);
+        $("#itineraryCustomInfantCount").val(infants);
+
+        $("#itineraryCustomAdultPrice").val(adultPrice);
+        $("#itineraryCustomChildPrice").val(childPrice);
+        $("#itineraryCustomInfantPrice").val(infantPrice);
+        $("#itineraryCustomTotalPrice").val(totalPrice);
+
+        const travelerParts = [];
+        if (adults) travelerParts.push(`${adults} Adults`);
+        if (children) travelerParts.push(`${children} Children`);
+        if (infants) travelerParts.push(`${infants} Infants`);
+        $("#itinTravelerCountBadge").text(
+          travelerParts.join(", ") || "Auto-calculates per traveler"
+        );
+
+        // 7. Tour Overview, Inclusions & Exclusions
+        const formatOverviewText = (s) => {
+          if (!s) return "";
+          let str = self.cleanLeadStringValue(s);
+          str = str
+            .replace(/<br\s*[\/]?>/gi, "\n")
+            .replace(/<\/p>/gi, "\n\n")
+            .replace(/<\/div>/gi, "\n")
+            .replace(/<li[^>]*>/gi, "• ")
+            .replace(/<\/li>/gi, "\n")
+            .replace(/<[^>]*>?/gm, "");
+          return str.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+        };
+
+        $("#itineraryCustomOverview").val(
+          formatOverviewText(content.overview || data.overview || "")
+        );
+        $("#itineraryCustomInclusions").val(
+          content.inclusions ||
+            "Hotel accommodation with breakfast\nAirport & sightseeing transfers\nAll toll taxes and parking charges"
+        );
+        $("#itineraryCustomExclusions").val(
+          content.exclusions ||
+            "Airfare / Train tickets\nPersonal expenses & tips\nEntry fees and camera tickets"
+        );
+
+        // 8. Package & Template State
+        const pkgId =
+          parseInt(
+            content.package_id ||
+              data.package_id ||
+              data.quotation_type_id ||
+              0
+          ) || 0;
+        const template =
+          content.template ||
+          data.template ||
+          (data.tour_package_template ? data.tour_package_template : "mit") ||
+          "mit";
+
+        const itinDest =
+          content.destination ||
+          content.city ||
+          content.tour_package_city ||
+          data.destination ||
+          data.tour_package_city ||
+          "";
+        self.activeItineraryDestination = itinDest;
+
+        self.selectedPackage = {
+          tour_package_id: pkgId,
+          tour_package_title: rawTitle,
+          tour_package_template: template,
+          template: template,
+          destination: itinDest,
+          tour_package_city: itinDest,
+          outstation_vehicle:
+            content.outstation_vehicle || content.vehicle || "",
+          localsightseen_vehicle: content.localsightseen_vehicle || "",
+        };
+        self.selectedPackageTemplate = template;
+
+        // 9. Day-Wise Itinerary Rendering
+        let daysList = [];
+        if (Array.isArray(content.itinerary) && content.itinerary.length > 0) {
+          daysList = content.itinerary;
+        } else if (typeof content.itinerary === "string" && content.itinerary.trim()) {
+          try {
+            daysList = JSON.parse(content.itinerary);
+          } catch (e) {
+            daysList = [];
+          }
+        }
+
+        // If daysList is still empty, fallback to pkg itinerary
+        if (!Array.isArray(daysList) || daysList.length === 0) {
+          if (data.parsed_itinerary && Array.isArray(data.parsed_itinerary)) {
+            daysList = data.parsed_itinerary;
+          }
+        }
+
+        self.renderItineraryDays(daysList);
+
+        // Scroll to top of fullscreen canvas
+        $("#modalSendItinerary .v3-modal-fullscreen-body").scrollTop(0);
+      };
+
+      // If we have content already in memory, open instantly!
+      if (qData && qData.content && (Array.isArray(qData.content.itinerary) || qData.content.title)) {
+        openEditorWithData(qData);
+        return;
+      }
+
+      // Otherwise fetch via API /api/v3/itinerary/get/
+      const originalBtnHtml = $triggerBtn ? $triggerBtn.html() : "";
+      if ($triggerBtn) {
+        $triggerBtn
+          .prop("disabled", true)
+          .html('<i class="fi fi-rr-spinner fi-spin"></i> Loading...');
+      }
+
+      $.ajax({
+        url: `/api/v3/itinerary/get/?id=${encodeURIComponent(qId)}`,
+        type: "GET",
+        dataType: "json",
+        success: function (res) {
+          if ($triggerBtn) {
+            $triggerBtn.prop("disabled", false).html(originalBtnHtml);
+          }
+          if (res && res.status === "success" && res.quotation) {
+            self.quotationsCache = self.quotationsCache || {};
+            self.quotationsCache[qId] = res.quotation;
+            openEditorWithData(res.quotation);
+          } else {
+            self.notify(
+              (res && res.msg) || "Could not retrieve itinerary details.",
+              "error"
+            );
+          }
+        },
+        error: function () {
+          if ($triggerBtn) {
+            $triggerBtn.prop("disabled", false).html(originalBtnHtml);
+          }
+          self.notify("Failed to fetch itinerary details. Please try again.", "error");
+        },
+      });
+    },
+
+    initItineraryDestinationSelect2: function (prefillDest) {
+      const self = this;
+      const $destInput = $("#itineraryDestinationInput");
+      const $modal = $("#modalSendItinerary");
+      if (!$destInput.length) return;
+
+      if ($destInput.hasClass("select2-hidden-accessible") || $destInput.data("select2")) {
+        try {
+          $destInput.select2("destroy");
+        } catch (e) {}
+      }
+
+      self.initCitySelect2(
+        $destInput,
+        $modal,
+        "-- Search or Select Destination City / Country --",
+      );
+
+      let targetDest = prefillDest;
+      if (!targetDest && self.activeItineraryDestination) {
+        targetDest = self.activeItineraryDestination;
+      }
+      if (!targetDest && self.selectedPackage) {
+        targetDest =
+          self.selectedPackage.destination ||
+          self.selectedPackage.tour_package_city ||
+          "";
+      }
+      if (!targetDest && self.leadData) {
+        const d = self.leadData || {};
+        const t = d.travel_details || {};
+        const isGeneric = function (val) {
+          if (!val || typeof val !== "string") return true;
+          const s = val.trim().toLowerCase();
+          return (
+            !s ||
+            s === "-" ||
+            s === "tour package enquiry" ||
+            s === "tour package inquiry" ||
+            s === "tour inquiry" ||
+            s === "tour enquiry" ||
+            s === "general enquiry" ||
+            s === "general inquiry" ||
+            s === "website inquiry" ||
+            s === "website enquiry" ||
+            s === "whatsapp inquiry" ||
+            s === "whatsapp web inquiry"
+          );
+        };
+        if (d.subject && !isGeneric(d.subject)) {
+          targetDest = d.subject.trim();
+        } else if (t.destination && !isGeneric(t.destination)) {
+          targetDest = t.destination.trim();
+        }
+      }
+
+      if (targetDest && typeof targetDest === "string") {
+        const clean = targetDest.trim();
+        if (clean && clean !== "-") {
+          $destInput
+            .html('<option></option>')
+            .append(new Option(clean, clean, true, true))
+            .val(clean)
+            .trigger("change");
+        } else {
+          $destInput.html('<option></option>').val(null).trigger("change");
+        }
+      } else {
+        $destInput.html('<option></option>').val(null).trigger("change");
+      }
+
+      // Also ensure travel style select2
+      const $travelStyle = $("#itineraryTravelStyle");
+      if ($travelStyle.length && typeof $.fn.select2 !== "undefined") {
+        if ($travelStyle.hasClass("select2-hidden-accessible") || $travelStyle.data("select2")) {
+          try {
+            $travelStyle.select2("destroy");
+          } catch (e) {}
+        }
+        $travelStyle.select2({
+          dropdownParent: $modal,
+          width: "100%",
+          minimumResultsForSearch: Infinity,
+        });
+      }
+    },
+
     confirmConvertToSale: function () {
       const self = this;
       if (self.isConvertingToSale || self.isUpdatingStatus) return;
@@ -7915,12 +8323,22 @@
           };
         },
         insertTag: function (data, tag) {
-          // Place search keyword with (Add New) at the LAST of dropdown options
-          data.push(tag);
+          if (!Array.isArray(data)) return;
+          // Avoid duplicate tags if keyword already in result list
+          const exists = data.some(function (item) {
+            return (
+              item &&
+              (String(item.id || "").toLowerCase() === String(tag.id || "").toLowerCase() ||
+                String(item.city || "").toLowerCase() === String(tag.city || "").toLowerCase())
+            );
+          });
+          if (!exists) {
+            data.push(tag);
+          }
         },
         templateResult: function (opt) {
           if (!opt.id) return opt.text;
-          if (opt.isNewTag || (opt.text && opt.text.endsWith("(Add New)"))) {
+          if (opt.isNewTag || (opt.text && String(opt.text).endsWith("(Add New)"))) {
             return $(
               `<div class="v3-select2-add-new-opt"><i class="fi fi-rr-plus"></i> ${escapeHtml(opt.text)}</div>`,
             );
@@ -7937,15 +8355,41 @@
         ajax: {
           url: "/api/v3/cities/",
           dataType: "json",
-          delay: 150,
+          delay: 200,
           data: function (params) {
             return {
+              search: params.term || "",
               q: params.term || "",
             };
           },
           processResults: function (data) {
+            let list = [];
+            if (data && Array.isArray(data.results)) {
+              list = data.results;
+            } else if (data && Array.isArray(data.cities)) {
+              list = data.cities.map(function (c) {
+                return { id: c, text: c, city: c };
+              });
+            }
+            // Ensure strictly unique option IDs to prevent Select2 collision issues
+            const seenIds = new Set();
+            const cleanResults = [];
+            list.forEach(function (item) {
+              const baseId = item.id || item.city || item.text;
+              if (!baseId) return;
+              if (seenIds.has(baseId)) {
+                const altId = item.text || (item.city + " (" + (item.state || item.country || "") + ")");
+                if (!seenIds.has(altId)) {
+                  seenIds.add(altId);
+                  cleanResults.push(Object.assign({}, item, { id: altId }));
+                }
+              } else {
+                seenIds.add(baseId);
+                cleanResults.push(item);
+              }
+            });
             return {
-              results: (data && data.results) || [],
+              results: cleanResults,
             };
           },
           cache: true,

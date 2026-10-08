@@ -98,7 +98,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                     <select id="editLeadPackage" class="v3-modal-select v3-package-select" data-placeholder="Choose a tour package or type custom destination..."></select>
                     
                     <!-- Selected Package Preview Badge in Modal -->
-                    <div id="editLeadSelectedPkgCard" class="v3-selected-pkg-card" style="display: none; margin-top: 8px;">
+                    <div id="editLeadSelectedPkgCard" class="v3-selected-pkg-card v3-hidden v3-mt-8">
                         <div class="v3-pkg-card-left">
                             <div class="v3-pkg-card-icon" id="editCardPkgIcon">
                                 <i class="fi fi-rr-sparkles"></i>
@@ -222,7 +222,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                     <div class="v3-itinerary-search-row">
                         <div class="v3-modal-form-group">
                             <label class="v3-modal-label"><i class="fi fi-rr-marker"></i> Destination / Country / City *</label>
-                            <select class="form-control v3-select-full" id="itineraryDestinationInput"></select>
+                            <select class="form-control v3-select-full" id="itineraryDestinationInput"><option></option></select>
                         </div>
                         <div class="v3-modal-form-group">
                             <label class="v3-modal-label"><i class="fi fi-rr-compass"></i> Travel Style / Theme</label>
@@ -302,7 +302,7 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                                 </div>
                                 <div class="v3-modal-form-group">
                                     <label class="v3-modal-label"><i class="fi fi-rr-calendar"></i> Travel Date / Departure *</label>
-                                    <input type="text" id="itineraryCustomTravelDate" class="v3-modal-input v3-modal-input-lg v3-single-datepicker-input" data-future-only="true" placeholder="Select departure date" readonly style="cursor:pointer;background:#fff;">
+                                    <input type="text" id="itineraryCustomTravelDate" class="v3-modal-input v3-modal-input-lg v3-single-datepicker-input" data-future-only="true" placeholder="Select departure date" readonly>
                                 </div>
                             </div>
 

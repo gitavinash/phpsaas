@@ -14,8 +14,9 @@ if (!isset($connection)) {
     }
 }
 
+$docRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
 if (!defined('LOGIN_CHECK')) {
-    define('LOGIN_CHECK', $_SERVER['DOCUMENT_ROOT'] . '/lib/session/index.php');
+    define('LOGIN_CHECK', $docRoot . '/lib/session/index.php');
 }
 if (file_exists(LOGIN_CHECK)) {
     require_once LOGIN_CHECK;
@@ -24,7 +25,14 @@ if (file_exists(LOGIN_CHECK)) {
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
 
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$rawId = isset($_GET['id']) ? trim((string)$_GET['id']) : (isset($_GET['quotation_id']) ? trim((string)$_GET['quotation_id']) : '');
+if (empty($rawId) && isset($_GET['encoded_id'])) {
+    $decoded = base64_decode(trim((string)$_GET['encoded_id']), true);
+    if ($decoded !== false && is_numeric($decoded)) {
+        $rawId = $decoded;
+    }
+}
+$id = is_numeric($rawId) ? (int)$rawId : 0;
 $leadId = isset($_GET['lead_id']) ? (int)$_GET['lead_id'] : 0;
 
 if ($id <= 0 && $leadId <= 0) {
@@ -40,6 +48,8 @@ $whereClause = ($id > 0)
     ? "q.quotation_id = {$id}"
     : "q.quotation_ref_id = '{$leadId}' AND q.quotation_ref_type = 'enquiry'";
 
+$siteClause = ($siteId > 0) ? "AND (q.quotation_site_id = {$siteId} OR q.quotation_site_id = 0)" : "";
+
 $query = "
     SELECT 
         q.*,
@@ -51,7 +61,7 @@ $query = "
     LEFT JOIN {$tblPrefix}tour_package tp
       ON tp.tour_package_id = q.quotation_type_id
     WHERE {$whereClause}
-      AND q.quotation_site_id = {$siteId}
+      {$siteClause}
     ORDER BY q.quotation_id DESC
     LIMIT 1
 ";
@@ -60,9 +70,16 @@ $res = mysqli_query($connection, $query);
 
 if ($res && mysqli_num_rows($res) > 0) {
     $quotation = mysqli_fetch_assoc($res);
+    $descData = [];
     if (!empty($quotation['quotation_description'])) {
-        $quotation['parsed_content'] = json_decode($quotation['quotation_description'], true);
+        $descData = json_decode($quotation['quotation_description'], true) ?: [];
     }
+    if (!isset($descData['package_id']) && !empty($quotation['quotation_type_id'])) {
+        $descData['package_id'] = (int)$quotation['quotation_type_id'];
+    }
+    $quotation['parsed_content'] = $descData;
+    $quotation['content']        = $descData;
+
     $encodedId = base64_encode((string)$quotation['quotation_id']);
     $quotation['encoded_id'] = $encodedId;
     $quotation['view_url'] = (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/view-itinerary/{$encodedId}/";
