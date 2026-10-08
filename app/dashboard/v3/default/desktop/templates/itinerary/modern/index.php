@@ -1594,8 +1594,9 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             <div class="modern-bar-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="modern-studio-logo">
+                <?php else: ?>
+                    <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
                 <?php endif; ?>
-                <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
             </div>
             <div class="modern-bar-right">
                 <div class="modern-status-badge">
@@ -1717,9 +1718,6 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -1754,8 +1752,9 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             <div class="modern-bar-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="modern-studio-logo">
+                <?php else: ?>
+                    <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
                 <?php endif; ?>
-                <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
             </div>
             <div class="modern-bar-right">
                 <div class="modern-ref-pill">
@@ -1851,9 +1850,6 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -1874,12 +1870,13 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             <div class="modern-bar-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="modern-studio-logo">
+                <?php else: ?>
+                    <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
                 <?php endif; ?>
-                <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
             </div>
             <div class="modern-bar-right">
                 <div class="modern-ref-pill">
-                    <?php echo htmlspecialchars($cleanQuoteRef); ?> · Investment
+                    <?php echo htmlspecialchars($cleanQuoteRef); ?> · Pricing
                 </div>
             </div>
         </div>
@@ -1888,7 +1885,7 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             <!-- Modern Price Hero Card -->
             <div class="modern-price-hero-card">
                 <div class="modern-price-hero-left">
-                    <div class="price-tagline">Total Package Investment</div>
+                    <div class="price-tagline">Total Package Price</div>
                     <div class="big-price">₹<?php echo number_format($totalPriceVal, 2); ?></div>
                     <div class="price-meta"><?php echo htmlspecialchars($paxSummaryText); ?> · Taxes Included · Quote Valid Until <?php echo $validUntilDate; ?></div>
                 </div>
@@ -1991,9 +1988,6 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -2010,8 +2004,9 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             <div class="modern-bar-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="modern-studio-logo">
+                <?php else: ?>
+                    <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
                 <?php endif; ?>
-                <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
             </div>
             <div class="modern-bar-right">
                 <div class="modern-ref-pill">
@@ -2067,9 +2062,6 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -2086,8 +2078,9 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             <div class="modern-bar-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="modern-studio-logo">
+                <?php else: ?>
+                    <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
                 <?php endif; ?>
-                <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
             </div>
             <div class="modern-bar-right">
                 <div class="modern-ref-pill">
@@ -2143,9 +2136,6 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -2162,8 +2152,9 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             <div class="modern-bar-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="modern-studio-logo">
+                <?php else: ?>
+                    <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
                 <?php endif; ?>
-                <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
             </div>
             <div class="modern-bar-right">
                 <div class="modern-ref-pill">
@@ -2254,9 +2245,6 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -2273,8 +2261,9 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             <div class="modern-bar-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="modern-studio-logo">
+                <?php else: ?>
+                    <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
                 <?php endif; ?>
-                <span class="modern-brand-tag"><?php echo htmlspecialchars($siteName); ?></span>
             </div>
             <div class="modern-bar-right">
                 <div class="modern-ref-pill">
@@ -2333,9 +2322,6 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">

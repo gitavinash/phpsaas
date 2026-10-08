@@ -1124,7 +1124,7 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
             font-weight: bold;
         }
 
-        /* Tour Pricing Page (Executive Investment Ledger) */
+        /* Tour Pricing Page (Executive Pricing Ledger) */
         #page-payment .hero {
             height: 44mm;
             max-height: 44mm;
@@ -2012,7 +2012,11 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
             <section class="page days-page" id="page-day-<?php echo $dayIndex; ?>">
                 <div class="exec-top-ledger">
                     <div class="exec-brand-left">
-                        <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                        <?php if (!empty($siteLogo)): ?>
+                            <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="exec-brand-logo">
+                        <?php else: ?>
+                            <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                        <?php endif; ?>
                     </div>
                     <div class="exec-meta-right">
                         <span class="exec-tag-pill">Day <?php echo $dayNumStr; ?> of <?php echo str_pad($totalDaysCount, 2, '0', STR_PAD_LEFT); ?></span>
@@ -2132,7 +2136,11 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
         <section class="page days-page" id="page-payment">
             <div class="exec-top-ledger">
                 <div class="exec-brand-left">
-                    <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                    <?php if (!empty($siteLogo)): ?>
+                        <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="exec-brand-logo">
+                    <?php else: ?>
+                        <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                    <?php endif; ?>
                 </div>
                 <div class="exec-meta-right">
                     <span class="exec-tag-pill">Payment Details</span>
@@ -2208,7 +2216,7 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
                         </div>
 
                         <div class="pricing-total-block">
-                            <span class="pricing-total-label">Total Payable Investment</span>
+                            <span class="pricing-total-label">Total Payable Amount</span>
                             <span class="pricing-total-amount">&#8377;<?php echo number_format($finalPriceVal, 2); ?></span>
                         </div>
 
@@ -2291,7 +2299,11 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
             <section class="page days-page" id="page-inclusions">
                 <div class="exec-top-ledger">
                     <div class="exec-brand-left">
-                        <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                        <?php if (!empty($siteLogo)): ?>
+                            <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="exec-brand-logo">
+                        <?php else: ?>
+                            <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                        <?php endif; ?>
                     </div>
                     <div class="exec-meta-right">
                         <span class="exec-tag-pill" style="color: #16a34a; background: #f0fdf4; border-color: #bbf7d0;">Package Specifications</span>
@@ -2315,7 +2327,7 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
                                 <?php foreach ($incList as $inc): if (empty($inc)) continue; ?>
                                     <li>
                                         <div class="tour_check"><i class="ri-check-line"></i></div>
-                                        <span><?php echo htmlspecialchars(ucfirst($inc)); ?></span>
+                                        <span><?php echo htmlspecialchars(capitalizeFirstWord($inc)); ?></span>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
@@ -2330,7 +2342,11 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
             <section class="page days-page" id="page-exclusions">
                 <div class="exec-top-ledger">
                     <div class="exec-brand-left">
-                        <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                        <?php if (!empty($siteLogo)): ?>
+                            <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="exec-brand-logo">
+                        <?php else: ?>
+                            <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                        <?php endif; ?>
                     </div>
                     <div class="exec-meta-right">
                         <span class="exec-tag-pill" style="color: #dc2626; background: #fef2f2; border-color: #fecaca;">Important Clarifications</span>
@@ -2354,7 +2370,7 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
                                 <?php foreach ($excList as $exc): if (empty($exc)) continue; ?>
                                     <li>
                                         <div class="tour_cross"><i class="ri-close-line"></i></div>
-                                        <span><?php echo htmlspecialchars(ucfirst($exc)); ?></span>
+                                        <span><?php echo htmlspecialchars(capitalizeFirstWord($exc)); ?></span>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
@@ -2368,7 +2384,11 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
         <section class="page days-page" id="page-contact">
             <div class="exec-top-ledger">
                 <div class="exec-brand-left">
-                    <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                    <?php if (!empty($siteLogo)): ?>
+                        <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="exec-brand-logo">
+                    <?php else: ?>
+                        <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                    <?php endif; ?>
                 </div>
                 <div class="exec-meta-right">
                     <span class="exec-tag-pill">Partner Credentials &amp; Desk</span>
@@ -2631,7 +2651,11 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
         <section class="page days-page" id="page-policies">
             <div class="exec-top-ledger">
                 <div class="exec-brand-left">
-                    <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                    <?php if (!empty($siteLogo)): ?>
+                        <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="exec-brand-logo">
+                    <?php else: ?>
+                        <span class="exec-brand-title"><?php echo htmlspecialchars($siteName); ?></span>
+                    <?php endif; ?>
                 </div>
                 <div class="exec-meta-right">
                     <span class="exec-tag-pill">Contractual Policies</span>
@@ -2673,7 +2697,7 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
                                 '<ul>',
                                 '<li><strong>Over 15 Days Notice:</strong> 20% administrative and file processing charge is retained.</li>',
                                 '<li><strong>7 to 14 Days Notice:</strong> 50% of the total quotation value is non-refundable.</li>',
-                                '<li><strong>Under 7 Days / Non-Arrival:</strong> 100% forfeiture of total package investment.</li>',
+                                '<li><strong>Under 7 Days / Non-Arrival:</strong> 100% forfeiture of total package amount.</li>',
                                 '<li><strong>Refund Timeline:</strong> Authorized refunds are disbursed to the originating account within 5 to 7 corporate banking business days.</li>',
                                 '</ul>'
                             ]);
@@ -2880,9 +2904,6 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
 
                 footer.innerHTML = `
                     <div class="bottom-decor">
-                        <?php if (!empty($siteLogo)): ?>
-                            <img src="<?php echo htmlspecialchars($siteLogo); ?>" class="center-logo" alt="<?php echo htmlspecialchars($siteName); ?>">
-                        <?php endif; ?>
                         <span class="bottom-domain"><?php echo htmlspecialchars($siteDomain); ?></span>
                     </div>
                     <div class="bottom-meta-row">

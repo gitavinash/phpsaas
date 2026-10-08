@@ -469,23 +469,25 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
 };
 
 // Roman Numeral Helper for Royal Heritage theme
-function toRomanNumerals($num)
-{
-    $n = intval($num);
-    $result = '';
-    $lookup = [
-        'X' => 10,
-        'IX' => 9,
-        'V' => 5,
-        'IV' => 4,
-        'I' => 1
-    ];
-    foreach ($lookup as $roman => $value) {
-        $matches = intval($n / $value);
-        $result .= str_repeat($roman, $matches);
-        $n = $n % $value;
+if (!function_exists('toRomanNumerals')) {
+    function toRomanNumerals($num)
+    {
+        $n = intval($num);
+        $result = '';
+        $lookup = [
+            'X' => 10,
+            'IX' => 9,
+            'V' => 5,
+            'IV' => 4,
+            'I' => 1
+        ];
+        foreach ($lookup as $roman => $value) {
+            $matches = intval($n / $value);
+            $result .= str_repeat($roman, $matches);
+            $n = $n % $value;
+        }
+        return $result ?: 'I';
     }
-    return $result ?: 'I';
 }
 ?>
 <!DOCTYPE html>
@@ -1470,11 +1472,9 @@ function toRomanNumerals($num)
             <div class="atelier-brand-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="atelier-logo">
-                <?php endif; ?>
-                <div>
+                <?php else: ?>
                     <div class="atelier-brand-title"><?php echo htmlspecialchars($siteName); ?></div>
-                    <div class="atelier-brand-subtitle">Private Concierge Atelier</div>
-                </div>
+                <?php endif; ?>
             </div>
             <div class="atelier-badge-right">
                 <div class="atelier-seal-badge">
@@ -1559,9 +1559,6 @@ function toRomanNumerals($num)
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -1605,11 +1602,9 @@ function toRomanNumerals($num)
                     <div class="atelier-brand-left">
                         <?php if (!empty($siteLogo)): ?>
                             <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="atelier-logo">
-                        <?php endif; ?>
-                        <div>
+                        <?php else: ?>
                             <div class="atelier-brand-title"><?php echo htmlspecialchars($siteName); ?></div>
-                            <div class="atelier-brand-subtitle">Private Concierge Atelier</div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                     <div class="atelier-badge-right">
                         <div class="atelier-seal-badge">
@@ -1695,9 +1690,6 @@ function toRomanNumerals($num)
                 <!-- Footer -->
                 <div class="page-footer-decor">
                     <div class="bottom-decor">
-                        <?php if (!empty($siteLogo)): ?>
-                            <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                        <?php endif; ?>
                         <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
                     </div>
                     <div class="bottom-meta-row">
@@ -1727,11 +1719,9 @@ function toRomanNumerals($num)
             <div class="atelier-brand-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="atelier-logo">
-                <?php endif; ?>
-                <div>
+                <?php else: ?>
                     <div class="atelier-brand-title"><?php echo htmlspecialchars($siteName); ?></div>
-                    <div class="atelier-brand-subtitle">Private Concierge Atelier</div>
-                </div>
+                <?php endif; ?>
             </div>
             <div class="atelier-badge-right">
                 <div class="atelier-seal-badge">
@@ -1752,7 +1742,7 @@ function toRomanNumerals($num)
 
                     <div class="certificate-total-box">
                         <div>
-                            <div class="total-tariff-label">Total Expedition Investment</div>
+                            <div class="total-tariff-label">Total Expedition Cost</div>
                             <div style="font-size:11.5px; color:#64748b;"><?php echo htmlspecialchars($paxSummaryText); ?> · Taxes Included</div>
                         </div>
                         <div class="total-tariff-amt">₹<?php echo number_format($totalPriceVal, 2); ?></div>
@@ -1853,9 +1843,6 @@ function toRomanNumerals($num)
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -1881,11 +1868,9 @@ function toRomanNumerals($num)
             <div class="atelier-brand-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="atelier-logo">
-                <?php endif; ?>
-                <div>
+                <?php else: ?>
                     <div class="atelier-brand-title"><?php echo htmlspecialchars($siteName); ?></div>
-                    <div class="atelier-brand-subtitle">Private Concierge Atelier</div>
-                </div>
+                <?php endif; ?>
             </div>
             <div class="atelier-badge-right">
                 <div class="atelier-seal-badge">
@@ -1937,9 +1922,6 @@ function toRomanNumerals($num)
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -1965,11 +1947,9 @@ function toRomanNumerals($num)
             <div class="atelier-brand-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="atelier-logo">
-                <?php endif; ?>
-                <div>
+                <?php else: ?>
                     <div class="atelier-brand-title"><?php echo htmlspecialchars($siteName); ?></div>
-                    <div class="atelier-brand-subtitle">Private Concierge Atelier</div>
-                </div>
+                <?php endif; ?>
             </div>
             <div class="atelier-badge-right">
                 <div class="atelier-seal-badge">
@@ -2021,9 +2001,6 @@ function toRomanNumerals($num)
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -2049,11 +2026,9 @@ function toRomanNumerals($num)
             <div class="atelier-brand-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="atelier-logo">
-                <?php endif; ?>
-                <div>
+                <?php else: ?>
                     <div class="atelier-brand-title"><?php echo htmlspecialchars($siteName); ?></div>
-                    <div class="atelier-brand-subtitle">Private Concierge Atelier</div>
-                </div>
+                <?php endif; ?>
             </div>
             <div class="atelier-badge-right">
                 <div class="atelier-seal-badge">
@@ -2127,9 +2102,6 @@ function toRomanNumerals($num)
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
@@ -2155,11 +2127,9 @@ function toRomanNumerals($num)
             <div class="atelier-brand-left">
                 <?php if (!empty($siteLogo)): ?>
                     <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="atelier-logo">
-                <?php endif; ?>
-                <div>
+                <?php else: ?>
                     <div class="atelier-brand-title"><?php echo htmlspecialchars($siteName); ?></div>
-                    <div class="atelier-brand-subtitle">Private Concierge Atelier</div>
-                </div>
+                <?php endif; ?>
             </div>
             <div class="atelier-badge-right">
                 <div class="atelier-seal-badge">
@@ -2217,9 +2187,6 @@ function toRomanNumerals($num)
         <!-- Footer -->
         <div class="page-footer-decor">
             <div class="bottom-decor">
-                <?php if (!empty($siteLogo)): ?>
-                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="decor-logo">
-                <?php endif; ?>
                 <span class="decor-company"><?php echo htmlspecialchars($siteDomain); ?></span>
             </div>
             <div class="bottom-meta-row">
