@@ -103,11 +103,12 @@ function loadExternalJS(filePath) {
 })();
 
 function popUpMessage(msgPostion, msgTxt, msgType) {
+  var type = (msgType === "danger" || msgType === "failed") ? "error" : (msgType || "info");
   if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
     Swal.fire({
       position: msgPostion || "center",
-      type: msgType || "info",
-      icon: msgType || "info",
+      type: type,
+      icon: type,
       title: msgTxt,
       showConfirmButton: false,
       timer: 1800,
@@ -115,8 +116,8 @@ function popUpMessage(msgPostion, msgTxt, msgType) {
   } else if (typeof window.swal === "function") {
     window.swal({
       title: msgTxt,
-      type: msgType || "info",
-      icon: msgType || "info",
+      type: type,
+      icon: type,
       timer: 1800,
       showConfirmButton: false,
     });

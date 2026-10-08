@@ -150,25 +150,7 @@ if ($method === 'GET') {
             ]
         ],
         // Messaging
-        [
-            'id'            => 'whatsapp',
-            'slug'          => 'whatsapp',
-            'title'         => 'WhatsApp Cloud API',
-            'category'      => 'messaging',
-            'category_name' => 'Messaging & Chat',
-            'description'   => 'Deliver interactive travel itineraries, automatic booking confirmations, and quotation PDFs directly to travelers on WhatsApp.',
-            'icon'          => 'whatsapp',
-            'config_url'    => '/dashboard/integration/whatsapp/',
-            'toggle_key'    => 'enable_whatsapp_business_api',
-            'is_active'     => ($configMap['enable_whatsapp_business_api'] ?? '1') === '1',
-            'status_label'  => !empty($configMap['whatsapp_phone_number_id']) ? 'Connected' : 'Active',
-            'is_connected'  => true,
-            'features'      => [
-                '1-Click PDF Itinerary & Voucher dispatch',
-                'Automated inquiry thank-you autoresponders',
-                'Payment request links with rich card previews'
-            ]
-        ],
+
         [
             'id'            => 'whatsapp_web',
             'slug'          => 'whatsapp_web',
@@ -379,6 +361,26 @@ if ($method === 'GET') {
                 'Dynamic amount-encoded UPI QR generation',
                 'Compatible with GPay, PhonePe, Paytm, BHIM'
             ]
+        ],
+        // Developer & Automation
+        [
+            'id'            => 'webhooks',
+            'slug'          => 'webhooks',
+            'title'         => 'Custom CRM Webhooks',
+            'category'      => 'developer',
+            'category_name' => 'Developer & Webhooks',
+            'description'   => 'Stream real-time lead and booking payloads to external endpoints, Zapier, Make, and backend microservices.',
+            'icon'          => 'webhooks',
+            'config_url'    => '/dashboard/integration/webhooks/',
+            'toggle_key'    => 'enable_webhooks',
+            'is_active'     => ($configMap['enable_webhooks'] ?? '1') === '1',
+            'status_label'  => (!empty($configMap['webhook_lead_created_url']) || !empty($configMap['webhook_payment_received_url']) || !empty($configMap['webhook_tour_booked_url'])) ? 'Configured' : 'Available',
+            'is_connected'  => (!empty($configMap['webhook_lead_created_url']) || !empty($configMap['webhook_payment_received_url']) || !empty($configMap['webhook_tour_booked_url'])),
+            'features'      => [
+                'Live outbound triggers for leads & bookings',
+                'HMAC SHA-256 webhook secret verification',
+                'Plug-and-play Zapier & Make integration'
+            ]
         ]
     ];
 
@@ -410,7 +412,6 @@ if ($method === 'POST' || $method === 'PUT') {
     if (empty($toggleKey)) {
         $slugMap = array_merge([
             'facebook'     => 'enable_facebook_lead_ads',
-            'whatsapp'     => 'enable_whatsapp_business_api',
             'whatsapp_web' => 'enable_whatsapp_web_api',
             'google_ads'   => 'enable_google_ads',
             'upi'          => 'enable_upi',

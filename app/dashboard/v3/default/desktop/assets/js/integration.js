@@ -70,13 +70,18 @@
     },
 
     updateCardActionState: function ($card, isActive) {
-      const $actions = $card.find(".integration-card-actions, .integration-card-footer");
+      const $status = $card.find(".integration-status-pill");
+      const $btn = $card.find(".btn-integration-primary, .btn-integration-outline");
       if (isActive) {
-        $actions.stop(true, true).slideDown(180);
-        $card.removeClass("is-disabled");
+        $card.removeClass("is-disabled").addClass("is-active-card");
+        $status.removeClass("is-idle").addClass("is-active");
+        $status.find(".status-text").text("Active");
+        $btn.removeClass("btn-integration-outline").addClass("btn-integration-primary");
       } else {
-        $actions.stop(true, true).slideUp(180);
-        $card.addClass("is-disabled");
+        $card.removeClass("is-active-card").addClass("is-disabled");
+        $status.removeClass("is-active").addClass("is-idle");
+        $status.find(".status-text").text("Disabled");
+        $btn.removeClass("btn-integration-primary").addClass("btn-integration-outline");
       }
     },
 
@@ -87,6 +92,34 @@
       } else {
         $asideItems.hide();
       }
+    },
+
+    togglePlugin: function (slug, key, isActive, callback) {
+      const self = this;
+      return $.ajax({
+        url: "/api/v3/integration/",
+        method: "POST",
+        data: JSON.stringify({
+          plugin_slug: slug,
+          toggle_key: key,
+          is_active: isActive ? 1 : 0,
+        }),
+        contentType: "application/json",
+        dataType: "json",
+        success: function (res) {
+          if (res && res.status === "success") {
+            self.showToast(res.msg || (isActive ? "Integration activated" : "Integration deactivated"), "success");
+            if (typeof callback === "function") callback(true, res);
+          } else {
+            self.showToast(res.msg || "Failed to update integration state", "error");
+            if (typeof callback === "function") callback(false, res);
+          }
+        },
+        error: function () {
+          self.showToast("Network error communicating with integrations API", "error");
+          if (typeof callback === "function") callback(false);
+        }
+      });
     },
 
     loadHubStatus: function () {
@@ -223,9 +256,9 @@
       $(".integration-card").each(function () {
         const $card = $(this);
         const cardCat = $card.data("category") || "";
-        const title = $card.find(".integration-meta h3").text().toLowerCase();
+        const title = $card.find(".integration-title, .integration-meta h3").text().toLowerCase();
         const desc = $card.find(".integration-desc").text().toLowerCase();
-        const tag = $card.find(".integration-tag").text().toLowerCase();
+        const tag = $card.find(".integration-tag, .integration-card-pill, .integration-feature-chips").text().toLowerCase();
 
         const matchesCat = self.activeCategory === "all" || cardCat === self.activeCategory;
         const matchesSearch = !self.searchQuery || title.includes(self.searchQuery) || desc.includes(self.searchQuery) || tag.includes(self.searchQuery);
@@ -352,8 +385,10 @@
               stateDevices = res.devices || [];
               stateAgents = res.agents || [];
 
-              $("#waWebActiveToggle").prop("checked", !!res.is_active);
-              self.updateAsidePluginState("whatsapp_web", !!res.is_active);
+              const isActive = !!res.is_active;
+              $("#waWebActiveToggle").prop("checked", isActive);
+              self.updateAsidePluginState("whatsapp_web", isActive);
+              updateWaWebSectionsVisibility(isActive);
 
               if (isAdmin) {
                 renderAdminView(res);
@@ -581,14 +616,14 @@
               self.showToast(res.msg || "Device assigned successfully.", "success");
               loadHubState();
             } else {
-              self.showToast(res.msg || "Failed to assign device.", "danger");
+              self.showToast(res.msg || "Failed to assign device.", "error");
               loadHubState();
             }
           },
           error: function (xhr) {
             $select.prop("disabled", false);
             const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to assign device.";
-            self.showToast(err, "danger");
+            self.showToast(err, "error");
             loadHubState();
           }
         });
@@ -697,13 +732,13 @@
               $("#waModalPairingCodeResult").removeClass("d-none");
               self.showToast("Code generated! Enter this in WhatsApp Linked Devices.", "success");
             } else {
-              self.showToast(res.msg || "Failed to generate pairing code.", "danger");
+              self.showToast(res.msg || "Failed to generate pairing code.", "error");
             }
           },
           error: function (xhr) {
             $btn.prop("disabled", false).html('<i class="fi fi-rr-key"></i> <span>Get Code</span>');
             const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to generate pairing code.";
-            self.showToast(err, "danger");
+            self.showToast(err, "error");
           }
         });
       });
@@ -734,13 +769,13 @@
               $("#waAgentPairingCodeResult").removeClass("d-none");
               self.showToast("Code generated! Enter this code on your WhatsApp app.", "success");
             } else {
-              self.showToast(res.msg || "Failed to generate pairing code.", "danger");
+              self.showToast(res.msg || "Failed to generate pairing code.", "error");
             }
           },
           error: function (xhr) {
             $btn.prop("disabled", false).html('<i class="fi fi-rr-key"></i> <span>Get Pairing Code</span>');
             const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to generate pairing code.";
-            self.showToast(err, "danger");
+            self.showToast(err, "error");
           }
         });
       });
@@ -765,13 +800,13 @@
               self.showToast(res.msg || "Chats synchronized successfully!", "success");
               loadHubState();
             } else {
-              self.showToast(res.msg || "Failed to sync chats.", "danger");
+              self.showToast(res.msg || "Failed to sync chats.", "error");
             }
           },
           error: function (xhr) {
             $btn.prop("disabled", false).html('<i class="fi fi-rr-refresh"></i> Sync');
             const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to sync chats.";
-            self.showToast(err, "danger");
+            self.showToast(err, "error");
           }
         });
       });
@@ -792,7 +827,7 @@
           error: function (xhr) {
             $btn.prop("disabled", false).removeClass("loading");
             const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to disconnect device.";
-            self.showToast(err, "danger");
+            self.showToast(err, "error");
           }
         });
       }
@@ -880,13 +915,14 @@
               self.showToast(res.msg || "Encryption ratchets repaired! WhatsApp keys refreshed.", "success");
               loadHubState();
             } else {
-              self.showToast(res.msg || "Failed to repair session ratchets.", "danger");
+              const msg = (res && res.msg) ? res.msg : "Could not contact WhatsApp gateway to repair sessions.";
+              self.showToast(msg, "error");
             }
           },
           error: function (xhr) {
             $btn.prop("disabled", false).html(origHtml);
-            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to repair session ratchets.";
-            self.showToast(err, "danger");
+            const err = (xhr.responseJSON && xhr.responseJSON.msg) ? xhr.responseJSON.msg : "Could not contact WhatsApp gateway to repair sessions.";
+            self.showToast(err, "error");
           }
         });
       });
@@ -904,11 +940,41 @@
         }
       });
 
+      function updateWaWebSectionsVisibility(isActive) {
+        if (isActive) {
+          $("#waWebSectionsWrapper").removeClass("d-none").slideDown(200);
+          $("#waWebSideCol").removeClass("d-none").slideDown(200);
+          $("#waWebDisabledState").slideUp(200, function () {
+            $(this).addClass("d-none");
+          });
+        } else {
+          $("#waWebSectionsWrapper").slideUp(200, function () {
+            $(this).addClass("d-none");
+          });
+          $("#waWebSideCol").slideUp(200, function () {
+            $(this).addClass("d-none");
+          });
+          $("#waWebDisabledState").removeClass("d-none").slideDown(200);
+        }
+      }
+
       // 13. Active toggle switch
       $("#waWebActiveToggle").on("change", function () {
         const isChecked = $(this).is(":checked");
-        self.togglePlugin("whatsapp_web", "enable_whatsapp_web_api", isChecked);
+        const $toggle = $(this);
+        $toggle.prop("disabled", true);
+
+        updateWaWebSectionsVisibility(isChecked);
         self.updateAsidePluginState("whatsapp_web", isChecked);
+
+        self.togglePlugin("whatsapp_web", "enable_whatsapp_web_api", isChecked, function (success) {
+          $toggle.prop("disabled", false);
+          if (!success) {
+            $toggle.prop("checked", !isChecked);
+            updateWaWebSectionsVisibility(!isChecked);
+            self.updateAsidePluginState("whatsapp_web", !isChecked);
+          }
+        });
       });
 
       // 14. Settings form submit
@@ -1813,6 +1879,7 @@
       });
     },
 
+
     // -------------------------------------------------------------
     // Facebook Form Leads Viewer (Search, Pagination, Details Modal)
     // -------------------------------------------------------------
@@ -2007,13 +2074,14 @@
     },
 
     showToast: function (msg, type) {
+      var iconType = (type === "danger" || type === "failed") ? "error" : (type || "success");
       if (typeof popUpMessage === "function") {
-        popUpMessage("center", msg, type || "success");
+        popUpMessage("center", msg, iconType);
       } else if (typeof Swal !== "undefined" && typeof Swal.fire === "function") {
         Swal.fire({
           toast: true,
           position: "top-end",
-          icon: type === "error" ? "error" : "success",
+          icon: (iconType === "error" || iconType === "warning" || iconType === "info") ? iconType : "success",
           title: msg,
           showConfirmButton: false,
           timer: 3000,

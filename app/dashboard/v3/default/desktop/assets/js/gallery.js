@@ -200,7 +200,8 @@
       $(document).on("click", ".deleteSingleGalleryImage", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        const imagePath = $(this).data("image");
+        const $btn = $(this);
+        const imagePath = $btn.data("image");
         if (!imagePath) return;
 
         if (typeof Swal !== "undefined") {
@@ -214,17 +215,18 @@
             confirmButtonText: "Yes, Delete"
           }).then(function (result) {
             if (result.value) {
-              self.executeDeleteImages([imagePath]);
+              self.executeDeleteImages([imagePath], $btn);
             }
           });
         } else if (confirm("Are you sure you want to permanently delete this photo?")) {
-          self.executeDeleteImages([imagePath]);
+          self.executeDeleteImages([imagePath], $btn);
         }
       });
 
       // Bulk Delete Selected Photos Button
       $(document).on("click", "#btnBulkDeleteGallery", function (e) {
         e.preventDefault();
+        const $btn = $(this);
         const selectedImages = [];
         $(".gallery-select-checkbox:checked").each(function () {
           const img = $(this).data("image");
@@ -250,11 +252,11 @@
             confirmButtonText: "Yes, Delete Selected"
           }).then(function (result) {
             if (result.value) {
-              self.executeDeleteImages(selectedImages);
+              self.executeDeleteImages(selectedImages, $btn);
             }
           });
         } else if (confirm("Are you sure you want to delete " + countText + "?")) {
-          self.executeDeleteImages(selectedImages);
+          self.executeDeleteImages(selectedImages, $btn);
         }
       });
 
@@ -326,6 +328,7 @@
           const $btn = $(this);
           if ($btn.attr("data-busy") === "1") return;
           $btn.attr("data-busy", "1").prop("disabled", true);
+          const origHtml = $btn.html();
 
           const idx = $btn.data("idx");
           const item = self.pexelsSuggestionsData[idx];
@@ -350,30 +353,26 @@
             },
             dataType: "json",
             success: function (res) {
-              $btn.removeAttr("data-busy");
-              if (res.status === "success") {
-                if (typeof popUpMessage === "function") {
-                  popUpMessage("center", res.msg, "success");
-                }
-                self.loadGalleryFromApi();
-                $btn.html('<i class="fi fi-rr-check"></i> Added');
-              } else {
-                $btn
-                  .prop("disabled", false)
-                  .html('<i class="fi fi-rr-plus"></i> Add to Gallery');
-                if (typeof popUpMessage === "function") {
-                  popUpMessage("center", res.msg || "Failed to add image", "error");
-                }
+              if (typeof popUpMessage === "function") {
+                popUpMessage("center", res.msg, res.status === "success" ? "success" : "error");
               }
-            },
-            error: function () {
               $btn
                 .removeAttr("data-busy")
                 .prop("disabled", false)
-                .html('<i class="fi fi-rr-plus"></i> Add to Gallery');
+                .html(origHtml);
+
+              if (res.status === "success") {
+                self.loadGalleryFromApi();
+              }
+            },
+            error: function () {
               if (typeof popUpMessage === "function") {
                 popUpMessage("center", "Error adding image to gallery", "error");
               }
+              $btn
+                .removeAttr("data-busy")
+                .prop("disabled", false)
+                .html(origHtml);
             },
           });
         });
@@ -387,6 +386,7 @@
           const $btn = $(this);
           if ($btn.attr("data-busy") === "1") return;
           $btn.attr("data-busy", "1").prop("disabled", true);
+          const origHtml = $btn.html();
 
           $btn.html(
             '<i class="fi fi-rr-spinner spinner"></i> Searching & Auto-Assigning Day Photos...'
@@ -402,37 +402,30 @@
             },
             dataType: "json",
             success: function (res) {
-              $btn.removeAttr("data-busy");
-              if (res.status === "success") {
-                if (typeof popUpMessage === "function") {
-                  popUpMessage("center", res.msg, "success");
-                }
-                self.loadGalleryFromApi();
-              } else {
-                $btn
-                  .prop("disabled", false)
-                  .html(
-                    '<i class="fi fi-rr-magic-wand"></i> Auto-Assign All Day Photos'
-                  );
-                if (typeof popUpMessage === "function") {
-                  popUpMessage(
-                    "center",
-                    res.msg || "Failed to assign suggested images",
-                    "error"
-                  );
-                }
+              if (typeof popUpMessage === "function") {
+                popUpMessage(
+                  "center",
+                  res.msg || (res.status === "success" ? "All suggested images assigned" : "Failed to assign suggested images"),
+                  res.status === "success" ? "success" : "error"
+                );
               }
-            },
-            error: function () {
               $btn
                 .removeAttr("data-busy")
                 .prop("disabled", false)
-                .html(
-                  '<i class="fi fi-rr-magic-wand"></i> Auto-Assign All Day Photos'
-                );
+                .html(origHtml);
+
+              if (res.status === "success") {
+                self.loadGalleryFromApi();
+              }
+            },
+            error: function () {
               if (typeof popUpMessage === "function") {
                 popUpMessage("center", "Error assigning suggested images", "error");
               }
+              $btn
+                .removeAttr("data-busy")
+                .prop("disabled", false)
+                .html(origHtml);
             },
           });
         });
@@ -492,8 +485,9 @@
         const action = $btn.data("action") || "set";
         const categoryId = self.packageId;
         const galleryId = self.galleryId;
+        const origHtml = $btn.html();
 
-        $btn.addClass("disabled").prop("disabled", true);
+        $btn.addClass("disabled").prop("disabled", true).html('<i class="fi fi-rr-spinner spinner"></i> Updating...');
 
         $.ajax({
           type: "POST",
@@ -509,17 +503,16 @@
             if (typeof popUpMessage === "function") {
               popUpMessage("center", response.msg, response.status);
             }
+            $btn.removeClass("disabled").prop("disabled", false).html(origHtml);
             self.loadGalleryFromApi();
           },
           error: function (error) {
-            $btn.removeClass("disabled").prop("disabled", false);
+            const msg = error.responseJSON ? error.responseJSON.msg : "Failed to update featured image";
+            const status = error.responseJSON ? error.responseJSON.status : "error";
             if (typeof popUpMessage === "function") {
-              popUpMessage(
-                "center",
-                error.responseJSON ? error.responseJSON.msg : "Failed to update featured image",
-                error.responseJSON ? error.responseJSON.status : "error"
-              );
+              popUpMessage("center", msg, status);
             }
+            $btn.removeClass("disabled").prop("disabled", false).html(origHtml);
           },
         });
       });
@@ -711,6 +704,7 @@
 
       self.isUploading = true;
       const $btn = $("#btnSubmitGalleryUpload, #addGallery");
+      const origHtml = $btn.html() || '<i class="fi-rr-check"></i> Upload Now';
       $btn.prop("disabled", true).addClass("disabled").html('<i class="fi fi-rr-spinner spinner"></i> Uploading...');
 
       const data = new FormData();
@@ -729,17 +723,16 @@
         encrypt: "multipart/form-data",
         success: function (response) {
           self.isUploading = false;
-          $btn.prop("disabled", false).removeClass("disabled").html('<i class="fi-rr-check"></i> Upload Now');
           if (typeof popUpMessage === "function") {
             popUpMessage("center", response.msg, response.status);
           }
+          $btn.prop("disabled", false).removeClass("disabled").html(origHtml);
           self.closeUploadModal();
           // Reload gallery items via API
           self.loadGalleryFromApi();
         },
         error: function (error) {
           self.isUploading = false;
-          $btn.prop("disabled", false).removeClass("disabled").html('<i class="fi-rr-check"></i> Upload Now');
           const msg =
             error.responseJSON && error.responseJSON.msg
               ? error.responseJSON.msg
@@ -751,6 +744,7 @@
           if (typeof popUpMessage === "function") {
             popUpMessage("center", msg, status);
           }
+          $btn.prop("disabled", false).removeClass("disabled").html(origHtml);
         },
       });
     },
@@ -871,9 +865,19 @@
       $("#galleryBulkBar").removeClass("is-visible").hide();
     },
 
-    executeDeleteImages: function (imagesArray) {
+    executeDeleteImages: function (imagesArray, $triggerBtn) {
       const self = this;
       if (!imagesArray || imagesArray.length === 0) return;
+
+      const $bulkBtn = $("#btnBulkDeleteGallery");
+      const origBulkHtml = $bulkBtn.html();
+      let origTriggerHtml = "";
+      if ($triggerBtn && $triggerBtn.length) {
+        origTriggerHtml = $triggerBtn.html();
+        $triggerBtn.prop("disabled", true).html('<i class="fi fi-rr-spinner spinner"></i>');
+      } else {
+        $bulkBtn.prop("disabled", true).html('<i class="fi fi-rr-spinner spinner"></i> Deleting...');
+      }
 
       if (typeof showPageLoader === "function") showPageLoader();
 
@@ -888,16 +892,20 @@
         dataType: "json",
         success: function (res) {
           if (typeof hidePageLoader === "function") hidePageLoader();
+          if (typeof popUpMessage === "function") {
+            popUpMessage(
+              "center",
+              res.message || (res.status === "success" ? "Photos deleted successfully." : "Failed to delete photos."),
+              res.status === "success" ? "success" : "error"
+            );
+          }
+          $bulkBtn.prop("disabled", false).html(origBulkHtml);
+          if ($triggerBtn && $triggerBtn.length) {
+            $triggerBtn.prop("disabled", false).html(origTriggerHtml);
+          }
           if (res.status === "success") {
-            if (typeof popUpMessage === "function") {
-              popUpMessage("center", res.message || "Photos deleted successfully.", "success");
-            }
             self.clearSelection();
             self.loadGalleryFromApi();
-          } else {
-            if (typeof popUpMessage === "function") {
-              popUpMessage("center", res.message || "Failed to delete photos.", "error");
-            }
           }
         },
         error: function (xhr) {
@@ -905,6 +913,10 @@
           const msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : "Error deleting photos.";
           if (typeof popUpMessage === "function") {
             popUpMessage("center", msg, "error");
+          }
+          $bulkBtn.prop("disabled", false).html(origBulkHtml);
+          if ($triggerBtn && $triggerBtn.length) {
+            $triggerBtn.prop("disabled", false).html(origTriggerHtml);
           }
         }
       });
@@ -924,6 +936,11 @@
           <div class="empty-state" style="grid-column: 1 / -1; padding: 50px 20px; text-align: center; background: #fff; border-radius: 12px; border: 1px dashed #cbd5e1;">
             <i class="fi-rr-picture" style="font-size: 36px; color: #94a3b8;"></i>
             <p style="margin-top: 10px; color: #64748b;">No gallery photos uploaded yet. Pick suggested photos or click <b>Upload Image</b> to add photos.</p>
+            <div style="margin-top: 16px;">
+              <button type="button" class="btn-gallery-action upload open-gallery-upload-modal">
+                <i class="fi fi-rr-cloud-upload"></i> Upload Image
+              </button>
+            </div>
           </div>
         `);
         return;

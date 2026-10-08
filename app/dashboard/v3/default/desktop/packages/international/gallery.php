@@ -95,7 +95,7 @@ $encodedId = base64_encode($id);
 
         <div class="gallery-quick-actions">
             <input type="text" id="galleryLocalSearch" class="gallery-search-input" placeholder="Search photos..." data-tooltip="Filter photos by day or name">
-            <button type="button" class="btn-v3-action primary open-gallery-upload-modal" id="btnOpenGalleryUpload" data-tooltip="Upload new image from your device">
+            <button type="button" class="btn-gallery-action upload open-gallery-upload-modal" id="btnOpenGalleryUpload" data-tooltip="Upload new image from your device">
                 <i class="fi fi-rr-cloud-upload"></i> Upload Image
             </button>
         </div>
@@ -202,12 +202,12 @@ $encodedId = base64_encode($id);
             </div>
             <div class="widget box-3" style="border: none; padding-top: 14px;">
                 <div class="actionArea" style="display: flex; gap: 8px; justify-content: flex-end;">
-                    <a href="#" class="btn popUpBtn" id="btnSubmitGalleryUpload" style="background: var(--brand-700, #4f46e5); color: #fff; border-radius: 6px; font-weight: 600; padding: 7px 16px; font-size: 12.5px; border: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                        <i class="fi-rr-check"></i> Upload Now
-                    </a>
-                    <span class="btn popUpBtn closeGalleryModal" style="background: #f1f5f9; color: #475569; border-radius: 6px; font-weight: 600; padding: 7px 14px; font-size: 12.5px; border: 1px solid #e2e8f0; cursor: pointer;">
-                        <i class="fi-rr-cross"></i> Cancel
-                    </span>
+                    <button type="button" class="btn-gallery-action upload" id="btnSubmitGalleryUpload">
+                        <i class="fi fi-rr-check"></i> Upload Now
+                    </button>
+                    <button type="button" class="btn-gallery-action cancel closeGalleryModal">
+                        <i class="fi fi-rr-cross"></i> Cancel
+                    </button>
                 </div>
             </div>
         </div>
