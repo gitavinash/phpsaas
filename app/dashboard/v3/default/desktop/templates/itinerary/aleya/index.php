@@ -298,6 +298,23 @@ if ($childCount > 0) $paxSummaryParts[] = "{$childCount} Child" . ($childCount >
 if ($infantCount > 0) $paxSummaryParts[] = "{$infantCount} Infant" . ($infantCount > 1 ? 's' : '');
 $paxSummaryText = !empty($paxSummaryParts) ? implode(', ', $paxSummaryParts) : '2 Distinguished Patrons';
 
+// Travel Date Resolution
+$travelDateRaw = !empty($travelDate) ? $travelDate : (!empty($travel_date) ? $travel_date : (!empty($quotation_travel_date) ? $quotation_travel_date : (!empty($postData['travelDate']) ? $postData['travelDate'] : (!empty($postData['travel_date']) ? $postData['travel_date'] : ''))));
+$travelTimestamp = null;
+if (!empty($travelDateRaw) && is_string($travelDateRaw)) {
+    $cleanDateStr = trim($travelDateRaw);
+    if ($cleanDateStr !== '' && $cleanDateStr !== '0000-00-00' && $cleanDateStr !== '1970-01-01') {
+        if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $cleanDateStr)) {
+            $cleanDateStr = str_replace('/', '-', $cleanDateStr);
+        }
+        $ts = strtotime($cleanDateStr);
+        if ($ts !== false && $ts > 0) {
+            $travelTimestamp = $ts;
+        }
+    }
+}
+$formattedTravelDate = ($travelTimestamp && $travelTimestamp > 0) ? date('d M Y', $travelTimestamp) : '';
+
 // Policy & Terms Variables
 $rawItineraryPolicy    = $itinerary_policy ?? '';
 $rawPaymentPolicy      = ($payment_policy ?? ($tour_package_payment_policy ?? ''));
@@ -800,6 +817,10 @@ if (!function_exists('toRomanNumerals')) {
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin-bottom: 16px;
+        }
+
+        .atelier-pillars-grid.has-5-pillars {
+            grid-template-columns: repeat(5, 1fr);
         }
 
         .atelier-pillar-box {
@@ -1478,7 +1499,7 @@ if (!function_exists('toRomanNumerals')) {
             </div>
             <div class="atelier-badge-right">
                 <div class="atelier-seal-badge">
-                    COLLECTION · <?php echo htmlspecialchars($cleanQuoteRef); ?>
+                    COLLECTION · <?php echo htmlspecialchars($cleanQuoteRef); ?><?php if (!empty($formattedTravelDate)): ?> · <?php echo htmlspecialchars($formattedTravelDate); ?><?php endif; ?>
                 </div>
             </div>
         </div>
@@ -1510,12 +1531,19 @@ if (!function_exists('toRomanNumerals')) {
             </div>
 
             <!-- Four Imperial Pillars Ledger -->
-            <div class="atelier-pillars-grid">
+            <div class="atelier-pillars-grid <?php echo !empty($formattedTravelDate) ? 'has-5-pillars' : ''; ?>">
                 <div class="atelier-pillar-box">
                     <div class="pillar-roman">PILLAR I</div>
                     <div class="pillar-title">Duration</div>
                     <div class="pillar-value"><?php echo toRomanNumerals($totalDaysCount); ?> Days · <?php echo toRomanNumerals($totalNightsCount); ?> Nights</div>
                 </div>
+                <?php if (!empty($formattedTravelDate)): ?>
+                <div class="atelier-pillar-box">
+                    <div class="pillar-roman">COMMENCING</div>
+                    <div class="pillar-title">Travel Date</div>
+                    <div class="pillar-value"><?php echo htmlspecialchars($formattedTravelDate); ?></div>
+                </div>
+                <?php endif; ?>
                 <div class="atelier-pillar-box">
                     <div class="pillar-roman">PILLAR II</div>
                     <div class="pillar-title">Distinguished Patrons</div>
@@ -1573,6 +1601,20 @@ if (!function_exists('toRomanNumerals')) {
     if (!empty($pkgDays)):
         foreach ($pkgDays as $index => $day):
             $dayNum = $index + 1;
+            $dayOffset = $index;
+            $dayTimestamp = null;
+            if (!empty($day['date']) || !empty($day['day_date'])) {
+                $rawDDate = trim((string)($day['date'] ?? $day['day_date']));
+                $dTs = strtotime($rawDDate);
+                if ($dTs !== false && $dTs > 0) {
+                    $dayTimestamp = $dTs;
+                }
+            }
+            if (!$dayTimestamp && $travelTimestamp) {
+                $dayTimestamp = strtotime("+{$dayOffset} days", $travelTimestamp);
+            }
+            $dayDateStr = $dayTimestamp ? date('d M Y', $dayTimestamp) : '';
+            $dayDateWithDay = $dayTimestamp ? date('D, d M Y', $dayTimestamp) : '';
             $dayPageId = 'page-day-' . $dayNum;
             $dayTitle = capitalizeFirstWord(cleanItineraryUnicode($day['title'] ?? ($day['day_title'] ?? "Day {$dayNum} Experience")));
             $dayDesc = capitalizeParagraphs(cleanItineraryUnicode($day['desc'] ?? ($day['description'] ?? ($day['overview'] ?? ''))));
@@ -1608,7 +1650,7 @@ if (!function_exists('toRomanNumerals')) {
                     </div>
                     <div class="atelier-badge-right">
                         <div class="atelier-seal-badge">
-                            COLLECTION · <?php echo htmlspecialchars($cleanQuoteRef); ?> · CH. <?php echo toRomanNumerals($dayNum); ?>
+                            COLLECTION · <?php echo htmlspecialchars($cleanQuoteRef); ?> · CH. <?php echo toRomanNumerals($dayNum); ?><?php if (!empty($dayDateStr)): ?> · <?php echo $dayDateStr; ?><?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -1616,7 +1658,7 @@ if (!function_exists('toRomanNumerals')) {
                 <div class="atelier-page-body">
                     <!-- Chapter Title -->
                     <div class="atelier-chapter-bar">
-                        <div class="chapter-eyebrow">Chapter <?php echo toRomanNumerals($dayNum); ?> · Day <?php echo sprintf('%02d', $dayNum); ?></div>
+                        <div class="chapter-eyebrow">Chapter <?php echo toRomanNumerals($dayNum); ?> · Day <?php echo sprintf('%02d', $dayNum); ?><?php if (!empty($dayDateWithDay)): ?> · <?php echo $dayDateWithDay; ?><?php endif; ?></div>
                         <h2 class="chapter-title"><?php echo htmlspecialchars($dayTitle); ?></h2>
                         <div class="chapter-filigree">♦ ♦ ♦</div>
                     </div>
@@ -1627,7 +1669,7 @@ if (!function_exists('toRomanNumerals')) {
                             <img src="<?php echo htmlspecialchars($dayImage); ?>" alt="<?php echo htmlspecialchars($dayTitle); ?>">
                         <?php else: ?>
                             <div class="atelier-day-plate-placeholder">
-                                <h2>DAY <?php echo $dayNum; ?></h2>
+                                <h2>DAY <?php echo $dayNum; ?><?php if (!empty($dayDateStr)): ?> · <?php echo $dayDateStr; ?><?php endif; ?></h2>
                             </div>
                         <?php endif; ?>
                         <div class="atelier-day-plate-dest">

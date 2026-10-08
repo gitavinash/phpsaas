@@ -418,7 +418,7 @@ if (!empty($quotationData)) {
 
     $quoteId = '#' . (defined('SITE_NAME') ? substr(strtoupper(preg_replace('/[^a-zA-Z]/', '', SITE_NAME)), 0, 3) : 'MIT') . '/' . $quotationId;
     $quotation_time = $quotationData['quotation_time'] ?? date('Y-m-d H:i:s');
-    $travelDate = $parsedDescription['travel_date'] ?? ($parsedDescription['travelDate'] ?? ($quotationData['quotation_travel_date'] ?? ''));
+    $travelDate = $parsedDescription['travel_date'] ?? ($parsedDescription['travelDate'] ?? ($quotationData['quotation_travel_date'] ?? ($postData['travelDate'] ?? ($postData['travel_date'] ?? ''))));
     $numberOfDays = (int)($quotationData['tour_package_duration'] ?? (count($itineraries) > 0 ? (count($itineraries) > 1 ? count($itineraries) - 1 : 1) : 0));
     $tour_package_duration = $numberOfDays;
 

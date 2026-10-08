@@ -335,6 +335,23 @@ if ($childCount > 0) $paxSummaryParts[] = "{$childCount} Child" . ($childCount >
 if ($infantCount > 0) $paxSummaryParts[] = "{$infantCount} Infant" . ($infantCount > 1 ? 's' : '');
 $paxSummaryText = !empty($paxSummaryParts) ? implode(', ', $paxSummaryParts) : '2 Adults';
 
+// Travel Date Resolution
+$travelDateRaw = !empty($travelDate) ? $travelDate : (!empty($travel_date) ? $travel_date : (!empty($quotation_travel_date) ? $quotation_travel_date : (!empty($postData['travelDate']) ? $postData['travelDate'] : (!empty($postData['travel_date']) ? $postData['travel_date'] : ''))));
+$travelTimestamp = null;
+if (!empty($travelDateRaw) && is_string($travelDateRaw)) {
+    $cleanDateStr = trim($travelDateRaw);
+    if ($cleanDateStr !== '' && $cleanDateStr !== '0000-00-00' && $cleanDateStr !== '1970-01-01') {
+        if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $cleanDateStr)) {
+            $cleanDateStr = str_replace('/', '-', $cleanDateStr);
+        }
+        $ts = strtotime($cleanDateStr);
+        if ($ts !== false && $ts > 0) {
+            $travelTimestamp = $ts;
+        }
+    }
+}
+$formattedTravelDate = ($travelTimestamp && $travelTimestamp > 0) ? date('d M Y', $travelTimestamp) : '';
+
 // Policy & Terms Variables
 $rawItineraryPolicy    = $itinerary_policy ?? '';
 $rawPaymentPolicy      = ($payment_policy ?? ($tour_package_payment_policy ?? ''));
@@ -899,6 +916,8 @@ if (!empty($cleanOverview)) {
             font-weight: 800;
             font-size: 14px;
             letter-spacing: 0.3px;
+            white-space: nowrap;
+            flex-shrink: 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
@@ -2245,6 +2264,13 @@ if (!empty($cleanOverview)) {
                         <p><strong><?php echo $totalNightsCount; ?>N / <?php echo $totalDaysCount; ?>D</strong></p>
                     </div>
 
+                    <?php if (!empty($formattedTravelDate)): ?>
+                        <div class="box">
+                            <p>Travel Date</p>
+                            <p><strong><?php echo htmlspecialchars($formattedTravelDate); ?></strong></p>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="box">
                         <p>Location</p>
                         <p><strong><?php echo htmlspecialchars(cleanProposalLabel($pkgCity)); ?></strong></p>
@@ -2466,6 +2492,20 @@ if (!empty($cleanOverview)) {
         $dayIndex = 1;
         foreach ($pkgDays as $day):
             $dayNumStr = str_pad($dayIndex, 2, '0', STR_PAD_LEFT);
+            $dayOffset = $dayIndex - 1;
+            $dayTimestamp = null;
+            if (!empty($day['date']) || !empty($day['day_date'])) {
+                $rawDDate = trim((string)($day['date'] ?? $day['day_date']));
+                $dTs = strtotime($rawDDate);
+                if ($dTs !== false && $dTs > 0) {
+                    $dayTimestamp = $dTs;
+                }
+            }
+            if (!$dayTimestamp && $travelTimestamp) {
+                $dayTimestamp = strtotime("+{$dayOffset} days", $travelTimestamp);
+            }
+            $dayDateStr = $dayTimestamp ? date('d M Y', $dayTimestamp) : '';
+            $dayDateWithDay = $dayTimestamp ? date('D, d M Y', $dayTimestamp) : '';
             $dayTitle = cleanItineraryUnicode($day['day'] ?? ($day['title'] ?? "Day {$dayIndex}"));
             // Strip out "Day X - " prefix if present
             $titleParts = explode(' - ', $dayTitle, 2);
@@ -2681,14 +2721,14 @@ if (!empty($cleanOverview)) {
                         <img src="<?php echo htmlspecialchars($dayImg); ?>" alt="<?php echo htmlspecialchars($cleanTitle); ?>">
                     <?php else: ?>
                         <div class="default-day-image">
-                            <h2>Day <?php echo $dayNumStr; ?></h2>
+                            <h2>Day <?php echo $dayNumStr; ?><?php if (!empty($dayDateStr)): ?> · <?php echo $dayDateStr; ?><?php endif; ?></h2>
                         </div>
                     <?php endif; ?>
                 </header>
 
                 <div class="container">
                     <div class="day-header">
-                        <div class="day-number-badge">Day <?php echo $dayNumStr; ?></div>
+                        <div class="day-number-badge">Day <?php echo $dayNumStr; ?><?php if (!empty($dayDateWithDay)): ?> &bull; <?php echo $dayDateWithDay; ?><?php endif; ?></div>
                         <h2 class="day-title"><?php echo htmlspecialchars($cleanTitle); ?></h2>
                     </div>
 

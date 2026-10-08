@@ -159,7 +159,7 @@ $numberOfDays = $totalNightsCount;
 
 $quoteId = '#PKG-' . ($packageId > 0 ? $packageId : 'PREVIEW');
 $quotation_time = date('Y-m-d H:i:s');
-$travelDate = date('Y-m-d', strtotime('+14 days'));
+$travelDate = !empty($postData['travelDate']) ? $postData['travelDate'] : (!empty($postData['travel_date']) ? $postData['travel_date'] : date('Y-m-d', strtotime('+14 days')));
 $quotationPriceWithOutGST = '0.00';
 $gstPercent = 5;
 $gstAmount = '0.00';

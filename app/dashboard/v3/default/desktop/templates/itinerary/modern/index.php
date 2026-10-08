@@ -297,6 +297,23 @@ if ($childCount > 0) $paxSummaryParts[] = "{$childCount} Child" . ($childCount >
 if ($infantCount > 0) $paxSummaryParts[] = "{$infantCount} Infant" . ($infantCount > 1 ? 's' : '');
 $paxSummaryText = !empty($paxSummaryParts) ? implode(', ', $paxSummaryParts) : '2 Adults';
 
+// Travel Date Resolution
+$travelDateRaw = !empty($travelDate) ? $travelDate : (!empty($travel_date) ? $travel_date : (!empty($quotation_travel_date) ? $quotation_travel_date : (!empty($postData['travelDate']) ? $postData['travelDate'] : (!empty($postData['travel_date']) ? $postData['travel_date'] : ''))));
+$travelTimestamp = null;
+if (!empty($travelDateRaw) && is_string($travelDateRaw)) {
+    $cleanDateStr = trim($travelDateRaw);
+    if ($cleanDateStr !== '' && $cleanDateStr !== '0000-00-00' && $cleanDateStr !== '1970-01-01') {
+        if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $cleanDateStr)) {
+            $cleanDateStr = str_replace('/', '-', $cleanDateStr);
+        }
+        $ts = strtotime($cleanDateStr);
+        if ($ts !== false && $ts > 0) {
+            $travelTimestamp = $ts;
+        }
+    }
+}
+$formattedTravelDate = ($travelTimestamp && $travelTimestamp > 0) ? date('d M Y', $travelTimestamp) : '';
+
 // Policy & Terms Variables
 $rawItineraryPolicy    = $itinerary_policy ?? '';
 $rawPaymentPolicy      = ($payment_policy ?? ($tour_package_payment_policy ?? ''));
@@ -758,6 +775,10 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             gap: 12px;
             margin-top: 16px;
             margin-bottom: 16px;
+        }
+
+        .modern-capsule-row.has-travel-date {
+            grid-template-columns: repeat(5, 1fr);
         }
 
         .modern-capsule {
@@ -1603,7 +1624,7 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
                     <span class="dot"></span> Active Proposal
                 </div>
                 <div class="modern-ref-pill">
-                    <?php echo htmlspecialchars($cleanQuoteRef); ?>
+                    <?php echo htmlspecialchars($cleanQuoteRef); ?><?php if (!empty($formattedTravelDate)): ?> · <?php echo htmlspecialchars($formattedTravelDate); ?><?php endif; ?>
                 </div>
             </div>
         </div>
@@ -1636,7 +1657,7 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             </div>
 
             <!-- 4 Capsule Stats Row -->
-            <div class="modern-capsule-row">
+            <div class="modern-capsule-row <?php echo !empty($formattedTravelDate) ? 'has-travel-date' : ''; ?>">
                 <div class="modern-capsule">
                     <div class="modern-capsule-icon">
                         <i class="ri-time-line"></i>
@@ -1646,6 +1667,17 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
                         <div class="modern-capsule-val"><?php echo $totalDaysCount; ?>D / <?php echo $totalNightsCount; ?>N</div>
                     </div>
                 </div>
+                <?php if (!empty($formattedTravelDate)): ?>
+                <div class="modern-capsule">
+                    <div class="modern-capsule-icon">
+                        <i class="ri-calendar-line"></i>
+                    </div>
+                    <div class="modern-capsule-text">
+                        <div class="modern-capsule-lbl">Travel Date</div>
+                        <div class="modern-capsule-val"><?php echo htmlspecialchars($formattedTravelDate); ?></div>
+                    </div>
+                </div>
+                <?php endif; ?>
                 <div class="modern-capsule">
                     <div class="modern-capsule-icon">
                         <i class="ri-group-line"></i>
@@ -1704,8 +1736,11 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
                     <div class="modern-route-nodes">
                         <?php foreach ($pkgDays as $rIdx => $rDay): 
                             $nodeCity = !empty($rDay['city']) ? $rDay['city'] : (!empty($rDay['stay_city']) ? $rDay['stay_city'] : 'Day ' . ($rIdx + 1));
+                            $nodeDate = ($travelTimestamp && $travelTimestamp > 0) ? date('d M', strtotime("+{$rIdx} days", $travelTimestamp)) : '';
                         ?>
-                            <span class="modern-node-chip"><?php echo htmlspecialchars($nodeCity); ?></span>
+                            <span class="modern-node-chip">
+                                <?php echo htmlspecialchars($nodeCity); ?><?php if (!empty($nodeDate)): ?> (<?php echo $nodeDate; ?>)<?php endif; ?>
+                            </span>
                             <?php if ($rIdx < count($pkgDays) - 1): ?>
                                 <span class="modern-node-arrow"><i class="ri-arrow-right-s-line"></i></span>
                             <?php endif; ?>
@@ -1732,6 +1767,20 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
     if (!empty($pkgDays)): 
         foreach ($pkgDays as $index => $day):
             $dayNum = $index + 1;
+            $dayOffset = $index;
+            $dayTimestamp = null;
+            if (!empty($day['date']) || !empty($day['day_date'])) {
+                $rawDDate = trim((string)($day['date'] ?? $day['day_date']));
+                $dTs = strtotime($rawDDate);
+                if ($dTs !== false && $dTs > 0) {
+                    $dayTimestamp = $dTs;
+                }
+            }
+            if (!$dayTimestamp && $travelTimestamp) {
+                $dayTimestamp = strtotime("+{$dayOffset} days", $travelTimestamp);
+            }
+            $dayDateStr = $dayTimestamp ? date('d M Y', $dayTimestamp) : '';
+            $dayDateWithDay = $dayTimestamp ? date('D, d M Y', $dayTimestamp) : '';
             $dayPageId = 'page-day-' . $dayNum;
             $dayTitle = capitalizeFirstWord(cleanItineraryUnicode($day['title'] ?? ($day['day_title'] ?? "Day {$dayNum} Experience")));
             $dayDesc = capitalizeParagraphs(cleanItineraryUnicode($day['desc'] ?? ($day['description'] ?? ($day['overview'] ?? ''))));
@@ -1758,7 +1807,7 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             </div>
             <div class="modern-bar-right">
                 <div class="modern-ref-pill">
-                    <?php echo htmlspecialchars($cleanQuoteRef); ?> · Day <?php echo $dayNum; ?>
+                    <?php echo htmlspecialchars($cleanQuoteRef); ?> · Day <?php echo $dayNum; ?><?php if (!empty($dayDateStr)): ?> · <?php echo $dayDateStr; ?><?php endif; ?>
                 </div>
             </div>
         </div>
@@ -1770,14 +1819,14 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
                     <img src="<?php echo htmlspecialchars($dayImage); ?>" alt="<?php echo htmlspecialchars($dayTitle); ?>">
                 <?php else: ?>
                     <div class="modern-hero-placeholder">
-                        <h2>DAY <?php echo $dayNum; ?></h2>
+                        <h2>DAY <?php echo $dayNum; ?><?php if (!empty($dayDateStr)): ?> · <?php echo $dayDateStr; ?><?php endif; ?></h2>
                     </div>
                 <?php endif; ?>
 
                 <div class="modern-day-banner-overlay">
                     <div class="modern-day-banner-top">
                         <div class="modern-day-badge">
-                            <i class="ri-calendar-event-line"></i> Day <?php echo sprintf('%02d', $dayNum); ?> of <?php echo sprintf('%02d', $totalDaysCount); ?>
+                            <i class="ri-calendar-event-line"></i> Day <?php echo sprintf('%02d', $dayNum); ?> of <?php echo sprintf('%02d', $totalDaysCount); ?><?php if (!empty($dayDateWithDay)): ?> &bull; <?php echo $dayDateWithDay; ?><?php endif; ?>
                         </div>
                         <div class="modern-dest-pill">
                             <i class="ri-map-pin-line"></i> <?php echo htmlspecialchars($dayCity); ?>
