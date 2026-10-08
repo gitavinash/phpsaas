@@ -270,48 +270,12 @@ if ($isLid) {
         }
     }
 
-    // Check known test LID
-    if (empty($resolvedRealPhone) && str_contains($cleanPhone, '187810329956513')) {
-        $resolvedRealPhone = '+919990026008';
-    }
-
-    // Match by pushname/name against existing chats with real phone numbers
-    $searchName = !empty($name) ? $name : $pushName;
-    if (empty($resolvedRealPhone) && !empty($searchName)) {
-        $escSearchName = mysqli_real_escape_string($connection, $searchName);
-        $mQ = mysqli_query($connection, "SELECT chat_phone FROM " . TABLE_PREFIX . "whatsapp_chat 
-                                         WHERE chat_site_id = {$siteId} 
-                                           AND chat_phone NOT REGEXP '^\\+?[0-9]{13,17}$'
-                                           AND (chat_name LIKE '%{$escSearchName}%' OR chat_pushname LIKE '%{$escSearchName}%')
-                                         ORDER BY chat_last_message_time DESC LIMIT 1");
-        if ($mQ && mysqli_num_rows($mQ) > 0) {
-            $mRow = mysqli_fetch_assoc($mQ);
-            $resolvedRealPhone = $mRow['chat_phone'];
-        }
-    }
-
-    // Match by recent outgoing conversation (sent within last 4 hours)
-    if (empty($resolvedRealPhone)) {
-        $outQ = mysqli_query($connection, "SELECT c.chat_phone 
-                                           FROM " . TABLE_PREFIX . "whatsapp_chat c 
-                                           JOIN " . TABLE_PREFIX . "whatsapp_message m ON m.message_chat_id = c.chat_id 
-                                           WHERE c.chat_site_id = {$siteId} 
-                                             AND m.message_direction = 'outgoing' 
-                                             AND c.chat_phone NOT REGEXP '^\\+?[0-9]{13,17}$' 
-                                             AND m.message_created_at >= DATE_SUB(NOW(), INTERVAL 4 HOUR)
-                                           ORDER BY m.message_created_at DESC LIMIT 1");
-        if ($outQ && mysqli_num_rows($outQ) > 0) {
-            $oRow = mysqli_fetch_assoc($outQ);
-            $resolvedRealPhone = $oRow['chat_phone'];
-        }
-    }
-
     if (!empty($resolvedRealPhone)) {
         $cleanPhone = $resolvedRealPhone;
         $cleanDigits = preg_replace('/[^0-9]/', '', $cleanPhone);
         $last10 = substr($cleanDigits, -10);
     } else {
-        // Fallback for unmapped LID: use pushname as display name so chat is not blank
+        // Fallback for unmapped LID: use pushname as display name so chat has a label
         if (!empty($pushName) && empty($name)) {
             $name = $pushName;
         }
@@ -388,7 +352,8 @@ try {
     $escDevPhone = mysqli_real_escape_string($connection, $connectedDevicePhone);
     $leadVal  = $leadId ? $leadId : "NULL";
 
-    $chatQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone = '{$escPhone}' OR chat_phone LIKE '%{$last10}') LIMIT 1");
+    $last10Condition = (strlen($last10) >= 8) ? " OR chat_phone LIKE '%{$last10}'" : "";
+    $chatQ = mysqli_query($connection, "SELECT chat_id, chat_name, chat_avatar FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone = '{$escPhone}'{$last10Condition}) LIMIT 1");
     $chatId = 0;
     $unreadInc = ($direction === 'incoming') ? 1 : 0;
 
@@ -397,9 +362,9 @@ try {
         $chatId = (int)$chatRow['chat_id'];
         mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat 
                                   SET chat_unread_count = chat_unread_count + {$unreadInc},
-                                      chat_name = IF('{$escName}' != '', '{$escName}', chat_name),
+                                      chat_name = IF(chat_name IS NULL OR chat_name = '' OR chat_name = chat_phone, IF('{$escName}' != '', '{$escName}', chat_name), chat_name),
                                       chat_pushname = IF('{$escPush}' != '', '{$escPush}', chat_pushname),
-                                      chat_avatar = IF('{$escAvatar}' != '', '{$escAvatar}', chat_avatar),
+                                      chat_avatar = IF(chat_avatar IS NULL OR chat_avatar = '', '{$escAvatar}', chat_avatar),
                                       chat_last_message = '" . mysqli_real_escape_string($connection, !empty($text) ? $text : '[Media]') . "',
                                       chat_last_message_time = NOW(),
                                       chat_device_phone = IF('{$escDevPhone}' != '', '{$escDevPhone}', chat_device_phone),
