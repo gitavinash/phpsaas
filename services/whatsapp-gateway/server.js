@@ -164,6 +164,11 @@ class WhatsAppSession {
     this.webhookUrl = null;
     this.siteId = null;
 
+    const siteMatch = this.sessionId.match(/^site_(\d+)_/);
+    if (siteMatch) {
+      this.siteId = parseInt(siteMatch[1], 10);
+    }
+
     this.loadStore();
     this.setupAutoSave();
   }
@@ -1049,13 +1054,16 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
 // 0. List all active WhatsApp device sessions
 app.get("/devices", (req, res) => {
   try {
+    const filterSiteId = req.query?.site_id ? String(req.query.site_id) : null;
     const list = [];
     for (const [id, s] of sessions.entries()) {
-      enrichSession(req, s);
+      // NOTE: Do not call enrichSession(req, s) on all sessions here to prevent cross-site contamination
       const hasCreds = fs.existsSync(path.join(s.authDir, "creds.json"));
       const isConn = s.connectionStatus === "connected" || (hasCreds && s.connectionStatus === "reconnecting");
-      list.push({
+      
+      const item = {
         session_id: id,
+        site_id: s.siteId || null,
         connection_status: s.connectionStatus,
         is_connected: isConn,
         is_linked: hasCreds || isConn,
@@ -1064,7 +1072,16 @@ app.get("/devices", (req, res) => {
         last_sync: s.lastSyncTime,
         total_chats: s.chatStore.size,
         total_contacts: s.contactStore.size,
-      });
+      };
+
+      if (filterSiteId) {
+        const matchesSite = s.siteId ? (String(s.siteId) === filterSiteId) : (id.startsWith(`site_${filterSiteId}_`));
+        if (matchesSite) {
+          list.push(item);
+        }
+      } else {
+        list.push(item);
+      }
     }
     res.json({
       status: "success",
@@ -1227,16 +1244,23 @@ app.post("/pairing-code", async (req, res) => {
 // 3. Send Outbound Message from CRM
 app.post("/send-message", async (req, res) => {
   let reqSid = req.body?.session_id || req.query?.session_id;
+  const targetSiteId = req.body?.site_id || req.query?.site_id || null;
   let s = reqSid ? getSession(reqSid, req) : null;
   if (!s || s.connectionStatus !== "connected") {
     for (const sess of sessions.values()) {
       if (sess.connectionStatus === "connected") {
+        if (targetSiteId) {
+          const sessMatchesSite = sess.siteId ? (String(sess.siteId) === String(targetSiteId)) : (sess.sessionId.startsWith(`site_${targetSiteId}_`));
+          if (!sessMatchesSite) continue;
+        }
         s = sess;
         break;
       }
     }
   }
-  if (!s) {
+  if (!s && targetSiteId) {
+    s = getSession(`site_${targetSiteId}_default`, req);
+  } else if (!s) {
     s = getSession("default", req);
   }
 
@@ -1345,17 +1369,24 @@ app.post("/send-message", async (req, res) => {
 // 3b. Manual Sync Chats from WhatsApp to CRM
 app.all("/sync-chats", async (req, res) => {
   let reqSid = req.body?.session_id || req.query?.session_id;
+  const targetSiteId = req.body?.site_id || req.query?.site_id || null;
   let s = reqSid ? getSession(reqSid, req) : null;
   if (!s || s.connectionStatus !== "connected") {
-    // Pick the first connected session
+    // Pick the first connected session for THIS site
     for (const sess of sessions.values()) {
       if (sess.connectionStatus === "connected") {
+        if (targetSiteId) {
+          const sessMatchesSite = sess.siteId ? (String(sess.siteId) === String(targetSiteId)) : (sess.sessionId.startsWith(`site_${targetSiteId}_`));
+          if (!sessMatchesSite) continue;
+        }
         s = sess;
         break;
       }
     }
   }
-  if (!s) {
+  if (!s && targetSiteId) {
+    s = getSession(`site_${targetSiteId}_default`, req);
+  } else if (!s) {
     s = getSession("default", req);
   }
 

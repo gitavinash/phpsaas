@@ -84,6 +84,17 @@ if ($method === 'GET') {
             }
         }
 
+        $sep = empty($sessParam) ? '?' : '&';
+        $sessParam .= $sep . 'site_id=' . $siteId;
+
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+            || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
+        $scheme = $isHttps ? 'https://' : 'http://';
+        $host = $_SERVER['HTTP_HOST'] ?? '127.0.0.1';
+        $dynamicWebhookUrl = $scheme . $host . '/api/v3/whatsapp/webhook/';
+        $sessParam .= '&webhook_url=' . urlencode($dynamicWebhookUrl);
+
         $gwUrl = 'http://127.0.0.1:3001/sync-chats' . $sessParam;
         $gwQ = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_web_gateway_url' LIMIT 1");
         if ($gwQ && mysqli_num_rows($gwQ) > 0) {
@@ -464,11 +475,29 @@ if ($method === 'POST') {
     $escName  = mysqli_real_escape_string($connection, $name);
     $leadVal  = $leadId ? $leadId : "NULL";
 
+    // Bind new chat to agent's assigned device phone or primary connected device on site
+    $currentUserId = defined('USER_ID') ? (int)USER_ID : (isset($user_id) ? (int)$user_id : 0);
+    $agentDevPhone = '';
+    if ($currentUserId > 0) {
+        $devAssigned = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
+        if ($devAssigned && mysqli_num_rows($devAssigned) > 0) {
+            $agentDevPhone = mysqli_fetch_assoc($devAssigned)['device_phone'] ?? '';
+        }
+    }
+    if (empty($agentDevPhone)) {
+        $anyDev = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
+        if ($anyDev && mysqli_num_rows($anyDev) > 0) {
+            $agentDevPhone = mysqli_fetch_assoc($anyDev)['device_phone'] ?? '';
+        }
+    }
+    $escDevPhone = !empty($agentDevPhone) ? mysqli_real_escape_string($connection, $agentDevPhone) : '';
+
     $sql = "INSERT INTO " . TABLE_PREFIX . "whatsapp_chat 
-            (chat_site_id, chat_phone, chat_name, chat_lead_id)
-            VALUES ({$siteId}, '{$escPhone}', '{$escName}', {$leadVal})
+            (chat_site_id, chat_phone, chat_device_phone, chat_name, chat_lead_id)
+            VALUES ({$siteId}, '{$escPhone}', " . (!empty($escDevPhone) ? "'{$escDevPhone}'" : "NULL") . ", '{$escName}', {$leadVal})
             ON DUPLICATE KEY UPDATE 
                 chat_name = IF('{$escName}' != '', '{$escName}', chat_name),
+                chat_device_phone = IF(" . (!empty($escDevPhone) ? "'{$escDevPhone}'" : "chat_device_phone") . " != '', " . (!empty($escDevPhone) ? "'{$escDevPhone}'" : "chat_device_phone") . ", chat_device_phone),
                 chat_lead_id = IF({$leadVal} IS NOT NULL, {$leadVal}, chat_lead_id)";
 
     mysqli_query($connection, $sql);

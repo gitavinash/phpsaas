@@ -24,6 +24,7 @@ if (empty($payload) && !empty($_POST)) {
     $payload = $_POST;
 }
 
+// Step 1: Explicit site_id in payload, query params, or constant
 $siteId = 0;
 if (isset($payload['site_id']) && is_numeric($payload['site_id']) && (int)$payload['site_id'] > 0) {
     $siteId = (int)$payload['site_id'];
@@ -33,7 +34,12 @@ if (isset($payload['site_id']) && is_numeric($payload['site_id']) && (int)$paylo
     $siteId = (int)SITE_ID;
 }
 
-// Fallback 1: Resolve site from linked device session_id
+// Step 2: Resolve site from session_id if encoded with site_{siteId}_
+if ($siteId <= 0 && !empty($payload['session_id']) && preg_match('/^site_(\d+)_/', trim($payload['session_id']), $mSite)) {
+    $siteId = (int)$mSite[1];
+}
+
+// Step 3: Resolve site from linked device session_id in database
 if ($siteId <= 0 && !empty($payload['session_id'])) {
     $escSession = mysqli_real_escape_string($connection, trim($payload['session_id']));
     $devQ = mysqli_query($connection, "SELECT device_site_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_session_id = '{$escSession}' LIMIT 1");
@@ -45,38 +51,7 @@ if ($siteId <= 0 && !empty($payload['session_id'])) {
     }
 }
 
-// Fallback 2: Resolve site from sender/recipient phone number or batch_sync
-if ($siteId <= 0 && (!empty($payload['phone']) || !empty($payload['from']))) {
-    $rawPhone = preg_replace('/[^0-9]/', '', $payload['phone'] ?? $payload['from']);
-    if (!empty($rawPhone)) {
-        $escPhone = mysqli_real_escape_string($connection, $rawPhone);
-        $devQ2 = mysqli_query($connection, "SELECT device_site_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_phone = '{$escPhone}' LIMIT 1");
-        if ($devQ2 && mysqli_num_rows($devQ2) > 0) {
-            $devRow2 = mysqli_fetch_assoc($devQ2);
-            if (!empty($devRow2['device_site_id'])) {
-                $siteId = (int)$devRow2['device_site_id'];
-            }
-        }
-    }
-}
-if ($siteId <= 0 && !empty($payload['chats']) && is_array($payload['chats'])) {
-    foreach ($payload['chats'] as $chItem) {
-        $p = preg_replace('/[^0-9]/', '', $chItem['phone'] ?? '');
-        if (!empty($p)) {
-            $escP = mysqli_real_escape_string($connection, $p);
-            $devQ3 = mysqli_query($connection, "SELECT device_site_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_phone = '{$escP}' LIMIT 1");
-            if ($devQ3 && mysqli_num_rows($devQ3) > 0) {
-                $devRow3 = mysqli_fetch_assoc($devQ3);
-                if (!empty($devRow3['device_site_id'])) {
-                    $siteId = (int)$devRow3['device_site_id'];
-                    break;
-                }
-            }
-        }
-    }
-}
-
-// Fallback 3: Resolve site from incoming HTTP_HOST domain name
+// Step 4: Resolve site from incoming HTTP_HOST domain name
 if ($siteId <= 0) {
     $host = $_SERVER['HTTP_HOST'] ?? '';
     $host = preg_replace('/:\d+$/', '', $host);
@@ -90,23 +65,23 @@ if ($siteId <= 0) {
     }
 }
 
-// Fallback 4: Fallback to active connected site configuration
-if ($siteId <= 0) {
-    $connQ = mysqli_query($connection, "SELECT site_configuration_site_id FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_key = 'whatsapp_web_status' AND site_configuration_value = 'connected' ORDER BY site_configuration_id DESC LIMIT 1");
-    if ($connQ && mysqli_num_rows($connQ) > 0) {
-        $cRow = mysqli_fetch_assoc($connQ);
-        if (!empty($cRow['site_configuration_site_id'])) {
-            $siteId = (int)$cRow['site_configuration_site_id'];
+// Step 5: Resolve site from connected device phone number
+if ($siteId <= 0 && (!empty($payload['to']) || !empty($payload['from']))) {
+    $fromPhone = preg_replace('/[^0-9]/', '', $payload['from'] ?? '');
+    $toPhone = preg_replace('/[^0-9]/', '', $payload['to'] ?? '');
+    $phonesToCheck = array_filter([$fromPhone, $toPhone]);
+    foreach ($phonesToCheck as $p) {
+        $last10p = substr($p, -10);
+        if (strlen($last10p) >= 8) {
+            $devQ2 = mysqli_query($connection, "SELECT device_site_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_phone LIKE '%{$last10p}' LIMIT 1");
+            if ($devQ2 && mysqli_num_rows($devQ2) > 0) {
+                $devRow2 = mysqli_fetch_assoc($devQ2);
+                if (!empty($devRow2['device_site_id'])) {
+                    $siteId = (int)$devRow2['device_site_id'];
+                    break;
+                }
+            }
         }
-    }
-}
-
-// Fallback 5: Fallback to first available site if single-tenant or default
-if ($siteId <= 0) {
-    $anySiteQ = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site ORDER BY site_id ASC LIMIT 1");
-    if ($anySiteQ && mysqli_num_rows($anySiteQ) > 0) {
-        $sRow = mysqli_fetch_assoc($anySiteQ);
-        $siteId = (int)$sRow['site_id'];
     }
 }
 
