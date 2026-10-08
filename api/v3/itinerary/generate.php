@@ -26,6 +26,8 @@ if (file_exists(LOGIN_CHECK)) {
     @require_once LOGIN_CHECK;
 }
 
+require_once __DIR__ . '/itinerary_engine.php';
+
 $travelCompanyName = defined('SITE_NAME') ? SITE_NAME : 'Tour Planner';
 
 // Extract raw POST payload (supports JSON body, form-data, query parameters, and _json_payload)
@@ -119,6 +121,25 @@ if (is_array($rawDurs)) {
     if ($n > 0) $tripDuration[] = $n;
 }
 
+// 6. Included Meals (Optional)
+$rawMeals = $payload['meals'] ?? ($payload['includedMeals'] ?? ($payload['meal'] ?? ($payload['mealPlan'] ?? [])));
+$includedMeals = [];
+if (is_array($rawMeals)) {
+    foreach ($rawMeals as $m) {
+        $mStr = trim((string)$m);
+        if (!empty($mStr) && strtolower($mStr) !== 'none') {
+            $includedMeals[] = $mStr;
+        }
+    }
+} elseif (is_string($rawMeals) && !empty(trim($rawMeals)) && strtolower(trim($rawMeals)) !== 'none') {
+    $parts = preg_split('/[,&+]+/', trim($rawMeals));
+    foreach ($parts as $p) {
+        $p = trim($p);
+        if (!empty($p)) $includedMeals[] = $p;
+    }
+}
+$includedMeals = array_values(array_unique($includedMeals));
+
 // Fallback validations and auto-completions
 if (empty($destinationCity)) {
     if (!empty($startingCity)) {
@@ -155,6 +176,70 @@ if ($totalNights < 1) {
 }
 $totalDays = $totalNights + 1;
 
+// 7. Day-Wise Inputs (Night Stays & User Notes from Day Planner)
+$rawDays = $payload['days'] ?? ($payload['daySchedule'] ?? []);
+$userDaysInput = [];
+
+if (is_array($rawDays)) {
+    foreach ($rawDays as $idx => $d) {
+        if (is_array($d)) {
+            $stayType = strtolower(trim((string)($d['stayType'] ?? '')));
+            $stayVal = trim((string)($d['stayCity'] ?? ($d['stay'] ?? ($d['city'] ?? ''))));
+            if ($stayType === 'transit' || strtolower($stayVal) === 'transit' || strtolower($stayVal) === 'tour departure') {
+                $stayVal = 'Transit';
+            }
+            $userDaysInput[] = [
+                'day' => intval($d['day'] ?? ($idx + 1)),
+                'stay' => $stayVal,
+                'stayType' => ($stayVal === 'Transit' ? 'transit' : 'in_hotel'),
+                'notes' => trim((string)($d['notes'] ?? ($d['details'] ?? ($d['highlights'] ?? '')))),
+                'title' => trim((string)($d['title'] ?? ''))
+            ];
+        }
+    }
+} elseif (!empty($payload['dayStay']) && is_array($payload['dayStay'])) {
+    foreach ($payload['dayStay'] as $idx => $st) {
+        $cleanSt = trim((string)$st);
+        if (strtolower($cleanSt) === 'transit' || strtolower($cleanSt) === 'tour departure') {
+            $cleanSt = 'Transit';
+        }
+        $userDaysInput[] = [
+            'day' => $idx + 1,
+            'stay' => $cleanSt,
+            'stayType' => ($cleanSt === 'Transit' ? 'transit' : 'in_hotel'),
+            'notes' => trim((string)($payload['dayNotes'][$idx] ?? '')),
+            'title' => trim((string)($payload['dayTitle'][$idx] ?? ''))
+        ];
+    }
+}
+
+// Compute default night stays sequence across total days
+$defaultNightStays = [];
+for ($d = 0; $d < count($destinationCity); $d++) {
+    $c = $destinationCity[$d];
+    $n = $tripDuration[$d] ?? 1;
+    for ($k = 0; $k < $n; $k++) {
+        $defaultNightStays[] = $c;
+    }
+}
+
+// Build normalized day plan for prompt and fallback
+$normalizedDayPlan = [];
+for ($i = 0; $i < $totalDays; $i++) {
+    $dayNum = $i + 1;
+    $userInput = $userDaysInput[$i] ?? [];
+    $stayCity = !empty($userInput['stay']) ? $userInput['stay'] : ($defaultNightStays[$i] ?? ($i === $totalDays - 1 ? 'Transit' : ($destinationCity[0] ?? $startingCity)));
+    $userNotes = !empty($userInput['notes']) ? $userInput['notes'] : '';
+    $userTitle = !empty($userInput['title']) ? $userInput['title'] : '';
+
+    $normalizedDayPlan[] = [
+        'day' => $dayNum,
+        'stay' => $stayCity,
+        'notes' => $userNotes,
+        'title' => $userTitle
+    ];
+}
+
 $chatGPTKey = defined('CHAT_GPT_API') ? CHAT_GPT_API : '';
 $tripData = null;
 
@@ -163,7 +248,7 @@ if (!empty($chatGPTKey)) {
     $destinationsAndDurations = "";
     for ($i = 0; $i < sizeof($destinationCity); $i++) {
         $nightCount = isset($tripDuration[$i]) ? $tripDuration[$i] : 1;
-        $destinationsAndDurations .= "{$destinationCity[$i]} with {$nightCount} nights, ";
+        $destinationsAndDurations .= "{$destinationCity[$i]} ({$nightCount} nights), ";
     }
     $destinationsAndDurations = rtrim($destinationsAndDurations, ", ");
 
@@ -197,9 +282,10 @@ if (!empty($chatGPTKey)) {
                         "additionalProperties" => false,
                         "properties" => [
                             "day" => ["type" => "string"],
+                            "stay" => ["type" => "string"],
                             "details" => ["type" => "string"]
                         ],
-                        "required" => ["day", "details"]
+                        "required" => ["day", "stay", "details"]
                     ]
                 ]
             ],
@@ -207,17 +293,48 @@ if (!empty($chatGPTKey)) {
         ]
     ];
 
-    $promptContent = "Create a detailed \"{$packageName}\" tour itinerary where travel style is \"{$travelStyle}\".\n";
-    $promptContent .= "Destinations and stay duration: {$destinationsAndDurations}.\n";
-    $promptContent .= "Total duration: {$totalNights} Nights / {$totalDays} Days.\n";
-    $promptContent .= "Tour starts from \"{$startingCity}\" and concludes at \"{$endCity}\". {$localSightseeingVehicleUpdated}local sightseeing will be arranged with {$localSightseeingVehicle}. Departure timings: {$startTimings}.\n\n";
-    $promptContent .= "Populate the JSON fields as follows:\n";
-    $promptContent .= "- overview.intro: A compelling, informative 2-3 paragraph overview describing the highlights, scenery, and experience of this {$travelStyle} journey across " . implode(', ', $destinationCity) . ".\n";
-    $promptContent .= "- overview.inclusion: A clear list of inclusions (e.g. Hotel accommodation on twin sharing, Daily breakfast & dinner, Dedicated transfers by {$outstationVehicle} & {$localSightseeingVehicle}, All toll tax, state permits, parking fees, and driver allowances).\n";
-    $promptContent .= "- overview.exclusion: A clear list of exclusions (e.g. Flight / train tickets, Monument entrance & camera fees, Adventure activity tickets, Personal expenses & laundry, Travel insurance).\n";
-    $promptContent .= "- durations: Exactly {$totalDays} daily itinerary objects. For each item:\n";
-    $promptContent .= "  - day: \"Day N - <Day Title & Location>\"\n";
-    $promptContent .= "  - details: An engaging 200-350 word paragraph describing the daily route, sightseeing stops, meals, and evening leisure.";
+    $dayWisePromptLines = [];
+    foreach ($normalizedDayPlan as $dp) {
+        $isTransit = ($dp['stay'] === 'Transit' || strtolower($dp['stay']) === 'transit');
+        $stayDesc = $isTransit ? "In Transit (No overnight hotel stay)" : "Overnight Hotel Stay in \"{$dp['stay']}\"";
+        $line = "- Day {$dp['day']}: {$stayDesc}";
+        if (!empty($dp['title'])) {
+            $line .= ", Target Title: \"{$dp['title']}\"";
+        }
+        if (!empty($dp['notes'])) {
+            $line .= ", User Highlights & Focus: \"{$dp['notes']}\"";
+        }
+        $dayWisePromptLines[] = $line;
+    }
+    $dayWisePromptText = implode("\n", $dayWisePromptLines);
+
+    $promptContent = "Create a bespoke, vivid, and highly realistic \"{$packageName}\" tour itinerary.\n";
+    $promptContent .= "Travel Style: \"{$travelStyle}\". Total Duration: {$totalNights} Nights / {$totalDays} Days.\n";
+    $promptContent .= "Route: Starting from \"{$startingCity}\", journeying through {$destinationsAndDurations}, and concluding at \"{$endCity}\".\n";
+    $promptContent .= "Fleet: {$localSightseeingVehicleUpdated}local sightseeing in private {$localSightseeingVehicle}. Departure: {$startTimings}.\n";
+    if (!empty($includedMeals)) {
+        $mealsListStr = implode(', ', $includedMeals);
+        $promptContent .= "Meal Plan: Included Daily Meals - {$mealsListStr}.\n";
+    } else {
+        $promptContent .= "Meal Plan: Room Only (No complimentary meals included).\n";
+    }
+    $promptContent .= "\n### Planned Day-by-Day Structure & Night Stays:\n{$dayWisePromptText}\n\n";
+    $promptContent .= "### STRICT CONTENT & WRITING GUIDELINES:\n";
+    $promptContent .= "1. NATURAL & ORGANIC PROSE: Write like a seasoned travel journalist. Completely avoid repetitive, robotic sentence structures across days. STRICTLY DO NOT start each day with phrases like \"Wake up to a crisp morning...\", \"Wake up early and savor a hearty breakfast...\", or \"After a delicious breakfast...\". Vary sentence openings, pace, and descriptive rhythm dynamically.\n";
+    $promptContent .= "2. REALISTIC PACING: Day 1 should focus on arrival excitement, greeting, and scenic transit. Middle days should dive into authentic local culture, architecture, viewpoints, local food, and leisure. Excursion days highlight landscapes and activities. The final day focuses on gentle farewell, souvenir hunting, and seamless departure.\n";
+    $promptContent .= "3. ACCURACY TO USER INPUTS: If specific user highlights or focus notes are provided for a day, explicitly feature and expand those exact attractions and experiences naturally in that day's narrative and title.\n";
+    $promptContent .= "4. NIGHT STAY HARMONY: Each day's \"stay\" field must contain either the assigned hotel city name (e.g. \"Srinagar\") or \"Transit\" if marked as Transit. If stay is \"Transit\", conclude the day naturally mentioning onward journey / overnight transit without hotel check-in. If stay is in a hotel, conclude mentioning evening relaxation, dinner, and comfortable overnight stay in that city.\n";
+    $promptContent .= "5. DURATION SCHEMA: Exactly {$totalDays} items in `durations` array. Each item must contain:\n";
+    $promptContent .= "   - `day`: \"Day N - <Evocative Landmark / Experience Title>\"\n";
+    $promptContent .= "   - `stay`: City name where traveler stays the night, or \"Transit\"\n";
+    $promptContent .= "   - `details`: Engaging 150-250 word authentic narrative covering the day's progression from morning to night.\n";
+    if (!empty($includedMeals)) {
+        $mealsListStr = implode(' & ', $includedMeals);
+        $promptContent .= "6. OVERVIEW: `overview.intro` must be an inspiring 2-paragraph journey introduction; `overview.inclusion` must clearly list \"Daily {$mealsListStr}\" alongside hotel stays and transport; `overview.exclusion` must list standard non-covered items.\n";
+    } else {
+        $promptContent .= "6. OVERVIEW: `overview.intro` must be an inspiring 2-paragraph journey introduction; `overview.inclusion` must cover accommodation and transport; `overview.exclusion` must state \"Lunch, dinner and personal food expenses (Room Only plan)\".\n";
+    }
+    $promptContent .= "7. ZERO DUPLICATION GUARANTEE: Every day title MUST be unique and specifically describe the planned activity and landmarks (NEVER repeat generic titles like 'Highlights & Local Experiences' across multiple days). Every day overview narrative MUST be completely unique with authentic day-by-day itineraries. NEVER repeat boilerplate phrases or closing sentences across days.\n";
 
     $data = [
         "model" => "gpt-4o-mini",
@@ -228,15 +345,15 @@ if (!empty($chatGPTKey)) {
         "messages" => [
             [
                 "role" => "system",
-                "content" => "You are an elite travel planner with over 15 years of itinerary creation experience working for {$travelCompanyName}. Respond ONLY with a valid JSON object matching the schema."
+                "content" => "You are an elite master travel curator for {$travelCompanyName}. You craft distinctive, authentic, and evocative day-by-day itineraries tailored to specific destinations without repetitive templates. Output strictly valid JSON matching the schema."
             ],
             [
                 "role" => "user",
                 "content" => $promptContent
             ]
         ],
-        "max_tokens" => 3500,
-        "temperature" => 0.7
+        "max_tokens" => 3800,
+        "temperature" => 0.75
     ];
 
     $headers = [
@@ -268,47 +385,53 @@ if (!empty($chatGPTKey)) {
 
 // Fallback intelligent generator if OpenAI was unavailable or failed
 if (empty($tripData)) {
-    $citiesText = implode(' & ', $destinationCity);
-    $intro = "Welcome to your {$travelStyle} journey through {$citiesText}! This {$totalNights} Nights / {$totalDays} Days tour package is carefully crafted to offer an unforgettable travel experience. Beginning from {$startingCity} and concluding at {$endCity}, enjoy comfortable transport by {$outstationVehicle} and dedicated local sightseeing in a private {$localSightseeingVehicle}. Explore iconic landmarks, breathtaking natural vistas, rich cultural heritage, and authentic local cuisine.";
+    $citiesFormatted = array_map('v3_format_city_display', $destinationCity);
+    $citiesText = implode(' & ', $citiesFormatted);
+    $startCityFormatted = v3_format_city_display($startingCity);
+    $endCityFormatted = v3_format_city_display($endCity);
 
-    $inclusions = "Accommodation in selected category hotel, Daily Breakfast & Dinner, Dedicated private vehicle ({$outstationVehicle} / {$localSightseeingVehicle}) for all transfers and sightseeing, Fuel charges, Toll tax, State permits, Parking fees and Driver allowance, 24x7 On-tour assistance from our operations team.";
+    $intro = "Welcome to your {$travelStyle} journey through {$citiesText}! This {$totalNights} Nights / {$totalDays} Days holiday package has been meticulously planned to deliver an authentic, immersive, and unforgettable travel experience. Beginning from {$startCityFormatted} and concluding at {$endCityFormatted}, enjoy comfortable travel aboard your dedicated {$outstationVehicle} and private local sightseeing in a {$localSightseeingVehicle}. Discover majestic landscapes, iconic monuments, vibrant markets, and flavorful local culinary heritage.";
 
-    $exclusions = "Airfare / Train fare to {$startingCity} and from {$endCity}, Monument entrance tickets, Camera fees and Activity charges (Ropeway, Rafting, Trekking), Personal expenses such as laundry, telephone calls, room heater and alcoholic beverages, Optional excursions and any meals not specified, 5% GST and Travel Insurance.";
+    $mealInclusionText = !empty($includedMeals) ? "Daily " . implode(' & ', $includedMeals) . ", " : "";
+    $mealExclusionText = !empty($includedMeals) ? "Meals other than specified (" . implode(', ', $includedMeals) . "), " : "All meals (Breakfast, Lunch & Dinner) unless explicitly arranged, ";
+
+    $inclusions = "Accommodation in selected category hotel, {$mealInclusionText}Dedicated private vehicle ({$outstationVehicle} / {$localSightseeingVehicle}) for all transfers and sightseeing, Fuel charges, Toll tax, State permits, Parking fees and Driver allowance, 24x7 On-tour assistance from our operations team.";
+
+    $exclusions = "Airfare / Train fare to {$startCityFormatted} and from {$endCityFormatted}, {$mealExclusionText}Monument entrance tickets, Camera fees and Activity charges (Ropeway, Rafting, Trekking), Personal expenses such as laundry, telephone calls, room heater and alcoholic beverages, Optional excursions, 5% GST and Travel Insurance.";
 
     $durations = [];
-    $currentDay = 1;
+    $assignedTracker = [];
 
-    // Day 1: Arrival & Transfer
-    $firstDest = $destinationCity[0] ?? $startingCity;
-    $durations[] = [
-        'day' => "Day 1 - Arrival at {$startingCity} & Transfer to {$firstDest}",
-        'details' => "Arrive at {$startingCity} where our representative will warmly welcome you. Board your comfortable {$outstationVehicle} as you begin your scenic road journey towards {$firstDest}. Marvel at the changing landscapes and lush vistas along the route. Upon arrival in {$firstDest}, check into your hotel and take time to freshen up. In the evening, enjoy a relaxing stroll through the local market or surrounding sights. Relish a delicious dinner and enjoy an overnight stay in {$firstDest}."
-    ];
-    $currentDay++;
+    foreach ($normalizedDayPlan as $idx => $dayItem) {
+        $dayNum = $dayItem['day'];
+        $stayCity = $dayItem['stay'];
+        $notes = $dayItem['notes'];
+        $customTitle = $dayItem['title'];
 
-    // Subsequent Days for destinations
-    for ($d = 0; $d < count($destinationCity); $d++) {
-        $dest = $destinationCity[$d];
-        $nights = $tripDuration[$d] ?? 1;
-
-        for ($n = 0; $n < $nights; $n++) {
-            if ($currentDay > $totalDays - 1) break;
-            $durations[] = [
-                'day' => "Day {$currentDay} - {$dest} Exploration & Local Sightseeing",
-                'details' => "Wake up to a crisp morning and savor a hearty breakfast at the hotel. Today, set out in your private {$localSightseeingVehicle} to explore the key tourist attractions, heritage sites, and panoramic viewpoints in and around {$dest}. Experience the vibrant local culture, capture memorable photographs, and indulge in shopping for handicrafts. Return to the hotel in the late afternoon. Unwind with dinner and a comfortable overnight stay."
-            ];
-            $currentDay++;
+        // Determine destination context for this day
+        $isTransit = ($stayCity === 'Transit' || strtolower($stayCity) === 'transit');
+        if (!$isTransit && !empty($stayCity)) {
+            $destCity = $stayCity;
+        } else {
+            $destIdx = min(count($destinationCity) - 1, intval($idx / max(1, ceil($totalDays / max(1, count($destinationCity))))));
+            $destCity = $destinationCity[$destIdx] ?? $startingCity;
         }
-    }
 
-    // Final Departure Day
-    while ($currentDay <= $totalDays) {
-        $lastDest = end($destinationCity) ?: $startingCity;
-        $durations[] = [
-            'day' => "Day {$currentDay} - {$lastDest} to {$endCity} & Tour Departure",
-            'details' => "Enjoy a delightful breakfast at your hotel before completing check-out formalities. Board your vehicle for your return transfer to {$endCity}. Reflect on the wonderful memories, scenic wonders, and new experiences collected throughout your trip. You will be dropped off at {$endCity} airport or railway station for your onward journey. Tour concludes with happy memories."
-        ];
-        $currentDay++;
+        $activeVehicle = ($dayNum === 1 || $dayNum === $totalDays) ? $outstationVehicle : $localSightseeingVehicle;
+        $activeMealPlan = !empty($includedMeals) ? implode(' & ', $includedMeals) : 'Room Only';
+
+        $durations[] = v3_build_smart_itinerary_day(
+            $dayNum,
+            $totalDays,
+            $stayCity,
+            $destCity,
+            $notes,
+            $customTitle,
+            $activeVehicle,
+            $activeMealPlan,
+            $idx,
+            $assignedTracker
+        );
     }
 
     $tripData = [
@@ -319,6 +442,16 @@ if (empty($tripData)) {
         ],
         'durations' => $durations
     ];
+}
+
+// Ensure each duration item in tripData contains 'stay'
+if (isset($tripData['durations']) && is_array($tripData['durations'])) {
+    foreach ($tripData['durations'] as $idx => &$dItem) {
+        if (empty($dItem['stay'])) {
+            $dItem['stay'] = $normalizedDayPlan[$idx]['stay'] ?? ($defaultNightStays[$idx] ?? 'Tour Stay');
+        }
+    }
+    unset($dItem);
 }
 
 // Structure final payload
@@ -333,6 +466,8 @@ $responseData = [
     'totalDays' => $totalDays,
     'outstationVehicle' => $outstationVehicle,
     'localSightseeingVehicle' => $localSightseeingVehicle,
+    'includedMeals' => $includedMeals,
+    'mealPlan' => !empty($includedMeals) ? implode(' & ', $includedMeals) : 'Room Only',
     'overview' => $tripData['overview'],
     'durations' => $tripData['durations'],
     'hotel' => '3_star_hotel'
@@ -343,3 +478,4 @@ echo json_encode([
     'msg' => 'Itinerary generated successfully.',
     'data' => $responseData
 ]);
+

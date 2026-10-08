@@ -779,24 +779,34 @@ $excList = parseBulletList($pkgExclusions);
     </div>
 
     <script>
-        document.getElementById('btnDownloadStandardPDF').addEventListener('click', async function() {
-            const btn = this;
-            const orig = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Generating PDF...';
+        async function downloadItineraryPDF() {
+            const btn = document.getElementById('btnDownloadStandardPDF');
+            const orig = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Generating PDF...';
+            }
 
             try {
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'pt', 'a4');
+                const jspdfModule = window.jspdf || (typeof jsPDF !== 'undefined' ? { jsPDF } : null);
+                if (!jspdfModule || !jspdfModule.jsPDF) {
+                    throw new Error("jsPDF library is not loaded.");
+                }
+                const pdf = new jspdfModule.jsPDF('p', 'pt', 'a4');
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
                 const element = document.getElementById('itineraryDocument');
+                if (!element) {
+                    throw new Error("Itinerary document element not found.");
+                }
 
                 const canvas = await html2canvas(element, {
                     scale: 2,
                     useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: '#ffffff'
+                    allowTaint: false,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    imageTimeout: 10000
                 });
 
                 const imgData = canvas.toDataURL('image/jpeg', 0.95);
@@ -816,14 +826,29 @@ $excList = parseBulletList($pkgExclusions);
                 }
 
                 pdf.save("<?php echo preg_replace('/[^A-Za-z0-9_-]/', '_', $pkgTitle); ?>_Proposal.pdf");
+                await new Promise(resolve => setTimeout(resolve, 400));
+                return true;
             } catch (e) {
-                console.error(e);
+                console.error('PDF generation error:', e);
                 window.print();
+                throw e;
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = orig;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = orig;
+                }
             }
-        });
+        }
+        window.downloadItineraryPDF = downloadItineraryPDF;
+
+        const btnStdPdf = document.getElementById('btnDownloadStandardPDF');
+        if (btnStdPdf) {
+            btnStdPdf.addEventListener('click', function() {
+                downloadItineraryPDF().catch(function(e) {
+                    console.error(e);
+                });
+            });
+        }
 
         // Auto-Download on page load if requested (?download=true or ?pdf=1)
         (function() {
@@ -832,12 +857,23 @@ $excList = parseBulletList($pkgExclusions);
             const pdfParam = urlParams.get('pdf');
             const shouldAutoDownload = dlParam === 'true' || dlParam === '1' || dlParam === 'yes' || pdfParam === '1' || pdfParam === 'true' || <?php echo (!empty($autoDownload) || !empty($isDownload)) ? 'true' : 'false'; ?>;
             if (shouldAutoDownload) {
-                window.addEventListener('load', function() {
+                let executed = false;
+                const runAutoDownload = function() {
+                    if (executed) return;
+                    executed = true;
                     setTimeout(function() {
-                        const btn = document.getElementById('btnDownloadStandardPDF');
-                        if (btn) btn.click();
-                    }, 600);
-                });
+                        downloadItineraryPDF().catch(function(e) {
+                            console.error('Auto download failed:', e);
+                        });
+                    }, 400);
+                };
+
+                if (document.readyState === 'complete') {
+                    runAutoDownload();
+                } else {
+                    window.addEventListener('load', runAutoDownload);
+                    setTimeout(runAutoDownload, 2500);
+                }
             }
         })();
     </script>

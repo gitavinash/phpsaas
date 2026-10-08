@@ -7,8 +7,11 @@ header("Content-type: application/json; charset=utf-8");
 /** Secure all request method from sql injection */
 
 foreach ($_GET as $key => $value) {
-
-	$secure[$key] = mysqli_real_escape_string($connection, $value);
+	if (is_string($value)) {
+		$secure[$key] = mysqli_real_escape_string($connection, $value);
+	} else {
+		$secure[$key] = $value;
+	}
 }
 
 if (isset($secure)) {

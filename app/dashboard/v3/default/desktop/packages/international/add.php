@@ -92,7 +92,7 @@ if (empty($availableTemplates)) {
         <div class="v3-form-split-layout">
             <!-- Main Form Column -->
             <div class="v3-form-main-col">
-                <form action="#" id="addInternationalPackageForm" method="POST" autocomplete="off">
+                <form action="#" id="addInternationalPackageForm" method="POST" autocomplete="off" novalidate>
                     <div class="v3-form-container">
 
                         <!-- Card 1: Basic Information -->
@@ -109,12 +109,17 @@ if (empty($availableTemplates)) {
                             <div class="v3-card-body">
                                 <div class="v3-form-grid">
                                     <div class="v3-form-group span-2">
-                                        <label class="v3-form-label" for="packageName">Package Title / Name <sup class="required">*</sup></label>
+                                        <div class="v3-form-label-with-action">
+                                            <label class="v3-form-label" for="packageName">Package Title / Name <sup class="required">*</sup></label>
+                                            <button type="button" class="btn-quick-suggest-title" id="btnSuggestTitle" title="Auto-suggest catchy title based on route and theme">
+                                                <i class="fi fi-rr-magic-wand"></i> Auto Suggest Title
+                                            </button>
+                                        </div>
                                         <div class="v3-input-icon-wrap">
                                             <i class="fi fi-rr-briefcase input-icon"></i>
-                                            <input type="text" class="v3-form-control" id="packageName" name="name" placeholder="e.g. 7 Days Scenic Switzerland & Paris Explorer" required />
+                                            <input type="text" class="v3-form-control" id="packageName" name="name" placeholder="e.g. 7 Days Scenic Switzerland & Paris Explorer" />
                                         </div>
-                                        <span class="v3-field-hint">A catchy title highlighting main countries, cities and signature experiences.</span>
+                                        <span class="v3-field-hint">A catchy title highlighting main countries, cities and signature experiences (auto-suggested on submit if blank).</span>
                                     </div>
 
 <?php
@@ -149,7 +154,7 @@ if ($cRes) {
                                     <div class="v3-form-group">
                                         <label class="v3-form-label" for="travelStyle">Travel Style / Theme <sup class="required">*</sup></label>
                                         <div class="v3-input-icon-wrap">
-                                            <i class="fi fi-rr-compass input-icon"></i>
+                                            <i class="fi fi-rr-navigation input-icon"></i>
                                             <select class="v3-standard-select v3-form-control" name="travelStyle" id="travelStyle">
                                                 <option value="cultural" selected>Cultural & Sightseeing</option>
                                                 <option value="honeymoon">Honeymoon & Romantic</option>
@@ -164,6 +169,15 @@ if ($cRes) {
                                                 <option value="backpacking">Backpacking</option>
                                                 <option value="beach">Beach & Island Gateway</option>
                                             </select>
+                                        </div>
+                                        <div class="v3-travel-style-pills" id="v3TravelStylePills">
+                                            <button type="button" class="v3-style-pill active" data-style="cultural"><i class="fi fi-rr-landmark-alt"></i> Cultural</button>
+                                            <button type="button" class="v3-style-pill" data-style="honeymoon"><i class="fi fi-rr-heart"></i> Honeymoon</button>
+                                            <button type="button" class="v3-style-pill" data-style="family"><i class="fi fi-rr-users-alt"></i> Family</button>
+                                            <button type="button" class="v3-style-pill" data-style="adventure"><i class="fi fi-rr-mountain"></i> Adventure</button>
+                                            <button type="button" class="v3-style-pill" data-style="luxury"><i class="fi fi-rr-gem"></i> Luxury</button>
+                                            <button type="button" class="v3-style-pill" data-style="beach"><i class="fi fi-rr-sun"></i> Beach</button>
+                                            <button type="button" class="v3-style-pill" data-style="shopping"><i class="fi fi-rr-shopping-bag"></i> Shopping</button>
                                         </div>
                                     </div>
                                 </div>
@@ -187,6 +201,15 @@ if ($cRes) {
                                     <div class="v3-dest-rows-header">
                                         <span>Destinations & Stays</span>
                                         <span class="v3-dest-total-badge">Total Duration: <strong id="statTotalNights">5</strong> Nights / <strong id="statTotalDays">6</strong> Days</span>
+                                    </div>
+
+                                    <div class="v3-route-journey-flow" id="v3RouteJourneyFlow">
+                                        <span class="v3-rjf-title"><i class="fi fi-rr-route"></i> Route Flow:</span>
+                                        <span class="v3-rjf-node pickup"><i class="fi fi-rr-plane-departure"></i> Origin</span>
+                                        <span class="v3-rjf-arrow"><i class="fi fi-rr-angle-right"></i></span>
+                                        <span class="v3-rjf-node stop"><i class="fi fi-rr-marker"></i> Stop 1</span>
+                                        <span class="v3-rjf-arrow"><i class="fi fi-rr-angle-right"></i></span>
+                                        <span class="v3-rjf-node drop"><i class="fi fi-rr-plane-arrival"></i> Drop-off</span>
                                     </div>
 
                                     <div id="destinationRowsContainer" class="v3-dest-rows-container">
@@ -223,6 +246,27 @@ if ($cRes) {
                                         <button type="button" class="btn-add-dest-v3" id="btnAddDestination">
                                             <i class="fi fi-rr-plus"></i> Add Another Destination Stop
                                         </button>
+                                    </div>
+
+                                    <!-- Day-by-Day Route & Night Stay Planner Section -->
+                                    <div class="v3-day-schedule-wrapper" id="v3DaySchedulePlannerWrapper">
+                                        <div class="v3-day-schedule-header">
+                                            <div class="v3-dsh-left">
+                                                <div class="v3-dsh-icon">
+                                                    <i class="fi fi-rr-bed"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="v3-dsh-title">Day-by-Day Route & Night Stay Planner</h4>
+                                                    <p class="v3-dsh-subtitle">Specify where travelers stay each night and add day highlights / focus for the itinerary</p>
+                                                </div>
+                                            </div>
+                                            <span class="v3-dsh-badge" id="dshDaysCountBadge">6 Days Scheduled</span>
+                                        </div>
+
+                                        <div class="v3-day-schedule-list" id="v3DaySchedulePlannerList">
+                                            <!-- Dynamically generated Day 1..N rows via JS -->
+                                        </div>
+                                        <datalist id="v3PlannerCitiesDatalist"></datalist>
                                     </div>
                                 </div>
 
@@ -309,7 +353,81 @@ if ($cRes) {
                             </div>
                         </div>
 
-                        <!-- Card 4: Action Footer Card -->
+                        <!-- Card 4: Included Meals (Optional) -->
+                        <div class="v3-card-section">
+                            <div class="v3-card-header">
+                                <div class="v3-card-header-icon amber">
+                                    <i class="fi fi-rr-restaurant"></i>
+                                </div>
+                                <div class="v3-card-header-text">
+                                    <h3>Included Meals (Optional)</h3>
+                                    <p>Select daily complimentary meals included throughout this international tour</p>
+                                </div>
+                            </div>
+                            <div class="v3-card-body">
+                                <div class="v3-meals-selection-wrap">
+                                    <div class="v3-meals-preset-bar">
+                                        <span class="v3-meals-preset-label"><i class="fi fi-rr-sparkles"></i> Quick Plans:</span>
+                                        <button type="button" class="v3-meal-preset-btn active" data-preset="none">No Meals (EP)</button>
+                                        <button type="button" class="v3-meal-preset-btn" data-preset="cp">Breakfast Only (CP)</button>
+                                        <button type="button" class="v3-meal-preset-btn" data-preset="map">Breakfast &amp; Dinner (MAP)</button>
+                                        <button type="button" class="v3-meal-preset-btn" data-preset="ap">All Meals (AP)</button>
+                                    </div>
+                                    <div class="v3-meals-grid">
+                                        <label class="v3-meal-card" data-meal="Breakfast">
+                                            <input type="checkbox" name="meals[]" value="Breakfast" class="v3-meal-checkbox" />
+                                            <div class="v3-meal-card-content">
+                                                <div class="v3-meal-icon"><i class="fi fi-rr-coffee"></i></div>
+                                                <div class="v3-meal-info">
+                                                    <span class="v3-meal-name">Breakfast</span>
+                                                    <span class="v3-meal-desc">Morning buffet or complimentary hotel breakfast</span>
+                                                </div>
+                                                <div class="v3-meal-check-indicator"><i class="fi fi-rr-check"></i></div>
+                                            </div>
+                                        </label>
+
+                                        <label class="v3-meal-card" data-meal="Lunch">
+                                            <input type="checkbox" name="meals[]" value="Lunch" class="v3-meal-checkbox" />
+                                            <div class="v3-meal-card-content">
+                                                <div class="v3-meal-icon"><i class="fi fi-rr-utensils"></i></div>
+                                                <div class="v3-meal-info">
+                                                    <span class="v3-meal-name">Lunch</span>
+                                                    <span class="v3-meal-desc">Afternoon lunch at hotel or international restaurant</span>
+                                                </div>
+                                                <div class="v3-meal-check-indicator"><i class="fi fi-rr-check"></i></div>
+                                            </div>
+                                        </label>
+
+                                        <label class="v3-meal-card" data-meal="Evening Snacks">
+                                            <input type="checkbox" name="meals[]" value="Evening Snacks" class="v3-meal-checkbox" />
+                                            <div class="v3-meal-card-content">
+                                                <div class="v3-meal-icon"><i class="fi fi-rr-mug-hot-alt"></i></div>
+                                                <div class="v3-meal-info">
+                                                    <span class="v3-meal-name">Evening Snacks</span>
+                                                    <span class="v3-meal-desc">Afternoon high tea, coffee &amp; refreshments</span>
+                                                </div>
+                                                <div class="v3-meal-check-indicator"><i class="fi fi-rr-check"></i></div>
+                                            </div>
+                                        </label>
+
+                                        <label class="v3-meal-card" data-meal="Dinner">
+                                            <input type="checkbox" name="meals[]" value="Dinner" class="v3-meal-checkbox" />
+                                            <div class="v3-meal-card-content">
+                                                <div class="v3-meal-icon"><i class="fi fi-rr-soup"></i></div>
+                                                <div class="v3-meal-info">
+                                                    <span class="v3-meal-name">Dinner</span>
+                                                    <span class="v3-meal-desc">Evening buffet or fine dining dinner at hotel</span>
+                                                </div>
+                                                <div class="v3-meal-check-indicator"><i class="fi fi-rr-check"></i></div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <span class="v3-field-hint">Selected meals are automatically integrated into package inclusions and daily tour schedules.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Action Footer Card -->
                         <div class="v3-card-section v3-actions-card">
                             <div class="v3-actions-wrap">
                                 <button type="button" class="btn-v3-reset" id="btnResetPackageForm">
@@ -375,6 +493,17 @@ if ($cRes) {
                                 </div>
                             </div>
 
+                            <!-- Included Meals Summary -->
+                            <div class="v3-summary-meals-box" id="summaryMealsBox">
+                                <div class="v3-summary-meals-header">
+                                    <i class="fi fi-rr-restaurant"></i>
+                                    <span>Included Meals</span>
+                                </div>
+                                <div class="v3-summary-meals-tags" id="summaryMealsTags">
+                                    <span class="v3-meal-tag-pill none">None (Room Only)</span>
+                                </div>
+                            </div>
+
                             <!-- AI Notice Box -->
                             <div class="v3-ai-notice-box">
                                 <div class="v3-ai-icon" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff;">
@@ -384,6 +513,13 @@ if ($cRes) {
                                     <strong>Global AI Itinerary Engine</strong>
                                     <p>Generating this package produces comprehensive international schedules, landmark touring, visa details, and smart flight logistics.</p>
                                 </div>
+                            </div>
+
+                            <!-- Instant Generate CTA in Sticky Sidebar -->
+                            <div class="v3-sidebar-action-wrap">
+                                <button type="button" class="btn-sidebar-generate" id="btnSidebarGenerate">
+                                    <i class="fi fi-rr-sparkles"></i> Generate AI Itinerary
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -464,6 +600,7 @@ if ($cRes) {
                 <input type="hidden" name="country" id="itineraryCountry" value="" />
                 <input type="hidden" name="startCity" id="itineraryStartCity" value="" />
                 <input type="hidden" name="endCity" id="itineraryEndCity" value="" />
+                <input type="hidden" name="mealPlan" id="itineraryMealPlan" value="" />
 
                 <div class="v3-form-container">
                     <!-- Card 1: Overview -->
@@ -498,8 +635,21 @@ if ($cRes) {
                             </div>
                         </div>
                         <div class="v3-card-body">
+                            <div class="v3-days-toolbar">
+                                <span class="v3-days-count-label" id="previewDaysCountLabel">Daily Itinerary Schedule</span>
+                                <div class="v3-days-toolbar-actions">
+                                    <button type="button" class="btn-toggle-days-collapse" id="btnToggleAllDaysCollapse">
+                                        <i class="fi fi-rr-compress-alt"></i> <span>Collapse All</span>
+                                    </button>
+                                </div>
+                            </div>
                             <div class="v3-days-list-container" id="itineraryDaysCardsContainer">
                                 <!-- Daily cards rendered dynamically by JS -->
+                            </div>
+                            <div class="v3-add-day-btn-bar">
+                                <button type="button" class="btn-add-preview-day" id="btnAddPreviewDay">
+                                    <i class="fi fi-rr-plus"></i> Add Another Day to Itinerary
+                                </button>
                             </div>
                         </div>
                     </div>

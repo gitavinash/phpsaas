@@ -141,7 +141,7 @@ function mapLeadFieldFromKey($key)
         return 'duration_days';
     }
     // Adults / Pax
-    if (in_array($norm, ['adults', 'number of adults', 'no of adults', 'pax', 'number of persons', 'how many people', 'how many people are travelling', 'travelers', 'travellers', 'guests', 'passengers', 'group size', 'number of travelers'], true) || str_contains($norm, 'how many people')) {
+    if (in_array($norm, ['adults', 'number of adults', 'no of adults', 'pax', 'number of persons', 'number of person', 'how many person', 'how many persons', 'how many people', 'how many people are travelling', 'travelers', 'travellers', 'guests', 'passengers', 'group size', 'number of travelers'], true) || str_contains($norm, 'how many people') || str_contains($norm, 'how many person')) {
         return 'adults';
     }
     // Children
@@ -610,7 +610,7 @@ $travelDateRaw = !empty($enquiryProfile['date_of_travel']) && $enquiryProfile['d
 
 $travelDate = (!empty($travelDateRaw) && strtotime($travelDateRaw) && date('Y', strtotime($travelDateRaw)) > 1970)
     ? date('d M Y', strtotime($travelDateRaw))
-    : '';
+    : trim((string)$travelDateRaw);
 
 $durationDays = isset($enquiryProfile['number_of_days']) && (int)$enquiryProfile['number_of_days'] > 0
     ? (int)$enquiryProfile['number_of_days']
@@ -687,27 +687,37 @@ $updatedAt = !empty($lead['enquiry_update']) && $lead['enquiry_update'] !== '000
 // Infer Destination from extraDetails, enquiry_city, or matching enquiry_subject with known cities/states
 $destinationCity = trim($extraDetails['destination'] ?? ($extraDetails['city'] ?? ($lead['enquiry_city'] ?? '')));
 if (empty($destinationCity) && !empty($lead['enquiry_subject'])) {
-    $cleanSubj = trim(preg_replace('/\b(\d+N\/?\d*D|\d+\s*(nights?|days?)|tour|package|holiday|trip|honeymoon|special|custom|itinerary|vacation|group|couple|family|deluxe|standard|premium|budget|super|luxury|stay|resort|hotel)\b/i', '', $lead['enquiry_subject']));
+    $rawSubj = trim($lead['enquiry_subject']);
+    $cleanSubj = trim(preg_replace('/\b(\d+N\/?\d*D|\d+\s*(nights?|days?)|tour|package|holiday|trip|honeymoon|special|custom|itinerary|vacation|group|couple|family|deluxe|standard|premium|budget|super|luxury|stay|resort|hotel|leads?|form|v\d+|travel)\b/i', '', $rawSubj));
     $cleanSubj = trim(preg_replace('/[^a-zA-Z\s]/', ' ', $cleanSubj));
-    if (!empty($cleanSubj)) {
+    $cleanSubj = trim(preg_replace('/\s+/', ' ', $cleanSubj));
+
+    $isGeneric = preg_match('/\b(whatsapp|web\s*inquiry|general\s*enquiry|tour\s*package\s*enquiry|website)\b/i', $rawSubj);
+
+    if (!empty($cleanSubj) && !$isGeneric) {
         $cleanSubjEsc = mysqli_real_escape_string($connection, $cleanSubj);
-        $cityMatchQ = "SELECT city_name FROM {$tblPrefix}city WHERE city_name LIKE '%{$cleanSubjEsc}%' OR '{$cleanSubjEsc}' LIKE CONCAT('%', city_name, '%') ORDER BY CHAR_LENGTH(city_name) DESC LIMIT 1";
+        // Check exact city match
+        $cityMatchQ = "SELECT city_name FROM {$tblPrefix}city WHERE LOWER(TRIM(city_name)) = LOWER('{$cleanSubjEsc}') LIMIT 1";
         if ($cmRes = mysqli_query($connection, $cityMatchQ)) {
             if ($cmRow = mysqli_fetch_assoc($cmRes)) {
                 $destinationCity = trim($cmRow['city_name']);
             }
         }
+        // Check exact state match
         if (empty($destinationCity)) {
-            $stateMatchQ = "SELECT state_name FROM {$tblPrefix}state WHERE state_name LIKE '%{$cleanSubjEsc}%' OR '{$cleanSubjEsc}' LIKE CONCAT('%', state_name, '%') ORDER BY CHAR_LENGTH(state_name) DESC LIMIT 1";
+            $stateMatchQ = "SELECT state_name FROM {$tblPrefix}state WHERE LOWER(TRIM(state_name)) = LOWER('{$cleanSubjEsc}') LIMIT 1";
             if ($smRes = mysqli_query($connection, $stateMatchQ)) {
                 if ($smRow = mysqli_fetch_assoc($smRes)) {
                     $destinationCity = trim($smRow['state_name']);
                 }
             }
         }
-    }
-    if (empty($destinationCity)) {
-        $destinationCity = trim($lead['enquiry_subject']);
+        // If no exact match found in city/state tables, preserve clean subject or raw subject as destination
+        if (empty($destinationCity)) {
+            $destinationCity = !empty($cleanSubj) ? ucwords(strtolower($cleanSubj)) : ucwords(strtolower($rawSubj));
+        }
+    } elseif (!$isGeneric) {
+        $destinationCity = ucwords(strtolower($rawSubj));
     }
 }
 

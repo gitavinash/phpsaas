@@ -59,21 +59,37 @@ function stripEditorToolkitMarkup($value)
 	return $value;
 }
 
+function sanitizeRequestRecursive($conn, $val)
+{
+	if (is_array($val)) {
+		$sanitized = [];
+		foreach ($val as $k => $v) {
+			$sanitized[$k] = sanitizeRequestRecursive($conn, $v);
+		}
+		return $sanitized;
+	}
+
+	if (!is_string($val)) {
+		return $val;
+	}
+
+	$stripped = stripEditorToolkitMarkup($val);
+	return ($conn instanceof mysqli) ? mysqli_real_escape_string($conn, $stripped) : addslashes($stripped);
+}
+
 /** Convert all request method type parameter into strings */
 
 if (sizeof($_REQUEST) != 0) {
 
 	foreach ($_REQUEST as $key => $value) {
+		$clean = sanitizeRequestRecursive($connection, $value);
+		$secure[$key] = $clean;
 
-		if (!is_array($value)) {
-
-			$secure[$key] = mysqli_real_escape_string($connection, stripEditorToolkitMarkup($value));
-		} else {
-
-			/** Convert string array to string  */
-
-			foreach ($value as $arrayKey => $arrayValue) {
-				$secure[$arrayKey] = mysqli_real_escape_string($connection, stripEditorToolkitMarkup($arrayValue));
+		if (is_array($clean)) {
+			foreach ($clean as $arrayKey => $arrayValue) {
+				if (!is_numeric($arrayKey) && !isset($secure[$arrayKey])) {
+					$secure[$arrayKey] = $arrayValue;
+				}
 			}
 		}
 	}

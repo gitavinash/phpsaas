@@ -2264,7 +2264,7 @@
 
           if (!pages || pages.length === 0) {
             const canvasEl = iframeDoc.getElementById('pdfContentWrapper') || iframeDoc.body || document.querySelector('#templatePreviewCanvas');
-            const canvas = await html2canvas(canvasEl, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff' });
+            const canvas = await html2canvas(canvasEl, { scale: 2, useCORS: true, allowTaint: false, imageTimeout: 10000, backgroundColor: '#ffffff' });
             const imgData = canvas.toDataURL('image/jpeg', 0.95);
             const imgProps = pdf.getImageProperties(imgData);
             const pdfImgHeight = (imgProps.height * pageWidth) / imgProps.width;
@@ -2274,7 +2274,8 @@
               const canvas = await html2canvas(pages[i], {
                 scale: 2,
                 useCORS: true,
-                allowTaint: true,
+                allowTaint: false,
+                imageTimeout: 10000,
                 backgroundColor: '#ffffff'
               });
               const imgData = canvas.toDataURL('image/jpeg', 0.95);

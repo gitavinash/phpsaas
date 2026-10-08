@@ -317,13 +317,130 @@
       return clean;
     },
 
+    isProfileOrDuplicateKey: function (key) {
+      if (!key && key !== 0) return true;
+      const kStr = String(key).trim();
+      if (!kStr) return true;
+
+      // 1. Technical / Meta / Tracking Keys
+      const technicalKeys = [
+        "id",
+        "created_time",
+        "inbox_url",
+        "ad_name",
+        "campaign_name",
+        "form_id",
+        "page_id",
+        "leadgen_id",
+        "campaign_id",
+        "adset_id",
+        "ad_id",
+        "partner_category",
+        "lead_id",
+        "enquiry_id",
+      ];
+      if (technicalKeys.includes(kStr.toLowerCase())) return true;
+      if (this.isTrackingKey(kStr)) return true;
+
+      // 2. Normalize key
+      const norm = kStr
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+      if (!norm) return true;
+
+      // 3. Match against standard Lead Profile fields (Customer Information & Travel Logistics)
+      const matchedField = this.matchJsonKeyToLeadField(kStr);
+      if (matchedField && matchedField.field && matchedField.field !== "do_not_map") {
+        return true;
+      }
+
+      // 4. Additional substring / alias checks for contact, name, and travel logistics
+      if (
+        norm.includes("email") ||
+        norm === "e mail" ||
+        norm === "mail" ||
+        norm.includes("phone") ||
+        norm.includes("mobile") ||
+        norm.includes("whatsapp") ||
+        norm.includes("contact number") ||
+        norm.includes("contact no") ||
+        norm.includes("phone no") ||
+        norm.includes("travel date") ||
+        norm.includes("date of travel") ||
+        norm.includes("trip date") ||
+        norm.includes("departure date") ||
+        norm.includes("how many person") ||
+        norm.includes("how many people") ||
+        norm.includes("group size") ||
+        norm === "name" ||
+        norm === "full name" ||
+        norm === "fullname" ||
+        norm === "first name" ||
+        norm === "firstname" ||
+        norm === "last name" ||
+        norm === "lastname" ||
+        norm === "customer name" ||
+        norm === "your name"
+      ) {
+        return true;
+      }
+
+      return false;
+    },
+
     hasMeaningfulRequirements: function (parsed) {
       if (!parsed) return false;
-      if (Array.isArray(parsed)) {
-        return parsed.length > 0;
+      const self = this;
+
+      if (parsed.field_data && Array.isArray(parsed.field_data)) {
+        const remaining = parsed.field_data.filter(function (item) {
+          if (!item) return false;
+          const k = item.name || "";
+          if (self.isProfileOrDuplicateKey(k)) return false;
+          const val = Array.isArray(item.values)
+            ? item.values.join(", ")
+            : item.values;
+          return (
+            val !== null &&
+            val !== undefined &&
+            String(val).trim() !== "" &&
+            String(val).trim() !== "#"
+          );
+        });
+        if (remaining.length > 0) return true;
+
+        const otherKeys = Object.keys(parsed).filter(function (k) {
+          if (k === "field_data") return false;
+          if (self.isProfileOrDuplicateKey(k)) return false;
+          const val = parsed[k];
+          return (
+            val !== null &&
+            val !== undefined &&
+            String(val).trim() !== "" &&
+            String(val).trim() !== "#"
+          );
+        });
+        return otherKeys.length > 0;
       }
+
+      if (Array.isArray(parsed)) {
+        return parsed.some(function (item) {
+          if (item && typeof item === "object") {
+            return Object.keys(item).some(function (k) {
+              return !self.isProfileOrDuplicateKey(k);
+            });
+          }
+          return (
+            item !== null && item !== undefined && String(item).trim() !== ""
+          );
+        });
+      }
+
       if (typeof parsed === "object") {
-        const keys = Object.keys(parsed);
+        const keys = Object.keys(parsed).filter(function (k) {
+          return !self.isProfileOrDuplicateKey(k);
+        });
         if (keys.length === 0) return false;
         return keys.some(function (k) {
           const val = parsed[k];
@@ -333,6 +450,7 @@
           return s !== "" && s !== "#";
         });
       }
+
       return String(parsed).trim() !== "";
     },
 
@@ -465,6 +583,9 @@
       const self = this;
       if (parsed && parsed.field_data && Array.isArray(parsed.field_data)) {
         const rows = parsed.field_data
+          .filter(function (item) {
+            return item && !self.isProfileOrDuplicateKey(item.name || "");
+          })
           .map(function (item) {
             const label = self.formatFieldLabel(item.name || "Field");
             const val = Array.isArray(item.values)
@@ -483,22 +604,24 @@
           .join("");
 
         let metaRows = "";
-        ["created_time", "inbox_url", "ad_name", "campaign_name"].forEach(
-          function (k) {
-            if (parsed[k]) {
-              const label = self.formatFieldLabel(k);
-              metaRows += `
-              <tr>
-                <td class="req-key-col">
-                  <span class="req-key-bullet"></span>
-                  <span class="req-key-text">${escapeHtml(label)}</span>
-                </td>
-                <td class="req-val-col">${self.formatFieldValue(parsed[k])}</td>
-              </tr>
-            `;
-            }
-          },
-        );
+        Object.keys(parsed).forEach(function (k) {
+          if (k === "field_data") return;
+          if (self.isProfileOrDuplicateKey(k)) return;
+          const label = self.formatFieldLabel(k);
+          metaRows += `
+            <tr>
+              <td class="req-key-col">
+                <span class="req-key-bullet"></span>
+                <span class="req-key-text">${escapeHtml(label)}</span>
+              </td>
+              <td class="req-val-col">${self.formatFieldValue(parsed[k])}</td>
+            </tr>
+          `;
+        });
+
+        if (!rows && !metaRows) {
+          return '<div class="v3-requirements-empty-note"><i class="fi fi-rr-info"></i><span>No additional special notes or requirements specified.</span></div>';
+        }
 
         return `
           <div class="v3-requirements-table-wrapper">
@@ -523,7 +646,9 @@
         parsed.forEach(function (item) {
           if (typeof item === "object" && item !== null) {
             Object.keys(item).forEach(function (k) {
-              if (!allKeys.includes(k)) allKeys.push(k);
+              if (!self.isProfileOrDuplicateKey(k) && !allKeys.includes(k)) {
+                allKeys.push(k);
+              }
             });
           }
         });
@@ -552,7 +677,23 @@
             </div>
           `;
         } else {
-          const tbody = parsed
+          const nonDupItems = parsed.filter(function (val) {
+            if (typeof val === "object" && val !== null) {
+              return Object.keys(val).some(function (k) {
+                return !self.isProfileOrDuplicateKey(k);
+              });
+            }
+            return (
+              val !== null &&
+              val !== undefined &&
+              String(val).trim() !== "" &&
+              String(val).trim() !== "#"
+            );
+          });
+          if (nonDupItems.length === 0) {
+            return '<div class="v3-requirements-empty-note"><i class="fi fi-rr-info"></i><span>No additional special notes or requirements specified.</span></div>';
+          }
+          const tbody = nonDupItems
             .map(function (val, idx) {
               return `
                 <tr>
@@ -579,7 +720,9 @@
       }
 
       if (typeof parsed === "object" && parsed !== null) {
-        const keys = Object.keys(parsed);
+        const keys = Object.keys(parsed).filter(function (k) {
+          return !self.isProfileOrDuplicateKey(k);
+        });
         if (keys.length === 0) {
           return '<div class="v3-requirements-empty-note"><i class="fi fi-rr-info"></i><span>Empty structured data.</span></div>';
         }
@@ -790,7 +933,9 @@
       if (
         dateExact.includes(norm) ||
         norm.includes("when are you planning") ||
-        norm.includes("planning your")
+        norm.includes("planning your") ||
+        norm.includes("travel date") ||
+        norm.includes("date of travel")
       ) {
         return { field: "date_of_travel", label: "Date of Travel" };
       }
@@ -818,6 +963,9 @@
         "no of adults",
         "pax",
         "number of persons",
+        "number of person",
+        "how many person",
+        "how many persons",
         "how many people",
         "how many people are travelling",
         "travelers",
@@ -830,6 +978,7 @@
       if (
         adultExact.includes(norm) ||
         norm.includes("how many people") ||
+        norm.includes("how many person") ||
         norm.includes("adult")
       ) {
         return { field: "adults", label: "Adults / Pax" };
@@ -4717,7 +4866,37 @@
         function () {
           const d = self.leadData || {};
           const t = d.travel_details || {};
-          const dest = (t.destination || d.subject || "").trim();
+
+          // Directly assign Package / Destination value from Lead View
+          const isGeneric = function (val) {
+            if (!val || typeof val !== "string") return true;
+            const s = val.trim().toLowerCase();
+            return (
+              !s ||
+              s === "-" ||
+              s === "tour package enquiry" ||
+              s === "tour package inquiry" ||
+              s === "tour inquiry" ||
+              s === "tour enquiry" ||
+              s === "general enquiry" ||
+              s === "general inquiry" ||
+              s === "website inquiry" ||
+              s === "website enquiry" ||
+              s === "whatsapp inquiry" ||
+              s === "whatsapp web inquiry"
+            );
+          };
+
+          let dest = "";
+          if (d.subject && !isGeneric(d.subject)) {
+            dest = d.subject.trim();
+          } else if (t.destination && !isGeneric(t.destination)) {
+            dest = t.destination.trim();
+          } else if (d.subject && d.subject !== "-") {
+            dest = d.subject.trim();
+          } else if (t.destination) {
+            dest = t.destination.trim();
+          }
 
           $("#modalSendItinerary").addClass("is-active");
 
@@ -4754,6 +4933,7 @@
               $destInput
                 .empty()
                 .append(new Option(dest, dest, true, true))
+                .val(dest)
                 .trigger("change");
             }
           }
@@ -5341,7 +5521,7 @@
       });
 
       // Helper: Publish/Download Itinerary
-      self.publishItinerary = function (isDownload, $btn, onSuccess) {
+      self.publishItinerary = function (isDownload, $btn, onSuccess, onError) {
         const title =
           $("#itineraryCustomTitle").val().trim() || "Custom Tour Itinerary";
         const totalPrice =
@@ -5355,6 +5535,7 @@
 
         if (!title) {
           self.notify("Itinerary title is required.", "warning");
+          if (typeof onError === "function") onError("title_required");
           return;
         }
 
@@ -5452,6 +5633,7 @@
 
         if (structuredItin.length === 0) {
           self.notify("Please add at least 1 day to the itinerary.", "warning");
+          if (typeof onError === "function") onError("empty_itinerary");
           return;
         }
 
@@ -5971,39 +6153,93 @@
       $(document)
         .off("click.v3LiveDlPdf", "#btnLivePreviewDownloadPdf")
         .on("click.v3LiveDlPdf", "#btnLivePreviewDownloadPdf", function () {
-          if (self.isPublishingItin) return;
-          self.isPublishingItin = true;
+          if (self.isDownloadingLivePdf) return;
+          self.isDownloadingLivePdf = true;
 
-          const newTab = window.open("about:blank", "_blank");
-          if (newTab) {
-            try {
-              newTab.document.write(
-                "<p style='font-family:sans-serif;padding:24px;color:#475569;font-size:14px;'>Preparing your Tour Itinerary PDF document...</p>",
-              );
-              newTab.document.close();
-            } catch (e) {}
+          const $btn = $(this);
+          const origHtml = $btn.html();
+          $btn
+            .prop("disabled", true)
+            .html(
+              '<i class="fi fi-rr-spinner fi-spin"></i> <span>Generating PDF...</span>',
+            );
+
+          const resetBtn = function () {
+            self.isDownloadingLivePdf = false;
+            $btn.prop("disabled", false).html(origHtml);
+          };
+
+          // 1. Direct Export from rendered Iframe (Fast, no popup blocker, works every time)
+          const iframe = document.getElementById("livePreviewIframe");
+          let iframeWin = null;
+          try {
+            iframeWin = iframe
+              ? iframe.contentWindow || iframe.contentDocument
+              : null;
+          } catch (e) {
+            iframeWin = null;
           }
-          self.publishItinerary(
-            true,
-            $(this),
-            function (res) {
-              self.isPublishingItin = false;
-              const encId = res.encodedId || btoa(String(res.itineraryId));
-              const downloadUrl = `/download-itinerary/${encId}/`;
-              if (newTab && !newTab.closed) {
-                newTab.location.href = downloadUrl;
+
+          const fallbackDownload = function () {
+            self.publishItinerary(
+              true,
+              $btn,
+              function (res) {
+                resetBtn();
+                const encId = res.encodedId || btoa(String(res.itineraryId));
+                const downloadUrl = `/download-itinerary/${encId}/`;
+                const $dlFrame = $("<iframe>", {
+                  src: downloadUrl,
+                  style: "display:none;width:0;height:0;border:0;",
+                }).appendTo("body");
+                setTimeout(function () {
+                  $dlFrame.remove();
+                }, 60000);
+                self.notify(
+                  "Itinerary PDF download initiated!",
+                  "success",
+                );
+              },
+              function () {
+                resetBtn();
+                self.notify("Failed to generate PDF. Please try again.", "error");
+              },
+            );
+          };
+
+          if (iframeWin && typeof iframeWin.downloadItineraryPDF === "function") {
+            try {
+              const resPromise = iframeWin.downloadItineraryPDF();
+              if (resPromise && typeof resPromise.then === "function") {
+                resPromise
+                  .then(function () {
+                    resetBtn();
+                    self.notify("Itinerary PDF downloaded successfully!", "success");
+                  })
+                  .catch(function (err) {
+                    console.warn(
+                      "In-iframe PDF download failed, falling back to server:",
+                      err,
+                    );
+                    fallbackDownload();
+                  });
+                return;
               } else {
-                window.open(downloadUrl, "_blank");
+                setTimeout(function () {
+                  resetBtn();
+                  self.notify("Itinerary PDF downloaded successfully!", "success");
+                }, 1200);
+                return;
               }
-              self.notify("Itinerary PDF opened in new tab!", "success");
-            },
-            function () {
-              self.isPublishingItin = false;
-              if (newTab && !newTab.closed) {
-                newTab.close();
-              }
-            },
-          );
+            } catch (err) {
+              console.warn("Iframe export exception:", err);
+              fallbackDownload();
+              return;
+            }
+          }
+
+          // Fallback if iframe export is not available
+          fallbackDownload();
         });
 
       $(document)
@@ -6038,6 +6274,8 @@
       $(document)
         .off("click.v3LiveCloseModal", ".v3-preview-close-trigger")
         .on("click.v3LiveCloseModal", ".v3-preview-close-trigger", function () {
+          self.isDownloadingLivePdf = false;
+          self.isPublishingItin = false;
           $("#modalItineraryLivePreview").removeClass("is-active");
         });
 

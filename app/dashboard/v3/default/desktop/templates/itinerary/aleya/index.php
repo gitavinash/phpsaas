@@ -1955,11 +1955,13 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
         });
 
         // Client-side PDF Generation with A4 slicing
-        document.getElementById('btnDownloadAleyaPDF').addEventListener('click', async function() {
-            const btn = this;
-            const origText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Generating PDF...';
+        async function downloadItineraryPDF() {
+            const btn = document.getElementById('btnDownloadAleyaPDF');
+            const origText = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Generating PDF...';
+            }
 
             try {
                 // Ensure all day cards are expanded during PDF generation
@@ -1969,17 +1971,25 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
                     if (b) b.style.display = 'block';
                 });
 
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'pt', 'a4');
+                const jspdfModule = window.jspdf || (typeof jsPDF !== 'undefined' ? { jsPDF } : null);
+                if (!jspdfModule || !jspdfModule.jsPDF) {
+                    throw new Error("jsPDF library is not loaded.");
+                }
+                const pdf = new jspdfModule.jsPDF('p', 'pt', 'a4');
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
                 const element = document.getElementById('itineraryDocument');
+                if (!element) {
+                    throw new Error("Itinerary document element not found.");
+                }
 
                 const canvas = await html2canvas(element, {
                     scale: 2,
                     useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: '#ffffff'
+                    allowTaint: false,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    imageTimeout: 10000
                 });
 
                 const imgData = canvas.toDataURL('image/jpeg', 0.95);
@@ -1999,15 +2009,30 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
                 }
 
                 pdf.save("<?php echo preg_replace('/[^A-Za-z0-9_-]/', '_', $pkgTitle); ?>_Aleya_Itinerary.pdf");
+                await new Promise(resolve => setTimeout(resolve, 400));
+                return true;
             } catch (err) {
                 console.error('PDF Error:', err);
                 alert('Could not generate PDF directly. Using print view instead.');
                 window.print();
+                throw err;
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = origText;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origText;
+                }
             }
-        });
+        }
+        window.downloadItineraryPDF = downloadItineraryPDF;
+
+        const btnAleyaPdf = document.getElementById('btnDownloadAleyaPDF');
+        if (btnAleyaPdf) {
+            btnAleyaPdf.addEventListener('click', function() {
+                downloadItineraryPDF().catch(function(e) {
+                    console.error(e);
+                });
+            });
+        }
 
         // Auto-Download on page load if requested (?download=true or ?pdf=1)
         (function() {
@@ -2016,12 +2041,23 @@ $locationText = !empty($locations) ? implode(', ', $locations) : 'Incredible Des
             const pdfParam = urlParams.get('pdf');
             const shouldAutoDownload = dlParam === 'true' || dlParam === '1' || dlParam === 'yes' || pdfParam === '1' || pdfParam === 'true' || <?php echo (!empty($autoDownload) || !empty($isDownload)) ? 'true' : 'false'; ?>;
             if (shouldAutoDownload) {
-                window.addEventListener('load', function() {
+                let executed = false;
+                const runAutoDownload = function() {
+                    if (executed) return;
+                    executed = true;
                     setTimeout(function() {
-                        const btn = document.getElementById('btnDownloadAleyaPDF');
-                        if (btn) btn.click();
-                    }, 600);
-                });
+                        downloadItineraryPDF().catch(function(e) {
+                            console.error('Auto download failed:', e);
+                        });
+                    }, 400);
+                };
+
+                if (document.readyState === 'complete') {
+                    runAutoDownload();
+                } else {
+                    window.addEventListener('load', runAutoDownload);
+                    setTimeout(runAutoDownload, 2500);
+                }
             }
         })();
     </script>

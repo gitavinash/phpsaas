@@ -3627,8 +3627,11 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                     throw new Error("No itinerary pages found to export.");
                 }
 
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'pt', 'a4');
+                const jspdfModule = window.jspdf || (typeof jsPDF !== 'undefined' ? { jsPDF } : null);
+                if (!jspdfModule || !jspdfModule.jsPDF) {
+                    throw new Error("jsPDF library is not loaded.");
+                }
+                const pdf = new jspdfModule.jsPDF('p', 'pt', 'a4');
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
 
@@ -3638,9 +3641,10 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                     const canvas = await html2canvas(pages[i], {
                         scale: 2,
                         useCORS: true,
-                        allowTaint: true,
+                        allowTaint: false,
                         backgroundColor: '#ffffff',
                         logging: false,
+                        imageTimeout: 10000,
                         windowWidth: pages[i].scrollWidth || 794,
                         windowHeight: pages[i].scrollHeight || 1123
                     });
@@ -3660,11 +3664,13 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 const fileName = '<?php echo preg_replace('/[^a-zA-Z0-9_-]/', '_', $pkgTitle); ?>_Itinerary.pdf';
                 pdf.save(fileName);
 
-                await new Promise(resolve => setTimeout(resolve, 600));
+                await new Promise(resolve => setTimeout(resolve, 400));
+                return true;
             } catch (err) {
                 console.error('PDF export error:', err);
                 if (msg) msg.textContent = 'PDF generation encountered an error.';
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                throw err;
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -3673,6 +3679,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 hidePageLoader();
             }
         }
+        window.downloadItineraryPDF = downloadItineraryPDF;
 
         // 4. Auto-Download on page load if requested (?download=true or ?pdf=1)
         (function() {
@@ -3681,11 +3688,23 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             const pdfParam = urlParams.get('pdf');
             const shouldAutoDownload = dlParam === 'true' || dlParam === '1' || dlParam === 'yes' || pdfParam === '1' || pdfParam === 'true' || <?php echo (!empty($autoDownload) || !empty($isDownload)) ? 'true' : 'false'; ?>;
             if (shouldAutoDownload) {
-                window.addEventListener('load', function() {
+                let executed = false;
+                const runAutoDownload = function() {
+                    if (executed) return;
+                    executed = true;
                     setTimeout(function() {
-                        downloadItineraryPDF();
-                    }, 600);
-                });
+                        downloadItineraryPDF().catch(function(e) {
+                            console.error('Auto download failed:', e);
+                        });
+                    }, 400);
+                };
+
+                if (document.readyState === 'complete') {
+                    runAutoDownload();
+                } else {
+                    window.addEventListener('load', runAutoDownload);
+                    setTimeout(runAutoDownload, 2500);
+                }
             }
         })();
     </script>
