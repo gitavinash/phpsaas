@@ -91,6 +91,7 @@ $query = "
         tp.tour_package_id,
         tp.tour_package_title,
         tp.tour_package_theme,
+        tp.tour_package_template,
         tp.tour_package_duration,
         tp.tour_package_city,
         tp.tour_package_state,

@@ -43,9 +43,54 @@ if (empty($rawRefId) && isset($_GET['refId'])) {
 $decodedRefId = base64_decode($rawRefId, true);
 $refId = ($decodedRefId !== false && is_numeric($decodedRefId)) ? (int)$decodedRefId : (int)$rawRefId;
 
+if (!function_exists('cleanItineraryUnicode')) {
+    function cleanItineraryUnicode($val)
+    {
+        if (is_array($val)) {
+            foreach ($val as $k => $v) {
+                $val[$k] = cleanItineraryUnicode($v);
+            }
+            return $val;
+        }
+        if (!is_string($val) || $val === '') {
+            return $val;
+        }
+
+        // 1. Unicode escape sequences: \u0026, \u2013, \u2014, etc.
+        $val = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($m) {
+            return mb_convert_encoding(pack('H*', $m[1]), 'UTF-8', 'UCS-2BE');
+        }, $val);
+
+        // 2. Erroneously unescaped hex artifacts
+        $val = preg_replace('/\bu0026\b/i', '&', $val);
+        $val = preg_replace('/\bu0040\b/i', '@', $val);
+        $val = preg_replace('/\bu2013\b/i', '–', $val);
+        $val = preg_replace('/\bu2014\b/i', '—', $val);
+
+        // 3. Repeatedly collapse double-encoded &amp;amp;
+        while (str_contains($val, '&amp;amp;')) {
+            $val = str_replace('&amp;amp;', '&amp;', $val);
+        }
+
+        // 4. Normalize HTML entities
+        $maxLoops = 3;
+        while ($maxLoops-- > 0 && preg_match('/&[a-zA-Z0-9#]+;/', $val)) {
+            $decoded = html_entity_decode($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            if ($decoded === $val) break;
+            $val = $decoded;
+        }
+
+        // 5. Standalone or erroneous "amp;" with missing leading ampersand
+        $val = preg_replace('/(?<=\s|^)amp;(?=\s|[.,!?]|$)/i', '&', $val);
+        $val = preg_replace('/\bamp;\b/i', '&', $val);
+
+        return $val;
+    }
+}
+
 $refType   = isset($data['refType']) ? mysqli_real_escape_string($connection, trim($data['refType'])) : 'enquiry';
 $mrp       = isset($data['mrp']) ? (float)$data['mrp'] : 0;
-$content   = isset($data['content']) && is_array($data['content']) ? $data['content'] : [];
+$content   = isset($data['content']) && is_array($data['content']) ? cleanItineraryUnicode($data['content']) : [];
 $isDownload = !empty($data['isDownload']);
 
 if ($refId <= 0) {

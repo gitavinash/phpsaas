@@ -507,11 +507,24 @@
         str = String(val);
       }
       str = str.trim();
-      // Fix unicode @ artifact e.g. u0040 or \u0040
-      str = str.replace(/\\u0040/gi, "@").replace(/\bu0040/gi, "@");
-      // Fix unicode dash artifacts
-      str = str.replace(/\\u2013/gi, "–").replace(/\bu2013/gi, "–");
-      str = str.replace(/\\u2014/gi, "—").replace(/\bu2014/gi, "—");
+      // Generic unicode escape decode (\u0026, \u2013, \u2014, \u00a0, etc.)
+      str = str.replace(/\\u([0-9a-fA-F]{4})/g, function (match, hex) {
+        return String.fromCharCode(parseInt(hex, 16));
+      });
+      // Fix specific unescaped hex artifacts
+      str = str.replace(/\bu0026\b/gi, "&");
+      str = str.replace(/\bu0040\b/gi, "@");
+      str = str.replace(/\bu2013\b/gi, "–");
+      str = str.replace(/\bu2014\b/gi, "—");
+      // Repeatedly collapse double-encoded &amp;amp;
+      while (str.includes("&amp;amp;")) {
+        str = str.replace(/&amp;amp;/gi, "&amp;");
+      }
+      // Decode &amp; to &
+      str = str.replace(/&amp;/gi, "&");
+      // Standalone or erroneous "amp;" with missing leading ampersand
+      str = str.replace(/(^|[\s,;.-])amp;([\s,;.-]|$)/gi, "$1&$2");
+      str = str.replace(/\bamp;\b/gi, "&");
       // If it's a JSON quoted string like "\"Md Koushar Ali\""
       if (str.startsWith('"') && str.endsWith('"') && str.length >= 2) {
         try {
@@ -3638,8 +3651,8 @@
 
     appendDayCard: function (d, num) {
       const self = this;
-      const title = d.day || `Day ${num} - Tour Plan`;
-      const overview = d.overview || "";
+      const title = self.cleanLeadStringValue(d.day || `Day ${num} - Tour Plan`);
+      const overview = self.cleanLeadStringValue(d.overview || "");
       const city = (d.stay || d.city || d.stay_city || "").trim();
       const hotelId = parseInt(d.hotel_id || d.assigned_hotel_id || 0) || 0;
       const hotelTitle = d.hotel_title || d.hotel || "";
@@ -3761,7 +3774,7 @@
                 ${citySelectHtml}
               </select>
             </div>
-            <input type="text" class="v3-itin-day-title-input itin-day-title" value="${title}" placeholder="e.g. Day ${num} - Arrival & City Tour">
+            <input type="text" class="v3-itin-day-title-input itin-day-title" value="${escapeHtml(title)}" placeholder="e.g. Day ${num} - Arrival & City Tour">
             <button type="button" class="v3-itin-day-delete-btn btn-delete-itin-day" title="Delete Day ${num}">
               <i class="fi fi-rr-trash"></i>
             </button>
@@ -3769,7 +3782,7 @@
 
           <div class="v3-modal-form-group">
             <label class="v3-modal-label">Day Schedule & Activities *</label>
-            <textarea class="v3-modal-textarea itin-day-overview" rows="3" placeholder="Describe the day's schedule, sightseeing spots, and activities...">${overview}</textarea>
+            <textarea class="v3-modal-textarea itin-day-overview" rows="3" placeholder="Describe the day's schedule, sightseeing spots, and activities...">${escapeHtml(overview)}</textarea>
           </div>
 
           <div class="v3-itin-meta-boxes-grid">
@@ -5523,7 +5536,7 @@
       // Helper: Publish/Download Itinerary
       self.publishItinerary = function (isDownload, $btn, onSuccess, onError) {
         const title =
-          $("#itineraryCustomTitle").val().trim() || "Custom Tour Itinerary";
+          self.cleanLeadStringValue($("#itineraryCustomTitle").val().trim()) || "Custom Tour Itinerary";
         const totalPrice =
           parseFloat($("#itineraryCustomTotalPrice").val()) || 0;
         const adultPrice =
@@ -5541,13 +5554,13 @@
 
         const structuredItin = [];
         $("#itinDaysStack .v3-itin-day-card").each(function () {
-          const dayTitle = $(this).find(".itin-day-title").val().trim();
+          const dayTitle = self.cleanLeadStringValue($(this).find(".itin-day-title").val().trim());
           const $overviewTextarea = $(this).find(".itin-day-overview");
           const editor = $overviewTextarea.data("v3Editor");
-          const dayOverview = (
+          const dayOverview = self.cleanLeadStringValue((
             editor ? editor.getContent() : $overviewTextarea.val()
-          ).trim();
-          const stayCity = $(this).find(".itin-day-city-select").val() || "";
+          ).trim());
+          const stayCity = self.cleanLeadStringValue($(this).find(".itin-day-city-select").val() || "");
 
           let hotelName = "";
           const $hotelSel = $(this).find(".itin-day-hotel-select");
@@ -5732,10 +5745,10 @@
                 : `${durationDays} Days`,
             duration_days: durationDays,
             number_of_days: durationNights,
-            overview: $("#itineraryCustomOverview").val().trim(),
+            overview: self.cleanLeadStringValue($("#itineraryCustomOverview").val().trim()),
             itinerary: structuredItin,
-            inclusions: $("#itineraryCustomInclusions").val().trim(),
-            exclusions: $("#itineraryCustomExclusions").val().trim(),
+            inclusions: self.cleanLeadStringValue($("#itineraryCustomInclusions").val().trim()),
+            exclusions: self.cleanLeadStringValue($("#itineraryCustomExclusions").val().trim()),
           },
         };
 
@@ -5783,8 +5796,27 @@
       // Change Itinerary CTA in Builder Modal
       $(document).on("click", "#btnChangeItinerary", function (e) {
         e.preventDefault();
+        // Show Search & Select Itinerary Template section only
         $("#itinerarySearchSection").removeClass("v3-hidden");
+
+        // Hide all other customization sections
+        $("#itineraryCustomSection").addClass("v3-hidden");
+
+        // Hide header actions
         $("#btnChangeItinerary").addClass("v3-hidden");
+        $("#btnPreviewItinerary").addClass("v3-hidden");
+
+        // Reset package selection dropdown so user can pick another template cleanly
+        const $pkgSelect = $("#itineraryPackageSelect");
+        if ($pkgSelect.length) {
+          $pkgSelect.val("");
+          if ($pkgSelect.hasClass("select2-hidden-accessible")) {
+            $pkgSelect.val("").trigger("change.select2");
+          }
+        }
+        self.selectedPackage = null;
+
+        // Scroll back to top of modal canvas
         $("#modalSendItinerary .v3-modal-fullscreen-body").animate(
           { scrollTop: 0 },
           250,
@@ -6097,6 +6129,8 @@
                 self.selectedPackage.gallery_image ||
                 ""
               : "",
+            template: templateToUse,
+            tour_package_template: templateToUse,
             format: "html",
             hideActions: true,
             preview: true,
@@ -6987,7 +7021,7 @@
 
       const formatOverviewText = (s) => {
         if (!s) return "";
-        let str = String(s);
+        let str = self.cleanLeadStringValue(s);
         // Normalize paragraph & line break tags to readable newlines
         str = str
           .replace(/<br\s*[\/]?>/gi, "\n")
@@ -7009,7 +7043,7 @@
             str = txt.value;
           } catch (e) {}
         }
-        return str.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+        return self.cleanLeadStringValue(str).replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
       };
 
       const formatBulletList = (input, defaultFallback = "") => {
@@ -7020,7 +7054,7 @@
             .filter(Boolean)
             .join("\n");
         }
-        let str = String(input);
+        let str = self.cleanLeadStringValue(input);
         // Replace HTML break and list tags with newlines
         str = str.replace(/<\/?(li|p|div|br|tr|td)[^>]*>/gi, "\n");
         // Remove remaining HTML tags
@@ -7042,7 +7076,7 @@
         const lines = str
           .split("\n")
           .map((line) => {
-            let l = line.trim();
+            let l = self.cleanLeadStringValue(line.trim());
             // Remove leading bullets/numbers/checks/dashes
             l = l.replace(/^[•\-*✓✗✔✕\d.):\s]+/u, "").trim();
             // Remove leading 'and '
@@ -7134,7 +7168,9 @@
         });
       }
 
-      $("#itineraryCustomTitle").val(pkg.tour_package_title || "");
+      $("#itineraryCustomTitle").val(
+        self.cleanLeadStringValue(pkg.tour_package_title || ""),
+      );
       $("#itineraryCustomAdultCount").val(adults > 0 ? adults : 2);
       $("#itineraryCustomChildCount").val(children);
       $("#itineraryCustomInfantCount").val(infants);
@@ -7388,6 +7424,12 @@
                 if (!currentVal || currentVal === initialVal) {
                   $currentOverview.val(formatOverviewText(enrichedOverview));
                 }
+              }
+              if (getRes.package.template || getRes.package.tour_package_template) {
+                const fetchedTemplate = getRes.package.template || getRes.package.tour_package_template;
+                self.selectedPackage.tour_package_template = fetchedTemplate;
+                self.selectedPackage.template = fetchedTemplate;
+                self.selectedPackageTemplate = fetchedTemplate;
               }
             }
 

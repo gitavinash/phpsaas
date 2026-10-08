@@ -287,16 +287,74 @@ if ($quotationId > 0) {
     }
 }
 
+if (!function_exists('cleanItineraryUnicode')) {
+    function cleanItineraryUnicode($val)
+    {
+        if (is_array($val)) {
+            foreach ($val as $k => $v) {
+                $val[$k] = cleanItineraryUnicode($v);
+            }
+            return $val;
+        }
+        if (!is_string($val) || $val === '') {
+            return $val;
+        }
+
+        // 1. Unicode escape sequences: \u0026, \u2013, \u2014, etc.
+        $val = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($m) {
+            return mb_convert_encoding(pack('H*', $m[1]), 'UTF-8', 'UCS-2BE');
+        }, $val);
+
+        // 2. Erroneously unescaped hex artifacts
+        $val = preg_replace('/\bu0026\b/i', '&', $val);
+        $val = preg_replace('/\bu0040\b/i', '@', $val);
+        $val = preg_replace('/\bu2013\b/i', '–', $val);
+        $val = preg_replace('/\bu2014\b/i', '—', $val);
+
+        // 3. Repeatedly collapse double-encoded &amp;amp;
+        while (str_contains($val, '&amp;amp;')) {
+            $val = str_replace('&amp;amp;', '&amp;', $val);
+        }
+
+        // 4. Normalize HTML entities
+        $maxLoops = 3;
+        while ($maxLoops-- > 0 && preg_match('/&[a-zA-Z0-9#]+;/', $val)) {
+            $decoded = html_entity_decode($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            if ($decoded === $val) break;
+            $val = $decoded;
+        }
+
+        // 5. Standalone or erroneous "amp;" with missing leading ampersand
+        $val = preg_replace('/(?<=\s|^)amp;(?=\s|[.,!?]|$)/i', '&', $val);
+        $val = preg_replace('/\bamp;\b/i', '&', $val);
+
+        return $val;
+    }
+}
+
 // If quotation found, populate template variables
 if (!empty($quotationData)) {
     $parsedDescription = [];
     if (!empty($quotationData['quotation_description'])) {
         $parsedDescription = json_decode($quotationData['quotation_description'], true) ?: [];
     }
+    $parsedDescription = cleanItineraryUnicode($parsedDescription);
 
     $templateToUse = !empty($requestedTemplate) ? strtolower($requestedTemplate) : '';
     if (empty($templateToUse)) {
-        $templateToUse = strtolower($parsedDescription['template'] ?? ($quotationData['tour_package_template'] ?? 'mit'));
+        $pkgTemplate  = !empty($quotationData['tour_package_template']) ? strtolower(trim($quotationData['tour_package_template'])) : '';
+        $descTemplate = !empty($parsedDescription['template']) ? strtolower(trim($parsedDescription['template'])) : '';
+
+        // Prioritize package template if set and non-default, or fallback gracefully
+        if (!empty($pkgTemplate) && $pkgTemplate !== 'mit') {
+            $templateToUse = $pkgTemplate;
+        } elseif (!empty($descTemplate)) {
+            $templateToUse = $descTemplate;
+        } elseif (!empty($pkgTemplate)) {
+            $templateToUse = $pkgTemplate;
+        } else {
+            $templateToUse = 'mit';
+        }
     }
     if (!in_array($templateToUse, $availableTemplates)) {
         $templateToUse = 'mit';
@@ -387,7 +445,17 @@ if (!empty($quotationData)) {
     }
 } else {
     // If raw draft content was posted without a quotation ID (Preview Mode)
-    $templateToUse = in_array(strtolower($requestedTemplate), $availableTemplates) ? strtolower($requestedTemplate) : 'mit';
+    $postData = cleanItineraryUnicode($postData);
+    $templateToUse = in_array(strtolower($requestedTemplate), $availableTemplates) ? strtolower($requestedTemplate) : '';
+    if (empty($templateToUse)) {
+        $candidateTemplate = strtolower(trim((string)($postData['template'] ?? ($postData['tour_package_template'] ?? ''))));
+        if (in_array($candidateTemplate, $availableTemplates)) {
+            $templateToUse = $candidateTemplate;
+        }
+    }
+    if (empty($templateToUse) || !in_array($templateToUse, $availableTemplates)) {
+        $templateToUse = 'mit';
+    }
 
     $itinerary_title   = $postData['title'] ?? ($postData['package_title'] ?? 'Tour Itinerary Proposal');
     $tour_package_title = $itinerary_title;

@@ -35,10 +35,87 @@ if (!function_exists('fixImageUrl')) {
     }
 }
 
+if (!function_exists('cleanItineraryUnicode')) {
+    function cleanItineraryUnicode($val)
+    {
+        if (is_array($val)) {
+            foreach ($val as $k => $v) {
+                $val[$k] = cleanItineraryUnicode($v);
+            }
+            return $val;
+        }
+        if (!is_string($val) || $val === '') {
+            return $val;
+        }
+
+        // 1. Unicode escape sequences: \u0026, \u2013, \u2014, etc.
+        $val = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($m) {
+            return mb_convert_encoding(pack('H*', $m[1]), 'UTF-8', 'UCS-2BE');
+        }, $val);
+
+        // 2. Erroneously unescaped hex artifacts
+        $val = preg_replace('/\bu0026\b/i', '&', $val);
+        $val = preg_replace('/\bu0040\b/i', '@', $val);
+        $val = preg_replace('/\bu2013\b/i', '–', $val);
+        $val = preg_replace('/\bu2014\b/i', '—', $val);
+
+        // 3. Repeatedly collapse double-encoded &amp;amp;
+        while (str_contains($val, '&amp;amp;')) {
+            $val = str_replace('&amp;amp;', '&amp;', $val);
+        }
+
+        // 4. Normalize HTML entities
+        $maxLoops = 3;
+        while ($maxLoops-- > 0 && preg_match('/&[a-zA-Z0-9#]+;/', $val)) {
+            $decoded = html_entity_decode($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            if ($decoded === $val) break;
+            $val = $decoded;
+        }
+
+        // 5. Standalone or erroneous "amp;" with missing leading ampersand
+        $val = preg_replace('/(?<=\s|^)amp;(?=\s|[.,!?]|$)/i', '&', $val);
+        $val = preg_replace('/\bamp;\b/i', '&', $val);
+
+        return $val;
+    }
+}
+
+if (!function_exists('capitalizeFirstWord')) {
+    function capitalizeFirstWord($text)
+    {
+        if (empty($text) || !is_string($text)) return $text;
+        $trimmed = trim($text);
+        // Capitalize the first alphabetical character, preserving leading punctuation or numbers (e.g., 5%, 24/7, quotes)
+        return preg_replace_callback('/^([^a-zA-Z\p{L}]*)([a-z\p{Ll}])/u', function ($m) {
+            return $m[1] . mb_strtoupper($m[2], 'UTF-8');
+        }, $trimmed);
+    }
+}
+
+if (!function_exists('capitalizeParagraphs')) {
+    function capitalizeParagraphs($htmlOrText)
+    {
+        if (empty($htmlOrText) || !is_string($htmlOrText)) return $htmlOrText;
+        if (str_contains($htmlOrText, '<')) {
+            // Capitalize after opening HTML tags: p, li, div, headings, or br tags
+            return preg_replace_callback('/(<\s*(?:p|li|div|h[1-6]|span)[^>]*>|<br\s*\/?>\s*|^)([^<a-zA-Z\p{L}]*)([a-z\p{Ll}])/u', function ($m) {
+                return $m[1] . $m[2] . mb_strtoupper($m[3], 'UTF-8');
+            }, $htmlOrText);
+        } else {
+            $lines = explode("\n", $htmlOrText);
+            foreach ($lines as $i => $l) {
+                $lines[$i] = capitalizeFirstWord($l);
+            }
+            return implode("\n", $lines);
+        }
+    }
+}
+
 if (!function_exists('parseBulletList')) {
     function parseBulletList($input)
     {
         if (empty($input)) return [];
+        $input = cleanItineraryUnicode($input);
         $items = [];
         if (is_array($input)) {
             foreach ($input as $item) {
@@ -48,19 +125,42 @@ if (!function_exists('parseBulletList')) {
                 }
             }
         } else {
-            // Replace all kinds of line breaks, tags, and commas with newlines to shift each item to its own line
-            $str = str_replace(['<br>', '<br/>', '<br />', '</li>', '<p>', '</p>', ','], "\n", (string)$input);
-            $rawLines = explode("\n", strip_tags($str));
+            $rawStr = (string)$input;
+            $hasLineBreaks = (
+                str_contains($rawStr, '<br') || 
+                str_contains($rawStr, '</li') || 
+                str_contains($rawStr, '</p') || 
+                str_contains($rawStr, "\n") || 
+                str_contains($rawStr, "\r")
+            );
+
+            if ($hasLineBreaks) {
+                // Split strictly by line/paragraph tags, never splitting commas in sentences/parentheses
+                $str = str_replace(['<br>', '<br/>', '<br />', '</li>', '<p>', '</p>'], "\n", $rawStr);
+                $rawLines = explode("\n", strip_tags($str));
+            } else {
+                // Single-line string: split on commas only if OUTSIDE parentheses
+                $cleanStr = strip_tags($rawStr);
+                $splitRegex = '/,(?![^(]*\))/';
+                $rawLines = preg_split($splitRegex, $cleanStr);
+            }
+
             foreach ($rawLines as $line) {
                 $line = trim($line);
-                $line = preg_replace('/^[•\-\*✓✗✔✕\d\.\)]+\s*/u', '', $line);
+                if ($line === '') continue;
+
+                // Strip leading bullet glyphs or numbered list prefixes like "1. ", "1) ", "(1) ", "• ", "- "
+                // Safely retain standalone percentages and numbers like "5% GST" or "24/7 Support"
+                $line = preg_replace('/^(\(?\d+[\.\)\-:]\s*|[•\-\*✓✗✔✕►▪▫–—]\s*)/u', '', $line);
                 $line = trim($line);
+
                 if (!empty($line)) {
+                    $line = capitalizeFirstWord($line);
                     $items[] = $line;
                 }
             }
         }
-        return array_values(array_unique($items));
+        return array_values(array_unique(array_filter($items)));
     }
 }
 
@@ -68,7 +168,8 @@ if (!function_exists('cleanProposalLabel')) {
     function cleanProposalLabel($val)
     {
         if (empty($val)) return '';
-        $clean = str_replace(['_', '-'], ' ', (string)$val);
+        $clean = cleanItineraryUnicode($val);
+        $clean = str_replace(['_', '-'], ' ', (string)$clean);
         $clean = preg_replace('/\s+/', ' ', $clean);
         return ucwords(strtolower(trim($clean)));
     }
@@ -84,7 +185,7 @@ if (!function_exists('renderPolicyContent')) {
     {
         if (empty($rawContent) || !is_string($rawContent) || trim($rawContent) === '') {
             if (!empty($fallbackHtml)) {
-                echo $fallbackHtml;
+                echo capitalizeParagraphs($fallbackHtml);
             }
             return;
         }
@@ -93,12 +194,12 @@ if (!function_exists('renderPolicyContent')) {
         if (strpos($trimmed, '<') !== false && strpos($trimmed, '>') !== false) {
             // Strip only inline style attributes to keep HTML structure
             $cleaned = preg_replace('/\s*style="[^"]*"/i', '', $trimmed);
-            echo $cleaned;
+            echo capitalizeParagraphs($cleaned);
         } else {
             // Plain text: split into lines and render as <p> blocks
             $lines = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $trimmed)));
             foreach ($lines as $line) {
-                echo '<p>' . htmlspecialchars($line) . '</p>';
+                echo '<p>' . htmlspecialchars(capitalizeFirstWord($line)) . '</p>';
             }
         }
     }
@@ -189,20 +290,20 @@ $waPayUrl = !empty($cleanWhatsappDigits)
     : '';
 
 // Package Variables
-$pkgTitle       = $tour_package_title ?? ($itinerary_title ?? ($title ?? 'Tour Package Itinerary'));
-$pkgCity        = $tour_package_city ?? ($city ?? 'Destination');
-$pkgState       = $tour_package_state ?? '';
-$pkgCountry     = $tour_package_country ?? '';
+$pkgTitle       = capitalizeFirstWord(cleanItineraryUnicode($tour_package_title ?? ($itinerary_title ?? ($title ?? 'Tour Package Itinerary'))));
+$pkgCity        = cleanItineraryUnicode($tour_package_city ?? ($city ?? 'Destination'));
+$pkgState       = cleanItineraryUnicode($tour_package_state ?? '');
+$pkgCountry     = cleanItineraryUnicode($tour_package_country ?? '');
 $pkgDuration    = $tour_package_duration ?? ($numberOfDays ?? ($duration ?? 0));
-$pkgTheme       = $tour_package_theme ?? ($travelStyle ?? 'Standard');
-$pkgHotel       = $tour_package_hotel ?? ($hotel ?? '');
+$pkgTheme       = cleanItineraryUnicode($tour_package_theme ?? ($travelStyle ?? 'Standard'));
+$pkgHotel       = cleanItineraryUnicode($tour_package_hotel ?? ($hotel ?? ''));
 $pkgPriceAdult  = $tour_package_price_selling_adult ?? ($selling_price ?? ($price ?? 0));
-$pkgOutVehicle  = $tour_package_outstation_vehicle ?? ($outstationVehicle ?? '');
-$pkgLocVehicle  = $tour_package_localsightseen_vehicle ?? ($localSightseeingVehicle ?? '');
-$pkgOverview    = $tour_package_overview ?? ($itinerary_overview ?? ($overview ?? ''));
-$pkgInclusions  = $tour_package_inclusions ?? ($inclusions ?? '');
-$pkgExclusions  = $tour_package_exclusions ?? ($exclusions ?? '');
-$pkgDays        = $itineraries ?? ($itinerary ?? ($days ?? []));
+$pkgOutVehicle  = cleanItineraryUnicode($tour_package_outstation_vehicle ?? ($outstationVehicle ?? ''));
+$pkgLocVehicle  = cleanItineraryUnicode($tour_package_localsightseen_vehicle ?? ($localSightseeingVehicle ?? ''));
+$pkgOverview    = cleanItineraryUnicode($tour_package_overview ?? ($itinerary_overview ?? ($overview ?? '')));
+$pkgInclusions  = cleanItineraryUnicode($tour_package_inclusions ?? ($inclusions ?? ''));
+$pkgExclusions  = cleanItineraryUnicode($tour_package_exclusions ?? ($exclusions ?? ''));
+$pkgDays        = cleanItineraryUnicode($itineraries ?? ($itinerary ?? ($days ?? [])));
 $quoteRef       = $quoteId ?? ($quotationId ?? ($tour_package_id ?? rand(1000, 9999)));
 
 // Company Bank & UPI Details
@@ -390,8 +491,11 @@ $excList = parseBulletList($pkgExclusions);
 
 // Format cleaner overview
 $cleanOverview = trim((string)$pkgOverview);
-if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
-    $cleanOverview = '<p>' . nl2br(htmlspecialchars($cleanOverview)) . '</p>';
+if (!empty($cleanOverview)) {
+    if (strpos($cleanOverview, '<') === false) {
+        $cleanOverview = '<p>' . nl2br(htmlspecialchars($cleanOverview, ENT_QUOTES, 'UTF-8', false)) . '</p>';
+    }
+    $cleanOverview = capitalizeParagraphs($cleanOverview);
 }
 ?>
 <!DOCTYPE html>
@@ -551,6 +655,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         }
 
         /* Default Day Image Fallback */
+        .hero .default-day-image,
         .days-page .hero .default-day-image {
             width: 100%;
             height: 100%;
@@ -558,20 +663,40 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
             place-items: center;
             text-align: center;
             color: #fff;
-            padding: 16px;
+            padding: 20px 30px;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             position: relative;
             overflow: hidden;
+            box-sizing: border-box;
         }
 
+        .hero .default-day-image h2,
         .days-page .hero .default-day-image h2 {
-            font-size: 4em;
+            font-size: 3.5em;
             font-weight: 800;
             letter-spacing: 1px;
             text-transform: uppercase;
             text-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
-            padding: 0 40px;
+            padding: 0 30px;
             box-sizing: border-box;
+            max-width: 95%;
+            word-break: break-word;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        #page-1 .hero .default-day-image {
+            background: linear-gradient(135deg, var(--primary-color, #e76317), var(--secondary-color, #26679c));
+        }
+
+        #page-1 .hero .default-day-image h2 {
+            font-size: clamp(1.8rem, 3.2vw, 2.75rem);
+            font-weight: 800;
+            line-height: 1.22;
+            letter-spacing: 0.5px;
+            max-width: 90%;
+            padding: 0 20px;
+            text-transform: uppercase;
         }
 
         /* Hero Wave Overlay */
@@ -2099,7 +2224,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                     <img src="<?php echo htmlspecialchars($heroFeatureImage); ?>" alt="<?php echo htmlspecialchars($pkgTitle); ?>">
                 <?php else: ?>
                     <div class="default-day-image">
-                        <h2><?php echo htmlspecialchars($pkgCity); ?></h2>
+                        <h2><?php echo htmlspecialchars(!empty($pkgTitle) ? $pkgTitle : (!empty($pkgCity) ? $pkgCity : 'Tour Package Proposal')); ?></h2>
                     </div>
                 <?php endif; ?>
                 <div class="refid">
@@ -2341,10 +2466,10 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
         $dayIndex = 1;
         foreach ($pkgDays as $day):
             $dayNumStr = str_pad($dayIndex, 2, '0', STR_PAD_LEFT);
-            $dayTitle = $day['day'] ?? ($day['title'] ?? "Day {$dayIndex}");
+            $dayTitle = cleanItineraryUnicode($day['day'] ?? ($day['title'] ?? "Day {$dayIndex}"));
             // Strip out "Day X - " prefix if present
             $titleParts = explode(' - ', $dayTitle, 2);
-            $cleanTitle = isset($titleParts[1]) ? trim($titleParts[1]) : trim($dayTitle);
+            $cleanTitle = capitalizeFirstWord(cleanItineraryUnicode(isset($titleParts[1]) ? trim($titleParts[1]) : trim($dayTitle)));
 
             $dayImg = fixImageUrl($day['feature_image'] ?? ($day['image'] ?? ($day['day_image'] ?? '')));
             if (empty($dayImg) && !empty($gallery_image_list)) {
@@ -2363,7 +2488,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                     }
                 }
             }
-            $dayOverview = $day['overview'] ?? ($day['description'] ?? '');
+            $dayOverview = capitalizeParagraphs(cleanItineraryUnicode($day['overview'] ?? ($day['description'] ?? ($day['desc'] ?? ''))));
 
             // Stay City from Itinerary Builder
             $rawStayCity = trim((string)($day['stay_city'] ?? ($day['city'] ?? '')));
@@ -2568,7 +2693,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                     </div>
 
                     <div class="day-content">
-                        <?php echo !empty($dayOverview) ? (strpos($dayOverview, '<') !== false ? $dayOverview : nl2br(htmlspecialchars($dayOverview))) : '<p>Sightseeing, transfers, and exploration according to custom schedule.</p>'; ?>
+                        <?php echo !empty($dayOverview) ? (strpos($dayOverview, '<') !== false ? $dayOverview : nl2br(htmlspecialchars($dayOverview, ENT_QUOTES, 'UTF-8', false))) : '<p>Sightseeing, transfers, and exploration according to custom schedule.</p>'; ?>
                     </div>
 
                     <?php if (!empty($stayCityClean) || !empty($propTitle) || !empty($dayVehicleClean)): ?>
@@ -2856,7 +2981,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                                     <?php foreach ($incList as $inc): if (empty($inc)) continue; ?>
                                         <li>
                                             <div class="tour_check"><i class="ri-check-line"></i></div>
-                                            <span><?php echo htmlspecialchars(ucfirst($inc)); ?></span>
+                                            <span><?php echo htmlspecialchars(capitalizeFirstWord($inc)); ?></span>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
@@ -2887,7 +3012,7 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                                     <?php foreach ($excList as $exc): if (empty($exc)) continue; ?>
                                         <li>
                                             <div class="tour_cross"><i class="ri-close-line"></i></div>
-                                            <span><?php echo htmlspecialchars(ucfirst($exc)); ?></span>
+                                            <span><?php echo htmlspecialchars(capitalizeFirstWord($exc)); ?></span>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
@@ -3570,6 +3695,26 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 hero.appendChild(waveContainer);
             });
 
+            // Handle missing or broken hero images gracefully by showing styled fallback title
+            document.querySelectorAll('.hero img').forEach((img) => {
+                const handleImgError = function() {
+                    const hero = img.closest('.hero');
+                    if (!hero || hero.querySelector('.default-day-image')) return;
+                    const altText = img.getAttribute('alt') || 'Tour Proposal';
+                    const fallback = document.createElement('div');
+                    fallback.className = 'default-day-image';
+                    const h2 = document.createElement('h2');
+                    h2.textContent = altText;
+                    fallback.appendChild(h2);
+                    img.replaceWith(fallback);
+                };
+                if (img.complete && img.naturalWidth === 0) {
+                    handleImgError();
+                } else {
+                    img.addEventListener('error', handleImgError, { once: true });
+                }
+            });
+
             // Dismiss loader once effects, layout, and pagination are ready
             hidePageLoader();
         }
@@ -3661,7 +3806,12 @@ if (!empty($cleanOverview) && strpos($cleanOverview, '<') === false) {
                 }
 
                 if (msg) msg.textContent = 'Saving PDF file...';
-                const fileName = '<?php echo preg_replace('/[^a-zA-Z0-9_-]/', '_', $pkgTitle); ?>_Itinerary.pdf';
+                <?php 
+                $safePdfTitle = preg_replace('/_+/', '_', preg_replace('/[^a-zA-Z0-9_-]/', '_', str_replace('&', 'and', cleanItineraryUnicode($pkgTitle))));
+                $safePdfTitle = trim($safePdfTitle, '_');
+                if (empty($safePdfTitle)) $safePdfTitle = 'Tour_Package';
+                ?>
+                const fileName = '<?php echo $safePdfTitle; ?>_Itinerary.pdf';
                 pdf.save(fileName);
 
                 await new Promise(resolve => setTimeout(resolve, 400));
