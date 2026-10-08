@@ -762,6 +762,7 @@
 .wa-chat-workspace {
   display: grid;
   grid-template-columns: 360px 1fr;
+  grid-template-rows: 100%;
   height: calc(100vh - 180px);
   min-height: 600px;
   background: #FFFFFF;
@@ -821,6 +822,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100%;
+  min-height: 0;
 }
 
 .wa-threads-header {
@@ -1096,6 +1099,10 @@
   flex-direction: column;
   background: #FFFFFF;
   position: relative;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 /* Empty State */
@@ -1147,6 +1154,11 @@
   display: none;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .wa-active-chat-wrapper.is-open {
@@ -1154,12 +1166,16 @@
 }
 
 .wa-active-chat-header {
+  flex-shrink: 0;
   padding: 12px 18px;
   border-bottom: 1px solid var(--wa-border);
   background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 
 .wa-active-user-meta {
@@ -1317,7 +1333,8 @@
 /* Messages Stream Wrap & Scroll To Bottom Button */
 .wa-messages-stream-wrap {
   position: relative;
-  flex: 1;
+  flex: 1 1 0%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1363,8 +1380,10 @@
 
 /* Messages Stream */
 .wa-messages-stream {
-  flex: 1;
+  flex: 1 1 0%;
+  min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 20px;
   background-color: var(--wa-bg-chat);
   background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
@@ -1418,11 +1437,20 @@
   font-size: 11px;
 }
 
-/* Composer Area */
+/* Composer Area (Fixed on bottom of chat box) */
 .wa-composer-area {
+  flex-shrink: 0;
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   background: #FFFFFF;
   border-top: 1px solid var(--wa-border);
   padding: 10px 16px 14px;
+  z-index: 10;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
 }
 
 .wa-quick-replies-bar {
