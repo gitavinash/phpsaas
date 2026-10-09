@@ -3668,6 +3668,11 @@
           d.total_days = totalDays;
           self.appendDayCard(d, idx + 1);
         });
+        setTimeout(function () {
+          if (typeof self.recordItineraryBaseline === "function") {
+            self.recordItineraryBaseline();
+          }
+        }, 250);
       });
     },
 
@@ -4024,6 +4029,7 @@
     },
 
     reindexDays: function () {
+      const self = this;
       $("#itinDaysStack .v3-itin-day-card").each(function (idx) {
         const num = idx + 1;
         $(this).attr("data-day-index", num);
@@ -4033,6 +4039,9 @@
         $(this).find(".v3-hotel-visibility-toggle").attr("title", `Toggle hotel in customer itinerary proposal for Day ${num}`);
         $(this).find(".v3-itin-hotel-hidden-notice").html(`<i class="fi fi-rr-info"></i> Hotel details hidden from customer itinerary proposal for Day ${num}.`);
       });
+      if (typeof self.checkItineraryChanges === "function") {
+        self.checkItineraryChanges();
+      }
     },
 
     resolvePrimaryCity: function (structuredItin) {
@@ -4935,6 +4944,14 @@
 
           $("#modalSendItinerary").addClass("is-active");
 
+          // Reset save as new package toggle to off by default
+          if (typeof self.resetSaveAsPackageToggle === "function") {
+            self.resetSaveAsPackageToggle();
+          }
+          if (typeof self.markItineraryModified === "function") {
+            self.markItineraryModified(false);
+          }
+
           // Preload stay cities from Cities API, vehicles, and properties in parallel
           self.loadItineraryMeta();
 
@@ -5219,6 +5236,9 @@
             },
             nextNum,
           );
+          if (typeof self.checkItineraryChanges === "function") {
+            self.checkItineraryChanges();
+          }
         },
       );
 
@@ -5326,8 +5346,8 @@
           const cp = parseFloat($("#itineraryCustomChildPrice").val()) || 0;
           const ip = parseFloat($("#itineraryCustomInfantPrice").val()) || 0;
 
-          const total = ap * adults + cp * children + ip * infants;
-          $("#itineraryCustomTotalPrice").val(total);
+          const total = Math.round(ap * adults + cp * children + ip * infants);
+          $("#itineraryCustomTotalPrice").val(total > 0 ? total : "");
 
           const travelerParts = [];
           if (adults) travelerParts.push(`${adults} Adults`);
@@ -5338,6 +5358,23 @@
           );
         },
       );
+
+      // Recalculate per-adult rate when user edits Total Quotation Value directly
+      $(document).on("input change", "#itineraryCustomTotalPrice", function () {
+        const totalVal = parseFloat($(this).val()) || 0;
+        const adults = parseInt($("#itineraryCustomAdultCount").val()) || 1;
+        const children = parseInt($("#itineraryCustomChildCount").val()) || 0;
+        const infants = parseInt($("#itineraryCustomInfantCount").val()) || 0;
+
+        const cp = parseFloat($("#itineraryCustomChildPrice").val()) || 0;
+        const ip = parseFloat($("#itineraryCustomInfantPrice").val()) || 0;
+
+        if (totalVal > 0 && adults > 0) {
+          const rem = Math.max(0, totalVal - (cp * children) - (ip * infants));
+          const calculatedAdultRate = Math.round(rem / adults);
+          $("#itineraryCustomAdultPrice").val(calculatedAdultRate);
+        }
+      });
 
       // Night Stay / City Dropdown Change on Itinerary Day
       $(document).on("change", ".itin-day-city-select", function () {
@@ -5543,8 +5580,100 @@
         }
       });
 
+      // Reset Save as New Package Toggle
+      self.resetSaveAsPackageToggle = function () {
+        $("#toggleSaveAsNewPackage, #toggleSaveAsNewPackagePreview").prop(
+          "checked",
+          false,
+        );
+        $("#wrapSaveAsNewPackage, #wrapSaveAsNewPackagePreview").removeClass(
+          "is-active",
+        );
+        $("#savePkgBadge, #savePkgBadgePreview").text("OFF");
+      };
+
+      // Track whether user made any changes to the default package
+      self.isItineraryModified = false;
+      self.itineraryBaselineSnapshot = null;
+
+      self.markItineraryModified = function (isModified) {
+        self.isItineraryModified = !!isModified;
+        const $toggles = $(
+          "#wrapSaveAsNewPackage, #wrapSaveAsNewPackagePreview",
+        );
+        if (self.isItineraryModified) {
+          $toggles.removeClass("v3-hidden");
+        } else {
+          $toggles.addClass("v3-hidden");
+          self.resetSaveAsPackageToggle();
+        }
+      };
+
+      self.getItineraryStateSnapshot = function () {
+        const fields = [
+          $("#itineraryCustomTitle").val() || "",
+          $("#itineraryCustomAdultPrice").val() || "",
+          $("#itineraryCustomChildPrice").val() || "",
+          $("#itineraryCustomInfantPrice").val() || "",
+          $("#itineraryCustomOverview").val() || "",
+          $("#itineraryCustomInclusions").val() || "",
+          $("#itineraryCustomExclusions").val() || "",
+          $("#itineraryCustomPickup").val() || "",
+          $("#itineraryCustomDrop").val() || "",
+          $("#itineraryCustomTheme").val() || "",
+        ];
+        const dayCards = [];
+        $("#itinDaysStack .v3-itin-day-card").each(function () {
+          const $c = $(this);
+          const $ov = $c.find(".itin-day-overview");
+          const ed = $ov.data("v3Editor");
+          const ovVal = ed ? ed.getContent() : $ov.val() || "";
+          dayCards.push(
+            [
+              $c.find(".itin-day-title").val() || "",
+              ovVal,
+              $c.find(".itin-day-city-select").val() || "",
+              $c.find(".itin-day-hotel-select").val() || "",
+              $c.find(".itin-day-hotel-custom").val() || "",
+              $c.find(".itin-day-hotel-stars").val() || "",
+              $c.find(".itin-day-room-type").val() || "",
+              $c.find(".itin-day-room-type-custom").val() || "",
+              $c.find(".itin-day-meal-plan").val() || "",
+              $c.find(".itin-day-vehicle-type").val() || "",
+              $c.find(".itin-day-vehicle-custom").val() || "",
+              $c.find(".itin-day-transfer-notes").val() || "",
+              $c.find(".itin-day-show-hotel-toggle").is(":checked") ? "1" : "0",
+              $c.attr("data-day-image") || "",
+            ].join("|"),
+          );
+        });
+        return fields.join("###") + "@@@" + dayCards.join("%%%");
+      };
+
+      self.recordItineraryBaseline = function () {
+        self.itineraryBaselineSnapshot = self.getItineraryStateSnapshot();
+        self.markItineraryModified(false);
+      };
+
+      self.checkItineraryChanges = function () {
+        if (!self.itineraryBaselineSnapshot) {
+          self.markItineraryModified(true);
+          return;
+        }
+        const currentSnapshot = self.getItineraryStateSnapshot();
+        const hasChanges = currentSnapshot !== self.itineraryBaselineSnapshot;
+        self.markItineraryModified(hasChanges);
+      };
+
       // Helper: Publish/Download Itinerary
-      self.publishItinerary = function (isDownload, $btn, onSuccess, onError) {
+      self.publishItinerary = function (
+        isDownload,
+        $btn,
+        onSuccess,
+        onError,
+        saveAsNewPackage,
+        newPackageTitle,
+      ) {
         const title =
           self.cleanLeadStringValue($("#itineraryCustomTitle").val().trim()) || "Custom Tour Itinerary";
         const totalPrice =
@@ -5718,16 +5847,46 @@
           $("#editLeadPhone").val() ||
           "";
 
+        let resolvedAdultPrice = adultPrice;
+        let resolvedTotalPrice = totalPrice;
+
+        if (resolvedTotalPrice <= 0) {
+          resolvedTotalPrice = Math.round((resolvedAdultPrice * adults) + (childPrice * children) + (infantPrice * infants));
+        }
+
+        // Guard against total amount being mistakenly assigned as per-adult price
+        if (resolvedTotalPrice > 0 && adults > 1 && resolvedAdultPrice >= resolvedTotalPrice) {
+          const rem = Math.max(0, resolvedTotalPrice - (childPrice * children) - (infantPrice * infants));
+          resolvedAdultPrice = Math.round(rem / adults);
+        } else if (resolvedAdultPrice <= 0 && resolvedTotalPrice > 0 && adults > 0) {
+          const rem = Math.max(0, resolvedTotalPrice - (childPrice * children) - (infantPrice * infants));
+          resolvedAdultPrice = Math.round(rem / adults);
+        }
+
+        const isSaveNewPkg =
+          saveAsNewPackage !== undefined
+            ? !!saveAsNewPackage
+            : $("#toggleSaveAsNewPackage").is(":checked") ||
+              $("#toggleSaveAsNewPackagePreview").is(":checked");
+
+        const resolvedPkgTitle =
+          newPackageTitle && typeof newPackageTitle === "string" && newPackageTitle.trim()
+            ? newPackageTitle.trim()
+            : title;
+
         const postData = {
           id: pkgId,
           refId: rawRefId,
           refType: "enquiry",
           email: customerEmail,
           mobile: customerMobile,
-          mrp: adultPrice || 0,
+          mrp: resolvedAdultPrice || 0,
           isDownload: !!isDownload,
+          save_as_new_package: isSaveNewPkg ? 1 : 0,
+          package_name: resolvedPkgTitle,
           content: {
             title: title,
+            new_package_title: resolvedPkgTitle,
             city: primaryCity,
             destination: primaryCity,
             tour_package_city: primaryCity,
@@ -5745,10 +5904,10 @@
             children_count: children,
             infants_count: infants,
             template: templateToUse,
-            adult_per_person: adultPrice || 0,
+            adult_per_person: resolvedAdultPrice || 0,
             child_per_person: childPrice || 0,
             infant_per_person: infantPrice || 0,
-            total_price: totalPrice || 0,
+            total_price: resolvedTotalPrice || 0,
             duration:
               durationNights > 0
                 ? `${durationNights} Nights / ${durationDays} Days`
@@ -5877,6 +6036,10 @@
           const $btns = $("#btnPreviewItinerary, #btnPreviewItineraryBottom");
           $btns.prop("disabled", true);
 
+          if (typeof self.checkItineraryChanges === "function") {
+            self.checkItineraryChanges();
+          }
+
           const title =
             $("#itineraryCustomTitle").val().trim() || "Custom Tour Itinerary";
           const travelDate =
@@ -5915,6 +6078,19 @@
             (self.leadData && self.leadData.travel_details
               ? parseInt(self.leadData.travel_details.infants || 0)
               : 0);
+
+          let resolvedAdultPrice = adultPrice;
+          let resolvedTotalPrice = totalPrice;
+          if (resolvedTotalPrice <= 0) {
+            resolvedTotalPrice = Math.round((resolvedAdultPrice * adults) + (childPrice * children) + (infantPrice * infants));
+          }
+          if (resolvedTotalPrice > 0 && adults > 1 && resolvedAdultPrice >= resolvedTotalPrice) {
+            const rem = Math.max(0, resolvedTotalPrice - (childPrice * children) - (infantPrice * infants));
+            resolvedAdultPrice = Math.round(rem / adults);
+          } else if (resolvedAdultPrice <= 0 && resolvedTotalPrice > 0 && adults > 0) {
+            const rem = Math.max(0, resolvedTotalPrice - (childPrice * children) - (infantPrice * infants));
+            resolvedAdultPrice = Math.round(rem / adults);
+          }
 
           const structuredItin = [];
           $("#itinDaysStack .v3-itin-day-card").each(function () {
@@ -6112,12 +6288,12 @@
             outstationVehicle: primaryVehicle,
             outstation_vehicle: primaryVehicle,
             vehicle: primaryVehicle,
-            totalPrice: totalPrice,
-            total_price: totalPrice,
-            price: totalPrice,
-            adultPrice: adultPrice,
-            adult_price: adultPrice,
-            adult_per_person: adultPrice,
+            totalPrice: resolvedTotalPrice,
+            total_price: resolvedTotalPrice,
+            price: resolvedTotalPrice,
+            adultPrice: resolvedAdultPrice,
+            adult_price: resolvedAdultPrice,
+            adult_per_person: resolvedAdultPrice,
             childPrice: childPrice,
             child_price: childPrice,
             child_per_person: childPrice,
@@ -6290,6 +6466,51 @@
           fallbackDownload();
         });
 
+      // Synchronize Save as New Tour Package toggle switches
+      $(document)
+        .off("change.v3SavePkgToggle", "#toggleSaveAsNewPackage, #toggleSaveAsNewPackagePreview")
+        .on(
+          "change.v3SavePkgToggle",
+          "#toggleSaveAsNewPackage, #toggleSaveAsNewPackagePreview",
+          function () {
+            const isChecked = $(this).is(":checked");
+            $("#toggleSaveAsNewPackage, #toggleSaveAsNewPackagePreview").prop(
+              "checked",
+              isChecked,
+            );
+            $("#wrapSaveAsNewPackage, #wrapSaveAsNewPackagePreview").toggleClass(
+              "is-active",
+              isChecked,
+            );
+            $("#savePkgBadge, #savePkgBadgePreview").text(
+              isChecked ? "ON" : "OFF",
+            );
+          },
+        );
+
+      // Listen for any user changes to the default package customizer fields
+      $(document)
+        .off(
+          "input.v3ItinChange change.v3ItinChange keyup.v3ItinChange",
+          "#itineraryCustomSection input, #itineraryCustomSection select, #itineraryCustomSection textarea, #itineraryCustomSection [contenteditable]",
+        )
+        .on(
+          "input.v3ItinChange change.v3ItinChange keyup.v3ItinChange",
+          "#itineraryCustomSection input, #itineraryCustomSection select, #itineraryCustomSection textarea, #itineraryCustomSection [contenteditable]",
+          function () {
+            if (
+              $(this).is(
+                "#toggleSaveAsNewPackage, #toggleSaveAsNewPackagePreview",
+              )
+            ) {
+              return;
+            }
+            if (typeof self.checkItineraryChanges === "function") {
+              self.checkItineraryChanges();
+            }
+          },
+        );
+
       $(document)
         .off("click.v3LiveSendItin", "#btnLivePreviewSendItinerary")
         .on(
@@ -6297,25 +6518,157 @@
           "#btnLivePreviewSendItinerary",
           function () {
             if (self.isPublishingItin) return;
-            self.isPublishingItin = true;
 
-            self.publishItinerary(
-              false,
-              $(this),
-              function (res) {
-                self.isPublishingItin = false;
-                $("#modalItineraryLivePreview").removeClass("is-active");
-                $("#modalSendItinerary").removeClass("is-active");
-                self.notify(
-                  res.msg || "Itinerary published and shared with customer!",
-                  "success",
-                );
-                self.loadLeadDetails();
-              },
-              function () {
-                self.isPublishingItin = false;
-              },
-            );
+            const $btn = $(this);
+            const isSaveAsPackage =
+              $("#toggleSaveAsNewPackage").is(":checked") ||
+              $("#toggleSaveAsNewPackagePreview").is(":checked");
+
+            const doPublish = function (saveAsNewPkg, customPkgName) {
+              self.isPublishingItin = true;
+              self.publishItinerary(
+                false,
+                $btn,
+                function (res) {
+                  self.isPublishingItin = false;
+                  $("#modalItineraryLivePreview").removeClass("is-active");
+                  $("#modalSendItinerary").removeClass("is-active");
+                  self.notify(
+                    res.msg || "Itinerary published and shared with customer!",
+                    "success",
+                  );
+                  self.loadLeadDetails();
+                },
+                function () {
+                  self.isPublishingItin = false;
+                },
+                saveAsNewPkg,
+                customPkgName,
+              );
+            };
+
+            // If toggle is ON, prompt for package name before saving with default suggested name
+            if (isSaveAsPackage) {
+              let basePkgName =
+                self.cleanLeadStringValue(
+                  $("#itineraryCustomTitle").val().trim(),
+                ) ||
+                (self.selectedPackage &&
+                  self.selectedPackage.tour_package_name) ||
+                "Custom Tour Package";
+
+              // Strip any existing trailing date/user postfix if already present
+              basePkgName = basePkgName
+                .replace(
+                  /\s*-\s*\d{1,2}\s+[A-Za-z]{3}\s+\d{4}.*$/,
+                  "",
+                )
+                .trim();
+
+              const todayStr =
+                typeof moment !== "undefined"
+                  ? moment().format("DD MMM YYYY")
+                  : new Date().toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    });
+
+              let userName =
+                $("#leadViewApp").attr("data-user-name") ||
+                $("#leadViewApp").data("user-name") ||
+                "";
+
+              if (
+                !userName &&
+                self.leadData &&
+                self.leadData.agent_name &&
+                self.leadData.agent_name !== "Unassigned"
+              ) {
+                userName = self.leadData.agent_name;
+              }
+
+              if (!userName) {
+                try {
+                  const m = document.cookie.match(/(?:^|; )user_name=([^;]*)/);
+                  if (m && m[1]) userName = decodeURIComponent(atob(m[1]));
+                } catch (e) {}
+              }
+
+              const postfixParts = [todayStr];
+              if (
+                userName &&
+                userName.trim() &&
+                userName.toLowerCase() !== "unassigned"
+              ) {
+                postfixParts.push(userName.trim());
+              }
+
+              const defaultPkgName = `${basePkgName} - ${postfixParts.join(" - ")}`;
+
+              const swalObj =
+                typeof window.Swal !== "undefined"
+                  ? window.Swal
+                  : typeof Swal !== "undefined"
+                    ? Swal
+                    : null;
+
+              const swalFn =
+                swalObj && typeof swalObj.fire === "function"
+                  ? swalObj.fire.bind(swalObj)
+                  : typeof swalObj === "function"
+                    ? swalObj
+                    : null;
+
+              if (swalFn) {
+                swalFn({
+                  title: "Save as New Tour Package",
+                  text: "Enter package name to save in your tour library:",
+                  input: "text",
+                  inputValue: defaultPkgName,
+                  inputPlaceholder: "Package Name",
+                  showCancelButton: true,
+                  confirmButtonColor: "#10b981",
+                  cancelButtonColor: "#64748b",
+                  confirmButtonText: "Save & Send",
+                  cancelButtonText: "Cancel",
+                  reverseButtons: true,
+                  onBeforeOpen: function (modalEl) {
+                    if (modalEl && modalEl.classList) {
+                      modalEl.classList.add("v3-swal-pkg-modal");
+                    }
+                  },
+                  inputValidator: function (value) {
+                    if (!value || !value.trim()) {
+                      return "Please enter a package name!";
+                    }
+                  },
+                })
+                  .then(function (result) {
+                    if (result && (result.isConfirmed || result.value)) {
+                      const chosenName =
+                        typeof result.value === "string" && result.value.trim()
+                          ? result.value.trim()
+                          : defaultPkgName;
+                      doPublish(true, chosenName);
+                    }
+                  });
+                return;
+              }
+
+              // Fallback if Swal is not loaded
+              const promptName = window.prompt(
+                "Enter package name to save in your tour library:",
+                defaultPkgName,
+              );
+              if (promptName !== null) {
+                doPublish(true, promptName.trim() || defaultPkgName);
+              }
+              return;
+            }
+
+            // Normal workflow: toggle is OFF -> proceed directly without confirmation alert
+            doPublish(false);
           },
         );
 
@@ -6988,6 +7341,9 @@
 
     populateCustomizerFields: function (pkg) {
       const self = this;
+      if (typeof self.markItineraryModified === "function") {
+        self.markItineraryModified(false);
+      }
       const adultPrice = parseFloat(pkg.tour_package_price_adult || 0);
       const childPrice = parseFloat(pkg.tour_package_price_child || 0);
       const adults =
@@ -7608,6 +7964,14 @@
         // 1. Open the Full Screen Itinerary Modal
         const $modal = $("#modalSendItinerary");
         $modal.addClass("is-active");
+
+        // Reset save as new package toggle to off by default
+        if (typeof self.resetSaveAsPackageToggle === "function") {
+          self.resetSaveAsPackageToggle();
+        }
+        if (typeof self.markItineraryModified === "function") {
+          self.markItineraryModified(false);
+        }
 
         // Preload stay cities from Cities API, vehicles, and properties
         self.loadItineraryMeta();

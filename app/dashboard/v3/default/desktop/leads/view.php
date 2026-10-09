@@ -18,10 +18,28 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
         $rawLeadId = $lastSeg;
     }
 }
+
+$loggedInUsername = '';
+if (!empty($_COOKIE['user_name'])) {
+    $loggedInUsername = trim((string)base64_decode($_COOKIE['user_name']));
+}
+if (empty($loggedInUsername) && !empty($_SESSION['user_name'])) {
+    $loggedInUsername = trim((string)$_SESSION['user_name']);
+}
+if (empty($loggedInUsername) && !empty($_SESSION['user_username'])) {
+    $loggedInUsername = trim((string)$_SESSION['user_username']);
+}
+if (empty($loggedInUsername) && defined('USER_ID') && (int)USER_ID > 0 && isset($connection)) {
+    $uRes = mysqli_query($connection, "SELECT p.profile_display_name, u.user_username FROM " . TABLE_PREFIX . "user u LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id WHERE u.user_id = " . (int)USER_ID . " LIMIT 1");
+    if ($uRes && $uRow = mysqli_fetch_assoc($uRes)) {
+        $loggedInUsername = !empty($uRow['profile_display_name']) ? trim($uRow['profile_display_name']) : trim($uRow['user_username']);
+    }
+}
 ?>
 <div id="leadViewApp" class="lead-view-wrapper<?php echo $isPackageSix ? ' is-package-six' : ''; ?>"
     data-lead-id="<?php echo htmlspecialchars($rawLeadId); ?>"
     data-user-id="<?php echo htmlspecialchars(defined('USER_ID') ? USER_ID : 0); ?>"
+    data-user-name="<?php echo htmlspecialchars($loggedInUsername); ?>"
     data-user-role="<?php echo htmlspecialchars(isset($site_access_type) ? $site_access_type : 'administrator'); ?>"
     data-package-id="<?php echo $packageId; ?>"
     data-is-package-six="<?php echo $isPackageSix ? '1' : '0'; ?>"
@@ -197,6 +215,16 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                 </div>
             </div>
             <div class="v3-modal-fullscreen-actions">
+                <div class="v3-save-pkg-toggle-wrapper v3-hidden" id="wrapSaveAsNewPackage" title="Toggle to save this itinerary as a new tour package template in your library">
+                    <label class="v3-save-pkg-toggle-label" for="toggleSaveAsNewPackage">
+                        <span class="v3-save-pkg-text"><i class="fi fi-rr-box-alt"></i> Save as New Package</span>
+                        <span class="v3-switch-slider-wrap">
+                            <input type="checkbox" id="toggleSaveAsNewPackage" name="save_as_new_package" value="1">
+                            <span class="v3-switch-slider"></span>
+                        </span>
+                        <span class="v3-save-pkg-badge" id="savePkgBadge">OFF</span>
+                    </label>
+                </div>
                 <button type="button" class="btn-v3-action btn-outline v3-hidden" id="btnChangeItinerary">
                     <i class="fi fi-rr-refresh"></i> Change Itinerary
                 </button>
@@ -512,18 +540,27 @@ if (empty($rawLeadId) && isset($urlStructure) && is_array($urlStructure)) {
                 </div>
                 <div class="v3-preview-header-meta">
                     <div class="v3-preview-header-title-wrap">
-                        <h4 class="v3-preview-header-title" id="livePreviewHeaderTitle">Custom Tour Proposal</h4>
-                        <span class="v3-preview-badge"><i class="fi fi-rr-sparkles"></i> Live Proposal Preview</span>
+                        <h4 class="v3-preview-header-title" id="livePreviewHeaderTitle" title="Custom Tour Proposal">Custom Tour Proposal</h4>
+                        <span class="v3-preview-badge"><i class="fi fi-rr-sparkles"></i> Preview</span>
                     </div>
-                    <span class="v3-preview-subtitle">Client-ready presentation & Multi-Page A4 PDF document</span>
                 </div>
             </div>
             <div class="v3-preview-header-actions">
-                <button type="button" class="btn-v3-action btn-outline" id="btnLivePreviewDownloadPdf">
+                <div class="v3-save-pkg-toggle-wrapper v3-preview-pkg-toggle v3-hidden" id="wrapSaveAsNewPackagePreview" title="Toggle to save this customized itinerary as a new tour package template in your library">
+                    <label class="v3-save-pkg-toggle-label" for="toggleSaveAsNewPackagePreview">
+                        <span class="v3-save-pkg-text"><i class="fi fi-rr-box-alt"></i> Save as Package</span>
+                        <span class="v3-switch-slider-wrap">
+                            <input type="checkbox" id="toggleSaveAsNewPackagePreview" name="save_as_new_package_preview" value="1">
+                            <span class="v3-switch-slider"></span>
+                        </span>
+                        <span class="v3-save-pkg-badge" id="savePkgBadgePreview">OFF</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-v3-action btn-outline" id="btnLivePreviewDownloadPdf" title="Download PDF document">
                     <i class="fi fi-rr-file-pdf"></i> Download PDF
                 </button>
-                <button type="button" class="btn-v3-action btn-green" id="btnLivePreviewSendItinerary">
-                    <i class="fi fi-rr-paper-plane"></i> Send Itinerary to Customer
+                <button type="button" class="btn-v3-action btn-green" id="btnLivePreviewSendItinerary" title="Send proposal to customer">
+                    <i class="fi fi-rr-paper-plane"></i> Send Itinerary
                 </button>
                 <button type="button" class="v3-modal-close-btn v3-preview-close-trigger" title="Close Preview (Esc)"><i class="fi fi-rr-cross"></i></button>
             </div>

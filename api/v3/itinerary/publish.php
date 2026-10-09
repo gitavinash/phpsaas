@@ -92,6 +92,7 @@ $refType   = isset($data['refType']) ? mysqli_real_escape_string($connection, tr
 $mrp       = isset($data['mrp']) ? (float)$data['mrp'] : 0;
 $content   = isset($data['content']) && is_array($data['content']) ? cleanItineraryUnicode($data['content']) : [];
 $isDownload = !empty($data['isDownload']);
+$saveAsNewPackage = !empty($data['save_as_new_package']) || !empty($data['saveAsNewPackage']);
 
 if ($refId <= 0) {
     http_response_code(400);
@@ -102,18 +103,44 @@ if ($refId <= 0) {
     exit;
 }
 
-// Extract and sanitize pricing
-preg_match('/\d+/', (string)($content['adult_per_person'] ?? ''), $mAdult);
-$adultPrice = isset($mAdult[0]) ? (int)$mAdult[0] : 0;
+// Extract and sanitize pricing accurately for each person type
+$cleanPrice = function($val) {
+    if (is_numeric($val)) return (float)$val;
+    $val = str_replace(',', '', (string)$val);
+    if (preg_match('/\d+(\.\d+)?/', $val, $m)) {
+        return (float)$m[0];
+    }
+    return 0.0;
+};
 
-preg_match('/\d+/', (string)($content['child_per_person'] ?? ''), $mChild);
-$childPrice = isset($mChild[0]) ? (int)$mChild[0] : 0;
+$adultPrice = $cleanPrice($content['adult_per_person'] ?? ($content['adultPrice'] ?? ($content['adult_price'] ?? '')));
+$childPrice = $cleanPrice($content['child_per_person'] ?? ($content['childPrice'] ?? ($content['child_price'] ?? '')));
+$infantPrice = $cleanPrice($content['infant_per_person'] ?? ($content['infantPrice'] ?? ($content['infant_price'] ?? '')));
+$totalPrice = $cleanPrice($content['total_price'] ?? ($content['totalPrice'] ?? ($content['price'] ?? '')));
 
-preg_match('/\d+/', (string)($content['infant_per_person'] ?? ''), $mInfant);
-$infantPrice = isset($mInfant[0]) ? (int)$mInfant[0] : 0;
+$adultsCount = max(1, (int)($content['adults_count'] ?? ($content['adults'] ?? 1)));
+$childrenCount = max(0, (int)($content['children_count'] ?? ($content['children'] ?? 0)));
+$infantsCount = max(0, (int)($content['infants_count'] ?? ($content['infants'] ?? 0)));
 
-preg_match('/\d+/', (string)($content['total_price'] ?? ''), $mTotal);
-$totalPrice = isset($mTotal[0]) ? (int)$mTotal[0] : ($adultPrice > 0 ? $adultPrice : 0);
+// If total price was not explicitly provided, calculate from individual person rates
+if ($totalPrice <= 0) {
+    $totalPrice = ($adultPrice * $adultsCount) + ($childPrice * $childrenCount) + ($infantPrice * $infantsCount);
+}
+
+// Ensure adultPrice represents the per-adult price, NOT the entire group total amount
+if ($adultPrice >= $totalPrice && $adultsCount > 1 && $totalPrice > 0) {
+    $rem = max(0, $totalPrice - ($childPrice * $childrenCount) - ($infantPrice * $infantsCount));
+    $adultPrice = round($rem / $adultsCount, 2);
+} elseif ($adultPrice <= 0 && $totalPrice > 0 && $adultsCount > 0) {
+    $rem = max(0, $totalPrice - ($childPrice * $childrenCount) - ($infantPrice * $infantsCount));
+    $adultPrice = round($rem / $adultsCount, 2);
+}
+
+// Keep content array synced with resolved rates
+$content['adult_per_person'] = $adultPrice;
+$content['child_per_person'] = $childPrice;
+$content['infant_per_person'] = $infantPrice;
+$content['total_price'] = $totalPrice;
 
 $itineraryJson = mysqli_real_escape_string($connection, json_encode($content, JSON_UNESCAPED_UNICODE));
 
@@ -203,6 +230,186 @@ if (mysqli_query($connection, $insertQuery)) {
             '{$quotationId}'
         )
     ");
+
+    // If requested, save customized itinerary as a new tour package template
+    $newPackageId = 0;
+    if ($saveAsNewPackage) {
+        $rawPkgTitle = !empty($data['package_name']) ? trim((string)$data['package_name']) : (!empty($content['new_package_title']) ? trim((string)$content['new_package_title']) : trim((string)($content['title'] ?? 'Custom Tour Package')));
+        $pkgTitle = mysqli_real_escape_string($connection, $rawPkgTitle);
+        $pkgTheme = mysqli_real_escape_string($connection, trim((string)($content['travel_theme'] ?? ($content['theme'] ?? 'standard'))));
+        $pkgTemplate = mysqli_real_escape_string($connection, trim((string)($content['template'] ?? 'mit')));
+        $pkgStartFrom = mysqli_real_escape_string($connection, trim((string)($content['pickup_location'] ?? '')));
+        $pkgEndTo = mysqli_real_escape_string($connection, trim((string)($content['drop_location'] ?? '')));
+        
+        $destRaw = trim((string)($content['city'] ?? ($content['destination'] ?? '')));
+        $destParts = array_filter(array_map('trim', explode(',', $destRaw)));
+        $destParts = array_values($destParts);
+        $cityName = $destParts[0] ?? '';
+        $stateName = (count($destParts) > 2) ? $destParts[count($destParts) - 2] : '';
+        $countryName = (count($destParts) > 1) ? end($destParts) : 'India';
+
+        if ((empty($stateName) || empty($countryName)) && !empty($cityName)) {
+            $escapedCity = mysqli_real_escape_string($connection, $cityName);
+            try {
+                $geoCheck = mysqli_query($connection, "
+                    SELECT c.city_name, s.state_name, co.country_name 
+                    FROM {$tblPrefix}city c
+                    LEFT JOIN {$tblPrefix}state s ON s.state_id = c.city_state_id
+                    LEFT JOIN {$tblPrefix}country co ON co.country_id = s.state_country_id
+                    WHERE c.city_name = '{$escapedCity}'
+                    LIMIT 1
+                ");
+                if ($geoCheck && mysqli_num_rows($geoCheck) > 0) {
+                    $gRow = mysqli_fetch_assoc($geoCheck);
+                    if (empty($stateName) && !empty($gRow['state_name'])) $stateName = $gRow['state_name'];
+                    if (empty($countryName) && !empty($gRow['country_name'])) $countryName = $gRow['country_name'];
+                }
+            } catch (Throwable $e) {
+                // Geo lookup error gracefully caught
+            }
+        }
+
+        $cityNameEscaped = mysqli_real_escape_string($connection, $cityName);
+        $stateNameEscaped = mysqli_real_escape_string($connection, $stateName);
+        $countryNameEscaped = mysqli_real_escape_string($connection, $countryName);
+
+        $pkgDuration = (int)($content['duration_days'] ?? (is_array($content['itinerary'] ?? null) ? count($content['itinerary']) : 1));
+        $pkgOverview = mysqli_real_escape_string($connection, trim((string)($content['overview'] ?? '')));
+        
+        $pkgItinArr = is_array($content['itinerary'] ?? null) ? $content['itinerary'] : [];
+        $pkgItinJson = mysqli_real_escape_string($connection, json_encode($pkgItinArr, JSON_UNESCAPED_UNICODE));
+        
+        $pkgInclusions = mysqli_real_escape_string($connection, trim((string)($content['inclusions'] ?? '')));
+        $pkgExclusions = mysqli_real_escape_string($connection, trim((string)($content['exclusions'] ?? '')));
+        $pkgHotel = mysqli_real_escape_string($connection, trim((string)($content['hotel'] ?? '')));
+        $pkgVehicle = mysqli_real_escape_string($connection, trim((string)($content['vehicle'] ?? ($content['outstation_vehicle'] ?? ''))));
+        
+        $pkgImage = '';
+        if (!empty($pkgItinArr[0]['image'])) {
+            $pkgImage = trim((string)$pkgItinArr[0]['image']);
+        }
+        $pkgImageEscaped = mysqli_real_escape_string($connection, $pkgImage);
+
+        $pkgType = (stripos($countryName, 'india') !== false || empty($countryName)) ? 'domestic' : 'international';
+
+        $insertPkgQuery = "
+            INSERT INTO {$tblPrefix}tour_package (
+                tour_package_site_id,
+                tour_package_created_by,
+                tour_package_image,
+                tour_package_title,
+                tour_package_theme,
+                tour_package_template,
+                tour_package_start_from,
+                tour_package_end_to,
+                tour_package_city,
+                tour_package_duration,
+                tour_package_overview,
+                tour_package_itinerary,
+                tour_package_inclusions,
+                tour_package_exclusions,
+                tour_package_price,
+                tour_package_hotel,
+                tour_package_state,
+                tour_package_country,
+                tour_package_type,
+                tour_package_outstation_vehicle,
+                tour_package_localsightseen_vehicle,
+                tour_package_status,
+                tour_package_created_at
+            ) VALUES (
+                {$siteId},
+                {$userId},
+                '{$pkgImageEscaped}',
+                '{$pkgTitle}',
+                '{$pkgTheme}',
+                '{$pkgTemplate}',
+                '{$pkgStartFrom}',
+                '{$pkgEndTo}',
+                '{$cityNameEscaped}',
+                {$pkgDuration},
+                '{$pkgOverview}',
+                '{$pkgItinJson}',
+                '{$pkgInclusions}',
+                '{$pkgExclusions}',
+                '',
+                '{$pkgHotel}',
+                '{$stateNameEscaped}',
+                '{$countryNameEscaped}',
+                '{$pkgType}',
+                '{$pkgVehicle}',
+                '{$pkgVehicle}',
+                1,
+                NOW()
+            )
+        ";
+
+        if (mysqli_query($connection, $insertPkgQuery)) {
+            $newPackageId = (int)mysqli_insert_id($connection);
+
+            // Insert into tour_package_price
+            $today = date('Y-m-d');
+            $nextYear = date('Y-m-d', strtotime('+1 year'));
+            $insertPriceQuery = "
+                INSERT INTO {$tblPrefix}tour_package_price (
+                    tour_package_price_parent_id,
+                    tour_package_price_site_id,
+                    tour_package_price_user_id,
+                    tour_package_price_date_start,
+                    tour_package_price_date_end,
+                    tour_package_price_net_adult,
+                    tour_package_price_net_child,
+                    tour_package_price_mrp_adult,
+                    tour_package_price_mrp_child,
+                    tour_package_price_selling_adult,
+                    tour_package_price_selling_child,
+                    tour_package_price_agent_adult,
+                    tour_package_price_agent_child,
+                    tour_package_price_type,
+                    tour_package_price_status,
+                    tour_package_price_created_at
+                ) VALUES (
+                    {$newPackageId},
+                    {$siteId},
+                    {$userId},
+                    '{$today}',
+                    '{$nextYear}',
+                    {$adultPrice},
+                    {$childPrice},
+                    {$adultPrice},
+                    {$childPrice},
+                    {$adultPrice},
+                    {$childPrice},
+                    {$adultPrice},
+                    {$childPrice},
+                    'double',
+                    1,
+                    NOW()
+                )
+            ";
+            mysqli_query($connection, $insertPriceQuery);
+
+            // Insert link & meta
+            $slug = preg_replace('/[^A-Za-z0-9\s]/', '_', (string)($content['title'] ?? 'package'));
+            $slug = strtolower('/' . preg_replace('/\s+/', '_', trim($slug)) . '-' . time() . '/');
+            $insertLink = "
+                INSERT INTO {$tblPrefix}link (
+                    link_url, link_relation_id, link_status, link_type, link_owner_id, link_site_id, link_creation, link_published
+                ) VALUES (
+                    '{$slug}', {$newPackageId}, 200, 'tour_package', {$userId}, {$siteId}, NOW(), NOW()
+                )
+            ";
+            if (mysqli_query($connection, $insertLink)) {
+                $linkId = (int)mysqli_insert_id($connection);
+                if ($linkId > 0) {
+                    mysqli_query($connection, "INSERT INTO {$tblPrefix}meta (meta_relation_id, meta_site_id, meta_type, meta_robots) VALUES ({$linkId}, {$siteId}, 'tour_package', 'index, follow')");
+                }
+            }
+
+            // Update quotation type id to point to the newly created package
+            mysqli_query($connection, "UPDATE {$tblPrefix}quotation SET quotation_type_id = {$newPackageId} WHERE quotation_id = {$quotationId}");
+        }
+    }
 
     // Fetch customer details from enquiry
     $customerQuery = mysqli_query($connection, "
@@ -423,7 +630,9 @@ if (mysqli_query($connection, $insertQuery)) {
 
     $msg = 'Itinerary published successfully.';
     if (!$isDownload) {
-        if ($emailSent && $whatsappSent) {
+        if ($saveAsNewPackage && $newPackageId > 0) {
+            $msg = 'Itinerary saved as new tour package and sent to customer!';
+        } elseif ($emailSent && $whatsappSent) {
             $msg = 'Itinerary published and sent to customer via Email and WhatsApp.';
         } elseif ($emailSent) {
             $msg = 'Itinerary published and sent to customer via Email.';
@@ -441,6 +650,7 @@ if (mysqli_query($connection, $insertQuery)) {
         'msg'            => $msg,
         'itineraryId'    => $quotationId,
         'encodedId'      => $encodedId,
+        'newPackageId'   => $newPackageId,
         'viewUrl'        => $viewUrl ?? '',
         'pdfUrl'         => $pdfUrl ?? '',
         'emailSent'      => $emailSent,
