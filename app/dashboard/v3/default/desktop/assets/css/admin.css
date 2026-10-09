@@ -12862,27 +12862,43 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
 }
 
 .v3-modal-close-btn {
-  width: 32px !important;
-  height: 32px !important;
+  width: 34px !important;
+  height: 34px !important;
   border-radius: 50% !important;
-  background: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
+  background: #fef2f2 !important;
+  border: 1.5px solid #fecaca !important;
   font-size: 15px !important;
-  color: #64748b !important;
+  color: #dc2626 !important;
   cursor: pointer !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  transition: all 0.15s ease !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.12) !important;
   flex-shrink: 0 !important;
   padding: 0 !important;
 }
 
+.v3-modal-close-btn i {
+  color: #dc2626 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: color 0.15s ease !important;
+}
+
 .v3-modal-close-btn:hover {
-  background: #fee2e2 !important;
-  color: #ef4444 !important;
-  border-color: #fca5a5 !important;
-  transform: rotate(90deg) !important;
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  border-color: #b91c1c !important;
+  box-shadow: 0 3px 8px rgba(220, 38, 38, 0.35) !important;
+  transform: rotate(90deg) scale(1.05) !important;
+}
+
+.v3-modal-close-btn:hover i {
+  color: #ffffff !important;
 }
 
 .v3-modal-body {
@@ -18737,14 +18753,36 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   background: #3b82f6 !important;
 }
 
+.emp-pipeline-chip.assigned,
 .emp-pipeline-chip.pending {
   background: #fffbeb !important;
   color: #b45309 !important;
   border: 1px solid #fde68a !important;
 }
 
+.emp-pipeline-chip.assigned .dot,
 .emp-pipeline-chip.pending .dot {
   background: #f59e0b !important;
+}
+
+.emp-pipeline-chip.itinerary {
+  background: #f0f9ff !important;
+  color: #0369a1 !important;
+  border: 1px solid #bae6fd !important;
+}
+
+.emp-pipeline-chip.itinerary .dot {
+  background: #0284c7 !important;
+}
+
+.emp-pipeline-chip.payment {
+  background: #ecfeff !important;
+  color: #0e7490 !important;
+  border: 1px solid #a5f3fc !important;
+}
+
+.emp-pipeline-chip.payment .dot {
+  background: #0891b2 !important;
 }
 
 .emp-pipeline-chip:hover {
@@ -20959,24 +20997,27 @@ tr:hover .vehicle-table-thumb {
 }
 
 .v3-modal-close-btn {
-  width: 30px !important;
-  height: 30px !important;
+  width: 34px !important;
+  height: 34px !important;
   border-radius: 50% !important;
-  border: 1px solid #e2e8f0 !important;
-  background: #f8fafc !important;
-  color: #64748b !important;
-  font-size: 12px !important;
+  border: 1.5px solid #fecaca !important;
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+  font-size: 14px !important;
   cursor: pointer !important;
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  transition: all 0.15s ease !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.12) !important;
 }
 
 .v3-modal-close-btn:hover {
-  background: #fee2e2 !important;
-  color: #dc2626 !important;
-  border-color: #fca5a5 !important;
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  border-color: #b91c1c !important;
+  box-shadow: 0 3px 8px rgba(220, 38, 38, 0.35) !important;
+  transform: rotate(90deg) scale(1.05) !important;
 }
 
 .v3-modal-body {
@@ -21575,6 +21616,17 @@ tr:hover .vehicle-table-thumb {
 .swal2-popup .swal2-styled.swal2-cancel:hover {
   background: #e2e8f0 !important;
   color: #1e293b !important;
+}
+
+/* Modal Discard/Exit Confirmation Alert Button Styling */
+.v3-swal-confirm-modal .swal2-styled.swal2-confirm {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35) !important;
+}
+
+.v3-swal-confirm-modal .swal2-styled.swal2-confirm:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.45) !important;
 }
 
 /* --- V3 TEAM & USERS MANAGEMENT STYLING --- */
@@ -29294,6 +29346,48 @@ body.v3-editor-fs-locked {
 #btnPreviewItinerary.v3-hidden,
 #btnPreviewItineraryBottom.v3-hidden {
   display: none !important;
+}
+
+/* Proposal Builder & Preview Header Close Button — High Visibility Red */
+.v3-modal-fullscreen-actions #btnCloseProposalBuilder,
+.v3-preview-header-actions .v3-preview-close-trigger {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: #fef2f2 !important;
+  border: 1.5px solid #fecaca !important;
+  color: #dc2626 !important;
+  font-size: 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.15) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.v3-modal-fullscreen-actions #btnCloseProposalBuilder i,
+.v3-preview-header-actions .v3-preview-close-trigger i {
+  color: #dc2626 !important;
+  font-size: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: color 0.15s ease !important;
+}
+
+.v3-modal-fullscreen-actions #btnCloseProposalBuilder:hover,
+.v3-preview-header-actions .v3-preview-close-trigger:hover {
+  background: #dc2626 !important;
+  border-color: #b91c1c !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.4) !important;
+  transform: rotate(90deg) scale(1.08) !important;
+}
+
+.v3-modal-fullscreen-actions #btnCloseProposalBuilder:hover i,
+.v3-preview-header-actions .v3-preview-close-trigger:hover i {
+  color: #ffffff !important;
 }
 
 .v3-modal-fullscreen-body {

@@ -503,22 +503,6 @@ if (mysqli_query($connection, $insertQuery)) {
                 WHERE enquiry_id = {$refId}
             ");
         }
-        if ($shouldUpdateStatus) {
-            $noteText = "Lead status updated to Itinerary Sent";
-            @mysqli_query($connection, "
-                INSERT INTO {$tblPrefix}enquiry_notes (
-                    enquiry_notes_ref_id, 
-                    enquiry_notes_user_id, 
-                    enquiry_notes_meta_type, 
-                    enquiry_notes_meta_value
-                ) VALUES (
-                    {$refId}, 
-                    {$userId}, 
-                    'status', 
-                    '" . mysqli_real_escape_string($connection, $noteText) . "'
-                )
-            ");
-        }
     }
 
     $siteDomain = defined('SITE_DOMAIN') && !empty(SITE_DOMAIN) ? SITE_DOMAIN : ($_SERVER['HTTP_HOST'] ?? '');

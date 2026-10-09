@@ -45,6 +45,9 @@
     activeComposerType: "note", // "note" | "followup"
     availablePackages: [],
     selectedPackage: null,
+    proposalModalHistoryActive: false,
+    isClosingProposalBuilder: false,
+    isConfirmingProposalClose: false,
 
     activeXhr: null,
 
@@ -126,6 +129,118 @@
     ) {
       // Global follow-up reminders are coordinated by app.js across the dashboard
       // to avoid duplicate notification banners, popups, and audio triggers.
+    },
+
+    pushProposalBuilderHistoryState: function () {
+      const self = this;
+      if (!self.proposalModalHistoryActive) {
+        try {
+          window.history.pushState(
+            { v3Modal: "proposalBuilder" },
+            "",
+            window.location.href,
+          );
+          self.proposalModalHistoryActive = true;
+        } catch (e) {
+          console.warn("History pushState error:", e);
+        }
+      }
+    },
+
+    closeProposalBuilder: function (isFromPopstate) {
+      const self = this;
+      self.isConfirmingProposalClose = false;
+      $("#modalItineraryLivePreview").removeClass("is-active");
+      $("#modalSendItinerary").removeClass("is-active");
+      self.isPublishingItin = false;
+      self.isDownloadingLivePdf = false;
+
+      if (self.proposalModalHistoryActive) {
+        if (isFromPopstate) {
+          self.proposalModalHistoryActive = false;
+        } else {
+          self.isClosingProposalBuilder = true;
+          self.proposalModalHistoryActive = false;
+          try {
+            window.history.back();
+          } catch (e) {}
+        }
+      }
+    },
+
+    confirmCloseProposalBuilder: function (onConfirm, onCancel) {
+      const self = this;
+      if (self.isConfirmingProposalClose) {
+        if (typeof onCancel === "function") onCancel();
+        return;
+      }
+      self.isConfirmingProposalClose = true;
+
+      const swalObj =
+        typeof window.Swal !== "undefined"
+          ? window.Swal
+          : typeof Swal !== "undefined"
+            ? Swal
+            : null;
+      const swalFn =
+        swalObj && typeof swalObj.fire === "function"
+          ? swalObj.fire.bind(swalObj)
+          : typeof swalObj === "function"
+            ? swalObj
+            : null;
+
+      const doConfirm = function () {
+        self.isConfirmingProposalClose = false;
+        if (typeof onConfirm === "function") {
+          onConfirm();
+        } else {
+          self.closeProposalBuilder(false);
+        }
+      };
+
+      const doCancel = function () {
+        self.isConfirmingProposalClose = false;
+        if (typeof onCancel === "function") {
+          onCancel();
+        }
+      };
+
+      if (swalFn) {
+        swalFn({
+          title: "Close Proposal Builder?",
+          text: "Any unsaved changes in this proposal will be lost. Are you sure you want to close the proposal builder?",
+          type: "warning",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#ef4444",
+          cancelButtonColor: "#64748b",
+          confirmButtonText: "Yes, Close",
+          cancelButtonText: "Keep Editing",
+          reverseButtons: true,
+          focusCancel: true,
+          onBeforeOpen: function (modalEl) {
+            if (modalEl && modalEl.classList) {
+              modalEl.classList.add("v3-swal-confirm-modal");
+            }
+          },
+        }).then(function (result) {
+          if (result && (result.isConfirmed || result.value)) {
+            doConfirm();
+          } else {
+            doCancel();
+          }
+        });
+      } else {
+        if (
+          window.confirm(
+            "Any unsaved changes in this proposal will be lost. Are you sure you want to close the proposal builder?",
+          )
+        ) {
+          doConfirm();
+        } else {
+          doCancel();
+        }
+      }
     },
 
     getLeadId: function () {
@@ -1779,6 +1894,13 @@
       if (lead.timeline && lead.timeline.length > 0) {
         timelineHtml = '<div class="v3-timeline-stream">';
         lead.timeline.forEach((t) => {
+          const desc = String(t.description || "").toLowerCase();
+          if (
+            desc.includes("lead status updated to itinerary") ||
+            (desc.includes("itinerary / quotation sent") && desc.includes("lead status"))
+          ) {
+            return;
+          }
           const type = (t.type || "note").toLowerCase();
           let extraContent = "";
           let cardExtraClass = `v3-timeline-card-${type}`;
@@ -4943,6 +5065,7 @@
           }
 
           $("#modalSendItinerary").addClass("is-active");
+          self.pushProposalBuilderHistoryState();
 
           // Reset save as new package toggle to off by default
           if (typeof self.resetSaveAsPackageToggle === "function") {
@@ -6531,8 +6654,7 @@
                 $btn,
                 function (res) {
                   self.isPublishingItin = false;
-                  $("#modalItineraryLivePreview").removeClass("is-active");
-                  $("#modalSendItinerary").removeClass("is-active");
+                  self.closeProposalBuilder(false);
                   self.notify(
                     res.msg || "Itinerary published and shared with customer!",
                     "success",
@@ -7099,12 +7221,86 @@
         $("#modalCloseLead").addClass("is-active");
       });
 
-      $(document).on("click", ".v3-modal-close-trigger", function () {
-        $(".v3-modal-overlay").removeClass("is-active");
+      $(document).on("click", "#btnCloseProposalBuilder", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.confirmCloseProposalBuilder(
+          function () {
+            self.closeProposalBuilder(false);
+          },
+          function () {},
+        );
+      });
+
+      $(document).on("click", ".v3-modal-close-trigger", function (e) {
+        if ($(this).closest("#modalSendItinerary").length) {
+          e.preventDefault();
+          e.stopPropagation();
+          self.confirmCloseProposalBuilder(
+            function () {
+              self.closeProposalBuilder(false);
+            },
+            function () {},
+          );
+          return;
+        }
+
+        if ($(this).closest("#modalItineraryLivePreview").length) {
+          e.preventDefault();
+          e.stopPropagation();
+          $("#modalItineraryLivePreview").removeClass("is-active");
+          return;
+        }
+
+        $(".v3-modal-overlay").not("#modalSendItinerary").removeClass("is-active");
       });
 
       // Close modal on Escape key or navigate with Left/Right Arrow keys
       $(document).on("keydown", function (e) {
+        if (e.key === "Escape" || e.keyCode === 27) {
+          const swalObj =
+            typeof window.Swal !== "undefined"
+              ? window.Swal
+              : typeof Swal !== "undefined"
+                ? Swal
+                : null;
+          const isSwalVisible =
+            (swalObj &&
+              typeof swalObj.isVisible === "function" &&
+              swalObj.isVisible()) ||
+            $(".swal2-container").is(":visible");
+          if (isSwalVisible) {
+            return;
+          }
+
+          if ($("#modalItineraryLivePreview").hasClass("is-active")) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#modalItineraryLivePreview").removeClass("is-active");
+            return;
+          }
+
+          if ($("#modalSendItinerary").hasClass("is-active")) {
+            e.preventDefault();
+            e.stopPropagation();
+            self.confirmCloseProposalBuilder(
+              function () {
+                self.closeProposalBuilder(false);
+              },
+              function () {},
+            );
+            return;
+          }
+
+          if ($(".v3-modal-overlay.is-active").length) {
+            $(".v3-modal-overlay.is-active").removeClass("is-active");
+          }
+          if ($(".popUp").is(":visible")) {
+            $(".popUp").hide();
+          }
+          return;
+        }
+
         if ($("#modalViewPaymentReceipt").hasClass("is-active")) {
           if (e.key === "ArrowLeft" || e.keyCode === 37) {
             e.preventDefault();
@@ -7116,16 +7312,71 @@
             return;
           }
         }
-
-        if (e.key === "Escape" || e.keyCode === 27) {
-          if ($(".v3-modal-overlay.is-active").length) {
-            $(".v3-modal-overlay.is-active").removeClass("is-active");
-          }
-          if ($(".popUp").is(":visible")) {
-            $(".popUp").hide();
-          }
-        }
       });
+
+      // Intercept popstate (browser back/forward button) to protect Proposal Builder
+      if (!window._v3ProposalPopstateBound) {
+        window._v3ProposalPopstateBound = true;
+        window.addEventListener(
+          "popstate",
+          function (e) {
+            const activeSelf = window.V3LeadView || self;
+
+            // 1. Programmatic history.back() after user confirmed exit
+            if (activeSelf.isClosingProposalBuilder) {
+              activeSelf.isClosingProposalBuilder = false;
+              activeSelf.proposalModalHistoryActive = false;
+              if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+              return;
+            }
+
+            // 2. Proposal Builder is open
+            if ($("#modalSendItinerary").hasClass("is-active")) {
+              if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+
+              // If Live Preview modal is open, close only Live Preview and restore proposal history
+              if ($("#modalItineraryLivePreview").hasClass("is-active")) {
+                $("#modalItineraryLivePreview").removeClass("is-active");
+                try {
+                  window.history.pushState(
+                    { v3Modal: "proposalBuilder" },
+                    "",
+                    window.location.href,
+                  );
+                } catch (err) {}
+                return;
+              }
+
+              // Show SweetAlert confirmation to close proposal builder
+              activeSelf.confirmCloseProposalBuilder(
+                function () {
+                  activeSelf.closeProposalBuilder(true);
+                },
+                function () {
+                  // User cancelled -> restore history state so future back presses are caught!
+                  try {
+                    window.history.pushState(
+                      { v3Modal: "proposalBuilder" },
+                      "",
+                      window.location.href,
+                    );
+                    activeSelf.proposalModalHistoryActive = true;
+                  } catch (err) {}
+                },
+              );
+            }
+          },
+          true, // Capture phase to intercept before SPA router
+        );
+
+        window.addEventListener("beforeunload", function (e) {
+          if ($("#modalSendItinerary").hasClass("is-active")) {
+            e.preventDefault();
+            e.returnValue = "Any unsaved proposal builder changes will be lost.";
+            return e.returnValue;
+          }
+        });
+      }
 
       // 10. Submit Payment Record Modal
       $(document).on("click", "#btnSubmitModalPayment", function () {
@@ -7964,6 +8215,7 @@
         // 1. Open the Full Screen Itinerary Modal
         const $modal = $("#modalSendItinerary");
         $modal.addClass("is-active");
+        self.pushProposalBuilderHistoryState();
 
         // Reset save as new package toggle to off by default
         if (typeof self.resetSaveAsPackageToggle === "function") {

@@ -143,11 +143,14 @@ if (!empty($empIds)) {
 // 4. Build Formatted Employee Performance Records
 $employeesList = [];
 $totalTeamMembers = count($employeesRaw);
-$globalTotalLeads = 0;
-$globalConfirmed  = 0;
-$globalFollowups  = 0;
-$globalPending    = 0;
-$globalLost       = 0;
+$globalTotalLeads       = 0;
+$globalConfirmed        = 0;
+$globalAssigned         = 0;
+$globalFollowups        = 0;
+$globalItineraries      = 0;
+$globalPaymentRequests  = 0;
+$globalPending          = 0;
+$globalLost             = 0;
 
 $topPerformer = null;
 $maxConfirmed = -1;
@@ -187,25 +190,52 @@ foreach ($employeesRaw as $uid => $emp) {
 
     $stats = $leadsStatsMap[$uid] ?? [];
 
-    // Success & Converted: 1 (Success), 8 (Upay done), 10 (Quotation approved), 11 (Voucher issued), 12 (Payment received), 13 (Trip in progress), 14 (Trip completed)
-    $confirmedCount = (int)($stats[1] ?? 0) + (int)($stats[8] ?? 0) + (int)($stats[10] ?? 0) + (int)($stats[11] ?? 0) + (int)($stats[12] ?? 0) + (int)($stats[13] ?? 0) + (int)($stats[14] ?? 0);
-    // Follow-up: 3
-    $followupCount  = (int)($stats[3] ?? 0);
-    // In-progress & Pipeline: 0 (Initiate), 2 (Pending assigned), 6 (Payment initiated), 7 (Sales request), 9 (Itinerary sent)
-    $pendingCount   = (int)($stats[0] ?? 0) + (int)($stats[2] ?? 0) + (int)($stats[6] ?? 0) + (int)($stats[7] ?? 0) + (int)($stats[9] ?? 0);
-    // Drop-off / Lost: 4 (Failed), 5 (Duplicate), 15 (Closed), 16 (Cancelled), 17 (Lost), 18 (Payment refund)
-    $lostCount      = (int)($stats[4] ?? 0) + (int)($stats[5] ?? 0) + (int)($stats[15] ?? 0) + (int)($stats[16] ?? 0) + (int)($stats[17] ?? 0) + (int)($stats[18] ?? 0);
-    $totalEmpLeads  = array_sum($stats);
+    // 1. Confirmed / Converted:
+    // 1 (Confirmed), 8 (Upay Done), 10 (Quotation Approved), 11 (Voucher Issued), 12 (Payment Received), 13 (Trip in Progress), 14 (Trip Completed)
+    $confirmedCount = (int)($stats[1] ?? 0)
+                    + (int)($stats[8] ?? 0)
+                    + (int)($stats[10] ?? 0)
+                    + (int)($stats[11] ?? 0)
+                    + (int)($stats[12] ?? 0)
+                    + (int)($stats[13] ?? 0)
+                    + (int)($stats[14] ?? 0);
 
-    $conversionRate = $totalEmpLeads > 0 ? round(($confirmedCount / $totalEmpLeads) * 100, 1) : 0.0;
-    $pipelineCount  = $followupCount + $pendingCount;
+    // 2. Active Pipeline Stages:
+    // - Assigned: 2 (Assigned), 0 (New/Inbound if assigned to agent)
+    $assignedCount   = (int)($stats[2] ?? 0) + (int)($stats[0] ?? 0);
+    // - Follow Up: 3 (Follow Up)
+    $followupCount   = (int)($stats[3] ?? 0);
+    // - Itinerary / Quotation Sent: 9 (Itinerary Sent)
+    $itineraryCount  = (int)($stats[9] ?? 0);
+    // - Payment Requested: 6 (Payment Requested)
+    $paymentReqCount = (int)($stats[6] ?? 0);
+    // - Sent for Sales Request: 7 (Sales Request)
+    $salesReqCount   = (int)($stats[7] ?? 0);
+
+    // Total Active Pipeline
+    $pipelineCount   = $assignedCount + $followupCount + $itineraryCount + $paymentReqCount + $salesReqCount;
+
+    // 3. Drop-off / Exception / Lost / Cancelled:
+    // 4 (Closed/Cancelled), 5 (Duplicate), 15 (Closed), 16 (Cancelled), 17 (Lost), 18 (Payment Refund)
+    $lostCount       = (int)($stats[4] ?? 0)
+                     + (int)($stats[5] ?? 0)
+                     + (int)($stats[15] ?? 0)
+                     + (int)($stats[16] ?? 0)
+                     + (int)($stats[17] ?? 0)
+                     + (int)($stats[18] ?? 0);
+
+    $totalEmpLeads   = array_sum($stats);
+    $conversionRate  = $totalEmpLeads > 0 ? round(($confirmedCount / $totalEmpLeads) * 100, 1) : 0.0;
 
     // Track Global Metrics
-    $globalTotalLeads += $totalEmpLeads;
-    $globalConfirmed  += $confirmedCount;
-    $globalFollowups  += $followupCount;
-    $globalPending    += $pendingCount;
-    $globalLost       += $lostCount;
+    $globalTotalLeads       += $totalEmpLeads;
+    $globalConfirmed        += $confirmedCount;
+    $globalAssigned         += $assignedCount;
+    $globalFollowups        += $followupCount;
+    $globalItineraries      += $itineraryCount;
+    $globalPaymentRequests  += $paymentReqCount;
+    $globalPending          += $assignedCount; // backward compatibility
+    $globalLost             += $lostCount;
 
     // Determine performance tier
     $performanceTier = 'Starting';
@@ -238,29 +268,35 @@ foreach ($employeesRaw as $uid => $emp) {
     }
 
     $employeesList[] = [
-        'id'                => $uid,
-        'encoded_id'        => base64_encode((string)$uid),
-        'name'              => $displayName,
-        'role'              => $role,
-        'role_label'        => ucwords($role),
-        'email'             => $email,
-        'mobile'            => $mobile,
-        'image'             => trim($emp['profile_image'] ?? ''),
-        'total_leads'       => $totalEmpLeads,
-        'confirmed_leads'   => $confirmedCount,
-        'followup_leads'    => $followupCount,
-        'pending_leads'     => $pendingCount,
-        'lost_leads'        => $lostCount,
-        'pipeline_leads'    => $pipelineCount,
-        'conversion_rate'   => $conversionRate,
-        'performance_tier'  => $performanceTier,
-        'performance_class' => $performanceClass,
-        'links'             => [
-            'all'       => "/dashboard/leads/list/?agentId={$uid}&daterange=" . urlencode($urlDateParam),
-            'confirmed' => "/dashboard/leads/list/?agentId={$uid}&leadStatus=1&daterange=" . urlencode($urlDateParam),
-            'followup'  => "/dashboard/leads/list/?agentId={$uid}&leadStatus=3&daterange=" . urlencode($urlDateParam),
-            'pending'   => "/dashboard/leads/list/?agentId={$uid}&leadStatus=2&daterange=" . urlencode($urlDateParam),
-            'lost'      => "/dashboard/leads/list/?agentId={$uid}&leadStatus=17&daterange=" . urlencode($urlDateParam)
+        'id'                     => $uid,
+        'encoded_id'             => base64_encode((string)$uid),
+        'name'                   => $displayName,
+        'role'                   => $role,
+        'role_label'             => ucwords($role),
+        'email'                  => $email,
+        'mobile'                 => $mobile,
+        'image'                  => trim($emp['profile_image'] ?? ''),
+        'total_leads'            => $totalEmpLeads,
+        'confirmed_leads'        => $confirmedCount,
+        'assigned_leads'         => $assignedCount,
+        'followup_leads'         => $followupCount,
+        'itinerary_leads'        => $itineraryCount,
+        'payment_requested_leads'=> $paymentReqCount,
+        'pending_leads'          => $assignedCount,
+        'lost_leads'             => $lostCount,
+        'pipeline_leads'         => $pipelineCount,
+        'conversion_rate'        => $conversionRate,
+        'performance_tier'       => $performanceTier,
+        'performance_class'      => $performanceClass,
+        'links'                  => [
+            'all'               => "/dashboard/leads/list/?agentId={$uid}&daterange=" . urlencode($urlDateParam),
+            'confirmed'         => "/dashboard/leads/list/?agentId={$uid}&leadStatus=1,8,10,11,12,13,14&daterange=" . urlencode($urlDateParam),
+            'assigned'          => "/dashboard/leads/list/?agentId={$uid}&leadStatus=2&daterange=" . urlencode($urlDateParam),
+            'pending'           => "/dashboard/leads/list/?agentId={$uid}&leadStatus=2&daterange=" . urlencode($urlDateParam),
+            'followup'          => "/dashboard/leads/list/?agentId={$uid}&leadStatus=3&daterange=" . urlencode($urlDateParam),
+            'itinerary'         => "/dashboard/leads/list/?agentId={$uid}&leadStatus=9&daterange=" . urlencode($urlDateParam),
+            'payment_requested' => "/dashboard/leads/list/?agentId={$uid}&leadStatus=6&daterange=" . urlencode($urlDateParam),
+            'lost'              => "/dashboard/leads/list/?agentId={$uid}&leadStatus=4,5,15,16,17,18&daterange=" . urlencode($urlDateParam)
         ]
     ];
 }
@@ -286,7 +322,7 @@ usort($employeesList, function ($a, $b) use ($sortBy) {
 });
 
 $overallConversionRate = $globalTotalLeads > 0 ? round(($globalConfirmed / $globalTotalLeads) * 100, 1) : 0.0;
-$globalPipeline = $globalFollowups + $globalPending;
+$globalPipeline = $globalAssigned + $globalFollowups + $globalItineraries + $globalPaymentRequests;
 
 echo json_encode([
     'status' => 'success',
@@ -298,16 +334,19 @@ echo json_encode([
         'preset'        => $preset ?: 'custom'
     ],
     'metrics' => [
-        'total_employees'       => $totalTeamMembers,
-        'filtered_employees'    => count($employeesList),
-        'total_leads'           => $globalTotalLeads,
-        'total_confirmed'       => $globalConfirmed,
-        'total_followups'       => $globalFollowups,
-        'total_pending'         => $globalPending,
-        'total_lost'            => $globalLost,
-        'total_pipeline'        => $globalPipeline,
-        'overall_conversion_rate' => $overallConversionRate,
-        'top_performer'         => $topPerformer
+        'total_employees'        => $totalTeamMembers,
+        'filtered_employees'     => count($employeesList),
+        'total_leads'            => $globalTotalLeads,
+        'total_confirmed'        => $globalConfirmed,
+        'total_assigned'         => $globalAssigned,
+        'total_followups'        => $globalFollowups,
+        'total_itineraries'      => $globalItineraries,
+        'total_payment_requests' => $globalPaymentRequests,
+        'total_pending'          => $globalAssigned,
+        'total_lost'             => $globalLost,
+        'total_pipeline'         => $globalPipeline,
+        'overall_conversion_rate'=> $overallConversionRate,
+        'top_performer'          => $topPerformer
     ],
     'employees' => $employeesList
 ]);

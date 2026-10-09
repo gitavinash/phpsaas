@@ -339,6 +339,15 @@ if (!empty($quotationIds)) {
 foreach ($rawTimelineRows as $tRow) {
     $noteType = strtolower(trim($tRow['enquiry_notes_meta_type'] ?? ''));
     $noteVal  = trim($tRow['enquiry_notes_meta_value'] ?? '');
+
+    // Skip redundant "Lead status updated to Itinerary..." status log so only rich itinerary and actual notes appear
+    if (
+        stripos($noteVal, 'Lead status updated to Itinerary') !== false ||
+        (stripos($noteVal, 'Itinerary / Quotation Sent') !== false && ($noteType === 'status' || stripos($noteVal, 'Lead status') !== false))
+    ) {
+        continue;
+    }
+
     $updatedBy = trim($tRow['user_name'] ?? 'System');
     $updatedAt = $tRow['enquiry_notes_update'] ?? '';
 

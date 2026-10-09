@@ -53,13 +53,35 @@ if ($reqAgent !== '' && $reqAgent !== 'all') {
 
 // Date Range Filter
 $daterangeFilter = "";
-if (isset($reqData['daterange']) && !empty($reqData['daterange']) && $reqData['daterange'] !== 'null' && $reqData['daterange'] !== 'all') {
-    $dates = explode(' - ', trim($reqData['daterange']));
-    if (count($dates) == 2) {
-        $t1 = date('Y-m-d 00:00:00', strtotime($dates[0]));
-        $t2 = date('Y-m-d 23:59:59', strtotime($dates[1]));
-        $daterangeFilter = " AND e.enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
+$hasExplicitDate = false;
+if (isset($reqData['daterange']) && !empty($reqData['daterange']) && $reqData['daterange'] !== 'null') {
+    $dr = trim($reqData['daterange']);
+    if (($ampPos = strpos($dr, '&')) !== false) {
+        $dr = substr($dr, 0, $ampPos);
     }
+    if ($dr === 'all') {
+        $daterangeFilter = "";
+        $hasExplicitDate = true;
+    } else {
+        $dates = explode(' - ', $dr);
+        if (count($dates) == 2) {
+            $parsedT1 = strtotime(trim($dates[0]));
+            $parsedT2 = strtotime(trim($dates[1]));
+            if ($parsedT1 && $parsedT2) {
+                $t1 = date('Y-m-d 00:00:00', $parsedT1);
+                $t2 = date('Y-m-d 23:59:59', $parsedT2);
+                $daterangeFilter = " AND e.enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
+                $hasExplicitDate = true;
+            }
+        }
+    }
+}
+
+// By default show last 30 days of data if no explicit date range is specified and not performing an open search
+if (!$hasExplicitDate && (!isset($reqData['search']) || trim($reqData['search']) === '')) {
+    $t1 = date('Y-m-d 00:00:00', strtotime('-29 days'));
+    $t2 = date('Y-m-d 23:59:59');
+    $daterangeFilter = " AND e.enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
 }
 
 // Search Filter
@@ -80,6 +102,10 @@ if (isset($reqData['search']) && trim($reqData['search']) !== '') {
                            OR e.enquiry_subject LIKE '%{$searchKey}%' 
                            OR e.enquiry_source LIKE '%{$searchKey}%'
                            OR e.enquiry_id = '{$searchKey}')";
+    }
+    // When specific search is provided without explicit daterange, search across all time
+    if (!$hasExplicitDate) {
+        $daterangeFilter = "";
     }
 }
 
@@ -204,6 +230,8 @@ LEFT JOIN {$tblPrefix}profile p ON e.enquiry_agent = p.profile_user_id
 LEFT JOIN (
     SELECT enquiry_notes_ref_id, MAX(enquiry_notes_update) AS latest_notes_time
     FROM {$tblPrefix}enquiry_notes
+    WHERE enquiry_notes_meta_value NOT LIKE '%Lead status updated to Itinerary%'
+      AND enquiry_notes_meta_value NOT LIKE '%Itinerary / Quotation Sent%'
     GROUP BY enquiry_notes_ref_id
 ) latest_notes ON e.enquiry_id = latest_notes.enquiry_notes_ref_id
 LEFT JOIN {$tblPrefix}enquiry_notes n ON e.enquiry_id = n.enquiry_notes_ref_id AND latest_notes.latest_notes_time = n.enquiry_notes_update
@@ -255,6 +283,9 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
             'recent_note'      => (function() use ($row) {
                 $type = trim($row['enquiry_notes_meta_type'] ?? '');
                 $val  = trim($row['enquiry_notes_meta_value'] ?? '');
+                if (stripos($val, 'Lead status updated to Itinerary') !== false || (stripos($val, 'Itinerary / Quotation Sent') !== false && ($type === 'status' || stripos($val, 'Lead status') !== false))) {
+                    return '';
+                }
                 if ($type === 'payment' || (str_starts_with($val, '{') && str_contains($val, 'paymentAmount'))) {
                     $dec = json_decode($val, true);
                     if (is_array($dec)) {

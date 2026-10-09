@@ -392,18 +392,32 @@
               ` : '<span class="emp-stat-zero">-</span>'}
             </td>
 
-            <!-- Active Pipeline (Follow-ups & Pending) -->
+            <!-- Active Pipeline (Assigned, Follow-ups, Itineraries, Payment Requests) -->
             <td style="text-align: center;">
-              ${(emp.followup_leads > 0 || emp.pending_leads > 0) ? `
+              ${(emp.pipeline_leads > 0) ? `
                 <div class="emp-pipeline-wrap">
+                  ${(emp.assigned_leads > 0) ? `
+                    <a href="${emp.links.assigned || emp.links.pending}" class="emp-pipeline-chip assigned" title="${emp.assigned_leads} Assigned Leads">
+                      <span class="dot"></span> ${emp.assigned_leads} Assigned
+                    </a>
+                  ` : (emp.pending_leads > 0 && !emp.assigned_leads ? `
+                    <a href="${emp.links.pending}" class="emp-pipeline-chip assigned" title="${emp.pending_leads} Assigned Leads">
+                      <span class="dot"></span> ${emp.pending_leads} Assigned
+                    </a>
+                  ` : '')}
                   ${emp.followup_leads > 0 ? `
                     <a href="${emp.links.followup}" class="emp-pipeline-chip followup" title="${emp.followup_leads} Follow-ups">
-                      <span class="dot"></span> ${emp.followup_leads} Follow-ups
+                      <span class="dot"></span> ${emp.followup_leads} Follow-up
                     </a>
                   ` : ''}
-                  ${emp.pending_leads > 0 ? `
-                    <a href="${emp.links.pending}" class="emp-pipeline-chip pending" title="${emp.pending_leads} Pending">
-                      <span class="dot"></span> ${emp.pending_leads} Pending
+                  ${emp.itinerary_leads > 0 ? `
+                    <a href="${emp.links.itinerary}" class="emp-pipeline-chip itinerary" title="${emp.itinerary_leads} Itinerary Sent">
+                      <span class="dot"></span> ${emp.itinerary_leads} Itinerary
+                    </a>
+                  ` : ''}
+                  ${emp.payment_requested_leads > 0 ? `
+                    <a href="${emp.links.payment_requested}" class="emp-pipeline-chip payment" title="${emp.payment_requested_leads} Payment Requested">
+                      <span class="dot"></span> ${emp.payment_requested_leads} Payment Req
                     </a>
                   ` : ''}
                 </div>

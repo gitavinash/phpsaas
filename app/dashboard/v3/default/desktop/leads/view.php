@@ -231,7 +231,7 @@ if (empty($loggedInUsername) && defined('USER_ID') && (int)USER_ID > 0 && isset(
                 <button type="button" class="btn-v3-action btn-green v3-hidden" id="btnPreviewItinerary">
                     <i class="fi fi-rr-eye"></i> Preview Itinerary
                 </button>
-                <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close (Press Esc)"><i class="fi fi-rr-cross"></i></button>
+                <button type="button" class="v3-modal-close-btn" id="btnCloseProposalBuilder" title="Close (Press Esc)"><i class="fi fi-rr-cross"></i></button>
             </div>
         </div>
 

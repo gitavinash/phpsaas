@@ -120,21 +120,23 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawStatus !== null && is_numeri
             }
         }
 
-        // 5. Log activity into enquiry_notes
-        require_once __DIR__ . '/status-config.php';
-        $statusMeta = getLeadStatusMeta($newStatus);
-        $statusLabel = $statusMeta['label'];
+        // 5. Log activity into enquiry_notes (Omit for status 9 as itinerary generation/dispatch handles its own rich log)
+        if ($newStatus !== 9) {
+            require_once __DIR__ . '/status-config.php';
+            $statusMeta = getLeadStatusMeta($newStatus);
+            $statusLabel = $statusMeta['label'];
 
-        $noteText = ($newStatus === 1)
-            ? "Lead converted to Confirmed Sale (Success) by {$currentUserName}"
-            : "Lead status updated to {$statusLabel} by {$currentUserName}";
+            $noteText = ($newStatus === 1)
+                ? "Lead converted to Confirmed Sale (Success) by {$currentUserName}"
+                : "Lead status updated to {$statusLabel} by {$currentUserName}";
 
-        $metaTypeEsc = 'status';
-        $metaValEsc  = mysqli_real_escape_string($connection, $noteText);
-        $insertNoteSql = "INSERT INTO {$tblPrefix}enquiry_notes 
-                          (enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) 
-                          VALUES ('{$realId}', '{$currentUserId}', '{$metaTypeEsc}', '{$metaValEsc}')";
-        @mysqli_query($connection, $insertNoteSql);
+            $metaTypeEsc = 'status';
+            $metaValEsc  = mysqli_real_escape_string($connection, $noteText);
+            $insertNoteSql = "INSERT INTO {$tblPrefix}enquiry_notes 
+                              (enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) 
+                              VALUES ('{$realId}', '{$currentUserId}', '{$metaTypeEsc}', '{$metaValEsc}')";
+            @mysqli_query($connection, $insertNoteSql);
+        }
 
         // 6. Lead details for notifications
         $custName = trim(($leadData['enquiry_first_name'] ?? '') . ' ' . ($leadData['enquiry_last_name'] ?? ''));

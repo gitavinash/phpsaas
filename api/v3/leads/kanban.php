@@ -34,21 +34,32 @@ $userFilter = ($accessType !== 'administrator' && $userId > 0)
     : "";
 
 $daterangeFilter = "";
+$hasExplicitDate = false;
 if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'] !== 'null') {
     $dr = trim($_GET['daterange']);
     if (($ampPos = strpos($dr, '&')) !== false) {
         $dr = substr($dr, 0, $ampPos);
     }
-    $dates = explode(' - ', $dr);
-    if (count($dates) == 2) {
-        $t1 = date('Y-m-d 00:00:00', strtotime(trim($dates[0])));
-        $t2 = date('Y-m-d 23:59:59', strtotime(trim($dates[1])));
-        if ($t1 && $t2 && strtotime(trim($dates[0])) !== false && strtotime(trim($dates[1])) !== false) {
-            $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
+    if ($dr === 'all') {
+        $daterangeFilter = "";
+        $hasExplicitDate = true;
+    } else {
+        $dates = explode(' - ', $dr);
+        if (count($dates) == 2) {
+            $parsedT1 = strtotime(trim($dates[0]));
+            $parsedT2 = strtotime(trim($dates[1]));
+            if ($parsedT1 && $parsedT2) {
+                $t1 = date('Y-m-d 00:00:00', $parsedT1);
+                $t2 = date('Y-m-d 23:59:59', $parsedT2);
+                $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
+                $hasExplicitDate = true;
+            }
         }
     }
 }
-if (empty($daterangeFilter) && (!isset($_GET['search']) || trim($_GET['search']) === '')) {
+
+// By default show last 30 days of data if no explicit date range is specified and not performing an open search
+if (!$hasExplicitDate && (!isset($_GET['search']) || trim($_GET['search']) === '')) {
     $t1 = date('Y-m-d 00:00:00', strtotime('-29 days'));
     $t2 = date('Y-m-d 23:59:59');
     $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
@@ -72,8 +83,10 @@ if (isset($_GET['search']) && trim($_GET['search']) !== '') {
                            OR enquiry_source LIKE '%{$searchKey}%'
                            OR enquiry_id = '{$searchKey}')";
     }
-    // When specific search is provided, search across all time
-    $daterangeFilter = "";
+    // When specific search is provided without explicit daterange, search across all time
+    if (!$hasExplicitDate) {
+        $daterangeFilter = "";
+    }
 }
 
 function cleanLeadSource($src)
