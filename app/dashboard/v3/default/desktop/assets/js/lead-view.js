@@ -1875,6 +1875,27 @@
         $app.hasClass("is-package-six")
       );
 
+      const natureAttr = $app.data("company-nature") || $app.attr("data-company-nature");
+      const actionAttr = $app.data("lead-action") || $app.attr("data-lead-action");
+      self.companyNature = (lead && lead.company_nature) || natureAttr || "travel_agency";
+      self.isTransporter = (self.companyNature === "transporter");
+
+      let viewOptsAttr = $app.data("lead-view-options");
+      if (typeof viewOptsAttr === "string") {
+        try { viewOptsAttr = JSON.parse(viewOptsAttr); } catch (e) {}
+      }
+      const rawOpts = (lead && lead.lead_view_options) || viewOptsAttr || {};
+      const isOptOn = (val) => val !== false && val !== "0" && val !== 0 && val !== "false";
+      self.leadViewOptions = {
+        show_payment_link: isOptOn(rawOpts.show_payment_link),
+        show_record_payment: isOptOn(rawOpts.show_record_payment),
+        show_convert_sale: isOptOn(rawOpts.show_convert_sale),
+        show_call_button: isOptOn(rawOpts.show_call_button),
+        show_whatsapp_button: isOptOn(rawOpts.show_whatsapp_button),
+        show_send_itinerary: isOptOn(rawOpts.show_send_itinerary),
+        show_send_quotation: isOptOn(rawOpts.show_send_quotation)
+      };
+
       document.title =
         (lead.name ? lead.name + " - Lead Details" : "Lead Details") +
         " | Dashboard";
@@ -2231,7 +2252,7 @@
                 </div>
               </div>
               ${
-                !self.isPackageSix
+                !self.isPackageSix && self.leadViewOptions.show_record_payment !== false
                   ? `
               <button type="button" class="btn-v3-action btn-green" id="btnOpenPaymentModalTab" data-tooltip="Record Payment">
                 <i class="fi fi-rr-plus"></i> Record Payment
@@ -2326,7 +2347,7 @@
             <h4 class="v3-empty-title">No Payments Recorded</h4>
             <p class="v3-empty-subtitle">No advance deposit or final settlement payment has been recorded yet.</p>
             ${
-              !self.isPackageSix
+              !self.isPackageSix && self.leadViewOptions.show_record_payment !== false
                 ? `
             <button type="button" class="btn-v3-action btn-green" id="btnOpenPaymentModal" data-tooltip="Record Payment">
               <i class="fi fi-rr-plus"></i> Record Payment
@@ -2581,7 +2602,7 @@
 
             <div class="v3-lead-hero-actions">
               ${
-                lead.wa_mobile
+                lead.wa_mobile && self.leadViewOptions.show_whatsapp_button
                   ? `
                 <a href="https://wa.me/${lead.wa_mobile}?text=Hello%20${encodeURIComponent(lead.first_name || lead.name)}" target="_blank" class="v3-btn-contact-action wa" data-tooltip="Chat on WhatsApp">
                   ${WA_SVG} <span>WhatsApp</span>
@@ -2590,7 +2611,7 @@
                   : ""
               }
               ${
-                lead.mobile
+                lead.mobile && self.leadViewOptions.show_call_button
                   ? `
                 <a href="tel:${lead.mobile}" class="v3-btn-contact-action call" data-tooltip="Call Primary Phone">
                   <i class="fi fi-rr-phone-call"></i> <span>${lead.mobile}</span>
@@ -2607,9 +2628,23 @@
                 ${
                   !self.isPackageSix
                     ? `
-                <button type="button" class="btn-v3-action btn-outline" id="btnHeroSendItinerary" data-tooltip="Search, Customize & Send Itinerary">
-                  <i class="fi fi-rr-paper-plane"></i> <span>Send Itinerary</span>
-                </button>
+                  ${
+                    self.isTransporter
+                      ? (self.leadViewOptions.show_send_quotation
+                          ? `
+                    <button type="button" class="btn-v3-action btn-outline" id="btnHeroSendQuotation" data-tooltip="Create & Send Quotation">
+                      <i class="fi fi-rr-document"></i> <span>Send Quotation</span>
+                    </button>
+                    `
+                          : "")
+                      : (self.leadViewOptions.show_send_itinerary
+                          ? `
+                    <button type="button" class="btn-v3-action btn-outline" id="btnHeroSendItinerary" data-tooltip="Search, Customize & Send Itinerary">
+                      <i class="fi fi-rr-paper-plane"></i> <span>Send Tour Itinerary</span>
+                    </button>
+                    `
+                          : "")
+                  }
                 `
                     : ""
                 }
@@ -2617,7 +2652,7 @@
                   <i class="fi fi-rr-alarm-clock"></i> <span>Follow-Up</span>
                 </button>
                 ${
-                  st !== 1
+                  st !== 1 && self.leadViewOptions.show_convert_sale !== false
                     ? `
                   <button type="button" class="btn-v3-action btn-green" id="btnHeroConvertToSale" data-tooltip="Convert Lead to Confirmed Sale">
                     <i class="fi fi-rr-check"></i> <span>Convert to Sale</span>
@@ -2899,7 +2934,7 @@
                     ? `
                   <div class="v3-fast-actions-grid">
                     ${
-                      lead.wa_mobile
+                      lead.wa_mobile && self.leadViewOptions.show_whatsapp_button
                         ? `
                       <a href="https://wa.me/${lead.wa_mobile}?text=Hello%20${encodeURIComponent(lead.first_name || lead.name)}" target="_blank" class="btn-fast-tile tile-wa" data-tooltip="Chat on WhatsApp">
                         <div class="fast-tile-icon">${WA_SVG}</div>
@@ -2913,7 +2948,7 @@
                     }
 
                     ${
-                      lead.mobile
+                      lead.mobile && self.leadViewOptions.show_call_button
                         ? `
                       <a href="tel:${lead.mobile}" class="btn-fast-tile tile-call" data-tooltip="Call customer mobile">
                         <div class="fast-tile-icon"><i class="fi fi-rr-phone-call"></i></div>
@@ -2937,13 +2972,31 @@
                     ${
                       !self.isPackageSix
                         ? `
-                    <button type="button" class="btn-fast-tile tile-itinerary" id="btnSideSendItinerary" data-tooltip="Create and send tour proposal">
-                      <div class="fast-tile-icon"><i class="fi fi-rr-paper-plane"></i></div>
-                      <div class="fast-tile-meta">
-                        <span class="fast-tile-title">Send Tour Itinerary</span>
-                        <span class="fast-tile-sub">Build & share quotation</span>
-                      </div>
-                    </button>
+                      ${
+                        self.isTransporter
+                          ? (self.leadViewOptions.show_send_quotation
+                              ? `
+                          <button type="button" class="btn-fast-tile tile-quotation" id="btnSideSendQuotation" data-tooltip="Build and share transporter quotation">
+                            <div class="fast-tile-icon"><i class="fi fi-rr-document"></i></div>
+                            <div class="fast-tile-meta">
+                              <span class="fast-tile-title">Send Quotation</span>
+                              <span class="fast-tile-sub">Vehicle & route quotation</span>
+                            </div>
+                          </button>
+                          `
+                              : "")
+                          : (self.leadViewOptions.show_send_itinerary
+                              ? `
+                          <button type="button" class="btn-fast-tile tile-itinerary" id="btnSideSendItinerary" data-tooltip="Create and send tour proposal">
+                            <div class="fast-tile-icon"><i class="fi fi-rr-paper-plane"></i></div>
+                            <div class="fast-tile-meta">
+                              <span class="fast-tile-title">Send Tour Itinerary</span>
+                              <span class="fast-tile-sub">Build & share quotation</span>
+                            </div>
+                          </button>
+                          `
+                              : "")
+                      }
                     `
                         : ""
                     }
@@ -2959,6 +3012,9 @@
                     ${
                       !self.isPackageSix
                         ? `
+                    ${
+                      self.leadViewOptions.show_record_payment !== false
+                        ? `
                     <button type="button" class="btn-fast-tile tile-pay-record" id="btnSideRecordPayment" data-tooltip="Record payment received from client">
                       <div class="fast-tile-icon"><i class="fi fi-rr-indian-rupee-sign"></i></div>
                       <div class="fast-tile-meta">
@@ -2966,7 +3022,13 @@
                         <span class="fast-tile-sub">Log received payment</span>
                       </div>
                     </button>
+                    `
+                        : ""
+                    }
 
+                    ${
+                      self.leadViewOptions.show_payment_link !== false
+                        ? `
                     <button type="button" class="btn-fast-tile tile-pay-link" id="btnSideSendPaymentLink" data-tooltip="Generate and share payment link">
                       <div class="fast-tile-icon"><i class="fi fi-rr-link"></i></div>
                       <div class="fast-tile-meta">
@@ -2977,9 +3039,12 @@
                     `
                         : ""
                     }
+                    `
+                        : ""
+                    }
 
                     ${
-                      st !== 1
+                      st !== 1 && self.leadViewOptions.show_convert_sale !== false
                         ? `
                       <button type="button" class="btn-fast-tile tile-convert" id="btnSideConvertToSale" data-tooltip="Mark lead as confirmed booking">
                         <div class="fast-tile-icon"><i class="fi fi-rr-check-circle"></i></div>
@@ -3798,7 +3863,7 @@
       });
     },
 
-    appendDayCard: function (d, num) {
+    appendDayCard: function (d, num, $insertAfterCard) {
       const self = this;
       const title = self.cleanLeadStringValue(d.day || `Day ${num} - Tour Plan`);
       const overview = self.cleanLeadStringValue(d.overview || "");
@@ -3924,6 +3989,9 @@
               </select>
             </div>
             <input type="text" class="v3-itin-day-title-input itin-day-title" value="${escapeHtml(title)}" placeholder="e.g. Day ${num} - Arrival & City Tour">
+            <button type="button" class="v3-itin-day-add-after-btn btn-add-day-after" data-after-day="${num}" title="Add Day After Day ${num}">
+              <i class="fi fi-rr-plus"></i> <span class="v3-btn-text">Add Day After</span>
+            </button>
             <button type="button" class="v3-itin-day-delete-btn btn-delete-itin-day" title="Delete Day ${num}">
               <i class="fi fi-rr-trash"></i>
             </button>
@@ -4010,10 +4078,21 @@
               </div>
             </div>
           </div>
+
+          <!-- In-between day inserter divider -->
+          <div class="v3-itin-insert-divider-wrap">
+            <button type="button" class="v3-btn-insert-between btn-add-day-after" data-after-day="${num}" title="Insert a new day after Day ${num}">
+              <i class="fi fi-rr-plus"></i> <span class="insert-label">Add Day After Day ${num}</span>
+            </button>
+          </div>
         </div>
       `;
       const $card = $(html);
-      $("#itinDaysStack").append($card);
+      if ($insertAfterCard && $insertAfterCard.length) {
+        $insertAfterCard.after($card);
+      } else {
+        $("#itinDaysStack").append($card);
+      }
 
       // Load initial room types for selected hotel
       const selectedPropId =
@@ -4154,12 +4233,36 @@
       const self = this;
       $("#itinDaysStack .v3-itin-day-card").each(function (idx) {
         const num = idx + 1;
-        $(this).attr("data-day-index", num);
-        $(this).find(".v3-itin-day-badge").text(`Day ${num}`);
-        $(this).find(".btn-delete-itin-day").attr("title", `Delete Day ${num}`);
-        $(this).find(".itin-day-show-hotel-toggle").attr("data-day-index", num);
-        $(this).find(".v3-hotel-visibility-toggle").attr("title", `Toggle hotel in customer itinerary proposal for Day ${num}`);
-        $(this).find(".v3-itin-hotel-hidden-notice").html(`<i class="fi fi-rr-info"></i> Hotel details hidden from customer itinerary proposal for Day ${num}.`);
+        const $card = $(this);
+        $card.attr("data-day-index", num);
+        $card.find(".v3-itin-day-badge").text(`Day ${num}`);
+        $card.find(".btn-delete-itin-day").attr("title", `Delete Day ${num}`);
+        $card
+          .find(".v3-itin-day-add-after-btn, .v3-btn-insert-between")
+          .attr("title", `Add Day After Day ${num}`)
+          .attr("data-after-day", num);
+        $card
+          .find(".v3-btn-insert-between .insert-label")
+          .text(`Add Day After Day ${num}`);
+        $card.find(".itin-day-show-hotel-toggle").attr("data-day-index", num);
+        $card.find(".itin-day-city-select").attr("data-day-index", num);
+        $card.find(".itin-day-hotel-select").attr("data-day-index", num);
+        $card
+          .find(".v3-hotel-visibility-toggle")
+          .attr("title", `Toggle hotel in customer itinerary proposal for Day ${num}`);
+        $card
+          .find(".v3-itin-hotel-hidden-notice")
+          .html(
+            `<i class="fi fi-rr-info"></i> Hotel details hidden from customer itinerary proposal for Day ${num}.`,
+          );
+
+        // Intelligently sync day title prefix if it starts with "Day X"
+        const $titleInput = $card.find(".itin-day-title");
+        const currentTitle = $titleInput.val() || "";
+        if (/^Day\s+\d+/i.test(currentTitle)) {
+          $titleInput.val(currentTitle.replace(/^Day\s+\d+/i, `Day ${num}`));
+        }
+        $titleInput.attr("placeholder", `e.g. Day ${num} - Arrival & City Tour`);
       });
       if (typeof self.checkItineraryChanges === "function") {
         self.checkItineraryChanges();
@@ -5025,6 +5128,15 @@
         });
       });
 
+      // 7.5 Transporter Quotation Modal Trigger
+      $(document).on(
+        "click",
+        "#btnHeroSendQuotation, #btnSideSendQuotation",
+        function () {
+          $("#modalSendTransporterQuotation").addClass("is-active");
+        },
+      );
+
       // 8. Full Screen Itinerary Modal Trigger & Logic
       $(document).on(
         "click",
@@ -5359,11 +5471,69 @@
             },
             nextNum,
           );
+          self.reindexDays();
           if (typeof self.checkItineraryChanges === "function") {
             self.checkItineraryChanges();
           }
         },
       );
+
+      // Add Day After (In-Between Day Inserter)
+      $(document).on("click", ".btn-add-day-after", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $targetCard = $(this).closest(".v3-itin-day-card");
+        if (!$targetCard.length) return;
+
+        const currentNum = parseInt($targetCard.attr("data-day-index")) || 1;
+        const nextNum = currentNum + 1;
+
+        // Inherit stay city, transport, and meal plan from current card for seamless UX
+        const currentCity =
+          $targetCard.find(".itin-day-city-select").val() || "";
+        const currentVehicle =
+          $targetCard.find(".itin-day-vehicle-type").val() || "";
+        const currentMealPlan =
+          $targetCard.find(".itin-day-meal-plan").val() || "CP";
+
+        self.appendDayCard(
+          {
+            day: `Day ${nextNum} - Sightseeing & Exploration`,
+            overview: "",
+            city: currentCity,
+            stay: currentCity,
+            hotel: "",
+            meal_plan: currentMealPlan,
+            vehicle: currentVehicle,
+            transfer_notes: "",
+          },
+          nextNum,
+          $targetCard,
+        );
+
+        self.reindexDays();
+
+        // Visual feedback & smooth scrolling to newly inserted card
+        const $newCard = $targetCard.next(".v3-itin-day-card");
+        if ($newCard.length) {
+          $newCard.addClass("v3-itin-just-added");
+          setTimeout(function () {
+            $newCard.removeClass("v3-itin-just-added");
+          }, 1500);
+
+          const $scrollContainer = $(
+            "#modalSendItinerary .v3-modal-fullscreen-body",
+          );
+          if ($scrollContainer.length) {
+            const cardTop =
+              $newCard.position().top + $scrollContainer.scrollTop() - 60;
+            $scrollContainer.animate({ scrollTop: Math.max(0, cardTop) }, 300);
+          }
+        }
+
+        self.notify(`Inserted Day ${nextNum} into itinerary.`, "success");
+      });
 
       // Hotel Show / Hide Switch Slider Toggle on Day Card
       $(document).on("change", ".itin-day-show-hotel-toggle", function () {

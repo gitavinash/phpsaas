@@ -35,6 +35,43 @@ if (empty($loggedInUsername) && defined('USER_ID') && (int)USER_ID > 0 && isset(
         $loggedInUsername = !empty($uRow['profile_display_name']) ? trim($uRow['profile_display_name']) : trim($uRow['user_username']);
     }
 }
+
+$companyNature = defined('COMPANY_NATURE') ? strtolower(COMPANY_NATURE) : 'travel_agency';
+$leadQuotationAction = defined('LEAD_QUOTATION_ACTION') ? strtolower(LEAD_QUOTATION_ACTION) : 'auto';
+$leadViewOpts = [
+    'show_payment_link' => true,
+    'show_record_payment' => true,
+    'show_convert_sale' => true,
+    'show_call_button' => true,
+    'show_whatsapp_button' => true,
+    'show_send_itinerary' => true,
+    'show_send_quotation' => true
+];
+$leadViewSiteId = defined('SITE_ID') && (int)SITE_ID > 0 ? (int)SITE_ID : (isset($_SESSION['site_id']) ? (int)$_SESSION['site_id'] : 0);
+if ($leadViewSiteId <= 0 && isset($_COOKIE['user_site_id'])) {
+    $leadViewSiteId = (int)base64_decode($_COOKIE['user_site_id']);
+}
+if ($leadViewSiteId <= 0) {
+    $leadViewSiteId = 1;
+}
+$leadViewTbl = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+if ($leadViewSiteId > 0 && isset($connection)) {
+    $lvRes = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM {$leadViewTbl}site_configuration WHERE site_configuration_site_id = {$leadViewSiteId} AND site_configuration_status = 1 AND site_configuration_key IN ('company_nature', 'lead_view_show_payment_link', 'lead_view_show_record_payment', 'lead_view_show_convert_sale', 'lead_view_show_call_button', 'lead_view_show_whatsapp_button', 'lead_view_show_send_itinerary', 'lead_view_show_send_quotation')");
+    if ($lvRes && mysqli_num_rows($lvRes) > 0) {
+        while ($lvRow = mysqli_fetch_assoc($lvRes)) {
+            $k = $lvRow['site_configuration_key'];
+            $v = $lvRow['site_configuration_value'];
+            if ($k === 'company_nature' && !empty($v)) $companyNature = strtolower($v);
+            if ($k === 'lead_view_show_payment_link') $leadViewOpts['show_payment_link'] = ($v !== '0');
+            if ($k === 'lead_view_show_record_payment') $leadViewOpts['show_record_payment'] = ($v !== '0');
+            if ($k === 'lead_view_show_convert_sale') $leadViewOpts['show_convert_sale'] = ($v !== '0');
+            if ($k === 'lead_view_show_call_button') $leadViewOpts['show_call_button'] = ($v !== '0');
+            if ($k === 'lead_view_show_whatsapp_button') $leadViewOpts['show_whatsapp_button'] = ($v !== '0');
+            if ($k === 'lead_view_show_send_itinerary') $leadViewOpts['show_send_itinerary'] = ($v !== '0');
+            if ($k === 'lead_view_show_send_quotation') $leadViewOpts['show_send_quotation'] = ($v !== '0');
+        }
+    }
+}
 ?>
 <div id="leadViewApp" class="lead-view-wrapper<?php echo $isPackageSix ? ' is-package-six' : ''; ?>"
     data-lead-id="<?php echo htmlspecialchars($rawLeadId); ?>"
@@ -43,6 +80,9 @@ if (empty($loggedInUsername) && defined('USER_ID') && (int)USER_ID > 0 && isset(
     data-user-role="<?php echo htmlspecialchars(isset($site_access_type) ? $site_access_type : 'administrator'); ?>"
     data-package-id="<?php echo $packageId; ?>"
     data-is-package-six="<?php echo $isPackageSix ? '1' : '0'; ?>"
+    data-company-nature="<?php echo htmlspecialchars($companyNature); ?>"
+    data-lead-action="<?php echo htmlspecialchars($leadQuotationAction); ?>"
+    data-lead-view-options='<?php echo json_encode($leadViewOpts); ?>'
     data-site-name="<?php echo htmlspecialchars(defined('SITE_NAME') ? SITE_NAME : ''); ?>"
     data-site-logo="<?php echo htmlspecialchars(defined('SITE_LOGO') ? SITE_LOGO : ''); ?>"
     data-site-domain="<?php echo htmlspecialchars(defined('COMPANY_SITE_DOMAIN') ? COMPANY_SITE_DOMAIN : (defined('SITE_DOMAIN') ? SITE_DOMAIN : '')); ?>"
@@ -885,6 +925,38 @@ if (empty($loggedInUsername) && defined('USER_ID') && (int)USER_ID > 0 && isset(
                 <i class="fi fi-rr-download"></i> Download Image
             </a>
             <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Transporter & Fleet Quotation Builder -->
+<div class="v3-modal-overlay" id="modalSendTransporterQuotation">
+    <div class="v3-modal-dialog v3-modal-dialog-md">
+        <div class="v3-modal-header">
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box icon-transporter">
+                    <i class="fi fi-rr-bus"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Transporter Quotation &amp; Fleet Proposal</h4>
+                    <span class="v3-modal-subtitle">Generate vehicle pricing, route estimates, and share with customer</span>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
+        </div>
+        <div class="v3-modal-body">
+            <div class="v3-transporter-placeholder-canvas">
+                <div class="v3-transporter-icon-badge">
+                    <i class="fi fi-rr-document-signed"></i>
+                </div>
+                <h4 class="v3-placeholder-title">Transporter Quotation Builder</h4>
+                <p class="v3-placeholder-desc">This proposal form is prepared for vehicle category selection (Sedan, SUV, Tempo Traveller, Bus), per-km / lump-sum route tariffs, toll inclusions, and instant WhatsApp PDF quotation generation.</p>
+                <div class="v3-mt-14">
+                    <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">
+                        <i class="fi fi-rr-cross"></i> Close
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

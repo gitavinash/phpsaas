@@ -35,6 +35,9 @@
       if ($("#settingSeoApp").length > 0) {
         this.initSeo();
       }
+      if ($("#settingAppConfigApp").length > 0) {
+        this.initAppConfig();
+      }
     },
 
     // ------------------------------------------------------------------------
@@ -1264,6 +1267,420 @@
           self.isSubmitting = false;
           $btn.prop("disabled", false).html(origHtml);
           self.showAlert("error", "Network error while saving SEO settings.");
+        }
+      });
+    },
+
+    // ------------------------------------------------------------------------
+    // APP & BUSINESS CONFIGURATION
+    // ------------------------------------------------------------------------
+    initAppConfig: function () {
+      const self = this;
+      self.initAppConfigSelect2();
+      self.bindAppConfigEvents();
+      self.loadAppConfigData();
+    },
+
+    initAppConfigSelect2: function () {
+      if (typeof $.fn.select2 !== "undefined") {
+        $("#settingAppConfigApp .selectJS").each(function () {
+          const $sel = $(this);
+          if ($sel.data("select2")) {
+            $sel.select2("destroy");
+          }
+          $sel.select2({
+            width: "100%",
+            dropdownAutoWidth: false,
+            minimumResultsForSearch: -1
+          });
+        });
+      }
+    },
+
+    bindAppConfigEvents: function () {
+      const self = this;
+
+      // Nature Option Card Selection
+      $(document).off("click", ".v3-nature-option-card").on("click", ".v3-nature-option-card", function () {
+        const $card = $(this);
+        const nature = $card.data("nature");
+        if (!nature) return;
+
+        $(".v3-nature-option-card").removeClass("is-selected");
+        $card.addClass("is-selected");
+        $("#configCompanyNature").val(nature);
+
+        // Toggle Fleet & Transporter tariff card visibility
+        if (nature === "transporter") {
+          $("#cardFleetTariffPreferences").removeClass("is-hidden");
+          $("#previewFleetRow").removeClass("is-hidden");
+          self.initAppConfigSelect2();
+        } else {
+          $("#cardFleetTariffPreferences").addClass("is-hidden");
+          $("#previewFleetRow").addClass("is-hidden");
+        }
+
+        self.updateAppConfigPreview();
+      });
+
+      // Currency Auto-Symbol Change
+      $(document).off("change", "#cfgCurrencyDefault").on("change", "#cfgCurrencyDefault", function () {
+        const curr = $(this).val();
+        const symbolMap = {
+          INR: "₹",
+          USD: "$",
+          EUR: "€",
+          AED: "د.إ",
+          GBP: "£",
+          THB: "฿",
+          SGD: "S$",
+          CAD: "C$",
+          AUD: "A$"
+        };
+        const sym = symbolMap[curr] || "₹";
+        $("#cfgCurrencySymbol").val(sym);
+        $("#cfgCurrencyIcon").text(sym);
+        $("#cfgCurrencySymbolIcon").text(sym);
+        self.updateAppConfigPreview();
+      });
+
+      // Manual currency symbol input update
+      $(document).off("input", "#cfgCurrencySymbol").on("input", "#cfgCurrencySymbol", function () {
+        const sym = $(this).val().trim() || "₹";
+        $("#cfgCurrencyIcon").text(sym);
+        $("#cfgCurrencySymbolIcon").text(sym);
+      });
+
+      // Advance Payment Percent Change (Custom Toggle)
+      $(document).off("change", "#cfgAdvancePaymentPercent").on("change", "#cfgAdvancePaymentPercent", function () {
+        const val = $(this).val();
+        if (val === "custom") {
+          $("#cfgAdvanceCustomGroup").removeClass("is-hidden");
+          if (!$("#cfgAdvancePaymentPercentCustom").val()) {
+            $("#cfgAdvancePaymentPercentCustom").val("35");
+          }
+          $("#cfgAdvancePaymentPercentCustom").focus();
+        } else {
+          $("#cfgAdvanceCustomGroup").addClass("is-hidden");
+        }
+        self.updateAppConfigPreview();
+      });
+
+      // Select2 & Input Changes to Live Preview
+      $(document).off("input change", "#settingAppConfigApp .selectJS, #cfgCurrencySymbol, #cfgAdvancePaymentPercentCustom, #cfgLeadViewPaymentLink, #cfgLeadViewRecordPayment, #cfgLeadViewConvertSale, #cfgLeadViewCallButton, #cfgLeadViewWhatsappButton, #cfgLeadViewSendItinerary, #cfgLeadViewSendQuotation").on("input change", "#settingAppConfigApp .selectJS, #cfgCurrencySymbol, #cfgAdvancePaymentPercentCustom, #cfgLeadViewPaymentLink, #cfgLeadViewRecordPayment, #cfgLeadViewConvertSale, #cfgLeadViewCallButton, #cfgLeadViewWhatsappButton, #cfgLeadViewSendItinerary, #cfgLeadViewSendQuotation", function () {
+        self.updateAppConfigPreview();
+      });
+
+      // Locked feature notification click
+      $(document).off("click", ".v3-feature-toggle-row.is-locked").on("click", ".v3-feature-toggle-row.is-locked", function (e) {
+        e.preventDefault();
+        const swalFn = window.swal || window.Swal;
+        const alertMsg = "This premium action requires an upgrade from your current package. Please contact support or upgrade your subscription to unlock.";
+        if (swalFn) {
+          swalFn({
+            title: "Upgrade Required",
+            text: alertMsg,
+            type: "warning",
+            icon: "warning",
+            confirmButtonText: "Got it"
+          });
+        } else {
+          alert(alertMsg);
+        }
+      });
+
+      // App Config Form Submission
+      $(document).off("submit", "#settingAppConfigForm").on("submit", "#settingAppConfigForm", function (e) {
+        e.preventDefault();
+        self.saveAppConfigData();
+      });
+    },
+
+    loadAppConfigData: function () {
+      const self = this;
+
+      $.ajax({
+        type: "GET",
+        url: "/api/v3/setting/app/",
+        dataType: "json",
+        success: function (res) {
+          if (res && res.status === "success" && res.data) {
+            const d = res.data;
+            const nature = d.company_nature || "travel_agency";
+            $("#configCompanyNature").val(nature);
+
+            $(".v3-nature-option-card").removeClass("is-selected");
+            $(`.v3-nature-option-card[data-nature="${nature}"]`).addClass("is-selected");
+
+            const symbolMap = {
+              INR: "₹",
+              USD: "$",
+              EUR: "€",
+              AED: "د.إ",
+              GBP: "£",
+              THB: "฿",
+              SGD: "S$",
+              CAD: "C$",
+              AUD: "A$"
+            };
+
+            // Financial & Currency
+            if (d.currency_default) $("#cfgCurrencyDefault").val(d.currency_default).trigger("change.select2");
+            const activeSym = d.currency_symbol || symbolMap[d.currency_default] || "₹";
+            $("#cfgCurrencySymbol").val(activeSym);
+            $("#cfgCurrencyIcon").text(activeSym);
+            $("#cfgCurrencySymbolIcon").text(activeSym);
+            if (d.tax_mode) $("#cfgTaxMode").val(d.tax_mode).trigger("change.select2");
+            if (d.quotation_validity_days) $("#cfgQuotationValidityDays").val(d.quotation_validity_days).trigger("change.select2");
+            
+            // Advance payment deposit
+            const advVal = String(d.advance_payment_percent || "25");
+            const standardDeposits = ["20", "25", "30", "50", "100"];
+            if (standardDeposits.includes(advVal)) {
+              $("#cfgAdvancePaymentPercent").val(advVal).trigger("change.select2");
+              $("#cfgAdvancePaymentPercentCustom").val(advVal);
+              $("#cfgAdvanceCustomGroup").addClass("is-hidden");
+            } else {
+              $("#cfgAdvancePaymentPercent").val("custom").trigger("change.select2");
+              $("#cfgAdvancePaymentPercentCustom").val(advVal);
+              $("#cfgAdvanceCustomGroup").removeClass("is-hidden");
+            }
+
+            // Lead Routing
+            if (d.lead_assignment_mode) $("#cfgLeadAssignmentMode").val(d.lead_assignment_mode).trigger("change.select2");
+            if (d.lead_default_followup_hours) $("#cfgLeadFollowupHours").val(d.lead_default_followup_hours).trigger("change.select2");
+            if (d.lead_sla_inactivity_hours) $("#cfgLeadSlaHours").val(d.lead_sla_inactivity_hours).trigger("change.select2");
+
+            // Proposal & Delivery
+            if (d.proposal_delivery_channel) $("#cfgProposalDeliveryChannel").val(d.proposal_delivery_channel).trigger("change.select2");
+            if (d.quotation_price_display) $("#cfgQuotationPriceDisplay").val(d.quotation_price_display).trigger("change.select2");
+
+            // Fleet & Transport Tariff
+            if (d.transporter_tariff_mode) $("#cfgTransporterTariffMode").val(d.transporter_tariff_mode).trigger("change.select2");
+            if (d.transporter_toll_policy) $("#cfgTransporterTollPolicy").val(d.transporter_toll_policy).trigger("change.select2");
+            if (d.transporter_driver_allowance) $("#cfgTransporterDriverAllowance").val(d.transporter_driver_allowance).trigger("change.select2");
+
+            // Lead View Visibility Toggles
+            const isOptEnabled = function (v) {
+              return v !== "0" && v !== 0 && v !== false && v !== "false";
+            };
+
+            const isPkgSix = (d.is_package_six === true || d.is_package_six === 1 || d.is_package_six === "1" || $("#settingAppConfigApp").data("is-package-six") === 1 || $("#settingAppConfigApp").data("is-package-six") === "1");
+            self.isPackageSix = isPkgSix;
+
+            if (isPkgSix) {
+              $("#cfgLeadViewPaymentLink, #cfgLeadViewRecordPayment, #cfgLeadViewSendItinerary, #cfgLeadViewSendQuotation")
+                .prop("disabled", true)
+                .prop("checked", false)
+                .closest(".v3-feature-toggle-row")
+                .addClass("is-locked");
+            } else {
+              $("#cfgLeadViewPaymentLink").prop("checked", isOptEnabled(d.lead_view_show_payment_link));
+              $("#cfgLeadViewRecordPayment").prop("checked", isOptEnabled(d.lead_view_show_record_payment));
+              $("#cfgLeadViewSendItinerary").prop("checked", isOptEnabled(d.lead_view_show_send_itinerary));
+              $("#cfgLeadViewSendQuotation").prop("checked", isOptEnabled(d.lead_view_show_send_quotation));
+            }
+
+            $("#cfgLeadViewConvertSale").prop("checked", isOptEnabled(d.lead_view_show_convert_sale));
+            $("#cfgLeadViewCallButton").prop("checked", isOptEnabled(d.lead_view_show_call_button));
+            $("#cfgLeadViewWhatsappButton").prop("checked", isOptEnabled(d.lead_view_show_whatsapp_button));
+
+            // Transporter conditional card
+            if (nature === "transporter") {
+              $("#cardFleetTariffPreferences").removeClass("is-hidden");
+              $("#previewFleetRow").removeClass("is-hidden");
+            } else {
+              $("#cardFleetTariffPreferences").addClass("is-hidden");
+              $("#previewFleetRow").addClass("is-hidden");
+            }
+
+            self.initAppConfigSelect2();
+            self.updateAppConfigPreview();
+          }
+        },
+        error: function () {
+          console.warn("Could not fetch app configuration.");
+        }
+      });
+    },
+
+    updateAppConfigPreview: function () {
+      const self = this;
+      const nature = $("#configCompanyNature").val() || "travel_agency";
+
+      const natureMeta = {
+        travel_agency: {
+          title: "Travel Agency & Tour Operator",
+          desc: "Optimized for holiday package sales & proposal sharing.",
+          icon: "fi fi-rr-plane-departure",
+          action: "Send Tour Itinerary",
+          actionIcon: "fi fi-rr-paper-plane"
+        },
+        transporter: {
+          title: "Transporter & Fleet Operator",
+          desc: "Optimized for vehicle dispatching & route quotations.",
+          icon: "fi fi-rr-bus",
+          action: "Send Quotation",
+          actionIcon: "fi fi-rr-document"
+        },
+        dmc: {
+          title: "Destination Management (DMC)",
+          desc: "Optimized for inbound ground services & B2B contracts.",
+          icon: "fi fi-rr-city",
+          action: "Send Tour Itinerary",
+          actionIcon: "fi fi-rr-paper-plane"
+        },
+        hotel_resort: {
+          title: "Hotel, Resort & Homestay",
+          desc: "Optimized for room reservations & stay hospitality.",
+          icon: "fi fi-rr-bed-alt",
+          action: "Send Quotation",
+          actionIcon: "fi fi-rr-document"
+        },
+        spa_wellness: {
+          title: "Spa, Wellness & Retreat",
+          desc: "Optimized for therapy appointments & wellness plans.",
+          icon: "fi fi-rr-flower",
+          action: "Send Quotation",
+          actionIcon: "fi fi-rr-document"
+        },
+        general: {
+          title: "General Business & Custom",
+          desc: "Standard sales pipeline and customized client estimates.",
+          icon: "fi fi-rr-briefcase",
+          action: "Send Quotation",
+          actionIcon: "fi fi-rr-document"
+        }
+      };
+
+      const meta = natureMeta[nature] || natureMeta.travel_agency;
+
+      $("#previewNatureIcon").html(`<i class="${meta.icon}"></i>`);
+      $("#previewNatureTitle").text(meta.title);
+      $("#previewNatureDesc").text(meta.desc);
+      $("#previewLeadAction").html(`<i class="${meta.actionIcon}"></i> <span>${meta.action}</span>`);
+
+      // Currency & Tax Preview
+      const curr = $("#cfgCurrencyDefault").val() || "INR";
+      const sym = $("#cfgCurrencySymbol").val() || "₹";
+      $("#cfgCurrencyIcon").text(sym);
+      $("#cfgCurrencySymbolIcon").text(sym);
+      const taxMode = $("#cfgTaxMode").val() || "exclusive";
+      const taxLabel = taxMode === "inclusive" ? "Inclusive Tax" : (taxMode === "exempt" ? "Tax Exempt" : "Exclusive Tax");
+      $("#previewCurrencyText").text(`${curr} (${sym}) • ${taxLabel}`);
+
+      // Proposal Channel Preview
+      const chan = $("#cfgProposalDeliveryChannel").val() || "whatsapp";
+      const chanLabel = chan === "email" ? "Email PDF" : (chan === "web_link" ? "Web Link Portal" : "WhatsApp Direct");
+      $("#previewProposalChannel").text(chanLabel);
+
+      // Validity Preview
+      const valDays = $("#cfgQuotationValidityDays").val() || "7";
+      $("#previewValidityText").text(`${valDays} Days`);
+
+      // Fleet Tariff Preview
+      if (nature === "transporter") {
+        $("#cardFleetTariffPreferences").removeClass("is-hidden");
+        $("#previewFleetRow").removeClass("is-hidden");
+        const tMode = $("#cfgTransporterTariffMode").val() || "per_km";
+        const tLabel = tMode === "fixed_route" ? "Fixed Route" : (tMode === "daily_hire" ? "Daily Hire" : "Per-Kilometer");
+        $("#previewFleetTariff").text(tLabel);
+      } else {
+        $("#cardFleetTariffPreferences").addClass("is-hidden");
+        $("#previewFleetRow").addClass("is-hidden");
+      }
+
+      // Fast Tile Badges
+      const isPkg6 = self.isPackageSix || $("#settingAppConfigApp").data("is-package-six") === 1 || $("#settingAppConfigApp").data("is-package-six") === "1";
+      const showPayLink = !isPkg6 && $("#cfgLeadViewPaymentLink").is(":checked");
+      const showRecPay = !isPkg6 && $("#cfgLeadViewRecordPayment").is(":checked");
+      const showItinerary = !isPkg6 && $("#cfgLeadViewSendItinerary").is(":checked");
+      const showQuotation = !isPkg6 && $("#cfgLeadViewSendQuotation").is(":checked");
+      const showConvSale = $("#cfgLeadViewConvertSale").is(":checked");
+      const showCall = $("#cfgLeadViewCallButton").is(":checked");
+      const showWa = $("#cfgLeadViewWhatsappButton").is(":checked");
+
+      $("#tagPrevCallButton").toggleClass("tag-active", showCall).toggle(showCall);
+      $("#tagPrevWhatsappButton").toggleClass("tag-active", showWa).toggle(showWa);
+      $("#tagPrevItinerary").toggleClass("tag-active", showItinerary).toggle(showItinerary);
+      $("#tagPrevQuotation").toggleClass("tag-active", showQuotation).toggle(showQuotation);
+      $("#tagPrevPaymentLink").toggleClass("tag-active", showPayLink).toggle(showPayLink);
+      $("#tagPrevRecordPayment").toggleClass("tag-active", showRecPay).toggle(showRecPay);
+      $("#tagPrevConvertSale").toggleClass("tag-active", showConvSale).toggle(showConvSale);
+    },
+
+    saveAppConfigData: function () {
+      const self = this;
+      if (self.isSubmitting) return;
+
+      const $btn = $("#btnSaveAppConfig");
+      const origHtml = $btn.html();
+
+      self.isSubmitting = true;
+      $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Saving...');
+
+      const rawAdv = $("#cfgAdvancePaymentPercent").val();
+      const advPercent = (rawAdv === "custom")
+        ? ($("#cfgAdvancePaymentPercentCustom").val().trim() || "25")
+        : (rawAdv || "25");
+
+      const payload = {
+        company_nature: $("#configCompanyNature").val(),
+        currency_default: $("#cfgCurrencyDefault").val(),
+        currency_symbol: $("#cfgCurrencySymbol").val() || "₹",
+        tax_mode: $("#cfgTaxMode").val(),
+        quotation_validity_days: $("#cfgQuotationValidityDays").val(),
+        advance_payment_percent: advPercent,
+        lead_assignment_mode: $("#cfgLeadAssignmentMode").val(),
+        lead_default_followup_hours: $("#cfgLeadFollowupHours").val(),
+        lead_sla_inactivity_hours: $("#cfgLeadSlaHours").val(),
+        proposal_delivery_channel: $("#cfgProposalDeliveryChannel").val(),
+        quotation_price_display: $("#cfgQuotationPriceDisplay").val(),
+        transporter_tariff_mode: $("#cfgTransporterTariffMode").val(),
+        transporter_toll_policy: $("#cfgTransporterTollPolicy").val(),
+        transporter_driver_allowance: $("#cfgTransporterDriverAllowance").val(),
+        lead_view_show_send_itinerary: $("#cfgLeadViewSendItinerary").is(":checked") ? "1" : "0",
+        lead_view_show_send_quotation: $("#cfgLeadViewSendQuotation").is(":checked") ? "1" : "0",
+        lead_view_show_payment_link: $("#cfgLeadViewPaymentLink").is(":checked") ? "1" : "0",
+        lead_view_show_record_payment: $("#cfgLeadViewRecordPayment").is(":checked") ? "1" : "0",
+        lead_view_show_convert_sale: $("#cfgLeadViewConvertSale").is(":checked") ? "1" : "0",
+        lead_view_show_call_button: $("#cfgLeadViewCallButton").is(":checked") ? "1" : "0",
+        lead_view_show_whatsapp_button: $("#cfgLeadViewWhatsappButton").is(":checked") ? "1" : "0"
+      };
+
+      $.ajax({
+        type: "POST",
+        url: "/api/v3/setting/app/",
+        data: JSON.stringify(payload),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (res) {
+          self.isSubmitting = false;
+          $btn.prop("disabled", false).html(origHtml);
+
+          if (res && res.status === "success") {
+            const swalFn = window.swal || window.Swal;
+            if (swalFn) {
+              swalFn({
+                title: "Configuration Saved!",
+                text: res.msg || "App and business configuration saved successfully.",
+                type: "success",
+                icon: "success",
+                timer: 1800,
+                showConfirmButton: false
+              });
+            } else {
+              alert(res.msg || "App configuration saved successfully.");
+            }
+            self.updateAppConfigPreview();
+          } else {
+            self.showAlert("error", res ? res.msg : "Failed to save configuration.");
+          }
+        },
+        error: function () {
+          self.isSubmitting = false;
+          $btn.prop("disabled", false).html(origHtml);
+          self.showAlert("error", "Network error while saving app configuration.");
         }
       });
     },

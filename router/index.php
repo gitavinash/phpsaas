@@ -295,6 +295,13 @@ switch ($urlStructure[0]) {
 		require_once 'itinerary.php';
 		break;
 
+	/** For Public Landing Page Web Form embed / view */
+
+	case 'form':
+	case 'web-form':
+		require_once 'web-form.php';
+		break;
+
 	/** For all type of payment process */
 
 	case 'payment':

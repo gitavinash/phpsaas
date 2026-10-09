@@ -48,19 +48,36 @@ if (EMAIL_ENABLE == 1) {
         if (empty($toAddress)) {
             throw new Exception('Recipient email address is missing.');
         }
-        $mail->addAddress($toAddress);
+        $toAddresses = is_array($toAddress) ? $toAddress : explode(',', $toAddress);
+        $hasValidTo = false;
+        foreach ($toAddresses as $to) {
+            $to = trim($to);
+            if (!empty($to) && filter_var($to, FILTER_VALIDATE_EMAIL)) {
+                $mail->addAddress($to);
+                $hasValidTo = true;
+            }
+        }
+        if (!$hasValidTo) {
+            $mail->addAddress(trim(is_array($toAddress) ? ($toAddress[0] ?? '') : $toAddress));
+        }
 
         if (isset($ccAddress)) {
             $ccAddresses = is_array($ccAddress) ? $ccAddress : explode(',', $ccAddress);
             foreach ($ccAddresses as $cc) {
-                $mail->addCC(trim($cc));
+                $cc = trim($cc);
+                if (!empty($cc) && filter_var($cc, FILTER_VALIDATE_EMAIL)) {
+                    $mail->addCC($cc);
+                }
             }
         }
 
         if (isset($bccAddress)) {
             $bccAddresses = is_array($bccAddress) ? $bccAddress : explode(',', $bccAddress);
             foreach ($bccAddresses as $bcc) {
-                $mail->addBCC(trim($bcc));
+                $bcc = trim($bcc);
+                if (!empty($bcc) && filter_var($bcc, FILTER_VALIDATE_EMAIL)) {
+                    $mail->addBCC($bcc);
+                }
             }
         }
 

@@ -885,5 +885,57 @@ $response = [
     ]
 ];
 
+// Fetch live app & lead view configurations directly from site_configuration table
+$siteConfigs = [];
+$effectiveSiteId = ($siteId > 0) ? $siteId : (int)($lead['enquiry_site_id'] ?? 0);
+if ($effectiveSiteId <= 0 && isset($_SESSION['site_id'])) {
+    $effectiveSiteId = (int)$_SESSION['site_id'];
+}
+if ($effectiveSiteId <= 0 && isset($_COOKIE['user_site_id'])) {
+    $effectiveSiteId = (int)base64_decode($_COOKIE['user_site_id']);
+}
+if ($effectiveSiteId <= 0) {
+    $effectiveSiteId = 1;
+}
+
+if ($effectiveSiteId > 0 && isset($connection)) {
+    $cfgKeys = [
+        'lead_view_show_payment_link',
+        'lead_view_show_record_payment',
+        'lead_view_show_convert_sale',
+        'lead_view_show_call_button',
+        'lead_view_show_whatsapp_button',
+        'lead_view_show_send_itinerary',
+        'lead_view_show_send_quotation',
+        'company_nature',
+        'currency_symbol',
+        'currency_default'
+    ];
+    $cfgKeyList = "'" . implode("','", $cfgKeys) . "'";
+    $cfgRes = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM {$tblPrefix}site_configuration WHERE site_configuration_site_id = {$effectiveSiteId} AND site_configuration_key IN ({$cfgKeyList}) AND site_configuration_status = 1");
+    if ($cfgRes && mysqli_num_rows($cfgRes) > 0) {
+        while ($cfgRow = mysqli_fetch_assoc($cfgRes)) {
+            $siteConfigs[$cfgRow['site_configuration_key']] = $cfgRow['site_configuration_value'];
+        }
+    }
+}
+
+$effectiveCompanyNature = !empty($siteConfigs['company_nature']) ? strtolower($siteConfigs['company_nature']) : (defined('COMPANY_NATURE') ? strtolower(COMPANY_NATURE) : 'travel_agency');
+$effectiveCurrencySymbol = !empty($siteConfigs['currency_symbol']) ? $siteConfigs['currency_symbol'] : (defined('CURRENCY_SYMBOL') ? CURRENCY_SYMBOL : '₹');
+$effectiveCurrencyDefault = !empty($siteConfigs['currency_default']) ? $siteConfigs['currency_default'] : (defined('CURRENCY_DEFAULT') ? CURRENCY_DEFAULT : 'INR');
+
+$response['data']['company_nature'] = $effectiveCompanyNature;
+$response['data']['currency_symbol'] = $effectiveCurrencySymbol;
+$response['data']['currency_default'] = $effectiveCurrencyDefault;
+$response['data']['lead_view_options'] = [
+    'show_payment_link'    => isset($siteConfigs['lead_view_show_payment_link']) ? ($siteConfigs['lead_view_show_payment_link'] !== '0') : (defined('LEAD_VIEW_SHOW_PAYMENT_LINK') ? (LEAD_VIEW_SHOW_PAYMENT_LINK !== '0') : true),
+    'show_record_payment'  => isset($siteConfigs['lead_view_show_record_payment']) ? ($siteConfigs['lead_view_show_record_payment'] !== '0') : (defined('LEAD_VIEW_SHOW_RECORD_PAYMENT') ? (LEAD_VIEW_SHOW_RECORD_PAYMENT !== '0') : true),
+    'show_convert_sale'    => isset($siteConfigs['lead_view_show_convert_sale']) ? ($siteConfigs['lead_view_show_convert_sale'] !== '0') : (defined('LEAD_VIEW_SHOW_CONVERT_SALE') ? (LEAD_VIEW_SHOW_CONVERT_SALE !== '0') : true),
+    'show_call_button'     => isset($siteConfigs['lead_view_show_call_button']) ? ($siteConfigs['lead_view_show_call_button'] !== '0') : (defined('LEAD_VIEW_SHOW_CALL_BUTTON') ? (LEAD_VIEW_SHOW_CALL_BUTTON !== '0') : true),
+    'show_whatsapp_button' => isset($siteConfigs['lead_view_show_whatsapp_button']) ? ($siteConfigs['lead_view_show_whatsapp_button'] !== '0') : (defined('LEAD_VIEW_SHOW_WHATSAPP_BUTTON') ? (LEAD_VIEW_SHOW_WHATSAPP_BUTTON !== '0') : true),
+    'show_send_itinerary'  => isset($siteConfigs['lead_view_show_send_itinerary']) ? ($siteConfigs['lead_view_show_send_itinerary'] !== '0') : (defined('LEAD_VIEW_SHOW_SEND_ITINERARY') ? (LEAD_VIEW_SHOW_SEND_ITINERARY !== '0') : true),
+    'show_send_quotation'  => isset($siteConfigs['lead_view_show_send_quotation']) ? ($siteConfigs['lead_view_show_send_quotation'] !== '0') : (defined('LEAD_VIEW_SHOW_SEND_QUOTATION') ? (LEAD_VIEW_SHOW_SEND_QUOTATION !== '0') : true),
+];
+
 echo json_encode($response);
 exit();

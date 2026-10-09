@@ -18,6 +18,8 @@ if (strpos($requestUri, '/setting/profile') !== false) {
     require_once __DIR__ . '/setting/banking.php';
 } elseif (strpos($requestUri, '/setting/seo') !== false) {
     require_once __DIR__ . '/setting/seo.php';
+} elseif (strpos($requestUri, '/setting/app') !== false) {
+    require_once __DIR__ . '/setting/app.php';
 } else {
     require_once __DIR__ . '/setting/configuration.php';
 }

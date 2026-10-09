@@ -103,6 +103,21 @@ $isFullSettingAccess = in_array($currentUserType, ['administrator', 'operator'])
                 </div>
             </div>
         </a>
+
+        <!-- Card 6: App & Business Configuration -->
+        <a href="/dashboard/setting/app/" class="v3-setting-card-link">
+            <div class="v3-card-section v3-setting-card-item">
+                <div class="v3-card-header-icon amber v3-setting-card-icon">
+                    <i class="fi fi-rr-apps-sort"></i>
+                </div>
+                <div>
+                    <h3 class="v3-setting-card-title">App &amp; Business Configuration</h3>
+                    <p class="v3-setting-card-desc">
+                        Manage business nature (Travel Agency, Transporter), quotation workflows, proposal modes, and operational features.
+                    </p>
+                </div>
+            </div>
+        </a>
         <?php } ?>
 
         <!-- Card 6: Personal Profile (Visible to all users) -->

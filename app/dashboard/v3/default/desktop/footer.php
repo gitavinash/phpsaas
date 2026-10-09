@@ -137,6 +137,7 @@
 				<script src="<?php echo ADMIN_JS ?>whatsapp.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>accounts.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>marketing-dashboard.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>web_forms.js?v=<?php echo time(); ?>"></script>
 				<?php
 				$appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
 				$appJSScript = ADMIN_JS . SITE_APP . '.js';

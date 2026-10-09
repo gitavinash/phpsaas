@@ -149,6 +149,25 @@ if ($method === 'GET') {
                 'Multi-channel campaign attribution ROI'
             ]
         ],
+        [
+            'id'            => 'web_forms',
+            'slug'          => 'web_forms',
+            'title'         => 'Landing Page Web Forms',
+            'category'      => 'leadgen',
+            'category_name' => 'Lead Generation & Ads',
+            'description'   => 'Build customizable embeddable web lead forms for landing pages with unique URLs and seamless iframe integration.',
+            'icon'          => 'web_forms',
+            'config_url'    => '/dashboard/integration/web_forms/',
+            'toggle_key'    => 'enable_web_forms',
+            'is_active'     => ($configMap['enable_web_forms'] ?? '1') === '1',
+            'status_label'  => 'Available',
+            'is_connected'  => true,
+            'features'      => [
+                'Unique public URL & 1-click iframe embed snippet',
+                'Built-in Google reCAPTCHA v3 spam protection',
+                'Mandatory Full Name & Mobile + customizable travel fields'
+            ]
+        ],
         // Messaging
 
         [

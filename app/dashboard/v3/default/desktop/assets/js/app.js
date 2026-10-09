@@ -4721,6 +4721,20 @@ $(document).ready(function (e) {
       }
     }
 
+    // 6b. Web Forms Plugin Module
+    const $webForms = $("#pluginWebFormsApp");
+    if ($webForms.length > 0) {
+      if (window.V3WebForms && typeof window.V3WebForms.init === "function") {
+        window.V3WebForms.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "web_forms.js?v=" + Date.now(), function () {
+          if (window.V3WebForms && typeof window.V3WebForms.init === "function") {
+            window.V3WebForms.init();
+          }
+        });
+      }
+    }
+
     // 7. Digital Marketing Dashboard Module
     const $mktDashboard = $("#digitalMarketingDashboardApp");
     if ($mktDashboard.length > 0) {

@@ -30,6 +30,11 @@ if (isset($name)) {
     // Remove name varible from array
 
     unset($_REQUEST['name']);
+} elseif (isset($full_name)) {
+
+    // Support full_name from landing page web forms
+    $name = $full_name;
+    unset($_REQUEST['full_name']);
 } else {
 
     if (isset($first_name)) {
@@ -274,10 +279,45 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '{$escaped_ip}', '{$escaped_c
 '{$trafficMedium}', '{$trafficCampaign}', {$enquiryStatus}, NOW())");
             $leadId = mysqli_insert_id($connection);
 
+            if (!empty($form_uid)) {
+                $escFormUid = mysqli_real_escape_string($connection, (string)$form_uid);
+                mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "web_form SET form_submissions_count = form_submissions_count + 1 WHERE form_uid = '{$escFormUid}'");
+
+                // Check custom email notification config for this web form
+                $formMailRes = mysqli_query($connection, "SELECT form_email_to, form_email_cc, form_email_bcc FROM " . TABLE_PREFIX . "web_form WHERE form_uid = '{$escFormUid}' LIMIT 1");
+                if ($formMailRes && $fMailRow = mysqli_fetch_assoc($formMailRes)) {
+                    if (!empty($fMailRow['form_email_to'])) {
+                        $toAddress = trim($fMailRow['form_email_to']);
+                        $sender = base64_encode($toAddress);
+                    }
+                    if (!empty($fMailRow['form_email_cc'])) {
+                        $ccAddress = trim($fMailRow['form_email_cc']);
+                        $cc = base64_encode($ccAddress);
+                    }
+                    if (!empty($fMailRow['form_email_bcc'])) {
+                        $bccAddress = trim($fMailRow['form_email_bcc']);
+                        $bcc = base64_encode($bccAddress);
+                    }
+                }
+            }
+
             if ($addNewEnquiry) {
                 mysqli_query($connection, "COMMIT");
             } else {
                 mysqli_query($connection, "ROLLBACK");
+            }
+
+            if (!isset($sender) && empty($toAddress)) {
+                $siteMailQ = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = " . (int)SITE_ID . " AND site_configuration_key = 'enquiry_email' AND site_configuration_status = 1 LIMIT 1");
+                if ($siteMailQ && $sm = mysqli_fetch_assoc($siteMailQ)) {
+                    if (!empty($sm['site_configuration_value'])) {
+                        $toAddress = trim($sm['site_configuration_value']);
+                        $sender = base64_encode($toAddress);
+                    }
+                } elseif (defined('SITE_EMAIL') && filter_var(SITE_EMAIL, FILTER_VALIDATE_EMAIL)) {
+                    $toAddress = SITE_EMAIL;
+                    $sender = base64_encode($toAddress);
+                }
             }
 
             if (isset($sender)) {
