@@ -6,7 +6,7 @@
  */
 
 $themeColor = defined('SITE_THEME_COLOUR') && !empty(SITE_THEME_COLOUR) ? SITE_THEME_COLOUR : (defined('SITE_THEME_COLOR') && !empty(SITE_THEME_COLOR) ? SITE_THEME_COLOR : '#4f46e5');
-$siteName = defined('SITE_NAME') && !empty(SITE_NAME) ? SITE_NAME : 'ISW Workspace';
+$siteName = defined('SITE_NAME') && !empty(SITE_NAME) ? SITE_NAME : 'Blumox Technologies';
 $siteUrl = defined('SITE_URL') ? SITE_URL : ('https://' . ($_SERVER['HTTP_HOST'] ?? ''));
 
 $subject = "Your Login Verification Code: {$otpCode} - {$siteName}";

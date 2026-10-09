@@ -124,7 +124,7 @@ function sendOTPviaMSG91($mobile, $otpCode, $name = 'User', $site_name = 'Aleya.
     }
     return true;
 }
-function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'ISW Workspace')
+function sendOTPviaEmail($email, $otpCode, $name = 'User', $site_name = 'Blumox Technologies')
 {
     $name = (($name != '') ? $name : 'User');
     $email = trim((string)$email);

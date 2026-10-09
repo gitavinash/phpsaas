@@ -27,7 +27,7 @@ $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $currentUserId = defined('USER_ID')  ? (int) USER_ID : 0;
 $siteDomain = SITE_URL;
-$siteName = defined('SITE_NAME') ? SITE_NAME : 'ISW Workspace';
+$siteName = defined('SITE_NAME') ? SITE_NAME : 'Blumox Technologies';
 
 // Flexible parameter extraction
 $rawLeadId = '';
