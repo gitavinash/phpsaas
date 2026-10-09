@@ -125,11 +125,13 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawAgentId !== null) {
                 $agentName = "Agent #{$realAgentId}";
             }
 
-            // Update lead agent and set status to 2 (Assigned/Pending) if it was unassigned (status 1)
+            // Update lead agent and set status to 2 (Assigned) if it was unassigned (status 0)
             $currentStatus = isset($leadData['enquiry_status'])
                 ? (int)$leadData['enquiry_status']
                 : 0;
 
+            // Flow: New Lead (0) -> Assigned (2) -> Follow Up (3) -> Itinerary Sent (9) -> Payment Requested (6) -> Confirmed (1)
+            // When an unassigned new lead (0) is assigned to a calling agent, it moves into Stage 2: Assigned
             $newStatus = ($currentStatus === 0) ? 2 : $currentStatus;
 
             $sql = "UPDATE {$tblPrefix}enquiry
@@ -138,7 +140,9 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawAgentId !== null) {
 
             if (mysqli_query($connection, $sql)) {
                 // Record in enquiry notes
-                $noteText = "Lead assigned to {$agentName}";
+                $noteText = ($newStatus === 2 && $currentStatus === 0)
+                    ? "Lead assigned to {$agentName} (Assigned)"
+                    : "Lead assigned to {$agentName}";
                 $noteSql = "INSERT INTO {$tblPrefix}enquiry_notes (enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value)
                             VALUES ({$realLeadId}, '{$currentUserId}', 'assign', '" . mysqli_real_escape_string($connection, $noteText) . "')";
                 @mysqli_query($connection, $noteSql);
@@ -326,6 +330,8 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawAgentId !== null) {
                     'lead_id'     => $realLeadId,
                     'agent_id'    => $realAgentId,
                     'agent'       => $agentName,
+                    'new_status'  => $newStatus,
+                    'status_id'   => $newStatus,
                     'email_sent'  => $emailSent,
                     'notification' => [
                         'title' => "Lead Assigned: {$custName}",
@@ -338,8 +344,10 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawAgentId !== null) {
             }
         } else {
             // Unassign lead (agent = 0)
+            $currentStatus = isset($leadData['enquiry_status']) ? (int)$leadData['enquiry_status'] : 0;
+            $unassignStatus = ($currentStatus === 2) ? 0 : $currentStatus;
             $sql = "UPDATE {$tblPrefix}enquiry
-                    SET enquiry_agent = '0'
+                    SET enquiry_agent = '0', enquiry_status = {$unassignStatus}
                     WHERE enquiry_id = {$realLeadId}";
 
             if (mysqli_query($connection, $sql)) {
@@ -357,6 +365,8 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawAgentId !== null) {
                     'lead_id'     => $realLeadId,
                     'agent_id'    => 0,
                     'agent'       => 'Unassigned',
+                    'new_status'  => $unassignStatus,
+                    'status_id'   => $unassignStatus,
                 ]);
                 exit();
             }

@@ -358,9 +358,9 @@ if (isset($connection) && $connection) {
                             <div class="v3-form-group">
                                 <label class="v3-form-label" for="leadStatusSelect">Initial Stage</label>
                                 <select id="leadStatusSelect" name="status" class="v3-lead-select">
-                                    <option value="0" selected>Fresh Lead</option>
-                                    <option value="2">Pending / Quotation</option>
-                                    <option value="3">Follow-Up Required</option>
+                                    <option value="0" selected>New Leads</option>
+                                    <option value="2">Assigned</option>
+                                    <option value="3">Follow Up</option>
                                     <option value="1">Confirmed</option>
                                 </select>
                             </div>

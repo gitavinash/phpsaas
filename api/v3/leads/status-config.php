@@ -12,62 +12,62 @@ if (!function_exists('getAleyaLeadStatuses')) {
             0 => [
                 'id'          => 0,
                 'code'        => 'initiate',
-                'label'       => 'Initiate',
+                'label'       => 'New Leads',
                 'type'        => 'lifecycle',
                 'class'       => 'status-initiate',
                 'dot_class'   => 'initiate',
                 'badge_class' => 'badge-initiate',
                 'icon'        => 'fi-rr-sparkles',
                 'color'       => '#0284c7',
-                'description' => 'Newly initiated lead inquiry before agent assignment'
+                'description' => 'Inbound lead received via Ads, Website, or WhatsApp before agent assignment'
             ],
             1 => [
                 'id'          => 1,
                 'code'        => 'success',
-                'label'       => 'Success',
+                'label'       => 'Confirmed',
                 'type'        => 'lifecycle',
                 'class'       => 'status-success',
                 'dot_class'   => 'success',
                 'badge_class' => 'badge-success',
                 'icon'        => 'fi-rr-check-circle',
                 'color'       => '#059669',
-                'description' => 'Successfully converted booking'
+                'description' => 'Advance or full payment verified, booking successfully confirmed'
             ],
             2 => [
                 'id'          => 2,
                 'code'        => 'pending_assigned',
-                'label'       => 'Pending (Assigned to Agent)',
+                'label'       => 'Assigned',
                 'type'        => 'lifecycle',
                 'class'       => 'status-pending',
                 'dot_class'   => 'pending',
                 'badge_class' => 'badge-pending',
                 'icon'        => 'fi-rr-user-time',
-                'color'       => '#d97706',
-                'description' => 'Pending because it is assigned to an agent'
+                'color'       => '#f59e0b',
+                'description' => 'Assigned to calling agent or team member, awaiting first contact'
             ],
             3 => [
                 'id'          => 3,
                 'code'        => 'followup',
-                'label'       => 'Follow-up',
+                'label'       => 'Follow Up',
                 'type'        => 'lifecycle',
                 'class'       => 'status-followup',
                 'dot_class'   => 'followup',
                 'badge_class' => 'badge-followup',
                 'icon'        => 'fi-rr-phone-call',
                 'color'       => '#2563eb',
-                'description' => 'Negotiation, date/destination adjustments'
+                'description' => 'Follow-up note logged, task set, or lead requirements updated'
             ],
             4 => [
                 'id'          => 4,
                 'code'        => 'failed',
-                'label'       => 'Cancelled',
+                'label'       => 'Closed / Cancelled',
                 'type'        => 'exception',
                 'class'       => 'status-failed',
                 'dot_class'   => 'failed',
                 'badge_class' => 'badge-cancelled',
                 'icon'        => 'fi-rr-cross-circle',
                 'color'       => '#dc2626',
-                'description' => 'Cancelled or failed lead inquiry'
+                'description' => 'Customer not interested, declined service, or cancelled'
             ],
             5 => [
                 'id'          => 5,
@@ -84,14 +84,14 @@ if (!function_exists('getAleyaLeadStatuses')) {
             6 => [
                 'id'          => 6,
                 'code'        => 'payment_initiated',
-                'label'       => 'Payment Initiated',
+                'label'       => 'Payment Requested',
                 'type'        => 'lifecycle',
                 'class'       => 'status-payment-initiated',
                 'dot_class'   => 'payment-initiated',
                 'badge_class' => 'badge-payment-initiated',
                 'icon'        => 'fi-rr-credit-card',
                 'color'       => '#0891b2',
-                'description' => 'Payment link generated & sent to client'
+                'description' => 'Payment link, QR, or advance payment request sent to client'
             ],
             7 => [
                 'id'          => 7,
@@ -120,14 +120,14 @@ if (!function_exists('getAleyaLeadStatuses')) {
             9 => [
                 'id'          => 9,
                 'code'        => 'itinerary_sent',
-                'label'       => 'Itinerary Sent',
+                'label'       => 'Itinerary / Quotation Sent',
                 'type'        => 'lifecycle',
                 'class'       => 'status-itinerary-sent',
                 'dot_class'   => 'itinerary-sent',
                 'badge_class' => 'badge-itinerary-sent',
                 'icon'        => 'fi-rr-route',
                 'color'       => '#3b82f6',
-                'description' => 'Itinerary created and dispatched to traveler'
+                'description' => 'Itinerary proposal or quotation dispatched to traveler'
             ],
             10 => [
                 'id'          => 10,

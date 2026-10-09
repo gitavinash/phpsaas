@@ -887,6 +887,11 @@ main .container .heading span {
   background: #fff7ed !important;
   color: #f97316 !important;
 }
+.kpi-amber .kpi-icon-box,
+#totalAssignedLeads .kpi-icon-box {
+  background: #fef3c7 !important;
+  color: #b45309 !important;
+}
 
 /* Status Accent Borders */
 .kpi-blue,
@@ -913,6 +918,10 @@ main .container .heading span {
 .kpi-orange,
 #totalPendingRequests {
   border-left: 3px solid #f97316 !important;
+}
+.kpi-amber,
+#totalAssignedLeads {
+  border-left: 3px solid #f59e0b !important;
 }
 
 /* Enhanced Chart Card Containers - 2-Column Presentation Layout */
@@ -1237,6 +1246,11 @@ main .container .heading span {
   align-items: start !important;
 }
 
+.kanban-calling-agent .kanban-column[data-status="0"],
+.kanban-calling-agent .col-fresh {
+  display: none !important;
+}
+
 .kanban-column {
   background: var(--slate-50) !important;
   border: 1px solid var(--slate-200) !important;
@@ -1264,13 +1278,20 @@ main .container .heading span {
 }
 
 .col-fresh .kanban-column-header {
-  border-bottom-color: var(--brand-600) !important;
+  border-bottom-color: #0284c7 !important;
 }
-.col-pending .kanban-column-header {
-  border-bottom-color: #0ea5e9 !important;
+.col-assigned .kanban-column-header {
+  border-bottom-color: #f59e0b !important;
 }
 .col-followup .kanban-column-header {
-  border-bottom-color: #8b5cf6 !important;
+  border-bottom-color: #2563eb !important;
+}
+.col-itinerary .kanban-column-header,
+.col-pending .kanban-column-header {
+  border-bottom-color: #3b82f6 !important;
+}
+.col-payment .kanban-column-header {
+  border-bottom-color: #0891b2 !important;
 }
 .col-confirmed .kanban-column-header {
   border-bottom-color: #10b981 !important;

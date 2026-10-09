@@ -17,6 +17,7 @@ $tblPrefix  = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId     = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $userId     = defined('USER_ID')      ? (int) USER_ID : 0;
 $accessType = isset($site_access_type) ? $site_access_type : 'administrator';
+$isCallingAgent = in_array(strtolower($accessType), ['agent', 'calling_agent', 'sales_executive'], true);
 
 if ($accessType === 'digital_marketing') {
     http_response_code(403);
@@ -93,8 +94,10 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
     $offset = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;
     $limit  = isset($_GET['limit'])  ? min(max(1, intval($_GET['limit'])), 50) : 10;
 
-    // Allowed active kanban columns: 0 (Initiate), 2 (Pending), 3 (Follow-up), 1 (Success)
-    if (!in_array($targetStatus, [0, 1, 2, 3], true)) {
+    // Allowed active kanban columns: 0 (New Leads), 2 (Assigned), 3 (Follow Up), 9 (Itinerary Sent), 6 (Payment Requested), 1 (Confirmed)
+    // Calling agents do not have access to Column 0 (New Leads)
+    $allowedStatuses = $isCallingAgent ? [1, 2, 3, 6, 9] : [0, 1, 2, 3, 6, 9];
+    if (!in_array($targetStatus, $allowedStatuses, true)) {
         echo json_encode([
             'status' => 200,
             'data'   => [],
@@ -105,11 +108,13 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
         exit();
     }
 
+    $statusClause = "enquiry_status = {$targetStatus}";
+
     $sql = "SELECT enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_mobile, enquiry_email,
                    enquiry_subject, enquiry_time, enquiry_status, enquiry_source
             FROM {$tblPrefix}enquiry
             WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
-              AND enquiry_status = {$targetStatus}
+              AND {$statusClause}
               AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
             ORDER BY enquiry_time DESC
             LIMIT {$offset}, {$limit}";
@@ -118,7 +123,7 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
     if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
         while ($row = mysqli_fetch_assoc($res)) {
             $stInt = (int)$row['enquiry_status'];
-            if (!in_array($stInt, [0, 1, 2, 3], true)) {
+            if (!in_array($stInt, [0, 1, 2, 3, 6, 9], true)) {
                 continue;
             }
             $meta = getLeadStatusMeta($stInt);
@@ -156,8 +161,13 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
     exit();
 }
 
-// Case 2: Full Board Load (grouped by status '0', '2', '3', '1')
-$grouped = ['0' => [], '2' => [], '3' => [], '1' => []];
+// Case 2: Full Board Load (for calling agents, status 0 'New Leads' is excluded)
+$allowedStatuses = $isCallingAgent ? [2, 3, 9, 6, 1] : [0, 2, 3, 9, 6, 1];
+$allowedStatusesStr = implode(', ', $allowedStatuses);
+$grouped = [];
+foreach ($allowedStatuses as $st) {
+    $grouped[(string)$st] = [];
+}
 $flatLeads = [];
 
 $limitClause = !empty($searchFilter) ? "LIMIT 100" : "LIMIT 150";
@@ -166,7 +176,7 @@ $sql = "SELECT enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_mobile
                enquiry_subject, enquiry_time, enquiry_status, enquiry_source
         FROM {$tblPrefix}enquiry
         WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
-          AND enquiry_status IN (0, 1, 2, 3)
+          AND enquiry_status IN ({$allowedStatusesStr})
           AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
         ORDER BY enquiry_time DESC
         {$limitClause}";
@@ -174,11 +184,11 @@ $sql = "SELECT enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_mobile
 if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
     while ($row = mysqli_fetch_assoc($res)) {
         $stInt = (int)$row['enquiry_status'];
-        if (!in_array($stInt, [0, 1, 2, 3], true)) {
+        if (!in_array($stInt, $allowedStatuses, true)) {
             continue;
         }
         $meta = getLeadStatusMeta($stInt);
-        $st   = (string)$stInt;
+        $groupKey = (string)$stInt;
         $fullName = trim(($row['enquiry_first_name'] ?? '') . ' ' . ($row['enquiry_last_name'] ?? ''));
         if (empty($fullName)) {
             $fullName = 'Lead #' . $row['enquiry_id'];
@@ -201,24 +211,29 @@ if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql)
             'status_color' => $meta['color'],
         ];
         $flatLeads[] = $item;
-        if (isset($grouped[$st])) {
-            $grouped[$st][] = $item;
+        if (isset($grouped[$groupKey])) {
+            $grouped[$groupKey][] = $item;
         }
     }
 }
 
-$statusCounts = ['0' => 0, '1' => 0, '2' => 0, '3' => 0];
+$statusCounts = [];
+foreach ($allowedStatuses as $st) {
+    $statusCounts[(string)$st] = 0;
+}
 $countSql = "SELECT enquiry_status, COUNT(*) as cnt
              FROM {$tblPrefix}enquiry
              WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
-               AND enquiry_status IN (0, 1, 2, 3)
+               AND enquiry_status IN ({$allowedStatusesStr})
                AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
              GROUP BY enquiry_status";
 if (isset($connection) && $connection && ($cRes = mysqli_query($connection, $countSql))) {
     while ($cRow = mysqli_fetch_assoc($cRes)) {
-        $stKey = (string)$cRow['enquiry_status'];
+        $stVal = (int)$cRow['enquiry_status'];
+        $cnt   = (int)$cRow['cnt'];
+        $stKey = (string)$stVal;
         if (isset($statusCounts[$stKey])) {
-            $statusCounts[$stKey] = (int)$cRow['cnt'];
+            $statusCounts[$stKey] = $cnt;
         }
     }
 }

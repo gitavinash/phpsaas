@@ -478,9 +478,16 @@ if (mysqli_query($connection, $insertQuery)) {
         $customerName = 'Valued Customer';
     }
 
-    // Persist email/mobile back to enquiry record if it was previously empty
-    if (!empty($customerData)) {
+    // Persist email/mobile and update lead status to 9 (Itinerary Sent) when dispatched
+    if (!empty($customerData) && $refType === 'enquiry') {
         $updateFields = [];
+        $currentLeadStatus = (int)($customerData['enquiry_status'] ?? 0);
+        $shouldUpdateStatus = (!$isDownload && $currentLeadStatus !== 1);
+
+        if ($shouldUpdateStatus) {
+            $updateFields[] = "enquiry_status = 9";
+            $updateFields[] = "enquiry_update = NOW()";
+        }
         if (empty($customerData['enquiry_email']) && !empty($enquiryEmail)) {
             $escEmail = mysqli_real_escape_string($connection, $enquiryEmail);
             $updateFields[] = "enquiry_email = '{$escEmail}'";
@@ -494,6 +501,22 @@ if (mysqli_query($connection, $insertQuery)) {
                 UPDATE {$tblPrefix}enquiry 
                 SET " . implode(', ', $updateFields) . " 
                 WHERE enquiry_id = {$refId}
+            ");
+        }
+        if ($shouldUpdateStatus) {
+            $noteText = "Lead status updated to Itinerary Sent";
+            @mysqli_query($connection, "
+                INSERT INTO {$tblPrefix}enquiry_notes (
+                    enquiry_notes_ref_id, 
+                    enquiry_notes_user_id, 
+                    enquiry_notes_meta_type, 
+                    enquiry_notes_meta_value
+                ) VALUES (
+                    {$refId}, 
+                    {$userId}, 
+                    'status', 
+                    '" . mysqli_real_escape_string($connection, $noteText) . "'
+                )
             ");
         }
     }

@@ -38,12 +38,19 @@ if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'
 }
 $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
 
+$userRole       = strtolower(isset($site_access_type) ? $site_access_type : (defined('USER_TYPE') ? USER_TYPE : ''));
+$isCallingAgent = in_array($userRole, ['agent', 'calling_agent', 'sales_executive'], true) || ($accessType !== 'administrator');
+
+$targetStatus = $isCallingAgent ? 2 : 0;
+if (isset($_GET['status']) && $_GET['status'] !== '') {
+    $targetStatus = (int)$_GET['status'];
+}
+
 $count = 0;
 $sql = "SELECT COUNT(*) AS cnt
         FROM {$tblPrefix}enquiry
         WHERE {$siteFilter}{$userFilter}{$daterangeFilter}
-          AND enquiry_status = 0
-          AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)";
+          AND enquiry_status = {$targetStatus}";
 
 if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
     if ($row = mysqli_fetch_assoc($res)) {
@@ -53,7 +60,7 @@ if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql)
 
 echo json_encode([
     'status' => 200,
-    'kpi'    => 'fresh',
+    'kpi'    => $isCallingAgent ? 'assigned' : 'fresh',
     'count'  => $count,
 ]);
 exit();

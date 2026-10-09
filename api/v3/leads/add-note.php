@@ -120,16 +120,25 @@ if (!mysqli_query($connection, $insertNoteSql)) {
 
 // Update lead status and follow-up time if specified
 $updateFields = [];
+$curStatus = (int)($leadData['enquiry_status'] ?? 0);
+$newStatus = $curStatus;
+
 if (!empty($followupTime)) {
     $fTimeFormatted = date('Y-m-d H:i:s', strtotime($followupTime));
     $updateFields[] = "enquiry_status = 3"; // Follow-Up status
     $updateFields[] = "enquiry_followup = '{$fTimeFormatted}'";
+    $newStatus = 3;
 } elseif ($isFinalNote) {
-    $closeStatus = isset($_POST['close_status']) ? (int)$_POST['close_status'] : (isset($_POST['status']) ? (int)$_POST['status'] : 15);
+    $closeStatus = isset($_POST['close_status']) ? (int)$_POST['close_status'] : (isset($_POST['status']) ? (int)$_POST['status'] : 4);
     if (!in_array($closeStatus, [4, 5, 15, 16, 17, 18], true)) {
-        $closeStatus = 15; // 15 = Closed
+        $closeStatus = 4; // 4 = Closed / Cancelled
     }
     $updateFields[] = "enquiry_status = {$closeStatus}";
+    $newStatus = $closeStatus;
+} elseif ($curStatus === 2 || $curStatus === 0) {
+    // Stage 3: Adding note/activity moves fresh/assigned lead into Follow-up
+    $updateFields[] = "enquiry_status = 3";
+    $newStatus = 3;
 }
 
 if (!empty($updateFields)) {
@@ -148,6 +157,7 @@ echo json_encode([
     'status' => 'success',
     'message' => !empty($followupTime) ? 'Follow-up reminder set successfully.' : 'Note added successfully.',
     'lead_id' => $leadId,
+    'new_status' => $newStatus,
     'followup_time' => !empty($followupTime) ? date('Y-m-d H:i:s', strtotime($followupTime)) : null,
     'followup_formatted' => !empty($followupTime) ? date('d M Y, h:i A', strtotime($followupTime)) : null,
 ]);

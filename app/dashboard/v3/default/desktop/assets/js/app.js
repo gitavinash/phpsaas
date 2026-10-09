@@ -1446,24 +1446,33 @@ $(document).ready(function (e) {
     // 3. Quick Stage Advance Button (Explicit Clear Action)
     let advanceBtnHtml = "";
     if (st === "0") {
+      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="2" data-stage-name="Assigned" title="Move status to Assigned"><i class="fi fi-rr-user-time"></i> Mark Assigned</button>`;
+    } else if (st === "2") {
       advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="3" data-stage-name="Follow Up" title="Move status to Follow Up"><i class="fi fi-rr-phone-call"></i> Start Follow-Up</button>`;
     } else if (st === "3") {
-      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="2" data-stage-name="Itinerary Sent" title="Move status to Itinerary Sent"><i class="fi fi-rr-paper-plane"></i> Send Itinerary</button>`;
-    } else if (st === "2") {
-      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance cta-confirm btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="1" data-stage-name="Confirmed" title="Confirm Booking for this lead"><i class="fi fi-rr-check-circle"></i> Confirm Booking</button>`;
+      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="9" data-stage-name="Itinerary Sent" title="Move status to Itinerary Sent"><i class="fi fi-rr-paper-plane"></i> Send Itinerary</button>`;
+    } else if (st === "9") {
+      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="6" data-stage-name="Payment Requested" title="Request Payment from client"><i class="fi fi-rr-credit-card"></i> Request Payment</button>`;
+    } else if (st === "6") {
+      advanceBtnHtml = `<button type="button" class="kanban-cta-btn cta-advance cta-confirm btn-kanban-advance" data-lead-id="${item.encoded_id}" data-target-status="1" data-stage-name="Confirmed" title="Confirm Payment for this lead"><i class="fi fi-rr-check-circle"></i> Confirm Payment</button>`;
     } else if (st === "1") {
       advanceBtnHtml = `<span class="kanban-won-badge"><i class="fi fi-rr-check-circle"></i> Confirmed Booking</span>`;
     }
 
-    // 4. Assign Agent, Lost, and Duplicate Buttons (ONLY ON FRESH STAGE st === "0")
+    // 4. Assign Agent, Lost, and Duplicate Buttons
     let assignBtnHtml = "";
     let lostBtnHtml = "";
     let duplicateBtnHtml = "";
 
-    if (st === "0") {
+    if (st === "0" || st === "2") {
       assignBtnHtml = `<button type="button" class="kanban-cta-btn cta-assign btn-kanban-assign-trigger" data-lead-id="${item.encoded_id}" data-lead-name="${customerName}" title="Assign lead to team member"><i class="fi fi-rr-user"></i> Assign</button>`;
-      lostBtnHtml = `<button type="button" class="kanban-cta-btn cta-lost btn-kanban-confirm-status" data-lead-id="${item.encoded_id}" data-status="5" data-action-name="Lost / Not Interested" title="Mark as Lost (Not Interested)"><i class="fi fi-rr-cross"></i> Lost</button>`;
-      duplicateBtnHtml = `<button type="button" class="kanban-cta-btn cta-duplicate btn-kanban-confirm-status" data-lead-id="${item.encoded_id}" data-status="4" data-action-name="Duplicate" title="Mark as Duplicate"><i class="fi fi-rr-copy"></i> Duplicate</button>`;
+    }
+
+    if (st === "0") {
+      lostBtnHtml = `<button type="button" class="kanban-cta-btn cta-lost btn-kanban-confirm-status" data-lead-id="${item.encoded_id}" data-status="4" data-action-name="Reject" title="Mark as Reject"><i class="fi fi-rr-cross"></i> Reject</button>`;
+      duplicateBtnHtml = `<button type="button" class="kanban-cta-btn cta-duplicate btn-kanban-confirm-status" data-lead-id="${item.encoded_id}" data-status="5" data-action-name="Duplicate" title="Mark as Duplicate"><i class="fi fi-rr-copy"></i> Duplicate</button>`;
+    } else if (["2", "3", "9", "6"].includes(st)) {
+      lostBtnHtml = `<button type="button" class="kanban-cta-btn cta-lost btn-kanban-confirm-status" data-lead-id="${item.encoded_id}" data-status="4" data-action-name="Reject" title="Reject / Cancel"><i class="fi fi-rr-cross"></i> Reject</button>`;
     }
 
     // Primary Row CTAs
@@ -1522,24 +1531,29 @@ $(document).ready(function (e) {
   window.refreshDashboardKpis = refreshDashboardKpis;
 
   function updateKanbanCounts() {
-    const statuses = ["0", "2", "3", "1"];
+    const statuses = ["0", "2", "3", "9", "6", "1"];
     statuses.forEach((st) => {
-      const count = $(`#kanban-container-${st}`).find(".kanban-card").length;
+      const container = $(`#kanban-container-${st}`);
+      if (!container.length) return;
+      const count = container.find(".kanban-card").length;
       $(`#kanban-count-${st}`).text(count);
     });
     refreshDashboardKpis();
   }
 
   function checkKanbanEmptyStates() {
-    const statuses = ["0", "2", "3", "1"];
+    const statuses = ["0", "2", "3", "9", "6", "1"];
     const labelMap = {
-      0: "fresh",
-      2: "pending",
+      0: "new leads",
+      2: "assigned",
       3: "follow-up",
+      9: "itinerary sent",
+      6: "payment requested",
       1: "confirmed",
     };
     statuses.forEach((st) => {
       const container = $(`#kanban-container-${st}`);
+      if (!container.length) return;
       if (container.find(".kanban-card").length === 0) {
         if (!container.find(".kanban-empty-drop-zone").length) {
           container.html(
@@ -1556,8 +1570,8 @@ $(document).ready(function (e) {
     const $card = $(`.kanban-card[data-lead-id="${leadId}"]`);
     if (!$card.length) return;
 
-    const st = String(targetStatus);
-    const validStatuses = ["0", "2", "3", "1"];
+    let st = String(targetStatus);
+    const validStatuses = ["0", "2", "3", "9", "6", "1"];
     // Never show close / cancelled / lost leads (4, 5, 8) in kanban
     if (!validStatuses.includes(st) || ["4", "5", "8"].includes(st)) {
       removeKanbanCardDom(leadId);
@@ -1565,6 +1579,10 @@ $(document).ready(function (e) {
     }
 
     const targetContainer = $(`#kanban-container-${st}`);
+    if (!targetContainer.length) {
+      removeKanbanCardDom(leadId);
+      return;
+    }
     targetContainer.find(".kanban-empty-drop-zone").remove();
 
     let leadData = null;
@@ -1620,15 +1638,16 @@ $(document).ready(function (e) {
 
   function renderKanbanBoardGrouped(boardData, boardCounts) {
     if (!boardData) return;
-    const statuses = ["0", "2", "3", "1"];
+    const statuses = ["0", "2", "3", "9", "6", "1"];
     statuses.forEach((st) => {
       const container = $(`#kanban-container-${st}`);
+      if (!container.length) return;
       const countPill = $(`#kanban-count-${st}`);
       const rawItems = Array.isArray(boardData[st]) ? boardData[st] : [];
       // Explicitly filter out closed / cancelled / lost / duplicate leads (statuses 4, 5, 6, 7, 8)
       const items = rawItems.filter((item) => {
         const s = parseInt(item.status, 10);
-        return s !== 4 && s !== 5 && s !== 6 && s !== 7 && s !== 8 && [0, 1, 2, 3].includes(s);
+        return s !== 4 && s !== 5 && s !== 7 && s !== 8 && [0, 1, 2, 3, 6, 9].includes(s);
       });
 
       const totalCount =
@@ -1642,9 +1661,11 @@ $(document).ready(function (e) {
 
       if (items.length === 0) {
         const labelMap = {
-          0: "fresh",
-          2: "pending",
+          0: "new leads",
+          2: "assigned",
           3: "follow-up",
+          9: "itinerary sent",
+          6: "payment requested",
           1: "confirmed",
         };
         container.html(
@@ -1677,12 +1698,12 @@ $(document).ready(function (e) {
         let boardData = res.data || res.grouped;
         let boardCounts = res.counts || null;
         if (boardData && typeof boardData === "object") {
-          const cleanGrouped = { 0: [], 2: [], 3: [], 1: [] };
-          ["0", "2", "3", "1"].forEach((k) => {
+          const cleanGrouped = { 0: [], 2: [], 3: [], 9: [], 6: [], 1: [] };
+          ["0", "2", "3", "9", "6", "1"].forEach((k) => {
             const arr = Array.isArray(boardData[k]) ? boardData[k] : [];
             cleanGrouped[k] = arr.filter((lead) => {
               const s = parseInt(lead.status, 10);
-              return s !== 4 && s !== 5 && s !== 6 && s !== 7 && s !== 8 && [0, 1, 2, 3].includes(s);
+              return s !== 4 && s !== 5 && s !== 7 && s !== 8 && [0, 1, 2, 3, 6, 9].includes(s);
             });
           });
           boardData = cleanGrouped;
@@ -1779,7 +1800,7 @@ $(document).ready(function (e) {
         if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
           res.data.forEach((item) => {
             const s = parseInt(item.status, 10);
-            if (s !== 4 && s !== 5 && s !== 6 && s !== 7 && s !== 8 && [0, 1, 2, 3].includes(s)) {
+            if (s !== 4 && s !== 5 && s !== 7 && s !== 8 && [0, 1, 2, 3, 6, 9].includes(s)) {
               container.append(renderKanbanCard(item, status));
             }
           });
@@ -2127,13 +2148,14 @@ $(document).ready(function (e) {
         $("#kanbanAssignOverlay").remove();
 
         if (res && res.status === 200) {
-          moveKanbanCardDom(leadId, "2");
+          const newTargetStatus = res.new_status ? String(res.new_status) : (res.status_id ? String(res.status_id) : "2");
+          moveKanbanCardDom(leadId, newTargetStatus);
           if (typeof Swal !== "undefined") {
             Swal.fire({
               type: "success",
               icon: "success",
               title: "Lead Assigned",
-              text: `Lead successfully assigned to ${agentName}.`,
+              text: `Lead successfully assigned to ${agentName}. Moved to Assigned.`,
               showConfirmButton: false,
               timer: 1500,
             });
@@ -2792,14 +2814,15 @@ $(document).ready(function (e) {
       cache: false,
       success: function (res) {
         if (res && res.data) {
-          const statuses = ["0", "2", "3", "1"];
+          const statuses = ["0", "2", "3", "9", "6", "1"];
           statuses.forEach((st) => {
             const container = $(`#kanban-container-${st}`);
+            if (!container.length) return;
             const countPill = $(`#kanban-count-${st}`);
             const rawItems = res.data[st] || [];
             const items = rawItems.filter((item) => {
               const s = parseInt(item.status, 10);
-              return s !== 4 && s !== 5 && s !== 6 && s !== 7 && s !== 8 && [0, 1, 2, 3].includes(s);
+              return s !== 4 && s !== 5 && s !== 7 && s !== 8 && [0, 1, 2, 3, 6, 9].includes(s);
             });
 
             const totalCount =
@@ -2811,9 +2834,11 @@ $(document).ready(function (e) {
 
             if (items.length === 0) {
               const labelMap = {
-                0: "fresh",
-                2: "pending",
+                0: "new leads",
+                2: "assigned",
                 3: "follow-up",
+                9: "itinerary sent",
+                6: "payment requested",
                 1: "confirmed",
               };
               container.html(
@@ -2952,7 +2977,7 @@ $(document).ready(function (e) {
       }
 
       // Step 1: Instant Client-Side DOM filter on currently rendered cards
-      const statuses = ["0", "2", "3", "1"];
+      const statuses = ["0", "2", "3", "9", "6", "1"];
       let totalClientMatches = 0;
       statuses.forEach((st) => {
         const container = $(`#kanban-container-${st}`);

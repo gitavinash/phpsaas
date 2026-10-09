@@ -2310,91 +2310,91 @@
                       <div class="v3-status-opt ${st === 0 ? "selected" : ""}" data-status="0">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot initiate"></span>
-                          <span>Initiate (0)</span>
+                          <span>New Leads</span>
                         </div>
                         ${st === 0 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 2 ? "selected" : ""}" data-status="2">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot pending"></span>
-                          <span>Pending Assigned (2)</span>
+                          <span>Assigned</span>
                         </div>
                         ${st === 2 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 9 ? "selected" : ""}" data-status="9">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot itinerary-sent"></span>
-                          <span>Itinerary Sent (9)</span>
-                        </div>
-                        ${st === 9 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 3 ? "selected" : ""}" data-status="3">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot followup"></span>
-                          <span>Follow-up (3)</span>
+                          <span>Follow Up</span>
                         </div>
                         ${st === 3 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-status-opt ${st === 9 ? "selected" : ""}" data-status="9">
+                        <div class="v3-status-opt-left">
+                          <span class="v3-status-opt-dot itinerary-sent"></span>
+                          <span>Itinerary / Quotation Sent</span>
+                        </div>
+                        ${st === 9 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 10 ? "selected" : ""}" data-status="10">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot quotation-approved"></span>
-                          <span>Quotation Approved (10)</span>
+                          <span>Quotation Approved</span>
                         </div>
                         ${st === 10 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 6 ? "selected" : ""}" data-status="6">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot payment-initiated"></span>
-                          <span>Payment Initiated (6)</span>
+                          <span>Payment Requested</span>
                         </div>
                         ${st === 6 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 12 ? "selected" : ""}" data-status="12">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot payment-received"></span>
-                          <span>Payment Received (12)</span>
+                          <span>Payment Received</span>
                         </div>
                         ${st === 12 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 8 ? "selected" : ""}" data-status="8">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot upay-done"></span>
-                          <span>Upay Done (8)</span>
+                          <span>Upay Done</span>
                         </div>
                         ${st === 8 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 1 ? "selected" : ""}" data-status="1">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot success"></span>
-                          <span>Success (1)</span>
+                          <span>Confirmed</span>
                         </div>
                         ${st === 1 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 11 ? "selected" : ""}" data-status="11">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot voucher-issued"></span>
-                          <span>Voucher Issued (11)</span>
+                          <span>Voucher Issued</span>
                         </div>
                         ${st === 11 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 13 ? "selected" : ""}" data-status="13">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot trip-progress"></span>
-                          <span>Trip in Progress (13)</span>
+                          <span>Trip in Progress</span>
                         </div>
                         ${st === 13 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 14 ? "selected" : ""}" data-status="14">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot trip-completed"></span>
-                          <span>Trip Completed (14)</span>
+                          <span>Trip Completed</span>
                         </div>
                         ${st === 14 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 15 ? "selected" : ""}" data-status="15">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot closed"></span>
-                          <span>Closed (15)</span>
+                          <span>Closed</span>
                         </div>
                         ${st === 15 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
@@ -2403,42 +2403,42 @@
                       <div class="v3-status-opt ${st === 4 ? "selected" : ""}" data-status="4">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot failed"></span>
-                          <span>Failed (4)</span>
+                          <span>Closed / Cancelled</span>
                         </div>
                         ${st === 4 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 5 ? "selected" : ""}" data-status="5">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot duplicate"></span>
-                          <span>Duplicate (5)</span>
+                          <span>Duplicate</span>
                         </div>
                         ${st === 5 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 7 ? "selected" : ""}" data-status="7">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot sales-request"></span>
-                          <span>Sent for Sales Request (7)</span>
+                          <span>Sent for Sales Request</span>
                         </div>
                         ${st === 7 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 16 ? "selected" : ""}" data-status="16">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot cancelled"></span>
-                          <span>Cancelled (16)</span>
+                          <span>Cancelled</span>
                         </div>
                         ${st === 16 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 17 ? "selected" : ""}" data-status="17">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot lost"></span>
-                          <span>Lost (17)</span>
+                          <span>Lost</span>
                         </div>
                         ${st === 17 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 18 ? "selected" : ""}" data-status="18">
                         <div class="v3-status-opt-left">
                           <span class="v3-status-opt-dot refund"></span>
-                          <span>Payment Refund (18)</span>
+                          <span>Payment Refund</span>
                         </div>
                         ${st === 18 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>

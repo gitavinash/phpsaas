@@ -786,7 +786,8 @@
       const self = this;
       $("#statTotalLeads").text(stats.total || 0);
       $("#statFreshLeads").text(stats.fresh || 0);
-      $("#statPendingLeads").text((stats.pending || 0) + (stats.followup || 0));
+      $("#statPendingLeads").text(stats.pending || 0);
+      $("#statFollowupLeads").text(stats.followup || 0);
       $("#statConfirmedLeads").text(stats.confirmed || 0);
 
       // Highlight active KPI filter card only when a specific status filter is active

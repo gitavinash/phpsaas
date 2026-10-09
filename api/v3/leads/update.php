@@ -259,7 +259,9 @@ $updateEnquirySql = "
         enquiry_email = '{$emailEsc}',
         enquiry_mobile = '{$mobileEsc}',
         enquiry_subject = '{$packageEsc}',
-        enquiry_message = '{$newMsgEsc}'
+        enquiry_message = '{$newMsgEsc}',
+        enquiry_status = CASE WHEN enquiry_status = 2 THEN 3 ELSE enquiry_status END,
+        enquiry_update = NOW()
     WHERE enquiry_id = {$realLeadId} {$siteClause}
 ";
 

@@ -185,13 +185,13 @@ foreach ($sourceLabels as $idx => $sName) {
 }
 
 // ---- 8. KANBAN (latest leads – no date filter, site-scoped) ----
-$kanbanLeads = ['0' => [], '2' => [], '3' => [], '1' => []];
+$kanbanLeads = ['0' => [], '2' => [], '3' => [], '9' => [], '6' => [], '1' => []];
 
 $sqlKanban = "SELECT enquiry_id, enquiry_first_name AS name, enquiry_mobile,
                      enquiry_subject, enquiry_time, enquiry_status, enquiry_source
               FROM {$tblPrefix}enquiry
               WHERE {$siteFilter}{$userFilter}
-                AND enquiry_status IN (0, 1, 2, 3)
+                AND enquiry_status IN (0, 1, 2, 3, 6, 9)
                 AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
               ORDER BY enquiry_time DESC
               LIMIT 150";
@@ -199,10 +199,10 @@ $sqlKanban = "SELECT enquiry_id, enquiry_first_name AS name, enquiry_mobile,
 if (isset($connection) && $connection && ($resKanban = mysqli_query($connection, $sqlKanban))) {
     while ($row = mysqli_fetch_assoc($resKanban)) {
         $stInt = (int)$row['enquiry_status'];
-        if (in_array($stInt, [4, 5, 7, 15, 16, 17, 18], true) || !in_array($stInt, [0, 1, 2, 3], true)) {
+        if (in_array($stInt, [4, 5, 7, 15, 16, 17, 18], true) || !in_array($stInt, [0, 1, 2, 3, 6, 9], true)) {
             continue;
         }
-        $st   = (string)$stInt;
+        $stKey = (string)$stInt;
         $mobileVal = ($accessType === 'digital_marketing') ? '' : (!empty($row['enquiry_mobile']) ? $row['enquiry_mobile'] : 'N/A');
         $item = [
             'id'         => $row['enquiry_id'],
@@ -214,8 +214,8 @@ if (isset($connection) && $connection && ($resKanban = mysqli_query($connection,
             'time'       => date('d M, h:i A', strtotime($row['enquiry_time'])),
             'status'     => $stInt,
         ];
-        if (isset($kanbanLeads[$st])) {
-            $kanbanLeads[$st][] = $item;
+        if (isset($kanbanLeads[$stKey])) {
+            $kanbanLeads[$stKey][] = $item;
         }
     }
 }
