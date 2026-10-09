@@ -864,6 +864,10 @@
           ? `<div class="lead-note-badge" title="${lead.recent_note}"><i class="fi fi-rr-comment-dots"></i> <span>${lead.recent_note}</span></div>`
           : `<span class="lead-no-note"><i class="fi fi-rr-comment"></i> No notes recorded</span>`;
 
+        const quoteSnippet = lead.quotation_formatted
+          ? `<div class="lead-quote-badge" title="Active Quotation: ${lead.quotation_formatted}"><i class="fi fi-rr-document-signed"></i> <span>Quote: ${lead.quotation_formatted}</span></div>`
+          : "";
+
         // If customer name is large, show first name only
         let displayName = (lead.name || "").trim();
         const firstName = (lead.first_name || "").trim();
@@ -931,6 +935,7 @@
                 </div>
                 <div class="lead-sub-meta">
                   ${noteSnippet}
+                  ${quoteSnippet}
                 </div>
               </div>
             </td>

@@ -109,6 +109,9 @@ if (isset($reqData['search']) && trim($reqData['search']) !== '') {
     }
 }
 
+// Stats Date Filter (used for top KPI stats breakdown)
+$statsDateFilter = $daterangeFilter;
+
 // Status Filter
 $statusFilter = "";
 $rawStatus = isset($reqData['status']) ? trim((string)$reqData['status']) : (isset($reqData['leadStatus']) ? trim((string)$reqData['leadStatus']) : '');
@@ -123,6 +126,28 @@ if ($rawStatus !== '' && $rawStatus !== 'all') {
     } elseif ($rawStatus === 'cancel' || $rawStatus === 'cancelled' || $rawStatus === '16' || $rawStatus === '4') {
         // Status 16 (Cancelled) and status 4 (historical failed/cancelled) both represent cancelled enquiries
         $statusFilter = " AND e.enquiry_status IN (4, 16)";
+    } elseif ($rawStatus === '9' || $rawStatus === 'itinerary_sent' || $rawStatus === 'quote_sent') {
+        // Status 9 represents Itinerary / Quotation Sent: match explicit status 9 OR enquiries with active quotations
+        $siteQuotationFilter = ($siteId > 0) ? " AND quotation_site_id = {$siteId}" : "";
+        $quoteDateClause     = (!empty($t1) && !empty($t2)) ? " AND quotation_time BETWEEN '{$t1}' AND '{$t2}'" : "";
+
+        if (!empty($t1) && !empty($t2)) {
+            $daterangeFilter = " AND (
+                (e.enquiry_time BETWEEN '{$t1}' AND '{$t2}' AND e.enquiry_status = 9)
+                OR e.enquiry_id IN (
+                    SELECT quotation_ref_id 
+                    FROM {$tblPrefix}quotation 
+                    WHERE quotation_status = 0{$siteQuotationFilter}{$quoteDateClause}
+                )
+            )";
+            $statusFilter = "";
+        } else {
+            $statusFilter = " AND (e.enquiry_status = 9 OR e.enquiry_id IN (
+                SELECT quotation_ref_id 
+                FROM {$tblPrefix}quotation 
+                WHERE quotation_status = 0{$siteQuotationFilter}
+            ))";
+        }
     } else {
         $targetStatus = (int)$rawStatus;
         $statusFilter = " AND e.enquiry_status = {$targetStatus}";
@@ -161,6 +186,20 @@ function getRelativeTime($timestamp)
     return date('d M Y', $time);
 }
 
+if (!function_exists('formatIndianCurrency')) {
+    function formatIndianCurrency($num)
+    {
+        $num = round((float)$num);
+        $isNegative = $num < 0;
+        $numStr = (string)abs($num);
+        if (strlen($numStr) <= 3) return ($isNegative ? '-' : '') . $numStr;
+        $lastThree = substr($numStr, -3);
+        $remaining = substr($numStr, 0, -3);
+        $formattedRemaining = preg_replace("/\B(?=(\d{2})+(?!\d))/", ",", $remaining);
+        return ($isNegative ? '-' : '') . $formattedRemaining . ',' . $lastThree;
+    }
+}
+
 // 1. Fetch Summary Stats for KPIs
 $stats = [
     'total'     => 0,
@@ -179,7 +218,7 @@ $statsQuery = "SELECT
     SUM(CASE WHEN e.enquiry_status = 1 THEN 1 ELSE 0 END) AS confirmed_count,
     SUM(CASE WHEN e.enquiry_status IN (4, 5, 7, 15, 16, 17, 18) THEN 1 ELSE 0 END) AS closed_count
 FROM {$tblPrefix}enquiry e
-WHERE {$siteFilter}{$userFilter}{$daterangeFilter}";
+WHERE {$siteFilter}{$userFilter}{$statsDateFilter}";
 
 if (isset($connection) && ($sRes = mysqli_query($connection, $statsQuery))) {
     if ($sRow = mysqli_fetch_assoc($sRes)) {
@@ -224,7 +263,8 @@ $leadsQuery = "SELECT
     e.enquiry_agent,
     p.profile_display_name AS agent_name,
     n.enquiry_notes_meta_type,
-    n.enquiry_notes_meta_value
+    n.enquiry_notes_meta_value,
+    MAX(CAST(q.quotation_price AS DECIMAL(15,2))) AS quotation_price
 FROM {$tblPrefix}enquiry e
 LEFT JOIN {$tblPrefix}profile p ON e.enquiry_agent = p.profile_user_id
 LEFT JOIN (
@@ -235,6 +275,7 @@ LEFT JOIN (
     GROUP BY enquiry_notes_ref_id
 ) latest_notes ON e.enquiry_id = latest_notes.enquiry_notes_ref_id
 LEFT JOIN {$tblPrefix}enquiry_notes n ON e.enquiry_id = n.enquiry_notes_ref_id AND latest_notes.latest_notes_time = n.enquiry_notes_update
+LEFT JOIN {$tblPrefix}quotation q ON e.enquiry_id = q.quotation_ref_id AND q.quotation_status = 0" . ($siteId > 0 ? " AND q.quotation_site_id = {$siteId}" : "") . "
 WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}{$statusFilter}{$sourceFilter}
 GROUP BY e.enquiry_id
 ORDER BY e.enquiry_time DESC
@@ -296,6 +337,8 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
                 }
                 return $val;
             })(),
+            'quotation_price'     => isset($row['quotation_price']) && is_numeric($row['quotation_price']) ? (float)$row['quotation_price'] : 0,
+            'quotation_formatted' => isset($row['quotation_price']) && (float)$row['quotation_price'] > 0 ? '₹' . formatIndianCurrency((float)$row['quotation_price']) : '',
         ];
     }
 }

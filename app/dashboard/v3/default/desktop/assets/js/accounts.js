@@ -74,6 +74,11 @@
           .siblings()
           .removeClass("active");
       }
+      const dateParam = urlParams.get("daterange");
+      if (dateParam) {
+        $("#accFilterDateRange").val(dateParam);
+        $("#accDateRangeLabel").text(dateParam);
+      }
     },
 
     bindLedgerEvents: function () {

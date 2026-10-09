@@ -74,6 +74,21 @@
           $('.btn-date-preset[data-preset="last_30_days"]').addClass('active');
           self.loadReportData();
         });
+
+        // Read URL query params on page load
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlDaterange = urlParams.get('daterange');
+        const urlPreset = urlParams.get('preset');
+        if (urlDaterange) {
+          $picker.val(urlDaterange);
+          self.customDateRange = urlDaterange;
+          self.activePreset = 'custom';
+          $('.btn-date-preset').removeClass('active');
+        } else if (urlPreset) {
+          self.activePreset = urlPreset;
+          $('.btn-date-preset').removeClass('active');
+          $(`.btn-date-preset[data-preset="${urlPreset}"]`).addClass('active');
+        }
       }
     },
 

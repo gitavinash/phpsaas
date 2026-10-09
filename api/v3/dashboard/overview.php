@@ -45,7 +45,8 @@ $kpis = array(
     'cancelLeads'    => 0,
     'pendingRequests'=> 0,
     'conversionRate' => '0%',
-    'totalRevenue'   => '₹0'
+    'totalRevenue'   => '₹0',
+    'totalQuoteSentValue' => '₹0'
 );
 
 $sqlKpi = "SELECT enquiry_status, COUNT(*) AS count
@@ -85,6 +86,35 @@ $sqlRev = "SELECT SUM(transaction_amount) AS total_rev
 if (isset($connection) && $connection && ($resRev = mysqli_query($connection, $sqlRev))) {
     if ($rowRev = mysqli_fetch_assoc($resRev)) {
         $kpis['totalRevenue'] = '₹' . number_format(floatval($rowRev['total_rev']));
+    }
+}
+
+// ---- 2b. TOTAL QUOTE SENT VALUE (Admin only) ----
+if ($accessType === 'administrator') {
+    $quoteDateFilter = str_replace('enquiry_time', 'quotation_time', $daterangeFilter);
+    $sqlQuote = "SELECT SUM(CAST(quotation_price AS DECIMAL(15,2))) AS total_val
+                 FROM {$tblPrefix}quotation
+                 WHERE quotation_status = 0"
+              . ($siteId > 0 ? " AND quotation_site_id = {$siteId}" : "")
+              . $quoteDateFilter;
+
+    if (isset($connection) && $connection && ($resQuote = mysqli_query($connection, $sqlQuote))) {
+        if ($rowQuote = mysqli_fetch_assoc($resQuote)) {
+            if (!function_exists('formatIndianCurrency')) {
+                function formatIndianCurrency($num)
+                {
+                    $num = round((float)$num);
+                    $isNegative = $num < 0;
+                    $numStr = (string)abs($num);
+                    if (strlen($numStr) <= 3) return ($isNegative ? '-' : '') . $numStr;
+                    $lastThree = substr($numStr, -3);
+                    $remaining = substr($numStr, 0, -3);
+                    $formattedRemaining = preg_replace("/\B(?=(\d{2})+(?!\d))/", ",", $remaining);
+                    return ($isNegative ? '-' : '') . $formattedRemaining . ',' . $lastThree;
+                }
+            }
+            $kpis['totalQuoteSentValue'] = '₹' . formatIndianCurrency(floatval($rowQuote['total_val'] ?? 0));
+        }
     }
 }
 

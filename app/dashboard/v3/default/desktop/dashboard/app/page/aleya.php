@@ -81,6 +81,7 @@ if (isset($daterange) && !empty($daterange)) {
     <?php
     if ($site_access_type == 'administrator') {
         require_once ADMIN_PATH . 'dashboard/widgets/revenue-summary.php';
+        require_once ADMIN_PATH . 'dashboard/widgets/quote-sent-value.php';
         require_once ADMIN_PATH . 'dashboard/widgets/duplicate-enquiry.php';
     }
     ?>

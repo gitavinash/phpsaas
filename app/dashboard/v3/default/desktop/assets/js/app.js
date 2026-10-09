@@ -1104,6 +1104,14 @@ $(document).ready(function (e) {
   function loadKpiConversionRate(daterange) {
     const $el = $("#kpiConversionRateValue");
     if (!$el.length) return;
+    const $card = $("#kpiConversionRate");
+    const $link = $card.closest("a");
+    if ($link.length && daterange) {
+      let currentHref = $link.attr("href") || "";
+      if (currentHref.indexOf("daterange=") !== -1) {
+        $link.attr("href", currentHref.replace(/daterange=[^&]*/, "daterange=" + encodeURIComponent(daterange)));
+      }
+    }
     $.ajax({
       type: "GET",
       url:
@@ -1121,6 +1129,14 @@ $(document).ready(function (e) {
   // 9. Modular Revenue Summary
   function loadDashboardRevenue(daterange) {
     if (!$("#kpiRevenueSummaryValue").length) return;
+    const $card = $("#kpiRevenueSummary");
+    const $link = $card.closest("a");
+    if ($link.length && daterange) {
+      let currentHref = $link.attr("href") || "";
+      if (currentHref.indexOf("daterange=") !== -1) {
+        $link.attr("href", currentHref.replace(/daterange=[^&]*/, "daterange=" + encodeURIComponent(daterange)));
+      }
+    }
     $.ajax({
       type: "GET",
       url:
@@ -1130,6 +1146,40 @@ $(document).ready(function (e) {
         if (!res || res.status !== 200) return;
         if ($("#kpiRevenueSummaryValue").length)
           $("#kpiRevenueSummaryValue").text(res.totalRevenue || "₹0");
+      },
+    });
+  }
+
+  // 9b. Quote Sent Value KPI (Admin only)
+  function loadKpiQuoteSentValue(daterange) {
+    if (!$("#kpiQuoteSentValue").length) return;
+    const $card = $("#kpiQuoteSentValueCard");
+    const $link = $card.closest("a");
+    if ($link.length && daterange) {
+      let currentHref = $link.attr("href") || "";
+      if (currentHref.indexOf("daterange=") !== -1) {
+        $link.attr("href", currentHref.replace(/daterange=[^&]*/, "daterange=" + encodeURIComponent(daterange)));
+      }
+    }
+    $.ajax({
+      type: "GET",
+      url:
+        "/api/v3/dashboard/kpis/quote-sent-value/?daterange=" +
+        encodeURIComponent(daterange),
+      dataType: "json",
+      success: function (res) {
+        if (!res || res.status !== 200) return;
+        if ($("#kpiQuoteSentValue").length) {
+          let val = res.totalQuoteSentValue;
+          if (!val && res.amount !== undefined) {
+            val = "₹" + Number(res.amount).toLocaleString("en-IN");
+          }
+          $("#kpiQuoteSentValue").text(val || "₹0");
+        }
+      },
+      error: function () {
+        if ($("#kpiQuoteSentValue").length)
+          $("#kpiQuoteSentValue").text("₹0");
       },
     });
   }
@@ -1736,6 +1786,7 @@ $(document).ready(function (e) {
     loadKpiPendingRequests(daterange);
     loadKpiConversionRate(daterange);
     loadDashboardRevenue(daterange);
+    loadKpiQuoteSentValue(daterange);
 
     // Load Charts, Follow-ups, and Kanban Board
     loadDashboardSources(daterange);
