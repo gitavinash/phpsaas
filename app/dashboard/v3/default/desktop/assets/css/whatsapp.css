@@ -881,7 +881,9 @@
 /* Select2 Dropdown Styling for WhatsApp Header Switcher */
 .wa-device-picker .select2-container {
   min-width: 170px;
-  max-width: 260px;
+  max-width: 280px;
+  width: auto !important;
+  flex: 1 1 auto;
 }
 
 .wa-device-picker .select2-container--default .select2-selection--single {
@@ -892,6 +894,7 @@
   box-shadow: none !important;
   display: flex !important;
   align-items: center !important;
+  cursor: pointer !important;
 }
 
 .wa-device-picker .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -921,10 +924,25 @@
 
 .wa-device-picker .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
   border-color: transparent transparent #10B981 transparent !important;
+  transform: rotate(180deg);
 }
 
-/* Standalone native fallback styling if Select2 not yet ready */
-.wa-device-select {
+/* Standalone native select must be completely hidden and unclickable when select2 is active */
+.wa-device-select.select2-hidden-accessible,
+select.wa-device-select.select2-hidden-accessible {
+  display: none !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  clip: rect(0 0 0 0) !important;
+}
+
+/* Standalone native fallback styling only when Select2 is not yet attached */
+.wa-device-select:not(.select2-hidden-accessible) {
   border: none !important;
   background: transparent !important;
   outline: none !important;

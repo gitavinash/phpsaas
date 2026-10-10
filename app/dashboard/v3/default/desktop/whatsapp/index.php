@@ -16,9 +16,9 @@
         </div>
         <div class="package-header-actions">
             <!-- Multi-Device Switcher Dropdown (Admin & Multi-device accounts) -->
-            <div class="wa-device-picker" id="waDeviceSwitcherBox">
+            <div class="wa-device-picker d-none" id="waDeviceSwitcherBox">
                 <i class="fi fi-rr-smartphone wa-device-picker-icon"></i>
-                <select id="waDeviceSelect" class="wa-device-select" aria-label="Switch Device Inbox">
+                <select id="waDeviceSelect" class="wa-device-select selectJS" aria-label="Switch Device Inbox">
                     <option value="all">All Devices</option>
                 </select>
             </div>
@@ -230,7 +230,7 @@
                     <label for="newChatDeviceSelect" class="v3-form-label">Send From WhatsApp Line</label>
                     <div class="v3-input-icon-wrap">
                         <i class="fi fi-rr-smartphone input-icon"></i>
-                        <select id="newChatDeviceSelect" class="v3-form-input"></select>
+                        <select id="newChatDeviceSelect" class="v3-form-input selectJS"></select>
                     </div>
                 </div>
                 <div class="v3-form-group">

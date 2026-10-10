@@ -69,7 +69,7 @@
       });
 
       // Multi-device switcher change
-      $(document).on("change", "#waDeviceSelect", function () {
+      $(document).on("change select2:select", "#waDeviceSelect", function () {
         if (self.isUpdatingDeviceSelect) return;
         self.selectedDeviceId = $(this).val() || "all";
         self.lastThreadsHtml = null;
@@ -285,12 +285,15 @@
       const $box = $("#waDeviceSwitcherBox");
       if (!$select.length) return;
 
-      if (!self.availableDevices || self.availableDevices.length === 0) {
-        $box.hide();
+      // RULE: Do NOT give device choose option to sales agent user.
+      // Only show assigned device to sales user (displayed in header status badge).
+      // Device switcher dropdown is strictly for administrators with multiple devices.
+      if (!self.isAdmin || !self.availableDevices || self.availableDevices.length <= 1) {
+        $box.addClass("d-none").hide();
         return;
       }
 
-      $box.show();
+      $box.removeClass("d-none").css("display", "inline-flex").show();
       const connectedCount = self.availableDevices.filter(function (d) { return d.status === "connected"; }).length;
       let optHtml = `<option value="all">📱 All Devices (${connectedCount} Active)</option>`;
 
@@ -306,23 +309,28 @@
 
       self.isUpdatingDeviceSelect = true;
       try {
-        if ($select.data("last-html") !== optHtml) {
-          if (typeof $.fn.select2 !== "undefined" && $select.hasClass("select2-hidden-accessible")) {
+        const hasSelect2 = typeof $.fn.select2 !== "undefined";
+        const isSelect2Attached = hasSelect2 && ($select.data("select2") || $select.hasClass("select2-hidden-accessible"));
+        const htmlChanged = $select.data("last-html") !== optHtml;
+
+        if (htmlChanged || !isSelect2Attached) {
+          if (isSelect2Attached) {
             try { $select.select2("destroy"); } catch (e) {}
           }
           $select.html(optHtml).data("last-html", optHtml);
           $select.val(self.selectedDeviceId || "all");
-        }
 
-        // Initialize Select2 on Device Switcher
-        if (typeof $.fn.select2 !== "undefined") {
-          if (!$select.hasClass("select2-hidden-accessible")) {
+          if (hasSelect2) {
             $select.select2({
               dropdownAutoWidth: true,
-              width: "100%",
+              width: "resolve",
               minimumResultsForSearch: 6,
               dropdownCssClass: "wa-select2-dropdown"
             });
+          }
+        } else if (isSelect2Attached) {
+          if ($select.val() !== (self.selectedDeviceId || "all")) {
+            $select.val(self.selectedDeviceId || "all").trigger("change.select2");
           }
         }
       } catch (err) {
@@ -331,25 +339,25 @@
         self.isUpdatingDeviceSelect = false;
       }
 
-      // Populate New Chat Modal device options as well
+      // Populate New Chat Modal device options (Admin only when multiple devices exist)
       const $modalSelect = $("#newChatDeviceSelect");
       const $modalGroup = $("#waNewChatDeviceGroup");
       if ($modalSelect.length) {
-        if (self.availableDevices.length > 1) {
+        if (self.isAdmin && self.availableDevices.length > 1) {
           $modalGroup.removeClass("d-none").show();
           let mOpts = "";
           self.availableDevices.forEach(function (d) {
             const isConn = d.status === "connected";
             mOpts += `<option value="${d.device_id}">📱 ${d.phone} (${d.name || "Line"})${isConn ? " [Connected]" : " [Offline]"}</option>`;
           });
-          if ($modalSelect.data("last-html") !== mOpts) {
-            if (typeof $.fn.select2 !== "undefined" && $modalSelect.hasClass("select2-hidden-accessible")) {
+          const hasSelect2 = typeof $.fn.select2 !== "undefined";
+          const mAttached = hasSelect2 && ($modalSelect.data("select2") || $modalSelect.hasClass("select2-hidden-accessible"));
+          if ($modalSelect.data("last-html") !== mOpts || !mAttached) {
+            if (mAttached) {
               try { $modalSelect.select2("destroy"); } catch (e) {}
             }
             $modalSelect.html(mOpts).data("last-html", mOpts);
-          }
-          if (typeof $.fn.select2 !== "undefined") {
-            if (!$modalSelect.hasClass("select2-hidden-accessible")) {
+            if (hasSelect2) {
               try {
                 $modalSelect.select2({
                   dropdownParent: $("#waNewChatModal"),
