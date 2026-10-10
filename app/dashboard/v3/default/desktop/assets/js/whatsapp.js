@@ -306,6 +306,21 @@
       if ($select.data("last-html") !== optHtml) {
         $select.html(optHtml).data("last-html", optHtml);
         $select.val(self.selectedDeviceId || "all");
+        if (typeof $.fn.select2 !== "undefined" && $select.hasClass("select2-hidden-accessible")) {
+          $select.trigger("change.select2");
+        }
+      }
+
+      // Initialize Select2 on Device Switcher
+      if (typeof $.fn.select2 !== "undefined") {
+        if (!$select.hasClass("select2-hidden-accessible")) {
+          $select.select2({
+            dropdownAutoWidth: true,
+            width: "resolve",
+            minimumResultsForSearch: 6,
+            dropdownCssClass: "wa-select2-dropdown"
+          });
+        }
       }
 
       // Populate New Chat Modal device options as well
@@ -319,7 +334,21 @@
             const isConn = d.status === "connected";
             mOpts += `<option value="${d.device_id}">📱 ${d.phone} (${d.name || "Line"})${isConn ? " [Connected]" : " [Offline]"}</option>`;
           });
-          $modalSelect.html(mOpts);
+          if ($modalSelect.data("last-html") !== mOpts) {
+            $modalSelect.html(mOpts).data("last-html", mOpts);
+            if (typeof $.fn.select2 !== "undefined" && $modalSelect.hasClass("select2-hidden-accessible")) {
+              $modalSelect.trigger("change.select2");
+            }
+          }
+          if (typeof $.fn.select2 !== "undefined") {
+            if (!$modalSelect.hasClass("select2-hidden-accessible")) {
+              $modalSelect.select2({
+                dropdownParent: $("#waNewChatModal"),
+                width: "100%",
+                dropdownCssClass: "wa-select2-dropdown"
+              });
+            }
+          }
         } else {
           $modalGroup.addClass("d-none").hide();
         }
@@ -336,8 +365,12 @@
 
       if (!$section.length || !$bar.length) return;
 
-      // Only show for Admin or when there are multiple team members
-      if (!self.isAdmin || !self.availableAgents || self.availableAgents.length === 0) {
+      // Only show for Admin when there are team members linked with a WhatsApp device
+      const linkedAgents = (self.availableAgents || []).filter(function (ag) {
+        return ag && (ag.is_connected || (ag.device_phone && ag.device_phone.trim() !== ""));
+      });
+
+      if (!self.isAdmin || linkedAgents.length === 0) {
         $section.addClass("d-none").hide();
         $banner.addClass("d-none").hide();
         return;
@@ -345,22 +378,28 @@
 
       $section.removeClass("d-none").show();
 
+      if (self.selectedUserId > 0 && !linkedAgents.some(function (ag) { return parseInt(ag.user_id, 10) === parseInt(self.selectedUserId, 10); })) {
+        self.selectedUserId = 0;
+      }
+
       const isAllActive = !self.selectedUserId || self.selectedUserId === 0;
       let pillsHtml = `
         <button type="button" class="wa-user-shortcut-pill ${isAllActive ? "active" : ""}" data-user-id="0" title="Show all team conversations">
-          <i class="fi fi-rr-users"></i> <span>All Team</span>
+          <i class="fi fi-rr-users"></i> <span>All</span>
         </button>
       `;
 
       let activeAgentName = "";
-      self.availableAgents.forEach(function (ag) {
+      linkedAgents.forEach(function (ag) {
         const isCur = self.selectedUserId && parseInt(self.selectedUserId, 10) === parseInt(ag.user_id, 10);
         if (isCur) activeAgentName = ag.name;
         const initials = self.getInitials(ag.name);
+        const parts = (ag.name || "").trim().split(/\s+/);
+        const shortName = parts.length > 1 ? parts[0] + " " + parts[1][0] + "." : (parts[0] || "User");
         pillsHtml += `
           <button type="button" class="wa-user-shortcut-pill ${isCur ? "active" : ""}" data-user-id="${ag.user_id}" title="Filter chats handled by ${self.escapeHtml(ag.name)}">
             <span class="wa-user-avatar-mini">${initials}</span>
-            <span>${self.escapeHtml(ag.name)}</span>
+            <span class="wa-user-pill-name">${self.escapeHtml(shortName)}</span>
             ${ag.is_connected ? '<span class="wa-user-online-dot" title="Device connected"></span>' : ""}
           </button>
         `;

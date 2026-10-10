@@ -16,27 +16,25 @@
         </div>
         <div class="package-header-actions">
             <!-- Multi-Device Switcher Dropdown (Admin & Multi-device accounts) -->
-            <div class="wa-device-switcher-box" id="waDeviceSwitcherBox">
-                <span class="wa-device-switcher-label"><i class="fi fi-rr-smartphone"></i> Inbox Line:</span>
-                <div class="wa-device-select-wrap">
-                    <select id="waDeviceSelect" class="wa-device-select" aria-label="Switch Device Inbox">
-                        <option value="all">📱 All Devices</option>
-                    </select>
-                </div>
+            <div class="wa-device-picker" id="waDeviceSwitcherBox">
+                <i class="fi fi-rr-smartphone wa-device-picker-icon"></i>
+                <select id="waDeviceSelect" class="wa-device-select" aria-label="Switch Device Inbox">
+                    <option value="all">All Devices</option>
+                </select>
             </div>
 
             <span class="wa-device-status-badge" id="waHeaderStatusBadge">
                 <span class="wa-pulse-dot"></span>
                 <span id="waHeaderStatusText">Checking connection...</span>
             </span>
-            <button type="button" class="btn-v3-action" id="btnSyncChatsInbox" data-tooltip="Sync All Chats from WhatsApp">
-                <i class="fi fi-rr-refresh"></i> <span>Sync WhatsApp</span>
+            <button type="button" class="btn-v3-action wa-header-btn-secondary" id="btnSyncChatsInbox" data-tooltip="Sync All Chats from WhatsApp">
+                <i class="fi fi-rr-refresh"></i> <span>Sync</span>
             </button>
-            <button type="button" class="btn-v3-action" id="btnOpenNewChatModal" data-tooltip="Start New WhatsApp Chat">
+            <button type="button" class="btn-v3-action wa-header-btn-primary" id="btnOpenNewChatModal" data-tooltip="Start New WhatsApp Chat">
                 <i class="fi fi-rr-add"></i> <span>New Chat</span>
             </button>
-            <a href="/dashboard/integration/whatsapp_web/" class="btn-v3-action" id="btnWaDeviceSettings" data-tooltip="Configure Linked Device">
-                <i class="fi fi-rr-qr-scan"></i> <span>Device Settings</span>
+            <a href="/dashboard/integration/whatsapp_web/" class="btn-v3-action wa-header-btn-secondary" id="btnWaDeviceSettings" data-tooltip="Configure Linked Device">
+                <i class="fi fi-rr-settings"></i> <span>Settings</span>
             </a>
         </div>
     </div>
@@ -94,11 +92,15 @@
                 <!-- Quick User Shortcut Bar (Admin only / Team filter) -->
                 <div class="wa-users-shortcut-section d-none" id="waUsersShortcutSection">
                     <div class="wa-users-shortcut-header">
-                        <span class="wa-users-shortcut-title"><i class="fi fi-rr-users-alt"></i> Team Chats:</span>
-                        <button type="button" class="wa-users-shortcut-reset d-none" id="btnResetUserFilter" title="Show all team chats">Clear Filter</button>
+                        <span class="wa-users-shortcut-title"><i class="fi fi-rr-users"></i> Team Filter</span>
+                        <button type="button" class="wa-users-shortcut-reset d-none" id="btnResetUserFilter" title="Show all team chats">
+                            <i class="fi fi-rr-rotate-left"></i> Reset
+                        </button>
                     </div>
-                    <div class="wa-users-shortcut-scroll" id="waUsersShortcutBar">
-                        <!-- Populated dynamically via JS: All Team, Avinash, Pooja, etc. -->
+                    <div class="wa-users-shortcut-scroll-container">
+                        <div class="wa-users-shortcut-scroll" id="waUsersShortcutBar">
+                            <!-- Populated dynamically via JS: All, Nandini S., Owais J., etc. -->
+                        </div>
                     </div>
                 </div>
 

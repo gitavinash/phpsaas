@@ -484,18 +484,22 @@ if ($method === 'GET') {
         }
     }
 
-    // Fetch team members / agents for quick shortcut switcher
+    // Fetch team members / agents for quick shortcut switcher (only those linked with a WhatsApp device)
     $agentsList = [];
     $agListQ = mysqli_query($connection, "SELECT sa.site_access_user_id as user_id, sa.site_access_type as role,
                                                 u.user_username,
                                                 TRIM(CONCAT(COALESCE(p.profile_first_name, ''), ' ', COALESCE(p.profile_last_name, ''))) as full_name,
-                                                d.device_phone, d.device_status
+                                                MAX(d.device_phone) as device_phone,
+                                                MAX(CASE WHEN d.device_status = 'connected' THEN 1 ELSE 0 END) as is_connected
                                          FROM " . TABLE_PREFIX . "site_access sa
                                          INNER JOIN " . TABLE_PREFIX . "user u ON u.user_id = sa.site_access_user_id
                                          LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
-                                         LEFT JOIN " . TABLE_PREFIX . "whatsapp_device d ON (d.device_site_id = {$siteId} AND d.device_assigned_user_id = sa.site_access_user_id AND d.device_status = 'connected')
-                                         WHERE sa.site_access_site_id = {$siteId} AND sa.site_access_status = 1
-                                         ORDER BY p.profile_first_name ASC, u.user_username ASC");
+                                         INNER JOIN " . TABLE_PREFIX . "whatsapp_device d ON (d.device_site_id = {$siteId} AND d.device_assigned_user_id = sa.site_access_user_id)
+                                         WHERE sa.site_access_site_id = {$siteId} 
+                                           AND sa.site_access_status = 1
+                                           AND (d.device_status = 'connected' OR (d.device_phone IS NOT NULL AND d.device_phone != ''))
+                                         GROUP BY sa.site_access_user_id, sa.site_access_type, u.user_username, full_name
+                                         ORDER BY is_connected DESC, p.profile_first_name ASC, u.user_username ASC");
     if ($agListQ) {
         while ($ag = mysqli_fetch_assoc($agListQ)) {
             $name = !empty($ag['full_name']) ? trim($ag['full_name']) : $ag['user_username'];
@@ -504,7 +508,7 @@ if ($method === 'GET') {
                 'name'         => $name,
                 'role'         => $ag['role'],
                 'device_phone' => $ag['device_phone'] ?: '',
-                'is_connected' => ($ag['device_status'] === 'connected')
+                'is_connected' => ((int)$ag['is_connected'] === 1)
             ];
         }
     }
