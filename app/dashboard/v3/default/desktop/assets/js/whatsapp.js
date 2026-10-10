@@ -70,6 +70,7 @@
 
       // Multi-device switcher change
       $(document).on("change", "#waDeviceSelect", function () {
+        if (self.isUpdatingDeviceSelect) return;
         self.selectedDeviceId = $(this).val() || "all";
         self.lastThreadsHtml = null;
         self.loadThreads();
@@ -303,24 +304,31 @@
         optHtml += `<option value="${d.device_id}" ${isSelected ? "selected" : ""}>${dot} ${phone} (${devName}${agent})</option>`;
       });
 
-      if ($select.data("last-html") !== optHtml) {
-        $select.html(optHtml).data("last-html", optHtml);
-        $select.val(self.selectedDeviceId || "all");
-        if (typeof $.fn.select2 !== "undefined" && $select.hasClass("select2-hidden-accessible")) {
-          $select.trigger("change.select2");
+      self.isUpdatingDeviceSelect = true;
+      try {
+        if ($select.data("last-html") !== optHtml) {
+          if (typeof $.fn.select2 !== "undefined" && $select.hasClass("select2-hidden-accessible")) {
+            try { $select.select2("destroy"); } catch (e) {}
+          }
+          $select.html(optHtml).data("last-html", optHtml);
+          $select.val(self.selectedDeviceId || "all");
         }
-      }
 
-      // Initialize Select2 on Device Switcher
-      if (typeof $.fn.select2 !== "undefined") {
-        if (!$select.hasClass("select2-hidden-accessible")) {
-          $select.select2({
-            dropdownAutoWidth: true,
-            width: "resolve",
-            minimumResultsForSearch: 6,
-            dropdownCssClass: "wa-select2-dropdown"
-          });
+        // Initialize Select2 on Device Switcher
+        if (typeof $.fn.select2 !== "undefined") {
+          if (!$select.hasClass("select2-hidden-accessible")) {
+            $select.select2({
+              dropdownAutoWidth: true,
+              width: "100%",
+              minimumResultsForSearch: 6,
+              dropdownCssClass: "wa-select2-dropdown"
+            });
+          }
         }
+      } catch (err) {
+        console.warn("Device switcher render warning:", err);
+      } finally {
+        self.isUpdatingDeviceSelect = false;
       }
 
       // Populate New Chat Modal device options as well
@@ -335,18 +343,20 @@
             mOpts += `<option value="${d.device_id}">📱 ${d.phone} (${d.name || "Line"})${isConn ? " [Connected]" : " [Offline]"}</option>`;
           });
           if ($modalSelect.data("last-html") !== mOpts) {
-            $modalSelect.html(mOpts).data("last-html", mOpts);
             if (typeof $.fn.select2 !== "undefined" && $modalSelect.hasClass("select2-hidden-accessible")) {
-              $modalSelect.trigger("change.select2");
+              try { $modalSelect.select2("destroy"); } catch (e) {}
             }
+            $modalSelect.html(mOpts).data("last-html", mOpts);
           }
           if (typeof $.fn.select2 !== "undefined") {
             if (!$modalSelect.hasClass("select2-hidden-accessible")) {
-              $modalSelect.select2({
-                dropdownParent: $("#waNewChatModal"),
-                width: "100%",
-                dropdownCssClass: "wa-select2-dropdown"
-              });
+              try {
+                $modalSelect.select2({
+                  dropdownParent: $("#waNewChatModal"),
+                  width: "100%",
+                  dropdownCssClass: "wa-select2-dropdown"
+                });
+              } catch (e) {}
             }
           }
         } else {
@@ -367,7 +377,7 @@
 
       // Only show for Admin when there are team members linked with a WhatsApp device
       const linkedAgents = (self.availableAgents || []).filter(function (ag) {
-        return ag && (ag.is_connected || (ag.device_phone && ag.device_phone.trim() !== ""));
+        return ag && (ag.is_connected || (ag.device_phone && String(ag.device_phone).trim() !== ""));
       });
 
       if (!self.isAdmin || linkedAgents.length === 0) {
@@ -494,7 +504,8 @@
         data: params,
         dataType: "json",
         success: function (res) {
-          if (res && res.is_device_linked === false) {
+          const hasChats = res && Array.isArray(res.chats) && res.chats.length > 0;
+          if (res && res.is_device_linked === false && !hasChats) {
             self.activeChatId = null;
             self.activePhone = null;
             if (self.knownChats) self.knownChats.clear();
@@ -504,7 +515,7 @@
             $("#waEmptyState").show();
             self.updateDeviceLinkedUI(false, null);
             return;
-          } else if (res && res.is_device_linked === true) {
+          } else if (res && (res.is_device_linked === true || hasChats)) {
             self.updateDeviceLinkedUI(true, res.linked_phone || "");
           }
 
@@ -512,11 +523,19 @@
           self.availableDevices = (res && Array.isArray(res.devices)) ? res.devices : [];
           self.availableAgents = (res && Array.isArray(res.agents)) ? res.agents : [];
 
-          // Render / Update Multi-Device Switcher dropdown
-          self.renderDeviceSwitcher();
+          try {
+            // Render / Update Multi-Device Switcher dropdown
+            self.renderDeviceSwitcher();
+          } catch (eDev) {
+            console.warn("Device switcher render error:", eDev);
+          }
 
-          // Render / Update Quick User Shortcut Bar (for Admin)
-          self.renderUserShortcuts();
+          try {
+            // Render / Update Quick User Shortcut Bar (for Admin)
+            self.renderUserShortcuts();
+          } catch (eUsr) {
+            console.warn("User shortcuts render error:", eUsr);
+          }
 
           const $container = $("#waThreadsContainer");
           if (!res || res.status !== "success" || !Array.isArray(res.chats)) {

@@ -141,7 +141,7 @@ if ($method === 'GET') {
                 $agentDevicePhone = $linkedPhone;
             } else {
                 // Shared connected device on site fallback
-                $devShared = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id ASC LIMIT 1");
+                $devShared = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY (device_status = 'connected') DESC, device_id ASC LIMIT 1");
                 if ($devShared && mysqli_num_rows($devShared) > 0) {
                     $devRow = mysqli_fetch_assoc($devShared);
                     $isDeviceLinked = true;
@@ -151,7 +151,28 @@ if ($method === 'GET') {
             }
         }
 
-        // Rule: When current number is disconnected, remove the current number chat from chatbox
+        // Instance fallback for agent when no site-isolated device exists
+        if (!$isDeviceLinked) {
+            $devAnyInst = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
+            if ($devAnyInst && mysqli_num_rows($devAnyInst) > 0) {
+                $devRow = mysqli_fetch_assoc($devAnyInst);
+                $isDeviceLinked = true;
+                $linkedPhone = $devRow['device_phone'] ?? '';
+                $agentDevicePhone = $linkedPhone;
+            }
+        }
+
+        // Rule: If chats exist in CRM, allow agent to read existing chats even if live socket disconnected
+        if (!$isDeviceLinked) {
+            $chatCheckQ = mysqli_query($connection, "SELECT chat_id, chat_device_phone FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} LIMIT 1");
+            if ($chatCheckQ && mysqli_num_rows($chatCheckQ) > 0) {
+                $chatRow = mysqli_fetch_assoc($chatCheckQ);
+                $isDeviceLinked = true;
+                $linkedPhone = $chatRow['chat_device_phone'] ?: '';
+                $agentDevicePhone = $linkedPhone;
+            }
+        }
+
         if (!$isDeviceLinked) {
             echo json_encode([
                 'status'           => 'success',
@@ -165,7 +186,7 @@ if ($method === 'GET') {
         }
     } else {
         // Administrator: Check if ANY device on this site is connected
-        $devAny = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
+        $devAny = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
         if ($devAny && mysqli_num_rows($devAny) > 0) {
             $devRow = mysqli_fetch_assoc($devAny);
             $isDeviceLinked = true;
@@ -184,6 +205,26 @@ if ($method === 'GET') {
             if (($cfgs['whatsapp_web_status'] ?? '') === 'connected' && !empty($cfgs['whatsapp_web_phone'])) {
                 $isDeviceLinked = true;
                 $linkedPhone = $cfgs['whatsapp_web_phone'];
+            }
+        }
+
+        // Fallback: Check if ANY device exists on the instance
+        if (!$isDeviceLinked) {
+            $devAnyInst = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
+            if ($devAnyInst && mysqli_num_rows($devAnyInst) > 0) {
+                $devRow = mysqli_fetch_assoc($devAnyInst);
+                $isDeviceLinked = true;
+                $linkedPhone = $devRow['device_phone'] ?? 'All Devices';
+            }
+        }
+
+        // Fallback: Check if existing chats exist in CRM
+        if (!$isDeviceLinked) {
+            $chatCheckQ = mysqli_query($connection, "SELECT chat_id, chat_device_phone FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} LIMIT 1");
+            if ($chatCheckQ && mysqli_num_rows($chatCheckQ) > 0) {
+                $chatRow = mysqli_fetch_assoc($chatCheckQ);
+                $isDeviceLinked = true;
+                $linkedPhone = $chatRow['chat_device_phone'] ?: 'All Devices';
             }
         }
 

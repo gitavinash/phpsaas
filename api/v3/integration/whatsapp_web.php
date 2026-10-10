@@ -587,6 +587,13 @@ if ($action === 'check_status' || $action === 'status') {
         }
 
         if (!$targetDev) {
+            $instDevQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
+            if ($instDevQ && mysqli_num_rows($instDevQ) > 0) {
+                $targetDev = mysqli_fetch_assoc($instDevQ);
+            }
+        }
+
+        if (!$targetDev) {
             // This site has NO device linked! Return disconnected. NEVER insert or adopt anything!
             echo json_encode([
                 'status'              => 'success',
