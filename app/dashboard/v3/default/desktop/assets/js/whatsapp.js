@@ -76,6 +76,15 @@
         self.loadThreads();
       });
 
+      // Clicking device picker box or icon opens the Select2 dropdown
+      $(document).on("click", "#waDeviceSwitcherBox .wa-device-picker-icon", function (e) {
+        e.preventDefault();
+        const $sel = $("#waDeviceSelect");
+        if ($sel.length && typeof $.fn.select2 !== "undefined") {
+          $sel.select2("open");
+        }
+      });
+
       // Quick user shortcut card click (Admin switching between team inboxes)
       $(document).on("click", ".wa-team-card, .wa-user-shortcut-pill", function () {
         const uid = parseInt($(this).data("user-id"), 10) || 0;
@@ -308,6 +317,73 @@
       });
     },
 
+    formatDeviceOption: function (opt) {
+      const self = this;
+      if (!opt.id) return opt.text;
+      const $el = $(opt.element);
+      if (!$el.length) return opt.text;
+
+      const type = $el.attr("data-type");
+      if (type === "all") {
+        const count = $el.attr("data-count") || "0";
+        return $(`
+          <div class="wa-s2-option-row is-all">
+            <span class="wa-s2-option-icon"><i class="fi fi-rr-apps"></i></span>
+            <div class="wa-s2-option-text">
+              <div class="wa-s2-option-main">All Devices</div>
+              <div class="wa-s2-option-sub">${count} Active WhatsApp Lines</div>
+            </div>
+          </div>
+        `);
+      }
+
+      const phone = $el.attr("data-phone") || opt.text;
+      const name = $el.attr("data-name") || "Line";
+      const agent = $el.attr("data-agent") || "";
+      const isConn = $el.attr("data-status") === "connected";
+      const agentText = (agent && agent !== "Unassigned") ? ` • ${agent}` : "";
+
+      return $(`
+        <div class="wa-s2-option-row">
+          <span class="wa-s2-option-status-dot ${isConn ? "is-connected" : "is-offline"}"></span>
+          <div class="wa-s2-option-text">
+            <div class="wa-s2-option-main">${self.escapeHtml(phone)}</div>
+            <div class="wa-s2-option-sub">${self.escapeHtml(name)}${self.escapeHtml(agentText)}</div>
+          </div>
+          <span class="wa-s2-option-pill ${isConn ? "is-connected" : "is-offline"}">${isConn ? "Online" : "Offline"}</span>
+        </div>
+      `);
+    },
+
+    formatDeviceSelection: function (opt) {
+      const self = this;
+      if (!opt.id) return opt.text;
+      const $el = $(opt.element);
+      if (!$el.length) return opt.text;
+
+      const type = $el.attr("data-type");
+      if (type === "all") {
+        const count = $el.attr("data-count") || "";
+        return $(`
+          <span class="wa-s2-selection-chip">
+            <span class="wa-s2-selection-dot is-connected"></span>
+            <span class="wa-s2-selection-label">All Devices ${count ? `(${count} Active)` : ""}</span>
+          </span>
+        `);
+      }
+
+      const phone = $el.attr("data-phone") || opt.text;
+      const name = $el.attr("data-name") || "";
+      const isConn = $el.attr("data-status") === "connected";
+
+      return $(`
+        <span class="wa-s2-selection-chip">
+          <span class="wa-s2-selection-dot ${isConn ? "is-connected" : "is-offline"}"></span>
+          <span class="wa-s2-selection-label">${self.escapeHtml(phone)}${name ? ` (${self.escapeHtml(name)})` : ""}</span>
+        </span>
+      `);
+    },
+
     renderDeviceSwitcher: function () {
       const self = this;
       const $select = $("#waDeviceSelect");
@@ -324,7 +400,7 @@
 
       $box.removeClass("d-none").css("display", "inline-flex").show();
       const connectedCount = self.availableDevices.filter(function (d) { return d.status === "connected"; }).length;
-      let optHtml = `<option value="all">📱 All Devices (${connectedCount} Active)</option>`;
+      let optHtml = `<option value="all" data-type="all" data-count="${connectedCount}">📱 All Devices (${connectedCount} Active)</option>`;
 
       self.availableDevices.forEach(function (d) {
         const isConn = d.status === "connected";
@@ -333,37 +409,51 @@
         const phone = d.phone || "";
         const agent = (d.assigned_agent_name && d.assigned_agent_name !== "Unassigned") ? ` • ${d.assigned_agent_name}` : "";
         const isSelected = String(self.selectedDeviceId) === String(d.device_id);
-        optHtml += `<option value="${d.device_id}" ${isSelected ? "selected" : ""}>${dot} ${phone} (${devName}${agent})</option>`;
+        optHtml += `<option value="${d.device_id}" data-type="device" data-phone="${phone}" data-name="${devName}" data-agent="${d.assigned_agent_name || ''}" data-status="${d.status}" ${isSelected ? "selected" : ""}>${dot} ${phone} (${devName}${agent})</option>`;
       });
 
       self.isUpdatingDeviceSelect = true;
       try {
         const hasSelect2 = typeof $.fn.select2 !== "undefined";
-        const isSelect2Attached = hasSelect2 && ($select.data("select2") || $select.hasClass("select2-hidden-accessible"));
-        const htmlChanged = $select.data("last-html") !== optHtml;
+        const lastHtml = $select.data("last-html");
+        const htmlChanged = lastHtml !== optHtml;
 
-        if (htmlChanged || !isSelect2Attached) {
-          if (isSelect2Attached) {
-            try { $select.select2("destroy"); } catch (e) {}
-          }
+        if (htmlChanged) {
           $select.html(optHtml).data("last-html", optHtml);
           $select.val(self.selectedDeviceId || "all");
+        }
 
-          if (hasSelect2) {
+        if (hasSelect2) {
+          const isCustomInit = $select.data("wa-custom-s2") === true && $select.hasClass("select2-hidden-accessible");
+
+          if (!isCustomInit) {
+            // Clean up any default select2 instance attached by global app.js
+            if ($select.data("select2") || $select.hasClass("select2-hidden-accessible")) {
+              try { $select.select2("destroy"); } catch (e) {}
+            }
+            $select.removeData("select2");
+            $select.removeAttr("data-select2-id");
+            $select.find("*").removeAttr("data-select2-id");
+            $box.find(".select2-container").remove();
+
             $select.select2({
               dropdownAutoWidth: true,
               width: "resolve",
-              minimumResultsForSearch: 6,
-              dropdownCssClass: "wa-select2-dropdown"
+              minimumResultsForSearch: 8,
+              dropdownCssClass: "wa-select2-dropdown",
+              templateResult: function (opt) { return self.formatDeviceOption(opt); },
+              templateSelection: function (opt) { return self.formatDeviceSelection(opt); },
+              escapeMarkup: function (m) { return m; }
             });
-            $select.off("select2:open select2:close").on("select2:open", function () {
+
+            $select.data("wa-custom-s2", true);
+
+            $select.off("select2:open.waBox select2:close.waBox").on("select2:open.waBox", function () {
               $("#waDeviceSwitcherBox").addClass("has-focus");
-            }).on("select2:close", function () {
+            }).on("select2:close.waBox", function () {
               $("#waDeviceSwitcherBox").removeClass("has-focus");
             });
-          }
-        } else if (isSelect2Attached) {
-          if ($select.val() !== (self.selectedDeviceId || "all")) {
+          } else if (htmlChanged) {
             $select.val(self.selectedDeviceId || "all").trigger("change.select2");
           }
         }

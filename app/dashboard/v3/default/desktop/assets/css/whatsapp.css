@@ -974,18 +974,19 @@
   transform: rotate(180deg);
 }
 
-/* Standalone native select must be completely hidden and unclickable when select2 is active */
+/* Native select hidden accessible when select2 is active */
 .wa-device-select.select2-hidden-accessible,
 select.wa-device-select.select2-hidden-accessible {
-  display: none !important;
   position: absolute !important;
-  width: 0 !important;
-  height: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
   padding: 0 !important;
-  margin: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  border: 0 !important;
   opacity: 0 !important;
   pointer-events: none !important;
-  clip: rect(0 0 0 0) !important;
 }
 
 /* Standalone native fallback styling only when Select2 is not yet attached */
@@ -1001,57 +1002,193 @@ select.wa-device-select.select2-hidden-accessible {
   padding: 0 16px 0 0 !important;
   appearance: none !important;
   -webkit-appearance: none !important;
-  max-width: 220px;
+  max-width: 240px;
   height: 100% !important;
+}
+
+/* Select2 Selection Chip inside 36px Header Picker */
+.wa-s2-selection-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.wa-s2-selection-dot {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+  display: inline-block !important;
+}
+
+.wa-s2-selection-dot.is-connected {
+  background: #10B981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25) !important;
+}
+
+.wa-s2-selection-dot.is-offline {
+  background: #94A3B8 !important;
+}
+
+.wa-s2-selection-label {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #1E293B !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 /* Custom Select2 Dropdown Popup */
 .select2-dropdown.wa-select2-dropdown {
   border: 1px solid #CBD5E1 !important;
-  border-radius: 10px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.08) !important;
   overflow: hidden !important;
   font-size: 12.5px !important;
   z-index: 10050 !important;
   background: #FFFFFF !important;
+  min-width: 290px !important;
 }
 
 .select2-dropdown.wa-select2-dropdown .select2-search--dropdown {
-  padding: 6px !important;
+  padding: 8px !important;
   background: #F8FAFC !important;
   border-bottom: 1px solid #E2E8F0 !important;
 }
 
 .select2-dropdown.wa-select2-dropdown .select2-search__field {
   border: 1px solid #CBD5E1 !important;
-  border-radius: 6px !important;
-  padding: 5px 8px !important;
+  border-radius: 7px !important;
+  padding: 6px 10px !important;
   font-size: 12px !important;
   outline: none !important;
+  background: #FFFFFF !important;
 }
 
 .select2-dropdown.wa-select2-dropdown .select2-search__field:focus {
   border-color: #10B981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15) !important;
+}
+
+.select2-dropdown.wa-select2-dropdown .select2-results__options {
+  padding: 4px 0 !important;
+  max-height: 280px !important;
 }
 
 .select2-dropdown.wa-select2-dropdown .select2-results__option {
-  padding: 8px 12px !important;
+  padding: 7px 12px !important;
   font-size: 12.5px !important;
   font-weight: 500 !important;
   color: #334155 !important;
-  transition: all 0.1s ease !important;
+  transition: all 0.12s ease !important;
+  cursor: pointer !important;
 }
 
 .select2-dropdown.wa-select2-dropdown .select2-results__option--highlighted[aria-selected] {
-  background: #ECFDF5 !important;
+  background: #F0FDF4 !important;
   color: #065F46 !important;
-  font-weight: 600 !important;
 }
 
 .select2-dropdown.wa-select2-dropdown .select2-results__option[aria-selected="true"] {
-  background: #10B981 !important;
-  color: #FFFFFF !important;
+  background: #ECFDF5 !important;
+  color: #047857 !important;
   font-weight: 600 !important;
+}
+
+/* Rich Option Rows inside Dropdown */
+.wa-s2-option-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.wa-s2-option-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 7px !important;
+  background: #EFF6FF !important;
+  color: #2563EB !important;
+  font-size: 13px !important;
+  flex-shrink: 0 !important;
+}
+
+.wa-s2-option-status-dot {
+  width: 9px !important;
+  height: 9px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}
+
+.wa-s2-option-status-dot.is-connected {
+  background: #10B981 !important;
+  box-shadow: 0 0 0 2.5px rgba(16, 185, 129, 0.22) !important;
+}
+
+.wa-s2-option-status-dot.is-offline {
+  background: #94A3B8 !important;
+}
+
+.wa-s2-option-text {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  line-height: 1.3 !important;
+}
+
+.wa-s2-option-main {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #1E293B !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.wa-s2-option-sub {
+  font-size: 11px !important;
+  color: #64748B !important;
+  margin-top: 1px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-weight: 400 !important;
+}
+
+.select2-results__option--highlighted .wa-s2-option-sub {
+  color: #047857 !important;
+}
+
+.select2-results__option[aria-selected="true"] .wa-s2-option-sub {
+  color: #059669 !important;
+}
+
+.wa-s2-option-pill {
+  padding: 2px 7px !important;
+  border-radius: 12px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  flex-shrink: 0 !important;
+}
+
+.wa-s2-option-pill.is-connected {
+  background: #DEF7EC !important;
+  color: #03543F !important;
+}
+
+.wa-s2-option-pill.is-offline {
+  background: #F1F5F9 !important;
+  color: #64748B !important;
 }
 
 .wa-chat-workspace {
