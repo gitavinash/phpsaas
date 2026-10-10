@@ -851,25 +851,36 @@
 
 /* Device Switcher (Header) */
 .wa-device-picker,
-.wa-device-switcher-box {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #FFFFFF;
-  border: 1px solid #CBD5E1;
-  height: 36px;
-  padding: 0 8px 0 10px;
-  border-radius: 9px;
-  position: relative;
-  transition: all 0.15s ease;
+.wa-device-switcher-box,
+#waDeviceSwitcherBox {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  height: 36px !important;
+  max-height: 36px !important;
+  line-height: 34px !important;
+  box-sizing: border-box !important;
+  padding: 0 8px 0 10px !important;
+  border-radius: 9px !important;
+  position: relative !important;
+  transition: all 0.15s ease !important;
+  vertical-align: middle !important;
+  overflow: visible !important;
 }
 
 .wa-device-picker:hover,
 .wa-device-picker:focus-within,
+.wa-device-picker.has-focus,
 .wa-device-switcher-box:hover,
-.wa-device-switcher-box:focus-within {
-  border-color: #10B981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+.wa-device-switcher-box:focus-within,
+.wa-device-switcher-box.has-focus,
+#waDeviceSwitcherBox:hover,
+#waDeviceSwitcherBox:focus-within,
+#waDeviceSwitcherBox.has-focus {
+  border-color: #10B981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12) !important;
 }
 
 .wa-device-picker-icon {
@@ -884,37 +895,73 @@
   max-width: 280px;
   width: auto !important;
   flex: 1 1 auto;
+  height: 34px !important;
+  max-height: 34px !important;
+  line-height: 34px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
 }
 
-.wa-device-picker .select2-container--default .select2-selection--single {
+.wa-device-picker .select2-container .selection {
+  display: block !important;
+  height: 34px !important;
+  max-height: 34px !important;
+  line-height: 34px !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* Strip ALL inner borders, focus outlines, and backgrounds from Select2 inside wa-device-picker */
+.wa-device-picker .select2-container--default .select2-selection--single,
+.wa-device-picker .select2-container--default.select2-container--focus .select2-selection--single,
+.wa-device-picker .select2-container--default.select2-container--open .select2-selection--single,
+.wa-device-picker .select2-selection--single,
+.wa-device-picker .select2-selection--single:focus,
+.wa-device-picker .select2-selection--single:active {
   background: transparent !important;
   border: none !important;
-  height: 34px !important;
+  border-color: transparent !important;
+  border-width: 0 !important;
+  border-radius: 0 !important;
   outline: none !important;
+  outline-width: 0 !important;
   box-shadow: none !important;
+  height: 34px !important;
+  max-height: 34px !important;
+  line-height: 34px !important;
+  padding: 0 !important;
+  margin: 0 !important;
   display: flex !important;
   align-items: center !important;
   cursor: pointer !important;
 }
 
 .wa-device-picker .select2-container--default .select2-selection--single .select2-selection__rendered {
-  padding-left: 0 !important;
+  padding-left: 2px !important;
   padding-right: 22px !important;
   line-height: 34px !important;
+  height: 34px !important;
   font-size: 12.5px !important;
   font-weight: 600 !important;
   color: #1E293B !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  border: none !important;
+  outline: none !important;
 }
 
 .wa-device-picker .select2-container--default .select2-selection--single .select2-selection__arrow {
   height: 34px !important;
+  top: 0 !important;
   right: 0 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  border: none !important;
+  outline: none !important;
 }
 
 .wa-device-picker .select2-container--default .select2-selection--single .select2-selection__arrow b {
@@ -1223,52 +1270,53 @@ select.wa-device-select.select2-hidden-accessible {
 .wa-users-shortcut-section {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 8px 0 2px 0;
+  gap: 8px;
+  padding: 10px 0 6px 0;
   border-top: 1px solid #F1F5F9;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .wa-users-shortcut-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2px;
+  padding: 0 4px;
 }
 
 .wa-users-shortcut-title {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  color: #94A3B8;
+  color: #64748B;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .wa-users-shortcut-title i {
   color: #10B981;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .wa-users-shortcut-reset {
   background: none;
   border: none;
   color: #10B981;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
-  padding: 0;
+  padding: 2px 6px;
+  border-radius: 6px;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  transition: color 0.15s ease;
+  gap: 4px;
+  transition: all 0.15s ease;
 }
 
 .wa-users-shortcut-reset:hover {
   color: #059669;
-  text-decoration: underline;
+  background: #ECFDF5;
 }
 
 .wa-users-shortcut-scroll-container {
@@ -1278,20 +1326,155 @@ select.wa-device-select.select2-hidden-accessible {
 
 .wa-users-shortcut-scroll {
   display: flex;
-  align-items: center;
-  gap: 5px;
+  align-items: stretch;
+  gap: 8px;
   overflow-x: auto;
-  padding: 2px 2px 4px 2px;
-  scrollbar-width: none;
+  padding: 2px 4px 6px 2px;
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
   -webkit-overflow-scrolling: touch;
-  mask-image: linear-gradient(to right, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
 }
 
 .wa-users-shortcut-scroll::-webkit-scrollbar {
-  display: none;
+  height: 4px;
 }
 
+.wa-users-shortcut-scroll::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+/* Large and Readable Team Filter Cards */
+.wa-team-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px 7px 8px;
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  min-width: 140px;
+  max-width: 220px;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+}
+
+.wa-team-card:hover {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.wa-team-card.active {
+  background: #ECFDF5 !important;
+  border-color: #10B981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25), 0 4px 10px rgba(16, 185, 129, 0.1) !important;
+}
+
+.wa-team-card-avatar-wrap {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.wa-team-card-avatar-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #E2E8F0;
+  display: block;
+}
+
+.wa-team-card.active .wa-team-card-avatar-img {
+  border-color: #10B981;
+}
+
+.wa-team-card-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.wa-team-card-avatar-all {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
+  font-size: 15px;
+}
+
+.wa-avatar-gradient-0 { background: linear-gradient(135deg, #3B82F6, #1D4ED8); }
+.wa-avatar-gradient-1 { background: linear-gradient(135deg, #10B981, #047857); }
+.wa-avatar-gradient-2 { background: linear-gradient(135deg, #8B5CF6, #6D28D9); }
+.wa-avatar-gradient-3 { background: linear-gradient(135deg, #F59E0B, #B45309); }
+.wa-avatar-gradient-4 { background: linear-gradient(135deg, #EC4899, #BE185D); }
+.wa-avatar-gradient-5 { background: linear-gradient(135deg, #06B6D4, #0E7490); }
+
+.wa-team-card-status-dot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+  background: #10B981;
+}
+
+.wa-team-card-status-dot.is-offline {
+  background: #94A3B8;
+}
+
+.wa-team-card-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.wa-team-card-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1E293B;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.wa-team-card.active .wa-team-card-name {
+  color: #065F46;
+}
+
+.wa-team-card-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748B;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  margin-top: 1px;
+}
+
+.wa-team-card.active .wa-team-card-sub {
+  color: #047857;
+}
+
+/* Fallback legacy pill support */
 .wa-user-shortcut-pill {
   display: inline-flex;
   align-items: center;

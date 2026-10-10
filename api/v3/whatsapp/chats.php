@@ -540,7 +540,9 @@ if ($method === 'GET') {
         $agListQ = mysqli_query($connection, "SELECT sa.site_access_user_id as user_id, sa.site_access_type as role,
                                                     u.user_username,
                                                     TRIM(CONCAT(COALESCE(p.profile_first_name, ''), ' ', COALESCE(p.profile_last_name, ''))) as full_name,
+                                                    MAX(p.profile_image) as profile_image,
                                                     MAX(d.device_phone) as device_phone,
+                                                    MAX(d.device_name) as device_name,
                                                     MAX(CASE WHEN d.device_status = 'connected' THEN 1 ELSE 0 END) as is_connected
                                              FROM " . TABLE_PREFIX . "site_access sa
                                              INNER JOIN " . TABLE_PREFIX . "user u ON u.user_id = sa.site_access_user_id
@@ -554,11 +556,17 @@ if ($method === 'GET') {
         if ($agListQ) {
             while ($ag = mysqli_fetch_assoc($agListQ)) {
                 $name = !empty($ag['full_name']) ? trim($ag['full_name']) : $ag['user_username'];
+                $avatar = trim($ag['profile_image'] ?? '');
+                if (!empty($avatar) && !str_starts_with($avatar, 'http://') && !str_starts_with($avatar, 'https://')) {
+                    $avatar = '/' . ltrim($avatar, '/');
+                }
                 $agentsList[] = [
                     'user_id'      => (int)$ag['user_id'],
                     'name'         => $name,
                     'role'         => $ag['role'],
+                    'avatar'       => $avatar,
                     'device_phone' => $ag['device_phone'] ?: '',
+                    'device_name'  => $ag['device_name'] ?: 'Line',
                     'is_connected' => ((int)$ag['is_connected'] === 1)
                 ];
             }

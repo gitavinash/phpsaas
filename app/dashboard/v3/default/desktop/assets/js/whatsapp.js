@@ -76,21 +76,31 @@
         self.loadThreads();
       });
 
-      // Quick user shortcut click (Admin switching between users)
-      $(document).on("click", ".wa-user-shortcut-pill", function () {
+      // Quick user shortcut card click (Admin switching between team inboxes)
+      $(document).on("click", ".wa-team-card, .wa-user-shortcut-pill", function () {
         const uid = parseInt($(this).data("user-id"), 10) || 0;
         if (self.selectedUserId === uid) {
           self.selectedUserId = 0; // toggle off back to all team
         } else {
           self.selectedUserId = uid;
         }
+        self.renderUserShortcuts();
         self.lastThreadsHtml = null;
         self.loadThreads();
+      });
+
+      // Keyboard support for team filter cards
+      $(document).on("keydown", ".wa-team-card", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          $(this).trigger("click");
+        }
       });
 
       // Reset user filter button & dismiss banner
       $(document).on("click", "#btnResetUserFilter, #btnDismissFilterBanner", function () {
         self.selectedUserId = 0;
+        self.renderUserShortcuts();
         self.lastThreadsHtml = null;
         self.loadThreads();
       });
@@ -327,6 +337,11 @@
               minimumResultsForSearch: 6,
               dropdownCssClass: "wa-select2-dropdown"
             });
+            $select.off("select2:open select2:close").on("select2:open", function () {
+              $("#waDeviceSwitcherBox").addClass("has-focus");
+            }).on("select2:close", function () {
+              $("#waDeviceSwitcherBox").removeClass("has-focus");
+            });
           }
         } else if (isSelect2Attached) {
           if ($select.val() !== (self.selectedDeviceId || "all")) {
@@ -401,30 +416,55 @@
       }
 
       const isAllActive = !self.selectedUserId || self.selectedUserId === 0;
-      let pillsHtml = `
-        <button type="button" class="wa-user-shortcut-pill ${isAllActive ? "active" : ""}" data-user-id="0" title="Show all team conversations">
-          <i class="fi fi-rr-users"></i> <span>All</span>
-        </button>
+      let cardsHtml = `
+        <div class="wa-team-card ${isAllActive ? "active" : ""}" data-user-id="0" role="button" tabindex="0" title="Show all team conversations">
+          <div class="wa-team-card-avatar-wrap">
+            <div class="wa-team-card-avatar wa-team-card-avatar-all">
+              <i class="fi fi-rr-users"></i>
+            </div>
+          </div>
+          <div class="wa-team-card-info">
+            <div class="wa-team-card-name">All Team</div>
+            <div class="wa-team-card-sub">${linkedAgents.length} Agents</div>
+          </div>
+        </div>
       `;
 
       let activeAgentName = "";
-      linkedAgents.forEach(function (ag) {
+      linkedAgents.forEach(function (ag, idx) {
         const isCur = self.selectedUserId && parseInt(self.selectedUserId, 10) === parseInt(ag.user_id, 10);
         if (isCur) activeAgentName = ag.name;
         const initials = self.getInitials(ag.name);
-        const parts = (ag.name || "").trim().split(/\s+/);
-        const shortName = parts.length > 1 ? parts[0] + " " + parts[1][0] + "." : (parts[0] || "User");
-        pillsHtml += `
-          <button type="button" class="wa-user-shortcut-pill ${isCur ? "active" : ""}" data-user-id="${ag.user_id}" title="Filter chats handled by ${self.escapeHtml(ag.name)}">
-            <span class="wa-user-avatar-mini">${initials}</span>
-            <span class="wa-user-pill-name">${self.escapeHtml(shortName)}</span>
-            ${ag.is_connected ? '<span class="wa-user-online-dot" title="Device connected"></span>' : ""}
-          </button>
+        const gradIdx = idx % 6;
+        const hasAvatar = ag.avatar && String(ag.avatar).trim() !== "" && !String(ag.avatar).includes("default-profile.png");
+        const subText = ag.device_phone ? ag.device_phone : (ag.device_name || "WhatsApp");
+
+        let avatarHtml = "";
+        if (hasAvatar) {
+          avatarHtml = `
+            <img src="${self.escapeHtml(ag.avatar)}" class="wa-team-card-avatar-img" alt="${self.escapeHtml(ag.name)}" onerror="this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='flex';}">
+            <div class="wa-team-card-avatar wa-avatar-gradient-${gradIdx}" style="display:none;">${initials}</div>
+          `;
+        } else {
+          avatarHtml = `<div class="wa-team-card-avatar wa-avatar-gradient-${gradIdx}">${initials}</div>`;
+        }
+
+        cardsHtml += `
+          <div class="wa-team-card ${isCur ? "active" : ""}" data-user-id="${ag.user_id}" role="button" tabindex="0" title="Filter chats for ${self.escapeHtml(ag.name)} (${self.escapeHtml(subText)})">
+            <div class="wa-team-card-avatar-wrap">
+              ${avatarHtml}
+              <span class="wa-team-card-status-dot ${ag.is_connected ? "" : "is-offline"}" title="${ag.is_connected ? "WhatsApp Connected" : "Device Offline"}"></span>
+            </div>
+            <div class="wa-team-card-info">
+              <div class="wa-team-card-name" title="${self.escapeHtml(ag.name)}">${self.escapeHtml(ag.name)}</div>
+              <div class="wa-team-card-sub" title="${self.escapeHtml(subText)}">${self.escapeHtml(subText)}</div>
+            </div>
+          </div>
         `;
       });
 
-      if ($bar.data("last-html") !== pillsHtml) {
-        $bar.html(pillsHtml).data("last-html", pillsHtml);
+      if ($bar.data("last-html") !== cardsHtml) {
+        $bar.html(cardsHtml).data("last-html", cardsHtml);
       }
 
       if (self.selectedUserId > 0 && activeAgentName) {
