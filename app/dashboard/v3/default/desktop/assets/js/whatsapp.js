@@ -105,6 +105,25 @@
         self.loadThreads();
       });
 
+      // Team filter card next / prev navigation
+      $(document).on("click", "#btnNextTeamCard, #btnEdgeNextTeamCard", function (e) {
+        e.preventDefault();
+        self.scrollTeamCards("next");
+      });
+
+      $(document).on("click", "#btnPrevTeamCard, #btnEdgePrevTeamCard", function (e) {
+        e.preventDefault();
+        self.scrollTeamCards("prev");
+      });
+
+      $(document).on("scroll", "#waUsersShortcutBar", function () {
+        self.updateTeamScrollArrows();
+      });
+
+      $(window).off("resize.waTeamScroll").on("resize.waTeamScroll", function () {
+        self.updateTeamScrollArrows();
+      });
+
       // Search input (delegated)
       let searchTimeout = null;
       $(document).on("input", "#waThreadSearch", function () {
@@ -474,6 +493,42 @@
       } else {
         $resetBtn.addClass("d-none").hide();
         $banner.addClass("d-none").hide();
+      }
+
+      setTimeout(function () {
+        self.updateTeamScrollArrows();
+      }, 50);
+    },
+
+    scrollTeamCards: function (direction) {
+      const el = document.getElementById("waUsersShortcutBar");
+      if (!el) return;
+      const $firstCard = $(el).find(".wa-team-card").first();
+      const cardWidth = $firstCard.length ? ($firstCard.outerWidth() + 8) : 170;
+      const delta = direction === "next" ? cardWidth : -cardWidth;
+      el.scrollBy({ left: delta, behavior: "smooth" });
+    },
+
+    updateTeamScrollArrows: function () {
+      const el = document.getElementById("waUsersShortcutBar");
+      if (!el) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const canScroll = maxScroll > 4;
+      const isAtStart = el.scrollLeft <= 5;
+      const isAtEnd = el.scrollLeft >= maxScroll - 5;
+
+      const $allPrev = $("#btnPrevTeamCard, #btnEdgePrevTeamCard");
+      const $allNext = $("#btnNextTeamCard, #btnEdgeNextTeamCard");
+
+      if (!canScroll) {
+        $allPrev.prop("disabled", true).addClass("is-disabled d-none");
+        $allNext.prop("disabled", true).addClass("is-disabled d-none");
+      } else {
+        $("#btnPrevTeamCard").removeClass("d-none").prop("disabled", isAtStart).toggleClass("is-disabled", isAtStart);
+        $("#btnNextTeamCard").removeClass("d-none").prop("disabled", isAtEnd).toggleClass("is-disabled", isAtEnd);
+
+        $("#btnEdgePrevTeamCard").toggleClass("d-none", isAtStart);
+        $("#btnEdgeNextTeamCard").toggleClass("d-none", isAtEnd);
       }
     },
 

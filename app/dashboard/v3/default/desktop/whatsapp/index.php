@@ -93,14 +93,28 @@
                 <div class="wa-users-shortcut-section d-none" id="waUsersShortcutSection">
                     <div class="wa-users-shortcut-header">
                         <span class="wa-users-shortcut-title"><i class="fi fi-rr-users"></i> Team Filter</span>
-                        <button type="button" class="wa-users-shortcut-reset d-none" id="btnResetUserFilter" title="Show all team chats">
-                            <i class="fi fi-rr-rotate-left"></i> Reset
-                        </button>
+                        <div class="wa-users-shortcut-actions">
+                            <button type="button" class="wa-team-nav-arrow" id="btnPrevTeamCard" title="Previous profile card" aria-label="Previous Profile Card">
+                                <i class="fi fi-rr-angle-left"></i>
+                            </button>
+                            <button type="button" class="wa-team-nav-arrow" id="btnNextTeamCard" title="Next profile card" aria-label="Next Profile Card">
+                                <i class="fi fi-rr-angle-right"></i>
+                            </button>
+                            <button type="button" class="wa-users-shortcut-reset d-none" id="btnResetUserFilter" title="Show all team chats">
+                                <i class="fi fi-rr-rotate-left"></i> Reset
+                            </button>
+                        </div>
                     </div>
                     <div class="wa-users-shortcut-scroll-container">
+                        <button type="button" class="wa-team-edge-arrow btn-prev d-none" id="btnEdgePrevTeamCard" title="Previous profile card" aria-label="Previous Profile Card">
+                            <i class="fi fi-rr-angle-left"></i>
+                        </button>
                         <div class="wa-users-shortcut-scroll" id="waUsersShortcutBar">
                             <!-- Populated dynamically via JS: All, Nandini S., Owais J., etc. -->
                         </div>
+                        <button type="button" class="wa-team-edge-arrow btn-next d-none" id="btnEdgeNextTeamCard" title="Next profile card" aria-label="Next Profile Card">
+                            <i class="fi fi-rr-angle-right"></i>
+                        </button>
                     </div>
                 </div>
 

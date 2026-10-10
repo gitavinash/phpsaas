@@ -1299,6 +1299,50 @@ select.wa-device-select.select2-hidden-accessible {
   font-size: 12px;
 }
 
+.wa-users-shortcut-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wa-team-nav-arrow {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  font-size: 11px;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.wa-team-nav-arrow:hover:not(:disabled):not(.is-disabled) {
+  background: #F8FAFC;
+  border-color: #10B981;
+  color: #10B981;
+  transform: translateY(-1px);
+}
+
+.wa-team-nav-arrow:active:not(:disabled):not(.is-disabled) {
+  transform: translateY(0);
+}
+
+.wa-team-nav-arrow:disabled,
+.wa-team-nav-arrow.is-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+  color: #94A3B8;
+}
+
 .wa-users-shortcut-reset {
   background: none;
   border: none;
@@ -1321,7 +1365,56 @@ select.wa-device-select.select2-hidden-accessible {
 
 .wa-users-shortcut-scroll-container {
   position: relative;
-  overflow: hidden;
+  width: 100%;
+}
+
+.wa-team-edge-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  font-size: 12px;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.wa-team-edge-arrow.btn-prev {
+  left: 2px;
+}
+
+.wa-team-edge-arrow.btn-next {
+  right: 2px;
+}
+
+.wa-team-edge-arrow:hover:not(:disabled):not(.is-disabled) {
+  background: #10B981;
+  color: #FFFFFF;
+  border-color: #10B981;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 14px rgba(16, 185, 129, 0.35);
+}
+
+.wa-team-edge-arrow:active:not(:disabled):not(.is-disabled) {
+  transform: translateY(-50%) scale(1);
+}
+
+.wa-team-edge-arrow:disabled,
+.wa-team-edge-arrow.is-disabled {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .wa-users-shortcut-scroll {
@@ -1329,19 +1422,17 @@ select.wa-device-select.select2-hidden-accessible {
   align-items: stretch;
   gap: 8px;
   overflow-x: auto;
-  padding: 2px 4px 6px 2px;
-  scrollbar-width: thin;
-  scrollbar-color: #CBD5E1 transparent;
+  padding: 3px 4px 6px 3px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 .wa-users-shortcut-scroll::-webkit-scrollbar {
-  height: 4px;
-}
-
-.wa-users-shortcut-scroll::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 4px;
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 /* Large and Readable Team Filter Cards */
