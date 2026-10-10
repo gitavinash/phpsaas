@@ -91,12 +91,26 @@ if (isset($connection) && $connection && ($resRev = mysqli_query($connection, $s
 
 // ---- 2b. TOTAL QUOTE SENT VALUE (Admin only) ----
 if ($accessType === 'administrator') {
-    $quoteDateFilter = str_replace('enquiry_time', 'quotation_time', $daterangeFilter);
-    $sqlQuote = "SELECT SUM(CAST(quotation_price AS DECIMAL(15,2))) AS total_val
-                 FROM {$tblPrefix}quotation
-                 WHERE quotation_status = 0"
-              . ($siteId > 0 ? " AND quotation_site_id = {$siteId}" : "")
-              . $quoteDateFilter;
+    $siteQuotationFilter = ($siteId > 0) ? " AND q.quotation_site_id = {$siteId}" : "";
+    $sqlQuote = "SELECT 
+                     COALESCE(SUM(latest_q.quotation_price), 0) AS total_val
+                 FROM {$tblPrefix}enquiry e
+                 INNER JOIN (
+                     SELECT q.quotation_ref_id, CAST(q.quotation_price AS DECIMAL(15,2)) AS quotation_price, q.quotation_time
+                     FROM {$tblPrefix}quotation q
+                     INNER JOIN (
+                         SELECT quotation_ref_id, MAX(quotation_id) AS max_qid
+                         FROM {$tblPrefix}quotation q
+                         WHERE quotation_status = 0 AND quotation_ref_type = 'enquiry' {$siteQuotationFilter}
+                         GROUP BY quotation_ref_id
+                     ) mq ON q.quotation_id = mq.max_qid
+                 ) latest_q ON e.enquiry_id = latest_q.quotation_ref_id
+                 WHERE {$siteFilter}
+                   AND e.enquiry_status NOT IN (4, 5, 15, 16, 17, 18)
+                   AND (
+                       latest_q.quotation_time BETWEEN '{$t1}' AND '{$t2}'
+                       OR (e.enquiry_time BETWEEN '{$t1}' AND '{$t2}' AND e.enquiry_status = 9)
+                   )";
 
     if (isset($connection) && $connection && ($resQuote = mysqli_query($connection, $sqlQuote))) {
         if ($rowQuote = mysqli_fetch_assoc($resQuote)) {

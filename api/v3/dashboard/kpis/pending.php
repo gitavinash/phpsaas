@@ -37,15 +37,19 @@ if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'
         $t2 = date('Y-m-d 23:59:59', strtotime(trim($dates[1])));
     }
 }
-$daterangeFilter = " AND e.enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
-
 $count = 0;
 $sql = "SELECT COUNT(DISTINCT e.enquiry_id) AS cnt
         FROM {$tblPrefix}enquiry e
-        WHERE {$siteFilter}{$userFilter}{$daterangeFilter}
-          AND (e.enquiry_status = 9 OR (e.enquiry_status NOT IN (1, 6, 4, 5, 7, 15, 16, 17, 18) AND e.enquiry_id IN (
-              SELECT quotation_ref_id FROM {$tblPrefix}quotation WHERE quotation_status = 0{$siteQuotationFilter}
-          )))";
+        WHERE {$siteFilter}{$userFilter}
+          AND e.enquiry_status NOT IN (4, 5, 15, 16, 17, 18)
+          AND (
+              (e.enquiry_time BETWEEN '{$t1}' AND '{$t2}' AND e.enquiry_status = 9)
+              OR e.enquiry_id IN (
+                  SELECT quotation_ref_id FROM {$tblPrefix}quotation
+                  WHERE quotation_status = 0 AND quotation_ref_type = 'enquiry' {$siteQuotationFilter}
+                    AND quotation_time BETWEEN '{$t1}' AND '{$t2}'
+              )
+          )";
 
 if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
     if ($row = mysqli_fetch_assoc($res)) {
