@@ -974,282 +974,84 @@
   transform: rotate(180deg);
 }
 
-/* Standalone native select must never capture clicks or open native menu */
+/* Standalone native select must be completely hidden and unclickable when select2 is active */
 .wa-device-select.select2-hidden-accessible,
-select.wa-device-select.select2-hidden-accessible,
-.wa-device-select:not(.select2-hidden-accessible),
-select.wa-device-select:not(.select2-hidden-accessible) {
+select.wa-device-select.select2-hidden-accessible {
+  display: none !important;
   position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  border: 0 !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Selected Device Presentation inside Header Pill */
-.wa-device-chip-sel {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: middle;
-}
-
-.wa-device-chip-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  display: inline-block;
-}
-
-.wa-device-chip-dot.is-connected {
-  background-color: #10B981;
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
-}
-
-.wa-device-chip-dot.is-offline {
-  background-color: #94A3B8;
-}
-
-.wa-device-chip-text {
-  font-weight: 600;
-  color: #1E293B;
-  font-size: 12.5px;
-  letter-spacing: -0.01em;
-}
-
-.wa-device-chip-meta {
-  color: #64748B;
-  font-weight: 500;
-  font-size: 11.5px;
-}
-
-/* Custom Select2 Dropdown Popup Matching Modern Emerald Theme */
-.select2-dropdown.wa-device-select2-dropdown,
-.select2-dropdown.wa-select2-dropdown {
-  border: 1px solid #E2E8F0 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 14px 34px -4px rgba(15, 23, 42, 0.12), 0 6px 14px -4px rgba(15, 23, 42, 0.06) !important;
-  overflow: hidden !important;
-  font-size: 12.5px !important;
-  z-index: 100050 !important;
-  background: #FFFFFF !important;
-  padding: 6px !important;
-  min-width: 310px !important;
-  max-width: 380px !important;
-}
-
-.select2-dropdown.wa-device-select2-dropdown .select2-search--dropdown,
-.select2-dropdown.wa-select2-dropdown .select2-search--dropdown {
-  padding: 6px 6px 8px 6px !important;
-  background: transparent !important;
-  border-bottom: 1px solid #F1F5F9 !important;
-  margin-bottom: 4px !important;
-}
-
-.select2-dropdown.wa-device-select2-dropdown .select2-search__field,
-.select2-dropdown.wa-select2-dropdown .select2-search__field {
-  border: 1px solid #CBD5E1 !important;
-  border-radius: 8px !important;
-  padding: 6px 10px !important;
-  font-size: 12.5px !important;
-  outline: none !important;
-  background: #F8FAFC !important;
-  transition: all 0.15s ease !important;
-}
-
-.select2-dropdown.wa-device-select2-dropdown .select2-search__field:focus,
-.select2-dropdown.wa-select2-dropdown .select2-search__field:focus {
-  border-color: #10B981 !important;
-  background: #FFFFFF !important;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12) !important;
-}
-
-.select2-dropdown.wa-device-select2-dropdown .select2-results__options,
-.select2-dropdown.wa-select2-dropdown .select2-results__options {
-  max-height: 290px !important;
+  width: 0 !important;
+  height: 0 !important;
   padding: 0 !important;
   margin: 0 !important;
-  list-style: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  clip: rect(0 0 0 0) !important;
 }
 
-.select2-dropdown.wa-device-select2-dropdown .select2-results__option,
-.select2-dropdown.wa-select2-dropdown .select2-results__option {
-  padding: 7px 9px !important;
-  margin: 2px 0 !important;
-  border-radius: 9px !important;
-  transition: all 0.12s ease !important;
+/* Standalone native fallback styling only when Select2 is not yet attached */
+.wa-device-select:not(.select2-hidden-accessible) {
+  border: none !important;
   background: transparent !important;
-  border: 1px solid transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #1E293B !important;
   cursor: pointer !important;
+  padding: 0 16px 0 0 !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  max-width: 220px;
+  height: 100% !important;
 }
 
-.select2-dropdown.wa-device-select2-dropdown .select2-results__option--highlighted[aria-selected],
+/* Custom Select2 Dropdown Popup */
+.select2-dropdown.wa-select2-dropdown {
+  border: 1px solid #CBD5E1 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+  overflow: hidden !important;
+  font-size: 12.5px !important;
+  z-index: 10050 !important;
+  background: #FFFFFF !important;
+}
+
+.select2-dropdown.wa-select2-dropdown .select2-search--dropdown {
+  padding: 6px !important;
+  background: #F8FAFC !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+}
+
+.select2-dropdown.wa-select2-dropdown .select2-search__field {
+  border: 1px solid #CBD5E1 !important;
+  border-radius: 6px !important;
+  padding: 5px 8px !important;
+  font-size: 12px !important;
+  outline: none !important;
+}
+
+.select2-dropdown.wa-select2-dropdown .select2-search__field:focus {
+  border-color: #10B981 !important;
+}
+
+.select2-dropdown.wa-select2-dropdown .select2-results__option {
+  padding: 8px 12px !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+  transition: all 0.1s ease !important;
+}
+
 .select2-dropdown.wa-select2-dropdown .select2-results__option--highlighted[aria-selected] {
   background: #ECFDF5 !important;
-  border-color: #A7F3D0 !important;
   color: #065F46 !important;
+  font-weight: 600 !important;
 }
 
-.select2-dropdown.wa-device-select2-dropdown .select2-results__option[aria-selected="true"],
 .select2-dropdown.wa-select2-dropdown .select2-results__option[aria-selected="true"] {
-  background: #F0FDF4 !important;
-  border-color: #86EFAC !important;
-}
-
-/* Device Menu Option Item Presentation */
-.wa-device-menu-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.wa-device-menu-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  position: relative;
-  font-size: 14px;
-}
-
-.wa-device-menu-avatar.is-all {
-  background: #ECFDF5;
-  color: #059669;
-}
-
-.wa-device-menu-avatar.is-connected {
-  background: #ECFDF5;
-  color: #10B981;
-}
-
-.wa-device-menu-avatar.is-offline {
-  background: #F1F5F9;
-  color: #94A3B8;
-}
-
-.wa-device-menu-dot {
-  position: absolute;
-  bottom: -1px;
-  right: -1px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  border: 2px solid #FFFFFF;
-}
-
-.wa-device-menu-dot.is-connected {
-  background: #10B981;
-}
-
-.wa-device-menu-dot.is-offline {
-  background: #CBD5E1;
-}
-
-.wa-device-menu-info {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.wa-device-menu-title-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.wa-device-menu-phone,
-.wa-device-menu-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: #0F172A;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  letter-spacing: -0.01em;
-}
-
-.wa-device-menu-sub {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
-  color: #64748B;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.wa-device-menu-line-name {
-  color: #334155;
-  font-weight: 500;
-  max-width: 145px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.wa-device-menu-agent {
-  color: #059669;
-  background: #ECFDF5;
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-size: 10.5px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.wa-device-menu-badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 9999px;
-  flex-shrink: 0;
-}
-
-.wa-device-menu-badge.is-active {
-  background: #ECFDF5;
-  color: #065F46;
-  border: 1px solid #A7F3D0;
-}
-
-.wa-device-menu-status-pill {
-  font-size: 10.5px;
-  font-weight: 600;
-  padding: 1px 7px;
-  border-radius: 9999px;
-  flex-shrink: 0;
-}
-
-.wa-device-menu-status-pill.is-online {
-  background: #ECFDF5;
-  color: #059669;
-}
-
-.wa-device-menu-status-pill.is-offline {
-  background: #F1F5F9;
-  color: #64748B;
+  background: #10B981 !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
 }
 
 .wa-chat-workspace {
