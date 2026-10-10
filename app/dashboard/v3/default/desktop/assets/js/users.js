@@ -140,7 +140,9 @@
         success: function (res) {
           if (res && res.status === "success") {
             self.allUsers = res.data || res.users || [];
-            self.renderKPIs(res.metrics || {});
+            self.userLimit = res.user_limit || 10;
+            self.isLimitReached = res.limit_reached || false;
+            self.renderKPIs(res.metrics || {}, res.user_limit, res.limit_reached);
             self.populateRoleDropdown(res.roles || []);
             self.applyFilters();
           } else {
@@ -154,11 +156,24 @@
       });
     },
 
-    renderKPIs: function (metrics) {
-      $("#statTotalUsers").text(metrics.total ?? this.allUsers.length);
+    renderKPIs: function (metrics, userLimit, limitReached) {
+      const total = metrics.total ?? this.allUsers.length;
+      if (userLimit) {
+        $("#statTotalUsers").text(total + " / " + userLimit);
+      } else {
+        $("#statTotalUsers").text(total);
+      }
       $("#statTotalAdmins").text(metrics.admins ?? 0);
       $("#statTotalAgents").text(metrics.agents ?? 0);
       $("#statTotalOperations").text(metrics.operations ?? 0);
+
+      if (limitReached) {
+        $("#btnBuyUserLicense").removeClass("d-none");
+        $("#btnAddUser, .package-header-actions .btn-add-pkg-v3").addClass("d-none");
+      } else {
+        $("#btnBuyUserLicense").addClass("d-none");
+        $("#btnAddUser, .package-header-actions .btn-add-pkg-v3").removeClass("d-none");
+      }
     },
 
     populateRoleDropdown: function (roles) {

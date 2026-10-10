@@ -14,5 +14,11 @@ if (!isset($params['status'])) {
 }
 
 $targetUrl = '/dashboard/accounts/?' . http_build_query($params);
-header("Location: " . $targetUrl, true, 301);
+
+if (!headers_sent()) {
+    header("Location: " . $targetUrl, true, 301);
+} else {
+    echo '<script>window.location.replace(' . json_encode($targetUrl) . ');</script>';
+    echo '<noscript><meta http-equiv="refresh" content="0;url=' . htmlspecialchars($targetUrl, ENT_QUOTES, 'UTF-8') . '"></noscript>';
+}
 exit();

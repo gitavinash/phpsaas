@@ -31,6 +31,22 @@
         self.bindLivePreview("add");
       });
 
+      // Check license limit status
+      $.ajax({
+        url: "/api/v3/users/?limit=1",
+        method: "GET",
+        dataType: "json",
+        success: function (res) {
+          if (res && res.limit_reached) {
+            $("#btnSubmitUser").addClass("d-none");
+            $("#btnUpgradeUserLicenseForm").removeClass("d-none");
+          } else {
+            $("#btnSubmitUser").removeClass("d-none");
+            $("#btnUpgradeUserLicenseForm").addClass("d-none");
+          }
+        }
+      });
+
       $(document).off("submit", "#addUserForm").on("submit", "#addUserForm", function (e) {
         e.preventDefault();
         self.submitAddUser();
@@ -137,15 +153,45 @@
               setTimeout(doRedirect, 800);
             }
           } else {
-            self.showAlert("error", res ? res.msg : "Failed to create user.");
+            if (res && res.limit_reached) {
+              self.showLicenseLimitAlert(res.msg || "Team member limit reached. Please buy more licenses to add more team members.");
+            } else {
+              self.showAlert("error", res ? res.msg : "Failed to create user.");
+            }
           }
         },
-        error: function () {
+        error: function (xhr) {
           self.isSubmitting = false;
           $btn.prop("disabled", false).html(origHtml);
-          self.showAlert("error", "Network error while creating user.");
+          const errData = xhr ? xhr.responseJSON : null;
+          if (errData && errData.limit_reached) {
+            self.showLicenseLimitAlert(errData.msg || "Team member limit reached. Please buy more licenses to add more team members.");
+          } else {
+            self.showAlert("error", (errData && errData.msg) ? errData.msg : "Network error while creating user.");
+          }
         }
       });
+    },
+
+    showLicenseLimitAlert: function (msg) {
+      const notice = msg || "You have reached your team member license limit. Please contact Aleya to add more team members.";
+      if (typeof window.showContactAleyaModal === "function") {
+        window.showContactAleyaModal("Team Member Limit Reached", notice);
+        return;
+      }
+      const swalFn = window.swal || window.Swal;
+      if (typeof swalFn === "function") {
+        swalFn({
+          title: "Team Member Limit Reached",
+          text: notice,
+          type: "warning",
+          icon: "warning",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#2563eb"
+        });
+      } else {
+        this.showAlert("warning", notice);
+      }
     },
 
     // ----------------------------------------------------

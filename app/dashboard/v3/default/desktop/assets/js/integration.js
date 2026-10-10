@@ -376,6 +376,9 @@
       let currentAgentSessionId = null;
       let stateDevices = [];
       let stateAgents = [];
+      let stateDeviceLimit = 1;
+      let stateDeviceCount = 0;
+      let stateLimitReached = false;
       let isAdmin = false;
 
       // 1. Load Devices and Initial State
@@ -389,6 +392,9 @@
               isAdmin = !!res.is_admin;
               stateDevices = res.devices || [];
               stateAgents = res.agents || [];
+              stateDeviceLimit = res.device_limit || 1;
+              stateDeviceCount = res.device_count !== undefined ? res.device_count : stateDevices.length;
+              stateLimitReached = res.limit_reached !== undefined ? res.limit_reached : (stateDeviceCount >= stateDeviceLimit);
 
               const isActive = !!res.is_active;
               $("#waWebActiveToggle").prop("checked", isActive);
@@ -432,7 +438,23 @@
         $("#waAdminSection").removeClass("d-none");
 
         const devices = data.devices || [];
-        $("#waAdminDeviceCount").text(devices.length);
+        const deviceLimit = data.device_limit || stateDeviceLimit || 1;
+        const deviceCount = data.device_count !== undefined ? data.device_count : devices.length;
+        const limitReached = data.limit_reached !== undefined ? data.limit_reached : (deviceCount >= deviceLimit);
+        stateDeviceLimit = deviceLimit;
+        stateDeviceCount = deviceCount;
+        stateLimitReached = limitReached;
+
+        $("#waAdminDeviceCount").text(deviceCount + " / " + deviceLimit);
+        if (limitReached) {
+          $("#waAdminDeviceCount").addClass("wa-count-limit-reached");
+          $("#btnBuyDeviceLicense").removeClass("d-none");
+          $("#btnOpenAddDeviceModal").addClass("d-none");
+        } else {
+          $("#waAdminDeviceCount").removeClass("wa-count-limit-reached");
+          $("#btnBuyDeviceLicense").addClass("d-none");
+          $("#btnOpenAddDeviceModal").removeClass("d-none");
+        }
 
         const $grid = $("#waAdminDevicesGrid");
         if (devices.length === 0) {
@@ -649,6 +671,28 @@
 
       // 6. Admin Add Device Modal
       $("#btnOpenAddDeviceModal").on("click", function () {
+        if (stateLimitReached) {
+          const limitMsg = "You have reached your WhatsApp device license limit (" + stateDeviceCount + "/" + stateDeviceLimit + "). Please contact Aleya to upgrade your plan and connect additional WhatsApp devices.";
+          if (typeof window.showContactAleyaModal === "function") {
+            window.showContactAleyaModal("WhatsApp Device Limit Reached", limitMsg);
+          } else {
+            const swalFn = window.swal || window.Swal;
+            if (typeof swalFn === "function") {
+              swalFn({
+                title: "Device Limit Reached",
+                text: limitMsg,
+                type: "warning",
+                icon: "warning",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#2563eb"
+              });
+            } else {
+              self.showToast(limitMsg, "warning");
+            }
+          }
+          return;
+        }
+
         currentModalSessionId = "device_" + Date.now();
         $("#waAddDeviceModal").addClass("is-active");
         loadModalQrCode(currentModalSessionId);
@@ -677,6 +721,20 @@
           method: "GET",
           dataType: "json",
           success: function (res) {
+            if (res && res.limit_reached) {
+              clearInterval(modalPollInterval);
+              if (modalCountdownInterval) clearInterval(modalCountdownInterval);
+              const limitNotice = res.msg || "You have reached your device license limit. Please contact Aleya to add more devices.";
+              $("#waModalQrCodeContainer").html(
+                '<div class="wa-qr-placeholder wa-qr-limit-error">' +
+                  '<i class="fi fi-rr-shield-exclamation"></i>' +
+                  '<h4>Device Limit Reached</h4>' +
+                  '<p>' + limitNotice + '</p>' +
+                  '<a href="javascript:void(0)" class="btn-wa-buy-license btn-contact-aleya" data-modal-title="WhatsApp Device Limit Reached" data-modal-notice="' + limitNotice + '"><i class="fi fi-rr-headset"></i> <span>Contact Aleya / Buy Licenses</span></a>' +
+                '</div>'
+              );
+              return;
+            }
             if (res && (res.status === "connected" || res.connection_status === "connected" || res.is_device_linked === true || res.is_connected === true)) {
               clearInterval(modalPollInterval);
               if (modalCountdownInterval) clearInterval(modalCountdownInterval);
@@ -713,6 +771,25 @@
             } else if (res && res.msg) {
               $("#waModalQrCodeContainer").html('<div class="wa-qr-placeholder"><span>' + res.msg + '</span></div>');
             }
+          },
+          error: function (xhr) {
+            const errData = xhr.responseJSON;
+            if (errData && errData.limit_reached) {
+              clearInterval(modalPollInterval);
+              if (modalCountdownInterval) clearInterval(modalCountdownInterval);
+              const limitNotice = errData.msg || "You have reached your device license limit. Please contact Aleya to add more devices.";
+              $("#waModalQrCodeContainer").html(
+                '<div class="wa-qr-placeholder wa-qr-limit-error">' +
+                  '<i class="fi fi-rr-shield-exclamation"></i>' +
+                  '<h4>Device Limit Reached</h4>' +
+                  '<p>' + limitNotice + '</p>' +
+                  '<a href="javascript:void(0)" class="btn-wa-buy-license btn-contact-aleya" data-modal-title="WhatsApp Device Limit Reached" data-modal-notice="' + limitNotice + '"><i class="fi fi-rr-headset"></i> <span>Contact Aleya / Buy Licenses</span></a>' +
+                '</div>'
+              );
+            } else {
+              const err = errData ? errData.msg : "Unable to generate QR code.";
+              $("#waModalQrCodeContainer").html('<div class="wa-qr-placeholder"><span>' + err + '</span></div>');
+            }
           }
         });
       }
@@ -732,6 +809,20 @@
             method: "GET",
             dataType: "json",
             success: function (res) {
+              if (res && res.limit_reached) {
+                clearInterval(modalPollInterval);
+                if (modalCountdownInterval) clearInterval(modalCountdownInterval);
+                const limitNotice = res.msg || "Device limit reached. Please contact Aleya to buy more licenses.";
+                $("#waModalQrCodeContainer").html(
+                  '<div class="wa-qr-placeholder wa-qr-limit-error">' +
+                    '<i class="fi fi-rr-shield-exclamation"></i>' +
+                    '<h4>Device Limit Reached</h4>' +
+                    '<p>' + limitNotice + '</p>' +
+                    '<a href="javascript:void(0)" class="btn-wa-buy-license btn-contact-aleya" data-modal-title="WhatsApp Device Limit Reached" data-modal-notice="' + limitNotice + '"><i class="fi fi-rr-headset"></i> <span>Contact Aleya / Buy Licenses</span></a>' +
+                  '</div>'
+                );
+                return;
+              }
               const isConnected = res && (
                 res.connection_status === "connected" ||
                 res.is_device_linked === true ||
@@ -794,8 +885,30 @@
           },
           error: function (xhr) {
             $btn.prop("disabled", false).html('<i class="fi fi-rr-key"></i> <span>Get Code</span>');
-            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Failed to generate pairing code.";
-            self.showToast(err, "error");
+            const errData = xhr.responseJSON;
+            if (errData && errData.limit_reached) {
+              const limitMsg = errData.msg || "Device limit reached. Please contact Aleya to connect additional WhatsApp devices.";
+              if (typeof window.showContactAleyaModal === "function") {
+                window.showContactAleyaModal("WhatsApp Device Limit Reached", limitMsg);
+              } else {
+                const swalFn = window.swal || window.Swal;
+                if (typeof swalFn === "function") {
+                  swalFn({
+                    title: "Device Limit Reached",
+                    text: limitMsg,
+                    type: "warning",
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#2563eb"
+                  });
+                } else {
+                  self.showToast(limitMsg, "error");
+                }
+              }
+            } else {
+              const err = errData ? errData.msg : "Failed to generate pairing code.";
+              self.showToast(err, "error");
+            }
           }
         });
       });

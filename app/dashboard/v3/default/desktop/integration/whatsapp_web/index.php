@@ -75,6 +75,9 @@ $isWaWebActive = (defined('ENABLE_WHATSAPP_WEB_API') && ENABLE_WHATSAPP_WEB_API 
                         <p>Manage multi-device connections and assign each device to a CRM sales agent.</p>
                     </div>
                     <div class="v3-header-actions-wrap">
+                        <button type="button" class="btn-wa-buy-license btn-contact-aleya btn-upgrade d-none" id="btnBuyDeviceLicense" title="Upgrade WhatsApp device licenses" data-modal-title="WhatsApp Device Limit Reached" data-modal-notice="You have reached your WhatsApp device license limit. Please contact Aleya to connect additional devices.">
+                            <i class="fi fi-rr-sparkles"></i> <span>Upgrade</span>
+                        </button>
                         <button type="button" class="btn-integration-primary btn-sm" id="btnOpenAddDeviceModal">
                             <i class="fi fi-rr-plus"></i> <span>Add WhatsApp Device</span>
                         </button>

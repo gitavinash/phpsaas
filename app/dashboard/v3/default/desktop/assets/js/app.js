@@ -5617,3 +5617,142 @@ $(document).ready(function (e) {
     }
   });
 })();
+
+/**
+ * Global Contact Aleya Support & License Upgrade Modal
+ * Replaces navigation to billing page when license limits are reached.
+ */
+(function () {
+  function ensureAleyaContactModal() {
+    var $modal = $("#modalContactAleya");
+    if ($modal.length) return $modal;
+
+    var modalHtml = 
+      '<div class="wa-modal-backdrop" id="modalContactAleya" style="z-index: 100000;" role="dialog" aria-modal="true">' +
+        '<div class="aleya-contact-modal-window">' +
+          '<div class="aleya-modal-header">' +
+            '<div class="aleya-header-icon-box">' +
+              '<i class="fi fi-rr-headset"></i>' +
+            '</div>' +
+            '<div class="aleya-header-text">' +
+              '<h3 id="modalContactAleyaTitle">Contact Aleya Support &amp; Sales</h3>' +
+              '<p id="modalContactAleyaSubtitle">To upgrade your plan, add extra device licenses, or add team members, please contact our team directly.</p>' +
+            '</div>' +
+            '<button type="button" class="aleya-modal-close-btn" id="btnCloseContactAleya" aria-label="Close">' +
+              '<i class="fi fi-rr-cross"></i>' +
+            '</button>' +
+          '</div>' +
+          '<div class="aleya-modal-body">' +
+            '<div class="aleya-modal-intro-badge">' +
+              '<i class="fi fi-rr-info"></i>' +
+              '<span id="modalContactAleyaNotice">You have reached the maximum allowed limit on your current plan. Instant activation is available by reaching out to Aleya.</span>' +
+            '</div>' +
+            '<div class="aleya-contact-grid">' +
+              '<!-- WhatsApp Card -->' +
+              '<a href="https://wa.me/919990026008?text=Hi%20Aleya%20Team,%20I%20would%20like%20to%20upgrade%20my%20license%20(Devices/Users)." target="_blank" rel="noopener noreferrer" class="aleya-contact-card card-whatsapp">' +
+                '<div class="aleya-card-head">' +
+                  '<div class="aleya-card-icon"><i class="ri-whatsapp-line"></i></div>' +
+                  '<span class="aleya-card-tag">Instant Chat</span>' +
+                '</div>' +
+                '<div class="aleya-card-title">WhatsApp Support</div>' +
+                '<div class="aleya-card-detail">+91 99900 26008</div>' +
+                '<div class="aleya-card-sub">Quick responses &amp; license allocation</div>' +
+                '<div class="aleya-card-action"><span>Chat on WhatsApp</span> <i class="fi fi-rr-arrow-right"></i></div>' +
+              '</a>' +
+              '<!-- Phone Call Card -->' +
+              '<a href="tel:+919990026008" class="aleya-contact-card card-phone">' +
+                '<div class="aleya-card-head">' +
+                  '<div class="aleya-card-icon"><i class="fi fi-rr-phone-call"></i></div>' +
+                  '<span class="aleya-card-tag">Direct Call</span>' +
+                '</div>' +
+                '<div class="aleya-card-title">Call Sales &amp; Support</div>' +
+                '<div class="aleya-card-detail">+91-9990026008</div>' +
+                '<div class="aleya-card-sub">Mon – Sat (10:00 AM – 7:00 PM)</div>' +
+                '<div class="aleya-card-action"><span>Call Directly</span> <i class="fi fi-rr-arrow-right"></i></div>' +
+              '</a>' +
+              '<!-- Email Card -->' +
+              '<a href="mailto:support@aleya.in?subject=License%20Upgrade%20Inquiry%20-%20Aleya" class="aleya-contact-card card-email">' +
+                '<div class="aleya-card-head">' +
+                  '<div class="aleya-card-icon"><i class="fi fi-rr-envelope"></i></div>' +
+                  '<span class="aleya-card-tag">Email Desk</span>' +
+                '</div>' +
+                '<div class="aleya-card-title">Email Inquiries</div>' +
+                '<div class="aleya-card-detail">support@aleya.in</div>' +
+                '<div class="aleya-card-sub">Official billing &amp; enterprise support</div>' +
+                '<div class="aleya-card-action"><span>Send Email</span> <i class="fi fi-rr-arrow-right"></i></div>' +
+              '</a>' +
+              '<!-- Website Card -->' +
+              '<a href="https://aleya.in" target="_blank" rel="noopener noreferrer" class="aleya-contact-card card-web">' +
+                '<div class="aleya-card-head">' +
+                  '<div class="aleya-card-icon"><i class="fi fi-rr-globe"></i></div>' +
+                  '<span class="aleya-card-tag">Official</span>' +
+                '</div>' +
+                '<div class="aleya-card-title">Aleya Website</div>' +
+                '<div class="aleya-card-detail">aleya.in</div>' +
+                '<div class="aleya-card-sub">Explore platform features &amp; tiers</div>' +
+                '<div class="aleya-card-action"><span>Visit Website</span> <i class="fi fi-rr-arrow-right"></i></div>' +
+              '</a>' +
+            '</div>' +
+          '</div>' +
+          '<div class="aleya-modal-footer">' +
+            '<p class="aleya-footer-note"><i class="fi fi-rr-shield-check"></i> <span>Extra licenses can be enabled for your account immediately.</span></p>' +
+            '<button type="button" class="btn-aleya-modal-dismiss" id="btnDismissContactAleya">Close</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    $("body").append(modalHtml);
+    $modal = $("#modalContactAleya");
+
+    // Event handlers for closing
+    $modal.on("click", "#btnCloseContactAleya, #btnDismissContactAleya", function (e) {
+      e.preventDefault();
+      window.hideContactAleyaModal();
+    });
+
+    $modal.on("click", function (e) {
+      if ($(e.target).is("#modalContactAleya")) {
+        window.hideContactAleyaModal();
+      }
+    });
+
+    $(document).on("keydown.modalContactAleya", function (e) {
+      if (e.key === "Escape" && $("#modalContactAleya").hasClass("is-active")) {
+        window.hideContactAleyaModal();
+      }
+    });
+
+    return $modal;
+  }
+
+  window.showContactAleyaModal = function (title, message) {
+    var $modal = ensureAleyaContactModal();
+    if (title) {
+      $("#modalContactAleyaTitle").text(title);
+    } else {
+      $("#modalContactAleyaTitle").text("Contact Aleya Support & Sales");
+    }
+
+    if (message) {
+      $("#modalContactAleyaNotice").text(message);
+    } else {
+      $("#modalContactAleyaNotice").text("You have reached the maximum allowed license limit. Please contact Aleya to upgrade your account.");
+    }
+
+    $modal.addClass("is-active");
+  };
+
+  window.hideContactAleyaModal = function () {
+    $("#modalContactAleya").removeClass("is-active");
+  };
+
+  // Global delegation for any Buy License button across V3 pages
+  $(document).on("click", ".btn-wa-buy-license, .btn-contact-aleya", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var customTitle = $(this).attr("data-modal-title") || "Upgrade Licenses & Quotas";
+    var customNotice = $(this).attr("data-modal-notice") || "To purchase more licenses or add more devices/team members, please contact Aleya directly.";
+    window.showContactAleyaModal(customTitle, customNotice);
+  });
+})();
+

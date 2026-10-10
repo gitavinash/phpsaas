@@ -3374,4 +3374,408 @@ select.wa-device-select.select2-hidden-accessible {
   line-height: 1.5 !important;
 }
 
+/* License Limit & Buy More License Utilities */
+.btn-wa-buy-license {
+  background: #f59e0b;
+  color: #FFFFFF !important;
+  border: 1px solid #d97706;
+  height: 32px;
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none !important;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.btn-wa-buy-license:hover {
+  background: #d97706;
+  border-color: #b45309;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-wa-buy-license:active {
+  transform: scale(0.96) !important;
+}
+
+.btn-wa-buy-license i {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.btn-wa-buy-license.btn-upgrade {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  height: auto !important;
+  min-height: 36px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+}
+
+.btn-wa-buy-license.btn-upgrade:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+.wa-count-limit-reached {
+  background: #fef3c7 !important;
+  color: #b45309 !important;
+  border: 1px solid #fde68a !important;
+}
+
+.wa-qr-limit-error {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 24px 16px !important;
+}
+
+.wa-qr-limit-error i {
+  font-size: 36px !important;
+  color: #f59e0b !important;
+  margin-bottom: 8px !important;
+}
+
+.wa-qr-limit-error h4 {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin: 0 0 6px 0 !important;
+}
+
+.wa-qr-limit-error p {
+  font-size: 13px !important;
+  color: #64748b !important;
+  margin: 0 0 16px 0 !important;
+  max-width: 320px !important;
+  line-height: 1.5 !important;
+}
+
+/* ==========================================================================
+   Aleya Contact & License Upgrade Modal
+   ========================================================================== */
+.aleya-contact-modal-window {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 620px;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  overflow: hidden;
+  transform: translateY(20px) scale(0.98);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid #e2e8f0;
+}
+
+.wa-modal-backdrop.is-active .aleya-contact-modal-window {
+  transform: translateY(0) scale(1);
+}
+
+.aleya-modal-header {
+  padding: 22px 24px 18px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+}
+
+.aleya-header-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.12);
+}
+
+.aleya-header-text {
+  flex: 1;
+  padding-right: 28px;
+}
+
+.aleya-header-text h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+
+.aleya-header-text p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.aleya-modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  position: absolute;
+  top: 18px;
+  right: 18px;
+}
+
+.aleya-modal-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.aleya-modal-body {
+  padding: 22px 24px;
+}
+
+.aleya-modal-intro-badge {
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  color: #92400e;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  line-height: 1.45;
+}
+
+.aleya-modal-intro-badge i {
+  font-size: 20px;
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.aleya-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 580px) {
+  .aleya-contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.aleya-contact-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.aleya-contact-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.08);
+}
+
+.aleya-contact-card.card-whatsapp {
+  border-color: #bbf7d0;
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+}
+.aleya-contact-card.card-whatsapp:hover {
+  border-color: #22c55e;
+}
+
+.aleya-contact-card.card-phone {
+  border-color: #bfdbfe;
+  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+}
+.aleya-contact-card.card-phone:hover {
+  border-color: #3b82f6;
+}
+
+.aleya-contact-card.card-email {
+  border-color: #fed7aa;
+  background: linear-gradient(180deg, #ffffff 0%, #fff7ed 100%);
+}
+.aleya-contact-card.card-email:hover {
+  border-color: #f97316;
+}
+
+.aleya-contact-card.card-web {
+  border-color: #e2e8f0;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+.aleya-contact-card.card-web:hover {
+  border-color: #64748b;
+}
+
+.aleya-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.aleya-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.card-whatsapp .aleya-card-icon {
+  background: #dcfce7;
+  color: #16a34a;
+}
+.card-phone .aleya-card-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+.card-email .aleya-card-icon {
+  background: #ffedd5;
+  color: #ea580c;
+}
+.card-web .aleya-card-icon {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.aleya-card-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+}
+
+.card-whatsapp .aleya-card-tag {
+  background: #16a34a;
+  color: #ffffff;
+}
+.card-phone .aleya-card-tag {
+  background: #2563eb;
+  color: #ffffff;
+}
+.card-email .aleya-card-tag {
+  background: #ea580c;
+  color: #ffffff;
+}
+.card-web .aleya-card-tag {
+  background: #475569;
+  color: #ffffff;
+}
+
+.aleya-card-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 3px;
+}
+
+.aleya-card-detail {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #334155;
+  margin: 0 0 4px;
+}
+
+.aleya-card-sub {
+  font-size: 11.5px;
+  color: #64748b;
+  margin: 0 0 12px;
+}
+
+.aleya-card-action {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.card-whatsapp .aleya-card-action { color: #16a34a; }
+.card-phone .aleya-card-action { color: #2563eb; }
+.card-email .aleya-card-action { color: #ea580c; }
+.card-web .aleya-card-action { color: #475569; }
+
+.aleya-modal-footer {
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.aleya-footer-note {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aleya-footer-note i {
+  color: #10b981;
+}
+
+.btn-aleya-modal-dismiss {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-aleya-modal-dismiss:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+
 

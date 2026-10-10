@@ -270,6 +270,29 @@ if ($metricsRes && $mRow = mysqli_fetch_assoc($metricsRes)) {
     $metrics['operations'] = (int)($mRow['total_operations'] ?? 0);
 }
 
+// Resolve User License Limit
+$userLimit = 10;
+if (defined('USER_LIMIT')) {
+    $userLimit = (int)USER_LIMIT;
+} elseif (getenv('USER_LIMIT') !== false && getenv('USER_LIMIT') !== '') {
+    $userLimit = (int)getenv('USER_LIMIT');
+} else {
+    $chkULimQ = mysqli_query($connection, "SELECT site_configuration_value FROM {$tblPrefix}site_configuration WHERE site_configuration_site_id = {$siteId} AND (site_configuration_key = 'user_limit' OR site_configuration_key = 'USER_LIMIT') AND site_configuration_status = 1 LIMIT 1");
+    if ($chkULimQ && mysqli_num_rows($chkULimQ) > 0) {
+        $uRow = mysqli_fetch_assoc($chkULimQ);
+        if (!empty($uRow['site_configuration_value']) && is_numeric($uRow['site_configuration_value'])) {
+            $userLimit = (int)$uRow['site_configuration_value'];
+        }
+    }
+}
+if ($userLimit <= 0) {
+    $userLimit = 10;
+}
+if (!defined('USER_LIMIT')) {
+    define('USER_LIMIT', $userLimit);
+}
+$isUserLimitReached = ($metrics['total'] >= $userLimit);
+
 echo json_encode([
     'status'          => 'success',
     'msg'             => 'Users retrieved successfully.',
@@ -279,5 +302,7 @@ echo json_encode([
     'users'           => $users,
     'metrics'         => $metrics,
     'roles'           => $rolesList,
-    'current_user_id' => $currentUserId
+    'current_user_id' => $currentUserId,
+    'user_limit'      => $userLimit,
+    'limit_reached'   => $isUserLimitReached
 ]);

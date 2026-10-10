@@ -101,6 +101,22 @@ $postType = end($postType);
 
 $dashboardPageTitle = ucwords(str_replace('/', ' &#8702; ', mysqli_real_escape_string($connection, ((rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') != '') ? rtrim(ltrim(ADMIN_BASE_URL, '/'), '/') : 'Dashboard'))) . ((isset($type)) ? ' &#8702; ' . $type : ''));
 
+// Route-level redirection before loading dashboard header to prevent "headers already sent"
+if ($dashboardFilePath === 'billing.php') {
+	$params = [];
+	if (!empty($_SERVER['QUERY_STRING'])) {
+		parse_str($_SERVER['QUERY_STRING'], $params);
+	}
+	if (!isset($params['status'])) {
+		$params['status'] = 'verified';
+	}
+	$targetUrl = '/dashboard/accounts/?' . http_build_query($params);
+	if (!headers_sent()) {
+		header("Location: " . $targetUrl, true, 301);
+		exit();
+	}
+}
+
 // Call dashboard theme file header, footer and main required file as per uri
 
 if (is_dir($dashboardDirectory)) {

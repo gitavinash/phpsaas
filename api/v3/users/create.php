@@ -151,6 +151,55 @@ if ($checkSiteAccess && mysqli_num_rows($checkSiteAccess) > 0) {
     exit();
 }
 
+// Check User License Limit
+// If USER_LIMIT key is defined then use the value, else default value is 10.
+$userLimit = 10;
+if (defined('USER_LIMIT')) {
+    $userLimit = (int)USER_LIMIT;
+} elseif (getenv('USER_LIMIT') !== false && getenv('USER_LIMIT') !== '') {
+    $userLimit = (int)getenv('USER_LIMIT');
+} else {
+    $chkULimQ = mysqli_query($connection, "SELECT site_configuration_value FROM {$tblPrefix}site_configuration WHERE site_configuration_site_id = {$siteId} AND (site_configuration_key = 'user_limit' OR site_configuration_key = 'USER_LIMIT') AND site_configuration_status = 1 LIMIT 1");
+    if ($chkULimQ && mysqli_num_rows($chkULimQ) > 0) {
+        $uRow = mysqli_fetch_assoc($chkULimQ);
+        if (!empty($uRow['site_configuration_value']) && is_numeric($uRow['site_configuration_value'])) {
+            $userLimit = (int)$uRow['site_configuration_value'];
+        }
+    }
+}
+if ($userLimit <= 0) {
+    $userLimit = 10;
+}
+if (!defined('USER_LIMIT')) {
+    define('USER_LIMIT', $userLimit);
+}
+
+// Count active team members on this site
+$userCountQ = mysqli_query($connection, "
+    SELECT COUNT(DISTINCT u.user_id) AS total_users 
+    FROM {$tblPrefix}user u
+    INNER JOIN {$tblPrefix}site_access sa ON sa.site_access_user_id = u.user_id
+    WHERE sa.site_access_site_id = {$siteId} 
+      AND sa.site_access_status = 1 
+      AND sa.site_access_type NOT IN ('customer', 'subscriber')
+");
+$currentUserCount = 0;
+if ($userCountQ && $ucRow = mysqli_fetch_assoc($userCountQ)) {
+    $currentUserCount = (int)($ucRow['total_users'] ?? 0);
+}
+
+if ($currentUserCount >= $userLimit) {
+    http_response_code(403);
+    echo json_encode([
+        'status'        => 'error',
+        'limit_reached' => true,
+        'user_limit'    => $userLimit,
+        'user_count'    => $currentUserCount,
+        'msg'           => "Team member limit reached ({$currentUserCount}/{$userLimit}). Please buy more licenses to add more team members."
+    ]);
+    exit();
+}
+
 mysqli_begin_transaction($connection);
 
 try {

@@ -89,6 +89,37 @@ if ($currentUserId > 0) {
 }
 $canLink = $isAdmin ? true : (!$hasAssignedDevice);
 
+// Resolve WhatsApp Device Limit
+// If WHATSAPP_DEVICE_LIMIT key is defined then use the value, else default to 1 device.
+$deviceLimit = 1;
+if (defined('WHATSAPP_DEVICE_LIMIT')) {
+    $deviceLimit = (int)WHATSAPP_DEVICE_LIMIT;
+} elseif (getenv('WHATSAPP_DEVICE_LIMIT') !== false && getenv('WHATSAPP_DEVICE_LIMIT') !== '') {
+    $deviceLimit = (int)getenv('WHATSAPP_DEVICE_LIMIT');
+} else {
+    $chkLimitQ = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND (site_configuration_key = 'whatsapp_device_limit' OR site_configuration_key = 'WHATSAPP_DEVICE_LIMIT') AND site_configuration_status = 1 LIMIT 1");
+    if ($chkLimitQ && mysqli_num_rows($chkLimitQ) > 0) {
+        $devRow = mysqli_fetch_assoc($chkLimitQ);
+        if (!empty($devRow['site_configuration_value']) && is_numeric($devRow['site_configuration_value'])) {
+            $deviceLimit = (int)$devRow['site_configuration_value'];
+        }
+    }
+}
+if ($deviceLimit <= 0) {
+    $deviceLimit = 1;
+}
+if (!defined('WHATSAPP_DEVICE_LIMIT')) {
+    define('WHATSAPP_DEVICE_LIMIT', $deviceLimit);
+}
+
+// Current linked device count for this site
+$devCntQ = mysqli_query($connection, "SELECT COUNT(*) as cnt FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId}");
+$currentDeviceCount = 0;
+if ($devCntQ && $dcRow = mysqli_fetch_assoc($devCntQ)) {
+    $currentDeviceCount = (int)$dcRow['cnt'];
+}
+$isDeviceLimitReached = ($currentDeviceCount >= $deviceLimit);
+
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = $_GET['action'] ?? ($_POST['action'] ?? '');
 
@@ -102,10 +133,12 @@ $configKeys = [
     'whatsapp_web_sync_incoming',
     'whatsapp_web_auto_create_lead',
     'whatsapp_web_gateway_url',
-    'whatsapp_web_last_sync'
+    'whatsapp_web_last_sync',
+    'whatsapp_device_limit'
 ];
 
 function getWaWebConfigs($connection, $siteId, $keys) {
+    global $deviceLimit;
     $escKeys = "'" . implode("','", array_map(function($k) use ($connection) { return mysqli_real_escape_string($connection, $k); }, $keys)) . "'";
     $sql = "SELECT site_configuration_key, site_configuration_value 
             FROM " . TABLE_PREFIX . "site_configuration 
@@ -124,7 +157,8 @@ function getWaWebConfigs($connection, $siteId, $keys) {
         'whatsapp_web_sync_incoming'    => '1',
         'whatsapp_web_auto_create_lead' => '1',
         'whatsapp_web_gateway_url'      => '',
-        'whatsapp_web_last_sync'        => ''
+        'whatsapp_web_last_sync'        => '',
+        'whatsapp_device_limit'         => (string)($deviceLimit ?? 1)
     ];
 
     if ($res) {
@@ -331,6 +365,10 @@ if ($action === 'get_devices' || $action === 'devices') {
         'current_user_id'     => $currentUserId,
         'has_assigned_device' => $hasAssignedDevice,
         'can_link_device'     => $canLink,
+        'device_limit'        => $deviceLimit,
+        'device_count'        => $currentDeviceCount,
+        'can_add_device'      => ($currentDeviceCount < $deviceLimit),
+        'limit_reached'       => $isDeviceLimitReached,
         'assigned_device'     => $userAssignedDevice ? [
             'device_id'  => (int)$userAssignedDevice['device_id'],
             'session_id' => $userAssignedDevice['device_session_id'],
@@ -456,6 +494,30 @@ if ($action === 'generate_qr' || $action === 'qr') {
         }
     }
 
+    // Check device limit: if adding a new device when limit reached, block with "Buy more license" error
+    $isExistingDevice = false;
+    if (!empty($sessionId)) {
+        $escSess = mysqli_real_escape_string($connection, $sessionId);
+        $rawSess = preg_replace('/^site_\d+_/', '', $sessionId);
+        $escRaw = mysqli_real_escape_string($connection, $rawSess);
+        $chkExistQ = mysqli_query($connection, "SELECT device_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_session_id = '{$escSess}' OR device_session_id = '{$escRaw}' OR device_session_id LIKE '%_{$escRaw}') LIMIT 1");
+        if ($chkExistQ && mysqli_num_rows($chkExistQ) > 0) {
+            $isExistingDevice = true;
+        }
+    }
+
+    if (!$isExistingDevice && $isDeviceLimitReached) {
+        http_response_code(403);
+        echo json_encode([
+            'status'        => 'error',
+            'limit_reached' => true,
+            'device_limit'  => $deviceLimit,
+            'device_count'  => $currentDeviceCount,
+            'msg'           => "WhatsApp device limit reached ({$currentDeviceCount}/{$deviceLimit}). Please buy more licenses to connect additional WhatsApp devices."
+        ]);
+        exit;
+    }
+
     $forceParam = (!empty($_GET['force']) && $_GET['force'] === '1') ? '&force=1' : '';
     $gwRes = callWaGateway($configs['whatsapp_web_gateway_url'] ?? '', 'qr?session_id=' . urlencode($sessionId) . $forceParam);
 
@@ -532,6 +594,30 @@ if ($action === 'pairing_code') {
         if ((!$chkSess || mysqli_num_rows($chkSess) === 0) && !str_starts_with($sessionId, 'site_' . $siteId . '_')) {
             $sessionId = 'site_' . $siteId . '_' . $sessionId;
         }
+    }
+
+    // Check device limit: if adding a new device when limit reached, block with "Buy more license" error
+    $isExistingDevice = false;
+    if (!empty($sessionId)) {
+        $escSess = mysqli_real_escape_string($connection, $sessionId);
+        $rawSess = preg_replace('/^site_\d+_/', '', $sessionId);
+        $escRaw = mysqli_real_escape_string($connection, $rawSess);
+        $chkExistQ = mysqli_query($connection, "SELECT device_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_session_id = '{$escSess}' OR device_session_id = '{$escRaw}' OR device_session_id LIKE '%_{$escRaw}') LIMIT 1");
+        if ($chkExistQ && mysqli_num_rows($chkExistQ) > 0) {
+            $isExistingDevice = true;
+        }
+    }
+
+    if (!$isExistingDevice && $isDeviceLimitReached) {
+        http_response_code(403);
+        echo json_encode([
+            'status'        => 'error',
+            'limit_reached' => true,
+            'device_limit'  => $deviceLimit,
+            'device_count'  => $currentDeviceCount,
+            'msg'           => "WhatsApp device limit reached ({$currentDeviceCount}/{$deviceLimit}). Please buy more licenses to connect additional WhatsApp devices."
+        ]);
+        exit;
     }
 
     if (empty($phone)) {
@@ -713,6 +799,23 @@ if ($action === 'check_status' || $action === 'status') {
         $escName = mysqli_real_escape_string($connection, $userName ?: 'WhatsApp Device');
         $assignedSql = (!$isAdmin && $currentUserId > 0) ? $currentUserId : "NULL";
 
+        // Enforce device limit before inserting new device
+        $chkDevExists = mysqli_query($connection, "SELECT device_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_session_id = '{$escSession}' LIMIT 1");
+        $devAlreadyInDb = ($chkDevExists && mysqli_num_rows($chkDevExists) > 0);
+
+        if (!$devAlreadyInDb && $isDeviceLimitReached) {
+            echo json_encode([
+                'status'            => 'error',
+                'limit_reached'     => true,
+                'device_limit'      => $deviceLimit,
+                'device_count'      => $currentDeviceCount,
+                'connection_status' => 'disconnected',
+                'is_device_linked'  => false,
+                'msg'               => "WhatsApp device limit reached ({$currentDeviceCount}/{$deviceLimit}). Please buy more licenses to connect additional WhatsApp devices."
+            ]);
+            exit;
+        }
+
         mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "whatsapp_device 
                                   (device_site_id, device_session_id, device_phone, device_name, device_assigned_user_id, device_status, device_last_sync)
                                   VALUES ({$siteId}, '{$escSession}', '{$escPhone}', '{$escName}', {$assignedSql}, 'connected', '{$now}')
@@ -868,6 +971,10 @@ if ($method === 'GET') {
         'current_user_id'     => $currentUserId,
         'has_assigned_device' => $hasAssignedDevice,
         'can_link_device'     => $canLink,
+        'device_limit'        => $deviceLimit,
+        'device_count'        => $currentDeviceCount,
+        'can_add_device'      => ($currentDeviceCount < $deviceLimit),
+        'limit_reached'       => $isDeviceLimitReached,
         'assigned_device'     => $userAssignedDevice,
         'data'                => $data,
         'webhook_url'         => $webhookUrl
