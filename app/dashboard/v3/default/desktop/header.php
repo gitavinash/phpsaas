@@ -123,8 +123,8 @@ if (isset($daterange)) {
                     <a href="/dashboard/leads/list/?leadStatus=1" class="v3-top-nav-item <?php echo (isset($_GET['leadStatus']) && $_GET['leadStatus'] == '1' ? 'active' : ''); ?>">
                         <i class="fi fi-rr-check"></i> <span>Confirmed</span>
                     </a>
-                    <a href="/dashboard/whatsapp/leads/" class="v3-top-nav-item <?php echo (strpos($currentUrl, '/whatsapp/leads') !== false ? 'active' : ''); ?>">
-                        <i class="fi fi-brands-whatsapp"></i> <span>Whatsapp</span>
+                    <a href="/dashboard/whatsapp/" class="v3-top-nav-item <?php echo (strpos($currentUrl, '/whatsapp') !== false ? 'active' : ''); ?>">
+                        <i class="fi fi-rr-comment-alt-middle"></i> <span>WhatsApp Inbox</span>
                     </a>
                 </nav>
             </div>
