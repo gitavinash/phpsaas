@@ -371,6 +371,7 @@
       let countdown = 30;
       let statusPollInterval = null;
       let modalPollInterval = null;
+      let modalCountdownInterval = null;
       let currentModalSessionId = null;
       let currentAgentSessionId = null;
       let stateDevices = [];
@@ -535,6 +536,13 @@
           method: "GET",
           dataType: "json",
           success: function (res) {
+            if (res && (res.status === "connected" || res.connection_status === "connected" || res.is_device_linked === true || res.is_connected === true)) {
+              clearInterval(statusPollInterval);
+              clearInterval(qrInterval);
+              self.showToast("WhatsApp device linked successfully!", "success");
+              loadHubState();
+              return;
+            }
             if (res && res.status === "success" && res.qr_svg) {
               $("#waAgentQrCodeContainer").html(res.qr_svg);
               resetAgentCountdown(res.expires_in || 30);
@@ -587,7 +595,13 @@
             method: "GET",
             dataType: "json",
             success: function (res) {
-              if (res && res.status === "success" && res.connection_status === "connected") {
+              const isConnected = res && (
+                res.connection_status === "connected" ||
+                res.is_device_linked === true ||
+                res.is_connected === true ||
+                res.status === "connected"
+              );
+              if (isConnected) {
                 clearInterval(statusPollInterval);
                 clearInterval(qrInterval);
                 self.showToast("WhatsApp device linked successfully!", "success");
@@ -595,7 +609,7 @@
               }
             }
           });
-        }, 3500);
+        }, 2500);
       }
 
       // 5. Admin Assign Device to Sales Agent
@@ -644,6 +658,7 @@
       $("#btnCloseAddDeviceModal").on("click", function () {
         $("#waAddDeviceModal").removeClass("is-active");
         clearInterval(modalPollInterval);
+        if (modalCountdownInterval) clearInterval(modalCountdownInterval);
       });
 
       // Close modal on backdrop click
@@ -651,6 +666,7 @@
         if ($(e.target).is("#waAddDeviceModal")) {
           $("#waAddDeviceModal").removeClass("is-active");
           clearInterval(modalPollInterval);
+          if (modalCountdownInterval) clearInterval(modalCountdownInterval);
         }
       });
 
@@ -661,14 +677,37 @@
           method: "GET",
           dataType: "json",
           success: function (res) {
+            if (res && (res.status === "connected" || res.connection_status === "connected" || res.is_device_linked === true || res.is_connected === true)) {
+              clearInterval(modalPollInterval);
+              if (modalCountdownInterval) clearInterval(modalCountdownInterval);
+              $("#waAddDeviceModal").removeClass("is-active");
+              self.showToast("New WhatsApp device connected successfully!", "success");
+              loadHubState();
+              return;
+            }
             if (res && res.status === "success" && res.qr_svg) {
+              if (res.session_id) {
+                currentModalSessionId = res.session_id;
+                startModalStatusPolling(res.session_id);
+              }
               $("#waModalQrCodeContainer").html(res.qr_svg);
               let modalCountdown = res.expires_in || 30;
               $("#waModalQrTimer").text(modalCountdown);
+              clearInterval(modalCountdownInterval);
+              modalCountdownInterval = setInterval(function () {
+                modalCountdown--;
+                $("#waModalQrTimer").text(modalCountdown);
+                if (modalCountdown <= 0) {
+                  clearInterval(modalCountdownInterval);
+                  if ($("#waAddDeviceModal").hasClass("is-active")) {
+                    loadModalQrCode(currentModalSessionId || sessId);
+                  }
+                }
+              }, 1000);
             } else if (res && res.status === "initializing") {
               setTimeout(function () {
                 if ($("#waAddDeviceModal").hasClass("is-active")) {
-                  loadModalQrCode(sessId);
+                  loadModalQrCode(currentModalSessionId || sessId);
                 }
               }, 1500);
             } else if (res && res.msg) {
@@ -679,19 +718,29 @@
       }
 
       function startModalStatusPolling(sessId) {
+        if (sessId) currentModalSessionId = sessId;
         clearInterval(modalPollInterval);
         modalPollInterval = setInterval(function () {
           if (!$("#waAddDeviceModal").hasClass("is-active")) {
             clearInterval(modalPollInterval);
+            if (modalCountdownInterval) clearInterval(modalCountdownInterval);
             return;
           }
+          const pollTarget = currentModalSessionId || sessId;
           $.ajax({
-            url: "/api/v3/integration/whatsapp_web/?action=check_status&session_id=" + encodeURIComponent(sessId),
+            url: "/api/v3/integration/whatsapp_web/?action=check_status&session_id=" + encodeURIComponent(pollTarget),
             method: "GET",
             dataType: "json",
             success: function (res) {
-              if (res && res.status === "success" && res.connection_status === "connected") {
+              const isConnected = res && (
+                res.connection_status === "connected" ||
+                res.is_device_linked === true ||
+                res.is_connected === true ||
+                res.status === "connected"
+              );
+              if (isConnected) {
                 clearInterval(modalPollInterval);
+                if (modalCountdownInterval) clearInterval(modalCountdownInterval);
                 $("#waAddDeviceModal").removeClass("is-active");
                 self.showToast("New WhatsApp device connected successfully!", "success");
                 loadHubState();
@@ -701,7 +750,7 @@
               }
             }
           });
-        }, 3000);
+        }, 2500);
       }
 
       $("#btnModalRefreshQr").on("click", function () {
@@ -731,6 +780,10 @@
           success: function (res) {
             $btn.prop("disabled", false).html('<i class="fi fi-rr-key"></i> <span>Get Code</span>');
             if (res && res.status === "success" && res.pairing_code) {
+              if (res.session_id) {
+                currentModalSessionId = res.session_id;
+                startModalStatusPolling(res.session_id);
+              }
               const code = res.pairing_code.match(/.{1,4}/g)?.join(" - ") || res.pairing_code;
               $("#waModalPairingCodeValue").text(code);
               $("#waModalPairingCodeResult").removeClass("d-none");
@@ -768,6 +821,10 @@
           success: function (res) {
             $btn.prop("disabled", false).html('<i class="fi fi-rr-key"></i> <span>Get Pairing Code</span>');
             if (res && res.status === "success" && res.pairing_code) {
+              if (res.session_id) {
+                currentAgentSessionId = res.session_id;
+                startAgentStatusPolling(res.session_id);
+              }
               const code = res.pairing_code.match(/.{1,4}/g)?.join(" - ") || res.pairing_code;
               $("#waAgentPairingCodeValue").text(code);
               $("#waAgentPairingCodeResult").removeClass("d-none");

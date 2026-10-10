@@ -1077,7 +1077,7 @@ app.get("/devices", (req, res) => {
       const item = {
         session_id: id,
         site_id: s.siteId || null,
-        connection_status: s.connectionStatus,
+        connection_status: isConn ? "connected" : s.connectionStatus,
         is_connected: isConn,
         is_linked: hasCreds || isConn,
         has_qr: s.connectionStatus === "qr_ready" && !!s.currentQrSvg,
@@ -1133,7 +1133,7 @@ app.get("/status", (req, res) => {
     res.json({
       status: "success",
       session_id: s.sessionId,
-      connection_status: s.connectionStatus,
+      connection_status: isConn ? "connected" : s.connectionStatus,
       is_connected: isConn,
       is_linked: hasCreds || isConn,
       has_qr: s.connectionStatus === "qr_ready" && !!s.currentQrSvg,

@@ -76,6 +76,16 @@
         self.loadThreads();
       });
 
+      // Open device switcher dropdown when clicking anywhere on the header container
+      $(document).on("click", "#waDeviceSwitcherBox", function (e) {
+        if (!$(e.target).closest(".select2-container").length) {
+          const $sel = $("#waDeviceSelect");
+          if ($sel.data("select2")) {
+            $sel.select2("open");
+          }
+        }
+      });
+
       // Quick user shortcut card click (Admin switching between team inboxes)
       $(document).on("click", ".wa-team-card, .wa-user-shortcut-pill", function () {
         const uid = parseInt($(this).data("user-id"), 10) || 0;
@@ -308,6 +318,92 @@
       });
     },
 
+    formatDeviceOption: function (opt) {
+      const self = this;
+      if (!opt.id || !opt.element) {
+        return opt.text;
+      }
+      const $el = $(opt.element);
+      const type = $el.attr("data-type");
+      const isConn = $el.attr("data-status") === "connected";
+
+      if (type === "all") {
+        const count = $el.attr("data-count") || "0";
+        const total = $el.attr("data-total") || "0";
+        return $(`
+          <div class="wa-device-menu-item is-all">
+            <div class="wa-device-menu-avatar is-all">
+              <i class="fi fi-rr-apps"></i>
+            </div>
+            <div class="wa-device-menu-info">
+              <div class="wa-device-menu-title-row">
+                <span class="wa-device-menu-title">All WhatsApp Lines</span>
+                <span class="wa-device-menu-badge is-active">${count} Active</span>
+              </div>
+              <div class="wa-device-menu-sub">
+                <span>Combined inbox • ${total} registered lines</span>
+              </div>
+            </div>
+          </div>
+        `);
+      }
+
+      const phone = $el.attr("data-phone") || opt.text;
+      const name = $el.attr("data-name") || "WhatsApp Line";
+      const agent = $el.attr("data-agent") || "";
+
+      return $(`
+        <div class="wa-device-menu-item">
+          <div class="wa-device-menu-avatar ${isConn ? "is-connected" : "is-offline"}">
+            <i class="fi fi-rr-smartphone"></i>
+            <span class="wa-device-menu-dot ${isConn ? "is-connected" : "is-offline"}"></span>
+          </div>
+          <div class="wa-device-menu-info">
+            <div class="wa-device-menu-title-row">
+              <span class="wa-device-menu-phone">${self.escapeHtml(phone)}</span>
+              <span class="wa-device-menu-status-pill ${isConn ? "is-online" : "is-offline"}">
+                ${isConn ? "Connected" : "Offline"}
+              </span>
+            </div>
+            <div class="wa-device-menu-sub">
+              <span class="wa-device-menu-line-name" title="${self.escapeHtml(name)}">${self.escapeHtml(name)}</span>
+              ${agent ? `<span class="wa-device-menu-agent" title="Assigned Agent: ${self.escapeHtml(agent)}"><i class="fi fi-rr-user"></i> ${self.escapeHtml(agent)}</span>` : ""}
+            </div>
+          </div>
+        </div>
+      `);
+    },
+
+    formatDeviceSelection: function (opt) {
+      const self = this;
+      if (!opt.id) return opt.text;
+      const $el = $(opt.element);
+      if (!$el.length) return opt.text;
+
+      const type = $el.attr("data-type");
+      if (type === "all") {
+        const count = $el.attr("data-count") || "0";
+        return $(`
+          <span class="wa-device-chip-sel">
+            <span class="wa-device-chip-dot is-connected"></span>
+            <span class="wa-device-chip-text">All Devices (${count} Active)</span>
+          </span>
+        `);
+      }
+
+      const phone = $el.attr("data-phone") || opt.text;
+      const name = $el.attr("data-name") || "";
+      const isConn = $el.attr("data-status") === "connected";
+
+      return $(`
+        <span class="wa-device-chip-sel">
+          <span class="wa-device-chip-dot ${isConn ? "is-connected" : "is-offline"}"></span>
+          <span class="wa-device-chip-text">${self.escapeHtml(phone)}</span>
+          ${name ? `<span class="wa-device-chip-meta">(${self.escapeHtml(name)})</span>` : ""}
+        </span>
+      `);
+    },
+
     renderDeviceSwitcher: function () {
       const self = this;
       const $select = $("#waDeviceSelect");
@@ -324,22 +420,23 @@
 
       $box.removeClass("d-none").css("display", "inline-flex").show();
       const connectedCount = self.availableDevices.filter(function (d) { return d.status === "connected"; }).length;
-      let optHtml = `<option value="all">📱 All Devices (${connectedCount} Active)</option>`;
+      const totalCount = self.availableDevices.length;
+      const isAllSelected = !self.selectedDeviceId || self.selectedDeviceId === "all";
+
+      let optHtml = `<option value="all" data-type="all" data-status="connected" data-count="${connectedCount}" data-total="${totalCount}" ${isAllSelected ? "selected" : ""}>All Devices (${connectedCount} Active)</option>`;
 
       self.availableDevices.forEach(function (d) {
-        const isConn = d.status === "connected";
-        const dot = isConn ? "🟢" : "⚪";
-        const devName = d.name ? d.name : "Line";
-        const phone = d.phone || "";
-        const agent = (d.assigned_agent_name && d.assigned_agent_name !== "Unassigned") ? ` • ${d.assigned_agent_name}` : "";
+        const devName = self.escapeHtml(d.name || "Line");
+        const phone = self.escapeHtml(d.phone || "");
+        const agent = (d.assigned_agent_name && d.assigned_agent_name !== "Unassigned") ? self.escapeHtml(d.assigned_agent_name) : "";
         const isSelected = String(self.selectedDeviceId) === String(d.device_id);
-        optHtml += `<option value="${d.device_id}" ${isSelected ? "selected" : ""}>${dot} ${phone} (${devName}${agent})</option>`;
+        optHtml += `<option value="${d.device_id}" data-type="device" data-phone="${phone}" data-name="${devName}" data-agent="${agent}" data-status="${d.status}" ${isSelected ? "selected" : ""}>${phone} (${devName})</option>`;
       });
 
       self.isUpdatingDeviceSelect = true;
       try {
         const hasSelect2 = typeof $.fn.select2 !== "undefined";
-        const isSelect2Attached = hasSelect2 && ($select.data("select2") || $select.hasClass("select2-hidden-accessible"));
+        const isSelect2Attached = hasSelect2 && !!$select.data("select2");
         const htmlChanged = $select.data("last-html") !== optHtml;
 
         if (htmlChanged || !isSelect2Attached) {
@@ -351,10 +448,14 @@
 
           if (hasSelect2) {
             $select.select2({
-              dropdownAutoWidth: true,
-              width: "resolve",
+              dropdownParent: $("body"),
+              dropdownAutoWidth: false,
+              width: "100%",
               minimumResultsForSearch: 6,
-              dropdownCssClass: "wa-select2-dropdown"
+              dropdownCssClass: "wa-device-select2-dropdown",
+              templateResult: function (data) { return self.formatDeviceOption(data); },
+              templateSelection: function (data) { return self.formatDeviceSelection(data); },
+              escapeMarkup: function (m) { return m; }
             });
             $select.off("select2:open select2:close").on("select2:open", function () {
               $("#waDeviceSwitcherBox").addClass("has-focus");
@@ -381,11 +482,13 @@
           $modalGroup.removeClass("d-none").show();
           let mOpts = "";
           self.availableDevices.forEach(function (d) {
-            const isConn = d.status === "connected";
-            mOpts += `<option value="${d.device_id}">📱 ${d.phone} (${d.name || "Line"})${isConn ? " [Connected]" : " [Offline]"}</option>`;
+            const devName = self.escapeHtml(d.name || "Line");
+            const phone = self.escapeHtml(d.phone || "");
+            const agent = (d.assigned_agent_name && d.assigned_agent_name !== "Unassigned") ? self.escapeHtml(d.assigned_agent_name) : "";
+            mOpts += `<option value="${d.device_id}" data-type="device" data-phone="${phone}" data-name="${devName}" data-agent="${agent}" data-status="${d.status}">${phone} (${devName})</option>`;
           });
           const hasSelect2 = typeof $.fn.select2 !== "undefined";
-          const mAttached = hasSelect2 && ($modalSelect.data("select2") || $modalSelect.hasClass("select2-hidden-accessible"));
+          const mAttached = hasSelect2 && !!$modalSelect.data("select2");
           if ($modalSelect.data("last-html") !== mOpts || !mAttached) {
             if (mAttached) {
               try { $modalSelect.select2("destroy"); } catch (e) {}
@@ -396,7 +499,10 @@
                 $modalSelect.select2({
                   dropdownParent: $("#waNewChatModal"),
                   width: "100%",
-                  dropdownCssClass: "wa-select2-dropdown"
+                  dropdownCssClass: "wa-device-select2-dropdown",
+                  templateResult: function (data) { return self.formatDeviceOption(data); },
+                  templateSelection: function (data) { return self.formatDeviceSelection(data); },
+                  escapeMarkup: function (m) { return m; }
                 });
               } catch (e) {}
             }

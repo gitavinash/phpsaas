@@ -681,9 +681,30 @@ if ($action === 'check_status' || $action === 'status') {
     }
 
     $gwStatus = callWaGateway($configs['whatsapp_web_gateway_url'] ?? '', 'status?session_id=' . urlencode($sessionId) . '&site_id=' . $siteId);
-    $isConnected = $gwStatus && (!empty($gwStatus['is_connected']) || !empty($gwStatus['is_linked']));
+    $isConnected = $gwStatus && (!empty($gwStatus['is_connected']) || !empty($gwStatus['is_linked']) || ($gwStatus['connection_status'] ?? '') === 'connected');
     $userPhone = $gwStatus['user']['phone'] ?? '';
     $userName = $gwStatus['user']['name'] ?? '';
+
+    // Check if database already recorded this session as connected on this site (e.g. via webhook or async open)
+    if (!$isConnected) {
+        $escSession = mysqli_real_escape_string($connection, $sessionId);
+        $rawSession = preg_replace('/^site_\d+_/', '', $sessionId);
+        $escRaw = mysqli_real_escape_string($connection, $rawSession);
+        $dbCheckQ = mysqli_query($connection, "SELECT device_session_id, device_phone, device_name, device_last_sync, device_status 
+                                               FROM " . TABLE_PREFIX . "whatsapp_device 
+                                               WHERE device_site_id = {$siteId} 
+                                                 AND (device_session_id = '{$escSession}' OR device_session_id = '{$escRaw}' OR device_session_id LIKE '%_{$escRaw}') 
+                                                 AND device_status = 'connected' 
+                                               LIMIT 1");
+        if ($dbCheckQ && mysqli_num_rows($dbCheckQ) > 0) {
+            $dbRow = mysqli_fetch_assoc($dbCheckQ);
+            $isConnected = true;
+            $sessionId = $dbRow['device_session_id'];
+            $userPhone = !empty($dbRow['device_phone']) ? $dbRow['device_phone'] : $userPhone;
+            $userName = !empty($dbRow['device_name']) ? $dbRow['device_name'] : $userName;
+            $now = !empty($dbRow['device_last_sync']) ? $dbRow['device_last_sync'] : date('Y-m-d H:i:s');
+        }
+    }
 
     if ($isConnected) {
         $now = date('Y-m-d H:i:s');
@@ -712,6 +733,7 @@ if ($action === 'check_status' || $action === 'status') {
         'session_id'        => $sessionId,
         'connection_status' => $isConnected ? 'connected' : ($gwStatus['connection_status'] ?? 'disconnected'),
         'is_device_linked'  => $isConnected,
+        'is_connected'      => $isConnected,
         'phone'             => $userPhone,
         'pushname'          => $userName,
         'last_sync'         => $now ?? date('Y-m-d H:i:s'),
