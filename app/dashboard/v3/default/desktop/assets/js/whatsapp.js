@@ -20,6 +20,11 @@
     activePhone: null,
     currentFilter: "all",
     searchQuery: "",
+    selectedDeviceId: "all",
+    selectedUserId: 0,
+    availableDevices: [],
+    availableAgents: [],
+    isAdmin: false,
     pollTimer: null,
     isDeviceLinked: false,
     eventsBound: false,
@@ -60,6 +65,32 @@
         $(".wa-filter-pill").removeClass("active");
         $(this).addClass("active");
         self.currentFilter = $(this).data("filter") || "all";
+        self.loadThreads();
+      });
+
+      // Multi-device switcher change
+      $(document).on("change", "#waDeviceSelect", function () {
+        self.selectedDeviceId = $(this).val() || "all";
+        self.lastThreadsHtml = null;
+        self.loadThreads();
+      });
+
+      // Quick user shortcut click (Admin switching between users)
+      $(document).on("click", ".wa-user-shortcut-pill", function () {
+        const uid = parseInt($(this).data("user-id"), 10) || 0;
+        if (self.selectedUserId === uid) {
+          self.selectedUserId = 0; // toggle off back to all team
+        } else {
+          self.selectedUserId = uid;
+        }
+        self.lastThreadsHtml = null;
+        self.loadThreads();
+      });
+
+      // Reset user filter button & dismiss banner
+      $(document).on("click", "#btnResetUserFilter, #btnDismissFilterBanner", function () {
+        self.selectedUserId = 0;
+        self.lastThreadsHtml = null;
         self.loadThreads();
       });
 
@@ -247,6 +278,108 @@
       });
     },
 
+    renderDeviceSwitcher: function () {
+      const self = this;
+      const $select = $("#waDeviceSelect");
+      const $box = $("#waDeviceSwitcherBox");
+      if (!$select.length) return;
+
+      if (!self.availableDevices || self.availableDevices.length === 0) {
+        $box.hide();
+        return;
+      }
+
+      $box.show();
+      const connectedCount = self.availableDevices.filter(function (d) { return d.status === "connected"; }).length;
+      let optHtml = `<option value="all">📱 All Devices (${connectedCount} Active)</option>`;
+
+      self.availableDevices.forEach(function (d) {
+        const isConn = d.status === "connected";
+        const dot = isConn ? "🟢" : "⚪";
+        const devName = d.name ? d.name : "Line";
+        const phone = d.phone || "";
+        const agent = (d.assigned_agent_name && d.assigned_agent_name !== "Unassigned") ? ` • ${d.assigned_agent_name}` : "";
+        const isSelected = String(self.selectedDeviceId) === String(d.device_id);
+        optHtml += `<option value="${d.device_id}" ${isSelected ? "selected" : ""}>${dot} ${phone} (${devName}${agent})</option>`;
+      });
+
+      if ($select.data("last-html") !== optHtml) {
+        $select.html(optHtml).data("last-html", optHtml);
+        $select.val(self.selectedDeviceId || "all");
+      }
+
+      // Populate New Chat Modal device options as well
+      const $modalSelect = $("#newChatDeviceSelect");
+      const $modalGroup = $("#waNewChatDeviceGroup");
+      if ($modalSelect.length) {
+        if (self.availableDevices.length > 1) {
+          $modalGroup.removeClass("d-none").show();
+          let mOpts = "";
+          self.availableDevices.forEach(function (d) {
+            const isConn = d.status === "connected";
+            mOpts += `<option value="${d.device_id}">📱 ${d.phone} (${d.name || "Line"})${isConn ? " [Connected]" : " [Offline]"}</option>`;
+          });
+          $modalSelect.html(mOpts);
+        } else {
+          $modalGroup.addClass("d-none").hide();
+        }
+      }
+    },
+
+    renderUserShortcuts: function () {
+      const self = this;
+      const $section = $("#waUsersShortcutSection");
+      const $bar = $("#waUsersShortcutBar");
+      const $banner = $("#waActiveFilterBanner");
+      const $bannerText = $("#waActiveFilterText");
+      const $resetBtn = $("#btnResetUserFilter");
+
+      if (!$section.length || !$bar.length) return;
+
+      // Only show for Admin or when there are multiple team members
+      if (!self.isAdmin || !self.availableAgents || self.availableAgents.length === 0) {
+        $section.addClass("d-none").hide();
+        $banner.addClass("d-none").hide();
+        return;
+      }
+
+      $section.removeClass("d-none").show();
+
+      const isAllActive = !self.selectedUserId || self.selectedUserId === 0;
+      let pillsHtml = `
+        <button type="button" class="wa-user-shortcut-pill ${isAllActive ? "active" : ""}" data-user-id="0" title="Show all team conversations">
+          <i class="fi fi-rr-users"></i> <span>All Team</span>
+        </button>
+      `;
+
+      let activeAgentName = "";
+      self.availableAgents.forEach(function (ag) {
+        const isCur = self.selectedUserId && parseInt(self.selectedUserId, 10) === parseInt(ag.user_id, 10);
+        if (isCur) activeAgentName = ag.name;
+        const initials = self.getInitials(ag.name);
+        pillsHtml += `
+          <button type="button" class="wa-user-shortcut-pill ${isCur ? "active" : ""}" data-user-id="${ag.user_id}" title="Filter chats handled by ${self.escapeHtml(ag.name)}">
+            <span class="wa-user-avatar-mini">${initials}</span>
+            <span>${self.escapeHtml(ag.name)}</span>
+            ${ag.is_connected ? '<span class="wa-user-online-dot" title="Device connected"></span>' : ""}
+          </button>
+        `;
+      });
+
+      if ($bar.data("last-html") !== pillsHtml) {
+        $bar.html(pillsHtml).data("last-html", pillsHtml);
+      }
+
+      if (self.selectedUserId > 0 && activeAgentName) {
+        $resetBtn.removeClass("d-none").show();
+        $banner.removeClass("d-none").show();
+        $bannerText.html(`<i class="fi fi-rr-filter"></i> Filtering chats for: <strong>${self.escapeHtml(activeAgentName)}</strong>`);
+      } else {
+        $resetBtn.addClass("d-none").hide();
+        $banner.addClass("d-none").hide();
+      }
+    },
+
     updateDeviceLinkedUI: function (isLinked, phone, msg) {
       this.isDeviceLinked = !!isLinked;
       const $workspace = $("#waChatWorkspace");
@@ -311,7 +444,9 @@
 
       const params = {
         filter: this.currentFilter,
-        q: this.searchQuery
+        q: this.searchQuery,
+        device_id: this.selectedDeviceId || "all",
+        user_id: this.selectedUserId || 0
       };
 
       $.ajax({
@@ -333,6 +468,16 @@
           } else if (res && res.is_device_linked === true) {
             self.updateDeviceLinkedUI(true, res.linked_phone || "");
           }
+
+          self.isAdmin = !!(res && res.is_admin);
+          self.availableDevices = (res && Array.isArray(res.devices)) ? res.devices : [];
+          self.availableAgents = (res && Array.isArray(res.agents)) ? res.agents : [];
+
+          // Render / Update Multi-Device Switcher dropdown
+          self.renderDeviceSwitcher();
+
+          // Render / Update Quick User Shortcut Bar (for Admin)
+          self.renderUserShortcuts();
 
           const $container = $("#waThreadsContainer");
           if (!res || res.status !== "success" || !Array.isArray(res.chats)) {
@@ -621,7 +766,8 @@
         data: JSON.stringify({
           chat_id: self.activeChatId,
           phone: self.activePhone,
-          text: text
+          text: text,
+          device_id: (self.selectedDeviceId && self.selectedDeviceId !== "all") ? self.selectedDeviceId : undefined
         }),
         dataType: "json",
         success: function (res) {
@@ -677,6 +823,7 @@
           if (chatRes && chatRes.status === "success" && chatRes.chat) {
             const chatId = chatRes.chat.chat_id;
             const targetPhone = chatRes.chat.chat_phone || phone;
+            const selectedLine = $("#newChatDeviceSelect").val() || (self.selectedDeviceId !== "all" ? self.selectedDeviceId : undefined);
             // Send initial message
             $.ajax({
               url: "/api/v3/whatsapp/messages/",
@@ -685,7 +832,8 @@
               data: JSON.stringify({
                 chat_id: chatId,
                 phone: targetPhone,
-                text: message
+                text: message,
+                device_id: selectedLine
               }),
               dataType: "json",
               success: function (sendRes) {

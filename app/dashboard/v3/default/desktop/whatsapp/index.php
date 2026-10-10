@@ -15,6 +15,16 @@
             </div>
         </div>
         <div class="package-header-actions">
+            <!-- Multi-Device Switcher Dropdown (Admin & Multi-device accounts) -->
+            <div class="wa-device-switcher-box" id="waDeviceSwitcherBox">
+                <span class="wa-device-switcher-label"><i class="fi fi-rr-smartphone"></i> Inbox Line:</span>
+                <div class="wa-device-select-wrap">
+                    <select id="waDeviceSelect" class="wa-device-select" aria-label="Switch Device Inbox">
+                        <option value="all">📱 All Devices</option>
+                    </select>
+                </div>
+            </div>
+
             <span class="wa-device-status-badge" id="waHeaderStatusBadge">
                 <span class="wa-pulse-dot"></span>
                 <span id="waHeaderStatusText">Checking connection...</span>
@@ -25,7 +35,7 @@
             <button type="button" class="btn-v3-action" id="btnOpenNewChatModal" data-tooltip="Start New WhatsApp Chat">
                 <i class="fi fi-rr-add"></i> <span>New Chat</span>
             </button>
-            <a href="/dashboard/integration/whatsapp_web/" class="btn-v3-action" data-tooltip="Configure Linked Device">
+            <a href="/dashboard/integration/whatsapp_web/" class="btn-v3-action" id="btnWaDeviceSettings" data-tooltip="Configure Linked Device">
                 <i class="fi fi-rr-qr-scan"></i> <span>Device Settings</span>
             </a>
         </div>
@@ -79,6 +89,23 @@
                     <button type="button" class="wa-filter-pill active" data-filter="all">All</button>
                     <button type="button" class="wa-filter-pill" data-filter="unread">Unread</button>
                     <button type="button" class="wa-filter-pill" data-filter="leads">CRM Leads</button>
+                </div>
+
+                <!-- Quick User Shortcut Bar (Admin only / Team filter) -->
+                <div class="wa-users-shortcut-section d-none" id="waUsersShortcutSection">
+                    <div class="wa-users-shortcut-header">
+                        <span class="wa-users-shortcut-title"><i class="fi fi-rr-users-alt"></i> Team Chats:</span>
+                        <button type="button" class="wa-users-shortcut-reset d-none" id="btnResetUserFilter" title="Show all team chats">Clear Filter</button>
+                    </div>
+                    <div class="wa-users-shortcut-scroll" id="waUsersShortcutBar">
+                        <!-- Populated dynamically via JS: All Team, Avinash, Pooja, etc. -->
+                    </div>
+                </div>
+
+                <!-- Active Filter Notice Banner -->
+                <div class="wa-active-filter-banner d-none" id="waActiveFilterBanner">
+                    <span id="waActiveFilterText">Showing chats</span>
+                    <button type="button" class="btn-wa-dismiss-filter" id="btnDismissFilterBanner" title="Clear filter"><i class="fi fi-rr-cross-small"></i></button>
                 </div>
             </div>
 
@@ -197,6 +224,13 @@
                 </button>
             </div>
             <form id="waNewChatForm" class="wa-modal-body">
+                <div class="v3-form-group d-none" id="waNewChatDeviceGroup">
+                    <label for="newChatDeviceSelect" class="v3-form-label">Send From WhatsApp Line</label>
+                    <div class="v3-input-icon-wrap">
+                        <i class="fi fi-rr-smartphone input-icon"></i>
+                        <select id="newChatDeviceSelect" class="v3-form-input"></select>
+                    </div>
+                </div>
                 <div class="v3-form-group">
                     <label for="newChatPhone" class="v3-form-label">Customer Mobile Number <span class="required">*</span></label>
                     <div class="v3-input-icon-wrap">

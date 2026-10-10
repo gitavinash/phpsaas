@@ -139,6 +139,15 @@ if ($method === 'GET') {
                 $isDeviceLinked = true;
                 $linkedPhone = $devRow['device_phone'] ?? '';
                 $agentDevicePhone = $linkedPhone;
+            } else {
+                // Shared connected device on site fallback
+                $devShared = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id ASC LIMIT 1");
+                if ($devShared && mysqli_num_rows($devShared) > 0) {
+                    $devRow = mysqli_fetch_assoc($devShared);
+                    $isDeviceLinked = true;
+                    $linkedPhone = $devRow['device_phone'] ?? '';
+                    $agentDevicePhone = $linkedPhone;
+                }
             }
         }
 
@@ -299,12 +308,54 @@ if ($method === 'GET') {
 
     // Role-based Chat Filtering:
     // Sales Agent sees only current number chats or leads assigned to them.
-    // Admin sees all devices' chats.
+    // Admin sees all devices' chats by default, or filtered by selected device / user.
     if (!$isAdmin && !empty($agentDevicePhone)) {
         $cleanAgentDigits = preg_replace('/[^0-9]/', '', $agentDevicePhone);
         $last10Agent = substr($cleanAgentDigits, -10);
         $escAgentDev = mysqli_real_escape_string($connection, $agentDevicePhone);
         $whereClauses[] = "(c.chat_device_phone = '{$escAgentDev}' OR c.chat_device_phone LIKE '%{$last10Agent}' OR c.chat_lead_id IN (SELECT enquiry_id FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND (enquiry_agent = {$currentUserId} OR enquiry_user_id = {$currentUserId})))";
+    }
+
+    // 1. Device Filter (Multi-device inbox switching)
+    $filterDeviceId = isset($_GET['device_id']) && is_numeric($_GET['device_id']) ? (int)$_GET['device_id'] : 0;
+    $filterDevicePhone = trim($_GET['device_phone'] ?? '');
+
+    if ($filterDeviceId > 0) {
+        $devCheckQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_id = {$filterDeviceId} AND device_site_id = {$siteId} LIMIT 1");
+        if ($devCheckQ && mysqli_num_rows($devCheckQ) > 0) {
+            $devCheckR = mysqli_fetch_assoc($devCheckQ);
+            $filterDevicePhone = $devCheckR['device_phone'] ?? '';
+        }
+    }
+
+    if (!empty($filterDevicePhone) && $filterDevicePhone !== 'all') {
+        $cleanDevDigits = preg_replace('/[^0-9]/', '', $filterDevicePhone);
+        $last10Dev = substr($cleanDevDigits, -10);
+        $escDevPhone = mysqli_real_escape_string($connection, $filterDevicePhone);
+        $whereClauses[] = "(c.chat_device_phone = '{$escDevPhone}' OR c.chat_device_phone LIKE '%{$last10Dev}')";
+    }
+
+    // 2. User/Agent Filter (Admin quick shortcut switching)
+    $filterUserId = isset($_GET['user_id']) && is_numeric($_GET['user_id']) ? (int)$_GET['user_id'] : (isset($_GET['agent_id']) && is_numeric($_GET['agent_id']) ? (int)$_GET['agent_id'] : 0);
+    if ($filterUserId > 0) {
+        $uDevPhones = [];
+        $uDevQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$filterUserId}");
+        if ($uDevQ) {
+            while ($udr = mysqli_fetch_assoc($uDevQ)) {
+                if (!empty($udr['device_phone'])) {
+                    $uClean = preg_replace('/[^0-9]/', '', $udr['device_phone']);
+                    $uDevPhones[] = mysqli_real_escape_string($connection, substr($uClean, -10));
+                }
+            }
+        }
+        $userConds = [];
+        if (!empty($uDevPhones)) {
+            foreach (array_unique($uDevPhones) as $udp) {
+                $userConds[] = "c.chat_device_phone LIKE '%{$udp}'";
+            }
+        }
+        $userConds[] = "c.chat_lead_id IN (SELECT enquiry_id FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND (enquiry_agent = {$filterUserId} OR enquiry_user_id = {$filterUserId}))";
+        $whereClauses[] = "(" . implode(' OR ', $userConds) . ")";
     }
 
     if (!empty($devPhones)) {
@@ -409,11 +460,65 @@ if ($method === 'GET') {
         }
     }
 
+    // Fetch all devices on this site for multi-device switcher
+    $devicesList = [];
+    $devListQ = mysqli_query($connection, "SELECT d.device_id, d.device_session_id, d.device_phone, d.device_name, d.device_status, d.device_assigned_user_id,
+                                                 TRIM(CONCAT(COALESCE(p.profile_first_name, ''), ' ', COALESCE(p.profile_last_name, ''))) as assigned_agent_name,
+                                                 u.user_username
+                                          FROM " . TABLE_PREFIX . "whatsapp_device d
+                                          LEFT JOIN " . TABLE_PREFIX . "user u ON u.user_id = d.device_assigned_user_id
+                                          LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
+                                          WHERE d.device_site_id = {$siteId}
+                                          ORDER BY (d.device_status = 'connected') DESC, d.device_id ASC");
+    if ($devListQ) {
+        while ($dl = mysqli_fetch_assoc($devListQ)) {
+            $devicesList[] = [
+                'device_id'           => (int)$dl['device_id'],
+                'session_id'          => $dl['device_session_id'],
+                'phone'               => $dl['device_phone'] ?: '',
+                'name'                => $dl['device_name'] ?: 'WhatsApp Line',
+                'status'              => $dl['device_status'],
+                'assigned_user_id'    => $dl['device_assigned_user_id'] ? (int)$dl['device_assigned_user_id'] : null,
+                'assigned_agent_name' => !empty($dl['assigned_agent_name']) ? trim($dl['assigned_agent_name']) : ($dl['user_username'] ?: 'Unassigned')
+            ];
+        }
+    }
+
+    // Fetch team members / agents for quick shortcut switcher
+    $agentsList = [];
+    $agListQ = mysqli_query($connection, "SELECT sa.site_access_user_id as user_id, sa.site_access_type as role,
+                                                u.user_username,
+                                                TRIM(CONCAT(COALESCE(p.profile_first_name, ''), ' ', COALESCE(p.profile_last_name, ''))) as full_name,
+                                                d.device_phone, d.device_status
+                                         FROM " . TABLE_PREFIX . "site_access sa
+                                         INNER JOIN " . TABLE_PREFIX . "user u ON u.user_id = sa.site_access_user_id
+                                         LEFT JOIN " . TABLE_PREFIX . "profile p ON p.profile_user_id = u.user_id
+                                         LEFT JOIN " . TABLE_PREFIX . "whatsapp_device d ON (d.device_site_id = {$siteId} AND d.device_assigned_user_id = sa.site_access_user_id AND d.device_status = 'connected')
+                                         WHERE sa.site_access_site_id = {$siteId} AND sa.site_access_status = 1
+                                         ORDER BY p.profile_first_name ASC, u.user_username ASC");
+    if ($agListQ) {
+        while ($ag = mysqli_fetch_assoc($agListQ)) {
+            $name = !empty($ag['full_name']) ? trim($ag['full_name']) : $ag['user_username'];
+            $agentsList[] = [
+                'user_id'      => (int)$ag['user_id'],
+                'name'         => $name,
+                'role'         => $ag['role'],
+                'device_phone' => $ag['device_phone'] ?: '',
+                'is_connected' => ($ag['device_status'] === 'connected')
+            ];
+        }
+    }
+
     echo json_encode([
         'status'           => 'success',
         'is_device_linked' => $isDeviceLinked,
         'linked_phone'     => $linkedPhone,
         'is_admin'         => $isAdmin,
+        'current_user_id'  => $currentUserId,
+        'devices'          => $devicesList,
+        'agents'           => $agentsList,
+        'active_device_id' => $filterDeviceId,
+        'active_user_id'   => $filterUserId,
         'chats'            => $chats,
         'count'            => count($chats)
     ]);
