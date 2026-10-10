@@ -2601,6 +2601,9 @@
             </div>
 
             <div class="v3-lead-hero-actions">
+              <button type="button" class="btn-v3-action btn-outline" id="btnHeroEditLead" data-tooltip="Edit Lead & Requirements">
+                <i class="fi fi-rr-edit"></i> <span>Edit Lead</span>
+              </button>
               ${
                 lead.wa_mobile && self.leadViewOptions.show_whatsapp_button
                   ? `
@@ -2619,9 +2622,6 @@
               `
                   : ""
               }
-              <button type="button" class="btn-v3-action btn-outline" id="btnHeroEditLead" data-tooltip="Edit Lead & Requirements">
-                <i class="fi fi-rr-edit"></i> <span>Edit Lead</span>
-              </button>
               ${
                 isAssigned
                   ? `
@@ -2933,6 +2933,14 @@
                   isAssigned
                     ? `
                   <div class="v3-fast-actions-grid">
+                    <button type="button" class="btn-fast-tile tile-edit" id="btnSideEditLead" data-tooltip="Edit customer information and trip requirements">
+                      <div class="fast-tile-icon"><i class="fi fi-rr-edit"></i></div>
+                      <div class="fast-tile-meta">
+                        <span class="fast-tile-title">Edit Lead & Travel</span>
+                        <span class="fast-tile-sub">Update customer needs</span>
+                      </div>
+                    </button>
+
                     ${
                       lead.wa_mobile && self.leadViewOptions.show_whatsapp_button
                         ? `
@@ -3000,14 +3008,6 @@
                     `
                         : ""
                     }
-
-                    <button type="button" class="btn-fast-tile tile-edit" id="btnSideEditLead" data-tooltip="Edit customer information and trip requirements">
-                      <div class="fast-tile-icon"><i class="fi fi-rr-edit"></i></div>
-                      <div class="fast-tile-meta">
-                        <span class="fast-tile-title">Edit Lead & Travel</span>
-                        <span class="fast-tile-sub">Update customer needs</span>
-                      </div>
-                    </button>
 
                     ${
                       !self.isPackageSix

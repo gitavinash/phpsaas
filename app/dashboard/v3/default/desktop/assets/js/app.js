@@ -5087,10 +5087,26 @@ $(document).ready(function (e) {
           }
           const rect = hoveredLi.getBoundingClientRect();
           sideMenu.style.position = "fixed";
-          sideMenu.style.top = rect.top + "px";
-          sideMenu.style.left = rect.right - 2 + "px";
           sideMenu.style.display = "block";
           sideMenu.style.zIndex = "99999";
+          sideMenu.style.left = rect.right - 2 + "px";
+
+          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+          sideMenu.style.maxHeight = Math.max(160, viewportHeight - 20) + "px";
+          sideMenu.style.overflowY = "auto";
+
+          const menuHeight = sideMenu.offsetHeight;
+          let top = rect.top;
+
+          // If menu extends past visible area below, flip upside to align with bottom of item
+          if (top + menuHeight > viewportHeight - 10) {
+            top = rect.bottom - menuHeight;
+            if (top < 10) {
+              top = 10;
+            }
+          }
+
+          sideMenu.style.top = top + "px";
           currentActiveSideMenu = sideMenu;
         } else {
           // Hovering an item without a sub-menu (e.g. Dashboard, Domestic packages)

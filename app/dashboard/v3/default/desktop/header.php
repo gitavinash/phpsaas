@@ -170,7 +170,7 @@ if (isset($daterange)) {
                     }
 
                     $waAsideSectionFile = $appDashboardDirectory . 'aside/whatsapp_section.php';
-                    if (file_exists($waAsideSectionFile)) {
+                    if (file_exists($waAsideSectionFile) && !defined('ISW_WA_ASIDE_LOADED')) {
                         require_once $waAsideSectionFile;
                     }
                     ?>

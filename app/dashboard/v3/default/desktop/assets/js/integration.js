@@ -87,10 +87,14 @@
 
     updateAsidePluginState: function (slug, isActive) {
       const $asideItems = $('[data-aside-plugin="' + slug + '"]');
+      const $asideAvailable = $('[data-aside-plugin="' + slug + '_available"]');
       if (isActive) {
-        $asideItems.show();
+        $asideItems.show().removeClass("plugin-item-disabled").addClass("plugin-item-active");
+        $asideItems.find(".aside-plugin-status-pill").removeClass("is-idle").addClass("is-active").text("Active");
+        $asideAvailable.hide();
       } else {
-        $asideItems.hide();
+        $asideItems.hide().removeClass("plugin-item-active").addClass("plugin-item-disabled");
+        $asideAvailable.show();
       }
     },
 

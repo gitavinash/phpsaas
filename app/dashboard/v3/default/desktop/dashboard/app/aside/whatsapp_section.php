@@ -5,10 +5,16 @@
  * Displays for all package users when WhatsApp Web API is activated.
  */
 
-$isWaWebActive = (defined('ENABLE_WHATSAPP_WEB_API') && (ENABLE_WHATSAPP_WEB_API == '1' || ENABLE_WHATSAPP_WEB_API === 1));
+if (defined('ISW_WA_ASIDE_LOADED')) {
+    return;
+}
+define('ISW_WA_ASIDE_LOADED', true);
+
+$isWaWebActive = (defined('ENABLE_WHATSAPP_WEB_API') ? (ENABLE_WHATSAPP_WEB_API == '1' || ENABLE_WHATSAPP_WEB_API === 1) : true);
 $waDisplayAttr = $isWaWebActive ? '' : 'style="display:none;"';
-$isWaInboxPage = (strpos(ADMIN_BASE_URL, '/whatsapp/') !== false && strpos(ADMIN_BASE_URL, '/integration/') === false);
-$isWaDevicePage = (strpos(ADMIN_BASE_URL, '/integration/whatsapp_web') !== false);
+$currentAsideUrl = defined('ADMIN_BASE_URL') ? ADMIN_BASE_URL : (defined('ACTIVE_URL') ? ACTIVE_URL : '');
+$isWaInboxPage = (strpos($currentAsideUrl, '/whatsapp/') !== false && strpos($currentAsideUrl, '/integration/') === false);
+$isWaDevicePage = (strpos($currentAsideUrl, '/integration/whatsapp_web') !== false);
 ?>
 
 <li class="header-section-name" data-aside-plugin="whatsapp_web" <?php echo $waDisplayAttr; ?>>

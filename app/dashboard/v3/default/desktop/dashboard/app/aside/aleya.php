@@ -255,60 +255,8 @@ if ($site_access_type == 'administrator') { ?>
     </li>
 <?php } ?>
 
-<!-- 6. SYSTEM & SETTINGS (Administrator & Digital Marketing) -->
-<?php if ($site_access_type == 'administrator' || $site_access_type == 'digital_marketing') { ?>
-    <li class="header-section-name">
-        <p>System &amp; Settings<span>Team, Channels &amp; Policies</span></p>
-    </li>
-
-    <?php
-
-    if (USER_TYPE == 'administrator') { ?>
-        <li <?php echo (strpos($currentUrl, '/setting/') !== false ? 'class="active"' : ''); ?>>
-            <a href="/dashboard/setting/"><i class="fi fi-rr-settings"></i> Settings</a>
-        </li>
-    <?php
-    }
-    ?>
-
-    <?php if ($site_access_type == 'administrator') { ?>
-        <li <?php echo (strpos($currentUrl, '/user/') !== false ? 'class="active"' : ''); ?>>
-            <a href="/dashboard/user/list/"><i class="fi fi-rr-users-alt"></i> Team &amp; Users</a>
-            <div class="side-menu">
-                <ul>
-                    <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All Team Members</a></li>
-                    <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add Team Member</a></li>
-                </ul>
-            </div>
-            <div class="bottom-menu">
-                <ul>
-                    <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All Team Members</a></li>
-                    <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add Team Member</a></li>
-                </ul>
-            </div>
-        </li>
-
-
-        <li <?php echo (strpos($currentUrl, '/company/') !== false ? 'class="active"' : ''); ?>>
-            <a href="/dashboard/company/list/"><i class="fi fi-rr-shop"></i> Companies &amp; Branches</a>
-            <div class="side-menu">
-                <ul>
-                    <li><a href="/dashboard/company/list/"><i class="fi-rr-apps-sort"></i> All Companies</a></li>
-                    <li><a href="/dashboard/company/add/"><i class="fi fi-rr-add"></i> Add New Company</a></li>
-                </ul>
-            </div>
-            <div class="bottom-menu">
-                <ul>
-                    <li><a href="/dashboard/company/list/"><i class="fi-rr-apps-sort"></i> All Companies</a></li>
-                    <li><a href="/dashboard/company/add/"><i class="fi fi-rr-add"></i> Add New Company</a></li>
-                </ul>
-            </div>
-        </li>
-    <?php } ?>
-<?php } ?>
-
 <?php
-// Plugins & Integrations: Visible to Administrator AND Digital Marketing
+// 7. PLUGINS & INTEGRATIONS (Dedicated Section with Active/Available Indicators)
 if ($site_access_type == 'administrator' || $site_access_type == 'digital_marketing') {
     $activeAsidePg = 'razorpay';
     if (defined('PG_NAME') && !empty(PG_NAME)) {
@@ -330,68 +278,166 @@ if ($site_access_type == 'administrator' || $site_access_type == 'digital_market
     } elseif (defined('ENABLE_RAZORPAY') && ENABLE_RAZORPAY == '1') {
         $activeAsidePg = 'razorpay';
     }
+
+    $isFbActive    = ($isDigitalMarketingPackage || !defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1' || ENABLE_FACEBOOK_LEAD_ADS === 1);
+    $isGAdsActive  = ($isDigitalMarketingPackage || (defined('ENABLE_GOOGLE_ADS') && (ENABLE_GOOGLE_ADS == '1' || ENABLE_GOOGLE_ADS === 1)));
+    $isWfActive    = ($isDigitalMarketingPackage || !defined('ENABLE_WEB_FORMS') || ENABLE_WEB_FORMS == '1' || ENABLE_WEB_FORMS === 1);
+    $isWaApiActive = (!defined('ENABLE_WHATSAPP_BUSINESS_API') || ENABLE_WHATSAPP_BUSINESS_API == '1' || ENABLE_WHATSAPP_BUSINESS_API === 1);
+    $isSmtpActive  = (!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1' || ENABLE_SMTP_EMAIL === 1);
+    $isUpiActive   = (!defined('ENABLE_UPI') || ENABLE_UPI == '1' || ENABLE_UPI === 1);
+    $isWhActive    = (!defined('ENABLE_WEBHOOKS') || ENABLE_WEBHOOKS == '1' || ENABLE_WEBHOOKS === 1);
+
+    $activePluginCount = 0;
+    if ($isFbActive) $activePluginCount++;
+    if ($isGAdsActive) $activePluginCount++;
+    if ($isWfActive) $activePluginCount++;
+    if ($isWaApiActive) $activePluginCount++;
+    if ($isSmtpActive) $activePluginCount++;
+    if ($isWhActive) $activePluginCount++;
+    if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') {
+        if (!empty($activeAsidePg)) $activePluginCount++;
+        if ($isUpiActive) $activePluginCount++;
+    }
 ?>
-    <li <?php echo (strpos($currentUrl, '/integration/') !== false ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/integration/"><i class="fi fi-rr-plug-connection"></i> Plugins &amp; Integrations</a>
-        <div class="side-menu">
+    <!-- 7. PLUGINS & INTEGRATIONS -->
+    <li class="header-section-name">
+        <p>Plugins &amp; Integrations<span>Active &amp; Available Addons</span></p>
+    </li>
+
+    <li <?php echo (strpos($currentUrl, '/integration/') !== false && strpos($currentUrl, '/integration/whatsapp_web') === false ? 'class="active"' : ''); ?>>
+        <a href="/dashboard/integration/"><i class="fi fi-rr-plug-connection"></i> Plugins &amp; Integrations <span class="aside-badge-plugin-count"><?php echo $activePluginCount; ?> Active</span></a>
+        <div class="side-menu aside-menu-plugins">
             <ul>
-                <li><a href="/dashboard/integration/"><i class="fi-rr-apps-sort"></i> All Plugins</a></li>
-                <li data-aside-plugin="facebook" <?php echo (($isDigitalMarketingPackage || !defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Ads</a></li>
-                <li data-aside-plugin="google_ads" <?php echo (($isDigitalMarketingPackage || (defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1')) ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
-                <li data-aside-plugin="web_forms" <?php echo (($isDigitalMarketingPackage || !defined('ENABLE_WEB_FORMS') || ENABLE_WEB_FORMS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/web_forms/"><i class="fi-rr-browser"></i> Web Forms</a></li>
-                <li data-aside-plugin="whatsapp" <?php echo ((!defined('ENABLE_WHATSAPP_BUSINESS_API') || ENABLE_WHATSAPP_BUSINESS_API == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/whatsapp/"><i class="fi-rr-comment-alt-middle"></i> WhatsApp API</a></li>
-                <li data-aside-plugin="smtp" <?php echo ((!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/smtp/"><i class="fi-rr-envelope"></i> SMTP Email</a></li>
+                <li><a href="/dashboard/integration/"><i class="fi fi-rr-apps-sort"></i> <strong>All Plugins Directory</strong></a></li>
+
+                <li class="aside-submenu-group-title"><span>Connected &amp; Active</span></li>
+                <li data-aside-plugin="facebook" class="<?php echo ($isFbActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isFbActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/facebook/"><i class="fi fi-rr-bullseye-arrow"></i> Facebook Ads <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                <li data-aside-plugin="google_ads" class="<?php echo ($isGAdsActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isGAdsActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/google_ads/"><i class="fi fi-rr-search-alt"></i> Google Ads <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                <li data-aside-plugin="web_forms" class="<?php echo ($isWfActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isWfActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/web_forms/"><i class="fi fi-rr-browser"></i> Web Forms <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                <li data-aside-plugin="whatsapp" class="<?php echo ($isWaApiActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isWaApiActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/whatsapp/"><i class="fi fi-rr-comment-alt-middle"></i> WhatsApp API <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                <li data-aside-plugin="smtp" class="<?php echo ($isSmtpActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isSmtpActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/smtp/"><i class="fi fi-rr-envelope"></i> SMTP Email <span class="aside-plugin-status-pill is-active">Active</span></a></li>
                 <?php if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') { ?>
-                    <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
-                    <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
-                    <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>
-                    <li data-aside-plugin="phonepe" <?php echo ($activeAsidePg === 'phonepe' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phonepe/"><i class="fi-rr-credit-card"></i> PhonePe</a></li>
-                    <li data-aside-plugin="worldline" <?php echo ($activeAsidePg === 'worldline' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/worldline/"><i class="fi-rr-credit-card"></i> Worldline</a></li>
-                    <li data-aside-plugin="payu" <?php echo ($activeAsidePg === 'payu' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/payu/"><i class="fi-rr-credit-card"></i> PayU</a></li>
-                    <li data-aside-plugin="phi_commerce" <?php echo ($activeAsidePg === 'phi_commerce' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phi_commerce/"><i class="fi-rr-credit-card"></i> Phi Commerce</a></li>
-                    <li data-aside-plugin="cashfree" <?php echo ($activeAsidePg === 'cashfree' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/cashfree/"><i class="fi-rr-credit-card"></i> Cashfree</a></li>
-                    <li data-aside-plugin="upi" <?php echo ((!defined('ENABLE_UPI') || ENABLE_UPI == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/upi/"><i class="fi-rr-qr-scan"></i> UPI &amp; QR</a></li>
+                    <li data-aside-plugin="razorpay" class="<?php echo ($activeAsidePg === 'razorpay' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/razorpay/"><i class="fi fi-rr-credit-card"></i> Razorpay <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                    <li data-aside-plugin="instamojo" class="<?php echo ($activeAsidePg === 'instamojo' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/instamojo/"><i class="fi fi-rr-credit-card"></i> Instamojo <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                    <li data-aside-plugin="sabpaisa" class="<?php echo ($activeAsidePg === 'sabpaisa' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi fi-rr-credit-card"></i> SabPaisa <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                    <li data-aside-plugin="phonepe" class="<?php echo ($activeAsidePg === 'phonepe' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'phonepe' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/phonepe/"><i class="fi fi-rr-credit-card"></i> PhonePe <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                    <li data-aside-plugin="worldline" class="<?php echo ($activeAsidePg === 'worldline' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'worldline' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/worldline/"><i class="fi fi-rr-credit-card"></i> Worldline <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                    <li data-aside-plugin="payu" class="<?php echo ($activeAsidePg === 'payu' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'payu' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/payu/"><i class="fi fi-rr-credit-card"></i> PayU <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                    <li data-aside-plugin="phi_commerce" class="<?php echo ($activeAsidePg === 'phi_commerce' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'phi_commerce' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/phi_commerce/"><i class="fi fi-rr-credit-card"></i> Phi Commerce <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                    <li data-aside-plugin="cashfree" class="<?php echo ($activeAsidePg === 'cashfree' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'cashfree' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/cashfree/"><i class="fi fi-rr-credit-card"></i> Cashfree <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+                    <li data-aside-plugin="upi" class="<?php echo ($isUpiActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isUpiActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/upi/"><i class="fi fi-rr-qr-scan"></i> UPI &amp; QR <span class="aside-plugin-status-pill is-active">Active</span></a></li>
                 <?php } ?>
+                <li data-aside-plugin="webhooks" class="<?php echo ($isWhActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isWhActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/webhooks/"><i class="fi fi-rr-code-compare"></i> Webhooks <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+
+                <li class="aside-submenu-group-title"><span>Available Addons</span></li>
+                <li data-aside-plugin="facebook_available" <?php echo (!$isFbActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/facebook/"><i class="fi fi-rr-bullseye-arrow"></i> Facebook Ads <span class="aside-plugin-status-pill is-idle">Setup</span></a></li>
+                <li data-aside-plugin="google_ads_available" <?php echo (!$isGAdsActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/google_ads/"><i class="fi fi-rr-search-alt"></i> Google Ads <span class="aside-plugin-status-pill is-idle">Setup</span></a></li>
+                <li data-aside-plugin="web_forms_available" <?php echo (!$isWfActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/web_forms/"><i class="fi fi-rr-browser"></i> Web Forms <span class="aside-plugin-status-pill is-idle">Setup</span></a></li>
+                <li data-aside-plugin="whatsapp_available" <?php echo (!$isWaApiActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/whatsapp/"><i class="fi fi-rr-comment-alt-middle"></i> WhatsApp API <span class="aside-plugin-status-pill is-idle">Setup</span></a></li>
+                <li data-aside-plugin="smtp_available" <?php echo (!$isSmtpActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/smtp/"><i class="fi fi-rr-envelope"></i> SMTP Email <span class="aside-plugin-status-pill is-idle">Setup</span></a></li>
+                <?php if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') { ?>
+                    <?php if ($activeAsidePg !== 'razorpay') { ?><li data-aside-plugin="razorpay_available"><a href="/dashboard/integration/razorpay/"><i class="fi fi-rr-credit-card"></i> Razorpay <span class="aside-plugin-status-pill is-idle">Setup</span></a></li><?php } ?>
+                    <?php if ($activeAsidePg !== 'phonepe') { ?><li data-aside-plugin="phonepe_available"><a href="/dashboard/integration/phonepe/"><i class="fi fi-rr-credit-card"></i> PhonePe <span class="aside-plugin-status-pill is-idle">Setup</span></a></li><?php } ?>
+                    <?php if ($activeAsidePg !== 'cashfree') { ?><li data-aside-plugin="cashfree_available"><a href="/dashboard/integration/cashfree/"><i class="fi fi-rr-credit-card"></i> Cashfree <span class="aside-plugin-status-pill is-idle">Setup</span></a></li><?php } ?>
+                    <?php if (!$isUpiActive) { ?><li data-aside-plugin="upi_available"><a href="/dashboard/integration/upi/"><i class="fi fi-rr-qr-scan"></i> UPI &amp; QR <span class="aside-plugin-status-pill is-idle">Setup</span></a></li><?php } ?>
+                <?php } ?>
+                <?php if (!$isWhActive) { ?><li data-aside-plugin="webhooks_available"><a href="/dashboard/integration/webhooks/"><i class="fi fi-rr-code-compare"></i> Webhooks <span class="aside-plugin-status-pill is-idle">Setup</span></a></li><?php } ?>
             </ul>
         </div>
         <div class="bottom-menu">
             <ul>
-                <li><a href="/dashboard/integration/"><i class="fi-rr-apps-sort"></i> All Plugins</a></li>
-                <li data-aside-plugin="facebook" <?php echo (($isDigitalMarketingPackage || !defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/facebook/"><i class="fi-rr-bullseye-arrow"></i> Facebook Ads</a></li>
-                <li data-aside-plugin="google_ads" <?php echo (($isDigitalMarketingPackage || (defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1')) ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/google_ads/"><i class="fi-rr-search-alt"></i> Google Ads</a></li>
-                <li data-aside-plugin="web_forms" <?php echo (($isDigitalMarketingPackage || !defined('ENABLE_WEB_FORMS') || ENABLE_WEB_FORMS == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/web_forms/"><i class="fi-rr-browser"></i> Web Forms</a></li>
-                <li data-aside-plugin="whatsapp" <?php echo ((!defined('ENABLE_WHATSAPP_BUSINESS_API') || ENABLE_WHATSAPP_BUSINESS_API == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/whatsapp/"><i class="fi-rr-comment-alt-middle"></i> WhatsApp API</a></li>
-                <li data-aside-plugin="smtp" <?php echo ((!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/smtp/"><i class="fi-rr-envelope"></i> SMTP Email</a></li>
-                <?php if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') { ?>
-                    <li data-aside-plugin="razorpay" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/razorpay/"><i class="fi-rr-credit-card"></i> Razorpay</a></li>
-                    <li data-aside-plugin="instamojo" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/instamojo/"><i class="fi-rr-credit-card"></i> Instamojo</a></li>
-                    <li data-aside-plugin="sabpaisa" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi-rr-credit-card"></i> SabPaisa</a></li>
-                    <li data-aside-plugin="phonepe" <?php echo ($activeAsidePg === 'phonepe' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phonepe/"><i class="fi-rr-credit-card"></i> PhonePe</a></li>
-                    <li data-aside-plugin="worldline" <?php echo ($activeAsidePg === 'worldline' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/worldline/"><i class="fi-rr-credit-card"></i> Worldline</a></li>
-                    <li data-aside-plugin="payu" <?php echo ($activeAsidePg === 'payu' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/payu/"><i class="fi-rr-credit-card"></i> PayU</a></li>
-                    <li data-aside-plugin="phi_commerce" <?php echo ($activeAsidePg === 'phi_commerce' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/phi_commerce/"><i class="fi-rr-credit-card"></i> Phi Commerce</a></li>
-                    <li data-aside-plugin="cashfree" <?php echo ($activeAsidePg === 'cashfree' ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/cashfree/"><i class="fi-rr-credit-card"></i> Cashfree</a></li>
-                    <li data-aside-plugin="upi" <?php echo ((!defined('ENABLE_UPI') || ENABLE_UPI == '1') ? '' : 'style="display:none;"') ?>><a href="/dashboard/integration/upi/"><i class="fi-rr-qr-scan"></i> UPI &amp; QR</a></li>
-                <?php } ?>
+                <li><a href="/dashboard/integration/"><i class="fi fi-rr-apps-sort"></i> All Plugins</a></li>
             </ul>
         </div>
     </li>
 <?php } ?>
 
-<?php if ($site_access_type == 'administrator') { ?>
-    <li <?php echo (strpos($currentUrl, '/policy/') !== false ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/policy/"><i class="fi fi-rr-memo"></i> Company Policies</a>
-        <div class="side-menu">
-            <ul>
-                <li><a href="/dashboard/policy/list/"><i class="fi-rr-apps-sort"></i> All Policies</a></li>
-                <li><a href="/dashboard/policy/add/"><i class="fi fi-rr-add"></i> Add New Policy</a></li>
-            </ul>
-        </div>
-        <div class="bottom-menu">
-            <ul>
-                <li><a href="/dashboard/policy/list/"><i class="fi-rr-apps-sort"></i> All Policies</a></li>
-                <li><a href="/dashboard/policy/add/"><i class="fi fi-rr-add"></i> Add New Policy</a></li>
-            </ul>
-        </div>
+<?php
+// 8. WHATSAPP CRM (Displayed above Setting section)
+$waAsideSectionFile = __DIR__ . '/whatsapp_section.php';
+if (file_exists($waAsideSectionFile)) {
+    require_once $waAsideSectionFile;
+}
+?>
+
+<!-- 9. SYSTEM & SETTINGS (Always at end of menus) -->
+<?php if ($site_access_type == 'administrator' || $site_access_type == 'digital_marketing') { ?>
+    <li class="header-section-name">
+        <p>System &amp; Settings<span>Team, Policies &amp; Configuration</span></p>
     </li>
+
+    <?php if ($site_access_type == 'administrator') { ?>
+        <li <?php echo (strpos($currentUrl, '/user/') !== false ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/user/list/"><i class="fi fi-rr-users-alt"></i> Team &amp; Users</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All Team Members</a></li>
+                    <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add Team Member</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="/dashboard/user/list/"><i class="fi-rr-apps-sort"></i> All Team Members</a></li>
+                    <li><a href="/dashboard/user/add/"><i class="fi fi-rr-user-add"></i> Add Team Member</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <li <?php echo (strpos($currentUrl, '/company/') !== false ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/company/list/"><i class="fi fi-rr-shop"></i> Companies &amp; Branches</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="/dashboard/company/list/"><i class="fi-rr-apps-sort"></i> All Companies</a></li>
+                    <li><a href="/dashboard/company/add/"><i class="fi fi-rr-add"></i> Add New Company</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="/dashboard/company/list/"><i class="fi-rr-apps-sort"></i> All Companies</a></li>
+                    <li><a href="/dashboard/company/add/"><i class="fi fi-rr-add"></i> Add New Company</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <li <?php echo (strpos($currentUrl, '/policy/') !== false ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/policy/"><i class="fi fi-rr-memo"></i> Company Policies</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="/dashboard/policy/list/"><i class="fi-rr-apps-sort"></i> All Policies</a></li>
+                    <li><a href="/dashboard/policy/add/"><i class="fi fi-rr-add"></i> Add New Policy</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="/dashboard/policy/list/"><i class="fi-rr-apps-sort"></i> All Policies</a></li>
+                    <li><a href="/dashboard/policy/add/"><i class="fi fi-rr-add"></i> Add New Policy</a></li>
+                </ul>
+            </div>
+        </li>
+    <?php } ?>
+
+    <?php if (USER_TYPE == 'administrator') { ?>
+        <li <?php echo (strpos($currentUrl, '/setting/') !== false ? 'class="active"' : ''); ?>>
+            <a href="/dashboard/setting/"><i class="fi fi-rr-settings"></i> Settings</a>
+            <div class="side-menu">
+                <ul>
+                    <li><a href="/dashboard/setting/"><i class="fi-rr-apps-sort"></i> All Settings</a></li>
+                    <li><a href="/dashboard/setting/app/"><i class="fi fi-rr-toggle-on"></i> Features &amp; Modules</a></li>
+                    <li><a href="/dashboard/setting/configuration/"><i class="fi fi-rr-settings-sliders"></i> Configuration</a></li>
+                    <li><a href="/dashboard/setting/contact/"><i class="fi fi-rr-phone-call"></i> Contact Details</a></li>
+                    <li><a href="/dashboard/setting/notifications/"><i class="fi fi-rr-bell"></i> Notifications</a></li>
+                    <li><a href="/dashboard/setting/bank/"><i class="fi fi-rr-bank"></i> Bank &amp; Payments</a></li>
+                    <li><a href="/dashboard/setting/seo/"><i class="fi fi-rr-search-alt"></i> SEO Settings</a></li>
+                    <li><a href="/dashboard/setting/profile/"><i class="fi fi-rr-user"></i> My Profile</a></li>
+                </ul>
+            </div>
+            <div class="bottom-menu">
+                <ul>
+                    <li><a href="/dashboard/setting/"><i class="fi-rr-apps-sort"></i> All Settings</a></li>
+                    <li><a href="/dashboard/setting/app/"><i class="fi fi-rr-toggle-on"></i> Features &amp; Modules</a></li>
+                    <li><a href="/dashboard/setting/configuration/"><i class="fi fi-rr-settings-sliders"></i> Configuration</a></li>
+                </ul>
+            </div>
+        </li>
+    <?php } ?>
 <?php } ?>
