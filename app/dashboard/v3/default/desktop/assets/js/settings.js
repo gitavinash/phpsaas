@@ -1278,6 +1278,7 @@
       const self = this;
       self.initAppConfigSelect2();
       self.bindAppConfigEvents();
+      self.updateAppConfigPreview();
       self.loadAppConfigData();
     },
 
@@ -1534,22 +1535,22 @@
           title: "Hotel, Resort & Homestay",
           desc: "Optimized for room reservations & stay hospitality.",
           icon: "fi fi-rr-bed-alt",
-          action: "Send Quotation",
-          actionIcon: "fi fi-rr-document"
+          action: "Send Tour Itinerary",
+          actionIcon: "fi fi-rr-paper-plane"
         },
         spa_wellness: {
           title: "Spa, Wellness & Retreat",
           desc: "Optimized for therapy appointments & wellness plans.",
           icon: "fi fi-rr-flower",
-          action: "Send Quotation",
-          actionIcon: "fi fi-rr-document"
+          action: "Send Tour Itinerary",
+          actionIcon: "fi fi-rr-paper-plane"
         },
         general: {
           title: "General Business & Custom",
           desc: "Standard sales pipeline and customized client estimates.",
           icon: "fi fi-rr-briefcase",
-          action: "Send Quotation",
-          actionIcon: "fi fi-rr-document"
+          action: "Send Tour Itinerary",
+          actionIcon: "fi fi-rr-paper-plane"
         }
       };
 
@@ -1590,23 +1591,34 @@
         $("#previewFleetRow").addClass("is-hidden");
       }
 
+      // Requirement: "Send Tour Itinerary" visible default and show "Send Quotation" only if business nature is "transporter" else hide.
+      // Requirement: Only 1 option will be visible from both.
+      const isTransporter = (nature === "transporter");
+      if (isTransporter) {
+        $("#rowLeadViewSendQuotation").removeClass("is-hidden");
+        $("#rowLeadViewSendItinerary").addClass("is-hidden");
+      } else {
+        $("#rowLeadViewSendItinerary").removeClass("is-hidden");
+        $("#rowLeadViewSendQuotation").addClass("is-hidden");
+      }
+
       // Fast Tile Badges
       const isPkg6 = self.isPackageSix || $("#settingAppConfigApp").data("is-package-six") === 1 || $("#settingAppConfigApp").data("is-package-six") === "1";
       const showPayLink = !isPkg6 && $("#cfgLeadViewPaymentLink").is(":checked");
       const showRecPay = !isPkg6 && $("#cfgLeadViewRecordPayment").is(":checked");
-      const showItinerary = !isPkg6 && $("#cfgLeadViewSendItinerary").is(":checked");
-      const showQuotation = !isPkg6 && $("#cfgLeadViewSendQuotation").is(":checked");
+      const showItinerary = !isTransporter && !isPkg6 && $("#cfgLeadViewSendItinerary").is(":checked");
+      const showQuotation = isTransporter && !isPkg6 && $("#cfgLeadViewSendQuotation").is(":checked");
       const showConvSale = $("#cfgLeadViewConvertSale").is(":checked");
       const showCall = $("#cfgLeadViewCallButton").is(":checked");
       const showWa = $("#cfgLeadViewWhatsappButton").is(":checked");
 
-      $("#tagPrevCallButton").toggleClass("tag-active", showCall).toggle(showCall);
-      $("#tagPrevWhatsappButton").toggleClass("tag-active", showWa).toggle(showWa);
-      $("#tagPrevItinerary").toggleClass("tag-active", showItinerary).toggle(showItinerary);
-      $("#tagPrevQuotation").toggleClass("tag-active", showQuotation).toggle(showQuotation);
-      $("#tagPrevPaymentLink").toggleClass("tag-active", showPayLink).toggle(showPayLink);
-      $("#tagPrevRecordPayment").toggleClass("tag-active", showRecPay).toggle(showRecPay);
-      $("#tagPrevConvertSale").toggleClass("tag-active", showConvSale).toggle(showConvSale);
+      $("#tagPrevCallButton").toggleClass("tag-active", showCall).toggleClass("is-hidden", !showCall);
+      $("#tagPrevWhatsappButton").toggleClass("tag-active", showWa).toggleClass("is-hidden", !showWa);
+      $("#tagPrevItinerary").toggleClass("tag-active", showItinerary).toggleClass("is-hidden", !showItinerary);
+      $("#tagPrevQuotation").toggleClass("tag-active", showQuotation).toggleClass("is-hidden", !showQuotation);
+      $("#tagPrevPaymentLink").toggleClass("tag-active", showPayLink).toggleClass("is-hidden", !showPayLink);
+      $("#tagPrevRecordPayment").toggleClass("tag-active", showRecPay).toggleClass("is-hidden", !showRecPay);
+      $("#tagPrevConvertSale").toggleClass("tag-active", showConvSale).toggleClass("is-hidden", !showConvSale);
     },
 
     saveAppConfigData: function () {
@@ -1624,8 +1636,11 @@
         ? ($("#cfgAdvancePaymentPercentCustom").val().trim() || "25")
         : (rawAdv || "25");
 
+      const nature = $("#configCompanyNature").val() || "travel_agency";
+      const isTransporter = (nature === "transporter");
+
       const payload = {
-        company_nature: $("#configCompanyNature").val(),
+        company_nature: nature,
         currency_default: $("#cfgCurrencyDefault").val(),
         currency_symbol: $("#cfgCurrencySymbol").val() || "₹",
         tax_mode: $("#cfgTaxMode").val(),
@@ -1639,8 +1654,8 @@
         transporter_tariff_mode: $("#cfgTransporterTariffMode").val(),
         transporter_toll_policy: $("#cfgTransporterTollPolicy").val(),
         transporter_driver_allowance: $("#cfgTransporterDriverAllowance").val(),
-        lead_view_show_send_itinerary: $("#cfgLeadViewSendItinerary").is(":checked") ? "1" : "0",
-        lead_view_show_send_quotation: $("#cfgLeadViewSendQuotation").is(":checked") ? "1" : "0",
+        lead_view_show_send_itinerary: (!isTransporter && $("#cfgLeadViewSendItinerary").is(":checked")) ? "1" : "0",
+        lead_view_show_send_quotation: (isTransporter && $("#cfgLeadViewSendQuotation").is(":checked")) ? "1" : "0",
         lead_view_show_payment_link: $("#cfgLeadViewPaymentLink").is(":checked") ? "1" : "0",
         lead_view_show_record_payment: $("#cfgLeadViewRecordPayment").is(":checked") ? "1" : "0",
         lead_view_show_convert_sale: $("#cfgLeadViewConvertSale").is(":checked") ? "1" : "0",

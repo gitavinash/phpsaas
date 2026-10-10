@@ -440,8 +440,8 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                             </label>
                         </div>
 
-                        <!-- Toggle 3: Send Tour Itinerary (Premium) -->
-                        <div class="v3-feature-toggle-row<?php echo $isPackageSix ? ' is-locked' : ''; ?>">
+                        <!-- Toggle 3: Send Tour Itinerary (Premium) - Shown for Non-Transporter natures -->
+                        <div class="v3-feature-toggle-row<?php echo $isPackageSix ? ' is-locked' : ''; ?>" id="rowLeadViewSendItinerary">
                             <div class="v3-feature-toggle-info">
                                 <div class="v3-feature-toggle-icon">
                                     <i class="fi fi-rr-paper-plane"></i>
@@ -457,8 +457,8 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                             </label>
                         </div>
 
-                        <!-- Toggle 4: Send Quotation (Premium) -->
-                        <div class="v3-feature-toggle-row<?php echo $isPackageSix ? ' is-locked' : ''; ?>">
+                        <!-- Toggle 4: Send Quotation (Premium) - Shown strictly for Transporter nature -->
+                        <div class="v3-feature-toggle-row<?php echo $isPackageSix ? ' is-locked' : ''; ?> is-hidden" id="rowLeadViewSendQuotation">
                             <div class="v3-feature-toggle-info">
                                 <div class="v3-feature-toggle-icon">
                                     <i class="fi fi-rr-document"></i>
@@ -588,7 +588,7 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                             <span class="v3-preview-tag tag-active" id="tagPrevCallButton">Quick Call</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevWhatsappButton">WhatsApp</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevItinerary">Tour Itinerary</span>
-                            <span class="v3-preview-tag tag-active" id="tagPrevQuotation">Send Quotation</span>
+                            <span class="v3-preview-tag tag-active is-hidden" id="tagPrevQuotation">Send Quotation</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevPaymentLink">Payment Link</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevRecordPayment">Record Payment</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevConvertSale">Convert Sale</span>

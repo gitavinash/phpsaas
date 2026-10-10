@@ -19094,11 +19094,13 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
 
 .v3-form-grid {
   display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 16px 18px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 860px) {
   .v3-form-grid {
     grid-template-columns: 1fr !important;
   }
@@ -19108,6 +19110,10 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   display: flex !important;
   flex-direction: column !important;
   gap: 5px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .v3-form-group.span-2,
@@ -31882,6 +31888,10 @@ body.v3-editor-fs-locked {
   min-width: 0 !important;
 }
 
+.v3-feature-toggle-row.is-hidden {
+  display: none !important;
+}
+
 .v3-feature-toggle-row:last-child {
   margin-bottom: 0 !important;
 }
@@ -32195,6 +32205,11 @@ body.v3-editor-fs-locked {
   border-color: #a7f3d0 !important;
 }
 
+.v3-preview-tag.is-hidden {
+  display: none !important;
+}
+
+
 .v3-card-header-icon.teal {
   background: #f0fdfa !important;
   color: #0d9488 !important;
@@ -32360,40 +32375,116 @@ body.v3-editor-fs-locked {
 }
 
 /* App Config Select2 Responsive & Layout Enhancements */
-#settingAppConfigApp .select2-container {
-  width: 100% !important;
+#settingAppConfigApp .v3-card-section {
+  min-width: 0 !important;
   max-width: 100% !important;
-}
-
-#settingAppConfigApp .select2-container--default .select2-selection--single {
-  height: 42px !important;
-  border: 1.5px solid #cbd5e1 !important;
-  border-radius: 8px !important;
-  background-color: #ffffff !important;
-  display: flex !important;
-  align-items: center !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
   box-sizing: border-box !important;
 }
 
-#settingAppConfigApp .select2-container--default.select2-container--focus .select2-selection--single,
-#settingAppConfigApp .select2-container--default.select2-container--open .select2-selection--single {
-  border-color: #0284c7 !important;
-  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12) !important;
+#settingAppConfigApp .v3-card-body {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
+#settingAppConfigApp .v3-form-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 16px 18px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#settingAppConfigApp .v3-form-group {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#settingAppConfigApp .v3-input-icon-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+#settingAppConfigApp .select2,
+#settingAppConfigApp .select2-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+#settingAppConfigApp .v3-input-icon-wrap .select2-container--default .select2-selection--single,
 #settingAppConfigApp .v3-input-icon-wrap .select2-selection--single {
-  padding-left: 36px !important;
+  position: relative !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border-radius: 8px !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
-#settingAppConfigApp .select2-selection__rendered {
-  padding-right: 24px !important;
+#settingAppConfigApp .v3-input-icon-wrap .select2-selection__rendered {
+  padding-left: 42px !important;
+  padding-right: 32px !important;
   font-size: 13px !important;
   color: #0f172a !important;
-  line-height: 1.4 !important;
+  line-height: 38px !important;
+  height: 38px !important;
+  display: block !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+#settingAppConfigApp .v3-input-icon-wrap .select2-container--default .select2-selection--single .select2-selection__arrow,
+#settingAppConfigApp .v3-input-icon-wrap .select2-selection__arrow {
+  position: absolute !important;
+  top: 10 !important;
+  bottom: 0 !important;
+  right: 10px !important;
+  width: 20px !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+}
+
+#settingAppConfigApp .v3-input-icon-wrap .select2-container--default .select2-selection--single .select2-selection__arrow b,
+#settingAppConfigApp .v3-input-icon-wrap .select2-selection__arrow b {
+  position: static !important;
+  margin: 0 !important;
+  display: block !important;
+  border-color: #64748b transparent transparent transparent !important;
+  border-style: solid !important;
+  border-width: 5px 4.5px 0 4.5px !important;
+  height: 0 !important;
+  width: 0 !important;
+  transition: transform 0.2s ease, border-color 0.2s ease !important;
+}
+
+#settingAppConfigApp .v3-input-icon-wrap .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b,
+#settingAppConfigApp .v3-input-icon-wrap .select2-container--open .select2-selection__arrow b {
+  border-color: transparent transparent #0284c7 transparent !important;
+  border-width: 0 4.5px 5px 4.5px !important;
 }
 
 #settingAppConfigApp .select2-dropdown,
@@ -32413,6 +32504,12 @@ body.v3-editor-fs-locked {
   white-space: normal !important;
   word-break: break-word !important;
   overflow-wrap: break-word !important;
+}
+
+@media (max-width: 860px) {
+  #settingAppConfigApp .v3-form-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* ---- V3 Aside Menu Plugins & Integration Presentation ---- */
