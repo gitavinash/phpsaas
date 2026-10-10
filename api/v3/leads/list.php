@@ -36,7 +36,12 @@ if (!empty($rawInput)) {
 $reqData = array_merge($_GET, $_REQUEST, $reqData);
 
 $siteFilter = ($siteId > 0) ? "e.enquiry_site_id = {$siteId}" : "1=1";
-$userFilter = ($accessType === 'agent' && $userId > 0)
+$siteQuotationFilter = ($siteId > 0) ? " AND quotation_site_id = {$siteId}" : "";
+$userRole = strtolower(isset($site_access_type) ? $site_access_type : ($accessType ?? ''));
+$isPrivilegedUser = in_array($userRole, ['administrator', 'admin', 'superadmin', 'operations', 'owner'], true);
+$isCallingAgent = in_array($userRole, ['agent', 'calling_agent', 'sales_executive'], true);
+
+$userFilter = (!$isPrivilegedUser && $userId > 0)
     ? " AND (e.enquiry_agent = '{$userId}')"
     : "";
 
@@ -54,6 +59,8 @@ if ($reqAgent !== '' && $reqAgent !== 'all') {
 // Date Range Filter
 $daterangeFilter = "";
 $hasExplicitDate = false;
+$t1 = "";
+$t2 = "";
 if (isset($reqData['daterange']) && !empty($reqData['daterange']) && $reqData['daterange'] !== 'null') {
     $dr = trim($reqData['daterange']);
     if (($ampPos = strpos($dr, '&')) !== false) {
@@ -127,27 +134,10 @@ if ($rawStatus !== '' && $rawStatus !== 'all') {
         // Status 16 (Cancelled) and status 4 (historical failed/cancelled) both represent cancelled enquiries
         $statusFilter = " AND e.enquiry_status IN (4, 16)";
     } elseif ($rawStatus === '9' || $rawStatus === 'itinerary_sent' || $rawStatus === 'quote_sent') {
-        // Status 9 represents Itinerary / Quotation Sent: match explicit status 9 OR enquiries with active quotations
-        $siteQuotationFilter = ($siteId > 0) ? " AND quotation_site_id = {$siteId}" : "";
-        $quoteDateClause     = (!empty($t1) && !empty($t2)) ? " AND quotation_time BETWEEN '{$t1}' AND '{$t2}'" : "";
-
-        if (!empty($t1) && !empty($t2)) {
-            $daterangeFilter = " AND (
-                (e.enquiry_time BETWEEN '{$t1}' AND '{$t2}' AND e.enquiry_status = 9)
-                OR e.enquiry_id IN (
-                    SELECT quotation_ref_id 
-                    FROM {$tblPrefix}quotation 
-                    WHERE quotation_status = 0{$siteQuotationFilter}{$quoteDateClause}
-                )
-            )";
-            $statusFilter = "";
-        } else {
-            $statusFilter = " AND (e.enquiry_status = 9 OR e.enquiry_id IN (
-                SELECT quotation_ref_id 
-                FROM {$tblPrefix}quotation 
-                WHERE quotation_status = 0{$siteQuotationFilter}
-            ))";
-        }
+        $statusFilter = " AND (e.enquiry_status = 9 OR (e.enquiry_status NOT IN (1, 6, 4, 5, 7, 15, 16, 17, 18) AND e.enquiry_id IN (SELECT quotation_ref_id FROM {$tblPrefix}quotation WHERE quotation_status = 0{$siteQuotationFilter})))";
+    } elseif (in_array((int)$rawStatus, [0, 2, 3], true)) {
+        $targetStatus = (int)$rawStatus;
+        $statusFilter = " AND e.enquiry_status = {$targetStatus} AND e.enquiry_id NOT IN (SELECT quotation_ref_id FROM {$tblPrefix}quotation WHERE quotation_status = 0{$siteQuotationFilter})";
     } else {
         $targetStatus = (int)$rawStatus;
         $statusFilter = " AND e.enquiry_status = {$targetStatus}";
@@ -206,19 +196,29 @@ $stats = [
     'fresh'     => 0,
     'pending'   => 0,
     'followup'  => 0,
+    'itinerary' => 0,
+    'payment'   => 0,
     'confirmed' => 0,
     'closed'    => 0,
 ];
 
 $statsQuery = "SELECT 
-    COUNT(*) AS total_count,
-    SUM(CASE WHEN e.enquiry_status = 0 THEN 1 ELSE 0 END) AS fresh_count,
-    SUM(CASE WHEN e.enquiry_status = 2 THEN 1 ELSE 0 END) AS pending_count,
-    SUM(CASE WHEN e.enquiry_status = 3 THEN 1 ELSE 0 END) AS followup_count,
+    COUNT(DISTINCT e.enquiry_id) AS total_count,
+    SUM(CASE WHEN e.enquiry_status = 0 AND q.quotation_id IS NULL THEN 1 ELSE 0 END) AS fresh_count,
+    SUM(CASE WHEN e.enquiry_status = 2 AND q.quotation_id IS NULL THEN 1 ELSE 0 END) AS pending_count,
+    SUM(CASE WHEN e.enquiry_status = 3 AND q.quotation_id IS NULL THEN 1 ELSE 0 END) AS followup_count,
+    SUM(CASE WHEN (e.enquiry_status = 9 OR (e.enquiry_status NOT IN (1, 6, 4, 5, 7, 15, 16, 17, 18) AND q.quotation_id IS NOT NULL)) THEN 1 ELSE 0 END) AS itinerary_count,
+    SUM(CASE WHEN e.enquiry_status = 6 THEN 1 ELSE 0 END) AS payment_count,
     SUM(CASE WHEN e.enquiry_status = 1 THEN 1 ELSE 0 END) AS confirmed_count,
     SUM(CASE WHEN e.enquiry_status IN (4, 5, 7, 15, 16, 17, 18) THEN 1 ELSE 0 END) AS closed_count
 FROM {$tblPrefix}enquiry e
-WHERE {$siteFilter}{$userFilter}{$statsDateFilter}";
+LEFT JOIN (
+    SELECT quotation_ref_id, MIN(quotation_id) AS quotation_id
+    FROM {$tblPrefix}quotation
+    WHERE quotation_status = 0{$siteQuotationFilter}
+    GROUP BY quotation_ref_id
+) q ON e.enquiry_id = q.quotation_ref_id
+WHERE {$siteFilter}{$userFilter}{$statsDateFilter}{$sourceFilter}";
 
 if (isset($connection) && ($sRes = mysqli_query($connection, $statsQuery))) {
     if ($sRow = mysqli_fetch_assoc($sRes)) {
@@ -226,6 +226,8 @@ if (isset($connection) && ($sRes = mysqli_query($connection, $statsQuery))) {
         $stats['fresh']     = (int)($sRow['fresh_count'] ?? 0);
         $stats['pending']   = (int)($sRow['pending_count'] ?? 0);
         $stats['followup']  = (int)($sRow['followup_count'] ?? 0);
+        $stats['itinerary'] = (int)($sRow['itinerary_count'] ?? 0);
+        $stats['payment']   = (int)($sRow['payment_count'] ?? 0);
         $stats['confirmed'] = (int)($sRow['confirmed_count'] ?? 0);
         $stats['closed']    = (int)($sRow['closed_count'] ?? 0);
     }
@@ -264,7 +266,8 @@ $leadsQuery = "SELECT
     p.profile_display_name AS agent_name,
     n.enquiry_notes_meta_type,
     n.enquiry_notes_meta_value,
-    MAX(CAST(q.quotation_price AS DECIMAL(15,2))) AS quotation_price
+    MAX(CAST(q.quotation_price AS DECIMAL(15,2))) AS quotation_price,
+    MAX(q.quotation_id) AS has_quotation
 FROM {$tblPrefix}enquiry e
 LEFT JOIN {$tblPrefix}profile p ON e.enquiry_agent = p.profile_user_id
 LEFT JOIN (
@@ -290,7 +293,13 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
         $fullName = trim($firstName . ' ' . $lastName);
         if (empty($fullName)) $fullName = 'Lead #' . $leadId;
 
-        $statusMeta = getLeadStatusMeta($row['enquiry_status']);
+        $rawSt = (int)$row['enquiry_status'];
+        $effectiveStatus = $rawSt;
+        if (!in_array($rawSt, [1, 6, 4, 5, 7, 15, 16, 17, 18], true) && !empty($row['has_quotation'])) {
+            $effectiveStatus = 9;
+        }
+
+        $statusMeta = getLeadStatusMeta($effectiveStatus);
 
         $agentId = (int)($row['enquiry_agent'] ?? 0);
         $agentName = !empty($row['agent_name']) ? trim($row['agent_name']) : '';
@@ -311,7 +320,7 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
             'subject'          => !empty($row['enquiry_subject']) ? ucwords(strtolower(trim($row['enquiry_subject']))) : 'Tour Package Enquiry',
             'source'           => cleanLeadSource($row['enquiry_source'] ?? ''),
             'source_raw'       => trim($row['enquiry_source'] ?? ''),
-            'status'           => (int)$row['enquiry_status'],
+            'status'           => $effectiveStatus,
             'status_label'     => $statusMeta['label'],
             'status_class'     => $statusMeta['class'],
             'status_icon'      => $statusMeta['icon'],

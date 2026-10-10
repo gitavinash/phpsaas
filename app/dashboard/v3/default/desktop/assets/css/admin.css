@@ -32457,7 +32457,7 @@ body.v3-editor-fs-locked {
 #settingAppConfigApp .v3-input-icon-wrap .select2-container--default .select2-selection--single .select2-selection__arrow,
 #settingAppConfigApp .v3-input-icon-wrap .select2-selection__arrow {
   position: absolute !important;
-  top: 10 !important;
+  top: 0 !important;
   bottom: 0 !important;
   right: 10px !important;
   width: 20px !important;
@@ -32513,6 +32513,34 @@ body.v3-editor-fs-locked {
 }
 
 /* ---- V3 Aside Menu Plugins & Integration Presentation ---- */
+nav.side-nav ul li.aside-item-plugins > a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 8px !important;
+  min-width: 0 !important;
+}
+
+nav.side-nav ul li.aside-item-plugins > a i {
+  font-size: 14px !important;
+  width: 16px !important;
+  min-width: 16px !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
+
+nav.side-nav ul li.aside-item-plugins > a .aside-menu-text {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 11.8px !important;
+  letter-spacing: -0.15px !important;
+  line-height: 1.2 !important;
+}
+
 nav.side-nav ul li .side-menu.aside-menu-plugins {
   width: 225px !important;
 }
@@ -32529,6 +32557,9 @@ nav.side-nav ul li .side-menu::-webkit-scrollbar-thumb {
 .aside-badge-plugin-count {
   display: inline-flex !important;
   align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
   font-size: 9px !important;
   font-weight: 700 !important;
   padding: 2px 6px !important;

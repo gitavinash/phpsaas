@@ -287,53 +287,7 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                     </div>
                 </div>
 
-                <!-- Card 4: Client Proposal Delivery & Communication -->
-                <div class="v3-card-section">
-                    <div class="v3-card-header">
-                        <div class="v3-card-header-icon purple">
-                            <i class="fi fi-rr-paper-plane"></i>
-                        </div>
-                        <div class="v3-card-header-text">
-                            <h3>Client Proposal Delivery &amp; Communication</h3>
-                            <p>Configure default delivery channel and pricing presentation format for quotations and tour proposals.</p>
-                        </div>
-                    </div>
-
-                    <div class="v3-card-body">
-                        <div class="v3-form-grid">
-                            <!-- Default Proposal Sharing Channel -->
-                            <div class="v3-form-group">
-                                <label for="cfgProposalDeliveryChannel" class="v3-form-label">
-                                    Default Proposal Sharing Mode
-                                </label>
-                                <div class="v3-input-icon-wrap">
-                                    <i class="fi fi-rr-share input-icon"></i>
-                                    <select id="cfgProposalDeliveryChannel" name="proposal_delivery_channel" class="v3-form-select selectJS">
-                                        <option value="whatsapp" selected>WhatsApp Direct (Pre-filled chat message with proposal link)</option>
-                                        <option value="email">Email Notification (Email with attached PDF proposal)</option>
-                                        <option value="web_link">Interactive Web Link (Mobile-friendly client approval portal)</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Quotation Price Display Mode -->
-                            <div class="v3-form-group">
-                                <label for="cfgQuotationPriceDisplay" class="v3-form-label">
-                                    Quotation Price Presentation
-                                </label>
-                                <div class="v3-input-icon-wrap">
-                                    <i class="fi fi-rr-eye input-icon"></i>
-                                    <select id="cfgQuotationPriceDisplay" name="quotation_price_display" class="v3-form-select selectJS">
-                                        <option value="lump_sum" selected>Lump-Sum Total (Displays overall package cost only)</option>
-                                        <option value="itemized">Itemized Breakdown (Displays service-wise &amp; day-wise costs)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5: Fleet & Transport Tariff Preferences (Conditional: Only visible if Transporter) -->
+                <!-- Card 4: Fleet & Transport Tariff Preferences (Conditional: Only visible if Transporter) -->
                 <div class="v3-card-section is-hidden" id="cardFleetTariffPreferences">
                     <div class="v3-card-header">
                         <div class="v3-card-header-icon amber">
@@ -362,16 +316,44 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                                 </div>
                             </div>
 
-                            <!-- Toll, State Tax & Parking Policy -->
+                            <!-- Toll & State Border Tax Policy -->
                             <div class="v3-form-group">
                                 <label for="cfgTransporterTollPolicy" class="v3-form-label">
-                                    Toll, State Border Tax &amp; Parking Policy
+                                    Toll &amp; State Border Entry Tax Policy
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-road input-icon"></i>
                                     <select id="cfgTransporterTollPolicy" name="transporter_toll_policy" class="v3-form-select selectJS">
-                                        <option value="included" selected>Included in Quoted Price</option>
+                                        <option value="included" selected>Included in Quoted Tariff</option>
                                         <option value="extra">Excluded (Billed extra as per actual receipts)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Parking Charges Policy -->
+                            <div class="v3-form-group">
+                                <label for="cfgTransporterParkingPolicy" class="v3-form-label">
+                                    Parking Charges Policy
+                                </label>
+                                <div class="v3-input-icon-wrap">
+                                    <i class="fi fi-rr-parking input-icon"></i>
+                                    <select id="cfgTransporterParkingPolicy" name="transporter_parking_policy" class="v3-form-select selectJS">
+                                        <option value="extra" selected>Excluded by Default (Guest pays actuals)</option>
+                                        <option value="included">Included in Quoted Price</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Garage to Garage Calculation Policy -->
+                            <div class="v3-form-group">
+                                <label for="cfgTransporterGaragePolicy" class="v3-form-label">
+                                    Garage to Garage Distance &amp; Time Calculation
+                                </label>
+                                <div class="v3-input-icon-wrap">
+                                    <i class="fi fi-rr-marker input-icon"></i>
+                                    <select id="cfgTransporterGaragePolicy" name="transporter_garage_policy" class="v3-form-select selectJS">
+                                        <option value="included" selected>Calculated Garage to Garage (Standard)</option>
+                                        <option value="pickup_point">Calculated from First Pickup Point</option>
                                     </select>
                                 </div>
                             </div>
@@ -393,7 +375,7 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                     </div>
                 </div>
 
-                <!-- Card 6: Lead View Actions & Controls -->
+                <!-- Card 5: Lead View Actions & Controls -->
                 <div class="v3-card-section">
                     <div class="v3-card-header">
                         <div class="v3-card-header-icon teal">
@@ -568,10 +550,6 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                         <div class="v3-preview-detail-row">
                             <span class="v3-preview-detail-label">Currency &amp; Tax:</span>
                             <span class="v3-preview-detail-val" id="previewCurrencyText">INR (₹) • Exclusive</span>
-                        </div>
-                        <div class="v3-preview-detail-row">
-                            <span class="v3-preview-detail-label">Proposal Sharing:</span>
-                            <span class="v3-preview-detail-val" id="previewProposalChannel">WhatsApp Direct</span>
                         </div>
                         <div class="v3-preview-detail-row">
                             <span class="v3-preview-detail-label">Quotation Validity:</span>

@@ -69,7 +69,10 @@ $managedKeys = [
     'quotation_price_display',
     'transporter_tariff_mode',
     'transporter_toll_policy',
+    'transporter_parking_policy',
+    'transporter_garage_policy',
     'transporter_driver_allowance',
+    'transporter_billing_terms',
     'lead_view_show_payment_link',
     'lead_view_show_record_payment',
     'lead_view_show_convert_sale',
@@ -108,6 +111,8 @@ if ($method === 'GET') {
     $data['quotation_price_display']      = 'lump_sum';
     $data['transporter_tariff_mode']      = 'per_km';
     $data['transporter_toll_policy']      = 'included';
+    $data['transporter_parking_policy']   = 'extra';
+    $data['transporter_garage_policy']    = 'included';
     $data['transporter_driver_allowance'] = 'included';
     $data['lead_view_show_payment_link']  = '1';
     $data['lead_view_show_record_payment'] = '1';
@@ -223,6 +228,16 @@ if ($method === 'POST' || $method === 'PUT') {
         $transporterTollPolicy = 'included';
     }
 
+    $transporterParkingPolicy = strtolower(trim($data['transporter_parking_policy'] ?? 'extra'));
+    if (!in_array($transporterParkingPolicy, ['extra', 'included'])) {
+        $transporterParkingPolicy = 'extra';
+    }
+
+    $transporterGaragePolicy = strtolower(trim($data['transporter_garage_policy'] ?? 'included'));
+    if (!in_array($transporterGaragePolicy, ['included', 'pickup_point'])) {
+        $transporterGaragePolicy = 'included';
+    }
+
     $transporterDriverAllowance = strtolower(trim($data['transporter_driver_allowance'] ?? 'included'));
     if (!in_array($transporterDriverAllowance, ['included', 'extra'])) {
         $transporterDriverAllowance = 'included';
@@ -252,6 +267,8 @@ if ($method === 'POST' || $method === 'PUT') {
         'quotation_price_display'      => $quotationPriceDisplay,
         'transporter_tariff_mode'      => $transporterTariffMode,
         'transporter_toll_policy'      => $transporterTollPolicy,
+        'transporter_parking_policy'   => $transporterParkingPolicy,
+        'transporter_garage_policy'    => $transporterGaragePolicy,
         'transporter_driver_allowance' => $transporterDriverAllowance,
         'lead_view_show_payment_link'  => $leadViewPaymentLink,
         'lead_view_show_record_payment'=> $leadViewRecordPayment,

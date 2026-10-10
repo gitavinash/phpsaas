@@ -1434,8 +1434,8 @@ $(document).ready(function (e) {
   function renderKanbanCard(item, st) {
     if (!item) return "";
     const s = parseInt(item.status !== undefined ? item.status : st, 10);
-    // Explicit exclusion: Never render Closed / Lost / Cancelled / Duplicate leads (statuses 4, 5, 6, 7, 8)
-    if ([4, 5, 6, 7, 8].includes(s) || ![0, 1, 2, 3].includes(s)) {
+    // Explicit exclusion: Never render Closed / Lost / Cancelled / Duplicate leads
+    if ([4, 5, 7, 8, 15, 16, 17, 18].includes(s) || ![0, 1, 2, 3, 6, 9].includes(s)) {
       return "";
     }
 
@@ -4741,6 +4741,22 @@ $(document).ready(function (e) {
               typeof window.V3LeadView.init === "function"
             ) {
               window.V3LeadView.init();
+            }
+          },
+        );
+      }
+
+      if (window.TransporterQuoteApp && typeof window.TransporterQuoteApp.init === "function") {
+        window.TransporterQuoteApp.init();
+      } else {
+        ensureScriptLoaded(
+          ADMIN_JS + "transporter-quote.js?v=" + Date.now(),
+          function () {
+            if (
+              window.TransporterQuoteApp &&
+              typeof window.TransporterQuoteApp.init === "function"
+            ) {
+              window.TransporterQuoteApp.init();
             }
           },
         );

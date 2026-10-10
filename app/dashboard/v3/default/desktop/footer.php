@@ -125,6 +125,8 @@
 				<script src="<?php echo ADMIN_JS ?>user-form.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>leads.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>leads-add.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>lead-view.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>transporter-quote.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>report-employees.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>settings.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>company-list.js?v=<?php echo time(); ?>"></script>

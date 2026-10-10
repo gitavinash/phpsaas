@@ -125,9 +125,13 @@ $newStatus = $curStatus;
 
 if (!empty($followupTime)) {
     $fTimeFormatted = date('Y-m-d H:i:s', strtotime($followupTime));
-    $updateFields[] = "enquiry_status = 3"; // Follow-Up status
     $updateFields[] = "enquiry_followup = '{$fTimeFormatted}'";
-    $newStatus = 3;
+    // Only move to status 3 if currently in fresh (0) or assigned (2)
+    // Do not demote leads that are already at Itinerary Sent (9), Payment Requested (6), or Confirmed (1)
+    if ($curStatus === 0 || $curStatus === 2) {
+        $updateFields[] = "enquiry_status = 3"; // Follow-Up status
+        $newStatus = 3;
+    }
 } elseif ($isFinalNote) {
     $closeStatus = isset($_POST['close_status']) ? (int)$_POST['close_status'] : (isset($_POST['status']) ? (int)$_POST['status'] : 4);
     if (!in_array($closeStatus, [4, 5, 15, 16, 17, 18], true)) {

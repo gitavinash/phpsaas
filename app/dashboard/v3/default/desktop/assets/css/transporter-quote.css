@@ -1,0 +1,686 @@
+/**
+ * Transporter Quotation Builder Styles
+ * Path: app/dashboard/v3/default/desktop/assets/css/transporter-quote.css
+ */
+
+.v3-modal-dialog.v3-modal-dialog-tq,
+.v3-modal-overlay#modalSendTransporterQuotation .v3-modal-dialog {
+    max-width: 980px !important;
+    width: 92% !important;
+    max-height: 92vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.tq-modal-body {
+    padding: 24px 28px;
+    overflow-y: auto;
+    max-height: calc(92vh - 145px);
+    background-color: #f8fafc;
+}
+
+/* Section Cards */
+.tq-section-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tq-section-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+.tq-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.tq-section-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tq-section-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.tq-section-icon.blue {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+}
+
+.tq-section-icon.teal {
+    background: rgba(13, 148, 136, 0.1);
+    color: #0d9488;
+}
+
+.tq-section-icon.amber {
+    background: rgba(217, 119, 6, 0.1);
+    color: #d97706;
+}
+
+.tq-section-icon.emerald {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.tq-section-icon.purple {
+    background: rgba(147, 51, 234, 0.1);
+    color: #9333ea;
+}
+
+.tq-section-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.tq-section-subtitle {
+    margin: 2px 0 0 0;
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Grids */
+.tq-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.tq-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.tq-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+/* Form Groups & Inputs */
+.tq-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tq-form-group.span-full {
+    grid-column: 1 / -1;
+}
+
+.tq-form-label {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tq-form-label .req {
+    color: #ef4444;
+}
+
+.tq-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.tq-input-wrap .tq-input-prefix {
+    position: absolute;
+    left: 12px;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.tq-input-wrap .tq-input-suffix {
+    position: absolute;
+    right: 12px;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.tq-input-wrap input.has-prefix {
+    padding-left: 32px;
+}
+
+.tq-input-wrap input.has-suffix {
+    padding-right: 48px;
+}
+
+.tq-form-control {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 13.5px;
+    color: #1e293b;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.tq-form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.tq-form-control:disabled,
+.tq-form-control[readonly]:not(.v3-single-datepicker-input) {
+    background-color: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+/* Datepicker & Iconized Inputs */
+.tq-input-with-icon {
+    position: relative;
+    width: 100%;
+}
+
+.tq-input-with-icon .tq-input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: #64748b;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.tq-input-with-icon .tq-form-control {
+    padding-left: 36px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #1e293b;
+}
+
+.tq-form-control.v3-single-datepicker-input[readonly] {
+    background-color: #ffffff;
+    color: #1e293b;
+    cursor: pointer;
+}
+
+/* Ensure daterangepicker popup renders cleanly above the modal */
+.daterangepicker {
+    z-index: 100060 !important;
+}
+
+/* Select2 for All Dropdowns in Transporter Modal */
+#modalSendTransporterQuotation .select2-container {
+    width: 100% !important;
+}
+
+#modalSendTransporterQuotation .select2-container .select2-selection--single {
+    height: 40px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 10px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#modalSendTransporterQuotation .select2-container--open .select2-selection--single,
+#modalSendTransporterQuotation .select2-container .select2-selection--single:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+    outline: none !important;
+}
+
+#modalSendTransporterQuotation .select2-container .select2-selection__rendered {
+    color: #1e293b !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    line-height: normal !important;
+    padding-left: 0 !important;
+}
+
+#modalSendTransporterQuotation .select2-container .select2-selection__placeholder {
+    color: #94a3b8 !important;
+    font-weight: 400 !important;
+}
+
+#modalSendTransporterQuotation .select2-container .select2-selection__arrow {
+    height: 38px !important;
+    right: 10px !important;
+}
+
+#modalSendTransporterQuotation .select2-dropdown {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+    z-index: 100050 !important;
+    overflow: hidden !important;
+}
+
+#modalSendTransporterQuotation .select2-results__option {
+    padding: 8px 12px !important;
+    font-size: 13.5px !important;
+    color: #1e293b !important;
+}
+
+#modalSendTransporterQuotation .select2-results__option--highlighted[aria-selected] {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+}
+
+#modalSendTransporterQuotation .select2-results__option[aria-selected="true"] {
+    background-color: #eff6ff !important;
+    color: #1d4ed8 !important;
+    font-weight: 600 !important;
+}
+
+/* Financial Summary Badges */
+.tq-balance-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+}
+
+.tq-balance-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+}
+
+.tq-balance-val {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.tq-balance-val.positive {
+    color: #16a34a;
+}
+
+/* Segmented Toggles for Billing Terms */
+.tq-terms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tq-term-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.tq-term-row:hover {
+    background: #ffffff;
+    border-color: #cbd5e1;
+}
+
+.tq-term-meta {
+    flex: 1;
+    padding-right: 18px;
+}
+
+.tq-term-title {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tq-term-desc {
+    margin: 3px 0 0 0;
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+/* Radio Pill Segmented Toggle */
+.tq-segmented-toggle {
+    display: inline-flex;
+    background: #e2e8f0;
+    border-radius: 20px;
+    padding: 2px;
+    position: relative;
+    user-select: none;
+}
+
+.tq-segmented-toggle label {
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0;
+}
+
+.tq-segmented-toggle input[type="radio"] {
+    display: none;
+}
+
+.tq-segmented-toggle input[type="radio"]:checked + label {
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tq-segmented-toggle input[type="radio"][value="yes"]:checked + label {
+    color: #16a34a;
+}
+
+.tq-segmented-toggle input[type="radio"][value="no"]:checked + label {
+    color: #dc2626;
+}
+
+/* Dynamic Custom Rules Repeater */
+.tq-rules-repeater-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.tq-rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+}
+
+.tq-rule-item.is-disabled {
+    opacity: 0.6;
+    background: #f1f5f9;
+}
+
+.tq-rule-item-check {
+    margin-top: 4px;
+}
+
+.tq-rule-item-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tq-rule-item-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    border: none;
+    background: transparent;
+    padding: 0;
+    outline: none;
+    width: 100%;
+}
+
+.tq-rule-item-desc {
+    font-size: 12px;
+    color: #64748b;
+    border: none;
+    background: transparent;
+    padding: 0;
+    outline: none;
+    width: 100%;
+}
+
+.tq-rule-item-title:focus,
+.tq-rule-item-desc:focus {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+
+.tq-rule-delete-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.15s ease;
+}
+
+.tq-rule-delete-btn:hover {
+    color: #ef4444;
+}
+
+.tq-rules-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 8px;
+}
+
+/* Modal Footer Actions */
+.tq-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    border-top: 1px solid #e2e8f0;
+    background: #ffffff;
+}
+
+.tq-footer-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #475569;
+}
+
+.tq-footer-summary strong {
+    font-size: 16px;
+    color: #0f172a;
+}
+
+.tq-footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* WhatsApp Share Modal */
+.tq-wa-icon-box {
+    background: rgba(37, 211, 102, 0.12);
+    color: #25d366;
+}
+
+.tq-wa-intro-text {
+    margin-bottom: 10px;
+    font-size: 13.5px;
+    color: #475569;
+}
+
+.tq-wa-modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tq-wa-modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.tq-wa-send-btn {
+    background: #25d366 !important;
+    border-color: #25d366 !important;
+    color: #ffffff !important;
+}
+
+#modalTransporterQuoteShare .tq-wa-preview-box {
+    background: #eef2f5;
+    border-radius: 10px;
+    padding: 16px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #1e293b;
+    white-space: pre-wrap;
+    max-height: 280px;
+    overflow-y: auto;
+    border: 1px solid #cbd5e1;
+}
+
+/* Transporter Quotation Live Proposal Preview Modal */
+.v3-modal-dialog.v3-modal-dialog-tq-preview,
+.v3-modal-overlay#modalTransporterQuotePreview .v3-modal-dialog {
+    max-width: 980px !important;
+    width: 94% !important;
+    height: 94vh !important;
+    max-height: 94vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+.tq-preview-modal-body {
+    flex: 1 1 auto;
+    overflow: hidden;
+    position: relative;
+    background: #e2e8f0;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.tq-live-preview-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    flex: 1 1 auto;
+    background: #ffffff;
+}
+
+.icon-tq-preview {
+    background: rgba(37, 99, 235, 0.12) !important;
+    color: #2563eb !important;
+}
+
+@media (max-width: 768px) {
+    .tq-grid-2,
+    .tq-grid-3,
+    .tq-grid-4 {
+        grid-template-columns: 1fr;
+    }
+    .tq-modal-body {
+        padding: 16px;
+    }
+    .tq-modal-footer {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .tq-footer-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+/* ==========================================================================
+   Business Nature Conditional Display & Select2 Styles for Edit Lead Modal
+   ========================================================================== */
+
+.is-nature-transporter .only-travel-agency {
+    display: none !important;
+}
+
+.is-nature-travel-agency .only-transporter {
+    display: none !important;
+}
+
+/* Reorder logistics fields when business nature is travel agency */
+.is-nature-travel-agency #editLeadLogisticsGrid #editLeadPackageWrap { order: 1; }
+.is-nature-travel-agency #editLeadLogisticsGrid #editLeadSubjectWrap { order: 2; }
+.is-nature-travel-agency #editLeadLogisticsGrid #editLeadTravelDateWrap { order: 3; }
+.is-nature-travel-agency #editLeadLogisticsGrid #editLeadDurationWrap { order: 4; }
+.is-nature-travel-agency #editLeadLogisticsGrid #editLeadPickupWrap { order: 5; }
+.is-nature-travel-agency #editLeadLogisticsGrid #editLeadDropWrap { order: 6; }
+
+/* Select2 Form Controls inside #modalEditLead */
+#modalEditLead .select2-container {
+    width: 100% !important;
+}
+
+#modalEditLead .select2-container--default .select2-selection--single {
+    height: 40px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 12px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+#modalEditLead .select2-container--default.select2-container--focus .select2-selection--single,
+#modalEditLead .select2-container--default.select2-container--open .select2-selection--single {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+}
+
+#modalEditLead .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #1e293b !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    padding: 0 !important;
+    line-height: normal !important;
+}
+
+#modalEditLead .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 38px !important;
+    right: 8px !important;
+}
+

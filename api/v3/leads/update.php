@@ -246,6 +246,12 @@ $existingMsg['current_location'] = $currentLocation;
 $existingMsg['pickup_location'] = $pickupLocation;
 $existingMsg['drop_location'] = $dropLocation;
 $existingMsg['requirements'] = $requirements;
+
+if (!empty($inputData['trip_type']))     $existingMsg['trip_type'] = trim($inputData['trip_type']);
+if (!empty($inputData['vehicle_type']))  $existingMsg['vehicle_type'] = trim($inputData['vehicle_type']);
+if (!empty($inputData['vehicle_model'])) $existingMsg['vehicle_model'] = trim($inputData['vehicle_model']);
+if (isset($inputData['luggage_bags']))   $existingMsg['luggage_bags'] = intval($inputData['luggage_bags']);
+
 $newMsgEsc = mysqli_real_escape_string($connection, json_encode($existingMsg));
 
 mysqli_query($connection, "START TRANSACTION");

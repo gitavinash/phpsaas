@@ -1452,13 +1452,11 @@
             if (d.lead_default_followup_hours) $("#cfgLeadFollowupHours").val(d.lead_default_followup_hours).trigger("change.select2");
             if (d.lead_sla_inactivity_hours) $("#cfgLeadSlaHours").val(d.lead_sla_inactivity_hours).trigger("change.select2");
 
-            // Proposal & Delivery
-            if (d.proposal_delivery_channel) $("#cfgProposalDeliveryChannel").val(d.proposal_delivery_channel).trigger("change.select2");
-            if (d.quotation_price_display) $("#cfgQuotationPriceDisplay").val(d.quotation_price_display).trigger("change.select2");
-
             // Fleet & Transport Tariff
             if (d.transporter_tariff_mode) $("#cfgTransporterTariffMode").val(d.transporter_tariff_mode).trigger("change.select2");
             if (d.transporter_toll_policy) $("#cfgTransporterTollPolicy").val(d.transporter_toll_policy).trigger("change.select2");
+            if (d.transporter_parking_policy) $("#cfgTransporterParkingPolicy").val(d.transporter_parking_policy).trigger("change.select2");
+            if (d.transporter_garage_policy) $("#cfgTransporterGaragePolicy").val(d.transporter_garage_policy).trigger("change.select2");
             if (d.transporter_driver_allowance) $("#cfgTransporterDriverAllowance").val(d.transporter_driver_allowance).trigger("change.select2");
 
             // Lead View Visibility Toggles
@@ -1570,11 +1568,6 @@
       const taxLabel = taxMode === "inclusive" ? "Inclusive Tax" : (taxMode === "exempt" ? "Tax Exempt" : "Exclusive Tax");
       $("#previewCurrencyText").text(`${curr} (${sym}) • ${taxLabel}`);
 
-      // Proposal Channel Preview
-      const chan = $("#cfgProposalDeliveryChannel").val() || "whatsapp";
-      const chanLabel = chan === "email" ? "Email PDF" : (chan === "web_link" ? "Web Link Portal" : "WhatsApp Direct");
-      $("#previewProposalChannel").text(chanLabel);
-
       // Validity Preview
       const valDays = $("#cfgQuotationValidityDays").val() || "7";
       $("#previewValidityText").text(`${valDays} Days`);
@@ -1649,13 +1642,13 @@
         lead_assignment_mode: $("#cfgLeadAssignmentMode").val(),
         lead_default_followup_hours: $("#cfgLeadFollowupHours").val(),
         lead_sla_inactivity_hours: $("#cfgLeadSlaHours").val(),
-        proposal_delivery_channel: $("#cfgProposalDeliveryChannel").val(),
-        quotation_price_display: $("#cfgQuotationPriceDisplay").val(),
         transporter_tariff_mode: $("#cfgTransporterTariffMode").val(),
         transporter_toll_policy: $("#cfgTransporterTollPolicy").val(),
+        transporter_parking_policy: $("#cfgTransporterParkingPolicy").val(),
+        transporter_garage_policy: $("#cfgTransporterGaragePolicy").val(),
         transporter_driver_allowance: $("#cfgTransporterDriverAllowance").val(),
-        lead_view_show_send_itinerary: (!isTransporter && $("#cfgLeadViewSendItinerary").is(":checked")) ? "1" : "0",
-        lead_view_show_send_quotation: (isTransporter && $("#cfgLeadViewSendQuotation").is(":checked")) ? "1" : "0",
+        lead_view_show_send_itinerary: $("#cfgLeadViewSendItinerary").is(":checked") ? "1" : "0",
+        lead_view_show_send_quotation: $("#cfgLeadViewSendQuotation").is(":checked") ? "1" : "0",
         lead_view_show_payment_link: $("#cfgLeadViewPaymentLink").is(":checked") ? "1" : "0",
         lead_view_show_record_payment: $("#cfgLeadViewRecordPayment").is(":checked") ? "1" : "0",
         lead_view_show_convert_sale: $("#cfgLeadViewConvertSale").is(":checked") ? "1" : "0",

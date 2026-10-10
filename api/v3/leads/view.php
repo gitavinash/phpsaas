@@ -871,6 +871,10 @@ $response = [
             'drop_location' => $dropLocation,
             'destination' => $destinationCity,
             'requirements' => $requirements,
+            'trip_type' => $extraDetails['trip_type'] ?? 'outstation_round',
+            'vehicle_type' => $extraDetails['vehicle_type'] ?? ($extraDetails['vehicle']['type'] ?? ''),
+            'vehicle_model' => $extraDetails['vehicle_model'] ?? ($extraDetails['vehicle']['title'] ?? ''),
+            'luggage_bags' => (int)($extraDetails['luggage_bags'] ?? 0),
             'custom_fields' => $extraDetails,
         ],
 
@@ -909,7 +913,9 @@ if ($effectiveSiteId > 0 && isset($connection)) {
         'lead_view_show_send_quotation',
         'company_nature',
         'currency_symbol',
-        'currency_default'
+        'currency_default',
+        'advance_payment_percent',
+        'transporter_billing_terms'
     ];
     $cfgKeyList = "'" . implode("','", $cfgKeys) . "'";
     $cfgRes = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM {$tblPrefix}site_configuration WHERE site_configuration_site_id = {$effectiveSiteId} AND site_configuration_key IN ({$cfgKeyList}) AND site_configuration_status = 1");
@@ -923,10 +929,14 @@ if ($effectiveSiteId > 0 && isset($connection)) {
 $effectiveCompanyNature = !empty($siteConfigs['company_nature']) ? strtolower($siteConfigs['company_nature']) : (defined('COMPANY_NATURE') ? strtolower(COMPANY_NATURE) : 'travel_agency');
 $effectiveCurrencySymbol = !empty($siteConfigs['currency_symbol']) ? $siteConfigs['currency_symbol'] : (defined('CURRENCY_SYMBOL') ? CURRENCY_SYMBOL : '₹');
 $effectiveCurrencyDefault = !empty($siteConfigs['currency_default']) ? $siteConfigs['currency_default'] : (defined('CURRENCY_DEFAULT') ? CURRENCY_DEFAULT : 'INR');
+$effectiveAdvancePercent = !empty($siteConfigs['advance_payment_percent']) ? (float)$siteConfigs['advance_payment_percent'] : (defined('ADVANCE_PAYMENT_PERCENT') ? (float)ADVANCE_PAYMENT_PERCENT : 25);
+$effectiveTransporterTerms = !empty($siteConfigs['transporter_billing_terms']) ? json_decode($siteConfigs['transporter_billing_terms'], true) : null;
 
 $response['data']['company_nature'] = $effectiveCompanyNature;
 $response['data']['currency_symbol'] = $effectiveCurrencySymbol;
 $response['data']['currency_default'] = $effectiveCurrencyDefault;
+$response['data']['advance_payment_percent'] = $effectiveAdvancePercent;
+$response['data']['transporter_billing_terms'] = $effectiveTransporterTerms;
 $response['data']['lead_view_options'] = [
     'show_payment_link'    => isset($siteConfigs['lead_view_show_payment_link']) ? ($siteConfigs['lead_view_show_payment_link'] !== '0') : (defined('LEAD_VIEW_SHOW_PAYMENT_LINK') ? (LEAD_VIEW_SHOW_PAYMENT_LINK !== '0') : true),
     'show_record_payment'  => isset($siteConfigs['lead_view_show_record_payment']) ? ($siteConfigs['lead_view_show_record_payment'] !== '0') : (defined('LEAD_VIEW_SHOW_RECORD_PAYMENT') ? (LEAD_VIEW_SHOW_RECORD_PAYMENT !== '0') : true),

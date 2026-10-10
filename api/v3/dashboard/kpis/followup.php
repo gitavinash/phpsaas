@@ -16,9 +16,10 @@ $siteId     = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $userId     = defined('USER_ID')      ? (int) USER_ID : 0;
 $accessType = isset($site_access_type) ? $site_access_type : 'customer';
 
-$siteFilter = ($siteId > 0) ? "enquiry_site_id = {$siteId}" : "1=1";
+$siteFilter = ($siteId > 0) ? "e.enquiry_site_id = {$siteId}" : "1=1";
+$siteQuotationFilter = ($siteId > 0) ? " AND quotation_site_id = {$siteId}" : "";
 $userFilter = ($accessType !== 'administrator' && $userId > 0)
-    ? " AND (enquiry_agent = '{$userId}')"
+    ? " AND (e.enquiry_agent = '{$userId}')"
     : "";
 
 $daterangeFilter = "";
@@ -36,13 +37,16 @@ if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'
         $t2 = date('Y-m-d 23:59:59', strtotime(trim($dates[1])));
     }
 }
-$daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
+$daterangeFilter = " AND e.enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
 
 $count = 0;
-$sql = "SELECT COUNT(*) AS cnt
-        FROM {$tblPrefix}enquiry
+$sql = "SELECT COUNT(DISTINCT e.enquiry_id) AS cnt
+        FROM {$tblPrefix}enquiry e
         WHERE {$siteFilter}{$userFilter}{$daterangeFilter}
-          AND enquiry_status = 3";
+          AND e.enquiry_status = 3
+          AND e.enquiry_id NOT IN (
+              SELECT quotation_ref_id FROM {$tblPrefix}quotation WHERE quotation_status = 0{$siteQuotationFilter}
+          )";
 
 if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
     if ($row = mysqli_fetch_assoc($res)) {

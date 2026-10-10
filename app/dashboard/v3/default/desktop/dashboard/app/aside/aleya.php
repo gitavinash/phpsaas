@@ -304,8 +304,8 @@ if ($site_access_type == 'administrator' || $site_access_type == 'digital_market
         <p>Plugins &amp; Integrations<span>Active &amp; Available Addons</span></p>
     </li>
 
-    <li <?php echo (strpos($currentUrl, '/integration/') !== false && strpos($currentUrl, '/integration/whatsapp_web') === false ? 'class="active"' : ''); ?>>
-        <a href="/dashboard/integration/"><i class="fi fi-rr-plug-connection"></i> Plugins &amp; Integrations <span class="aside-badge-plugin-count"><?php echo $activePluginCount; ?> Active</span></a>
+    <li class="aside-item-plugins<?php echo (strpos($currentUrl, '/integration/') !== false && strpos($currentUrl, '/integration/whatsapp_web') === false ? ' active' : ''); ?>">
+        <a href="/dashboard/integration/"><i class="fi fi-rr-plug-connection"></i> <span class="aside-menu-text">Plugins &amp; Integrations</span> <span class="aside-badge-plugin-count"><?php echo $activePluginCount; ?> Active</span></a>
         <div class="side-menu aside-menu-plugins">
             <ul>
                 <li><a href="/dashboard/integration/"><i class="fi fi-rr-apps-sort"></i> <strong>All Plugins Directory</strong></a></li>

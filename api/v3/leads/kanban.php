@@ -5,13 +5,13 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 header("Expires: 0");
 
-require_once LOGIN_CHECK;
 if (!isset($connection)) {
     $configPath = $_SERVER['DOCUMENT_ROOT'] . '/lib/configuration/index.php';
     if (file_exists($configPath)) {
         require_once $configPath;
     }
 }
+require_once LOGIN_CHECK;
 
 $tblPrefix  = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
 $siteId     = defined('SITE_ID')      ? (int) SITE_ID : 0;
@@ -28,13 +28,31 @@ if ($accessType === 'digital_marketing') {
     exit;
 }
 
-$siteFilter = ($siteId > 0) ? "enquiry_site_id = {$siteId}" : "1=1";
-$userFilter = ($accessType !== 'administrator' && $userId > 0)
-    ? " AND (enquiry_agent = '{$userId}')"
+$userRole = strtolower(isset($site_access_type) ? $site_access_type : ($accessType ?? ''));
+$isPrivilegedUser = in_array($userRole, ['administrator', 'admin', 'superadmin', 'operations', 'owner'], true);
+$isCallingAgent = in_array($userRole, ['agent', 'calling_agent', 'sales_executive'], true);
+
+$siteFilter = ($siteId > 0) ? "e.enquiry_site_id = {$siteId}" : "1=1";
+$siteQuotationFilter = ($siteId > 0) ? " AND quotation_site_id = {$siteId}" : "";
+$userFilter = (!$isPrivilegedUser && $userId > 0)
+    ? " AND (e.enquiry_agent = '{$userId}')"
     : "";
+
+// Specific agent filter from request
+$reqAgent = $_GET['agentId'] ?? ($_GET['agent_id'] ?? ($_GET['agent'] ?? ''));
+if ($reqAgent !== '' && $reqAgent !== 'all') {
+    if ($reqAgent === '0' || $reqAgent === 'unassigned') {
+        $userFilter .= " AND (e.enquiry_agent = '0' OR e.enquiry_agent = '' OR e.enquiry_agent IS NULL)";
+    } elseif (is_numeric($reqAgent) && (int)$reqAgent > 0) {
+        $filterAgentId = (int)$reqAgent;
+        $userFilter .= " AND e.enquiry_agent = '{$filterAgentId}'";
+    }
+}
 
 $daterangeFilter = "";
 $hasExplicitDate = false;
+$t1 = "";
+$t2 = "";
 if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'] !== 'null') {
     $dr = trim($_GET['daterange']);
     if (($ampPos = strpos($dr, '&')) !== false) {
@@ -51,7 +69,7 @@ if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'
             if ($parsedT1 && $parsedT2) {
                 $t1 = date('Y-m-d 00:00:00', $parsedT1);
                 $t2 = date('Y-m-d 23:59:59', $parsedT2);
-                $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
+                $daterangeFilter = " AND e.enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
                 $hasExplicitDate = true;
             }
         }
@@ -62,31 +80,38 @@ if (isset($_GET['daterange']) && !empty($_GET['daterange']) && $_GET['daterange'
 if (!$hasExplicitDate && (!isset($_GET['search']) || trim($_GET['search']) === '')) {
     $t1 = date('Y-m-d 00:00:00', strtotime('-29 days'));
     $t2 = date('Y-m-d 23:59:59');
-    $daterangeFilter = " AND enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
+    $daterangeFilter = " AND e.enquiry_time BETWEEN '{$t1}' AND '{$t2}'";
 }
 
 $searchFilter = "";
 if (isset($_GET['search']) && trim($_GET['search']) !== '') {
     $searchKey = mysqli_real_escape_string($connection, trim($_GET['search']));
     if ($accessType === 'digital_marketing') {
-        $searchFilter = " AND (enquiry_first_name LIKE '%{$searchKey}%' 
-                           OR enquiry_last_name LIKE '%{$searchKey}%'
-                           OR enquiry_subject LIKE '%{$searchKey}%' 
-                           OR enquiry_source LIKE '%{$searchKey}%'
-                           OR enquiry_id = '{$searchKey}')";
+        $searchFilter = " AND (e.enquiry_first_name LIKE '%{$searchKey}%' 
+                           OR e.enquiry_last_name LIKE '%{$searchKey}%'
+                           OR e.enquiry_subject LIKE '%{$searchKey}%' 
+                           OR e.enquiry_source LIKE '%{$searchKey}%'
+                           OR e.enquiry_id = '{$searchKey}')";
     } else {
-        $searchFilter = " AND (enquiry_first_name LIKE '%{$searchKey}%' 
-                           OR enquiry_last_name LIKE '%{$searchKey}%'
-                           OR enquiry_mobile LIKE '%{$searchKey}%' 
-                           OR enquiry_email LIKE '%{$searchKey}%' 
-                           OR enquiry_subject LIKE '%{$searchKey}%' 
-                           OR enquiry_source LIKE '%{$searchKey}%'
-                           OR enquiry_id = '{$searchKey}')";
+        $searchFilter = " AND (e.enquiry_first_name LIKE '%{$searchKey}%' 
+                           OR e.enquiry_last_name LIKE '%{$searchKey}%'
+                           OR e.enquiry_mobile LIKE '%{$searchKey}%' 
+                           OR e.enquiry_email LIKE '%{$searchKey}%' 
+                           OR e.enquiry_subject LIKE '%{$searchKey}%' 
+                           OR e.enquiry_source LIKE '%{$searchKey}%'
+                           OR e.enquiry_id = '{$searchKey}')";
     }
     // When specific search is provided without explicit daterange, search across all time
     if (!$hasExplicitDate) {
         $daterangeFilter = "";
     }
+}
+
+// Source Filter
+$sourceFilter = "";
+if (isset($_GET['source']) && trim($_GET['source']) !== '' && $_GET['source'] !== 'all') {
+    $sourceKey = mysqli_real_escape_string($connection, trim($_GET['source']));
+    $sourceFilter = " AND e.enquiry_source LIKE '%{$sourceKey}%'";
 }
 
 function cleanLeadSource($src)
@@ -121,25 +146,34 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
         exit();
     }
 
-    $statusClause = "enquiry_status = {$targetStatus}";
+    if ($targetStatus === 9) {
+        $statusClause = "(e.enquiry_status = 9 OR (e.enquiry_status NOT IN (1, 6, 4, 5, 7, 15, 16, 17, 18) AND q.quotation_id IS NOT NULL))";
+    } elseif (in_array($targetStatus, [0, 2, 3], true)) {
+        $statusClause = "e.enquiry_status = {$targetStatus} AND q.quotation_id IS NULL";
+    } else {
+        $statusClause = "e.enquiry_status = {$targetStatus}";
+    }
 
-    $sql = "SELECT enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_mobile, enquiry_email,
-                   enquiry_subject, enquiry_time, enquiry_status, enquiry_source
-            FROM {$tblPrefix}enquiry
-            WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
+    $sql = "SELECT e.enquiry_id, e.enquiry_first_name, e.enquiry_last_name, e.enquiry_mobile, e.enquiry_email,
+                   e.enquiry_subject, e.enquiry_time, e.enquiry_status, e.enquiry_source
+            FROM {$tblPrefix}enquiry e
+            LEFT JOIN (
+                SELECT quotation_ref_id, MIN(quotation_id) AS quotation_id
+                FROM {$tblPrefix}quotation
+                WHERE quotation_status = 0{$siteQuotationFilter}
+                GROUP BY quotation_ref_id
+            ) q ON e.enquiry_id = q.quotation_ref_id
+            WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}{$sourceFilter}
               AND {$statusClause}
-              AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
-            ORDER BY enquiry_time DESC
+              AND e.enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
+            ORDER BY e.enquiry_time DESC
             LIMIT {$offset}, {$limit}";
 
     $leads = [];
     if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
         while ($row = mysqli_fetch_assoc($res)) {
-            $stInt = (int)$row['enquiry_status'];
-            if (!in_array($stInt, [0, 1, 2, 3, 6, 9], true)) {
-                continue;
-            }
-            $meta = getLeadStatusMeta($stInt);
+            $effectiveStatus = $targetStatus;
+            $meta = getLeadStatusMeta($effectiveStatus);
             $fullName = trim(($row['enquiry_first_name'] ?? '') . ' ' . ($row['enquiry_last_name'] ?? ''));
             if (empty($fullName)) {
                 $fullName = 'Lead #' . $row['enquiry_id'];
@@ -156,7 +190,7 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
                 'subject'      => !empty($row['enquiry_subject']) ? $row['enquiry_subject'] : 'General Enquiry',
                 'source'       => cleanLeadSource($row['enquiry_source']),
                 'time'         => date('d M, h:i A', strtotime($row['enquiry_time'])),
-                'status'       => $stInt,
+                'status'       => $effectiveStatus,
                 'status_label' => $meta['label'],
                 'status_class' => $meta['class'],
                 'status_color' => $meta['color'],
@@ -176,27 +210,41 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
 
 // Case 2: Full Board Load (for calling agents, status 0 'New Leads' is excluded)
 $allowedStatuses = $isCallingAgent ? [2, 3, 9, 6, 1] : [0, 2, 3, 9, 6, 1];
-$allowedStatusesStr = implode(', ', $allowedStatuses);
 $grouped = [];
 foreach ($allowedStatuses as $st) {
     $grouped[(string)$st] = [];
 }
 $flatLeads = [];
 
-$limitClause = !empty($searchFilter) ? "LIMIT 100" : "LIMIT 150";
+$limitClause = !empty($searchFilter) ? "LIMIT 200" : "LIMIT 350";
 
-$sql = "SELECT enquiry_id, enquiry_first_name, enquiry_last_name, enquiry_mobile, enquiry_email,
-               enquiry_subject, enquiry_time, enquiry_status, enquiry_source
-        FROM {$tblPrefix}enquiry
-        WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
-          AND enquiry_status IN ({$allowedStatusesStr})
-          AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
-        ORDER BY enquiry_time DESC
+$sql = "SELECT e.enquiry_id, e.enquiry_first_name, e.enquiry_last_name, e.enquiry_mobile, e.enquiry_email,
+               e.enquiry_subject, e.enquiry_time, e.enquiry_status, e.enquiry_source,
+               CASE
+                   WHEN e.enquiry_status = 1 THEN 1
+                   WHEN e.enquiry_status = 6 THEN 6
+                   WHEN (e.enquiry_status = 9 OR q.quotation_id IS NOT NULL) THEN 9
+                   WHEN e.enquiry_status = 3 THEN 3
+                   WHEN e.enquiry_status = 2 THEN 2
+                   WHEN e.enquiry_status = 0 THEN 0
+                   ELSE e.enquiry_status
+               END AS effective_status
+        FROM {$tblPrefix}enquiry e
+        LEFT JOIN (
+            SELECT quotation_ref_id, MIN(quotation_id) AS quotation_id
+            FROM {$tblPrefix}quotation
+            WHERE quotation_status = 0{$siteQuotationFilter}
+            GROUP BY quotation_ref_id
+        ) q ON e.enquiry_id = q.quotation_ref_id
+        WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}{$sourceFilter}
+          AND e.enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
+        HAVING effective_status IN (" . implode(', ', $allowedStatuses) . ")
+        ORDER BY e.enquiry_time DESC
         {$limitClause}";
 
 if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql))) {
     while ($row = mysqli_fetch_assoc($res)) {
-        $stInt = (int)$row['enquiry_status'];
+        $stInt = (int)$row['effective_status'];
         if (!in_array($stInt, $allowedStatuses, true)) {
             continue;
         }
@@ -215,9 +263,9 @@ if (isset($connection) && $connection && ($res = mysqli_query($connection, $sql)
             'last_name'  => $row['enquiry_last_name'] ?? '',
             'mobile'     => ($isDigMkt || empty($row['enquiry_mobile'])) ? '' : $row['enquiry_mobile'],
             'email'      => ($isDigMkt || empty($row['enquiry_email']))  ? '' : $row['enquiry_email'],
-            'subject'    => !empty($row['enquiry_subject']) ? $row['enquiry_subject']       : 'General Enquiry',
+            'subject'    => !empty($row['enquiry_subject']) ? $row['enquiry_subject'] : 'General Enquiry',
             'source'     => cleanLeadSource($row['enquiry_source']),
-            'time'         => date('d M, h:i A', strtotime($row['enquiry_time'])),
+            'time'       => date('d M, h:i A', strtotime($row['enquiry_time'])),
             'status'       => $stInt,
             'status_label' => $meta['label'],
             'status_class' => $meta['class'],
@@ -234,15 +282,31 @@ $statusCounts = [];
 foreach ($allowedStatuses as $st) {
     $statusCounts[(string)$st] = 0;
 }
-$countSql = "SELECT enquiry_status, COUNT(*) as cnt
-             FROM {$tblPrefix}enquiry
-             WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}
-               AND enquiry_status IN ({$allowedStatusesStr})
-               AND enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
-             GROUP BY enquiry_status";
+$countSql = "SELECT 
+                 CASE 
+                     WHEN e.enquiry_status = 1 THEN 1
+                     WHEN e.enquiry_status = 6 THEN 6
+                     WHEN (e.enquiry_status = 9 OR q.quotation_id IS NOT NULL) THEN 9
+                     WHEN e.enquiry_status = 3 THEN 3
+                     WHEN e.enquiry_status = 2 THEN 2
+                     WHEN e.enquiry_status = 0 THEN 0
+                     ELSE e.enquiry_status
+                 END AS effective_status,
+                 COUNT(DISTINCT e.enquiry_id) as cnt
+             FROM {$tblPrefix}enquiry e
+             LEFT JOIN (
+                 SELECT quotation_ref_id, MIN(quotation_id) AS quotation_id
+                 FROM {$tblPrefix}quotation
+                 WHERE quotation_status = 0{$siteQuotationFilter}
+                 GROUP BY quotation_ref_id
+             ) q ON e.enquiry_id = q.quotation_ref_id
+             WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}{$sourceFilter}
+               AND e.enquiry_status NOT IN (4, 5, 7, 15, 16, 17, 18)
+             GROUP BY effective_status";
+
 if (isset($connection) && $connection && ($cRes = mysqli_query($connection, $countSql))) {
     while ($cRow = mysqli_fetch_assoc($cRes)) {
-        $stVal = (int)$cRow['enquiry_status'];
+        $stVal = (int)$cRow['effective_status'];
         $cnt   = (int)$cRow['cnt'];
         $stKey = (string)$stVal;
         if (isset($statusCounts[$stKey])) {

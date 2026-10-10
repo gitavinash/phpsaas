@@ -82,13 +82,21 @@
       const initialAgent = urlParams.get("agentId") || urlParams.get("agent_id") || urlParams.get("agent") || $app.data("initial-agent") || $("#filterLeadAgent").val() || "all";
       const initialSource = urlParams.get("source") || $("#filterLeadSource").val() || "all";
       const initialSearch = urlParams.get("search") || urlParams.get("q") || $("#leadTableSearch").val() || "";
-      const initialDateRange = urlParams.get("daterange") || "";
+      const urlDateRange = urlParams.get("daterange");
 
       this.activeStatus = String(initialStatus);
       this.activeAgent = String(initialAgent);
       this.activeSource = String(initialSource);
       this.activeSearch = String(initialSearch);
-      this.activeDateRange = String(initialDateRange);
+
+      // Default to last 30 days if no daterange query parameter is provided
+      if (urlDateRange !== null && urlDateRange !== undefined && urlDateRange !== "") {
+        this.activeDateRange = String(urlDateRange);
+      } else if (typeof moment !== "undefined") {
+        this.activeDateRange = moment().subtract(29, "days").format("YYYY-MM-DD") + " - " + moment().format("YYYY-MM-DD");
+      } else {
+        this.activeDateRange = "";
+      }
 
       if (this.activeStatus !== "all") {
         $("#filterLeadStatus").val(this.activeStatus);
@@ -192,13 +200,18 @@
         },
       });
 
-      if (self.activeDateRange) {
-        $dateInput.val(self.activeDateRange);
+      if (self.activeDateRange && self.activeDateRange !== "all") {
+        const parts = self.activeDateRange.split(" - ");
+        if (parts.length === 2 && typeof moment !== "undefined" && moment(parts[0]).isValid() && moment(parts[1]).isValid()) {
+          $dateInput.val(moment(parts[0]).format("MMM D") + " – " + moment(parts[1]).format("MMM D, YYYY"));
+        } else {
+          $dateInput.val(self.activeDateRange);
+        }
         $("#clearLeadDateRangeBtn").show();
         $("#leadDateRangeWrap").addClass("has-date");
       } else {
-        $dateInput.val("").attr("placeholder", "Select date range");
-        self.activeDateRange = "";
+        $dateInput.val("").attr("placeholder", "All Time (No date filter)");
+        self.activeDateRange = "all";
         $("#clearLeadDateRangeBtn").hide();
         $("#leadDateRangeWrap").removeClass("has-date");
       }
@@ -245,10 +258,10 @@
       });
 
       $dateInput.on("cancel.daterangepicker", function (ev, picker) {
-        $(this).val("");
+        $(this).val("").attr("placeholder", "All Time (No date filter)");
         $("#clearLeadDateRangeBtn").hide();
         $("#leadDateRangeWrap").removeClass("has-date");
-        self.activeDateRange = "";
+        self.activeDateRange = "all";
         self.currentPage = 1;
         if (picker) {
           if (typeof picker.hide === "function") picker.hide();
@@ -270,10 +283,10 @@
 
       $("#clearLeadDateRangeBtn").on("click", function (e) {
         e.stopPropagation();
-        $dateInput.val("");
+        $dateInput.val("").attr("placeholder", "All Time (No date filter)");
         $(this).hide();
         $("#leadDateRangeWrap").removeClass("has-date");
-        self.activeDateRange = "";
+        self.activeDateRange = "all";
         self.currentPage = 1;
         self.loadLeads();
       });
@@ -345,10 +358,24 @@
         }
 
         self.activeSearch = "";
-        self.activeDateRange = "";
         self.activeStatus = "all";
         self.activeAgent = "all";
         self.activeSource = "all";
+
+        if (typeof moment !== "undefined") {
+          const defaultStart = moment().subtract(29, "days");
+          const defaultEnd = moment();
+          self.activeDateRange = defaultStart.format("YYYY-MM-DD") + " - " + defaultEnd.format("YYYY-MM-DD");
+          $("#filterLeadDateRange").val(defaultStart.format("MMM D") + " – " + defaultEnd.format("MMM D, YYYY"));
+          $("#clearLeadDateRangeBtn").show();
+          $("#leadDateRangeWrap").addClass("has-date");
+        } else {
+          self.activeDateRange = "all";
+          $("#filterLeadDateRange").val("").attr("placeholder", "All Time (No date filter)");
+          $("#clearLeadDateRangeBtn").hide();
+          $("#leadDateRangeWrap").removeClass("has-date");
+        }
+
         self.limit = parseInt($("#leadsPerPage").val()) || 10;
         self.currentPage = 1;
         self.loadLeads();
@@ -698,9 +725,7 @@
           agent_id: self.activeAgent,
           agentId: self.activeAgent,
           source: self.activeSource,
-          daterange:
-            self.activeDateRange ||
-            (typeof dateRangeParams !== "undefined" ? dateRangeParams : ""),
+          daterange: self.activeDateRange ? self.activeDateRange : "all",
         },
         dataType: "json",
         success: function (res) {

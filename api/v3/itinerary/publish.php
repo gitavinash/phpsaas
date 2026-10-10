@@ -482,7 +482,7 @@ if (mysqli_query($connection, $insertQuery)) {
     if (!empty($customerData) && $refType === 'enquiry') {
         $updateFields = [];
         $currentLeadStatus = (int)($customerData['enquiry_status'] ?? 0);
-        $shouldUpdateStatus = (!$isDownload && $currentLeadStatus !== 1);
+        $shouldUpdateStatus = !in_array($currentLeadStatus, [1, 6, 4, 5, 7, 15, 16, 17, 18], true);
 
         if ($shouldUpdateStatus) {
             $updateFields[] = "enquiry_status = 9";

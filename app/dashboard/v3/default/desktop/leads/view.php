@@ -110,8 +110,8 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                     <i class="fi fi-rr-edit"></i>
                 </div>
                 <div class="v3-modal-title-wrap">
-                    <h4 class="v3-modal-title">Edit Lead & Travel Details</h4>
-                    <span class="v3-modal-subtitle">Update customer information and tour requirements</span>
+                    <h4 class="v3-modal-title" id="editLeadModalTitle">Edit Lead & Travel Details</h4>
+                    <span class="v3-modal-subtitle" id="editLeadModalSubtitle">Update customer information and requirements</span>
                 </div>
             </div>
             <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
@@ -146,9 +146,36 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                 </div>
             </div>
 
-            <h5 class="v3-modal-subheading">Travel Logistics</h5>
-            <div class="v3-form-grid-2">
-                <div class="v3-modal-form-group">
+            <!-- Logistics Section (Dynamically tailored for Transporter vs Travel Agency) -->
+            <h5 class="v3-modal-subheading" id="editLeadLogisticsHeading">Travel Logistics</h5>
+            <div class="v3-form-grid-2" id="editLeadLogisticsGrid">
+                <!-- Route: Pickup Point -->
+                <div class="v3-modal-form-group" id="editLeadPickupWrap">
+                    <label class="v3-modal-label" id="editLeadPickupLabel">Pickup Point / City *</label>
+                    <select id="editLeadPickup" class="v3-modal-select" data-placeholder="Search or enter pickup location..."></select>
+                </div>
+                <!-- Route: Drop Point -->
+                <div class="v3-modal-form-group" id="editLeadDropWrap">
+                    <label class="v3-modal-label" id="editLeadDropLabel">Drop Point / City *</label>
+                    <select id="editLeadDrop" class="v3-modal-select" data-placeholder="Search or enter drop location..."></select>
+                </div>
+                <!-- Transporter Only: Destination City -->
+                <div class="v3-modal-form-group only-transporter" id="editLeadDestinationWrap">
+                    <label class="v3-modal-label">Destination City</label>
+                    <select id="editLeadDestination" class="v3-modal-select" data-placeholder="Search or enter destination city..."></select>
+                </div>
+                <!-- Transporter Only: Trip Type -->
+                <div class="v3-modal-form-group only-transporter" id="editLeadTripTypeWrap">
+                    <label class="v3-modal-label">Trip Type</label>
+                    <select id="editLeadTripType" class="v3-modal-select">
+                        <option value="outstation_round">Outstation (Round Trip)</option>
+                        <option value="outstation_oneway">Outstation (One Way)</option>
+                        <option value="local_rental">Local City Rental</option>
+                        <option value="airport_transfer">Airport Transfer</option>
+                    </select>
+                </div>
+                <!-- Travel Agency Only: Tour Package / Destination -->
+                <div class="v3-modal-form-group only-travel-agency" id="editLeadPackageWrap">
                     <div class="v3-form-label-row">
                         <label class="v3-modal-label">Tour Package / Destination *</label>
                         <span class="v3-label-hint">Select package or type custom destination</span>
@@ -176,39 +203,59 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                         <button type="button" class="btn-clear-pkg-card" id="editBtnClearPkgCard" title="Clear selection">✕</button>
                     </div>
                 </div>
-                <div class="v3-modal-form-group">
+                <!-- Travel Agency Only: Package / Subject -->
+                <div class="v3-modal-form-group only-travel-agency" id="editLeadSubjectWrap">
                     <label class="v3-modal-label">Package / Subject</label>
                     <input type="text" id="editLeadSubject" class="v3-modal-input" placeholder="e.g. Dubai Tour Package">
                 </div>
-                <div class="v3-modal-form-group">
+                <!-- Common: Date of Travel (Calendar Datepicker, past dates disabled) -->
+                <div class="v3-modal-form-group" id="editLeadTravelDateWrap">
                     <label class="v3-modal-label">Date of Travel</label>
                     <input type="text" id="editLeadTravelDate" class="v3-modal-input v3-single-datepicker-input" data-future-only="true" placeholder="YYYY-MM-DD" autocomplete="off" readonly>
                 </div>
-                <div class="v3-modal-form-group">
-                    <label class="v3-modal-label">Trip Duration (Nights)</label>
-                    <input type="number" id="editLeadDuration" class="v3-modal-input" placeholder="e.g. 5" min="0">
+                <!-- Common: Trip Duration -->
+                <div class="v3-modal-form-group" id="editLeadDurationWrap">
+                    <label class="v3-modal-label" id="editLeadDurationLabel">Trip Duration (Days)</label>
+                    <input type="number" id="editLeadDuration" class="v3-modal-input" placeholder="e.g. 3" min="1" value="1">
                 </div>
-                <div class="v3-modal-form-group">
-                    <label class="v3-modal-label">Pickup Point</label>
-                    <select id="editLeadPickup" class="v3-modal-select"></select>
+                <!-- Transporter Only: Vehicle Category -->
+                <div class="v3-modal-form-group only-transporter" id="editLeadVehicleTypeWrap">
+                    <label class="v3-modal-label">Vehicle Category</label>
+                    <select id="editLeadVehicleType" class="v3-modal-select">
+                        <option value="all">All Fleet Categories</option>
+                        <option value="sedan">Sedan (Dzire, Etios, Aura)</option>
+                        <option value="suv">SUV (Innova, Crysta, Ertiga)</option>
+                        <option value="hatchback">Hatchback (WagonR, Swift)</option>
+                        <option value="tempo">Tempo Traveller (12/17/20 Seater)</option>
+                        <option value="luxury">Luxury Car (BMW, Mercedes, Audi)</option>
+                        <option value="bus">Mini Bus / Coach</option>
+                    </select>
                 </div>
-                <div class="v3-modal-form-group">
-                    <label class="v3-modal-label">Drop Point</label>
-                    <select id="editLeadDrop" class="v3-modal-select"></select>
+                <!-- Transporter Only: Preferred Vehicle Model -->
+                <div class="v3-modal-form-group only-transporter" id="editLeadVehicleModelWrap">
+                    <label class="v3-modal-label">Preferred Vehicle Model</label>
+                    <select id="editLeadVehicleModel" class="v3-modal-select" data-placeholder="Choose vehicle model...">
+                        <option value="">-- Choose Vehicle Model --</option>
+                    </select>
                 </div>
             </div>
 
-            <h5 class="v3-modal-subheading">Guests Breakdown</h5>
+            <!-- Passengers & Capacity Breakdown -->
+            <h5 class="v3-modal-subheading" id="editLeadGuestsHeading">Passengers &amp; Capacity</h5>
             <div class="v3-form-grid-3">
                 <div class="v3-modal-form-group">
-                    <label class="v3-modal-label">Adults</label>
+                    <label class="v3-modal-label" id="editLeadAdultsLabel">Passengers / Adults</label>
                     <input type="number" id="editLeadAdults" class="v3-modal-input" min="1" value="1">
                 </div>
                 <div class="v3-modal-form-group">
                     <label class="v3-modal-label">Children</label>
                     <input type="number" id="editLeadChildren" class="v3-modal-input" min="0" value="0">
                 </div>
-                <div class="v3-modal-form-group">
+                <div class="v3-modal-form-group only-transporter" id="editLeadLuggageBagsWrap">
+                    <label class="v3-modal-label">Luggage Bags</label>
+                    <input type="number" id="editLeadLuggageBags" class="v3-modal-input" min="0" value="0">
+                </div>
+                <div class="v3-modal-form-group only-travel-agency" id="editLeadInfantsWrap">
                     <label class="v3-modal-label">Infants</label>
                     <input type="number" id="editLeadInfants" class="v3-modal-input" min="0" value="0">
                 </div>
@@ -931,7 +978,7 @@ if ($leadViewSiteId > 0 && isset($connection)) {
 
 <!-- Modal: Transporter & Fleet Quotation Builder -->
 <div class="v3-modal-overlay" id="modalSendTransporterQuotation">
-    <div class="v3-modal-dialog v3-modal-dialog-md">
+    <div class="v3-modal-dialog v3-modal-dialog-xl v3-modal-dialog-tq">
         <div class="v3-modal-header">
             <div class="v3-modal-header-left">
                 <div class="v3-modal-header-icon-box icon-transporter">
@@ -944,21 +991,365 @@ if ($leadViewSiteId > 0 && isset($connection)) {
             </div>
             <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
         </div>
-        <div class="v3-modal-body">
-            <div class="v3-transporter-placeholder-canvas">
-                <div class="v3-transporter-icon-badge">
-                    <i class="fi fi-rr-document-signed"></i>
+        <div class="v3-modal-body tq-modal-body">
+            <!-- 1. Customer Section -->
+            <div class="tq-section-card">
+                <div class="tq-section-header">
+                    <div class="tq-section-title-wrap">
+                        <div class="tq-section-icon blue"><i class="fi fi-rr-user"></i></div>
+                        <div>
+                            <h4 class="tq-section-title">Customer Information</h4>
+                            <p class="tq-section-subtitle">Customer identity details pre-filled from lead record</p>
+                        </div>
+                    </div>
                 </div>
-                <h4 class="v3-placeholder-title">Transporter Quotation Builder</h4>
-                <p class="v3-placeholder-desc">This proposal form is prepared for vehicle category selection (Sedan, SUV, Tempo Traveller, Bus), per-km / lump-sum route tariffs, toll inclusions, and instant WhatsApp PDF quotation generation.</p>
-                <div class="v3-mt-14">
-                    <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">
-                        <i class="fi fi-rr-cross"></i> Close
+                <div class="tq-grid-2">
+                    <div class="tq-form-group">
+                        <label for="tqCustomerName" class="tq-form-label">Customer Name <span class="req">*</span></label>
+                        <input type="text" id="tqCustomerName" class="tq-form-control" placeholder="Customer Full Name" required>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqCustomerMobile" class="tq-form-label">Mobile Number <span class="req">*</span></label>
+                        <input type="tel" id="tqCustomerMobile" class="tq-form-control" placeholder="Mobile / WhatsApp Number" required>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqCustomerEmail" class="tq-form-label">Email Address</label>
+                        <input type="email" id="tqCustomerEmail" class="tq-form-control" placeholder="client@example.com">
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqCustomerAddress" class="tq-form-label">Address / Location</label>
+                        <input type="text" id="tqCustomerAddress" class="tq-form-control" placeholder="City, State, or Street Address">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Travel & Transport Section -->
+            <div class="tq-section-card">
+                <div class="tq-section-header">
+                    <div class="tq-section-title-wrap">
+                        <div class="tq-section-icon teal"><i class="fi fi-rr-route"></i></div>
+                        <div>
+                            <h4 class="tq-section-title">Travel &amp; Transport Logistics</h4>
+                            <p class="tq-section-subtitle">Origin, destination, route points, and schedule</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tq-grid-2">
+                    <div class="tq-form-group">
+                        <label for="tqDestination" class="tq-form-label">Destination <span class="req">*</span></label>
+                        <input type="text" id="tqDestination" class="tq-form-control" placeholder="Tour destination or city" required>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqPickupLocation" class="tq-form-label">Pickup Location <span class="req">*</span></label>
+                        <input type="text" id="tqPickupLocation" class="tq-form-control" placeholder="Airport, Railway Station, Hotel..." required>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqDropLocation" class="tq-form-label">Drop Location <span class="req">*</span></label>
+                        <input type="text" id="tqDropLocation" class="tq-form-control" placeholder="Destination point or return city" required>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqTravelDate" class="tq-form-label">Travel Date <span class="req">*</span></label>
+                        <div class="tq-input-with-icon">
+                            <i class="fi fi-rr-calendar tq-input-icon"></i>
+                            <input type="text" id="tqTravelDate" class="tq-form-control v3-single-datepicker-input" data-future-only="true" placeholder="YYYY-MM-DD" readonly required>
+                        </div>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqTravelDuration" class="tq-form-label">Travel Duration (Days)</label>
+                        <input type="number" id="tqTravelDuration" class="tq-form-control" min="1" step="1" value="1" placeholder="1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Vehicle Section -->
+            <div class="tq-section-card">
+                <div class="tq-section-header">
+                    <div class="tq-section-title-wrap">
+                        <div class="tq-section-icon amber"><i class="fi fi-rr-car-alt"></i></div>
+                        <div>
+                            <h4 class="tq-section-title">Vehicle &amp; Fleet Selection</h4>
+                            <p class="tq-section-subtitle">Select category and vehicle model from master fleet catalog</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tq-grid-2">
+                    <div class="tq-form-group">
+                        <label for="tqVehicleType" class="tq-form-label">Vehicle Type / Category <span class="req">*</span></label>
+                        <select id="tqVehicleType" class="tq-form-control selectJS" data-placeholder="All Categories">
+                            <option value="">All Categories</option>
+                            <option value="sedan">Sedan</option>
+                            <option value="suv">SUV</option>
+                            <option value="mpv">MPV</option>
+                            <option value="traveller">Tempo Traveller</option>
+                            <option value="bus">Bus / Coach</option>
+                            <option value="hatchback">Hatchback</option>
+                            <option value="light_commercial_vehicle">Light Commercial / Van</option>
+                        </select>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqVehicleModel" class="tq-form-label">Vehicle Model <span class="req">*</span></label>
+                        <select id="tqVehicleModel" class="tq-form-control selectJS" data-placeholder="Choose vehicle model...">
+                            <option value="">Loading fleet models...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Billing Section -->
+            <div class="tq-section-card">
+                <div class="tq-section-header">
+                    <div class="tq-section-title-wrap">
+                        <div class="tq-section-icon emerald"><i class="fi fi-rr-receipt"></i></div>
+                        <div>
+                            <h4 class="tq-section-title">Billing &amp; Tariff Structure</h4>
+                            <p class="tq-section-subtitle">Trip total cost, KM threshold, extra rate, and advance payment</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tq-grid-2">
+                    <div class="tq-form-group">
+                        <label for="tqTotalCost" class="tq-form-label">Total Cost <span class="req">*</span></label>
+                        <div class="tq-input-wrap">
+                            <span class="tq-input-prefix tq-currency-symbol">₹</span>
+                            <input type="number" id="tqTotalCost" class="tq-form-control has-prefix" min="0" step="any" placeholder="0.00" required>
+                        </div>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqKmRunning" class="tq-form-label">KM Running (Daily Limit)</label>
+                        <div class="tq-input-wrap">
+                            <input type="number" id="tqKmRunning" class="tq-form-control has-suffix" min="1" step="1" value="250" placeholder="250">
+                            <span class="tq-input-suffix">KM</span>
+                        </div>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqExtraKmCharge" class="tq-form-label">Extra KM Charges</label>
+                        <div class="tq-input-wrap">
+                            <span class="tq-input-prefix tq-currency-symbol">₹</span>
+                            <input type="number" id="tqExtraKmCharge" class="tq-form-control has-prefix has-suffix" min="0" step="any" placeholder="14.00">
+                            <span class="tq-input-suffix">/ KM</span>
+                        </div>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqAdvancePercent" class="tq-form-label">Advance Deposit (%)</label>
+                        <div class="tq-input-wrap">
+                            <input type="number" id="tqAdvancePercent" class="tq-form-control has-suffix" min="0" max="100" step="1" value="25" placeholder="25">
+                            <span class="tq-input-suffix">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tq-balance-card">
+                    <div>
+                        <span class="tq-balance-label">Advance Booking Deposit:</span>
+                        <div class="tq-balance-val positive">
+                            <span class="tq-currency-symbol">₹</span> <span id="tqAdvanceAmountDisplay">0.00</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="tq-balance-label">Balance Payable on Trip:</span>
+                        <div class="tq-balance-val">
+                            <span class="tq-currency-symbol">₹</span> <span id="tqBalanceAmountDisplay">0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Billing Terms Section -->
+            <div class="tq-section-card">
+                <div class="tq-section-header">
+                    <div class="tq-section-title-wrap">
+                        <div class="tq-section-icon purple"><i class="fi fi-rr-shield-check"></i></div>
+                        <div>
+                            <h4 class="tq-section-title">Billing Terms &amp; Conditions</h4>
+                            <p class="tq-section-subtitle">Toggle standard transporter policy inclusions and exclusions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tq-terms-list">
+                    <!-- Term 1: Parking Charges (Default: No) -->
+                    <div class="tq-term-row">
+                        <div class="tq-term-meta">
+                            <h5 class="tq-term-title">1. Parking Charges</h5>
+                            <p class="tq-term-desc">Airport, railway station, hotel, or monument parking fees.</p>
+                        </div>
+                        <div class="tq-segmented-toggle">
+                            <input type="radio" name="tq_term_parking" id="tqParkingYes" value="yes">
+                            <label for="tqParkingYes">Yes</label>
+                            <input type="radio" name="tq_term_parking" id="tqParkingNo" value="no" checked>
+                            <label for="tqParkingNo">No</label>
+                        </div>
+                    </div>
+
+                    <!-- Term 2: Garage to Garage (Default: Yes) -->
+                    <div class="tq-term-row">
+                        <div class="tq-term-meta">
+                            <h5 class="tq-term-title">2. Garage to Garage Calculation</h5>
+                            <p class="tq-term-desc">Timing and distance to be calculated from garage to garage.</p>
+                        </div>
+                        <div class="tq-segmented-toggle">
+                            <input type="radio" name="tq_term_garage" id="tqGarageYes" value="yes" checked>
+                            <label for="tqGarageYes">Yes</label>
+                            <input type="radio" name="tq_term_garage" id="tqGarageNo" value="no">
+                            <label for="tqGarageNo">No</label>
+                        </div>
+                    </div>
+
+                    <!-- Term 3: Toll Tax (Default: Yes) -->
+                    <div class="tq-term-row">
+                        <div class="tq-term-meta">
+                            <h5 class="tq-term-title">3. Toll Tax</h5>
+                            <p class="tq-term-desc">National and state expressways / highway toll plazas.</p>
+                        </div>
+                        <div class="tq-segmented-toggle">
+                            <input type="radio" name="tq_term_toll" id="tqTollYes" value="yes" checked>
+                            <label for="tqTollYes">Yes</label>
+                            <input type="radio" name="tq_term_toll" id="tqTollNo" value="no">
+                            <label for="tqTollNo">No</label>
+                        </div>
+                    </div>
+
+                    <!-- Term 4: State Tax (Default: Yes) -->
+                    <div class="tq-term-row">
+                        <div class="tq-term-meta">
+                            <h5 class="tq-term-title">4. State Tax</h5>
+                            <p class="tq-term-desc">Commercial vehicle inter-state border entry taxes &amp; permits.</p>
+                        </div>
+                        <div class="tq-segmented-toggle">
+                            <input type="radio" name="tq_term_state_tax" id="tqStateTaxYes" value="yes" checked>
+                            <label for="tqStateTaxYes">Yes</label>
+                            <input type="radio" name="tq_term_state_tax" id="tqStateTaxNo" value="no">
+                            <label for="tqStateTaxNo">No</label>
+                        </div>
+                    </div>
+
+                    <!-- Term 5: Driver Allowance (Default: Yes) -->
+                    <div class="tq-term-row">
+                        <div class="tq-term-meta">
+                            <h5 class="tq-term-title">5. Driver Allowance</h5>
+                            <p class="tq-term-desc">Driver daytime duty and night halt allowances.</p>
+                        </div>
+                        <div class="tq-segmented-toggle">
+                            <input type="radio" name="tq_term_driver" id="tqDriverYes" value="yes" checked>
+                            <label for="tqDriverYes">Yes</label>
+                            <input type="radio" name="tq_term_driver" id="tqDriverNo" value="no">
+                            <label for="tqDriverNo">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Additional Billing Terms & Rules Extension -->
+            <div class="tq-section-card">
+                <div class="tq-section-header">
+                    <div class="tq-section-title-wrap">
+                        <div class="tq-section-icon blue"><i class="fi fi-rr-settings-sliders"></i></div>
+                        <div>
+                            <h4 class="tq-section-title">Additional Business Terms &amp; Rules</h4>
+                            <p class="tq-section-subtitle">Add custom policies (daily KM limit, payment schedules, night rules)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tq-rules-repeater-list" id="tqCustomRulesList">
+                    <!-- Dynamic rules inserted via JS -->
+                </div>
+                <div class="tq-rules-actions-row">
+                    <button type="button" class="btn-v3-action btn-outline" id="tqBtnAddRule">
+                        <i class="fi fi-rr-plus"></i> Add More Rule
+                    </button>
+                    <button type="button" class="btn-v3-action btn-outline" id="tqBtnSaveDefaultTerms" title="Save these rules as default for future quotes">
+                        <i class="fi fi-rr-disk"></i> Save Terms as Business Default
                     </button>
                 </div>
+            </div>
+        </div>
+        <div class="tq-modal-footer">
+            <div class="tq-footer-summary">
+                <span>Total Quote:</span>
+                <strong><span class="tq-currency-symbol">₹</span> <span id="tqFooterTotalDisplay">0.00</span></strong>
+            </div>
+            <div class="tq-footer-actions">
+                <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger" id="tqBtnCancelQuote">Cancel</button>
+                <button type="button" class="btn-add-pkg-v3" id="tqBtnSubmitQuote">
+                    <i class="fi fi-rr-eye"></i> Preview &amp; Generate Quotation
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<script src="<?php echo ADMIN_JS ?>lead-view.js?v=<?php echo time(); ?>"></script>
+<!-- Modal: Transporter Quotation Live Proposal Preview -->
+<div class="v3-modal-overlay" id="modalTransporterQuotePreview">
+    <div class="v3-modal-dialog v3-modal-dialog-preview v3-modal-dialog-tq-preview">
+        <!-- Preview Header -->
+        <div class="v3-preview-modal-header">
+            <div class="v3-preview-header-left">
+                <div class="v3-preview-header-icon icon-tq-preview">
+                    <i class="fi fi-rr-document-signed"></i>
+                </div>
+                <div class="v3-preview-header-meta">
+                    <div class="v3-preview-header-title-wrap">
+                        <h4 class="v3-preview-header-title" id="tqPreviewHeaderTitle">Transporter Quotation &amp; Fleet Proposal</h4>
+                        <span class="v3-preview-badge"><i class="fi fi-rr-sparkles"></i> Live Preview</span>
+                    </div>
+                </div>
+            </div>
+            <div class="v3-preview-header-actions">
+                <button type="button" class="btn-v3-action btn-outline" id="tqBtnPreviewBack" title="Edit inputs in quote builder">
+                    <i class="fi fi-rr-edit"></i> Edit Details
+                </button>
+                <button type="button" class="btn-v3-action btn-outline" id="tqBtnPreviewDownloadPdf" title="Download quotation PDF document">
+                    <i class="fi fi-rr-file-pdf"></i> Download PDF
+                </button>
+                <button type="button" class="btn-v3-action btn-green" id="tqBtnPreviewSendQuote" title="Send quotation to customer">
+                    <i class="fi fi-brands-whatsapp"></i> Send Quotation
+                </button>
+                <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close Preview"><i class="fi fi-rr-cross"></i></button>
+            </div>
+        </div>
+        <!-- Scrollable Document Preview Body -->
+        <div class="v3-preview-modal-body tq-preview-modal-body">
+            <div id="tqPreviewLoader" class="v3-itinerary-preview-loader v3-hidden">
+                <div class="v3-table-spinner">
+                    <div class="v3-spinner-ring"></div>
+                </div>
+                <span>Rendering transporter proposal...</span>
+            </div>
+            <iframe id="tqPreviewIframe" class="v3-live-preview-iframe tq-live-preview-iframe" title="Transporter Quotation Proposal Preview"></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: WhatsApp Quote Share / Success -->
+<div class="v3-modal-overlay" id="modalTransporterQuoteShare">
+    <div class="v3-modal-dialog v3-modal-dialog-md">
+        <div class="v3-modal-header">
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box tq-wa-icon-box">
+                    <i class="fi fi-brands-whatsapp"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Quotation Ready to Share</h4>
+                    <span class="v3-modal-subtitle">Transporter quotation has been recorded in the lead timeline</span>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
+        </div>
+        <div class="v3-modal-body">
+            <p class="tq-wa-intro-text">
+                Review the quotation text below before sending to the customer via WhatsApp:
+            </p>
+            <div class="tq-wa-preview-box" id="tqWaPreviewBox"></div>
+        </div>
+        <div class="v3-modal-footer tq-wa-modal-footer">
+            <button type="button" class="btn-v3-action btn-outline" id="tqBtnCopyWaText">
+                <i class="fi fi-rr-copy"></i> Copy Text
+            </button>
+            <div class="tq-wa-modal-actions">
+                <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Close</button>
+                <a href="#" target="_blank" class="btn-add-pkg-v3 tq-wa-send-btn" id="tqBtnSendWaDirect">
+                    <i class="fi fi-brands-whatsapp"></i> Send on WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

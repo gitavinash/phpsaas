@@ -341,9 +341,24 @@
           clearTimeout(self.loadTimeoutTimer);
           self.isLoading = false;
           self.activeXhr = null;
+          if (typeof hidePageLoader === "function") {
+            hidePageLoader();
+          }
           if (res.status === "success" && res.data) {
             self.leadData = res.data;
-            self.renderView(res.data);
+            try {
+              self.renderView(res.data);
+            } catch (renderErr) {
+              console.error("V3LeadView render error:", renderErr);
+              $container.html(`
+                <div class="v3-leads-empty-state">
+                  <div class="v3-empty-icon-wrap"><i class="fi fi-rr-exclamation"></i></div>
+                  <h4 class="v3-empty-title">Rendering Error</h4>
+                  <p class="v3-empty-subtitle">An unexpected display error occurred while rendering lead profile.</p>
+                  <button type="button" class="btn-empty-reset-filters" id="btnRetryLeadView"><i class="fi fi-rr-refresh"></i> Retry</button>
+                </div>
+              `);
+            }
           } else {
             $container.html(`
               <div class="v3-leads-empty-state">
@@ -356,10 +371,16 @@
           }
         },
         error: function (xhr, status) {
-          if (status === "abort") return;
+          if (status === "abort") {
+            self.isLoading = false;
+            return;
+          }
           clearTimeout(self.loadTimeoutTimer);
           self.isLoading = false;
           self.activeXhr = null;
+          if (typeof hidePageLoader === "function") {
+            hidePageLoader();
+          }
           $container.html(`
             <div class="v3-leads-empty-state">
               <div class="v3-empty-icon-wrap"><i class="fi fi-rr-exclamation"></i></div>
@@ -1404,7 +1425,36 @@
             .empty()
             .append(new Option(dest, dest, true, true))
             .trigger("change");
+          $("#editLeadDestination")
+            .empty()
+            .append(new Option(dest, dest, true, true))
+            .trigger("change");
           $("#editLeadSubject").val(dest);
+          break;
+        }
+        case "trip_type": {
+          const lower = strVal.toLowerCase();
+          let matched = "outstation_round";
+          if (lower.includes("oneway") || lower.includes("one way") || lower.includes("one-way")) matched = "outstation_oneway";
+          else if (lower.includes("local") || lower.includes("city")) matched = "local_rental";
+          else if (lower.includes("airport")) matched = "airport_transfer";
+          $("#editLeadTripType").val(matched).trigger("change");
+          break;
+        }
+        case "vehicle_type": {
+          const lower = strVal.toLowerCase();
+          let cat = "all";
+          if (lower.includes("sedan") || lower.includes("dzire") || lower.includes("etios")) cat = "sedan";
+          else if (lower.includes("suv") || lower.includes("innova") || lower.includes("crysta") || lower.includes("ertiga")) cat = "suv";
+          else if (lower.includes("tempo")) cat = "tempo";
+          else if (lower.includes("hatchback") || lower.includes("swift") || lower.includes("wagon")) cat = "hatchback";
+          else if (lower.includes("luxury") || lower.includes("bmw") || lower.includes("audi")) cat = "luxury";
+          else if (lower.includes("bus") || lower.includes("coach")) cat = "bus";
+          $("#editLeadVehicleType").val(cat).trigger("change");
+          break;
+        }
+        case "vehicle_model": {
+          $("#editLeadVehicleModel").append(new Option(strVal, strVal, true, true)).trigger("change");
           break;
         }
         case "date_of_travel": {
@@ -1440,6 +1490,11 @@
         case "infants": {
           const m = strVal.match(/\d+/);
           if (m) $("#editLeadInfants").val(parseInt(m[0], 10));
+          break;
+        }
+        case "luggage_bags": {
+          const m = strVal.match(/\d+/);
+          if (m) $("#editLeadLuggageBags").val(parseInt(m[0], 10));
           break;
         }
         case "pickup_location": {
@@ -1481,11 +1536,15 @@
         { val: "alt_mobile", text: "Alternate Mobile" },
         { val: "email", text: "Email Address" },
         { val: "current_location", text: "Current City / Location" },
-        { val: "destination", text: "Tour Package / Destination" },
+        { val: "destination", text: "Destination City / Package" },
+        { val: "trip_type", text: "Trip Type (Round / One Way / Local)" },
+        { val: "vehicle_type", text: "Vehicle Category (Sedan / SUV / Tempo)" },
+        { val: "vehicle_model", text: "Vehicle Model" },
         { val: "date_of_travel", text: "Date of Travel" },
         { val: "duration_days", text: "Duration (Days)" },
-        { val: "adults", text: "Adults / Pax" },
+        { val: "adults", text: "Passengers / Adults" },
         { val: "children", text: "Children" },
+        { val: "luggage_bags", text: "Luggage Bags" },
         { val: "infants", text: "Infants" },
         { val: "pickup_location", text: "Pickup Location" },
         { val: "drop_location", text: "Drop Location" },
@@ -1542,11 +1601,15 @@
         { val: "alt_mobile", text: "Alternate Mobile" },
         { val: "email", text: "Email Address" },
         { val: "current_location", text: "Current City / Location" },
-        { val: "destination", text: "Tour Package / Destination" },
+        { val: "destination", text: "Destination City / Package" },
+        { val: "trip_type", text: "Trip Type (Round / One Way / Local)" },
+        { val: "vehicle_type", text: "Vehicle Category (Sedan / SUV / Tempo)" },
+        { val: "vehicle_model", text: "Vehicle Model" },
         { val: "date_of_travel", text: "Date of Travel" },
         { val: "duration_days", text: "Duration (Days)" },
-        { val: "adults", text: "Adults / Pax" },
+        { val: "adults", text: "Passengers / Adults" },
         { val: "children", text: "Children" },
+        { val: "luggage_bags", text: "Luggage Bags" },
         { val: "infants", text: "Infants" },
         { val: "pickup_location", text: "Pickup Location" },
         { val: "drop_location", text: "Drop Location" },
@@ -4614,6 +4677,57 @@
 
           $("#modalEditLead").addClass("is-active");
 
+          // Helper to set Select2 option value
+          function setSelect2Val($el, val, text) {
+            if (!$el || !$el.length) return;
+            $el.empty();
+            if (val) {
+              $el.append(new Option(text || val, val, true, true));
+            }
+            $el.val(val || "").trigger("change");
+          }
+
+          if (self.isTransporter) {
+            $("#modalEditLead")
+              .addClass("is-nature-transporter")
+              .removeClass("is-nature-travel-agency");
+            $("#editLeadModalTitle").text("Edit Lead & Transport Details");
+            $("#editLeadModalSubtitle").text(
+              "Update customer information, route logistics and fleet requirements",
+            );
+            $("#editLeadLogisticsHeading").text("Route & Fleet Logistics");
+            $("#editLeadGuestsHeading").text("Passengers & Capacity");
+            $("#editLeadDurationLabel").text("Trip Duration (Days)");
+            $("#editLeadAdultsLabel").text("Passengers / Adults");
+            $("#editLeadPickupLabel").text("Pickup Location *");
+            $("#editLeadDropLabel").text("Drop / Return Location *");
+
+            const initialDest = (t.destination || d.subject || "").trim();
+            setSelect2Val($("#editLeadDestination"), initialDest, initialDest);
+            $("#editLeadTripType")
+              .val(t.trip_type || "outstation_round")
+              .trigger("change");
+            $("#editLeadLuggageBags").val(t.luggage_bags || 0);
+
+            const vType = t.vehicle_type || "all";
+            $("#editLeadVehicleType").val(vType).trigger("change");
+            self.loadEditVehicleModels(vType, t.vehicle_model || "");
+          } else {
+            $("#modalEditLead")
+              .addClass("is-nature-travel-agency")
+              .removeClass("is-nature-transporter");
+            $("#editLeadModalTitle").text("Edit Lead & Travel Details");
+            $("#editLeadModalSubtitle").text(
+              "Update customer information and tour requirements",
+            );
+            $("#editLeadLogisticsHeading").text("Travel Logistics");
+            $("#editLeadGuestsHeading").text("Guests Breakdown");
+            $("#editLeadDurationLabel").text("Trip Duration (Nights)");
+            $("#editLeadAdultsLabel").text("Adults");
+            $("#editLeadPickupLabel").text("Pickup Point / City");
+            $("#editLeadDropLabel").text("Drop Point / City");
+          }
+
           if (isReqTrigger) {
             setTimeout(function () {
               const $modalBody = $("#modalEditLead .v3-modal-body-scrollable");
@@ -4651,15 +4765,25 @@
             $("#modalEditLead"),
             "-- Search / Select Drop Point / City --",
           );
+          self.initCitySelect2(
+            $("#editLeadDestination"),
+            $("#modalEditLead"),
+            "-- Search / Select Destination City --",
+          );
 
-          // Helper to set Select2 option value
-          function setSelect2Val($el, val, text) {
-            if (!$el || !$el.length) return;
-            $el.empty();
-            if (val) {
-              $el.append(new Option(text || val, val, true, true));
-            }
-            $el.val(val || "").trigger("change");
+          if (!$("#editLeadTripType").hasClass("select2-hidden-accessible")) {
+            $("#editLeadTripType").select2({
+              dropdownParent: $("#modalEditLead"),
+              width: "100%",
+              minimumResultsForSearch: Infinity,
+            });
+          }
+          if (!$("#editLeadVehicleType").hasClass("select2-hidden-accessible")) {
+            $("#editLeadVehicleType").select2({
+              dropdownParent: $("#modalEditLead"),
+              width: "100%",
+              minimumResultsForSearch: Infinity,
+            });
           }
 
           const pickupVal = t.pickup_location || "Delhi";
@@ -4854,6 +4978,43 @@
         }
       });
 
+      // Transporter Vehicle Type change in Edit Lead Modal: Filter models
+      $(document).on(
+        "change select2:select",
+        "#editLeadVehicleType",
+        function () {
+          const cat = $(this).val();
+          self.loadEditVehicleModels(cat, $("#editLeadVehicleModel").val());
+        },
+      );
+
+      // Transporter Destination change: default drop point if one-way
+      $(document).on(
+        "select2:select change",
+        "#editLeadDestination",
+        function () {
+          const dest = $(this).val();
+          if (dest && self.isTransporter) {
+            const curDrop = $("#editLeadDrop").val();
+            const pickupVal = $("#editLeadPickup").val();
+            if (
+              !curDrop ||
+              curDrop === pickupVal ||
+              !$("#editLeadDrop").data("userModified")
+            ) {
+              const tripType = $("#editLeadTripType").val();
+              if (tripType === "outstation_oneway") {
+                $("#editLeadDrop")
+                  .empty()
+                  .append(new Option(dest, dest, true, true))
+                  .trigger("change");
+              }
+            }
+          }
+        },
+      );
+
+
       // Split name when space entered in First Name if Last Name is empty
       $(document).on("blur change", "#editLeadFirstName", function () {
         const val = $(this).val().trim();
@@ -4985,6 +5146,31 @@
           $("#editLeadSubject").val(subjectVal);
         }
 
+        const isTransporter = self.isTransporter;
+        const transporterDest = $("#editLeadDestination").val() || "";
+        const tripType = $("#editLeadTripType").val() || "outstation_round";
+        const vehicleType = $("#editLeadVehicleType").val() || "";
+        const vehicleModel = $("#editLeadVehicleModel").val() || "";
+        const luggageBags = parseInt($("#editLeadLuggageBags").val(), 10) || 0;
+
+        const effectiveDest = isTransporter
+          ? transporterDest || subjectVal || packageVal
+          : packageVal || transporterDest;
+        let effectiveSubject = subjectVal;
+        if (isTransporter) {
+          if (!effectiveSubject) {
+            effectiveSubject = transporterDest
+              ? (tripType ? tripType.replace(/_/g, " ") : "Transport") +
+                " to " +
+                transporterDest
+              : "Transport Service";
+          }
+        } else {
+          if (!effectiveSubject) {
+            effectiveSubject = packageVal;
+          }
+        }
+
         const $btn = $(this);
         $btn.prop("disabled", true).text("Saving...");
 
@@ -4999,18 +5185,22 @@
           mobile: mobile,
           alt_mobile: $("#editLeadAltMobile").val().trim(),
           current_location: $("#editLeadCurrentLocation").val() || "",
-          destination: packageVal,
-          destination_city: packageVal,
-          city: packageVal,
-          subject: subjectVal || packageVal,
-          package: packageVal || subjectVal,
+          destination: effectiveDest,
+          destination_city: effectiveDest,
+          city: effectiveDest,
+          subject: effectiveSubject,
+          package: isTransporter ? "" : packageVal || effectiveSubject,
           date_of_travel: $("#editLeadTravelDate").val(),
           duration_days: $("#editLeadDuration").val(),
           pickup_location: $("#editLeadPickup").val() || "",
           drop_location: $("#editLeadDrop").val() || "",
           adults: $("#editLeadAdults").val(),
           children: $("#editLeadChildren").val(),
-          infants: $("#editLeadInfants").val(),
+          infants: isTransporter ? 0 : $("#editLeadInfants").val(),
+          trip_type: tripType,
+          vehicle_type: vehicleType,
+          vehicle_model: vehicleModel,
+          luggage_bags: luggageBags,
           requirements: finalReq,
           removed_keys: JSON.stringify(removedKeys),
         };
@@ -5133,7 +5323,14 @@
         "click",
         "#btnHeroSendQuotation, #btnSideSendQuotation",
         function () {
-          $("#modalSendTransporterQuotation").addClass("is-active");
+          if (
+            window.TransporterQuoteApp &&
+            typeof window.TransporterQuoteApp.openQuoteModal === "function"
+          ) {
+            window.TransporterQuoteApp.openQuoteModal();
+          } else {
+            $("#modalSendTransporterQuotation").addClass("is-active");
+          }
         },
       );
 
@@ -7462,6 +7659,27 @@
             return;
           }
 
+          if ($("#modalTransporterQuotePreview").hasClass("is-active")) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#modalTransporterQuotePreview").removeClass("is-active");
+            return;
+          }
+
+          if ($("#modalSendTransporterQuotation").hasClass("is-active")) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (
+              window.TransporterQuoteApp &&
+              typeof window.TransporterQuoteApp.confirmCloseModal === "function"
+            ) {
+              window.TransporterQuoteApp.confirmCloseModal();
+            } else {
+              $("#modalSendTransporterQuotation").removeClass("is-active");
+            }
+            return;
+          }
+
           if ($(".v3-modal-overlay.is-active").length) {
             $(".v3-modal-overlay.is-active").removeClass("is-active");
           }
@@ -9257,6 +9475,79 @@
           return data.text || data.id;
         },
       });
+    },
+
+    editVehiclesCache: [],
+
+    loadEditVehicleModels: function (category, selectedModel) {
+      const self = this;
+      const $select = $("#editLeadVehicleModel");
+      if (!$select.length) return;
+
+      function populate(list) {
+        $select.empty();
+        $select.append('<option value="">-- Choose Vehicle Model --</option>');
+        let filtered = list;
+        if (category && category !== "all") {
+          filtered = list.filter(function (v) {
+            return (v.type || "").toLowerCase() === category.toLowerCase();
+          });
+        }
+        if (filtered.length === 0 && list.length > 0) {
+          filtered = list;
+        }
+
+        let selectedFound = false;
+        filtered.forEach(function (v) {
+          const label =
+            v.title + (v.seating ? " (" + v.seating + " Seater)" : "");
+          const isSelected =
+            selectedModel &&
+            (String(v.id) === String(selectedModel) ||
+              (v.title &&
+                v.title.toLowerCase() === String(selectedModel).toLowerCase()));
+          if (isSelected) selectedFound = true;
+          const $opt = $("<option></option>")
+            .val(v.title || v.id)
+            .text(label)
+            .attr("data-id", v.id)
+            .attr("data-title", v.title)
+            .attr("data-type", v.type || "")
+            .attr("data-seating", v.seating || "")
+            .prop("selected", !!isSelected);
+          $select.append($opt);
+        });
+
+        if (selectedModel && !selectedFound) {
+          $select.append(new Option(selectedModel, selectedModel, true, true));
+        }
+
+        if ($select.hasClass("select2-hidden-accessible")) {
+          $select.trigger("change.select2");
+        } else if ($.fn.select2) {
+          $select.select2({
+            dropdownParent: $("#modalEditLead"),
+            width: "100%",
+            placeholder: "Choose vehicle model...",
+          });
+        }
+      }
+
+      if (self.editVehiclesCache && self.editVehiclesCache.length > 0) {
+        populate(self.editVehiclesCache);
+      } else {
+        $.ajax({
+          url: "/api/v3/vehicles/list/",
+          type: "GET",
+          dataType: "json",
+          success: function (res) {
+            if (res && res.status === "success" && Array.isArray(res.data)) {
+              self.editVehiclesCache = res.data;
+              populate(self.editVehiclesCache);
+            }
+          },
+        });
+      }
     },
 
     initSingleDatePickers: function () {
