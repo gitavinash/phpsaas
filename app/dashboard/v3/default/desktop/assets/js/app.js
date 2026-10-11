@@ -1108,9 +1108,9 @@ $(document).ready(function (e) {
     const $link = $card.closest("a");
     if ($link.length && daterange) {
       let currentHref = $link.attr("href") || "";
-      if (currentHref.indexOf("daterange=") !== -1) {
-        $link.attr("href", currentHref.replace(/daterange=[^&]*/, "daterange=" + encodeURIComponent(daterange)));
-      }
+      // if (currentHref.indexOf("daterange=") !== -1) {
+      //   $link.attr("href", currentHref.replace(/daterange=[^&]*/, "daterange=" + encodeURIComponent(daterange)));
+      // }
     }
     $.ajax({
       type: "GET",
@@ -1133,9 +1133,9 @@ $(document).ready(function (e) {
     const $link = $card.closest("a");
     if ($link.length && daterange) {
       let currentHref = $link.attr("href") || "";
-      if (currentHref.indexOf("daterange=") !== -1) {
-        $link.attr("href", currentHref.replace(/daterange=[^&]*/, "daterange=" + encodeURIComponent(daterange)));
-      }
+      // if (currentHref.indexOf("daterange=") !== -1) {
+      //   $link.attr("href", currentHref.replace(/daterange=[^&]*/, "daterange=" + encodeURIComponent(daterange)));
+      // }
     }
     $.ajax({
       type: "GET",
@@ -1157,9 +1157,9 @@ $(document).ready(function (e) {
     const $link = $card.closest("a");
     if ($link.length && daterange) {
       let currentHref = $link.attr("href") || "";
-      if (currentHref.indexOf("daterange=") !== -1) {
-        $link.attr("href", currentHref.replace(/daterange=[^&]*/, "daterange=" + encodeURIComponent(daterange)));
-      }
+      // if (currentHref.indexOf("daterange=") !== -1) {
+      //   $link.attr("href", currentHref.replace(/daterange=[^&]*/, "daterange=" + encodeURIComponent(daterange)));
+      // }
     }
     $.ajax({
       type: "GET",

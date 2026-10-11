@@ -5,9 +5,7 @@
         $userFilter = "?agentId={$user_id}&";
     }
 
-    $formattedStart = !empty($startDate) ? date('d-M-Y', strtotime($startDate)) : date('d-M-Y', strtotime('-29 days'));
-    $formattedEnd   = !empty($endDate) ? date('d-M-Y', strtotime($endDate)) : date('d-M-Y');
-    $url = "/dashboard/leads/list/{$userFilter}leadStatus=9&daterange=" . urlencode("{$formattedStart} - {$formattedEnd}");
+    $url = "/dashboard/leads/list/{$userFilter}leadStatus=9&daterange={$startDate} - {$endDate}";
 ?>
 <a href="<?php echo $url ?>">
     <div class="widget-info kpi-card kpi-indigo" id="kpiQuoteSentValueCard">
