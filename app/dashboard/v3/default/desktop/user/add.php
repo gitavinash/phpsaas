@@ -169,7 +169,7 @@
                         <i class="fi fi-rr-arrow-left"></i> Cancel
                     </a>
                     <button type="button" class="btn-wa-buy-license btn-contact-aleya btn-upgrade d-none" id="btnUpgradeUserLicenseForm" data-modal-title="Team Member Limit Reached" data-modal-notice="You have reached your team member license limit. Please contact Aleya to upgrade your plan and add more team members.">
-                        <i class="fi fi-rr-sparkles"></i> <span>Upgrade</span>
+                        <i class="fi fi-rr-sparkles"></i> <span>Buy More User Licenses</span>
                     </button>
                     <button type="submit" id="btnSubmitUser" class="v3-btn-primary">
                         <i class="fi fi-rr-check"></i> <span id="btnSubmitText">Create Team Member</span>
