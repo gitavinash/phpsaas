@@ -929,12 +929,14 @@
       let html = "";
       leads.forEach(function (lead) {
         const isChecked = self.selectedLeads.has(String(lead.id));
-        const initials = (lead.name || "L")
-          .split(" ")
-          .map((n) => n[0])
-          .slice(0, 2)
-          .join("")
-          .toUpperCase();
+        const cleanNameWords = (lead.name || "Lead")
+          .replace(/[^a-zA-Z0-9\s]/g, " ")
+          .trim()
+          .split(/\s+/)
+          .filter(Boolean);
+        const initials = cleanNameWords.length >= 2
+          ? (cleanNameWords[0][0] + cleanNameWords[1][0]).toUpperCase()
+          : (cleanNameWords[0] ? cleanNameWords[0].slice(0, 2).toUpperCase() : "LD");
 
         let agentOptions = `<option value="0">Unassigned</option>`;
         self.agentsList.forEach(function (ag) {
@@ -995,44 +997,34 @@
         const respElapsed = resp.elapsed_string ? ` · ${resp.elapsed_string}` : "";
 
         let followupHtml = "";
-        if (lead.next_followup) {
-          const nf = lead.next_followup;
+        const nf = lead.next_followup;
+        if (nf && (nf.is_scheduled || nf.datetime || (nf.time_formatted && nf.time_formatted !== "Not Scheduled"))) {
           let fuClass = "fu-badge-pending";
           let fuIcon = "fi-rr-clock";
           if (nf.is_overdue) {
             fuClass = "fu-badge-overdue";
             fuIcon = "fi-rr-exclamation";
-          } else if (nf.is_due_today) {
+          } else if (nf.is_today || nf.is_due_today) {
             fuClass = "fu-badge-today";
             fuIcon = "fi-rr-alarm-clock";
           }
+          const fuTime = nf.time_formatted || nf.due_formatted || nf.due_at || "Scheduled";
           followupHtml = `
-            <div class="lead-followup-pill ${fuClass}" title="Next Follow-Up (${nf.type || 'Task'})">
-              <i class="fi ${fuIcon}"></i> <span>${nf.due_formatted || nf.due_at}</span>
+            <div class="lead-followup-pill ${fuClass}" title="Next Follow-Up (${nf.badge_label || 'Scheduled'})">
+              <i class="fi ${fuIcon}"></i> <span>${fuTime}</span>
             </div>
           `;
         } else {
           followupHtml = `<span class="lead-no-followup"><i class="fi fi-rr-calendar-minus"></i> No follow-up set</span>`;
         }
 
-        // If customer name is large, show first name only
-        let displayName = (lead.name || "").trim();
-        const firstName = (lead.first_name || "").trim();
-        if (displayName.length > 14) {
-          if (firstName.length > 0) {
-            displayName = firstName;
-          } else {
-            const nameParts = displayName.split(/\s+/);
-            if (nameParts.length > 1 && nameParts[0].length > 0) {
-              displayName = nameParts[0];
-            }
-          }
-        }
+        const fullName = (lead.name || "").trim() || (lead.first_name || "").trim() || ("Lead #" + lead.id);
+        const displayName = fullName;
 
-        let customerNameHtml = `<span class="lead-primary-text">${displayName}</span>`;
+        let customerNameHtml = `<span class="lead-primary-text" title="${lead.name || fullName}">${displayName}</span>`;
         if (!self.isDigitalMarketing) {
           customerNameHtml = `
-            <a href="/dashboard/leads/view/?id=${lead.encoded_id}" class="lead-primary-text" title="View ${lead.name}">
+            <a href="/dashboard/leads/view/?id=${lead.encoded_id}" class="lead-primary-text" title="View ${lead.name || fullName}">
               ${displayName}
             </a>
           `;
@@ -1050,6 +1042,8 @@
                 <div class="lead-cell-meta">
                   <div class="lead-name-row">
                     ${customerNameHtml}
+                  </div>
+                  <div class="lead-badges-row">
                     ${statusBadge}
                     ${interestBadge}
                   </div>
