@@ -682,8 +682,18 @@ if ($leadViewSiteId > 0 && isset($connection)) {
         </div>
         <div class="v3-modal-body">
             <div class="v3-modal-form-group">
+                <label class="v3-modal-label">Task Type *</label>
+                <select id="modalFollowUpType" class="selectJS leads-filter-select v3-select-full">
+                    <option value="Call" selected>📞 Phone Call</option>
+                    <option value="WhatsApp">💬 WhatsApp Message</option>
+                    <option value="Email">✉️ Email</option>
+                    <option value="Meeting">🤝 In-Person Meeting</option>
+                    <option value="Other">📌 Other Action</option>
+                </select>
+            </div>
+            <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Reason / Objective *</label>
-                <select id="modalFollowUpReason" class="leads-filter-select v3-select-full">
+                <select id="modalFollowUpReason" class="selectJS leads-filter-select v3-select-full">
                     <option value="Interested - Price Discussion">Interested - Price Discussion</option>
                     <option value="Itinerary Customization Request">Itinerary Customization Request</option>
                     <option value="Client Asked to Call Later">Client Asked to Call Later</option>
@@ -734,6 +744,10 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                 </div>
             </div>
             <div class="v3-modal-form-group">
+                <label class="v3-modal-label">Next Action / Goal</label>
+                <input type="text" id="modalFollowUpNextAction" class="v3-modal-input" placeholder="e.g. Discuss revised quote, take deposit confirmation...">
+            </div>
+            <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Notes / Instructions</label>
                 <textarea id="modalFollowUpComment" class="v3-modal-textarea" placeholder="Add specific follow-up points..."></textarea>
             </div>
@@ -741,6 +755,113 @@ if ($leadViewSiteId > 0 && isset($connection)) {
         <div class="v3-modal-footer">
             <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
             <button type="button" class="btn-v3-action btn-green" id="btnSubmitModalFollowUp">Set Reminder</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Log Customer Interaction -->
+<div class="v3-modal-overlay" id="modalLogInteraction">
+    <div class="v3-modal-dialog">
+        <div class="v3-modal-header">
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box icon-interaction">
+                    <i class="fi fi-rr-headset"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Log Customer Interaction</h4>
+                    <span class="v3-modal-subtitle">Record calls, WhatsApp messages, or customer responses</span>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
+        </div>
+        <div class="v3-modal-body">
+            <div class="v3-modal-form-group">
+                <label class="v3-modal-label">Interaction Direction &amp; Flow *</label>
+                <select id="logInteractionDirection" class="selectJS leads-filter-select v3-select-full">
+                    <option value="outbound" selected>📤 Outbound (Agent contacted customer)</option>
+                    <option value="inbound">📥 Inbound (Customer replied / called agent)</option>
+                </select>
+            </div>
+            <div class="v3-modal-form-group">
+                <label class="v3-modal-label">Channel / Type *</label>
+                <select id="logInteractionType" class="selectJS leads-filter-select v3-select-full">
+                    <option value="call" selected>📞 Phone Call</option>
+                    <option value="whatsapp">💬 WhatsApp</option>
+                    <option value="email">✉️ Email</option>
+                    <option value="meeting">🤝 In-Person Meeting</option>
+                    <option value="other">📌 Other</option>
+                </select>
+            </div>
+            <div class="v3-modal-form-group">
+                <label class="v3-modal-label">Discussion Notes / Outcome *</label>
+                <textarea id="logInteractionNotes" class="v3-modal-textarea" placeholder="Summarize the conversation or customer reply..."></textarea>
+            </div>
+        </div>
+        <div class="v3-modal-footer">
+            <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
+            <button type="button" class="btn-v3-action btn-green" id="btnSubmitLogInteraction">Log Interaction</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Complete Follow-Up Task -->
+<div class="v3-modal-overlay" id="modalCompleteTask">
+    <div class="v3-modal-dialog">
+        <div class="v3-modal-header">
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box icon-complete-task">
+                    <i class="fi fi-rr-check-circle"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Complete Follow-Up Task</h4>
+                    <span class="v3-modal-subtitle">Record task outcome and schedule next steps</span>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
+        </div>
+        <div class="v3-modal-body">
+            <input type="hidden" id="completeTaskId" value="">
+            <div class="v3-modal-form-group">
+                <label class="v3-modal-label">Follow-Up Outcome / Notes *</label>
+                <textarea id="completeTaskOutcome" class="v3-modal-textarea" placeholder="Describe the result of this follow-up call/meeting..."></textarea>
+            </div>
+            <div class="v3-modal-form-group">
+                <label class="v3-modal-checkbox-label">
+                    <input type="checkbox" id="completeTaskScheduleNext" value="1">
+                    <span>Schedule next follow-up task now</span>
+                </label>
+            </div>
+            <div id="completeTaskNextSection" class="is-hidden">
+                <div class="v3-modal-form-group">
+                    <label class="v3-modal-label">Next Task Type</label>
+                    <select id="completeTaskNextType" class="leads-filter-select v3-select-full">
+                        <option value="Call" selected>📞 Phone Call</option>
+                        <option value="WhatsApp">💬 WhatsApp Message</option>
+                        <option value="Email">✉️ Email</option>
+                        <option value="Meeting">🤝 Meeting</option>
+                        <option value="Other">📌 Other</option>
+                    </select>
+                </div>
+                <div class="v3-modal-form-group">
+                    <label class="v3-modal-label">Next Due Date &amp; Time</label>
+                    <div class="v3-datetime-split-grid">
+                        <div class="v3-datetime-col">
+                            <input type="date" id="completeTaskNextDate" class="v3-native-datetime-input">
+                        </div>
+                        <div class="v3-datetime-col">
+                            <input type="time" id="completeTaskNextTime" class="v3-native-datetime-input" value="11:00">
+                        </div>
+                    </div>
+                </div>
+                <div class="v3-modal-form-group">
+                    <label class="v3-modal-label">Next Action / Goal</label>
+                    <input type="text" id="completeTaskNextAction" class="v3-modal-input" placeholder="e.g. Send updated pricing...">
+                </div>
+            </div>
+        </div>
+        <div class="v3-modal-footer">
+            <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
+            <button type="button" class="btn-v3-action btn-green" id="btnSubmitCompleteTask">Complete Task</button>
         </div>
     </div>
 </div>

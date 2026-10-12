@@ -7116,6 +7116,568 @@ button.btn-action-icon.delete:hover,
   background: #ea580c !important;
 }
 
+/* 20 CRM Pipeline Status Badges */
+.v3-lead-badge.status-contacted {
+  background: #f0fdfa !important;
+  color: #0d9488 !important;
+  border: 1px solid #ccfbf1 !important;
+}
+.v3-lead-badge.status-contacted .lead-dot { background: #0d9488 !important; }
+
+.v3-lead-badge.status-requirement {
+  background: #f0f9ff !important;
+  color: #0284c7 !important;
+  border: 1px solid #e0f2fe !important;
+}
+.v3-lead-badge.status-requirement .lead-dot { background: #0284c7 !important; }
+
+.v3-lead-badge.status-itinerary-prog {
+  background: #f5f3ff !important;
+  color: #7c3aed !important;
+  border: 1px solid #ede9fe !important;
+}
+.v3-lead-badge.status-itinerary-prog .lead-dot { background: #7c3aed !important; }
+
+.v3-lead-badge.status-quote-prog {
+  background: #fdf4ff !important;
+  color: #c026d3 !important;
+  border: 1px solid #fae8ff !important;
+}
+.v3-lead-badge.status-quote-prog .lead-dot { background: #c026d3 !important; }
+
+.v3-lead-badge.status-quote-sent {
+  background: #eff6ff !important;
+  color: #2563eb !important;
+  border: 1px solid #dbeafe !important;
+}
+.v3-lead-badge.status-quote-sent .lead-dot { background: #2563eb !important; }
+
+.v3-lead-badge.status-awaiting-dec {
+  background: #fffbeb !important;
+  color: #d97706 !important;
+  border: 1px solid #fef3c7 !important;
+}
+.v3-lead-badge.status-awaiting-dec .lead-dot { background: #d97706 !important; }
+
+.v3-lead-badge.status-negotiation {
+  background: #fff7ed !important;
+  color: #ea580c !important;
+  border: 1px solid #ffedd5 !important;
+}
+.v3-lead-badge.status-negotiation .lead-dot { background: #ea580c !important; }
+
+.v3-lead-badge.status-on-hold {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  border: 1px solid #e2e8f0 !important;
+}
+.v3-lead-badge.status-on-hold .lead-dot { background: #64748b !important; }
+
+.v3-lead-badge.status-nurture {
+  background: #f7fee7 !important;
+  color: #65a30d !important;
+  border: 1px solid #ecfccb !important;
+}
+.v3-lead-badge.status-nurture .lead-dot { background: #65a30d !important; }
+
+.v3-lead-badge.status-not-interested {
+  background: #f4f4f5 !important;
+  color: #71717a !important;
+  border: 1px solid #e4e4e7 !important;
+}
+.v3-lead-badge.status-not-interested .lead-dot { background: #71717a !important; }
+
+.v3-lead-badge.status-unqualified {
+  background: #fff1f2 !important;
+  color: #e11d48 !important;
+  border: 1px solid #ffe4e6 !important;
+}
+.v3-lead-badge.status-unqualified .lead-dot { background: #e11d48 !important; }
+
+/* Customer Interest Level Pills */
+.v3-interest-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  padding: 1px 7px !important;
+  border-radius: 9999px !important;
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  white-space: nowrap !important;
+}
+.v3-interest-pill.pill-interest-hot,
+.v3-interest-trigger.pill-interest-hot {
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+  border: 1px solid #fecaca !important;
+}
+.v3-interest-pill.pill-interest-warm,
+.v3-interest-trigger.pill-interest-warm {
+  background: #fffbeb !important;
+  color: #d97706 !important;
+  border: 1px solid #fde68a !important;
+}
+.v3-interest-pill.pill-interest-cold,
+.v3-interest-trigger.pill-interest-cold {
+  background: #eff6ff !important;
+  color: #2563eb !important;
+  border: 1px solid #bfdbfe !important;
+}
+.v3-interest-pill.pill-interest-not-interested,
+.v3-interest-trigger.pill-interest-not-interested {
+  background: #f1f5f9 !important;
+  color: #64748b !important;
+  border: 1px solid #e2e8f0 !important;
+}
+.v3-interest-pill.pill-interest-unknown,
+.v3-interest-trigger.pill-interest-unknown {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Interest Picker Component in Lead Hero */
+.v3-interest-picker-wrap {
+  position: relative !important;
+  display: inline-block !important;
+}
+.v3-interest-trigger {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 4px 10px !important;
+  border-radius: 9999px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  border: 1px solid #e2e8f0 !important;
+  background: #ffffff !important;
+  transition: all 0.2s ease !important;
+}
+.v3-interest-trigger:hover {
+  filter: brightness(0.97) !important;
+  transform: translateY(-1px) !important;
+}
+.v3-interest-trigger .interest-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 12.5px !important;
+  line-height: 1 !important;
+}
+.v3-interest-trigger .interest-icon i {
+  font-size: 12.5px !important;
+  line-height: 1 !important;
+}
+.v3-interest-trigger .interest-label-prefix {
+  font-weight: 500 !important;
+  font-size: 11.5px !important;
+  opacity: 0.8 !important;
+  margin-right: 2px !important;
+}
+.v3-interest-trigger .interest-label {
+  font-weight: 600 !important;
+  font-size: 12px !important;
+}
+.v3-interest-trigger .fi-rr-angle-small-down {
+  font-size: 11px !important;
+  opacity: 0.7 !important;
+  margin-left: 1px !important;
+}
+.v3-interest-dropdown-menu {
+  position: absolute !important;
+  top: calc(100% + 6px) !important;
+  left: 0 !important;
+  min-width: 175px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1) !important;
+  padding: 6px !important;
+  z-index: 100 !important;
+  display: none !important;
+}
+.v3-interest-dropdown-menu.is-open {
+  display: block !important;
+}
+.v3-interest-opt {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 10px !important;
+  border-radius: 6px !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  color: #1e293b !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease !important;
+}
+.v3-interest-opt:hover {
+  background: #f1f5f9 !important;
+}
+.v3-interest-opt.selected {
+  background: #e2e8f0 !important;
+  font-weight: 600 !important;
+}
+.v3-interest-opt .interest-opt-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 16px !important;
+  font-size: 12.5px !important;
+}
+.v3-interest-opt .interest-opt-icon i {
+  font-size: 12.5px !important;
+  line-height: 1 !important;
+}
+.v3-interest-opt .fi-rr-check {
+  margin-left: auto !important;
+  color: #059669 !important;
+  font-size: 11px !important;
+}
+
+/* Modal Select2 Styling for Log Interaction & Schedule Follow-Up */
+.v3-modal-dialog .select2-container {
+  width: 100% !important;
+  display: block !important;
+}
+.v3-modal-dialog .select2-container--default .select2-selection--single {
+  height: 40px !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  background-color: #f8fafc !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: all 0.2s ease !important;
+}
+.v3-modal-dialog .select2-container--default.select2-container--open .select2-selection--single,
+.v3-modal-dialog .select2-container--default.select2-container--focus .select2-selection--single {
+  border-color: #f97316 !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12) !important;
+}
+.v3-modal-dialog .select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 38px !important;
+  padding-left: 12px !important;
+  padding-right: 28px !important;
+  color: #1e293b !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+.v3-modal-dialog .select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 38px !important;
+  right: 10px !important;
+}
+.v3-modal-dialog .select2-dropdown,
+.v3-modal-overlay .select2-dropdown {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1) !important;
+  z-index: 1000005 !important;
+}
+
+/* Customer Response Tracking Badges */
+.v3-response-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 3px 8px !important;
+  border-radius: 9999px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  white-space: nowrap !important;
+}
+.v3-response-badge .resp-dot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+}
+.v3-response-badge.badge-resp-no-activity {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  border: 1px solid #e2e8f0 !important;
+}
+.v3-response-badge.badge-resp-no-activity .resp-dot { background: #94a3b8 !important; }
+
+.v3-response-badge.badge-resp-awaiting {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border: 1px solid #bfdbfe !important;
+}
+.v3-response-badge.badge-resp-awaiting .resp-dot { background: #3b82f6 !important; }
+
+.v3-response-badge.badge-resp-responded {
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+.v3-response-badge.badge-resp-responded .resp-dot { background: #10b981 !important; }
+
+.v3-response-badge.badge-resp-24h {
+  background: #fffbeb !important;
+  color: #b45309 !important;
+  border: 1px solid #fde68a !important;
+}
+.v3-response-badge.badge-resp-24h .resp-dot { background: #f59e0b !important; }
+
+.v3-response-badge.badge-resp-48h {
+  background: #fff7ed !important;
+  color: #c2410c !important;
+  border: 1px solid #fed7aa !important;
+}
+.v3-response-badge.badge-resp-48h .resp-dot { background: #ea580c !important; }
+
+.v3-response-badge.badge-resp-7d {
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  border: 1px solid #fecaca !important;
+}
+.v3-response-badge.badge-resp-7d .resp-dot { background: #ef4444 !important; }
+
+/* Follow-up Schedule Pills */
+.lead-followup-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 2px 7px !important;
+  border-radius: 6px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  white-space: nowrap !important;
+}
+.lead-followup-pill.fu-badge-pending {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+.lead-followup-pill.fu-badge-today {
+  background: #faf5ff !important;
+  color: #7e22ce !important;
+  border: 1px solid #e9d5ff !important;
+  font-weight: 600 !important;
+}
+.lead-followup-pill.fu-badge-overdue {
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+  border: 1px solid #fecaca !important;
+  font-weight: 600 !important;
+}
+.lead-followup-pill.fu-badge-completed {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+
+.lead-no-followup {
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.lead-travel-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 11px !important;
+  color: #0284c7 !important;
+  background: #f0f9ff !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  border: 1px solid #e0f2fe !important;
+}
+
+/* Sidebar Response & Tasks Card */
+.v3-response-tasks-card {
+  margin-bottom: 16px !important;
+}
+.v3-response-tracker-box {
+  background: #f8fafc !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  border: 1px solid #e2e8f0 !important;
+  margin-bottom: 12px !important;
+}
+.v3-resp-top-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+.v3-resp-meta-desc {
+  font-size: 11.5px !important;
+  color: #64748b !important;
+  margin-top: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+}
+.v3-resp-elapsed {
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  margin-left: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+}
+.v3-tasks-header-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 8px !important;
+}
+.v3-tasks-subtitle {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+}
+.v3-lead-tasks-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+.v3-task-item {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  transition: all 0.2s ease !important;
+}
+.v3-task-item:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04) !important;
+}
+.v3-task-item.is-overdue {
+  border-left: 3px solid #ef4444 !important;
+}
+.v3-task-item.status-completed {
+  opacity: 0.75 !important;
+  background: #f8fafc !important;
+}
+.v3-task-item-top {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 6px !important;
+}
+.v3-task-type-chip {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  color: #334155 !important;
+}
+.v3-task-due-time {
+  font-size: 11px !important;
+  color: #64748b !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+.v3-task-goal {
+  font-size: 12px !important;
+  color: #1e293b !important;
+  margin-top: 4px !important;
+}
+.v3-task-notes {
+  font-size: 11.5px !important;
+  color: #64748b !important;
+  margin-top: 2px !important;
+}
+.task-outcome-meta {
+  font-size: 11px !important;
+  color: #059669 !important;
+  margin-top: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+.v3-task-item-footer {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-top: 8px !important;
+  padding-top: 6px !important;
+  border-top: 1px dashed #f1f5f9 !important;
+}
+.v3-task-agent {
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+.btn-complete-task {
+  background: #ecfdf5 !important;
+  border: 1px solid #a7f3d0 !important;
+  color: #059669 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+.btn-complete-task:hover {
+  background: #d1fae5 !important;
+}
+.v3-no-tasks-hint {
+  font-size: 11.5px !important;
+  color: #94a3b8 !important;
+  padding: 10px !important;
+  text-align: center !important;
+  background: #f8fafc !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+
+/* Converted Booking Banner */
+.v3-converted-booking-banner {
+  background: #f0fdf4 !important;
+  border: 1px solid #bbf7d0 !important;
+  border-radius: 10px !important;
+  padding: 12px 16px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 16px !important;
+}
+.v3-cb-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+.v3-cb-icon-wrap {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 8px !important;
+  background: #dcfce7 !important;
+  color: #16a34a !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 18px !important;
+}
+.v3-cb-title {
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #15803d !important;
+}
+.v3-cb-sub {
+  font-size: 12px !important;
+  color: #4ade80 !important;
+  color: #166534 !important;
+}
+
 /* Agent Assign Field */
 .lead-assign-wrap {
   position: relative !important;
@@ -12027,7 +12589,8 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   margin-bottom: 10px !important;
 }
 
-.v3-composer-type-btn {
+.v3-composer-type-btn,
+.v3-composer-action-btn {
   padding: 4px 10px !important;
   border-radius: 20px !important;
   font-size: 12px !important;
@@ -12037,6 +12600,16 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   color: #475569 !important;
   cursor: pointer !important;
   transition: all 0.15s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+.v3-composer-type-btn:hover,
+.v3-composer-action-btn:hover {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
 }
 
 .v3-composer-type-btn.active {

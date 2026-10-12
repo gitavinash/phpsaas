@@ -88,11 +88,22 @@ if ($rawLeadId !== '' && $rawLeadId !== null && $rawStatus !== null && is_numeri
         $leadData = mysqli_fetch_assoc($leadRes);
         $oldStatus = (int)($leadData['enquiry_status'] ?? 0);
 
+        $extraSet = "";
+        require_once __DIR__ . '/status-config.php';
+        if (in_array($newStatus, [9, 19, 23], true)) {
+            $extraSet .= ", enquiry_last_contacted_at = NOW()";
+            $calc = calculateCustomerResponseStatus(date('Y-m-d H:i:s'), $leadData['enquiry_last_customer_response_at'] ?? null, $newStatus);
+            $extraSet .= ", enquiry_response_status = '" . mysqli_real_escape_string($connection, $calc['status']) . "'";
+        } elseif (isClosedLeadStatus($newStatus)) {
+            $extraSet .= ", enquiry_response_status = 'No Activity'";
+        }
+
         // 3. Update enquiry status
         $updateSiteClause = ($siteId > 0) ? " AND enquiry_site_id = {$siteId}" : "";
         $updateSql = "UPDATE {$tblPrefix}enquiry
                       SET enquiry_status = {$newStatus},
                           enquiry_update = NOW()
+                          {$extraSet}
                       WHERE enquiry_id = {$realId}{$updateSiteClause}";
 
         if (!mysqli_query($connection, $updateSql)) {

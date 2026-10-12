@@ -2491,7 +2491,136 @@
         `
         : "";
 
+      // Converted Booking Banner
+      const bInfo = lead.booking;
+      const bookingBannerHtml = bInfo ? `
+        <div class="v3-converted-booking-banner">
+          <div class="v3-cb-left">
+            <div class="v3-cb-icon-wrap"><i class="fi fi-rr-check-circle"></i></div>
+            <div class="v3-cb-meta">
+              <h5 class="v3-cb-title">Converted to Confirmed Booking #${bInfo.id}</h5>
+              <span class="v3-cb-sub">${bInfo.service || 'Travel Package'} · Status: <strong>${bInfo.status_label || 'Confirmed'}</strong> · Converted on ${bInfo.date || 'Recent'}</span>
+            </div>
+          </div>
+          <div class="v3-cb-right">
+            <a href="/dashboard/booking/view/?id=${bInfo.id}" class="btn-v3-action btn-green btn-xs" target="_blank">
+              <i class="fi fi-rr-arrow-up-right-from-square"></i> View Booking
+            </a>
+          </div>
+        </div>
+      ` : "";
+
+      // Response Tracking & Tasks Sidebar Widget
+      const resp = lead.response_indicator || {};
+      const respBadgeClass = resp.badge_class || "badge-resp-no-activity";
+      const respLabel = resp.label || "No Activity";
+
+      let tasksListHtml = "";
+      const tasks = lead.tasks || [];
+      if (tasks.length > 0) {
+        tasks.forEach(t => {
+          let taskIcon = "fi-rr-phone-call";
+          if (t.type === "WhatsApp") taskIcon = "fi-rr-comment";
+          else if (t.type === "Email") taskIcon = "fi-rr-envelope";
+          else if (t.type === "Meeting") taskIcon = "fi-rr-handshake";
+          else if (t.type === "Other") taskIcon = "fi-rr-bookmark";
+
+          let taskBadgeClass = "fu-badge-pending";
+          let badgeText = t.due_formatted || t.due_at;
+          if (t.status === "completed") {
+            taskBadgeClass = "fu-badge-completed";
+            badgeText = "Completed";
+          } else if (t.is_overdue) {
+            taskBadgeClass = "fu-badge-overdue";
+            badgeText = "Overdue";
+          } else if (t.is_today) {
+            taskBadgeClass = "fu-badge-today";
+            badgeText = "Due Today";
+          }
+
+          const completeBtn = (t.status === "pending") ? `
+            <button type="button" class="btn-complete-task" data-task-id="${t.id}" title="Complete this task">
+              <i class="fi fi-rr-check"></i> Complete
+            </button>
+          ` : "";
+
+          const outcomeHtml = t.outcome ? `
+            <div class="task-outcome-meta"><i class="fi fi-rr-comment-dots"></i> Outcome: ${escapeHtml(t.outcome)}</div>
+          ` : "";
+
+          tasksListHtml += `
+            <div class="v3-task-item status-${t.status} ${t.is_overdue ? 'is-overdue' : ''}">
+              <div class="v3-task-item-top">
+                <span class="v3-task-type-chip type-${(t.type || 'call').toLowerCase()}">
+                  <i class="fi ${taskIcon}"></i> ${t.type || 'Task'}
+                </span>
+                <span class="lead-followup-pill ${taskBadgeClass}">${badgeText}</span>
+              </div>
+              <div class="v3-task-item-body">
+                <div class="v3-task-due-time"><i class="fi fi-rr-clock"></i> ${t.due_formatted || t.due_at}</div>
+                ${t.next_action ? `<div class="v3-task-goal"><strong>Goal:</strong> ${escapeHtml(t.next_action)}</div>` : ''}
+                ${t.notes ? `<div class="v3-task-notes">${escapeHtml(t.notes)}</div>` : ''}
+                ${outcomeHtml}
+              </div>
+              <div class="v3-task-item-footer">
+                <span class="v3-task-agent"><i class="fi fi-rr-user"></i> ${escapeHtml(t.agent_name || 'Agent')}</span>
+                ${completeBtn}
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        tasksListHtml = `
+          <div class="v3-no-tasks-hint">
+            <i class="fi fi-rr-calendar-check"></i>
+            <span>No pending follow-up tasks scheduled.</span>
+          </div>
+        `;
+      }
+
+      const pendingTasksCount = (lead.tasks || []).filter(t => t.status === 'pending').length;
+
+      const responseTrackerSidebarHtml = `
+        <!-- Customer Response & Tasks Card -->
+        <div class="v3-sidebar-card v3-response-tasks-card">
+          <div class="v3-sidebar-card-title">
+            <span>Response &amp; Tasks</span>
+            <i class="fi fi-rr-hourglass-end"></i>
+          </div>
+
+          <!-- Customer Response Tracking -->
+          <div class="v3-response-tracker-box">
+            <div class="v3-resp-top-row">
+              <span class="v3-response-badge ${respBadgeClass}" title="${resp.description || respLabel}">
+                <span class="resp-dot"></span> ${respLabel}
+              </span>
+              <button type="button" class="btn-v3-action btn-outline btn-xs" id="btnOpenLogInteractionModal" title="Log call, WhatsApp message, or customer reply">
+                <i class="fi fi-rr-headset"></i> Log Interaction
+              </button>
+            </div>
+            <div class="v3-resp-meta-desc">
+              <span>${resp.description || ""}</span>
+              ${resp.elapsed_string ? `<span class="v3-resp-elapsed"><i class="fi fi-rr-clock"></i> ${resp.elapsed_string}</span>` : ""}
+            </div>
+          </div>
+
+          <!-- Follow-up Tasks Section -->
+          <div class="v3-tasks-header-row">
+            <span class="v3-tasks-subtitle">Follow-up Tasks (${pendingTasksCount} pending)</span>
+            <button type="button" class="btn-v3-action btn-orange btn-xs" id="btnOpenScheduleTaskModal" title="Schedule next follow-up task">
+              <i class="fi fi-rr-plus"></i> New Task
+            </button>
+          </div>
+          <div class="v3-lead-tasks-list">
+            ${tasksListHtml}
+          </div>
+        </div>
+      `;
+
       // 4. Complete Unified CRM Assembly
+      const rawInterestIcon = (lead.interest_meta && lead.interest_meta.icon) ? lead.interest_meta.icon : "fi-rr-question";
+      const interestIconHtml = rawInterestIcon.indexOf("fi-") !== -1 ? `<i class="fi ${rawInterestIcon}"></i>` : rawInterestIcon;
+
       const html = `
         <div class="v3-lead-view-wrapper">
           <!-- 1. Minimal Hero Header Banner -->
@@ -2504,6 +2633,8 @@
               <div class="v3-lead-hero-title-wrap">
                 <div class="v3-lead-hero-name-row">
                   <h2 class="v3-lead-hero-name">${lead.name}</h2>
+                  
+                  <!-- Main Status Picker (20 CRM Stages) -->
                   <div class="v3-minimal-status-picker">
                     <button type="button" class="v3-minimal-status-trigger ${lead.status_class}" id="btnMinimalStatusTrigger" title="Click to change status">
                       <span class="lead-dot" style="background-color: ${lead.status_color}"></span>
@@ -2512,141 +2643,126 @@
                     </button>
 
                     <div class="v3-status-dropdown-menu" id="statusDropdownMenu">
-                      <div class="v3-status-opt-header">Lifecycle Flow</div>
+                      <div class="v3-status-opt-header">Active Sales Pipeline</div>
                       <div class="v3-status-opt ${st === 0 ? "selected" : ""}" data-status="0">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot initiate"></span>
-                          <span>New Leads</span>
-                        </div>
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot initiate"></span><span>New Enquiry</span></div>
                         ${st === 0 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 2 ? "selected" : ""}" data-status="2">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot pending"></span>
-                          <span>Assigned</span>
-                        </div>
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot pending"></span><span>Assigned</span></div>
                         ${st === 2 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
-                      <div class="v3-status-opt ${st === 3 ? "selected" : ""}" data-status="3">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot followup"></span>
-                          <span>Follow Up</span>
-                        </div>
-                        ${st === 3 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      <div class="v3-status-opt ${st === 19 ? "selected" : ""}" data-status="19">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot contacted"></span><span>Contacted</span></div>
+                        ${st === 19 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-status-opt ${st === 20 ? "selected" : ""}" data-status="20">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot requirement"></span><span>Requirement Collected</span></div>
+                        ${st === 20 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-status-opt ${st === 21 ? "selected" : ""}" data-status="21">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot itinerary-prog"></span><span>Itinerary In Progress</span></div>
+                        ${st === 21 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 9 ? "selected" : ""}" data-status="9">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot itinerary-sent"></span>
-                          <span>Itinerary / Quotation Sent</span>
-                        </div>
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot itinerary-sent"></span><span>Itinerary Sent</span></div>
                         ${st === 9 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
+                      <div class="v3-status-opt ${st === 22 ? "selected" : ""}" data-status="22">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot quote-prog"></span><span>Quotation In Progress</span></div>
+                        ${st === 22 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-status-opt ${st === 23 ? "selected" : ""}" data-status="23">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot quote-sent"></span><span>Quotation Sent</span></div>
+                        ${st === 23 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-status-opt ${st === 24 ? "selected" : ""}" data-status="24">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot awaiting-dec"></span><span>Awaiting Customer Decision</span></div>
+                        ${st === 24 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-status-opt ${st === 25 ? "selected" : ""}" data-status="25">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot negotiation"></span><span>Negotiation</span></div>
+                        ${st === 25 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
                       <div class="v3-status-opt ${st === 10 ? "selected" : ""}" data-status="10">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot quotation-approved"></span>
-                          <span>Quotation Approved</span>
-                        </div>
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot quotation-approved"></span><span>Quotation Approved</span></div>
                         ${st === 10 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 6 ? "selected" : ""}" data-status="6">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot payment-initiated"></span>
-                          <span>Payment Requested</span>
-                        </div>
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot payment-initiated"></span><span>Payment Pending</span></div>
                         ${st === 6 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
-                      <div class="v3-status-opt ${st === 12 ? "selected" : ""}" data-status="12">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot payment-received"></span>
-                          <span>Payment Received</span>
-                        </div>
-                        ${st === 12 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 8 ? "selected" : ""}" data-status="8">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot upay-done"></span>
-                          <span>Upay Done</span>
-                        </div>
-                        ${st === 8 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
                       <div class="v3-status-opt ${st === 1 ? "selected" : ""}" data-status="1">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot success"></span>
-                          <span>Confirmed</span>
-                        </div>
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot success"></span><span>Converted to Booking</span></div>
                         ${st === 1 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
-                      <div class="v3-status-opt ${st === 11 ? "selected" : ""}" data-status="11">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot voucher-issued"></span>
-                          <span>Voucher Issued</span>
-                        </div>
-                        ${st === 11 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 13 ? "selected" : ""}" data-status="13">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot trip-progress"></span>
-                          <span>Trip in Progress</span>
-                        </div>
-                        ${st === 13 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 14 ? "selected" : ""}" data-status="14">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot trip-completed"></span>
-                          <span>Trip Completed</span>
-                        </div>
-                        ${st === 14 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 15 ? "selected" : ""}" data-status="15">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot closed"></span>
-                          <span>Closed</span>
-                        </div>
-                        ${st === 15 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
 
-                      <div class="v3-status-opt-header">Exception & Drop-Off</div>
-                      <div class="v3-status-opt ${st === 4 ? "selected" : ""}" data-status="4">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot failed"></span>
-                          <span>Closed / Cancelled</span>
-                        </div>
-                        ${st === 4 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      <div class="v3-status-opt-header">Hold, Nurture &amp; Outcomes</div>
+                      <div class="v3-status-opt ${st === 26 ? "selected" : ""}" data-status="26">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot on-hold"></span><span>On Hold</span></div>
+                        ${st === 26 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
-                      <div class="v3-status-opt ${st === 5 ? "selected" : ""}" data-status="5">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot duplicate"></span>
-                          <span>Duplicate</span>
-                        </div>
-                        ${st === 5 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      <div class="v3-status-opt ${st === 27 ? "selected" : ""}" data-status="27">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot nurture"></span><span>Nurture</span></div>
+                        ${st === 27 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
-                      <div class="v3-status-opt ${st === 7 ? "selected" : ""}" data-status="7">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot sales-request"></span>
-                          <span>Sent for Sales Request</span>
-                        </div>
-                        ${st === 7 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 16 ? "selected" : ""}" data-status="16">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot cancelled"></span>
-                          <span>Cancelled</span>
-                        </div>
-                        ${st === 16 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      <div class="v3-status-opt ${st === 28 ? "selected" : ""}" data-status="28">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot not-interested"></span><span>Not Interested</span></div>
+                        ${st === 28 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                       <div class="v3-status-opt ${st === 17 ? "selected" : ""}" data-status="17">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot lost"></span>
-                          <span>Lost</span>
-                        </div>
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot lost"></span><span>Lost</span></div>
                         ${st === 17 ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
-                      <div class="v3-status-opt ${st === 18 ? "selected" : ""}" data-status="18">
-                        <div class="v3-status-opt-left">
-                          <span class="v3-status-opt-dot refund"></span>
-                          <span>Payment Refund</span>
-                        </div>
-                        ${st === 18 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      <div class="v3-status-opt ${st === 5 ? "selected" : ""}" data-status="5">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot duplicate"></span><span>Duplicate</span></div>
+                        ${st === 5 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-status-opt ${st === 29 ? "selected" : ""}" data-status="29">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot unqualified"></span><span>Unqualified</span></div>
+                        ${st === 29 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-status-opt ${st === 16 ? "selected" : ""}" data-status="16">
+                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot cancelled"></span><span>Cancelled</span></div>
+                        ${st === 16 ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Customer Interest Picker -->
+                  <div class="v3-interest-picker-wrap">
+                    <button type="button" class="v3-interest-trigger pill-interest-${(lead.interest_level || "unknown").toLowerCase().replace(/\s+/g, "-")}" id="btnInterestTrigger" title="Click to update interest level">
+                      <span class="interest-icon">${interestIconHtml}</span>
+                      <span class="interest-label-prefix">Interest:</span>
+                      <span class="interest-label">${lead.interest_level || "Unknown"}</span>
+                      <i class="fi fi-rr-angle-small-down"></i>
+                    </button>
+                    <div class="v3-interest-dropdown-menu" id="interestDropdownMenu">
+                      <div class="v3-status-opt-header">Customer Interest</div>
+                      <div class="v3-interest-opt ${lead.interest_level === "Hot" ? "selected" : ""}" data-interest="Hot">
+                        <span class="interest-opt-icon"><i class="fi fi-rr-flame"></i></span>
+                        <span class="interest-opt-label">Hot</span>
+                        ${lead.interest_level === "Hot" ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-interest-opt ${lead.interest_level === "Warm" ? "selected" : ""}" data-interest="Warm">
+                        <span class="interest-opt-icon"><i class="fi fi-rr-sparkles"></i></span>
+                        <span class="interest-opt-label">Warm</span>
+                        ${lead.interest_level === "Warm" ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-interest-opt ${lead.interest_level === "Cold" ? "selected" : ""}" data-interest="Cold">
+                        <span class="interest-opt-icon"><i class="fi fi-rr-snowflake"></i></span>
+                        <span class="interest-opt-label">Cold</span>
+                        ${lead.interest_level === "Cold" ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-interest-opt ${lead.interest_level === "Not Interested" ? "selected" : ""}" data-interest="Not Interested">
+                        <span class="interest-opt-icon"><i class="fi fi-rr-cross-circle"></i></span>
+                        <span class="interest-opt-label">Not Interested</span>
+                        ${lead.interest_level === "Not Interested" ? '<i class="fi fi-rr-check"></i>' : ""}
+                      </div>
+                      <div class="v3-interest-opt ${lead.interest_level === "Unknown" || !lead.interest_level ? "selected" : ""}" data-interest="Unknown">
+                        <span class="interest-opt-icon"><i class="fi fi-rr-question"></i></span>
+                        <span class="interest-opt-label">Unknown</span>
+                        ${lead.interest_level === "Unknown" || !lead.interest_level ? '<i class="fi fi-rr-check"></i>' : ""}
                       </div>
                     </div>
                   </div>
@@ -2811,6 +2927,8 @@
                     </button>
                   </div>
 
+                  ${bookingBannerHtml}
+
                   <h4 class="v3-info-section-heading">Customer Information</h4>
                   <div class="v3-data-grid">
                     <div class="v3-data-item">
@@ -2881,67 +2999,19 @@
                       <button type="button" class="v3-composer-type-btn active" data-type="note">
                         <i class="fi fi-rr-comment-alt"></i> Add Note
                       </button>
-                      <button type="button" class="v3-composer-type-btn" data-type="followup">
-                        <i class="fi fi-rr-alarm-clock"></i> Set Follow-Up
+                      <button type="button" class="v3-composer-action-btn" id="btnComposerLogInteraction" title="Log phone call, WhatsApp chat, or meeting">
+                        <i class="fi fi-rr-headset"></i> Log Interaction
+                      </button>
+                      <button type="button" class="v3-composer-action-btn" id="btnComposerScheduleFollowUp" title="Schedule callback or next task">
+                        <i class="fi fi-rr-alarm-clock"></i> Schedule Follow-Up
                       </button>
                     </div>
 
-                    <textarea id="composerNoteInput" class="v3-composer-input" placeholder="Type a note, call log, or customer update..."></textarea>
-
-                    <div class="v3-composer-followup-row" id="composerFollowupRow">
-                      <div class="v3-followup-schedule-card">
-                        <div class="v3-followup-presets-wrap">
-                          <span class="v3-preset-label"><i class="fi fi-rr-bolt"></i> Quick Presets:</span>
-                          <div class="v3-preset-chips" data-target="#composerFollowupTime">
-                            <button type="button" class="v3-preset-chip" data-preset="in_2_hours"><i class="fi fi-rr-bolt"></i> In 2 Hours</button>
-                            <button type="button" class="v3-preset-chip active" data-preset="tomorrow_morning"><i class="fi fi-rr-sun"></i> Tomorrow 10:30 AM</button>
-                            <button type="button" class="v3-preset-chip" data-preset="tomorrow_afternoon"><i class="fi fi-rr-sun"></i> Tomorrow 3:00 PM</button>
-                            <button type="button" class="v3-preset-chip" data-preset="tomorrow_evening"><i class="fi fi-rr-sunset"></i> Tomorrow 6:00 PM</button>
-                            <button type="button" class="v3-preset-chip" data-preset="in_2_days"><i class="fi fi-rr-calendar"></i> In 2 Days 11:00 AM</button>
-                            <button type="button" class="v3-preset-chip" data-preset="next_monday"><i class="fi fi-rr-calendar-clock"></i> Next Mon 10:30 AM</button>
-                          </div>
-                        </div>
-                        <div class="v3-datetime-split-grid">
-                          <div class="v3-datetime-col">
-                            <label class="v3-sub-label" for="composerFollowupDate"><i class="fi fi-rr-calendar"></i> Date</label>
-                            <div class="v3-native-input-wrap">
-                              <input type="date" id="composerFollowupDate" class="v3-native-datetime-input">
-                            </div>
-                          </div>
-                          <div class="v3-datetime-col">
-                            <label class="v3-sub-label" for="composerFollowupTimeInput"><i class="fi fi-rr-clock"></i> Time</label>
-                            <div class="v3-native-input-wrap">
-                              <input type="time" id="composerFollowupTimeInput" class="v3-native-datetime-input">
-                            </div>
-                          </div>
-                        </div>
-                        <input type="hidden" id="composerFollowupTime" value="${defaultFollowupStr}">
-                        <div class="v3-time-quick-pills" data-target="#composerFollowupTimeInput">
-                          <span class="v3-time-pills-label">Popular slots:</span>
-                          <button type="button" class="v3-time-pill" data-time="10:00">10:00 AM</button>
-                          <button type="button" class="v3-time-pill active" data-time="10:30">10:30 AM</button>
-                          <button type="button" class="v3-time-pill" data-time="14:30">02:30 PM</button>
-                          <button type="button" class="v3-time-pill" data-time="16:00">04:00 PM</button>
-                          <button type="button" class="v3-time-pill" data-time="18:00">06:00 PM</button>
-                          <button type="button" class="v3-time-pill" data-time="19:30">07:30 PM</button>
-                        </div>
-                        <div class="v3-slot-status-box" id="composerSlotStatus"></div>
-                      </div>
-                      <div class="v3-modal-form-group" style="margin-top: 10px;">
-                        <label class="v3-modal-label">Reason / Objective *</label>
-                        <select id="composerFollowupReason" class="leads-filter-select v3-select-full">
-                          <option value="Interested - Price Discussion">Price Discussion</option>
-                          <option value="Itinerary Customization">Itinerary Customization</option>
-                          <option value="Call Back Request">Call Back Request</option>
-                          <option value="Payment Follow-up">Payment Follow-up</option>
-                          <option value="General Follow-up" selected>General Follow-up</option>
-                        </select>
-                      </div>
-                    </div>
+                    <textarea id="composerNoteInput" class="v3-composer-input" placeholder="Type an internal note, customer observation, or team remark..."></textarea>
 
                     <div class="v3-composer-footer">
                       <button type="button" class="btn-v3-action btn-green" id="btnSubmitComposer">
-                        <i class="fi fi-rr-check"></i> Post Update
+                        <i class="fi fi-rr-check"></i> Post Note
                       </button>
                     </div>
                   </div>
@@ -2985,6 +3055,7 @@
             <!-- Right Area: Sidebar Panels -->
             <div class="v3-sidebar-panel">
               ${agentSidebarHtml}
+              ${isAssigned ? responseTrackerSidebarHtml : ""}
 
               <!-- Fast Actions Sidebar for Telecallers -->
               <div class="v3-sidebar-card v3-fast-actions-card">
@@ -3162,6 +3233,8 @@
             width: "100%",
           });
         }
+        self.initLogInteractionSelect2();
+        self.initScheduleFollowUpSelect2();
       }
 
       // Check & schedule upcoming follow-up reminder if assigned to current user
@@ -4500,6 +4573,26 @@
         }
       });
 
+      // Customer Interest Picker Toggle & Selection
+      $(document).on("click", "#btnInterestTrigger", function (e) {
+        e.stopPropagation();
+        $("#interestDropdownMenu").toggleClass("is-open");
+      });
+
+      $(document).on("click", function (e) {
+        if (!$(e.target).closest(".v3-interest-picker-wrap").length) {
+          $("#interestDropdownMenu").removeClass("is-open");
+        }
+      });
+
+      $(document).on("click", ".v3-interest-opt", function () {
+        const targetInterest = $(this).data("interest");
+        $("#interestDropdownMenu").removeClass("is-open");
+        const currentInterest = self.leadData ? (self.leadData.interest_level || "Unknown") : "Unknown";
+        if (targetInterest === currentInterest) return;
+        self.updateInterestLevel(targetInterest);
+      });
+
       $(document).on("click", ".v3-status-opt", function () {
         const targetStatus = parseInt($(this).data("status"));
         $("#statusDropdownMenu").removeClass("is-open");
@@ -4516,7 +4609,10 @@
           targetStatus === 16 ||
           targetStatus === 17 ||
           targetStatus === 4 ||
-          targetStatus === 18
+          targetStatus === 18 ||
+          targetStatus === 28 ||
+          targetStatus === 29 ||
+          targetStatus === 5
         ) {
           $("#modalCloseStatus").val(targetStatus);
           $("#modalCloseLead").addClass("is-active");
@@ -4525,36 +4621,12 @@
         }
       });
 
-      // 3. Composer Switch (Note vs Follow-Up)
+      // 3. Composer Focus on Note click
       $(document).on("click", ".v3-composer-type-btn", function () {
-        const type = $(this).data("type");
-        self.activeComposerType = type;
-        $(".v3-composer-type-btn").removeClass("active");
-        $(this).addClass("active");
-
-        if (type === "followup") {
-          $("#composerFollowupRow").addClass("is-visible");
-          self.initDateTimePicker();
-          $("#composerNoteInput").attr(
-            "placeholder",
-            "Add instructions for this follow-up reminder...",
-          );
-          $("#btnSubmitComposer").html(
-            '<i class="fi fi-rr-alarm-clock"></i> Set Reminder',
-          );
-        } else {
-          $("#composerFollowupRow").removeClass("is-visible");
-          $("#composerNoteInput").attr(
-            "placeholder",
-            "Type a note, call log, or customer update...",
-          );
-          $("#btnSubmitComposer").html(
-            '<i class="fi fi-rr-check"></i> Post Note',
-          );
-        }
+        $("#composerNoteInput").focus();
       });
 
-      // 4. Submit Composer Update
+      // 4. Submit Composer Note
       $(document).on("click", "#btnSubmitComposer", function () {
         if (!self.leadData || !(parseInt(self.leadData.agent_id || 0) > 0)) {
           self.notify(
@@ -4565,9 +4637,7 @@
         }
 
         const msg = $("#composerNoteInput").val().trim();
-        const type = self.activeComposerType;
-
-        if (type === "note" && !msg) {
+        if (!msg) {
           self.notify("Please type a note before posting.", "warning");
           return;
         }
@@ -4575,18 +4645,12 @@
         const $btn = $(this);
         $btn.prop("disabled", true).text("Posting...");
 
-        const followupReason =
-          $("#composerFollowupReason").val() || "General Follow-up";
         const postData = {
           leadId: self.leadId,
-          title: type === "followup" ? followupReason : "Note",
-          category: type === "followup" ? followupReason : "Note",
+          title: "Note",
+          category: "Note",
           msg: msg,
         };
-
-        if (type === "followup") {
-          postData.followupTime = $("#composerFollowupTime").val();
-        }
 
         self.submitComposerNote(postData, $btn);
       });
@@ -7169,15 +7233,20 @@
           $("#modalItineraryLivePreview").removeClass("is-active");
         });
 
-      // 9. Other Modals & Follow-up Presets
+      // 9. Open Schedule Follow-Up Modal (Unified across Hero button, sidebar, and composer)
       $(document).on(
         "click",
-        "#btnHeroSetFollowUp, #btnSideSetFollowUp",
+        "#btnHeroSetFollowUp, #btnSideSetFollowUp, #btnOpenScheduleTaskModal, #btnComposerScheduleFollowUp",
         function () {
-          $(".v3-tab-link[data-tab='tab-activity']").trigger("click");
-          $(".v3-composer-type-btn[data-type='followup']").trigger("click");
-          $("#composerNoteInput").focus();
-          self.initDateTimePicker();
+          if (!self.leadData || !(parseInt(self.leadData.agent_id || 0) > 0)) {
+            self.notify(
+              "Lead is unassigned. Please assign an agent first.",
+              "warning",
+            );
+            return;
+          }
+          $("#modalSetFollowUp").addClass("is-active");
+          self.initScheduleFollowUpSelect2();
         },
       );
 
@@ -7381,6 +7450,8 @@
         const reason = $("#modalFollowUpReason").val() || "General Follow-up";
         const fTime = $("#modalFollowUpTime").val();
         const comment = $("#modalFollowUpComment").val().trim();
+        const taskType = $("#modalFollowUpType").val() || "Call";
+        const nextAction = $("#modalFollowUpNextAction").val().trim() || reason;
 
         if (!fTime) {
           self.notify(
@@ -7395,11 +7466,153 @@
           leadId: self.leadId,
           title: reason,
           category: reason,
-          msg: comment || "Scheduled callback for " + reason,
+          msg: comment || "Scheduled " + taskType + " for " + reason,
           followupTime: fTime,
+          due_at: fTime,
+          task_type: taskType,
+          next_action: nextAction,
+          notes: comment,
         };
 
         self.submitModalFollowUp(postData, $btn);
+      });
+
+      // Customer Interaction Logging Events (Sidebar and Activity tab composer)
+      $(document).on(
+        "click",
+        "#btnOpenLogInteractionModal, #btnComposerLogInteraction",
+        function () {
+          if (!self.leadData || !(parseInt(self.leadData.agent_id || 0) > 0)) {
+            self.notify(
+              "Lead is unassigned. Please assign an agent first.",
+              "warning",
+            );
+            return;
+          }
+          $("#modalLogInteraction").addClass("is-active");
+          self.initLogInteractionSelect2();
+          $("#logInteractionNotes").val("").focus();
+        },
+      );
+
+      $(document).on("click", "#btnSubmitLogInteraction", function () {
+        const dir = $("#logInteractionDirection").val() || "outbound";
+        const type = $("#logInteractionType").val() || "call";
+        const notes = $("#logInteractionNotes").val().trim();
+        if (!notes) {
+          self.notify("Please enter interaction notes.", "warning");
+          return;
+        }
+
+        const $btn = $(this);
+        $btn.prop("disabled", true).text("Logging...");
+
+        $.ajax({
+          url: "/api/v3/leads/log-interaction/",
+          type: "POST",
+          data: {
+            leadId: self.leadId,
+            direction: dir,
+            type: type,
+            notes: notes,
+            is_customer_reply: dir === "inbound" ? 1 : 0,
+          },
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false).text("Log Interaction");
+            if (res && (res.status === 200 || res.status === "success")) {
+              self.notify("Customer interaction logged successfully.", "success");
+              $("#modalLogInteraction").removeClass("is-active");
+              self.loadLeadDetails();
+            } else {
+              self.notify(
+                (res && res.message) || "Failed to log interaction.",
+                "error",
+              );
+            }
+          },
+          error: function () {
+            $btn.prop("disabled", false).text("Log Interaction");
+            self.notify("Network error while logging interaction.", "error");
+          },
+        });
+      });
+
+      // Complete Task Modal & Submission
+      $(document).on("click", ".btn-complete-task", function () {
+        const taskId = $(this).data("task-id");
+        $("#completeTaskId").val(taskId);
+        $("#completeTaskOutcome").val("");
+        $("#completeTaskScheduleNext").prop("checked", false);
+        $("#completeTaskNextSection").addClass("is-hidden");
+        $("#modalCompleteTask").addClass("is-active");
+      });
+
+      $(document).on("change", "#completeTaskScheduleNext", function () {
+        if ($(this).is(":checked")) {
+          $("#completeTaskNextSection").removeClass("is-hidden");
+        } else {
+          $("#completeTaskNextSection").addClass("is-hidden");
+        }
+      });
+
+      $(document).on("click", "#btnSubmitCompleteTask", function () {
+        const taskId = $("#completeTaskId").val();
+        const outcome = $("#completeTaskOutcome").val().trim();
+        const schedNext = $("#completeTaskScheduleNext").is(":checked") ? 1 : 0;
+        const nextDate = $("#completeTaskNextDate").val();
+        const nextTime = $("#completeTaskNextTime").val();
+        const nextType = $("#completeTaskNextType").val() || "Call";
+        const nextAction = $("#completeTaskNextAction").val().trim();
+
+        if (!outcome) {
+          self.notify("Please record the follow-up outcome.", "warning");
+          return;
+        }
+
+        let nextDueAt = "";
+        if (schedNext) {
+          if (!nextDate) {
+            self.notify("Please choose a next follow-up date.", "warning");
+            return;
+          }
+          nextDueAt = nextDate + " " + (nextTime || "11:00") + ":00";
+        }
+
+        const $btn = $(this);
+        $btn.prop("disabled", true).text("Completing...");
+
+        $.ajax({
+          url: "/api/v3/leads/complete-task/",
+          type: "POST",
+          data: {
+            task_id: taskId,
+            outcome: outcome,
+            schedule_next: schedNext,
+            next_due_at: nextDueAt,
+            next_type: nextType,
+            next_action: nextAction,
+            next_notes: "Follow-up after: " + outcome,
+          },
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false).text("Complete Task");
+            if (res && (res.status === 200 || res.status === "success")) {
+              self.notify("Follow-up task marked as complete.", "success");
+              $("#modalCompleteTask").removeClass("is-active");
+              self.loadLeadDetails();
+            } else {
+              self.notify(
+                (res && res.message) || "Failed to complete task.",
+                "error",
+              );
+            }
+          },
+          error: function () {
+            $btn.prop("disabled", false).text("Complete Task");
+            self.notify("Network error while completing task.", "error");
+          },
+        });
       });
 
       $(document).on("click", "#btnSideSendPaymentLink", function () {
@@ -9868,7 +10081,7 @@
       $btn.prop("disabled", true).text("Scheduling...");
 
       $.ajax({
-        url: "/api/v3/leads/add-note/",
+        url: "/api/v3/leads/add-task/",
         type: "POST",
         data: postData,
         dataType: "json",
@@ -9914,16 +10127,16 @@
             return;
           }
 
-          if (res && res.status === "success") {
+          if (res && (res.status === "success" || res.status === 200)) {
             self.notify(
-              res.message || "Follow-up reminder set successfully.",
+              res.message || "Follow-up task scheduled successfully.",
               "success",
             );
             $("#modalSetFollowUp").removeClass("is-active");
             self.loadLeadDetails();
           } else {
             self.notify(
-              (res && res.message) || "Failed to set follow-up reminder.",
+              (res && res.message) || "Failed to schedule follow-up task.",
               "error",
             );
           }
@@ -9931,10 +10144,88 @@
         error: function () {
           $btn.prop("disabled", false).text("Set Reminder");
           self.notify(
-            "Network error while setting follow-up reminder.",
+            "Network error while scheduling follow-up task.",
             "error",
           );
         },
+      });
+    },
+
+    updateInterestLevel: function (interest, callback) {
+      const self = this;
+      if (self.isUpdatingInterest) return;
+      self.isUpdatingInterest = true;
+
+      $.ajax({
+        url: "/api/v3/leads/update-interest/",
+        type: "POST",
+        data: {
+          leadId: self.leadId,
+          interest_level: interest,
+        },
+        dataType: "json",
+        success: function (res) {
+          self.isUpdatingInterest = false;
+          if (typeof callback === "function") callback(null, res);
+          if (res && (res.status === 200 || res.status === "success")) {
+            self.notify("Customer interest updated to " + interest, "success");
+            self.loadLeadDetails();
+          } else {
+            self.notify((res && res.message) || "Failed to update interest level.", "error");
+          }
+        },
+        error: function () {
+          self.isUpdatingInterest = false;
+          if (typeof callback === "function") callback(new Error("Network error"));
+          self.notify("Network error during interest level update.", "error");
+        },
+      });
+    },
+
+    initLogInteractionSelect2: function () {
+      if (typeof $.fn.select2 === "undefined") return;
+      const $modal = $("#modalLogInteraction");
+      if (!$modal.length) return;
+      $("#logInteractionDirection, #logInteractionType").each(function () {
+        const $sel = $(this);
+        if ($sel.data("select2")) {
+          $sel.select2("destroy");
+        }
+        $sel.select2({
+          dropdownParent: $modal,
+          dropdownAutoWidth: true,
+          width: "100%",
+          minimumResultsForSearch: Infinity,
+        });
+      });
+    },
+
+    initScheduleFollowUpSelect2: function () {
+      if (typeof $.fn.select2 === "undefined") return;
+      const $modal = $("#modalSetFollowUp");
+      if (!$modal.length) return;
+      $("#modalFollowUpType").each(function () {
+        const $sel = $(this);
+        if ($sel.data("select2")) {
+          $sel.select2("destroy");
+        }
+        $sel.select2({
+          dropdownParent: $modal,
+          dropdownAutoWidth: true,
+          width: "100%",
+          minimumResultsForSearch: Infinity,
+        });
+      });
+      $("#modalFollowUpReason").each(function () {
+        const $sel = $(this);
+        if ($sel.data("select2")) {
+          $sel.select2("destroy");
+        }
+        $sel.select2({
+          dropdownParent: $modal,
+          dropdownAutoWidth: true,
+          width: "100%",
+        });
       });
     },
   };

@@ -23,6 +23,9 @@
     activeAgent: "all",
     activeDateRange: "",
     activeSource: "all",
+    activeInterest: "all",
+    activeResponse: "all",
+    activeFollowup: "all",
     agentsList: [],
     selectedLeads: new Set(),
     isLoading: false,
@@ -81,12 +84,18 @@
       const initialStatus = urlParams.get("leadStatus") || urlParams.get("status") || $app.data("initial-status") || $("#filterLeadStatus").val() || "all";
       const initialAgent = urlParams.get("agentId") || urlParams.get("agent_id") || urlParams.get("agent") || $app.data("initial-agent") || $("#filterLeadAgent").val() || "all";
       const initialSource = urlParams.get("source") || $("#filterLeadSource").val() || "all";
+      const initialInterest = urlParams.get("interest") || $("#filterLeadInterest").val() || "all";
+      const initialResponse = urlParams.get("response") || urlParams.get("response_status") || $("#filterLeadResponse").val() || "all";
+      const initialFollowup = urlParams.get("followup") || "all";
       const initialSearch = urlParams.get("search") || urlParams.get("q") || $("#leadTableSearch").val() || "";
       const urlDateRange = urlParams.get("daterange");
 
       this.activeStatus = String(initialStatus);
       this.activeAgent = String(initialAgent);
       this.activeSource = String(initialSource);
+      this.activeInterest = String(initialInterest);
+      this.activeResponse = String(initialResponse);
+      this.activeFollowup = String(initialFollowup);
       this.activeSearch = String(initialSearch);
 
       // Default to last 30 days if no daterange query parameter is provided
@@ -106,6 +115,12 @@
       }
       if (this.activeSource !== "all") {
         $("#filterLeadSource").val(this.activeSource);
+      }
+      if (this.activeInterest !== "all") {
+        $("#filterLeadInterest").val(this.activeInterest);
+      }
+      if (this.activeResponse !== "all") {
+        $("#filterLeadResponse").val(this.activeResponse);
       }
       if (this.activeSearch) {
         $("#leadTableSearch").val(this.activeSearch);
@@ -341,6 +356,22 @@
         self.loadLeads();
       });
 
+      $("#filterLeadInterest").on("change", function () {
+        const val = $(this).val();
+        if (self.activeInterest === val) return;
+        self.activeInterest = val;
+        self.currentPage = 1;
+        self.loadLeads();
+      });
+
+      $("#filterLeadResponse").on("change", function () {
+        const val = $(this).val();
+        if (self.activeResponse === val) return;
+        self.activeResponse = val;
+        self.currentPage = 1;
+        self.loadLeads();
+      });
+
       // 3. Reset All Filters Button
       $("#btnResetLeadFilters").on("click", function () {
         $("#leadTableSearch").val("");
@@ -352,15 +383,20 @@
         $("#filterLeadStatus").val("all");
         $("#filterLeadAgent").val("all");
         $("#filterLeadSource").val("all");
+        $("#filterLeadInterest").val("all");
+        $("#filterLeadResponse").val("all");
 
         if (typeof $.fn.select2 !== "undefined") {
-          $("#filterLeadStatus, #filterLeadAgent, #filterLeadSource").trigger("change.select2");
+          $("#filterLeadStatus, #filterLeadAgent, #filterLeadSource, #filterLeadInterest, #filterLeadResponse").trigger("change.select2");
         }
 
         self.activeSearch = "";
         self.activeStatus = "all";
         self.activeAgent = "all";
         self.activeSource = "all";
+        self.activeInterest = "all";
+        self.activeResponse = "all";
+        self.activeFollowup = "all";
 
         if (typeof moment !== "undefined") {
           const defaultStart = moment().subtract(29, "days");
@@ -389,13 +425,41 @@
       // 4. Quick KPI Cards Filter Click
       $(document).on("click", ".lead-kpi-filter-btn", function () {
         const status = $(this).data("status");
+        const interest = $(this).data("interest");
+        const followup = $(this).data("followup");
+        const response = $(this).data("response");
+
+        if (interest !== undefined) {
+          const intStr = String(interest);
+          self.activeInterest = (self.activeInterest === intStr) ? "all" : intStr;
+          $("#filterLeadInterest").val(self.activeInterest);
+          if (typeof $.fn.select2 !== "undefined") $("#filterLeadInterest").trigger("change.select2");
+          self.currentPage = 1;
+          self.loadLeads();
+          return;
+        }
+
+        if (followup !== undefined) {
+          const foStr = String(followup);
+          self.activeFollowup = (self.activeFollowup === foStr) ? "all" : foStr;
+          self.currentPage = 1;
+          self.loadLeads();
+          return;
+        }
+
+        if (response !== undefined) {
+          const respStr = String(response);
+          self.activeResponse = (self.activeResponse === respStr) ? "all" : respStr;
+          $("#filterLeadResponse").val(self.activeResponse);
+          if (typeof $.fn.select2 !== "undefined") $("#filterLeadResponse").trigger("change.select2");
+          self.currentPage = 1;
+          self.loadLeads();
+          return;
+        }
+
         if (status !== undefined) {
           const statusStr = String(status);
-          if (self.activeStatus === statusStr && statusStr !== "all") {
-            self.activeStatus = "all";
-          } else {
-            self.activeStatus = statusStr;
-          }
+          self.activeStatus = (self.activeStatus === statusStr && statusStr !== "all") ? "all" : statusStr;
           $("#filterLeadStatus").val(self.activeStatus);
           if (typeof $.fn.select2 !== "undefined") {
             $("#filterLeadStatus").trigger("change.select2");
@@ -702,11 +766,12 @@
       }
       self.isLoading = true;
 
+      const colSpan = self.isDigitalMarketing ? 4 : 7;
       const $tbody = $("#leadsTableBody");
       if (showLoader) {
         $tbody.html(`
           <tr>
-            <td colspan="6" class="table-loading-state">
+            <td colspan="${colSpan}" class="table-loading-state">
               <div class="table-loading-spinner"></div>
               <span>Loading leads pipeline...</span>
             </td>
@@ -722,6 +787,9 @@
           limit: self.limit,
           search: self.activeSearch,
           status: self.activeStatus,
+          interest: self.activeInterest,
+          response_status: self.activeResponse,
+          followup_filter: self.activeFollowup,
           agent_id: self.activeAgent,
           agentId: self.activeAgent,
           source: self.activeSource,
@@ -740,7 +808,7 @@
           } else {
             $tbody.html(`
               <tr>
-                <td colspan="6">
+                <td colspan="${colSpan}">
                   <div class="v3-leads-empty-state">
                     <div class="v3-empty-icon-wrap">
                       <i class="fi fi-rr-cross-circle"></i>
@@ -763,7 +831,7 @@
           self.isLoading = false;
           $tbody.html(`
             <tr>
-              <td colspan="6">
+              <td colspan="${colSpan}">
                 <div class="v3-leads-empty-state">
                   <div class="v3-empty-icon-wrap">
                     <i class="fi fi-rr-exclamation"></i>
@@ -814,21 +882,34 @@
       $("#statPendingLeads").text(stats.pending || 0);
       $("#statFollowupLeads").text(stats.followup || 0);
       $("#statConfirmedLeads").text(stats.confirmed || 0);
+      $("#statHotLeads").text(stats.hot || stats.hot_leads || 0);
+      $("#statDueTodayLeads").text(stats.due_today || 0);
+      $("#statOverdueLeads").text(stats.overdue || 0);
+      $("#statNoResp24hLeads").text(stats.no_response_24h || 0);
 
-      // Highlight active KPI filter card only when a specific status filter is active
+      // Highlight active KPI filter card
       $(".lead-kpi-filter-btn").removeClass("active");
-      if (self.activeStatus && self.activeStatus !== "all") {
+      if (self.activeInterest && self.activeInterest !== "all") {
+        $(`.lead-kpi-filter-btn[data-interest="${self.activeInterest}"]`).addClass("active");
+      } else if (self.activeFollowup && self.activeFollowup !== "all") {
+        $(`.lead-kpi-filter-btn[data-followup="${self.activeFollowup}"]`).addClass("active");
+      } else if (self.activeResponse && self.activeResponse !== "all") {
+        $(`.lead-kpi-filter-btn[data-response="${self.activeResponse}"]`).addClass("active");
+      } else if (self.activeStatus && self.activeStatus !== "all") {
         $(`.lead-kpi-filter-btn[data-status="${self.activeStatus}"]`).addClass("active");
+      } else {
+        $(`.lead-kpi-filter-btn[data-status="all"]`).addClass("active");
       }
     },
 
     renderTableRows: function (leads) {
       const self = this;
+      const colSpan = self.isDigitalMarketing ? 4 : 7;
       const $tbody = $("#leadsTableBody");
       if (!leads || leads.length === 0) {
         $tbody.html(`
           <tr>
-            <td colspan="6">
+            <td colspan="${colSpan}">
               <div class="v3-leads-empty-state">
                 <div class="v3-empty-icon-wrap">
                   <i class="fi fi-rr-inbox"></i>
@@ -867,6 +948,16 @@
           </span>
         `;
 
+        const interestMeta = lead.interest_meta || {};
+        const fallbackIcon = (interestMeta.icon && interestMeta.icon.indexOf('fi-') !== -1)
+          ? `<i class="fi ${interestMeta.icon}"></i>`
+          : (interestMeta.icon || '❓');
+        const interestBadge = interestMeta.badge_html || `
+          <span class="v3-interest-pill pill-interest-${(lead.interest_level || 'Unknown').toLowerCase().replace(/\s+/g, '-')}">
+            ${fallbackIcon} ${lead.interest_level || 'Unknown'}
+          </span>
+        `;
+
         const phoneLink = lead.mobile
           ? `<a href="tel:${lead.mobile}" class="lead-contact-link" title="Call ${lead.mobile}"><i class="fi fi-rr-phone-call"></i> ${lead.mobile}</a>`
           : `<span class="meta-txt muted">-</span>`;
@@ -892,6 +983,37 @@
         const quoteSnippet = lead.quotation_formatted
           ? `<div class="lead-quote-badge" title="Active Quotation: ${lead.quotation_formatted}"><i class="fi fi-rr-document-signed"></i> <span>Quote: ${lead.quotation_formatted}</span></div>`
           : "";
+
+        const travelDateBadge = lead.travel_date
+          ? `<div class="lead-travel-badge" title="Travel Date: ${lead.travel_date}"><i class="fi fi-rr-calendar"></i> <span>Travel: ${lead.travel_date}</span></div>`
+          : "";
+
+        // Response & Follow-up tracking
+        const resp = lead.response_indicator || {};
+        const respBadgeClass = resp.badge_class || "badge-resp-no-activity";
+        const respLabel = resp.label || "No Activity";
+        const respElapsed = resp.elapsed_string ? ` · ${resp.elapsed_string}` : "";
+
+        let followupHtml = "";
+        if (lead.next_followup) {
+          const nf = lead.next_followup;
+          let fuClass = "fu-badge-pending";
+          let fuIcon = "fi-rr-clock";
+          if (nf.is_overdue) {
+            fuClass = "fu-badge-overdue";
+            fuIcon = "fi-rr-exclamation";
+          } else if (nf.is_due_today) {
+            fuClass = "fu-badge-today";
+            fuIcon = "fi-rr-alarm-clock";
+          }
+          followupHtml = `
+            <div class="lead-followup-pill ${fuClass}" title="Next Follow-Up (${nf.type || 'Task'})">
+              <i class="fi ${fuIcon}"></i> <span>${nf.due_formatted || nf.due_at}</span>
+            </div>
+          `;
+        } else {
+          followupHtml = `<span class="lead-no-followup"><i class="fi fi-rr-calendar-minus"></i> No follow-up set</span>`;
+        }
 
         // If customer name is large, show first name only
         let displayName = (lead.name || "").trim();
@@ -929,6 +1051,7 @@
                   <div class="lead-name-row">
                     ${customerNameHtml}
                     ${statusBadge}
+                    ${interestBadge}
                   </div>
                   <div class="lead-sub-meta">
                     <span class="meta-txt"><i class="fi fi-rr-clock"></i> ${lead.time_relative}</span>
@@ -961,6 +1084,20 @@
                 <div class="lead-sub-meta">
                   ${noteSnippet}
                   ${quoteSnippet}
+                  ${travelDateBadge}
+                </div>
+              </div>
+            </td>
+
+            <td class="td-response">
+              <div class="lead-cell-meta">
+                <div class="lead-response-status-wrap">
+                  <span class="v3-response-badge ${respBadgeClass}" title="${resp.description || respLabel}">
+                    <span class="resp-dot"></span> ${respLabel}${respElapsed}
+                  </span>
+                </div>
+                <div class="lead-followup-schedule-wrap">
+                  ${followupHtml}
                 </div>
               </div>
             </td>

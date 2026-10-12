@@ -151,6 +151,67 @@ if (isset($reqData['source']) && trim($reqData['source']) !== '' && $reqData['so
     $sourceFilter = " AND e.enquiry_source LIKE '%{$sourceKey}%'";
 }
 
+// Interest Level Filter
+$interestFilter = "";
+$rawInterest = isset($reqData['interest']) ? trim((string)$reqData['interest']) : (isset($reqData['interest_level']) ? trim((string)$reqData['interest_level']) : '');
+if ($rawInterest !== '' && $rawInterest !== 'all') {
+    $escInterest = mysqli_real_escape_string($connection, $rawInterest);
+    $interestFilter = " AND e.enquiry_interest_level = '{$escInterest}'";
+}
+
+// Response Indicator Filter
+$responseFilter = "";
+$rawResp = isset($reqData['response_status']) ? trim((string)$reqData['response_status']) : (isset($reqData['response']) ? trim((string)$reqData['response']) : '');
+if ($rawResp !== '' && $rawResp !== 'all') {
+    if ($rawResp === 'no_activity') {
+        $responseFilter = " AND (e.enquiry_last_contacted_at IS NULL AND e.enquiry_last_customer_response_at IS NULL)";
+    } elseif ($rawResp === 'awaiting_response') {
+        $responseFilter = " AND e.enquiry_last_contacted_at > DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+    } elseif ($rawResp === 'responded') {
+        $responseFilter = " AND e.enquiry_last_customer_response_at IS NOT NULL AND e.enquiry_last_customer_response_at >= COALESCE(e.enquiry_last_contacted_at, '1970-01-01')";
+    } elseif ($rawResp === 'no_response_24h') {
+        $responseFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND e.enquiry_last_contacted_at > DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+    } elseif ($rawResp === 'no_response_48h') {
+        $responseFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND e.enquiry_last_contacted_at > DATE_SUB(NOW(), INTERVAL 7 DAY) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+    } elseif ($rawResp === 'no_response_7d') {
+        $responseFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 7 DAY) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+    }
+}
+
+// Operational Follow-Up Filter
+$followupFilter = "";
+$rawFollowupF = isset($reqData['followup_filter']) ? trim((string)$reqData['followup_filter']) : '';
+$todayStart = date('Y-m-d 00:00:00');
+$todayEnd   = date('Y-m-d 23:59:59');
+if ($rawFollowupF === 'due_today') {
+    $followupFilter = " AND e.enquiry_followup BETWEEN '{$todayStart}' AND '{$todayEnd}'";
+} elseif ($rawFollowupF === 'overdue') {
+    $followupFilter = " AND e.enquiry_followup < '{$todayStart}' AND e.enquiry_followup != '0000-00-00 00:00:00'";
+} elseif ($rawFollowupF === 'no_response_24h') {
+    $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+} elseif ($rawFollowupF === 'no_response_48h') {
+    $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+} elseif ($rawFollowupF === 'no_response_7d') {
+    $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 7 DAY) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
+}
+
+// Travel Date Range Filter
+$travelDateFilter = "";
+if (isset($reqData['travel_date']) && !empty($reqData['travel_date']) && $reqData['travel_date'] !== 'all') {
+    $tdParts = explode(' - ', trim($reqData['travel_date']));
+    if (count($tdParts) === 2) {
+        $p1 = strtotime(trim($tdParts[0]));
+        $p2 = strtotime(trim($tdParts[1]));
+        if ($p1 && $p2) {
+            $td1 = date('Y-m-d', $p1);
+            $td2 = date('Y-m-d', $p2);
+            $travelDateFilter = " AND e.enquiry_id IN (SELECT enquiry_profile_ref_id FROM {$tblPrefix}enquiry_profile WHERE date_of_travel BETWEEN '{$td1}' AND '{$td2}')";
+        }
+    }
+}
+
+$combinedFilters = "{$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}{$statusFilter}{$sourceFilter}{$interestFilter}{$responseFilter}{$followupFilter}{$travelDateFilter}";
+
 function cleanLeadSource($src)
 {
     if (empty($src) || trim($src) === '') return 'Direct';
@@ -192,14 +253,20 @@ if (!function_exists('formatIndianCurrency')) {
 
 // 1. Fetch Summary Stats for KPIs
 $stats = [
-    'total'     => 0,
-    'fresh'     => 0,
-    'pending'   => 0,
-    'followup'  => 0,
-    'itinerary' => 0,
-    'payment'   => 0,
-    'confirmed' => 0,
-    'closed'    => 0,
+    'total'           => 0,
+    'fresh'           => 0,
+    'pending'         => 0,
+    'followup'        => 0,
+    'itinerary'       => 0,
+    'payment'         => 0,
+    'confirmed'       => 0,
+    'closed'          => 0,
+    'hot_leads'       => 0,
+    'warm_leads'      => 0,
+    'due_today'       => 0,
+    'overdue'         => 0,
+    'no_response_24h' => 0,
+    'no_response_48h' => 0,
 ];
 
 $statsQuery = "SELECT 
@@ -207,10 +274,16 @@ $statsQuery = "SELECT
     SUM(CASE WHEN e.enquiry_status = 0 AND q.quotation_id IS NULL THEN 1 ELSE 0 END) AS fresh_count,
     SUM(CASE WHEN e.enquiry_status = 2 AND q.quotation_id IS NULL THEN 1 ELSE 0 END) AS pending_count,
     SUM(CASE WHEN e.enquiry_status = 3 AND q.quotation_id IS NULL THEN 1 ELSE 0 END) AS followup_count,
-    SUM(CASE WHEN (e.enquiry_status = 9 OR (e.enquiry_status NOT IN (1, 6, 4, 5, 7, 15, 16, 17, 18) AND q.quotation_id IS NOT NULL)) THEN 1 ELSE 0 END) AS itinerary_count,
+    SUM(CASE WHEN (e.enquiry_status = 9 OR (e.enquiry_status NOT IN (1, 6, 4, 5, 7, 15, 16, 17, 18, 28, 29) AND q.quotation_id IS NOT NULL)) THEN 1 ELSE 0 END) AS itinerary_count,
     SUM(CASE WHEN e.enquiry_status = 6 THEN 1 ELSE 0 END) AS payment_count,
     SUM(CASE WHEN e.enquiry_status = 1 THEN 1 ELSE 0 END) AS confirmed_count,
-    SUM(CASE WHEN e.enquiry_status IN (4, 5, 7, 15, 16, 17, 18) THEN 1 ELSE 0 END) AS closed_count
+    SUM(CASE WHEN e.enquiry_status IN (4, 5, 7, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END) AS closed_count,
+    SUM(CASE WHEN e.enquiry_interest_level = 'Hot' THEN 1 ELSE 0 END) AS hot_count,
+    SUM(CASE WHEN e.enquiry_interest_level = 'Warm' THEN 1 ELSE 0 END) AS warm_count,
+    SUM(CASE WHEN e.enquiry_followup BETWEEN '{$todayStart}' AND '{$todayEnd}' THEN 1 ELSE 0 END) AS due_today_count,
+    SUM(CASE WHEN e.enquiry_followup < '{$todayStart}' AND e.enquiry_followup != '0000-00-00 00:00:00' AND e.enquiry_status NOT IN (1, 4, 5, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END) AS overdue_count,
+    SUM(CASE WHEN e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END) AS no_resp_24h_count,
+    SUM(CASE WHEN e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END) AS no_resp_48h_count
 FROM {$tblPrefix}enquiry e
 LEFT JOIN (
     SELECT quotation_ref_id, MIN(quotation_id) AS quotation_id
@@ -222,14 +295,21 @@ WHERE {$siteFilter}{$userFilter}{$statsDateFilter}{$sourceFilter}";
 
 if (isset($connection) && ($sRes = mysqli_query($connection, $statsQuery))) {
     if ($sRow = mysqli_fetch_assoc($sRes)) {
-        $stats['total']     = (int)($sRow['total_count'] ?? 0);
-        $stats['fresh']     = (int)($sRow['fresh_count'] ?? 0);
-        $stats['pending']   = (int)($sRow['pending_count'] ?? 0);
-        $stats['followup']  = (int)($sRow['followup_count'] ?? 0);
-        $stats['itinerary'] = (int)($sRow['itinerary_count'] ?? 0);
-        $stats['payment']   = (int)($sRow['payment_count'] ?? 0);
-        $stats['confirmed'] = (int)($sRow['confirmed_count'] ?? 0);
-        $stats['closed']    = (int)($sRow['closed_count'] ?? 0);
+        $stats['total']           = (int)($sRow['total_count'] ?? 0);
+        $stats['fresh']           = (int)($sRow['fresh_count'] ?? 0);
+        $stats['pending']         = (int)($sRow['pending_count'] ?? 0);
+        $stats['followup']        = (int)($sRow['followup_count'] ?? 0);
+        $stats['itinerary']       = (int)($sRow['itinerary_count'] ?? 0);
+        $stats['payment']         = (int)($sRow['payment_count'] ?? 0);
+        $stats['confirmed']       = (int)($sRow['confirmed_count'] ?? 0);
+        $stats['closed']          = (int)($sRow['closed_count'] ?? 0);
+        $stats['hot_leads']       = (int)($sRow['hot_count'] ?? 0);
+        $stats['warm_leads']      = (int)($sRow['warm_count'] ?? 0);
+        $stats['due_today']       = (int)($sRow['due_today_count'] ?? 0);
+        $stats['overdue']         = (int)($sRow['overdue_count'] ?? 0);
+        $stats['no_response_24h'] = (int)($sRow['no_resp_24h_count'] ?? 0);
+        $stats['no_response_48h'] = (int)($sRow['no_resp_48h_count'] ?? 0);
+        $stats['hot']             = $stats['hot_leads'];
     }
 }
 
@@ -241,7 +321,7 @@ $offset = ($page - 1) * $limit;
 // Total Count matching current filters
 $countQuery = "SELECT COUNT(DISTINCT e.enquiry_id) AS filtered_count
                FROM {$tblPrefix}enquiry e
-               WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}{$statusFilter}{$sourceFilter}";
+               WHERE {$combinedFilters}";
 
 $totalRecords = 0;
 if (isset($connection) && ($cRes = mysqli_query($connection, $countQuery))) {
@@ -262,14 +342,22 @@ $leadsQuery = "SELECT
     e.enquiry_subject,
     e.enquiry_source,
     e.enquiry_status,
+    e.enquiry_interest_level,
+    e.enquiry_last_contacted_at,
+    e.enquiry_last_customer_response_at,
+    e.enquiry_response_status,
+    e.enquiry_expected_value,
+    e.enquiry_followup,
     e.enquiry_agent,
     p.profile_display_name AS agent_name,
     n.enquiry_notes_meta_type,
     n.enquiry_notes_meta_value,
     MAX(CAST(q.quotation_price AS DECIMAL(15,2))) AS quotation_price,
-    MAX(q.quotation_id) AS has_quotation
+    MAX(q.quotation_id) AS has_quotation,
+    MAX(ep.date_of_travel) AS travel_date
 FROM {$tblPrefix}enquiry e
 LEFT JOIN {$tblPrefix}profile p ON e.enquiry_agent = p.profile_user_id
+LEFT JOIN {$tblPrefix}enquiry_profile ep ON e.enquiry_id = ep.enquiry_profile_ref_id
 LEFT JOIN (
     SELECT enquiry_notes_ref_id, MAX(enquiry_notes_update) AS latest_notes_time
     FROM {$tblPrefix}enquiry_notes
@@ -279,7 +367,7 @@ LEFT JOIN (
 ) latest_notes ON e.enquiry_id = latest_notes.enquiry_notes_ref_id
 LEFT JOIN {$tblPrefix}enquiry_notes n ON e.enquiry_id = n.enquiry_notes_ref_id AND latest_notes.latest_notes_time = n.enquiry_notes_update
 LEFT JOIN {$tblPrefix}quotation q ON e.enquiry_id = q.quotation_ref_id AND q.quotation_status = 0" . ($siteId > 0 ? " AND q.quotation_site_id = {$siteId}" : "") . "
-WHERE {$siteFilter}{$userFilter}{$daterangeFilter}{$searchFilter}{$statusFilter}{$sourceFilter}
+WHERE {$combinedFilters}
 GROUP BY e.enquiry_id
 ORDER BY e.enquiry_time DESC
 LIMIT {$offset}, {$limit}";
@@ -295,11 +383,50 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
 
         $rawSt = (int)$row['enquiry_status'];
         $effectiveStatus = $rawSt;
-        if (!in_array($rawSt, [1, 6, 4, 5, 7, 15, 16, 17, 18], true) && !empty($row['has_quotation'])) {
+        if (!in_array($rawSt, [1, 6, 4, 5, 7, 15, 16, 17, 18, 28, 29], true) && !empty($row['has_quotation'])) {
             $effectiveStatus = 9;
         }
 
         $statusMeta = getLeadStatusMeta($effectiveStatus);
+
+        // Interest Level
+        $interestLvl = !empty($row['enquiry_interest_level']) ? $row['enquiry_interest_level'] : 'Unknown';
+        $interestMeta = getInterestLevelMeta($interestLvl);
+
+        // Customer Response Calculation
+        $respTracking = calculateCustomerResponseStatus($row['enquiry_last_contacted_at'], $row['enquiry_last_customer_response_at'], $effectiveStatus);
+
+        // Next Follow-Up Operational Indicator
+        $nextFollowupData = [
+            'is_scheduled'   => false,
+            'time_formatted' => 'Not Scheduled',
+            'badge'          => 'none',
+            'is_overdue'     => false,
+            'is_today'       => false,
+        ];
+        if (!empty($row['enquiry_followup']) && $row['enquiry_followup'] !== '0000-00-00 00:00:00') {
+            $fTs = strtotime($row['enquiry_followup']);
+            if ($fTs && date('Y', $fTs) > 2000) {
+                $now = time();
+                $isToday = (date('Y-m-d', $fTs) === date('Y-m-d', $now));
+                $isOverdue = ($fTs < $now && !$isToday);
+                $badge = $isOverdue ? 'overdue' : ($isToday ? 'today' : 'upcoming');
+                $nextFollowupData = [
+                    'is_scheduled'   => true,
+                    'datetime'       => date('Y-m-d H:i:s', $fTs),
+                    'time_formatted' => date('d M Y, h:i A', $fTs),
+                    'badge'          => $badge,
+                    'badge_label'    => $isOverdue ? 'Overdue' : ($isToday ? 'Due Today' : 'Upcoming'),
+                    'is_overdue'     => $isOverdue,
+                    'is_today'       => $isToday,
+                ];
+            }
+        }
+
+        $travelDateFormatted = '';
+        if (!empty($row['travel_date']) && $row['travel_date'] !== '0000-00-00') {
+            $travelDateFormatted = date('d M Y', strtotime($row['travel_date']));
+        }
 
         $agentId = (int)($row['enquiry_agent'] ?? 0);
         $agentName = !empty($row['agent_name']) ? trim($row['agent_name']) : '';
@@ -308,29 +435,38 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
         $cleanMobile = $isDigMkt ? '' : preg_replace('/[^0-9]/', '', (string)($row['enquiry_mobile'] ?? ''));
         $waMobile = ($isDigMkt || empty($cleanMobile)) ? '' : ((strlen($cleanMobile) == 10) ? ('91' . $cleanMobile) : $cleanMobile);
 
+        $qPrice = isset($row['quotation_price']) && is_numeric($row['quotation_price']) && (float)$row['quotation_price'] > 0
+            ? (float)$row['quotation_price']
+            : (float)($row['enquiry_expected_value'] ?? 0);
+
         $leadsList[] = [
-            'id'               => $leadId,
-            'encoded_id'       => base64_encode($leadId),
-            'name'             => ucwords(strtolower($fullName)),
-            'first_name'       => ucwords(strtolower($firstName)),
-            'email'            => $isDigMkt ? '' : trim($row['enquiry_email'] ?? ''),
-            'mobile'           => $isDigMkt ? '' : trim($row['enquiry_mobile'] ?? ''),
-            'alt_mobile'       => $isDigMkt ? '' : trim($row['enquiry_alt_mobile'] ?? ''),
-            'wa_mobile'        => $waMobile,
-            'subject'          => !empty($row['enquiry_subject']) ? ucwords(strtolower(trim($row['enquiry_subject']))) : 'Tour Package Enquiry',
-            'source'           => cleanLeadSource($row['enquiry_source'] ?? ''),
-            'source_raw'       => trim($row['enquiry_source'] ?? ''),
-            'status'           => $effectiveStatus,
-            'status_label'     => $statusMeta['label'],
-            'status_class'     => $statusMeta['class'],
-            'status_icon'      => $statusMeta['icon'],
-            'status_color'     => $statusMeta['color'],
-            'time'             => date('d M Y, h:i A', strtotime($row['enquiry_time'])),
-            'time_relative'    => getRelativeTime($row['enquiry_time']),
-            'agent_id'         => $agentId,
-            'agent_name'       => $agentName,
-            'recent_note_type' => trim($row['enquiry_notes_meta_type'] ?? ''),
-            'recent_note'      => (function() use ($row) {
+            'id'                  => $leadId,
+            'encoded_id'          => base64_encode($leadId),
+            'name'                => ucwords(strtolower($fullName)),
+            'first_name'          => ucwords(strtolower($firstName)),
+            'email'               => $isDigMkt ? '' : trim($row['enquiry_email'] ?? ''),
+            'mobile'              => $isDigMkt ? '' : trim($row['enquiry_mobile'] ?? ''),
+            'alt_mobile'          => $isDigMkt ? '' : trim($row['enquiry_alt_mobile'] ?? ''),
+            'wa_mobile'           => $waMobile,
+            'subject'             => !empty($row['enquiry_subject']) ? ucwords(strtolower(trim($row['enquiry_subject']))) : 'Tour Package Enquiry',
+            'source'              => cleanLeadSource($row['enquiry_source'] ?? ''),
+            'source_raw'          => trim($row['enquiry_source'] ?? ''),
+            'status'              => $effectiveStatus,
+            'status_label'        => $statusMeta['label'],
+            'status_class'        => $statusMeta['class'],
+            'status_icon'         => $statusMeta['icon'],
+            'status_color'        => $statusMeta['color'],
+            'interest_level'      => $interestLvl,
+            'interest_meta'       => $interestMeta,
+            'response_indicator'  => $respTracking,
+            'next_followup'       => $nextFollowupData,
+            'travel_date'         => $travelDateFormatted,
+            'time'                => date('d M Y, h:i A', strtotime($row['enquiry_time'])),
+            'time_relative'       => getRelativeTime($row['enquiry_time']),
+            'agent_id'            => $agentId,
+            'agent_name'          => $agentName,
+            'recent_note_type'    => trim($row['enquiry_notes_meta_type'] ?? ''),
+            'recent_note'         => (function() use ($row) {
                 $type = trim($row['enquiry_notes_meta_type'] ?? '');
                 $val  = trim($row['enquiry_notes_meta_value'] ?? '');
                 if (stripos($val, 'Lead status updated to Itinerary') !== false || (stripos($val, 'Itinerary / Quotation Sent') !== false && ($type === 'status' || stripos($val, 'Lead status') !== false))) {
@@ -346,8 +482,8 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
                 }
                 return $val;
             })(),
-            'quotation_price'     => isset($row['quotation_price']) && is_numeric($row['quotation_price']) ? (float)$row['quotation_price'] : 0,
-            'quotation_formatted' => isset($row['quotation_price']) && (float)$row['quotation_price'] > 0 ? '₹' . formatIndianCurrency((float)$row['quotation_price']) : '',
+            'quotation_price'     => $qPrice,
+            'quotation_formatted' => $qPrice > 0 ? '₹' . formatIndianCurrency($qPrice) : '',
         ];
     }
 }

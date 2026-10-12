@@ -812,6 +812,95 @@ foreach ($timeline as $tItem) {
     }
 }
 
+// Interest Level
+$interestLevel = !empty($lead['enquiry_interest_level']) ? $lead['enquiry_interest_level'] : 'Unknown';
+$interestMeta = getInterestLevelMeta($interestLevel);
+
+// Response Tracking & WhatsApp Integration
+$lastContactedAt = $lead['enquiry_last_contacted_at'] ?? null;
+$lastResponseAt  = $lead['enquiry_last_customer_response_at'] ?? null;
+
+// Reconcile with WhatsApp messages if available
+$chatCleanPhone = preg_replace('/[^0-9]/', '', (string)($lead['enquiry_mobile'] ?? ''));
+if (!empty($chatCleanPhone)) {
+    $waPhoneVariants = "'" . mysqli_real_escape_string($connection, $chatCleanPhone) . "'";
+    if (strlen($chatCleanPhone) === 10) {
+        $waPhoneVariants .= ",'91" . mysqli_real_escape_string($connection, $chatCleanPhone) . "'";
+    }
+    $waQ = "SELECT 
+        MAX(CASE WHEN m.message_direction = 'incoming' THEN m.message_created_at ELSE NULL END) AS wa_last_inbound,
+        MAX(CASE WHEN m.message_direction = 'outgoing' THEN m.message_created_at ELSE NULL END) AS wa_last_outbound
+    FROM {$tblPrefix}whatsapp_chat c
+    INNER JOIN {$tblPrefix}whatsapp_message m ON m.message_chat_id = c.chat_id
+    WHERE c.chat_lead_id = {$leadId} OR c.chat_phone IN ({$waPhoneVariants})";
+    if ($waRes = mysqli_query($connection, $waQ)) {
+        if ($waRow = mysqli_fetch_assoc($waRes)) {
+            if (!empty($waRow['wa_last_inbound']) && (empty($lastResponseAt) || strtotime($waRow['wa_last_inbound']) > strtotime($lastResponseAt))) {
+                $lastResponseAt = $waRow['wa_last_inbound'];
+            }
+            if (!empty($waRow['wa_last_outbound']) && (empty($lastContactedAt) || strtotime($waRow['wa_last_outbound']) > strtotime($lastContactedAt))) {
+                $lastContactedAt = $waRow['wa_last_outbound'];
+            }
+        }
+    }
+}
+
+$responseTracking = calculateCustomerResponseStatus($lastContactedAt, $lastResponseAt, (int)($lead['enquiry_status'] ?? 0));
+
+// Fetch Follow-up Tasks from isw_enquiry_task
+$tasksList = [];
+$tasksQuery = "SELECT t.*, p.profile_display_name AS agent_name, cp.profile_display_name AS completed_by_name
+               FROM {$tblPrefix}enquiry_task t
+               LEFT JOIN {$tblPrefix}profile p ON t.task_agent_id = p.profile_user_id
+               LEFT JOIN {$tblPrefix}profile cp ON t.task_completed_by = cp.profile_user_id
+               WHERE t.task_enquiry_id = {$leadId}
+               ORDER BY CASE WHEN t.task_status = 'pending' THEN 0 ELSE 1 END, t.task_due_at ASC";
+if ($tRes = mysqli_query($connection, $tasksQuery)) {
+    while ($tRow = mysqli_fetch_assoc($tRes)) {
+        $tDueTs = strtotime($tRow['task_due_at']);
+        $tIsToday = (date('Y-m-d', $tDueTs) === date('Y-m-d'));
+        $tIsOverdue = ($tDueTs < time() && !$tIsToday && $tRow['task_status'] === 'pending');
+        $tasksList[] = [
+            'id'             => (int)$tRow['task_id'],
+            'type'           => $tRow['task_type'],
+            'due_at'         => $tRow['task_due_at'],
+            'due_formatted'  => date('d M Y, h:i A', $tDueTs),
+            'notes'          => $tRow['task_notes'] ?? '',
+            'next_action'    => $tRow['task_next_action'] ?? '',
+            'status'         => $tRow['task_status'],
+            'outcome'        => $tRow['task_outcome'] ?? '',
+            'completed_at'   => !empty($tRow['task_completed_at']) ? date('d M Y, h:i A', strtotime($tRow['task_completed_at'])) : null,
+            'completed_by'   => $tRow['completed_by_name'] ?? '',
+            'agent_id'       => (int)$tRow['task_agent_id'],
+            'agent_name'     => $tRow['agent_name'] ?? 'Agent',
+            'is_overdue'     => $tIsOverdue,
+            'is_today'       => $tIsToday,
+        ];
+    }
+}
+
+// Fetch Linked Booking Information
+$bookingInfo = null;
+$bookingQuery = "SELECT booking_id, booking_date, booking_time, booking_service, booking_type, booking_status, booking_update
+                 FROM {$tblPrefix}booking
+                 WHERE booking_enquiry_id = {$leadId}" . ($siteId > 0 ? " AND booking_site_id = {$siteId}" : "") . "
+                 ORDER BY booking_id DESC LIMIT 1";
+if ($bRes = mysqli_query($connection, $bookingQuery)) {
+    if ($bRow = mysqli_fetch_assoc($bRes)) {
+        $bSt = (int)$bRow['booking_status'];
+        $bStatusLabel = ($bSt === 1) ? 'Confirmed' : (($bSt === 0) ? 'Pending' : 'Cancelled');
+        $bookingInfo = [
+            'id'           => (int)$bRow['booking_id'],
+            'service'      => $bRow['booking_service'] ?: 'Travel Package',
+            'type'         => $bRow['booking_type'],
+            'date'         => $bRow['booking_date'],
+            'status'       => $bSt,
+            'status_label' => $bStatusLabel,
+            'updated_at'   => $bRow['booking_update'],
+        ];
+    }
+}
+
 $kpis = [
     'next_followup' => $nextFollowup,
     'lead_age' => [
@@ -825,7 +914,9 @@ $kpis = [
         'itineraries_count' => $itinerariesCount,
         'payments_count' => $paymentsCount,
         'summary' => "{$totalTouchpoints} Touchpoint" . ($totalTouchpoints === 1 ? '' : 's')
-    ]
+    ],
+    'response_indicator' => $responseTracking,
+    'interest_level'     => $interestMeta,
 ];
 
 $response = [
@@ -845,6 +936,17 @@ $response = [
         'status_label' => $statusMeta['label'],
         'status_class' => $statusMeta['class'],
         'status_color' => $statusMeta['color'],
+        'status_icon'  => $statusMeta['icon'],
+        'interest_level' => $interestLevel,
+        'interest_meta'  => $interestMeta,
+        'response_tracking' => $responseTracking,
+        'last_contacted_at' => $lastContactedAt ? date('d M Y, h:i A', strtotime($lastContactedAt)) : null,
+        'last_customer_response_at' => $lastResponseAt ? date('d M Y, h:i A', strtotime($lastResponseAt)) : null,
+        'tasks' => $tasksList,
+        'booking' => $bookingInfo,
+        'all_statuses' => getAleyaLeadStatuses(),
+        'all_interests' => getAleyaInterestLevels(),
+        'all_response_statuses' => getAleyaResponseStatuses(),
         'subject' => !empty($lead['enquiry_subject']) ? ucwords(strtolower(trim($lead['enquiry_subject']))) : 'Tour Package Enquiry',
         'source' => !empty($lead['enquiry_source']) ? ucfirst($lead['enquiry_source']) : 'Direct',
         'medium' => trim($lead['enquiry_medium'] ?? ''),
