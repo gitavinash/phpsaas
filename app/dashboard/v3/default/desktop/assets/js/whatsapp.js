@@ -70,35 +70,23 @@
       });
 
       // Device Tab click (Sidebar line switcher)
-      $(document).on("click", ".wa-device-tab", function () {
+      $(document).on("click", ".wa-device-tab, .wa-device-rail-item", function () {
         const devId = $(this).data("device-id");
         self.selectedDeviceId = devId || "all";
-        $(".wa-device-tab").removeClass("active");
+        $(".wa-device-tab, .wa-device-rail-item").removeClass("active");
         $(this).addClass("active");
+        self.updateActiveDeviceChip();
         self.updateHeaderStatusBadge();
         self.lastThreadsHtml = null;
         self.loadThreads();
       });
 
       // Keyboard support for device tabs
-      $(document).on("keydown", ".wa-device-tab", function (e) {
+      $(document).on("keydown", ".wa-device-tab, .wa-device-rail-item", function (e) {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           $(this).trigger("click");
         }
-      });
-
-      // Device tabs horizontal scroll arrows
-      $(document).on("click", "#btnPrevDeviceTab", function (e) {
-        e.preventDefault();
-        const $bar = $("#waDeviceTabsBar");
-        if ($bar.length) $bar.animate({ scrollLeft: "-=220" }, 200);
-      });
-
-      $(document).on("click", "#btnNextDeviceTab", function (e) {
-        e.preventDefault();
-        const $bar = $("#waDeviceTabsBar");
-        if ($bar.length) $bar.animate({ scrollLeft: "+=220" }, 200);
       });
 
       // Search input (delegated)
@@ -349,23 +337,22 @@
 
     renderDeviceTabs: function () {
       const self = this;
-      const $sec = $("#waDeviceTabsSection");
-      const $bar = $("#waDeviceTabsBar");
-      const $nav = $("#waDeviceTabsNav");
-      if (!$sec.length || !$bar.length) return;
+      const $rail = $("#waDevicesRail");
+      const $list = $("#waDevicesRailList");
+      const $count = $("#waRailDeviceCount");
+      const $workspace = $("#waChatWorkspace");
 
       const devices = self.availableDevices || [];
       if (!devices.length) {
-        $sec.addClass("d-none").hide();
+        if ($rail.length) $rail.addClass("d-none").hide();
+        if ($workspace.length) $workspace.removeClass("has-devices-rail");
+        self.updateActiveDeviceChip();
         return;
       }
 
-      $sec.removeClass("d-none").show();
-      if (devices.length > 2) {
-        $nav.removeClass("d-none").show();
-      } else {
-        $nav.addClass("d-none").hide();
-      }
+      if ($rail.length) $rail.removeClass("d-none").show();
+      if ($workspace.length) $workspace.addClass("has-devices-rail");
+      if ($count.length) $count.text(devices.length);
 
       const connectedCount = devices.filter(function (d) { return d.status === "connected"; }).length;
       const isAllSelected = !self.selectedDeviceId || self.selectedDeviceId === "all";
@@ -373,7 +360,7 @@
       let html = "";
       if (self.isAdmin && devices.length > 1) {
         html += `
-          <div class="wa-device-tab ${isAllSelected ? "active" : ""}" data-device-id="all" role="button" tabindex="0" title="View all WhatsApp lines">
+          <div class="wa-device-rail-item wa-device-tab ${isAllSelected ? "active" : ""}" data-device-id="all" role="button" tabindex="0" title="View all WhatsApp lines">
             <div class="wa-device-tab-avatar-wrap">
               <div class="wa-device-tab-avatar is-all">
                 <i class="fi fi-rr-apps"></i>
@@ -414,7 +401,7 @@
           : `<div class="wa-device-tab-agent is-unassigned"><i class="fi fi-rr-user-add"></i> Unassigned</div>`;
 
         html += `
-          <div class="wa-device-tab ${isCur ? "active" : ""}" data-device-id="${d.device_id}" role="button" tabindex="0" title="${self.escapeHtml(d.phone || d.name)}">
+          <div class="wa-device-rail-item wa-device-tab ${isCur ? "active" : ""}" data-device-id="${d.device_id}" role="button" tabindex="0" title="${self.escapeHtml(d.phone || d.name)}">
             <div class="wa-device-tab-avatar-wrap">
               ${avatarHtml}
               <span class="wa-device-tab-status-dot ${isConn ? "is-connected" : "is-offline"}" title="${isConn ? "Online" : "Offline"}"></span>
@@ -428,9 +415,10 @@
         `;
       });
 
-      if ($bar.data("last-html") !== html) {
-        $bar.html(html).data("last-html", html);
+      if ($list.length && $list.data("last-html") !== html) {
+        $list.html(html).data("last-html", html);
       }
+      self.updateActiveDeviceChip();
 
       // Populate New Chat Modal device options (Admin only when multiple devices exist)
       const $modalSelect = $("#newChatDeviceSelect");
@@ -460,6 +448,32 @@
           }
         } else {
           $modalGroup.addClass("d-none").hide();
+        }
+      }
+    },
+
+    updateActiveDeviceChip: function () {
+      const self = this;
+      const $chip = $("#waActiveDeviceChip");
+      const $chipText = $("#waActiveDeviceChipText");
+      if (!$chip.length || !$chipText.length) return;
+
+      const devices = self.availableDevices || [];
+      if (!devices.length) {
+        $chip.addClass("d-none").hide();
+        return;
+      }
+
+      $chip.removeClass("d-none").show();
+      if (!self.selectedDeviceId || self.selectedDeviceId === "all") {
+        $chipText.text(`All Lines (${devices.length})`);
+      } else {
+        const curDev = devices.find(function (d) { return String(d.device_id) === String(self.selectedDeviceId); });
+        if (curDev) {
+          const agentPart = curDev.assigned_agent_name && curDev.assigned_agent_name !== "Unassigned" ? ` • ${curDev.assigned_agent_name}` : "";
+          $chipText.text(`${curDev.phone || curDev.name || "Line"}${agentPart}`);
+        } else {
+          $chipText.text("Selected Line");
         }
       }
     },
@@ -500,6 +514,7 @@
           $text.text("Device Online");
         }
       }
+      this.updateActiveDeviceChip();
     },
 
     updateDeviceLinkedUI: function (isLinked, phone, msg, hasAssignedDevice, isAdmin) {

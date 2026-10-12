@@ -57,7 +57,21 @@
 
     <!-- Main Chat Workspace -->
     <div class="wa-chat-workspace" id="waChatWorkspace">
-        <!-- Left Sidebar: Conversations Thread List -->
+        <!-- 1. Leftmost Vertical Device Rail (Top to Bottom) -->
+        <aside class="wa-devices-rail d-none" id="waDevicesRail">
+            <div class="wa-devices-rail-header">
+                <div class="wa-devices-rail-title">
+                    <i class="fi fi-rr-smartphone"></i>
+                    <span>Lines</span>
+                </div>
+                <span class="wa-devices-rail-count" id="waRailDeviceCount">0</span>
+            </div>
+            <div class="wa-devices-rail-list" id="waDevicesRailList">
+                <!-- Populated dynamically from top to bottom via JS -->
+            </div>
+        </aside>
+
+        <!-- 2. Contacts Inbox Sidebar for Active Device -->
         <aside class="wa-threads-sidebar">
             <!-- Search & Filters -->
             <div class="wa-threads-header">
@@ -79,20 +93,10 @@
                     <button type="button" class="wa-filter-pill" data-filter="leads">CRM Leads</button>
                 </div>
 
-                <!-- WhatsApp Device / Line Tabs (Profile icon + Mobile + Device name + Assigned Agent) -->
-                <div class="wa-device-tabs-section d-none" id="waDeviceTabsSection">
-                    <div class="wa-device-tabs-header">
-                        <span class="wa-device-tabs-title"><i class="fi fi-rr-smartphone"></i> WhatsApp Lines</span>
-                        <div class="wa-device-tabs-nav d-none" id="waDeviceTabsNav">
-                            <button type="button" class="wa-tabs-arrow" id="btnPrevDeviceTab" title="Previous line"><i class="fi fi-rr-angle-left"></i></button>
-                            <button type="button" class="wa-tabs-arrow" id="btnNextDeviceTab" title="Next line"><i class="fi fi-rr-angle-right"></i></button>
-                        </div>
-                    </div>
-                    <div class="wa-device-tabs-scroll-wrap">
-                        <div class="wa-device-tabs-scroll" id="waDeviceTabsBar">
-                            <!-- Populated dynamically via JS -->
-                        </div>
-                    </div>
+                <!-- Active Line Context Chip -->
+                <div class="wa-active-device-chip d-none" id="waActiveDeviceChip">
+                    <span class="wa-active-device-dot"></span>
+                    <span class="wa-active-device-text" id="waActiveDeviceChipText">All Lines</span>
                 </div>
             </div>
 
