@@ -56,9 +56,27 @@ if (!fs.existsSync(AUTH_DIR)) {
   fs.mkdirSync(AUTH_DIR, { recursive: true });
 }
 
-const UPLOAD_DIR = path.resolve(__dirname, "../../upload/whatsapp");
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+let UPLOAD_DIR = path.resolve(__dirname, "../../upload/whatsapp");
+let UPLOAD_DIR_IS_CRM = true;
+
+try {
+  if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  }
+  const testFile = path.join(UPLOAD_DIR, `.perm_test_${Date.now()}`);
+  fs.writeFileSync(testFile, "ok");
+  fs.unlinkSync(testFile);
+} catch (e) {
+  console.warn(`[WhatsApp Gateway] Warning: Primary upload directory not writable (${e.message}). Falling back to local media_cache.`);
+  UPLOAD_DIR = path.join(__dirname, "media_cache");
+  UPLOAD_DIR_IS_CRM = false;
+  try {
+    if (!fs.existsSync(UPLOAD_DIR)) {
+      fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+    }
+  } catch (err2) {
+    console.error("[WhatsApp Gateway] Fatal: Could not create local media cache:", err2);
+  }
 }
 
 const app = express();
@@ -185,11 +203,14 @@ async function downloadAndSaveMedia(msg, sessionId) {
   if (!mediaType || !mediaObj) return null;
 
   const uploadDir = UPLOAD_DIR;
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
+  try {
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+  } catch (e) {}
 
   const baseName = `wa_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+  const getMediaUrl = (file) => (UPLOAD_DIR_IS_CRM ? `/upload/whatsapp/${file}` : `http://127.0.0.1:${PORT}/media/${file}`);
 
   // 1. Download decrypted media buffer via Baileys
   try {
@@ -209,10 +230,10 @@ async function downloadAndSaveMedia(msg, sessionId) {
       const fileName = `${baseName}.${ext}`;
       const filePath = path.join(uploadDir, fileName);
       fs.writeFileSync(filePath, buffer);
-      console.log(`[WhatsApp Gateway:${sessionId}] Downloaded media (${mediaType}, ${buffer.length} bytes): /upload/whatsapp/${fileName}`);
+      console.log(`[WhatsApp Gateway:${sessionId}] Downloaded media (${mediaType}, ${buffer.length} bytes): ${getMediaUrl(fileName)}`);
       return {
         type: mediaType,
-        url: `/upload/whatsapp/${fileName}`,
+        url: getMediaUrl(fileName),
         caption: mediaObj.caption || ""
       };
     }
@@ -230,10 +251,10 @@ async function downloadAndSaveMedia(msg, sessionId) {
         const fileName = `${baseName}_thumb.jpg`;
         const filePath = path.join(uploadDir, fileName);
         fs.writeFileSync(filePath, thumbBuf);
-        console.log(`[WhatsApp Gateway:${sessionId}] Saved media thumbnail: /upload/whatsapp/${fileName}`);
+        console.log(`[WhatsApp Gateway:${sessionId}] Saved media thumbnail: ${getMediaUrl(fileName)}`);
         return {
           type: mediaType,
-          url: `/upload/whatsapp/${fileName}`,
+          url: getMediaUrl(fileName),
           caption: mediaObj.caption || ""
         };
       }
