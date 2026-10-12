@@ -728,3 +728,70 @@ if (!function_exists('formatElapsedDuration')) {
         return floor($seconds / 604800) . 'w';
     }
 }
+
+if (!function_exists('ensureAleyaCrmSchema')) {
+    function ensureAleyaCrmSchema($conn, $tblPrefix = '')
+    {
+        static $checked = false;
+        if ($checked || !$conn) return;
+        $checked = true;
+
+        if (empty($tblPrefix)) {
+            $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+        }
+
+        // Fast check: does enquiry_interest_level exist?
+        $checkCol = @mysqli_query($conn, "SHOW COLUMNS FROM `{$tblPrefix}enquiry` LIKE 'enquiry_interest_level'");
+        if ($checkCol && mysqli_num_rows($checkCol) > 0) {
+            return; // Schema is already migrated
+        }
+
+        // Safe idempotent ALTER TABLE additions
+        $enquiryTable = "{$tblPrefix}enquiry";
+        $cols = [
+            'enquiry_interest_level'            => "ALTER TABLE `{$enquiryTable}` ADD COLUMN `enquiry_interest_level` VARCHAR(20) NOT NULL DEFAULT 'Unknown' AFTER `enquiry_status`",
+            'enquiry_last_contacted_at'         => "ALTER TABLE `{$enquiryTable}` ADD COLUMN `enquiry_last_contacted_at` DATETIME NULL DEFAULT NULL AFTER `enquiry_interest_level`",
+            'enquiry_last_customer_response_at' => "ALTER TABLE `{$enquiryTable}` ADD COLUMN `enquiry_last_customer_response_at` DATETIME NULL DEFAULT NULL AFTER `enquiry_last_contacted_at`",
+            'enquiry_response_status'           => "ALTER TABLE `{$enquiryTable}` ADD COLUMN `enquiry_response_status` VARCHAR(40) NOT NULL DEFAULT 'No Activity' AFTER `enquiry_last_customer_response_at`",
+            'enquiry_expected_value'            => "ALTER TABLE `{$enquiryTable}` ADD COLUMN `enquiry_expected_value` DECIMAL(15,2) NOT NULL DEFAULT 0.00 AFTER `enquiry_response_status`",
+            'enquiry_booking_id'                => "ALTER TABLE `{$enquiryTable}` ADD COLUMN `enquiry_booking_id` BIGINT NULL DEFAULT NULL AFTER `enquiry_expected_value`",
+        ];
+
+        foreach ($cols as $colName => $alterSql) {
+            $c = @mysqli_query($conn, "SHOW COLUMNS FROM `{$enquiryTable}` LIKE '{$colName}'");
+            if (!$c || mysqli_num_rows($c) === 0) {
+                @mysqli_query($conn, $alterSql);
+            }
+        }
+
+        // Create tasks table if not exists
+        $taskTable = "{$tblPrefix}enquiry_task";
+        $createTaskTableSql = "CREATE TABLE IF NOT EXISTS `{$taskTable}` (
+            `task_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+            `task_site_id` BIGINT NOT NULL DEFAULT 0,
+            `task_enquiry_id` BIGINT NOT NULL,
+            `task_agent_id` BIGINT NOT NULL DEFAULT 0,
+            `task_type` ENUM('Call', 'WhatsApp', 'Email', 'Meeting', 'Other') NOT NULL DEFAULT 'Call',
+            `task_due_at` DATETIME NOT NULL,
+            `task_notes` TEXT NULL,
+            `task_next_action` VARCHAR(255) NULL,
+            `task_status` ENUM('pending', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
+            `task_outcome` VARCHAR(255) NULL,
+            `task_completed_at` DATETIME NULL,
+            `task_completed_by` BIGINT NULL,
+            `task_created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `task_updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX `idx_task_enquiry` (`task_enquiry_id`),
+            INDEX `idx_task_site` (`task_site_id`),
+            INDEX `idx_task_agent` (`task_agent_id`),
+            INDEX `idx_task_due` (`task_due_at`),
+            INDEX `idx_task_status` (`task_status`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+        @mysqli_query($conn, $createTaskTableSql);
+    }
+}
+
+// Auto-run schema check if connection exists
+if (isset($connection) && $connection) {
+    ensureAleyaCrmSchema($connection);
+}

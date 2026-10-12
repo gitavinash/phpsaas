@@ -849,13 +849,15 @@ $responseTracking = calculateCustomerResponseStatus($lastContactedAt, $lastRespo
 
 // Fetch Follow-up Tasks from isw_enquiry_task
 $tasksList = [];
-$tasksQuery = "SELECT t.*, p.profile_display_name AS agent_name, cp.profile_display_name AS completed_by_name
-               FROM {$tblPrefix}enquiry_task t
-               LEFT JOIN {$tblPrefix}profile p ON t.task_agent_id = p.profile_user_id
-               LEFT JOIN {$tblPrefix}profile cp ON t.task_completed_by = cp.profile_user_id
-               WHERE t.task_enquiry_id = {$leadId}
-               ORDER BY CASE WHEN t.task_status = 'pending' THEN 0 ELSE 1 END, t.task_due_at ASC";
-if ($tRes = mysqli_query($connection, $tasksQuery)) {
+$taskTblChk = @mysqli_query($connection, "SHOW TABLES LIKE '{$tblPrefix}enquiry_task'");
+if ($taskTblChk && mysqli_num_rows($taskTblChk) > 0) {
+    $tasksQuery = "SELECT t.*, p.profile_display_name AS agent_name, cp.profile_display_name AS completed_by_name
+                   FROM {$tblPrefix}enquiry_task t
+                   LEFT JOIN {$tblPrefix}profile p ON t.task_agent_id = p.profile_user_id
+                   LEFT JOIN {$tblPrefix}profile cp ON t.task_completed_by = cp.profile_user_id
+                   WHERE t.task_enquiry_id = {$leadId}
+                   ORDER BY CASE WHEN t.task_status = 'pending' THEN 0 ELSE 1 END, t.task_due_at ASC";
+    if ($tRes = @mysqli_query($connection, $tasksQuery)) {
     while ($tRow = mysqli_fetch_assoc($tRes)) {
         $tDueTs = strtotime($tRow['task_due_at']);
         $tIsToday = (date('Y-m-d', $tDueTs) === date('Y-m-d'));
@@ -877,6 +879,7 @@ if ($tRes = mysqli_query($connection, $tasksQuery)) {
             'is_today'       => $tIsToday,
         ];
     }
+}
 }
 
 // Fetch Linked Booking Information

@@ -151,10 +151,20 @@ if (isset($reqData['source']) && trim($reqData['source']) !== '' && $reqData['so
     $sourceFilter = " AND e.enquiry_source LIKE '%{$sourceKey}%'";
 }
 
+// Schema availability check (safe auto-migrate on missing columns)
+$hasCrmCols = false;
+if (isset($connection) && $connection) {
+    if (function_exists('ensureAleyaCrmSchema')) {
+        ensureAleyaCrmSchema($connection, $tblPrefix);
+    }
+    $colChk = @mysqli_query($connection, "SHOW COLUMNS FROM `{$tblPrefix}enquiry` LIKE 'enquiry_interest_level'");
+    $hasCrmCols = ($colChk && mysqli_num_rows($colChk) > 0);
+}
+
 // Interest Level Filter
 $interestFilter = "";
 $rawInterest = isset($reqData['interest']) ? trim((string)$reqData['interest']) : (isset($reqData['interest_level']) ? trim((string)$reqData['interest_level']) : '');
-if ($rawInterest !== '' && $rawInterest !== 'all') {
+if ($hasCrmCols && $rawInterest !== '' && $rawInterest !== 'all') {
     $escInterest = mysqli_real_escape_string($connection, $rawInterest);
     $interestFilter = " AND e.enquiry_interest_level = '{$escInterest}'";
 }
@@ -162,7 +172,7 @@ if ($rawInterest !== '' && $rawInterest !== 'all') {
 // Response Indicator Filter
 $responseFilter = "";
 $rawResp = isset($reqData['response_status']) ? trim((string)$reqData['response_status']) : (isset($reqData['response']) ? trim((string)$reqData['response']) : '');
-if ($rawResp !== '' && $rawResp !== 'all') {
+if ($hasCrmCols && $rawResp !== '' && $rawResp !== 'all') {
     if ($rawResp === 'no_activity') {
         $responseFilter = " AND (e.enquiry_last_contacted_at IS NULL AND e.enquiry_last_customer_response_at IS NULL)";
     } elseif ($rawResp === 'awaiting_response') {
@@ -187,11 +197,11 @@ if ($rawFollowupF === 'due_today') {
     $followupFilter = " AND e.enquiry_followup BETWEEN '{$todayStart}' AND '{$todayEnd}'";
 } elseif ($rawFollowupF === 'overdue') {
     $followupFilter = " AND e.enquiry_followup < '{$todayStart}' AND e.enquiry_followup != '0000-00-00 00:00:00'";
-} elseif ($rawFollowupF === 'no_response_24h') {
+} elseif ($hasCrmCols && $rawFollowupF === 'no_response_24h') {
     $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
-} elseif ($rawFollowupF === 'no_response_48h') {
+} elseif ($hasCrmCols && $rawFollowupF === 'no_response_48h') {
     $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
-} elseif ($rawFollowupF === 'no_response_7d') {
+} elseif ($hasCrmCols && $rawFollowupF === 'no_response_7d') {
     $followupFilter = " AND e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 7 DAY) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29)";
 }
 
@@ -278,12 +288,12 @@ $statsQuery = "SELECT
     SUM(CASE WHEN e.enquiry_status = 6 THEN 1 ELSE 0 END) AS payment_count,
     SUM(CASE WHEN e.enquiry_status = 1 THEN 1 ELSE 0 END) AS confirmed_count,
     SUM(CASE WHEN e.enquiry_status IN (4, 5, 7, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END) AS closed_count,
-    SUM(CASE WHEN e.enquiry_interest_level = 'Hot' THEN 1 ELSE 0 END) AS hot_count,
-    SUM(CASE WHEN e.enquiry_interest_level = 'Warm' THEN 1 ELSE 0 END) AS warm_count,
+    " . ($hasCrmCols ? "SUM(CASE WHEN e.enquiry_interest_level = 'Hot' THEN 1 ELSE 0 END)" : "0") . " AS hot_count,
+    " . ($hasCrmCols ? "SUM(CASE WHEN e.enquiry_interest_level = 'Warm' THEN 1 ELSE 0 END)" : "0") . " AS warm_count,
     SUM(CASE WHEN e.enquiry_followup BETWEEN '{$todayStart}' AND '{$todayEnd}' THEN 1 ELSE 0 END) AS due_today_count,
     SUM(CASE WHEN e.enquiry_followup < '{$todayStart}' AND e.enquiry_followup != '0000-00-00 00:00:00' AND e.enquiry_status NOT IN (1, 4, 5, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END) AS overdue_count,
-    SUM(CASE WHEN e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END) AS no_resp_24h_count,
-    SUM(CASE WHEN e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END) AS no_resp_48h_count
+    " . ($hasCrmCols ? "SUM(CASE WHEN e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END)" : "0") . " AS no_resp_24h_count,
+    " . ($hasCrmCols ? "SUM(CASE WHEN e.enquiry_last_contacted_at <= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND (e.enquiry_last_customer_response_at IS NULL OR e.enquiry_last_customer_response_at < e.enquiry_last_contacted_at) AND e.enquiry_status NOT IN (1, 4, 5, 8, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29) THEN 1 ELSE 0 END)" : "0") . " AS no_resp_48h_count
 FROM {$tblPrefix}enquiry e
 LEFT JOIN (
     SELECT quotation_ref_id, MIN(quotation_id) AS quotation_id
@@ -342,11 +352,15 @@ $leadsQuery = "SELECT
     e.enquiry_subject,
     e.enquiry_source,
     e.enquiry_status,
-    e.enquiry_interest_level,
+    " . ($hasCrmCols ? "e.enquiry_interest_level,
     e.enquiry_last_contacted_at,
     e.enquiry_last_customer_response_at,
     e.enquiry_response_status,
-    e.enquiry_expected_value,
+    e.enquiry_expected_value," : "'Unknown' AS enquiry_interest_level,
+    NULL AS enquiry_last_contacted_at,
+    NULL AS enquiry_last_customer_response_at,
+    'No Activity' AS enquiry_response_status,
+    0.00 AS enquiry_expected_value,") . "
     e.enquiry_followup,
     e.enquiry_agent,
     p.profile_display_name AS agent_name,
