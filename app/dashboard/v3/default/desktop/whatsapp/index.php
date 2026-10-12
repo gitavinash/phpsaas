@@ -52,10 +52,10 @@
                     <i class="fi fi-rr-cross-small"></i>
                 </span>
             </div>
-            <h3>No WhatsApp Device Linked</h3>
+            <h3 id="waUnlinkedTitle">No WhatsApp Device Linked</h3>
             <p id="waUnlinkedMessage">You must link a WhatsApp device before you can access the CRM Live Inbox, read incoming customer messages, or reply to leads.</p>
             <div class="wa-unlinked-actions">
-                <a href="/dashboard/integration/whatsapp_web/" class="btn-integration-primary">
+                <a href="/dashboard/integration/whatsapp_web/" class="btn-integration-primary" id="btnLinkDeviceNow">
                     <i class="fi fi-rr-qr-scan"></i> Link WhatsApp Device Now
                 </a>
                 <button type="button" class="btn-wa-secondary" id="btnRecheckConnection">

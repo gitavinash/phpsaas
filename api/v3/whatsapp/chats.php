@@ -65,22 +65,52 @@ $action = $_GET['action'] ?? ($_POST['action'] ?? '');
 // 1. GET: Fetch List of WhatsApp Chat Conversations
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
-    if ($action === 'sync') {
-        $currentUserId = defined('USER_ID') ? (int)USER_ID : 0;
-        $sessParam = '';
-        if ($currentUserId > 0) {
-            $devQ = mysqli_query($connection, "SELECT device_session_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
-            if ($devQ && mysqli_num_rows($devQ) > 0) {
-                $devR = mysqli_fetch_assoc($devQ);
-                $sessParam = '?session_id=' . urlencode($devR['device_session_id']);
+    // Determine current user and role upfront
+    $currentUserId = defined('USER_ID') ? (int)USER_ID : (isset($user_id) ? (int)$user_id : 0);
+    $userRole = isset($site_access_type) ? strtolower($site_access_type) : '';
+    $isAdmin = in_array($userRole, ['administrator', 'admin', 'owner', 'superadmin']);
+
+    if (!$isAdmin && $currentUserId > 0) {
+        $saQ = mysqli_query($connection, "SELECT site_access_type FROM " . TABLE_PREFIX . "site_access WHERE site_access_site_id = {$siteId} AND site_access_user_id = {$currentUserId} AND site_access_status = 1 LIMIT 1");
+        if ($saQ && mysqli_num_rows($saQ) > 0) {
+            $saR = mysqli_fetch_assoc($saQ);
+            if (in_array(strtolower($saR['site_access_type'] ?? ''), ['administrator', 'admin', 'owner', 'superadmin'])) {
+                $isAdmin = true;
             }
         }
+    }
 
-        if (empty($sessParam)) {
-            $anyDevQ = mysqli_query($connection, "SELECT device_session_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
-            if ($anyDevQ && mysqli_num_rows($anyDevQ) > 0) {
-                $anyDevR = mysqli_fetch_assoc($anyDevQ);
-                $sessParam = '?session_id=' . urlencode($anyDevR['device_session_id']);
+    if ($action === 'sync') {
+        $sessParam = '';
+        if (!$isAdmin) {
+            // Non-admin: sync only their assigned connected device
+            if ($currentUserId > 0) {
+                $devQ = mysqli_query($connection, "SELECT device_session_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
+                if ($devQ && mysqli_num_rows($devQ) > 0) {
+                    $devR = mysqli_fetch_assoc($devQ);
+                    $sessParam = '?session_id=' . urlencode($devR['device_session_id']);
+                }
+            }
+            if (empty($sessParam)) {
+                echo json_encode(['status' => 'error', 'msg' => 'No active WhatsApp device assigned to your account.']);
+                exit;
+            }
+        } else {
+            // Admin: sync requested device, or primary connected device
+            $reqDeviceId = isset($_GET['device_id']) && is_numeric($_GET['device_id']) ? (int)$_GET['device_id'] : 0;
+            if ($reqDeviceId > 0) {
+                $devQ = mysqli_query($connection, "SELECT device_session_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_id = {$reqDeviceId} AND device_status = 'connected' LIMIT 1");
+                if ($devQ && mysqli_num_rows($devQ) > 0) {
+                    $devR = mysqli_fetch_assoc($devQ);
+                    $sessParam = '?session_id=' . urlencode($devR['device_session_id']);
+                }
+            }
+            if (empty($sessParam)) {
+                $anyDevQ = mysqli_query($connection, "SELECT device_session_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
+                if ($anyDevQ && mysqli_num_rows($anyDevQ) > 0) {
+                    $anyDevR = mysqli_fetch_assoc($anyDevQ);
+                    $sessParam = '?session_id=' . urlencode($anyDevR['device_session_id']);
+                }
             }
         }
 
@@ -110,80 +140,53 @@ if ($method === 'GET') {
     $q = trim($_GET['q'] ?? '');
     $filter = trim($_GET['filter'] ?? 'all'); // 'all', 'unread', 'leads'
 
-    // Determine current user and role
-    $currentUserId = defined('USER_ID') ? (int)USER_ID : (isset($user_id) ? (int)$user_id : 0);
-    $userRole = isset($site_access_type) ? strtolower($site_access_type) : '';
-    $isAdmin = in_array($userRole, ['administrator', 'admin', 'owner', 'superadmin']);
-
-    if (!$isAdmin && $currentUserId > 0) {
-        $saQ = mysqli_query($connection, "SELECT site_access_type FROM " . TABLE_PREFIX . "site_access WHERE site_access_site_id = {$siteId} AND site_access_user_id = {$currentUserId} AND site_access_status = 1 LIMIT 1");
-        if ($saQ && mysqli_num_rows($saQ) > 0) {
-            $saR = mysqli_fetch_assoc($saQ);
-            if (in_array(strtolower($saR['site_access_type'] ?? ''), ['administrator', 'admin', 'owner', 'superadmin'])) {
-                $isAdmin = true;
-            }
-        }
-    }
-
     $isDeviceLinked = false;
     $linkedPhone = '';
     $agentDevicePhone = '';
+    $assignedPhones = [];
 
     // Check device connectivity based on role
     if (!$isAdmin) {
-        // Sales Agent: Check their assigned connected device
+        // Sales Agent / Regular User: strictly check their assigned device(s)
+        $assignedDevs = [];
         if ($currentUserId > 0) {
-            $devAssigned = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
-            if ($devAssigned && mysqli_num_rows($devAssigned) > 0) {
-                $devRow = mysqli_fetch_assoc($devAssigned);
-                $isDeviceLinked = true;
-                $linkedPhone = $devRow['device_phone'] ?? '';
-                $agentDevicePhone = $linkedPhone;
-            } else {
-                // Shared connected device on site fallback
-                $devShared = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY (device_status = 'connected') DESC, device_id ASC LIMIT 1");
-                if ($devShared && mysqli_num_rows($devShared) > 0) {
-                    $devRow = mysqli_fetch_assoc($devShared);
-                    $isDeviceLinked = true;
-                    $linkedPhone = $devRow['device_phone'] ?? '';
-                    $agentDevicePhone = $linkedPhone;
+            $devAssignedQ = mysqli_query($connection, "SELECT device_session_id, device_phone, device_status FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId}");
+            if ($devAssignedQ && mysqli_num_rows($devAssignedQ) > 0) {
+                while ($dRow = mysqli_fetch_assoc($devAssignedQ)) {
+                    $assignedDevs[] = $dRow;
                 }
             }
         }
 
-        // Instance fallback for agent when no site-isolated device exists
-        if (!$isDeviceLinked) {
-            $devAnyInst = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
-            if ($devAnyInst && mysqli_num_rows($devAnyInst) > 0) {
-                $devRow = mysqli_fetch_assoc($devAnyInst);
-                $isDeviceLinked = true;
-                $linkedPhone = $devRow['device_phone'] ?? '';
-                $agentDevicePhone = $linkedPhone;
-            }
-        }
-
-        // Rule: If chats exist in CRM, allow agent to read existing chats even if live socket disconnected
-        if (!$isDeviceLinked) {
-            $chatCheckQ = mysqli_query($connection, "SELECT chat_id, chat_device_phone FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} LIMIT 1");
-            if ($chatCheckQ && mysqli_num_rows($chatCheckQ) > 0) {
-                $chatRow = mysqli_fetch_assoc($chatCheckQ);
-                $isDeviceLinked = true;
-                $linkedPhone = $chatRow['chat_device_phone'] ?: '';
-                $agentDevicePhone = $linkedPhone;
-            }
-        }
-
-        if (!$isDeviceLinked) {
+        if (empty($assignedDevs)) {
+            // User has NO assigned WhatsApp device: Strictly show NO chats and inform user
             echo json_encode([
-                'status'           => 'success',
-                'is_device_linked' => false,
-                'linked_phone'     => '',
-                'is_admin'         => false,
-                'chats'            => [],
-                'count'            => 0
+                'status'              => 'success',
+                'is_device_linked'    => false,
+                'has_assigned_device' => false,
+                'linked_phone'        => '',
+                'is_admin'            => false,
+                'msg'                 => 'No WhatsApp device has been assigned to your user account. Please contact an administrator to assign a device to your profile.',
+                'devices'             => [],
+                'agents'              => [],
+                'chats'               => [],
+                'count'               => 0
             ]);
             exit;
         }
+
+        $hasConnectedDev = false;
+        foreach ($assignedDevs as $dRow) {
+            if (($dRow['device_status'] ?? '') === 'connected') {
+                $hasConnectedDev = true;
+            }
+            if (!empty($dRow['device_phone'])) {
+                $assignedPhones[] = $dRow['device_phone'];
+            }
+        }
+        $isDeviceLinked = $hasConnectedDev;
+        $linkedPhone = !empty($assignedPhones) ? $assignedPhones[0] : '';
+        $agentDevicePhone = $linkedPhone;
     } else {
         // Administrator: Check if ANY device on this site is connected
         $devAny = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
@@ -348,20 +351,26 @@ if ($method === 'GET') {
     $whereClauses = ["c.chat_site_id = {$siteId}"];
 
     // Role-based Chat Filtering:
-    // Sales Agent sees only current assigned device chats or CRM leads assigned to them.
-    // Admin sees all devices' chats by default, or filtered by selected device / user.
+    // Sales Agent / Regular User: strictly sees ONLY chats for their assigned WhatsApp device(s).
+    // Admin: sees all devices' chats by default, or filtered by selected device / team member.
     if (!$isAdmin) {
         $filterDeviceId = 0;
         $filterDevicePhone = '';
         $filterUserId = $currentUserId;
 
-        if (!empty($agentDevicePhone)) {
-            $cleanAgentDigits = preg_replace('/[^0-9]/', '', $agentDevicePhone);
-            $last10Agent = substr($cleanAgentDigits, -10);
-            $escAgentDev = mysqli_real_escape_string($connection, $agentDevicePhone);
-            $whereClauses[] = "(c.chat_device_phone = '{$escAgentDev}' OR c.chat_device_phone LIKE '%{$last10Agent}' OR c.chat_lead_id IN (SELECT enquiry_id FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND (enquiry_agent = {$currentUserId} OR enquiry_user_id = {$currentUserId})))";
+        $devConds = [];
+        foreach (array_unique($assignedPhones) as $aph) {
+            $cleanAph = preg_replace('/[^0-9]/', '', $aph);
+            $last10Aph = substr($cleanAph, -10);
+            $escAph = mysqli_real_escape_string($connection, $aph);
+            $devConds[] = "(c.chat_device_phone = '{$escAph}' OR c.chat_device_phone LIKE '%{$last10Aph}')";
+        }
+
+        if (!empty($devConds)) {
+            $whereClauses[] = "(" . implode(' OR ', $devConds) . ")";
         } else {
-            $whereClauses[] = "c.chat_lead_id IN (SELECT enquiry_id FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND (enquiry_agent = {$currentUserId} OR enquiry_user_id = {$currentUserId}))";
+            // User has no assigned device phone yet: show no chats
+            $whereClauses[] = "1 = 0";
         }
     } else {
         // Administrator: Allowed to switch between all devices or team member inboxes
@@ -401,8 +410,11 @@ if ($method === 'GET') {
                     $userConds[] = "c.chat_device_phone LIKE '%{$udp}'";
                 }
             }
-            $userConds[] = "c.chat_lead_id IN (SELECT enquiry_id FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND (enquiry_agent = {$filterUserId} OR enquiry_user_id = {$filterUserId}))";
-            $whereClauses[] = "(" . implode(' OR ', $userConds) . ")";
+            if (!empty($userConds)) {
+                $whereClauses[] = "(" . implode(' OR ', $userConds) . ")";
+            } else {
+                $whereClauses[] = "1 = 0";
+            }
         }
     }
 
@@ -666,19 +678,48 @@ if ($method === 'POST') {
     $escName  = mysqli_real_escape_string($connection, $name);
     $leadVal  = $leadId ? $leadId : "NULL";
 
-    // Bind new chat to agent's assigned device phone or primary connected device on site
+    // Role check and device binding
     $currentUserId = defined('USER_ID') ? (int)USER_ID : (isset($user_id) ? (int)$user_id : 0);
-    $agentDevPhone = '';
-    if ($currentUserId > 0) {
-        $devAssigned = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
-        if ($devAssigned && mysqli_num_rows($devAssigned) > 0) {
-            $agentDevPhone = mysqli_fetch_assoc($devAssigned)['device_phone'] ?? '';
+    $userRole = isset($site_access_type) ? strtolower($site_access_type) : '';
+    $isAdmin = in_array($userRole, ['administrator', 'admin', 'owner', 'superadmin']);
+    if (!$isAdmin && $currentUserId > 0) {
+        $saQ = mysqli_query($connection, "SELECT site_access_type FROM " . TABLE_PREFIX . "site_access WHERE site_access_site_id = {$siteId} AND site_access_user_id = {$currentUserId} AND site_access_status = 1 LIMIT 1");
+        if ($saQ && mysqli_num_rows($saQ) > 0) {
+            $saR = mysqli_fetch_assoc($saQ);
+            if (in_array(strtolower($saR['site_access_type'] ?? ''), ['administrator', 'admin', 'owner', 'superadmin'])) {
+                $isAdmin = true;
+            }
         }
     }
-    if (empty($agentDevPhone)) {
-        $anyDev = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
-        if ($anyDev && mysqli_num_rows($anyDev) > 0) {
-            $agentDevPhone = mysqli_fetch_assoc($anyDev)['device_phone'] ?? '';
+
+    $agentDevPhone = '';
+    if (!$isAdmin) {
+        // Non-admin MUST bind to their assigned connected device
+        if ($currentUserId > 0) {
+            $devAssigned = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
+            if ($devAssigned && mysqli_num_rows($devAssigned) > 0) {
+                $agentDevPhone = mysqli_fetch_assoc($devAssigned)['device_phone'] ?? '';
+            }
+        }
+        if (empty($agentDevPhone)) {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'msg' => 'No active WhatsApp device assigned to your account. You cannot initiate chats.']);
+            exit;
+        }
+    } else {
+        // Admin: can bind to requested device or primary connected device
+        $reqDevId = isset($data['device_id']) && is_numeric($data['device_id']) ? (int)$data['device_id'] : 0;
+        if ($reqDevId > 0) {
+            $specDevQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_id = {$reqDevId} LIMIT 1");
+            if ($specDevQ && mysqli_num_rows($specDevQ) > 0) {
+                $agentDevPhone = mysqli_fetch_assoc($specDevQ)['device_phone'] ?? '';
+            }
+        }
+        if (empty($agentDevPhone)) {
+            $anyDev = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
+            if ($anyDev && mysqli_num_rows($anyDev) > 0) {
+                $agentDevPhone = mysqli_fetch_assoc($anyDev)['device_phone'] ?? '';
+            }
         }
     }
     $escDevPhone = !empty($agentDevPhone) ? mysqli_real_escape_string($connection, $agentDevPhone) : '';

@@ -99,31 +99,30 @@ if ($method === 'GET') {
     }
 
     if (!$isAdmin) {
-        $agentDevQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
-        $agentDevPhone = '';
-        if ($agentDevQ && mysqli_num_rows($agentDevQ) > 0) {
-            $agentDevRow = mysqli_fetch_assoc($agentDevQ);
-            $agentDevPhone = $agentDevRow['device_phone'] ?? '';
+        $assignedDevPhones = [];
+        if ($currentUserId > 0) {
+            $agentDevQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId}");
+            if ($agentDevQ && mysqli_num_rows($agentDevQ) > 0) {
+                while ($dRow = mysqli_fetch_assoc($agentDevQ)) {
+                    if (!empty($dRow['device_phone'])) {
+                        $assignedDevPhones[] = $dRow['device_phone'];
+                    }
+                }
+            }
         }
 
         $canAccess = false;
-        if (!empty($agentDevPhone)) {
-            $cleanAgentDigits = preg_replace('/[^0-9]/', '', $agentDevPhone);
-            $last10Agent = substr($cleanAgentDigits, -10);
-            $escAgentDev = mysqli_real_escape_string($connection, $agentDevPhone);
-
-            $authCheckQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat 
-                WHERE chat_id = {$chatId} AND chat_site_id = {$siteId} 
-                  AND (chat_device_phone = '{$escAgentDev}' OR chat_device_phone LIKE '%{$last10Agent}' 
-                       OR chat_lead_id IN (SELECT enquiry_id FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND (enquiry_agent = {$currentUserId} OR enquiry_user_id = {$currentUserId}))) 
-                LIMIT 1");
-            if ($authCheckQ && mysqli_num_rows($authCheckQ) > 0) {
-                $canAccess = true;
+        if (!empty($assignedDevPhones)) {
+            $devConds = [];
+            foreach ($assignedDevPhones as $aph) {
+                $cDigits = preg_replace('/[^0-9]/', '', $aph);
+                $last10 = substr($cDigits, -10);
+                $escAph = mysqli_real_escape_string($connection, $aph);
+                $devConds[] = "(chat_device_phone = '{$escAph}' OR chat_device_phone LIKE '%{$last10}')";
             }
-        } elseif ($currentUserId > 0) {
             $authCheckQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat 
                 WHERE chat_id = {$chatId} AND chat_site_id = {$siteId} 
-                  AND chat_lead_id IN (SELECT enquiry_id FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND (enquiry_agent = {$currentUserId} OR enquiry_user_id = {$currentUserId})) 
+                  AND (" . implode(' OR ', $devConds) . ")
                 LIMIT 1");
             if ($authCheckQ && mysqli_num_rows($authCheckQ) > 0) {
                 $canAccess = true;
@@ -132,7 +131,7 @@ if ($method === 'GET') {
 
         if (!$canAccess) {
             http_response_code(403);
-            echo json_encode(['status' => 'error', 'msg' => 'Access denied. You do not have permission to view this conversation.']);
+            echo json_encode(['status' => 'error', 'msg' => 'Access denied. You can only view chats for your assigned WhatsApp device.']);
             exit;
         }
     }
@@ -368,17 +367,23 @@ if ($method === 'POST') {
                 $senderPhone = $devRow['device_phone'];
             }
         } else {
-            // Check for shared connected device on site
-            $sharedDevQ = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id ASC LIMIT 1");
-            if ($sharedDevQ && mysqli_num_rows($sharedDevQ) > 0) {
-                $sDevRow = mysqli_fetch_assoc($sharedDevQ);
-                $targetSessionId = $sDevRow['device_session_id'];
-                if (!empty($sDevRow['device_phone'])) {
-                    $senderPhone = $sDevRow['device_phone'];
-                }
-            } else {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'msg' => 'No active WhatsApp device assigned to your account.']);
+            exit;
+        }
+
+        // Verify that this chat belongs to the user's assigned device
+        if (!empty($senderPhone)) {
+            $cleanSender = preg_replace('/[^0-9]/', '', $senderPhone);
+            $last10Sender = substr($cleanSender, -10);
+            $escSender = mysqli_real_escape_string($connection, $senderPhone);
+            $chatDevCheck = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat 
+                WHERE chat_id = {$chatId} AND chat_site_id = {$siteId} 
+                  AND (chat_device_phone = '{$escSender}' OR chat_device_phone LIKE '%{$last10Sender}') 
+                LIMIT 1");
+            if (!$chatDevCheck || mysqli_num_rows($chatDevCheck) === 0) {
                 http_response_code(403);
-                echo json_encode(['status' => 'error', 'msg' => 'No active WhatsApp device linked to your account.']);
+                echo json_encode(['status' => 'error', 'msg' => 'Access denied. You can only send messages for conversations on your assigned WhatsApp device.']);
                 exit;
             }
         }

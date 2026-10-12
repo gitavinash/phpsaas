@@ -622,14 +622,35 @@
       }
     },
 
-    updateDeviceLinkedUI: function (isLinked, phone, msg) {
+    updateDeviceLinkedUI: function (isLinked, phone, msg, hasAssignedDevice, isAdmin) {
       this.isDeviceLinked = !!isLinked;
+      if (typeof isAdmin !== "undefined") {
+        this.isAdmin = !!isAdmin;
+      }
+      if (typeof hasAssignedDevice !== "undefined") {
+        this.hasAssignedDevice = !!hasAssignedDevice;
+      }
+
       const $workspace = $("#waChatWorkspace");
       const $unlinked = $("#waUnlinkedStateCard");
       const $badge = $("#waHeaderStatusBadge");
       const $text = $("#waHeaderStatusText");
       const $syncBtn = $("#btnSyncChatsInbox");
       const $newChatBtn = $("#btnOpenNewChatModal");
+      const $settingsBtn = $("#btnWaDeviceSettings");
+      const $deviceSwitcherBox = $("#waDeviceSwitcherBox");
+      const $userShortcutSec = $("#waUsersShortcutSection");
+      const $unlinkedTitle = $("#waUnlinkedTitle");
+      const $unlinkedMsg = $("#waUnlinkedMessage");
+      const $linkBtn = $("#btnLinkDeviceNow");
+
+      if (!this.isAdmin) {
+        $deviceSwitcherBox.addClass("d-none").hide();
+        $userShortcutSec.addClass("d-none").hide();
+        $settingsBtn.addClass("d-none").hide();
+      } else {
+        $settingsBtn.removeClass("d-none").show();
+      }
 
       if (isLinked) {
         $workspace.removeClass("d-none");
@@ -638,7 +659,15 @@
         $newChatBtn.removeClass("d-none");
 
         $badge.addClass("is-connected");
-        $text.text("Linked: " + (phone || "Connected"));
+        if (this.isAdmin) {
+          if (!this.selectedDeviceId || this.selectedDeviceId === "all") {
+            $text.text(phone ? "All Devices (" + phone + ")" : "All Devices (Online)");
+          } else {
+            $text.text("Device: " + (phone || "Online"));
+          }
+        } else {
+          $text.text(phone ? "Assigned: " + phone : "Device Online");
+        }
       } else {
         $workspace.addClass("d-none");
         $unlinked.removeClass("d-none");
@@ -646,10 +675,16 @@
         $newChatBtn.addClass("d-none");
 
         $badge.removeClass("is-connected");
-        $text.text("Device Not Linked");
+        $text.text("Device Offline");
 
-        if (msg) {
-          $("#waUnlinkedMessage").text(msg);
+        if (!this.isAdmin && this.hasAssignedDevice === false) {
+          if ($unlinkedTitle.length) $unlinkedTitle.text("No WhatsApp Device Assigned");
+          if ($unlinkedMsg.length) $unlinkedMsg.text(msg || "No WhatsApp device has been assigned to your user account. Please contact an administrator to assign a device to your profile.");
+          if ($linkBtn.length) $linkBtn.addClass("d-none").hide();
+        } else {
+          if ($unlinkedTitle.length) $unlinkedTitle.text("No WhatsApp Device Linked");
+          if ($unlinkedMsg.length) $unlinkedMsg.text(msg || "You must link a WhatsApp device before you can access the CRM Live Inbox, read incoming customer messages, or reply to leads.");
+          if ($linkBtn.length) $linkBtn.removeClass("d-none").show();
         }
       }
     },
@@ -662,7 +697,7 @@
         dataType: "json",
         success: function (res) {
           const isConnected = res && res.status === "success" && (res.connection_status === "connected" || res.is_device_linked === true);
-          self.updateDeviceLinkedUI(isConnected, res ? res.phone : null);
+          self.updateDeviceLinkedUI(isConnected, res ? res.phone : null, res ? res.msg : null, res ? res.has_assigned_device : true, res ? res.is_admin : false);
           if (typeof callback === "function") {
             callback(isConnected);
           }
@@ -697,6 +732,10 @@
         data: params,
         dataType: "json",
         success: function (res) {
+          self.isAdmin = !!(res && res.is_admin);
+          self.availableDevices = (res && Array.isArray(res.devices)) ? res.devices : [];
+          self.availableAgents = (res && Array.isArray(res.agents)) ? res.agents : [];
+
           const hasChats = res && Array.isArray(res.chats) && res.chats.length > 0;
           if (res && res.is_device_linked === false && !hasChats) {
             self.activeChatId = null;
@@ -706,15 +745,11 @@
             $("#waMessagesStream").empty();
             $("#waActiveChatWrapper").removeClass("is-open");
             $("#waEmptyState").show();
-            self.updateDeviceLinkedUI(false, null);
+            self.updateDeviceLinkedUI(false, null, res.msg, res.has_assigned_device, res.is_admin);
             return;
           } else if (res && (res.is_device_linked === true || hasChats)) {
-            self.updateDeviceLinkedUI(true, res.linked_phone || "");
+            self.updateDeviceLinkedUI(true, res.linked_phone || "", null, res.has_assigned_device, res.is_admin);
           }
-
-          self.isAdmin = !!(res && res.is_admin);
-          self.availableDevices = (res && Array.isArray(res.devices)) ? res.devices : [];
-          self.availableAgents = (res && Array.isArray(res.agents)) ? res.agents : [];
 
           try {
             // Render / Update Multi-Device Switcher dropdown

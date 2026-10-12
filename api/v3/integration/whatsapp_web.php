@@ -664,18 +664,33 @@ if ($action === 'check_status' || $action === 'status') {
             $uadQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} LIMIT 1");
             if ($uadQ && mysqli_num_rows($uadQ) > 0) {
                 $targetDev = mysqli_fetch_assoc($uadQ);
+            } else {
+                // Non-admin has NO assigned WhatsApp device: Strictly return disconnected with notice
+                echo json_encode([
+                    'status'              => 'success',
+                    'session_id'          => '',
+                    'connection_status'   => 'disconnected',
+                    'is_device_linked'    => false,
+                    'phone'               => '',
+                    'pushname'            => '',
+                    'last_sync'           => '',
+                    'can_link_device'     => false,
+                    'has_assigned_device' => false,
+                    'is_admin'            => false,
+                    'msg'                 => 'No WhatsApp device has been assigned to your user account. Please contact an administrator to assign a device to your profile.'
+                ]);
+                exit;
             }
         } else {
             $adQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
             if ($adQ && mysqli_num_rows($adQ) > 0) {
                 $targetDev = mysqli_fetch_assoc($adQ);
             }
-        }
-
-        if (!$targetDev) {
-            $instDevQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
-            if ($instDevQ && mysqli_num_rows($instDevQ) > 0) {
-                $targetDev = mysqli_fetch_assoc($instDevQ);
+            if (!$targetDev) {
+                $instDevQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE (device_status = 'connected' OR (device_phone IS NOT NULL AND device_phone != '')) ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
+                if ($instDevQ && mysqli_num_rows($instDevQ) > 0) {
+                    $targetDev = mysqli_fetch_assoc($instDevQ);
+                }
             }
         }
 
