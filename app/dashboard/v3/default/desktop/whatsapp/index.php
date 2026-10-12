@@ -3,11 +3,9 @@
     <div class="package-header-bar wa-chat-header-bar">
         <div class="package-header-left">
             <div class="package-header-icon brand-whatsapp wa-inbox-icon">
-                <span class="v3-wa-icon-svg wa-icon-emerald">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-                    </svg>
-                </span>
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                </svg>
             </div>
             <div class="package-header-titles">
                 <h2>WhatsApp Live CRM Chat &amp; Messaging</h2>
@@ -15,14 +13,6 @@
             </div>
         </div>
         <div class="package-header-actions">
-            <!-- Multi-Device Switcher Dropdown (Admin & Multi-device accounts) -->
-            <div class="wa-device-picker d-none" id="waDeviceSwitcherBox">
-                <i class="fi fi-rr-smartphone wa-device-picker-icon"></i>
-                <select id="waDeviceSelect" class="wa-device-select selectJS" aria-label="Switch Device Inbox">
-                    <option value="all">All Devices</option>
-                </select>
-            </div>
-
             <span class="wa-device-status-badge" id="waHeaderStatusBadge">
                 <span class="wa-pulse-dot"></span>
                 <span id="waHeaderStatusText">Checking connection...</span>
@@ -89,39 +79,20 @@
                     <button type="button" class="wa-filter-pill" data-filter="leads">CRM Leads</button>
                 </div>
 
-                <!-- Quick User Shortcut Bar (Admin only / Team filter) -->
-                <div class="wa-users-shortcut-section d-none" id="waUsersShortcutSection">
-                    <div class="wa-users-shortcut-header">
-                        <span class="wa-users-shortcut-title"><i class="fi fi-rr-users"></i> Team Filter</span>
-                        <div class="wa-users-shortcut-actions">
-                            <button type="button" class="wa-team-nav-arrow" id="btnPrevTeamCard" title="Previous profile card" aria-label="Previous Profile Card">
-                                <i class="fi fi-rr-angle-left"></i>
-                            </button>
-                            <button type="button" class="wa-team-nav-arrow" id="btnNextTeamCard" title="Next profile card" aria-label="Next Profile Card">
-                                <i class="fi fi-rr-angle-right"></i>
-                            </button>
-                            <button type="button" class="wa-users-shortcut-reset d-none" id="btnResetUserFilter" title="Show all team chats">
-                                <i class="fi fi-rr-rotate-left"></i> Reset
-                            </button>
+                <!-- WhatsApp Device / Line Tabs (Profile icon + Mobile + Device name + Assigned Agent) -->
+                <div class="wa-device-tabs-section d-none" id="waDeviceTabsSection">
+                    <div class="wa-device-tabs-header">
+                        <span class="wa-device-tabs-title"><i class="fi fi-rr-smartphone"></i> WhatsApp Lines</span>
+                        <div class="wa-device-tabs-nav d-none" id="waDeviceTabsNav">
+                            <button type="button" class="wa-tabs-arrow" id="btnPrevDeviceTab" title="Previous line"><i class="fi fi-rr-angle-left"></i></button>
+                            <button type="button" class="wa-tabs-arrow" id="btnNextDeviceTab" title="Next line"><i class="fi fi-rr-angle-right"></i></button>
                         </div>
                     </div>
-                    <div class="wa-users-shortcut-scroll-container">
-                        <button type="button" class="wa-team-edge-arrow btn-prev d-none" id="btnEdgePrevTeamCard" title="Previous profile card" aria-label="Previous Profile Card">
-                            <i class="fi fi-rr-angle-left"></i>
-                        </button>
-                        <div class="wa-users-shortcut-scroll" id="waUsersShortcutBar">
-                            <!-- Populated dynamically via JS: All, Nandini S., Owais J., etc. -->
+                    <div class="wa-device-tabs-scroll-wrap">
+                        <div class="wa-device-tabs-scroll" id="waDeviceTabsBar">
+                            <!-- Populated dynamically via JS -->
                         </div>
-                        <button type="button" class="wa-team-edge-arrow btn-next d-none" id="btnEdgeNextTeamCard" title="Next profile card" aria-label="Next Profile Card">
-                            <i class="fi fi-rr-angle-right"></i>
-                        </button>
                     </div>
-                </div>
-
-                <!-- Active Filter Notice Banner -->
-                <div class="wa-active-filter-banner d-none" id="waActiveFilterBanner">
-                    <span id="waActiveFilterText">Showing chats</span>
-                    <button type="button" class="btn-wa-dismiss-filter" id="btnDismissFilterBanner" title="Clear filter"><i class="fi fi-rr-cross-small"></i></button>
                 </div>
             </div>
 

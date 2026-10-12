@@ -69,69 +69,36 @@
         self.loadThreads();
       });
 
-      // Multi-device switcher change
-      $(document).on("change select2:select", "#waDeviceSelect", function () {
-        if (self.isUpdatingDeviceSelect) return;
-        self.selectedDeviceId = $(this).val() || "all";
+      // Device Tab click (Sidebar line switcher)
+      $(document).on("click", ".wa-device-tab", function () {
+        const devId = $(this).data("device-id");
+        self.selectedDeviceId = devId || "all";
+        $(".wa-device-tab").removeClass("active");
+        $(this).addClass("active");
+        self.updateHeaderStatusBadge();
         self.lastThreadsHtml = null;
         self.loadThreads();
       });
 
-      // Clicking device picker box or icon opens the Select2 dropdown
-      $(document).on("click", "#waDeviceSwitcherBox .wa-device-picker-icon", function (e) {
-        e.preventDefault();
-        const $sel = $("#waDeviceSelect");
-        if ($sel.length && typeof $.fn.select2 !== "undefined") {
-          $sel.select2("open");
-        }
-      });
-
-      // Quick user shortcut card click (Admin switching between team inboxes)
-      $(document).on("click", ".wa-team-card, .wa-user-shortcut-pill", function () {
-        const uid = parseInt($(this).data("user-id"), 10) || 0;
-        if (self.selectedUserId === uid) {
-          self.selectedUserId = 0; // toggle off back to all team
-        } else {
-          self.selectedUserId = uid;
-        }
-        self.renderUserShortcuts();
-        self.lastThreadsHtml = null;
-        self.loadThreads();
-      });
-
-      // Keyboard support for team filter cards
-      $(document).on("keydown", ".wa-team-card", function (e) {
+      // Keyboard support for device tabs
+      $(document).on("keydown", ".wa-device-tab", function (e) {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           $(this).trigger("click");
         }
       });
 
-      // Reset user filter button & dismiss banner
-      $(document).on("click", "#btnResetUserFilter, #btnDismissFilterBanner", function () {
-        self.selectedUserId = 0;
-        self.renderUserShortcuts();
-        self.lastThreadsHtml = null;
-        self.loadThreads();
-      });
-
-      // Team filter card next / prev navigation
-      $(document).on("click", "#btnNextTeamCard, #btnEdgeNextTeamCard", function (e) {
+      // Device tabs horizontal scroll arrows
+      $(document).on("click", "#btnPrevDeviceTab", function (e) {
         e.preventDefault();
-        self.scrollTeamCards("next");
+        const $bar = $("#waDeviceTabsBar");
+        if ($bar.length) $bar.animate({ scrollLeft: "-=220" }, 200);
       });
 
-      $(document).on("click", "#btnPrevTeamCard, #btnEdgePrevTeamCard", function (e) {
+      $(document).on("click", "#btnNextDeviceTab", function (e) {
         e.preventDefault();
-        self.scrollTeamCards("prev");
-      });
-
-      $(document).on("scroll", "#waUsersShortcutBar", function () {
-        self.updateTeamScrollArrows();
-      });
-
-      $(window).off("resize.waTeamScroll").on("resize.waTeamScroll", function () {
-        self.updateTeamScrollArrows();
+        const $bar = $("#waDeviceTabsBar");
+        if ($bar.length) $bar.animate({ scrollLeft: "+=220" }, 200);
       });
 
       // Search input (delegated)
@@ -380,172 +347,109 @@
       });
     },
 
-    formatDeviceOption: function (opt) {
+    renderDeviceTabs: function () {
       const self = this;
-      if (!opt.id) return opt.text;
-      const $el = $(opt.element);
-      if (!$el.length) return opt.text;
+      const $sec = $("#waDeviceTabsSection");
+      const $bar = $("#waDeviceTabsBar");
+      const $nav = $("#waDeviceTabsNav");
+      if (!$sec.length || !$bar.length) return;
 
-      const type = $el.attr("data-type");
-      if (type === "all") {
-        const count = $el.attr("data-count") || "0";
-        return $(`
-          <div class="wa-s2-option-row is-all">
-            <span class="wa-s2-option-icon"><i class="fi fi-rr-apps"></i></span>
-            <div class="wa-s2-option-text">
-              <div class="wa-s2-option-main">All Devices</div>
-              <div class="wa-s2-option-sub">${count} Active WhatsApp Lines</div>
-            </div>
-          </div>
-        `);
-      }
-
-      const phone = $el.attr("data-phone") || opt.text;
-      const name = $el.attr("data-name") || "Line";
-      const agent = $el.attr("data-agent") || "";
-      const isConn = $el.attr("data-status") === "connected";
-      const agentText = (agent && agent !== "Unassigned") ? ` • ${agent}` : "";
-
-      return $(`
-        <div class="wa-s2-option-row">
-          <span class="wa-s2-option-status-dot ${isConn ? "is-connected" : "is-offline"}"></span>
-          <div class="wa-s2-option-text">
-            <div class="wa-s2-option-main">${self.escapeHtml(phone)}</div>
-            <div class="wa-s2-option-sub">${self.escapeHtml(name)}${self.escapeHtml(agentText)}</div>
-          </div>
-          <span class="wa-s2-option-pill ${isConn ? "is-connected" : "is-offline"}">${isConn ? "Online" : "Offline"}</span>
-        </div>
-      `);
-    },
-
-    formatDeviceSelection: function (opt) {
-      const self = this;
-      if (!opt.id) return opt.text;
-      const $el = $(opt.element);
-      if (!$el.length) return opt.text;
-
-      const type = $el.attr("data-type");
-      if (type === "all") {
-        const count = $el.attr("data-count") || "";
-        return $(`
-          <span class="wa-s2-selection-chip">
-            <span class="wa-s2-selection-dot is-connected"></span>
-            <span class="wa-s2-selection-label">All Devices ${count ? `(${count} Active)` : ""}</span>
-          </span>
-        `);
-      }
-
-      const phone = $el.attr("data-phone") || opt.text;
-      const name = $el.attr("data-name") || "";
-      const isConn = $el.attr("data-status") === "connected";
-
-      return $(`
-        <span class="wa-s2-selection-chip">
-          <span class="wa-s2-selection-dot ${isConn ? "is-connected" : "is-offline"}"></span>
-          <span class="wa-s2-selection-label">${self.escapeHtml(phone)}${name ? ` (${self.escapeHtml(name)})` : ""}</span>
-        </span>
-      `);
-    },
-
-    renderDeviceSwitcher: function () {
-      const self = this;
-      const $select = $("#waDeviceSelect");
-      const $box = $("#waDeviceSwitcherBox");
-      if (!$select.length) return;
-
-      // RULE: Do NOT give device choose option to sales agent user.
-      // Only show assigned device to sales user (displayed in header status badge).
-      // Device switcher dropdown is strictly for administrators with multiple devices.
-      if (!self.isAdmin || !self.availableDevices || self.availableDevices.length <= 1) {
-        $box.addClass("d-none").hide();
+      const devices = self.availableDevices || [];
+      if (!devices.length) {
+        $sec.addClass("d-none").hide();
         return;
       }
 
-      $box.removeClass("d-none").css("display", "inline-flex").show();
-      const connectedCount = self.availableDevices.filter(function (d) { return d.status === "connected"; }).length;
-      let optHtml = `<option value="all" data-type="all" data-count="${connectedCount}">📱 All Devices (${connectedCount} Active)</option>`;
+      $sec.removeClass("d-none").show();
+      if (devices.length > 2) {
+        $nav.removeClass("d-none").show();
+      } else {
+        $nav.addClass("d-none").hide();
+      }
 
-      self.availableDevices.forEach(function (d) {
+      const connectedCount = devices.filter(function (d) { return d.status === "connected"; }).length;
+      const isAllSelected = !self.selectedDeviceId || self.selectedDeviceId === "all";
+
+      let html = "";
+      if (self.isAdmin && devices.length > 1) {
+        html += `
+          <div class="wa-device-tab ${isAllSelected ? "active" : ""}" data-device-id="all" role="button" tabindex="0" title="View all WhatsApp lines">
+            <div class="wa-device-tab-avatar-wrap">
+              <div class="wa-device-tab-avatar is-all">
+                <i class="fi fi-rr-apps"></i>
+              </div>
+              <span class="wa-device-tab-status-dot is-connected"></span>
+            </div>
+            <div class="wa-device-tab-info">
+              <div class="wa-device-tab-phone">All Lines</div>
+              <div class="wa-device-tab-name">${connectedCount} Active / ${devices.length} Total</div>
+              <div class="wa-device-tab-agent"><i class="fi fi-rr-users"></i> All Chats</div>
+            </div>
+          </div>
+        `;
+      }
+
+      devices.forEach(function (d, idx) {
+        const isCur = String(self.selectedDeviceId) === String(d.device_id);
         const isConn = d.status === "connected";
-        const dot = isConn ? "🟢" : "⚪";
-        const devName = d.name ? d.name : "Line";
-        const phone = d.phone || "";
-        const agent = (d.assigned_agent_name && d.assigned_agent_name !== "Unassigned") ? ` • ${d.assigned_agent_name}` : "";
-        const isSelected = String(self.selectedDeviceId) === String(d.device_id);
-        optHtml += `<option value="${d.device_id}" data-type="device" data-phone="${phone}" data-name="${devName}" data-agent="${d.assigned_agent_name || ''}" data-status="${d.status}" ${isSelected ? "selected" : ""}>${dot} ${phone} (${devName}${agent})</option>`;
+        const hasAgent = d.assigned_agent_name && d.assigned_agent_name !== "Unassigned";
+        const initials = hasAgent ? self.getInitials(d.assigned_agent_name) : "WA";
+        const gradIdx = idx % 6;
+        const hasAvatar = d.avatar && String(d.avatar).trim() !== "" && !String(d.avatar).includes("default-profile.png");
+
+        let avatarHtml = "";
+        if (hasAvatar) {
+          avatarHtml = `
+            <img src="${self.escapeHtml(d.avatar)}" class="wa-device-tab-avatar-img" alt="${self.escapeHtml(d.assigned_agent_name)}" onerror="this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='flex';}">
+            <div class="wa-device-tab-avatar wa-avatar-gradient-${gradIdx}" style="display:none;">${initials}</div>
+          `;
+        } else if (hasAgent) {
+          avatarHtml = `<div class="wa-device-tab-avatar wa-avatar-gradient-${gradIdx}">${initials}</div>`;
+        } else {
+          avatarHtml = `<div class="wa-device-tab-avatar is-phone"><i class="fi fi-rr-smartphone"></i></div>`;
+        }
+
+        const agentDisplay = hasAgent
+          ? `<div class="wa-device-tab-agent" title="Assigned Agent: ${self.escapeHtml(d.assigned_agent_name)}"><i class="fi fi-rr-user"></i> ${self.escapeHtml(d.assigned_agent_name)}</div>`
+          : `<div class="wa-device-tab-agent is-unassigned"><i class="fi fi-rr-user-add"></i> Unassigned</div>`;
+
+        html += `
+          <div class="wa-device-tab ${isCur ? "active" : ""}" data-device-id="${d.device_id}" role="button" tabindex="0" title="${self.escapeHtml(d.phone || d.name)}">
+            <div class="wa-device-tab-avatar-wrap">
+              ${avatarHtml}
+              <span class="wa-device-tab-status-dot ${isConn ? "is-connected" : "is-offline"}" title="${isConn ? "Online" : "Offline"}"></span>
+            </div>
+            <div class="wa-device-tab-info">
+              <div class="wa-device-tab-phone">${self.escapeHtml(d.phone || "WhatsApp Line")}</div>
+              <div class="wa-device-tab-name">${self.escapeHtml(d.name || "Line")}</div>
+              ${agentDisplay}
+            </div>
+          </div>
+        `;
       });
 
-      self.isUpdatingDeviceSelect = true;
-      try {
-        const hasSelect2 = typeof $.fn.select2 !== "undefined";
-        const lastHtml = $select.data("last-html");
-        const htmlChanged = lastHtml !== optHtml;
-
-        if (htmlChanged) {
-          $select.html(optHtml).data("last-html", optHtml);
-          $select.val(self.selectedDeviceId || "all");
-        }
-
-        if (hasSelect2) {
-          const isCustomInit = $select.data("wa-custom-s2") === true && $select.hasClass("select2-hidden-accessible");
-
-          if (!isCustomInit) {
-            // Clean up any default select2 instance attached by global app.js
-            if ($select.data("select2") || $select.hasClass("select2-hidden-accessible")) {
-              try { $select.select2("destroy"); } catch (e) {}
-            }
-            $select.removeData("select2");
-            $select.removeAttr("data-select2-id");
-            $select.find("*").removeAttr("data-select2-id");
-            $box.find(".select2-container").remove();
-
-            $select.select2({
-              dropdownAutoWidth: true,
-              width: "resolve",
-              minimumResultsForSearch: 8,
-              dropdownCssClass: "wa-select2-dropdown",
-              templateResult: function (opt) { return self.formatDeviceOption(opt); },
-              templateSelection: function (opt) { return self.formatDeviceSelection(opt); },
-              escapeMarkup: function (m) { return m; }
-            });
-
-            $select.data("wa-custom-s2", true);
-
-            $select.off("select2:open.waBox select2:close.waBox").on("select2:open.waBox", function () {
-              $("#waDeviceSwitcherBox").addClass("has-focus");
-            }).on("select2:close.waBox", function () {
-              $("#waDeviceSwitcherBox").removeClass("has-focus");
-            });
-          } else if (htmlChanged) {
-            $select.val(self.selectedDeviceId || "all").trigger("change.select2");
-          }
-        }
-      } catch (err) {
-        console.warn("Device switcher render warning:", err);
-      } finally {
-        self.isUpdatingDeviceSelect = false;
+      if ($bar.data("last-html") !== html) {
+        $bar.html(html).data("last-html", html);
       }
 
       // Populate New Chat Modal device options (Admin only when multiple devices exist)
       const $modalSelect = $("#newChatDeviceSelect");
       const $modalGroup = $("#waNewChatDeviceGroup");
       if ($modalSelect.length) {
-        if (self.isAdmin && self.availableDevices.length > 1) {
+        if (self.isAdmin && devices.length > 1) {
           $modalGroup.removeClass("d-none").show();
           let mOpts = "";
-          self.availableDevices.forEach(function (d) {
+          devices.forEach(function (d) {
             const isConn = d.status === "connected";
-            mOpts += `<option value="${d.device_id}">📱 ${d.phone} (${d.name || "Line"})${isConn ? " [Connected]" : " [Offline]"}</option>`;
+            const ag = d.assigned_agent_name && d.assigned_agent_name !== "Unassigned" ? ` • ${d.assigned_agent_name}` : "";
+            mOpts += `<option value="${d.device_id}">📱 ${d.phone} (${d.name || "Line"}${ag})${isConn ? " [Online]" : " [Offline]"}</option>`;
           });
           const hasSelect2 = typeof $.fn.select2 !== "undefined";
-          const mAttached = hasSelect2 && ($modalSelect.data("select2") || $modalSelect.hasClass("select2-hidden-accessible"));
-          if ($modalSelect.data("last-html") !== mOpts || !mAttached) {
-            if (mAttached) {
-              try { $modalSelect.select2("destroy"); } catch (e) {}
-            }
+          if ($modalSelect.data("last-html") !== mOpts) {
             $modalSelect.html(mOpts).data("last-html", mOpts);
             if (hasSelect2) {
               try {
+                if ($modalSelect.data("select2")) $modalSelect.select2("destroy");
                 $modalSelect.select2({
                   dropdownParent: $("#waNewChatModal"),
                   width: "100%",
@@ -560,128 +464,41 @@
       }
     },
 
-    renderUserShortcuts: function () {
+    updateHeaderStatusBadge: function () {
       const self = this;
-      const $section = $("#waUsersShortcutSection");
-      const $bar = $("#waUsersShortcutBar");
-      const $banner = $("#waActiveFilterBanner");
-      const $bannerText = $("#waActiveFilterText");
-      const $resetBtn = $("#btnResetUserFilter");
+      const $badge = $("#waHeaderStatusBadge");
+      const $text = $("#waHeaderStatusText");
+      if (!$badge.length || !$text.length) return;
 
-      if (!$section.length || !$bar.length) return;
-
-      // Only show for Admin when there are team members linked with a WhatsApp device
-      const linkedAgents = (self.availableAgents || []).filter(function (ag) {
-        return ag && (ag.is_connected || (ag.device_phone && String(ag.device_phone).trim() !== ""));
-      });
-
-      if (!self.isAdmin || linkedAgents.length === 0) {
-        $section.addClass("d-none").hide();
-        $banner.addClass("d-none").hide();
+      if (!this.isDeviceLinked) {
+        $badge.removeClass("is-connected").addClass("is-disconnected");
+        $text.text("Device Offline");
         return;
       }
 
-      $section.removeClass("d-none").show();
+      $badge.removeClass("is-disconnected").addClass("is-connected");
+      const devices = this.availableDevices || [];
+      const connectedCount = devices.filter(function (d) { return d.status === "connected"; }).length;
 
-      if (self.selectedUserId > 0 && !linkedAgents.some(function (ag) { return parseInt(ag.user_id, 10) === parseInt(self.selectedUserId, 10); })) {
-        self.selectedUserId = 0;
-      }
-
-      const isAllActive = !self.selectedUserId || self.selectedUserId === 0;
-      let cardsHtml = `
-        <div class="wa-team-card ${isAllActive ? "active" : ""}" data-user-id="0" role="button" tabindex="0" title="Show all team conversations">
-          <div class="wa-team-card-avatar-wrap">
-            <div class="wa-team-card-avatar wa-team-card-avatar-all">
-              <i class="fi fi-rr-users"></i>
-            </div>
-          </div>
-          <div class="wa-team-card-info">
-            <div class="wa-team-card-name">All Team</div>
-            <div class="wa-team-card-sub">${linkedAgents.length} Agents</div>
-          </div>
-        </div>
-      `;
-
-      let activeAgentName = "";
-      linkedAgents.forEach(function (ag, idx) {
-        const isCur = self.selectedUserId && parseInt(self.selectedUserId, 10) === parseInt(ag.user_id, 10);
-        if (isCur) activeAgentName = ag.name;
-        const initials = self.getInitials(ag.name);
-        const gradIdx = idx % 6;
-        const hasAvatar = ag.avatar && String(ag.avatar).trim() !== "" && !String(ag.avatar).includes("default-profile.png");
-        const subText = ag.device_phone ? ag.device_phone : (ag.device_name || "WhatsApp");
-
-        let avatarHtml = "";
-        if (hasAvatar) {
-          avatarHtml = `
-            <img src="${self.escapeHtml(ag.avatar)}" class="wa-team-card-avatar-img" alt="${self.escapeHtml(ag.name)}" onerror="this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='flex';}">
-            <div class="wa-team-card-avatar wa-avatar-gradient-${gradIdx}" style="display:none;">${initials}</div>
-          `;
+      if (this.isAdmin) {
+        if (!this.selectedDeviceId || this.selectedDeviceId === "all") {
+          $text.text(connectedCount > 0 ? `All Lines (${connectedCount} Connected)` : "All Lines Active");
         } else {
-          avatarHtml = `<div class="wa-team-card-avatar wa-avatar-gradient-${gradIdx}">${initials}</div>`;
+          const curDev = devices.find(function (d) { return String(d.device_id) === String(self.selectedDeviceId); });
+          if (curDev) {
+            const agentLabel = curDev.assigned_agent_name && curDev.assigned_agent_name !== "Unassigned" ? ` • ${curDev.assigned_agent_name}` : "";
+            $text.text(`${curDev.phone || "Line"}${agentLabel}`);
+          } else {
+            $text.text("Line Active");
+          }
         }
-
-        cardsHtml += `
-          <div class="wa-team-card ${isCur ? "active" : ""}" data-user-id="${ag.user_id}" role="button" tabindex="0" title="Filter chats for ${self.escapeHtml(ag.name)} (${self.escapeHtml(subText)})">
-            <div class="wa-team-card-avatar-wrap">
-              ${avatarHtml}
-              <span class="wa-team-card-status-dot ${ag.is_connected ? "" : "is-offline"}" title="${ag.is_connected ? "WhatsApp Connected" : "Device Offline"}"></span>
-            </div>
-            <div class="wa-team-card-info">
-              <div class="wa-team-card-name" title="${self.escapeHtml(ag.name)}">${self.escapeHtml(ag.name)}</div>
-              <div class="wa-team-card-sub" title="${self.escapeHtml(subText)}">${self.escapeHtml(subText)}</div>
-            </div>
-          </div>
-        `;
-      });
-
-      if ($bar.data("last-html") !== cardsHtml) {
-        $bar.html(cardsHtml).data("last-html", cardsHtml);
-      }
-
-      if (self.selectedUserId > 0 && activeAgentName) {
-        $resetBtn.removeClass("d-none").show();
-        $banner.removeClass("d-none").show();
-        $bannerText.html(`<i class="fi fi-rr-filter"></i> Filtering chats for: <strong>${self.escapeHtml(activeAgentName)}</strong>`);
       } else {
-        $resetBtn.addClass("d-none").hide();
-        $banner.addClass("d-none").hide();
-      }
-
-      setTimeout(function () {
-        self.updateTeamScrollArrows();
-      }, 50);
-    },
-
-    scrollTeamCards: function (direction) {
-      const el = document.getElementById("waUsersShortcutBar");
-      if (!el) return;
-      const $firstCard = $(el).find(".wa-team-card").first();
-      const cardWidth = $firstCard.length ? ($firstCard.outerWidth() + 8) : 170;
-      const delta = direction === "next" ? cardWidth : -cardWidth;
-      el.scrollBy({ left: delta, behavior: "smooth" });
-    },
-
-    updateTeamScrollArrows: function () {
-      const el = document.getElementById("waUsersShortcutBar");
-      if (!el) return;
-      const maxScroll = el.scrollWidth - el.clientWidth;
-      const canScroll = maxScroll > 4;
-      const isAtStart = el.scrollLeft <= 5;
-      const isAtEnd = el.scrollLeft >= maxScroll - 5;
-
-      const $allPrev = $("#btnPrevTeamCard, #btnEdgePrevTeamCard");
-      const $allNext = $("#btnNextTeamCard, #btnEdgeNextTeamCard");
-
-      if (!canScroll) {
-        $allPrev.prop("disabled", true).addClass("is-disabled d-none");
-        $allNext.prop("disabled", true).addClass("is-disabled d-none");
-      } else {
-        $("#btnPrevTeamCard").removeClass("d-none").prop("disabled", isAtStart).toggleClass("is-disabled", isAtStart);
-        $("#btnNextTeamCard").removeClass("d-none").prop("disabled", isAtEnd).toggleClass("is-disabled", isAtEnd);
-
-        $("#btnEdgePrevTeamCard").toggleClass("d-none", isAtStart);
-        $("#btnEdgeNextTeamCard").toggleClass("d-none", isAtEnd);
+        const curDev = devices[0];
+        if (curDev && curDev.phone) {
+          $text.text(`${curDev.phone} (Online)`);
+        } else {
+          $text.text("Device Online");
+        }
       }
     },
 
@@ -696,20 +513,14 @@
 
       const $workspace = $("#waChatWorkspace");
       const $unlinked = $("#waUnlinkedStateCard");
-      const $badge = $("#waHeaderStatusBadge");
-      const $text = $("#waHeaderStatusText");
       const $syncBtn = $("#btnSyncChatsInbox");
       const $newChatBtn = $("#btnOpenNewChatModal");
       const $settingsBtn = $("#btnWaDeviceSettings");
-      const $deviceSwitcherBox = $("#waDeviceSwitcherBox");
-      const $userShortcutSec = $("#waUsersShortcutSection");
       const $unlinkedTitle = $("#waUnlinkedTitle");
       const $unlinkedMsg = $("#waUnlinkedMessage");
       const $linkBtn = $("#btnLinkDeviceNow");
 
       if (!this.isAdmin) {
-        $deviceSwitcherBox.addClass("d-none").hide();
-        $userShortcutSec.addClass("d-none").hide();
         $settingsBtn.addClass("d-none").hide();
       } else {
         $settingsBtn.removeClass("d-none").show();
@@ -720,25 +531,13 @@
         $unlinked.addClass("d-none");
         $syncBtn.removeClass("d-none");
         $newChatBtn.removeClass("d-none");
-
-        $badge.addClass("is-connected");
-        if (this.isAdmin) {
-          if (!this.selectedDeviceId || this.selectedDeviceId === "all") {
-            $text.text(phone ? "All Devices (" + phone + ")" : "All Devices (Online)");
-          } else {
-            $text.text("Device: " + (phone || "Online"));
-          }
-        } else {
-          $text.text(phone ? "Assigned: " + phone : "Device Online");
-        }
+        this.updateHeaderStatusBadge();
       } else {
         $workspace.addClass("d-none");
         $unlinked.removeClass("d-none");
         $syncBtn.addClass("d-none");
         $newChatBtn.addClass("d-none");
-
-        $badge.removeClass("is-connected");
-        $text.text("Device Offline");
+        this.updateHeaderStatusBadge();
 
         if (!this.isAdmin && this.hasAssignedDevice === false) {
           if ($unlinkedTitle.length) $unlinkedTitle.text("No WhatsApp Device Assigned");
@@ -815,17 +614,10 @@
           }
 
           try {
-            // Render / Update Multi-Device Switcher dropdown
-            self.renderDeviceSwitcher();
+            self.renderDeviceTabs();
+            self.updateHeaderStatusBadge();
           } catch (eDev) {
-            console.warn("Device switcher render error:", eDev);
-          }
-
-          try {
-            // Render / Update Quick User Shortcut Bar (for Admin)
-            self.renderUserShortcuts();
-          } catch (eUsr) {
-            console.warn("User shortcuts render error:", eUsr);
+            console.warn("Device tabs render error:", eDev);
           }
 
           const $container = $("#waThreadsContainer");

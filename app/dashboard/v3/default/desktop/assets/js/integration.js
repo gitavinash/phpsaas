@@ -458,7 +458,22 @@
 
         const $grid = $("#waAdminDevicesGrid");
         if (devices.length === 0) {
-          $grid.html('<div class="wa-qr-placeholder"><i class="fi fi-rr-smartphone"></i><span>No WhatsApp devices linked yet. Click "+ Add WhatsApp Device" above to connect your first number.</span></div>');
+          const actionBtnHtml = limitReached
+            ? '<button type="button" class="btn-wa-buy-license btn-contact-aleya btn-upgrade" title="Upgrade WhatsApp device licenses" data-modal-title="WhatsApp Device Limit Reached" data-modal-notice="You have reached your WhatsApp device license limit. Please contact Aleya to connect additional devices."><i class="fi fi-rr-sparkles"></i> <span>Buy More WhatsApp Licenses</span></button>'
+            : '<button type="button" class="btn-integration-primary btn-sm btn-empty-add-device"><i class="fi fi-rr-plus"></i> <span>Add WhatsApp Device</span></button>';
+
+          $grid.html(
+            '<div class="wa-devices-empty-state">' +
+              '<div class="wa-devices-empty-icon">' +
+                '<i class="fi fi-rr-smartphone"></i>' +
+              '</div>' +
+              '<h4 class="wa-devices-empty-title">No WhatsApp Devices Linked Yet</h4>' +
+              '<p class="wa-devices-empty-desc">Connect your first WhatsApp number to start chatting with CRM leads, sync messages in real-time, and assign lines to your sales team.</p>' +
+              '<div class="wa-devices-empty-action">' +
+                actionBtnHtml +
+              '</div>' +
+            '</div>'
+          );
           return;
         }
 
@@ -703,6 +718,11 @@
         $("#waAddDeviceModal").removeClass("is-active");
         clearInterval(modalPollInterval);
         if (modalCountdownInterval) clearInterval(modalCountdownInterval);
+      });
+
+      // Delegate click on empty state add device button
+      $(document).on("click", ".btn-empty-add-device", function () {
+        $("#btnOpenAddDeviceModal").trigger("click");
       });
 
       // Close modal on backdrop click

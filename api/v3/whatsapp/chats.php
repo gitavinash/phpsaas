@@ -528,6 +528,7 @@ if ($method === 'GET') {
     if ($isAdmin) {
         $devListQ = mysqli_query($connection, "SELECT d.device_id, d.device_session_id, d.device_phone, d.device_name, d.device_status, d.device_assigned_user_id,
                                                      TRIM(CONCAT(COALESCE(p.profile_first_name, ''), ' ', COALESCE(p.profile_last_name, ''))) as assigned_agent_name,
+                                                     p.profile_image,
                                                      u.user_username
                                               FROM " . TABLE_PREFIX . "whatsapp_device d
                                               LEFT JOIN " . TABLE_PREFIX . "user u ON u.user_id = d.device_assigned_user_id
@@ -536,6 +537,10 @@ if ($method === 'GET') {
                                               ORDER BY (d.device_status = 'connected') DESC, d.device_id ASC");
         if ($devListQ) {
             while ($dl = mysqli_fetch_assoc($devListQ)) {
+                $avatar = trim($dl['profile_image'] ?? '');
+                if (!empty($avatar) && !str_starts_with($avatar, 'http://') && !str_starts_with($avatar, 'https://')) {
+                    $avatar = '/' . ltrim($avatar, '/');
+                }
                 $devicesList[] = [
                     'device_id'           => (int)$dl['device_id'],
                     'session_id'          => $dl['device_session_id'],
@@ -543,7 +548,8 @@ if ($method === 'GET') {
                     'name'                => $dl['device_name'] ?: 'WhatsApp Line',
                     'status'              => $dl['device_status'],
                     'assigned_user_id'    => $dl['device_assigned_user_id'] ? (int)$dl['device_assigned_user_id'] : null,
-                    'assigned_agent_name' => !empty($dl['assigned_agent_name']) ? trim($dl['assigned_agent_name']) : ($dl['user_username'] ?: 'Unassigned')
+                    'assigned_agent_name' => !empty($dl['assigned_agent_name']) ? trim($dl['assigned_agent_name']) : ($dl['user_username'] ?: 'Unassigned'),
+                    'avatar'              => $avatar
                 ];
             }
         }
@@ -587,6 +593,7 @@ if ($method === 'GET') {
         // Sales Agent: ONLY return their assigned device if one is linked. No team shortcuts.
         $devListQ = mysqli_query($connection, "SELECT d.device_id, d.device_session_id, d.device_phone, d.device_name, d.device_status, d.device_assigned_user_id,
                                                      TRIM(CONCAT(COALESCE(p.profile_first_name, ''), ' ', COALESCE(p.profile_last_name, ''))) as assigned_agent_name,
+                                                     p.profile_image,
                                                      u.user_username
                                               FROM " . TABLE_PREFIX . "whatsapp_device d
                                               LEFT JOIN " . TABLE_PREFIX . "user u ON u.user_id = d.device_assigned_user_id
@@ -595,6 +602,10 @@ if ($method === 'GET') {
                                               ORDER BY (d.device_status = 'connected') DESC, d.device_id ASC LIMIT 1");
         if ($devListQ && mysqli_num_rows($devListQ) > 0) {
             $dl = mysqli_fetch_assoc($devListQ);
+            $avatar = trim($dl['profile_image'] ?? '');
+            if (!empty($avatar) && !str_starts_with($avatar, 'http://') && !str_starts_with($avatar, 'https://')) {
+                $avatar = '/' . ltrim($avatar, '/');
+            }
             $devicesList[] = [
                 'device_id'           => (int)$dl['device_id'],
                 'session_id'          => $dl['device_session_id'],
@@ -602,7 +613,8 @@ if ($method === 'GET') {
                 'name'                => $dl['device_name'] ?: 'WhatsApp Line',
                 'status'              => $dl['device_status'],
                 'assigned_user_id'    => (int)$currentUserId,
-                'assigned_agent_name' => !empty($dl['assigned_agent_name']) ? trim($dl['assigned_agent_name']) : ($dl['user_username'] ?: 'Assigned')
+                'assigned_agent_name' => !empty($dl['assigned_agent_name']) ? trim($dl['assigned_agent_name']) : ($dl['user_username'] ?: 'Assigned'),
+                'avatar'              => $avatar
             ];
         }
     }
