@@ -218,7 +218,21 @@
 
                     <!-- Message Form -->
                     <form id="waMessageSendForm" class="wa-composer-form">
+                        <div id="waComposerAttachPreview" class="wa-composer-attach-preview d-none">
+                            <img id="waAttachThumb" class="wa-attach-thumb" src="" alt="Attachment preview">
+                            <div class="wa-attach-info">
+                                <div id="waAttachFileName" class="wa-attach-filename"></div>
+                                <div id="waAttachFileSize" class="wa-attach-filesize"></div>
+                            </div>
+                            <button type="button" id="btnWaRemoveAttach" class="btn-wa-remove-attach" title="Remove attachment">
+                                <i class="fi fi-rr-cross"></i>
+                            </button>
+                        </div>
                         <div class="wa-input-row">
+                            <input type="file" id="waImageFileInput" accept="image/*" class="d-none">
+                            <button type="button" class="btn-wa-attach" id="btnWaAttachImage" title="Attach Image">
+                                <i class="fi fi-rr-clip"></i>
+                            </button>
                             <textarea id="waComposerText" class="wa-composer-textarea" placeholder="Type a message (Press Enter to send, Shift+Enter for new line)..." rows="1"></textarea>
                             <button type="submit" class="btn-wa-send" id="btnSendMessage" title="Send WhatsApp Message">
                                 <i class="fi fi-rr-paper-plane"></i>
@@ -273,6 +287,16 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal for Full Image View -->
+    <div class="wa-lightbox-overlay d-none" id="waImageLightboxModal" aria-hidden="true">
+        <div class="wa-lightbox-dialog">
+            <button type="button" class="wa-lightbox-close" id="btnCloseLightbox" title="Close">
+                <i class="fi fi-rr-cross"></i>
+            </button>
+            <img class="wa-lightbox-img" id="waLightboxImage" src="" alt="WhatsApp Media">
         </div>
     </div>
 </div>

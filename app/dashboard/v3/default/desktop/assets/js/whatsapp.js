@@ -18,6 +18,7 @@
   window.V3WhatsApp = {
     activeChatId: null,
     activePhone: null,
+    attachedFile: null,
     currentFilter: "all",
     searchQuery: "",
     selectedDeviceId: "all",
@@ -246,6 +247,62 @@
         }
       });
 
+      // Attach Image button click
+      $(document).on("click", "#btnWaAttachImage", function () {
+        $("#waImageFileInput").trigger("click");
+      });
+
+      // File input change
+      $(document).on("change", "#waImageFileInput", function () {
+        const file = this.files && this.files[0];
+        if (file) {
+          self.setAttachment(file);
+        }
+      });
+
+      // Remove attachment
+      $(document).on("click", "#btnWaRemoveAttach", function () {
+        self.clearAttachment();
+      });
+
+      // Paste image directly into composer textarea
+      $(document).on("paste", "#waComposerText", function (e) {
+        const clipboardData = e.originalEvent && e.originalEvent.clipboardData;
+        if (!clipboardData || !clipboardData.items) return;
+        for (let i = 0; i < clipboardData.items.length; i++) {
+          const item = clipboardData.items[i];
+          if (item.type && item.type.indexOf("image") !== -1) {
+            const file = item.getAsFile();
+            if (file) {
+              self.setAttachment(file);
+              break;
+            }
+          }
+        }
+      });
+
+      // Lightbox view for chat images
+      $(document).on("click", ".wa-msg-img", function () {
+        const src = $(this).attr("src");
+        if (src) {
+          $("#waLightboxImage").attr("src", src);
+          $("#waImageLightboxModal").removeClass("d-none").addClass("is-active").attr("aria-hidden", "false");
+        }
+      });
+
+      // Close Lightbox
+      $(document).on("click", "#btnCloseLightbox", function () {
+        $("#waImageLightboxModal").addClass("d-none").removeClass("is-active").attr("aria-hidden", "true");
+        $("#waLightboxImage").attr("src", "");
+      });
+
+      $(document).on("click", "#waImageLightboxModal", function (e) {
+        if (e.target === this) {
+          $("#waImageLightboxModal").addClass("d-none").removeClass("is-active").attr("aria-hidden", "true");
+          $("#waLightboxImage").attr("src", "");
+        }
+      });
+
       // Refresh active chat (delegated)
       $(document).on("click", "#btnRefreshActiveChat", function () {
         if (self.activeChatId) {
@@ -285,9 +342,15 @@
 
       // Close modal on Escape or clicking outside
       $(document).on("keydown", function (e) {
-        if (e.key === "Escape" && $("#waNewChatModal").hasClass("is-active")) {
-          $("#waNewChatModal").removeClass("is-active").attr("aria-hidden", "true");
-          $("#waNewChatForm")[0].reset();
+        if (e.key === "Escape") {
+          if ($("#waNewChatModal").hasClass("is-active")) {
+            $("#waNewChatModal").removeClass("is-active").attr("aria-hidden", "true");
+            $("#waNewChatForm")[0].reset();
+          }
+          if (!$("#waImageLightboxModal").hasClass("d-none")) {
+            $("#waImageLightboxModal").addClass("d-none").removeClass("is-active").attr("aria-hidden", "true");
+            $("#waLightboxImage").attr("src", "");
+          }
         }
       });
 
@@ -852,7 +915,7 @@
                   ${hasDistinctName ? `<div class="wa-thread-phone-sub">${self.escapeHtml(chat.phone)}</div>` : ""}
                   ${deviceTagHtml}
                   <div class="wa-thread-bottom">
-                    <p class="wa-thread-preview">${self.escapeHtml(chat.last_message || "No messages yet")}</p>
+                    <p class="wa-thread-preview">${self.escapeHtml((chat.last_message === "[Image]" || chat.last_message === "[Photo]" || chat.last_message === "[Media]") ? "📷 Photo" : (chat.last_message || "No messages yet"))}</p>
                     ${chat.unread_count > 0 ? `<span class="wa-unread-badge">${chat.unread_count}</span>` : ""}
                   </div>
                 </div>
@@ -892,6 +955,7 @@
       this.activeChatId = chatId;
       this.activePhone = phone;
       this.lastStreamHtml = null;
+      this.clearAttachment();
 
       $(".wa-thread-item").removeClass("active");
       $(`.wa-thread-item[data-chat-id="${chatId}"]`).addClass("active");
@@ -980,15 +1044,21 @@
             let contentHtml = "";
             if (msg.media_url) {
               if (msg.type === "image" || msg.media_url.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i)) {
-                contentHtml += `<div class="wa-msg-media"><img src="${self.escapeHtml(msg.media_url)}" alt="Media" style="max-width:100%;border-radius:8px;margin-bottom:4px;display:block;" /></div>`;
+                contentHtml += `<div class="wa-msg-media"><img src="${self.escapeHtml(msg.media_url)}" class="wa-msg-img" alt="Photo" loading="lazy" /></div>`;
               } else {
-                contentHtml += `<div class="wa-msg-media"><a href="${self.escapeHtml(msg.media_url)}" target="_blank" rel="noopener noreferrer" style="color:#2563EB;text-decoration:underline;"><i class="fi fi-rr-document"></i> View Attachment</a></div>`;
+                contentHtml += `<div class="wa-msg-media"><a href="${self.escapeHtml(msg.media_url)}" class="wa-msg-doc-link" target="_blank" rel="noopener noreferrer"><i class="fi fi-rr-document"></i> View Attachment</a></div>`;
               }
-            }
-            if (msg.text) {
-              contentHtml += `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
-            } else if (!msg.media_url) {
-              contentHtml += `<div class="wa-msg-text"><em>[Message]</em></div>`;
+              if (msg.text && msg.text !== "[Image]" && msg.text !== "[Photo]" && msg.text !== "[Media]") {
+                contentHtml += `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
+              }
+            } else {
+              if (msg.text === "[Image]" || msg.text === "[Photo]" || msg.type === "image") {
+                contentHtml += `<div class="wa-media-photo-card"><i class="fi fi-rr-picture"></i><span>Photo</span></div>`;
+              } else if (msg.text) {
+                contentHtml += `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
+              } else {
+                contentHtml += `<div class="wa-msg-text"><em>[Message]</em></div>`;
+              }
             }
 
             html += `
@@ -1039,41 +1109,67 @@
 
       const $textarea = $("#waComposerText");
       const text = $textarea.val().trim();
-      if (!text) return;
+      if (!text && !self.attachedFile) return;
 
       this.isSending = true;
       const $btn = $("#btnSendMessage");
       $btn.prop("disabled", true).find("i").attr("class", "fi fi-rr-spinner wa-spin");
 
-      $.ajax({
-        url: "/api/v3/whatsapp/messages/",
-        method: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({
-          chat_id: self.activeChatId,
-          phone: self.activePhone,
-          text: text,
-          device_id: (self.selectedDeviceId && self.selectedDeviceId !== "all") ? self.selectedDeviceId : undefined
-        }),
-        dataType: "json",
-        success: function (res) {
-          self.isSending = false;
-          $btn.prop("disabled", false).find("i").attr("class", "fi fi-rr-paper-plane");
-
-          if (res && res.status === "success") {
-            $textarea.val("").css("height", "auto").focus();
-            self.loadMessages(self.activeChatId, true);
-            self.loadThreads();
-          } else {
-            alert(res.msg || "Failed to send WhatsApp message.");
-          }
-        },
-        error: function () {
-          self.isSending = false;
-          $btn.prop("disabled", false).find("i").attr("class", "fi fi-rr-paper-plane");
-          alert("Network error sending WhatsApp message.");
+      let ajaxOptions = {};
+      if (self.attachedFile) {
+        const formData = new FormData();
+        formData.append("chat_id", self.activeChatId);
+        formData.append("phone", self.activePhone || "");
+        formData.append("text", text);
+        if (self.selectedDeviceId && self.selectedDeviceId !== "all") {
+          formData.append("device_id", self.selectedDeviceId);
         }
-      });
+        formData.append("media", self.attachedFile);
+
+        ajaxOptions = {
+          url: "/api/v3/whatsapp/messages/",
+          method: "POST",
+          data: formData,
+          processData: false,
+          contentType: false,
+          dataType: "json"
+        };
+      } else {
+        ajaxOptions = {
+          url: "/api/v3/whatsapp/messages/",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            chat_id: self.activeChatId,
+            phone: self.activePhone,
+            text: text,
+            device_id: (self.selectedDeviceId && self.selectedDeviceId !== "all") ? self.selectedDeviceId : undefined
+          }),
+          dataType: "json"
+        };
+      }
+
+      ajaxOptions.success = function (res) {
+        self.isSending = false;
+        $btn.prop("disabled", false).find("i").attr("class", "fi fi-rr-paper-plane");
+
+        if (res && res.status === "success") {
+          $textarea.val("").css("height", "auto").focus();
+          self.clearAttachment();
+          self.loadMessages(self.activeChatId, true);
+          self.loadThreads();
+        } else {
+          alert(res.msg || "Failed to send WhatsApp message.");
+        }
+      };
+
+      ajaxOptions.error = function () {
+        self.isSending = false;
+        $btn.prop("disabled", false).find("i").attr("class", "fi fi-rr-paper-plane");
+        alert("Network error sending WhatsApp message.");
+      };
+
+      $.ajax(ajaxOptions);
     },
 
     submitNewChat: function () {
@@ -1292,6 +1388,49 @@
       setTimeout(function () {
         $alert.fadeOut(400, function () { $(this).remove(); });
       }, 7000);
+    },
+
+    formatFileSize: function (bytes) {
+      if (!bytes || bytes <= 0) return "0 B";
+      const k = 1024;
+      const sizes = ["B", "KB", "MB", "GB"];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+    },
+
+    setAttachment: function (file) {
+      const self = this;
+      if (!file) return;
+      if (!file.type || !file.type.startsWith("image/")) {
+        alert("Please select an image file (JPG, PNG, GIF, WebP).");
+        return;
+      }
+      if (file.size > 20 * 1024 * 1024) {
+        alert("Image size exceeds maximum limit of 20MB.");
+        return;
+      }
+
+      self.attachedFile = file;
+      $("#waAttachFileName").text(file.name || "image.jpg");
+      $("#waAttachFileSize").text(self.formatFileSize(file.size));
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        $("#waAttachThumb").attr("src", e.target.result);
+        $("#waComposerAttachPreview").removeClass("d-none");
+        $("#waComposerText").focus();
+      };
+      reader.readAsDataURL(file);
+    },
+
+    clearAttachment: function () {
+      const self = this;
+      self.attachedFile = null;
+      $("#waImageFileInput").val("");
+      $("#waAttachThumb").attr("src", "");
+      $("#waAttachFileName").text("");
+      $("#waAttachFileSize").text("");
+      $("#waComposerAttachPreview").addClass("d-none");
     }
   };
 

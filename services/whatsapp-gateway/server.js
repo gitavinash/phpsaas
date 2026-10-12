@@ -18,6 +18,7 @@ const {
   isJidGroup,
   isJidStatusBroadcast,
   isJidNewsletter,
+  downloadMediaMessage,
 } = require("@whiskeysockets/baileys");
 const QRCode = require("qrcode");
 const express = require("express");
@@ -55,9 +56,16 @@ if (!fs.existsSync(AUTH_DIR)) {
   fs.mkdirSync(AUTH_DIR, { recursive: true });
 }
 
+const UPLOAD_DIR = path.resolve(__dirname, "../../upload/whatsapp");
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+}
+
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use("/media", express.static(UPLOAD_DIR));
 
 process.on("uncaughtException", (err) => {
   console.error("[WhatsApp Gateway] Uncaught Exception:", err);
@@ -128,6 +136,113 @@ function getMessageText(message) {
     } catch (e) {}
   }
   return "";
+}
+
+// Helper to extract and save media attachments (images, audio, video, documents, stickers)
+async function downloadAndSaveMedia(msg, sessionId) {
+  if (!msg || !msg.message) return null;
+  let m = msg.message;
+  let depth = 0;
+  while (depth < 5 && m) {
+    if (m.ephemeralMessage?.message) m = m.ephemeralMessage.message;
+    else if (m.viewOnceMessage?.message) m = m.viewOnceMessage.message;
+    else if (m.viewOnceMessageV2?.message) m = m.viewOnceMessageV2.message;
+    else if (m.documentWithCaptionMessage?.message) m = m.documentWithCaptionMessage.message;
+    else if (m.editedMessage?.message) m = m.editedMessage.message;
+    else break;
+    depth++;
+  }
+  if (!m) return null;
+
+  let mediaType = null;
+  let mediaObj = null;
+  let ext = "jpg";
+
+  if (m.imageMessage) {
+    mediaType = "image";
+    mediaObj = m.imageMessage;
+    ext = "jpg";
+    if (mediaObj.mimetype && mediaObj.mimetype.includes("png")) ext = "png";
+    else if (mediaObj.mimetype && mediaObj.mimetype.includes("webp")) ext = "webp";
+  } else if (m.videoMessage) {
+    mediaType = "video";
+    mediaObj = m.videoMessage;
+    ext = "mp4";
+  } else if (m.audioMessage) {
+    mediaType = "audio";
+    mediaObj = m.audioMessage;
+    ext = "ogg";
+  } else if (m.documentMessage) {
+    mediaType = "document";
+    mediaObj = m.documentMessage;
+    ext = mediaObj.fileName ? (path.extname(mediaObj.fileName).replace(".", "") || "pdf") : "pdf";
+  } else if (m.stickerMessage) {
+    mediaType = "sticker";
+    mediaObj = m.stickerMessage;
+    ext = "webp";
+  }
+
+  if (!mediaType || !mediaObj) return null;
+
+  const uploadDir = UPLOAD_DIR;
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
+  const baseName = `wa_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+
+  // 1. Download decrypted media buffer via Baileys
+  try {
+    const buffer = await downloadMediaMessage(
+      msg,
+      "buffer",
+      {},
+      {
+        logger,
+        reuploadRequest: (update) => {
+          console.log(`[WhatsApp Gateway:${sessionId}] Reupload request triggered for media`);
+        }
+      }
+    );
+
+    if (buffer && buffer.length > 0) {
+      const fileName = `${baseName}.${ext}`;
+      const filePath = path.join(uploadDir, fileName);
+      fs.writeFileSync(filePath, buffer);
+      console.log(`[WhatsApp Gateway:${sessionId}] Downloaded media (${mediaType}, ${buffer.length} bytes): /upload/whatsapp/${fileName}`);
+      return {
+        type: mediaType,
+        url: `/upload/whatsapp/${fileName}`,
+        caption: mediaObj.caption || ""
+      };
+    }
+  } catch (err) {
+    console.warn(`[WhatsApp Gateway:${sessionId}] Failed to download media buffer:`, err.message || err);
+  }
+
+  // 2. Fallback: check jpegThumbnail
+  if (mediaObj.jpegThumbnail) {
+    try {
+      const thumbBuf = Buffer.isBuffer(mediaObj.jpegThumbnail)
+        ? mediaObj.jpegThumbnail
+        : Buffer.from(mediaObj.jpegThumbnail, "base64");
+      if (thumbBuf && thumbBuf.length > 0) {
+        const fileName = `${baseName}_thumb.jpg`;
+        const filePath = path.join(uploadDir, fileName);
+        fs.writeFileSync(filePath, thumbBuf);
+        console.log(`[WhatsApp Gateway:${sessionId}] Saved media thumbnail: /upload/whatsapp/${fileName}`);
+        return {
+          type: mediaType,
+          url: `/upload/whatsapp/${fileName}`,
+          caption: mediaObj.caption || ""
+        };
+      }
+    } catch (tErr) {
+      console.warn(`[WhatsApp Gateway:${sessionId}] Failed to save thumbnail:`, tErr.message || tErr);
+    }
+  }
+
+  return null;
 }
 
 // -----------------------------------------------------------------------------
@@ -793,7 +908,14 @@ class WhatsAppSession {
           }
 
           const body = getMessageText(msg.message);
-          if (!body) {
+          let mediaInfo = null;
+          try {
+            mediaInfo = await downloadAndSaveMedia(msg, this.sessionId);
+          } catch (mErr) {
+            console.warn(`[WhatsApp Gateway:${this.sessionId}] Error extracting media:`, mErr?.message || mErr);
+          }
+
+          if (!body && !mediaInfo) {
             const msgKeys = msg.message ? Object.keys(msg.message) : [];
             // Silently ignore internal WhatsApp protocol or sender key distribution packets
             if (msgKeys.length === 1 && (msgKeys[0] === 'senderKeyDistributionMessage' || msgKeys[0] === 'messageContextInfo' || msgKeys[0] === 'protocolMessage')) {
@@ -817,9 +939,14 @@ class WhatsAppSession {
           const isFromMe = !!msg.key.fromMe;
           const ts = Number(msg.messageTimestamp) || Math.floor(Date.now() / 1000);
 
+          let previewText = body;
+          if (mediaInfo) {
+            previewText = mediaInfo.caption ? mediaInfo.caption : "📷 Photo";
+          }
+
           const existing = this.chatStore.get(jid) || { id: jid };
           existing.conversationTimestamp = ts;
-          existing.lastMessageText = body;
+          existing.lastMessageText = previewText;
           if (avatarUrl && !existing.avatar) existing.avatar = avatarUrl;
           if (pushName && !existing.pushName) existing.pushName = pushName;
           if (!isFromMe) {
@@ -827,7 +954,7 @@ class WhatsAppSession {
           }
           this.chatStore.set(jid, existing);
 
-          console.log(`[WhatsApp Gateway:${this.sessionId}] Message (${isFromMe ? "OUT" : "IN"}) ${contactPhone}: "${body.substring(0, 40)}"`);
+          console.log(`[WhatsApp Gateway:${this.sessionId}] Message (${isFromMe ? "OUT" : "IN"}) ${contactPhone}: "${(mediaInfo ? `[${mediaInfo.type}] ` : '') + (mediaInfo?.caption || body || '').substring(0, 40)}"`);
 
           this.notify({
             event: "message",
@@ -838,7 +965,9 @@ class WhatsAppSession {
             name: isFromMe ? (this.connectedUser?.name || "") : (pushName || ""),
             pushname: pushName,
             avatar: avatarUrl || "",
-            text: body,
+            text: mediaInfo ? (mediaInfo.caption || "") : body,
+            media: mediaInfo ? mediaInfo.url : "",
+            type: mediaInfo ? mediaInfo.type : "text",
             msg_id: msg.key.id,
             timestamp: ts,
             lid: rawJid.includes("@lid") ? rawJid : (altJid && altJid.includes("@lid") ? altJid : null),
@@ -1302,9 +1431,9 @@ app.post("/send-message", async (req, res) => {
     });
   }
 
-  let { to, message } = req.body;
-  if (!to || !message) {
-    return res.status(400).json({ status: "error", message: "Missing recipient (to) or message" });
+  let { to, message, media, type } = req.body;
+  if (!to || (!message && !media)) {
+    return res.status(400).json({ status: "error", message: "Missing recipient (to) or message content" });
   }
 
   try {
@@ -1355,7 +1484,44 @@ app.post("/send-message", async (req, res) => {
       }
     } catch (e) {}
 
-    const sent = await s.sock.sendMessage(targetJid, { text: message });
+    let sendContent;
+    if (media) {
+      let mediaBuffer = null;
+      let mediaMime = "image/jpeg";
+      if (typeof media === "string" && media.startsWith("/upload/")) {
+        const localPath = path.resolve(__dirname, "../../" + media.replace(/^\//, ""));
+        if (fs.existsSync(localPath)) {
+          mediaBuffer = fs.readFileSync(localPath);
+          if (localPath.endsWith(".png")) mediaMime = "image/png";
+          else if (localPath.endsWith(".webp")) mediaMime = "image/webp";
+        }
+      } else if (typeof media === "string" && media.startsWith("data:image/")) {
+        const match = media.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
+        if (match) {
+          mediaMime = match[1];
+          mediaBuffer = Buffer.from(match[2], "base64");
+        }
+      }
+
+      if (mediaBuffer) {
+        sendContent = {
+          image: mediaBuffer,
+          mimetype: mediaMime,
+          caption: message || ""
+        };
+      } else if (typeof media === "string" && (media.startsWith("http://") || media.startsWith("https://"))) {
+        sendContent = {
+          image: { url: media },
+          caption: message || ""
+        };
+      } else {
+        sendContent = { text: message || "" };
+      }
+    } else {
+      sendContent = { text: message || "" };
+    }
+
+    const sent = await s.sock.sendMessage(targetJid, sendContent);
 
     if (sent?.key?.remoteJid && sent.key.remoteJid.includes("@lid")) {
       const normLid = jidNormalizedUser(sent.key.remoteJid);

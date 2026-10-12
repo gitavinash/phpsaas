@@ -240,6 +240,43 @@ if ($method === 'POST') {
     $type   = trim($data['type'] ?? 'text');
     $mediaUrl = trim($data['media_url'] ?? '');
 
+    // Handle image file or base64 upload
+    if (!empty($_FILES['media']['tmp_name']) && is_uploaded_file($_FILES['media']['tmp_name'])) {
+        $upDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/upload/whatsapp';
+        if (!is_dir($upDir)) {
+            @mkdir($upDir, 0777, true);
+        }
+        $origName = $_FILES['media']['name'] ?? 'image.jpg';
+        $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION)) ?: 'jpg';
+        if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'])) {
+            $ext = 'jpg';
+        }
+        $newFileName = 'wa_' . time() . '_' . substr(md5(uniqid('', true)), 0, 8) . '.' . $ext;
+        $destPath = $upDir . '/' . $newFileName;
+        if (move_uploaded_file($_FILES['media']['tmp_name'], $destPath)) {
+            $mediaUrl = '/upload/whatsapp/' . $newFileName;
+            $type = in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']) ? 'image' : 'document';
+        }
+    } elseif (!empty($data['image_base64']) && str_starts_with($data['image_base64'], 'data:image/')) {
+        $upDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/upload/whatsapp';
+        if (!is_dir($upDir)) {
+            @mkdir($upDir, 0777, true);
+        }
+        $bParts = explode(',', $data['image_base64'], 2);
+        if (count($bParts) === 2) {
+            $bin = base64_decode($bParts[1]);
+            $ext = 'jpg';
+            if (str_contains($bParts[0], 'png')) $ext = 'png';
+            elseif (str_contains($bParts[0], 'webp')) $ext = 'webp';
+            $newFileName = 'wa_' . time() . '_' . substr(md5(uniqid('', true)), 0, 8) . '.' . $ext;
+            $destPath = $upDir . '/' . $newFileName;
+            if (file_put_contents($destPath, $bin) !== false) {
+                $mediaUrl = '/upload/whatsapp/' . $newFileName;
+                $type = 'image';
+            }
+        }
+    }
+
     if (empty($text) && empty($mediaUrl)) {
         http_response_code(400);
         echo json_encode(['status' => 'error', 'msg' => 'Message text or media is required.']);
@@ -320,7 +357,7 @@ if ($method === 'POST') {
     $msgId = (int)mysqli_insert_id($connection);
 
     // Update conversation thread
-    $lastMsgPreview = !empty($text) ? $text : '[Media Attachment]';
+    $lastMsgPreview = !empty($text) ? $text : (!empty($mediaUrl) ? '📷 Photo' : '[Media Attachment]');
     $escPreview = mysqli_real_escape_string($connection, $lastMsgPreview);
     mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat 
                               SET chat_last_message = '{$escPreview}', 
@@ -467,6 +504,7 @@ if ($method === 'POST') {
         'to'          => $recipientPhone,
         'message'     => $text,
         'media'       => $mediaUrl,
+        'type'        => $type,
         'msg_id'      => $waMsgId
     ]);
 

@@ -388,6 +388,13 @@ try {
     $escDevPhone = mysqli_real_escape_string($connection, $connectedDevicePhone);
     $leadVal  = $leadId ? $leadId : "NULL";
 
+    // Clean up [Image] placeholder text if media is present
+    if (!empty($media) && trim($text) === '[Image]') {
+        $text = '';
+    }
+    $lastPreviewMsg = !empty($text) ? $text : (!empty($media) ? '📷 Photo' : ($type === 'image' ? '📷 Photo' : '[Message]'));
+    $escLastPreview = mysqli_real_escape_string($connection, $lastPreviewMsg);
+
     $chatQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone = '{$escPhone}' OR chat_phone LIKE '%{$last10}') LIMIT 1");
     $chatId = 0;
     $unreadInc = ($direction === 'incoming') ? 1 : 0;
@@ -400,7 +407,7 @@ try {
                                       chat_name = IF('{$escName}' != '', '{$escName}', chat_name),
                                       chat_pushname = IF('{$escPush}' != '', '{$escPush}', chat_pushname),
                                       chat_avatar = IF('{$escAvatar}' != '', '{$escAvatar}', chat_avatar),
-                                      chat_last_message = '" . mysqli_real_escape_string($connection, !empty($text) ? $text : '[Media]') . "',
+                                      chat_last_message = '{$escLastPreview}',
                                       chat_last_message_time = NOW(),
                                       chat_device_phone = IF('{$escDevPhone}' != '', '{$escDevPhone}', chat_device_phone),
                                       chat_lead_id = IF({$leadVal} IS NOT NULL, {$leadVal}, chat_lead_id)
@@ -408,7 +415,7 @@ try {
     } else {
         $insChatSql = "INSERT INTO " . TABLE_PREFIX . "whatsapp_chat 
                        (chat_site_id, chat_phone, chat_device_phone, chat_name, chat_pushname, chat_avatar, chat_last_message, chat_last_message_time, chat_unread_count, chat_lead_id)
-                       VALUES ({$siteId}, '{$escPhone}', '{$escDevPhone}', '{$escName}', '{$escPush}', '{$escAvatar}', '" . mysqli_real_escape_string($connection, !empty($text) ? $text : '[Media]') . "', NOW(), {$unreadInc}, {$leadVal})
+                       VALUES ({$siteId}, '{$escPhone}', '{$escDevPhone}', '{$escName}', '{$escPush}', '{$escAvatar}', '{$escLastPreview}', NOW(), {$unreadInc}, {$leadVal})
                        ON DUPLICATE KEY UPDATE 
                            chat_unread_count = chat_unread_count + {$unreadInc},
                            chat_last_message = VALUES(chat_last_message),
