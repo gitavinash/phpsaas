@@ -1442,14 +1442,29 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
             return notifyCrm(payload, fallbackUrl, 1);
           }
         } else {
-          printCardLog(`${COLOR.BG_CYAN}${COLOR.BOLD} [CRM WEBHOOK DELIVERED] ${COLOR.RESET}`, [
-            ["Site Domain", hostHeader],
-            ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
-            ["Target Webhook", targetUrl],
-            ["HTTP Status", `${res.statusCode} OK (Delivered)`],
-            ["Contact Phone", payload.phone || payload.from || payload.to || "N/A"],
-            ["Message ID", payload.msg_id || "N/A"],
-          ], COLOR.CYAN);
+          let parsed = null;
+          try { parsed = JSON.parse(resBody); } catch (e) {}
+
+          if (parsed && parsed.status === "error") {
+            printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [CRM WEBHOOK REJECTED] ${COLOR.RESET}`, [
+              ["Site Domain", hostHeader],
+              ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
+              ["Target Webhook", targetUrl],
+              ["Status", "Rejected by CRM API"],
+              ["Error Detail", parsed.msg || "Unknown error"],
+              ["Contact Phone", payload.phone || payload.from || payload.to || "N/A"],
+              ["Message ID", payload.msg_id || "N/A"],
+            ], COLOR.YELLOW);
+          } else {
+            printCardLog(`${COLOR.BG_CYAN}${COLOR.BOLD} [CRM WEBHOOK DELIVERED] ${COLOR.RESET}`, [
+              ["Site Domain", hostHeader],
+              ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
+              ["Target Webhook", targetUrl],
+              ["HTTP Status", `${res.statusCode} OK (Delivered)`],
+              ["Contact Phone", payload.phone || payload.from || payload.to || "N/A"],
+              ["Message ID", payload.msg_id || "N/A"],
+            ], COLOR.CYAN);
+          }
         }
       });
     });

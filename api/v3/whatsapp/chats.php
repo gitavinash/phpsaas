@@ -267,12 +267,12 @@ if ($method === 'GET') {
     // Auto-heal: Purge ghost LID chats with no messages or empty text
     mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_chat 
         WHERE chat_site_id = {$siteId} 
-          AND (chat_phone REGEXP '^\\\\+?[0-9]{13,17}$' OR chat_last_message IS NULL OR chat_last_message = '')
+          AND (CHAR_LENGTH(REPLACE(chat_phone, '+', '')) >= 14 OR chat_last_message IS NULL OR chat_last_message = '')
           AND (chat_lead_id IS NULL OR chat_lead_id = 0)
           AND chat_id NOT IN (SELECT DISTINCT message_chat_id FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_site_id = {$siteId})");
 
     // Auto-heal: Reconcile rogue LID chats (e.g. +187810329956513) into their real contact chat
-    $rogueQ = mysqli_query($connection, "SELECT chat_id, chat_phone, chat_name, chat_pushname, chat_lead_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone LIKE '%187810329956513%' OR chat_phone REGEXP '^\\\\+?[0-9]{13,17}$' OR chat_phone REGEXP '^\\\\+?1[0-9]{13,16}$')");
+    $rogueQ = mysqli_query($connection, "SELECT chat_id, chat_phone, chat_name, chat_pushname, chat_lead_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone LIKE '%187810329956513%' OR CHAR_LENGTH(REPLACE(chat_phone, '+', '')) >= 14)");
     if ($rogueQ && mysqli_num_rows($rogueQ) > 0) {
         while ($rRow = mysqli_fetch_assoc($rogueQ)) {
             $rChatId = (int)$rRow['chat_id'];
@@ -288,7 +288,7 @@ if ($method === 'GET') {
                 }
             }
             if ($targetChatId === 0 && !empty($escRPush)) {
-                $targetQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_id != {$rChatId} AND chat_phone NOT REGEXP '^\\\\+?[0-9]{13,17}$' AND (chat_name LIKE '%{$escRPush}%' OR chat_pushname LIKE '%{$escRPush}%') ORDER BY chat_id ASC LIMIT 1");
+                $targetQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_id != {$rChatId} AND CHAR_LENGTH(REPLACE(chat_phone, '+', '')) <= 13 AND chat_phone NOT LIKE '%@lid' AND (chat_name LIKE '%{$escRPush}%' OR chat_pushname LIKE '%{$escRPush}%') ORDER BY chat_id ASC LIMIT 1");
                 if ($targetQ && mysqli_num_rows($targetQ) > 0) {
                     $targetChatId = (int)mysqli_fetch_assoc($targetQ)['chat_id'];
                 }
@@ -423,7 +423,7 @@ if ($method === 'GET') {
     }
 
     // Exclude unmapped ghost LID numbers from chat list only if they have no messages
-    $whereClauses[] = "(c.chat_phone NOT REGEXP '^\\\\+?[0-9]{13,17}$' OR (c.chat_last_message IS NOT NULL AND c.chat_last_message != ''))";
+    $whereClauses[] = "(CHAR_LENGTH(REPLACE(c.chat_phone, '+', '')) <= 13 OR (c.chat_last_message IS NOT NULL AND c.chat_last_message != ''))";
     $whereClauses[] = "((c.chat_last_message IS NOT NULL AND c.chat_last_message != '') OR (c.chat_lead_id IS NOT NULL AND c.chat_lead_id > 0))";
 
     if (!empty($q)) {

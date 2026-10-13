@@ -24,6 +24,7 @@ if (empty($payload) && !empty($_POST)) {
     $payload = $_POST;
 }
 
+try {
 // Step 1: Explicit site_id in payload, query params, or constant
 $siteId = 0;
 if (isset($payload['site_id']) && is_numeric($payload['site_id']) && (int)$payload['site_id'] > 0) {
@@ -296,7 +297,8 @@ if ($isLid) {
         $escSearchName = mysqli_real_escape_string($connection, $searchName);
         $mQ = mysqli_query($connection, "SELECT chat_phone FROM " . TABLE_PREFIX . "whatsapp_chat 
                                          WHERE chat_site_id = {$siteId} 
-                                           AND chat_phone NOT REGEXP '^\\+?[0-9]{13,17}$'
+                                           AND CHAR_LENGTH(REPLACE(chat_phone, '+', '')) <= 13
+                                           AND chat_phone NOT LIKE '%@lid'
                                            AND (chat_name LIKE '%{$escSearchName}%' OR chat_pushname LIKE '%{$escSearchName}%')
                                          ORDER BY chat_last_message_time DESC LIMIT 1");
         if ($mQ && mysqli_num_rows($mQ) > 0) {
@@ -305,14 +307,15 @@ if ($isLid) {
         }
     }
 
-    // Match by recent outgoing conversation (sent within last 4 hours)
-    if (empty($resolvedRealPhone)) {
+    // Match by recent outgoing conversation (sent within last 4 hours) only for incoming message replies
+    if ($direction === 'incoming' && empty($resolvedRealPhone)) {
         $outQ = mysqli_query($connection, "SELECT c.chat_phone 
                                            FROM " . TABLE_PREFIX . "whatsapp_chat c 
                                            JOIN " . TABLE_PREFIX . "whatsapp_message m ON m.message_chat_id = c.chat_id 
                                            WHERE c.chat_site_id = {$siteId} 
                                              AND m.message_direction = 'outgoing' 
-                                             AND c.chat_phone NOT REGEXP '^\\+?[0-9]{13,17}$' 
+                                             AND CHAR_LENGTH(REPLACE(c.chat_phone, '+', '')) <= 13
+                                             AND c.chat_phone NOT LIKE '%@lid'
                                              AND m.message_created_at >= DATE_SUB(NOW(), INTERVAL 4 HOUR)
                                            ORDER BY m.message_created_at DESC LIMIT 1");
         if ($outQ && mysqli_num_rows($outQ) > 0) {
@@ -392,8 +395,7 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_device SET device_phone = '{$escDevP}', device_status = 'connected', device_last_sync = NOW() WHERE device_site_id = {$siteId} AND (device_session_id = '{$escSess}' OR device_session_id LIKE '%{$escSess}') AND (device_phone IS NULL OR device_phone = '')");
 }
 
-try {
-    // Find or match CRM lead
+// Find or match CRM lead
     $leadId = null;
     $phoneDigits = $cleanDigits;
 
