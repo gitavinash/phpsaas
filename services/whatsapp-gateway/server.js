@@ -249,6 +249,25 @@ process.on("unhandledRejection", (reason, promise) => {
 
 const logger = pino({ level: "silent" });
 
+function isLidNumber(jidOrPhone) {
+  if (!jidOrPhone) return false;
+  const str = String(jidOrPhone).trim();
+  if (str.includes("@lid")) return true;
+  const digits = str.replace(/[^0-9]/g, "");
+  // All WhatsApp Privacy LIDs are 14 to 17 digits.
+  // Standard E.164 phone numbers (India +91 is 12 digits; global max is 13 digits) are <= 13 digits.
+  return digits.length >= 14 && digits.length <= 18;
+}
+
+function formatPhoneOrLid(phone, name = "") {
+  if (!phone) return name ? `${name} (Unknown)` : "Unknown Contact";
+  if (isLidNumber(phone)) {
+    const rawDigits = String(phone).replace(/[^0-9]/g, "");
+    return name ? `${name} [LID: ${rawDigits}]` : `[WhatsApp Privacy LID: ${rawDigits}]`;
+  }
+  return name ? `${phone} (${name})` : phone;
+}
+
 function logWhatsAppMessage({
   direction = "INCOMING",
   siteDomain = "localhost",
@@ -268,13 +287,14 @@ function logWhatsAppMessage({
     : `${COLOR.BG_BLUE}${COLOR.BOLD} [OUTGOING MESSAGE] ${COLOR.RESET}`;
   const headerColor = isIncoming ? COLOR.GREEN : COLOR.CYAN;
 
+  const formattedContact = formatPhoneOrLid(contactPhone, contactName);
   const senderStr = isIncoming
-    ? (contactName ? `${contactPhone} (${contactName})` : (contactPhone || "Unknown Contact"))
+    ? formattedContact
     : (devicePhone ? `${devicePhone} (Connected Device)` : "Connected WhatsApp Device");
 
   const receiverStr = isIncoming
     ? (devicePhone ? `${devicePhone} (Connected Device)` : "Connected WhatsApp Device")
-    : (contactName ? `${contactPhone} (${contactName})` : (contactPhone || "Unknown Recipient"));
+    : formattedContact;
 
   const displayMsg = mediaType
     ? `[${mediaType.toUpperCase()}] ${messageText || "(Media attachment)"}`
@@ -289,6 +309,10 @@ function logWhatsAppMessage({
     ["Message", displayMsg],
     ["Message ID", msgId || "N/A"],
   ];
+
+  if (isLidNumber(contactPhone)) {
+    fields.push(["LID Warning", "WhatsApp Privacy ID (Unmapped from real phone number)"]);
+  }
 
   if (status) {
     fields.push(["Status", status]);
@@ -637,7 +661,7 @@ class WhatsAppSession {
       const decAlt = jidDecode(normAlt);
       if (decAlt?.server === "s.whatsapp.net" && decAlt?.user) {
         const digits = decAlt.user.replace(/[^0-9]/g, "");
-        if (digits.length >= 7) return "+" + digits;
+        if (digits.length >= 7 && digits.length <= 13) return "+" + digits;
       }
     }
 
@@ -650,25 +674,31 @@ class WhatsAppSession {
 
     // Handle WhatsApp Privacy LID (Linked Device identifier)
     if (decoded.server === "lid") {
-      let mapped = this.lidPhoneMap.get(normalized) || this.lidPhoneMap.get(decoded.user + "@lid") || this.lidPhoneMap.get(decoded.user);
+      let mapped = this.lidPhoneMap.get(normalized) ||
+                   this.lidPhoneMap.get(decoded.user + "@lid") ||
+                   this.lidPhoneMap.get(decoded.user) ||
+                   this.lidPhoneMap.get("+" + decoded.user);
       if (!mapped) {
         for (const [k, c] of this.contactStore.entries()) {
-          const cLidNorm = c.lid ? jidNormalizedUser(c.lid) : null;
-          if (cLidNorm === normalized || c.lid === normalized || c.lid === (decoded.user + "@lid")) {
-            mapped = k;
-            this.lidPhoneMap.set(normalized, k);
-            break;
+          const cLidDec = c.lid ? jidDecode(c.lid) : null;
+          const cIdDec = c.id ? jidDecode(c.id) : null;
+          if (cLidDec?.user === decoded.user || cIdDec?.user === decoded.user) {
+            mapped = c.phoneNumber || c.phone || (cIdDec?.server === "s.whatsapp.net" ? c.id : null);
+            if (mapped) {
+              this.lidPhoneMap.set(normalized, mapped);
+              break;
+            }
           }
         }
       }
       if (mapped) {
-        if (typeof mapped === "string" && mapped.startsWith("+")) {
+        if (typeof mapped === "string" && mapped.startsWith("+") && !isLidNumber(mapped)) {
           return mapped;
         }
         const mappedDec = jidDecode(mapped);
-        if (mappedDec?.user) {
+        if (mappedDec?.user && mappedDec?.server === "s.whatsapp.net") {
           const digits = mappedDec.user.replace(/[^0-9]/g, "");
-          if (digits.length >= 7) return "+" + digits;
+          if (digits.length >= 7 && digits.length <= 13) return "+" + digits;
         }
       }
       // Check direct contact phone / phoneNumber
@@ -677,28 +707,80 @@ class WhatsAppSession {
         const p = directCt.phoneNumber || directCt.phone;
         if (p) {
           const digits = String(p).replace(/[^0-9]/g, "");
-          if (digits.length >= 7) return "+" + digits;
+          if (digits.length >= 7 && digits.length <= 13) return "+" + digits;
         }
       }
       if (this.connectedUser?.phone && this.sock?.user?.lid && normalized.startsWith(this.sock.user.lid.split(":")[0])) {
         return this.connectedUser.phone;
       }
-      // If we have a recent outgoing contact (from /send-message within last 120s), link to it
-      if (this.lastOutgoingPhone && (Date.now() - this.lastOutgoingTime < 120000)) {
-        return this.lastOutgoingPhone;
+      // Check historical messages in chatStore
+      const chatObj = this.chatStore.get(normalized) || this.chatStore.get(decoded.user + "@lid");
+      if (chatObj?.messages && Array.isArray(chatObj.messages)) {
+        for (const m of chatObj.messages) {
+          const mKey = m?.key || m?.message?.key;
+          const alt = mKey?.remoteJidAlt || mKey?.participantPn || mKey?.senderPn;
+          if (alt && !alt.includes("@lid")) {
+            const altDec = jidDecode(jidNormalizedUser(alt));
+            if (altDec?.user && altDec.server === "s.whatsapp.net") {
+              const digits = altDec.user.replace(/[^0-9]/g, "");
+              if (digits.length >= 7 && digits.length <= 13) {
+                return "+" + digits;
+              }
+            }
+          }
+        }
       }
       // Known test LID fallback
       if (decoded.user.includes("187810329956513")) {
         return "+919990026008";
       }
-      // Fallback: return LID digits so message is NEVER dropped!
-      const digits = decoded.user.replace(/[^0-9]/g, "");
-      return digits.length >= 7 ? ("+" + digits) : null;
+      // Return null so async resolvePhoneNumber runs the full multi-stage lookup!
+      return null;
     }
 
     const digits = decoded.user.replace(/[^0-9]/g, "");
-    if (!digits || digits.length < 7) return null;
+    if (!digits || digits.length < 7 || digits.length > 13) return null;
     return "+" + digits;
+  }
+
+  async queryCrmForLid(lidUser, pushName = "") {
+    if (!lidUser) return null;
+    try {
+      const crmUrl = new URL(this.webhookUrl || CRM_WEBHOOK_URL);
+      const host = (crmUrl.hostname === "127.0.0.1" || crmUrl.hostname === "localhost") ? this.getSiteDomain() : crmUrl.hostname;
+      const resolveEndpoint = `http://127.0.0.1/api/v3/whatsapp/chats/?action=resolve_lid&lid=${encodeURIComponent(lidUser)}&pushname=${encodeURIComponent(pushName || "")}${this.siteId ? `&site_id=${this.siteId}` : ""}`;
+
+      const res = await new Promise((resolve) => {
+        const req = http.get(resolveEndpoint, {
+          headers: { Host: host, "User-Agent": "WhatsApp-Gateway-Daemon/3.0" },
+          timeout: 2500,
+        }, (resp) => {
+          let data = "";
+          resp.on("data", (chunk) => (data += chunk));
+          resp.on("end", () => {
+            try {
+              const j = JSON.parse(data);
+              resolve(j);
+            } catch (e) {
+              resolve(null);
+            }
+          });
+        });
+        req.on("error", () => resolve(null));
+        req.on("timeout", () => {
+          req.destroy();
+          resolve(null);
+        });
+      });
+
+      if (res && res.status === "success" && res.phone) {
+        const digits = res.phone.replace(/[^0-9]/g, "");
+        if (digits.length >= 7 && digits.length <= 13) {
+          return "+" + digits;
+        }
+      }
+    } catch (e) {}
+    return null;
   }
 
   async resolvePhoneNumber(jid, altJid = null, msg = null) {
@@ -722,7 +804,7 @@ class WhatsAppSession {
         const decAlt = jidDecode(normAlt);
         if (decAlt?.server === "s.whatsapp.net" && decAlt?.user) {
           const digits = decAlt.user.replace(/[^0-9]/g, "");
-          if (digits.length >= 7) {
+          if (digits.length >= 7 && digits.length <= 13) {
             const p = "+" + digits;
             if (jid) {
               const normJid = jidNormalizedUser(jid);
@@ -731,6 +813,7 @@ class WhatsAppSession {
               if (dec?.user) {
                 this.lidPhoneMap.set(dec.user, p);
                 this.lidPhoneMap.set(dec.user + "@lid", p);
+                this.lidPhoneMap.set("+" + dec.user, p);
               }
             }
             return p;
@@ -741,7 +824,7 @@ class WhatsAppSession {
 
     // 2. Synchronous resolution
     const syncPhone = this.getPhoneNumber(jid, altJid);
-    if (syncPhone && !syncPhone.startsWith("+187810329956513") && !syncPhone.match(/^\+1[0-9]{13,16}$/)) {
+    if (syncPhone && !isLidNumber(syncPhone)) {
       return syncPhone;
     }
 
@@ -754,36 +837,102 @@ class WhatsAppSession {
     if (decoded.server === "lid") {
       if (this.sock?.signalRepository?.lidMapping?.getPNForLID) {
         try {
-          const pn = await this.sock.signalRepository.lidMapping.getPNForLID(normalized);
-          if (pn) {
-            const pnNorm = jidNormalizedUser(pn);
-            const pnDec = jidDecode(pnNorm);
-            if (pnDec?.user) {
-              const digits = pnDec.user.replace(/[^0-9]/g, "");
-              if (digits.length >= 7) {
-                const realPhone = "+" + digits;
-                this.lidPhoneMap.set(normalized, realPhone);
-                this.lidPhoneMap.set(decoded.user + "@lid", realPhone);
-                this.lidPhoneMap.set(decoded.user, realPhone);
-                return realPhone;
+          const candidates = [normalized, `${decoded.user}@lid`, decoded.user];
+          for (const cand of candidates) {
+            const pn = await this.sock.signalRepository.lidMapping.getPNForLID(cand).catch(() => null);
+            if (pn) {
+              const pnNorm = jidNormalizedUser(pn);
+              const pnDec = jidDecode(pnNorm);
+              if (pnDec?.user && pnDec?.server === "s.whatsapp.net") {
+                const digits = pnDec.user.replace(/[^0-9]/g, "");
+                if (digits.length >= 7 && digits.length <= 13) {
+                  const realPhone = "+" + digits;
+                  this.lidPhoneMap.set(normalized, realPhone);
+                  this.lidPhoneMap.set(decoded.user + "@lid", realPhone);
+                  this.lidPhoneMap.set(decoded.user, realPhone);
+                  this.lidPhoneMap.set("+" + decoded.user, realPhone);
+                  return realPhone;
+                }
               }
             }
           }
         } catch (e) {}
       }
 
-      // 4. Try matching against recent outgoing activity (within 120 seconds)
-      if (this.lastOutgoingPhone && (Date.now() - this.lastOutgoingTime < 120000)) {
-        this.lidPhoneMap.set(normalized, this.lastOutgoingPhone);
-        this.lidPhoneMap.set(decoded.user + "@lid", this.lastOutgoingPhone);
-        this.lidPhoneMap.set(decoded.user, this.lastOutgoingPhone);
-        return this.lastOutgoingPhone;
+      // 4. Try scanning cached messages in chatStore for historical alt JIDs
+      const chatObj = this.chatStore.get(normalized) || this.chatStore.get(`${decoded.user}@lid`);
+      if (chatObj?.messages && Array.isArray(chatObj.messages)) {
+        for (const m of chatObj.messages) {
+          const mKey = m?.key || m?.message?.key;
+          const alt = mKey?.remoteJidAlt || mKey?.participantPn || mKey?.senderPn;
+          if (alt && !alt.includes("@lid")) {
+            const altDec = jidDecode(jidNormalizedUser(alt));
+            if (altDec?.user && altDec.server === "s.whatsapp.net") {
+              const digits = altDec.user.replace(/[^0-9]/g, "");
+              if (digits.length >= 7 && digits.length <= 13) {
+                const realPhone = "+" + digits;
+                this.lidPhoneMap.set(normalized, realPhone);
+                this.lidPhoneMap.set(`${decoded.user}@lid`, realPhone);
+                this.lidPhoneMap.set(decoded.user, realPhone);
+                this.lidPhoneMap.set("+" + decoded.user, realPhone);
+                return realPhone;
+              }
+            }
+          }
+        }
       }
 
-      // 5. Hardcoded safety mapping for known test user if all else fails
+      // 5. Try scanning contactStore by notify / name
+      const pushName = msg?.pushName || this.getContactName(jid) || "";
+      if (pushName && pushName.trim().length >= 3) {
+        const cleanSearchName = pushName.trim().toLowerCase();
+        for (const [k, c] of this.contactStore.entries()) {
+          const cName = (c.name || c.notify || c.verifiedName || "").trim().toLowerCase();
+          if (cName && (cName === cleanSearchName || cName.includes(cleanSearchName))) {
+            const cDec = jidDecode(jidNormalizedUser(k));
+            if (cDec?.server === "s.whatsapp.net" && cDec?.user) {
+              const digits = cDec.user.replace(/[^0-9]/g, "");
+              if (digits.length >= 7 && digits.length <= 13) {
+                const realPhone = "+" + digits;
+                this.lidPhoneMap.set(normalized, realPhone);
+                this.lidPhoneMap.set(`${decoded.user}@lid`, realPhone);
+                this.lidPhoneMap.set(decoded.user, realPhone);
+                this.lidPhoneMap.set("+" + decoded.user, realPhone);
+                return realPhone;
+              }
+            }
+          }
+        }
+      }
+
+      // 6. Try matching against recent outgoing activity (within 10 minutes)
+      if (this.lastOutgoingPhone && (Date.now() - this.lastOutgoingTime < 600000)) {
+        const cleanOut = this.lastOutgoingPhone.replace(/[^0-9]/g, "");
+        if (cleanOut.length >= 7 && cleanOut.length <= 13) {
+          this.lidPhoneMap.set(normalized, this.lastOutgoingPhone);
+          this.lidPhoneMap.set(decoded.user + "@lid", this.lastOutgoingPhone);
+          this.lidPhoneMap.set(decoded.user, this.lastOutgoingPhone);
+          this.lidPhoneMap.set("+" + decoded.user, this.lastOutgoingPhone);
+          return this.lastOutgoingPhone;
+        }
+      }
+
+      // 7. Hardcoded test user mapping
       if (decoded.user.includes("187810329956513")) {
         return "+919990026008";
       }
+
+      // 8. Query CRM Webhook / Chats API to resolve from CRM Leads
+      try {
+        const crmResolved = await this.queryCrmForLid(decoded.user, pushName);
+        if (crmResolved) {
+          this.lidPhoneMap.set(normalized, crmResolved);
+          this.lidPhoneMap.set(decoded.user + "@lid", crmResolved);
+          this.lidPhoneMap.set(decoded.user, crmResolved);
+          this.lidPhoneMap.set("+" + decoded.user, crmResolved);
+          return crmResolved;
+        }
+      } catch (crmErr) {}
     }
 
     return syncPhone || ("+" + decoded.user);
@@ -824,12 +973,23 @@ class WhatsAppSession {
         this.contactStore.set(normalized, { ...(this.contactStore.get(normalized) || {}), ...c });
         if (c.lid) {
           const normLid = jidNormalizedUser(c.lid);
+          const lidDec = jidDecode(normLid);
           this.lidPhoneMap.set(normLid, normalized);
           this.lidPhoneMap.set(c.lid, normalized);
+          if (lidDec?.user) {
+            this.lidPhoneMap.set(lidDec.user, normalized);
+            this.lidPhoneMap.set(`${lidDec.user}@lid`, normalized);
+            this.lidPhoneMap.set(`+${lidDec.user}`, normalized);
+          }
         }
         if (c.phoneNumber) {
           const phoneJid = jidNormalizedUser(c.phoneNumber.includes("@") ? c.phoneNumber : (c.phoneNumber + "@s.whatsapp.net"));
           this.lidPhoneMap.set(normalized, phoneJid);
+          const decPn = jidDecode(phoneJid);
+          if (decPn?.user) {
+            const cleanPn = "+" + decPn.user.replace(/[^0-9]/g, "");
+            this.lidPhoneMap.set(normalized, cleanPn);
+          }
         }
       }
     }
@@ -854,7 +1014,16 @@ class WhatsAppSession {
         if (altJid && rawJid.endsWith("@lid") && altJid.endsWith("@s.whatsapp.net")) {
           const normLid = jidNormalizedUser(rawJid);
           const normPhone = jidNormalizedUser(altJid);
-          this.lidPhoneMap.set(normLid, normPhone);
+          const lidDec = jidDecode(normLid);
+          const pnDec = jidDecode(normPhone);
+          if (lidDec?.user && pnDec?.user) {
+            const cleanPn = "+" + pnDec.user.replace(/[^0-9]/g, "");
+            this.lidPhoneMap.set(normLid, cleanPn);
+            this.lidPhoneMap.set(rawJid, cleanPn);
+            this.lidPhoneMap.set(lidDec.user, cleanPn);
+            this.lidPhoneMap.set(`${lidDec.user}@lid`, cleanPn);
+            this.lidPhoneMap.set(`+${lidDec.user}`, cleanPn);
+          }
         }
 
         const normalized = jidNormalizedUser(rawJid);
@@ -1089,22 +1258,48 @@ class WhatsAppSession {
         }
       });
 
+      const registerContactLid = (c) => {
+        if (!c || !c.id) return;
+        const norm = jidNormalizedUser(c.id);
+        this.contactStore.set(norm, { ...(this.contactStore.get(norm) || {}), ...c });
+
+        const phoneTarget = (c.phoneNumber && c.phoneNumber.includes("@"))
+          ? jidNormalizedUser(c.phoneNumber)
+          : (norm.endsWith("@s.whatsapp.net") ? norm : null);
+
+        const lidTarget = c.lid ? jidNormalizedUser(c.lid) : (norm.endsWith("@lid") ? norm : null);
+
+        if (lidTarget && phoneTarget) {
+          const lidDec = jidDecode(lidTarget);
+          const pnDec = jidDecode(phoneTarget);
+          if (lidDec?.user && pnDec?.user) {
+            const cleanPn = "+" + pnDec.user.replace(/[^0-9]/g, "");
+            this.lidPhoneMap.set(lidTarget, cleanPn);
+            this.lidPhoneMap.set(lidDec.user, cleanPn);
+            this.lidPhoneMap.set(`${lidDec.user}@lid`, cleanPn);
+            this.lidPhoneMap.set(`+${lidDec.user}`, cleanPn);
+
+            try {
+              if (this.sock?.signalRepository?.lidMapping?.storeLIDPNMappings) {
+                this.sock.signalRepository.lidMapping.storeLIDPNMappings([{ lid: lidTarget, pn: phoneTarget }]);
+              }
+            } catch (e) {}
+          }
+        }
+      };
+
       this.sock.ev.on("contacts.upsert", (contacts) => {
         for (const c of contacts) {
-          if (!c || !c.id) continue;
-          const norm = jidNormalizedUser(c.id);
-          this.contactStore.set(norm, { ...(this.contactStore.get(norm) || {}), ...c });
-          if (c.lid) this.lidPhoneMap.set(c.lid, norm);
+          registerContactLid(c);
         }
+        this.saveStore();
       });
 
       this.sock.ev.on("contacts.update", (contacts) => {
         for (const c of contacts) {
-          if (!c || !c.id) continue;
-          const norm = jidNormalizedUser(c.id);
-          this.contactStore.set(norm, { ...(this.contactStore.get(norm) || {}), ...c });
-          if (c.lid) this.lidPhoneMap.set(c.lid, norm);
+          registerContactLid(c);
         }
+        this.saveStore();
       });
 
       this.sock.ev.on("messaging-history.set", async ({ chats, contacts, messages }) => {
@@ -1440,13 +1635,16 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
       let resBody = "";
       res.on("data", (chunk) => (resBody += chunk));
       res.on("end", () => {
+        const rawPhone = payload.phone || payload.from || payload.to || "N/A";
+        const displayContactPhone = formatPhoneOrLid(rawPhone);
+
         if (res.statusCode >= 400) {
           printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [CRM WEBHOOK ERROR] ${COLOR.RESET}`, [
             ["Site Domain", hostHeader],
             ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
             ["Target Webhook", targetUrl],
             ["HTTP Status", `${res.statusCode} Error`],
-            ["Contact Phone", payload.phone || payload.from || payload.to || "N/A"],
+            ["Contact Phone", displayContactPhone],
             ["Response", (resBody || "").substring(0, 150)],
           ], COLOR.YELLOW);
 
@@ -1459,6 +1657,30 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
           let parsed = null;
           try { parsed = JSON.parse(resBody); } catch (e) {}
 
+          if (parsed && parsed.resolved_phone) {
+            const cleanResolved = "+" + String(parsed.resolved_phone).replace(/[^0-9]/g, "");
+            const sid = payload.session_id;
+            const targetSess = sid ? sessions.get(sid) : null;
+            if (targetSess) {
+              if (payload.lid) {
+                targetSess.lidPhoneMap.set(payload.lid, cleanResolved);
+                const dec = jidDecode(payload.lid);
+                if (dec?.user) {
+                  targetSess.lidPhoneMap.set(dec.user, cleanResolved);
+                  targetSess.lidPhoneMap.set(`${dec.user}@lid`, cleanResolved);
+                  targetSess.lidPhoneMap.set(`+${dec.user}`, cleanResolved);
+                }
+              }
+              const rawDigits = String(rawPhone).replace(/[^0-9]/g, "");
+              if (rawDigits.length >= 14) {
+                targetSess.lidPhoneMap.set(rawDigits, cleanResolved);
+                targetSess.lidPhoneMap.set(`+${rawDigits}`, cleanResolved);
+                targetSess.lidPhoneMap.set(`${rawDigits}@lid`, cleanResolved);
+              }
+              targetSess.saveStore();
+            }
+          }
+
           if (parsed && parsed.status === "error") {
             printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [CRM WEBHOOK REJECTED] ${COLOR.RESET}`, [
               ["Site Domain", hostHeader],
@@ -1466,7 +1688,7 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
               ["Target Webhook", targetUrl],
               ["Status", "Rejected by CRM API"],
               ["Error Detail", parsed.msg || "Unknown error"],
-              ["Contact Phone", payload.phone || payload.from || payload.to || "N/A"],
+              ["Contact Phone", displayContactPhone],
               ["Message ID", payload.msg_id || "N/A"],
             ], COLOR.YELLOW);
           } else {
@@ -1475,7 +1697,7 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
               ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
               ["Target Webhook", targetUrl],
               ["HTTP Status", `${res.statusCode} OK (Delivered)`],
-              ["Contact Phone", payload.phone || payload.from || payload.to || "N/A"],
+              ["Contact Phone", displayContactPhone],
               ["Message ID", payload.msg_id || "N/A"],
             ], COLOR.CYAN);
           }
@@ -1790,8 +2012,19 @@ app.post("/send-message", async (req, res) => {
           }
           if (results[0].lid) {
             const normLid = jidNormalizedUser(results[0].lid);
+            const lidDec = jidDecode(normLid);
             s.lidPhoneMap.set(normLid, outPhone);
             s.lidPhoneMap.set(results[0].lid, outPhone);
+            if (lidDec?.user) {
+              s.lidPhoneMap.set(lidDec.user, outPhone);
+              s.lidPhoneMap.set(`${lidDec.user}@lid`, outPhone);
+              s.lidPhoneMap.set(`+${lidDec.user}`, outPhone);
+            }
+            try {
+              if (s.sock?.signalRepository?.lidMapping?.storeLIDPNMappings) {
+                s.sock.signalRepository.lidMapping.storeLIDPNMappings([{ lid: normLid, pn: targetJid }]);
+              }
+            } catch (e) {}
           }
         }
       }
@@ -1804,8 +2037,14 @@ app.post("/send-message", async (req, res) => {
         const mappedLid = await s.sock.signalRepository.lidMapping.getLIDForPN(normTarget);
         if (mappedLid) {
           const normLid = jidNormalizedUser(mappedLid);
+          const lidDec = jidDecode(normLid);
           s.lidPhoneMap.set(normLid, outPhone);
           s.lidPhoneMap.set(mappedLid, outPhone);
+          if (lidDec?.user) {
+            s.lidPhoneMap.set(lidDec.user, outPhone);
+            s.lidPhoneMap.set(`${lidDec.user}@lid`, outPhone);
+            s.lidPhoneMap.set(`+${lidDec.user}`, outPhone);
+          }
         }
       }
     } catch (e) {}
@@ -1851,8 +2090,19 @@ app.post("/send-message", async (req, res) => {
 
     if (sent?.key?.remoteJid && sent.key.remoteJid.includes("@lid")) {
       const normLid = jidNormalizedUser(sent.key.remoteJid);
+      const lidDec = jidDecode(normLid);
       s.lidPhoneMap.set(normLid, outPhone);
       s.lidPhoneMap.set(sent.key.remoteJid, outPhone);
+      if (lidDec?.user) {
+        s.lidPhoneMap.set(lidDec.user, outPhone);
+        s.lidPhoneMap.set(`${lidDec.user}@lid`, outPhone);
+        s.lidPhoneMap.set(`+${lidDec.user}`, outPhone);
+      }
+      try {
+        if (s.sock?.signalRepository?.lidMapping?.storeLIDPNMappings) {
+          s.sock.signalRepository.lidMapping.storeLIDPNMappings([{ lid: normLid, pn: targetJid }]);
+        }
+      } catch (e) {}
     }
 
     // Store in messageStore under all key formats to resolve encryption retry requests from recipient

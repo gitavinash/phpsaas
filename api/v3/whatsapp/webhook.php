@@ -272,16 +272,15 @@ if (strlen($last10) >= 8) {
     }
 }
 
-// 2. Handle WhatsApp Privacy LID (13-17 digits)
-$isLid = preg_match('/^[0-9]{13,17}$/', $cleanDigits);
+// 2. Handle WhatsApp Privacy LID (14-17 digits or @lid)
+$isLid = (strlen($cleanDigits) >= 14 || str_contains($contactPhone, '@lid'));
+$resolvedRealPhone = '';
 if ($isLid) {
-    $resolvedRealPhone = '';
-
     // Check if gateway forwarded senderPn / sender_pn
     $senderPn = trim($payload['sender_pn'] ?? ($payload['senderPn'] ?? ''));
     if (!empty($senderPn)) {
         $pnDigits = preg_replace('/[^0-9]/', '', $senderPn);
-        if (strlen($pnDigits) >= 7 && strlen($pnDigits) <= 15) {
+        if (strlen($pnDigits) >= 7 && strlen($pnDigits) <= 13) {
             $resolvedRealPhone = '+' . $pnDigits;
         }
     }
@@ -307,8 +306,28 @@ if ($isLid) {
         }
     }
 
-    // Match by recent outgoing conversation (sent within last 4 hours) only for incoming message replies
-    if ($direction === 'incoming' && empty($resolvedRealPhone)) {
+    // Match by lead name in tbl_enquiry
+    if (empty($resolvedRealPhone) && !empty($searchName)) {
+        $escSearchName = mysqli_real_escape_string($connection, $searchName);
+        $lq = mysqli_query($connection, "SELECT enquiry_mobile, TRIM(CONCAT(COALESCE(enquiry_first_name, ''), ' ', COALESCE(enquiry_last_name, ''))) as lead_name 
+                                         FROM " . TABLE_PREFIX . "enquiry 
+                                         WHERE enquiry_site_id = {$siteId} 
+                                           AND (TRIM(CONCAT(COALESCE(enquiry_first_name, ''), ' ', COALESCE(enquiry_last_name, ''))) LIKE '%{$escSearchName}%' OR enquiry_first_name LIKE '%{$escSearchName}%') 
+                                           AND enquiry_mobile IS NOT NULL AND enquiry_mobile != '' 
+                                         ORDER BY enquiry_id DESC LIMIT 1");
+        if ($lq && mysqli_num_rows($lq) > 0) {
+            $lr = mysqli_fetch_assoc($lq);
+            $digits = preg_replace('/[^0-9]/', '', $lr['enquiry_mobile']);
+            if (strlen($digits) == 10) $digits = '91' . $digits;
+            if (strlen($digits) >= 8 && strlen($digits) <= 13) {
+                $resolvedRealPhone = '+' . $digits;
+                if (!empty($lr['lead_name'])) $name = $lr['lead_name'];
+            }
+        }
+    }
+
+    // Match by recent outgoing conversation (sent within last 4 hours)
+    if (empty($resolvedRealPhone)) {
         $outQ = mysqli_query($connection, "SELECT c.chat_phone 
                                            FROM " . TABLE_PREFIX . "whatsapp_chat c 
                                            JOIN " . TABLE_PREFIX . "whatsapp_message m ON m.message_chat_id = c.chat_id 
@@ -332,6 +351,8 @@ if ($isLid) {
         // Fallback for unmapped LID: use pushname as display name so chat is not blank
         if (!empty($pushName) && empty($name)) {
             $name = $pushName;
+        } elseif (empty($name)) {
+            $name = 'WhatsApp Contact';
         }
     }
 }
@@ -505,12 +526,13 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     $messageId = (int)mysqli_insert_id($connection);
 
     echo json_encode([
-        'status'     => 'success',
-        'msg'        => 'WhatsApp message synced to CRM.',
-        'chat_id'    => $chatId,
-        'message_id' => $messageId,
-        'direction'  => $direction,
-        'lead_id'    => $leadId
+        'status'         => 'success',
+        'msg'            => 'WhatsApp message synced to CRM.',
+        'chat_id'        => $chatId,
+        'message_id'     => $messageId,
+        'direction'      => $direction,
+        'lead_id'        => $leadId,
+        'resolved_phone' => !empty($resolvedRealPhone) ? $resolvedRealPhone : null
     ]);
     exit;
 } catch (Throwable $e) {
