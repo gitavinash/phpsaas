@@ -93,7 +93,7 @@ process.on("unhandledRejection", (reason, promise) => {
   console.error("[WhatsApp Gateway] Unhandled Rejection:", reason);
 });
 
-const logger = pino({ level: "error" });
+const logger = pino({ level: "silent" });
 
 // ANSI Color formatting helpers for clean terminal readability
 const COLOR = {
@@ -838,8 +838,16 @@ class WhatsAppSession {
     }
 
     if (batchPayload.length > 0) {
-      console.log(`[WhatsApp Gateway:${this.sessionId}] Forwarding ${batchPayload.length} conversations to CRM Webhook in chunks...`);
       const CHUNK_SIZE = 150;
+      printCardLog(`${COLOR.BG_BLUE}${COLOR.BOLD} [SYNC HISTORICAL CHATS] ${COLOR.RESET}`, [
+        ["Site Domain", this.getSiteDomain()],
+        ["Device WhatsApp", this.connectedUser?.phone || "Connected Device"],
+        ["Session ID", this.sessionId],
+        ["Action", `Forwarding ${batchPayload.length} chat conversations to CRM Webhook`],
+        ["Batch Chunks", `${Math.ceil(batchPayload.length / CHUNK_SIZE)} chunk(s) (${CHUNK_SIZE} chats/chunk)`],
+        ["Status", "Syncing to CRM Webhook in background..."],
+      ], COLOR.BLUE);
+
       for (let i = 0; i < batchPayload.length; i += CHUNK_SIZE) {
         const chunk = batchPayload.slice(i, i + CHUNK_SIZE);
         this.notify({
@@ -1001,7 +1009,12 @@ class WhatsAppSession {
       });
 
       this.sock.ev.on("messaging-history.set", async ({ chats, contacts, messages }) => {
-        console.log(`[WhatsApp Gateway:${this.sessionId}] History received: ${chats?.length || 0} chats, ${contacts?.length || 0} contacts`);
+        printCardLog(`${COLOR.BG_BLUE}${COLOR.BOLD} [WHATSAPP HISTORY RECEIVED] ${COLOR.RESET}`, [
+          ["Site Domain", this.getSiteDomain()],
+          ["Session ID", this.sessionId],
+          ["Device WhatsApp", this.connectedUser?.phone || "Connected Device"],
+          ["History Stats", `${chats?.length || 0} chats, ${contacts?.length || 0} contacts received`],
+        ], COLOR.BLUE);
         await this.syncBatchHistory(chats || [], messages || [], contacts || []);
       });
 
@@ -1048,7 +1061,6 @@ class WhatsAppSession {
 
           const contactPhone = await this.resolvePhoneNumber(jid, altJid, msg);
           if (!contactPhone) {
-            console.log(`[WhatsApp Gateway:${this.sessionId}] Could not resolve phone for ${jid}`);
             continue;
           }
 
@@ -1060,7 +1072,6 @@ class WhatsAppSession {
               const u10 = cleanUserPhone.slice(-10);
               const c10 = cleanContact.slice(-10);
               if (u10 === c10) {
-                console.log(`[WhatsApp Gateway:${this.sessionId}] Skipping self-message for ${contactPhone}`);
                 continue;
               }
             }
@@ -1075,12 +1086,6 @@ class WhatsAppSession {
           }
 
           if (!body && !mediaInfo) {
-            const msgKeys = msg.message ? Object.keys(msg.message) : [];
-            // Silently ignore internal WhatsApp protocol or sender key distribution packets
-            if (msgKeys.length === 1 && (msgKeys[0] === 'senderKeyDistributionMessage' || msgKeys[0] === 'messageContextInfo' || msgKeys[0] === 'protocolMessage')) {
-              continue;
-            }
-            console.log(`[WhatsApp Gateway:${this.sessionId}] Skipping message ${msg.key?.id}: empty body or unhandled format. Keys: [${msgKeys.join(", ")}], stubType=${msg.messageStubType || 'none'}`);
             continue;
           }
 
@@ -1197,14 +1202,61 @@ class WhatsAppSession {
 const sessions = new Map();
 let lastKnownWebhookUrl = null;
 
-// Intercept libsignal Bad MAC noise and auto-repair broken session ratchets
+// Intercept libsignal Bad MAC noise, SessionError, and auto-repair broken session ratchets
+const origConsoleLog = console.log;
+const origConsoleWarn = console.warn;
 const origConsoleError = console.error;
+
+function shouldFormatArgs(args) {
+  if (!args || args.length === 0) return false;
+  if (typeof args[0] !== "string") return true;
+  const str = args[0];
+  if (
+    str === "" ||
+    str.includes("┌─") ||
+    str.includes("├─") ||
+    str.includes("└─") ||
+    str.includes("│ ") ||
+    str.startsWith("┌") ||
+    str.startsWith("├") ||
+    str.startsWith("└") ||
+    str.startsWith("│")
+  ) {
+    return false;
+  }
+  return true;
+}
+
+console.log = function (...args) {
+  if (shouldFormatArgs(args)) {
+    const ts = getFormattedTimestamp();
+    origConsoleLog.apply(console, ["\n" + `${COLOR.DIM}[${ts}]${COLOR.RESET}`, ...args, "\n"]);
+  } else {
+    origConsoleLog.apply(console, args);
+  }
+};
+
+console.warn = function (...args) {
+  if (shouldFormatArgs(args)) {
+    const ts = getFormattedTimestamp();
+    origConsoleWarn.apply(console, ["\n" + `${COLOR.YELLOW}[${ts}] [WARN]${COLOR.RESET}`, ...args, "\n"]);
+  } else {
+    origConsoleWarn.apply(console, args);
+  }
+};
+
 console.error = function (...args) {
   const msg = args
     .map((a) => (typeof a === "object" ? (a?.stack || a?.message || JSON.stringify(a)) : String(a)))
     .join(" ");
 
-  if (msg.includes("Bad MAC") || msg.includes("Failed to decrypt message with any known session")) {
+  if (
+    msg.includes("Bad MAC") ||
+    msg.includes("Failed to decrypt message with any known session") ||
+    msg.includes("No session record") ||
+    msg.includes("failed to decrypt message") ||
+    msg.includes("SessionError")
+  ) {
     const m = msg.match(/([0-9]{11,20})/);
     if (m && m[1]) {
       const peerId = m[1];
@@ -1227,10 +1279,15 @@ console.error = function (...args) {
         }
       } catch (e) {}
     }
-    console.log(`[WhatsApp Gateway] Notice: Signal session ratchet refreshed for peer.`);
     return;
   }
-  origConsoleError.apply(console, args);
+
+  if (shouldFormatArgs(args)) {
+    const ts = getFormattedTimestamp();
+    origConsoleError.apply(console, ["\n" + `${COLOR.RED}[${ts}] [ERROR]${COLOR.RESET}`, ...args, "\n"]);
+  } else {
+    origConsoleError.apply(console, args);
+  }
 };
 
 function enrichSession(req, session) {
