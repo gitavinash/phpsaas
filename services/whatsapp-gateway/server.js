@@ -51,49 +51,8 @@ if (fs.existsSync(envFile)) {
 const PORT = process.env.PORT || 3001;
 const AUTH_DIR = path.join(__dirname, "auth_session");
 const CRM_WEBHOOK_URL = process.env.CRM_WEBHOOK_URL || "http://localhost/api/v3/whatsapp/webhook/";
-
-if (!fs.existsSync(AUTH_DIR)) {
-  fs.mkdirSync(AUTH_DIR, { recursive: true });
-}
-
-let UPLOAD_DIR = path.resolve(__dirname, "../../upload/whatsapp");
-let UPLOAD_DIR_IS_CRM = true;
-
-try {
-  if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-  }
-  const testFile = path.join(UPLOAD_DIR, `.perm_test_${Date.now()}`);
-  fs.writeFileSync(testFile, "ok");
-  fs.unlinkSync(testFile);
-} catch (e) {
-  console.warn(`[WhatsApp Gateway] Warning: Primary upload directory not writable (${e.message}). Falling back to local media_cache.`);
-  UPLOAD_DIR = path.join(__dirname, "media_cache");
-  UPLOAD_DIR_IS_CRM = false;
-  try {
-    if (!fs.existsSync(UPLOAD_DIR)) {
-      fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-    }
-  } catch (err2) {
-    console.error("[WhatsApp Gateway] Fatal: Could not create local media cache:", err2);
-  }
-}
-
-const app = express();
-app.use(cors());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-app.use("/media", express.static(UPLOAD_DIR));
-
-process.on("uncaughtException", (err) => {
-  console.error("[WhatsApp Gateway] Uncaught Exception:", err);
-});
-
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("[WhatsApp Gateway] Unhandled Rejection:", reason);
-});
-
-const logger = pino({ level: "silent" });
+const sessions = new Map();
+let lastKnownWebhookUrl = null;
 
 // ANSI Color formatting helpers for clean terminal readability
 const COLOR = {
@@ -125,6 +84,93 @@ function getFormattedTimestamp(date = new Date()) {
   return `${year}-${month}-${day} ${hours}:${mins}:${secs}`;
 }
 
+const origConsoleLog = console.log;
+const origConsoleWarn = console.warn;
+const origConsoleError = console.error;
+
+function shouldFormatArgs(args) {
+  if (!args || args.length === 0) return false;
+  if (typeof args[0] !== "string") return true;
+  const str = args[0];
+  if (
+    str === "" ||
+    str.includes("┌─") ||
+    str.includes("├─") ||
+    str.includes("└─") ||
+    str.includes("│ ") ||
+    str.startsWith("┌") ||
+    str.startsWith("├") ||
+    str.startsWith("└") ||
+    str.startsWith("│")
+  ) {
+    return false;
+  }
+  return true;
+}
+
+console.log = function (...args) {
+  if (shouldFormatArgs(args)) {
+    const ts = getFormattedTimestamp();
+    origConsoleLog.apply(console, ["\n" + `${COLOR.DIM}[${ts}]${COLOR.RESET}`, ...args, "\n"]);
+  } else {
+    origConsoleLog.apply(console, args);
+  }
+};
+
+console.warn = function (...args) {
+  if (shouldFormatArgs(args)) {
+    const ts = getFormattedTimestamp();
+    origConsoleWarn.apply(console, ["\n" + `${COLOR.YELLOW}[${ts}] [WARN]${COLOR.RESET}`, ...args, "\n"]);
+  } else {
+    origConsoleWarn.apply(console, args);
+  }
+};
+
+console.error = function (...args) {
+  const msg = args
+    .map((a) => (typeof a === "object" ? (a?.stack || a?.message || JSON.stringify(a)) : String(a)))
+    .join(" ");
+
+  if (
+    msg.includes("Bad MAC") ||
+    msg.includes("Failed to decrypt message with any known session") ||
+    msg.includes("No session record") ||
+    msg.includes("failed to decrypt message") ||
+    msg.includes("SessionError")
+  ) {
+    const m = msg.match(/([0-9]{11,20})/);
+    if (m && m[1]) {
+      const peerId = m[1];
+      try {
+        const authDirs = [AUTH_DIR];
+        for (const s of sessions.values()) {
+          if (s.authDir && !authDirs.includes(s.authDir)) authDirs.push(s.authDir);
+        }
+        for (const dir of authDirs) {
+          if (fs.existsSync(dir)) {
+            const files = fs.readdirSync(dir);
+            for (const f of files) {
+              if (f.startsWith("session-") && f.includes(peerId) && f.endsWith(".json")) {
+                try {
+                  fs.unlinkSync(path.join(dir, f));
+                } catch (e) {}
+              }
+            }
+          }
+        }
+      } catch (e) {}
+    }
+    return;
+  }
+
+  if (shouldFormatArgs(args)) {
+    const ts = getFormattedTimestamp();
+    origConsoleError.apply(console, ["\n" + `${COLOR.RED}[${ts}] [ERROR]${COLOR.RESET}`, ...args, "\n"]);
+  } else {
+    origConsoleError.apply(console, args);
+  }
+};
+
 function printCardLog(title, fields = [], color = COLOR.CYAN) {
   const timestamp = getFormattedTimestamp();
   const width = 80;
@@ -133,28 +179,75 @@ function printCardLog(title, fields = [], color = COLOR.CYAN) {
   const midBorder = `├${lineChar.repeat(width - 2)}`;
   const botBorder = `└${lineChar.repeat(width - 2)}`;
 
-  // Blank space on top
-  console.log("");
-  console.log(`${color}${COLOR.BOLD}${topBorder}${COLOR.RESET}`);
-  console.log(`${color}${COLOR.BOLD}│ ${title.padEnd(width - 28)} ${COLOR.DIM}${timestamp}${COLOR.RESET}`);
-  console.log(`${color}${midBorder}${COLOR.RESET}`);
+  origConsoleLog("");
+  origConsoleLog(`${color}${COLOR.BOLD}${topBorder}${COLOR.RESET}`);
+  origConsoleLog(`${color}${COLOR.BOLD}│ ${title.padEnd(width - 28)} ${COLOR.DIM}${timestamp}${COLOR.RESET}`);
+  origConsoleLog(`${color}${midBorder}${COLOR.RESET}`);
 
   for (const [label, val] of fields) {
     if (val !== undefined && val !== null && val !== "") {
-      const paddedLabel = `${COLOR.BOLD}${label.padEnd(18)}${COLOR.RESET}`;
+      const paddedLabel = `${COLOR.BOLD}${label.padEnd(20)}${COLOR.RESET}`;
       const strVal = String(val);
       const lines = strVal.split("\n");
-      console.log(`${color}│${COLOR.RESET}  ${paddedLabel} : ${lines[0]}`);
+      origConsoleLog(`${color}│${COLOR.RESET}  ${paddedLabel} : ${lines[0]}`);
       for (let i = 1; i < lines.length; i++) {
-        console.log(`${color}│${COLOR.RESET}  ${" ".repeat(18)}   ${lines[i]}`);
+        origConsoleLog(`${color}│${COLOR.RESET}  ${" ".repeat(20)}   ${lines[i]}`);
       }
     }
   }
 
-  console.log(`${color}${COLOR.BOLD}${botBorder}${COLOR.RESET}`);
-  // Blank space on bottom
-  console.log("");
+  origConsoleLog(`${color}${COLOR.BOLD}${botBorder}${COLOR.RESET}`);
+  origConsoleLog("");
 }
+
+if (!fs.existsSync(AUTH_DIR)) {
+  fs.mkdirSync(AUTH_DIR, { recursive: true });
+}
+
+let UPLOAD_DIR = path.resolve(__dirname, "../../upload/whatsapp");
+let UPLOAD_DIR_IS_CRM = true;
+
+try {
+  if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  }
+  const testFile = path.join(UPLOAD_DIR, `.perm_test_${Date.now()}`);
+  fs.writeFileSync(testFile, "ok");
+  fs.unlinkSync(testFile);
+} catch (e) {
+  const primaryUploadDir = UPLOAD_DIR;
+  UPLOAD_DIR = path.join(__dirname, "media_cache");
+  UPLOAD_DIR_IS_CRM = false;
+  try {
+    if (!fs.existsSync(UPLOAD_DIR)) {
+      fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+    }
+  } catch (err2) {
+    origConsoleError("[WhatsApp Gateway] Fatal: Could not create local media cache:", err2);
+  }
+  printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [STORAGE NOTICE] ${COLOR.RESET}`, [
+    ["Primary Storage", `${primaryUploadDir} (Not writable)`],
+    ["Active Storage", "services/whatsapp-gateway/media_cache (Local Fallback)"],
+    ["Reason", e.message || "Permission Denied"],
+    ["Storage Status", "Media attachments falling back to local gateway cache"],
+  ], COLOR.YELLOW);
+}
+
+const app = express();
+app.use(cors());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use("/media", express.static(UPLOAD_DIR));
+
+process.on("uncaughtException", (err) => {
+  origConsoleError("[WhatsApp Gateway] Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  origConsoleError("[WhatsApp Gateway] Unhandled Rejection:", reason);
+});
+
+const logger = pino({ level: "silent" });
 
 function logWhatsAppMessage({
   direction = "INCOMING",
@@ -502,10 +595,16 @@ class WhatsAppSession {
         if (Array.isArray(raw.lidMap)) raw.lidMap.forEach(([k, v]) => this.lidPhoneMap.set(k, v));
         if (Array.isArray(raw.messageStore)) raw.messageStore.forEach(([k, v]) => { if (k && v) this.messageStore.set(k, v); });
         if (raw.lastOutgoingPhone) this.lastOutgoingPhone = raw.lastOutgoingPhone;
-        console.log(`[WhatsApp Gateway:${this.sessionId}] Restored ${this.chatStore.size} chats, ${this.contactStore.size} contacts, ${this.messageStore.size} cached message keys, webhook: ${this.webhookUrl || 'default'}.`);
+        printCardLog(`${COLOR.BG_BLUE}${COLOR.BOLD} [SESSION RESTORED] ${COLOR.RESET}`, [
+          ["Session ID", this.sessionId],
+          ["Site Domain", this.getSiteDomain()],
+          ["Target Webhook", this.webhookUrl || CRM_WEBHOOK_URL || "Default CRM Webhook"],
+          ["Restored Data", `${this.chatStore.size.toLocaleString()} chats · ${this.contactStore.size.toLocaleString()} contacts · ${this.messageStore.size.toLocaleString()} cached keys`],
+          ["Status", "Session store loaded & ready"],
+        ], COLOR.BLUE);
       }
     } catch (e) {
-      console.error(`[WhatsApp Gateway:${this.sessionId}] Error reading store:`, e.message);
+      origConsoleError(`[WhatsApp Gateway:${this.sessionId}] Error reading store:`, e.message);
     }
   }
 
@@ -1197,98 +1296,9 @@ class WhatsAppSession {
 }
 
 // -----------------------------------------------------------------------------
-// Session Manager
 // -----------------------------------------------------------------------------
-const sessions = new Map();
-let lastKnownWebhookUrl = null;
-
-// Intercept libsignal Bad MAC noise, SessionError, and auto-repair broken session ratchets
-const origConsoleLog = console.log;
-const origConsoleWarn = console.warn;
-const origConsoleError = console.error;
-
-function shouldFormatArgs(args) {
-  if (!args || args.length === 0) return false;
-  if (typeof args[0] !== "string") return true;
-  const str = args[0];
-  if (
-    str === "" ||
-    str.includes("┌─") ||
-    str.includes("├─") ||
-    str.includes("└─") ||
-    str.includes("│ ") ||
-    str.startsWith("┌") ||
-    str.startsWith("├") ||
-    str.startsWith("└") ||
-    str.startsWith("│")
-  ) {
-    return false;
-  }
-  return true;
-}
-
-console.log = function (...args) {
-  if (shouldFormatArgs(args)) {
-    const ts = getFormattedTimestamp();
-    origConsoleLog.apply(console, ["\n" + `${COLOR.DIM}[${ts}]${COLOR.RESET}`, ...args, "\n"]);
-  } else {
-    origConsoleLog.apply(console, args);
-  }
-};
-
-console.warn = function (...args) {
-  if (shouldFormatArgs(args)) {
-    const ts = getFormattedTimestamp();
-    origConsoleWarn.apply(console, ["\n" + `${COLOR.YELLOW}[${ts}] [WARN]${COLOR.RESET}`, ...args, "\n"]);
-  } else {
-    origConsoleWarn.apply(console, args);
-  }
-};
-
-console.error = function (...args) {
-  const msg = args
-    .map((a) => (typeof a === "object" ? (a?.stack || a?.message || JSON.stringify(a)) : String(a)))
-    .join(" ");
-
-  if (
-    msg.includes("Bad MAC") ||
-    msg.includes("Failed to decrypt message with any known session") ||
-    msg.includes("No session record") ||
-    msg.includes("failed to decrypt message") ||
-    msg.includes("SessionError")
-  ) {
-    const m = msg.match(/([0-9]{11,20})/);
-    if (m && m[1]) {
-      const peerId = m[1];
-      try {
-        const authDirs = [AUTH_DIR];
-        for (const s of sessions.values()) {
-          if (s.authDir && !authDirs.includes(s.authDir)) authDirs.push(s.authDir);
-        }
-        for (const dir of authDirs) {
-          if (fs.existsSync(dir)) {
-            const files = fs.readdirSync(dir);
-            for (const f of files) {
-              if (f.startsWith("session-") && f.includes(peerId) && f.endsWith(".json")) {
-                try {
-                  fs.unlinkSync(path.join(dir, f));
-                } catch (e) {}
-              }
-            }
-          }
-        }
-      } catch (e) {}
-    }
-    return;
-  }
-
-  if (shouldFormatArgs(args)) {
-    const ts = getFormattedTimestamp();
-    origConsoleError.apply(console, ["\n" + `${COLOR.RED}[${ts}] [ERROR]${COLOR.RESET}`, ...args, "\n"]);
-  } else {
-    origConsoleError.apply(console, args);
-  }
-};
+// Session Routing & Helpers
+// -----------------------------------------------------------------------------
 
 function enrichSession(req, session) {
   if (!session || !req) return;
@@ -1318,9 +1328,14 @@ function enrichSession(req, session) {
   if (webhookUrl && typeof webhookUrl === "string" && webhookUrl.startsWith("http")) {
     lastKnownWebhookUrl = webhookUrl;
     if (session.webhookUrl !== webhookUrl) {
-      console.log(`[WhatsApp Gateway:${session.sessionId}] Dynamic webhook registered: ${webhookUrl}`);
       session.webhookUrl = webhookUrl;
       changed = true;
+      printCardLog(`${COLOR.BG_CYAN}${COLOR.BOLD} [WEBHOOK ATTACHED] ${COLOR.RESET}`, [
+        ["Session ID", session.sessionId],
+        ["Site Domain", session.getSiteDomain()],
+        ["Webhook URL", webhookUrl],
+        ["Status", "DYNAMIC CRM WEBHOOK REGISTERED"],
+      ], COLOR.CYAN);
     }
   }
 
@@ -1355,7 +1370,6 @@ try {
     if (d.isDirectory() && d.name !== "default") {
       const hasCreds = fs.existsSync(path.join(AUTH_DIR, d.name, "creds.json"));
       if (hasCreds) {
-        console.log(`[WhatsApp Gateway] Auto-loading discovered session: ${d.name}`);
         getSession(d.name);
       }
     }
@@ -1691,7 +1705,13 @@ app.post("/pairing-code", async (req, res) => {
     }
 
     const code = await s.sock.requestPairingCode(cleanPhone);
-    console.log(`[WhatsApp Gateway:${s.sessionId}] Pairing code for ${cleanPhone}: ${code}`);
+    printCardLog(`${COLOR.BG_GREEN}${COLOR.BOLD} [PAIRING CODE GENERATED] ${COLOR.RESET}`, [
+      ["Session ID", s.sessionId],
+      ["Site Domain", s.getSiteDomain()],
+      ["Phone Number", cleanPhone],
+      ["Pairing Code", code],
+      ["Instructions", "Enter this 8-character code in WhatsApp > Linked Devices"],
+    ], COLOR.GREEN);
     res.json({
       status: "success",
       session_id: s.sessionId,
@@ -1960,7 +1980,11 @@ app.all("/repair-sessions", async (req, res) => {
     } catch (e) {}
   }
 
-  console.log(`[WhatsApp Gateway] Repaired Signal sessions. Purged ${totalPurged} poisoned session files.`);
+  printCardLog(`${COLOR.BG_BLUE}${COLOR.BOLD} [SIGNAL REPAIR COMPLETE] ${COLOR.RESET}`, [
+    ["Action", "Purged corrupted pre-key session files"],
+    ["Purged Files", `${totalPurged} poisoned session files`],
+    ["Status", "Signal chat sessions cleared successfully"],
+  ], COLOR.BLUE);
   res.json({
     status: "success",
     purged_session_files: totalPurged,
@@ -1986,5 +2010,12 @@ app.all("/logout", async (req, res) => {
 
 // Start Express and WhatsApp Gateway
 app.listen(PORT, () => {
-  console.log(`[WhatsApp Gateway] Multi-Device Gateway Server running on http://127.0.0.1:${PORT}`);
+  printCardLog(`${COLOR.BG_GREEN}${COLOR.BOLD} [GATEWAY DAEMON ONLINE] ${COLOR.RESET}`, [
+    ["Listen Address", `http://127.0.0.1:${PORT}`],
+    ["Auth Directory", AUTH_DIR],
+    ["Media Storage", UPLOAD_DIR + (UPLOAD_DIR_IS_CRM ? " (Shared CRM Upload)" : " (Local Cache)")],
+    ["Discovered Sessions", `${sessions.size} active session(s) auto-loaded`],
+    ["Default Webhook", CRM_WEBHOOK_URL],
+    ["Status", "READY & LISTENING FOR API / SOCKETS"],
+  ], COLOR.GREEN);
 });
