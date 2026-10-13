@@ -2786,7 +2786,7 @@
               ${
                 lead.wa_mobile && self.leadViewOptions.show_whatsapp_button
                   ? `
-                <a href="https://wa.me/${lead.wa_mobile}?text=Hello%20${encodeURIComponent(lead.first_name || lead.name)}" target="_blank" class="v3-btn-contact-action wa" data-tooltip="Chat on WhatsApp">
+                <a href="/dashboard/whatsapp/?phone=${lead.wa_mobile.replace(/[^0-9]/g, '')}&name=${encodeURIComponent(lead.first_name || lead.name || '')}&lead_id=${self.leadId || ''}&new_chat=1" class="v3-btn-contact-action wa" data-tooltip="Chat on WhatsApp" data-phone="${lead.wa_mobile}" data-name="${encodeURIComponent(lead.first_name || lead.name || '')}" data-lead-id="${self.leadId || ''}">
                   ${WA_SVG} <span>WhatsApp</span>
                 </a>
               `
@@ -3078,7 +3078,7 @@
                     ${
                       lead.wa_mobile && self.leadViewOptions.show_whatsapp_button
                         ? `
-                      <a href="https://wa.me/${lead.wa_mobile}?text=Hello%20${encodeURIComponent(lead.first_name || lead.name)}" target="_blank" class="btn-fast-tile tile-wa" data-tooltip="Chat on WhatsApp">
+                      <a href="/dashboard/whatsapp/?phone=${lead.wa_mobile.replace(/[^0-9]/g, '')}&name=${encodeURIComponent(lead.first_name || lead.name || '')}&lead_id=${self.leadId || ''}&new_chat=1" class="btn-fast-tile tile-wa" data-tooltip="Chat on WhatsApp" data-phone="${lead.wa_mobile}" data-name="${encodeURIComponent(lead.first_name || lead.name || '')}" data-lead-id="${self.leadId || ''}">
                         <div class="fast-tile-icon">${WA_SVG}</div>
                         <div class="fast-tile-meta">
                           <span class="fast-tile-title">WhatsApp Chat</span>

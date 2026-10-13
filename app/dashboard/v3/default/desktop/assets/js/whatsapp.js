@@ -31,6 +31,9 @@
     eventsBound: false,
     isLoadingThreads: false,
     isLoadingMessages: false,
+    pendingLeadPhone: null,
+    pendingLeadName: null,
+    pendingLeadId: null,
 
     init: function () {
       const $app = $("#whatsappCrmApp");
@@ -41,11 +44,25 @@
 
       this.stopPolling();
       this.lastThreadsHtml = null;
+
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const qPhone = urlParams.get("phone");
+        if (qPhone) {
+          this.pendingLeadPhone = qPhone;
+          this.pendingLeadName = urlParams.get("name") || "";
+          this.pendingLeadId = urlParams.get("lead_id") || "";
+        }
+      } catch (e) {
+        console.warn("Error parsing URL params:", e);
+      }
+
       this.bindEvents();
       this.checkConnectionStatus();
       this.loadThreads();
       this.startPolling();
     },
+
 
     bindEvents: function () {
       if (this.eventsBound) return;
@@ -643,6 +660,7 @@
 
           if (res.chats.length === 0) {
             $container.html('<div class="wa-loading-threads"><i class="fi fi-rr-comment-slash"></i><span>No conversations found.</span></div>');
+            self.handlePendingLeadChat([]);
             return;
           }
 
@@ -737,10 +755,13 @@
           self.hasInitialLoaded = true;
 
           if (self.lastThreadsHtml === html && $container.children(".wa-thread-item").length > 0) {
+            self.handlePendingLeadChat(res.chats);
             return;
           }
           self.lastThreadsHtml = html;
           $container.html(html);
+          self.handlePendingLeadChat(res.chats);
+
         },
         error: function () {
           const $container = $("#waThreadsContainer");
@@ -1238,8 +1259,262 @@
       $("#waAttachFileName").text("");
       $("#waAttachFileSize").text("");
       $("#waComposerAttachPreview").addClass("d-none");
+    },
+
+    handlePendingLeadChat: function (chats) {
+      if (!this.pendingLeadPhone) return;
+      const self = this;
+      const targetPhone = this.pendingLeadPhone;
+      const targetName = this.pendingLeadName || "";
+      const targetLeadId = this.pendingLeadId || "";
+      const targetDigits = this.cleanDigits(targetPhone);
+
+      // Reset pending state
+      this.pendingLeadPhone = null;
+      this.pendingLeadName = null;
+      this.pendingLeadId = null;
+
+      // Clean browser address bar query string without reloading
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      // Check if thread exists
+      let matchedChat = null;
+      if (Array.isArray(chats) && targetDigits) {
+        matchedChat = chats.find(function (c) {
+          return self.cleanDigits(c.phone) === targetDigits;
+        });
+      }
+
+      if (matchedChat) {
+        // Open the existing conversation
+        self.selectChat(matchedChat.chat_id, matchedChat.phone);
+        setTimeout(function () {
+          $("#waMessageInput").focus();
+        }, 350);
+      } else {
+        // No conversation exists yet: automatically open New Chat modal prefilled with this lead!
+        $("#waNewChatModal").addClass("is-active").attr("aria-hidden", "false");
+        let formattedPhone = targetPhone.trim();
+        let onlyDigits = formattedPhone.replace(/[^0-9]/g, "");
+        if (onlyDigits.length === 10) formattedPhone = "+91" + onlyDigits;
+        else if (!formattedPhone.startsWith("+")) formattedPhone = "+" + onlyDigits;
+
+        $("#newChatPhone").val(formattedPhone);
+        $("#newChatName").val(targetName);
+        if (!$("#newChatMessage").val()) {
+          $("#newChatMessage").val(targetName ? ("Hello " + targetName + ", ") : "Hello, ");
+        }
+        setTimeout(function () {
+          $("#newChatMessage").focus();
+        }, 350);
+      }
     }
   };
+
+  /* ==========================================================================
+     V3 Global WhatsApp Lead Chat Helper
+     ========================================================================== */
+  window.V3WhatsAppLeadChat = {
+    cachedStatus: null,
+    cacheTime: 0,
+    CACHE_TTL: 10000, // 10 seconds cache
+
+    checkStatus: function (callback, force) {
+      const now = Date.now();
+      if (!force && this.cachedStatus !== null && (now - this.cacheTime < this.CACHE_TTL)) {
+        if (typeof callback === "function") {
+          callback(this.cachedStatus.isConnected, this.cachedStatus.res);
+        }
+        return;
+      }
+      const self = this;
+      $.ajax({
+        url: "/api/v3/integration/whatsapp_web/?action=check_status",
+        method: "GET",
+        dataType: "json",
+        success: function (res) {
+          const isConnected = res && res.status === "success" && (res.connection_status === "connected" || res.is_device_linked === true);
+          self.cachedStatus = { isConnected: isConnected, res: res };
+          self.cacheTime = Date.now();
+          if (typeof callback === "function") {
+            callback(isConnected, res);
+          }
+        },
+        error: function () {
+          self.cachedStatus = { isConnected: false, res: null };
+          self.cacheTime = Date.now();
+          if (typeof callback === "function") {
+            callback(false, null);
+          }
+        }
+      });
+    },
+
+    open: function (opts) {
+      opts = opts || {};
+      const self = this;
+      const phone = (opts.phone || "").trim();
+      const name = (opts.name || "").trim();
+      const leadId = opts.leadId || "";
+      const $btn = opts.$btn || null;
+
+      if (!phone) {
+        alert("No WhatsApp phone number available for this contact.");
+        return;
+      }
+
+      if ($btn && $btn.length) {
+        $btn.addClass("is-checking-wa");
+      }
+
+      this.checkStatus(function (isConnected, res) {
+        if ($btn && $btn.length) {
+          $btn.removeClass("is-checking-wa");
+        }
+
+        if (isConnected) {
+          // Open connected device chat inbox and start chat
+          const targetUrl = "/dashboard/whatsapp/?phone=" + encodeURIComponent(phone) +
+            (name ? "&name=" + encodeURIComponent(name) : "") +
+            (leadId ? "&lead_id=" + encodeURIComponent(leadId) : "") +
+            "&new_chat=1";
+          self.navigateTo(targetUrl);
+        } else {
+          // Device is not connected: show popup
+          self.showConnectPrompt(phone, name);
+        }
+      });
+    },
+
+    showConnectPrompt: function (phone, name) {
+      this.ensureModalHtml();
+      const $modal = $("#modalWaConnectDevicePrompt");
+      if (!$modal.length) return;
+
+      if (name || phone) {
+        $("#waConnectLeadName").text(name || "Customer");
+        $("#waConnectLeadPhone").text(phone || "");
+        $("#waConnectLeadPreview").removeClass("d-none");
+      } else {
+        $("#waConnectLeadPreview").addClass("d-none");
+      }
+
+      $modal.addClass("is-active").attr("aria-hidden", "false");
+    },
+
+    closeConnectPrompt: function () {
+      $("#modalWaConnectDevicePrompt").removeClass("is-active").attr("aria-hidden", "true");
+    },
+
+    navigateTo: function (url) {
+      const link = document.createElement("a");
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    },
+
+    ensureModalHtml: function () {
+      if ($("#modalWaConnectDevicePrompt").length > 0) return;
+      const html = `
+        <div class="v3-modal-overlay wa-connect-prompt-modal-overlay" id="modalWaConnectDevicePrompt" aria-hidden="true" role="dialog" aria-labelledby="waConnectPromptModalTitle">
+          <div class="v3-modal-dialog v3-modal-dialog-md wa-connect-prompt-dialog">
+            <div class="v3-modal-header">
+              <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box wa-connect-header-icon">
+                  <i class="fi fi-brands-whatsapp"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                  <h4 class="v3-modal-title" id="waConnectPromptModalTitle">Connect Device to Start WhatsApp Msg</h4>
+                  <span class="v3-modal-subtitle">WhatsApp CRM Live Messaging</span>
+                </div>
+              </div>
+              <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" aria-label="Close dialog" title="Close"><i class="fi fi-rr-cross"></i></button>
+            </div>
+            <div class="v3-modal-body wa-connect-prompt-body">
+              <div class="wa-connect-illustration-wrap">
+                <div class="wa-connect-pulse-ring">
+                  <div class="wa-connect-phone-icon">
+                    <i class="fi fi-rr-smartphone"></i>
+                    <span class="wa-connect-status-indicator">
+                      <i class="fi fi-rr-cross"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <h3 class="wa-connect-prompt-headline">No WhatsApp Device Connected</h3>
+              <p class="wa-connect-prompt-desc">
+                Please connect your WhatsApp device to start chatting with leads directly from your CRM inbox.
+              </p>
+              <div class="wa-connect-lead-preview d-none" id="waConnectLeadPreview">
+                <div class="wa-connect-lead-info">
+                  <span class="wa-connect-lead-label">Lead Contact:</span>
+                  <strong class="wa-connect-lead-name" id="waConnectLeadName">-</strong>
+                  <span class="wa-connect-lead-phone" id="waConnectLeadPhone">-</span>
+                </div>
+              </div>
+              <div class="wa-connect-info-callout">
+                <i class="fi fi-rr-info"></i>
+                <span>Linking your device allows real-time incoming messages, live team replies, and full conversation history inside CRM.</span>
+              </div>
+            </div>
+            <div class="v3-modal-footer wa-connect-prompt-footer">
+              <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
+              <a href="/dashboard/integration/whatsapp_web/" class="btn-v3-action btn-wa-connect-primary" id="btnGoToConnectWaDevice">
+                <i class="fi fi-rr-qr-scan"></i> <span>Connect WhatsApp Device</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+      $("body").append(html);
+    }
+  };
+
+  // Delegated click listener for WhatsApp chat buttons across all V3 pages
+  $(document).on("click", ".lead-wa-btn-vibrant, .v3-btn-contact-action.wa, .btn-fast-tile.tile-wa, .kanban-cta-btn.cta-whatsapp, [data-action='whatsapp-chat']", function (e) {
+    e.preventDefault();
+    const $btn = $(this);
+    let phone = $btn.data("phone") || $btn.attr("data-phone") || "";
+    let name = $btn.data("name") || $btn.attr("data-name") || "";
+    let leadId = $btn.data("lead-id") || $btn.attr("data-lead-id") || "";
+
+    if (name && typeof name === "string" && name.includes("%")) {
+      try { name = decodeURIComponent(name); } catch (_) {}
+    }
+
+    if (!phone) {
+      const href = $btn.attr("href") || "";
+      const match = href.match(/wa\.me\/([0-9+]+)/) || href.match(/phone=([0-9+]+)/);
+      if (match && match[1]) {
+        phone = match[1];
+      }
+    }
+
+    window.V3WhatsAppLeadChat.open({
+      phone: phone,
+      name: name,
+      leadId: leadId,
+      $btn: $btn
+    });
+  });
+
+  // Modal events for Connect Device prompt
+  $(document).on("click", "#modalWaConnectDevicePrompt .v3-modal-close-trigger", function () {
+    window.V3WhatsAppLeadChat.closeConnectPrompt();
+  });
+  $(document).on("click", "#modalWaConnectDevicePrompt", function (e) {
+    if (e.target === this) {
+      window.V3WhatsAppLeadChat.closeConnectPrompt();
+    }
+  });
+  $(document).on("keydown", function (e) {
+    if (e.key === "Escape" && $("#modalWaConnectDevicePrompt").hasClass("is-active")) {
+      window.V3WhatsAppLeadChat.closeConnectPrompt();
+    }
+  });
 
   $(document).ready(function () {
     window.V3WhatsApp.init();
@@ -1263,3 +1538,4 @@
     }, 50);
   });
 });
+

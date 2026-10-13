@@ -317,3 +317,4 @@ if ($isDigitalMarketing) {
         </div>
     </div>
 </div>
+<?php require_once dirname(__DIR__) . '/templates/whatsapp/device_connect_modal.php'; ?>

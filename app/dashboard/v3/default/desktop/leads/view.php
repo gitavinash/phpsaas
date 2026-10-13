@@ -1474,3 +1474,4 @@ if ($leadViewSiteId > 0 && isset($connection)) {
         </div>
     </div>
 </div>
+<?php require_once dirname(__DIR__) . '/templates/whatsapp/device_connect_modal.php'; ?>

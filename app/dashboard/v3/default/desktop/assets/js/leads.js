@@ -1085,9 +1085,12 @@
           </svg>
         `;
 
+        const waLeadName = encodeURIComponent(lead.first_name || lead.name || "");
+        const waLeadPhone = lead.wa_mobile ? lead.wa_mobile.replace(/[^0-9]/g, "") : "";
         const waIconBtn = lead.wa_mobile
-          ? `<a href="https://wa.me/${lead.wa_mobile}?text=Hello%20${encodeURIComponent(lead.first_name || lead.name)}" target="_blank" class="lead-wa-btn-vibrant" title="Chat on WhatsApp">${waSvg}</a>`
+          ? `<a href="/dashboard/whatsapp/?phone=${waLeadPhone}&name=${waLeadName}&lead_id=${lead.id || ''}&new_chat=1" class="lead-wa-btn-vibrant" title="Chat on WhatsApp" data-phone="${lead.wa_mobile}" data-name="${waLeadName}" data-lead-id="${lead.id || ''}">${waSvg}</a>`
           : "";
+
 
         const emailLink = lead.email
           ? `<a href="mailto:${lead.email}" class="lead-email-link" title="Email ${lead.email}"><i class="fi fi-rr-envelope"></i> ${lead.email}</a>`
