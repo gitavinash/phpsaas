@@ -41,6 +41,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
             $deliveryDate = '';
             $deliverySlot = '';
             $returnComment = '';
+            $returnReason = '';
 
             $metaQuery = mysqli_query($connection, "SELECT order_meta_key, order_meta_value FROM " . TABLE_PREFIX . "order_meta WHERE order_relation_id = '{$orderIdEsc}'");
             if ($metaQuery && mysqli_num_rows($metaQuery) > 0) {
@@ -51,7 +52,9 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
                         $deliveryDate = $val;
                     } else if (in_array($key, ['preferredtime', 'deliveryslot', 'timeslot', 'deliverypreferredtime'])) {
                         $deliverySlot = formatDeliverySlotAMPM($val);
-                    } else if (in_array($key, ['returncomment', 'returnreason'])) {
+                    } else if (in_array($key, ['returnreason', 'reason', 'undeliveredreason', 'failurereason', 'failedreason'])) {
+                        $returnReason = $val;
+                    } else if (in_array($key, ['returncomment', 'comment', 'reschedulecomment'])) {
                         if (empty($returnComment)) {
                             $returnComment = $val;
                         }
@@ -84,22 +87,34 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
                         'date' => $dateText,
                     );
 
-                    // Attach Reschedule/Return specific fields
+                    // Attach Reschedule/Return/Failure specific fields
                     if (strpos($logType, 'reschedule') !== false || stripos($statusText, 'reschedule') !== false) {
                         $logItem['deliveryDate'] = $deliveryDate;
                         $logItem['deliverySlot'] = $deliverySlot;
-                    } else if (strpos($logType, 'return') !== false || stripos($statusText, 'return') !== false) {
+                    } else if (strpos($logType, 'return') !== false || strpos($logType, 'delivery_failed') !== false || strpos($logType, 'failed') !== false || stripos($statusText, 'return') !== false || stripos($statusText, 'failed') !== false || stripos($statusText, 'unable') !== false) {
                         $logItem['deliveryDate'] = $deliveryDate;
                         $logItem['deliverySlot'] = $deliverySlot;
 
-                        // Parse return comment from log internal if meta wasn't found
-                        if (empty($returnComment) && !empty($logData['log_internal'])) {
+                        // Parse return comment/reason from log internal if not found in meta
+                        if (!empty($logData['log_internal'])) {
+                            if (preg_match('/Reason:\s*([^.]+)/i', $logData['log_internal'], $m)) {
+                                if (empty($returnReason)) {
+                                    $returnReason = trim($m[1]);
+                                }
+                                $logItem['reason'] = trim($m[1]);
+                            }
                             if (preg_match('/Comment:\s*(.*)$/i', $logData['log_internal'], $m)) {
-                                $logItem['returnComment'] = trim($m[1]);
-                            } else if (preg_match('/Reason:\s*(.*)$/i', $logData['log_internal'], $m)) {
+                                if (empty($returnComment)) {
+                                    $returnComment = trim($m[1]);
+                                }
                                 $logItem['returnComment'] = trim($m[1]);
                             }
-                        } else if (!empty($returnComment)) {
+                        }
+
+                        if (!empty($returnReason)) {
+                            $logItem['reason'] = $returnReason;
+                        }
+                        if (!empty($returnComment)) {
                             $logItem['returnComment'] = $returnComment;
                         }
                     }
@@ -110,7 +125,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
                 $status = 'success';
                 $msg = 'Order tracking data found.';
 
-                switch ($orderData['order_status']) {
+                switch ((string)$orderData['order_status']) {
                     case '0':
                         $orderStatus = 'Pending';
                         break;
@@ -141,6 +156,12 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
                     case '9':
                         $orderStatus = 'Rescheduled';
                         break;
+                    case '10':
+                        $orderStatus = 'Not in Service Area';
+                        break;
+                    case '11':
+                        $orderStatus = 'Delivery Failed';
+                        break;
                     default:
                         $orderStatus = "Unknown";
                         break;
@@ -150,12 +171,15 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
                     'order' => array(
                         'trackingId' => 'OD' . $trackingId,
                         'orderStatus' => $orderStatus,
+                        'statusCode' => (int)$orderData['order_status'],
                         'orderDate' => $orderData['order_generate'],
                         'deliveryCity' => $orderData['city_name'],
                         'deliveryState' => $orderData['state_name'],
                         'deliveryDate' => $deliveryDate,
                         'deliverySlot' => $deliverySlot,
                         'returnComment' => $returnComment,
+                        'reason' => $returnReason,
+                        'returnReason' => $returnReason,
                     ),
                     'logs' => $logs,
                 );

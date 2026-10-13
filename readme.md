@@ -207,6 +207,8 @@ Order status follows the standard logistics lifecycle from order creation to fin
 |    `7` | Cancelled          |
 |    `8` | Returned           |
 |    `9` | Rescheduled        |
+|    `10` | Not in Service Area        |
+|    `11` | Delivery Failed        |
 
 ### Normal Order Flow
 

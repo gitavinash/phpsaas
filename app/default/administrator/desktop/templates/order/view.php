@@ -43,7 +43,7 @@ if (isset($id)) {
 
                 $numericStatusMap = array(
                     '0' => 'Pending',
-                    '1' => 'Order Accepted by Vendor',
+                    '1' => 'Accepted',
                     '2' => 'Assigned to Vendor',
                     '3' => 'Processing',
                     '4' => 'Shipped',
@@ -52,6 +52,8 @@ if (isset($id)) {
                     '7' => 'Cancelled',
                     '8' => 'Returned',
                     '9' => 'Rescheduled',
+                    '10' => 'Not in Service Area',
+                    '11' => 'Delivery Failed',
                 );
 
                 if (isset($numericStatusMap[$orderStatusValue])) {
@@ -68,9 +70,9 @@ if (isset($id)) {
 
                 if (in_array($orderStatusRaw, array('delivered', 'complete', 'completed', 'success', 'confirmed', 'confirm'))) {
                     $orderStatusChipClass = 'badge-delivered';
-                } elseif (in_array($orderStatusRaw, array('waiting', 'pending', 'processing', 'on_hold', 'in_progress', 'out_for_delivery', 'shipped'))) {
+                } elseif (in_array($orderStatusRaw, array('waiting', 'pending', 'processing', 'on_hold', 'in_progress', 'out_for_delivery', 'shipped', 'assigned_to_vendor', 'accepted'))) {
                     $orderStatusChipClass = 'badge-pending';
-                } elseif (in_array($orderStatusRaw, array('cancel', 'cancelled', 'return', 'returned', 'failed', 'rejected'))) {
+                } elseif (in_array($orderStatusRaw, array('cancel', 'cancelled', 'return', 'returned', 'failed', 'rejected', 'delivery_failed', 'not_in_service_area'))) {
                     $orderStatusChipClass = 'badge-cancelled';
                 } elseif (in_array($orderStatusRaw, array('rescheduled', 'reschedule'))) {
                     $orderStatusChipClass = 'badge-rescheduled';

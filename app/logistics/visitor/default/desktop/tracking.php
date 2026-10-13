@@ -167,6 +167,10 @@
               <div class="meta-label">Delivery Slot</div>
               <div class="meta-value" id="display-delivery-slot">—</div>
             </div>
+            <div class="meta-item" id="reason-meta-item" style="display: none;">
+              <div class="meta-label">Reason</div>
+              <div class="meta-value" id="display-reason">—</div>
+            </div>
             <div class="meta-item" id="return-comment-meta-item" style="display: none;">
               <div class="meta-label">Return Comment</div>
               <div class="meta-value" id="display-return-comment">—</div>

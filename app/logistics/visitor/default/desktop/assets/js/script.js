@@ -265,9 +265,10 @@ function renderTracking(data) {
   setText("display-order-date",    order.orderDate ? formatDate(order.orderDate) : "—");
   setText("display-delivery-city", deliveryLocation);
 
-  // -- Delivery Date, Slot, and Comment fields --
+  // -- Delivery Date, Slot, Reason, and Comment fields --
   const delDateItem = document.getElementById("delivery-date-meta-item");
   const delSlotItem = document.getElementById("delivery-slot-meta-item");
+  const reasonItem = document.getElementById("reason-meta-item");
   const retCommentItem = document.getElementById("return-comment-meta-item");
   const resCommentItem = document.getElementById("reschedule-comment-meta-item");
 
@@ -283,6 +284,28 @@ function renderTracking(data) {
     if (delSlotItem) delSlotItem.style.display = "block";
   } else if (delSlotItem) {
     delSlotItem.style.display = "none";
+  }
+
+  // Reason (Show if status is NDA / Delivery Failed / Not in Service Area)
+  const orderStatusStr = (order.orderStatus || "").trim();
+  const statusCode = String(order.statusCode || "");
+  const reasonText = order.reason || order.returnReason || "";
+
+  const isNdaStatus = (
+    orderStatusStr.toUpperCase() === "NDA" ||
+    orderStatusStr.toLowerCase().includes("nda") ||
+    orderStatusStr.toLowerCase() === "delivery failed" ||
+    orderStatusStr.toLowerCase() === "not in service area" ||
+    statusCode === "11" ||
+    statusCode === "10" ||
+    (reasonText && reasonText.toLowerCase().includes("deliverable address"))
+  );
+
+  if (isNdaStatus && reasonText) {
+    setText("display-reason", cleanCommentText(reasonText));
+    if (reasonItem) reasonItem.style.display = "block";
+  } else if (reasonItem) {
+    reasonItem.style.display = "none";
   }
 
   if (order.returnComment) {
@@ -347,11 +370,11 @@ function renderStatusBadge(status) {
   let cls = "badge-neutral";
   if      (s.includes("delivered"))               cls = "badge-success";
   else if (s.includes("out for delivery"))         cls = "badge-warning";
-  else if (s.includes("delivery") && !s.includes("out")) cls = "badge-warning";
+  else if (s.includes("delivery") && !s.includes("out") && !s.includes("failed")) cls = "badge-warning";
   else if (s.includes("transit"))                 cls = "badge-primary";
   else if (s.includes("picked") || s.includes("dispatched")) cls = "badge-primary";
   else if (s.includes("pending") || s.includes("booked") || s.includes("received")) cls = "badge-neutral";
-  else if (s.includes("cancelled") || s.includes("failed") || s.includes("returned")) cls = "badge-danger";
+  else if (s.includes("cancelled") || s.includes("failed") || s.includes("returned") || s === "nda" || s.includes("nda")) cls = "badge-danger";
 
   wrap.innerHTML = `
         <span class="badge ${cls}" role="status" aria-label="Current status: ${escHtml(status)}">
@@ -374,6 +397,8 @@ function renderLatestIcon(status) {
   let svg;
   if (s.includes("delivered")) {
     svg = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else if (s.includes("failed") || s === "nda" || s.includes("nda")) {
+    svg = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
   } else if (s.includes("delivery")) {
     svg = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`;
   } else if (s.includes("transit")) {
@@ -409,7 +434,7 @@ function updateProgress(stageOrStatus) {
   let currentIdx = 0;
   if (val.includes("reschedul")) {
     currentIdx = 3;
-  } else if (val.includes("return")) {
+  } else if (val.includes("return") || val.includes("failed") || val.includes("nda")) {
     currentIdx = 4;
   } else {
     for (let i = STAGES.length - 1; i >= 0; i--) {
@@ -426,6 +451,8 @@ function updateProgress(stageOrStatus) {
 
     if (idx === 3 && val.includes("reschedul")) {
       labelText = "Rescheduled";
+    } else if (idx === 4 && (val.includes("failed") || val.includes("nda"))) {
+      labelText = "Delivery Failed";
     } else if (idx === 4 && val.includes("return")) {
       labelText = "Returned";
     }
@@ -490,6 +517,14 @@ function renderTimeline(logs) {
         detailsHtml += `<div style="font-size:.8rem;color:#475569;margin-top:2px;display:flex;align-items:center;gap:4px;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           Delivery Slot: <strong style="color:#0f172a;">${escHtml(item.deliverySlot)}</strong>
+        </div>`;
+      }
+
+      const reasonVal = item.reason || null;
+      if (reasonVal) {
+        detailsHtml += `<div style="font-size:.8rem;color:#dc2626;margin-top:4px;display:flex;align-items:flex-start;gap:4px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:2px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Reason: <strong style="color:#b91c1c;">${escHtml(cleanCommentText(reasonVal))}</strong></span>
         </div>`;
       }
 
