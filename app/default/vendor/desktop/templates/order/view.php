@@ -72,7 +72,7 @@ if (isset($id)) {
                     $orderStatusChipClass = 'badge-delivered';
                 } elseif (in_array($orderStatusRaw, array('waiting', 'pending', 'processing', 'on_hold', 'in_progress', 'out_for_delivery', 'shipped', 'assigned_to_vendor', 'accepted'))) {
                     $orderStatusChipClass = 'badge-pending';
-                } elseif (in_array($orderStatusRaw, array('cancel', 'cancelled', 'return', 'returned', 'failed', 'rejected', 'delivery_failed', 'not_in_service_area'))) {
+                } elseif (in_array($orderStatusRaw, array('cancel', 'cancelled', 'return', 'returned', 'failed', 'rejected', 'delivery_failed', 'unable_to_deliver', 'not_in_service_area'))) {
                     $orderStatusChipClass = 'badge-cancelled';
                 } elseif (in_array($orderStatusRaw, array('rescheduled', 'reschedule'))) {
                     $orderStatusChipClass = 'badge-rescheduled';

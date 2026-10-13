@@ -286,7 +286,7 @@ function renderTracking(data) {
     delSlotItem.style.display = "none";
   }
 
-  // Reason (Show if status is NDA / Delivery Failed / Not in Service Area)
+  // Reason (Show if status is NDA / Delivery Failed / Unable to Deliver / Not in Service Area / Pending with reason)
   const orderStatusStr = (order.orderStatus || "").trim();
   const statusCode = String(order.statusCode || "");
   const reasonText = order.reason || order.returnReason || "";
@@ -295,13 +295,23 @@ function renderTracking(data) {
     orderStatusStr.toUpperCase() === "NDA" ||
     orderStatusStr.toLowerCase().includes("nda") ||
     orderStatusStr.toLowerCase() === "delivery failed" ||
+    orderStatusStr.toLowerCase() === "unable to deliver" ||
     orderStatusStr.toLowerCase() === "not in service area" ||
     statusCode === "11" ||
     statusCode === "10" ||
     (reasonText && reasonText.toLowerCase().includes("deliverable address"))
   );
 
-  if (isNdaStatus && reasonText) {
+  const showReason = Boolean(
+    reasonText && (
+      isNdaStatus ||
+      statusCode === "0" ||
+      orderStatusStr.toLowerCase() === "pending" ||
+      orderStatusStr.toLowerCase().includes("unable")
+    )
+  );
+
+  if (showReason) {
     setText("display-reason", cleanCommentText(reasonText));
     if (reasonItem) reasonItem.style.display = "block";
   } else if (reasonItem) {
@@ -374,7 +384,7 @@ function renderStatusBadge(status) {
   else if (s.includes("transit"))                 cls = "badge-primary";
   else if (s.includes("picked") || s.includes("dispatched")) cls = "badge-primary";
   else if (s.includes("pending") || s.includes("booked") || s.includes("received")) cls = "badge-neutral";
-  else if (s.includes("cancelled") || s.includes("failed") || s.includes("returned") || s === "nda" || s.includes("nda")) cls = "badge-danger";
+  else if (s.includes("cancelled") || s.includes("failed") || s.includes("returned") || s === "nda" || s.includes("nda") || s.includes("unable")) cls = "badge-danger";
 
   wrap.innerHTML = `
         <span class="badge ${cls}" role="status" aria-label="Current status: ${escHtml(status)}">
@@ -397,7 +407,7 @@ function renderLatestIcon(status) {
   let svg;
   if (s.includes("delivered")) {
     svg = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-  } else if (s.includes("failed") || s === "nda" || s.includes("nda")) {
+  } else if (s.includes("failed") || s === "nda" || s.includes("nda") || s.includes("unable")) {
     svg = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
   } else if (s.includes("delivery")) {
     svg = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`;
@@ -434,7 +444,7 @@ function updateProgress(stageOrStatus) {
   let currentIdx = 0;
   if (val.includes("reschedul")) {
     currentIdx = 3;
-  } else if (val.includes("return") || val.includes("failed") || val.includes("nda")) {
+  } else if (val.includes("return") || val.includes("failed") || val.includes("nda") || val.includes("unable")) {
     currentIdx = 4;
   } else {
     for (let i = STAGES.length - 1; i >= 0; i--) {
@@ -451,7 +461,7 @@ function updateProgress(stageOrStatus) {
 
     if (idx === 3 && val.includes("reschedul")) {
       labelText = "Rescheduled";
-    } else if (idx === 4 && (val.includes("failed") || val.includes("nda"))) {
+    } else if (idx === 4 && (val.includes("failed") || val.includes("nda") || val.includes("unable"))) {
       labelText = "Delivery Failed";
     } else if (idx === 4 && val.includes("return")) {
       labelText = "Returned";
@@ -528,19 +538,16 @@ function renderTimeline(logs) {
         </div>`;
       }
 
-      const retComment = item.returnComment || (item.status && item.status.toLowerCase().includes('return') ? item.comment : null);
-      if (retComment) {
-        detailsHtml += `<div style="font-size:.8rem;color:#dc2626;margin-top:4px;display:flex;align-items:flex-start;gap:4px;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:2px;flex-shrink:0;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span>Return Comment: <strong style="color:#b91c1c;">${escHtml(cleanCommentText(retComment))}</strong></span>
-        </div>`;
-      }
+      const commentVal = item.comment || item.returnComment || item.rescheduleComment || null;
+      if (commentVal) {
+        const isReschedule = item.status && item.status.toLowerCase().includes('reschedule');
+        const isFailureOrReturn = item.status && (item.status.toLowerCase().includes('fail') || item.status.toLowerCase().includes('return') || item.status.toLowerCase().includes('unable'));
+        const commentColor = isFailureOrReturn ? '#dc2626' : (isReschedule ? '#2563eb' : '#475569');
+        const labelText = isReschedule ? 'Reschedule Comment' : (item.status && item.status.toLowerCase().includes('return') ? 'Return Comment' : 'Comment');
 
-      const resComment = item.rescheduleComment || (item.status && item.status.toLowerCase().includes('reschedule') ? item.comment : null);
-      if (resComment) {
-        detailsHtml += `<div style="font-size:.8rem;color:#2563eb;margin-top:4px;display:flex;align-items:flex-start;gap:4px;">
+        detailsHtml += `<div style="font-size:.8rem;color:${commentColor};margin-top:4px;display:flex;align-items:flex-start;gap:4px;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:2px;flex-shrink:0;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span>Reschedule Comment: <strong style="color:#1d4ed8;">${escHtml(cleanCommentText(resComment))}</strong></span>
+          <span>${labelText}: <strong style="color:${commentColor};">${escHtml(cleanCommentText(commentVal))}</strong></span>
         </div>`;
       }
 

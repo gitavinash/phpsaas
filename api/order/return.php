@@ -68,8 +68,8 @@ if (!empty($commentEsc)) {
 
 // Create activity log
 $logAction = $isNda ? 'delivery_failed' : 'pending';
-$logTitle = $isNda ? 'Delivery Failed' : 'Unable to Deliver - Pending';
-$logInternal = ($isNda ? "Delivery failed" : "Unable to deliver (Order marked as Pending)") . " for Order #{$idEsc}" . (!empty($return_reason) ? ". Reason: {$return_reason}" : '') . (!empty($comment) ? ". Comment: {$comment}" : '');
+$logTitle = $isNda ? 'Unable to Deliver' : 'Pending';
+$logInternal = ($isNda ? "Unable to deliver" : "Order marked as Pending") . " for Order #{$idEsc}" . (!empty($return_reason) ? ". Reason: {$return_reason}" : '') . (!empty($comment) ? ". Comment: {$comment}" : '');
 createLog(
     $connection,
     $idEsc,
@@ -81,5 +81,5 @@ createLog(
 
 echo json_encode([
     'status' => 200,
-    'msg' => $isNda ? 'Order marked as Delivery Failed.' : 'Order marked as Pending.'
+    'msg' => $isNda ? 'Order marked as Unable to Deliver.' : 'Order marked as Pending.'
 ]);

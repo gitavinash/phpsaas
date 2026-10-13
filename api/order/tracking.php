@@ -82,40 +82,71 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
                     $dateText = !empty($logData['log_date']) ? $logData['log_date'] : (!empty($logData['log_time']) ? $logData['log_time'] : '');
                     $logType = strtolower((string)($logData['log_type'] ?? ''));
 
+                    $internal = trim((string)($logData['log_internal'] ?? ''));
+
                     $logItem = array(
                         'status' => $statusText,
                         'date' => $dateText,
                     );
 
-                    // Attach Reschedule/Return/Failure specific fields
-                    if (strpos($logType, 'reschedule') !== false || stripos($statusText, 'reschedule') !== false) {
-                        $logItem['deliveryDate'] = $deliveryDate;
-                        $logItem['deliverySlot'] = $deliverySlot;
-                    } else if (strpos($logType, 'return') !== false || strpos($logType, 'delivery_failed') !== false || strpos($logType, 'failed') !== false || stripos($statusText, 'return') !== false || stripos($statusText, 'failed') !== false || stripos($statusText, 'unable') !== false) {
-                        $logItem['deliveryDate'] = $deliveryDate;
-                        $logItem['deliverySlot'] = $deliverySlot;
+                    // Dedicated log details parsed exclusively from this entry's internal record
+                    if (!empty($internal)) {
+                        // 1. Dedicated Reason (e.g., "Reason: Not Deliverable Address" or "rejected with reason: ...")
+                        if (preg_match('/Reason:\s*([^.]+?)(?:\.\s*(?:Comment|Photo):|$)/i', $internal, $m)) {
+                            $logItem['reason'] = trim($m[1]);
+                        } elseif (preg_match('/rejected with reason:\s*(.*)$/i', $internal, $m)) {
+                            $logItem['reason'] = trim($m[1]);
+                        }
 
-                        // Parse return comment/reason from log internal if not found in meta
-                        if (!empty($logData['log_internal'])) {
-                            if (preg_match('/Reason:\s*([^.]+)/i', $logData['log_internal'], $m)) {
-                                if (empty($returnReason)) {
-                                    $returnReason = trim($m[1]);
-                                }
-                                $logItem['reason'] = trim($m[1]);
+                        // 2. Dedicated Comment (e.g., "Comment: Unable to deliver" or "accepted with comment: ...")
+                        if (preg_match('/Comment:\s*(.*?)(?:\.\s*Photo:|$)/i', $internal, $m)) {
+                            $c = trim($m[1]);
+                            if (!empty($c)) {
+                                $logItem['comment'] = $c;
                             }
-                            if (preg_match('/Comment:\s*(.*)$/i', $logData['log_internal'], $m)) {
-                                if (empty($returnComment)) {
-                                    $returnComment = trim($m[1]);
-                                }
-                                $logItem['returnComment'] = trim($m[1]);
+                        } elseif (preg_match('/accepted with comment:\s*(.*)$/i', $internal, $m)) {
+                            $c = trim($m[1]);
+                            if (!empty($c)) {
+                                $logItem['comment'] = $c;
                             }
                         }
 
-                        if (!empty($returnReason)) {
-                            $logItem['reason'] = $returnReason;
+                        // 3. Dedicated Reschedule details (only for reschedule entries that record date/slot in log_internal)
+                        if (strpos($logType, 'reschedule') !== false || stripos($statusText, 'reschedule') !== false) {
+                            if (preg_match('/to\s+(\d{4}-\d{2}-\d{2})/i', $internal, $m)) {
+                                $logItem['deliveryDate'] = trim($m[1]);
+                            }
+                            if (preg_match('/\(([^)]*(?:AM|PM|\d{1,2}:\d{2})[^)]*)\)/i', $internal, $m)) {
+                                $logItem['deliverySlot'] = trim($m[1]);
+                            }
                         }
-                        if (!empty($returnComment)) {
-                            $logItem['returnComment'] = $returnComment;
+                    }
+
+                    // Only "Not Delivery address" shows "Unable to Deliver", for others just show "Pending" with reason and comment
+                    $isReturnOrUnable = (
+                        $logType === 'delivery_failed' ||
+                        $logType === 'unable_to_deliver' ||
+                        stripos($statusText, 'unable to deliver') !== false ||
+                        stripos($statusText, 'delivery failed') !== false ||
+                        (!empty($logItem['reason']) && ($logType === 'pending' || stripos($statusText, 'pending') !== false))
+                    );
+
+                    if ($isReturnOrUnable) {
+                        $checkReason = $logItem['reason'] ?? '';
+                        $isNdaReason = (
+                            strcasecmp(trim($checkReason), 'Not Deliverable Address') === 0 ||
+                            strcasecmp(trim($checkReason), 'Not Delivery address') === 0 ||
+                            strcasecmp(trim($checkReason), 'Not Deliaverable address') === 0 ||
+                            strcasecmp(trim($checkReason), 'NDA') === 0 ||
+                            stripos($checkReason, 'deliverable address') !== false ||
+                            stripos($checkReason, 'deliaverable address') !== false ||
+                            stripos($checkReason, 'delivery address') !== false
+                        );
+
+                        if ($isNdaReason) {
+                            $logItem['status'] = 'Unable to Deliver';
+                        } else {
+                            $logItem['status'] = 'Pending';
                         }
                     }
 
