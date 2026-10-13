@@ -29,6 +29,13 @@
         vehiclesLoading: false,
         termsLoaded: false,
         termsLoading: false,
+        lastCreatedQuote: null,
+        lastSavedPdfUrl: null,
+        lastSavedPdfFullUrl: null,
+        lastSavedPdfFileName: null,
+        lastCustomerMobile: "",
+        isGeneratingPdf: false,
+        pdfGenerationCallbacks: [],
 
         init: function () {
             if (!$("#modalSendTransporterQuotation").length) {
@@ -55,7 +62,35 @@
                 $(this).siblings(".v3-single-datepicker-input").focus().click();
             });
 
-            // Reactive Billing Calculations
+            // When KM Running (Daily Limit) changes, update minimum Total Running KM
+            $(document).on("input change", "#tqKmRunning", function () {
+                var dailyLimit = parseFloat($(this).val()) || 0;
+                if (dailyLimit > 0) {
+                    $("#tqTotalRunningKm").attr("min", dailyLimit);
+                    var currentTotalKm = parseFloat($("#tqTotalRunningKm").val());
+                    if (isNaN(currentTotalKm) || currentTotalKm < dailyLimit) {
+                        $("#tqTotalRunningKm").val(dailyLimit);
+                    }
+                }
+                self.recalculateTotalFromKm();
+            });
+
+            // Reactive Billing Calculations from Total Running KM and Extra KM Rate
+            $(document).on("input change", "#tqTotalRunningKm, #tqExtraKmCharge", function () {
+                self.recalculateTotalFromKm();
+            });
+
+            // Enforce minimum on blur / change of Total Running KM
+            $(document).on("blur change", "#tqTotalRunningKm", function () {
+                var dailyLimit = parseFloat($("#tqKmRunning").val()) || 0;
+                var currentTotalKm = parseFloat($(this).val());
+                if (dailyLimit > 0 && (isNaN(currentTotalKm) || currentTotalKm < dailyLimit)) {
+                    $(this).val(dailyLimit);
+                    self.recalculateTotalFromKm();
+                }
+            });
+
+            // Reactive Billing Calculations from Total Cost or Advance %
             $(document).on("input change", "#tqTotalCost, #tqAdvancePercent", function () {
                 self.recalculateBilling();
             });
@@ -63,6 +98,7 @@
             // Change Vehicle Type filter (support both native change and Select2 events)
             $(document).on("change select2:select", "#tqVehicleType", function () {
                 var selectedCat = $(this).val();
+                self.pendingVehicleType = selectedCat;
                 self.filterVehicleModels(selectedCat);
             });
 
@@ -148,6 +184,10 @@
 
             $(document).on("click", "#tqBtnPreviewDownloadPdf", function (e) {
                 e.preventDefault();
+                if (self.lastSavedPdfFullUrl) {
+                    window.open(self.lastSavedPdfFullUrl, "_blank");
+                    return;
+                }
                 var iframe = document.getElementById("tqPreviewIframe");
                 if (iframe && iframe.contentWindow) {
                     iframe.contentWindow.focus();
@@ -159,8 +199,12 @@
 
             $(document).on("click", "#tqBtnPreviewSendQuote", function (e) {
                 e.preventDefault();
-                $("#modalTransporterQuotePreview").removeClass("is-active");
-                $("#modalTransporterQuoteShare").addClass("is-active");
+                self.sendQuotationViaWhatsApp(false);
+            });
+
+            $(document).on("click", "#tqBtnSendWaDirect", function (e) {
+                e.preventDefault();
+                self.sendQuotationViaWhatsApp(true);
             });
 
             $(document).on("click", "#modalTransporterQuotePreview .v3-modal-close-trigger", function (e) {
@@ -409,19 +453,97 @@
 
             // Pre-fill Billing
             var quoteVal = (lead.quotation && lead.quotation.price) ? parseFloat(lead.quotation.price) : 0;
-            $("#tqTotalCost").val(quoteVal > 0 ? quoteVal : "");
-            $("#tqKmRunning").val(250);
-            $("#tqExtraKmCharge").val(14);
+            var details = (lead.quotation && (lead.quotation.details || lead.quotation.content || lead.quotation.parsed_content)) ? (lead.quotation.details || lead.quotation.content || lead.quotation.parsed_content) : {};
+            var billing = details.billing || (lead.quotation && lead.quotation.billing) || {};
+
+            var kmDaily = (billing.km_running !== undefined && billing.km_running !== null) ? parseFloat(billing.km_running) : 250;
+            var rawTotalRunning = (billing.total_running_km !== undefined && billing.total_running_km !== null && billing.total_running_km !== "") ? parseFloat(billing.total_running_km) : null;
+            var totalRunning = (rawTotalRunning !== null && !isNaN(rawTotalRunning) && rawTotalRunning >= kmDaily) ? rawTotalRunning : kmDaily;
+            var extraKm = (billing.extra_km_charge !== undefined && billing.extra_km_charge !== null) ? parseFloat(billing.extra_km_charge) : 14;
+            var advPercent = (billing.advance_percent !== undefined && billing.advance_percent !== null) ? parseFloat(billing.advance_percent) : self.defaultAdvancePercent;
+
+            $("#tqKmRunning").val(kmDaily);
+            $("#tqTotalRunningKm").val(totalRunning).attr("min", kmDaily);
+            $("#tqExtraKmCharge").val(extraKm);
+            $("#tqAdvancePercent").val(advPercent);
+
+            if (quoteVal > 0) {
+                $("#tqTotalCost").val(quoteVal);
+            } else if (parseFloat(totalRunning) > 0 && parseFloat(extraKm) > 0) {
+                var autoCost = roundToTwo(parseFloat(totalRunning) * parseFloat(extraKm));
+                $("#tqTotalCost").val(autoCost > 0 ? autoCost : "");
+            } else {
+                $("#tqTotalCost").val("");
+            }
 
             self.recalculateBilling();
 
+            // Resolve vehicle and fleet preference from lead details
+            var leadVehicle = self.resolveLeadVehicle(lead);
+            var targetCategory = leadVehicle.category || "";
+            var targetModel = leadVehicle.vehicleId || leadVehicle.model || "";
+
+            // If we have cached vehicles and targetModel but no category yet, try finding category from vehiclesCache
+            if (!targetCategory && targetModel && self.vehiclesCache.length > 0) {
+                var sModel = String(targetModel).toLowerCase();
+                for (var i = 0; i < self.vehiclesCache.length; i++) {
+                    var vItem = self.vehiclesCache[i];
+                    if (String(vItem.id) === sModel || (vItem.title && (vItem.title.toLowerCase().indexOf(sModel) !== -1 || sModel.indexOf(vItem.title.toLowerCase()) !== -1))) {
+                        targetCategory = (vItem.type || "").toLowerCase();
+                        break;
+                    }
+                }
+            }
+
+            self.pendingVehicleType = targetCategory;
+            self.pendingVehicleModel = targetModel;
+
             // Initialize and sync Select2 dropdowns
             self.initSelect2Dropdowns();
-            $("#tqVehicleType").val("").trigger("change.select2");
-            self.filterVehicleModels("");
+            $("#tqVehicleType").val(targetCategory || "").trigger("change.select2");
+            self.filterVehicleModels(targetCategory, targetModel);
 
             // Open Modal
             $("#modalSendTransporterQuotation").addClass("is-active");
+        },
+
+        normalizeVehicleCategory: function (catStr) {
+            if (!catStr) return "";
+            var s = String(catStr).toLowerCase().trim();
+            if (s.indexOf("sedan") !== -1 || s.indexOf("dzire") !== -1 || s.indexOf("etios") !== -1) return "sedan";
+            if (s.indexOf("suv") !== -1 || s.indexOf("crysta") !== -1 || s.indexOf("innova") !== -1 || s.indexOf("scorpio") !== -1 || s.indexOf("ertiga") !== -1) return "suv";
+            if (s.indexOf("mpv") !== -1 || s.indexOf("marazzo") !== -1 || s.indexOf("carens") !== -1) return "mpv";
+            if (s.indexOf("tempo") !== -1 || s.indexOf("traveller") !== -1 || s.indexOf("traveler") !== -1 || s.indexOf("winger") !== -1) return "traveller";
+            if (s.indexOf("bus") !== -1 || s.indexOf("coach") !== -1) return "bus";
+            if (s.indexOf("hatch") !== -1 || s.indexOf("swift") !== -1 || s.indexOf("wagon") !== -1 || s.indexOf("i10") !== -1) return "hatchback";
+            if (s.indexOf("van") !== -1 || s.indexOf("commercial") !== -1 || s.indexOf("lcv") !== -1) return "light_commercial_vehicle";
+            return s;
+        },
+
+        resolveLeadVehicle: function (lead) {
+            var self = this;
+            lead = lead || {};
+            var travel = lead.travel_details || {};
+            var details = (lead.quotation && (lead.quotation.details || lead.quotation.content || lead.quotation.parsed_content)) ? (lead.quotation.details || lead.quotation.content || lead.quotation.parsed_content) : {};
+            var qVeh = (lead.quotation && lead.quotation.vehicle) ? lead.quotation.vehicle : (details.vehicle || {});
+            var tCust = travel.custom_fields || {};
+            var lCust = lead.custom_fields || {};
+
+            var rawType = travel.vehicle_type || qVeh.vehicle_type || qVeh.type || lead.vehicle_type || tCust.vehicle_type || lCust.vehicle_type || "";
+            var rawModel = travel.vehicle_model || qVeh.vehicle_title || qVeh.title || qVeh.vehicle_id || lead.vehicle_model || lead.preferred_vehicle || lead.vehicle || tCust.vehicle_model || lCust.vehicle_model || "";
+
+            var vehicleId = qVeh.vehicle_id || (isFinite(rawModel) && parseInt(rawModel, 10) > 0 ? parseInt(rawModel, 10) : null);
+
+            var category = self.normalizeVehicleCategory(rawType);
+            if (!category && rawModel) {
+                category = self.normalizeVehicleCategory(rawModel);
+            }
+
+            return {
+                category: category,
+                model: rawModel,
+                vehicleId: vehicleId
+            };
         },
 
         preloadVehicles: function () {
@@ -437,7 +559,20 @@
                     self.vehiclesLoaded = true;
                     if (res && res.status === "success" && Array.isArray(res.data)) {
                         self.vehiclesCache = res.data;
-                        self.filterVehicleModels($("#tqVehicleType").val());
+                        var catToFilter = self.pendingVehicleType !== undefined ? self.pendingVehicleType : ($("#tqVehicleType").val() || "");
+                        var modelToSelect = self.pendingVehicleModel !== undefined ? self.pendingVehicleModel : "";
+                        if (!catToFilter && modelToSelect) {
+                            var sM = String(modelToSelect).toLowerCase();
+                            for (var k = 0; k < self.vehiclesCache.length; k++) {
+                                var vMatch = self.vehiclesCache[k];
+                                if (String(vMatch.id) === sM || (vMatch.title && (vMatch.title.toLowerCase().indexOf(sM) !== -1 || sM.indexOf(vMatch.title.toLowerCase()) !== -1))) {
+                                    catToFilter = (vMatch.type || "").toLowerCase();
+                                    $("#tqVehicleType").val(catToFilter).trigger("change.select2");
+                                    break;
+                                }
+                            }
+                        }
+                        self.filterVehicleModels(catToFilter, modelToSelect);
                     }
                 },
                 error: function () {
@@ -446,7 +581,7 @@
             });
         },
 
-        filterVehicleModels: function (category) {
+        filterVehicleModels: function (category, selectedModelOrId) {
             var self = this;
             var $select = $("#tqVehicleModel");
             $select.empty();
@@ -463,6 +598,9 @@
                 filtered = self.vehiclesCache; // fallback to all if no direct match
             }
 
+            var targetSearch = selectedModelOrId ? String(selectedModelOrId).toLowerCase().trim() : "";
+            var matchedOptionValue = null;
+
             filtered.forEach(function (v) {
                 var label = v.title + (v.seating ? " (" + v.seating + " Seater)" : "");
                 var $opt = $("<option></option>")
@@ -471,8 +609,22 @@
                     .attr("data-title", v.title)
                     .attr("data-type", v.type || "")
                     .attr("data-seating", v.seating || "");
+
+                if (targetSearch) {
+                    var vIdStr = String(v.id).toLowerCase();
+                    var vTitleLower = (v.title || "").toLowerCase();
+                    if (vIdStr === targetSearch || vTitleLower === targetSearch || vTitleLower.indexOf(targetSearch) !== -1 || targetSearch.indexOf(vTitleLower) !== -1) {
+                        $opt.prop("selected", true);
+                        matchedOptionValue = v.id;
+                    }
+                }
+
                 $select.append($opt);
             });
+
+            if (matchedOptionValue) {
+                $select.val(matchedOptionValue);
+            }
 
             // Initialize or update Select2
             if ($select.hasClass("select2-hidden-accessible")) {
@@ -484,6 +636,32 @@
                     width: "100%"
                 });
             }
+        },
+
+        recalculateTotalFromKm: function () {
+            var self = this;
+            var dailyLimit = parseFloat($("#tqKmRunning").val()) || 0;
+            var rawVal = $("#tqTotalRunningKm").val();
+            var totalKm = parseFloat(rawVal);
+            var extraKm = parseFloat($("#tqExtraKmCharge").val()) || 0;
+
+            if (dailyLimit > 0) {
+                $("#tqTotalRunningKm").attr("min", dailyLimit);
+                if (rawVal === "" || isNaN(totalKm) || totalKm < dailyLimit) {
+                    totalKm = dailyLimit;
+                    $("#tqTotalRunningKm").val(dailyLimit);
+                }
+            } else {
+                if (isNaN(totalKm)) totalKm = 0;
+            }
+
+            if (totalKm > 0 && extraKm > 0) {
+                var totalCost = roundToTwo(totalKm * extraKm);
+                $("#tqTotalCost").val(totalCost);
+            } else if (rawVal !== "" && totalKm === 0) {
+                $("#tqTotalCost").val(0);
+            }
+            self.recalculateBilling();
         },
 
         recalculateBilling: function () {
@@ -500,6 +678,7 @@
             $("#tqAdvanceAmountDisplay").text(self.formatNumber(advanceAmount));
             $("#tqBalanceAmountDisplay").text(self.formatNumber(balanceAmount));
             $("#tqFooterTotalDisplay").text(self.formatNumber(total));
+            $("#tqAmountInWordsDisplay").text(self.getIndianCurrencyWords(total));
         },
 
         loadDefaultTerms: function () {
@@ -700,6 +879,11 @@
 
             var totalCost = parseFloat($("#tqTotalCost").val()) || 0;
             var kmRunning = parseFloat($("#tqKmRunning").val()) || 250;
+            var totalRunningKm = parseFloat($("#tqTotalRunningKm").val()) || 0;
+            if (kmRunning > 0 && totalRunningKm < kmRunning) {
+                totalRunningKm = kmRunning;
+                $("#tqTotalRunningKm").val(kmRunning);
+            }
             var extraKmCharge = parseFloat($("#tqExtraKmCharge").val()) || 0;
             var advancePercent = parseFloat($("#tqAdvancePercent").val()) || 25;
             var advanceAmount = roundToTwo((totalCost * advancePercent) / 100);
@@ -788,6 +972,7 @@
                     currency_symbol: self.activeCurrencySymbol,
                     total_cost: totalCost,
                     km_running: kmRunning,
+                    total_running_km: totalRunningKm,
                     extra_km_charge: extraKmCharge,
                     advance_percent: advancePercent,
                     advance_amount: advanceAmount,
@@ -841,6 +1026,20 @@
             }
 
             self.lastCreatedQuote = res;
+            self.lastSavedPdfUrl = null;
+            self.lastSavedPdfFullUrl = null;
+            self.lastSavedPdfFileName = null;
+
+            var rawPhone = customerMobile || (res.customer ? res.customer.mobile : "") || $("#tqCustomerMobile").val() || "";
+            var cleanPhone = String(rawPhone).replace(/[^0-9]/g, "");
+            if (cleanPhone.length === 10) cleanPhone = "91" + cleanPhone;
+            self.lastCustomerMobile = cleanPhone;
+
+            // Reset Share modal status indicators
+            $("#tqWaSentBanner").addClass("d-none");
+            $("#tqWaViewPdfLink").addClass("d-none").attr("href", "#");
+            $("#tqBtnOpenCrmChat").addClass("d-none").attr("href", "#");
+            $("#tqBtnSendWaDirect span").text("Send on WhatsApp");
 
             // Close quote creation modal
             $("#modalSendTransporterQuotation").removeClass("is-active");
@@ -848,18 +1047,20 @@
             // Populate and open live preview modal
             var iframe = document.getElementById("tqPreviewIframe");
             if (iframe) {
-                iframe.srcdoc = res.rendered_html || "<p style='padding:20px;text-align:center;'>Quotation preview generated.</p>";
+                iframe.srcdoc = res.rendered_html || "<p class=\"tq-empty-preview\">Quotation preview generated.</p>";
+                iframe.onload = function () {
+                    if (res.quotation_id) {
+                        self.ensureQuotationPdf(res.quotation_id, function () {});
+                    }
+                };
             }
             $("#modalTransporterQuotePreview").addClass("is-active");
 
             // Pre-populate WhatsApp Share Modal for Send Quote action
             $("#tqWaPreviewBox").text(res.whatsapp_text || "");
 
-            var rawPhone = customerMobile || (res.customer ? res.customer.mobile : "") || $("#tqCustomerMobile").val() || "";
-            var cleanPhone = String(rawPhone).replace(/[^0-9]/g, "");
-            if (cleanPhone.length === 10) cleanPhone = "91" + cleanPhone; // default country code if missing
             var waUrl = "https://api.whatsapp.com/send?phone=" + encodeURIComponent(cleanPhone) + "&text=" + encodeURIComponent(res.whatsapp_text || "");
-            $("#tqBtnSendWaDirect").attr("href", waUrl);
+            $("#tqBtnSendWaDirect").attr("data-fallback-url", waUrl);
 
             self.notify("Quotation generated! Review proposal preview below.", "success");
 
@@ -879,6 +1080,53 @@
             });
         },
 
+        getIndianCurrencyWords: function (num) {
+            var n = Math.round(parseFloat(num || 0));
+            if (n <= 0) return "Rupees Zero Only";
+            var ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+                "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+            var tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+            function convertLessThanOneThousand(val) {
+                var str = "";
+                if (val >= 100) {
+                    str += ones[Math.floor(val / 100)] + " Hundred ";
+                    val = val % 100;
+                }
+                if (val >= 20) {
+                    str += tens[Math.floor(val / 10)] + " ";
+                    val = val % 10;
+                }
+                if (val > 0) {
+                    str += ones[val] + " ";
+                }
+                return str.trim();
+            }
+
+            var crore = Math.floor(n / 10000000);
+            n = n % 10000000;
+            var lakh = Math.floor(n / 100000);
+            n = n % 100000;
+            var thousand = Math.floor(n / 1000);
+            n = n % 1000;
+            var remainder = n;
+
+            var res = "";
+            if (crore > 0) {
+                res += convertLessThanOneThousand(crore) + " Crore ";
+            }
+            if (lakh > 0) {
+                res += convertLessThanOneThousand(lakh) + " Lakh ";
+            }
+            if (thousand > 0) {
+                res += convertLessThanOneThousand(thousand) + " Thousand ";
+            }
+            if (remainder > 0) {
+                res += convertLessThanOneThousand(remainder) + " ";
+            }
+            return "Rupees " + res.trim() + " Only";
+        },
+
         notify: function (msg, type) {
             if (typeof Swal !== "undefined") {
                 Swal.fire({
@@ -894,6 +1142,284 @@
             } else {
                 alert(msg);
             }
+        },
+
+        loadHtml2Pdf: function (callback) {
+            if (typeof window.html2pdf !== "undefined") {
+                return callback(null, window.html2pdf);
+            }
+            var existingScript = document.querySelector('script[src*="html2pdf"]');
+            if (existingScript) {
+                var checkCount = 0;
+                var checkInterval = setInterval(function () {
+                    checkCount++;
+                    if (typeof window.html2pdf !== "undefined") {
+                        clearInterval(checkInterval);
+                        return callback(null, window.html2pdf);
+                    }
+                    if (checkCount >= 50) {
+                        clearInterval(checkInterval);
+                        return callback(new Error("Timeout waiting for html2pdf bundle to load."));
+                    }
+                }, 100);
+                return;
+            }
+            var script = document.createElement("script");
+            script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+            script.onload = function () {
+                callback(null, window.html2pdf);
+            };
+            script.onerror = function () {
+                callback(new Error("Failed to load html2pdf script bundle."));
+            };
+            document.head.appendChild(script);
+        },
+
+        ensureQuotationPdf: function (quoteId, callback) {
+            var self = this;
+            if (self.lastSavedPdfUrl) {
+                return callback(null, {
+                    pdf_url: self.lastSavedPdfUrl,
+                    full_url: self.lastSavedPdfFullUrl,
+                    file_name: self.lastSavedPdfFileName
+                });
+            }
+
+            if (self.isGeneratingPdf) {
+                self.pdfGenerationCallbacks.push(callback);
+                return;
+            }
+
+            self.isGeneratingPdf = true;
+            self.pdfGenerationCallbacks = [callback];
+
+            var triggerCallbacks = function (err, result) {
+                self.isGeneratingPdf = false;
+                var list = self.pdfGenerationCallbacks;
+                self.pdfGenerationCallbacks = [];
+                for (var i = 0; i < list.length; i++) {
+                    if (typeof list[i] === "function") {
+                        list[i](err, result);
+                    }
+                }
+            };
+
+            var iframe = document.getElementById("tqPreviewIframe");
+            if (!iframe) {
+                return triggerCallbacks(new Error("Preview iframe not found"));
+            }
+
+            var iframeDoc = iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null);
+            if (!iframeDoc || !iframeDoc.body) {
+                return triggerCallbacks(new Error("Preview document not yet loaded"));
+            }
+
+            // Temporarily hide any floating print action bar inside iframe for clean PDF output
+            var actionBars = iframeDoc.querySelectorAll(".v3-pdf-actions-bar, .pdf-actions-bar");
+            for (var a = 0; a < actionBars.length; a++) {
+                actionBars[a].style.display = "none";
+            }
+            var restoreActionBars = function () {
+                for (var b = 0; b < actionBars.length; b++) {
+                    actionBars[b].style.display = "";
+                }
+            };
+
+            var targetEl = iframeDoc.querySelector("#page-quotation") ||
+                           iframeDoc.querySelector(".page") ||
+                           iframeDoc.querySelector(".mit-quote-page") ||
+                           iframeDoc.querySelector(".mit-quote-container") ||
+                           iframeDoc.querySelector(".tq-proposal-wrapper") ||
+                           iframeDoc.body;
+
+            self.loadHtml2Pdf(function (libErr, html2pdf) {
+                if (libErr || !html2pdf) {
+                    restoreActionBars();
+                    return triggerCallbacks(libErr || new Error("html2pdf library is unavailable"));
+                }
+
+                try {
+                    var opt = {
+                        margin: [6, 6, 6, 6],
+                        filename: "Quotation_TQ-" + quoteId + ".pdf",
+                        image: { type: "jpeg", quality: 0.98 },
+                        html2canvas: { scale: 2, useCORS: true, logging: false },
+                        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+                    };
+
+                    html2pdf().set(opt).from(targetEl).toPdf().get("pdf").then(function (pdf) {
+                        restoreActionBars();
+                        var pdfDataUri = pdf.output("datauristring");
+                        if (!pdfDataUri || pdfDataUri.length < 50) {
+                            return triggerCallbacks(new Error("Invalid or empty PDF data URI rendered"));
+                        }
+
+                        $.ajax({
+                            url: "/api/v3/transporters/quotation.php?action=save_pdf",
+                            type: "POST",
+                            dataType: "json",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                quotation_id: quoteId,
+                                pdf_data: pdfDataUri
+                            }),
+                            success: function (saveRes) {
+                                if (saveRes && saveRes.status === "success") {
+                                    self.lastSavedPdfUrl = saveRes.pdf_url;
+                                    self.lastSavedPdfFullUrl = saveRes.full_url;
+                                    self.lastSavedPdfFileName = saveRes.file_name;
+                                    triggerCallbacks(null, saveRes);
+                                } else {
+                                    triggerCallbacks(new Error((saveRes && saveRes.message) ? saveRes.message : "Failed to save quotation PDF"));
+                                }
+                            },
+                            error: function () {
+                                triggerCallbacks(new Error("Network error occurred while saving quotation PDF"));
+                            }
+                        });
+                    }).catch(function (e) {
+                        restoreActionBars();
+                        triggerCallbacks(e);
+                    });
+                } catch (e) {
+                    restoreActionBars();
+                    triggerCallbacks(e);
+                }
+            });
+        },
+
+        checkDefaultWhatsAppDevice: function (callback) {
+            $.ajax({
+                url: "/api/v3/whatsapp/messages.php?action=check_default_device",
+                type: "GET",
+                dataType: "json",
+                cache: false,
+                success: function (res) {
+                    callback(null, res);
+                },
+                error: function () {
+                    callback(null, { status: "error", is_connected: false });
+                }
+            });
+        },
+
+        sendQuotationViaWhatsApp: function (isTriggeredFromShareModal) {
+            var self = this;
+            var quote = self.lastCreatedQuote;
+            if (!quote || !quote.quotation_id) {
+                self.notify("No active quotation proposal found to send.", "error");
+                return;
+            }
+
+            var quoteId = quote.quotation_id;
+            var rawPhone = self.lastCustomerMobile || (quote.customer ? quote.customer.mobile : "") || $("#tqCustomerMobile").val() || "";
+            var cleanPhone = String(rawPhone).replace(/[^0-9]/g, "");
+            if (cleanPhone.length === 10) cleanPhone = "91" + cleanPhone;
+            var whatsappText = quote.whatsapp_text || $("#tqWaPreviewBox").text() || "";
+
+            var $btn = isTriggeredFromShareModal ? $("#tqBtnSendWaDirect") : $("#tqBtnPreviewSendQuote");
+            var originalBtnHtml = $btn.html();
+            $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Checking WhatsApp...');
+
+            self.checkDefaultWhatsAppDevice(function (devErr, devRes) {
+                var isConnected = devRes && devRes.status === "success" && devRes.is_connected && devRes.device;
+
+                if (!isConnected) {
+                    $btn.prop("disabled", false).html(originalBtnHtml);
+
+                    if (isTriggeredFromShareModal) {
+                        // Open direct WhatsApp web link in new tab
+                        var fallbackUrl = "https://api.whatsapp.com/send?phone=" + encodeURIComponent(cleanPhone) + "&text=" + encodeURIComponent(whatsappText);
+                        window.open(fallbackUrl, "_blank");
+                    } else {
+                        // Switch from preview to share modal and show informative notice
+                        $("#modalTransporterQuotePreview").removeClass("is-active");
+                        $("#modalTransporterQuoteShare").addClass("is-active");
+                        $("#tqWaSentBanner").addClass("d-none");
+                        self.notify("No default WhatsApp device is connected. You can share via WhatsApp Web or scan QR.", "info");
+
+                        // Still ensure PDF is generated and ready for customer/agent
+                        self.ensureQuotationPdf(quoteId, function (pdfErr, pdfRes) {
+                            if (!pdfErr && pdfRes && pdfRes.full_url) {
+                                $("#tqWaViewPdfLink").attr("href", pdfRes.full_url).removeClass("d-none");
+                            }
+                        });
+                    }
+                    return;
+                }
+
+                // WhatsApp Device IS connected and ready!
+                var devInfo = devRes.device;
+                $btn.html('<i class="fi fi-rr-spinner fi-spin"></i> Generating PDF &amp; Sending...');
+
+                self.ensureQuotationPdf(quoteId, function (pdfErr, pdfRes) {
+                    var payload = {
+                        phone: cleanPhone,
+                        text: whatsappText,
+                        type: (!pdfErr && pdfRes && pdfRes.pdf_url) ? "document" : "text",
+                        device_id: devInfo.device_id
+                    };
+
+                    if (!pdfErr && pdfRes && pdfRes.pdf_url) {
+                        payload.media_url = pdfRes.pdf_url;
+                        payload.file_name = pdfRes.file_name || ("Quotation_TQ-" + quoteId + ".pdf");
+                    }
+
+                    $.ajax({
+                        url: "/api/v3/whatsapp/messages.php",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify(payload),
+                        success: function (sendRes) {
+                            $btn.prop("disabled", false).html(originalBtnHtml);
+
+                            if (sendRes && sendRes.status === "success") {
+                                self.notify("Quotation proposal & PDF sent to customer on WhatsApp!", "success");
+
+                                // Update Share Modal banner to showcase successful delivery
+                                $("#tqWaSentBanner").removeClass("d-none");
+                                $("#tqWaSentTitle").text("Quotation & Proposal PDF Sent Successfully");
+                                var deviceLabel = devInfo.device_name || devInfo.phone_number || "Default Device";
+                                $("#tqWaSentDesc").html("Sent to <strong>+" + cleanPhone + "</strong> via <strong>" + escapeHtml(deviceLabel) + "</strong> with proposal document attached.");
+
+                                if (pdfRes && (pdfRes.full_url || pdfRes.pdf_url)) {
+                                    $("#tqWaViewPdfLink").attr("href", pdfRes.full_url || pdfRes.pdf_url).removeClass("d-none");
+                                }
+                                $("#tqBtnOpenCrmChat").attr("href", "/dashboard/whatsapp_chat/?phone=" + encodeURIComponent(cleanPhone)).removeClass("d-none");
+                                $("#tqBtnSendWaDirect span").text("Resend on WhatsApp");
+
+                                $("#modalTransporterQuotePreview").removeClass("is-active");
+                                $("#modalTransporterQuoteShare").addClass("is-active");
+
+                                // Refresh Lead Timeline
+                                if (window.V3LeadView && typeof window.V3LeadView.loadLeadDetails === "function") {
+                                    window.V3LeadView.loadLeadDetails();
+                                } else if (window.leadViewApp && typeof window.leadViewApp.loadLeadDetails === "function") {
+                                    window.leadViewApp.loadLeadDetails();
+                                }
+                            } else {
+                                var errText = (sendRes && sendRes.msg) ? sendRes.msg : "Failed to deliver WhatsApp message.";
+                                self.notify(errText, "error");
+                                if (!isTriggeredFromShareModal) {
+                                    $("#modalTransporterQuotePreview").removeClass("is-active");
+                                    $("#modalTransporterQuoteShare").addClass("is-active");
+                                }
+                            }
+                        },
+                        error: function (xhr) {
+                            $btn.prop("disabled", false).html(originalBtnHtml);
+                            var errResp = xhr.responseJSON;
+                            var errMsg = (errResp && (errResp.msg || errResp.message)) ? (errResp.msg || errResp.message) : "Failed to communicate with WhatsApp gateway.";
+                            self.notify(errMsg, "error");
+                            if (!isTriggeredFromShareModal) {
+                                $("#modalTransporterQuotePreview").removeClass("is-active");
+                                $("#modalTransporterQuoteShare").addClass("is-active");
+                            }
+                        }
+                    });
+                });
+            });
         }
     };
 

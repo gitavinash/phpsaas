@@ -2757,6 +2757,14 @@
   gap: 10px;
 }
 
+.wa-device-header-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .wa-device-phone-wrap {
   display: flex;
   align-items: center;
@@ -2815,6 +2823,17 @@
   background: #FEF3C7;
   color: #B45309;
   border: 1px solid #FDE68A;
+}
+
+.wa-device-badge.default-badge {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+  font-weight: 700;
+}
+
+.wa-device-badge.default-badge i {
+  color: #2563EB;
 }
 
 .wa-device-badge-dot {
@@ -2935,6 +2954,33 @@
   border-color: #CBD5E1;
   color: #0F172A;
   transform: translateY(-1px);
+}
+
+.btn-device-default {
+  background: #F8FAFC;
+  color: #475569;
+  border-color: #E2E8F0;
+}
+
+.btn-device-default:hover {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+  color: #1D4ED8;
+  transform: translateY(-1px);
+}
+
+.btn-device-default.is-default {
+  background: #ECFDF5 !important;
+  color: #047857 !important;
+  border-color: #A7F3D0 !important;
+  opacity: 1 !important;
+  cursor: default !important;
+  pointer-events: auto !important;
+  transform: none !important;
+}
+
+.btn-device-default.is-default i {
+  color: #059669;
 }
 
 .btn-device-disconnect {

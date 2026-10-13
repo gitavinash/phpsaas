@@ -2059,6 +2059,7 @@ app.post("/send-message", async (req, res) => {
           mediaBuffer = fs.readFileSync(localPath);
           if (localPath.endsWith(".png")) mediaMime = "image/png";
           else if (localPath.endsWith(".webp")) mediaMime = "image/webp";
+          else if (localPath.endsWith(".pdf")) mediaMime = "application/pdf";
         }
       } else if (typeof media === "string" && media.startsWith("data:image/")) {
         const match = media.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
@@ -2066,19 +2067,46 @@ app.post("/send-message", async (req, res) => {
           mediaMime = match[1];
           mediaBuffer = Buffer.from(match[2], "base64");
         }
+      } else if (typeof media === "string" && media.startsWith("data:application/pdf")) {
+        const match = media.match(/^data:(application\/pdf);base64,(.+)$/);
+        if (match) {
+          mediaMime = "application/pdf";
+          mediaBuffer = Buffer.from(match[2], "base64");
+        }
       }
 
+      const isDoc = (type === "document") || (mediaMime === "application/pdf") || (typeof media === "string" && (media.toLowerCase().includes(".pdf") || media.startsWith("data:application/pdf")));
+      const docFileName = req.body?.file_name || req.body?.fileName || req.query?.file_name || "Quotation.pdf";
+
       if (mediaBuffer) {
-        sendContent = {
-          image: mediaBuffer,
-          mimetype: mediaMime,
-          caption: message || ""
-        };
+        if (isDoc) {
+          sendContent = {
+            document: mediaBuffer,
+            mimetype: "application/pdf",
+            fileName: docFileName,
+            caption: message || ""
+          };
+        } else {
+          sendContent = {
+            image: mediaBuffer,
+            mimetype: mediaMime,
+            caption: message || ""
+          };
+        }
       } else if (typeof media === "string" && (media.startsWith("http://") || media.startsWith("https://"))) {
-        sendContent = {
-          image: { url: media },
-          caption: message || ""
-        };
+        if (isDoc) {
+          sendContent = {
+            document: { url: media },
+            mimetype: "application/pdf",
+            fileName: docFileName,
+            caption: message || ""
+          };
+        } else {
+          sendContent = {
+            image: { url: media },
+            caption: message || ""
+          };
+        }
       } else {
         sendContent = { text: message || "" };
       }

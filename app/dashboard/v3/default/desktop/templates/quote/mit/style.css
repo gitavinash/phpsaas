@@ -1,0 +1,813 @@
+/**
+ * MIT Commercial Transport Quotation Template Styles
+ * Path: app/dashboard/v3/default/desktop/templates/quote/mit/style.css
+ * Valid Legal A4 Format with Crisp Corporate Styling
+ */
+
+:root {
+    --primary-slate: #0f172a;
+    --navy-header: #0f2942;
+    --slate-text: #1e293b;
+    --slate-muted: #475569;
+    --slate-light: #64748b;
+    --border-dark: #94a3b8;
+    --border-light: #cbd5e1;
+    --border-divider: #e2e8f0;
+    --bg-card: #f8fafc;
+    --bg-page: #f1f5f9;
+    --white: #ffffff;
+    --brand-accent: #2563eb;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Plus Jakarta Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    background-color: var(--bg-page);
+    color: var(--slate-text);
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 24px 0 60px 0;
+}
+
+/* Floating Action Bar (Top / Corner) */
+.v3-pdf-actions-bar {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
+    padding: 8px 14px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+    border: 1px solid var(--border-divider);
+}
+
+.btn-pdf-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.btn-pdf-print {
+    background: var(--primary-slate);
+    color: var(--white);
+}
+
+.btn-pdf-print:hover {
+    background: #1e293b;
+    transform: translateY(-1px);
+}
+
+.btn-pdf-whatsapp {
+    background: #25d366;
+    color: var(--white);
+}
+
+.btn-pdf-whatsapp:hover {
+    background: #20bd5a;
+    transform: translateY(-1px);
+}
+
+/* Page Container - A4 Dimensions */
+.page {
+    position: relative;
+    max-width: 880px;
+    width: 100%;
+    margin: 0 auto 30px auto;
+    background: var(--white);
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-dark);
+    overflow: hidden;
+}
+
+/* Corporate Letterhead Header (Valid Legal Format) */
+.indian-letterhead {
+    padding: 24px 30px 18px 30px;
+    border-bottom: 2px solid var(--primary-slate);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    background: var(--white);
+}
+
+.company-meta-col {
+    flex: 1;
+}
+
+.company-brand-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary-slate);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+}
+
+.company-tagline {
+    font-size: 11px;
+    color: var(--slate-muted);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.company-address-line {
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.45;
+    margin-bottom: 3px;
+}
+
+.company-tax-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--slate-text);
+}
+
+.company-tax-badge {
+    background: var(--bg-card);
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 1px solid var(--border-light);
+    font-size: 11px;
+    color: #334155;
+}
+
+.invoice-title-col {
+    text-align: right;
+    min-width: 250px;
+}
+
+.invoice-type-pill {
+    display: inline-block;
+    background: var(--primary-slate);
+    color: var(--white);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+}
+
+.invoice-meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+}
+
+.invoice-meta-table td {
+    padding: 2px 0;
+    font-size: 12px;
+}
+
+.invoice-meta-table td.lbl {
+    color: var(--slate-light);
+    text-align: right;
+    padding-right: 8px;
+}
+
+.invoice-meta-table td.val {
+    font-weight: 700;
+    color: var(--primary-slate);
+    text-align: right;
+}
+
+/* Document Body Section */
+.proposal-body {
+    padding: 24px 30px 30px 30px;
+}
+
+/* 2-Column Info Grid: Customer & Journey */
+.indian-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.indian-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.indian-box-header {
+    background: var(--navy-header);
+    color: var(--white);
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.indian-box-body {
+    padding: 12px 14px;
+}
+
+.indian-data-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 12.5px;
+}
+
+.indian-data-row:last-child {
+    margin-bottom: 0;
+}
+
+.indian-data-row .lbl {
+    color: var(--slate-light);
+    font-size: 12px;
+}
+
+.indian-data-row .val {
+    font-weight: 600;
+    color: var(--primary-slate);
+    text-align: right;
+}
+
+/* Vehicle Specification Banner - Neutral Legal Format */
+.indian-fleet-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-left: 4px solid var(--primary-slate);
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.fleet-meta h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary-slate);
+    margin-bottom: 4px;
+}
+
+.fleet-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.fleet-tag-pill {
+    background: var(--white);
+    color: #334155;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 1px solid var(--border-light);
+}
+
+.fleet-cost-meta {
+    text-align: right;
+    min-width: 140px;
+}
+
+.fleet-cost-lbl {
+    font-size: 10.5px;
+    color: var(--slate-light);
+    font-weight: 700;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.fleet-cost-val {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary-slate);
+}
+
+/* Itemized Tariff Table (Formal Indian Legal Format) */
+.indian-table-wrap {
+    border: 1px solid var(--navy-header);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.indian-tariff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+}
+
+.indian-tariff-table th {
+    background: var(--navy-header);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 9px 12px;
+    border-right: 1px solid #1e3a5f;
+    text-align: left;
+}
+
+.indian-tariff-table th:last-child {
+    border-right: none;
+}
+
+.indian-tariff-table th.center,
+.indian-tariff-table td.center {
+    text-align: center;
+}
+
+.indian-tariff-table th.right,
+.indian-tariff-table td.right {
+    text-align: right;
+}
+
+.indian-tariff-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-divider);
+    border-right: 1px solid var(--border-divider);
+    vertical-align: middle;
+    color: var(--slate-text);
+}
+
+.indian-tariff-table td:last-child {
+    border-right: none;
+}
+
+.indian-tariff-table tbody tr:nth-child(even) {
+    background-color: var(--bg-card);
+}
+
+.tariff-desc-sub {
+    display: block;
+    font-size: 11px;
+    color: var(--slate-light);
+    margin-top: 2px;
+}
+
+.term-badge-included {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: #f1f5f9;
+    color: #0f172a;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid #cbd5e1;
+    text-transform: uppercase;
+}
+
+.term-badge-extra {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
+}
+
+.indian-tariff-table tr.total-row {
+    background: #f1f5f9;
+    font-weight: 700;
+}
+
+.indian-tariff-table tr.total-row td {
+    border-top: 2px solid var(--navy-header);
+    font-size: 14px;
+    color: var(--primary-slate);
+    padding: 10px 12px;
+}
+
+.indian-tariff-table tr.total-row td.grand-amount {
+    font-size: 17px;
+    color: var(--navy-header);
+}
+
+/* Amount Chargeable in Words Box */
+.indian-words-strip {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-left: 4px solid var(--primary-slate);
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--primary-slate);
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Payment Milestones Card */
+.indian-payment-schedule {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.payment-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.payment-pill.advance {
+    background: var(--bg-card);
+    border-color: var(--border-dark);
+    border-left: 3px solid var(--primary-slate);
+}
+
+.payment-pill .meta .lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--slate-muted);
+    letter-spacing: 0.04em;
+}
+
+.payment-pill .meta .desc {
+    font-size: 11px;
+    color: var(--slate-light);
+    margin-top: 2px;
+}
+
+.payment-pill .amount {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary-slate);
+}
+
+/* Bank & Digital Payment Card with QR */
+.indian-bank-card {
+    background: var(--white);
+    border: 1px dashed var(--navy-header);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+}
+
+.indian-bank-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-divider);
+}
+
+.indian-bank-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy-header);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.indian-upi-badge {
+    background: #f1f5f9;
+    color: var(--primary-slate);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 1px solid var(--border-light);
+}
+
+.indian-bank-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.indian-bank-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+    font-size: 12px;
+}
+
+.indian-bank-cell {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+}
+
+.indian-bank-cell.span-2 {
+    grid-column: span 2;
+}
+
+.indian-bank-cell .lbl {
+    color: var(--slate-light);
+    min-width: 82px;
+}
+
+.val-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 700;
+    color: var(--primary-slate);
+}
+
+.val-upi {
+    color: var(--primary-slate);
+    background: #f1f5f9;
+    padding: 1px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--border-light);
+}
+
+.indian-qr-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-left: 12px;
+    border-left: 1px solid var(--border-divider);
+}
+
+.indian-qr-img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid var(--border-light);
+}
+
+.indian-qr-lbl {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--slate-muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Commercial Operating Terms Card */
+.indian-terms-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+}
+
+.indian-terms-header {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary-slate);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.indian-terms-list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.55;
+}
+
+.indian-term-item {
+    margin-bottom: 4px;
+}
+
+.indian-custom-rules-wrap {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-light);
+}
+
+.indian-sub-heading {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--navy-header);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+/* Dual Signatures Block */
+.indian-sign-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border-divider);
+}
+
+.indian-sign-box {
+    text-align: left;
+}
+
+.indian-sign-box.right {
+    text-align: right;
+}
+
+.sign-placeholder-line {
+    border-bottom: 1px dashed var(--border-dark);
+    height: 38px;
+    margin-bottom: 6px;
+}
+
+.sign-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary-slate);
+}
+
+.sign-subtitle {
+    font-size: 11px;
+    color: var(--slate-light);
+}
+
+/* Document Footer with Aleya.in Credit */
+.indian-doc-footer {
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-divider);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--slate-light);
+}
+
+.footer-credit {
+    font-weight: 600;
+    color: #475569;
+}
+
+.credit-link {
+    color: var(--brand-accent);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.credit-link:hover {
+    text-decoration: underline;
+}
+
+/* Page Break Print Running Footer */
+.print-page-footer {
+    display: none;
+}
+
+/* Print Optimization */
+@media print {
+    body {
+        background: var(--white) !important;
+        padding: 0 !important;
+    }
+    .v3-pdf-actions-bar {
+        display: none !important;
+    }
+    .page {
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+    .indian-tariff-table th {
+        background: #0f2942 !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .indian-box-header {
+        background: #0f2942 !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .invoice-type-pill {
+        background: #0f172a !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .indian-fleet-card,
+    .indian-terms-card,
+    .indian-sign-grid,
+    .indian-doc-footer,
+    .indian-bank-card,
+    .indian-payment-schedule {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    .print-page-footer {
+        display: block !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        text-align: center !important;
+        font-size: 9.5px !important;
+        color: #64748b !important;
+        background: #ffffff !important;
+        border-top: 1px solid #e2e8f0 !important;
+        padding: 4px 10px !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    @page {
+        margin: 10mm 12mm 14mm 12mm;
+        size: A4 portrait;
+        @bottom-center {
+            content: "Powered by Aleya.in • Fleet & Mobility Solutions";
+            font-size: 9px;
+            color: #64748b;
+        }
+    }
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+    .indian-letterhead {
+        flex-direction: column;
+    }
+    .invoice-title-col {
+        text-align: left;
+    }
+    .invoice-meta-table td.lbl {
+        text-align: left;
+    }
+    .indian-info-grid,
+    .indian-payment-schedule,
+    .indian-sign-grid {
+        grid-template-columns: 1fr;
+    }
+    .indian-bank-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .indian-bank-grid {
+        grid-template-columns: 1fr;
+    }
+    .indian-bank-cell.span-2 {
+        grid-column: span 1;
+    }
+    .indian-qr-col {
+        border-left: none;
+        border-top: 1px solid var(--border-divider);
+        padding-left: 0;
+        padding-top: 10px;
+        width: 100%;
+    }
+    .indian-sign-box.right {
+        text-align: left;
+    }
+    .indian-doc-footer {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "mit",
+  "name": "MIT Legal Quote",
+  "title": "MIT Commercial Transport Proposal",
+  "version": "1.0.0",
+  "author": "Aleya",
+  "tag": "Default",
+  "badge": "A4 Legal",
+  "badge_style": "background:#f1f5f9; color:#0f172a; border-color:#cbd5e1;",
+  "icon": "fi fi-rr-document-signed",
+  "icon_style": "background:#f1f5f9; color:#0f172a;",
+  "description": "Formal legal commercial transport proposal with A4 printable layout, itemized tariff particulars, UPI QR payment, operating terms & dual signatures.",
+  "accent_color": "#0f172a",
+  "tags": [
+    { "icon": "fi fi-rr-document", "label": "A4 Legal Format" },
+    { "icon": "fi fi-rr-file-pdf", "label": "PDF Ready" }
+  ],
+  "screenshot": "screenshot.svg",
+  "order": 1
+}

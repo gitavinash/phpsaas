@@ -498,6 +498,14 @@
             });
           }
 
+          const defaultBadgeHtml = dev.is_default
+            ? '<span class="wa-device-badge default-badge" title="Default device for sending alerts and notifications to customers"><i class="fi fi-rr-star"></i> Default</span>'
+            : '';
+
+          const defaultBtnHtml = dev.is_default
+            ? '<button type="button" class="btn-device-action btn-device-default is-default" title="Default line for alerts &amp; customer notifications"><i class="fi fi-rr-check-circle"></i> <span>Default Line</span></button>'
+            : '<button type="button" class="btn-device-action btn-device-default btn-set-default" data-device-id="' + dev.device_id + '" title="Mark as default to send alerts and notifications to customers"><i class="fi fi-rr-star"></i> <span>Set as Default</span></button>';
+
           html += '<div class="wa-device-card" data-device-id="' + dev.device_id + '" data-session-id="' + dev.session_id + '">' +
                     '<div class="wa-device-card-header">' +
                       '<div class="wa-device-phone-wrap">' +
@@ -507,9 +515,12 @@
                           '<span class="wa-device-pushname">' + (dev.name || 'WhatsApp Web') + '</span>' +
                         '</div>' +
                       '</div>' +
-                      '<span class="wa-device-badge ' + statusClass + '">' +
-                        '<span class="wa-device-badge-dot"></span> ' + statusLabel +
-                      '</span>' +
+                      '<div class="wa-device-header-badges">' +
+                        defaultBadgeHtml +
+                        '<span class="wa-device-badge ' + statusClass + '">' +
+                          '<span class="wa-device-badge-dot"></span> ' + statusLabel +
+                        '</span>' +
+                      '</div>' +
                     '</div>' +
                     '<div class="wa-device-assignment-box">' +
                       '<label class="wa-device-assignment-label"><i class="fi fi-rr-user"></i> Assigned Sales Agent</label>' +
@@ -522,6 +533,7 @@
                       '<span>Synced: ' + dev.last_sync + '</span>' +
                     '</div>' +
                     '<div class="wa-device-card-actions">' +
+                      defaultBtnHtml +
                       '<button type="button" class="btn-device-action btn-device-sync" data-session-id="' + dev.session_id + '" title="Synchronize chats from this device">' +
                         '<i class="fi fi-rr-refresh"></i> <span>Sync</span>' +
                       '</button>' +
@@ -1073,6 +1085,39 @@
         } else if (confirm("Are you sure you want to disconnect this WhatsApp device?")) {
           performDisconnect(sessId, devId, $btn);
         }
+      });
+
+      // 9b. Set Device as Default Communication Line for Alerts & Notifications
+      $(document).off("click", ".btn-set-default").on("click", ".btn-set-default", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $btn = $(this);
+        const devId = $btn.attr("data-device-id") || $btn.data("device-id") || "";
+        if (!devId) return;
+
+        $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner wa-spin"></i> <span>Setting...</span>');
+
+        $.ajax({
+          url: "/api/v3/integration/whatsapp_web/?action=set_default_device",
+          type: "POST",
+          dataType: "json",
+          contentType: "application/json",
+          data: JSON.stringify({ device_id: Number(devId) }),
+          success: function (res) {
+            if (res && res.status === "success") {
+              self.showToast(res.msg || "Device marked as default for customer alerts and notifications.", "success");
+              loadHubState();
+            } else {
+              $btn.prop("disabled", false).html('<i class="fi fi-rr-star"></i> <span>Set as Default</span>');
+              self.showToast((res && res.msg) ? res.msg : "Failed to set default device.", "error");
+            }
+          },
+          error: function (xhr) {
+            $btn.prop("disabled", false).html('<i class="fi fi-rr-star"></i> <span>Set as Default</span>');
+            const err = xhr.responseJSON ? xhr.responseJSON.msg : "Error setting default device.";
+            self.showToast(err, "error");
+          }
+        });
       });
 
       // 10. Pairing Mode Tabs

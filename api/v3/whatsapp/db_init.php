@@ -108,6 +108,15 @@ function initWhatsAppDatabase($connection) {
         @mysqli_query($connection, $devTableSql);
     } catch (Throwable $e) {}
 
+    // Safely add device_is_default column if not present
+    try {
+        $colDefRes = @mysqli_query($connection, "SHOW COLUMNS FROM " . $prefix . "whatsapp_device LIKE 'device_is_default'");
+        if ($colDefRes && mysqli_num_rows($colDefRes) === 0) {
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_device ADD COLUMN device_is_default TINYINT(1) NOT NULL DEFAULT 0 AFTER device_assigned_user_id");
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_device ADD INDEX idx_device_default (device_site_id, device_is_default)");
+        }
+    } catch (Throwable $e) {}
+
     $initialized = true;
     return true;
 }

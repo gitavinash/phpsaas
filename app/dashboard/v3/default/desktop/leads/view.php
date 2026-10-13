@@ -1229,16 +1229,9 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                 </div>
                 <div class="tq-grid-2">
                     <div class="tq-form-group">
-                        <label for="tqTotalCost" class="tq-form-label">Total Cost <span class="req">*</span></label>
+                        <label for="tqTotalRunningKm" class="tq-form-label">Total Running KMs</label>
                         <div class="tq-input-wrap">
-                            <span class="tq-input-prefix tq-currency-symbol">₹</span>
-                            <input type="number" id="tqTotalCost" class="tq-form-control has-prefix" min="0" step="any" placeholder="0.00" required>
-                        </div>
-                    </div>
-                    <div class="tq-form-group">
-                        <label for="tqKmRunning" class="tq-form-label">KM Running (Daily Limit)</label>
-                        <div class="tq-input-wrap">
-                            <input type="number" id="tqKmRunning" class="tq-form-control has-suffix" min="1" step="1" value="250" placeholder="250">
+                            <input type="number" id="tqTotalRunningKm" class="tq-form-control has-suffix" min="250" step="any" placeholder="250">
                             <span class="tq-input-suffix">KM</span>
                         </div>
                     </div>
@@ -1251,10 +1244,25 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                         </div>
                     </div>
                     <div class="tq-form-group">
+                        <label for="tqTotalCost" class="tq-form-label">Total Cost <span class="req">*</span></label>
+                        <div class="tq-input-wrap">
+                            <span class="tq-input-prefix tq-currency-symbol">₹</span>
+                            <input type="number" id="tqTotalCost" class="tq-form-control has-prefix" min="0" step="any" placeholder="0.00" required>
+                        </div>
+                        <span class="tq-form-hint">Calculated as Extra KM charges &times; Total Running KM (Min. Daily Limit)</span>
+                    </div>
+                    <div class="tq-form-group">
                         <label for="tqAdvancePercent" class="tq-form-label">Advance Deposit (%)</label>
                         <div class="tq-input-wrap">
                             <input type="number" id="tqAdvancePercent" class="tq-form-control has-suffix" min="0" max="100" step="1" value="25" placeholder="25">
                             <span class="tq-input-suffix">%</span>
+                        </div>
+                    </div>
+                    <div class="tq-form-group">
+                        <label for="tqKmRunning" class="tq-form-label">KM Running (Daily Limit)</label>
+                        <div class="tq-input-wrap">
+                            <input type="number" id="tqKmRunning" class="tq-form-control has-suffix" min="1" step="1" value="250" placeholder="250">
+                            <span class="tq-input-suffix">KM</span>
                         </div>
                     </div>
                 </div>
@@ -1272,6 +1280,11 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                             <span class="tq-currency-symbol">₹</span> <span id="tqBalanceAmountDisplay">0.00</span>
                         </div>
                     </div>
+                </div>
+
+                <div class="tq-words-card">
+                    <span class="tq-words-label"><i class="fi fi-rr-document-signed"></i> Amount in Words:</span>
+                    <span class="tq-words-val" id="tqAmountInWordsDisplay">Rupees Zero Only</span>
                 </div>
             </div>
 
@@ -1456,7 +1469,23 @@ if ($leadViewSiteId > 0 && isset($connection)) {
             <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
         </div>
         <div class="v3-modal-body">
-            <p class="tq-wa-intro-text">
+            <!-- Status banner when sent directly via connected WhatsApp device with PDF -->
+            <div class="tq-wa-sent-banner d-none" id="tqWaSentBanner">
+                <div class="tq-wa-sent-icon">
+                    <i class="fi fi-rr-check-circle"></i>
+                </div>
+                <div class="tq-wa-sent-info">
+                    <strong id="tqWaSentTitle">Quotation &amp; PDF Sent via WhatsApp</strong>
+                    <p id="tqWaSentDesc">Delivered directly to customer with proposal PDF attached.</p>
+                </div>
+                <div class="tq-wa-sent-actions">
+                    <a href="#" target="_blank" class="tq-wa-view-pdf-link d-none" id="tqWaViewPdfLink">
+                        <i class="fi fi-rr-file-pdf"></i> <span>View PDF</span>
+                    </a>
+                </div>
+            </div>
+
+            <p class="tq-wa-intro-text" id="tqWaIntroText">
                 Review the quotation text below before sending to the customer via WhatsApp:
             </p>
             <div class="tq-wa-preview-box" id="tqWaPreviewBox"></div>
@@ -1465,11 +1494,14 @@ if ($leadViewSiteId > 0 && isset($connection)) {
             <button type="button" class="btn-v3-action btn-outline" id="tqBtnCopyWaText">
                 <i class="fi fi-rr-copy"></i> Copy Text
             </button>
+            <a href="#" target="_blank" class="btn-v3-action btn-outline d-none" id="tqBtnOpenCrmChat">
+                <i class="fi fi-rr-comment-alt-middle"></i> Open in CRM Live Chat
+            </a>
             <div class="tq-wa-modal-actions">
                 <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Close</button>
-                <a href="#" target="_blank" class="btn-add-pkg-v3 tq-wa-send-btn" id="tqBtnSendWaDirect">
-                    <i class="fi fi-brands-whatsapp"></i> Send on WhatsApp
-                </a>
+                <button type="button" class="btn-add-pkg-v3 tq-wa-send-btn" id="tqBtnSendWaDirect">
+                    <i class="fi fi-brands-whatsapp"></i> <span>Send on WhatsApp</span>
+                </button>
             </div>
         </div>
     </div>

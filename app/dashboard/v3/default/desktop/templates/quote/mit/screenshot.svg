@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <rect width="600" height="400" fill="#f1f5f9"/>
+
+  <!-- A4 Page representation -->
+  <rect x="50" y="20" width="500" height="360" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+
+  <!-- Corporate Letterhead Header -->
+  <rect x="75" y="40" width="220" height="14" rx="2" fill="#0f172a"/>
+  <rect x="75" y="60" width="180" height="8" rx="2" fill="#64748b"/>
+  <rect x="75" y="73" width="240" height="6" rx="2" fill="#94a3b8"/>
+  <rect x="75" y="85" width="200" height="12" rx="2" fill="#f8fafc" stroke="#cbd5e1"/>
+
+  <!-- Quotation Type Pill & Ref -->
+  <rect x="365" y="40" width="160" height="20" rx="3" fill="#0f172a"/>
+  <text x="375" y="54" fill="#ffffff" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700">COMMERCIAL QUOTE</text>
+  <rect x="390" y="66" width="135" height="6" rx="2" fill="#64748b"/>
+  <rect x="420" y="78" width="105" height="6" rx="2" fill="#64748b"/>
+
+  <line x1="75" y1="108" x2="525" y2="108" stroke="#0f172a" stroke-width="1.5"/>
+
+  <!-- 2 Info Boxes -->
+  <rect x="75" y="118" width="215" height="52" rx="4" fill="#f8fafc" stroke="#cbd5e1"/>
+  <rect x="75" y="118" width="215" height="14" rx="4" fill="#0f2942"/>
+  <text x="83" y="128" fill="#ffffff" font-size="7.5" font-weight="700">CUSTOMER DETAILS</text>
+
+  <rect x="310" y="118" width="215" height="52" rx="4" fill="#f8fafc" stroke="#cbd5e1"/>
+  <rect x="310" y="118" width="215" height="14" rx="4" fill="#0f2942"/>
+  <text x="318" y="128" fill="#ffffff" font-size="7.5" font-weight="700">ROUTE &amp; SCHEDULE</text>
+
+  <!-- Fleet Box -->
+  <rect x="75" y="180" width="450" height="34" rx="4" fill="#f8fafc" stroke="#cbd5e1"/>
+  <rect x="75" y="180" width="4" height="34" fill="#0f172a"/>
+  <text x="88" y="196" fill="#0f172a" font-size="11" font-weight="800">SUZUKI DEZIRE (SEDAN)</text>
+  <text x="420" y="201" fill="#0f172a" font-size="13" font-weight="800">₹ 3,500.00</text>
+
+  <!-- Tariff Table -->
+  <rect x="75" y="222" width="450" height="54" rx="4" fill="#ffffff" stroke="#0f2942"/>
+  <rect x="75" y="222" width="450" height="15" fill="#0f2942"/>
+  <text x="85" y="233" fill="#ffffff" font-size="7.5" font-weight="700">DESCRIPTION</text>
+  <text x="450" y="233" fill="#ffffff" font-size="7.5" font-weight="700">AMOUNT</text>
+  <line x1="75" y1="255" x2="525" y2="255" stroke="#e2e8f0"/>
+  <text x="85" y="250" fill="#334155" font-size="8">Vehicle Running Tariff</text>
+  <text x="460" y="250" fill="#334155" font-size="8">₹ 3,500.00</text>
+  <text x="85" y="268" fill="#0f172a" font-size="8.5" font-weight="700">TOTAL QUOTATION ESTIMATE</text>
+  <text x="450" y="268" fill="#0f172a" font-size="9" font-weight="800">₹ 3,500.00</text>
+
+  <!-- Words strip -->
+  <rect x="75" y="284" width="450" height="18" rx="3" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="83" y="296" fill="#0f172a" font-size="7.5" font-weight="600">Amount in Words: Rupees Three Thousand Five Hundred Only</text>
+
+  <!-- Signatures -->
+  <line x1="85" y1="340" x2="195" y2="340" stroke="#94a3b8"/>
+  <text x="85" y="348" fill="#475569" font-size="7" font-weight="700">Customer Signature</text>
+  <line x1="405" y1="340" x2="515" y2="340" stroke="#94a3b8"/>
+  <text x="405" y="348" fill="#475569" font-size="7" font-weight="700">Authorized Signatory</text>
+
+  <!-- Footer -->
+  <text x="175" y="368" fill="#64748b" font-size="7.5">Powered by Aleya.in • Enterprise Fleet &amp; Travel Solutions</text>
+</svg>

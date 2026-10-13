@@ -37,19 +37,96 @@ if ($siteId <= 0) {
     $siteId = 1;
 }
 
-$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+if ($method === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+function formatIndianNumber(float $num, int $decimals = 2): string {
+    $isNegative = $num < 0;
+    $num = abs($num);
+    $parts = explode('.', number_format($num, $decimals, '.', ''));
+    $intPart = $parts[0];
+    $decPart = isset($parts[1]) ? '.' . $parts[1] : '';
+    if (strlen($intPart) > 3) {
+        $lastThree = substr($intPart, -3);
+        $remaining = substr($intPart, 0, -3);
+        $remaining = preg_replace("/\B(?=(\d{2})+(?!\d))/", ",", $remaining);
+        $formatted = $remaining . ',' . $lastThree . $decPart;
+    } else {
+        $formatted = $intPart . $decPart;
+    }
+    return ($isNegative ? '-' : '') . $formatted;
+}
+
+function getIndianCurrencyWords(float $amount): string {
+    $amount = round($amount, 2);
+    $no = (int)floor($amount);
+    $point = (int)round(($amount - $no) * 100);
+    $words = [
+        0 => '', 1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five',
+        6 => 'Six', 7 => 'Seven', 8 => 'Eight', 9 => 'Nine', 10 => 'Ten',
+        11 => 'Eleven', 12 => 'Twelve', 13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
+        16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen', 19 => 'Nineteen', 20 => 'Twenty',
+        30 => 'Thirty', 40 => 'Forty', 50 => 'Fifty', 60 => 'Sixty', 70 => 'Seventy',
+        80 => 'Eighty', 90 => 'Ninety'
+    ];
+    $digits = ['', 'Hundred', 'Thousand', 'Lakh', 'Crore'];
+    
+    $str = [];
+    $i = 0;
+    while ($no > 0) {
+        $divider = ($i == 2) ? 10 : 100;
+        $number = $no % $divider;
+        $no = (int)floor($no / $divider);
+        $i += ($divider == 10) ? 1 : 2;
+        if ($number > 0) {
+            $counter = count($str);
+            if ($number < 20) {
+                $chunk = $words[$number];
+            } else {
+                $chunk = $words[10 * (int)floor($number / 10)] . ($number % 10 ? ' ' . $words[$number % 10] : '');
+            }
+            $unit = isset($digits[$counter]) && !empty($digits[$counter]) ? ' ' . $digits[$counter] : '';
+            $str[] = trim($chunk . $unit);
+        } else {
+            $str[] = '';
+        }
+    }
+    $rupees = implode(' ', array_reverse(array_filter($str)));
+    $rupees = trim(preg_replace('/\s+/', ' ', $rupees));
+    if (empty($rupees)) $rupees = 'Zero';
+    $paise = '';
+    if ($point > 0) {
+        if ($point < 20) $pWords = $words[$point];
+        else $pWords = $words[10 * (int)floor($point / 10)] . ($point % 10 ? ' ' . $words[$point % 10] : '');
+        $paise = ' and ' . trim($pWords) . ' Paise';
+    }
+    return 'Rupees ' . $rupees . $paise . ' Only';
+}
 
 function getTransporterCompanyMeta($connection, $siteId, $tblPrefix) {
     $meta = [
-        'name'    => 'Aleya Travel & Fleet Logistics',
-        'mobile'  => '',
-        'email'   => '',
-        'address' => '',
-        'domain'  => ''
+        'name'        => 'Aleya Travel & Fleet Logistics',
+        'tagline'     => 'Commercial Tourist Fleet & Transport Operator',
+        'mobile'      => '',
+        'whatsapp'    => '',
+        'email'       => '',
+        'address'     => '',
+        'domain'      => '',
+        'gstin'       => '',
+        'pan'         => '',
+        'bank_name'   => '',
+        'bank_ac_name'=> '',
+        'bank_ac_no'  => '',
+        'bank_ifsc'   => '',
+        'bank_branch' => '',
+        'upi_id'      => ''
     ];
     if (!$connection) return $meta;
     $sId = (int)$siteId;
-    $clause = ($sId > 0) ? "WHERE site_configuration_site_id = {$sId}" : "";
+    $clause = ($sId > 0) ? "WHERE site_configuration_site_id = {$sId} OR site_configuration_site_id = 0" : "";
     $res = @mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM {$tblPrefix}site_configuration {$clause}");
     if ($res) {
         while ($r = mysqli_fetch_assoc($res)) {
@@ -57,20 +134,65 @@ function getTransporterCompanyMeta($connection, $siteId, $tblPrefix) {
             $v = trim((string)$r['site_configuration_value']);
             if (empty($v)) continue;
             if ($k === 'company_name') $meta['name'] = $v;
-            else if ($k === 'site_mobile' || $k === 'company_mobile' || $k === 'company_whatsapp_number') {
+            else if ($k === 'company_mobile' || $k === 'site_mobile') {
                 if (empty($meta['mobile'])) $meta['mobile'] = $v;
             }
-            else if ($k === 'site_email' || $k === 'company_email') {
+            else if ($k === 'company_whatsapp_number' || $k === 'company_whatsapp') {
+                if (empty($meta['whatsapp'])) $meta['whatsapp'] = $v;
+            }
+            else if ($k === 'company_email' || $k === 'site_email') {
                 if (empty($meta['email'])) $meta['email'] = $v;
             }
             else if ($k === 'company_address') $meta['address'] = $v;
             else if ($k === 'company_site_domain') $meta['domain'] = $v;
+            else if ($k === 'company_gst' || $k === 'gst_number' || $k === 'gstin') $meta['gstin'] = $v;
+            else if ($k === 'company_pan' || $k === 'pan_number') $meta['pan'] = $v;
+            else if ($k === 'bank_name' && empty($meta['bank_name'])) $meta['bank_name'] = $v;
+            else if ($k === 'bank_ac_name' && empty($meta['bank_ac_name'])) $meta['bank_ac_name'] = $v;
+            else if ($k === 'bank_ac_number' && empty($meta['bank_ac_no'])) $meta['bank_ac_no'] = $v;
+            else if ($k === 'bank_ifsc' && empty($meta['bank_ifsc'])) $meta['bank_ifsc'] = $v;
+            else if ($k === 'bank_address' && empty($meta['bank_branch'])) $meta['bank_branch'] = $v;
+            else if (($k === 'upi_details' || $k === 'pg_upi_address') && empty($meta['upi_id'])) {
+                $parts = explode(',', $v);
+                $meta['upi_id'] = trim($parts[0]);
+            }
+            else if ($k === 'setting_company_profile') {
+                $cp = json_decode($v, true);
+                if (is_array($cp)) {
+                    if (!empty($cp['companyName']) && $meta['name'] === 'Aleya Travel & Fleet Logistics') $meta['name'] = $cp['companyName'];
+                    if (!empty($cp['companyMobile']) && empty($meta['mobile'])) $meta['mobile'] = $cp['companyMobile'];
+                    if (!empty($cp['companyWhatsapp']) && empty($meta['whatsapp'])) $meta['whatsapp'] = $cp['companyWhatsapp'];
+                    if (!empty($cp['companyEmail']) && empty($meta['email'])) $meta['email'] = $cp['companyEmail'];
+                    if (!empty($cp['companyAddress']) && empty($meta['address'])) $meta['address'] = $cp['companyAddress'];
+                }
+            }
         }
     }
+    if (empty($meta['mobile']) && !empty($meta['whatsapp'])) $meta['mobile'] = $meta['whatsapp'];
+    if (empty($meta['whatsapp']) && !empty($meta['mobile'])) $meta['whatsapp'] = $meta['mobile'];
+    if (empty($meta['bank_ac_name'])) $meta['bank_ac_name'] = $meta['name'];
     return $meta;
 }
 
 function buildTransporterProposalHtml($quoteId, $details, $company) {
+    // Modular Template Hook: Render using V3 Quote Template if available
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : (defined('ROOT') ? ROOT : realpath(__DIR__ . '/../../../'));
+    $templateFile = $docRoot . '/app/dashboard/v3/default/desktop/templates/quote/mit/index.php';
+    if (!file_exists($templateFile)) {
+        $templateFile = dirname(__DIR__, 3) . '/dashboard/v3/default/desktop/templates/quote/mit/index.php';
+    }
+    if (file_exists($templateFile)) {
+        $quotationId = $quoteId;
+        $quotePayload = $details;
+        $companyMeta = $company;
+        ob_start();
+        include $templateFile;
+        $templateRendered = ob_get_clean();
+        if (!empty($templateRendered)) {
+            return $templateRendered;
+        }
+    }
+
     $cust = $details['customer'] ?? [];
     $trav = $details['travel'] ?? [];
     $veh  = $details['vehicle'] ?? [];
@@ -92,13 +214,24 @@ function buildTransporterProposalHtml($quoteId, $details, $company) {
     $vehType    = htmlspecialchars(ucfirst($veh['vehicle_type'] ?? 'Sedan / SUV'));
     $vehSeating = htmlspecialchars((string)($veh['vehicle_seating'] ?? ''));
 
-    $sym         = htmlspecialchars($bill['currency_symbol'] ?? '₹');
-    $totalCost   = number_format((float)($bill['total_cost'] ?? 0), 2);
-    $kmRunning   = htmlspecialchars((string)($bill['km_running'] ?? 250));
-    $extraKm     = number_format((float)($bill['extra_km_charge'] ?? 0), 2);
-    $advPercent  = (float)($bill['advance_percent'] ?? 25);
-    $advAmount   = number_format((float)($bill['advance_amount'] ?? 0), 2);
-    $balAmount   = number_format((float)($bill['balance_amount'] ?? 0), 2);
+    $sym              = htmlspecialchars($bill['currency_symbol'] ?? '₹');
+    $totalCostNum     = (float)($bill['total_cost'] ?? 0);
+    $totalRunningKmNum= (float)($bill['total_running_km'] ?? 0);
+    $extraKmNum       = (float)($bill['extra_km_charge'] ?? 0);
+    $kmRunningNum     = (float)($bill['km_running'] ?? 250);
+    $advPercent       = (float)($bill['advance_percent'] ?? 25);
+    $advAmountNum     = (float)($bill['advance_amount'] ?? round(($totalCostNum * $advPercent) / 100, 2));
+    $balAmountNum     = (float)($bill['balance_amount'] ?? max(0, $totalCostNum - $advAmountNum));
+
+    $totalCost   = formatIndianNumber($totalCostNum);
+    $extraKm     = formatIndianNumber($extraKmNum);
+    $kmRunning   = formatIndianNumber($kmRunningNum, 0);
+    $advAmount   = formatIndianNumber($advAmountNum);
+    $balAmount   = formatIndianNumber($balAmountNum);
+    $totalRunningKmStr = ($totalRunningKmNum > 0) ? formatIndianNumber($totalRunningKmNum, ($totalRunningKmNum == (int)$totalRunningKmNum ? 0 : 2)) : '';
+    $runningAmountStr  = ($totalRunningKmNum > 0 && $extraKmNum > 0) ? formatIndianNumber($totalRunningKmNum * $extraKmNum) : $totalCost;
+    $distanceQtyStr    = !empty($totalRunningKmStr) ? $totalRunningKmStr . ' KM' : 'As per Route';
+    $amountInWords     = getIndianCurrencyWords($totalCostNum);
 
     $parking  = strtolower($term['parking_charges'] ?? 'no') === 'yes';
     $garage   = strtolower($term['garage_to_garage'] ?? 'yes') === 'yes';
@@ -107,24 +240,39 @@ function buildTransporterProposalHtml($quoteId, $details, $company) {
     $driver   = strtolower($term['driver_allowance'] ?? 'yes') === 'yes';
     $customRules = is_array($term['custom_rules'] ?? null) ? $term['custom_rules'] : [];
 
-    $garageText    = $garage ? 'Applicable' : 'Standard Base';
+    $garageText    = $garage ? 'Garage to Garage Applicable' : 'City Base to Base';
     $tollClass     = $toll ? 'term-badge-included' : 'term-badge-excluded';
-    $tollText      = $toll ? 'Included' : 'Excluded';
+    $tollText      = $toll ? 'Included in Quote' : 'Excluded (At Actuals)';
     $stateTaxClass = $stateTax ? 'term-badge-included' : 'term-badge-excluded';
-    $stateTaxText  = $stateTax ? 'Included' : 'Excluded';
+    $stateTaxText  = $stateTax ? 'Included in Quote' : 'Excluded (At Actuals)';
     $driverClass   = $driver ? 'term-badge-included' : 'term-badge-excluded';
-    $driverText    = $driver ? 'Included' : 'Excluded';
+    $driverText    = $driver ? 'Included in Quote' : 'Excluded';
     $parkingClass  = $parking ? 'term-badge-included' : 'term-badge-excluded';
-    $parkingText   = $parking ? 'Included' : 'Excluded (Guest Pays Direct)';
+    $parkingText   = $parking ? 'Included in Quote' : 'Excluded (Payable by Guest)';
 
-    $compName = htmlspecialchars($company['name'] ?? 'Aleya Fleet Logistics');
-    $compPhone = htmlspecialchars($company['mobile'] ?? '');
-    $compEmail = htmlspecialchars($company['email'] ?? '');
-    $compDomain = htmlspecialchars($company['domain'] ?? '');
+    $compName    = htmlspecialchars($company['name'] ?? 'Aleya Fleet Logistics');
+    $compTagline = htmlspecialchars($company['tagline'] ?? 'Commercial Tourist Fleet & Transport Operator');
+    $compPhone   = htmlspecialchars($company['mobile'] ?? '');
+    $compWhatsapp= htmlspecialchars($company['whatsapp'] ?? $compPhone);
+    $compEmail   = htmlspecialchars($company['email'] ?? '');
+    $compDomain  = htmlspecialchars($company['domain'] ?? '');
     $compAddress = htmlspecialchars($company['address'] ?? '');
+    $compGstin   = htmlspecialchars(!empty($company['gstin']) ? $company['gstin'] : 'Exempt / Transporter RCM');
+    $compPan     = htmlspecialchars(!empty($company['pan']) ? $company['pan'] : '');
+    $compWebsiteHtml = !empty($compDomain) ? '<span class="company-tax-badge">Website: ' . $compDomain . '</span>' : '';
+    $compPanHtml     = !empty($compPan) ? '<span class="company-tax-badge">PAN: ' . $compPan . '</span>' : '';
+    $vehSeatingHtml  = !empty($vehSeating) ? '<span class="fleet-tag-pill">' . htmlspecialchars($vehSeating) . ' Seater</span>' : '';
+
+    $bankName    = htmlspecialchars($company['bank_name'] ?? '');
+    $bankAcName  = htmlspecialchars($company['bank_ac_name'] ?? $compName);
+    $bankAcNo    = htmlspecialchars($company['bank_ac_no'] ?? '');
+    $bankIfsc    = htmlspecialchars($company['bank_ifsc'] ?? '');
+    $bankBranch  = htmlspecialchars($company['bank_branch'] ?? '');
+    $upiId       = htmlspecialchars($company['upi_id'] ?? '');
 
     $quoteDisplayId = 'TQ-' . str_pad((string)$quoteId, 5, '0', STR_PAD_LEFT);
     $currentDate = date('d M, Y');
+    $validDate   = date('d M, Y', strtotime('+7 days'));
 
     $customRulesHtml = '';
     if (!empty($customRules)) {
@@ -132,14 +280,42 @@ function buildTransporterProposalHtml($quoteId, $details, $company) {
             if (!empty($cr['enabled']) && !empty($cr['title'])) {
                 $t = htmlspecialchars($cr['title']);
                 $d = !empty($cr['description']) ? ' &mdash; <span style="color:#64748b;">' . htmlspecialchars($cr['description']) . '</span>' : '';
-                $customRulesHtml .= '<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f1f5f9;"><span style="color:#2563eb;font-weight:700;">&bull;</span><div><strong>' . $t . '</strong>' . $d . '</div></div>';
+                $customRulesHtml .= '<li class="indian-term-item"><strong>' . $t . '</strong>' . $d . '</li>';
             }
         }
     }
 
     $customRulesBlock = '';
     if (!empty($customRulesHtml)) {
-        $customRulesBlock = '<div style="margin-top:16px;padding-top:14px;border-top:1px dashed #cbd5e1;"><div style="font-size:11.5px;font-weight:700;text-transform:uppercase;color:#64748b;margin-bottom:8px;">Additional Commercial Terms &amp; Policies</div>' . $customRulesHtml . '</div>';
+        $customRulesBlock = '<div class="indian-custom-rules-wrap"><div class="indian-sub-heading">Special Operating Conditions:</div><ul class="indian-terms-list">' . $customRulesHtml . '</ul></div>';
+    }
+
+    $bankDetailsHtml = '';
+    if (!empty($bankName) || !empty($bankAcNo) || !empty($upiId)) {
+        $bankDetailsHtml = '
+        <div class="indian-bank-card">
+            <div class="indian-bank-header">
+                <div class="indian-bank-title"><i class="bank-icon">🏦</i> Bank &amp; Digital Payment Details (For NEFT / RTGS / IMPS / UPI)</div>
+                ' . (!empty($upiId) ? '<span class="indian-upi-badge">UPI / QR Enabled</span>' : '') . '
+            </div>
+            <div class="indian-bank-grid">
+                ' . (!empty($bankName) ? '<div class="indian-bank-cell"><span class="lbl">Bank Name:</span> <strong>' . $bankName . '</strong></div>' : '') . '
+                ' . (!empty($bankAcName) ? '<div class="indian-bank-cell"><span class="lbl">Beneficiary:</span> <strong>' . $bankAcName . '</strong></div>' : '') . '
+                ' . (!empty($bankAcNo) ? '<div class="indian-bank-cell"><span class="lbl">Account No:</span> <strong class="val-mono">' . $bankAcNo . '</strong></div>' : '') . '
+                ' . (!empty($bankIfsc) ? '<div class="indian-bank-cell"><span class="lbl">IFSC Code:</span> <strong class="val-mono">' . $bankIfsc . '</strong></div>' : '') . '
+                ' . (!empty($bankBranch) ? '<div class="indian-bank-cell span-2"><span class="lbl">Branch:</span> <span>' . $bankBranch . '</span></div>' : '') . '
+                ' . (!empty($upiId) ? '<div class="indian-bank-cell span-2"><span class="lbl">UPI ID / VPA:</span> <strong class="val-mono val-upi">' . $upiId . '</strong> (GooglePay, PhonePe, Paytm, BHIM)</div>' : '') . '
+            </div>
+        </div>';
+    } else {
+        $bankDetailsHtml = '
+        <div class="indian-bank-card">
+            <div class="indian-bank-header">
+                <div class="indian-bank-title"><i class="bank-icon">🏦</i> Bank &amp; UPI Payment</div>
+                <span class="indian-upi-badge">Instant Booking</span>
+            </div>
+            <p style="font-size:12.5px;color:#475569;margin-top:4px;">Official bank transfer and UPI QR details will be provided along with booking confirmation voucher.</p>
+        </div>';
     }
 
     return <<<HTML
@@ -148,10 +324,10 @@ function buildTransporterProposalHtml($quoteId, $details, $company) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposal {$quoteDisplayId} - {$custName}</title>
+    <title>Transporter Quotation {$quoteDisplayId} - {$custName}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -159,207 +335,457 @@ function buildTransporterProposalHtml($quoteId, $details, $company) {
             background-color: #f1f5f9;
             color: #1e293b;
             padding: 30px 16px;
-            font-size: 13.5px;
+            font-size: 13px;
             line-height: 1.5;
         }
         .proposal-wrap {
-            max-width: 860px;
+            max-width: 880px;
             margin: 0 auto;
             background: #ffffff;
-            border-radius: 14px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.06), 0 8px 10px -6px rgba(0,0,0,0.04);
-            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            border: 1px solid #94a3b8;
             overflow: hidden;
+            position: relative;
         }
-        .proposal-header {
-            padding: 32px 36px 24px 36px;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #ffffff;
+        /* Header / Letterhead - Formal Legal Document Format */
+        .indian-letterhead {
+            padding: 24px 30px 18px 30px;
+            border-bottom: 2px solid #0f172a;
             display: flex;
-            align-items: flex-start;
             justify-content: space-between;
-            gap: 20px;
-            border-bottom: 3px solid #2563eb;
+            align-items: flex-start;
+            gap: 24px;
+            background: #ffffff;
+        }
+        .company-meta-col {
+            flex: 1;
         }
         .company-brand-title {
             font-size: 22px;
             font-weight: 800;
-            letter-spacing: -0.02em;
-            color: #ffffff;
+            color: #0f172a;
+            letter-spacing: 0.02em;
+            line-height: 1.2;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+        .company-tagline {
+            font-size: 11px;
+            color: #475569;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
             margin-bottom: 6px;
         }
-        .company-meta-line {
+        .company-address-line {
             font-size: 12px;
-            color: #94a3b8;
+            color: #334155;
+            line-height: 1.45;
             margin-bottom: 3px;
         }
-        .proposal-ref-box {
-            text-align: right;
-        }
-        .proposal-badge {
-            display: inline-block;
-            background: rgba(37, 99, 235, 0.25);
-            color: #60a5fa;
-            border: 1px solid rgba(96, 165, 250, 0.3);
-            padding: 4px 10px;
-            border-radius: 6px;
+        .company-tax-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
             font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1e293b;
         }
-        .proposal-ref-number {
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.01em;
-        }
-        .proposal-date-line {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-top: 4px;
-        }
-        .proposal-body {
-            padding: 32px 36px;
-        }
-        .grid-two-cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 24px;
-        }
-        .info-card {
+        .company-tax-badge {
             background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 18px 20px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1px solid #cbd5e1;
+            font-size: 11px;
+            color: #334155;
         }
-        .info-card-title {
+        .invoice-title-col {
+            text-align: right;
+            min-width: 250px;
+        }
+        .invoice-type-pill {
+            display: inline-block;
+            background: #0f172a;
+            color: #ffffff;
             font-size: 11.5px;
             font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 3px;
+            margin-bottom: 8px;
+        }
+        .invoice-meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+        }
+        .invoice-meta-table td {
+            padding: 2px 0;
+            font-size: 12px;
+        }
+        .invoice-meta-table td.lbl {
+            color: #64748b;
+            text-align: right;
+            padding-right: 8px;
+        }
+        .invoice-meta-table td.val {
+            font-weight: 700;
+            color: #0f172a;
+            text-align: right;
+        }
+
+        /* Body Section */
+        .proposal-body {
+            padding: 24px 30px 30px 30px;
+        }
+        /* 2-Column Info Grid: Customer & Trip */
+        .indian-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .indian-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .indian-box-header {
+            background: #0f2942;
+            color: #ffffff;
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .indian-box-body {
+            padding: 12px 14px;
+        }
+        .indian-data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 12.5px;
+        }
+        .indian-data-row:last-child { margin-bottom: 0; }
+        .indian-data-row .lbl { color: #64748b; font-size: 12px; }
+        .indian-data-row .val { font-weight: 600; color: #0f172a; text-align: right; }
+
+        /* Vehicle Specification Banner - Neutral Legal Format */
+        .indian-fleet-card {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #0f172a;
+            border-radius: 4px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .fleet-meta h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+        .fleet-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .fleet-tag-pill {
+            background: #ffffff;
+            color: #334155;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1px solid #cbd5e1;
+        }
+        .fleet-cost-meta {
+            text-align: right;
+            min-width: 140px;
+        }
+        .fleet-cost-lbl {
+            font-size: 10.5px;
+            color: #64748b;
+            font-weight: 700;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .fleet-cost-val {
+            font-size: 20px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        /* Indian Itemized Tariff Table */
+        .indian-table-wrap {
+            border: 1px solid #0f2942;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .indian-tariff-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+        }
+        .indian-tariff-table th {
+            background: #0f2942;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 11.5px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 9px 12px;
+            border-right: 1px solid #1e3a5f;
+            text-align: left;
+        }
+        .indian-tariff-table th:last-child { border-right: none; }
+        .indian-tariff-table th.center, .indian-tariff-table td.center { text-align: center; }
+        .indian-tariff-table th.right, .indian-tariff-table td.right { text-align: right; }
+        .indian-tariff-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            vertical-align: middle;
+            color: #1e293b;
+        }
+        .indian-tariff-table td:last-child { border-right: none; }
+        .indian-tariff-table tbody tr:nth-child(even) { background-color: #f8fafc; }
+        .tariff-desc-sub {
+            display: block;
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        .indian-tariff-table tr.total-row {
+            background: #f1f5f9;
+            font-weight: 700;
+        }
+        .indian-tariff-table tr.total-row td {
+            border-top: 2px solid #0f2942;
+            font-size: 14px;
+            color: #0f172a;
+            padding: 10px 12px;
+        }
+        .indian-tariff-table tr.total-row td.grand-amount {
+            font-size: 17px;
+            color: #0f2942;
+        }
+
+        /* Amount in Words Box */
+        .indian-words-strip {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #0f172a;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #0f172a;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Payment Milestones Card */
+        .indian-payment-schedule {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .payment-pill {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .payment-pill.advance {
+            background: #f8fafc;
+            border-color: #94a3b8;
+            border-left: 3px solid #0f172a;
+        }
+        .payment-pill .meta .lbl {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #475569;
+            letter-spacing: 0.04em;
+        }
+        .payment-pill .meta .desc {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        .payment-pill .amount {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .payment-pill.advance .amount {
+            color: #0f172a;
+        }
+
+        /* Indian Bank & UPI Box */
+        .indian-bank-card {
+            background: #ffffff;
+            border: 1px dashed #0f2942;
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+        }
+        .indian-bank-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .indian-bank-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0f2942;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .indian-upi-badge {
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #bfdbfe;
+        }
+        .indian-bank-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+            font-size: 12px;
+        }
+        .indian-bank-cell {
+            display: flex;
+            gap: 6px;
+        }
+        .indian-bank-cell.span-2 {
+            grid-column: 1 / -1;
+        }
+        .indian-bank-cell .lbl { color: #64748b; min-width: 90px; }
+        .val-mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #0f172a; }
+        .val-upi { color: #2563eb; font-weight: 700; }
+
+        /* Terms & Conditions Section */
+        .indian-terms-card {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+        }
+        .indian-terms-header {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0f2942;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #64748b;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 1px solid #e2e8f0;
             padding-bottom: 6px;
         }
-        .info-card-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 7px;
-            font-size: 13px;
+        .indian-terms-list {
+            list-style: none;
+            padding-left: 0;
         }
-        .info-card-row:last-child { margin-bottom: 0; }
-        .info-label { color: #64748b; }
-        .info-val { font-weight: 600; color: #0f172a; text-align: right; }
-        .vehicle-hero-card {
-            background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
-            border: 1px solid #bfdbfe;
-            border-radius: 10px;
-            padding: 18px 22px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .vehicle-meta h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1e3a8a;
-            margin-bottom: 4px;
-        }
-        .vehicle-tag {
-            display: inline-block;
-            background: #dbeafe;
-            color: #1d4ed8;
-            padding: 2px 8px;
-            border-radius: 4px;
+        .indian-term-item {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 6px;
             font-size: 11.5px;
-            font-weight: 600;
-            margin-right: 6px;
-        }
-        .tariff-section {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 24px;
-        }
-        .tariff-header {
-            background: #f8fafc;
-            padding: 12px 20px;
-            font-size: 12.5px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
             color: #334155;
-            border-bottom: 1px solid #e2e8f0;
+            line-height: 1.45;
         }
-        .tariff-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .tariff-table th, .tariff-table td {
-            padding: 12px 20px;
-            text-align: left;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 13.5px;
-        }
-        .tariff-table th { background: #fafafa; font-weight: 600; color: #64748b; font-size: 12px; }
-        .tariff-table td.val-highlight { font-weight: 700; color: #2563eb; }
-        .tariff-total-row {
-            background: #f8fafc;
-            font-weight: 700;
-        }
-        .tariff-total-row td {
-            font-size: 16px;
-            color: #0f172a;
-            border-top: 2px solid #cbd5e1;
-            padding: 14px 20px;
-        }
-        .terms-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 10px;
-        }
-        .term-pill {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            border-radius: 8px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            font-size: 12.5px;
+        .indian-term-item:last-child { margin-bottom: 0; }
+        .indian-term-item::before {
+            content: "•";
+            position: absolute;
+            left: 4px;
+            color: #0f2942;
+            font-weight: 800;
+            font-size: 14px;
         }
         .term-badge-included {
             background: #dcfce7;
             color: #15803d;
-            padding: 2px 7px;
-            border-radius: 4px;
+            padding: 1px 6px;
+            border-radius: 3px;
             font-weight: 700;
-            font-size: 11px;
+            font-size: 10.5px;
         }
         .term-badge-excluded {
             background: #fee2e2;
             color: #b91c1c;
-            padding: 2px 7px;
-            border-radius: 4px;
+            padding: 1px 6px;
+            border-radius: 3px;
             font-weight: 700;
+            font-size: 10.5px;
+        }
+        .indian-sub-heading {
             font-size: 11px;
-        }
-        .proposal-footer-notes {
-            margin-top: 24px;
-            padding: 16px 20px;
-            border-left: 3px solid #2563eb;
-            background: #f8fafc;
-            border-radius: 0 8px 8px 0;
-            font-size: 12px;
+            font-weight: 700;
             color: #475569;
+            text-transform: uppercase;
+            margin: 10px 0 6px 0;
         }
+
+        /* Signatures Section */
+        .indian-sign-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #cbd5e1;
+        }
+        .indian-sign-box {
+            font-size: 12px;
+        }
+        .indian-sign-box.right {
+            text-align: right;
+        }
+        .sign-placeholder-line {
+            height: 48px;
+            border-bottom: 1px dashed #94a3b8;
+            margin-bottom: 6px;
+        }
+        .sign-title {
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .sign-subtitle {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* Floating Action Bar */
         .action-floating-bar {
             position: fixed;
             bottom: 20px;
@@ -369,166 +795,348 @@ function buildTransporterProposalHtml($quoteId, $details, $company) {
             z-index: 1000;
         }
         .btn-print-action {
-            background: #2563eb;
+            background: #0f2942;
             color: #fff;
             border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 6px;
             font-weight: 600;
+            font-size: 13px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+            box-shadow: 0 4px 12px rgba(15, 41, 66, 0.3);
             display: flex;
             align-items: center;
             gap: 6px;
+            transition: all 0.2s ease;
         }
-        .btn-print-action:hover { background: #1d4ed8; }
+        .btn-print-action:hover { background: #1e3a5f; transform: translateY(-1px); }
+
+        /* Document Footer & Aleya.in Credit */
+        .indian-doc-footer {
+            margin-top: 24px;
+            padding-top: 14px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #64748b;
+        }
+        .indian-doc-footer .footer-credit {
+            font-weight: 600;
+            color: #334155;
+            text-align: right;
+        }
+        .indian-doc-footer .credit-link {
+            color: #2563eb;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .indian-doc-footer .credit-link:hover {
+            text-decoration: underline;
+        }
+        .print-page-footer {
+            display: none;
+        }
+
+        /* Print Rules */
         @media print {
             body { background: #ffffff !important; padding: 0 !important; color: #000000 !important; }
             .proposal-wrap { box-shadow: none !important; border: none !important; max-width: 100% !important; border-radius: 0 !important; }
             .action-floating-bar { display: none !important; }
-            .proposal-header { background: #1e293b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .vehicle-hero-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            @page { margin: 10mm; size: A4; }
+            .indian-tariff-table th, .indian-box-header, .invoice-type-pill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .indian-terms-card, .indian-sign-grid, .indian-doc-footer, .indian-bank-card, .indian-payment-schedule { page-break-inside: avoid; break-inside: avoid; }
+            .print-page-footer {
+                display: block !important;
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                text-align: center !important;
+                font-size: 9.5px !important;
+                color: #64748b !important;
+                background: #ffffff !important;
+                border-top: 1px solid #e2e8f0 !important;
+                padding: 4px 10px !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            @page {
+                margin: 10mm 12mm 14mm 12mm;
+                size: A4 portrait;
+                @bottom-center {
+                    content: "Powered by Aleya.in • Fleet & Mobility Solutions";
+                    font-size: 9px;
+                    color: #64748b;
+                }
+            }
         }
         @media (max-width: 768px) {
-            .grid-two-cards, .terms-grid { grid-template-columns: 1fr; }
-            .proposal-header { flex-direction: column; }
-            .proposal-ref-box { text-align: left; }
+            .indian-letterhead { flex-direction: column; }
+            .invoice-title-col { text-align: left; }
+            .invoice-meta-table td.lbl { text-align: left; }
+            .indian-info-grid, .indian-payment-schedule, .indian-bank-grid, .indian-sign-grid { grid-template-columns: 1fr; }
+            .indian-sign-box.right { text-align: left; }
         }
     </style>
 </head>
 <body>
     <div class="proposal-wrap">
-        <header class="proposal-header">
-            <div>
+        <!-- Corporate Letterhead Header (Valid Legal Format) -->
+        <header class="indian-letterhead">
+            <div class="company-meta-col">
                 <h1 class="company-brand-title">{$compName}</h1>
-                <p class="company-meta-line">{$compAddress}</p>
-                <p class="company-meta-line">Phone: {$compPhone} &bull; Email: {$compEmail}</p>
-                <p class="company-meta-line">{$compDomain}</p>
-            </div>
-            <div class="proposal-ref-box">
-                <span class="proposal-badge">Fleet Proposal</span>
-                <div class="proposal-ref-number">{$quoteDisplayId}</div>
-                <div class="proposal-date-line">Date: {$currentDate}</div>
-            </div>
-        </header>
-
-        <main class="proposal-body">
-            <div class="grid-two-cards">
-                <div class="info-card">
-                    <div class="info-card-title">Customer Identity</div>
-                    <div class="info-card-row">
-                        <span class="info-label">Client Name:</span>
-                        <span class="info-val">{$custName}</span>
-                    </div>
-                    <div class="info-card-row">
-                        <span class="info-label">Mobile Number:</span>
-                        <span class="info-val">{$custMobile}</span>
-                    </div>
-                    <div class="info-card-row">
-                        <span class="info-label">Email Address:</span>
-                        <span class="info-val">{$custEmail}</span>
-                    </div>
-                    <div class="info-card-row">
-                        <span class="info-label">Address / Location:</span>
-                        <span class="info-val">{$custAddress}</span>
-                    </div>
-                </div>
-
-                <div class="info-card">
-                    <div class="info-card-title">Travel &amp; Route Logistics</div>
-                    <div class="info-card-row">
-                        <span class="info-label">Destination:</span>
-                        <span class="info-val">{$dest}</span>
-                    </div>
-                    <div class="info-card-row">
-                        <span class="info-label">Pickup Point:</span>
-                        <span class="info-val">{$pickup}</span>
-                    </div>
-                    <div class="info-card-row">
-                        <span class="info-label">Drop Point:</span>
-                        <span class="info-val">{$drop}</span>
-                    </div>
-                    <div class="info-card-row">
-                        <span class="info-label">Travel Date:</span>
-                        <span class="info-val">{$tDate} ({$duration} Days)</span>
-                    </div>
+                <div class="company-tagline">{$compTagline}</div>
+                <p class="company-address-line">{$compAddress}</p>
+                <p class="company-address-line"><strong>Phone:</strong> {$compPhone} &bull; <strong>WhatsApp:</strong> {$compWhatsapp} &bull; <strong>Email:</strong> {$compEmail}</p>
+                <div class="company-tax-strip">
+                    <span class="company-tax-badge">GSTIN: {$compGstin}</span>
+                    {$compPanHtml}
+                    {$compWebsiteHtml}
+                    <span class="company-tax-badge">Commercial Fleet Operator</span>
                 </div>
             </div>
 
-            <div class="vehicle-hero-card">
-                <div class="vehicle-meta">
-                    <h3>{$vehTitle}</h3>
-                    <div>
-                        <span class="vehicle-tag">{$vehType}</span>
-                        <span class="vehicle-tag">{$vehSeating} Seater</span>
-                        <span class="vehicle-tag" style="background:#dcfce7;color:#15803d;">Dedicated Chauffeur</span>
-                    </div>
-                </div>
-                <div style="text-align:right;">
-                    <span style="font-size:12px;color:#64748b;display:block;">Package Price</span>
-                    <strong style="font-size:22px;color:#0f172a;">{$sym} {$totalCost}</strong>
-                </div>
-            </div>
-
-            <div class="tariff-section">
-                <div class="tariff-header">Commercial Billing &amp; Tariff Summary</div>
-                <table class="tariff-table">
+            <div class="invoice-title-col">
+                <div class="invoice-type-pill">COMMERCIAL TRANSPORT QUOTATION</div>
+                <table class="invoice-meta-table">
                     <tr>
-                        <td>Daily Running Limit / Allowance</td>
-                        <td class="val-highlight" style="text-align:right;">{$kmRunning} KM / Day</td>
+                        <td class="lbl">Quote Ref No:</td>
+                        <td class="val">{$quoteDisplayId}</td>
                     </tr>
                     <tr>
-                        <td>Extra Running Charge (Beyond Limit)</td>
-                        <td class="val-highlight" style="text-align:right;">{$sym} {$extraKm} / KM</td>
+                        <td class="lbl">Date of Issue:</td>
+                        <td class="val">{$currentDate}</td>
                     </tr>
                     <tr>
-                        <td>Advance Booking Deposit Required ({$advPercent}%)</td>
-                        <td class="val-highlight" style="text-align:right;color:#15803d;">{$sym} {$advAmount}</td>
+                        <td class="lbl">Valid Upto:</td>
+                        <td class="val">{$validDate}</td>
                     </tr>
                     <tr>
-                        <td>Balance Payable on Trip</td>
-                        <td class="val-highlight" style="text-align:right;">{$sym} {$balAmount}</td>
-                    </tr>
-                    <tr class="tariff-total-row">
-                        <td>Total Quotation Cost</td>
-                        <td style="text-align:right;color:#2563eb;">{$sym} {$totalCost}</td>
+                        <td class="lbl">Duty Nature:</td>
+                        <td class="val">Passenger Transport</td>
                     </tr>
                 </table>
             </div>
+        </header>
 
-            <div class="info-card" style="margin-bottom:24px;">
-                <div class="info-card-title">Policy &amp; Standard Inclusions</div>
-                <div class="terms-grid">
-                    <div class="term-pill">
-                        <span>Garage to Garage Calculation</span>
-                        <span class="term-badge-included">{$garageText}</span>
+        <!-- Document Main Body -->
+        <main class="proposal-body">
+            <!-- 2-Column Structured Info: Customer & Itinerary -->
+            <div class="indian-info-grid">
+                <div class="indian-box">
+                    <div class="indian-box-header">
+                        <span>Customer Details (Quotation To)</span>
+                        <span>Client</span>
                     </div>
-                    <div class="term-pill">
-                        <span>Toll Express Plaza Taxes</span>
-                        <span class="{$tollClass}">{$tollText}</span>
-                    </div>
-                    <div class="term-pill">
-                        <span>Inter-State Commercial Taxes</span>
-                        <span class="{$stateTaxClass}">{$stateTaxText}</span>
-                    </div>
-                    <div class="term-pill">
-                        <span>Chauffeur / Driver Allowance</span>
-                        <span class="{$driverClass}">{$driverText}</span>
-                    </div>
-                    <div class="term-pill" style="grid-column: 1 / -1;">
-                        <span>Airport, Station &amp; Monument Parking</span>
-                        <span class="{$parkingClass}">{$parkingText}</span>
+                    <div class="indian-box-body">
+                        <div class="indian-data-row">
+                            <span class="lbl">Client Name:</span>
+                            <span class="val">{$custName}</span>
+                        </div>
+                        <div class="indian-data-row">
+                            <span class="lbl">Mobile No:</span>
+                            <span class="val">{$custMobile}</span>
+                        </div>
+                        <div class="indian-data-row">
+                            <span class="lbl">Email ID:</span>
+                            <span class="val">{$custEmail}</span>
+                        </div>
+                        <div class="indian-data-row">
+                            <span class="lbl">Address / City:</span>
+                            <span class="val">{$custAddress}</span>
+                        </div>
                     </div>
                 </div>
+
+                <div class="indian-box">
+                    <div class="indian-box-header">
+                        <span>Tour &amp; Journey Route Schedule</span>
+                        <span>Itinerary</span>
+                    </div>
+                    <div class="indian-box-body">
+                        <div class="indian-data-row">
+                            <span class="lbl">Destination:</span>
+                            <span class="val">{$dest}</span>
+                        </div>
+                        <div class="indian-data-row">
+                            <span class="lbl">Pickup Point:</span>
+                            <span class="val">{$pickup}</span>
+                        </div>
+                        <div class="indian-data-row">
+                            <span class="lbl">Drop Point:</span>
+                            <span class="val">{$drop}</span>
+                        </div>
+                        <div class="indian-data-row">
+                            <span class="lbl">Travel Date:</span>
+                            <span class="val">{$tDate} ({$duration} Day(s))</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assigned Fleet Vehicle Specification Card -->
+            <div class="indian-fleet-card">
+                <div class="fleet-meta">
+                    <h3>{$vehTitle}</h3>
+                    <div class="fleet-tags">
+                        <span class="fleet-tag-pill">Category: {$vehType}</span>
+                        {$vehSeatingHtml}
+                        <span class="fleet-tag-pill">All India Tourist Permit</span>
+                        <span class="fleet-tag-pill">Air-Conditioned</span>
+                        <span class="fleet-tag-pill">Chauffeur Driven</span>
+                    </div>
+                </div>
+                <div class="fleet-cost-meta">
+                    <span class="fleet-cost-lbl">Estimated Fleet Tariff</span>
+                    <strong class="fleet-cost-val">{$sym} {$totalCost}</strong>
+                </div>
+            </div>
+
+            <!-- Commercial Tariff & Estimate Table (Indian Format) -->
+            <div class="indian-table-wrap">
+                <table class="indian-tariff-table">
+                    <thead>
+                        <tr>
+                            <th class="center" style="width: 46px;">S.N.</th>
+                            <th>Description / Service Particulars</th>
+                            <th class="right" style="width: 140px;">Tariff Basis</th>
+                            <th class="right" style="width: 130px;">Distance / Qty</th>
+                            <th class="right" style="width: 150px;">Total Amount ({$sym})</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="center">1.</td>
+                            <td>
+                                <strong>Vehicle Outstation Running Tariff</strong>
+                                <span class="tariff-desc-sub">Route distance tariff estimated based on itinerary ({$pickup} to {$dest})</span>
+                            </td>
+                            <td class="right">{$sym} {$extraKm} / KM</td>
+                            <td class="right">{$distanceQtyStr}</td>
+                            <td class="right"><strong>{$sym} {$runningAmountStr}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="center">2.</td>
+                            <td>
+                                <strong>Daily Minimum Running Allowance (Threshold)</strong>
+                                <span class="tariff-desc-sub">Standard operational limit per calendar day</span>
+                            </td>
+                            <td class="right">{$kmRunning} KM / Day</td>
+                            <td class="right">{$duration} Day(s)</td>
+                            <td class="right"><span class="term-badge-included">Included</span></td>
+                        </tr>
+                        <tr>
+                            <td class="center">3.</td>
+                            <td>
+                                <strong>Professional Commercial Chauffeur Duty</strong>
+                                <span class="tariff-desc-sub">Chauffeur daytime driving duty and outstation allowance</span>
+                            </td>
+                            <td class="right">Standard</td>
+                            <td class="right">{$duration} Day(s)</td>
+                            <td class="right"><span class="{$driverClass}">{$driverText}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="center">4.</td>
+                            <td>
+                                <strong>Toll Tax, Express Highway &amp; State Border Permits</strong>
+                                <span class="tariff-desc-sub">Commercial border taxes and national expressway toll charges</span>
+                            </td>
+                            <td class="right">Permit / Plaza</td>
+                            <td class="right">As per Route</td>
+                            <td class="right"><span class="{$tollClass}">{$tollText}</span></td>
+                        </tr>
+                        <!-- Grand Total Summary Row -->
+                        <tr class="total-row">
+                            <td colspan="4" class="right">TOTAL ESTIMATED QUOTATION COST:</td>
+                            <td class="right grand-amount">{$sym} {$totalCost}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Amount Chargeable in Words (Indian Standard) -->
+            <div class="indian-words-strip">
+                <strong>Amount Chargeable in Words:</strong> {$amountInWords}
+            </div>
+
+            <!-- Payment Schedule & Advance Breakdown -->
+            <div class="indian-payment-schedule">
+                <div class="payment-pill advance">
+                    <div class="meta">
+                        <div class="lbl">Advance Booking Deposit ({$advPercent}%)</div>
+                        <div class="desc">Required to confirm fleet reservation</div>
+                    </div>
+                    <div class="amount">{$sym} {$advAmount}</div>
+                </div>
+                <div class="payment-pill">
+                    <div class="meta">
+                        <div class="lbl">Balance Due on Departure</div>
+                        <div class="desc">Payable at start of journey / trip</div>
+                    </div>
+                    <div class="amount">{$sym} {$balAmount}</div>
+                </div>
+            </div>
+
+            <!-- Bank & Digital Payment Details (Indian Format) -->
+            {$bankDetailsHtml}
+
+            <!-- Commercial Policy & Terms & Conditions -->
+            <div class="indian-terms-card">
+                <div class="indian-terms-header">
+                    <span>Terms &amp; Conditions</span>
+                    <span style="font-size:11px;color:#64748b;text-transform:none;">Standard Outstation Commercial Policy</span>
+                </div>
+                <ul class="indian-terms-list">
+                    <li class="indian-term-item"><strong>Garage to Garage Calculation:</strong> Total running distance (kilometres) and duty timings are calculated starting and closing from our garage base ({$garageText}).</li>
+                    <li class="indian-term-item"><strong>Toll Plaza &amp; Inter-State Taxes:</strong> National highway toll plaza taxes, commercial border entry taxes, and airport/station parking fees are <strong>{$tollText} / {$stateTaxText} / {$parkingText}</strong>.</li>
+                    <li class="indian-term-item"><strong>Chauffeur Duty &amp; Allowance:</strong> Commercial driver day duty and night halt allowances are <strong>{$driverText}</strong>.</li>
+                    <li class="indian-term-item"><strong>Mountain / Uphill Incline AC Policy:</strong> As per transport safety regulations, the vehicle air conditioner (AC) will remain switched off on steep uphill mountain road sections to ensure engine performance and passenger safety.</li>
+                    <li class="indian-term-item"><strong>Night Driving Regulations:</strong> Night driving between 11:00 PM and 06:00 AM requires prior operational confirmation and attracts additional night allowance.</li>
+                    <li class="indian-term-item"><strong>Extra Running Tariff:</strong> Any additional running beyond the estimated distance will be charged at <strong>{$sym} {$extraKm} per KM</strong>.</li>
+                    <li class="indian-term-item"><strong>Mechanical Breakdown Backup:</strong> In the rare event of an unavoidable mechanical breakdown, an equivalent replacement vehicle will be arranged promptly to ensure seamless travel.</li>
+                </ul>
 
                 {$customRulesBlock}
             </div>
 
-            <div class="proposal-footer-notes">
-                <strong>Booking Instructions:</strong> Vehicle slot is held temporarily. Advance booking deposit of {$sym} {$advAmount} is required to confirm reservation. Toll, state taxes, and parking fees (if excluded) are to be settled as per actuals during the journey.
+            <!-- Dual Signatures Block (Indian Format) -->
+            <div class="indian-sign-grid">
+                <div class="indian-sign-box">
+                    <div class="sign-placeholder-line"></div>
+                    <div class="sign-title">Customer Acceptance &amp; Signature</div>
+                    <div class="sign-subtitle">I accept the quoted pricing, route terms, and commercial policies.</div>
+                </div>
+                <div class="indian-sign-box right">
+                    <div class="sign-placeholder-line"></div>
+                    <div class="sign-title">For {$compName}</div>
+                    <div class="sign-subtitle">Authorized Signatory / Fleet Operations (Official Stamp)</div>
+                </div>
             </div>
+
+            <!-- Document Footer with Aleya.in Credit -->
+            <footer class="indian-doc-footer">
+                <div class="footer-meta-text">
+                    Computer generated commercial estimate &bull; Valid as per terms &amp; conditions stated above.
+                </div>
+                <div class="footer-credit">
+                    Powered by <a href="https://aleya.in" target="_blank" rel="noopener" class="credit-link">Aleya.in</a> &bull; Enterprise Fleet &amp; Travel Solutions
+                </div>
+            </footer>
         </main>
+    </div>
+
+    <!-- Page Break Print Running Footer -->
+    <div class="print-page-footer">
+        Powered by <a href="https://aleya.in" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:none;font-weight:700;">Aleya.in</a> &bull; Fleet &amp; Travel Management Platform
+    </div>
+
+    <!-- Floating Action Bar for Print & Download -->
+    <div class="action-floating-bar">
+        <button type="button" class="btn-print-action" onclick="window.print()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print / Save as PDF
+        </button>
     </div>
 
     <script>
@@ -631,6 +1239,54 @@ if ($method === 'POST') {
         $data = !empty($_POST) ? $_POST : [];
     }
 
+    $action = $_GET['action'] ?? ($data['action'] ?? '');
+    if ($action === 'save_pdf') {
+        $quoteId = (int)($data['quotation_id'] ?? ($_POST['quotation_id'] ?? $_GET['quotation_id'] ?? 0));
+        $pdfData = $data['pdf_data'] ?? ($_POST['pdf_data'] ?? '');
+
+        if ($quoteId <= 0 || empty($pdfData)) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Quotation ID and valid PDF data are required.']);
+            exit;
+        }
+
+        if (strpos($pdfData, 'base64,') !== false) {
+            $pdfData = substr($pdfData, strpos($pdfData, 'base64,') + 7);
+        }
+        $decoded = base64_decode($pdfData);
+        if ($decoded === false || strlen($decoded) < 10) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Invalid PDF binary data provided.']);
+            exit;
+        }
+
+        $uploadDir = $docRoot . '/upload/quotations';
+        if (!is_dir($uploadDir)) {
+            @mkdir($uploadDir, 0777, true);
+        }
+
+        $fileName = 'quotation_' . $quoteId . '_' . substr(md5('isw_quote_' . $quoteId), 0, 8) . '.pdf';
+        $filePath = $uploadDir . '/' . $fileName;
+        file_put_contents($filePath, $decoded);
+
+        $relUrl = '/upload/quotations/' . $fileName;
+        $host = $_SERVER['HTTP_HOST'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : '');
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+            || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
+        $protocol = $isHttps ? 'https://' : 'http://';
+        $fullUrl = (!empty($host) ? $protocol . $host : '') . $relUrl;
+
+        echo json_encode([
+            'status'    => 'success',
+            'message'   => 'Quotation PDF saved successfully.',
+            'pdf_url'   => $relUrl,
+            'full_url'  => $fullUrl,
+            'file_name' => 'Quotation_TQ-' . str_pad((string)$quoteId, 5, '0', STR_PAD_LEFT) . '.pdf'
+        ]);
+        exit;
+    }
+
     $rawLeadId = $data['lead_id'] ?? ($data['leadId'] ?? ($data['refId'] ?? ''));
     $leadId = 0;
     if (is_numeric($rawLeadId) && (int)$rawLeadId > 0) {
@@ -690,6 +1346,10 @@ if ($method === 'POST') {
 
     $totalCost      = (float)($billing['total_cost'] ?? 0);
     $kmRunning      = (float)($billing['km_running'] ?? 250);
+    $totalRunningKm = (float)($billing['total_running_km'] ?? 0);
+    if ($kmRunning > 0 && $totalRunningKm < $kmRunning) {
+        $totalRunningKm = $kmRunning;
+    }
     $extraKmCharge  = (float)($billing['extra_km_charge'] ?? 0);
     $advancePercent = (float)($billing['advance_percent'] ?? 25);
     $advanceAmount  = (float)($billing['advance_amount'] ?? round(($totalCost * $advancePercent) / 100, 2));
@@ -735,6 +1395,7 @@ if ($method === 'POST') {
             'currency_symbol' => $currencySymbol,
             'total_cost'      => $totalCost,
             'km_running'      => $kmRunning,
+            'total_running_km' => $totalRunningKm,
             'extra_km_charge' => $extraKmCharge,
             'advance_percent' => $advancePercent,
             'advance_amount'  => $advanceAmount,
@@ -813,43 +1474,51 @@ if ($method === 'POST') {
     mysqli_query($connection, "UPDATE {$tblPrefix}enquiry SET enquiry_status = 9, enquiry_update = NOW() WHERE enquiry_id = {$leadId} " . ($siteId > 0 ? "AND enquiry_site_id = {$siteId}" : ""));
 
     // Build WhatsApp Message Text
+    $companyMeta = getTransporterCompanyMeta($connection, $siteId, $tblPrefix);
+    $compName = $companyMeta['name'] ?? 'Aleya Fleet Logistics';
+    $quoteDisplayId = 'TQ-' . str_pad((string)$quotationId, 5, '0', STR_PAD_LEFT);
+    $formattedTotal = formatIndianNumber($totalCost);
+    $formattedAdv = formatIndianNumber($advanceAmount);
+    $formattedBal = formatIndianNumber($balanceAmount);
+    $waWords = getIndianCurrencyWords($totalCost);
+
     $waLines = [];
-    $waLines[] = "*TRIP QUOTATION & FLEET PROPOSAL*";
-    $waLines[] = "--------------------------------";
+    $waLines[] = "🚗 *{$compName}*";
+    $waLines[] = "📋 *TRIP ESTIMATE & FLEET QUOTATION* (#{$quoteDisplayId})";
+    $waLines[] = "━━━━━━━━━━━━━━━━━━━━━━";
     if (!empty($customerName)) {
-        $waLines[] = "*Customer:* " . $customerName;
+        $waLines[] = "👤 *Customer:* " . $customerName;
     }
     if (!empty($destination)) {
-        $waLines[] = "*Destination:* " . $destination;
-    }
-    if (!empty($pickupLocation)) {
-        $waLines[] = "*Pickup:* " . $pickupLocation;
-    }
-    if (!empty($dropLocation)) {
-        $waLines[] = "*Drop:* " . $dropLocation;
+        $waLines[] = "📍 *Route:* " . (!empty($pickupLocation) ? $pickupLocation . " ➔ " : "") . $destination . (!empty($dropLocation) ? " ➔ " . $dropLocation : "");
     }
     if (!empty($travelDate)) {
-        $waLines[] = "*Travel Date:* " . $travelDate . (!empty($travelDuration) ? " ({$travelDuration} Days)" : "");
+        $waLines[] = "📅 *Travel Date:* " . $travelDate . (!empty($travelDuration) ? " ({$travelDuration} Days)" : "");
     }
     if (!empty($vehicleTitle)) {
-        $waLines[] = "*Vehicle:* " . $vehicleTitle . (!empty($vehicleSeating) ? " ({$vehicleSeating} Seater)" : "");
+        $waLines[] = "🚘 *Fleet:* " . $vehicleTitle . (!empty($vehicleSeating) ? " (" . $vehicleSeating . " Seater AC)" : "");
     }
     $waLines[] = "";
-    $waLines[] = "*BILLING DETAILS*";
-    $waLines[] = "*Total Cost:* {$currencySymbol} " . number_format($totalCost, 2);
-    $waLines[] = "*KM Allowance:* " . $kmRunning . " KM";
+    $waLines[] = "💵 *TARIFF & COMMERCIAL BILLING*";
+    $waLines[] = "• *Total Cost:* {$currencySymbol} {$formattedTotal}";
+    $waLines[] = "• *Amount in Words:* " . $waWords;
+    if ($totalRunningKm > 0) {
+        $formattedWaKm = formatIndianNumber($totalRunningKm, ($totalRunningKm == (int)$totalRunningKm ? 0 : 2));
+        $waLines[] = "• *Estimated Running:* " . $formattedWaKm . " KM";
+    }
     if ($extraKmCharge > 0) {
-        $waLines[] = "*Extra KM Rate:* {$currencySymbol} " . number_format($extraKmCharge, 2) . " / KM";
+        $waLines[] = "• *Tariff Rate / Extra KM:* {$currencySymbol} " . formatIndianNumber($extraKmCharge) . " / KM";
     }
-    $waLines[] = "*Advance Booking Deposit:* {$currencySymbol} " . number_format($advanceAmount, 2) . " ({$advancePercent}%)";
-    $waLines[] = "*Balance Due:* {$currencySymbol} " . number_format($balanceAmount, 2);
+    $waLines[] = "• *Advance Booking Deposit ({$advancePercent}%):* {$currencySymbol} {$formattedAdv}";
+    $waLines[] = "• *Balance on Departure:* {$currencySymbol} {$formattedBal}";
     $waLines[] = "";
-    $waLines[] = "*TERMS & POLICIES*";
-    $waLines[] = "• Garage to Garage Calculation: " . ($garageToGarage === 'yes' ? "Applicable" : "Not Applicable");
-    $waLines[] = "• Toll Tax: " . ($tollTax === 'yes' ? "Included" : "Excluded (As per actual)");
-    $waLines[] = "• State Border Entry Tax: " . ($stateTax === 'yes' ? "Included" : "Excluded (As per actual)");
-    $waLines[] = "• Driver Allowance: " . ($driverAllowance === 'yes' ? "Included" : "Excluded");
-    $waLines[] = "• Parking Charges: " . ($parkingCharges === 'yes' ? "Included" : "Excluded (Paid directly by guest)");
+    $waLines[] = "📜 *KEY POLICIES & TERMS*";
+    $waLines[] = "• Garage to Garage: " . ($garageToGarage === 'yes' ? "Applicable" : "City Base");
+    $waLines[] = "• Toll Taxes & Expressways: " . ($tollTax === 'yes' ? "Included in Quote" : "Excluded (At Actuals)");
+    $waLines[] = "• State Commercial Entry Tax: " . ($stateTax === 'yes' ? "Included in Quote" : "Excluded (At Actuals)");
+    $waLines[] = "• Driver Allowance: " . ($driverAllowance === 'yes' ? "Included in Quote" : "Excluded");
+    $waLines[] = "• Parking Charges: " . ($parkingCharges === 'yes' ? "Included in Quote" : "Excluded (Paid by Guest)");
+    $waLines[] = "• Mountain Section: AC remains switched off on steep uphill climbs as per safety norms.";
 
     if (!empty($customRules)) {
         foreach ($customRules as $cr) {
@@ -859,8 +1528,13 @@ if ($method === 'POST') {
         }
     }
 
+    if (!empty($companyMeta['upi_id'])) {
+        $waLines[] = "";
+        $waLines[] = "💳 *PAYMENT DETAILS*";
+        $waLines[] = "UPI ID: " . $companyMeta['upi_id'] . " (GPay/PhonePe/Paytm)";
+    }
     $waLines[] = "";
-    $waLines[] = "Thank you for choosing us! Please reply to confirm this proposal.";
+    $waLines[] = "Thank you for choosing {$compName}! (Powered by Aleya.in). Please reply with 'CONFIRM' to reserve your vehicle.";
     $whatsappText = implode("\n", $waLines);
 
     $companyMeta = getTransporterCompanyMeta($connection, $siteId, $tblPrefix);
