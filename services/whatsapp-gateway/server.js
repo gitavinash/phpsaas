@@ -95,6 +95,115 @@ process.on("unhandledRejection", (reason, promise) => {
 
 const logger = pino({ level: "error" });
 
+// ANSI Color formatting helpers for clean terminal readability
+const COLOR = {
+  RESET: "\x1b[0m",
+  BOLD: "\x1b[1m",
+  DIM: "\x1b[2m",
+  GREEN: "\x1b[32m",
+  CYAN: "\x1b[36m",
+  BLUE: "\x1b[34m",
+  YELLOW: "\x1b[33m",
+  RED: "\x1b[31m",
+  WHITE: "\x1b[37m",
+  BG_GREEN: "\x1b[42m\x1b[30m",
+  BG_BLUE: "\x1b[44m\x1b[37m",
+  BG_CYAN: "\x1b[46m\x1b[30m",
+  BG_YELLOW: "\x1b[43m\x1b[30m",
+  BG_RED: "\x1b[41m\x1b[37m",
+};
+
+function getFormattedTimestamp(date = new Date()) {
+  const d = date instanceof Date ? date : new Date(date);
+  const pad = (n) => String(n).padStart(2, "0");
+  const year = d.getFullYear();
+  const month = pad(d.getMonth() + 1);
+  const day = pad(d.getDate());
+  const hours = pad(d.getHours());
+  const mins = pad(d.getMinutes());
+  const secs = pad(d.getSeconds());
+  return `${year}-${month}-${day} ${hours}:${mins}:${secs}`;
+}
+
+function printCardLog(title, fields = [], color = COLOR.CYAN) {
+  const timestamp = getFormattedTimestamp();
+  const width = 80;
+  const lineChar = "─";
+  const topBorder = `┌${lineChar.repeat(width - 2)}`;
+  const midBorder = `├${lineChar.repeat(width - 2)}`;
+  const botBorder = `└${lineChar.repeat(width - 2)}`;
+
+  // Blank space on top
+  console.log("");
+  console.log(`${color}${COLOR.BOLD}${topBorder}${COLOR.RESET}`);
+  console.log(`${color}${COLOR.BOLD}│ ${title.padEnd(width - 28)} ${COLOR.DIM}${timestamp}${COLOR.RESET}`);
+  console.log(`${color}${midBorder}${COLOR.RESET}`);
+
+  for (const [label, val] of fields) {
+    if (val !== undefined && val !== null && val !== "") {
+      const paddedLabel = `${COLOR.BOLD}${label.padEnd(18)}${COLOR.RESET}`;
+      const strVal = String(val);
+      const lines = strVal.split("\n");
+      console.log(`${color}│${COLOR.RESET}  ${paddedLabel} : ${lines[0]}`);
+      for (let i = 1; i < lines.length; i++) {
+        console.log(`${color}│${COLOR.RESET}  ${" ".repeat(18)}   ${lines[i]}`);
+      }
+    }
+  }
+
+  console.log(`${color}${COLOR.BOLD}${botBorder}${COLOR.RESET}`);
+  // Blank space on bottom
+  console.log("");
+}
+
+function logWhatsAppMessage({
+  direction = "INCOMING",
+  siteDomain = "localhost",
+  siteId = null,
+  devicePhone = "",
+  sessionId = "",
+  contactPhone = "",
+  contactName = "",
+  messageText = "",
+  mediaType = "",
+  msgId = "",
+  status = "",
+}) {
+  const isIncoming = String(direction).toUpperCase() === "INCOMING";
+  const badge = isIncoming
+    ? `${COLOR.BG_GREEN}${COLOR.BOLD} [INCOMING MESSAGE] ${COLOR.RESET}`
+    : `${COLOR.BG_BLUE}${COLOR.BOLD} [OUTGOING MESSAGE] ${COLOR.RESET}`;
+  const headerColor = isIncoming ? COLOR.GREEN : COLOR.CYAN;
+
+  const senderStr = isIncoming
+    ? (contactName ? `${contactPhone} (${contactName})` : (contactPhone || "Unknown Contact"))
+    : (devicePhone ? `${devicePhone} (Connected Device)` : "Connected WhatsApp Device");
+
+  const receiverStr = isIncoming
+    ? (devicePhone ? `${devicePhone} (Connected Device)` : "Connected WhatsApp Device")
+    : (contactName ? `${contactPhone} (${contactName})` : (contactPhone || "Unknown Recipient"));
+
+  const displayMsg = mediaType
+    ? `[${mediaType.toUpperCase()}] ${messageText || "(Media attachment)"}`
+    : `"${messageText || ""}"`;
+
+  const fields = [
+    ["Site Domain", siteId ? `${siteDomain} (Site ID: ${siteId})` : siteDomain],
+    ["Device WhatsApp", devicePhone ? `${devicePhone}${sessionId ? ` [Session: ${sessionId}]` : ""}` : (sessionId || "default")],
+    ["Direction", isIncoming ? "INCOMING 📥 (From WhatsApp Contact)" : "OUTGOING 📤 (To WhatsApp Contact)"],
+    ["Sender", senderStr],
+    ["Receiver", receiverStr],
+    ["Message", displayMsg],
+    ["Message ID", msgId || "N/A"],
+  ];
+
+  if (status) {
+    fields.push(["Status", status]);
+  }
+
+  printCardLog(badge, fields, headerColor);
+}
+
 // Helper to decode message text across various WhatsApp formats
 function getMessageText(message) {
   if (!message) return "";
@@ -309,6 +418,19 @@ class WhatsAppSession {
     this.setupAutoSave();
   }
 
+  getSiteDomain() {
+    const targetUrl = this.webhookUrl || lastKnownWebhookUrl || process.env.CRM_WEBHOOK_URL || CRM_WEBHOOK_URL;
+    if (targetUrl) {
+      try {
+        const u = new URL(targetUrl);
+        if (u.hostname && u.hostname !== "127.0.0.1") {
+          return u.host;
+        }
+      } catch (e) {}
+    }
+    return "localhost";
+  }
+
   async getMessage(key) {
     if (!key) return undefined;
     const msgId = key.id;
@@ -363,6 +485,7 @@ class WhatsAppSession {
     const enriched = {
       session_id: this.sessionId,
       site_id: this.siteId || payload.site_id || null,
+      device_phone: this.connectedUser?.phone || null,
       ...payload,
     };
     notifyCrm(enriched, this.webhookUrl);
@@ -386,22 +509,26 @@ class WhatsAppSession {
     }
   }
 
+  saveStore() {
+    try {
+      if (fs.existsSync(this.authDir)) {
+        const data = {
+          webhookUrl: this.webhookUrl,
+          siteId: this.siteId,
+          chats: Array.from(this.chatStore.values()),
+          contacts: Array.from(this.contactStore.values()),
+          lidMap: Array.from(this.lidPhoneMap.entries()),
+          messageStore: Array.from(this.messageStore.entries()).slice(-1000),
+          lastOutgoingPhone: this.lastOutgoingPhone,
+        };
+        fs.writeFileSync(this.storePath, JSON.stringify(data));
+      }
+    } catch (e) {}
+  }
+
   setupAutoSave() {
     setInterval(() => {
-      try {
-        if (fs.existsSync(this.authDir)) {
-          const data = {
-            webhookUrl: this.webhookUrl,
-            siteId: this.siteId,
-            chats: Array.from(this.chatStore.values()),
-            contacts: Array.from(this.contactStore.values()),
-            lidMap: Array.from(this.lidPhoneMap.entries()),
-            messageStore: Array.from(this.messageStore.entries()).slice(-1000),
-            lastOutgoingPhone: this.lastOutgoingPhone,
-          };
-          fs.writeFileSync(this.storePath, JSON.stringify(data));
-        }
-      } catch (e) {}
+      this.saveStore();
     }, 15000);
   }
 
@@ -794,7 +921,13 @@ class WhatsAppSession {
             connected_at: this.lastSyncTime,
           };
 
-          console.log(`[WhatsApp Gateway:${this.sessionId}] Connected successfully as ${formattedPhone}`);
+          printCardLog(`${COLOR.BG_GREEN}${COLOR.BOLD} [WHATSAPP DEVICE CONNECTED] ${COLOR.RESET}`, [
+            ["Site Domain", this.getSiteDomain()],
+            ["Device WhatsApp", formattedPhone],
+            ["Device Name", this.connectedUser.name],
+            ["Session ID", this.sessionId],
+            ["Status", "CONNECTED & LISTENING FOR MESSAGES"],
+          ], COLOR.GREEN);
 
           this.notify({
             event: "device_connected",
@@ -821,7 +954,14 @@ class WhatsAppSession {
           this.currentQrSvg = null;
           this.currentQrString = null;
 
-          console.log(`[WhatsApp Gateway:${this.sessionId}] Connection closed. StatusCode: ${statusCode}. Reason: ${errMsg}. Reconnect: ${shouldReconnect}`);
+          printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [WHATSAPP DEVICE DISCONNECTED] ${COLOR.RESET}`, [
+            ["Site Domain", this.getSiteDomain()],
+            ["Session ID", this.sessionId],
+            ["Device WhatsApp", this.connectedUser?.phone || "Not Linked"],
+            ["Status Code", statusCode || "N/A"],
+            ["Reason", errMsg || (statusCode === DisconnectReason.loggedOut ? "Logged Out" : "Connection Closed")],
+            ["Auto Reconnect", shouldReconnect ? "Yes (Retrying in background)" : "No"],
+          ], COLOR.YELLOW);
 
           if (statusCode === DisconnectReason.loggedOut) {
             this.connectionStatus = "disconnected";
@@ -875,8 +1015,6 @@ class WhatsAppSession {
 
       this.sock.ev.on("messages.upsert", async (m) => {
         if (!m.messages || !m.messages.length) return;
-
-        console.log(`[WhatsApp Gateway:${this.sessionId}] messages.upsert received ${m.messages.length} message(s) [type=${m.type}]`);
 
         for (const msg of m.messages) {
           const rawJid = msg.key?.remoteJid;
@@ -975,7 +1113,19 @@ class WhatsAppSession {
           }
           this.chatStore.set(jid, existing);
 
-          console.log(`[WhatsApp Gateway:${this.sessionId}] Message (${isFromMe ? "OUT" : "IN"}) ${contactPhone}: "${(mediaInfo ? `[${mediaInfo.type}] ` : '') + (mediaInfo?.caption || body || '').substring(0, 40)}"`);
+          logWhatsAppMessage({
+            direction: isFromMe ? "OUTGOING" : "INCOMING",
+            siteDomain: this.getSiteDomain(),
+            siteId: this.siteId,
+            devicePhone: this.connectedUser?.phone || "Connected Device",
+            sessionId: this.sessionId,
+            contactPhone: contactPhone,
+            contactName: isFromMe ? "" : pushName,
+            messageText: mediaInfo ? (mediaInfo.caption || "[Media attachment]") : body,
+            mediaType: mediaInfo ? mediaInfo.type : "",
+            msgId: msg.key?.id || "N/A",
+            status: "Forwarding to CRM Webhook...",
+          });
 
           this.notify({
             event: "message",
@@ -1087,6 +1237,7 @@ function enrichSession(req, session) {
   if (!session || !req) return;
   const webhookUrl = req.query?.webhook_url || req.body?.webhook_url;
   const siteId = req.query?.site_id || req.body?.site_id;
+  let changed = false;
 
   // Prevent cross-site session contamination:
   // If session already belongs to another site, do NOT let a different site override its siteId or webhookUrl
@@ -1100,7 +1251,11 @@ function enrichSession(req, session) {
       console.warn(`[WhatsApp Gateway:${session.sessionId}] Ignored cross-site enrich attempt from site ${siteId} (session belongs to site ${siteMatch[1]})`);
       return;
     }
-    session.siteId = siteId;
+    const numSite = parseInt(siteId, 10);
+    if (session.siteId !== numSite) {
+      session.siteId = numSite;
+      changed = true;
+    }
   }
 
   if (webhookUrl && typeof webhookUrl === "string" && webhookUrl.startsWith("http")) {
@@ -1108,7 +1263,12 @@ function enrichSession(req, session) {
     if (session.webhookUrl !== webhookUrl) {
       console.log(`[WhatsApp Gateway:${session.sessionId}] Dynamic webhook registered: ${webhookUrl}`);
       session.webhookUrl = webhookUrl;
+      changed = true;
     }
+  }
+
+  if (changed) {
+    session.saveStore();
   }
 }
 
@@ -1165,44 +1325,92 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
     const client = url.protocol === "https:" ? https : http;
     const defaultPort = url.protocol === "https:" ? 443 : 80;
 
-    const req = client.request(
-      {
-        hostname: url.hostname,
-        port: url.port || defaultPort,
-        path: url.pathname + url.search,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Content-Length": Buffer.byteLength(data),
-          "Host": url.host,
-          "User-Agent": "WhatsApp-Gateway/1.0",
-        },
-        timeout: 10000,
-        rejectUnauthorized: false,
-      },
-      (res) => {
-        // Follow redirect if 301, 302, 307, 308
-        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          const redirectUrl = new URL(res.headers.location, targetUrl).toString();
-          console.log(`[WhatsApp Gateway] Webhook redirected (${res.statusCode}) to ${redirectUrl}`);
-          return notifyCrm(payload, redirectUrl, redirectCount + 1);
-        }
-
-        let resBody = "";
-        res.on("data", (chunk) => (resBody += chunk));
-        res.on("end", () => {
-          if (res.statusCode >= 400) {
-            console.error(`[WhatsApp Gateway] CRM Webhook responded HTTP ${res.statusCode} (${targetUrl}):`, resBody);
-          } else {
-            console.log(`[WhatsApp Gateway] CRM Webhook delivered successfully (${res.statusCode}): ${payload.event || 'message'}`);
+    // Determine the optimal Host header:
+    // If targetUrl points to 127.0.0.1 or localhost, but we know the actual tenant domain
+    // (from targetOverrideUrl, lastKnownWebhookUrl, or environment), use that domain as the Host header
+    // so Apache name-based VirtualHosts route to the correct CRM tenant instead of the default 404 VirtualHost.
+    let hostHeader = url.host;
+    if (url.hostname === "127.0.0.1" || url.hostname === "localhost") {
+      let resolvedDomain = null;
+      if (lastKnownWebhookUrl) {
+        try {
+          const knownUrl = new URL(lastKnownWebhookUrl);
+          if (knownUrl.hostname !== "127.0.0.1" && knownUrl.hostname !== "localhost") {
+            resolvedDomain = knownUrl.host;
           }
-        });
+        } catch (e) {}
       }
-    );
+      hostHeader = resolvedDomain || (url.hostname === "127.0.0.1" ? "localhost" : url.host);
+    }
+
+    const reqOptions = {
+      hostname: url.hostname,
+      port: url.port || defaultPort,
+      path: url.pathname + url.search,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(data),
+        "Host": hostHeader,
+        "User-Agent": "WhatsApp-Gateway/1.0",
+      },
+      timeout: 10000,
+      rejectUnauthorized: false,
+    };
+
+    const req = client.request(reqOptions, (res) => {
+      // Follow redirect if 301, 302, 307, 308
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        const redirectUrl = new URL(res.headers.location, targetUrl).toString();
+        console.log(`[WhatsApp Gateway] Webhook redirected (${res.statusCode}) to ${redirectUrl}`);
+        return notifyCrm(payload, redirectUrl, redirectCount + 1);
+      }
+
+      let resBody = "";
+      res.on("data", (chunk) => (resBody += chunk));
+      res.on("end", () => {
+        if (res.statusCode >= 400) {
+          printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [CRM WEBHOOK ERROR] ${COLOR.RESET}`, [
+            ["Site Domain", hostHeader],
+            ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
+            ["Target Webhook", targetUrl],
+            ["HTTP Status", `${res.statusCode} Error`],
+            ["Contact Phone", payload.phone || payload.from || payload.to || "N/A"],
+            ["Response", (resBody || "").substring(0, 150)],
+          ], COLOR.YELLOW);
+
+          // If a public domain webhook returns error/404 or fails, fallback to direct loopback (127.0.0.1) with Host header
+          if (url.hostname !== "127.0.0.1" && redirectCount === 0) {
+            const fallbackUrl = `http://127.0.0.1${url.pathname}${url.search}`;
+            return notifyCrm(payload, fallbackUrl, 1);
+          }
+        } else {
+          printCardLog(`${COLOR.BG_CYAN}${COLOR.BOLD} [CRM WEBHOOK DELIVERED] ${COLOR.RESET}`, [
+            ["Site Domain", hostHeader],
+            ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
+            ["Target Webhook", targetUrl],
+            ["HTTP Status", `${res.statusCode} OK (Delivered)`],
+            ["Contact Phone", payload.phone || payload.from || payload.to || "N/A"],
+            ["Message ID", payload.msg_id || "N/A"],
+          ], COLOR.CYAN);
+        }
+      });
+    });
 
     req.on("error", (e) => {
-      console.error(`[WhatsApp Gateway] Error connecting to CRM webhook (${targetUrl}):`, e.message);
+      printCardLog(`${COLOR.BG_RED}${COLOR.BOLD} [CRM WEBHOOK CONNECTION FAILED] ${COLOR.RESET}`, [
+        ["Site Domain", hostHeader],
+        ["Target Webhook", targetUrl],
+        ["Error", e.message],
+      ], COLOR.RED);
+
+      // If connection to public URL failed (e.g. DNS / NAT loopback failure / Cloudflare timeout), fallback to 127.0.0.1 with Host header
+      if (url.hostname !== "127.0.0.1" && redirectCount === 0) {
+        const fallbackUrl = `http://127.0.0.1${url.pathname}${url.search}`;
+        return notifyCrm(payload, fallbackUrl, 1);
+      }
     });
+
     req.write(data);
     req.end();
   } catch (e) {
@@ -1220,7 +1428,12 @@ app.get("/devices", (req, res) => {
     const filterSiteId = req.query?.site_id ? String(req.query.site_id) : null;
     const list = [];
     for (const [id, s] of sessions.entries()) {
-      // NOTE: Do not call enrichSession(req, s) on all sessions here to prevent cross-site contamination
+      if (filterSiteId) {
+        const matchesSite = s.siteId ? (String(s.siteId) === filterSiteId) : (id.startsWith(`site_${filterSiteId}_`));
+        if (matchesSite) {
+          enrichSession(req, s);
+        }
+      }
       const hasCreds = fs.existsSync(path.join(s.authDir, "creds.json"));
       const isConn = s.connectionStatus === "connected" || (hasCreds && s.connectionStatus === "reconnecting");
       
@@ -1571,6 +1784,20 @@ app.post("/send-message", async (req, res) => {
     existing.conversationTimestamp = Math.floor(Date.now() / 1000);
     existing.lastMessageText = message;
     s.chatStore.set(norm, existing);
+
+    logWhatsAppMessage({
+      direction: "OUTGOING",
+      siteDomain: s.getSiteDomain(),
+      siteId: s.siteId,
+      devicePhone: s.connectedUser?.phone || "Connected Device",
+      sessionId: s.sessionId,
+      contactPhone: "+" + cleanNumber,
+      contactName: "",
+      messageText: message || (media ? "[Media attachment]" : ""),
+      mediaType: media ? (type || "image") : "",
+      msgId: sent?.key?.id || "N/A",
+      status: "Dispatched to WhatsApp Network (Success)"
+    });
 
     res.json({
       status: "success",

@@ -12,6 +12,7 @@ $initialLeadStatus   = isset($_GET['leadStatus']) ? (string)$_GET['leadStatus'] 
 $initialAgentId      = isset($_GET['agentId']) ? (string)$_GET['agentId'] : (isset($_GET['agent_id']) ? (string)$_GET['agent_id'] : (isset($_GET['agent']) ? (string)$_GET['agent'] : 'all'));
 $isDigitalMarketing  = (isset($site_access_type) && $site_access_type === 'digital_marketing');
 $userRole            = strtolower(isset($site_access_type) ? $site_access_type : (defined('USER_TYPE') ? USER_TYPE : ''));
+$isAdmin             = (isset($site_access_type) && ($site_access_type === 'administrator' || $site_access_type === 'admin')) || in_array($userRole, ['administrator', 'admin', 'superadmin', 'operator'], true);
 $isCallingAgent      = in_array($userRole, ['agent', 'calling_agent', 'sales_executive'], true) || (isset($site_access_type) && $site_access_type !== 'administrator' && !$isDigitalMarketing);
 
 if ($isCallingAgent && $initialLeadStatus === '0') {
@@ -142,33 +143,33 @@ if ($isDigitalMarketing) {
                         <option value="all" <?php echo ($initialLeadStatus === 'all' ? 'selected' : ''); ?>>All Statuses</option>
                         <optgroup label="Sales Pipeline Stages">
                             <?php if (!$isCallingAgent): ?>
-                            <option value="0" <?php echo ($initialLeadStatus === '0' ? 'selected' : ''); ?>>New Enquiry</option>
+                            <option value="0" data-icon="fi-rr-sparkles" <?php echo ($initialLeadStatus === '0' ? 'selected' : ''); ?>>New Enquiry</option>
                             <?php endif; ?>
-                            <option value="2" <?php echo ($initialLeadStatus === '2' ? 'selected' : ''); ?>>Assigned</option>
-                            <option value="19" <?php echo ($initialLeadStatus === '19' ? 'selected' : ''); ?>>Contacted</option>
-                            <option value="20" <?php echo ($initialLeadStatus === '20' ? 'selected' : ''); ?>>Requirement Collected</option>
-                            <option value="21" <?php echo ($initialLeadStatus === '21' ? 'selected' : ''); ?>>Itinerary In Progress</option>
-                            <option value="9" <?php echo ($initialLeadStatus === '9' ? 'selected' : ''); ?>>Itinerary Sent</option>
-                            <option value="22" <?php echo ($initialLeadStatus === '22' ? 'selected' : ''); ?>>Quotation In Progress</option>
-                            <option value="23" <?php echo ($initialLeadStatus === '23' ? 'selected' : ''); ?>>Quotation Sent</option>
-                            <option value="24" <?php echo ($initialLeadStatus === '24' ? 'selected' : ''); ?>>Awaiting Customer Decision</option>
-                            <option value="25" <?php echo ($initialLeadStatus === '25' ? 'selected' : ''); ?>>Negotiation</option>
-                            <option value="10" <?php echo ($initialLeadStatus === '10' ? 'selected' : ''); ?>>Quotation Approved</option>
-                            <option value="6" <?php echo ($initialLeadStatus === '6' ? 'selected' : ''); ?>>Payment Pending</option>
-                            <option value="1" <?php echo ($initialLeadStatus === '1' ? 'selected' : ''); ?>>Converted to Booking</option>
+                            <option value="2" data-icon="fi-rr-user-time" <?php echo ($initialLeadStatus === '2' ? 'selected' : ''); ?>>Assigned</option>
+                            <option value="19" data-icon="fi-rr-phone-call" <?php echo ($initialLeadStatus === '19' ? 'selected' : ''); ?>>Contacted</option>
+                            <option value="20" data-icon="fi-rr-clipboard-list-check" <?php echo ($initialLeadStatus === '20' ? 'selected' : ''); ?>>Requirement Collected</option>
+                            <option value="21" data-icon="fi-rr-map-marker-edit" <?php echo ($initialLeadStatus === '21' ? 'selected' : ''); ?>>Itinerary In Progress</option>
+                            <option value="9" data-icon="fi-rr-route" <?php echo ($initialLeadStatus === '9' ? 'selected' : ''); ?>>Itinerary Sent</option>
+                            <option value="22" data-icon="fi-rr-calculator" <?php echo ($initialLeadStatus === '22' ? 'selected' : ''); ?>>Quotation In Progress</option>
+                            <option value="23" data-icon="fi-rr-paper-plane" <?php echo ($initialLeadStatus === '23' ? 'selected' : ''); ?>>Quotation Sent</option>
+                            <option value="24" data-icon="fi-rr-hourglass-end" <?php echo ($initialLeadStatus === '24' ? 'selected' : ''); ?>>Awaiting Customer Decision</option>
+                            <option value="25" data-icon="fi-rr-comments" <?php echo ($initialLeadStatus === '25' ? 'selected' : ''); ?>>Negotiation</option>
+                            <option value="10" data-icon="fi-rr-check-circle" <?php echo ($initialLeadStatus === '10' ? 'selected' : ''); ?>>Quotation Approved</option>
+                            <option value="6" data-icon="fi-rr-clock" <?php echo ($initialLeadStatus === '6' ? 'selected' : ''); ?>>Payment Pending</option>
+                            <option value="1" data-icon="fi-rr-shield-check" <?php echo ($initialLeadStatus === '1' ? 'selected' : ''); ?>>Converted to Booking</option>
                         </optgroup>
                         <optgroup label="Nurture & Hold">
-                            <option value="26" <?php echo ($initialLeadStatus === '26' ? 'selected' : ''); ?>>On Hold</option>
-                            <option value="27" <?php echo ($initialLeadStatus === '27' ? 'selected' : ''); ?>>Nurture</option>
-                            <option value="3" <?php echo ($initialLeadStatus === '3' ? 'selected' : ''); ?>>Follow Up (Legacy)</option>
+                            <option value="26" data-icon="fi-rr-pause-circle" <?php echo ($initialLeadStatus === '26' ? 'selected' : ''); ?>>On Hold</option>
+                            <option value="27" data-icon="fi-rr-leaf" <?php echo ($initialLeadStatus === '27' ? 'selected' : ''); ?>>Nurture</option>
+                            <option value="3" data-icon="fi-rr-phone-call" <?php echo ($initialLeadStatus === '3' ? 'selected' : ''); ?>>Follow Up (Legacy)</option>
                         </optgroup>
                         <optgroup label="Closed & Exception">
-                            <option value="28" <?php echo ($initialLeadStatus === '28' ? 'selected' : ''); ?>>Not Interested</option>
-                            <option value="17" <?php echo ($initialLeadStatus === '17' ? 'selected' : ''); ?>>Lost</option>
-                            <option value="5" <?php echo ($initialLeadStatus === '5' ? 'selected' : ''); ?>>Duplicate</option>
-                            <option value="29" <?php echo ($initialLeadStatus === '29' ? 'selected' : ''); ?>>Unqualified</option>
-                            <option value="16" <?php echo ($initialLeadStatus === '16' || $initialLeadStatus === 'cancel' || $initialLeadStatus === '4,16' ? 'selected' : ''); ?>>Cancelled</option>
-                            <option value="4" <?php echo ($initialLeadStatus === '4' ? 'selected' : ''); ?>>Closed / Cancelled (Legacy)</option>
+                            <option value="28" data-icon="fi-rr-cross-circle" <?php echo ($initialLeadStatus === '28' ? 'selected' : ''); ?>>Not Interested</option>
+                            <option value="17" data-icon="fi-rr-circle-xmark" <?php echo ($initialLeadStatus === '17' ? 'selected' : ''); ?>>Lost</option>
+                            <option value="5" data-icon="fi-rr-copy" <?php echo ($initialLeadStatus === '5' ? 'selected' : ''); ?>>Duplicate</option>
+                            <option value="29" data-icon="fi-rr-ban" <?php echo ($initialLeadStatus === '29' ? 'selected' : ''); ?>>Unqualified</option>
+                            <option value="16" data-icon="fi-rr-circle-cross" <?php echo ($initialLeadStatus === '16' || $initialLeadStatus === 'cancel' || $initialLeadStatus === '4,16' ? 'selected' : ''); ?>>Cancelled</option>
+                            <option value="4" data-icon="fi-rr-cross-circle" <?php echo ($initialLeadStatus === '4' ? 'selected' : ''); ?>>Closed / Cancelled (Legacy)</option>
                         </optgroup>
                     </select>
                 </div>
@@ -177,11 +178,11 @@ if ($isDigitalMarketing) {
                 <div class="leads-select-holder">
                     <select id="filterLeadInterest" class="leads-filter-select">
                         <option value="all" selected>All Interests</option>
-                        <option value="Hot">🔥 Hot</option>
-                        <option value="Warm">✨ Warm</option>
-                        <option value="Cold">❄️ Cold</option>
-                        <option value="Not Interested">🚫 Not Interested</option>
-                        <option value="Unknown">❓ Unknown</option>
+                        <option value="Hot" data-icon="fi-rr-flame">Hot</option>
+                        <option value="Warm" data-icon="fi-rr-sparkles">Warm</option>
+                        <option value="Cold" data-icon="fi-rr-snowflake">Cold</option>
+                        <option value="Not Interested" data-icon="fi-rr-cross-circle">Not Interested</option>
+                        <option value="Unknown" data-icon="fi-rr-question">Unknown</option>
                     </select>
                 </div>
 
@@ -190,46 +191,46 @@ if ($isDigitalMarketing) {
                     <select id="filterLeadResponse" class="leads-filter-select">
                         <option value="all" selected>All Response States</option>
                         <optgroup label="Customer Response">
-                            <option value="responded">✅ Responded</option>
-                            <option value="awaiting_response">⏳ Awaiting Response (< 24h)</option>
-                            <option value="no_response_24h">⚠️ No Response (24h+)</option>
-                            <option value="no_response_48h">🚨 No Response (48h+)</option>
-                            <option value="no_response_7d">⛔ No Response (7d+)</option>
-                            <option value="no_activity">⚪ No Activity</option>
+                            <option value="responded" data-icon="fi-rr-check-circle">Responded</option>
+                            <option value="awaiting_response" data-icon="fi-rr-hourglass">Awaiting Response (&lt; 24h)</option>
+                            <option value="no_response_24h" data-icon="fi-rr-time-forward">No Response (24h+)</option>
+                            <option value="no_response_48h" data-icon="fi-rr-exclamation">No Response (48h+)</option>
+                            <option value="no_response_7d" data-icon="fi-rr-alarm-exclamation">No Response (7d+)</option>
+                            <option value="no_activity" data-icon="fi-rr-circle">No Activity</option>
                         </optgroup>
                         <optgroup label="Follow-Up Schedule">
-                            <option value="due_today">⏰ Follow-Up Due Today</option>
-                            <option value="overdue">🚨 Follow-Up Overdue</option>
+                            <option value="due_today" data-icon="fi-rr-alarm-clock">Follow-Up Due Today</option>
+                            <option value="overdue" data-icon="fi-rr-alarm-exclamation">Follow-Up Overdue</option>
                         </optgroup>
                     </select>
                 </div>
 
-                <?php if (!$isDigitalMarketing): ?>
-                <!-- Assigned Agent Filter (Select2) -->
+                <?php if ($isAdmin): ?>
+                <!-- Assigned Agent Filter (Select2 - Admin Only) -->
                 <div class="leads-select-holder">
                     <select id="filterLeadAgent" class="leads-filter-select">
-                        <option value="all" <?php echo ($initialAgentId === 'all' ? 'selected' : ''); ?>>All Assignees</option>
-                        <option value="0" <?php echo ($initialAgentId === '0' ? 'selected' : ''); ?>>Unassigned Only</option>
+                        <option value="all" data-icon="fi-rr-users" <?php echo ($initialAgentId === 'all' ? 'selected' : ''); ?>>All Assignees</option>
+                        <option value="0" data-icon="fi-rr-user-slash" <?php echo ($initialAgentId === '0' ? 'selected' : ''); ?>>Unassigned Only</option>
                         <?php if ($initialAgentId !== 'all' && $initialAgentId !== '0' && $initialAgentId !== ''): ?>
-                            <option value="<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?>" selected>Agent #<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?></option>
+                            <option value="<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?>" data-icon="fi-rr-user" selected>Agent #<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?></option>
                         <?php endif; ?>
                     </select>
                 </div>
-                <?php endif; ?>
 
-                <!-- Source Filter (Select2) -->
+                <!-- Source Filter (Select2 - Admin Only) -->
                 <div class="leads-select-holder">
                     <select id="filterLeadSource" class="leads-filter-select">
                         <option value="all" selected>All Sources</option>
-                        <option value="website">Website</option>
-                        <option value="direct">Direct</option>
-                        <option value="facebook">Facebook</option>
-                        <option value="instagram">Instagram</option>
-                        <option value="google">Google</option>
-                        <option value="whatsapp">WhatsApp</option>
-                        <option value="referral">Referral</option>
+                        <option value="website" data-icon="fi-rr-globe">Website</option>
+                        <option value="direct" data-icon="fi-rr-user">Direct</option>
+                        <option value="facebook" data-icon="fi-rr-share">Facebook</option>
+                        <option value="instagram" data-icon="fi-rr-camera">Instagram</option>
+                        <option value="google" data-icon="fi-rr-search">Google</option>
+                        <option value="whatsapp" data-icon="fi-rr-comment-alt">WhatsApp</option>
+                        <option value="referral" data-icon="fi-rr-users-alt">Referral</option>
                     </select>
                 </div>
+                <?php endif; ?>
 
                 <!-- Reset Filters Button -->
                 <button type="button" id="btnResetLeadFilters" class="btn-reset-filters-v3" title="Reset all filters">
@@ -249,9 +250,9 @@ if ($isDigitalMarketing) {
                 <div class="leads-bulk-select-holder">
                     <select id="bulkActionSelect" class="leads-filter-select">
                         <option value="">Choose bulk action...</option>
-                        <option value="convert_to_sales">Convert to Confirmed Sales</option>
-                        <option value="mark_duplicate">Mark as Duplicate</option>
-                        <option value="delete">Delete Selected</option>
+                        <option value="convert_to_sales" data-icon="fi-rr-check-circle">Convert to Confirmed Sales</option>
+                        <option value="mark_duplicate" data-icon="fi-rr-copy">Mark as Duplicate</option>
+                        <option value="delete" data-icon="fi-rr-trash">Delete Selected</option>
                     </select>
                 </div>
                 <button type="button" class="btn-v3-primary" id="btnApplyBulkAction">Apply</button>
@@ -275,7 +276,7 @@ if ($isDigitalMarketing) {
                         <th class="th-response">Response &amp; Follow-Up</th>
                         <?php if (!$isDigitalMarketing): ?>
                         <th class="th-agent">Assigned Agent</th>
-                        <th class="th-actions text-right">Actions</th>
+                        <th class="th-actions text-center">Actions</th>
                         <?php endif; ?>
                     </tr>
                 </thead>

@@ -55,12 +55,26 @@ if ($siteId <= 0 && !empty($payload['session_id'])) {
 if ($siteId <= 0) {
     $host = $_SERVER['HTTP_HOST'] ?? '';
     $host = preg_replace('/:\d+$/', '', $host);
-    if (!empty($host) && $host !== 'localhost' && $host !== '127.0.0.1') {
+    if (!empty($host) && $host !== '127.0.0.1') {
         $escapedHost = mysqli_real_escape_string($connection, $host);
         $siteQuery = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site WHERE site_domain = '{$escapedHost}' OR site_url LIKE '%{$escapedHost}%' LIMIT 1");
         if ($siteQuery && mysqli_num_rows($siteQuery) > 0) {
             $row = mysqli_fetch_assoc($siteQuery);
             $siteId = (int)$row['site_id'];
+        }
+    }
+}
+
+// Fallback for localhost / local dev environment
+if ($siteId <= 0) {
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $host = preg_replace('/:\d+$/', '', $host);
+    if ($host === 'localhost' || $host === '127.0.0.1' || empty($host)) {
+        $locQ = mysqli_query($connection, "SELECT site_id FROM " . TABLE_PREFIX . "site WHERE site_domain = 'localhost' LIMIT 1");
+        if ($locQ && mysqli_num_rows($locQ) > 0) {
+            $siteId = (int)mysqli_fetch_assoc($locQ)['site_id'];
+        } elseif (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) {
+            $siteId = 385;
         }
     }
 }
@@ -231,11 +245,12 @@ $contactPhone = $direction === 'outgoing'
     ? trim($payload['to'] ?? ($payload['phone'] ?? ''))
     : trim($payload['from'] ?? ($payload['sender'] ?? ($payload['phone'] ?? '')));
 
-$name  = trim($payload['name'] ?? ($payload['pushname'] ?? ($payload['pushName'] ?? '')));
-$text  = trim($payload['text'] ?? ($payload['message'] ?? ($payload['body'] ?? '')));
-$media = trim($payload['media'] ?? ($payload['media_url'] ?? ''));
-$waId  = trim($payload['msg_id'] ?? ($payload['id'] ?? ('wa_msg_' . uniqid('', true))));
-$type  = trim($payload['type'] ?? (!empty($media) ? 'image' : 'text'));
+$pushName = trim($payload['pushname'] ?? ($payload['pushName'] ?? ($payload['name'] ?? '')));
+$name     = trim($payload['name'] ?? $pushName);
+$text     = trim($payload['text'] ?? ($payload['message'] ?? ($payload['body'] ?? '')));
+$media    = trim($payload['media'] ?? ($payload['media_url'] ?? ''));
+$waId     = trim($payload['msg_id'] ?? ($payload['id'] ?? ('wa_msg_' . uniqid('', true))));
+$type     = trim($payload['type'] ?? (!empty($media) ? 'image' : 'text'));
 
 // Normalize contact phone
 $cleanPhone = preg_replace('/[^0-9+]/', '', $contactPhone);
@@ -330,13 +345,51 @@ if (!empty($waId)) {
 
 // Resolve active connected device phone for this session/site
 $connectedDevicePhone = '';
-$devPhoneQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} " . (!empty($payload['session_id']) ? "AND device_session_id = '" . mysqli_real_escape_string($connection, $payload['session_id']) . "'" : "AND device_status = 'connected'") . " LIMIT 1");
-if ($devPhoneQ && mysqli_num_rows($devPhoneQ) > 0) {
-    $devRowP = mysqli_fetch_assoc($devPhoneQ);
-    $connectedDevicePhone = $devRowP['device_phone'] ?? '';
+
+// Check payload explicit device_phone
+$payloadDevPhone = trim($payload['device_phone'] ?? '');
+if (!empty($payloadDevPhone)) {
+    $connectedDevicePhone = $payloadDevPhone;
 }
+
+// For incoming messages, the recipient ('to') is the connected device phone
+if (empty($connectedDevicePhone) && $direction === 'incoming' && !empty($payload['to'])) {
+    $toDigits = preg_replace('/[^0-9]/', '', $payload['to']);
+    if (strlen($toDigits) >= 7 && strlen($toDigits) <= 15) {
+        $connectedDevicePhone = '+' . $toDigits;
+    }
+}
+
+// Check database by session_id or connected status
 if (empty($connectedDevicePhone)) {
-    $connectedDevicePhone = !empty($configs['whatsapp_web_phone']) ? $configs['whatsapp_web_phone'] : 'CRM';
+    $sessCond = !empty($payload['session_id']) 
+        ? "AND (device_session_id = '" . mysqli_real_escape_string($connection, $payload['session_id']) . "' OR device_session_id LIKE '%" . mysqli_real_escape_string($connection, $payload['session_id']) . "')" 
+        : "AND device_status = 'connected'";
+    $devPhoneQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} {$sessCond} AND device_phone IS NOT NULL AND device_phone != '' ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
+    if ($devPhoneQ && mysqli_num_rows($devPhoneQ) > 0) {
+        $devRowP = mysqli_fetch_assoc($devPhoneQ);
+        $connectedDevicePhone = $devRowP['device_phone'] ?? '';
+    }
+}
+
+// Fallback to any connected device on this site
+if (empty($connectedDevicePhone)) {
+    $anyDevQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_phone IS NOT NULL AND device_phone != '' ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
+    if ($anyDevQ && mysqli_num_rows($anyDevQ) > 0) {
+        $connectedDevicePhone = mysqli_fetch_assoc($anyDevQ)['device_phone'] ?? '';
+    }
+}
+
+// Fallback to site configuration
+if (empty($connectedDevicePhone)) {
+    $connectedDevicePhone = !empty($configs['whatsapp_web_phone']) ? $configs['whatsapp_web_phone'] : '';
+}
+
+// Ensure whatsapp_device has device_phone populated if currently blank
+if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
+    $escSess = mysqli_real_escape_string($connection, $payload['session_id']);
+    $escDevP = mysqli_real_escape_string($connection, $connectedDevicePhone);
+    @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_device SET device_phone = '{$escDevP}', device_status = 'connected', device_last_sync = NOW() WHERE device_site_id = {$siteId} AND (device_session_id = '{$escSess}' OR device_session_id LIKE '%{$escSess}') AND (device_phone IS NULL OR device_phone = '')");
 }
 
 try {
@@ -409,18 +462,19 @@ try {
                                       chat_avatar = IF('{$escAvatar}' != '', '{$escAvatar}', chat_avatar),
                                       chat_last_message = '{$escLastPreview}',
                                       chat_last_message_time = NOW(),
-                                      chat_device_phone = IF('{$escDevPhone}' != '', '{$escDevPhone}', chat_device_phone),
+                                      chat_device_phone = IF('{$escDevPhone}' != '' AND '{$escDevPhone}' != 'CRM', '{$escDevPhone}', IF(chat_device_phone = 'CRM', '', chat_device_phone)),
                                       chat_lead_id = IF({$leadVal} IS NOT NULL, {$leadVal}, chat_lead_id)
                                   WHERE chat_id = {$chatId} AND chat_site_id = {$siteId}");
     } else {
+        $cleanInsDev = (!empty($escDevPhone) && $escDevPhone !== 'CRM') ? $escDevPhone : '';
         $insChatSql = "INSERT INTO " . TABLE_PREFIX . "whatsapp_chat 
                        (chat_site_id, chat_phone, chat_device_phone, chat_name, chat_pushname, chat_avatar, chat_last_message, chat_last_message_time, chat_unread_count, chat_lead_id)
-                       VALUES ({$siteId}, '{$escPhone}', '{$escDevPhone}', '{$escName}', '{$escPush}', '{$escAvatar}', '{$escLastPreview}', NOW(), {$unreadInc}, {$leadVal})
+                       VALUES ({$siteId}, '{$escPhone}', '{$cleanInsDev}', '{$escName}', '{$escPush}', '{$escAvatar}', '{$escLastPreview}', NOW(), {$unreadInc}, {$leadVal})
                        ON DUPLICATE KEY UPDATE 
                            chat_unread_count = chat_unread_count + {$unreadInc},
                            chat_last_message = VALUES(chat_last_message),
                            chat_last_message_time = NOW(),
-                           chat_device_phone = IF(VALUES(chat_device_phone) != '', VALUES(chat_device_phone), chat_device_phone),
+                           chat_device_phone = IF(VALUES(chat_device_phone) != '' AND VALUES(chat_device_phone) != 'CRM', VALUES(chat_device_phone), chat_device_phone),
                            chat_id = LAST_INSERT_ID(chat_id)";
         mysqli_query($connection, $insChatSql);
         $chatId = (int)mysqli_insert_id($connection);

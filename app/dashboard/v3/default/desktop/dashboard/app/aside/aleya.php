@@ -118,13 +118,29 @@ if (!$isDigitalMarketingPackage && ($site_access_type == 'administrator' || $sit
 
 <?php
 // 2. PACKAGES, VENDORS & CMS - Hidden in Digital Marketing Package (ID 6)
-if (!$isDigitalMarketingPackage && ($site_access_type == 'administrator' || $site_access_type == 'operations')) { ?>
+if (!$isDigitalMarketingPackage && ($site_access_type == 'administrator' || $site_access_type == 'operations')) {
+    $asideNatureVal = defined('COMPANY_NATURE') ? strtolower(COMPANY_NATURE) : 'travel_agency';
+    $isDefaultNaturePackagesVendors = in_array($asideNatureVal, ['travel_agency', 'dmc']);
 
-    <li class="header-section-name">
+    $showTourPackages = defined('ASIDE_MENU_SHOW_PACKAGES')
+        ? (ASIDE_MENU_SHOW_PACKAGES == '1' || ASIDE_MENU_SHOW_PACKAGES === 1)
+        : $isDefaultNaturePackagesVendors;
+
+    $showSupplyVendors = defined('ASIDE_MENU_SHOW_VENDORS')
+        ? (ASIDE_MENU_SHOW_VENDORS == '1' || ASIDE_MENU_SHOW_VENDORS === 1)
+        : $isDefaultNaturePackagesVendors;
+
+    $showMarketingCms = defined('ASIDE_MENU_SHOW_CMS')
+        ? (ASIDE_MENU_SHOW_CMS == '1' || ASIDE_MENU_SHOW_CMS === 1)
+        : false;
+?>
+
+    <?php if ($showTourPackages) { ?>
+    <li class="header-section-name" data-aside-group="packages">
         <p>Tour Packages<span>Smart Itineraries &amp; Catalog</span></p>
     </li>
 
-    <li <?php echo (strpos($currentUrl, '/packages/domestic/') !== false ? 'class="active"' : ''); ?>>
+    <li data-aside-group="packages" <?php echo (strpos($currentUrl, '/packages/domestic/') !== false ? 'class="active"' : ''); ?>>
         <a href="/dashboard/packages/domestic/"><i class="fi fi-rr-suitcase-alt"></i> Domestic Packages</a>
         <div class="side-menu">
             <ul>
@@ -142,7 +158,7 @@ if (!$isDigitalMarketingPackage && ($site_access_type == 'administrator' || $sit
         </div>
     </li>
 
-    <li <?php echo (strpos($currentUrl, '/packages/international/') !== false || (strpos($currentUrl, '/international/') !== false && strpos($currentUrl, '/packages/') !== false) ? 'class="active"' : ''); ?>>
+    <li data-aside-group="packages" <?php echo (strpos($currentUrl, '/packages/international/') !== false || (strpos($currentUrl, '/international/') !== false && strpos($currentUrl, '/packages/') !== false) ? 'class="active"' : ''); ?>>
         <a href="/dashboard/packages/international/"><i class="fi fi-rr-globe"></i> International Packages</a>
         <div class="side-menu">
             <ul>
@@ -159,13 +175,15 @@ if (!$isDigitalMarketingPackage && ($site_access_type == 'administrator' || $sit
             </ul>
         </div>
     </li>
+    <?php } ?>
 
+    <?php if ($showSupplyVendors) { ?>
     <!-- 3. SUPPLY & VENDORS -->
-    <li class="header-section-name">
+    <li class="header-section-name" data-aside-group="vendors">
         <p>Supply &amp; Vendors<span>Inventory, Hotels &amp; Logistics</span></p>
     </li>
 
-    <li <?php echo (strpos($currentUrl, '/vendors/property/') !== false ? 'class="active"' : ''); ?>>
+    <li data-aside-group="vendors" <?php echo (strpos($currentUrl, '/vendors/property/') !== false ? 'class="active"' : ''); ?>>
         <a href="/dashboard/vendors/property/"><i class="fi fi-rr-city"></i> Properties &amp; Hotels</a>
         <div class="side-menu">
             <ul>
@@ -187,7 +205,7 @@ if (!$isDigitalMarketingPackage && ($site_access_type == 'administrator' || $sit
         </div>
     </li>
 
-    <li <?php echo (strpos($currentUrl, '/vendors/transporter/') !== false ? 'class="active"' : ''); ?>>
+    <li data-aside-group="vendors" <?php echo (strpos($currentUrl, '/vendors/transporter/') !== false ? 'class="active"' : ''); ?>>
         <a href="/dashboard/vendors/transporter/"><i class="fi fi-rr-bus"></i> Transporters &amp; Fleet</a>
         <div class="side-menu">
             <ul>
@@ -205,30 +223,33 @@ if (!$isDigitalMarketingPackage && ($site_access_type == 'administrator' || $sit
         </div>
     </li>
 
-    <li class="aside-menu-disabled">
+    <li data-aside-group="vendors" class="aside-menu-disabled">
         <a href="javascript:void(0)"><i class="fi fi-rr-building"></i> DMC Partners <span class="aside-badge-soon">Soon</span></a>
     </li>
+    <?php } ?>
 
+    <?php if ($showMarketingCms) { ?>
     <!-- 4. MARKETING & CONTENT (CMS) -->
-    <li class="header-section-name">
+    <li class="header-section-name" data-aside-group="cms">
         <p>Marketing &amp; CMS<span>Blogs, Reviews &amp; Website</span></p>
     </li>
 
-    <li class="aside-menu-disabled">
+    <li data-aside-group="cms" class="aside-menu-disabled">
         <a href="javascript:void(0)"><i class="fi fi-rr-document-signed"></i> Travel Blogs <span class="aside-badge-soon">Soon</span></a>
     </li>
 
-    <li class="aside-menu-disabled">
+    <li data-aside-group="cms" class="aside-menu-disabled">
         <a href="javascript:void(0)"><i class="fi fi-rr-comment-quote"></i> Client Testimonials <span class="aside-badge-soon">Soon</span></a>
     </li>
 
-    <li class="aside-menu-disabled">
+    <li data-aside-group="cms" class="aside-menu-disabled">
         <a href="javascript:void(0)"><i class="fi fi-rr-picture"></i> Hero Sliders <span class="aside-badge-soon">Soon</span></a>
     </li>
 
-    <li class="aside-menu-disabled">
+    <li data-aside-group="cms" class="aside-menu-disabled">
         <a href="javascript:void(0)"><i class="fi fi-rr-interrogation"></i> FAQs <span class="aside-badge-soon">Soon</span></a>
     </li>
+    <?php } ?>
 
 <?php
 }

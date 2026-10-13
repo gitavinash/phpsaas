@@ -684,11 +684,11 @@ if ($leadViewSiteId > 0 && isset($connection)) {
             <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Task Type *</label>
                 <select id="modalFollowUpType" class="selectJS leads-filter-select v3-select-full">
-                    <option value="Call" selected>📞 Phone Call</option>
-                    <option value="WhatsApp">💬 WhatsApp Message</option>
-                    <option value="Email">✉️ Email</option>
-                    <option value="Meeting">🤝 In-Person Meeting</option>
-                    <option value="Other">📌 Other Action</option>
+                    <option value="Call" data-icon="fi-rr-phone-call" selected>Phone Call</option>
+                    <option value="WhatsApp" data-icon="fi-rr-comment-alt">WhatsApp Message</option>
+                    <option value="Email" data-icon="fi-rr-envelope">Email</option>
+                    <option value="Meeting" data-icon="fi-rr-users">In-Person Meeting</option>
+                    <option value="Other" data-icon="fi-rr-bookmark">Other Action</option>
                 </select>
             </div>
             <div class="v3-modal-form-group">
@@ -778,18 +778,18 @@ if ($leadViewSiteId > 0 && isset($connection)) {
             <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Interaction Direction &amp; Flow *</label>
                 <select id="logInteractionDirection" class="selectJS leads-filter-select v3-select-full">
-                    <option value="outbound" selected>📤 Outbound (Agent contacted customer)</option>
-                    <option value="inbound">📥 Inbound (Customer replied / called agent)</option>
+                    <option value="outbound" data-icon="fi-rr-sign-out-alt" selected>Outbound (Agent contacted customer)</option>
+                    <option value="inbound" data-icon="fi-rr-sign-in-alt">Inbound (Customer replied / called agent)</option>
                 </select>
             </div>
             <div class="v3-modal-form-group">
                 <label class="v3-modal-label">Channel / Type *</label>
                 <select id="logInteractionType" class="selectJS leads-filter-select v3-select-full">
-                    <option value="call" selected>📞 Phone Call</option>
-                    <option value="whatsapp">💬 WhatsApp</option>
-                    <option value="email">✉️ Email</option>
-                    <option value="meeting">🤝 In-Person Meeting</option>
-                    <option value="other">📌 Other</option>
+                    <option value="call" data-icon="fi-rr-phone-call" selected>Phone Call</option>
+                    <option value="whatsapp" data-icon="fi-rr-comment-alt">WhatsApp</option>
+                    <option value="email" data-icon="fi-rr-envelope">Email</option>
+                    <option value="meeting" data-icon="fi-rr-users">In-Person Meeting</option>
+                    <option value="other" data-icon="fi-rr-bookmark">Other</option>
                 </select>
             </div>
             <div class="v3-modal-form-group">
@@ -834,12 +834,12 @@ if ($leadViewSiteId > 0 && isset($connection)) {
             <div id="completeTaskNextSection" class="is-hidden">
                 <div class="v3-modal-form-group">
                     <label class="v3-modal-label">Next Task Type</label>
-                    <select id="completeTaskNextType" class="leads-filter-select v3-select-full">
-                        <option value="Call" selected>📞 Phone Call</option>
-                        <option value="WhatsApp">💬 WhatsApp Message</option>
-                        <option value="Email">✉️ Email</option>
-                        <option value="Meeting">🤝 Meeting</option>
-                        <option value="Other">📌 Other</option>
+                    <select id="completeTaskNextType" class="selectJS leads-filter-select v3-select-full">
+                        <option value="Call" data-icon="fi-rr-phone-call" selected>Phone Call</option>
+                        <option value="WhatsApp" data-icon="fi-rr-comment-alt">WhatsApp Message</option>
+                        <option value="Email" data-icon="fi-rr-envelope">Email</option>
+                        <option value="Meeting" data-icon="fi-rr-users">Meeting</option>
+                        <option value="Other" data-icon="fi-rr-bookmark">Other</option>
                     </select>
                 </div>
                 <div class="v3-modal-form-group">

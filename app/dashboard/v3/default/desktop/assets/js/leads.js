@@ -54,6 +54,7 @@
       this.isDigitalMarketing = (role === "digital_marketing");
       this.isAdmin =
         role === "administrator" ||
+        role === "admin" ||
         role === "superadmin" ||
         role === "operator";
       $app
@@ -61,19 +62,22 @@
         .toggleClass("leads-agent-view", !this.isAdmin)
         .toggleClass("leads-digital-marketing-view", this.isDigitalMarketing);
 
-      // Immediately apply column visibility to <thead> (before data loads)
+      // Immediately apply column & filter visibility (before data loads)
       if (this.isDigitalMarketing) {
         $(".leads-data-table th.th-contact, .leads-data-table th.col-contact").hide();
         $(".leads-data-table th.th-agent, .leads-data-table th.col-agent").hide();
         $(".leads-data-table th.th-actions, .leads-data-table th.col-actions").hide();
+        $("#filterLeadAgent, #filterLeadSource").closest(".leads-select-holder").hide();
       } else if (!this.isAdmin) {
         $(".leads-data-table th.th-contact, .leads-data-table th.col-contact").show();
         $(".leads-data-table th.th-agent, .leads-data-table th.col-agent").hide();
         $(".leads-data-table th.th-actions, .leads-data-table th.col-actions").show();
+        $("#filterLeadAgent, #filterLeadSource").closest(".leads-select-holder").hide();
       } else {
         $(".leads-data-table th.th-contact, .leads-data-table th.col-contact").show();
         $(".leads-data-table th.th-agent, .leads-data-table th.col-agent").show();
         $(".leads-data-table th.th-actions, .leads-data-table th.col-actions").show();
+        $("#filterLeadAgent, #filterLeadSource").closest(".leads-select-holder").show();
       }
 
       this.selectedLeads.clear();
@@ -82,8 +86,12 @@
       // Read initial filters from URL query parameters or DOM data attributes
       const urlParams = new URLSearchParams(window.location.search);
       const initialStatus = urlParams.get("leadStatus") || urlParams.get("status") || $app.data("initial-status") || $("#filterLeadStatus").val() || "all";
-      const initialAgent = urlParams.get("agentId") || urlParams.get("agent_id") || urlParams.get("agent") || $app.data("initial-agent") || $("#filterLeadAgent").val() || "all";
-      const initialSource = urlParams.get("source") || $("#filterLeadSource").val() || "all";
+      const initialAgent = this.isAdmin
+        ? (urlParams.get("agentId") || urlParams.get("agent_id") || urlParams.get("agent") || $app.data("initial-agent") || $("#filterLeadAgent").val() || "all")
+        : "all";
+      const initialSource = this.isAdmin
+        ? (urlParams.get("source") || $("#filterLeadSource").val() || "all")
+        : "all";
       const initialInterest = urlParams.get("interest") || $("#filterLeadInterest").val() || "all";
       const initialResponse = urlParams.get("response") || urlParams.get("response_status") || $("#filterLeadResponse").val() || "all";
       const initialFollowup = urlParams.get("followup") || "all";
@@ -127,59 +135,166 @@
         $("#clearLeadSearchBtn").show();
       }
 
-      this.initSelect2();
-      this.initDateRangePicker();
-      if (!this.eventsBound) {
-        this.bindEvents();
-        this.eventsBound = true;
+      try {
+        this.initSelect2();
+      } catch (e) {
+        console.error("V3Leads initSelect2 error:", e);
       }
+
+      try {
+        this.initDateRangePicker();
+      } catch (e) {
+        console.error("V3Leads initDateRangePicker error:", e);
+      }
+
+      try {
+        if (!this.eventsBound) {
+          this.bindEvents();
+          this.eventsBound = true;
+        }
+      } catch (e) {
+        console.error("V3Leads bindEvents error:", e);
+      }
+
       this.loadLeads();
     },
 
     initSelect2: function () {
       const self = this;
       if (typeof $.fn.select2 !== "undefined") {
-        // Destroy existing select2 to avoid duplicate wrappers
-        $("#filterLeadStatus, #filterLeadAgent, #filterLeadSource, #bulkActionSelect, #leadsPerPage").each(function () {
-          if ($(this).data("select2")) {
-            $(this).select2("destroy");
+        const formatSelectOption = function (state) {
+          if (!state.id) return state.text;
+          const $elem = $(state.element);
+          const icon = $elem.data("icon") || $elem.attr("data-icon");
+          if (icon) {
+            const $wrap = $(
+              '<span class="select2-opt-wrap"><i class="fi ' +
+                icon +
+                ' select2-opt-icon"></i> </span>'
+            );
+            const $txt = $('<span class="select2-opt-text"></span>').text(
+              state.text
+            );
+            $wrap.append($txt);
+            return $wrap;
+          }
+          return state.text;
+        };
+
+        const formatSelectSelection = function (state) {
+          if (!state.id) return state.text;
+          const $elem = $(state.element);
+          const icon = $elem.data("icon") || $elem.attr("data-icon");
+          if (icon) {
+            const $wrap = $(
+              '<span class="select2-selection-wrap"><i class="fi ' +
+                icon +
+                ' select2-opt-icon"></i> </span>'
+            );
+            const $txt = $('<span class="select2-opt-text"></span>').text(
+              state.text
+            );
+            $wrap.append($txt);
+            return $wrap;
+          }
+          return state.text;
+        };
+
+        const baseConfig = {
+          dropdownAutoWidth: true,
+          templateResult: formatSelectOption,
+          templateSelection: formatSelectSelection,
+        };
+
+        // Attach leads-filter-dropdown class dynamically on open for custom styling
+        $(document)
+          .off("select2:open.leadsFilters")
+          .on(
+            "select2:open.leadsFilters",
+            "#filterLeadStatus, #filterLeadInterest, #filterLeadResponse, #filterLeadAgent, #filterLeadSource, #bulkActionSelect",
+            function () {
+              $(".select2-dropdown").addClass("leads-filter-dropdown");
+            }
+          );
+
+        // Destroy existing select2 safely to avoid duplicate wrappers
+        $(
+          "#filterLeadStatus, #filterLeadInterest, #filterLeadResponse, #filterLeadAgent, #filterLeadSource, #bulkActionSelect, #leadsPerPage"
+        ).each(function () {
+          if ($(this).hasClass("select2-hidden-accessible")) {
+            try {
+              $(this).select2("destroy");
+            } catch (e) {}
           }
         });
 
-        $("#filterLeadStatus").select2({
-          dropdownAutoWidth: true,
-          width: "120px",
-          minimumResultsForSearch: Infinity,
-        });
+        $("#filterLeadStatus").select2(
+          $.extend({}, baseConfig, {
+            width: "165px",
+            minimumResultsForSearch: Infinity,
+          })
+        );
 
         if (self.activeStatus && self.activeStatus !== "all") {
           $("#filterLeadStatus").val(self.activeStatus).trigger("change.select2");
         }
 
-        $("#filterLeadAgent").select2({
-          dropdownAutoWidth: true,
-          width: "130px",
-        });
+        $("#filterLeadInterest").select2(
+          $.extend({}, baseConfig, {
+            width: "145px",
+            minimumResultsForSearch: Infinity,
+          })
+        );
 
-        if (self.activeAgent && self.activeAgent !== "all") {
-          $("#filterLeadAgent").val(self.activeAgent).trigger("change.select2");
+        if (self.activeInterest && self.activeInterest !== "all") {
+          $("#filterLeadInterest").val(self.activeInterest).trigger("change.select2");
         }
 
-        $("#filterLeadSource").select2({
-          dropdownAutoWidth: true,
-          width: "115px",
-        });
+        $("#filterLeadResponse").select2(
+          $.extend({}, baseConfig, {
+            width: "195px",
+            minimumResultsForSearch: Infinity,
+          })
+        );
 
-        $("#bulkActionSelect").select2({
-          minimumResultsForSearch: Infinity,
-          dropdownAutoWidth: true,
-          width: "100%",
-        });
+        if (self.activeResponse && self.activeResponse !== "all") {
+          $("#filterLeadResponse").val(self.activeResponse).trigger("change.select2");
+        }
+
+        if (self.isAdmin) {
+          $("#filterLeadAgent").select2(
+            $.extend({}, baseConfig, {
+              width: "155px",
+            })
+          );
+
+          if (self.activeAgent && self.activeAgent !== "all") {
+            $("#filterLeadAgent").val(self.activeAgent).trigger("change.select2");
+          }
+
+          $("#filterLeadSource").select2(
+            $.extend({}, baseConfig, {
+              width: "135px",
+              minimumResultsForSearch: Infinity,
+            })
+          );
+
+          if (self.activeSource && self.activeSource !== "all") {
+            $("#filterLeadSource").val(self.activeSource).trigger("change.select2");
+          }
+        }
+
+        $("#bulkActionSelect").select2(
+          $.extend({}, baseConfig, {
+            minimumResultsForSearch: Infinity,
+            width: "100%",
+          })
+        );
 
         $("#leadsPerPage").select2({
           minimumResultsForSearch: Infinity,
           dropdownAutoWidth: true,
-          width: "70px",
+          width: "75px",
         });
       }
     },
@@ -861,7 +976,7 @@
           $existing.text(`${ag.name} (${ag.role})`);
         } else {
           $filter.append(
-            `<option value="${ag.id}">${ag.name} (${ag.role})</option>`,
+            `<option value="${ag.id}" data-icon="fi-rr-user">${ag.name} (${ag.role})</option>`,
           );
         }
       });
@@ -953,7 +1068,7 @@
         const interestMeta = lead.interest_meta || {};
         const fallbackIcon = (interestMeta.icon && interestMeta.icon.indexOf('fi-') !== -1)
           ? `<i class="fi ${interestMeta.icon}"></i>`
-          : (interestMeta.icon || '❓');
+          : (interestMeta.icon || '<i class="fi fi-rr-question"></i>');
         const interestBadge = interestMeta.badge_html || `
           <span class="v3-interest-pill pill-interest-${(lead.interest_level || 'Unknown').toLowerCase().replace(/\s+/g, '-')}">
             ${fallbackIcon} ${lead.interest_level || 'Unknown'}
@@ -1106,7 +1221,7 @@
               </div>
             </td>
 
-            <td class="td-actions text-right">
+            <td class="td-actions text-center">
               <div class="lead-actions-group">
                 <a href="/dashboard/leads/view/?id=${lead.encoded_id}" class="btn-lead-view-cta" title="View Details">
                   <i class="fi fi-rr-eye"></i> <span>View</span>

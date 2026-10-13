@@ -313,22 +313,22 @@ if ($method === 'GET') {
         }
     }
 
-    // Auto-heal: Populate chat_device_phone from messages for existing chats where missing
+    // Auto-heal: Populate chat_device_phone from messages for existing chats where missing or set to CRM
     @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat c
         JOIN (
             SELECT message_chat_id, 
                    MAX(IF(message_direction = 'outgoing', message_sender, message_receiver)) as dev_phone
             FROM " . TABLE_PREFIX . "whatsapp_message
-            WHERE message_site_id = {$siteId}
+            WHERE message_site_id = {$siteId} AND message_sender != 'CRM' AND message_receiver != 'CRM'
             GROUP BY message_chat_id
         ) m_dev ON m_dev.message_chat_id = c.chat_id
         SET c.chat_device_phone = m_dev.dev_phone
-        WHERE c.chat_site_id = {$siteId} AND (c.chat_device_phone IS NULL OR c.chat_device_phone = '') AND m_dev.dev_phone IS NOT NULL AND m_dev.dev_phone != ''");
+        WHERE c.chat_site_id = {$siteId} AND (c.chat_device_phone IS NULL OR c.chat_device_phone = '' OR c.chat_device_phone = 'CRM') AND m_dev.dev_phone IS NOT NULL AND m_dev.dev_phone != '' AND m_dev.dev_phone != 'CRM'");
 
-    // Auto-heal: If chat_device_phone is still empty, populate with primary connected device
+    // Auto-heal: If chat_device_phone is still empty or CRM, populate with primary connected device
     if (!empty($allActiveDevPhones[0])) {
         $escPrimaryDev = mysqli_real_escape_string($connection, $allActiveDevPhones[0]);
-        @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat SET chat_device_phone = '{$escPrimaryDev}' WHERE chat_site_id = {$siteId} AND (chat_device_phone IS NULL OR chat_device_phone = '')");
+        @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat SET chat_device_phone = '{$escPrimaryDev}' WHERE chat_site_id = {$siteId} AND (chat_device_phone IS NULL OR chat_device_phone = '' OR chat_device_phone = 'CRM')");
     }
 
     // Auto-heal: Synchronize chat_last_message and chat_last_message_time with the latest message in message table

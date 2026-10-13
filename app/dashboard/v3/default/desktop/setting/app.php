@@ -509,6 +509,72 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                     </div>
                 </div>
 
+                <!-- Card 6: Aside Navigation Menu Groups -->
+                <div class="v3-card-section">
+                    <div class="v3-card-header">
+                        <div class="v3-card-header-icon blue">
+                            <i class="fi fi-rr-menu-burger"></i>
+                        </div>
+                        <div class="v3-card-header-text">
+                            <h3>Sidebar Navigation Menu Groups</h3>
+                            <p>Control the visibility of operational menu sections in the left sidebar navigation.</p>
+                        </div>
+                    </div>
+
+                    <div class="v3-card-body">
+                        <!-- Toggle 1: Tour Packages -->
+                        <div class="v3-feature-toggle-row">
+                            <div class="v3-feature-toggle-info">
+                                <div class="v3-feature-toggle-icon">
+                                    <i class="fi fi-rr-suitcase-alt"></i>
+                                </div>
+                                <div class="v3-feature-toggle-text">
+                                    <h4>Tour Packages</h4>
+                                    <p>Display Domestic &amp; International holiday packages, catalog lists, itineraries, and destinations.</p>
+                                </div>
+                            </div>
+                            <label class="v3-switch-label" for="cfgAsideMenuPackages">
+                                <input type="checkbox" id="cfgAsideMenuPackages" name="aside_menu_show_packages" value="1" checked>
+                                <span class="v3-switch-slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Toggle 2: Supply & Vendors -->
+                        <div class="v3-feature-toggle-row">
+                            <div class="v3-feature-toggle-info">
+                                <div class="v3-feature-toggle-icon">
+                                    <i class="fi fi-rr-city"></i>
+                                </div>
+                                <div class="v3-feature-toggle-text">
+                                    <h4>Supply &amp; Vendors</h4>
+                                    <p>Display Hotels &amp; Properties, Transporters &amp; Fleet, Room Types, and DMC Partners.</p>
+                                </div>
+                            </div>
+                            <label class="v3-switch-label" for="cfgAsideMenuVendors">
+                                <input type="checkbox" id="cfgAsideMenuVendors" name="aside_menu_show_vendors" value="1" checked>
+                                <span class="v3-switch-slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- Toggle 3: Marketing & CMS -->
+                        <div class="v3-feature-toggle-row">
+                            <div class="v3-feature-toggle-info">
+                                <div class="v3-feature-toggle-icon">
+                                    <i class="fi fi-rr-document-signed"></i>
+                                </div>
+                                <div class="v3-feature-toggle-text">
+                                    <h4>Marketing &amp; CMS</h4>
+                                    <p>Display Travel Blogs, Client Testimonials, Hero Sliders, and FAQ management menu links.</p>
+                                </div>
+                            </div>
+                            <label class="v3-switch-label" for="cfgAsideMenuCms">
+                                <input type="checkbox" id="cfgAsideMenuCms" name="aside_menu_show_cms" value="1">
+                                <span class="v3-switch-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Form Action Footer -->
                 <div class="v3-form-actions-bar">
                     <a href="/dashboard/setting/" class="v3-btn-secondary">
@@ -570,6 +636,14 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                             <span class="v3-preview-tag tag-active" id="tagPrevPaymentLink">Payment Link</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevRecordPayment">Record Payment</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevConvertSale">Convert Sale</span>
+                        </div>
+                        <div class="v3-preview-detail-row">
+                            <span class="v3-preview-detail-label">Active Sidebar Menu Groups:</span>
+                        </div>
+                        <div class="v3-preview-tags-wrap" id="previewAsideMenuWrap">
+                            <span class="v3-preview-tag tag-active" id="tagPrevMenuPackages">Tour Packages</span>
+                            <span class="v3-preview-tag tag-active" id="tagPrevMenuVendors">Supply &amp; Vendors</span>
+                            <span class="v3-preview-tag tag-active is-hidden" id="tagPrevMenuCms">Marketing &amp; CMS</span>
                         </div>
                     </div>
                 </div>

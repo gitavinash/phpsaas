@@ -45,14 +45,16 @@ $userFilter = (!$isPrivilegedUser && $userId > 0)
     ? " AND (e.enquiry_agent = '{$userId}')"
     : "";
 
-// Specific agent filter from request
-$reqAgent = $reqData['agentId'] ?? ($reqData['agent_id'] ?? ($reqData['agent'] ?? ''));
-if ($reqAgent !== '' && $reqAgent !== 'all') {
-    if ($reqAgent === '0' || $reqAgent === 'unassigned') {
-        $userFilter .= " AND (e.enquiry_agent = '0' OR e.enquiry_agent = '' OR e.enquiry_agent IS NULL)";
-    } elseif (is_numeric($reqAgent) && (int)$reqAgent > 0) {
-        $filterAgentId = (int)$reqAgent;
-        $userFilter .= " AND e.enquiry_agent = '{$filterAgentId}'";
+// Specific agent filter from request (privileged admin users only)
+if ($isPrivilegedUser) {
+    $reqAgent = $reqData['agentId'] ?? ($reqData['agent_id'] ?? ($reqData['agent'] ?? ''));
+    if ($reqAgent !== '' && $reqAgent !== 'all') {
+        if ($reqAgent === '0' || $reqAgent === 'unassigned') {
+            $userFilter .= " AND (e.enquiry_agent = '0' OR e.enquiry_agent = '' OR e.enquiry_agent IS NULL)";
+        } elseif (is_numeric($reqAgent) && (int)$reqAgent > 0) {
+            $filterAgentId = (int)$reqAgent;
+            $userFilter .= " AND e.enquiry_agent = '{$filterAgentId}'";
+        }
     }
 }
 
@@ -144,9 +146,9 @@ if ($rawStatus !== '' && $rawStatus !== 'all') {
     }
 }
 
-// Source Filter
+// Source Filter (privileged admin users only)
 $sourceFilter = "";
-if (isset($reqData['source']) && trim($reqData['source']) !== '' && $reqData['source'] !== 'all') {
+if ($isPrivilegedUser && isset($reqData['source']) && trim($reqData['source']) !== '' && $reqData['source'] !== 'all') {
     $sourceKey = mysqli_real_escape_string($connection, trim($reqData['source']));
     $sourceFilter = " AND e.enquiry_source LIKE '%{$sourceKey}%'";
 }

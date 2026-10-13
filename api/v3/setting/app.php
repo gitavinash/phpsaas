@@ -79,7 +79,10 @@ $managedKeys = [
     'lead_view_show_call_button',
     'lead_view_show_whatsapp_button',
     'lead_view_show_send_itinerary',
-    'lead_view_show_send_quotation'
+    'lead_view_show_send_quotation',
+    'aside_menu_show_packages',
+    'aside_menu_show_vendors',
+    'aside_menu_show_cms'
 ];
 
 // --------------------------------------------------------------------------
@@ -133,6 +136,21 @@ if ($method === 'GET') {
     }
     if (empty($data['company_nature_title'])) {
         $data['company_nature_title'] = $natureTitles[$data['company_nature']] ?? 'Travel Agency & Tour Operator';
+    }
+
+    // Aside Menu Visibility Defaults:
+    // If Nature is "travel_agency" or "dmc", default to showing "Tour Packages" and "Supply & Vendors".
+    // For other natures, default to hiding them.
+    // "Marketing & CMS" is default hidden for all.
+    $isDefaultNaturePackagesVendors = in_array($data['company_nature'], ['travel_agency', 'dmc']);
+    if (!isset($data['aside_menu_show_packages'])) {
+        $data['aside_menu_show_packages'] = $isDefaultNaturePackagesVendors ? '1' : '0';
+    }
+    if (!isset($data['aside_menu_show_vendors'])) {
+        $data['aside_menu_show_vendors'] = $isDefaultNaturePackagesVendors ? '1' : '0';
+    }
+    if (!isset($data['aside_menu_show_cms'])) {
+        $data['aside_menu_show_cms'] = '0';
     }
 
     // Site package identification
@@ -252,6 +270,11 @@ if ($method === 'POST' || $method === 'PUT') {
     $leadViewSendItinerary  = (!empty($data['lead_view_show_send_itinerary']) && $data['lead_view_show_send_itinerary'] !== '0') ? '1' : '0';
     $leadViewSendQuotation  = (!empty($data['lead_view_show_send_quotation']) && $data['lead_view_show_send_quotation'] !== '0') ? '1' : '0';
 
+    // Aside Navigation Menu Group Toggles
+    $asideMenuShowPackages  = (!empty($data['aside_menu_show_packages']) && $data['aside_menu_show_packages'] !== '0') ? '1' : '0';
+    $asideMenuShowVendors   = (!empty($data['aside_menu_show_vendors']) && $data['aside_menu_show_vendors'] !== '0') ? '1' : '0';
+    $asideMenuShowCms       = (!empty($data['aside_menu_show_cms']) && $data['aside_menu_show_cms'] !== '0') ? '1' : '0';
+
     $valuesToSave = [
         'company_nature'               => $nature,
         'company_nature_title'         => $natureTitle,
@@ -276,7 +299,10 @@ if ($method === 'POST' || $method === 'PUT') {
         'lead_view_show_call_button'   => $leadViewCallButton,
         'lead_view_show_whatsapp_button'=> $leadViewWhatsappButton,
         'lead_view_show_send_itinerary'=> $leadViewSendItinerary,
-        'lead_view_show_send_quotation'=> $leadViewSendQuotation
+        'lead_view_show_send_quotation'=> $leadViewSendQuotation,
+        'aside_menu_show_packages'     => $asideMenuShowPackages,
+        'aside_menu_show_vendors'      => $asideMenuShowVendors,
+        'aside_menu_show_cms'          => $asideMenuShowCms
     ];
 
     mysqli_query($connection, "START TRANSACTION");

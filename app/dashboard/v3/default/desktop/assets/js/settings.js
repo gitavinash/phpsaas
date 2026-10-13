@@ -1321,6 +1321,18 @@
           $("#previewFleetRow").addClass("is-hidden");
         }
 
+        // Default aside menu groups based on business nature:
+        // By default if Business Nature is "Travel Agency" and "DMC" then only show "Tour Packages", "Supply & Vendors"
+        // As on now default hide "Marketing & CMS" for all
+        if (nature === "travel_agency" || nature === "dmc") {
+          $("#cfgAsideMenuPackages").prop("checked", true);
+          $("#cfgAsideMenuVendors").prop("checked", true);
+        } else {
+          $("#cfgAsideMenuPackages").prop("checked", false);
+          $("#cfgAsideMenuVendors").prop("checked", false);
+        }
+        $("#cfgAsideMenuCms").prop("checked", false);
+
         self.updateAppConfigPreview();
       });
 
@@ -1368,7 +1380,7 @@
       });
 
       // Select2 & Input Changes to Live Preview
-      $(document).off("input change", "#settingAppConfigApp .selectJS, #cfgCurrencySymbol, #cfgAdvancePaymentPercentCustom, #cfgLeadViewPaymentLink, #cfgLeadViewRecordPayment, #cfgLeadViewConvertSale, #cfgLeadViewCallButton, #cfgLeadViewWhatsappButton, #cfgLeadViewSendItinerary, #cfgLeadViewSendQuotation").on("input change", "#settingAppConfigApp .selectJS, #cfgCurrencySymbol, #cfgAdvancePaymentPercentCustom, #cfgLeadViewPaymentLink, #cfgLeadViewRecordPayment, #cfgLeadViewConvertSale, #cfgLeadViewCallButton, #cfgLeadViewWhatsappButton, #cfgLeadViewSendItinerary, #cfgLeadViewSendQuotation", function () {
+      $(document).off("input change", "#settingAppConfigApp .selectJS, #cfgCurrencySymbol, #cfgAdvancePaymentPercentCustom, #cfgLeadViewPaymentLink, #cfgLeadViewRecordPayment, #cfgLeadViewConvertSale, #cfgLeadViewCallButton, #cfgLeadViewWhatsappButton, #cfgLeadViewSendItinerary, #cfgLeadViewSendQuotation, #cfgAsideMenuPackages, #cfgAsideMenuVendors, #cfgAsideMenuCms").on("input change", "#settingAppConfigApp .selectJS, #cfgCurrencySymbol, #cfgAdvancePaymentPercentCustom, #cfgLeadViewPaymentLink, #cfgLeadViewRecordPayment, #cfgLeadViewConvertSale, #cfgLeadViewCallButton, #cfgLeadViewWhatsappButton, #cfgLeadViewSendItinerary, #cfgLeadViewSendQuotation, #cfgAsideMenuPackages, #cfgAsideMenuVendors, #cfgAsideMenuCms", function () {
         self.updateAppConfigPreview();
       });
 
@@ -1483,6 +1495,11 @@
             $("#cfgLeadViewConvertSale").prop("checked", isOptEnabled(d.lead_view_show_convert_sale));
             $("#cfgLeadViewCallButton").prop("checked", isOptEnabled(d.lead_view_show_call_button));
             $("#cfgLeadViewWhatsappButton").prop("checked", isOptEnabled(d.lead_view_show_whatsapp_button));
+
+            // Aside Navigation Menu Groups
+            $("#cfgAsideMenuPackages").prop("checked", isOptEnabled(d.aside_menu_show_packages));
+            $("#cfgAsideMenuVendors").prop("checked", isOptEnabled(d.aside_menu_show_vendors));
+            $("#cfgAsideMenuCms").prop("checked", isOptEnabled(d.aside_menu_show_cms));
 
             // Transporter conditional card
             if (nature === "transporter") {
@@ -1612,6 +1629,15 @@
       $("#tagPrevPaymentLink").toggleClass("tag-active", showPayLink).toggleClass("is-hidden", !showPayLink);
       $("#tagPrevRecordPayment").toggleClass("tag-active", showRecPay).toggleClass("is-hidden", !showRecPay);
       $("#tagPrevConvertSale").toggleClass("tag-active", showConvSale).toggleClass("is-hidden", !showConvSale);
+
+      // Aside Navigation Menu Groups Preview
+      const showPackages = $("#cfgAsideMenuPackages").is(":checked");
+      const showVendors = $("#cfgAsideMenuVendors").is(":checked");
+      const showCms = $("#cfgAsideMenuCms").is(":checked");
+
+      $("#tagPrevMenuPackages").toggleClass("tag-active", showPackages).toggleClass("is-hidden", !showPackages);
+      $("#tagPrevMenuVendors").toggleClass("tag-active", showVendors).toggleClass("is-hidden", !showVendors);
+      $("#tagPrevMenuCms").toggleClass("tag-active", showCms).toggleClass("is-hidden", !showCms);
     },
 
     saveAppConfigData: function () {
@@ -1653,7 +1679,10 @@
         lead_view_show_record_payment: $("#cfgLeadViewRecordPayment").is(":checked") ? "1" : "0",
         lead_view_show_convert_sale: $("#cfgLeadViewConvertSale").is(":checked") ? "1" : "0",
         lead_view_show_call_button: $("#cfgLeadViewCallButton").is(":checked") ? "1" : "0",
-        lead_view_show_whatsapp_button: $("#cfgLeadViewWhatsappButton").is(":checked") ? "1" : "0"
+        lead_view_show_whatsapp_button: $("#cfgLeadViewWhatsappButton").is(":checked") ? "1" : "0",
+        aside_menu_show_packages: $("#cfgAsideMenuPackages").is(":checked") ? "1" : "0",
+        aside_menu_show_vendors: $("#cfgAsideMenuVendors").is(":checked") ? "1" : "0",
+        aside_menu_show_cms: $("#cfgAsideMenuCms").is(":checked") ? "1" : "0"
       };
 
       $.ajax({

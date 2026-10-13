@@ -10186,6 +10186,25 @@
       if (typeof $.fn.select2 === "undefined") return;
       const $modal = $("#modalLogInteraction");
       if (!$modal.length) return;
+      const formatSelectOption = function (state) {
+        if (!state.id) return state.text;
+        const $elem = $(state.element);
+        const icon = $elem.data("icon") || $elem.attr("data-icon");
+        if (icon) {
+          const $wrap = $(
+            '<span class="select2-opt-wrap"><i class="fi ' +
+              icon +
+              ' select2-opt-icon"></i> </span>'
+          );
+          const $txt = $('<span class="select2-opt-text"></span>').text(
+            state.text
+          );
+          $wrap.append($txt);
+          return $wrap;
+        }
+        return state.text;
+      };
+
       $("#logInteractionDirection, #logInteractionType").each(function () {
         const $sel = $(this);
         if ($sel.data("select2")) {
@@ -10196,6 +10215,8 @@
           dropdownAutoWidth: true,
           width: "100%",
           minimumResultsForSearch: Infinity,
+          templateResult: formatSelectOption,
+          templateSelection: formatSelectOption,
         });
       });
     },
@@ -10204,6 +10225,25 @@
       if (typeof $.fn.select2 === "undefined") return;
       const $modal = $("#modalSetFollowUp");
       if (!$modal.length) return;
+      const formatSelectOption = function (state) {
+        if (!state.id) return state.text;
+        const $elem = $(state.element);
+        const icon = $elem.data("icon") || $elem.attr("data-icon");
+        if (icon) {
+          const $wrap = $(
+            '<span class="select2-opt-wrap"><i class="fi ' +
+              icon +
+              ' select2-opt-icon"></i> </span>'
+          );
+          const $txt = $('<span class="select2-opt-text"></span>').text(
+            state.text
+          );
+          $wrap.append($txt);
+          return $wrap;
+        }
+        return state.text;
+      };
+
       $("#modalFollowUpType").each(function () {
         const $sel = $(this);
         if ($sel.data("select2")) {
@@ -10214,6 +10254,8 @@
           dropdownAutoWidth: true,
           width: "100%",
           minimumResultsForSearch: Infinity,
+          templateResult: formatSelectOption,
+          templateSelection: formatSelectOption,
         });
       });
       $("#modalFollowUpReason").each(function () {

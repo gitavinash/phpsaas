@@ -129,6 +129,21 @@ if ($method === 'GET') {
             }
         }
 
+        if (!$canAccess && !empty($assignedDevPhones)) {
+            $devCountQ = mysqli_query($connection, "SELECT COUNT(*) as cnt FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId}");
+            $totalDevs = ($devCountQ && $dCnt = mysqli_fetch_assoc($devCountQ)) ? (int)$dCnt['cnt'] : 0;
+            if ($totalDevs <= 1) {
+                $canAccess = true;
+            } else {
+                $leadAgentQ = mysqli_query($connection, "SELECT c.chat_id FROM " . TABLE_PREFIX . "whatsapp_chat c 
+                    LEFT JOIN " . TABLE_PREFIX . "enquiry e ON e.enquiry_id = c.chat_lead_id 
+                    WHERE c.chat_id = {$chatId} AND c.chat_site_id = {$siteId} AND (e.enquiry_agent = {$currentUserId} OR c.chat_device_phone IS NULL OR c.chat_device_phone = '' OR c.chat_device_phone = 'CRM') LIMIT 1");
+                if ($leadAgentQ && mysqli_num_rows($leadAgentQ) > 0) {
+                    $canAccess = true;
+                }
+            }
+        }
+
         if (!$canAccess) {
             http_response_code(403);
             echo json_encode(['status' => 'error', 'msg' => 'Access denied. You can only view chats for your assigned WhatsApp device.']);
