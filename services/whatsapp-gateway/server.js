@@ -536,6 +536,18 @@ async function downloadAndSaveMedia(msg, sessionId, sock = null, allowPhoneRetry
   return null;
 }
 
+// Helper: checks whether an auth directory contains authenticated credentials (paired to a phone)
+function isSessionLinked(authDir) {
+  try {
+    const credsPath = path.join(authDir, "creds.json");
+    if (!fs.existsSync(credsPath)) return false;
+    const creds = JSON.parse(fs.readFileSync(credsPath, "utf8"));
+    return !!(creds && creds.me && creds.me.id);
+  } catch (e) {
+    return false;
+  }
+}
+
 // -----------------------------------------------------------------------------
 // WhatsApp Multi-Session Instance
 // -----------------------------------------------------------------------------
@@ -556,6 +568,7 @@ class WhatsAppSession {
     this.connectedUser = null;
     this.lastSyncTime = null;
     this.hasSyncedInitial = false;
+    this.reconnectAttempts = 0;
 
     this.chatStore = new Map();
     this.contactStore = new Map();
@@ -577,6 +590,12 @@ class WhatsAppSession {
 
     this.loadStore();
     this.setupAutoSave();
+  }
+
+  isLinked() {
+    if (this.sock?.user?.id) return true;
+    if (this.connectedUser?.phone && this.connectedUser.phone !== "Unknown") return true;
+    return isSessionLinked(this.authDir);
   }
 
   getSiteDomain() {
@@ -1322,6 +1341,7 @@ class WhatsAppSession {
         }
 
         if (connection === "open") {
+          this.reconnectAttempts = 0;
           this.connectionStatus = "connected";
           this.currentQrSvg = null;
           this.currentQrString = null;
@@ -1364,7 +1384,11 @@ class WhatsAppSession {
 
         if (connection === "close") {
           const statusCode = lastDisconnect?.error?.output?.statusCode;
-          const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+          const isLoggedOut = statusCode === DisconnectReason.loggedOut;
+          const isLinked = this.isLinked();
+          // Only auto-reconnect if the session was actually paired/linked to a WhatsApp account.
+          // Unlinked sessions (waiting for QR scan) must NEVER auto-reconnect in the background.
+          const shouldReconnect = !isLoggedOut && isLinked;
           const err = lastDisconnect?.error;
           const errMsg = err?.message || err?.output?.payload?.message || "";
 
@@ -1374,27 +1398,33 @@ class WhatsAppSession {
           printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [WHATSAPP DEVICE DISCONNECTED] ${COLOR.RESET}`, [
             ["Site Domain", this.getSiteDomain()],
             ["Session ID", this.sessionId],
-            ["Device WhatsApp", this.connectedUser?.phone || "Not Linked"],
+            ["Device WhatsApp", this.connectedUser?.phone || (isLinked ? "Linked Device" : "Not Linked")],
             ["Status Code", statusCode || "N/A"],
-            ["Reason", errMsg || (statusCode === DisconnectReason.loggedOut ? "Logged Out" : "Connection Closed")],
-            ["Auto Reconnect", shouldReconnect ? "Yes (Retrying in background)" : "No"],
+            ["Reason", errMsg || (isLoggedOut ? "Logged Out" : "Connection Closed")],
+            ["Auto Reconnect", shouldReconnect ? "Yes (Retrying in background)" : "No (Session not linked or logged out)"],
           ], COLOR.YELLOW);
 
-          if (statusCode === DisconnectReason.loggedOut) {
+          if (isLoggedOut) {
             this.connectionStatus = "disconnected";
             this.connectedUser = null;
+            this.reconnectAttempts = 0;
             try {
               fs.rmSync(this.authDir, { recursive: true, force: true });
             } catch (e) {}
-            setTimeout(() => this.startSocket(), 1500);
+            if (this.sessionId !== "default") {
+              sessions.delete(this.sessionId);
+            }
           } else if (shouldReconnect) {
             // Keep connectedUser and mark reconnecting so momentary Baileys cycling does not wipe device status
             this.connectionStatus = "reconnecting";
-            const delay = statusCode === 408 ? 1000 : 2500;
+            this.reconnectAttempts = (this.reconnectAttempts || 0) + 1;
+            // Backoff delay: minimum 3s, scaling up to 30s to prevent flooding WhatsApp edge servers
+            const delay = Math.min(30000, Math.max(3000, this.reconnectAttempts * 2000));
             setTimeout(() => this.startSocket(), delay);
           } else {
             this.connectionStatus = "disconnected";
             this.connectedUser = null;
+            this.reconnectAttempts = 0;
           }
         }
       });
@@ -1694,9 +1724,8 @@ function getSession(sessionId = "default", req = null) {
   return s;
 }
 
-// Initialize any pre-existing connected sessions on startup
-const defaultHasCreds = fs.existsSync(path.join(AUTH_DIR, "creds.json"));
-if (defaultHasCreds) {
+// Initialize only pre-existing authenticated/linked sessions on startup
+if (isSessionLinked(AUTH_DIR)) {
   getSession("default");
 }
 
@@ -1704,9 +1733,18 @@ try {
   const dirs = fs.readdirSync(AUTH_DIR, { withFileTypes: true });
   for (const d of dirs) {
     if (d.isDirectory() && d.name !== "default") {
-      const hasCreds = fs.existsSync(path.join(AUTH_DIR, d.name, "creds.json"));
-      if (hasCreds) {
+      const sessionDir = path.join(AUTH_DIR, d.name);
+      if (isSessionLinked(sessionDir)) {
         getSession(d.name);
+      } else {
+        // Automatically prune stale unlinked session folders older than 2 hours
+        try {
+          const stat = fs.statSync(sessionDir);
+          const ageMs = Date.now() - stat.mtimeMs;
+          if (ageMs > 2 * 60 * 60 * 1000) {
+            fs.rmSync(sessionDir, { recursive: true, force: true });
+          }
+        } catch (e) {}
       }
     }
   }
@@ -1889,7 +1927,7 @@ app.get("/devices", (req, res) => {
           enrichSession(req, s);
         }
       }
-      const hasCreds = fs.existsSync(path.join(s.authDir, "creds.json"));
+      const hasCreds = s.isLinked();
       const isConn = s.connectionStatus === "connected" || (hasCreds && s.connectionStatus === "reconnecting");
       
       const item = {
@@ -1897,7 +1935,7 @@ app.get("/devices", (req, res) => {
         site_id: s.siteId || null,
         connection_status: isConn ? "connected" : s.connectionStatus,
         is_connected: isConn,
-        is_linked: hasCreds || isConn,
+        is_linked: hasCreds,
         has_qr: s.connectionStatus === "qr_ready" && !!s.currentQrSvg,
         user: s.connectedUser,
         last_sync: s.lastSyncTime,
@@ -1946,14 +1984,14 @@ app.get("/status", (req, res) => {
       }
     }
 
-    const hasCreds = fs.existsSync(path.join(s.authDir, "creds.json"));
+    const hasCreds = s.isLinked();
     const isConn = s.connectionStatus === "connected" || (hasCreds && s.connectionStatus === "reconnecting");
     res.json({
       status: "success",
       session_id: s.sessionId,
       connection_status: isConn ? "connected" : s.connectionStatus,
       is_connected: isConn,
-      is_linked: hasCreds || isConn,
+      is_linked: hasCreds,
       has_qr: s.connectionStatus === "qr_ready" && !!s.currentQrSvg,
       user: s.connectedUser,
       last_sync: s.lastSyncTime,
@@ -1981,7 +2019,7 @@ app.get("/qr", async (req, res) => {
     const force = req.query.force === "1" || req.query.force === "true";
     let isStale = (Date.now() - s.qrGeneratedAt) > 28000;
 
-    if (force && s.connectionStatus !== "connected") {
+    if ((force || s.connectionStatus === "disconnected" || !s.sock) && s.connectionStatus !== "connected") {
       try {
         if (s.sock) s.sock.end();
       } catch (e) {}
