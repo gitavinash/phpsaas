@@ -92,12 +92,6 @@
                     <button type="button" class="wa-filter-pill" data-filter="unread">Unread</button>
                     <button type="button" class="wa-filter-pill" data-filter="leads">CRM Leads</button>
                 </div>
-
-                <!-- Active Line Context Chip -->
-                <div class="wa-active-device-chip d-none" id="waActiveDeviceChip">
-                    <span class="wa-active-device-dot"></span>
-                    <span class="wa-active-device-text" id="waActiveDeviceChipText">All Lines</span>
-                </div>
             </div>
 
             <!-- Thread Items Container -->
@@ -136,31 +130,44 @@
                         <button type="button" class="btn-wa-back-to-list" id="btnBackToThreads" title="Back to conversations">
                             <i class="fi fi-rr-arrow-small-left"></i>
                         </button>
-                        <div class="wa-user-avatar" id="waActiveAvatar">WA</div>
+                        <div class="wa-user-avatar-wrap">
+                            <div class="wa-user-avatar is-fallback" id="waActiveAvatar">
+                                <i class="fi fi-rr-user"></i>
+                            </div>
+                            <span class="wa-user-avatar-dot" title="Online"></span>
+                        </div>
                         <div class="wa-user-details">
                             <div class="wa-user-name-row">
-                                <h4 id="waActiveName">Contact Name</h4>
-                                <span class="wa-lead-tag" id="waActiveLeadBadge">
+                                <h4 id="waActiveName">Select a chat</h4>
+                                <button type="button" class="btn-wa-copy-phone d-none" id="btnCopyActivePhoneName" title="Copy Phone Number">
+                                    <i class="fi fi-rr-copy"></i>
+                                </button>
+                                <span class="wa-lead-tag d-none" id="waActiveLeadBadge">
                                     <i class="fi fi-rr-bullseye-arrow"></i> <span id="waActiveLeadText">Lead #0</span>
                                 </span>
                             </div>
                             <div class="wa-user-sub-row">
-                                <span class="wa-user-phone" id="waActivePhone">+91 ...</span>
-                                <button type="button" class="btn-wa-copy-phone" id="btnCopyActivePhone" title="Copy Phone Number">
-                                    <i class="fi fi-rr-copy"></i>
-                                </button>
-                                <span class="wa-dot-sep">•</span>
-                                <span class="wa-user-online-status" id="waActiveStatus">WhatsApp Connected</span>
-                                <span class="wa-header-device-badge d-none" id="waActiveDeviceBadge"></span>
+                                <span class="wa-user-phone-wrap" id="waActivePhoneWrap">
+                                    <span class="wa-user-phone" id="waActivePhone">+91 ...</span>
+                                    <button type="button" class="btn-wa-copy-phone" id="btnCopyActivePhone" title="Copy Phone Number">
+                                        <i class="fi fi-rr-copy"></i>
+                                    </button>
+                                    <span class="wa-dot-sep">•</span>
+                                </span>
+                                <span class="wa-user-online-status" id="waActiveStatus">
+                                    <span class="wa-status-pulse"></span>
+                                    <span id="waActiveStatusText">WhatsApp Connected</span>
+                                </span>
                             </div>
                         </div>
                     </div>
 
                     <div class="wa-active-chat-actions">
-                        <a href="#" target="_blank" class="btn-wa-header-action" id="waViewLeadLink" title="View CRM Lead">
-                            <i class="fi fi-rr-user"></i> <span>View Lead</span>
+                        <div class="wa-header-device-badge d-none" id="waActiveDeviceBadge"></div>
+                        <a href="#" target="_blank" class="btn-wa-header-lead d-none" id="waViewLeadLink" title="View CRM Lead">
+                            <i class="fi fi-rr-bullseye-arrow"></i> <span>View Lead</span>
                         </a>
-                        <button type="button" class="btn-wa-header-action" id="btnRefreshActiveChat" title="Refresh messages">
+                        <button type="button" class="btn-wa-header-icon-action" id="btnRefreshActiveChat" title="Refresh messages">
                             <i class="fi fi-rr-refresh"></i>
                         </button>
                     </div>

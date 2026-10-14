@@ -66,6 +66,15 @@ if ($method === 'GET') {
 
     $site = mysqli_fetch_assoc($res);
 
+    // Read site_timezone from isw_site_configuration
+    $siteTimezone = 'Asia/Kolkata';
+    $tzQuery = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'site_timezone' LIMIT 1");
+    if ($tzQuery && $tzRow = mysqli_fetch_assoc($tzQuery)) {
+        if (!empty($tzRow['site_configuration_value'])) {
+            $siteTimezone = trim($tzRow['site_configuration_value']);
+        }
+    }
+
     echo json_encode([
         'status' => 'success',
         'data' => [
@@ -74,6 +83,7 @@ if ($method === 'GET') {
             'site_description' => $site['site_description'] ?? '',
             'site_keyword' => $site['site_keyword'] ?? '',
             'site_lang' => $site['site_lang'] ?: 'en',
+            'site_timezone' => $siteTimezone,
             'site_index' => $site['site_index'] ?: 'index, follow',
             'site_domain' => $site['site_domain'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : ''),
             'site_logo' => $site['site_logo'] ?? '',
@@ -187,11 +197,26 @@ if ($method === 'POST' || $method === 'PUT') {
         $updateSetting = mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_setting(site_setting_site_id, site_theme_color) VALUES({$siteId}, '{$escapedThm}')");
     }
 
+    // Save site_timezone into isw_site_configuration
+    $siteTimezone = trim($data['site_timezone'] ?? 'Asia/Kolkata');
+    if (empty($siteTimezone)) {
+        $siteTimezone = 'Asia/Kolkata';
+    }
+    $escapedTz = mysqli_real_escape_string($connection, $siteTimezone);
+    $checkTz = mysqli_query($connection, "SELECT site_configuration_id FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'site_timezone' LIMIT 1");
+    if ($checkTz && mysqli_num_rows($checkTz) > 0) {
+        $tzRow = mysqli_fetch_assoc($checkTz);
+        mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "site_configuration SET site_configuration_value = '{$escapedTz}', site_configuration_status = 1 WHERE site_configuration_id = " . (int)$tzRow['site_configuration_id']);
+    } else {
+        mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "site_configuration (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status, site_configuration_global) VALUES ({$siteId}, 'site_timezone', '{$escapedTz}', 1, 0)");
+    }
+
     if ($updateSite && $updateSetting) {
         mysqli_query($connection, "COMMIT");
         echo json_encode([
             'status' => 'success',
             'msg' => 'Website configuration and brand assets saved successfully.',
+            'site_timezone' => $siteTimezone,
             'site_logo' => $newSiteLogo,
             'site_icon' => $newSiteIcon
         ]);

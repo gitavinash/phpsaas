@@ -45,8 +45,41 @@
     // ------------------------------------------------------------------------
     initConfig: function () {
       const self = this;
+      self.initConfigSelect2();
       self.bindConfigEvents();
       self.loadConfigData();
+    },
+
+    initConfigSelect2: function () {
+      if (typeof $.fn.select2 === "undefined") return;
+
+      const $tz = $("#configSiteTimezone");
+      if ($tz.length > 0) {
+        if ($tz.hasClass("select2-hidden-accessible")) {
+          try {
+            $tz.select2("destroy");
+          } catch (e) {}
+        }
+        $tz.select2({
+          width: "100%",
+          placeholder: "Select Time Zone",
+          dropdownAutoWidth: false
+        });
+      }
+
+      const $lang = $("#configSiteLang");
+      if ($lang.length > 0) {
+        if ($lang.hasClass("select2-hidden-accessible")) {
+          try {
+            $lang.select2("destroy");
+          } catch (e) {}
+        }
+        $lang.select2({
+          width: "100%",
+          minimumResultsForSearch: -1,
+          dropdownAutoWidth: false
+        });
+      }
     },
 
     bindConfigEvents: function () {
@@ -204,7 +237,21 @@
             const d = res.data;
             $("#configSiteName").val(d.site_name || "");
             $("#configSiteDomain").val(d.site_domain || window.location.hostname);
-            $("#configSiteLang").val(d.site_lang || "en");
+
+            const lang = d.site_lang || "en";
+            $("#configSiteLang").val(lang);
+            if (typeof $.fn.select2 !== "undefined") {
+              $("#configSiteLang").trigger("change.select2");
+            }
+
+            const tz = d.site_timezone || "Asia/Kolkata";
+            if ($("#configSiteTimezone").find('option[value="' + tz + '"]').length === 0) {
+              $("#configSiteTimezone").append(new Option(tz, tz, true, true));
+            }
+            $("#configSiteTimezone").val(tz);
+            if (typeof $.fn.select2 !== "undefined") {
+              $("#configSiteTimezone").trigger("change.select2");
+            }
 
             const themeColor = d.site_theme_color || "#4f46e5";
             $("#configThemeColorPicker").val(themeColor);
@@ -258,6 +305,7 @@
       const formData = new FormData();
       formData.append("site_name", siteName);
       formData.append("site_lang", siteLang);
+      formData.append("site_timezone", $("#configSiteTimezone").val() || "Asia/Kolkata");
       formData.append("site_theme_color", siteTheme);
 
       const logoInput = document.getElementById("configLogoInput");
@@ -1748,4 +1796,8 @@
   }
 
   window.V3Settings = V3Settings;
+
+  $(function () {
+    V3Settings.init();
+  });
 })(window, jQuery);

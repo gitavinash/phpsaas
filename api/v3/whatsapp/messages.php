@@ -58,6 +58,16 @@ if (defined('LOGIN_CHECK') && file_exists(LOGIN_CHECK)) {
 require_once __DIR__ . '/db_init.php';
 initWhatsAppDatabase($connection);
 
+// Retrieve site timezone configuration (default Asia/Kolkata for local IST)
+$siteTimezone = 'Asia/Kolkata';
+$tzQ = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'site_timezone' LIMIT 1");
+if ($tzQ && $tzRow = mysqli_fetch_assoc($tzQ)) {
+    if (!empty($tzRow['site_configuration_value'])) {
+        $siteTimezone = trim($tzRow['site_configuration_value']);
+    }
+}
+@date_default_timezone_set($siteTimezone);
+
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 // --------------------------------------------------------------------------
@@ -65,76 +75,32 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 // --------------------------------------------------------------------------
 if ($method === 'GET') {
     $action = $_GET['action'] ?? '';
+
+    // Handle retry media download for pending/historical attachments
+    if ($action === 'retry_media') {
+        $msgWaId = trim($_GET['msg_id'] ?? ($_POST['msg_id'] ?? ''));
+        if (!empty($msgWaId)) {
+            $gwUrl = "http://127.0.0.1:3001/retry-media?msg_id=" . urlencode($msgWaId);
+            $ctx = stream_context_create(['http' => ['timeout' => 8]]);
+            $gwRes = @file_get_contents($gwUrl, false, $ctx);
+            echo $gwRes ?: json_encode(['status' => 'pending']);
+            exit;
+        }
+        echo json_encode(['status' => 'error', 'msg' => 'Message ID required']);
+        exit;
+    }
+
     if ($action === 'check_default_device' || $action === 'default_device') {
+        require_once __DIR__ . '/device_helper.php';
+
         $currentUserId = defined('USER_ID') ? (int)USER_ID : (isset($user_id) ? (int)$user_id : 0);
-        $userRole = isset($site_access_type) ? strtolower($site_access_type) : '';
-        $isAdmin = in_array($userRole, ['administrator', 'admin', 'owner', 'superadmin']);
 
-        // Check site access if needed
-        if (!$isAdmin && $currentUserId > 0) {
-            $saQ = mysqli_query($connection, "SELECT site_access_type FROM " . TABLE_PREFIX . "site_access WHERE site_access_site_id = {$siteId} AND site_access_user_id = {$currentUserId} AND site_access_status = 1 LIMIT 1");
-            if ($saQ && mysqli_num_rows($saQ) > 0) {
-                $saR = mysqli_fetch_assoc($saQ);
-                if (in_array(strtolower($saR['site_access_type'] ?? ''), ['administrator', 'admin', 'owner', 'superadmin'])) {
-                    $isAdmin = true;
-                }
-            }
-        }
-
-        // Current count
+        // Count total devices
         $cntQ = mysqli_query($connection, "SELECT COUNT(*) as cnt FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId}");
-        $totalDevs = 0;
-        if ($cntQ && $cr = mysqli_fetch_assoc($cntQ)) {
-            $totalDevs = (int)$cr['cnt'];
-        }
+        $totalDevs = ($cntQ && $cr = mysqli_fetch_assoc($cntQ)) ? (int)$cr['cnt'] : 0;
 
-        $devFound = null;
-        // 1. If sales agent has an assigned connected device, use it
-        if (!$isAdmin && $currentUserId > 0) {
-            $agDevQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
-            if ($agDevQ && mysqli_num_rows($agDevQ) > 0) {
-                $devFound = mysqli_fetch_assoc($agDevQ);
-            }
-        }
-
-        // 2. Explicit default device
-        if (!$devFound) {
-            $defQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_is_default = 1 AND device_status = 'connected' LIMIT 1");
-            if ($defQ && mysqli_num_rows($defQ) > 0) {
-                $devFound = mysqli_fetch_assoc($defQ);
-            }
-        }
-
-        // 3. From site_configuration
-        if (!$devFound) {
-            $cfgDefQ = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_default_device_id' LIMIT 1");
-            if ($cfgDefQ && mysqli_num_rows($cfgDefQ) > 0) {
-                $cfgRow = mysqli_fetch_assoc($cfgDefQ);
-                $cfgDevId = (int)($cfgRow['site_configuration_value'] ?? 0);
-                if ($cfgDevId > 0) {
-                    $chkQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_id = {$cfgDevId} AND device_status = 'connected' LIMIT 1");
-                    if ($chkQ && mysqli_num_rows($chkQ) > 0) {
-                        $devFound = mysqli_fetch_assoc($chkQ);
-                    }
-                }
-            }
-        }
-
-        // 4. Single attached device on site
-        if (!$devFound && $totalDevs === 1) {
-            $singleQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' LIMIT 1");
-            if ($singleQ && mysqli_num_rows($singleQ) > 0) {
-                $devFound = mysqli_fetch_assoc($singleQ);
-            }
-        }
-
-        // 5. Fallback: Any connected device
-        if (!$devFound) {
-            $anyQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id ASC LIMIT 1");
-            if ($anyQ && mysqli_num_rows($anyQ) > 0) {
-                $devFound = mysqli_fetch_assoc($anyQ);
-            }
-        }
+        // Resolve device: sender assigned device > default device > single connected device
+        $devFound = resolveSenderWhatsAppDevice($connection, $siteId, $currentUserId);
 
         echo json_encode([
             'status'       => 'success',
@@ -265,35 +231,9 @@ if ($method === 'GET') {
         ];
     }
 
-    // Fetch messages (with automatic phone matching to ensure incoming messages are never missed)
-    $chatPhone = !empty($chat['chat_phone']) ? $chat['chat_phone'] : $phone;
-    $chatPhoneWhere = "";
-    if (!empty($chatPhone)) {
-        $cDigits = preg_replace('/[^0-9]/', '', $chatPhone);
-        $cLast10 = substr($cDigits, -10);
-        if (strlen($cLast10) >= 8) {
-            $chatPhoneWhere = " OR message_sender LIKE '%{$cLast10}' OR message_receiver LIKE '%{$cLast10}'";
-            // Auto-heal: Ensure all messages with this phone are consolidated into this chat
-            @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message 
-                                       SET message_chat_id = {$chatId} 
-                                       WHERE message_site_id = {$siteId} 
-                                         AND message_chat_id != {$chatId} 
-                                         AND (message_sender LIKE '%{$cLast10}' OR message_receiver LIKE '%{$cLast10}')");
-        }
-
-        // Reconcile known test LID (187810329956513) into Avinash chat
-        if (str_contains($chatPhone, '9990026008') || stripos($chat['chat_name'] ?? '', 'avinash') !== false) {
-            $chatPhoneWhere .= " OR message_sender LIKE '%187810329956513%' OR message_receiver LIKE '%187810329956513%'";
-            @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message 
-                                       SET message_chat_id = {$chatId} 
-                                       WHERE message_site_id = {$siteId} 
-                                         AND message_chat_id != {$chatId} 
-                                         AND (message_sender LIKE '%187810329956513%' OR message_receiver LIKE '%187810329956513%')");
-        }
-    }
-
+    // Fetch messages strictly for this chat conversation
     $sql = "SELECT * FROM " . TABLE_PREFIX . "whatsapp_message 
-            WHERE message_site_id = {$siteId} AND (message_chat_id = {$chatId}{$chatPhoneWhere}) 
+            WHERE message_site_id = {$siteId} AND message_chat_id = {$chatId} 
             ORDER BY message_created_at ASC, message_id ASC 
             LIMIT 300";
 
@@ -302,9 +242,23 @@ if ($method === 'GET') {
 
     if ($res) {
         while ($row = mysqli_fetch_assoc($res)) {
-            $ts = strtotime($row['message_created_at']);
+            $timeDisplay = '';
+            $dateDisplay = '';
+            if (!empty($row['message_created_at'])) {
+                try {
+                    $dt = new DateTime($row['message_created_at'], new DateTimeZone('UTC'));
+                    $dt->setTimezone(new DateTimeZone($siteTimezone));
+                    $timeDisplay = $dt->format('h:i A');
+                    $dateDisplay = $dt->format('M d, Y');
+                } catch (Exception $e) {
+                    $ts = strtotime($row['message_created_at']);
+                    $timeDisplay = date('h:i A', $ts);
+                    $dateDisplay = date('M d, Y', $ts);
+                }
+            }
             $messages[] = [
                 'id'         => (int)$row['message_id'],
+                'wa_id'      => $row['message_wa_id'] ?? '',
                 'direction'  => $row['message_direction'],
                 'sender'     => $row['message_sender'],
                 'receiver'   => $row['message_receiver'],
@@ -313,8 +267,8 @@ if ($method === 'GET') {
                 'media_url'  => $row['message_media_url'] ?? '',
                 'status'     => $row['message_status'],
                 'created_at' => $row['message_created_at'],
-                'time'       => date('h:i A', $ts),
-                'date'       => date('M d, Y', $ts)
+                'time'       => $timeDisplay,
+                'date'       => $dateDisplay
             ];
         }
     }
@@ -449,7 +403,7 @@ if ($method === 'POST') {
     $escSender = mysqli_real_escape_string($connection, $senderPhone);
     $escReceiver = mysqli_real_escape_string($connection, $recipientPhone);
     $escType = mysqli_real_escape_string($connection, $type);
-    $now = date('Y-m-d H:i:s');
+    $now = gmdate('Y-m-d H:i:s');
 
     // Insert outgoing message
     $msgSql = "INSERT INTO " . TABLE_PREFIX . "whatsapp_message 
@@ -497,55 +451,24 @@ if ($method === 'POST') {
     $selectedDeviceId = isset($data['device_id']) && is_numeric($data['device_id']) ? (int)$data['device_id'] : 0;
     $selectedDevicePhone = trim($data['device_phone'] ?? '');
 
-    if (!$isAdmin) {
-        $devQ = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
-        if ($devQ && mysqli_num_rows($devQ) > 0) {
-            $devRow = mysqli_fetch_assoc($devQ);
-            $targetSessionId = $devRow['device_session_id'];
-            if (!empty($devRow['device_phone'])) {
-                $senderPhone = $devRow['device_phone'];
-            }
-        } else {
-            // Also check if there is an explicit default device or single connected device available
-            $defDevQ = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_is_default = 1 OR (SELECT COUNT(*) FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId}) = 1) AND device_status = 'connected' LIMIT 1");
-            if ($defDevQ && mysqli_num_rows($defDevQ) > 0) {
-                $ddRow = mysqli_fetch_assoc($defDevQ);
-                $targetSessionId = $ddRow['device_session_id'];
-                if (!empty($ddRow['device_phone'])) {
-                    $senderPhone = $ddRow['device_phone'];
-                }
-            } else {
-                http_response_code(403);
-                echo json_encode(['status' => 'error', 'msg' => 'No active WhatsApp device assigned to your account or configured as default.']);
-                exit;
-            }
+    // Strict Priority Rule:
+    // If sender user has an assigned connected device, ALWAYS use it (do not use default device)!
+    $userAssignedDev = null;
+    if ($currentUserId > 0) {
+        $uadQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device 
+            WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
+        if ($uadQ && mysqli_num_rows($uadQ) > 0) {
+            $userAssignedDev = mysqli_fetch_assoc($uadQ);
         }
+    }
 
-        // Verify that this chat belongs to the user's assigned device or lead/default
-        if (!empty($senderPhone)) {
-            $cleanSender = preg_replace('/[^0-9]/', '', $senderPhone);
-            $last10Sender = substr($cleanSender, -10);
-            $escSender = mysqli_real_escape_string($connection, $senderPhone);
-            $chatDevCheck = mysqli_query($connection, "SELECT c.chat_id FROM " . TABLE_PREFIX . "whatsapp_chat c
-                LEFT JOIN " . TABLE_PREFIX . "enquiry e ON e.enquiry_id = c.chat_lead_id
-                WHERE c.chat_id = {$chatId} AND c.chat_site_id = {$siteId} 
-                  AND (c.chat_device_phone = '{$escSender}' 
-                       OR c.chat_device_phone LIKE '%{$last10Sender}'
-                       OR c.chat_device_phone IS NULL 
-                       OR c.chat_device_phone = '' 
-                       OR c.chat_device_phone = 'CRM'
-                       OR e.enquiry_agent = {$currentUserId}
-                       OR (SELECT COUNT(*) FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId}) <= 1
-                      ) 
-                LIMIT 1");
-            if (!$chatDevCheck || mysqli_num_rows($chatDevCheck) === 0) {
-                http_response_code(403);
-                echo json_encode(['status' => 'error', 'msg' => 'Access denied. You can only send messages for conversations on your assigned WhatsApp device.']);
-                exit;
-            }
+    if ($userAssignedDev) {
+        $targetSessionId = $userAssignedDev['device_session_id'];
+        if (!empty($userAssignedDev['device_phone'])) {
+            $senderPhone = $userAssignedDev['device_phone'];
         }
     } else {
-        // Admin: First check if explicit device_id requested
+        // User has NO assigned device. Resolve based on explicit selection or default device
         $foundDev = false;
         if ($selectedDeviceId > 0) {
             $specDevQ = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_id = {$selectedDeviceId} AND device_status = 'connected' LIMIT 1");
@@ -567,8 +490,7 @@ if ($method === 'POST') {
                 $foundDev = true;
             }
         }
-        if (!$foundDev) {
-            // Check if chat has a device_phone
+        if (!$foundDev && $chatId > 0) {
             $chatDevQ = mysqli_query($connection, "SELECT chat_device_phone FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_id = {$chatId} AND chat_site_id = {$siteId} LIMIT 1");
             if ($chatDevQ && mysqli_num_rows($chatDevQ) > 0) {
                 $cdRow = mysqli_fetch_assoc($chatDevQ);
@@ -586,50 +508,45 @@ if ($method === 'POST') {
             }
         }
         if (!$foundDev) {
-            // Prioritize device marked as default for customer communication
-            $defDevQ = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_is_default = 1 AND device_status = 'connected' LIMIT 1");
-            if ($defDevQ && mysqli_num_rows($defDevQ) > 0) {
-                $ddRow = mysqli_fetch_assoc($defDevQ);
-                $targetSessionId = $ddRow['device_session_id'];
-                if (!empty($ddRow['device_phone'])) $senderPhone = $ddRow['device_phone'];
+            // Fallback to default device (or single connected device)
+            $resDev = resolveSenderWhatsAppDevice($connection, $siteId, $currentUserId);
+            if ($resDev) {
+                $targetSessionId = $resDev['device_session_id'];
+                if (!empty($resDev['device_phone'])) {
+                    $senderPhone = $resDev['device_phone'];
+                }
                 $foundDev = true;
             }
         }
-        if (!$foundDev) {
-            // Check site_configuration default device
-            $cfgDefQ = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_default_device_id' LIMIT 1");
-            if ($cfgDefQ && mysqli_num_rows($cfgDefQ) > 0) {
-                $cfgRow = mysqli_fetch_assoc($cfgDefQ);
-                $cfgDevId = (int)($cfgRow['site_configuration_value'] ?? 0);
-                if ($cfgDevId > 0) {
-                    $cDefQ = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_id = {$cfgDevId} AND device_status = 'connected' LIMIT 1");
-                    if ($cDefQ && mysqli_num_rows($cDefQ) > 0) {
-                        $cdRow = mysqli_fetch_assoc($cDefQ);
-                        $targetSessionId = $cdRow['device_session_id'];
-                        if (!empty($cdRow['device_phone'])) $senderPhone = $cdRow['device_phone'];
-                        $foundDev = true;
-                    }
-                }
-            }
+
+        if (!$foundDev && !$isAdmin) {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'msg' => 'No active WhatsApp device assigned to your account or configured as default.']);
+            exit;
         }
-        if (!$foundDev) {
-            $anyDevQ = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
-            if ($anyDevQ && mysqli_num_rows($anyDevQ) > 0) {
-                $anyDevR = mysqli_fetch_assoc($anyDevQ);
-                $targetSessionId = $anyDevR['device_session_id'];
-                if (!empty($anyDevR['device_phone'])) {
-                    $senderPhone = $anyDevR['device_phone'];
-                }
-            } else {
-                $existDef = mysqli_query($connection, "SELECT device_session_id, device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_session_id = 'default' OR device_session_id = 'site_{$siteId}_default') LIMIT 1");
-                if ($existDef && mysqli_num_rows($existDef) > 0) {
-                    $defRow = mysqli_fetch_assoc($existDef);
-                    $targetSessionId = $defRow['device_session_id'];
-                    if (!empty($defRow['device_phone'])) {
-                        $senderPhone = $defRow['device_phone'];
-                    }
-                }
-            }
+    }
+
+    // Verify chat access for non-admin
+    if (!$isAdmin && !empty($senderPhone) && $chatId > 0) {
+        $cleanSender = preg_replace('/[^0-9]/', '', $senderPhone);
+        $last10Sender = substr($cleanSender, -10);
+        $escSender = mysqli_real_escape_string($connection, $senderPhone);
+        $chatDevCheck = mysqli_query($connection, "SELECT c.chat_id FROM " . TABLE_PREFIX . "whatsapp_chat c
+            LEFT JOIN " . TABLE_PREFIX . "enquiry e ON e.enquiry_id = c.chat_lead_id
+            WHERE c.chat_id = {$chatId} AND c.chat_site_id = {$siteId} 
+              AND (c.chat_device_phone = '{$escSender}' 
+                   OR c.chat_device_phone LIKE '%{$last10Sender}'
+                   OR c.chat_device_phone IS NULL 
+                   OR c.chat_device_phone = '' 
+                   OR c.chat_device_phone = 'CRM'
+                   OR e.enquiry_agent = {$currentUserId}
+                   OR (SELECT COUNT(*) FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId}) <= 1
+                  ) 
+            LIMIT 1");
+        if (!$chatDevCheck || mysqli_num_rows($chatDevCheck) === 0) {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'msg' => 'Access denied. You can only send messages for conversations on your assigned WhatsApp device.']);
+            exit;
         }
     }
 
@@ -729,7 +646,7 @@ if ($method === 'POST') {
             'text'       => $text,
             'status'     => 'delivered',
             'created_at' => $now,
-            'time'       => date('h:i A', strtotime($now))
+            'time'       => (new DateTime('now', new DateTimeZone($siteTimezone)))->format('h:i A')
         ]
     ]);
     exit;

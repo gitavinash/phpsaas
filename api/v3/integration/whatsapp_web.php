@@ -58,6 +58,7 @@ if (defined('LOGIN_CHECK') && file_exists(LOGIN_CHECK)) {
 
 require_once dirname(__DIR__) . '/whatsapp/db_init.php';
 require_once dirname(__DIR__) . '/whatsapp/qr_helper.php';
+require_once dirname(__DIR__) . '/whatsapp/device_helper.php';
 
 initWhatsAppDatabase($connection);
 
@@ -517,55 +518,8 @@ if ($action === 'set_default_device' || $action === 'set_default') {
 // 2c. ACTION: Get Default Communication Device
 // --------------------------------------------------------------------------
 if ($action === 'get_default_device' || $action === 'default_device') {
-    $devFound = null;
-
-    // 1. If sales agent has an assigned connected device, use it
-    if (!$isAdmin && $currentUserId > 0) {
-        $agDevQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$currentUserId} AND device_status = 'connected' LIMIT 1");
-        if ($agDevQ && mysqli_num_rows($agDevQ) > 0) {
-            $devFound = mysqli_fetch_assoc($agDevQ);
-        }
-    }
-
-    // 2. Look for explicitly marked default device
-    if (!$devFound) {
-        $defQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_is_default = 1 LIMIT 1");
-        if ($defQ && mysqli_num_rows($defQ) > 0) {
-            $devFound = mysqli_fetch_assoc($defQ);
-        }
-    }
-
-    // 3. If site configuration has a default device ID
-    if (!$devFound) {
-        $cfgDefQ = mysqli_query($connection, "SELECT site_configuration_value FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_default_device_id' LIMIT 1");
-        if ($cfgDefQ && mysqli_num_rows($cfgDefQ) > 0) {
-            $cfgRow = mysqli_fetch_assoc($cfgDefQ);
-            $cfgDevId = (int)($cfgRow['site_configuration_value'] ?? 0);
-            if ($cfgDevId > 0) {
-                $chkQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_id = {$cfgDevId} LIMIT 1");
-                if ($chkQ && mysqli_num_rows($chkQ) > 0) {
-                    $devFound = mysqli_fetch_assoc($chkQ);
-                }
-            }
-        }
-    }
-
-    // 4. If only 1 device is attached for this site, use it
-    if (!$devFound && $currentDeviceCount === 1) {
-        $singleQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} LIMIT 1");
-        if ($singleQ && mysqli_num_rows($singleQ) > 0) {
-            $devFound = mysqli_fetch_assoc($singleQ);
-        }
-    }
-
-    // 5. Fallback: Any connected device
-    if (!$devFound) {
-        $anyQ = mysqli_query($connection, "SELECT * FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id ASC LIMIT 1");
-        if ($anyQ && mysqli_num_rows($anyQ) > 0) {
-            $devFound = mysqli_fetch_assoc($anyQ);
-        }
-    }
-
+    // Priority: Sender Assigned Device > Site Default Device > Single Connected Device
+    $devFound = resolveSenderWhatsAppDevice($connection, $siteId, $currentUserId);
     $isConnected = $devFound && ($devFound['device_status'] === 'connected');
 
     echo json_encode([
@@ -979,6 +933,7 @@ if ($action === 'check_status' || $action === 'status') {
         if (!empty($userPhone)) saveWaWebConfig($connection, $siteId, 'whatsapp_web_phone', $userPhone);
         if (!empty($userName)) saveWaWebConfig($connection, $siteId, 'whatsapp_web_pushname', $userName);
         saveWaWebConfig($connection, $siteId, 'whatsapp_web_last_sync', $now);
+        ensureFirstDeviceIsDefault($connection, $siteId, $escSession);
     }
 
     echo json_encode([

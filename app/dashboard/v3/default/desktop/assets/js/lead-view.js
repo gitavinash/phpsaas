@@ -1963,6 +1963,10 @@
         (lead.name ? lead.name + " - Lead Details" : "Lead Details") +
         " | Dashboard";
 
+      if (typeof self.setupDeliveryToggles === "function") {
+        self.setupDeliveryToggles();
+      }
+
       const travel = lead.travel_details || {};
       const quote = lead.quotation || {};
 
@@ -2065,6 +2069,22 @@
               self.quotationsCache[q.id] = q;
             }
 
+            const delivery = q.delivery || (q.content && q.content.delivery) || null;
+            let deliveryBadgesHtml = "";
+            if (delivery) {
+              if (delivery.whatsapp) {
+                deliveryBadgesHtml += `<span class="v3-tin-tag success" title="Delivered over WhatsApp"><i class="fi fi-brands-whatsapp"></i> WhatsApp Sent</span>`;
+              } else if (delivery.whatsapp_error && delivery.whatsapp_error !== "Skipped by user toggle.") {
+                deliveryBadgesHtml += `<span class="v3-tin-tag danger" title="${escapeHtml(delivery.whatsapp_error)}"><i class="fi fi-brands-whatsapp"></i> WhatsApp Failed</span>`;
+              }
+              if (delivery.email) {
+                deliveryBadgesHtml += `<span class="v3-tin-tag info" title="Delivered via Email"><i class="fi fi-rr-envelope"></i> Email Sent</span>`;
+              } else if (delivery.email_error && delivery.email_error !== "Skipped by user toggle.") {
+                deliveryBadgesHtml += `<span class="v3-tin-tag danger" title="${escapeHtml(delivery.email_error)}"><i class="fi fi-rr-envelope"></i> Email Failed</span>`;
+              }
+            }
+            const showItinTags = hasMeta || !!deliveryBadgesHtml;
+
             categoryHtml = `<span class="v3-timeline-category-pill pill-itinerary"><i class="fi fi-rr-route"></i> Itinerary Proposal</span>`;
             cardExtraClass = "v3-timeline-card-itinerary";
             extraContent = `
@@ -2076,12 +2096,13 @@
                       ${q.id || (t.description && !isNaN(t.description)) ? `<span class="v3-tin-chip">#${q.id || t.description}</span>` : ""}
                     </div>
                     ${
-                      hasMeta
+                      showItinTags
                         ? `
                       <div class="v3-tin-tags">
                         ${q.destination ? `<span class="v3-tin-tag"><i class="fi fi-rr-marker"></i> ${q.destination}</span>` : ""}
                         ${q.duration ? `<span class="v3-tin-tag"><i class="fi fi-rr-moon"></i> ${q.duration}</span>` : ""}
                         ${q.theme ? `<span class="v3-tin-tag theme"><i class="fi fi-rr-star"></i> ${q.theme}</span>` : ""}
+                        ${deliveryBadgesHtml}
                       </div>
                     `
                         : ""
@@ -2124,7 +2145,7 @@
                     ${
                       viewUrl && viewUrl !== "#"
                         ? `
-                    <button type="button" class="v3-tin-action-btn outline btn-copy-itin-link" data-url="${window.location.origin + viewUrl}" title="Copy itinerary link to clipboard">
+                    <button type="button" class="v3-tin-action-btn outline btn-copy-itin-link" data-url="${q.short_view_url || (window.location.origin + viewUrl)}" title="Copy short itinerary link to clipboard">
                       <i class="fi fi-rr-copy"></i> Copy Link
                     </button>`
                         : ""
@@ -2217,6 +2238,15 @@
           }
         });
       }
+
+      const hasItinerarySent = !!(
+        lead.has_itinerary_sent ||
+        (lead.quotation && (lead.quotation.price > 0 || lead.quotation.id > 0)) ||
+        (lead.timeline && lead.timeline.some((t) => t.type === "itinerary")) ||
+        quotePrice > 0 ||
+        [9, 23, 24, 25, 26, 27].includes(parseInt(lead.status_id || lead.enquiry_status, 10))
+      );
+      self.hasItinerarySent = hasItinerarySent;
 
       let pendingAmount = 0;
       let pendingHtml = "";
@@ -2315,7 +2345,7 @@
                 </div>
               </div>
               ${
-                !self.isPackageSix && self.leadViewOptions.show_record_payment !== false
+                !self.isPackageSix && self.leadViewOptions.show_record_payment !== false && hasItinerarySent
                   ? `
               <button type="button" class="btn-v3-action btn-green" id="btnOpenPaymentModalTab" data-tooltip="Record Payment">
                 <i class="fi fi-rr-plus"></i> Record Payment
@@ -2410,13 +2440,13 @@
             <h4 class="v3-empty-title">No Payments Recorded</h4>
             <p class="v3-empty-subtitle">No advance deposit or final settlement payment has been recorded yet.</p>
             ${
-              !self.isPackageSix && self.leadViewOptions.show_record_payment !== false
+              !self.isPackageSix && self.leadViewOptions.show_record_payment !== false && hasItinerarySent
                 ? `
             <button type="button" class="btn-v3-action btn-green" id="btnOpenPaymentModal" data-tooltip="Record Payment">
               <i class="fi fi-rr-plus"></i> Record Payment
             </button>
             `
-                : ""
+                : (!hasItinerarySent ? `<span class="v3-text-muted v3-fs-12"><i class="fi fi-rr-info"></i> Send tour itinerary proposal first to enable recording payments</span>` : "")
             }
           </div>
         `;
@@ -2462,34 +2492,49 @@
         .toLowerCase()
         .trim();
       const canManageAgent =
+        userRole === "admin" ||
         userRole === "administrator" ||
         userRole === "operations" ||
         userRole === "superadmin" ||
         userRole === "operational";
 
-      const agentSidebarHtml = canManageAgent
-        ? `
-          <!-- Assigned Representative Box (Administrator & Operational Only) -->
-          <div class="v3-sidebar-card">
-            <div class="v3-sidebar-card-title">
-              <span>Assigned Representative</span>
-              <i class="fi fi-rr-user-gear"></i>
-            </div>
-            <div class="v3-assigned-agent-wrapper">
-              <select id="leadDetailAgentSelect" class="leads-filter-select v3-select-full">
-                <option value="0">-- Unassigned --</option>
-                ${(lead.agents || [])
-                  .map((ag) => {
-                    const agId = parseInt(ag.id || ag.user_id || 0);
-                    const isSelected = parseInt(lead.agent_id || 0) === agId;
-                    return `<option value="${agId}" ${isSelected ? "selected" : ""}>${ag.name} (${ag.role})</option>`;
-                  })
-                  .join("")}
-              </select>
-            </div>
+      const currentAgent = (lead.agents || []).find(
+        (ag) => parseInt(ag.id || ag.user_id || 0) === parseInt(lead.agent_id || 0)
+      ) || (lead.agent_name && lead.agent_name !== "Unassigned" ? { name: lead.agent_name, role: lead.agent_role || "Representative" } : null);
+
+      const heroAgentHtml = `
+        <div class="v3-hero-agent-card ${isAssigned ? "is-assigned" : "is-unassigned"}">
+          <div class="v3-hero-agent-avatar ${isAssigned ? "has-agent" : "unassigned"}">
+            ${isAssigned ? '<i class="fi fi-rr-user-headset"></i>' : '<i class="fi fi-rr-user-slash"></i>'}
           </div>
-        `
-        : "";
+          <div class="v3-hero-agent-info">
+            <span class="v3-hero-agent-kicker">Assigned Representative</span>
+            ${
+              canManageAgent
+                ? `
+              <div class="v3-hero-agent-select-wrap">
+                <select id="leadDetailAgentSelect" class="leads-filter-select v3-hero-agent-select">
+                  <option value="0">-- Unassigned --</option>
+                  ${(lead.agents || [])
+                    .map((ag) => {
+                      const agId = parseInt(ag.id || ag.user_id || 0);
+                      const isSelected = parseInt(lead.agent_id || 0) === agId;
+                      return `<option value="${agId}" ${isSelected ? "selected" : ""}>${ag.name} (${ag.role})</option>`;
+                    })
+                    .join("")}
+                </select>
+              </div>
+            `
+                : `
+              <div class="v3-hero-agent-static">
+                <span class="v3-hero-agent-name">${currentAgent ? currentAgent.name : "Unassigned"}</span>
+                <span class="v3-hero-agent-role">${currentAgent ? (currentAgent.role || "Representative") : "No agent assigned"}</span>
+              </div>
+            `
+            }
+          </div>
+        </div>
+      `;
 
       // Converted Booking Banner
       const bInfo = lead.booking;
@@ -2625,157 +2670,164 @@
         <div class="v3-lead-view-wrapper">
           <!-- 1. Minimal Hero Header Banner -->
           <div class="v3-lead-hero-banner">
-            <div class="v3-lead-hero-left">
-              <a href="/dashboard/leads/list/" class="v3-lead-back-circle" id="btnBackToLeads" data-tooltip="Back to Leads Pipeline">
-                <i class="fi fi-rr-arrow-left"></i>
-              </a>
+            <div class="v3-lead-hero-top">
+              <div class="v3-lead-hero-left">
+                <a href="/dashboard/leads/list/" class="v3-lead-back-circle" id="btnBackToLeads" data-tooltip="Back to Leads Pipeline">
+                  <i class="fi fi-rr-arrow-left"></i>
+                </a>
 
-              <div class="v3-lead-hero-title-wrap">
-                <div class="v3-lead-hero-name-row">
-                  <h2 class="v3-lead-hero-name">${lead.name}</h2>
-                  
-                  <!-- Main Status Picker (20 CRM Stages) -->
-                  <div class="v3-minimal-status-picker">
-                    <button type="button" class="v3-minimal-status-trigger ${lead.status_class}" id="btnMinimalStatusTrigger" title="Click to change status">
-                      <span class="lead-dot" style="background-color: ${lead.status_color}"></span>
-                      <span>${lead.status_label}</span>
-                      <i class="fi fi-rr-angle-small-down"></i>
-                    </button>
+                <div class="v3-lead-hero-title-wrap">
+                  <div class="v3-lead-hero-name-row">
+                    <h2 class="v3-lead-hero-name">${lead.name}</h2>
+                    
+                    <!-- Main Status Picker (20 CRM Stages) -->
+                    <div class="v3-minimal-status-picker">
+                      <button type="button" class="v3-minimal-status-trigger ${lead.status_class}" id="btnMinimalStatusTrigger" title="Click to change status">
+                        <span class="lead-dot" style="background-color: ${lead.status_color}"></span>
+                        <span>${lead.status_label}</span>
+                        <i class="fi fi-rr-angle-small-down"></i>
+                      </button>
 
-                    <div class="v3-status-dropdown-menu" id="statusDropdownMenu">
-                      <div class="v3-status-opt-header">Active Sales Pipeline</div>
-                      <div class="v3-status-opt ${st === 0 ? "selected" : ""}" data-status="0">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot initiate"></span><span>New Enquiry</span></div>
-                        ${st === 0 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 2 ? "selected" : ""}" data-status="2">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot pending"></span><span>Assigned</span></div>
-                        ${st === 2 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 19 ? "selected" : ""}" data-status="19">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot contacted"></span><span>Contacted</span></div>
-                        ${st === 19 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 20 ? "selected" : ""}" data-status="20">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot requirement"></span><span>Requirement Collected</span></div>
-                        ${st === 20 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 21 ? "selected" : ""}" data-status="21">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot itinerary-prog"></span><span>Itinerary In Progress</span></div>
-                        ${st === 21 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 9 ? "selected" : ""}" data-status="9">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot itinerary-sent"></span><span>Itinerary Sent</span></div>
-                        ${st === 9 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 22 ? "selected" : ""}" data-status="22">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot quote-prog"></span><span>Quotation In Progress</span></div>
-                        ${st === 22 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 23 ? "selected" : ""}" data-status="23">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot quote-sent"></span><span>Quotation Sent</span></div>
-                        ${st === 23 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 24 ? "selected" : ""}" data-status="24">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot awaiting-dec"></span><span>Awaiting Customer Decision</span></div>
-                        ${st === 24 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 25 ? "selected" : ""}" data-status="25">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot negotiation"></span><span>Negotiation</span></div>
-                        ${st === 25 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 10 ? "selected" : ""}" data-status="10">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot quotation-approved"></span><span>Quotation Approved</span></div>
-                        ${st === 10 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 6 ? "selected" : ""}" data-status="6">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot payment-initiated"></span><span>Payment Pending</span></div>
-                        ${st === 6 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 1 ? "selected" : ""}" data-status="1">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot success"></span><span>Converted to Booking</span></div>
-                        ${st === 1 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
+                      <div class="v3-status-dropdown-menu" id="statusDropdownMenu">
+                        <div class="v3-status-opt-header">Active Sales Pipeline</div>
+                        <div class="v3-status-opt ${st === 0 ? "selected" : ""}" data-status="0">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot initiate"></span><span>New Enquiry</span></div>
+                          ${st === 0 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 2 ? "selected" : ""}" data-status="2">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot pending"></span><span>Assigned</span></div>
+                          ${st === 2 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 19 ? "selected" : ""}" data-status="19">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot contacted"></span><span>Contacted</span></div>
+                          ${st === 19 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 20 ? "selected" : ""}" data-status="20">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot requirement"></span><span>Requirement Collected</span></div>
+                          ${st === 20 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 21 ? "selected" : ""}" data-status="21">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot itinerary-prog"></span><span>Itinerary In Progress</span></div>
+                          ${st === 21 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 9 ? "selected" : ""}" data-status="9">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot itinerary-sent"></span><span>Itinerary Sent</span></div>
+                          ${st === 9 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 22 ? "selected" : ""}" data-status="22">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot quote-prog"></span><span>Quotation In Progress</span></div>
+                          ${st === 22 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 23 ? "selected" : ""}" data-status="23">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot quote-sent"></span><span>Quotation Sent</span></div>
+                          ${st === 23 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 24 ? "selected" : ""}" data-status="24">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot awaiting-dec"></span><span>Awaiting Customer Decision</span></div>
+                          ${st === 24 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 25 ? "selected" : ""}" data-status="25">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot negotiation"></span><span>Negotiation</span></div>
+                          ${st === 25 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 10 ? "selected" : ""}" data-status="10">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot quotation-approved"></span><span>Quotation Approved</span></div>
+                          ${st === 10 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 6 ? "selected" : ""}" data-status="6">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot payment-initiated"></span><span>Payment Pending</span></div>
+                          ${st === 6 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 1 ? "selected" : ""}" data-status="1">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot success"></span><span>Converted to Booking</span></div>
+                          ${st === 1 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
 
-                      <div class="v3-status-opt-header">Hold, Nurture &amp; Outcomes</div>
-                      <div class="v3-status-opt ${st === 26 ? "selected" : ""}" data-status="26">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot on-hold"></span><span>On Hold</span></div>
-                        ${st === 26 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        <div class="v3-status-opt-header">Hold, Nurture &amp; Outcomes</div>
+                        <div class="v3-status-opt ${st === 26 ? "selected" : ""}" data-status="26">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot on-hold"></span><span>On Hold</span></div>
+                          ${st === 26 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 27 ? "selected" : ""}" data-status="27">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot nurture"></span><span>Nurture</span></div>
+                          ${st === 27 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 28 ? "selected" : ""}" data-status="28">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot not-interested"></span><span>Not Interested</span></div>
+                          ${st === 28 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 17 ? "selected" : ""}" data-status="17">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot lost"></span><span>Lost</span></div>
+                          ${st === 17 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 5 ? "selected" : ""}" data-status="5">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot duplicate"></span><span>Duplicate</span></div>
+                          ${st === 5 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 29 ? "selected" : ""}" data-status="29">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot unqualified"></span><span>Unqualified</span></div>
+                          ${st === 29 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-status-opt ${st === 16 ? "selected" : ""}" data-status="16">
+                          <div class="v3-status-opt-left"><span class="v3-status-opt-dot cancelled"></span><span>Cancelled</span></div>
+                          ${st === 16 ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
                       </div>
-                      <div class="v3-status-opt ${st === 27 ? "selected" : ""}" data-status="27">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot nurture"></span><span>Nurture</span></div>
-                        ${st === 27 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 28 ? "selected" : ""}" data-status="28">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot not-interested"></span><span>Not Interested</span></div>
-                        ${st === 28 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 17 ? "selected" : ""}" data-status="17">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot lost"></span><span>Lost</span></div>
-                        ${st === 17 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 5 ? "selected" : ""}" data-status="5">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot duplicate"></span><span>Duplicate</span></div>
-                        ${st === 5 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 29 ? "selected" : ""}" data-status="29">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot unqualified"></span><span>Unqualified</span></div>
-                        ${st === 29 ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-status-opt ${st === 16 ? "selected" : ""}" data-status="16">
-                        <div class="v3-status-opt-left"><span class="v3-status-opt-dot cancelled"></span><span>Cancelled</span></div>
-                        ${st === 16 ? '<i class="fi fi-rr-check"></i>' : ""}
+                    </div>
+
+                    <!-- Customer Interest Picker -->
+                    <div class="v3-interest-picker-wrap">
+                      <button type="button" class="v3-interest-trigger pill-interest-${(lead.interest_level || "unknown").toLowerCase().replace(/\s+/g, "-")}" id="btnInterestTrigger" title="Click to update interest level">
+                        <span class="interest-icon">${interestIconHtml}</span>
+                        <span class="interest-label-prefix">Interest:</span>
+                        <span class="interest-label">${lead.interest_level || "Unknown"}</span>
+                        <i class="fi fi-rr-angle-small-down"></i>
+                      </button>
+                      <div class="v3-interest-dropdown-menu" id="interestDropdownMenu">
+                        <div class="v3-status-opt-header">Customer Interest</div>
+                        <div class="v3-interest-opt ${lead.interest_level === "Hot" ? "selected" : ""}" data-interest="Hot">
+                          <span class="interest-opt-icon"><i class="fi fi-rr-flame"></i></span>
+                          <span class="interest-opt-label">Hot</span>
+                          ${lead.interest_level === "Hot" ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-interest-opt ${lead.interest_level === "Warm" ? "selected" : ""}" data-interest="Warm">
+                          <span class="interest-opt-icon"><i class="fi fi-rr-sparkles"></i></span>
+                          <span class="interest-opt-label">Warm</span>
+                          ${lead.interest_level === "Warm" ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-interest-opt ${lead.interest_level === "Cold" ? "selected" : ""}" data-interest="Cold">
+                          <span class="interest-opt-icon"><i class="fi fi-rr-snowflake"></i></span>
+                          <span class="interest-opt-label">Cold</span>
+                          ${lead.interest_level === "Cold" ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-interest-opt ${lead.interest_level === "Not Interested" ? "selected" : ""}" data-interest="Not Interested">
+                          <span class="interest-opt-icon"><i class="fi fi-rr-cross-circle"></i></span>
+                          <span class="interest-opt-label">Not Interested</span>
+                          ${lead.interest_level === "Not Interested" ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
+                        <div class="v3-interest-opt ${lead.interest_level === "Unknown" || !lead.interest_level ? "selected" : ""}" data-interest="Unknown">
+                          <span class="interest-opt-icon"><i class="fi fi-rr-question"></i></span>
+                          <span class="interest-opt-label">Unknown</span>
+                          ${lead.interest_level === "Unknown" || !lead.interest_level ? '<i class="fi fi-rr-check"></i>' : ""}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <!-- Customer Interest Picker -->
-                  <div class="v3-interest-picker-wrap">
-                    <button type="button" class="v3-interest-trigger pill-interest-${(lead.interest_level || "unknown").toLowerCase().replace(/\s+/g, "-")}" id="btnInterestTrigger" title="Click to update interest level">
-                      <span class="interest-icon">${interestIconHtml}</span>
-                      <span class="interest-label-prefix">Interest:</span>
-                      <span class="interest-label">${lead.interest_level || "Unknown"}</span>
-                      <i class="fi fi-rr-angle-small-down"></i>
-                    </button>
-                    <div class="v3-interest-dropdown-menu" id="interestDropdownMenu">
-                      <div class="v3-status-opt-header">Customer Interest</div>
-                      <div class="v3-interest-opt ${lead.interest_level === "Hot" ? "selected" : ""}" data-interest="Hot">
-                        <span class="interest-opt-icon"><i class="fi fi-rr-flame"></i></span>
-                        <span class="interest-opt-label">Hot</span>
-                        ${lead.interest_level === "Hot" ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-interest-opt ${lead.interest_level === "Warm" ? "selected" : ""}" data-interest="Warm">
-                        <span class="interest-opt-icon"><i class="fi fi-rr-sparkles"></i></span>
-                        <span class="interest-opt-label">Warm</span>
-                        ${lead.interest_level === "Warm" ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-interest-opt ${lead.interest_level === "Cold" ? "selected" : ""}" data-interest="Cold">
-                        <span class="interest-opt-icon"><i class="fi fi-rr-snowflake"></i></span>
-                        <span class="interest-opt-label">Cold</span>
-                        ${lead.interest_level === "Cold" ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-interest-opt ${lead.interest_level === "Not Interested" ? "selected" : ""}" data-interest="Not Interested">
-                        <span class="interest-opt-icon"><i class="fi fi-rr-cross-circle"></i></span>
-                        <span class="interest-opt-label">Not Interested</span>
-                        ${lead.interest_level === "Not Interested" ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                      <div class="v3-interest-opt ${lead.interest_level === "Unknown" || !lead.interest_level ? "selected" : ""}" data-interest="Unknown">
-                        <span class="interest-opt-icon"><i class="fi fi-rr-question"></i></span>
-                        <span class="interest-opt-label">Unknown</span>
-                        ${lead.interest_level === "Unknown" || !lead.interest_level ? '<i class="fi fi-rr-check"></i>' : ""}
-                      </div>
-                    </div>
+                  <div class="v3-lead-hero-meta">
+                    <span class="v3-hero-meta-item"><i class="fi fi-rr-calendar"></i> Added ${lead.created_at || "Recently"}</span>
+                    <span class="v3-meta-sep">•</span>
+                    <span class="v3-hero-meta-item"><i class="fi fi-rr-time-check"></i> Updated ${lead.updated_at || lead.created_at || "Recently"}</span>
+                    <span class="v3-meta-sep">•</span>
+                    <span class="v3-hero-meta-badge source"><i class="fi fi-rr-globe"></i> ${lead.source}</span>
+                    ${lead.campaign ? `<span class="v3-meta-sep">•</span><span class="v3-hero-meta-badge campaign"><i class="fi fi-rr-bullhorn"></i> ${lead.campaign}</span>` : ""}
                   </div>
                 </div>
+              </div>
 
-                <div class="v3-lead-hero-meta">
-                  <span class="v3-hero-meta-item"><i class="fi fi-rr-calendar"></i> Added ${lead.created_at || "Recently"}</span>
-                  <span class="v3-meta-sep">•</span>
-                  <span class="v3-hero-meta-item"><i class="fi fi-rr-time-check"></i> Updated ${lead.updated_at || lead.created_at || "Recently"}</span>
-                  <span class="v3-meta-sep">•</span>
-                  <span class="v3-hero-meta-badge source"><i class="fi fi-rr-globe"></i> ${lead.source}</span>
-                  ${lead.campaign ? `<span class="v3-meta-sep">•</span><span class="v3-hero-meta-badge campaign"><i class="fi fi-rr-bullhorn"></i> ${lead.campaign}</span>` : ""}
-                </div>
+              <!-- Right Side: Assigned Representative Card -->
+              <div class="v3-lead-hero-right">
+                ${heroAgentHtml}
               </div>
             </div>
 
@@ -2830,6 +2882,21 @@
                 <button type="button" class="btn-v3-action btn-orange" id="btnHeroSetFollowUp" data-tooltip="Set Follow-Up Reminder">
                   <i class="fi fi-rr-alarm-clock"></i> <span>Follow-Up</span>
                 </button>
+                ${
+                  !self.isPackageSix && hasItinerarySent
+                    ? `
+                  ${
+                    self.leadViewOptions.show_payment_link !== false
+                      ? `
+                    <button type="button" class="btn-v3-action btn-purple" id="btnHeroSendPaymentLink" data-tooltip="Generate & Send Payment Link">
+                      <i class="fi fi-rr-link"></i> <span>Payment Link</span>
+                    </button>
+                    `
+                      : ""
+                  }
+                `
+                    : ""
+                }
                 ${
                   st !== 1 && self.leadViewOptions.show_convert_sale !== false
                     ? `
@@ -3054,36 +3121,33 @@
 
             <!-- Right Area: Sidebar Panels -->
             <div class="v3-sidebar-panel">
-              ${agentSidebarHtml}
+              <!-- 1. Customer Response & Follow-up Tasks (1st Priority) -->
               ${isAssigned ? responseTrackerSidebarHtml : ""}
 
-              <!-- Fast Actions Sidebar for Telecallers -->
+              <!-- 2. Quick Actions Sidebar for Telecallers (2nd Priority) -->
               <div class="v3-sidebar-card v3-fast-actions-card">
-                <div class="v3-sidebar-card-title">
-                  <span>Fast Actions</span>
-                  <i class="fi fi-rr-bolt"></i>
+                <div class="v3-fa-header">
+                  <div class="v3-fa-title-group">
+                    <span class="v3-fa-title-icon"><i class="fi fi-rr-bolt"></i></span>
+                    <div>
+                      <h4 class="v3-fa-title">Quick Actions</h4>
+                      <span class="v3-fa-subtitle">Engagement &amp; closing</span>
+                    </div>
+                  </div>
+                  ${hasItinerarySent ? '<span class="v3-fa-status-pill pill-sent"><i class="fi fi-rr-check"></i> Itinerary Sent</span>' : '<span class="v3-fa-status-pill pill-neutral"><i class="fi fi-rr-clock"></i> New Lead</span>'}
                 </div>
+
                 ${
                   isAssigned
                     ? `
-                  <div class="v3-fast-actions-grid">
-                    <button type="button" class="btn-fast-tile tile-edit" id="btnSideEditLead" data-tooltip="Edit customer information and trip requirements">
-                      <div class="fast-tile-icon"><i class="fi fi-rr-edit"></i></div>
-                      <div class="fast-tile-meta">
-                        <span class="fast-tile-title">Edit Lead & Travel</span>
-                        <span class="fast-tile-sub">Update customer needs</span>
-                      </div>
-                    </button>
-
+                  <!-- Communication Bar -->
+                  <div class="v3-fa-contact-bar">
                     ${
                       lead.wa_mobile && self.leadViewOptions.show_whatsapp_button
                         ? `
-                      <a href="/dashboard/whatsapp/?phone=${lead.wa_mobile.replace(/[^0-9]/g, '')}&name=${encodeURIComponent(lead.first_name || lead.name || '')}&lead_id=${self.leadId || ''}&new_chat=1" class="btn-fast-tile tile-wa" data-tooltip="Chat on WhatsApp" data-phone="${lead.wa_mobile}" data-name="${encodeURIComponent(lead.first_name || lead.name || '')}" data-lead-id="${self.leadId || ''}">
-                        <div class="fast-tile-icon">${WA_SVG}</div>
-                        <div class="fast-tile-meta">
-                          <span class="fast-tile-title">WhatsApp Chat</span>
-                          <span class="fast-tile-sub">Send instant message</span>
-                        </div>
+                      <a href="/dashboard/whatsapp/?phone=${lead.wa_mobile.replace(/[^0-9]/g, '')}&name=${encodeURIComponent(lead.first_name || lead.name || '')}&lead_id=${self.leadId || ''}&new_chat=1" class="v3-fa-contact-btn btn-wa" data-tooltip="Open WhatsApp Chat">
+                        ${WA_SVG}
+                        <span>WhatsApp</span>
                       </a>
                     `
                         : ""
@@ -3092,111 +3156,115 @@
                     ${
                       lead.mobile && self.leadViewOptions.show_call_button
                         ? `
-                      <a href="tel:${lead.mobile}" class="btn-fast-tile tile-call" data-tooltip="Call customer mobile">
-                        <div class="fast-tile-icon"><i class="fi fi-rr-phone-call"></i></div>
-                        <div class="fast-tile-meta">
-                          <span class="fast-tile-title">Call Customer</span>
-                          <span class="fast-tile-sub">${lead.mobile}</span>
-                        </div>
+                      <a href="tel:${lead.mobile}" class="v3-fa-contact-btn btn-call" data-tooltip="Call ${lead.mobile}">
+                        <i class="fi fi-rr-phone-call"></i>
+                        <span>Call</span>
                       </a>
                     `
                         : ""
                     }
 
-                    <button type="button" class="btn-fast-tile tile-followup" id="btnSideSetFollowUp" data-tooltip="Schedule next callback reminder">
-                      <div class="fast-tile-icon"><i class="fi fi-rr-alarm-clock"></i></div>
-                      <div class="fast-tile-meta">
-                        <span class="fast-tile-title">Schedule Follow-Up</span>
-                        <span class="fast-tile-sub">Set reminder / call later</span>
-                      </div>
+                    <button type="button" class="v3-fa-contact-btn btn-followup" id="btnSideSetFollowUp" data-tooltip="Schedule next reminder or task">
+                      <i class="fi fi-rr-alarm-clock"></i>
+                      <span>Follow-Up</span>
                     </button>
+                  </div>
 
-                    ${
-                      !self.isPackageSix
-                        ? `
+                  <!-- Deal Progression Section -->
+                  <div class="v3-fa-section">
+                    <div class="v3-fa-section-label">Deal Progression</div>
+                    <div class="v3-fa-deal-actions">
                       ${
-                        self.isTransporter
-                          ? (self.leadViewOptions.show_send_quotation
-                              ? `
-                          <button type="button" class="btn-fast-tile tile-quotation" id="btnSideSendQuotation" data-tooltip="Build and share transporter quotation">
-                            <div class="fast-tile-icon"><i class="fi fi-rr-document"></i></div>
-                            <div class="fast-tile-meta">
-                              <span class="fast-tile-title">Send Quotation</span>
-                              <span class="fast-tile-sub">Vehicle & route quotation</span>
-                            </div>
-                          </button>
-                          `
-                              : "")
-                          : (self.leadViewOptions.show_send_itinerary
-                              ? `
-                          <button type="button" class="btn-fast-tile tile-itinerary" id="btnSideSendItinerary" data-tooltip="Create and send tour proposal">
-                            <div class="fast-tile-icon"><i class="fi fi-rr-paper-plane"></i></div>
-                            <div class="fast-tile-meta">
-                              <span class="fast-tile-title">Send Tour Itinerary</span>
-                              <span class="fast-tile-sub">Build & share quotation</span>
-                            </div>
-                          </button>
-                          `
-                              : "")
+                        !self.isPackageSix
+                          ? `
+                        ${
+                          self.isTransporter
+                            ? (self.leadViewOptions.show_send_quotation
+                                ? `
+                            <button type="button" class="v3-fa-row-action action-itinerary" id="btnSideSendQuotation" data-tooltip="Build & send quotation">
+                              <div class="v3-fa-row-left">
+                                <span class="v3-fa-row-icon icon-cyan"><i class="fi fi-rr-document"></i></span>
+                                <div class="v3-fa-row-text">
+                                  <span class="v3-fa-row-title">Send Quotation</span>
+                                  <span class="v3-fa-row-sub">${hasItinerarySent ? (quotePrice > 0 ? "Active Quote: ₹" + quotePrice.toLocaleString("en-IN") + " · Click to revise" : "Quotation sent · Click to customize") : "Vehicle &amp; route proposal"}</span>
+                                </div>
+                              </div>
+                              ${hasItinerarySent ? '<span class="v3-fa-row-badge badge-sky"><i class="fi fi-rr-check"></i> Sent</span>' : '<i class="fi fi-rr-angle-right v3-fa-row-arrow"></i>'}
+                            </button>
+                            `
+                                : "")
+                            : (self.leadViewOptions.show_send_itinerary
+                                ? `
+                            <button type="button" class="v3-fa-row-action action-itinerary" id="btnSideSendItinerary" data-tooltip="${hasItinerarySent ? "Review, customize or revise itinerary" : "Create & send tour itinerary"}">
+                              <div class="v3-fa-row-left">
+                                <span class="v3-fa-row-icon icon-cyan"><i class="fi fi-rr-paper-plane"></i></span>
+                                <div class="v3-fa-row-text">
+                                  <span class="v3-fa-row-title">Send Itinerary</span>
+                                  <span class="v3-fa-row-sub">${hasItinerarySent ? (quotePrice > 0 ? "Active Quote: ₹" + quotePrice.toLocaleString("en-IN") + " · Click to revise" : "Quotation sent · Click to customize / revise") : "Build quotation and share with client"}</span>
+                                </div>
+                              </div>
+                              ${hasItinerarySent ? '<span class="v3-fa-row-badge badge-sky"><i class="fi fi-rr-check"></i> Sent</span>' : '<i class="fi fi-rr-angle-right v3-fa-row-arrow"></i>'}
+                            </button>
+                            `
+                                : "")
+                        }
+                      `
+                          : ""
                       }
-                    `
-                        : ""
-                    }
 
-                    ${
-                      !self.isPackageSix
-                        ? `
-                    ${
-                      self.leadViewOptions.show_record_payment !== false
-                        ? `
-                    <button type="button" class="btn-fast-tile tile-pay-record" id="btnSideRecordPayment" data-tooltip="Record payment received from client">
-                      <div class="fast-tile-icon"><i class="fi fi-rr-indian-rupee-sign"></i></div>
-                      <div class="fast-tile-meta">
-                        <span class="fast-tile-title">Record Payment</span>
-                        <span class="fast-tile-sub">Log received payment</span>
-                      </div>
-                    </button>
-                    `
-                        : ""
-                    }
+                      ${
+                        !self.isPackageSix && hasItinerarySent
+                          ? `
+                        <div class="v3-fa-split-row">
+                          ${
+                            self.leadViewOptions.show_payment_link !== false
+                              ? `
+                            <button type="button" class="v3-fa-compact-action action-paylink" id="btnSideSendPaymentLink" data-tooltip="Generate & send online deposit link">
+                              <span class="v3-fa-compact-icon icon-purple"><i class="fi fi-rr-link"></i></span>
+                              <div class="v3-fa-compact-text">
+                                <span class="v3-fa-compact-label">Payment Link</span>
+                                <span class="v3-fa-compact-sub">Online UPI &amp; Cards</span>
+                              </div>
+                            </button>
+                            `
+                              : ""
+                          }
 
-                    ${
-                      self.leadViewOptions.show_payment_link !== false
-                        ? `
-                    <button type="button" class="btn-fast-tile tile-pay-link" id="btnSideSendPaymentLink" data-tooltip="Generate and share payment link">
-                      <div class="fast-tile-icon"><i class="fi fi-rr-link"></i></div>
-                      <div class="fast-tile-meta">
-                        <span class="fast-tile-title">Send Payment Link</span>
-                        <span class="fast-tile-sub">Request online deposit</span>
-                      </div>
-                    </button>
-                    `
-                        : ""
-                    }
-                    `
-                        : ""
-                    }
-
-                    ${
-                      st !== 1 && self.leadViewOptions.show_convert_sale !== false
-                        ? `
-                      <button type="button" class="btn-fast-tile tile-convert" id="btnSideConvertToSale" data-tooltip="Mark lead as confirmed booking">
-                        <div class="fast-tile-icon"><i class="fi fi-rr-check-circle"></i></div>
-                        <div class="fast-tile-meta">
-                          <span class="fast-tile-title">Convert to Confirmed Sale</span>
-                          <span class="fast-tile-sub">Confirm tour booking</span>
+                          ${
+                            self.leadViewOptions.show_record_payment !== false
+                              ? `
+                            <button type="button" class="v3-fa-compact-action action-recordpay" id="btnSideRecordPayment" data-tooltip="Log cash, UPI, or transfer received">
+                              <span class="v3-fa-compact-icon icon-teal"><i class="fi fi-rr-indian-rupee-sign"></i></span>
+                              <div class="v3-fa-compact-text">
+                                <span class="v3-fa-compact-label">Record Payment</span>
+                                <span class="v3-fa-compact-sub">Cash · NEFT · Manual</span>
+                              </div>
+                            </button>
+                            `
+                              : ""
+                          }
                         </div>
-                      </button>
-                    `
-                        : ""
-                    }
+                      `
+                          : ""
+                      }
 
-                    <button type="button" class="btn-fast-tile tile-close" id="btnSideCloseLeadModal" data-tooltip="Archive or close lead with reason">
-                      <div class="fast-tile-icon"><i class="fi fi-rr-cross-circle"></i></div>
-                      <div class="fast-tile-meta">
-                        <span class="fast-tile-title">Close / Lost Lead</span>
-                        <span class="fast-tile-sub">Mark cancelled / not interested</span>
-                      </div>
+                      ${
+                        st !== 1 && self.leadViewOptions.show_convert_sale !== false
+                          ? `
+                        <button type="button" class="v3-fa-convert-btn" id="btnSideConvertToSale" data-tooltip="Mark lead as confirmed sale & convert to booking">
+                          <i class="fi fi-rr-check-circle"></i>
+                          <span>Convert to Confirmed Sale</span>
+                        </button>
+                      `
+                          : ""
+                      }
+                    </div>
+                  </div>
+
+                  <!-- Management / Secondary Actions -->
+                  <div class="v3-fa-footer-row">
+                    <button type="button" class="v3-fa-subtle-btn btn-danger-subtle btn-full-width" id="btnSideCloseLeadModal" title="Mark as lost or archive lead">
+                      <i class="fi fi-rr-cross-circle"></i> <span>Lost / Close Lead</span>
                     </button>
                   </div>
                 `
@@ -3204,7 +3272,7 @@
                   <div class="v3-unassigned-lead-banner">
                     <div class="v3-unassigned-icon"><i class="fi fi-rr-lock"></i></div>
                     <h5 class="v3-unassigned-title">Lead Unassigned</h5>
-                    <p class="v3-unassigned-desc">Fast Actions will be visible and enabled once this lead is assigned to a representative.</p>
+                    <p class="v3-unassigned-desc">Quick Actions will be visible and enabled once this lead is assigned to a representative.</p>
                   </div>
                 `
                 }
@@ -5447,6 +5515,9 @@
           if (typeof self.markItineraryModified === "function") {
             self.markItineraryModified(false);
           }
+          if (typeof self.setupDeliveryToggles === "function") {
+            self.setupDeliveryToggles();
+          }
 
           // Preload stay cities from Cities API, vehicles, and properties in parallel
           self.loadItineraryMeta();
@@ -6219,6 +6290,81 @@
         self.markItineraryModified(hasChanges);
       };
 
+      // Delivery Toggles Management (Email & WhatsApp)
+      self.setupDeliveryToggles = function (prevQuoteData) {
+        const lead = self.leadData || {};
+        const email = String(lead.email || "").trim();
+        const mobile = String(lead.mobile || "").trim();
+        const waDevice = lead.whatsapp_device || null;
+        const isWaAvailable = !!(waDevice && waDevice.available);
+
+        // Previous delivery preferences if modifying an existing quotation
+        const prevDelivery = prevQuoteData && (prevQuoteData.delivery || (prevQuoteData.content && prevQuoteData.content.delivery)) ? (prevQuoteData.delivery || prevQuoteData.content.delivery) : null;
+
+        // 1. Email Toggle Configuration
+        const hasEmail = !!(email && email.includes("@"));
+        const $emailToggles = $("#toggleSendEmail, #toggleSendEmailPreview");
+        $emailToggles.prop("disabled", !hasEmail);
+        if (!hasEmail) {
+          $emailToggles.prop("checked", false);
+          $emailToggles.closest("label").attr("title", "Customer has no email address on file");
+        } else {
+          const emailDefault = prevDelivery ? !!prevDelivery.email : true;
+          $emailToggles.prop("checked", emailDefault);
+          $emailToggles.closest("label").attr("title", `Send proposal link to ${email}`);
+        }
+
+        // 2. WhatsApp Toggle Configuration
+        const hasPhone = !!(mobile && mobile.replace(/\D/g, "").length >= 7);
+        const canSendWa = hasPhone && isWaAvailable;
+        const $waToggles = $("#toggleSendWhatsApp, #toggleSendWhatsAppPreview");
+        $waToggles.prop("disabled", !canSendWa);
+
+        let waBadgeText = "";
+        let waBadgeClass = "";
+        if (!hasPhone) {
+          $waToggles.prop("checked", false);
+          $waToggles.closest("label").attr("title", "Customer has no phone number on file");
+          waBadgeText = "No Phone";
+          waBadgeClass = "warning";
+        } else if (!isWaAvailable) {
+          $waToggles.prop("checked", false);
+          $waToggles.closest("label").attr("title", "No WhatsApp device is connected on this site");
+          waBadgeText = "Offline";
+          waBadgeClass = "offline";
+        } else {
+          const waDefault = prevDelivery ? !!prevDelivery.whatsapp : true;
+          $waToggles.prop("checked", waDefault);
+          const devNum = waDevice.phone_number ? ("+" + String(waDevice.phone_number).replace(/^\+/, "")) : "";
+          const devTitle = waDevice.is_assigned
+            ? `Sending via your assigned WhatsApp device (${devNum})`
+            : `Sending via default WhatsApp device (${devNum})`;
+          $waToggles.closest("label").attr("title", devTitle);
+          waBadgeText = waDevice.is_assigned ? `Assigned (${devNum})` : `Default (${devNum})`;
+          waBadgeClass = "online";
+        }
+
+        if (waBadgeText) {
+          const badgeHtml = `<span class="v3-device-pill ${waBadgeClass}" title="${escapeHtml(waBadgeText)}">${escapeHtml(waBadgeText)}</span>`;
+          $("#itinWaDeviceBadge, #itinWaDeviceBadgePreview").html(badgeHtml);
+        } else {
+          $("#itinWaDeviceBadge, #itinWaDeviceBadgePreview").empty();
+        }
+      };
+
+      // Bidirectional sync for Email & WhatsApp delivery checkboxes
+      $(document).off("change.v3DeliveryEmail", "#toggleSendEmail, #toggleSendEmailPreview")
+        .on("change.v3DeliveryEmail", "#toggleSendEmail, #toggleSendEmailPreview", function () {
+          const isChecked = $(this).is(":checked");
+          $("#toggleSendEmail, #toggleSendEmailPreview").prop("checked", isChecked);
+        });
+
+      $(document).off("change.v3DeliveryWhatsApp", "#toggleSendWhatsApp, #toggleSendWhatsAppPreview")
+        .on("change.v3DeliveryWhatsApp", "#toggleSendWhatsApp, #toggleSendWhatsAppPreview", function () {
+          const isChecked = $(this).is(":checked");
+          $("#toggleSendWhatsApp, #toggleSendWhatsAppPreview").prop("checked", isChecked);
+        });
+
       // Helper: Publish/Download Itinerary
       self.publishItinerary = function (
         isDownload,
@@ -6428,6 +6574,9 @@
             ? newPackageTitle.trim()
             : title;
 
+        const isEmailChecked = $("#toggleSendEmail").is(":checked") || $("#toggleSendEmailPreview").is(":checked");
+        const isWhatsAppChecked = $("#toggleSendWhatsApp").is(":checked") || $("#toggleSendWhatsAppPreview").is(":checked");
+
         const postData = {
           id: pkgId,
           refId: rawRefId,
@@ -6436,6 +6585,8 @@
           mobile: customerMobile,
           mrp: resolvedAdultPrice || 0,
           isDownload: !!isDownload,
+          send_email: isDownload ? 0 : (isEmailChecked ? 1 : 0),
+          send_whatsapp: isDownload ? 0 : (isWhatsAppChecked ? 1 : 0),
           save_as_new_package: isSaveNewPkg ? 1 : 0,
           package_name: resolvedPkgTitle,
           content: {
@@ -7086,10 +7237,25 @@
                 function (res) {
                   self.isPublishingItin = false;
                   self.closeProposalBuilder(false);
-                  self.notify(
-                    res.msg || "Itinerary published and shared with customer!",
-                    "success",
-                  );
+
+                  let noticeMsg = res.msg || "Itinerary published and shared with customer!";
+                  let noticeType = "success";
+                  if (res.sentChannels && res.sentChannels.length > 0) {
+                    noticeMsg = `Itinerary published & sent via ${res.sentChannels.join(" & ")}!`;
+                  } else if (!$("#toggleSendEmailPreview").is(":checked") && !$("#toggleSendWhatsAppPreview").is(":checked")) {
+                    noticeMsg = "Itinerary published successfully! (Delivery skipped by toggle)";
+                    noticeType = "info";
+                  }
+
+                  self.notify(noticeMsg, noticeType);
+
+                  if (res.whatsappError && res.whatsappError !== "Skipped by user toggle.") {
+                    self.notify(`WhatsApp Notice: ${res.whatsappError}`, "warning");
+                  }
+                  if (res.emailError && res.emailError !== "Skipped by user toggle.") {
+                    self.notify(`Email Notice: ${res.emailError}`, "warning");
+                  }
+
                   self.loadLeadDetails();
                 },
                 function () {
@@ -7615,18 +7781,276 @@
         });
       });
 
-      $(document).on("click", "#btnSideSendPaymentLink", function () {
-        if (self.leadData && self.leadData.quotation) {
-          $("#modalPaymentAmountInput").val(
-            self.leadData.quotation.price || "",
-          );
+      // Helper to retrieve active quotation data
+      function getActivePaymentQuotation() {
+        const lead = (self.leadData && self.leadData.lead) || self.leadData || {};
+        let quote = (self.leadData && self.leadData.quotation) || (lead && lead.quotation) || null;
+        let price = quote && quote.price ? parseFloat(quote.price) : 0;
+        if (!price && quote && quote.quotation_price) price = parseFloat(quote.quotation_price);
+        if (!price && lead && lead.quotation_price) price = parseFloat(lead.quotation_price);
+        let title = (quote && (quote.title || quote.package_title || quote.tour_package_name)) || "";
+        let quoteId = quote && quote.id ? parseInt(quote.id, 10) : 0;
+        let minPayment = quote && quote.min_payment ? parseFloat(quote.min_payment) : 0;
+        let minPercent = quote && quote.min_percent ? parseFloat(quote.min_percent) : 30;
+
+        // Fallback to timeline itinerary quotation if not populated
+        if (price <= 0 && lead.timeline && lead.timeline.length > 0) {
+          for (let i = 0; i < lead.timeline.length; i++) {
+            const t = lead.timeline[i];
+            if (t.quotation && t.quotation.price && parseFloat(t.quotation.price) > 0) {
+              price = parseFloat(t.quotation.price);
+              if (!title && t.quotation.title) title = t.quotation.title;
+              if (!quoteId && t.quotation.id) quoteId = parseInt(t.quotation.id, 10);
+              break;
+            }
+          }
         }
+
+        // Check self.activeQuotation
+        if (price <= 0 && self.activeQuotation && self.activeQuotation.price) {
+          price = parseFloat(self.activeQuotation.price);
+          if (!title && self.activeQuotation.title) title = self.activeQuotation.title;
+          if (!quoteId && self.activeQuotation.id) quoteId = parseInt(self.activeQuotation.id, 10);
+        }
+
+        if (price > 0 && minPayment <= 0) {
+          minPayment = Math.round((price * minPercent) / 100);
+        }
+
+        return {
+          id: quoteId,
+          price: price,
+          title: title || "Tour Proposal",
+          min_payment: minPayment,
+          min_percent: minPercent
+        };
+      }
+
+      // Update live calculations & alerts for payment link modal
+      function updatePaymentLinkCalculations(enteredVal, quotePrice, suggestedMin) {
+        enteredVal = parseFloat(enteredVal) || 0;
+        quotePrice = parseFloat(quotePrice) || 0;
+        suggestedMin = parseFloat(suggestedMin) || 0;
+
+        // Update Collecting Now display
+        $("#modalPayCalcCollect").text("₹ " + enteredVal.toLocaleString("en-IN"));
+
+        // Update Remaining Balance display
+        if (quotePrice > 0) {
+          const balance = Math.max(0, quotePrice - enteredVal);
+          $("#modalPayCalcBalance").text("₹ " + balance.toLocaleString("en-IN"));
+
+          // Live percent badge
+          if (enteredVal > 0) {
+            const pct = Math.round((enteredVal / quotePrice) * 100);
+            $("#modalPayLivePctBadge").text(pct + "% Selected");
+          } else {
+            $("#modalPayLivePctBadge").text("0% Selected");
+          }
+        } else {
+          $("#modalPayCalcBalance").text("₹ 0");
+          $("#modalPayLivePctBadge").text("Custom Amount");
+        }
+
+        // Chip active state check
+        let matchedChip = false;
+        if (quotePrice > 0 && enteredVal > 0) {
+          $(".v3-pay-pct-chip").each(function () {
+            const chipPct = parseFloat($(this).data("pct"));
+            const targetAmt = Math.round((quotePrice * chipPct) / 100);
+            if (Math.abs(targetAmt - enteredVal) <= 1) {
+              $(".v3-pay-pct-chip").removeClass("is-active");
+              $(this).addClass("is-active");
+              matchedChip = true;
+              return false;
+            }
+          });
+        }
+        if (!matchedChip) {
+          $(".v3-pay-pct-chip").removeClass("is-active");
+        }
+
+        // Warnings / alerts: strictly show per condition else hide
+        // 1. Low warning: ONLY show if suggestedMin > 0, enteredVal > 0, and enteredVal < suggestedMin
+        if (suggestedMin > 0 && enteredVal > 0 && enteredVal < suggestedMin) {
+          $("#modalPayAlertLow").removeClass("v3-hidden").show();
+        } else {
+          $("#modalPayAlertLow").addClass("v3-hidden").hide();
+        }
+
+        // 2. High warning: ONLY show if quotePrice > 0 && enteredVal > 0 && enteredVal > quotePrice
+        if (quotePrice > 0 && enteredVal > 0 && enteredVal > quotePrice) {
+          $("#modalPayAlertHigh").removeClass("v3-hidden").show();
+        } else {
+          $("#modalPayAlertHigh").addClass("v3-hidden").hide();
+        }
+      }
+
+      // Open Send Payment Link Modal
+      $(document).on("click", "#btnSideSendPaymentLink, #btnHeroSendPaymentLink", function () {
+        const lead = (self.leadData && self.leadData.lead) || self.leadData || {};
+        const qInfo = getActivePaymentQuotation();
+        const clientName = lead.name || lead.client_name || "Customer";
+        const clientPhone = lead.mobile || lead.client_contact || lead.phone || lead.contact || "-";
+
+        // Fill quotation details
+        $("#modalQuotationPrice").text("₹ " + (qInfo.price > 0 ? qInfo.price.toLocaleString("en-IN") : "0"));
+        $("#modalPayItineraryTitle").text(qInfo.title);
+        $("#modalPayRecipientName").text(clientName);
+        $("#modalPayRecipientPhone").text(clientPhone);
+
+        // Calculate suggested minimum amount
+        const suggestedMin = qInfo.min_payment > 0 ? qInfo.min_payment : (qInfo.price > 0 ? Math.round(qInfo.price * 0.3) : 0);
+        $("#modalPayMinBadge").text("Min. Suggested: ₹ " + suggestedMin.toLocaleString("en-IN"));
+
+        // Default initial amount to suggested minimum (or full quotation price)
+        const initialCollect = suggestedMin > 0 ? suggestedMin : (qInfo.price > 0 ? qInfo.price : "");
+        $("#modalPaymentAmountInput").val(initialCollect);
+
+        // Reset note, success box & submit button
+        $("#modalPaymentLinkNote").val("");
+        $("#modalPaySuccessBox").addClass("v3-hidden").hide();
+        $("#modalPayGeneratedUrl").val("");
+        $("#btnSubmitModalSendPaymentLink").prop("disabled", false).html('<i class="fi fi-rr-paper-plane"></i> Send Payment Link');
+
+        // Reset alerts before calculating
+        $("#modalPayAlertLow").addClass("v3-hidden").hide();
+        $("#modalPayAlertHigh").addClass("v3-hidden").hide();
+
+        // Update live calculations & active chip
+        updatePaymentLinkCalculations(initialCollect, qInfo.price, suggestedMin);
+
+        // Show modal
         $("#modalSendPaymentLink").addClass("is-active");
+      });
+
+      // Quick Suggestion Percentage Chip Click
+      $(document).on("click", ".v3-pay-pct-chip", function (e) {
+        e.preventDefault();
+        const pct = parseFloat($(this).data("pct"));
+        const qInfo = getActivePaymentQuotation();
+        const suggestedMin = qInfo.min_payment > 0 ? qInfo.min_payment : (qInfo.price > 0 ? Math.round(qInfo.price * 0.3) : 0);
+        if (qInfo.price > 0 && pct > 0) {
+          const calcAmount = Math.round((qInfo.price * pct) / 100);
+          $("#modalPaymentAmountInput").val(calcAmount);
+          $(".v3-pay-pct-chip").removeClass("is-active");
+          $(this).addClass("is-active");
+          updatePaymentLinkCalculations(calcAmount, qInfo.price, suggestedMin);
+        }
+      });
+
+      // Payment Amount Input Change / Typing
+      $(document).on("input change", "#modalPaymentAmountInput", function () {
+        const val = $(this).val();
+        const qInfo = getActivePaymentQuotation();
+        const suggestedMin = qInfo.min_payment > 0 ? qInfo.min_payment : (qInfo.price > 0 ? Math.round(qInfo.price * 0.3) : 0);
+        updatePaymentLinkCalculations(val, qInfo.price, suggestedMin);
+      });
+
+      // Send Payment Link Modal Submit Handler
+      $(document).on("click", "#btnSubmitModalSendPaymentLink", function () {
+        const $btn = $(this);
+        const amount = parseFloat($("#modalPaymentAmountInput").val());
+        if (!amount || amount <= 0) {
+          self.notify("Please enter a valid payment amount to collect.", "warning");
+          $("#modalPaymentAmountInput").focus();
+          return;
+        }
+
+        const leadId = (self.leadData && (self.leadData.id || (self.leadData.lead && self.leadData.lead.id))) || self.leadId;
+        const qInfo = getActivePaymentQuotation();
+        const notes = $("#modalPaymentLinkNote").val().trim();
+        const sendWhatsApp = $("#modalPaySendWhatsApp").is(":checked") ? 1 : 0;
+
+        $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner spinner-rotate"></i> Generating Link...');
+
+        $.ajax({
+          url: "/api/v3/leads/payment-link.php",
+          type: "POST",
+          dataType: "json",
+          data: {
+            lead_id: leadId,
+            quotation_id: qInfo.id || 0,
+            amount: amount,
+            notes: notes,
+            send_whatsapp: sendWhatsApp
+          },
+          success: function (res) {
+            $btn.prop("disabled", false).html('<i class="fi fi-rr-paper-plane"></i> Send Payment Link');
+            if (res && res.status === "success") {
+              const payUrl = (res.data && (res.data.payment_url || res.data.short_url)) || "";
+              const waUrl = (res.data && res.data.whatsapp_url) || "";
+
+              // Reveal success container in modal
+              $("#modalPaySuccessBox").removeClass("v3-hidden");
+              $("#modalPayGeneratedUrl").val(payUrl);
+              if (waUrl) {
+                $("#btnWhatsAppGeneratedPayLink").attr("href", waUrl).removeClass("v3-hidden");
+              } else {
+                $("#btnWhatsAppGeneratedPayLink").addClass("v3-hidden");
+              }
+
+              self.notify(
+                sendWhatsApp
+                  ? "Payment link generated & sent via WhatsApp!"
+                  : "Payment link generated successfully!",
+                "success"
+              );
+
+              // Seamlessly refresh timeline in background (SPA)
+              if (typeof self.loadLeadDetails === "function") {
+                self.loadLeadDetails();
+              }
+            } else {
+              self.notify((res && res.message) || "Failed to generate payment link.", "error");
+            }
+          },
+          error: function (xhr) {
+            $btn.prop("disabled", false).html('<i class="fi fi-rr-paper-plane"></i> Send Payment Link');
+            let errMsg = "Network error while generating payment link.";
+            try {
+              const errRes = JSON.parse(xhr.responseText);
+              if (errRes && errRes.message) errMsg = errRes.message;
+            } catch (e) {}
+            self.notify(errMsg, "error");
+          }
+        });
+      });
+
+      // Copy Payment Link Handler
+      $(document).on("click", "#btnCopyGeneratedPayLink", function () {
+        const urlInput = document.getElementById("modalPayGeneratedUrl");
+        if (!urlInput || !urlInput.value) return;
+
+        const urlVal = urlInput.value;
+        const $btn = $(this);
+
+        function showCopiedState() {
+          $btn.html('<i class="fi fi-rr-check"></i> <span>Copied!</span>');
+          setTimeout(function () {
+            $btn.html('<i class="fi fi-rr-copy"></i> <span>Copy</span>');
+          }, 2500);
+          self.notify("Payment link copied to clipboard!", "success");
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(urlVal).then(function () {
+            showCopiedState();
+          }).catch(function () {
+            urlInput.select();
+            document.execCommand("copy");
+            showCopiedState();
+          });
+        } else {
+          urlInput.select();
+          document.execCommand("copy");
+          showCopiedState();
+        }
       });
 
       $(document).on(
         "click",
-        "#btnOpenPaymentModal, #btnOpenPaymentModalTab, #btnSideRecordPayment",
+        "#btnOpenPaymentModal, #btnOpenPaymentModalTab, #btnSideRecordPayment, #btnHeroRecordPayment",
         function () {
           const fileInput = document.getElementById("modalPayFile");
           if (fileInput) fileInput.value = "";
@@ -8824,6 +9248,9 @@
         }
         if (typeof self.markItineraryModified === "function") {
           self.markItineraryModified(false);
+        }
+        if (typeof self.setupDeliveryToggles === "function") {
+          self.setupDeliveryToggles(data);
         }
 
         // Preload stay cities from Cities API, vehicles, and properties

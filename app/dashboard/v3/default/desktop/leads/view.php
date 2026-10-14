@@ -602,11 +602,31 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                         </div>
                     </div>
 
-                    <!-- 5. Footer Preview CTA Bar -->
-                    <div class="v3-itin-footer-actions">
-                        <button type="button" class="btn-v3-action btn-green btn-v3-preview-lg" id="btnPreviewItineraryBottom">
-                            <i class="fi fi-rr-eye"></i> Preview Itinerary Proposal
-                        </button>
+                    <!-- 5. Footer Preview & Delivery Options Bar -->
+                    <div class="v3-itin-footer-actions-wrap">
+                        <div class="v3-itin-delivery-toggles">
+                            <span class="v3-itin-delivery-title"><i class="fi fi-rr-paper-plane"></i> Send Channels:</span>
+                            <label class="v3-channel-toggle-label" for="toggleSendEmail" title="Send proposal link and summary to customer email">
+                                <span class="v3-switch-slider-wrap">
+                                    <input type="checkbox" id="toggleSendEmail" name="send_email" value="1" checked>
+                                    <span class="v3-switch-slider"></span>
+                                </span>
+                                <span class="v3-channel-toggle-text"><i class="fi fi-rr-envelope"></i> Email</span>
+                            </label>
+                            <label class="v3-channel-toggle-label" for="toggleSendWhatsApp" title="Send interactive itinerary and proposal summary to customer WhatsApp">
+                                <span class="v3-switch-slider-wrap">
+                                    <input type="checkbox" id="toggleSendWhatsApp" name="send_whatsapp" value="1" checked>
+                                    <span class="v3-switch-slider"></span>
+                                </span>
+                                <span class="v3-channel-toggle-text"><i class="fi fi-rr-comment-alt"></i> WhatsApp</span>
+                                <span class="v3-channel-device-badge" id="itinWaDeviceBadge"></span>
+                            </label>
+                        </div>
+                        <div class="v3-itin-footer-actions">
+                            <button type="button" class="btn-v3-action btn-green btn-v3-preview-lg" id="btnPreviewItineraryBottom">
+                                <i class="fi fi-rr-eye"></i> Preview Itinerary Proposal
+                            </button>
+                        </div>
                     </div>
 
                 </div>
@@ -641,6 +661,23 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                             <span class="v3-switch-slider"></span>
                         </span>
                         <span class="v3-save-pkg-badge" id="savePkgBadgePreview">OFF</span>
+                    </label>
+                </div>
+                <div class="v3-itin-delivery-toggles v3-preview-delivery-toggles" id="wrapPreviewDeliveryToggles">
+                    <span class="v3-itin-delivery-title"><i class="fi fi-rr-paper-plane"></i> Send:</span>
+                    <label class="v3-channel-toggle-label" for="toggleSendEmailPreview" title="Send proposal to customer email">
+                        <span class="v3-switch-slider-wrap">
+                            <input type="checkbox" id="toggleSendEmailPreview" name="send_email_preview" value="1" checked>
+                            <span class="v3-switch-slider"></span>
+                        </span>
+                        <span class="v3-channel-toggle-text"><i class="fi fi-rr-envelope"></i> Email</span>
+                    </label>
+                    <label class="v3-channel-toggle-label" for="toggleSendWhatsAppPreview" title="Send proposal to customer WhatsApp">
+                        <span class="v3-switch-slider-wrap">
+                            <input type="checkbox" id="toggleSendWhatsAppPreview" name="send_whatsapp_preview" value="1" checked>
+                            <span class="v3-switch-slider"></span>
+                        </span>
+                        <span class="v3-channel-toggle-text"><i class="fi fi-rr-comment-alt"></i> WhatsApp</span>
                     </label>
                 </div>
                 <button type="button" class="btn-v3-action btn-outline" id="btnLivePreviewDownloadPdf" title="Download PDF document">
@@ -868,7 +905,7 @@ if ($leadViewSiteId > 0 && isset($connection)) {
 
 <!-- Modal: Send Payment Link -->
 <div class="v3-modal-overlay" id="modalSendPaymentLink">
-    <div class="v3-modal-dialog">
+    <div class="v3-modal-dialog v3-modal-dialog-paylink">
         <div class="v3-modal-header">
             <div class="v3-modal-header-left">
                 <div class="v3-modal-header-icon-box icon-link">
@@ -882,22 +919,124 @@ if ($leadViewSiteId > 0 && isset($connection)) {
             <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
         </div>
         <div class="v3-modal-body">
-            <div class="v3-modal-form-group">
-                <label class="v3-modal-label">Quotation Price</label>
-                <div id="modalQuotationPrice" class="v3-modal-quote-price">₹ 0</div>
+            <!-- Active Quotation Summary Card -->
+            <div class="v3-paylink-quote-card">
+                <div class="v3-paylink-quote-top">
+                    <div class="v3-paylink-quote-meta">
+                        <span class="v3-paylink-quote-label">Quotation Price</span>
+                        <div id="modalQuotationPrice" class="v3-modal-quote-price">₹ 0</div>
+                    </div>
+                    <div class="v3-paylink-quote-badge" id="modalPayQuoteBadge">
+                        <i class="fi fi-rr-route"></i>
+                        <span id="modalPayItineraryTitle">Tour Proposal</span>
+                    </div>
+                </div>
+                <div class="v3-paylink-recipient-row">
+                    <span class="v3-paylink-recipient-item">
+                        <i class="fi fi-rr-user"></i>
+                        <span id="modalPayRecipientName">Customer</span>
+                    </span>
+                    <span class="v3-paylink-recipient-sep">•</span>
+                    <span class="v3-paylink-recipient-item">
+                        <i class="fi fi-rr-phone-call"></i>
+                        <span id="modalPayRecipientPhone">-</span>
+                    </span>
+                </div>
             </div>
+
+            <!-- Payment Amount to Collect Input -->
             <div class="v3-modal-form-group">
-                <label class="v3-modal-label">Payment Amount to Collect (₹) *</label>
-                <input type="number" id="modalPaymentAmountInput" class="v3-modal-input" placeholder="e.g. 15000">
+                <div class="v3-pay-label-row">
+                    <label class="v3-modal-label" for="modalPaymentAmountInput">Payment Amount to Collect (₹) *</label>
+                    <span class="v3-pay-min-badge" id="modalPayMinBadge">Min. Suggested: ₹ 0</span>
+                </div>
+                <div class="v3-input-currency-wrapper">
+                    <span class="v3-input-prefix">₹</span>
+                    <input type="number" id="modalPaymentAmountInput" class="v3-modal-input v3-input-with-prefix" placeholder="Enter amount to collect" min="1" step="1">
+                </div>
             </div>
+
+            <!-- Quick Suggestion in Payment % -->
+            <div class="v3-pay-percent-section">
+                <div class="v3-pay-percent-header">
+                    <span class="v3-pay-percent-label">Quick Suggestions in %</span>
+                    <span class="v3-pay-live-pct-badge" id="modalPayLivePctBadge">30% Selected</span>
+                </div>
+                <div class="v3-pay-percent-chips" id="modalPayPercentChips">
+                    <button type="button" class="v3-pay-pct-chip" data-pct="10">10%</button>
+                    <button type="button" class="v3-pay-pct-chip" data-pct="25">25%</button>
+                    <button type="button" class="v3-pay-pct-chip is-active" data-pct="30" id="chipMinPercent">
+                        30% <span class="v3-pct-tag">Min</span>
+                    </button>
+                    <button type="button" class="v3-pay-pct-chip" data-pct="50">50%</button>
+                    <button type="button" class="v3-pay-pct-chip" data-pct="100">100% (Full)</button>
+                </div>
+            </div>
+
+            <!-- Live Calculation & Balance Breakdown -->
+            <div class="v3-pay-calc-card">
+                <div class="v3-pay-calc-col">
+                    <span class="v3-pay-calc-label">Collecting Now</span>
+                    <div class="v3-pay-calc-val val-collect" id="modalPayCalcCollect">₹ 0</div>
+                </div>
+                <div class="v3-pay-calc-divider"></div>
+                <div class="v3-pay-calc-col">
+                    <span class="v3-pay-calc-label">Balance Remaining</span>
+                    <div class="v3-pay-calc-val val-balance" id="modalPayCalcBalance">₹ 0</div>
+                </div>
+            </div>
+
+            <!-- Warning Alert (if amount < min or amount > quote) -->
+            <div id="modalPayAlertLow" class="v3-pay-alert-box v3-pay-alert-warn v3-hidden">
+                <i class="fi fi-rr-info"></i>
+                <span>Amount is lower than the recommended minimum advance deposit.</span>
+            </div>
+            <div id="modalPayAlertHigh" class="v3-pay-alert-box v3-pay-alert-danger v3-hidden">
+                <i class="fi fi-rr-exclamation"></i>
+                <span>Entered amount exceeds the total quotation price.</span>
+            </div>
+
+            <!-- Payment Link Notes -->
             <div class="v3-modal-form-group">
-                <label class="v3-modal-label">Payment Link Notes</label>
-                <textarea id="modalPaymentLinkNote" class="v3-modal-textarea" placeholder="e.g. Advance deposit for booking confirmation"></textarea>
+                <label class="v3-modal-label" for="modalPaymentLinkNote">Payment Link Notes / Purpose</label>
+                <textarea id="modalPaymentLinkNote" class="v3-modal-textarea" rows="2" placeholder="e.g. Advance deposit for booking confirmation"></textarea>
+            </div>
+
+            <!-- WhatsApp Notification Toggle -->
+            <div class="v3-paylink-channel-row">
+                <label class="v3-custom-checkbox-wrap" for="modalPaySendWhatsApp">
+                    <input type="checkbox" id="modalPaySendWhatsApp" checked>
+                    <span class="v3-checkbox-label">
+                        <i class="fi fi-brands-whatsapp"></i> Send payment link automatically to client via WhatsApp
+                    </span>
+                </label>
+            </div>
+
+            <!-- Generated Success State Box (Initially hidden) -->
+            <div id="modalPaySuccessBox" class="v3-paylink-success-box v3-hidden">
+                <div class="v3-paylink-success-banner">
+                    <div class="v3-paylink-success-icon"><i class="fi fi-rr-check"></i></div>
+                    <div class="v3-paylink-success-text">
+                        <h5>Payment Link Ready!</h5>
+                        <p>Share this secure link with the customer for online payment.</p>
+                    </div>
+                </div>
+                <div class="v3-paylink-url-box">
+                    <input type="text" id="modalPayGeneratedUrl" class="v3-paylink-url-input" readonly>
+                    <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnCopyGeneratedPayLink" title="Copy link to clipboard">
+                        <i class="fi fi-rr-copy"></i> <span>Copy</span>
+                    </button>
+                    <a href="#" target="_blank" class="btn-v3-action btn-green btn-sm" id="btnWhatsAppGeneratedPayLink" title="Open WhatsApp chat">
+                        <i class="fi fi-brands-whatsapp"></i> <span>WhatsApp</span>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="v3-modal-footer">
             <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
-            <button type="button" class="btn-v3-action btn-purple" id="btnSubmitModalSendPaymentLink">Send Payment Link</button>
+            <button type="button" class="btn-v3-action btn-purple" id="btnSubmitModalSendPaymentLink">
+                <i class="fi fi-rr-paper-plane"></i> Send Payment Link
+            </button>
         </div>
     </div>
 </div>

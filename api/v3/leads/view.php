@@ -14,6 +14,12 @@ $siteId     = defined('SITE_ID')      ? (int) SITE_ID : 0;
 $currentUserId = defined('USER_ID')   ? (int) USER_ID : 0;
 $accessType = isset($site_access_type) ? $site_access_type : 'administrator';
 
+if (!function_exists('longToShortUrl')) {
+    if (defined('UTIL_FUNCTIONS') && file_exists(UTIL_FUNCTIONS)) {
+        require_once UTIL_FUNCTIONS;
+    }
+}
+
 if ($accessType === 'digital_marketing') {
     http_response_code(403);
     echo json_encode(['status' => 'error', 'message' => 'Access denied: Digital marketing users cannot view lead contact details.']);
@@ -318,19 +324,29 @@ if (!empty($quotationIds)) {
             $descData['package_id'] = (int)$qRow['quotation_type_id'];
             $descData['id']         = $qId;
 
+            $siteDomain   = defined('SITE_DOMAIN') && !empty(SITE_DOMAIN) ? SITE_DOMAIN : ($_SERVER['HTTP_HOST'] ?? '');
+            $protocol     = (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) ? 'http://' : 'https://';
+            $fullViewUrl  = $protocol . $siteDomain . "/view-itinerary/{$encodedQId}/";
+            $fullPdfUrl   = $protocol . $siteDomain . "/download-itinerary/{$encodedQId}/";
+            $shortViewUrl = function_exists('longToShortUrl') ? longToShortUrl($connection, $fullViewUrl) : '';
+            $shortPdfUrl  = function_exists('longToShortUrl') ? longToShortUrl($connection, $fullPdfUrl) : '';
+
             $quotationsMap[$qId] = [
-                'id'           => $qId,
-                'encoded_id'   => $encodedQId,
-                'package_id'   => (int)$qRow['quotation_type_id'],
-                'title'        => $qTitle,
-                'price'        => $qPrice,
-                'mrp'          => $qMrp,
-                'duration'     => $qDuration,
-                'destination'  => $qDest,
-                'theme'        => $qTheme,
-                'content'      => $descData,
-                'view_url'     => "/view-itinerary/{$encodedQId}/",
-                'download_url' => "/download-itinerary/{$encodedQId}/",
+                'id'                 => $qId,
+                'encoded_id'         => $encodedQId,
+                'package_id'         => (int)$qRow['quotation_type_id'],
+                'title'              => $qTitle,
+                'price'              => $qPrice,
+                'mrp'                => $qMrp,
+                'duration'           => $qDuration,
+                'destination'        => $qDest,
+                'theme'              => $qTheme,
+                'delivery'           => $descData['delivery'] ?? null,
+                'content'            => $descData,
+                'view_url'           => "/view-itinerary/{$encodedQId}/",
+                'download_url'       => "/download-itinerary/{$encodedQId}/",
+                'short_view_url'     => $shortViewUrl ?: $fullViewUrl,
+                'short_download_url' => $shortPdfUrl ?: $fullPdfUrl,
             ];
         }
     }
@@ -511,18 +527,27 @@ foreach ($rawTimelineRows as $tRow) {
             $quoteInfo = $quotationsMap[(int)$noteVal];
             $itemDesc  = $quoteInfo['title'];
         } elseif (is_numeric($noteVal) && (int)$noteVal > 0) {
-            $encId = base64_encode((string)$noteVal);
+            $encId        = base64_encode((string)$noteVal);
+            $siteDomain   = defined('SITE_DOMAIN') && !empty(SITE_DOMAIN) ? SITE_DOMAIN : ($_SERVER['HTTP_HOST'] ?? '');
+            $protocol     = (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) ? 'http://' : 'https://';
+            $fullViewUrl  = $protocol . $siteDomain . "/view-itinerary/{$encId}/";
+            $fullPdfUrl   = $protocol . $siteDomain . "/download-itinerary/{$encId}/";
+            $shortViewUrl = function_exists('longToShortUrl') ? longToShortUrl($connection, $fullViewUrl) : '';
+            $shortPdfUrl  = function_exists('longToShortUrl') ? longToShortUrl($connection, $fullPdfUrl) : '';
+
             $quoteInfo = [
-                'id'           => (int)$noteVal,
-                'encoded_id'   => $encId,
-                'title'        => 'Tour Itinerary #' . $noteVal,
-                'price'        => 0,
-                'mrp'          => 0,
-                'duration'     => '',
-                'destination'  => '',
-                'theme'        => '',
-                'view_url'     => "/view-itinerary/{$encId}/",
-                'download_url' => "/download-itinerary/{$encId}/",
+                'id'                 => (int)$noteVal,
+                'encoded_id'         => $encId,
+                'title'              => 'Tour Itinerary #' . $noteVal,
+                'price'              => 0,
+                'mrp'                => 0,
+                'duration'           => '',
+                'destination'        => '',
+                'theme'              => '',
+                'view_url'           => "/view-itinerary/{$encId}/",
+                'download_url'       => "/download-itinerary/{$encId}/",
+                'short_view_url'     => $shortViewUrl ?: $fullViewUrl,
+                'short_download_url' => $shortPdfUrl ?: $fullPdfUrl,
             ];
             $itemDesc = 'Tour Itinerary #' . $noteVal;
         }
@@ -549,24 +574,28 @@ $quotation = [
     'id' => 0,
     'price' => 0,
     'min_payment' => 0,
+    'title' => '',
 ];
 
-$quoteSql = "SELECT quotation_id, quotation_price 
+$quoteSql = "SELECT quotation_id, quotation_price, quotation_description, quotation_type_id 
              FROM {$tblPrefix}quotation 
              WHERE quotation_ref_id = '{$leadId}' 
                AND quotation_ref_type = 'enquiry' 
-               AND quotation_site_id = {$siteId} 
+               " . ($siteId > 0 ? "AND (quotation_site_id = {$siteId} OR quotation_site_id = 0)" : "") . "
              ORDER BY quotation_id DESC 
              LIMIT 1";
 
 if ($qRes = mysqli_query($connection, $quoteSql)) {
     if ($qRow = mysqli_fetch_assoc($qRes)) {
-        $qPrice = (float)($qRow['quotation_price'] ?? 0);
+        $qDescJson = !empty($qRow['quotation_description']) ? json_decode($qRow['quotation_description'], true) : [];
+        $qPrice = (float)($qRow['quotation_price'] ?? ($qDescJson['total_price'] ?? 0));
+        $qTitle = !empty($qDescJson['title']) ? trim($qDescJson['title']) : (!empty($qDescJson['package_name']) ? trim($qDescJson['package_name']) : '');
         $minPercent = defined('MINIMUM_PAYMENT') ? (float)MINIMUM_PAYMENT : 30;
         $quotation = [
             'id' => (int)$qRow['quotation_id'],
             'price' => $qPrice,
             'min_payment' => round(($qPrice * $minPercent) / 100, 2),
+            'title' => $qTitle,
         ];
     }
 }
@@ -577,12 +606,33 @@ if ($quotation['price'] <= 0 && !empty($quotationsMap)) {
         if (!empty($qm['price']) && (float)$qm['price'] > 0) {
             $quotation['price'] = (float)$qm['price'];
             $quotation['id']    = (int)($qm['id'] ?? 0);
+            $quotation['title'] = (string)($qm['title'] ?? '');
             $minPercent = defined('MINIMUM_PAYMENT') ? (float)MINIMUM_PAYMENT : 30;
             $quotation['min_payment'] = round(($quotation['price'] * $minPercent) / 100, 2);
             break;
         }
     }
 }
+
+// Determine if itinerary has been sent
+$hasItinerarySent = false;
+if (!empty($quotation['price']) && (float)$quotation['price'] > 0) {
+    $hasItinerarySent = true;
+} elseif (!empty($quotationsMap)) {
+    $hasItinerarySent = true;
+} else {
+    foreach ($rawTimelineRows as $rtr) {
+        if (strtolower(trim($rtr['enquiry_notes_meta_type'] ?? '')) === 'itinerary') {
+            $hasItinerarySent = true;
+            break;
+        }
+    }
+    $stId = (int)($lead['enquiry_status'] ?? 0);
+    if (!$hasItinerarySent && in_array($stId, [9, 23, 24, 25, 26, 27], true)) {
+        $hasItinerarySent = true;
+    }
+}
+$lead['has_itinerary_sent'] = $hasItinerarySent;
 
 // 4. Fetch All Active Agents for inline re-assign
 $agents = [];
@@ -985,6 +1035,7 @@ $response = [
 
         // Related Collections
         'quotation' => $quotation,
+        'has_itinerary_sent' => $hasItinerarySent,
         'timeline' => $timeline,
         'payments' => $payments,
         'agents' => $agents,
@@ -1036,6 +1087,23 @@ $effectiveCurrencySymbol = !empty($siteConfigs['currency_symbol']) ? $siteConfig
 $effectiveCurrencyDefault = !empty($siteConfigs['currency_default']) ? $siteConfigs['currency_default'] : (defined('CURRENCY_DEFAULT') ? CURRENCY_DEFAULT : 'INR');
 $effectiveAdvancePercent = !empty($siteConfigs['advance_payment_percent']) ? (float)$siteConfigs['advance_payment_percent'] : (defined('ADVANCE_PAYMENT_PERCENT') ? (float)ADVANCE_PAYMENT_PERCENT : 25);
 $effectiveTransporterTerms = !empty($siteConfigs['transporter_billing_terms']) ? json_decode($siteConfigs['transporter_billing_terms'], true) : null;
+
+// Resolve active WhatsApp device for current user & site to guide UI toggles
+require_once dirname(__DIR__) . '/whatsapp/device_helper.php';
+$resolvedWaDevice = resolveSenderWhatsAppDevice($connection, $effectiveSiteId, $currentUserId);
+$response['data']['whatsapp_device'] = $resolvedWaDevice ? [
+    'available'    => true,
+    'phone_number' => $resolvedWaDevice['device_phone'] ?? ($resolvedWaDevice['device_phone_number'] ?? ''),
+    'name'         => $resolvedWaDevice['device_name'] ?? '',
+    'reason'       => $resolvedWaDevice['resolved_reason'] ?? 'default',
+    'is_assigned'  => ($resolvedWaDevice['resolved_reason'] ?? '') === 'user_assigned',
+] : [
+    'available'    => false,
+    'phone_number' => '',
+    'name'         => '',
+    'reason'       => 'none',
+    'is_assigned'  => false,
+];
 
 $response['data']['company_nature'] = $effectiveCompanyNature;
 $response['data']['currency_symbol'] = $effectiveCurrencySymbol;

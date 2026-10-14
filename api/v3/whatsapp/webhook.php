@@ -148,6 +148,9 @@ if (($payload['event'] ?? '') === 'device_connected') {
             mysqli_query($connection, $insDev);
         }
 
+        require_once __DIR__ . '/device_helper.php';
+        ensureFirstDeviceIsDefault($connection, $siteId, $escSession);
+
         echo json_encode(['status' => 'success', 'msg' => 'Device connection recorded.']);
         exit;
     }
@@ -157,6 +160,27 @@ if (($payload['event'] ?? '') === 'device_connected') {
 if (($payload['event'] ?? '') === 'batch_sync') {
     $batchChats = $payload['chats'] ?? [];
     $synced = 0;
+
+    // Resolve connected device phone for message records
+    $devicePhone = !empty($payload['device_phone']) ? trim($payload['device_phone']) : '';
+    if (empty($devicePhone) && !empty($payload['session_id'])) {
+        $sessEsc = mysqli_real_escape_string($connection, $payload['session_id']);
+        $devQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_session_id = '{$sessEsc}' OR device_session_id LIKE '%{$sessEsc}') LIMIT 1");
+        if ($devQ && $dr = mysqli_fetch_assoc($devQ)) {
+            $devicePhone = $dr['device_phone'] ?? '';
+        }
+    }
+    if (empty($devicePhone)) {
+        $devQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND device_status = 'connected' ORDER BY device_id DESC LIMIT 1");
+        if ($devQ && $dr = mysqli_fetch_assoc($devQ)) {
+            $devicePhone = $dr['device_phone'] ?? '';
+        }
+    }
+    if (empty($devicePhone)) {
+        $devicePhone = 'CRM';
+    }
+    $escDevPhone = mysqli_real_escape_string($connection, $devicePhone);
+
     foreach ($batchChats as $c) {
         $cPhone = preg_replace('/[^0-9+]/', '', $c['phone'] ?? '');
         if (empty($cPhone) || strlen($cPhone) < 8) continue;
@@ -164,9 +188,14 @@ if (($payload['event'] ?? '') === 'batch_sync') {
         // Skip ghost/unmapped 13-17 digit LID numbers and empty chats
         $cleanDigits = preg_replace('/[^0-9]/', '', $cPhone);
         if (strlen($cleanDigits) >= 13) continue;
-        if (empty($c['last_message'])) continue;
+
+        $hasMessages = !empty($c['last_message']) || (!empty($c['messages']) && is_array($c['messages']));
+        if (!$hasMessages) continue;
 
         $cName = trim($c['name'] ?? '');
+        if (preg_match('/^WhatsApp\s*\(/i', $cName)) {
+            $cName = '';
+        }
         $cPushName = trim($c['pushname'] ?? ($c['pushName'] ?? ''));
         $cAvatar = !empty($c['avatar']) ? mysqli_real_escape_string($connection, $c['avatar']) : '';
         $escPhone = mysqli_real_escape_string($connection, $cPhone);
@@ -176,7 +205,7 @@ if (($payload['event'] ?? '') === 'batch_sync') {
         $unread = (int)($c['unread_count'] ?? 0);
         $cTime = !empty($c['timestamp']) ? date('Y-m-d H:i:s', is_numeric($c['timestamp']) ? (int)$c['timestamp'] : strtotime($c['timestamp'])) : date('Y-m-d H:i:s');
 
-        // Match with CRM lead if exists
+        // Match with CRM lead ONLY if one already exists - NEVER create a new lead during sync
         $phoneDigits = preg_replace('/[^0-9]/', '', $cPhone);
         $last10 = substr($phoneDigits, -10);
         $leadVal = "NULL";
@@ -191,9 +220,11 @@ if (($payload['event'] ?? '') === 'batch_sync') {
             }
         }
 
+        $chatId = 0;
         $chk = mysqli_query($connection, "SELECT chat_id, chat_name, chat_pushname FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_phone = '{$escPhone}' LIMIT 1");
         if ($chk && mysqli_num_rows($chk) > 0) {
             $existing = mysqli_fetch_assoc($chk);
+            $chatId = (int)$existing['chat_id'];
             mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat 
                                       SET chat_name = IF('{$escName}' != '' AND '{$escName}' != '{$escPhone}', '{$escName}', chat_name),
                                           chat_pushname = IF('{$escPush}' != '', '{$escPush}', chat_pushname),
@@ -201,17 +232,109 @@ if (($payload['event'] ?? '') === 'batch_sync') {
                                           chat_unread_count = {$unread},
                                           chat_last_message = IF('{$lastMsg}' != '', '{$lastMsg}', chat_last_message),
                                           chat_last_message_time = IF('{$lastMsg}' != '', '{$cTime}', chat_last_message_time),
+                                          chat_device_phone = IF('{$escDevPhone}' != '' AND '{$escDevPhone}' != 'CRM', '{$escDevPhone}', chat_device_phone),
                                           chat_lead_id = IF({$leadVal} IS NOT NULL, {$leadVal}, chat_lead_id)
-                                      WHERE chat_id = {$existing['chat_id']} AND chat_site_id = {$siteId}");
+                                      WHERE chat_id = {$chatId} AND chat_site_id = {$siteId}");
         } else {
+            $cleanDevIns = ($escDevPhone !== 'CRM') ? $escDevPhone : '';
             mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "whatsapp_chat 
-                                      (chat_site_id, chat_phone, chat_name, chat_pushname, chat_avatar, chat_last_message, chat_last_message_time, chat_unread_count, chat_lead_id)
-                                      VALUES ({$siteId}, '{$escPhone}', '{$escName}', '{$escPush}', '{$cAvatar}', '{$lastMsg}', '{$cTime}', {$unread}, {$leadVal})");
+                                      (chat_site_id, chat_phone, chat_device_phone, chat_name, chat_pushname, chat_avatar, chat_last_message, chat_last_message_time, chat_unread_count, chat_lead_id)
+                                      VALUES ({$siteId}, '{$escPhone}', '{$cleanDevIns}', '{$escName}', '{$escPush}', '{$cAvatar}', '{$lastMsg}', '{$cTime}', {$unread}, {$leadVal})");
+            $chatId = (int)mysqli_insert_id($connection);
+            if ($chatId <= 0) {
+                $cRecQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_phone = '{$escPhone}' LIMIT 1");
+                if ($cRecQ && mysqli_num_rows($cRecQ) > 0) {
+                    $chatId = (int)mysqli_fetch_assoc($cRecQ)['chat_id'];
+                }
+            }
         }
+
+        // Sync old chat message history into tbl_whatsapp_message
+        if ($chatId > 0) {
+            $chatMsgs = (!empty($c['messages']) && is_array($c['messages'])) ? $c['messages'] : [];
+            if (empty($chatMsgs) && !empty($lastMsg)) {
+                $chatMsgs[] = [
+                    'msg_id'    => null,
+                    'from_me'   => false,
+                    'text'      => $c['last_message'],
+                    'timestamp' => $cTime
+                ];
+            }
+
+            foreach ($chatMsgs as $mItem) {
+                $mText = trim($mItem['text'] ?? '');
+                $mMedia = trim($mItem['media_url'] ?? ($mItem['media'] ?? ''));
+                if (empty($mText) && !empty($mMedia)) {
+                    $mText = '[Image]';
+                }
+                if (empty($mText) && empty($mMedia)) continue;
+
+                $escMText = mysqli_real_escape_string($connection, $mText);
+                $mType = trim($mItem['type'] ?? (!empty($mMedia) ? 'image' : 'text'));
+                $escMMedia = mysqli_real_escape_string($connection, $mMedia);
+                $escMType = mysqli_real_escape_string($connection, $mType);
+
+                $mWaId = !empty($mItem['msg_id']) ? mysqli_real_escape_string($connection, $mItem['msg_id']) : null;
+                $mFromMe = !empty($mItem['from_me']);
+                $mDir = $mFromMe ? 'outgoing' : 'incoming';
+                $mSender = $mFromMe ? $devicePhone : $escPhone;
+                $mReceiver = $mFromMe ? $escPhone : $devicePhone;
+                $mItemTime = !empty($mItem['timestamp']) 
+                    ? (is_numeric($mItem['timestamp']) ? date('Y-m-d H:i:s', (int)$mItem['timestamp']) : date('Y-m-d H:i:s', strtotime($mItem['timestamp']))) 
+                    : $cTime;
+
+                $mExists = false;
+                if (!empty($mWaId)) {
+                    $mChk = mysqli_query($connection, "SELECT message_id, message_media_url, message_type FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_site_id = {$siteId} AND message_wa_id = '{$mWaId}' LIMIT 1");
+                    if ($mChk && mysqli_num_rows($mChk) > 0) {
+                        $mExists = true;
+                        $existingRow = mysqli_fetch_assoc($mChk);
+                        if (empty($existingRow['message_media_url']) && !empty($mMedia)) {
+                            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escMMedia}', message_type = '{$escMType}' WHERE message_id = {$existingRow['message_id']}");
+                        }
+                    }
+                }
+                if (!$mExists) {
+                    $mChk2 = mysqli_query($connection, "SELECT message_id, message_media_url, message_type FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_site_id = {$siteId} AND message_chat_id = {$chatId} AND message_text = '{$escMText}' AND ABS(TIMESTAMPDIFF(MINUTE, message_created_at, '{$mItemTime}')) < 5 LIMIT 1");
+                    if ($mChk2 && mysqli_num_rows($mChk2) > 0) {
+                        $mExists = true;
+                        $existingRow = mysqli_fetch_assoc($mChk2);
+                        if (empty($existingRow['message_media_url']) && !empty($mMedia)) {
+                            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escMMedia}', message_type = '{$escMType}' WHERE message_id = {$existingRow['message_id']}");
+                        }
+                    }
+                }
+
+                if (!$mExists) {
+                    $waIdSql = $mWaId ? "'{$mWaId}'" : "NULL";
+                    mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "whatsapp_message 
+                        (message_site_id, message_chat_id, message_wa_id, message_direction, message_sender, message_receiver, message_type, message_text, message_media_url, message_status, message_created_at)
+                        VALUES ({$siteId}, {$chatId}, {$waIdSql}, '{$mDir}', '{$mSender}', '{$mReceiver}', '{$escMType}', '{$escMText}', '{$escMMedia}', 'delivered', '{$mItemTime}')");
+                }
+            }
+        }
+
         $synced++;
     }
 
     echo json_encode(['status' => 'success', 'synced_count' => $synced]);
+    exit;
+}
+
+// Handle on-demand or delayed media downloaded event from gateway
+if (($payload['event'] ?? '') === 'media_downloaded') {
+    $msgWaId = trim($payload['msg_id'] ?? '');
+    $mediaUrl = trim($payload['media_url'] ?? '');
+    $mType = trim($payload['type'] ?? 'image');
+    if (!empty($msgWaId) && !empty($mediaUrl)) {
+        $escWaId = mysqli_real_escape_string($connection, $msgWaId);
+        $escMedia = mysqli_real_escape_string($connection, $mediaUrl);
+        $escType = mysqli_real_escape_string($connection, $mType);
+        mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escMedia}', message_type = '{$escType}' WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}'");
+        echo json_encode(['status' => 'success', 'msg' => 'Media updated for message ' . $msgWaId]);
+        exit;
+    }
+    echo json_encode(['status' => 'ignored', 'msg' => 'Missing msg_id or media_url']);
     exit;
 }
 
@@ -420,6 +543,13 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     $leadId = null;
     $phoneDigits = $cleanDigits;
 
+    // Detect if this message is from a sync operation or historical replay
+    $isSyncOrHistorical = !empty($payload['is_sync']) || !empty($payload['is_historical']) || (($payload['event'] ?? '') === 'batch_sync');
+    $msgTs = !empty($payload['timestamp']) ? (is_numeric($payload['timestamp']) ? (int)$payload['timestamp'] : strtotime($payload['timestamp'])) : time();
+    if ($msgTs < 10000000000 && (time() - $msgTs) > 1800) {
+        $isSyncOrHistorical = true;
+    }
+
     if (strlen($last10) >= 8) {
         $leadQ = mysqli_query($connection, "SELECT enquiry_id, TRIM(CONCAT(COALESCE(enquiry_first_name, ''), ' ', COALESCE(enquiry_last_name, ''))) as lead_name FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND enquiry_mobile LIKE '%{$last10}' LIMIT 1");
         if ($leadQ && mysqli_num_rows($leadQ) > 0) {
@@ -428,8 +558,8 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
             if (empty($name) && !empty($lRow['lead_name'])) {
                 $name = $lRow['lead_name'];
             }
-        } elseif ($direction === 'incoming') {
-            // Auto-create new CRM lead for fresh inquiry from new WhatsApp contact
+        } elseif ($direction === 'incoming' && !$isSyncOrHistorical && ($configs['whatsapp_web_auto_create_lead'] ?? '1') === '1') {
+            // Auto-create new CRM lead ONLY for fresh, real-time incoming inquiries (never during sync or for historical chats)
             try {
                 $rawLeadName = !empty($name) ? $name : (!empty($pushName) ? $pushName : 'WhatsApp (' . $cleanPhone . ')');
                 $nameParts = preg_split('/\s+/', trim($rawLeadName), 2);
@@ -458,6 +588,9 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     $avatar   = trim($payload['avatar'] ?? ($payload['profile_pic'] ?? ''));
     $escAvatar = mysqli_real_escape_string($connection, $avatar);
     $escPhone = mysqli_real_escape_string($connection, $cleanPhone);
+    if (preg_match('/^WhatsApp\s*\(/i', $name)) {
+        $name = '';
+    }
     $escName  = mysqli_real_escape_string($connection, !empty($name) && $name !== $cleanPhone ? $name : '');
     $pushName = trim($payload['pushname'] ?? ($payload['pushName'] ?? ($payload['name'] ?? '')));
     $escPush  = mysqli_real_escape_string($connection, $pushName);
@@ -475,6 +608,7 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     $chatId = 0;
     $unreadInc = ($direction === 'incoming') ? 1 : 0;
 
+    $nowUtc = gmdate('Y-m-d H:i:s');
     if ($chatQ && mysqli_num_rows($chatQ) > 0) {
         $chatRow = mysqli_fetch_assoc($chatQ);
         $chatId = (int)$chatRow['chat_id'];
@@ -484,7 +618,7 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
                                       chat_pushname = IF('{$escPush}' != '', '{$escPush}', chat_pushname),
                                       chat_avatar = IF('{$escAvatar}' != '', '{$escAvatar}', chat_avatar),
                                       chat_last_message = '{$escLastPreview}',
-                                      chat_last_message_time = NOW(),
+                                      chat_last_message_time = '{$nowUtc}',
                                       chat_device_phone = IF('{$escDevPhone}' != '' AND '{$escDevPhone}' != 'CRM', '{$escDevPhone}', IF(chat_device_phone = 'CRM', '', chat_device_phone)),
                                       chat_lead_id = IF({$leadVal} IS NOT NULL, {$leadVal}, chat_lead_id)
                                   WHERE chat_id = {$chatId} AND chat_site_id = {$siteId}");
@@ -492,11 +626,11 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
         $cleanInsDev = (!empty($escDevPhone) && $escDevPhone !== 'CRM') ? $escDevPhone : '';
         $insChatSql = "INSERT INTO " . TABLE_PREFIX . "whatsapp_chat 
                        (chat_site_id, chat_phone, chat_device_phone, chat_name, chat_pushname, chat_avatar, chat_last_message, chat_last_message_time, chat_unread_count, chat_lead_id)
-                       VALUES ({$siteId}, '{$escPhone}', '{$cleanInsDev}', '{$escName}', '{$escPush}', '{$escAvatar}', '{$escLastPreview}', NOW(), {$unreadInc}, {$leadVal})
+                       VALUES ({$siteId}, '{$escPhone}', '{$cleanInsDev}', '{$escName}', '{$escPush}', '{$escAvatar}', '{$escLastPreview}', '{$nowUtc}', {$unreadInc}, {$leadVal})
                        ON DUPLICATE KEY UPDATE 
                            chat_unread_count = chat_unread_count + {$unreadInc},
                            chat_last_message = VALUES(chat_last_message),
-                           chat_last_message_time = NOW(),
+                           chat_last_message_time = '{$nowUtc}',
                            chat_device_phone = IF(VALUES(chat_device_phone) != '' AND VALUES(chat_device_phone) != 'CRM', VALUES(chat_device_phone), chat_device_phone),
                            chat_id = LAST_INSERT_ID(chat_id)";
         mysqli_query($connection, $insChatSql);
@@ -520,7 +654,10 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     $msgSql = "INSERT INTO " . TABLE_PREFIX . "whatsapp_message 
                (message_site_id, message_chat_id, message_wa_id, message_direction, message_sender, message_receiver, message_type, message_text, message_media_url, message_status, message_created_at)
                VALUES ({$siteId}, {$chatId}, '{$escWaId}', '{$direction}', '{$senderPhone}', '{$receiverPhone}', '{$escType}', '{$escText}', '{$escMedia}', 'delivered', '{$now}')
-               ON DUPLICATE KEY UPDATE message_status = VALUES(message_status)";
+               ON DUPLICATE KEY UPDATE 
+                   message_status = VALUES(message_status),
+                   message_media_url = IF(VALUES(message_media_url) != '', VALUES(message_media_url), message_media_url),
+                   message_type = IF(VALUES(message_type) != 'text', VALUES(message_type), message_type)";
 
     mysqli_query($connection, $msgSql);
     $messageId = (int)mysqli_insert_id($connection);

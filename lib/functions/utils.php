@@ -187,24 +187,103 @@ function normalizeIndianMobile($input)
     return false; // invalid number
 }
 
+function getLinkShortenerBaseUrl($connection)
+{
+    if (defined('SHORT_URL_DOMAIN') && !empty(SHORT_URL_DOMAIN)) {
+        return rtrim(SHORT_URL_DOMAIN, '/');
+    }
+
+    static $cachedShortenerUrl = null;
+    if ($cachedShortenerUrl !== null) {
+        return $cachedShortenerUrl;
+    }
+
+    $tablePrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+    $protocol = (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) ? 'http://' : 'https://';
+
+    $checkQuery = "SELECT site_domain, site_url FROM {$tablePrefix}site 
+                   INNER JOIN {$tablePrefix}app ON site_app_id = app_id 
+                   WHERE (app_path = 'link_shortener' OR app_id = 12) AND site_status = 1 
+                   ORDER BY site_id DESC LIMIT 1";
+
+    if ($connection instanceof mysqli) {
+        if ($res = mysqli_query($connection, $checkQuery)) {
+            if ($row = mysqli_fetch_assoc($res)) {
+                $domain = !empty($row['site_domain']) ? $row['site_domain'] : $row['site_url'];
+                if (!preg_match('#^https?://#i', $domain)) {
+                    $domain = $protocol . $domain;
+                }
+                $cachedShortenerUrl = rtrim($domain, '/');
+                return $cachedShortenerUrl;
+            }
+        }
+    }
+
+    if (defined('SITE_URL') && !empty(SITE_URL)) {
+        return rtrim(SITE_URL, '/');
+    }
+
+    return $protocol . 'dc.local';
+}
+
 function longToShortUrl($connection, $longUrl)
 {
-
-    if (mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "redirection(redirection_from, redirection_to, redirection_http_status, redirection_owner_id, redirection_site_id, redirection_status) VALUES('#', '{$longUrl}', 301, " . USER_ID . ", " . SITE_ID . ", '1')")) {
-        return SITE_URL . '/' . base64_encode(mysqli_insert_id($connection));
+    if (empty($longUrl) || !($connection instanceof mysqli)) {
+        return '';
     }
-    return '';
+
+    $escapedUrl = mysqli_real_escape_string($connection, trim($longUrl));
+    $ownerId = defined('USER_ID') ? (int)USER_ID : 0;
+    $siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
+    $tablePrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+
+    // Check if an active short link already exists for this exact destination to reuse clean short links
+    $checkSql = "SELECT redirection_id FROM {$tablePrefix}redirection 
+                 WHERE redirection_to = '{$escapedUrl}' AND redirection_from = '#' AND redirection_status = 1 
+                 ORDER BY redirection_id DESC LIMIT 1";
+    $checkRes = mysqli_query($connection, $checkSql);
+    if ($checkRes && mysqli_num_rows($checkRes) > 0) {
+        $existing = mysqli_fetch_assoc($checkRes);
+        $shortId = (int)$existing['redirection_id'];
+    } else {
+        $insertSql = "INSERT INTO {$tablePrefix}redirection(redirection_from, redirection_to, redirection_http_status, redirection_owner_id, redirection_site_id, redirection_status, redirection_generated, redirection_update) 
+                      VALUES('#', '{$escapedUrl}', 301, {$ownerId}, {$siteId}, 1, NOW(), NOW())";
+        if (mysqli_query($connection, $insertSql)) {
+            $shortId = (int)mysqli_insert_id($connection);
+        } else {
+            return '';
+        }
+    }
+
+    $baseUrl = getLinkShortenerBaseUrl($connection);
+    return $baseUrl . '/' . base64_encode((string)$shortId);
 }
 
 function shortToLongUrl($connection, $shortUrl)
 {
+    if (empty($shortUrl) || !($connection instanceof mysqli)) {
+        return [];
+    }
 
-    $checkRedircetQuery = "SELECT redirection_to, redirection_http_status FROM " . TABLE_PREFIX . "redirection WHERE redirection_id='" . base64_decode($shortUrl) . "' AND  redirection_status='1'";
+    $shortUrl = trim((string)$shortUrl, '/');
+    if ($shortUrl === '') {
+        return [];
+    }
 
-    if ($checkUrl = mysqli_query($connection, $checkRedircetQuery)) {
+    $tablePrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+    $escapedShort = mysqli_real_escape_string($connection, $shortUrl);
+    $decodedId = base64_decode($shortUrl, true);
+    $idCondition = ($decodedId !== false && is_numeric($decodedId)) ? "redirection_id = '" . (int)$decodedId . "'" : "0=1";
+
+    $checkRedirectQuery = "SELECT redirection_id, redirection_to, redirection_http_status 
+                           FROM {$tablePrefix}redirection 
+                           WHERE ({$idCondition} OR redirection_from = '{$escapedShort}' OR redirection_from = '/{$escapedShort}') 
+                             AND redirection_status = 1 
+                           ORDER BY redirection_id DESC LIMIT 1";
+
+    if ($checkUrl = mysqli_query($connection, $checkRedirectQuery)) {
         if (mysqli_num_rows($checkUrl) != 0) {
-            $urlData = mysqli_fetch_assoc($checkUrl);
-            return $urlData;
+            return mysqli_fetch_assoc($checkUrl);
         }
     }
     return [];

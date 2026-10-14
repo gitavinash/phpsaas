@@ -505,9 +505,24 @@ if (mysqli_query($connection, $insertQuery)) {
         }
     }
 
-    $siteDomain = defined('SITE_DOMAIN') && !empty(SITE_DOMAIN) ? SITE_DOMAIN : ($_SERVER['HTTP_HOST'] ?? '');
-    $viewUrl = 'https://' . $siteDomain . "/view-itinerary/{$encodedId}/";
-    $pdfUrl  = 'https://' . $siteDomain . "/download-itinerary/{$encodedId}/";
+    $siteDomain  = defined('SITE_DOMAIN') && !empty(SITE_DOMAIN) ? SITE_DOMAIN : ($_SERVER['HTTP_HOST'] ?? '');
+    $protocol    = (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) ? 'http://' : 'https://';
+    $fullViewUrl = $protocol . $siteDomain . "/view-itinerary/{$encodedId}/";
+    $fullPdfUrl  = $protocol . $siteDomain . "/download-itinerary/{$encodedId}/";
+
+    if (!function_exists('longToShortUrl')) {
+        if (defined('UTIL_FUNCTIONS') && file_exists(UTIL_FUNCTIONS)) {
+            require_once UTIL_FUNCTIONS;
+        } elseif (file_exists($docRoot . '/lib/functions/utils.php')) {
+            require_once $docRoot . '/lib/functions/utils.php';
+        }
+    }
+
+    $shortViewUrl = function_exists('longToShortUrl') ? longToShortUrl($connection, $fullViewUrl) : '';
+    $shortPdfUrl  = function_exists('longToShortUrl') ? longToShortUrl($connection, $fullPdfUrl) : '';
+
+    $viewUrl = !empty($shortViewUrl) ? $shortViewUrl : $fullViewUrl;
+    $pdfUrl  = !empty($shortPdfUrl) ? $shortPdfUrl : $fullPdfUrl;
 
     $emailSent = false;
     $emailError = null;
@@ -546,107 +561,203 @@ if (mysqli_query($connection, $insertQuery)) {
         $itineraryPrice = $totalPrice;
         $tourDuration = ($totalDays > 1 ? ($totalDays - 1) . ' Nights / ' : '') . $totalDays . ' Days';
 
-        // 1. Dispatch Itinerary via Email using enquiry_email
+        $shouldSendEmail = isset($data['send_email']) ? (!empty($data['send_email']) && $data['send_email'] !== 'false' && $data['send_email'] !== '0') : true;
+        $shouldSendWhatsApp = isset($data['send_whatsapp']) ? (!empty($data['send_whatsapp']) && $data['send_whatsapp'] !== 'false' && $data['send_whatsapp'] !== '0') : true;
+
+        // 1. Dispatch Itinerary via Email using enquiry_email (if toggle ON)
         $toAddress = $enquiryEmail;
-        if (!empty($toAddress)) {
-            $emailTemplateFile = '';
-            if (defined('USER_EMAIL_TEMPLATE') && file_exists(USER_EMAIL_TEMPLATE . 'send-itinerary.php')) {
-                $emailTemplateFile = USER_EMAIL_TEMPLATE . 'send-itinerary.php';
-            } elseif (defined('EMAIL_TEMPLATE')) {
-                $siteApp = defined('SITE_APP') ? SITE_APP : 'aleya';
-                $emailCands = [
-                    EMAIL_TEMPLATE . $siteApp . '/agent/send-itinerary.php',
-                    EMAIL_TEMPLATE . $siteApp . '/administrator/send-itinerary.php',
-                    EMAIL_TEMPLATE . $siteApp . '/operations/send-itinerary.php',
-                ];
-                foreach ($emailCands as $cand) {
-                    if (file_exists($cand)) {
-                        $emailTemplateFile = $cand;
-                        break;
-                    }
-                }
-            }
-
-            if (!empty($emailTemplateFile)) {
-                // Buffer output to catch any PHPMailer / echo outputs and prevent corrupting JSON
-                ob_start();
-                try {
-                    require_once $emailTemplateFile;
-                    $emailSent = true;
-                } catch (\Throwable $e) {
-                    $emailError = $e->getMessage();
-                }
-                $emailOut = ob_get_clean();
-                if (!empty($emailOut) && (stripos($emailOut, 'Mailer Error') !== false || stripos($emailOut, 'Exception') !== false)) {
-                    $emailError = trim(strip_tags($emailOut));
-                    $emailSent = false;
-                }
-            } else {
-                $emailError = 'Email template not found on server.';
-            }
-        } else {
-            $emailError = 'Customer email address (enquiry_email) is missing.';
-        }
-
-        // 2. Dispatch Itinerary via WhatsApp using enquiry_mobile
-        $cleanMobile = preg_replace('/[^0-9]/', '', $enquiryMobile);
-        $mobile = !empty($cleanMobile) ? $cleanMobile : $enquiryMobile;
-
-        if (!empty($mobile)) {
-            $waEnabled = (
-                (defined('ENABLE_WHATSAPP_BUSINESS_API') && (ENABLE_WHATSAPP_BUSINESS_API === 'yes' || ENABLE_WHATSAPP_BUSINESS_API === '1' || ENABLE_WHATSAPP_BUSINESS_API === 1))
-                || !defined('ENABLE_WHATSAPP_BUSINESS_API')
-            );
-
-            if ($waEnabled) {
-                $whatsappTemplateFile = '';
-                if (defined('WHATSAPP_TEMPLATE_USER') && file_exists(WHATSAPP_TEMPLATE_USER . 'send-itinerary.php')) {
-                    $whatsappTemplateFile = WHATSAPP_TEMPLATE_USER . 'send-itinerary.php';
-                } elseif (defined('WHATSAPP_TEMPLATE')) {
+        if ($shouldSendEmail) {
+            if (!empty($toAddress)) {
+                $emailTemplateFile = '';
+                if (defined('USER_EMAIL_TEMPLATE') && file_exists(USER_EMAIL_TEMPLATE . 'send-itinerary.php')) {
+                    $emailTemplateFile = USER_EMAIL_TEMPLATE . 'send-itinerary.php';
+                } elseif (defined('EMAIL_TEMPLATE')) {
                     $siteApp = defined('SITE_APP') ? SITE_APP : 'aleya';
-                    $waCands = [
-                        WHATSAPP_TEMPLATE . $siteApp . '/agent/send-itinerary.php',
-                        WHATSAPP_TEMPLATE . $siteApp . '/administrator/send-itinerary.php',
+                    $emailCands = [
+                        EMAIL_TEMPLATE . $siteApp . '/agent/send-itinerary.php',
+                        EMAIL_TEMPLATE . $siteApp . '/administrator/send-itinerary.php',
+                        EMAIL_TEMPLATE . $siteApp . '/operations/send-itinerary.php',
                     ];
-                    foreach ($waCands as $cand) {
+                    foreach ($emailCands as $cand) {
                         if (file_exists($cand)) {
-                            $whatsappTemplateFile = $cand;
+                            $emailTemplateFile = $cand;
                             break;
                         }
                     }
                 }
 
-                if (!empty($whatsappTemplateFile)) {
+                if (!empty($emailTemplateFile)) {
+                    // Buffer output to catch any PHPMailer / echo outputs and prevent corrupting JSON
                     ob_start();
                     try {
-                        require_once $whatsappTemplateFile;
-                        $whatsappSent = true;
+                        require_once $emailTemplateFile;
+                        $emailSent = true;
                     } catch (\Throwable $e) {
-                        $whatsappError = $e->getMessage();
+                        $emailError = $e->getMessage();
                     }
-                    $waOut = ob_get_clean();
-                    if (!empty($waOut) && stripos($waOut, 'failed') !== false) {
-                        $whatsappError = trim(strip_tags($waOut));
+                    $emailOut = ob_get_clean();
+                    if (!empty($emailOut) && (stripos($emailOut, 'Mailer Error') !== false || stripos($emailOut, 'Exception') !== false)) {
+                        $emailError = trim(strip_tags($emailOut));
+                        $emailSent = false;
                     }
+                } else {
+                    $emailError = 'Email template not found on server.';
                 }
+            } else {
+                $emailError = 'Customer email address (enquiry_email) is missing.';
             }
         } else {
-            $whatsappError = 'Customer mobile number (enquiry_mobile) is missing.';
+            $emailError = 'Skipped by user toggle.';
+        }
+
+        // 2. Dispatch Itinerary via WhatsApp using enquiry_mobile (if toggle ON)
+        $cleanMobile = preg_replace('/[^0-9]/', '', (string)$enquiryMobile);
+        $mobile = !empty($cleanMobile) ? $cleanMobile : $enquiryMobile;
+
+        if ($shouldSendWhatsApp) {
+            if (!empty($mobile)) {
+                require_once dirname(__DIR__) . '/whatsapp/device_helper.php';
+
+                $siteTitle = defined('SITE_NAME') ? SITE_NAME : 'Aleya';
+                $tourName = !empty($content['title']) ? trim((string)$content['title']) : 'Tour Proposal';
+                $cName = !empty($customerName) ? trim((string)$customerName) : 'Valued Customer';
+                $curSym = defined('DEFAULT_CURRENCY_SYMBOL') ? DEFAULT_CURRENCY_SYMBOL : '₹';
+
+                $waLines = [];
+                $waLines[] = "🌟 *Tour Proposal & Itinerary*";
+                $waLines[] = "";
+                $waLines[] = "Dear {$cName},";
+                $waLines[] = "";
+                $waLines[] = "Greetings from *{$siteTitle}*!";
+                $waLines[] = "We are pleased to share your customized tour proposal for *{$tourName}*.";
+                $waLines[] = "";
+                if (!empty($tourDuration)) {
+                    $waLines[] = "📅 *Duration:* {$tourDuration}";
+                }
+                if (!empty($itineraryPrice)) {
+                    $waLines[] = "💰 *Total Price:* {$curSym}" . number_format((float)$itineraryPrice, 2);
+                }
+                $waLines[] = "";
+                $waLines[] = "🌐 *View Interactive Itinerary:*";
+                $waLines[] = $viewUrl;
+                $waLines[] = "";
+                $waLines[] = "📄 *Download PDF:*";
+                $waLines[] = $pdfUrl;
+                $waLines[] = "";
+                $waLines[] = "Feel free to reply directly here for any modifications or questions. Have a wonderful journey!";
+                $waText = implode("\n", $waLines);
+
+                $waRes = sendWhatsAppDirectMessage(
+                    $connection,
+                    $siteId,
+                    $userId,
+                    $mobile,
+                    $waText,
+                    [
+                        'lead_id'   => $refId,
+                        'type'      => 'text'
+                    ]
+                );
+
+                if (isset($waRes['status']) && $waRes['status'] === 'success') {
+                    $whatsappSent = true;
+                    $whatsappError = null;
+                } else {
+                    $whatsappError = $waRes['msg'] ?? 'WhatsApp device error.';
+
+                    // Fallback attempt to legacy template if configured
+                    $whatsappTemplateFile = '';
+                    if (defined('WHATSAPP_TEMPLATE_USER') && file_exists(WHATSAPP_TEMPLATE_USER . 'send-itinerary.php')) {
+                        $whatsappTemplateFile = WHATSAPP_TEMPLATE_USER . 'send-itinerary.php';
+                    } elseif (defined('WHATSAPP_TEMPLATE')) {
+                        $siteApp = defined('SITE_APP') ? SITE_APP : 'aleya';
+                        $waCands = [
+                            WHATSAPP_TEMPLATE . $siteApp . '/agent/send-itinerary.php',
+                            WHATSAPP_TEMPLATE . $siteApp . '/administrator/send-itinerary.php',
+                        ];
+                        foreach ($waCands as $cand) {
+                            if (file_exists($cand)) {
+                                $whatsappTemplateFile = $cand;
+                                break;
+                            }
+                        }
+                    }
+                    if (!empty($whatsappTemplateFile)) {
+                        ob_start();
+                        try {
+                            require_once $whatsappTemplateFile;
+                            $whatsappSent = true;
+                            $whatsappError = null;
+                        } catch (\Throwable $e) {
+                            // Keep previous error
+                        }
+                        $waOut = ob_get_clean();
+                        if (!empty($waOut) && stripos($waOut, 'failed') !== false) {
+                            $whatsappError = trim(strip_tags($waOut));
+                            $whatsappSent = false;
+                        }
+                    }
+                }
+            } else {
+                $whatsappError = 'Customer mobile number (enquiry_mobile) is missing.';
+            }
+        } else {
+            $whatsappError = 'Skipped by user toggle.';
+        }
+
+        // Record delivery metadata in quotation content
+        $sentChannels = [];
+        if ($whatsappSent) {
+            $sentChannels[] = 'WhatsApp (' . $mobile . ')';
+        }
+        if ($emailSent) {
+            $sentChannels[] = 'Email (' . $enquiryEmail . ')';
+        }
+
+        $content['delivery'] = [
+            'email'          => $emailSent,
+            'whatsapp'       => $whatsappSent,
+            'email_error'    => $emailError,
+            'whatsapp_error' => $whatsappError,
+            'channels'       => $sentChannels,
+            'sent_at'        => date('Y-m-d H:i:s')
+        ];
+        $updDescJson = mysqli_real_escape_string($connection, json_encode($content));
+        mysqli_query($connection, "UPDATE {$tblPrefix}quotation SET quotation_description = '{$updDescJson}' WHERE quotation_id = {$quotationId}");
+
+        // Record timeline note for delivery
+        if (!empty($sentChannels)) {
+            $summaryNote = "Itinerary proposal sent to customer via " . implode(' & ', $sentChannels);
+            $escSummaryNote = mysqli_real_escape_string($connection, $summaryNote);
+            @mysqli_query($connection, "INSERT INTO {$tblPrefix}enquiry_notes (
+                enquiry_notes_ref_id,
+                enquiry_notes_user_id,
+                enquiry_notes_meta_type,
+                enquiry_notes_meta_value
+            ) VALUES (
+                {$refId},
+                {$userId},
+                'itinerary_sent',
+                '{$escSummaryNote}'
+            )");
         }
     }
 
     $msg = 'Itinerary published successfully.';
     if (!$isDownload) {
         if ($saveAsNewPackage && $newPackageId > 0) {
-            $msg = 'Itinerary saved as new tour package and sent to customer!';
+            $msg = 'Itinerary saved as new tour package' . (!empty($sentChannels) ? ' and sent via ' . implode(' & ', $sentChannels) : '!') . '.';
         } elseif ($emailSent && $whatsappSent) {
-            $msg = 'Itinerary published and sent to customer via Email and WhatsApp.';
-        } elseif ($emailSent) {
-            $msg = 'Itinerary published and sent to customer via Email.';
+            $msg = 'Itinerary published and sent to customer via Email and WhatsApp!';
         } elseif ($whatsappSent) {
-            $msg = 'Itinerary published and sent to customer via WhatsApp.';
-        } elseif (!empty($emailError)) {
-            $msg = 'Itinerary published, but could not send email: ' . $emailError;
+            $msg = 'Itinerary published and sent to customer via WhatsApp!';
+        } elseif ($emailSent) {
+            $msg = 'Itinerary published and sent to customer via Email!';
+        } elseif (!$shouldSendEmail && !$shouldSendWhatsApp) {
+            $msg = 'Itinerary published successfully (delivery skipped by toggle).';
+        } else {
+            $errs = array_filter([$emailError ? "Email: {$emailError}" : null, $whatsappError ? "WhatsApp: {$whatsappError}" : null]);
+            $msg = 'Itinerary published, but could not deliver: ' . implode(' | ', $errs);
         }
     }
 
@@ -659,9 +770,16 @@ if (mysqli_query($connection, $insertQuery)) {
         'encodedId'      => $encodedId,
         'newPackageId'   => $newPackageId,
         'viewUrl'        => $viewUrl ?? '',
+        'fullViewUrl'    => $fullViewUrl ?? '',
+        'shortViewUrl'   => $shortViewUrl ?? '',
         'pdfUrl'         => $pdfUrl ?? '',
+        'fullPdfUrl'     => $fullPdfUrl ?? '',
+        'shortPdfUrl'    => $shortPdfUrl ?? '',
         'emailSent'      => $emailSent,
         'whatsappSent'   => $whatsappSent,
+        'emailError'     => $emailError,
+        'whatsappError'  => $whatsappError,
+        'sentChannels'   => $sentChannels ?? [],
         'enquiry_email'  => $enquiryEmail,
         'enquiry_mobile' => $enquiryMobile
     ]);

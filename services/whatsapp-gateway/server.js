@@ -383,9 +383,11 @@ function getMessageText(message) {
 }
 
 // Helper to extract and save media attachments (images, audio, video, documents, stickers)
-async function downloadAndSaveMedia(msg, sessionId) {
-  if (!msg || !msg.message) return null;
-  let m = msg.message;
+async function downloadAndSaveMedia(msg, sessionId, sock = null, allowPhoneRetry = true) {
+  if (!msg) return null;
+  const realMsg = (msg.message && msg.message.key) ? msg.message : msg;
+  if (!realMsg || !realMsg.message) return null;
+  let m = realMsg.message;
   let depth = 0;
   while (depth < 5 && m) {
     if (m.ephemeralMessage?.message) m = m.ephemeralMessage.message;
@@ -435,26 +437,61 @@ async function downloadAndSaveMedia(msg, sessionId) {
     }
   } catch (e) {}
 
-  const baseName = `wa_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+  const msgId = realMsg.key?.id || `wa_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+  const baseName = `wa_${msgId}`;
+  const fileName = `${baseName}.${ext}`;
+  const filePath = path.join(uploadDir, fileName);
   const getMediaUrl = (file) => (UPLOAD_DIR_IS_CRM ? `/upload/whatsapp/${file}` : `http://127.0.0.1:${PORT}/media/${file}`);
+
+  // 0. Cache check: If file already exists and has valid size, return immediately
+  try {
+    if (fs.existsSync(filePath) && fs.statSync(filePath).size > 0) {
+      return {
+        type: mediaType,
+        url: getMediaUrl(fileName),
+        caption: mediaObj.caption || ""
+      };
+    }
+  } catch (e) {}
 
   // 1. Download decrypted media buffer via Baileys
   try {
-    const buffer = await downloadMediaMessage(
-      msg,
-      "buffer",
-      {},
-      {
-        logger,
-        reuploadRequest: (update) => {
-          console.log(`[WhatsApp Gateway:${sessionId}] Reupload request triggered for media`);
+    let buffer = null;
+    try {
+      buffer = await downloadMediaMessage(
+        realMsg,
+        "buffer",
+        {},
+        {
+          logger,
+          reuploadRequest: (update) => {
+            if (sock && typeof sock.updateMediaMessage === "function") {
+              return sock.updateMediaMessage(update);
+            }
+            console.log(`[WhatsApp Gateway:${sessionId}] Reupload request triggered for media`);
+          }
+        }
+      );
+    } catch (dErr) {
+      console.log(`[WhatsApp Gateway:${sessionId}] Initial download failed for ${msgId}: ${dErr.message || dErr}`);
+      if (allowPhoneRetry && sock && typeof sock.updateMediaMessage === "function") {
+        console.log(`[WhatsApp Gateway:${sessionId}] Requesting media update from phone via sock.updateMediaMessage for ${msgId}...`);
+        try {
+          const updatedMsg = await Promise.race([
+            sock.updateMediaMessage(realMsg),
+            new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout waiting for media update")), 8000))
+          ]);
+          if (updatedMsg) {
+            console.log(`[WhatsApp Gateway:${sessionId}] Phone responded with refreshed media for ${msgId}! Downloading buffer...`);
+            buffer = await downloadMediaMessage(updatedMsg, "buffer", {}, { logger });
+          }
+        } catch (retryErr) {
+          console.warn(`[WhatsApp Gateway:${sessionId}] Phone media retry failed for ${msgId}:`, retryErr.message || retryErr);
         }
       }
-    );
+    }
 
     if (buffer && buffer.length > 0) {
-      const fileName = `${baseName}.${ext}`;
-      const filePath = path.join(uploadDir, fileName);
       fs.writeFileSync(filePath, buffer);
       console.log(`[WhatsApp Gateway:${sessionId}] Downloaded media (${mediaType}, ${buffer.length} bytes): ${getMediaUrl(fileName)}`);
       return {
@@ -464,23 +501,30 @@ async function downloadAndSaveMedia(msg, sessionId) {
       };
     }
   } catch (err) {
-    console.warn(`[WhatsApp Gateway:${sessionId}] Failed to download media buffer:`, err.message || err);
+    console.warn(`[WhatsApp Gateway:${sessionId}] Failed to download media buffer for ${msgId}:`, err.message || err);
   }
 
   // 2. Fallback: check jpegThumbnail
   if (mediaObj.jpegThumbnail) {
     try {
+      const thumbName = `${baseName}_thumb.jpg`;
+      const thumbPath = path.join(uploadDir, thumbName);
+      if (fs.existsSync(thumbPath) && fs.statSync(thumbPath).size > 0) {
+        return {
+          type: mediaType,
+          url: getMediaUrl(thumbName),
+          caption: mediaObj.caption || ""
+        };
+      }
       const thumbBuf = Buffer.isBuffer(mediaObj.jpegThumbnail)
         ? mediaObj.jpegThumbnail
         : Buffer.from(mediaObj.jpegThumbnail, "base64");
       if (thumbBuf && thumbBuf.length > 0) {
-        const fileName = `${baseName}_thumb.jpg`;
-        const filePath = path.join(uploadDir, fileName);
-        fs.writeFileSync(filePath, thumbBuf);
-        console.log(`[WhatsApp Gateway:${sessionId}] Saved media thumbnail: ${getMediaUrl(fileName)}`);
+        fs.writeFileSync(thumbPath, thumbBuf);
+        console.log(`[WhatsApp Gateway:${sessionId}] Saved media thumbnail: ${getMediaUrl(thumbName)}`);
         return {
           type: mediaType,
-          url: getMediaUrl(fileName),
+          url: getMediaUrl(thumbName),
           caption: mediaObj.caption || ""
         };
       }
@@ -598,14 +642,14 @@ class WhatsAppSession {
     return undefined;
   }
 
-  notify(payload) {
+  async notify(payload) {
     const enriched = {
       session_id: this.sessionId,
       site_id: this.siteId || payload.site_id || null,
       device_phone: this.connectedUser?.phone || null,
       ...payload,
     };
-    notifyCrm(enriched, this.webhookUrl);
+    return await notifyCrm(enriched, this.webhookUrl);
   }
 
   loadStore() {
@@ -674,6 +718,14 @@ class WhatsAppSession {
 
     // Handle WhatsApp Privacy LID (Linked Device identifier)
     if (decoded.server === "lid") {
+      if (this.lidPhoneMap.has(normalized)) {
+        const cached = this.lidPhoneMap.get(normalized);
+        if (cached === false || cached === null) return null;
+        if (typeof cached === "string" && cached.startsWith("+") && !isLidNumber(cached)) {
+          return cached;
+        }
+      }
+
       let mapped = this.lidPhoneMap.get(normalized) ||
                    this.lidPhoneMap.get(decoded.user + "@lid") ||
                    this.lidPhoneMap.get(decoded.user) ||
@@ -693,21 +745,31 @@ class WhatsAppSession {
       }
       if (mapped) {
         if (typeof mapped === "string" && mapped.startsWith("+") && !isLidNumber(mapped)) {
+          this.lidPhoneMap.set(normalized, mapped);
           return mapped;
         }
         const mappedDec = jidDecode(mapped);
         if (mappedDec?.user && mappedDec?.server === "s.whatsapp.net") {
           const digits = mappedDec.user.replace(/[^0-9]/g, "");
-          if (digits.length >= 7 && digits.length <= 13) return "+" + digits;
+          if (digits.length >= 7 && digits.length <= 13) {
+            const finalPn = "+" + digits;
+            this.lidPhoneMap.set(normalized, finalPn);
+            return finalPn;
+          }
         }
       }
+
       // Check direct contact phone / phoneNumber
       const directCt = this.contactStore.get(normalized) || this.contactStore.get(decoded.user + "@lid");
       if (directCt) {
         const p = directCt.phoneNumber || directCt.phone;
         if (p) {
           const digits = String(p).replace(/[^0-9]/g, "");
-          if (digits.length >= 7 && digits.length <= 13) return "+" + digits;
+          if (digits.length >= 7 && digits.length <= 13) {
+            const finalPn = "+" + digits;
+            this.lidPhoneMap.set(normalized, finalPn);
+            return finalPn;
+          }
         }
       }
       if (this.connectedUser?.phone && this.sock?.user?.lid && normalized.startsWith(this.sock.user.lid.split(":")[0])) {
@@ -724,7 +786,9 @@ class WhatsAppSession {
             if (altDec?.user && altDec.server === "s.whatsapp.net") {
               const digits = altDec.user.replace(/[^0-9]/g, "");
               if (digits.length >= 7 && digits.length <= 13) {
-                return "+" + digits;
+                const finalPn = "+" + digits;
+                this.lidPhoneMap.set(normalized, finalPn);
+                return finalPn;
               }
             }
           }
@@ -734,7 +798,9 @@ class WhatsAppSession {
       if (decoded.user.includes("187810329956513")) {
         return "+919990026008";
       }
-      // Return null so async resolvePhoneNumber runs the full multi-stage lookup!
+
+      // Return null and cache to avoid redundant scans
+      this.lidPhoneMap.set(normalized, false);
       return null;
     }
 
@@ -1039,6 +1105,29 @@ class WhatsAppSession {
         if (m.pushName && !existing.pushName) {
           existing.pushName = m.pushName;
         }
+        if (!existing.messages) existing.messages = [];
+        if (body || (m.message && (m.message.imageMessage || m.message.videoMessage || m.message.documentMessage))) {
+          let mediaUrl = "";
+          let mediaType = "text";
+          if (m.message && (m.message.imageMessage || m.message.videoMessage || m.message.documentMessage || m.message.audioMessage || m.message.stickerMessage)) {
+            try {
+              const dl = await downloadAndSaveMedia(m, this.sessionId, this.sock, false);
+              if (dl?.url) {
+                mediaUrl = dl.url;
+                mediaType = dl.type || "image";
+              }
+            } catch (e) {}
+          }
+          existing.messages.push({
+            msg_id: m.key?.id || null,
+            from_me: !!m.key?.fromMe,
+            text: body || (mediaType === "image" ? "[Image]" : ""),
+            media_url: mediaUrl,
+            type: mediaType,
+            timestamp: ts,
+          });
+          if (existing.messages.length > 50) existing.messages.shift();
+        }
         this.chatStore.set(normalized, existing);
       }
     }
@@ -1058,7 +1147,51 @@ class WhatsAppSession {
       }
 
       const lastMsg = c.lastMessageText || "";
-      if (!lastMsg) continue;
+      const chatMessages = [];
+      if (Array.isArray(c.messages) && c.messages.length > 0) {
+        for (const mItem of c.messages.slice(-30)) {
+          const realMsg = (mItem.message && mItem.message.key) ? mItem.message : mItem;
+          const msgId = realMsg.key?.id || mItem.msg_id || null;
+          const fromMe = !!(realMsg.key?.fromMe !== undefined ? realMsg.key?.fromMe : mItem.from_me);
+          const rawMsg = realMsg.message || realMsg;
+          const text = mItem.text || getMessageText(rawMsg);
+          const ts = Number(realMsg.messageTimestamp || mItem.timestamp) || Math.floor(Date.now() / 1000);
+
+          let mediaUrl = mItem.media_url || mItem.media || "";
+          let mediaType = mItem.type || (mediaUrl ? "image" : "text");
+
+          if (!mediaUrl && realMsg.message && (realMsg.message.imageMessage || realMsg.message.videoMessage || realMsg.message.documentMessage || realMsg.message.audioMessage || realMsg.message.stickerMessage)) {
+            try {
+              const dlResult = await downloadAndSaveMedia(realMsg, this.sessionId, this.sock, false);
+              if (dlResult && dlResult.url) {
+                mediaUrl = dlResult.url;
+                mediaType = dlResult.type || "image";
+              }
+            } catch (dlErr) {}
+          }
+
+          chatMessages.push({
+            msg_id: msgId,
+            from_me: fromMe,
+            text: text,
+            media_url: mediaUrl,
+            type: mediaType,
+            timestamp: ts,
+          });
+        }
+      } else if (lastMsg) {
+        const fallbackType = (lastMsg === "[Image]" || lastMsg === "📷 Photo") ? "image" : "text";
+        chatMessages.push({
+          msg_id: null,
+          from_me: false,
+          text: lastMsg,
+          media_url: "",
+          type: fallbackType,
+          timestamp: Number(c.conversationTimestamp) || Math.floor(Date.now() / 1000),
+        });
+      }
+
+      if (!lastMsg && chatMessages.length === 0) continue;
       processedPhones.add(phone);
 
       const contact = this.contactStore.get(jid) || {};
@@ -1076,7 +1209,10 @@ class WhatsAppSession {
         avatar: avatar,
         unread_count: Number(c.unreadCount) || 0,
         timestamp: ts,
-        last_message: lastMsg,
+        last_message: lastMsg || (chatMessages.length ? chatMessages[chatMessages.length - 1].text : ""),
+        messages: chatMessages,
+        is_sync: true,
+        is_historical: true,
       });
     }
 
@@ -1102,6 +1238,9 @@ class WhatsAppSession {
         unread_count: 0,
         timestamp: Math.floor(Date.now() / 1000),
         last_message: "",
+        messages: [],
+        is_sync: true,
+        is_historical: true,
       });
     }
 
@@ -1118,8 +1257,10 @@ class WhatsAppSession {
 
       for (let i = 0; i < batchPayload.length; i += CHUNK_SIZE) {
         const chunk = batchPayload.slice(i, i + CHUNK_SIZE);
-        this.notify({
+        await this.notify({
           event: "batch_sync",
+          is_sync: true,
+          is_historical: true,
           chats: chunk,
         });
       }
@@ -1143,7 +1284,7 @@ class WhatsAppSession {
         browser: Browsers.macOS("Chrome"),
         enableAutoSessionRecreation: true,
         enableRecentMessageCache: true,
-        syncFullHistory: false,
+        syncFullHistory: true,
         connectTimeoutMs: 60000,
         keepAliveIntervalMs: 30000,
         emitOwnEvents: true,
@@ -1374,7 +1515,7 @@ class WhatsAppSession {
           const body = getMessageText(msg.message);
           let mediaInfo = null;
           try {
-            mediaInfo = await downloadAndSaveMedia(msg, this.sessionId);
+            mediaInfo = await downloadAndSaveMedia(msg, this.sessionId, this.sock);
           } catch (mErr) {
             console.warn(`[WhatsApp Gateway:${this.sessionId}] Error extracting media:`, mErr?.message || mErr);
           }
@@ -1572,158 +1713,164 @@ try {
 } catch (e) {}
 
 function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
-  if (redirectCount > 3) {
-    console.error("[WhatsApp Gateway] CRM Webhook exceeded max redirects (3).");
-    return;
-  }
-  try {
-    let targetUrl = targetOverrideUrl || lastKnownWebhookUrl || process.env.CRM_WEBHOOK_URL || CRM_WEBHOOK_URL;
-    if (!targetUrl) {
-      console.warn("[WhatsApp Gateway] No CRM_WEBHOOK_URL configured for webhook notification.");
-      return;
+  return new Promise((resolve) => {
+    if (redirectCount > 3) {
+      console.error("[WhatsApp Gateway] CRM Webhook exceeded max redirects (3).");
+      return resolve(false);
     }
-
-    // Always canonicalize /webhook.php to /webhook/ to prevent Apache 301/302 redirects
-    targetUrl = targetUrl.replace(/\/webhook\.php(\?|$)/, "/webhook/$1");
-
-    const data = JSON.stringify(payload);
-    const url = new URL(targetUrl);
-    const client = url.protocol === "https:" ? https : http;
-    const defaultPort = url.protocol === "https:" ? 443 : 80;
-
-    // Determine the optimal Host header:
-    // If targetUrl points to 127.0.0.1 or localhost, but we know the actual tenant domain
-    // (from targetOverrideUrl, lastKnownWebhookUrl, or environment), use that domain as the Host header
-    // so Apache name-based VirtualHosts route to the correct CRM tenant instead of the default 404 VirtualHost.
-    let hostHeader = url.host;
-    if (url.hostname === "127.0.0.1" || url.hostname === "localhost") {
-      let resolvedDomain = null;
-      if (lastKnownWebhookUrl) {
-        try {
-          const knownUrl = new URL(lastKnownWebhookUrl);
-          if (knownUrl.hostname !== "127.0.0.1" && knownUrl.hostname !== "localhost") {
-            resolvedDomain = knownUrl.host;
-          }
-        } catch (e) {}
-      }
-      hostHeader = resolvedDomain || (url.hostname === "127.0.0.1" ? "localhost" : url.host);
-    }
-
-    const reqOptions = {
-      hostname: url.hostname,
-      port: url.port || defaultPort,
-      path: url.pathname + url.search,
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Content-Length": Buffer.byteLength(data),
-        "Host": hostHeader,
-        "User-Agent": "WhatsApp-Gateway/1.0",
-      },
-      timeout: 10000,
-      rejectUnauthorized: false,
-    };
-
-    const req = client.request(reqOptions, (res) => {
-      // Follow redirect if 301, 302, 307, 308
-      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        const redirectUrl = new URL(res.headers.location, targetUrl).toString();
-        console.log(`[WhatsApp Gateway] Webhook redirected (${res.statusCode}) to ${redirectUrl}`);
-        return notifyCrm(payload, redirectUrl, redirectCount + 1);
+    try {
+      let targetUrl = targetOverrideUrl || lastKnownWebhookUrl || process.env.CRM_WEBHOOK_URL || CRM_WEBHOOK_URL;
+      if (!targetUrl) {
+        console.warn("[WhatsApp Gateway] No CRM_WEBHOOK_URL configured for webhook notification.");
+        return resolve(false);
       }
 
-      let resBody = "";
-      res.on("data", (chunk) => (resBody += chunk));
-      res.on("end", () => {
-        const rawPhone = payload.phone || payload.from || payload.to || "N/A";
-        const displayContactPhone = formatPhoneOrLid(rawPhone);
+      // Always canonicalize /webhook.php to /webhook/ to prevent Apache 301/302 redirects
+      targetUrl = targetUrl.replace(/\/webhook\.php(\?|$)/, "/webhook/$1");
 
-        if (res.statusCode >= 400) {
-          printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [CRM WEBHOOK ERROR] ${COLOR.RESET}`, [
-            ["Site Domain", hostHeader],
-            ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
-            ["Target Webhook", targetUrl],
-            ["HTTP Status", `${res.statusCode} Error`],
-            ["Contact Phone", displayContactPhone],
-            ["Response", (resBody || "").substring(0, 150)],
-          ], COLOR.YELLOW);
+      const data = JSON.stringify(payload);
+      const url = new URL(targetUrl);
+      const client = url.protocol === "https:" ? https : http;
+      const defaultPort = url.protocol === "https:" ? 443 : 80;
 
-          // If a public domain webhook returns error/404 or fails, fallback to direct loopback (127.0.0.1) with Host header
-          if (url.hostname !== "127.0.0.1" && redirectCount === 0) {
-            const fallbackUrl = `http://127.0.0.1${url.pathname}${url.search}`;
-            return notifyCrm(payload, fallbackUrl, 1);
-          }
-        } else {
-          let parsed = null;
-          try { parsed = JSON.parse(resBody); } catch (e) {}
-
-          if (parsed && parsed.resolved_phone) {
-            const cleanResolved = "+" + String(parsed.resolved_phone).replace(/[^0-9]/g, "");
-            const sid = payload.session_id;
-            const targetSess = sid ? sessions.get(sid) : null;
-            if (targetSess) {
-              if (payload.lid) {
-                targetSess.lidPhoneMap.set(payload.lid, cleanResolved);
-                const dec = jidDecode(payload.lid);
-                if (dec?.user) {
-                  targetSess.lidPhoneMap.set(dec.user, cleanResolved);
-                  targetSess.lidPhoneMap.set(`${dec.user}@lid`, cleanResolved);
-                  targetSess.lidPhoneMap.set(`+${dec.user}`, cleanResolved);
-                }
-              }
-              const rawDigits = String(rawPhone).replace(/[^0-9]/g, "");
-              if (rawDigits.length >= 14) {
-                targetSess.lidPhoneMap.set(rawDigits, cleanResolved);
-                targetSess.lidPhoneMap.set(`+${rawDigits}`, cleanResolved);
-                targetSess.lidPhoneMap.set(`${rawDigits}@lid`, cleanResolved);
-              }
-              targetSess.saveStore();
+      // Determine the optimal Host header:
+      // If targetUrl points to 127.0.0.1 or localhost, but we know the actual tenant domain
+      // (from targetOverrideUrl, lastKnownWebhookUrl, or environment), use that domain as the Host header
+      // so Apache name-based VirtualHosts route to the correct CRM tenant instead of the default 404 VirtualHost.
+      let hostHeader = url.host;
+      if (url.hostname === "127.0.0.1" || url.hostname === "localhost") {
+        let resolvedDomain = null;
+        if (lastKnownWebhookUrl) {
+          try {
+            const knownUrl = new URL(lastKnownWebhookUrl);
+            if (knownUrl.hostname !== "127.0.0.1" && knownUrl.hostname !== "localhost") {
+              resolvedDomain = knownUrl.host;
             }
-          }
-
-          if (parsed && parsed.status === "error") {
-            printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [CRM WEBHOOK REJECTED] ${COLOR.RESET}`, [
-              ["Site Domain", hostHeader],
-              ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
-              ["Target Webhook", targetUrl],
-              ["Status", "Rejected by CRM API"],
-              ["Error Detail", parsed.msg || "Unknown error"],
-              ["Contact Phone", displayContactPhone],
-              ["Message ID", payload.msg_id || "N/A"],
-            ], COLOR.YELLOW);
-          } else {
-            printCardLog(`${COLOR.BG_CYAN}${COLOR.BOLD} [CRM WEBHOOK DELIVERED] ${COLOR.RESET}`, [
-              ["Site Domain", hostHeader],
-              ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
-              ["Target Webhook", targetUrl],
-              ["HTTP Status", `${res.statusCode} OK (Delivered)`],
-              ["Contact Phone", displayContactPhone],
-              ["Message ID", payload.msg_id || "N/A"],
-            ], COLOR.CYAN);
-          }
+          } catch (e) {}
         }
-      });
-    });
-
-    req.on("error", (e) => {
-      printCardLog(`${COLOR.BG_RED}${COLOR.BOLD} [CRM WEBHOOK CONNECTION FAILED] ${COLOR.RESET}`, [
-        ["Site Domain", hostHeader],
-        ["Target Webhook", targetUrl],
-        ["Error", e.message],
-      ], COLOR.RED);
-
-      // If connection to public URL failed (e.g. DNS / NAT loopback failure / Cloudflare timeout), fallback to 127.0.0.1 with Host header
-      if (url.hostname !== "127.0.0.1" && redirectCount === 0) {
-        const fallbackUrl = `http://127.0.0.1${url.pathname}${url.search}`;
-        return notifyCrm(payload, fallbackUrl, 1);
+        hostHeader = resolvedDomain || (url.hostname === "127.0.0.1" ? "localhost" : url.host);
       }
-    });
 
-    req.write(data);
-    req.end();
-  } catch (e) {
-    console.error("[WhatsApp Gateway] Error building CRM webhook request:", e.message);
-  }
+      const reqOptions = {
+        hostname: url.hostname,
+        port: url.port || defaultPort,
+        path: url.pathname + url.search,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(data),
+          "Host": hostHeader,
+          "User-Agent": "WhatsApp-Gateway/1.0",
+        },
+        timeout: 10000,
+        rejectUnauthorized: false,
+      };
+
+      const req = client.request(reqOptions, (res) => {
+        // Follow redirect if 301, 302, 307, 308
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          const redirectUrl = new URL(res.headers.location, targetUrl).toString();
+          console.log(`[WhatsApp Gateway] Webhook redirected (${res.statusCode}) to ${redirectUrl}`);
+          return resolve(notifyCrm(payload, redirectUrl, redirectCount + 1));
+        }
+
+        let resBody = "";
+        res.on("data", (chunk) => (resBody += chunk));
+        res.on("end", () => {
+          const rawPhone = payload.phone || payload.from || payload.to || "N/A";
+          const displayContactPhone = formatPhoneOrLid(rawPhone);
+
+          if (res.statusCode >= 400) {
+            printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [CRM WEBHOOK ERROR] ${COLOR.RESET}`, [
+              ["Site Domain", hostHeader],
+              ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
+              ["Target Webhook", targetUrl],
+              ["HTTP Status", `${res.statusCode} Error`],
+              ["Contact Phone", displayContactPhone],
+              ["Response", (resBody || "").substring(0, 150)],
+            ], COLOR.YELLOW);
+
+            // If a public domain webhook returns error/404 or fails, fallback to direct loopback (127.0.0.1) with Host header
+            if (url.hostname !== "127.0.0.1" && redirectCount === 0) {
+              const fallbackUrl = `http://127.0.0.1${url.pathname}${url.search}`;
+              return resolve(notifyCrm(payload, fallbackUrl, 1));
+            }
+            resolve(false);
+          } else {
+            let parsed = null;
+            try { parsed = JSON.parse(resBody); } catch (e) {}
+
+            if (parsed && parsed.resolved_phone) {
+              const cleanResolved = "+" + String(parsed.resolved_phone).replace(/[^0-9]/g, "");
+              const sid = payload.session_id;
+              const targetSess = sid ? sessions.get(sid) : null;
+              if (targetSess) {
+                if (payload.lid) {
+                  targetSess.lidPhoneMap.set(payload.lid, cleanResolved);
+                  const dec = jidDecode(payload.lid);
+                  if (dec?.user) {
+                    targetSess.lidPhoneMap.set(dec.user, cleanResolved);
+                    targetSess.lidPhoneMap.set(`${dec.user}@lid`, cleanResolved);
+                    targetSess.lidPhoneMap.set(`+${dec.user}`, cleanResolved);
+                  }
+                }
+                const rawDigits = String(rawPhone).replace(/[^0-9]/g, "");
+                if (rawDigits.length >= 14) {
+                  targetSess.lidPhoneMap.set(rawDigits, cleanResolved);
+                  targetSess.lidPhoneMap.set(`+${rawDigits}`, cleanResolved);
+                  targetSess.lidPhoneMap.set(`${rawDigits}@lid`, cleanResolved);
+                }
+                targetSess.saveStore();
+              }
+            }
+
+            if (parsed && parsed.status === "error") {
+              printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [CRM WEBHOOK REJECTED] ${COLOR.RESET}`, [
+                ["Site Domain", hostHeader],
+                ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
+                ["Target Webhook", targetUrl],
+                ["Status", "Rejected by CRM API"],
+                ["Error Detail", parsed.msg || "Unknown error"],
+                ["Contact Phone", displayContactPhone],
+                ["Message ID", payload.msg_id || "N/A"],
+              ], COLOR.YELLOW);
+            } else {
+              printCardLog(`${COLOR.BG_CYAN}${COLOR.BOLD} [CRM WEBHOOK DELIVERED] ${COLOR.RESET}`, [
+                ["Site Domain", hostHeader],
+                ["Event", `${payload.event || 'message'} (${payload.direction || 'event'})`],
+                ["Target Webhook", targetUrl],
+                ["HTTP Status", `${res.statusCode} OK (Delivered)`],
+                ["Contact Phone", displayContactPhone],
+                ["Message ID", payload.msg_id || "N/A"],
+              ], COLOR.CYAN);
+            }
+            resolve(true);
+          }
+        });
+      });
+
+      req.on("error", (e) => {
+        printCardLog(`${COLOR.BG_RED}${COLOR.BOLD} [CRM WEBHOOK CONNECTION FAILED] ${COLOR.RESET}`, [
+          ["Site Domain", hostHeader],
+          ["Target Webhook", targetUrl],
+          ["Error", e.message],
+        ], COLOR.RED);
+
+        // If connection to public URL failed (e.g. DNS / NAT loopback failure / Cloudflare timeout), fallback to 127.0.0.1 with Host header
+        if (url.hostname !== "127.0.0.1" && redirectCount === 0) {
+          const fallbackUrl = `http://127.0.0.1${url.pathname}${url.search}`;
+          return resolve(notifyCrm(payload, fallbackUrl, 1));
+        }
+        resolve(false);
+      });
+
+      req.write(data);
+      req.end();
+    } catch (e) {
+      console.error("[WhatsApp Gateway] Error building CRM webhook request:", e.message);
+      resolve(false);
+    }
+  });
 }
 
 // -----------------------------------------------------------------------------
@@ -1972,6 +2119,14 @@ app.post("/send-message", async (req, res) => {
     s = getSession("default", req);
   }
 
+  if (s && s.connectionStatus !== "connected" && fs.existsSync(path.join(s.authDir, "creds.json"))) {
+    let waitCount = 0;
+    while (s.connectionStatus !== "connected" && waitCount < 10) {
+      await new Promise(r => setTimeout(r, 500));
+      waitCount++;
+    }
+  }
+
   if (s.connectionStatus !== "connected" || !s.sock) {
     return res.status(400).json({
       status: "error",
@@ -2050,7 +2205,9 @@ app.post("/send-message", async (req, res) => {
     } catch (e) {}
 
     let sendContent;
-    if (media) {
+    if (type === "text") {
+      sendContent = { text: message || "" };
+    } else if (media) {
       let mediaBuffer = null;
       let mediaMime = "image/jpeg";
       if (typeof media === "string" && media.startsWith("/upload/")) {
@@ -2234,6 +2391,67 @@ app.all("/sync-chats", async (req, res) => {
     user: s.connectedUser,
     message: `Synchronized ${synced} conversations to CRM.`
   });
+});
+
+// Endpoint to retry downloading media on-demand using active socket
+app.all("/retry-media", async (req, res) => {
+  const reqSid = req.body?.session_id || req.query?.session_id;
+  const requestedMsgId = req.body?.msg_id || req.query?.msg_id || null;
+  let targetSessions = [];
+  if (reqSid) {
+    const s = getSession(reqSid, req);
+    if (s && s.connectionStatus === "connected") targetSessions.push(s);
+  }
+  if (targetSessions.length === 0) {
+    for (const sess of sessions.values()) {
+      if (sess.connectionStatus === "connected") {
+        targetSessions.push(sess);
+      }
+    }
+  }
+
+  if (targetSessions.length === 0) {
+    return res.status(400).json({ status: "error", message: "No WhatsApp sessions connected." });
+  }
+
+  const results = [];
+  for (const s of targetSessions) {
+    if (!s.sock) continue;
+    for (const [jid, c] of s.chatStore.entries()) {
+      if (!Array.isArray(c.messages)) continue;
+      for (const item of c.messages) {
+        const realMsg = (item.message && item.message.key) ? item.message : item;
+        const msgId = realMsg.key?.id || item.msg_id;
+        if (!msgId) continue;
+        if (requestedMsgId && msgId !== requestedMsgId) continue;
+
+        const rawMsg = realMsg.message || realMsg;
+        if (rawMsg.imageMessage || rawMsg.videoMessage || rawMsg.documentMessage || rawMsg.audioMessage || rawMsg.stickerMessage) {
+          console.log(`[WhatsApp Gateway:${s.sessionId}] Retrying media download for msg ${msgId} in JID ${jid}...`);
+          try {
+            const dl = await downloadAndSaveMedia(realMsg, s.sessionId, s.sock);
+            if (dl && dl.url) {
+              results.push({ msgId, jid, url: dl.url, type: dl.type });
+              s.notify({
+                event: "media_downloaded",
+                msg_id: msgId,
+                media_url: dl.url,
+                type: dl.type,
+                phone: s.getPhoneNumber(jid),
+                session_id: s.sessionId
+              });
+            } else {
+              results.push({ msgId, jid, status: "null_result" });
+            }
+          } catch (err) {
+            results.push({ msgId, jid, error: err.message });
+          }
+        }
+      }
+    }
+  }
+
+  res.json({ status: "success", count: results.length, results });
 });
 
 // 3c. Repair broken Signal ratchets (deletes poisoned session-*.json while keeping creds.json intact)

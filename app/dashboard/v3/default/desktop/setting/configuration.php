@@ -73,9 +73,38 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-comment-alt input-icon"></i>
-                                    <select id="configSiteLang" name="site_lang" class="v3-form-select" required>
+                                    <select id="configSiteLang" name="site_lang" class="v3-form-select selectJS" required>
                                         <option value="en">English (en)</option>
                                         <option value="hi_IN">Hindi (हिंदी - hi_IN)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Website Timezone -->
+                            <div class="v3-form-group span-2">
+                                <label for="configSiteTimezone" class="v3-form-label">
+                                    Website Time Zone <span class="required">*</span>
+                                </label>
+                                <div class="v3-input-icon-wrap">
+                                    <i class="fi fi-rr-clock input-icon"></i>
+                                    <select id="configSiteTimezone" name="site_timezone" class="v3-form-select selectJS" required>
+                                        <option value="Asia/Kolkata">Asia/Kolkata (IST - UTC+05:30) - India Standard Time</option>
+                                        <option value="UTC">UTC (Coordinated Universal Time - UTC+00:00)</option>
+                                        <option value="Asia/Dubai">Asia/Dubai (GST - UTC+04:00) - UAE, Gulf</option>
+                                        <option value="Asia/Singapore">Asia/Singapore (SGT - UTC+08:00) - Singapore</option>
+                                        <option value="Asia/Kathmandu">Asia/Kathmandu (NPT - UTC+05:45) - Nepal</option>
+                                        <option value="Asia/Dhaka">Asia/Dhaka (BST - UTC+06:00) - Bangladesh</option>
+                                        <option value="Asia/Bangkok">Asia/Bangkok (ICT - UTC+07:00) - Thailand, Indochina</option>
+                                        <option value="Asia/Tokyo">Asia/Tokyo (JST - UTC+09:00) - Japan</option>
+                                        <option value="Europe/London">Europe/London (GMT/BST - UTC+00:00 / UTC+01:00) - UK</option>
+                                        <option value="Europe/Paris">Europe/Paris (CET/CEST - UTC+01:00 / UTC+02:00) - Central Europe</option>
+                                        <option value="Europe/Berlin">Europe/Berlin (CET/CEST - UTC+01:00 / UTC+02:00) - Germany</option>
+                                        <option value="America/New_York">America/New_York (EST/EDT - UTC-05:00) - US Eastern</option>
+                                        <option value="America/Chicago">America/Chicago (CST/CDT - UTC-06:00) - US Central</option>
+                                        <option value="America/Denver">America/Denver (MST/MDT - UTC-07:00) - US Mountain</option>
+                                        <option value="America/Los_Angeles">America/Los_Angeles (PST/PDT - UTC-08:00) - US Pacific</option>
+                                        <option value="America/Toronto">America/Toronto (EST/EDT - UTC-05:00) - Canada Eastern</option>
+                                        <option value="Australia/Sydney">Australia/Sydney (AEST/AEDT - UTC+10:00 / UTC+11:00) - Sydney</option>
                                     </select>
                                 </div>
                             </div>

@@ -92,7 +92,6 @@
         self.selectedDeviceId = devId || "all";
         $(".wa-device-tab, .wa-device-rail-item").removeClass("active");
         $(this).addClass("active");
-        self.updateActiveDeviceChip();
         self.updateHeaderStatusBadge();
         self.lastThreadsHtml = null;
         self.loadThreads();
@@ -144,14 +143,17 @@
       });
 
       // Copy Active Phone Number
-      $(document).on("click", "#btnCopyActivePhone", function () {
-        const phone = self.activePhone || $("#waActivePhone").text().trim();
+      $(document).on("click", ".btn-wa-copy-phone, #btnCopyActivePhone, #btnCopyActivePhoneName", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const phone = self.activePhone || $("#waActivePhone").text().trim() || $("#waActiveName").text().trim();
         if (!phone) return;
         const $btn = $(this);
+        const originalHtml = $btn.html();
         const copySuccess = function () {
           $btn.html('<i class="fi fi-rr-check" style="color:#10B981;"></i>');
           setTimeout(function () {
-            $btn.html('<i class="fi fi-rr-copy"></i>');
+            $btn.html(originalHtml);
           }, 1800);
         };
 
@@ -275,28 +277,82 @@
         }
       });
 
+      // Click to retry loading photo for historical/pending media
+      $(document).on("click", ".wa-media-photo-card[data-retry-wa-id]", function () {
+        const $card = $(this);
+        const waId = $card.attr("data-retry-wa-id");
+        if (!waId || $card.hasClass("is-loading")) return;
+        $card.addClass("is-loading");
+        $card.find(".wa-media-photo-desc").text("Downloading photo...");
+        $.ajax({
+          url: self.config.messagesApi + "?action=retry_media&msg_id=" + encodeURIComponent(waId),
+          type: "GET",
+          timeout: 10000,
+          complete: function () {
+            setTimeout(function () {
+              self.loadMessages(self.activeChatId, false);
+            }, 1200);
+          }
+        });
+      });
+
       // Refresh active chat (delegated)
       $(document).on("click", "#btnRefreshActiveChat", function () {
-        if (self.activeChatId) {
-          self.loadMessages(self.activeChatId, false);
+        if (!self.activeChatId) return;
+        const $btn = $(this);
+        const $icon = $btn.find("i");
+        $icon.addClass("wa-spin");
+        $btn.prop("disabled", true);
+
+        // Abort existing message request and reset lock guard
+        if (self.currentMessagesXhr) {
+          try { self.currentMessagesXhr.abort(); } catch (e) {}
+          self.currentMessagesXhr = null;
         }
+        self.isLoadingMessages = false;
+        self.lastStreamHtml = "";
+
+        self.loadMessages(self.activeChatId, false, function () {
+          $icon.removeClass("wa-spin");
+          $btn.prop("disabled", false);
+        });
+        self.loadThreads();
       });
 
       // Sync chats from WhatsApp into inbox (delegated)
       $(document).on("click", "#btnSyncChatsInbox", function () {
         const $btn = $(this);
-        $btn.prop("disabled", true).find("i").addClass("wa-spin");
+        const $icon = $btn.find("i");
+        $icon.addClass("wa-spin");
+        $btn.prop("disabled", true);
+
+        let syncUrl = "/api/v3/whatsapp/chats/?action=sync";
+        if (self.selectedDeviceId && self.selectedDeviceId !== "all") {
+          syncUrl += "&device_id=" + encodeURIComponent(self.selectedDeviceId);
+        }
+
         $.ajax({
-          url: "/api/v3/whatsapp/chats/?action=sync",
+          url: syncUrl,
           method: "GET",
           dataType: "json",
+          timeout: 30000,
           success: function (res) {
-            $btn.prop("disabled", false).find("i").removeClass("wa-spin");
             self.loadThreads();
+            if (self.activeChatId) {
+              self.lastStreamHtml = "";
+              self.loadMessages(self.activeChatId, false);
+            }
           },
           error: function () {
-            $btn.prop("disabled", false).find("i").removeClass("wa-spin");
             self.loadThreads();
+            if (self.activeChatId) {
+              self.lastStreamHtml = "";
+              self.loadMessages(self.activeChatId, false);
+            }
+          },
+          complete: function () {
+            $icon.removeClass("wa-spin");
+            $btn.prop("disabled", false);
           }
         });
       });
@@ -363,7 +419,6 @@
       if (!devices.length) {
         if ($rail.length) $rail.addClass("d-none").hide();
         if ($workspace.length) $workspace.removeClass("has-devices-rail");
-        self.updateActiveDeviceChip();
         return;
       }
 
@@ -435,7 +490,6 @@
       if ($list.length && $list.data("last-html") !== html) {
         $list.html(html).data("last-html", html);
       }
-      self.updateActiveDeviceChip();
 
       // Populate New Chat Modal device options (Admin only when multiple devices exist)
       const $modalSelect = $("#newChatDeviceSelect");
@@ -465,32 +519,6 @@
           }
         } else {
           $modalGroup.addClass("d-none").hide();
-        }
-      }
-    },
-
-    updateActiveDeviceChip: function () {
-      const self = this;
-      const $chip = $("#waActiveDeviceChip");
-      const $chipText = $("#waActiveDeviceChipText");
-      if (!$chip.length || !$chipText.length) return;
-
-      const devices = self.availableDevices || [];
-      if (!devices.length) {
-        $chip.addClass("d-none").hide();
-        return;
-      }
-
-      $chip.removeClass("d-none").show();
-      if (!self.selectedDeviceId || self.selectedDeviceId === "all") {
-        $chipText.text(`All Lines (${devices.length})`);
-      } else {
-        const curDev = devices.find(function (d) { return String(d.device_id) === String(self.selectedDeviceId); });
-        if (curDev) {
-          const agentPart = curDev.assigned_agent_name && curDev.assigned_agent_name !== "Unassigned" ? ` • ${curDev.assigned_agent_name}` : "";
-          $chipText.text(`${curDev.phone || curDev.name || "Line"}${agentPart}`);
-        } else {
-          $chipText.text("Selected Line");
         }
       }
     },
@@ -531,7 +559,6 @@
           $text.text("Device Online");
         }
       }
-      this.updateActiveDeviceChip();
     },
 
     updateDeviceLinkedUI: function (isLinked, phone, msg, hasAssignedDevice, isAdmin) {
@@ -705,29 +732,49 @@
             if (isActive && String(self.activeChatId) !== String(chat.chat_id)) {
               self.activeChatId = chat.chat_id;
             }
-            const hasLead = !!chat.lead;
+            const initials = self.getInitials(chat.name);
             const avatarContent = chat.avatar
               ? `<img src="${self.escapeHtml(chat.avatar)}" alt="" class="wa-avatar-img" />`
-              : self.getInitials(chat.name || chat.phone);
+              : (initials || '<i class="fi fi-rr-user"></i>');
 
             const displayName = chat.name || chat.phone;
-            const hasDistinctName = chat.name && chat.name !== chat.phone && !chat.name.includes(chat.phone);
+            const phone = chat.phone || "";
+            const cleanPhoneDigits = self.cleanDigits(phone);
+            const cleanNameDigits = self.cleanDigits(displayName);
+            const hasDistinctName = displayName && phone && cleanNameDigits !== cleanPhoneDigits && !displayName.startsWith("+");
 
             const devInfo = chat.device || {};
             const devPhone = devInfo.phone || "";
-            const devName = devInfo.name || "";
-            const agName = (devInfo.agent_name && devInfo.agent_name !== "Unassigned") ? devInfo.agent_name : "";
-            const devLabel = devName && devName !== "WhatsApp Line" ? `${devName} (${devPhone})` : devPhone;
+            const agName = (devInfo.agent_name && devInfo.agent_name !== "Unassigned" && devInfo.agent_name !== "Unassigned Agent") ? devInfo.agent_name : "";
+
+            // User requirement: "For label just show Default Line No. or Assinged agent name."
+            let badgeText = "";
+            let badgeIcon = "fi-rr-smartphone";
+            let badgeClass = "wa-tag-device";
+            let badgeTitle = "";
+
+            if (agName) {
+              badgeText = agName;
+              badgeIcon = "fi-rr-user";
+              badgeClass = "wa-tag-agent";
+              badgeTitle = "Assigned Agent: " + agName;
+            } else if (devPhone) {
+              badgeText = devPhone;
+              badgeIcon = "fi-rr-smartphone";
+              badgeClass = "wa-tag-device";
+              badgeTitle = "Line: " + devPhone;
+            }
 
             let deviceTagHtml = "";
-            if (devLabel || agName) {
+            if (badgeText) {
               deviceTagHtml = `
                 <div class="wa-thread-device-tag">
-                  ${devLabel ? `<span class="wa-tag-device" title="WhatsApp Device / Line"><i class="fi fi-rr-smartphone"></i> ${self.escapeHtml(devLabel)}</span>` : ""}
-                  ${agName ? `<span class="wa-tag-agent" title="Handling Sales Agent"><i class="fi fi-rr-user"></i> ${self.escapeHtml(agName)}</span>` : ""}
+                  <span class="${badgeClass}" title="${self.escapeHtml(badgeTitle)}"><i class="fi ${badgeIcon}"></i> ${self.escapeHtml(badgeText)}</span>
                 </div>
               `;
             }
+
+            const hasLead = !!(chat.lead && chat.lead.id);
 
             html += `
               <div class="wa-thread-item ${isActive ? "active" : ""}" data-chat-id="${chat.chat_id}" data-phone="${self.escapeHtml(chat.phone)}">
@@ -780,6 +827,15 @@
     },
 
     selectChat: function (chatId, phone) {
+      if (!chatId) return;
+
+      // Abort any in-flight messages request from previous chat
+      if (this.currentMessagesXhr && typeof this.currentMessagesXhr.abort === "function") {
+        try { this.currentMessagesXhr.abort(); } catch (e) {}
+        this.currentMessagesXhr = null;
+      }
+      this.isLoadingMessages = false;
+
       this.activeChatId = chatId;
       this.activePhone = phone;
       this.lastStreamHtml = null;
@@ -792,6 +848,9 @@
       $("#waEmptyState").hide();
       $("#waActiveChatWrapper").addClass("is-open");
       $("#waChatWorkspace").addClass("mobile-chat-open");
+
+      // Clear stream immediately so previous chat messages never linger
+      $("#waMessagesStream").html('<div class="wa-loading-threads"><i class="fi fi-rr-spinner wa-spin"></i><span>Loading conversation...</span></div>');
 
       this.loadMessages(chatId, true);
     },
@@ -808,49 +867,87 @@
       }
       this.isLoadingMessages = true;
 
-      $.ajax({
+      this.currentMessagesXhr = $.ajax({
         url: "/api/v3/whatsapp/messages/?chat_id=" + chatId,
         method: "GET",
         dataType: "json",
         success: function (res) {
+          // Strictly ensure user has not switched to another chat while request was in-flight
+          if (String(self.activeChatId) !== String(chatId)) {
+            return;
+          }
           if (!res || res.status !== "success") return;
+          if (res.chat && String(res.chat.chat_id) !== String(self.activeChatId)) {
+            return;
+          }
 
           const chat = res.chat;
           if (chat) {
-            $("#waActiveName").text(chat.chat_name || chat.chat_phone);
-            $("#waActivePhone").text(chat.chat_phone);
-            if (chat.chat_avatar) {
-              $("#waActiveAvatar").html(`<img src="${self.escapeHtml(chat.chat_avatar)}" alt="" class="wa-avatar-img" />`);
+            const phone = (chat.chat_phone || "").trim();
+            let rawName = (chat.chat_name || "").trim();
+            if (rawName.startsWith("WhatsApp (")) {
+              rawName = "";
+            }
+            const pushName = (chat.chat_pushname || "").trim();
+            const leadName = (chat.enquiry_name || "").trim();
+            const displayName = leadName || rawName || pushName || "";
+            const cleanPhoneDigits = self.cleanDigits(phone);
+            const cleanNameDigits = self.cleanDigits(displayName);
+            const isNameReal = displayName && cleanNameDigits !== cleanPhoneDigits && !displayName.startsWith("+");
+
+            if (isNameReal) {
+              $("#waActiveName").text(displayName);
+              $("#waActivePhone").text(phone);
+              $("#waActivePhoneWrap").removeClass("d-none").show();
+              $("#btnCopyActivePhoneName").addClass("d-none").hide();
             } else {
-              $("#waActiveAvatar").text(self.getInitials(chat.chat_name || chat.chat_phone));
+              $("#waActiveName").text(phone || "WhatsApp Contact");
+              $("#waActivePhoneWrap").addClass("d-none").hide();
+              if (phone) {
+                $("#btnCopyActivePhoneName").removeClass("d-none").show();
+              } else {
+                $("#btnCopyActivePhoneName").addClass("d-none").hide();
+              }
+            }
+
+            if (chat.chat_avatar) {
+              $("#waActiveAvatar").removeClass("is-fallback").html(`<img src="${self.escapeHtml(chat.chat_avatar)}" alt="" class="wa-avatar-img" />`);
+            } else if (isNameReal) {
+              const initials = self.getInitials(displayName);
+              $("#waActiveAvatar").removeClass("is-fallback").html(`<span>${self.escapeHtml(initials)}</span>`);
+            } else {
+              $("#waActiveAvatar").addClass("is-fallback").html('<i class="fi fi-rr-user"></i>');
             }
 
             if (chat.chat_lead_id) {
-              $("#waActiveLeadBadge").show();
-              $("#waActiveLeadText").text("Lead #" + chat.chat_lead_id + (chat.enquiry_name ? " (" + chat.enquiry_name + ")" : ""));
-              $("#waViewLeadLink").attr("href", "/dashboard/leads/view/?id=" + btoa(chat.chat_lead_id)).show();
+              $("#waActiveLeadBadge").removeClass("d-none").show().attr("title", "CRM Lead #" + chat.chat_lead_id + (chat.enquiry_name ? " (" + chat.enquiry_name + ")" : ""));
+              $("#waActiveLeadText").text("Lead #" + chat.chat_lead_id);
+              $("#waViewLeadLink").attr("href", "/dashboard/leads/view/?id=" + btoa(chat.chat_lead_id)).removeClass("d-none").show();
             } else {
-              $("#waActiveLeadBadge").hide();
-              $("#waViewLeadLink").hide();
+              $("#waActiveLeadBadge").addClass("d-none").hide();
+              $("#waViewLeadLink").addClass("d-none").hide();
             }
 
             if (chat.device && (chat.device.phone || chat.device.name || chat.device.agent_name)) {
-              const devLine = chat.device.name && chat.device.name !== "WhatsApp Line"
-                ? `${chat.device.name} (${chat.device.phone || ""})`
-                : (chat.device.phone || "");
-              const agName = (chat.device.agent_name && chat.device.agent_name !== "Unassigned")
+              const devPhone = chat.device.phone || "";
+              const agName = (chat.device.agent_name && chat.device.agent_name !== "Unassigned" && chat.device.agent_name !== "Unassigned Agent")
                 ? chat.device.agent_name
                 : "";
+
+              // For label just show Default Line No. or Assigned agent name
+              const badgeText = agName || devPhone;
+              const badgeIcon = agName ? "fi-rr-user" : "fi-rr-smartphone";
+              const badgeTitle = agName ? "Assigned Agent: " + agName : "Line: " + devPhone;
+
               let badgeHtml = "";
-              if (devLine && agName) {
-                badgeHtml = `<i class="fi fi-rr-smartphone"></i> Line: <strong>${self.escapeHtml(devLine)}</strong> <span class="wa-badge-sep">•</span> <i class="fi fi-rr-user"></i> Agent: <strong>${self.escapeHtml(agName)}</strong>`;
-              } else if (devLine) {
-                badgeHtml = `<i class="fi fi-rr-smartphone"></i> Line: <strong>${self.escapeHtml(devLine)}</strong>`;
-              } else if (agName) {
-                badgeHtml = `<i class="fi fi-rr-user"></i> Agent: <strong>${self.escapeHtml(agName)}</strong>`;
-              }
-              if (badgeHtml) {
-                $("#waActiveDeviceBadge").html(badgeHtml).removeClass("d-none").show();
+              if (badgeText) {
+                badgeHtml = `
+                  <div class="wa-line-pill-icon"><i class="fi ${badgeIcon}"></i></div>
+                  <div class="wa-line-pill-content">
+                    <span class="wa-line-pill-name" title="${self.escapeHtml(badgeTitle)}">${self.escapeHtml(badgeText)}</span>
+                  </div>
+                `;
+                $("#waActiveDeviceBadge").html(badgeHtml).attr("title", badgeTitle).removeClass("d-none").show();
               } else {
                 $("#waActiveDeviceBadge").addClass("d-none").hide();
               }
@@ -881,7 +978,14 @@
               }
             } else {
               if (msg.text === "[Image]" || msg.text === "[Photo]" || msg.type === "image") {
-                contentHtml += `<div class="wa-media-photo-card"><i class="fi fi-rr-picture"></i><span>Photo</span></div>`;
+                contentHtml += `
+                  <div class="wa-media-photo-card" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}" title="Click to retry loading photo">
+                    <div class="wa-media-photo-icon"><i class="fi fi-rr-picture"></i></div>
+                    <div class="wa-media-photo-meta">
+                      <span class="wa-media-photo-title">Photo</span>
+                      <span class="wa-media-photo-desc">Click to load photo</span>
+                    </div>
+                  </div>`;
               } else if (msg.text) {
                 contentHtml += `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
               } else {
@@ -890,7 +994,7 @@
             }
 
             html += `
-              <div class="wa-msg-bubble ${isOut ? "outgoing" : "incoming"}">
+              <div class="wa-msg-bubble ${isOut ? "outgoing" : "incoming"}" data-id="${msg.id}" data-wa-id="${self.escapeHtml(msg.wa_id || '')}">
                 ${contentHtml}
                 <div class="wa-msg-meta">
                   <span>${self.escapeHtml(msg.time)}</span>
@@ -923,6 +1027,7 @@
           }
         },
         complete: function () {
+          self.currentMessagesXhr = null;
           self.isLoadingMessages = false;
           if (typeof callback === "function") {
             callback();
@@ -1131,12 +1236,16 @@
     },
 
     getInitials: function (str) {
-      if (!str) return "WA";
-      const parts = str.trim().split(/\s+/);
-      if (parts.length >= 2) {
+      if (!str) return "";
+      const clean = String(str).trim();
+      if (!/[a-zA-Z]/.test(clean)) {
+        return "";
+      }
+      const parts = clean.split(/\s+/).filter(Boolean);
+      if (parts.length >= 2 && parts[0] && parts[1]) {
         return (parts[0][0] + parts[1][0]).toUpperCase();
       }
-      return str.substring(0, 2).toUpperCase();
+      return clean.substring(0, 2).toUpperCase();
     },
 
     escapeHtml: function (str) {
