@@ -5344,8 +5344,12 @@ $(document).ready(function (e) {
               cancelButtonText: "Dismiss"
             }).then(function (result) {
               if (result.value || result.isConfirmed) {
-                window.location.href = "/dashboard/leads/view/?id=" + topAlert.encoded_id;
-              }
+    window.open(
+        "/dashboard/leads/view/?id=" + topAlert.encoded_id,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
             });
           } else {
             const customerNames = unalerted
