@@ -117,6 +117,18 @@ function initWhatsAppDatabase($connection) {
         }
     } catch (Throwable $e) {}
 
+    // Safely add device_error_reason and device_disconnected_at columns if not present
+    try {
+        $colErr = @mysqli_query($connection, "SHOW COLUMNS FROM " . $prefix . "whatsapp_device LIKE 'device_error_reason'");
+        if ($colErr && mysqli_num_rows($colErr) === 0) {
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_device ADD COLUMN device_error_reason VARCHAR(255) DEFAULT NULL AFTER device_status");
+        }
+        $colDisc = @mysqli_query($connection, "SHOW COLUMNS FROM " . $prefix . "whatsapp_device LIKE 'device_disconnected_at'");
+        if ($colDisc && mysqli_num_rows($colDisc) === 0) {
+            @mysqli_query($connection, "ALTER TABLE " . $prefix . "whatsapp_device ADD COLUMN device_disconnected_at DATETIME DEFAULT NULL AFTER device_error_reason");
+        }
+    } catch (Throwable $e) {}
+
     $initialized = true;
     return true;
 }

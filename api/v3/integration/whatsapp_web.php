@@ -136,7 +136,8 @@ $configKeys = [
     'whatsapp_web_gateway_url',
     'whatsapp_web_last_sync',
     'whatsapp_device_limit',
-    'whatsapp_default_device_id'
+    'whatsapp_default_device_id',
+    'whatsapp_disconnect_alert'
 ];
 
 function getWaWebConfigs($connection, $siteId, $keys) {
@@ -278,8 +279,10 @@ if ($action === 'get_devices' || $action === 'devices') {
                 $sess = $gDev['session_id'] ?? '';
                 if (in_array($sess, $siteSessionIds, true)) {
                     $escSess = mysqli_real_escape_string($connection, $sess);
-                    $stat = ($gDev['is_connected'] || ($gDev['connection_status'] ?? '') === 'connected' || !empty($gDev['is_linked'])) ? 'connected' : (!empty($gDev['has_qr']) ? 'qr_ready' : 'disconnected');
-                    $ph   = mysqli_real_escape_string($connection, $gDev['user']['phone'] ?? '');
+                    $isConn = !empty($gDev['is_connected']) || ($gDev['connection_status'] ?? '') === 'connected';
+                    $hasQr  = !empty($gDev['has_qr']) || ($gDev['connection_status'] ?? '') === 'qr_ready';
+                    $stat   = $isConn ? 'connected' : ($hasQr ? 'qr_ready' : 'disconnected');
+                    $ph     = mysqli_real_escape_string($connection, $gDev['user']['phone'] ?? '');
                     $nm   = mysqli_real_escape_string($connection, $gDev['user']['name'] ?? 'WhatsApp Device');
                     $sync = !empty($gDev['last_sync']) ? date('Y-m-d H:i:s', strtotime($gDev['last_sync'])) : date('Y-m-d H:i:s');
 
@@ -387,7 +390,20 @@ if ($action === 'get_devices' || $action === 'devices') {
         ] : null,
         'devices'             => $devices,
         'agents'              => $agents,
+        'disconnect_alert'    => !empty($configs['whatsapp_disconnect_alert']) ? json_decode($configs['whatsapp_disconnect_alert'], true) : null,
         'is_active'           => $configs['enable_whatsapp_web_api'] === '1'
+    ]);
+    exit;
+}
+
+// --------------------------------------------------------------------------
+// 1.5 ACTION: Dismiss WhatsApp Disconnection Alert
+// --------------------------------------------------------------------------
+if ($action === 'dismiss_disconnect_alert') {
+    mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_disconnect_alert'");
+    echo json_encode([
+        'status' => 'success',
+        'msg'    => 'WhatsApp disconnection alert dismissed.'
     ]);
     exit;
 }
@@ -801,9 +817,9 @@ if ($action === 'check_status' || $action === 'status') {
 
         $sessionId = $targetDev['device_session_id'];
         $gwStatus = callWaGateway($configs['whatsapp_web_gateway_url'] ?? '', 'status?session_id=' . urlencode($sessionId) . '&site_id=' . $siteId);
-        $isLiveConn = $gwStatus && (!empty($gwStatus['is_connected']) || !empty($gwStatus['is_linked']));
+        $isLiveConn = $gwStatus && (!empty($gwStatus['is_connected']) || ($gwStatus['connection_status'] ?? '') === 'connected');
         $now = date('Y-m-d H:i:s');
-        $statusStr = $isLiveConn ? 'connected' : ($targetDev['device_status'] === 'connected' ? 'connected' : 'disconnected');
+        $statusStr = $isLiveConn ? 'connected' : 'disconnected';
 
         if ($isLiveConn) {
             $userPhone = $gwStatus['user']['phone'] ?? $targetDev['device_phone'];

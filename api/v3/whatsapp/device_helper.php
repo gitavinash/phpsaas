@@ -425,3 +425,258 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
         'message_id' => $msgId
     ];
 }
+
+/**
+ * Handles device disconnection notification from WhatsApp gateway daemon.
+ * Updates device status, records dashboard alert in isw_site_configuration,
+ * and sends a throttled email alert to the site administrator.
+ *
+ * @param mysqli $connection
+ * @param int $siteId
+ * @param string $sessionId
+ * @param string $phone
+ * @param string $reason
+ * @param int $statusCode
+ * @return bool
+ */
+function handleWhatsAppDeviceDisconnection($connection, $siteId, $sessionId, $phone = '', $reason = '', $statusCode = 0) {
+    if (!$connection || (int)$siteId <= 0) {
+        return false;
+    }
+
+    $siteId = (int)$siteId;
+    $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+    $escSession = mysqli_real_escape_string($connection, trim($sessionId));
+    $escReason = mysqli_real_escape_string($connection, trim(substr($reason ?: 'Connection dropped', 0, 250)));
+    $now = date('Y-m-d H:i:s');
+
+    // 1. Mark device as disconnected in isw_whatsapp_device
+    if (!empty($escSession)) {
+        mysqli_query($connection, "UPDATE {$prefix}whatsapp_device 
+            SET device_status = 'disconnected',
+                device_error_reason = '{$escReason}',
+                device_disconnected_at = '{$now}'
+            WHERE device_site_id = {$siteId} AND (device_session_id = '{$escSession}' OR device_session_id LIKE '%{$escSession}')");
+    }
+
+    // 2. Count active connected devices remaining on this site
+    $remQ = mysqli_query($connection, "SELECT COUNT(*) as cnt FROM {$prefix}whatsapp_device 
+        WHERE device_site_id = {$siteId} AND device_status = 'connected'");
+    $remCount = ($remQ && $r = mysqli_fetch_assoc($remQ)) ? (int)$r['cnt'] : 0;
+
+    // If no active devices remain connected, update site configuration status
+    if ($remCount === 0) {
+        mysqli_query($connection, "INSERT INTO {$prefix}site_configuration 
+            (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status)
+            VALUES ({$siteId}, 'whatsapp_web_status', 'disconnected', 1)
+            ON DUPLICATE KEY UPDATE site_configuration_value = 'disconnected'");
+    }
+
+    // 3. Save In-App Dashboard Alert flag in isw_site_configuration
+    $alertData = [
+        'status'                   => 'disconnected',
+        'session_id'               => $sessionId,
+        'phone'                    => $phone,
+        'reason'                   => $reason ?: 'Connection dropped',
+        'status_code'              => (int)$statusCode,
+        'disconnected_at'          => $now,
+        'active_devices_remaining' => $remCount,
+        'dismissed'                => 0
+    ];
+    $escAlertJson = mysqli_real_escape_string($connection, json_encode($alertData));
+    mysqli_query($connection, "INSERT INTO {$prefix}site_configuration 
+        (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status)
+        VALUES ({$siteId}, 'whatsapp_disconnect_alert', '{$escAlertJson}', 1)
+        ON DUPLICATE KEY UPDATE site_configuration_value = '{$escAlertJson}'");
+
+    // 4. Send email alert to Site Administrator (throttled to at most 1 email per 30 minutes)
+    sendWhatsAppDisconnectionEmail($connection, $siteId, $sessionId, $phone, $reason, $statusCode, $remCount);
+
+    return true;
+}
+
+/**
+ * Sends a throttled email notification to the site administrator when a WhatsApp connection drops.
+ * Throttled to at most 1 alert per 30 minutes (1800s) to prevent spamming admin inbox during reconnection retries.
+ *
+ * @param mysqli $connection
+ * @param int $siteId
+ * @param string $sessionId
+ * @param string $phone
+ * @param string $reason
+ * @param int $statusCode
+ * @param int $remCount
+ * @return bool
+ */
+function sendWhatsAppDisconnectionEmail($connection, $siteId, $sessionId, $phone = '', $reason = '', $statusCode = 0, $remCount = 0) {
+    if (!$connection || (int)$siteId <= 0) {
+        return false;
+    }
+
+    $siteId = (int)$siteId;
+    $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+
+    // 1. Throttling check: max 1 email per 30 minutes (1800 seconds)
+    $throtQ = mysqli_query($connection, "SELECT site_configuration_value FROM {$prefix}site_configuration 
+        WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_disconnect_last_email_time' LIMIT 1");
+    if ($throtQ && $tr = mysqli_fetch_assoc($throtQ)) {
+        $lastSent = (int)($tr['site_configuration_value'] ?? 0);
+        if ($lastSent > 0 && (time() - $lastSent) < 1800) {
+            // Suppress duplicate email notification within 30 minutes
+            return false;
+        }
+    }
+
+    // 2. Fetch site configurations for candidate emails
+    $cfgQ = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value 
+        FROM {$prefix}site_configuration 
+        WHERE site_configuration_site_id = {$siteId} 
+          AND site_configuration_key IN ('notification_admin_email', 'admin_email', 'notification_enquiry_email', 'enquiry_email', 'site_email_alert', 'site_email', 'site_name')");
+    $siteCfg = [];
+    if ($cfgQ) {
+        while ($r = mysqli_fetch_assoc($cfgQ)) {
+            $siteCfg[$r['site_configuration_key']] = $r['site_configuration_value'];
+        }
+    }
+
+    $primaryAdminEmail = '';
+    $candidateKeys = [
+        'notification_admin_email',
+        'admin_email',
+        'notification_enquiry_email',
+        'enquiry_email',
+        'site_email_alert',
+        'site_email'
+    ];
+    foreach ($candidateKeys as $cKey) {
+        if (!empty($siteCfg[$cKey])) {
+            $firstCand = trim(explode(',', $siteCfg[$cKey])[0]);
+            if (filter_var($firstCand, FILTER_VALIDATE_EMAIL)) {
+                $primaryAdminEmail = strtolower($firstCand);
+                break;
+            }
+        }
+    }
+
+    // Fallback: fetch primary administrator from site_access & user table
+    if (empty($primaryAdminEmail)) {
+        $admQ = mysqli_query($connection, "SELECT u.user_email 
+            FROM {$prefix}site_access sa
+            JOIN {$prefix}user u ON u.user_id = sa.site_access_user_id
+            WHERE sa.site_access_site_id = {$siteId}
+              AND sa.site_access_type = 'administrator'
+            ORDER BY sa.site_access_id ASC LIMIT 1");
+        if ($admQ && $ar = mysqli_fetch_assoc($admQ)) {
+            if (filter_var($ar['user_email'], FILTER_VALIDATE_EMAIL)) {
+                $primaryAdminEmail = strtolower(trim($ar['user_email']));
+            }
+        }
+    }
+
+    if (empty($primaryAdminEmail)) {
+        return false;
+    }
+
+    // 3. Resolve site domain and name
+    $siteName = $siteCfg['site_name'] ?? '';
+    $siteDomain = '';
+    $siteQ = mysqli_query($connection, "SELECT site_name, site_domain, site_url FROM {$prefix}site WHERE site_id = {$siteId} LIMIT 1");
+    if ($siteQ && $sr = mysqli_fetch_assoc($siteQ)) {
+        if (empty($siteName) && !empty($sr['site_name'])) {
+            $siteName = $sr['site_name'];
+        }
+        $siteDomain = $sr['site_domain'] ?? '';
+    }
+    if (empty($siteName)) {
+        $siteName = !empty($siteDomain) ? $siteDomain : 'CRM Portal';
+    }
+    $loginUrl = !empty($siteDomain) ? "https://{$siteDomain}/app/dashboard/v3/default/desktop/integration/whatsapp_web.php" : "https://crm.musafirindiatrip.com/";
+
+    // 4. Update throttling timestamp in database immediately
+    $currentTime = time();
+    mysqli_query($connection, "INSERT INTO {$prefix}site_configuration 
+        (site_configuration_site_id, site_configuration_key, site_configuration_value, site_configuration_status)
+        VALUES ({$siteId}, 'whatsapp_disconnect_last_email_time', '{$currentTime}', 1)
+        ON DUPLICATE KEY UPDATE site_configuration_value = '{$currentTime}'");
+
+    // 5. Build HTML Email Body
+    $safePhone = htmlspecialchars($phone ?: 'Linked WhatsApp Line');
+    $safeReason = htmlspecialchars($reason ?: 'Connection was terminated by WhatsApp or companion session conflict.');
+    $safeTime = date('d M Y, h:i A');
+    $statusText = ($statusCode > 0) ? " (Code: {$statusCode})" : "";
+
+    $emailSubject = "[Urgent Alert] WhatsApp Connection Dropped - {$siteName}";
+    $htmlContent = "
+    <div style='font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;'>
+        <div style='background-color: #dc2626; color: #ffffff; padding: 20px 24px; text-align: left;'>
+            <h2 style='margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.02em;'>⚠️ WhatsApp Disconnected Alert</h2>
+            <p style='margin: 6px 0 0 0; font-size: 14px; opacity: 0.9;'>Action required: WhatsApp automation has paused for {$siteName}.</p>
+        </div>
+        <div style='padding: 24px; color: #1e293b; font-size: 14px; line-height: 1.6;'>
+            <p style='margin-top: 0;'>Hello Administrator,</p>
+            <p>Your WhatsApp companion device has lost connection to the CRM gateway. Automated WhatsApp messages (itineraries, quotations, and chat synchronization) may not be delivered until the connection is restored.</p>
+            
+            <table style='width: 100%; border-collapse: collapse; margin: 20px 0; background-color: #f8fafc; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0;'>
+                <tr>
+                    <td style='padding: 10px 14px; font-weight: 600; color: #64748b; width: 35%; border-bottom: 1px solid #e2e8f0;'>Site</td>
+                    <td style='padding: 10px 14px; color: #0f172a; border-bottom: 1px solid #e2e8f0;'>{$siteName} (" . htmlspecialchars($siteDomain) . ")</td>
+                </tr>
+                <tr>
+                    <td style='padding: 10px 14px; font-weight: 600; color: #64748b; border-bottom: 1px solid #e2e8f0;'>Device Phone</td>
+                    <td style='padding: 10px 14px; color: #0f172a; border-bottom: 1px solid #e2e8f0; font-weight: 600;'>{$safePhone}</td>
+                </tr>
+                <tr>
+                    <td style='padding: 10px 14px; font-weight: 600; color: #64748b; border-bottom: 1px solid #e2e8f0;'>Disconnected At</td>
+                    <td style='padding: 10px 14px; color: #0f172a; border-bottom: 1px solid #e2e8f0;'>{$safeTime}</td>
+                </tr>
+                <tr>
+                    <td style='padding: 10px 14px; font-weight: 600; color: #64748b; border-bottom: 1px solid #e2e8f0;'>Reason</td>
+                    <td style='padding: 10px 14px; color: #b91c1c; border-bottom: 1px solid #e2e8f0;'>{$safeReason}{$statusText}</td>
+                </tr>
+                <tr>
+                    <td style='padding: 10px 14px; font-weight: 600; color: #64748b;'>Active Devices Left</td>
+                    <td style='padding: 10px 14px; color: #0f172a;'>{$remCount} connected</td>
+                </tr>
+            </table>
+
+            <div style='text-align: center; margin: 30px 0;'>
+                <a href='{$loginUrl}' style='background-color: #2563eb; color: #ffffff; padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block; font-size: 15px;'>Reconnect WhatsApp on Dashboard</a>
+            </div>
+
+            <p style='color: #64748b; font-size: 12px; margin-bottom: 0;'>
+                Note: This automated alert is throttled to at most 1 email every 30 minutes to prevent mailbox clutter. Please log in to your CRM dashboard to scan the QR code and re-establish the connection.
+            </p>
+        </div>
+        <div style='background-color: #f1f5f9; padding: 14px 24px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0;'>
+            CRM Automated Gateway Notification System &copy; " . date('Y') . "
+        </div>
+    </div>";
+
+    // 6. Send Email using system mailer
+    $sendMailPath = defined('SEND_EMAIL') && file_exists(SEND_EMAIL) 
+        ? SEND_EMAIL 
+        : (defined('CONFIG') ? CONFIG . 'mail/send-email.php' : (dirname(__DIR__, 3) . '/lib/configuration/mail/send-email.php'));
+
+    if (file_exists($sendMailPath)) {
+        $toAddress = $primaryAdminEmail;
+        $subject = $emailSubject;
+        $email_body = $htmlContent;
+
+        if (!defined('SITE_NAME')) {
+            define('SITE_NAME', $siteName);
+        }
+        if (!defined('SITE_ID')) {
+            define('SITE_ID', $siteId);
+        }
+
+        ob_start();
+        try {
+            require $sendMailPath;
+        } catch (\Throwable $e) {}
+        ob_get_clean();
+        return true;
+    }
+
+    return false;
+}
+

@@ -151,9 +151,26 @@ if (($payload['event'] ?? '') === 'device_connected') {
         require_once __DIR__ . '/device_helper.php';
         ensureFirstDeviceIsDefault($connection, $siteId, $escSession);
 
+        // Clear any previous disconnection alert now that device is successfully connected
+        mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_disconnect_alert'");
+
         echo json_encode(['status' => 'success', 'msg' => 'Device connection recorded.']);
         exit;
     }
+}
+
+// Handle device_disconnected event from gateway
+if (($payload['event'] ?? '') === 'device_disconnected') {
+    $phone      = trim($payload['phone'] ?? ($payload['device_phone'] ?? ''));
+    $sessionId  = trim($payload['session_id'] ?? 'default');
+    $reason     = trim($payload['reason'] ?? 'Connection dropped');
+    $statusCode = (int)($payload['status_code'] ?? 0);
+
+    require_once __DIR__ . '/device_helper.php';
+    handleWhatsAppDeviceDisconnection($connection, $siteId, $sessionId, $phone, $reason, $statusCode);
+
+    echo json_encode(['status' => 'success', 'msg' => 'Device disconnection recorded and alert triggered.']);
+    exit;
 }
 
 // Handle batch_sync event (historical or bulk chat synchronization)

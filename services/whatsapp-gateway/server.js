@@ -599,6 +599,7 @@ class WhatsAppSession {
 
     this.webhookUrl = null;
     this.siteId = null;
+    this.isStoreDirty = false;
 
     const siteMatch = this.sessionId.match(/^site_(\d+)_/);
     if (siteMatch) {
@@ -712,27 +713,78 @@ class WhatsAppSession {
     }
   }
 
-  saveStore() {
+  saveStore(force = false) {
+    if (!force && !this.isStoreDirty) return;
     try {
       if (fs.existsSync(this.authDir)) {
+        // Sanitize and trim chats to avoid serializing giant buffers or internal structures
+        const sanitizedChats = Array.from(this.chatStore.values())
+          .filter((c) => c && c.id)
+          .sort((a, b) => (b.conversationTimestamp || 0) - (a.conversationTimestamp || 0))
+          .slice(0, 150)
+          .map((c) => ({
+            id: c.id,
+            conversationTimestamp: c.conversationTimestamp || 0,
+            lastMessageText: typeof c.lastMessageText === "string" ? c.lastMessageText.substring(0, 300) : "",
+            pushName: c.pushName || "",
+            name: c.name || "",
+            messages: Array.isArray(c.messages)
+              ? c.messages.slice(-10).map((m) => ({
+                  msg_id: m.msg_id || null,
+                  from_me: !!m.from_me,
+                  text: typeof m.text === "string" ? m.text.substring(0, 300) : "",
+                  media_url: m.media_url || "",
+                  type: m.type || "text",
+                  timestamp: m.timestamp || 0,
+                }))
+              : [],
+          }));
+
+        // Sanitize contacts (max 200)
+        const sanitizedContacts = Array.from(this.contactStore.values())
+          .filter((c) => c && c.id)
+          .slice(0, 200)
+          .map((c) => ({
+            id: c.id,
+            name: c.name || "",
+            notify: c.notify || "",
+            phoneNumber: c.phoneNumber || "",
+          }));
+
         const data = {
           webhookUrl: this.webhookUrl,
           siteId: this.siteId,
-          chats: Array.from(this.chatStore.values()),
-          contacts: Array.from(this.contactStore.values()),
-          lidMap: Array.from(this.lidPhoneMap.entries()),
-          messageStore: Array.from(this.messageStore.entries()).slice(-1000),
+          chats: sanitizedChats,
+          contacts: sanitizedContacts,
+          lidMap: Array.from(this.lidPhoneMap.entries()).slice(-300),
+          messageStore: Array.from(this.messageStore.entries()).slice(-300),
           lastOutgoingPhone: this.lastOutgoingPhone,
         };
         fs.writeFileSync(this.storePath, JSON.stringify(data));
+        this.isStoreDirty = false;
+
+        // In-memory bounds check: prune older map entries to prevent memory bloat
+        if (this.chatStore.size > 300) {
+          const sorted = Array.from(this.chatStore.entries())
+            .sort((a, b) => (b[1]?.conversationTimestamp || 0) - (a[1]?.conversationTimestamp || 0));
+          this.chatStore = new Map(sorted.slice(0, 200));
+        }
+        if (this.messageStore.size > 600) {
+          const entries = Array.from(this.messageStore.entries()).slice(-300);
+          this.messageStore = new Map(entries);
+        }
       }
-    } catch (e) {}
+    } catch (e) {
+      origConsoleError(`[WhatsApp Gateway:${this.sessionId}] Error writing store:`, e.message);
+    }
   }
 
   setupAutoSave() {
     setInterval(() => {
-      this.saveStore();
-    }, 15000);
+      if (this.isStoreDirty) {
+        this.saveStore();
+      }
+    }, 60000);
   }
 
   getPhoneNumber(jid, altJid = null) {
@@ -1431,8 +1483,18 @@ class WhatsAppSession {
 
           if (isLoggedOut) {
             this.connectionStatus = "disconnected";
+            const oldPhone = this.connectedUser?.phone || null;
             this.connectedUser = null;
             this.reconnectAttempts = 0;
+            this.notify({
+              event: "device_disconnected",
+              session_id: this.sessionId,
+              site_id: this.siteId,
+              phone: oldPhone,
+              status_code: statusCode || 401,
+              reason: "Device was logged out or unlinked from WhatsApp",
+              is_logged_out: true,
+            }).catch(() => {});
             try {
               fs.rmSync(this.authDir, { recursive: true, force: true });
             } catch (e) {}
@@ -1446,6 +1508,7 @@ class WhatsAppSession {
             // stop reconnecting to avoid spamming WhatsApp and causing server IP ban.
             if (this.reconnectAttempts > 5) {
               this.connectionStatus = "disconnected";
+              const userPhone = this.connectedUser?.phone || null;
               printCardLog(`${COLOR.BG_RED}${COLOR.BOLD} [AUTO-RECONNECT PAUSED] ${COLOR.RESET}`, [
                 ["Site Domain", this.getSiteDomain()],
                 ["Session ID", this.sessionId],
@@ -1453,6 +1516,17 @@ class WhatsAppSession {
                 ["Reason", `Session rejected with code ${statusCode || 428}. Session conflict with another instance or device was unlinked from WhatsApp app.`],
                 ["Status", "Halted background reconnection loop to prevent IP rate-limiting. Re-scan QR from CRM to resume."],
               ], COLOR.RED);
+
+              // Notify CRM webhook that auto-reconnect has paused and device is dropped
+              this.notify({
+                event: "device_disconnected",
+                session_id: this.sessionId,
+                site_id: this.siteId,
+                phone: userPhone,
+                status_code: statusCode || 428,
+                reason: errMsg || `Reconnection failed with code ${statusCode || 428} (${this.reconnectAttempts} attempts)`,
+                reconnect_paused: true,
+              }).catch(() => {});
               return;
             }
 
@@ -1463,8 +1537,17 @@ class WhatsAppSession {
             setTimeout(() => this.startSocket(), delay);
           } else {
             this.connectionStatus = "disconnected";
+            const oldPhone = this.connectedUser?.phone || null;
             this.connectedUser = null;
             this.reconnectAttempts = 0;
+            this.notify({
+              event: "device_disconnected",
+              session_id: this.sessionId,
+              site_id: this.siteId,
+              phone: oldPhone,
+              status_code: statusCode || 0,
+              reason: errMsg || "Connection closed",
+            }).catch(() => {});
           }
         }
       });
@@ -1503,14 +1586,14 @@ class WhatsAppSession {
         for (const c of contacts) {
           registerContactLid(c);
         }
-        this.saveStore();
+        this.isStoreDirty = true;
       });
 
       this.sock.ev.on("contacts.update", (contacts) => {
         for (const c of contacts) {
           registerContactLid(c);
         }
-        this.saveStore();
+        this.isStoreDirty = true;
       });
 
       this.sock.ev.on("messaging-history.set", async ({ chats, contacts, messages }) => {
@@ -1688,6 +1771,17 @@ class WhatsAppSession {
     this.contactStore.clear();
     this.lidPhoneMap.clear();
 
+    const oldPhone = this.connectedUser?.phone || null;
+    this.notify({
+      event: "device_disconnected",
+      session_id: this.sessionId,
+      site_id: this.siteId,
+      phone: oldPhone,
+      status_code: 200,
+      reason: "Manual logout from CRM",
+      is_logged_out: true,
+    }).catch(() => {});
+
     this.connectionStatus = "disconnected";
     this.connectedUser = null;
     this.currentQrSvg = null;
@@ -1746,7 +1840,7 @@ function enrichSession(req, session) {
   }
 
   if (changed) {
-    session.saveStore();
+    session.saveStore(true);
   }
 }
 
@@ -1952,7 +2046,7 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
                   targetSess.lidPhoneMap.set(`+${rawDigits}`, cleanResolved);
                   targetSess.lidPhoneMap.set(`${rawDigits}@lid`, cleanResolved);
                 }
-                targetSess.saveStore();
+                targetSess.isStoreDirty = true;
               }
             }
 
