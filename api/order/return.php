@@ -30,17 +30,8 @@ if (!$checkOrder || mysqli_num_rows($checkOrder) === 0) {
     exit;
 }
 
-// Check if reason is "Not Deliverable Address" (or NDA / non-deliverable address)
-$isNda = (
-    strcasecmp(trim($return_reason), 'Not Deliverable Address') === 0 ||
-    strcasecmp(trim($return_reason), 'Not Deliaverable address') === 0 ||
-    strcasecmp(trim($return_reason), 'NDA') === 0 ||
-    stripos($return_reason, 'deliverable address') !== false ||
-    stripos($return_reason, 'deliaverable address') !== false
-);
-
-// If reason is "Not Deliverable Address" then status is 11 (Delivery Failed), else 0 (Pending)
-$newStatus = $isNda ? 11 : 0;
+// If user clicks on "Unable to Deliver", mark order status as 11 (Delivery Failed) for all reasons
+$newStatus = 11;
 mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "order SET order_status = {$newStatus} WHERE order_id = '{$idEsc}'");
 
 // Save return metadata without duplicate keys
@@ -67,9 +58,9 @@ if (!empty($commentEsc)) {
 }
 
 // Create activity log
-$logAction = $isNda ? 'delivery_failed' : 'pending';
-$logTitle = $isNda ? 'Unable to Deliver' : 'Pending';
-$logInternal = ($isNda ? "Unable to deliver" : "Order marked as Pending") . " for Order #{$idEsc}" . (!empty($return_reason) ? ". Reason: {$return_reason}" : '') . (!empty($comment) ? ". Comment: {$comment}" : '');
+$logAction = 'delivery_failed';
+$logTitle = 'Delivery Failed';
+$logInternal = "Unable to deliver (Delivery Failed) for Order #{$idEsc}" . (!empty($return_reason) ? ". Reason: {$return_reason}" : '') . (!empty($comment) ? ". Comment: {$comment}" : '');
 createLog(
     $connection,
     $idEsc,
@@ -81,5 +72,5 @@ createLog(
 
 echo json_encode([
     'status' => 200,
-    'msg' => $isNda ? 'Order marked as Unable to Deliver.' : 'Order marked as Pending.'
+    'msg' => 'Order marked as Delivery Failed.'
 ]);

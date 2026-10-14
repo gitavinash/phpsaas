@@ -122,7 +122,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
                         }
                     }
 
-                    // Only "Not Delivery address" shows "Unable to Deliver", for others just show "Pending" with reason and comment
+                    // If log is from "Unable to Deliver", show as "Delivery Failed" for all reasons
                     $isReturnOrUnable = (
                         $logType === 'delivery_failed' ||
                         $logType === 'unable_to_deliver' ||
@@ -132,22 +132,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
                     );
 
                     if ($isReturnOrUnable) {
-                        $checkReason = $logItem['reason'] ?? '';
-                        $isNdaReason = (
-                            strcasecmp(trim($checkReason), 'Not Deliverable Address') === 0 ||
-                            strcasecmp(trim($checkReason), 'Not Delivery address') === 0 ||
-                            strcasecmp(trim($checkReason), 'Not Deliaverable address') === 0 ||
-                            strcasecmp(trim($checkReason), 'NDA') === 0 ||
-                            stripos($checkReason, 'deliverable address') !== false ||
-                            stripos($checkReason, 'deliaverable address') !== false ||
-                            stripos($checkReason, 'delivery address') !== false
-                        );
-
-                        if ($isNdaReason) {
-                            $logItem['status'] = 'Unable to Deliver';
-                        } else {
-                            $logItem['status'] = 'Pending';
-                        }
+                        $logItem['status'] = 'Delivery Failed';
                     }
 
                     $logs[] = $logItem;
