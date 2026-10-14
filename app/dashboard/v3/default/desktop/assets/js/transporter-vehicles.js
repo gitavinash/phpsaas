@@ -49,7 +49,138 @@
       this.allVehicles = [];
       this.masterVehicles = [];
       this.bindEvents();
+      this.initToolbarSelect2();
+      this.initSelect2Dropdowns();
       this.fetchVehicles();
+    },
+
+    initToolbarSelect2: function () {
+      if (!$.fn.select2) return;
+      const $cat = $("#vehicleCategoryDropdown");
+      if ($cat.length) {
+        try {
+          $cat.select2("destroy");
+        } catch (e) {}
+        $cat.select2({
+          width: "200px",
+          minimumResultsForSearch: Infinity,
+        });
+      }
+    },
+
+    formatCategoryOption: function (state) {
+      if (!state.id) return state.text;
+      let icon = "fi-rr-cars";
+      if (state.element) {
+        icon = $(state.element).data("icon") || $(state.element).attr("data-icon") || icon;
+      } else {
+        const $opt = $("#modalVehicleType").find('option[value="' + state.id + '"]');
+        if ($opt.length) {
+          icon = $opt.data("icon") || $opt.attr("data-icon") || icon;
+        }
+      }
+      if (icon === "fi-rr-jeep") icon = "fi-rr-truck-pickup";
+      return $(
+        '<span class="fleet-select2-item">' +
+        '<i class="fi ' +
+        icon +
+        ' fleet-select2-item-icon"></i>' +
+        '<span class="fleet-select2-item-text">' +
+        selfEscapeHTML(state.text) +
+        "</span>" +
+        "</span>"
+      );
+    },
+
+    formatFuelOption: function (state) {
+      if (!state.id) return state.text;
+      let icon = "fi-rr-gas-pump";
+      if (state.element) {
+        icon = $(state.element).data("icon") || $(state.element).attr("data-icon") || icon;
+      } else {
+        const $opt = $("#modalVehicleFuel").find('option[value="' + state.id + '"]');
+        if ($opt.length) {
+          icon = $opt.data("icon") || $opt.attr("data-icon") || icon;
+        }
+      }
+      return $(
+        '<span class="fleet-select2-item">' +
+        '<i class="fi ' +
+        icon +
+        ' fleet-select2-item-icon"></i>' +
+        '<span class="fleet-select2-item-text">' +
+        selfEscapeHTML(state.text) +
+        "</span>" +
+        "</span>"
+      );
+    },
+
+    initSelect2Dropdowns: function () {
+      if (!$.fn.select2) return;
+      const self = this;
+      const $overlay = $("#vehicleModalOverlay");
+      const parentContainer = $overlay.length ? $overlay : $(document.body);
+
+      const $typeSelect = $("#modalVehicleType");
+      if ($typeSelect.length) {
+        if ($typeSelect.hasClass("select2-hidden-accessible") || $typeSelect.data("select2")) {
+          try {
+            $typeSelect.select2("destroy");
+          } catch (e) {}
+        }
+        try {
+          $typeSelect.select2({
+            dropdownParent: parentContainer,
+            width: "100%",
+            placeholder: "Select Category",
+            allowClear: false,
+            templateResult: function (state) {
+              return self.formatCategoryOption(state);
+            },
+            templateSelection: function (state) {
+              return self.formatCategoryOption(state);
+            },
+            escapeMarkup: function (m) {
+              return m;
+            },
+          });
+          $typeSelect.off("change.select2err").on("change.select2err", function () {
+            $("#errModalType").text("");
+            $typeSelect.next(".select2-container").removeClass("is-invalid");
+          });
+        } catch (err) {
+          console.error("Select2 initialization failed on modalVehicleType:", err);
+        }
+      }
+
+      const $fuelSelect = $("#modalVehicleFuel");
+      if ($fuelSelect.length) {
+        if ($fuelSelect.hasClass("select2-hidden-accessible") || $fuelSelect.data("select2")) {
+          try {
+            $fuelSelect.select2("destroy");
+          } catch (e) {}
+        }
+        try {
+          $fuelSelect.select2({
+            dropdownParent: parentContainer,
+            width: "100%",
+            placeholder: "Select Fuel (Optional)",
+            allowClear: false,
+            minimumResultsForSearch: Infinity,
+            templateResult: function (state) {
+              return self.formatFuelOption(state);
+            },
+            templateSelection: function (state) {
+              return self.formatFuelOption(state);
+            },
+            escapeMarkup: function (m) {
+              return m;
+            },
+          });
+        } catch (err) {
+          console.error("Select2 initialization failed on modalVehicleFuel:", err);
+        }
+      }
     },
 
     bindEvents: function () {
@@ -104,7 +235,11 @@
           self.searchQuery = "";
           $("#vehicleSearchInput").val("");
           $("#btnVehicleSearchClear").removeClass("is-visible");
-          $("#vehicleCategoryDropdown").val("");
+          if ($.fn.select2 && $("#vehicleCategoryDropdown").data("select2")) {
+            $("#vehicleCategoryDropdown").val("").trigger("change");
+          } else {
+            $("#vehicleCategoryDropdown").val("");
+          }
           self.applyFilters();
         });
 
@@ -237,16 +372,27 @@
       // Gallery Multi-File Upload & Drag-Drop Handling
       // -------------------------------------------------------------
       $(document)
-        .off("click", "#btnBrowseGalleryFiles, #fleetGalleryDropBar")
+        .off(
+          "click",
+          "#fleetGalleryEmptyDropzone, #btnBrowseGalleryEmpty, #btnBrowseGalleryFilesTop, #btnGalleryAddTile",
+        )
         .on(
           "click",
-          "#btnBrowseGalleryFiles, #fleetGalleryDropBar",
+          "#fleetGalleryEmptyDropzone, #btnBrowseGalleryEmpty, #btnBrowseGalleryFilesTop, #btnGalleryAddTile",
           function (e) {
             if (!$(e.target).is("#modalVehicleGalleryInput")) {
               $("#modalVehicleGalleryInput").trigger("click");
             }
           },
         );
+
+      $(document)
+        .off("click", "#btnClearAllGalleryFiles")
+        .on("click", "#btnClearAllGalleryFiles", function (e) {
+          e.stopPropagation();
+          self.galleryItems = [];
+          self.renderGalleryGrid();
+        });
 
       $(document)
         .off("change", "#modalVehicleGalleryInput")
@@ -259,28 +405,42 @@
         });
 
       $(document)
-        .off("dragover dragenter", "#fleetGalleryDropBar")
-        .on("dragover dragenter", "#fleetGalleryDropBar", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          $(this).addClass("dragover");
-        });
+        .off(
+          "dragover dragenter",
+          "#fleetGalleryEmptyDropzone, #fleetGalleryActiveContainer",
+        )
+        .on(
+          "dragover dragenter",
+          "#fleetGalleryEmptyDropzone, #fleetGalleryActiveContainer",
+          function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).addClass("dragover");
+          },
+        );
 
       $(document)
-        .off("dragleave drop", "#fleetGalleryDropBar")
-        .on("dragleave drop", "#fleetGalleryDropBar", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          $(this).removeClass("dragover");
-          if (e.type === "drop") {
-            const files =
-              e.originalEvent.dataTransfer &&
-              e.originalEvent.dataTransfer.files;
-            if (files && files.length > 0) {
-              self.addGalleryFiles(files);
+        .off(
+          "dragleave drop",
+          "#fleetGalleryEmptyDropzone, #fleetGalleryActiveContainer",
+        )
+        .on(
+          "dragleave drop",
+          "#fleetGalleryEmptyDropzone, #fleetGalleryActiveContainer",
+          function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).removeClass("dragover");
+            if (e.type === "drop") {
+              const files =
+                e.originalEvent.dataTransfer &&
+                e.originalEvent.dataTransfer.files;
+              if (files && files.length > 0) {
+                self.addGalleryFiles(files);
+              }
             }
-          }
-        });
+          },
+        );
 
       // Set Gallery Item as Feature Cover
       $(document)
@@ -502,20 +662,26 @@
     renderGalleryGrid: function () {
       const $grid = $("#fleetGalleryGrid");
       const $badge = $("#fleetGalleryCountBadge");
+      const $emptyDropzone = $("#fleetGalleryEmptyDropzone");
+      const $activeContainer = $("#fleetGalleryActiveContainer");
+      const $topActions = $("#fleetGalleryTopActions");
       const total = this.galleryItems.length;
 
       $badge.text(total + (total === 1 ? " photo" : " photos"));
 
       if (!total) {
-        $grid.html(`
-          <div class="fleet-gallery-empty-hint" id="fleetGalleryEmptyHint">
-            No gallery photos uploaded yet. Click above to select multiple photos.
-          </div>
-        `);
+        $emptyDropzone.removeClass("is-hidden");
+        $activeContainer.addClass("is-hidden");
+        $topActions.addClass("is-hidden");
+        $grid.empty();
         return;
       }
 
-      const html = this.galleryItems
+      $emptyDropzone.addClass("is-hidden");
+      $activeContainer.removeClass("is-hidden");
+      $topActions.removeClass("is-hidden");
+
+      const itemsHtml = this.galleryItems
         .map(function (item) {
           const coverClass = item.isCover ? " is-cover" : "";
           const coverBadge = item.isCover
@@ -539,7 +705,14 @@
         })
         .join("");
 
-      $grid.html(html);
+      const addTileHtml = `
+        <div class="fleet-gallery-add-tile" id="btnGalleryAddTile" title="Add more gallery photos">
+          <i class="fi fi-rr-plus"></i>
+          <span>Add More</span>
+        </div>
+      `;
+
+      $grid.html(itemsHtml + addTileHtml);
     },
 
     // -------------------------------------------------------------
@@ -1031,12 +1204,18 @@
 
       $("#vehicleModalTitle").text("Add New Fleet Vehicle");
       $("#vehicleModalSubtitle").text(
-        "Configure vehicle model, image gallery, per KM rates, and seating capacity",
+        "Configure vehicle model specifications, photo gallery, tariff rates, and seating capacity",
       );
       $("#btnSaveVehicleText").text("Save Vehicle");
-      $("#modalHeaderIcon").attr("class", "fi fi-rr-car");
+      $("#modalHeaderIcon").attr("class", "fi fi-rr-car-alt");
 
       $("#vehicleModalOverlay").addClass("active is-active");
+      this.initSelect2Dropdowns();
+      if ($.fn.select2) {
+        $("#modalVehicleType").val("").trigger("change");
+        $("#modalVehicleFuel").val("").trigger("change");
+      }
+
       if (this.transporterId) {
         $("#vehicleModalTitle").text("Choose Fleet Vehicles");
         $("#vehicleModalSubtitle").text(
@@ -1099,18 +1278,34 @@
       this.renderGalleryGrid();
       this.refreshAmenityPillStates();
 
-      $("#vehicleModalTitle").text(`Edit Vehicle — ${v.title}`);
+      $("#vehicleModalTitle").text(`Edit Fleet Vehicle — ${v.title}`);
       $("#vehicleModalSubtitle").text(
-        "Update model specs, photo gallery, per KM rates, and capacities",
+        "Update model specifications, photo gallery, per KM rates, and seating capacity",
       );
       $("#btnSaveVehicleText").text("Update Vehicle");
       $("#modalHeaderIcon").attr("class", "fi fi-rr-settings-sliders");
 
       $("#vehicleModalOverlay").addClass("active is-active");
+      this.initSelect2Dropdowns();
+
+      // Sync select2 values
+      if ($.fn.select2) {
+        $("#modalVehicleType").val(v.type).trigger("change");
+        $("#modalVehicleFuel").val(v.fuel_type || "").trigger("change");
+      }
+
       setTimeout(() => $("#modalVehicleTitle").focus(), 150);
     },
 
     closeModal: function () {
+      if ($.fn.select2) {
+        try {
+          $("#modalVehicleType").select2("close");
+        } catch (e) {}
+        try {
+          $("#modalVehicleFuel").select2("close");
+        } catch (e) {}
+      }
       $("#vehicleModalOverlay").removeClass("active is-active");
       this.editingVehicleId = null;
       this.featureImageFile = null;
@@ -1121,6 +1316,7 @@
     clearErrors: function () {
       $(".v3-field-error").text("");
       $(".v3-form-control").removeClass("is-invalid");
+      $("#modalVehicleType").next(".select2-container").removeClass("is-invalid");
     },
 
     // -------------------------------------------------------------
@@ -1150,8 +1346,8 @@
       self.clearErrors();
 
       const title = $("#modalVehicleTitle").val().trim();
-      const type = $("#modalVehicleType").val().trim();
-      const fuelType = $("#modalVehicleFuel").val().trim();
+      const type = $("#modalVehicleType").val() ? $("#modalVehicleType").val().trim() : "";
+      const fuelType = $("#modalVehicleFuel").val() ? $("#modalVehicleFuel").val().trim() : "";
       const seating = parseInt($("#modalVehicleSeating").val(), 10) || 0;
       const luggage = parseInt($("#modalVehicleLuggage").val(), 10) || 0;
       const rateWithTax = parseFloat($("#modalVehicleRateWithTax").val()) || 0;
@@ -1165,7 +1361,7 @@
         hasError = true;
       }
       if (!type) {
-        $("#modalVehicleType").addClass("is-invalid");
+        $("#modalVehicleType").next(".select2-container").addClass("is-invalid");
         $("#errModalType").text("Please select vehicle category/type.");
         hasError = true;
       }
