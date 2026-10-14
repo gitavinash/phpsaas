@@ -1910,18 +1910,13 @@ try {
   validSessions.sort((a, b) => b.mtime - a.mtime);
 
   const seenPhones = new Set();
-  const seenSites = new Set();
   const sessionsToBoot = [];
 
   for (const s of validSessions) {
     let isConflict = false;
 
     // WhatsApp Multi-Device protocol allows only ONE companion socket per phone number
-    if (seenPhones.has(s.phone)) {
-      isConflict = true;
-    }
-    // A site with auto-generated timestamped device sessions (site_X_device_...) should only keep the latest active device
-    if (s.siteId && seenSites.has(s.siteId)) {
+    if (s.phone && seenPhones.has(s.phone)) {
       isConflict = true;
     }
 
@@ -1931,8 +1926,7 @@ try {
         fs.rmSync(s.dir, { recursive: true, force: true });
       } catch (e) {}
     } else {
-      seenPhones.add(s.phone);
-      if (s.siteId) seenSites.add(s.siteId);
+      if (s.phone) seenPhones.add(s.phone);
       sessionsToBoot.push(s.name);
     }
   }

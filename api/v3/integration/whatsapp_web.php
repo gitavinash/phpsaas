@@ -1015,6 +1015,9 @@ if ($action === 'disconnect' || $action === 'delete_device') {
         saveWaWebConfig($connection, $siteId, 'whatsapp_web_pushname', '');
     }
 
+    // Clear any previous disconnect alert on intentional manual disconnect
+    mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_key = 'whatsapp_disconnect_alert'");
+
     echo json_encode([
         'status' => 'success',
         'msg'    => 'WhatsApp device disconnected successfully.'
