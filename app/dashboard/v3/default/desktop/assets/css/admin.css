@@ -34258,74 +34258,184 @@ nav.side-nav ul li .side-menu::-webkit-scrollbar-thumb {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
 }
 
-.v3-itin-delivery-toggles {
+/* ==========================================================================
+   Itinerary Delivery Channel Checkboxes (Email & WhatsApp)
+   ========================================================================== */
+.v3-itin-delivery-channels {
   display: inline-flex !important;
   align-items: center !important;
-  flex-wrap: wrap !important;
-  gap: 12px !important;
+  gap: 6px !important;
   background: #f8fafc !important;
   border: 1px solid #e2e8f0 !important;
-  border-radius: 10px !important;
-  padding: 6px 14px !important;
+  border-radius: 8px !important;
+  padding: 4px 8px !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
 }
 
-.v3-itin-delivery-title {
-  font-size: 11.5px !important;
+.v3-itin-delivery-channels.v3-preview-channels {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  margin-right: 4px !important;
+}
+
+.v3-channels-label {
+  font-size: 11px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
   color: #64748b !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 5px !important;
-}
-
-.v3-channel-toggle-label {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin: 0 !important;
-  cursor: pointer !important;
+  gap: 4px !important;
+  margin-right: 2px !important;
+  padding-left: 2px !important;
   user-select: none !important;
-  padding: 3px 8px !important;
-  border-radius: 8px !important;
-  transition: all 0.2s ease !important;
 }
 
-.v3-channel-toggle-label:hover {
-  background: #edf2f7 !important;
+.v3-channels-label i {
+  font-size: 11px !important;
+  color: #64748b !important;
 }
 
-.v3-channel-toggle-text {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: #334155 !important;
+.v3-channel-check-item {
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  transition: all 0.15s ease !important;
+  position: relative !important;
 }
 
-.v3-channel-toggle-text i.fi-rr-envelope {
+.v3-channel-check-item:hover:not(.is-disabled) {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Hide native checkbox cleanly while preserving accessibility */
+.v3-channel-checkbox {
+  position: absolute !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Custom Checkbox Square */
+.v3-custom-check-box {
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 4px !important;
+  border: 1.5px solid #94a3b8 !important;
+  background: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  transition: all 0.15s ease !important;
+}
+
+.v3-custom-check-box i {
+  display: none !important;
+  font-size: 8px !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+/* Checked state - Email */
+.v3-channel-check-item:has(input[id*="Email"]:checked) .v3-custom-check-box,
+.v3-channel-check-item.is-email-checked .v3-custom-check-box {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+}
+.v3-channel-check-item:has(input[id*="Email"]:checked) .v3-custom-check-box i,
+.v3-channel-check-item.is-email-checked .v3-custom-check-box i {
+  display: block !important;
+}
+
+/* Checked state - WhatsApp */
+.v3-channel-check-item:has(input[id*="WhatsApp"]:checked) .v3-custom-check-box,
+.v3-channel-check-item.is-whatsapp-checked .v3-custom-check-box {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+}
+.v3-channel-check-item:has(input[id*="WhatsApp"]:checked) .v3-custom-check-box i,
+.v3-channel-check-item.is-whatsapp-checked .v3-custom-check-box i {
+  display: block !important;
+}
+
+/* Icons */
+.v3-chan-icon {
+  font-size: 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  line-height: 1 !important;
+}
+.v3-chan-icon.email {
   color: #2563eb !important;
 }
-
-.v3-channel-toggle-text i.fi-rr-comment-alt {
+.v3-chan-icon.whatsapp {
   color: #16a34a !important;
 }
 
-.v3-channel-device-badge {
-  font-size: 10.5px !important;
+/* Text */
+.v3-chan-text {
+  font-size: 12.5px !important;
   font-weight: 600 !important;
-  padding: 2px 6px !important;
-  border-radius: 6px !important;
+  color: #334155 !important;
+  line-height: 1 !important;
+}
+
+/* Disabled State (e.g. no WhatsApp device or no email) */
+.v3-channel-check-item.is-disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+.v3-channel-check-item.is-disabled .v3-custom-check-box {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+.v3-channel-check-item.is-disabled .v3-chan-text {
+  color: #94a3b8 !important;
+}
+.v3-channel-check-item.is-disabled .v3-chan-icon {
+  color: #94a3b8 !important;
+}
+
+/* Device Pill inside Checkbox item */
+.v3-chan-device-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  padding: 1px 5px !important;
+  border-radius: 4px !important;
+  line-height: 1 !important;
+}
+.v3-chan-device-pill.online {
   background: #dcfce7 !important;
   color: #15803d !important;
 }
-
-.v3-preview-delivery-toggles {
-  padding: 4px 10px !important;
-  background: #f1f5f9 !important;
-  border-color: #cbd5e1 !important;
+.v3-chan-device-pill.offline {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+}
+.v3-chan-device-pill.warning {
+  background: #fef3c7 !important;
+  color: #b45309 !important;
 }
 
 .v3-tin-tag.success {

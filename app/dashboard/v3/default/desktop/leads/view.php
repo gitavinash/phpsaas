@@ -604,22 +604,20 @@ if ($leadViewSiteId > 0 && isset($connection)) {
 
                     <!-- 5. Footer Preview & Delivery Options Bar -->
                     <div class="v3-itin-footer-actions-wrap">
-                        <div class="v3-itin-delivery-toggles">
-                            <span class="v3-itin-delivery-title"><i class="fi fi-rr-paper-plane"></i> Send Channels:</span>
-                            <label class="v3-channel-toggle-label" for="toggleSendEmail" title="Send proposal link and summary to customer email">
-                                <span class="v3-switch-slider-wrap">
-                                    <input type="checkbox" id="toggleSendEmail" name="send_email" value="1" checked>
-                                    <span class="v3-switch-slider"></span>
-                                </span>
-                                <span class="v3-channel-toggle-text"><i class="fi fi-rr-envelope"></i> Email</span>
+                        <div class="v3-itin-delivery-channels" id="wrapBuilderDeliveryChannels">
+                            <span class="v3-channels-label"><i class="fi fi-rr-paper-plane"></i> Send:</span>
+                            <label class="v3-channel-check-item is-email-checked" id="itemSendEmail" for="toggleSendEmail" title="Send proposal link to customer email">
+                                <input type="checkbox" id="toggleSendEmail" name="send_email" value="1" class="v3-channel-checkbox" checked>
+                                <span class="v3-custom-check-box"><i class="fi fi-rr-check"></i></span>
+                                <i class="fi fi-rr-envelope v3-chan-icon email"></i>
+                                <span class="v3-chan-text">Email</span>
                             </label>
-                            <label class="v3-channel-toggle-label" for="toggleSendWhatsApp" title="Send interactive itinerary and proposal summary to customer WhatsApp">
-                                <span class="v3-switch-slider-wrap">
-                                    <input type="checkbox" id="toggleSendWhatsApp" name="send_whatsapp" value="1" checked>
-                                    <span class="v3-switch-slider"></span>
-                                </span>
-                                <span class="v3-channel-toggle-text"><i class="fi fi-rr-comment-alt"></i> WhatsApp</span>
-                                <span class="v3-channel-device-badge" id="itinWaDeviceBadge"></span>
+                            <label class="v3-channel-check-item is-whatsapp-checked" id="itemSendWhatsApp" for="toggleSendWhatsApp" title="Send proposal to customer WhatsApp">
+                                <input type="checkbox" id="toggleSendWhatsApp" name="send_whatsapp" value="1" class="v3-channel-checkbox" checked>
+                                <span class="v3-custom-check-box"><i class="fi fi-rr-check"></i></span>
+                                <i class="fi fi-brands-whatsapp v3-chan-icon whatsapp"></i>
+                                <span class="v3-chan-text">WhatsApp</span>
+                                <span class="v3-chan-device-pill" id="itinWaDeviceBadge"></span>
                             </label>
                         </div>
                         <div class="v3-itin-footer-actions">
@@ -663,21 +661,20 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                         <span class="v3-save-pkg-badge" id="savePkgBadgePreview">OFF</span>
                     </label>
                 </div>
-                <div class="v3-itin-delivery-toggles v3-preview-delivery-toggles" id="wrapPreviewDeliveryToggles">
-                    <span class="v3-itin-delivery-title"><i class="fi fi-rr-paper-plane"></i> Send:</span>
-                    <label class="v3-channel-toggle-label" for="toggleSendEmailPreview" title="Send proposal to customer email">
-                        <span class="v3-switch-slider-wrap">
-                            <input type="checkbox" id="toggleSendEmailPreview" name="send_email_preview" value="1" checked>
-                            <span class="v3-switch-slider"></span>
-                        </span>
-                        <span class="v3-channel-toggle-text"><i class="fi fi-rr-envelope"></i> Email</span>
+                <div class="v3-itin-delivery-channels v3-preview-channels" id="wrapPreviewDeliveryToggles">
+                    <span class="v3-channels-label"><i class="fi fi-rr-paper-plane"></i> Send:</span>
+                    <label class="v3-channel-check-item is-email-checked" id="itemSendEmailPreview" for="toggleSendEmailPreview" title="Send proposal link to customer email">
+                        <input type="checkbox" id="toggleSendEmailPreview" name="send_email_preview" value="1" class="v3-channel-checkbox" checked>
+                        <span class="v3-custom-check-box"><i class="fi fi-rr-check"></i></span>
+                        <i class="fi fi-rr-envelope v3-chan-icon email"></i>
+                        <span class="v3-chan-text">Email</span>
                     </label>
-                    <label class="v3-channel-toggle-label" for="toggleSendWhatsAppPreview" title="Send proposal to customer WhatsApp">
-                        <span class="v3-switch-slider-wrap">
-                            <input type="checkbox" id="toggleSendWhatsAppPreview" name="send_whatsapp_preview" value="1" checked>
-                            <span class="v3-switch-slider"></span>
-                        </span>
-                        <span class="v3-channel-toggle-text"><i class="fi fi-rr-comment-alt"></i> WhatsApp</span>
+                    <label class="v3-channel-check-item is-whatsapp-checked" id="itemSendWhatsAppPreview" for="toggleSendWhatsAppPreview" title="Send proposal to customer WhatsApp">
+                        <input type="checkbox" id="toggleSendWhatsAppPreview" name="send_whatsapp_preview" value="1" class="v3-channel-checkbox" checked>
+                        <span class="v3-custom-check-box"><i class="fi fi-rr-check"></i></span>
+                        <i class="fi fi-brands-whatsapp v3-chan-icon whatsapp"></i>
+                        <span class="v3-chan-text">WhatsApp</span>
+                        <span class="v3-chan-device-pill" id="itinWaDeviceBadgePreview"></span>
                     </label>
                 </div>
                 <button type="button" class="btn-v3-action btn-outline" id="btnLivePreviewDownloadPdf" title="Download PDF document">

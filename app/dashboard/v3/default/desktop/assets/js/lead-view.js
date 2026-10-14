@@ -6304,32 +6304,34 @@
         // 1. Email Toggle Configuration
         const hasEmail = !!(email && email.includes("@"));
         const $emailToggles = $("#toggleSendEmail, #toggleSendEmailPreview");
+        const $emailItems = $("#itemSendEmail, #itemSendEmailPreview");
         $emailToggles.prop("disabled", !hasEmail);
         if (!hasEmail) {
           $emailToggles.prop("checked", false);
-          $emailToggles.closest("label").attr("title", "Customer has no email address on file");
+          $emailItems.addClass("is-disabled").removeClass("is-email-checked").attr("title", "Customer has no email address on file");
         } else {
           const emailDefault = prevDelivery ? !!prevDelivery.email : true;
           $emailToggles.prop("checked", emailDefault);
-          $emailToggles.closest("label").attr("title", `Send proposal link to ${email}`);
+          $emailItems.removeClass("is-disabled").toggleClass("is-email-checked", emailDefault).attr("title", `Send proposal link to ${email}`);
         }
 
         // 2. WhatsApp Toggle Configuration
         const hasPhone = !!(mobile && mobile.replace(/\D/g, "").length >= 7);
         const canSendWa = hasPhone && isWaAvailable;
         const $waToggles = $("#toggleSendWhatsApp, #toggleSendWhatsAppPreview");
+        const $waItems = $("#itemSendWhatsApp, #itemSendWhatsAppPreview");
         $waToggles.prop("disabled", !canSendWa);
 
         let waBadgeText = "";
         let waBadgeClass = "";
         if (!hasPhone) {
           $waToggles.prop("checked", false);
-          $waToggles.closest("label").attr("title", "Customer has no phone number on file");
+          $waItems.addClass("is-disabled").removeClass("is-whatsapp-checked").attr("title", "Customer has no phone number on file");
           waBadgeText = "No Phone";
           waBadgeClass = "warning";
         } else if (!isWaAvailable) {
           $waToggles.prop("checked", false);
-          $waToggles.closest("label").attr("title", "No WhatsApp device is connected on this site");
+          $waItems.addClass("is-disabled").removeClass("is-whatsapp-checked").attr("title", "No WhatsApp device is connected on this site. Please connect a device in WhatsApp Settings.");
           waBadgeText = "Offline";
           waBadgeClass = "offline";
         } else {
@@ -6339,13 +6341,13 @@
           const devTitle = waDevice.is_assigned
             ? `Sending via your assigned WhatsApp device (${devNum})`
             : `Sending via default WhatsApp device (${devNum})`;
-          $waToggles.closest("label").attr("title", devTitle);
+          $waItems.removeClass("is-disabled").toggleClass("is-whatsapp-checked", waDefault).attr("title", devTitle);
           waBadgeText = waDevice.is_assigned ? `Assigned (${devNum})` : `Default (${devNum})`;
           waBadgeClass = "online";
         }
 
         if (waBadgeText) {
-          const badgeHtml = `<span class="v3-device-pill ${waBadgeClass}" title="${escapeHtml(waBadgeText)}">${escapeHtml(waBadgeText)}</span>`;
+          const badgeHtml = `<span class="v3-chan-device-pill ${waBadgeClass}" title="${escapeHtml(waBadgeText)}">${escapeHtml(waBadgeText)}</span>`;
           $("#itinWaDeviceBadge, #itinWaDeviceBadgePreview").html(badgeHtml);
         } else {
           $("#itinWaDeviceBadge, #itinWaDeviceBadgePreview").empty();
@@ -6357,12 +6359,14 @@
         .on("change.v3DeliveryEmail", "#toggleSendEmail, #toggleSendEmailPreview", function () {
           const isChecked = $(this).is(":checked");
           $("#toggleSendEmail, #toggleSendEmailPreview").prop("checked", isChecked);
+          $("#itemSendEmail, #itemSendEmailPreview").toggleClass("is-email-checked", isChecked);
         });
 
       $(document).off("change.v3DeliveryWhatsApp", "#toggleSendWhatsApp, #toggleSendWhatsAppPreview")
         .on("change.v3DeliveryWhatsApp", "#toggleSendWhatsApp, #toggleSendWhatsAppPreview", function () {
           const isChecked = $(this).is(":checked");
           $("#toggleSendWhatsApp, #toggleSendWhatsAppPreview").prop("checked", isChecked);
+          $("#itemSendWhatsApp, #itemSendWhatsAppPreview").toggleClass("is-whatsapp-checked", isChecked);
         });
 
       // Helper: Publish/Download Itinerary
