@@ -1369,12 +1369,12 @@ class WhatsAppSession {
           keys: makeCacheableSignalKeyStore(state.keys, logger),
         },
         logger: logger,
-        browser: Browsers.macOS("Chrome"),
+        browser: ["Aleya CRM", "Chrome", "120.0.0"],
         enableAutoSessionRecreation: true,
         enableRecentMessageCache: true,
-        syncFullHistory: true,
+        syncFullHistory: false,
         connectTimeoutMs: 60000,
-        keepAliveIntervalMs: 30000,
+        keepAliveIntervalMs: 25000,
         emitOwnEvents: true,
         defaultQueryTimeoutMs: 120000,
         markOnlineOnConnect: true,
@@ -1504,36 +1504,43 @@ class WhatsAppSession {
           } else if (shouldReconnect) {
             this.reconnectAttempts = (this.reconnectAttempts || 0) + 1;
 
-            // Circuit Breaker: if a session is rejected 5 times consecutively (e.g. 428 Precondition Required / conflict),
-            // stop reconnecting to avoid spamming WhatsApp and causing server IP ban.
-            if (this.reconnectAttempts > 5) {
+            // When failures reach 5 (e.g. temporary phone network drop), notify admin once
+            // but keep retrying in the background with a 60s heartbeat so the device recovers automatically!
+            if (this.reconnectAttempts === 5) {
               this.connectionStatus = "disconnected";
               const userPhone = this.connectedUser?.phone || null;
-              printCardLog(`${COLOR.BG_RED}${COLOR.BOLD} [AUTO-RECONNECT PAUSED] ${COLOR.RESET}`, [
+              printCardLog(`${COLOR.BG_YELLOW}${COLOR.BOLD} [WHATSAPP DISCONNECTED - BACKGROUND RETRY ACTIVE] ${COLOR.RESET}`, [
                 ["Site Domain", this.getSiteDomain()],
                 ["Session ID", this.sessionId],
                 ["Consecutive Failures", `${this.reconnectAttempts} failed reconnection attempts`],
-                ["Reason", `Session rejected with code ${statusCode || 428}. Session conflict with another instance or device was unlinked from WhatsApp app.`],
-                ["Status", "Halted background reconnection loop to prevent IP rate-limiting. Re-scan QR from CRM to resume."],
-              ], COLOR.RED);
+                ["Reason", `Session rejected with code ${statusCode || 428}. Phone may be offline or network dropped.`],
+                ["Status", "Maintaining 60s background retry heartbeat. Session preserved."],
+              ], COLOR.YELLOW);
 
-              // Notify CRM webhook that auto-reconnect has paused and device is dropped
+              // Notify CRM webhook and site admin email that device is disconnected
               this.notify({
                 event: "device_disconnected",
                 session_id: this.sessionId,
                 site_id: this.siteId,
                 phone: userPhone,
                 status_code: statusCode || 428,
-                reason: errMsg || `Reconnection failed with code ${statusCode || 428} (${this.reconnectAttempts} attempts)`,
-                reconnect_paused: true,
+                reason: errMsg || `Connection dropped with code ${statusCode || 428}`,
+                reconnect_paused: false,
               }).catch(() => {});
-              return;
             }
 
-            // Keep connectedUser and mark reconnecting so momentary Baileys cycling does not wipe device status
-            this.connectionStatus = "reconnecting";
-            // Backoff delay: minimum 3s, scaling up to 30s to prevent flooding WhatsApp edge servers
-            const delay = Math.min(30000, Math.max(3000, this.reconnectAttempts * 2000));
+            if (this.reconnectAttempts < 5) {
+              this.connectionStatus = "reconnecting";
+            }
+
+            // Gentle Exponential Backoff:
+            // Attempt 1: 5s, Attempt 2: 10s, Attempt 3: 15s, Attempt 4: 30s, Attempt 5+: 60s
+            let delay = 5000;
+            if (this.reconnectAttempts === 2) delay = 10000;
+            else if (this.reconnectAttempts === 3) delay = 15000;
+            else if (this.reconnectAttempts === 4) delay = 30000;
+            else if (this.reconnectAttempts >= 5) delay = 60000;
+
             setTimeout(() => this.startSocket(), delay);
           } else {
             this.connectionStatus = "disconnected";
