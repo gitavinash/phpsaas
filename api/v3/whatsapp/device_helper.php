@@ -390,7 +390,7 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
             if (!empty($gwResData['msg_id'])) {
                 $realWaId = mysqli_real_escape_string($connection, $gwResData['msg_id']);
                 mysqli_query($connection, "UPDATE {$prefix}whatsapp_message 
-                    SET message_wa_id = '{$realWaId}', message_status = 'delivered' 
+                    SET message_wa_id = '{$realWaId}', message_status = 'sent' 
                     WHERE message_id = {$msgId}");
             }
         } else {

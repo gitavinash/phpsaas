@@ -711,10 +711,10 @@ if (mysqli_query($connection, $insertQuery)) {
         // Record delivery metadata in quotation content
         $sentChannels = [];
         if ($whatsappSent) {
-            $sentChannels[] = 'WhatsApp (' . $mobile . ')';
+            $sentChannels[] = 'WhatsApp';
         }
         if ($emailSent) {
-            $sentChannels[] = 'Email (' . $enquiryEmail . ')';
+            $sentChannels[] = 'Email';
         }
 
         $content['delivery'] = [

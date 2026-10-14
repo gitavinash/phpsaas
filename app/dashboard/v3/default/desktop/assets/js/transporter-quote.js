@@ -1331,7 +1331,7 @@
                 $emailItems.addClass("is-disabled").removeClass("is-email-checked").attr("title", "Customer has no email address on file");
             } else {
                 $emailToggles.prop("checked", true);
-                $emailItems.removeClass("is-disabled").addClass("is-email-checked").attr("title", "Send quotation proposal to " + email);
+                $emailItems.removeClass("is-disabled").addClass("is-email-checked").attr("title", "Send quotation proposal via Email");
             }
 
             // 2. WhatsApp Toggle Configuration
@@ -1359,12 +1359,11 @@
                     waBadgeClass = "offline";
                 } else {
                     $waToggles.prop("checked", true);
-                    var devNum = device.phone_number ? ("+" + String(device.phone_number).replace(/^\+/, "")) : "";
                     var devTitle = device.is_assigned
-                        ? ("Sending via your assigned WhatsApp device (" + devNum + ")")
-                        : ("Sending via default WhatsApp device (" + devNum + ")");
+                        ? "Sending via your assigned WhatsApp device"
+                        : "Sending via default WhatsApp device";
                     $waItems.removeClass("is-disabled").addClass("is-whatsapp-checked").attr("title", devTitle);
-                    waBadgeText = device.is_assigned ? ("Assigned (" + devNum + ")") : ("Default (" + devNum + ")");
+                    waBadgeText = device.is_assigned ? "Assigned" : "Default";
                     waBadgeClass = "online";
                 }
 
@@ -1467,7 +1466,7 @@
                             if (res.whatsapp_sent) {
                                 $("#tqWaSentBanner").removeClass("d-none");
                                 $("#tqWaSentTitle").text("Quotation & Proposal PDF Sent Successfully");
-                                $("#tqWaSentDesc").html("Sent to <strong>+" + cleanPhone + "</strong> with proposal document attached.");
+                                $("#tqWaSentDesc").html("Quotation proposal delivered to customer with proposal document attached.");
                                 if (fullPdfUrl) {
                                     $("#tqWaViewPdfLink").attr("href", fullPdfUrl).removeClass("d-none");
                                 }

@@ -1358,6 +1358,22 @@ class WhatsAppSession {
   }
 
   async startSocket() {
+    if (this.isConnecting) return;
+    this.isConnecting = true;
+
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+
+    if (this.sock) {
+      try {
+        this.sock.ev.removeAllListeners();
+        this.sock.end?.();
+      } catch (e) {}
+      this.sock = null;
+    }
+
     try {
       const { version } = await fetchLatestBaileysVersion().catch(() => ({ version: [2, 3000, 1043857760] }));
       const { state, saveCreds } = await useMultiFileAuthState(this.authDir);
@@ -1410,6 +1426,7 @@ class WhatsAppSession {
         }
 
         if (connection === "open") {
+          this.isConnecting = false;
           this.connectedAt = Date.now();
           this.connectionStatus = "connected";
           this.currentQrSvg = null;
@@ -1533,6 +1550,8 @@ class WhatsAppSession {
               this.connectionStatus = "reconnecting";
             }
 
+            this.isConnecting = false;
+
             // Gentle Exponential Backoff:
             // Attempt 1: 5s, Attempt 2: 10s, Attempt 3: 15s, Attempt 4: 30s, Attempt 5+: 60s
             let delay = 5000;
@@ -1541,8 +1560,10 @@ class WhatsAppSession {
             else if (this.reconnectAttempts === 4) delay = 30000;
             else if (this.reconnectAttempts >= 5) delay = 60000;
 
-            setTimeout(() => this.startSocket(), delay);
+            if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
+            this.reconnectTimer = setTimeout(() => this.startSocket(), delay);
           } else {
+            this.isConnecting = false;
             this.connectionStatus = "disconnected";
             const oldPhone = this.connectedUser?.phone || null;
             this.connectedUser = null;
@@ -1746,7 +1767,36 @@ class WhatsAppSession {
           });
         }
       });
+
+      this.sock.ev.on("messages.update", async (updates) => {
+        if (!Array.isArray(updates)) return;
+        for (const u of updates) {
+          const statusVal = u?.update?.status;
+          const msgWaId = u?.key?.id;
+          if (!msgWaId || !statusVal) continue;
+          let statusStr = null;
+          if (statusVal === 2 || statusVal === "SERVER_ACK") {
+            statusStr = "sent";
+          } else if (statusVal === 3 || statusVal === "DELIVERY_ACK") {
+            statusStr = "delivered";
+          } else if (statusVal === 4 || statusVal === 5 || statusVal === "READ" || statusVal === "PLAYED") {
+            statusStr = "read";
+          } else if (statusVal === 0 || statusVal === "ERROR") {
+            statusStr = "failed";
+          }
+          if (statusStr) {
+            this.notify({
+              event: "message_status_update",
+              msg_id: msgWaId,
+              status: statusStr,
+              session_id: this.sessionId,
+              site_id: this.siteId,
+            }).catch(() => {});
+          }
+        }
+      });
     } catch (err) {
+      this.isConnecting = false;
       console.error(`[WhatsApp Gateway:${this.sessionId}] Error initializing socket:`, err);
     }
   }
@@ -2449,13 +2499,25 @@ app.post("/send-message", async (req, res) => {
     } else if (media) {
       let mediaBuffer = null;
       let mediaMime = "image/jpeg";
-      if (typeof media === "string" && media.startsWith("/upload/")) {
-        const localPath = path.resolve(__dirname, "../../" + media.replace(/^\//, ""));
-        if (fs.existsSync(localPath)) {
+      let localPath = null;
+
+      if (typeof media === "string") {
+        if (media.startsWith("/upload/")) {
+          localPath = path.resolve(__dirname, "../../" + media.replace(/^\//, ""));
+        } else if (media.includes("/upload/")) {
+          const rel = media.substring(media.indexOf("/upload/"));
+          localPath = path.resolve(__dirname, "../../" + rel.replace(/^\//, ""));
+        }
+      }
+
+      if (localPath && fs.existsSync(localPath)) {
+        try {
           mediaBuffer = fs.readFileSync(localPath);
           if (localPath.endsWith(".png")) mediaMime = "image/png";
           else if (localPath.endsWith(".webp")) mediaMime = "image/webp";
           else if (localPath.endsWith(".pdf")) mediaMime = "application/pdf";
+        } catch (e) {
+          mediaBuffer = null;
         }
       } else if (typeof media === "string" && media.startsWith("data:image/")) {
         const match = media.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
@@ -2490,13 +2552,21 @@ app.post("/send-message", async (req, res) => {
           };
         }
       } else if (typeof media === "string" && (media.startsWith("http://") || media.startsWith("https://"))) {
-        if (isDoc) {
+        const isPdfUrl = media.toLowerCase().includes(".pdf");
+        if (isDoc && isPdfUrl) {
           sendContent = {
             document: { url: media },
             mimetype: "application/pdf",
             fileName: docFileName,
             caption: message || ""
           };
+        } else if (isDoc && !isPdfUrl) {
+          // If media is a web URL (e.g. /download-itinerary/ or /itinerary/) rather than a binary PDF,
+          // deliver cleanly as a formatted text message with the link rather than failing media upload
+          const fullText = (message && !message.includes(media))
+            ? (message + "\n\n📄 *Quotation PDF Link:*\n" + media)
+            : (message || media);
+          sendContent = { text: fullText };
         } else {
           sendContent = {
             image: { url: media },

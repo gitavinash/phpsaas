@@ -173,6 +173,36 @@ if (($payload['event'] ?? '') === 'device_disconnected') {
     exit;
 }
 
+// Handle message_status_update event from gateway (real-time delivery and read receipts)
+if (($payload['event'] ?? '') === 'message_status_update') {
+    $msgWaId = trim($payload['msg_id'] ?? '');
+    $status  = trim($payload['status'] ?? '');
+    if (!empty($msgWaId) && in_array($status, ['sent', 'delivered', 'read', 'failed'], true)) {
+        $escWaId = mysqli_real_escape_string($connection, $msgWaId);
+        $escStat = mysqli_real_escape_string($connection, $status);
+
+        if ($escStat === 'read') {
+            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message 
+                SET message_status = 'read' 
+                WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}'");
+        } elseif ($escStat === 'delivered') {
+            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message 
+                SET message_status = 'delivered' 
+                WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}' AND message_status != 'read'");
+        } elseif ($escStat === 'sent') {
+            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message 
+                SET message_status = 'sent' 
+                WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}' AND message_status NOT IN ('delivered', 'read')");
+        } elseif ($escStat === 'failed') {
+            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message 
+                SET message_status = 'failed' 
+                WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}' AND message_status NOT IN ('delivered', 'read')");
+        }
+    }
+    echo json_encode(['status' => 'success', 'msg' => 'Status update recorded.']);
+    exit;
+}
+
 // Handle batch_sync event (historical or bulk chat synchronization)
 if (($payload['event'] ?? '') === 'batch_sync') {
     $batchChats = $payload['chats'] ?? [];

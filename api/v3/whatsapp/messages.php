@@ -614,7 +614,7 @@ if ($method === 'POST') {
             $gwSuccess = true;
             if (!empty($gwResData['msg_id'])) {
                 $realWaId = mysqli_real_escape_string($connection, $gwResData['msg_id']);
-                mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_wa_id = '{$realWaId}', message_status = 'delivered' WHERE message_id = {$msgId}");
+                mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_wa_id = '{$realWaId}', message_status = 'sent' WHERE message_id = {$msgId}");
             }
         } else {
             $gwErrorMsg = $gwResData['message'] ?? 'WhatsApp device was unable to send this message.';

@@ -1331,9 +1331,31 @@ if ($method === 'POST') {
             || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
             || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
         $protocol = $isHttps ? 'https://' : 'http://';
+
+        // Check if there is an actual physical PDF file on disk
+        $localPdfRel = '';
+        $isPhysicalPdf = false;
+        if (!empty($pdfUrl)) {
+            $parsedPath = parse_url($pdfUrl, PHP_URL_PATH);
+            if (!empty($parsedPath) && strpos($parsedPath, '/upload/') !== false) {
+                $diskFile = $docRoot . '/' . ltrim($parsedPath, '/');
+                if (file_exists($diskFile) && filesize($diskFile) > 500) {
+                    $fp = @fopen($diskFile, 'rb');
+                    $head = $fp ? fread($fp, 5) : '';
+                    if ($fp) fclose($fp);
+                    if (strpos($head, '%PDF') === 0) {
+                        $isPhysicalPdf = true;
+                        $localPdfRel = '/' . ltrim($parsedPath, '/');
+                    }
+                }
+            }
+        }
+
         $fullPdfUrl = $pdfUrl;
         if (empty($fullPdfUrl) && !empty($host)) {
             $fullPdfUrl = $protocol . $host . "/download-itinerary/{$encodedId}/";
+        } elseif (!empty($localPdfRel) && !empty($host)) {
+            $fullPdfUrl = $protocol . $host . $localPdfRel;
         }
 
         $whatsappSent = false;
@@ -1389,7 +1411,7 @@ if ($method === 'POST') {
                     try {
                         require SEND_EMAIL;
                         $emailSent = true;
-                        $sentChannels[] = "Email ({$customerEmail})";
+                        $sentChannels[] = "Email";
                     } catch (\Throwable $e) {
                         $emailError = $e->getMessage();
                     }
@@ -1440,6 +1462,9 @@ if ($method === 'POST') {
                     $waText = implode("\n", $waLines);
                 }
 
+                $waMsgType = $isPhysicalPdf ? 'document' : 'text';
+                $waMediaUrl = $isPhysicalPdf ? $localPdfRel : '';
+
                 $waRes = sendWhatsAppDirectMessage(
                     $connection,
                     $siteId,
@@ -1448,15 +1473,15 @@ if ($method === 'POST') {
                     $waText,
                     [
                         'lead_id'   => $leadId,
-                        'type'      => !empty($fullPdfUrl) ? 'document' : 'text',
-                        'media_url' => $fullPdfUrl,
+                        'type'      => $waMsgType,
+                        'media_url' => $waMediaUrl,
                         'file_name' => "Quotation_{$quoteDisplayId}.pdf"
                     ]
                 );
 
                 if (isset($waRes['status']) && $waRes['status'] === 'success') {
                     $whatsappSent = true;
-                    $sentChannels[] = "WhatsApp (+{$cleanPhone})";
+                    $sentChannels[] = "WhatsApp";
                 } else {
                     $whatsappError = $waRes['msg'] ?? 'WhatsApp device error.';
                 }
