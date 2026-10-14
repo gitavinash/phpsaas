@@ -548,6 +548,23 @@ function isSessionLinked(authDir) {
   }
 }
 
+// Helper: extracts phone number and metadata from session creds.json
+function getSessionCredentialsMeta(authDir) {
+  try {
+    const credsPath = path.join(authDir, "creds.json");
+    if (!fs.existsSync(credsPath)) return null;
+    const creds = JSON.parse(fs.readFileSync(credsPath, "utf8"));
+    if (creds && creds.me && creds.me.id) {
+      const rawDigits = String(creds.me.id).split(":")[0].replace(/[^0-9]/g, "");
+      return {
+        phone: rawDigits,
+        name: creds.me.name || "",
+      };
+    }
+  } catch (e) {}
+  return null;
+}
+
 // -----------------------------------------------------------------------------
 // WhatsApp Multi-Session Instance
 // -----------------------------------------------------------------------------
@@ -1341,11 +1358,19 @@ class WhatsAppSession {
         }
 
         if (connection === "open") {
-          this.reconnectAttempts = 0;
+          this.connectedAt = Date.now();
           this.connectionStatus = "connected";
           this.currentQrSvg = null;
           this.currentQrString = null;
           this.lastSyncTime = new Date().toISOString();
+
+          // Reset reconnectAttempts only if the session remains connected stably for at least 15 seconds.
+          // This prevents flapping sessions (disconnecting every 2-3s due to conflict) from endlessly resetting the counter.
+          setTimeout(() => {
+            if (this.connectionStatus === "connected" && (Date.now() - (this.connectedAt || 0)) >= 14000) {
+              this.reconnectAttempts = 0;
+            }
+          }, 15000);
 
           const rawId = this.sock.user?.id || "";
           const phoneDigits = rawId.split(":")[0].replace(/[^0-9]/g, "");
@@ -1415,9 +1440,24 @@ class WhatsAppSession {
               sessions.delete(this.sessionId);
             }
           } else if (shouldReconnect) {
+            this.reconnectAttempts = (this.reconnectAttempts || 0) + 1;
+
+            // Circuit Breaker: if a session is rejected 5 times consecutively (e.g. 428 Precondition Required / conflict),
+            // stop reconnecting to avoid spamming WhatsApp and causing server IP ban.
+            if (this.reconnectAttempts > 5) {
+              this.connectionStatus = "disconnected";
+              printCardLog(`${COLOR.BG_RED}${COLOR.BOLD} [AUTO-RECONNECT PAUSED] ${COLOR.RESET}`, [
+                ["Site Domain", this.getSiteDomain()],
+                ["Session ID", this.sessionId],
+                ["Consecutive Failures", `${this.reconnectAttempts} failed reconnection attempts`],
+                ["Reason", `Session rejected with code ${statusCode || 428}. Session conflict with another instance or device was unlinked from WhatsApp app.`],
+                ["Status", "Halted background reconnection loop to prevent IP rate-limiting. Re-scan QR from CRM to resume."],
+              ], COLOR.RED);
+              return;
+            }
+
             // Keep connectedUser and mark reconnecting so momentary Baileys cycling does not wipe device status
             this.connectionStatus = "reconnecting";
-            this.reconnectAttempts = (this.reconnectAttempts || 0) + 1;
             // Backoff delay: minimum 3s, scaling up to 30s to prevent flooding WhatsApp edge servers
             const delay = Math.min(30000, Math.max(3000, this.reconnectAttempts * 2000));
             setTimeout(() => this.startSocket(), delay);
@@ -1731,11 +1771,27 @@ if (isSessionLinked(AUTH_DIR)) {
 
 try {
   const dirs = fs.readdirSync(AUTH_DIR, { withFileTypes: true });
+  const validSessions = [];
+
   for (const d of dirs) {
     if (d.isDirectory() && d.name !== "default") {
       const sessionDir = path.join(AUTH_DIR, d.name);
-      if (isSessionLinked(sessionDir)) {
-        getSession(d.name);
+      const meta = getSessionCredentialsMeta(sessionDir);
+      let mtime = 0;
+      try {
+        mtime = fs.statSync(sessionDir).mtimeMs;
+      } catch (e) {}
+
+      if (meta && meta.phone) {
+        const siteMatch = d.name.match(/^site_(\d+)_/);
+        const siteId = siteMatch ? siteMatch[1] : null;
+        validSessions.push({
+          name: d.name,
+          dir: sessionDir,
+          phone: meta.phone,
+          siteId: siteId,
+          mtime: mtime,
+        });
       } else {
         // Automatically prune stale unlinked session folders older than 2 hours
         try {
@@ -1748,7 +1804,45 @@ try {
       }
     }
   }
-} catch (e) {}
+
+  // Sort by modification timestamp descending (newest first)
+  validSessions.sort((a, b) => b.mtime - a.mtime);
+
+  const seenPhones = new Set();
+  const seenSites = new Set();
+  const sessionsToBoot = [];
+
+  for (const s of validSessions) {
+    let isConflict = false;
+
+    // WhatsApp Multi-Device protocol allows only ONE companion socket per phone number
+    if (seenPhones.has(s.phone)) {
+      isConflict = true;
+    }
+    // A site with auto-generated timestamped device sessions (site_X_device_...) should only keep the latest active device
+    if (s.siteId && seenSites.has(s.siteId)) {
+      isConflict = true;
+    }
+
+    if (isConflict) {
+      console.log(`[WhatsApp Gateway] Pruning duplicate conflicting session on boot: ${s.name} (Phone: +${s.phone})`);
+      try {
+        fs.rmSync(s.dir, { recursive: true, force: true });
+      } catch (e) {}
+    } else {
+      seenPhones.add(s.phone);
+      if (s.siteId) seenSites.add(s.siteId);
+      sessionsToBoot.push(s.name);
+    }
+  }
+
+  // Boot only unique, verified non-conflicting sessions
+  for (const name of sessionsToBoot) {
+    getSession(name);
+  }
+} catch (e) {
+  console.error("[WhatsApp Gateway] Error scanning auth sessions on startup:", e);
+}
 
 function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
   return new Promise((resolve) => {
