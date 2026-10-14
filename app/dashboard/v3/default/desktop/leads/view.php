@@ -72,12 +72,25 @@ if ($leadViewSiteId > 0 && isset($connection)) {
         }
     }
 }
+
+$currentUserRole = isset($site_access_type) ? strtolower(trim($site_access_type)) : '';
+if (empty($currentUserRole) && defined('USER_TYPE')) {
+    $currentUserRole = strtolower(trim(USER_TYPE));
+}
+if (empty($currentUserRole) && !empty($_COOKIE['user_type'])) {
+    $currentUserRole = strtolower(trim(base64_decode($_COOKIE['user_type'])));
+}
+if (empty($currentUserRole)) {
+    $currentUserRole = 'administrator';
+}
+$isCallingAgentUser = in_array($currentUserRole, ['agent', 'calling_agent', 'crm_calling_agent', 'crm calling agent', 'sales_executive']);
 ?>
-<div id="leadViewApp" class="lead-view-wrapper<?php echo $isPackageSix ? ' is-package-six' : ''; ?>"
+<div id="leadViewApp" class="lead-view-wrapper<?php echo $isPackageSix ? ' is-package-six' : ''; ?><?php echo $isCallingAgentUser ? ' is-calling-agent' : ''; ?>"
     data-lead-id="<?php echo htmlspecialchars($rawLeadId); ?>"
     data-user-id="<?php echo htmlspecialchars(defined('USER_ID') ? USER_ID : 0); ?>"
     data-user-name="<?php echo htmlspecialchars($loggedInUsername); ?>"
-    data-user-role="<?php echo htmlspecialchars(isset($site_access_type) ? $site_access_type : 'administrator'); ?>"
+    data-user-role="<?php echo htmlspecialchars($currentUserRole); ?>"
+    data-is-calling-agent="<?php echo $isCallingAgentUser ? '1' : '0'; ?>"
     data-package-id="<?php echo $packageId; ?>"
     data-is-package-six="<?php echo $isPackageSix ? '1' : '0'; ?>"
     data-company-nature="<?php echo htmlspecialchars($companyNature); ?>"
@@ -1537,6 +1550,22 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                 <span>Total Quote:</span>
                 <strong><span class="tq-currency-symbol">₹</span> <span id="tqFooterTotalDisplay">0.00</span></strong>
             </div>
+            <div class="v3-itin-delivery-channels" id="wrapTqDeliveryChannels">
+                <span class="v3-channels-label"><i class="fi fi-rr-paper-plane"></i> Send:</span>
+                <label class="v3-channel-check-item is-email-checked" id="itemTqSendEmail" for="toggleTqSendEmail" title="Send quotation to customer email">
+                    <input type="checkbox" id="toggleTqSendEmail" name="tq_send_email" value="1" class="v3-channel-checkbox" checked>
+                    <span class="v3-custom-check-box"><i class="fi fi-rr-check"></i></span>
+                    <i class="fi fi-rr-envelope v3-chan-icon email"></i>
+                    <span class="v3-chan-text">Email</span>
+                </label>
+                <label class="v3-channel-check-item is-whatsapp-checked" id="itemTqSendWhatsApp" for="toggleTqSendWhatsApp" title="Send quotation to customer WhatsApp">
+                    <input type="checkbox" id="toggleTqSendWhatsApp" name="tq_send_whatsapp" value="1" class="v3-channel-checkbox" checked>
+                    <span class="v3-custom-check-box"><i class="fi fi-rr-check"></i></span>
+                    <i class="fi fi-brands-whatsapp v3-chan-icon whatsapp"></i>
+                    <span class="v3-chan-text">WhatsApp</span>
+                    <span class="v3-chan-device-pill" id="tqWaDeviceBadge"></span>
+                </label>
+            </div>
             <div class="tq-footer-actions">
                 <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger" id="tqBtnCancelQuote">Cancel</button>
                 <button type="button" class="btn-add-pkg-v3" id="tqBtnSubmitQuote">
@@ -1567,11 +1596,27 @@ if ($leadViewSiteId > 0 && isset($connection)) {
                 <button type="button" class="btn-v3-action btn-outline" id="tqBtnPreviewBack" title="Edit inputs in quote builder">
                     <i class="fi fi-rr-edit"></i> Edit Details
                 </button>
+                <div class="v3-itin-delivery-channels v3-preview-channels" id="wrapTqPreviewDeliveryChannels">
+                    <span class="v3-channels-label"><i class="fi fi-rr-paper-plane"></i> Send:</span>
+                    <label class="v3-channel-check-item is-email-checked" id="itemTqSendEmailPreview" for="toggleTqSendEmailPreview" title="Send quotation to customer email">
+                        <input type="checkbox" id="toggleTqSendEmailPreview" name="tq_send_email_preview" value="1" class="v3-channel-checkbox" checked>
+                        <span class="v3-custom-check-box"><i class="fi fi-rr-check"></i></span>
+                        <i class="fi fi-rr-envelope v3-chan-icon email"></i>
+                        <span class="v3-chan-text">Email</span>
+                    </label>
+                    <label class="v3-channel-check-item is-whatsapp-checked" id="itemTqSendWhatsAppPreview" for="toggleTqSendWhatsAppPreview" title="Send quotation to customer WhatsApp">
+                        <input type="checkbox" id="toggleTqSendWhatsAppPreview" name="tq_send_whatsapp_preview" value="1" class="v3-channel-checkbox" checked>
+                        <span class="v3-custom-check-box"><i class="fi fi-rr-check"></i></span>
+                        <i class="fi fi-brands-whatsapp v3-chan-icon whatsapp"></i>
+                        <span class="v3-chan-text">WhatsApp</span>
+                        <span class="v3-chan-device-pill" id="tqWaDeviceBadgePreview"></span>
+                    </label>
+                </div>
                 <button type="button" class="btn-v3-action btn-outline" id="tqBtnPreviewDownloadPdf" title="Download quotation PDF document">
                     <i class="fi fi-rr-file-pdf"></i> Download PDF
                 </button>
                 <button type="button" class="btn-v3-action btn-green" id="tqBtnPreviewSendQuote" title="Send quotation to customer">
-                    <i class="fi fi-brands-whatsapp"></i> Send Quotation
+                    <i class="fi fi-rr-paper-plane"></i> Send Quotation
                 </button>
                 <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close Preview"><i class="fi fi-rr-cross"></i></button>
             </div>

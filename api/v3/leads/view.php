@@ -1040,6 +1040,7 @@ $response = [
         'payments' => $payments,
         'agents' => $agents,
         'access_type' => $accessType,
+        'is_calling_agent' => in_array(strtolower(trim($accessType)), ['agent', 'calling_agent', 'crm_calling_agent', 'crm calling agent', 'sales_executive']),
         'current_user_id' => (int)$currentUserId,
         'site_package_id' => defined('SITE_PACKAGE_ID') ? (int)SITE_PACKAGE_ID : (isset($site_package_id) ? (int)$site_package_id : 7),
     ]

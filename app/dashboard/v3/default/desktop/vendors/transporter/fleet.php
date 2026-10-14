@@ -97,7 +97,7 @@ $fleetTransporterId = $_GET['id'] ?? ($_GET['transporter_id'] ?? '');
             </table>
         </div>
     </div>
-    <div id="vehiclesEmptyState" class="transporter-fleet-empty-state" style="display:none;">
+    <div id="vehiclesEmptyState" class="transporter-fleet-empty-state is-hidden">
         <div class="transporter-fleet-empty-icon"><i class="fi fi-rr-car-alt"></i></div>
         <h3>No fleet vehicles assigned</h3>
         <p id="vehicleEmptyStateMsg">Choose the master vehicle models this transporter can operate.</p>

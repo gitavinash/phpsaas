@@ -214,7 +214,7 @@ if (!empty($upiId)) {
 
 // WhatsApp Share URL
 $cleanWhatsappDigits = preg_replace('/[^\d]/', '', (string)$custMobile);
-$waShareText = "Hello {$custName}, please review your quotation {$quoteDisplayId} for {$vehTitle} ({$pickup} to {$dest}): Total {$sym} {$totalCost}. Advance: {$sym} {$advAmount}. Valid until {$validDate}.";
+$waShareText = "Hello {$custName}, please review your quotation {$quoteDisplayId} for {$vehTitle} ({$pickup} to {$dest}): Total {$sym} {$totalCost}. Advance: {$sym} {$advAmount}. Valid until {$validDate}.\n\n—\n_Powered by Aleya.in_";
 $waShareUrl = !empty($cleanWhatsappDigits) ? "https://wa.me/{$cleanWhatsappDigits}?text=" . rawurlencode($waShareText) : "https://wa.me/?text=" . rawurlencode($waShareText);
 ?>
 <!DOCTYPE html>

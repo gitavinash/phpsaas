@@ -1287,6 +1287,228 @@ if ($method === 'POST') {
         exit;
     }
 
+    // Action: Send Quotation Proposal via Email & WhatsApp
+    if ($action === 'send') {
+        $quoteId = (int)($data['quotation_id'] ?? ($_POST['quotation_id'] ?? 0));
+        $sendEmail = isset($data['send_email']) ? (!empty($data['send_email']) && $data['send_email'] !== 'false' && $data['send_email'] !== '0') : false;
+        $sendWhatsApp = isset($data['send_whatsapp']) ? (!empty($data['send_whatsapp']) && $data['send_whatsapp'] !== 'false' && $data['send_whatsapp'] !== '0') : false;
+        $pdfUrl = trim((string)($data['pdf_url'] ?? ''));
+
+        if ($quoteId <= 0) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Valid Quotation ID is required.']);
+            exit;
+        }
+
+        $qRes = mysqli_query($connection, "SELECT * FROM {$tblPrefix}quotation WHERE quotation_id = {$quoteId} LIMIT 1");
+        if (!$qRes || mysqli_num_rows($qRes) === 0) {
+            http_response_code(404);
+            echo json_encode(['status' => 'error', 'message' => 'Quotation not found.']);
+            exit;
+        }
+        $qRow = mysqli_fetch_assoc($qRes);
+        $leadId = (int)$qRow['quotation_ref_id'];
+        $quotePayload = !empty($qRow['quotation_description']) ? json_decode($qRow['quotation_description'], true) : [];
+
+        $customerName   = trim((string)($quotePayload['customer']['name'] ?? ''));
+        $customerMobile = trim((string)($quotePayload['customer']['mobile'] ?? ''));
+        $customerEmail  = trim((string)($quotePayload['customer']['email'] ?? ''));
+        $vehicleTitle   = trim((string)($quotePayload['vehicle']['vehicle_title'] ?? 'Vehicle'));
+        $destination    = trim((string)($quotePayload['travel']['destination'] ?? ''));
+        $pickupLocation = trim((string)($quotePayload['travel']['pickup_location'] ?? ''));
+        $travelDate     = trim((string)($quotePayload['travel']['travel_date'] ?? ''));
+        $travelDuration = trim((string)($quotePayload['travel']['duration_days'] ?? '1'));
+        $totalCost      = (float)($quotePayload['billing']['total_cost'] ?? $qRow['quotation_price']);
+        $currencySymbol = trim((string)($quotePayload['billing']['currency_symbol'] ?? '₹'));
+
+        $companyMeta = getTransporterCompanyMeta($connection, $siteId, $tblPrefix);
+        $compName = $companyMeta['name'] ?? 'Aleya Fleet Logistics';
+        $quoteDisplayId = 'TQ-' . str_pad((string)$quoteId, 5, '0', STR_PAD_LEFT);
+
+        $encodedId = base64_encode((string)$quoteId);
+        $host = $_SERVER['HTTP_HOST'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : '');
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+            || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
+        $protocol = $isHttps ? 'https://' : 'http://';
+        $fullPdfUrl = $pdfUrl;
+        if (empty($fullPdfUrl) && !empty($host)) {
+            $fullPdfUrl = $protocol . $host . "/download-itinerary/{$encodedId}/";
+        }
+
+        $whatsappSent = false;
+        $whatsappError = null;
+        $emailSent = false;
+        $emailError = null;
+        $sentChannels = [];
+
+        // 1. Dispatch Email
+        if ($sendEmail) {
+            if (!empty($customerEmail) && filter_var($customerEmail, FILTER_VALIDATE_EMAIL)) {
+                $toAddress = $customerEmail;
+                $subject = "Your Fleet Quotation {$quoteDisplayId} for {$vehicleTitle} | {$compName}";
+
+                $safeCustName = htmlspecialchars($customerName ?: 'Customer', ENT_QUOTES, 'UTF-8');
+                $safeCompName = htmlspecialchars($compName, ENT_QUOTES, 'UTF-8');
+                $safeVeh = htmlspecialchars($vehicleTitle, ENT_QUOTES, 'UTF-8');
+                $costFmt = number_format($totalCost, 2);
+                $safeRoute = htmlspecialchars((!empty($pickupLocation) ? $pickupLocation . ' to ' : '') . $destination, ENT_QUOTES, 'UTF-8');
+
+                $email_body = "
+                    <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1e293b; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;'>
+                        <div style='border-bottom: 2px solid #059669; padding-bottom: 12px; margin-bottom: 20px;'>
+                            <h2 style='color: #0f172a; margin: 0; font-size: 20px;'>{$safeCompName}</h2>
+                            <p style='color: #64748b; margin: 4px 0 0 0; font-size: 13px;'>Trip Estimate &amp; Commercial Fleet Quotation (#{$quoteDisplayId})</p>
+                        </div>
+                        <p style='font-size: 14px; line-height: 22px;'>Dear <strong>{$safeCustName}</strong>,</p>
+                        <p style='font-size: 14px; line-height: 22px;'>Thank you for considering <strong>{$safeCompName}</strong>. We are pleased to share your customized commercial quotation for <strong>{$safeVeh}</strong>.</p>
+                        
+                        <div style='background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 16px; margin: 20px 0;'>
+                            <p style='margin: 4px 0; font-size: 14px;'><strong>Fleet:</strong> {$safeVeh}</p>
+                            " . (!empty($safeRoute) ? "<p style='margin: 4px 0; font-size: 14px;'><strong>Route:</strong> {$safeRoute}</p>" : "") . "
+                            " . (!empty($travelDate) ? "<p style='margin: 4px 0; font-size: 14px;'><strong>Date:</strong> {$travelDate} ({$travelDuration} Days)</p>" : "") . "
+                            <p style='margin: 8px 0 4px 0; font-size: 16px; color: #059669;'><strong>Total Tariff:</strong> {$currencySymbol} {$costFmt}</p>
+                        </div>
+
+                        " . (!empty($fullPdfUrl) ? "
+                        <div style='margin: 25px 0;'>
+                            <a href='{$fullPdfUrl}' style='display: inline-block; background: #059669; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px;'>Download Quotation PDF</a>
+                        </div>
+                        " : "") . "
+
+                        <p style='font-size: 13px; line-height: 20px; color: #64748b; margin-top: 24px;'>
+                            Please reply directly to this email or message us on WhatsApp to confirm your booking.<br><br>
+                            —<br>
+                            <em>Powered by Aleya.in</em>
+                        </p>
+                    </div>
+                ";
+
+                if (defined('SEND_EMAIL') && file_exists(SEND_EMAIL)) {
+                    ob_start();
+                    try {
+                        require SEND_EMAIL;
+                        $emailSent = true;
+                        $sentChannels[] = "Email ({$customerEmail})";
+                    } catch (\Throwable $e) {
+                        $emailError = $e->getMessage();
+                    }
+                    $emailOut = ob_get_clean();
+                    if (!empty($emailOut) && (stripos($emailOut, 'Mailer Error') !== false || stripos($emailOut, 'Exception') !== false)) {
+                        $emailError = trim(strip_tags($emailOut));
+                        $emailSent = false;
+                    }
+                } else {
+                    $emailError = 'Mailer service script not found.';
+                }
+            } else {
+                $emailError = 'Customer email address is invalid or missing.';
+            }
+        } else {
+            $emailError = 'Skipped by user toggle.';
+        }
+
+        // 2. Dispatch WhatsApp
+        if ($sendWhatsApp) {
+            $cleanPhone = preg_replace('/[^0-9]/', '', (string)$customerMobile);
+            if (!empty($cleanPhone)) {
+                require_once dirname(__DIR__) . '/whatsapp/device_helper.php';
+
+                // Format WhatsApp text with Powered by Aleya.in footer
+                $waText = !empty($data['whatsapp_text']) ? trim($data['whatsapp_text']) : '';
+                if (empty($waText)) {
+                    $waLines = [];
+                    $waLines[] = "🚗 *{$compName}*";
+                    $waLines[] = "📋 *TRIP ESTIMATE & FLEET QUOTATION* (#{$quoteDisplayId})";
+                    $waLines[] = "━━━━━━━━━━━━━━━━━━━━━━";
+                    if (!empty($customerName)) $waLines[] = "👤 *Customer:* " . $customerName;
+                    if (!empty($destination)) $waLines[] = "📍 *Route:* " . (!empty($pickupLocation) ? $pickupLocation . " ➔ " : "") . $destination;
+                    if (!empty($travelDate)) $waLines[] = "📅 *Travel Date:* " . $travelDate . " ({$travelDuration} Days)";
+                    if (!empty($vehicleTitle)) $waLines[] = "🚘 *Fleet:* " . $vehicleTitle;
+                    $waLines[] = "";
+                    $waLines[] = "💵 *Total Cost:* {$currencySymbol} " . number_format($totalCost, 2);
+                    if (!empty($fullPdfUrl)) {
+                        $waLines[] = "";
+                        $waLines[] = "📄 *Download Quotation PDF:*";
+                        $waLines[] = $fullPdfUrl;
+                    }
+                    $waLines[] = "";
+                    $waLines[] = "Thank you for choosing {$compName}! Please reply with 'CONFIRM' to reserve your vehicle.";
+                    $waLines[] = "";
+                    $waLines[] = "—";
+                    $waLines[] = "_Powered by Aleya.in_";
+                    $waText = implode("\n", $waLines);
+                }
+
+                $waRes = sendWhatsAppDirectMessage(
+                    $connection,
+                    $siteId,
+                    $userId,
+                    $cleanPhone,
+                    $waText,
+                    [
+                        'lead_id'   => $leadId,
+                        'type'      => !empty($fullPdfUrl) ? 'document' : 'text',
+                        'media_url' => $fullPdfUrl,
+                        'file_name' => "Quotation_{$quoteDisplayId}.pdf"
+                    ]
+                );
+
+                if (isset($waRes['status']) && $waRes['status'] === 'success') {
+                    $whatsappSent = true;
+                    $sentChannels[] = "WhatsApp (+{$cleanPhone})";
+                } else {
+                    $whatsappError = $waRes['msg'] ?? 'WhatsApp device error.';
+                }
+            } else {
+                $whatsappError = 'Customer mobile number is missing.';
+            }
+        } else {
+            $whatsappError = 'Skipped by user toggle.';
+        }
+
+        // Record delivery metadata in quotation_description
+        $quotePayload['delivery'] = [
+            'whatsapp'       => $whatsappSent,
+            'whatsapp_error' => $whatsappError,
+            'email'          => $emailSent,
+            'email_error'    => $emailError,
+            'channels'       => $sentChannels,
+            'sent_at'        => date('Y-m-d H:i:s')
+        ];
+        $updDescJson = mysqli_real_escape_string($connection, json_encode($quotePayload, JSON_UNESCAPED_UNICODE));
+        mysqli_query($connection, "UPDATE {$tblPrefix}quotation SET quotation_description = '{$updDescJson}' WHERE quotation_id = {$quoteId}");
+
+        // Record timeline note
+        if (!empty($sentChannels)) {
+            $summaryNote = "Transporter quotation #{$quoteId} sent to customer via " . implode(' & ', $sentChannels);
+            $escSummaryNote = mysqli_real_escape_string($connection, $summaryNote);
+            @mysqli_query($connection, "INSERT INTO {$tblPrefix}enquiry_notes (
+                enquiry_notes_ref_id,
+                enquiry_notes_user_id,
+                enquiry_notes_meta_type,
+                enquiry_notes_meta_value
+            ) VALUES (
+                {$leadId},
+                {$userId},
+                'itinerary',
+                '{$escSummaryNote}'
+            )");
+            @mysqli_query($connection, "UPDATE {$tblPrefix}enquiry SET enquiry_status = 9, enquiry_update = NOW() WHERE enquiry_id = {$leadId}");
+        }
+
+        echo json_encode([
+            'status'         => 'success',
+            'message'        => !empty($sentChannels) ? ("Quotation proposal sent via " . implode(' & ', $sentChannels) . "!") : "Delivery preferences recorded.",
+            'sent_channels'  => $sentChannels,
+            'whatsapp_sent'  => $whatsappSent,
+            'whatsapp_error' => $whatsappError,
+            'email_sent'     => $emailSent,
+            'email_error'    => $emailError
+        ]);
+        exit;
+    }
+
     $rawLeadId = $data['lead_id'] ?? ($data['leadId'] ?? ($data['refId'] ?? ''));
     $leadId = 0;
     if (is_numeric($rawLeadId) && (int)$rawLeadId > 0) {
@@ -1371,8 +1593,11 @@ if ($method === 'POST') {
 
     // Construct Complete Proposal Payload
     $quotePayload = [
-        'type' => 'transporter_quotation',
-        'customer' => [
+        'type'        => 'transporter_quotation',
+        'title'       => 'Fleet Quotation - ' . (!empty($vehicleTitle) ? $vehicleTitle : 'Vehicle'),
+        'destination' => $destination,
+        'duration'    => $travelDuration . ($travelDuration == '1' ? ' Day' : ' Days'),
+        'customer'    => [
             'name'    => $customerName,
             'mobile'  => $customerMobile,
             'email'   => $customerEmail,
@@ -1534,7 +1759,10 @@ if ($method === 'POST') {
         $waLines[] = "UPI ID: " . $companyMeta['upi_id'] . " (GPay/PhonePe/Paytm)";
     }
     $waLines[] = "";
-    $waLines[] = "Thank you for choosing {$compName}! (Powered by Aleya.in). Please reply with 'CONFIRM' to reserve your vehicle.";
+    $waLines[] = "Thank you for choosing {$compName}! Please reply with 'CONFIRM' to reserve your vehicle.";
+    $waLines[] = "";
+    $waLines[] = "—";
+    $waLines[] = "_Powered by Aleya.in_";
     $whatsappText = implode("\n", $waLines);
 
     $companyMeta = getTransporterCompanyMeta($connection, $siteId, $tblPrefix);

@@ -207,6 +207,21 @@
                 self.sendQuotationViaWhatsApp(true);
             });
 
+            // Bidirectional sync for Transporter Delivery Channels (Email & WhatsApp)
+            $(document).off("change.v3TqDeliveryEmail", "#toggleTqSendEmail, #toggleTqSendEmailPreview")
+                .on("change.v3TqDeliveryEmail", "#toggleTqSendEmail, #toggleTqSendEmailPreview", function () {
+                    var isChecked = $(this).is(":checked");
+                    $("#toggleTqSendEmail, #toggleTqSendEmailPreview").prop("checked", isChecked);
+                    $("#itemTqSendEmail, #itemTqSendEmailPreview").toggleClass("is-email-checked", isChecked);
+                });
+
+            $(document).off("change.v3TqDeliveryWhatsApp", "#toggleTqSendWhatsApp, #toggleTqSendWhatsAppPreview")
+                .on("change.v3TqDeliveryWhatsApp", "#toggleTqSendWhatsApp, #toggleTqSendWhatsAppPreview", function () {
+                    var isChecked = $(this).is(":checked");
+                    $("#toggleTqSendWhatsApp, #toggleTqSendWhatsAppPreview").prop("checked", isChecked);
+                    $("#itemTqSendWhatsApp, #itemTqSendWhatsAppPreview").toggleClass("is-whatsapp-checked", isChecked);
+                });
+
             $(document).on("click", "#modalTransporterQuotePreview .v3-modal-close-trigger", function (e) {
                 e.preventDefault();
                 $("#modalTransporterQuotePreview").removeClass("is-active");
@@ -502,6 +517,9 @@
             self.initSelect2Dropdowns();
             $("#tqVehicleType").val(targetCategory || "").trigger("change.select2");
             self.filterVehicleModels(targetCategory, targetModel);
+
+            // Configure Delivery Channels (Email & WhatsApp)
+            self.setupTqDeliveryToggles(lead);
 
             // Open Modal
             $("#modalSendTransporterQuotation").addClass("is-active");
@@ -1056,6 +1074,14 @@
             }
             $("#modalTransporterQuotePreview").addClass("is-active");
 
+            // Sync Delivery Channels from Builder to Preview
+            var isEmailChecked = $("#toggleTqSendEmail").is(":checked");
+            var isWaChecked = $("#toggleTqSendWhatsApp").is(":checked");
+            $("#toggleTqSendEmailPreview").prop("checked", isEmailChecked);
+            $("#itemTqSendEmailPreview").toggleClass("is-email-checked", isEmailChecked);
+            $("#toggleTqSendWhatsAppPreview").prop("checked", isWaChecked);
+            $("#itemTqSendWhatsAppPreview").toggleClass("is-whatsapp-checked", isWaChecked);
+
             // Pre-populate WhatsApp Share Modal for Send Quote action
             $("#tqWaPreviewBox").text(res.whatsapp_text || "");
 
@@ -1288,6 +1314,82 @@
             });
         },
 
+        setupTqDeliveryToggles: function (lead) {
+            var self = this;
+            lead = lead || self.currentLeadData || {};
+            var email = String(lead.email || $("#tqCustomerEmail").val() || "").trim();
+            var mobile = String(lead.mobile || lead.wa_mobile || $("#tqCustomerMobile").val() || "").trim();
+            var waDevice = lead.whatsapp_device || null;
+
+            // 1. Email Toggle Configuration
+            var hasEmail = !!(email && email.indexOf("@") !== -1);
+            var $emailToggles = $("#toggleTqSendEmail, #toggleTqSendEmailPreview");
+            var $emailItems = $("#itemTqSendEmail, #itemTqSendEmailPreview");
+            $emailToggles.prop("disabled", !hasEmail);
+            if (!hasEmail) {
+                $emailToggles.prop("checked", false);
+                $emailItems.addClass("is-disabled").removeClass("is-email-checked").attr("title", "Customer has no email address on file");
+            } else {
+                $emailToggles.prop("checked", true);
+                $emailItems.removeClass("is-disabled").addClass("is-email-checked").attr("title", "Send quotation proposal to " + email);
+            }
+
+            // 2. WhatsApp Toggle Configuration
+            var hasPhone = !!(mobile && mobile.replace(/\D/g, "").length >= 7);
+            var $waToggles = $("#toggleTqSendWhatsApp, #toggleTqSendWhatsAppPreview");
+            var $waItems = $("#itemTqSendWhatsApp, #itemTqSendWhatsAppPreview");
+
+            var applyDeviceStatus = function (device) {
+                var isAvailable = !!(device && (device.available || device.is_connected));
+                var canSendWa = hasPhone && isAvailable;
+                $waToggles.prop("disabled", !canSendWa);
+
+                var waBadgeText = "";
+                var waBadgeClass = "";
+
+                if (!hasPhone) {
+                    $waToggles.prop("checked", false);
+                    $waItems.addClass("is-disabled").removeClass("is-whatsapp-checked").attr("title", "Customer has no phone number on file");
+                    waBadgeText = "No Phone";
+                    waBadgeClass = "warning";
+                } else if (!isAvailable) {
+                    $waToggles.prop("checked", false);
+                    $waItems.addClass("is-disabled").removeClass("is-whatsapp-checked").attr("title", "No WhatsApp device is connected on this site. Please connect a device in WhatsApp Settings.");
+                    waBadgeText = "Offline";
+                    waBadgeClass = "offline";
+                } else {
+                    $waToggles.prop("checked", true);
+                    var devNum = device.phone_number ? ("+" + String(device.phone_number).replace(/^\+/, "")) : "";
+                    var devTitle = device.is_assigned
+                        ? ("Sending via your assigned WhatsApp device (" + devNum + ")")
+                        : ("Sending via default WhatsApp device (" + devNum + ")");
+                    $waItems.removeClass("is-disabled").addClass("is-whatsapp-checked").attr("title", devTitle);
+                    waBadgeText = device.is_assigned ? ("Assigned (" + devNum + ")") : ("Default (" + devNum + ")");
+                    waBadgeClass = "online";
+                }
+
+                if (waBadgeText) {
+                    var badgeHtml = '<span class="v3-chan-device-pill ' + waBadgeClass + '" title="' + escapeHtml(waBadgeText) + '">' + escapeHtml(waBadgeText) + '</span>';
+                    $("#tqWaDeviceBadge, #tqWaDeviceBadgePreview").html(badgeHtml);
+                } else {
+                    $("#tqWaDeviceBadge, #tqWaDeviceBadgePreview").empty();
+                }
+            };
+
+            if (waDevice) {
+                applyDeviceStatus(waDevice);
+            } else {
+                self.checkDefaultWhatsAppDevice(function (err, res) {
+                    var dev = (res && res.device) ? res.device : null;
+                    if (dev) {
+                        dev.available = !!res.is_connected;
+                        dev.is_connected = !!res.is_connected;
+                    }
+                    applyDeviceStatus(dev);
+                });
+            }
+        },
+
         checkDefaultWhatsAppDevice: function (callback) {
             $.ajax({
                 url: "/api/v3/whatsapp/messages.php?action=check_default_device",
@@ -1317,107 +1419,103 @@
             if (cleanPhone.length === 10) cleanPhone = "91" + cleanPhone;
             var whatsappText = quote.whatsapp_text || $("#tqWaPreviewBox").text() || "";
 
+            // Check selected delivery channels
+            var isEmailChecked = !isTriggeredFromShareModal && ($("#toggleTqSendEmailPreview").is(":checked") || $("#toggleTqSendEmail").is(":checked"));
+            var isWaChecked = isTriggeredFromShareModal || ($("#toggleTqSendWhatsAppPreview").is(":checked") || $("#toggleTqSendWhatsApp").is(":checked"));
+
+            if (!isEmailChecked && !isWaChecked) {
+                self.notify("Please select at least one delivery channel (Email or WhatsApp).", "warning");
+                return;
+            }
+
             var $btn = isTriggeredFromShareModal ? $("#tqBtnSendWaDirect") : $("#tqBtnPreviewSendQuote");
             var originalBtnHtml = $btn.html();
-            $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Checking WhatsApp...');
+            $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Sending Quotation...');
 
-            self.checkDefaultWhatsAppDevice(function (devErr, devRes) {
-                var isConnected = devRes && devRes.status === "success" && devRes.is_connected && devRes.device;
+            // Step 1: Ensure PDF is generated/ready
+            self.ensureQuotationPdf(quoteId, function (pdfErr, pdfRes) {
+                var fullPdfUrl = (!pdfErr && pdfRes && (pdfRes.full_url || pdfRes.pdf_url)) ? (pdfRes.full_url || pdfRes.pdf_url) : "";
 
-                if (!isConnected) {
-                    $btn.prop("disabled", false).html(originalBtnHtml);
+                // Step 2: Dispatch through backend API (action=send)
+                $.ajax({
+                    url: "/api/v3/transporters/quotation.php?action=send",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        quotation_id: quoteId,
+                        send_email: isEmailChecked ? 1 : 0,
+                        send_whatsapp: isWaChecked ? 1 : 0,
+                        pdf_url: fullPdfUrl,
+                        whatsapp_text: whatsappText
+                    }),
+                    success: function (res) {
+                        $btn.prop("disabled", false).html(originalBtnHtml);
 
-                    if (isTriggeredFromShareModal) {
-                        // Open direct WhatsApp web link in new tab
-                        var fallbackUrl = "https://api.whatsapp.com/send?phone=" + encodeURIComponent(cleanPhone) + "&text=" + encodeURIComponent(whatsappText);
-                        window.open(fallbackUrl, "_blank");
-                    } else {
-                        // Switch from preview to share modal and show informative notice
-                        $("#modalTransporterQuotePreview").removeClass("is-active");
-                        $("#modalTransporterQuoteShare").addClass("is-active");
-                        $("#tqWaSentBanner").addClass("d-none");
-                        self.notify("No default WhatsApp device is connected. You can share via WhatsApp Web or scan QR.", "info");
+                        if (res && res.status === "success") {
+                            var noticeMsg = res.message || "Quotation proposal sent to customer!";
+                            self.notify(noticeMsg, "success");
 
-                        // Still ensure PDF is generated and ready for customer/agent
-                        self.ensureQuotationPdf(quoteId, function (pdfErr, pdfRes) {
-                            if (!pdfErr && pdfRes && pdfRes.full_url) {
-                                $("#tqWaViewPdfLink").attr("href", pdfRes.full_url).removeClass("d-none");
+                            if (res.whatsapp_error && res.whatsapp_error !== "Skipped by user toggle.") {
+                                self.notify("WhatsApp Notice: " + res.whatsapp_error, "warning");
                             }
-                        });
-                    }
-                    return;
-                }
+                            if (res.email_error && res.email_error !== "Skipped by user toggle.") {
+                                self.notify("Email Notice: " + res.email_error, "warning");
+                            }
 
-                // WhatsApp Device IS connected and ready!
-                var devInfo = devRes.device;
-                $btn.html('<i class="fi fi-rr-spinner fi-spin"></i> Generating PDF &amp; Sending...');
-
-                self.ensureQuotationPdf(quoteId, function (pdfErr, pdfRes) {
-                    var payload = {
-                        phone: cleanPhone,
-                        text: whatsappText,
-                        type: (!pdfErr && pdfRes && pdfRes.pdf_url) ? "document" : "text",
-                        device_id: devInfo.device_id
-                    };
-
-                    if (!pdfErr && pdfRes && pdfRes.pdf_url) {
-                        payload.media_url = pdfRes.pdf_url;
-                        payload.file_name = pdfRes.file_name || ("Quotation_TQ-" + quoteId + ".pdf");
-                    }
-
-                    $.ajax({
-                        url: "/api/v3/whatsapp/messages.php",
-                        type: "POST",
-                        dataType: "json",
-                        contentType: "application/json",
-                        data: JSON.stringify(payload),
-                        success: function (sendRes) {
-                            $btn.prop("disabled", false).html(originalBtnHtml);
-
-                            if (sendRes && sendRes.status === "success") {
-                                self.notify("Quotation proposal & PDF sent to customer on WhatsApp!", "success");
-
-                                // Update Share Modal banner to showcase successful delivery
+                            // If sent over WhatsApp, update Share Modal banner if shown
+                            if (res.whatsapp_sent) {
                                 $("#tqWaSentBanner").removeClass("d-none");
                                 $("#tqWaSentTitle").text("Quotation & Proposal PDF Sent Successfully");
-                                var deviceLabel = devInfo.device_name || devInfo.phone_number || "Default Device";
-                                $("#tqWaSentDesc").html("Sent to <strong>+" + cleanPhone + "</strong> via <strong>" + escapeHtml(deviceLabel) + "</strong> with proposal document attached.");
-
-                                if (pdfRes && (pdfRes.full_url || pdfRes.pdf_url)) {
-                                    $("#tqWaViewPdfLink").attr("href", pdfRes.full_url || pdfRes.pdf_url).removeClass("d-none");
+                                $("#tqWaSentDesc").html("Sent to <strong>+" + cleanPhone + "</strong> with proposal document attached.");
+                                if (fullPdfUrl) {
+                                    $("#tqWaViewPdfLink").attr("href", fullPdfUrl).removeClass("d-none");
                                 }
                                 $("#tqBtnOpenCrmChat").attr("href", "/dashboard/whatsapp_chat/?phone=" + encodeURIComponent(cleanPhone)).removeClass("d-none");
                                 $("#tqBtnSendWaDirect span").text("Resend on WhatsApp");
+                            }
 
-                                $("#modalTransporterQuotePreview").removeClass("is-active");
-                                $("#modalTransporterQuoteShare").addClass("is-active");
+                            // Close live preview modal
+                            $("#modalTransporterQuotePreview").removeClass("is-active");
 
-                                // Refresh Lead Timeline
-                                if (window.V3LeadView && typeof window.V3LeadView.loadLeadDetails === "function") {
-                                    window.V3LeadView.loadLeadDetails();
-                                } else if (window.leadViewApp && typeof window.leadViewApp.loadLeadDetails === "function") {
-                                    window.leadViewApp.loadLeadDetails();
-                                }
-                            } else {
-                                var errText = (sendRes && sendRes.msg) ? sendRes.msg : "Failed to deliver WhatsApp message.";
-                                self.notify(errText, "error");
-                                if (!isTriggeredFromShareModal) {
+                            // Refresh Lead Timeline in SPA
+                            if (window.V3LeadView && typeof window.V3LeadView.loadLeadDetails === "function") {
+                                window.V3LeadView.loadLeadDetails();
+                            } else if (window.leadViewApp && typeof window.leadViewApp.loadLeadDetails === "function") {
+                                window.leadViewApp.loadLeadDetails();
+                            }
+                        } else {
+                            var errMsg = (res && res.message) ? res.message : "Failed to dispatch quotation.";
+                            self.notify(errMsg, "error");
+
+                            // Fallback if WhatsApp was checked but could not be sent directly
+                            if (isWaChecked && (!res || !res.whatsapp_sent)) {
+                                if (isTriggeredFromShareModal) {
+                                    var fallbackUrl = "https://api.whatsapp.com/send?phone=" + encodeURIComponent(cleanPhone) + "&text=" + encodeURIComponent(whatsappText);
+                                    window.open(fallbackUrl, "_blank");
+                                } else {
                                     $("#modalTransporterQuotePreview").removeClass("is-active");
                                     $("#modalTransporterQuoteShare").addClass("is-active");
                                 }
                             }
-                        },
-                        error: function (xhr) {
-                            $btn.prop("disabled", false).html(originalBtnHtml);
-                            var errResp = xhr.responseJSON;
-                            var errMsg = (errResp && (errResp.msg || errResp.message)) ? (errResp.msg || errResp.message) : "Failed to communicate with WhatsApp gateway.";
-                            self.notify(errMsg, "error");
-                            if (!isTriggeredFromShareModal) {
+                        }
+                    },
+                    error: function (xhr) {
+                        $btn.prop("disabled", false).html(originalBtnHtml);
+                        var errResp = xhr.responseJSON;
+                        var errMsg = (errResp && (errResp.message || errResp.msg)) ? (errResp.message || errResp.msg) : "Error sending quotation.";
+                        self.notify(errMsg, "error");
+
+                        if (isWaChecked) {
+                            if (isTriggeredFromShareModal) {
+                                var fallbackUrl = "https://api.whatsapp.com/send?phone=" + encodeURIComponent(cleanPhone) + "&text=" + encodeURIComponent(whatsappText);
+                                window.open(fallbackUrl, "_blank");
+                            } else {
                                 $("#modalTransporterQuotePreview").removeClass("is-active");
                                 $("#modalTransporterQuoteShare").addClass("is-active");
                             }
                         }
-                    });
+                    }
                 });
             });
         }

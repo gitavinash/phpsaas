@@ -9764,6 +9764,12 @@ tr.row-selected td {
   flex-shrink: 0 !important;
 }
 
+/* Hide Assigned Representative for CRM Calling Agents */
+.lead-view-wrapper.is-calling-agent .v3-lead-hero-right,
+.lead-view-wrapper.is-calling-agent .v3-hero-agent-card {
+  display: none !important;
+}
+
 /* Assigned Representative Card in Header */
 .v3-hero-agent-card {
   display: flex !important;

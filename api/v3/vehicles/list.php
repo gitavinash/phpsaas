@@ -97,9 +97,14 @@ if (!empty($whereConditions)) {
 $sql = "SELECT 
             v.vehicle_id,
             v.vehicle_thumbnail,
+            v.vehicle_gallery,
             v.vehicle_title,
             v.vehicle_description,
             v.vehicle_seating,
+            v.vehicle_per_km_rate_with_tax,
+            v.vehicle_per_km_rate_without_tax,
+            v.vehicle_luggage,
+            v.vehicle_fuel_type,
             v.vehicle_is_deletable,
             v.vehicle_type,
             v.vehicle_time
@@ -125,6 +130,15 @@ $formatVehicle = function ($row) {
         'flight' => 'Flight',
         'rail' => 'Rail'
     ];
+
+    $gallery = [];
+    if (!empty($row['vehicle_gallery'])) {
+        $decoded = json_decode($row['vehicle_gallery'], true);
+        if (is_array($decoded)) {
+            $gallery = array_values(array_filter(array_map('trim', $decoded)));
+        }
+    }
+
     return [
         'id' => $vId,
         'encoded_id' => base64_encode((string)$vId),
@@ -132,8 +146,14 @@ $formatVehicle = function ($row) {
         'type' => $type,
         'type_label' => $typeLabels[$type] ?? ucwords(str_replace('_', ' ', $type)),
         'seating' => (int)($row['vehicle_seating'] ?? 0),
+        'luggage' => (int)($row['vehicle_luggage'] ?? 0),
+        'rate_per_km_with_tax' => (float)($row['vehicle_per_km_rate_with_tax'] ?? 0),
+        'rate_per_km_without_tax' => (float)($row['vehicle_per_km_rate_without_tax'] ?? 0),
+        'fuel_type' => $row['vehicle_fuel_type'] ?? '',
         'description' => $row['vehicle_description'] ?? '',
         'thumbnail' => !empty($row['vehicle_thumbnail']) ? $row['vehicle_thumbnail'] : '',
+        'gallery' => $gallery,
+        'gallery_count' => count($gallery),
         'is_deletable' => (int)($row['vehicle_is_deletable'] ?? 1) === 1,
         'created_at' => $row['vehicle_time'] ?? ''
     ];
@@ -146,7 +166,7 @@ if ($res && mysqli_num_rows($res) > 0) {
 
 $masterVehicles = $vehicles;
 if ($transporterId > 0) {
-    $masterRes = mysqli_query($connection, "SELECT vehicle_id, vehicle_thumbnail, vehicle_title, vehicle_description, vehicle_seating, vehicle_is_deletable, vehicle_type, vehicle_time FROM {$tblPrefix}vehicles ORDER BY vehicle_id DESC");
+    $masterRes = mysqli_query($connection, "SELECT vehicle_id, vehicle_thumbnail, vehicle_gallery, vehicle_title, vehicle_description, vehicle_seating, vehicle_per_km_rate_with_tax, vehicle_per_km_rate_without_tax, vehicle_luggage, vehicle_fuel_type, vehicle_is_deletable, vehicle_type, vehicle_time FROM {$tblPrefix}vehicles ORDER BY vehicle_id DESC");
     $masterVehicles = [];
     if ($masterRes) {
         while ($masterRow = mysqli_fetch_assoc($masterRes)) {

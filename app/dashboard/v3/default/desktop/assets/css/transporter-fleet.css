@@ -1,0 +1,851 @@
+/**
+ * V3 Transporter Fleet & Vehicles Master Stylesheet
+ * Path: app/dashboard/v3/default/desktop/assets/css/transporter-fleet.css
+ */
+
+/* ==========================================================================
+   1. Scope & Common Layout
+   ========================================================================== */
+.vehicle-master-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+/* Header badge */
+.vehicle-header-badge {
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%) !important;
+  color: #ffffff !important;
+}
+
+.btn-reset-filters {
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   2. Table Presentation & Cell Typography
+   ========================================================================== */
+.package-v3-datatable .vehicle-row td {
+  vertical-align: middle;
+}
+
+.vehicle-model-cell {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.vehicle-thumbnail-wrapper {
+  position: relative;
+  width: 64px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vehicle-thumbnail-wrapper:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+.vehicle-model-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vehicle-model-fallback-icon {
+  font-size: 22px;
+  color: #64748b;
+}
+
+.vehicle-photo-count-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  letter-spacing: 0.2px;
+}
+
+.vehicle-meta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vehicle-model-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+}
+
+.vehicle-sub-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.vehicle-fuel-pill {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.vehicle-fuel-pill.diesel {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.vehicle-fuel-pill.cng {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.vehicle-fuel-pill.petrol {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.vehicle-fuel-pill.electric {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.vehicle-desc-text {
+  color: #475569;
+  font-size: 12.5px;
+  line-height: 1.45;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.vehicle-desc-empty {
+  color: #94a3b8;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.vehicle-badge-icon {
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+.vehicle-capacity-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.capacity-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e293b;
+  background: #f8fafc;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  width: fit-content;
+}
+
+.capacity-chip i {
+  color: #6366f1;
+  font-size: 12px;
+}
+
+.capacity-chip.luggage i {
+  color: #0d9488;
+}
+
+/* Rate Display in Table */
+.vehicle-rates-block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.fleet-rate-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.fleet-rate-badge .rate-label {
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.85;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.fleet-rate-badge .rate-value {
+  font-weight: 700;
+  font-feature-settings: "tnum";
+}
+
+.fleet-rate-badge.incl-tax {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.fleet-rate-badge.excl-tax {
+  background: #f8fafc;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+}
+
+.fleet-rate-badge.not-set {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 1px dashed #cbd5e1;
+}
+
+.vehicle-actions-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.btn-action-icon.view-gallery {
+  color: #0d9488;
+  background: #f0fdfa;
+}
+
+.btn-action-icon.view-gallery:hover {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+/* ==========================================================================
+   3. Modal Styling (Add & Update Vehicle)
+   ========================================================================== */
+.v3-modal-dialog-fleet {
+  max-width: 860px !important;
+  width: 95% !important;
+  max-height: 92vh !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+}
+
+.v3-modal-dialog-fleet .v3-modal-body {
+  overflow-y: auto;
+  max-height: calc(92vh - 135px);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Form Section Cards */
+.fleet-form-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fleet-form-section.tint-pricing {
+  background: linear-gradient(180deg, #f8fafc 0%, #f0fdf4 100%);
+  border-color: #cbd5e1;
+}
+
+.fleet-form-section.tint-media {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+.section-legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.section-legend-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #eef2ff;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.section-legend-icon.green {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.section-legend-icon.blue {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.section-legend h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.section-legend p {
+  font-size: 11.5px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Grid Layouts */
+.fleet-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.fleet-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .fleet-grid-2,
+  .fleet-grid-3 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* Currency input wrap */
+.fleet-currency-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.fleet-currency-prefix {
+  position: absolute;
+  left: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.fleet-currency-input-wrap .v3-form-control {
+  padding-left: 28px !important;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.fleet-field-helper {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 4px;
+  line-height: 1.35;
+}
+
+.fleet-field-helper.positive {
+  color: #059669;
+  font-weight: 500;
+}
+
+/* Amenity Quick Tags */
+.fleet-amenity-tags-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.fleet-amenity-pill {
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.fleet-amenity-pill:hover {
+  border-color: #6366f1;
+  color: #4338ca;
+  background: #eef2ff;
+}
+
+.fleet-amenity-pill.selected {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   4. Feature Image & Multi-Gallery Manager
+   ========================================================================== */
+.fleet-media-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+@media (max-width: 768px) {
+  .fleet-media-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Feature Image Card */
+.fleet-feature-image-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fleet-feature-preview-zone {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 12px;
+}
+
+.fleet-feature-preview-zone:hover,
+.fleet-feature-preview-zone.dragover {
+  border-color: #6366f1;
+  background: #f5f7ff;
+}
+
+.fleet-feature-preview-zone.has-image {
+  border-style: solid;
+  border-color: #cbd5e1;
+  padding: 0;
+}
+
+.fleet-feature-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fleet-feature-badge-tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.4);
+}
+
+.fleet-feature-remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.75);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.fleet-feature-remove-btn:hover {
+  background: #dc2626;
+}
+
+.fleet-feature-empty-icon {
+  font-size: 32px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.fleet-feature-empty-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  margin: 0;
+}
+
+.fleet-feature-empty-hint {
+  font-size: 10.5px;
+  color: #94a3b8;
+  margin: 2px 0 0;
+}
+
+/* Gallery Zone */
+.fleet-gallery-zone-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 180px;
+}
+
+.fleet-gallery-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fleet-gallery-count-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* Gallery Upload Bar */
+.fleet-gallery-drop-bar {
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fleet-gallery-drop-bar:hover,
+.fleet-gallery-drop-bar.dragover {
+  border-color: #6366f1;
+  background: #eef2ff;
+}
+
+.drop-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.drop-bar-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #6366f1;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.drop-bar-text h5 {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.drop-bar-text p {
+  font-size: 11px;
+  color: #64748b;
+  margin: 0;
+}
+
+.btn-browse-gallery {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #4f46e5;
+  border: 1px solid #c7d2fe;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-browse-gallery:hover {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+/* Gallery Grid */
+.fleet-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+  margin-top: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.fleet-gallery-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f1f5f9;
+  border: 1.5px solid #e2e8f0;
+  transition: all 0.15s ease;
+}
+
+.fleet-gallery-item.is-cover {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+}
+
+.fleet-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fleet-gallery-item .gallery-item-actions {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.fleet-gallery-item:hover .gallery-item-actions {
+  opacity: 1;
+}
+
+.gallery-action-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: none;
+  background: #ffffff;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.gallery-action-btn:hover {
+  transform: scale(1.1);
+}
+
+.gallery-action-btn.set-cover {
+  color: #d97706;
+}
+
+.gallery-action-btn.delete-item {
+  color: #dc2626;
+}
+
+.gallery-cover-star-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 9px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.fleet-gallery-empty-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  font-style: italic;
+  padding: 12px;
+  text-align: center;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+/* ==========================================================================
+   5. Quick Gallery Lightbox Viewer Modal
+   ========================================================================== */
+.fleet-lightbox-dialog {
+  max-width: 780px !important;
+  width: 90% !important;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.fleet-lightbox-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.lightbox-main-stage {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  background: #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-main-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.lightbox-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  color: #0f172a;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.lightbox-nav-btn:hover {
+  background: #ffffff;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.lightbox-nav-btn.prev {
+  left: 12px;
+}
+
+.lightbox-nav-btn.next {
+  right: 12px;
+}
+
+.lightbox-thumb-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  overflow-x: auto;
+  padding: 4px;
+}
+
+.lightbox-thumb-item {
+  width: 64px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: all 0.15s ease;
+}
+
+.lightbox-thumb-item.active {
+  border-color: #4f46e5;
+  opacity: 1;
+}
+
+.lightbox-thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

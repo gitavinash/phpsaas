@@ -645,6 +645,9 @@ if (mysqli_query($connection, $insertQuery)) {
                 $waLines[] = $pdfUrl;
                 $waLines[] = "";
                 $waLines[] = "Feel free to reply directly here for any modifications or questions. Have a wonderful journey!";
+                $waLines[] = "";
+                $waLines[] = "—";
+                $waLines[] = "_Powered by Aleya.in_";
                 $waText = implode("\n", $waLines);
 
                 $waRes = sendWhatsAppDirectMessage(

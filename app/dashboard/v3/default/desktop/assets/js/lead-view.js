@@ -2483,7 +2483,7 @@
           ? defaultFollowupMoment.format("YYYY-MM-DD, hh:mm A")
           : "";
 
-      // Role check: Only Administrator and Operational can see/manage Assigned Representative
+      // Role check: Don't show Assigned Representative for CRM calling agents
       const userRole = (
         lead.access_type ||
         $("#leadViewApp").data("user-role") ||
@@ -2491,50 +2491,60 @@
       )
         .toLowerCase()
         .trim();
+
+      const isCallingAgent =
+        lead.is_calling_agent === true ||
+        lead.is_calling_agent === 1 ||
+        lead.is_calling_agent === "1" ||
+        userRole === "agent" ||
+        userRole === "calling_agent" ||
+        userRole === "crm_calling_agent" ||
+        userRole === "crm calling agent" ||
+        userRole === "sales_executive" ||
+        $("#leadViewApp").data("is-calling-agent") === 1 ||
+        $("#leadViewApp").data("is-calling-agent") === "1" ||
+        $("#leadViewApp").hasClass("is-calling-agent");
+
       const canManageAgent =
-        userRole === "admin" ||
-        userRole === "administrator" ||
-        userRole === "operations" ||
-        userRole === "superadmin" ||
-        userRole === "operational";
+        !isCallingAgent &&
+        (userRole === "admin" ||
+          userRole === "administrator" ||
+          userRole === "operations" ||
+          userRole === "superadmin" ||
+          userRole === "operational" ||
+          userRole === "team_lead" ||
+          userRole === "manager");
+
+      const canSeeAssignedRep = !isCallingAgent && canManageAgent;
 
       const currentAgent = (lead.agents || []).find(
         (ag) => parseInt(ag.id || ag.user_id || 0) === parseInt(lead.agent_id || 0)
       ) || (lead.agent_name && lead.agent_name !== "Unassigned" ? { name: lead.agent_name, role: lead.agent_role || "Representative" } : null);
 
-      const heroAgentHtml = `
+      const heroAgentHtml = canSeeAssignedRep
+        ? `
         <div class="v3-hero-agent-card ${isAssigned ? "is-assigned" : "is-unassigned"}">
           <div class="v3-hero-agent-avatar ${isAssigned ? "has-agent" : "unassigned"}">
             ${isAssigned ? '<i class="fi fi-rr-user-headset"></i>' : '<i class="fi fi-rr-user-slash"></i>'}
           </div>
           <div class="v3-hero-agent-info">
             <span class="v3-hero-agent-kicker">Assigned Representative</span>
-            ${
-              canManageAgent
-                ? `
-              <div class="v3-hero-agent-select-wrap">
-                <select id="leadDetailAgentSelect" class="leads-filter-select v3-hero-agent-select">
-                  <option value="0">-- Unassigned --</option>
-                  ${(lead.agents || [])
-                    .map((ag) => {
-                      const agId = parseInt(ag.id || ag.user_id || 0);
-                      const isSelected = parseInt(lead.agent_id || 0) === agId;
-                      return `<option value="${agId}" ${isSelected ? "selected" : ""}>${ag.name} (${ag.role})</option>`;
-                    })
-                    .join("")}
-                </select>
-              </div>
-            `
-                : `
-              <div class="v3-hero-agent-static">
-                <span class="v3-hero-agent-name">${currentAgent ? currentAgent.name : "Unassigned"}</span>
-                <span class="v3-hero-agent-role">${currentAgent ? (currentAgent.role || "Representative") : "No agent assigned"}</span>
-              </div>
-            `
-            }
+            <div class="v3-hero-agent-select-wrap">
+              <select id="leadDetailAgentSelect" class="leads-filter-select v3-hero-agent-select">
+                <option value="0">-- Unassigned --</option>
+                ${(lead.agents || [])
+                  .map((ag) => {
+                    const agId = parseInt(ag.id || ag.user_id || 0);
+                    const isSelected = parseInt(lead.agent_id || 0) === agId;
+                    return `<option value="${agId}" ${isSelected ? "selected" : ""}>${ag.name} (${ag.role})</option>`;
+                  })
+                  .join("")}
+              </select>
+            </div>
           </div>
         </div>
-      `;
+      `
+        : "";
 
       // Converted Booking Banner
       const bInfo = lead.booking;
@@ -2825,10 +2835,16 @@
                 </div>
               </div>
 
-              <!-- Right Side: Assigned Representative Card -->
+              <!-- Right Side: Assigned Representative Card (Managers/Admins only) -->
+              ${
+                canSeeAssignedRep && heroAgentHtml
+                  ? `
               <div class="v3-lead-hero-right">
                 ${heroAgentHtml}
               </div>
+              `
+                  : ""
+              }
             </div>
 
             <div class="v3-lead-hero-actions">

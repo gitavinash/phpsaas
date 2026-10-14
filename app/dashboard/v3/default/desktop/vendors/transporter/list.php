@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="/dashboard/vendors/transporter/fleet/" class="btn-v3-action" data-tooltip="Manage Fleet & Vehicle Models">
+            <a href="/dashboard/vendors/transporter/vehicle/" class="btn-v3-action" data-tooltip="Manage Fleet & Vehicle Models">
                 <i class="fi fi-rr-car-alt"></i> Fleet &amp; Vehicles
             </a>
             <a href="/dashboard/vendors/transporter/add/" class="btn-add-pkg-v3" data-tooltip="Add new transporter to directory">
