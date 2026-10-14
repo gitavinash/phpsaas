@@ -1809,24 +1809,30 @@ class WhatsAppSession {
 
 function enrichSession(req, session) {
   if (!session || !req) return;
-  const webhookUrl = req.query?.webhook_url || req.body?.webhook_url;
-  const siteId = req.query?.site_id || req.body?.site_id;
+  let webhookUrl = req.query?.webhook_url || req.body?.webhook_url;
+  if (Array.isArray(webhookUrl)) webhookUrl = webhookUrl[0];
+  let rawSiteId = req.query?.site_id || req.body?.site_id;
+  if (Array.isArray(rawSiteId)) rawSiteId = rawSiteId[0];
+  if (typeof rawSiteId === "string" && rawSiteId.includes(",")) {
+    rawSiteId = rawSiteId.split(",")[0].trim();
+  }
+  const siteId = rawSiteId ? String(rawSiteId).trim() : null;
   let changed = false;
 
   // Prevent cross-site session contamination:
   // If session already belongs to another site, do NOT let a different site override its siteId or webhookUrl
   if (siteId) {
-    if (session.siteId && String(session.siteId) !== String(siteId)) {
+    if (session.siteId && String(session.siteId) !== siteId) {
       console.warn(`[WhatsApp Gateway:${session.sessionId}] Ignored cross-site enrich attempt from site ${siteId} (belongs to site ${session.siteId})`);
       return;
     }
     const siteMatch = session.sessionId.match(/^site_(\d+)_/);
-    if (siteMatch && String(siteMatch[1]) !== String(siteId)) {
+    if (siteMatch && String(siteMatch[1]) !== siteId) {
       console.warn(`[WhatsApp Gateway:${session.sessionId}] Ignored cross-site enrich attempt from site ${siteId} (session belongs to site ${siteMatch[1]})`);
       return;
     }
     const numSite = parseInt(siteId, 10);
-    if (session.siteId !== numSite) {
+    if (!isNaN(numSite) && session.siteId !== numSite) {
       session.siteId = numSite;
       changed = true;
     }
@@ -2107,7 +2113,10 @@ function notifyCrm(payload, targetOverrideUrl = null, redirectCount = 0) {
 // 0. List all active WhatsApp device sessions
 app.get("/devices", (req, res) => {
   try {
-    const filterSiteId = req.query?.site_id ? String(req.query.site_id) : null;
+    let rawFilterSiteId = req.query?.site_id;
+    if (Array.isArray(rawFilterSiteId)) rawFilterSiteId = rawFilterSiteId[0];
+    if (typeof rawFilterSiteId === "string" && rawFilterSiteId.includes(",")) rawFilterSiteId = rawFilterSiteId.split(",")[0].trim();
+    const filterSiteId = rawFilterSiteId ? String(rawFilterSiteId).trim() : null;
     const list = [];
     for (const [id, s] of sessions.entries()) {
       if (filterSiteId) {
@@ -2154,7 +2163,10 @@ app.get("/devices", (req, res) => {
 // 1. Status & QR Info for specific session
 app.get("/status", (req, res) => {
   try {
-    const filterSiteId = req.query?.site_id ? String(req.query.site_id) : null;
+    let rawFilterSiteId = req.query?.site_id;
+    if (Array.isArray(rawFilterSiteId)) rawFilterSiteId = rawFilterSiteId[0];
+    if (typeof rawFilterSiteId === "string" && rawFilterSiteId.includes(",")) rawFilterSiteId = rawFilterSiteId.split(",")[0].trim();
+    const filterSiteId = rawFilterSiteId ? String(rawFilterSiteId).trim() : null;
     const s = getSession(req.query.session_id, req);
 
     if (filterSiteId) {

@@ -196,12 +196,21 @@ function callWaGateway($customUrl, $path, $method = 'GET', $body = null) {
     $dynamicWebhookUrl = $scheme . $host . '/api/v3/whatsapp/webhook/';
     $siteId = defined('SITE_ID') ? (int)SITE_ID : 0;
 
-    $separator = (strpos($target, '?') !== false) ? '&' : '?';
-    $target .= $separator . 'webhook_url=' . urlencode($dynamicWebhookUrl) . '&site_id=' . $siteId;
+    $paramsToAdd = [];
+    if (strpos($target, 'webhook_url=') === false) {
+        $paramsToAdd[] = 'webhook_url=' . urlencode($dynamicWebhookUrl);
+    }
+    if ($siteId > 0 && strpos($target, 'site_id=') === false) {
+        $paramsToAdd[] = 'site_id=' . $siteId;
+    }
+    if (!empty($paramsToAdd)) {
+        $separator = (strpos($target, '?') !== false) ? '&' : '?';
+        $target .= $separator . implode('&', $paramsToAdd);
+    }
 
     if ($body !== null && is_array($body)) {
-        $body['webhook_url'] = $dynamicWebhookUrl;
-        $body['site_id'] = $siteId;
+        if (!isset($body['webhook_url'])) $body['webhook_url'] = $dynamicWebhookUrl;
+        if (!isset($body['site_id'])) $body['site_id'] = $siteId;
     }
 
     $res = false;
