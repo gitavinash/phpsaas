@@ -1281,7 +1281,7 @@
                         }
 
                         $.ajax({
-                            url: "/api/v3/transporters/quotation.php?action=save_pdf",
+                            url: "/api/v3/transporters/quotation/?action=save_pdf",
                             type: "POST",
                             dataType: "json",
                             contentType: "application/json",
@@ -1437,7 +1437,7 @@
 
                 // Step 2: Dispatch through backend API (action=send)
                 $.ajax({
-                    url: "/api/v3/transporters/quotation.php?action=send",
+                    url: "/api/v3/transporters/quotation/?action=send",
                     type: "POST",
                     dataType: "json",
                     contentType: "application/json",
