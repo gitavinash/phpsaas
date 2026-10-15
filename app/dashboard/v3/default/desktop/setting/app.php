@@ -456,6 +456,23 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                             </label>
                         </div>
 
+                        <!-- Toggle 4b: Send Photos (Premium) - Shown strictly for Transporter nature -->
+                        <div class="v3-feature-toggle-row<?php echo $isPackageSix ? ' is-locked' : ''; ?> is-hidden" id="rowLeadViewSendPhotos">
+                            <div class="v3-feature-toggle-info">
+                                <div class="v3-feature-toggle-icon">
+                                    <i class="fi fi-rr-camera"></i>
+                                </div>
+                                <div class="v3-feature-toggle-text">
+                                    <h4>Send Photos <span class="<?php echo $isPackageSix ? 'v3-badge-upgrade' : 'v3-badge-premium'; ?>"><i class="fi fi-rr-crown"></i> <?php echo $isPackageSix ? 'Upgrade Required' : 'Premium'; ?></span></h4>
+                                    <p>Display fast action to select fleet vehicles and send vehicle photo profiles directly to clients via WhatsApp &amp; Email.</p>
+                                </div>
+                            </div>
+                            <label class="v3-switch-label" for="cfgLeadViewSendPhotos">
+                                <input type="checkbox" id="cfgLeadViewSendPhotos" name="lead_view_show_send_photos" value="1" <?php echo $isPackageSix ? 'disabled' : 'checked'; ?>>
+                                <span class="v3-switch-slider"></span>
+                            </label>
+                        </div>
+
                         <!-- Toggle 5: Convert to Confirmed Sale -->
                         <div class="v3-feature-toggle-row">
                             <div class="v3-feature-toggle-info">
@@ -633,6 +650,7 @@ $isPackageSix = ($packageId === 6 || (defined('SITE_PACKAGE_ID') && (int)SITE_PA
                             <span class="v3-preview-tag tag-active" id="tagPrevWhatsappButton">WhatsApp</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevItinerary">Tour Itinerary</span>
                             <span class="v3-preview-tag tag-active is-hidden" id="tagPrevQuotation">Send Quotation</span>
+                            <span class="v3-preview-tag tag-active is-hidden" id="tagPrevVehiclePhotos">Send Photos</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevPaymentLink">Payment Link</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevRecordPayment">Record Payment</span>
                             <span class="v3-preview-tag tag-active" id="tagPrevConvertSale">Convert Sale</span>

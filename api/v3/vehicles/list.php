@@ -24,6 +24,9 @@ $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId    = defined('SITE_ID')      ? (int) SITE_ID : (int)($_SESSION['site_id'] ?? 0);
 $userId    = defined('USER_ID')      ? (int) USER_ID : (int)($_SESSION['user_id'] ?? 0);
 
+require_once __DIR__ . '/schema.php';
+ensureTransporterVehiclesSchema($connection, $tblPrefix, $siteId);
+
 $search   = isset($_GET['search']) ? mysqli_real_escape_string($connection, trim($_GET['search'])) : '';
 $category = isset($_GET['category']) ? mysqli_real_escape_string($connection, strtolower(trim($_GET['category']))) : '';
 $rawTransporterId = $_GET['transporter_id'] ?? ($_GET['transporterId'] ?? 0);
@@ -74,18 +77,18 @@ if ($vehicleId > 0) {
 
 if (!empty($category) && $category !== 'all') {
     if ($category === 'mpv_suv') {
-        $whereConditions[] = "v.vehicle_type IN ('mpv', 'suv')";
+        $whereConditions[] = "LOWER(TRIM(v.vehicle_type)) IN ('mpv', 'suv')";
     } elseif ($category === 'tempo_bus') {
-        $whereConditions[] = "v.vehicle_type IN ('bus', 'traveller', 'light_commercial_vehicle')";
+        $whereConditions[] = "LOWER(TRIM(v.vehicle_type)) IN ('bus', 'traveller', 'light_commercial_vehicle')";
     } elseif ($category === 'micro_hatch') {
-        $whereConditions[] = "v.vehicle_type IN ('micro', 'hatchback')";
+        $whereConditions[] = "LOWER(TRIM(v.vehicle_type)) IN ('micro', 'hatchback')";
     } else {
-        $whereConditions[] = "v.vehicle_type = '{$category}'";
+        $whereConditions[] = "LOWER(TRIM(v.vehicle_type)) = '{$category}'";
     }
 }
 
 if (!empty($search)) {
-    $whereConditions[] = "(v.vehicle_title LIKE '%{$search}%' OR v.vehicle_type LIKE '%{$search}%' OR v.vehicle_description LIKE '%{$search}%')";
+    $whereConditions[] = "(v.vehicle_title LIKE '%{$search}%' OR v.vehicle_type LIKE '%{$search}%' OR v.vehicle_description LIKE '%{$search}%' OR v.vehicle_fuel_type LIKE '%{$search}%')";
 }
 
 $whereSql = '';

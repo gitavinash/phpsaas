@@ -683,13 +683,25 @@ $formAction = $currentDomain . '/enquiry/';
         .then(function(data) {
             setLoading(false);
             if (data.status === 'success' || (data.status && data.status.toString() === '200')) {
-                // If redirect URL provided
-                var targetRedirect = data.redirect_url || redirectUrl;
-                if (targetRedirect && targetRedirect.length > 3) {
-                    window.top.location.href = targetRedirect;
+                // If user defined a thank you redirect URL
+                var targetRedirect = (data && data.redirect_url) ? data.redirect_url : redirectUrl;
+                if (targetRedirect && typeof targetRedirect === 'string' && targetRedirect.trim().length > 3) {
+                    targetRedirect = targetRedirect.trim();
+                    if (!/^https?:\/\//i.test(targetRedirect) && !targetRedirect.startsWith('/')) {
+                        targetRedirect = 'https://' + targetRedirect;
+                    }
+                    try {
+                        if (window.top && window.top !== window) {
+                            window.top.location.href = targetRedirect;
+                        } else {
+                            window.location.href = targetRedirect;
+                        }
+                    } catch (e) {
+                        window.location.href = targetRedirect;
+                    }
                     return;
                 }
-                // Show in-place animated success screen
+                // If user has NOT defined the Thank You URL: Show thank you message
                 formWrapper.style.display = 'none';
                 successCard.style.display = 'block';
             } else {

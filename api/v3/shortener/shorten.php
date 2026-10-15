@@ -111,7 +111,7 @@ if (!empty($alias)) {
         $row = mysqli_fetch_assoc($checkRes);
         if ($row['redirection_to'] === $longUrl) {
             // Already points to same destination
-            $shortUrl = $baseUrl . '/' . $cleanAlias;
+            $shortUrl = $baseUrl . '/' . $cleanAlias . '/';
             echo json_encode([
                 'status'     => 'success',
                 'code'       => 200,
@@ -136,7 +136,7 @@ if (!empty($alias)) {
     $insertSql = "INSERT INTO {$tblPrefix}redirection(redirection_from, redirection_to, redirection_http_status, redirection_owner_id, redirection_site_id, redirection_status, redirection_generated, redirection_update) 
                   VALUES('{$escAlias}', '{$escLong}', 301, {$userId}, {$siteId}, 1, NOW(), NOW())";
     if (mysqli_query($connection, $insertSql)) {
-        $shortUrl = $baseUrl . '/' . $cleanAlias;
+        $shortUrl = $baseUrl . '/' . $cleanAlias . '/';
         echo json_encode([
             'status'     => 'success',
             'code'       => 200,
@@ -161,7 +161,7 @@ if (!empty($alias)) {
 $shortUrl = longToShortUrl($connection, $longUrl);
 
 if (!empty($shortUrl)) {
-    $code = basename(parse_url($shortUrl, PHP_URL_PATH));
+    $code = trim((string)parse_url($shortUrl, PHP_URL_PATH), '/');
     http_response_code(200);
     echo json_encode([
         'status'     => 'success',

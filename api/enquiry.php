@@ -283,8 +283,8 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '{$escaped_ip}', '{$escaped_c
                 $escFormUid = mysqli_real_escape_string($connection, (string)$form_uid);
                 mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "web_form SET form_submissions_count = form_submissions_count + 1 WHERE form_uid = '{$escFormUid}'");
 
-                // Check custom email notification config for this web form
-                $formMailRes = mysqli_query($connection, "SELECT form_email_to, form_email_cc, form_email_bcc FROM " . TABLE_PREFIX . "web_form WHERE form_uid = '{$escFormUid}' LIMIT 1");
+                // Check custom email notification config and redirect URL for this web form
+                $formMailRes = mysqli_query($connection, "SELECT form_email_to, form_email_cc, form_email_bcc, form_redirect_url FROM " . TABLE_PREFIX . "web_form WHERE form_uid = '{$escFormUid}' LIMIT 1");
                 if ($formMailRes && $fMailRow = mysqli_fetch_assoc($formMailRes)) {
                     if (!empty($fMailRow['form_email_to'])) {
                         $toAddress = trim($fMailRow['form_email_to']);
@@ -297,6 +297,9 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '{$escaped_ip}', '{$escaped_c
                     if (!empty($fMailRow['form_email_bcc'])) {
                         $bccAddress = trim($fMailRow['form_email_bcc']);
                         $bcc = base64_encode($bccAddress);
+                    }
+                    if (empty($redirect_url) && !empty($fMailRow['form_redirect_url'])) {
+                        $redirect_url = trim($fMailRow['form_redirect_url']);
                     }
                 }
             }
@@ -356,7 +359,7 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '{$escaped_ip}', '{$escaped_c
             (isset($_REQUEST['format']) && $_REQUEST['format'] === 'json')
         );
 
-        if (strpos($redirect_url, '/shipping/') !== false) {
+        if (!empty($redirect_url) && strpos($redirect_url, '/shipping/') !== false) {
 
             $postUrlValue = "&name=" . urlencode($first_name) . "&email=" . urlencode($email) . "&mobile=" . urlencode($mobile) .
                 "&pickup_date=" . urlencode($pickup_date) . "&pickup_time=" . urlencode($pickup_time) . "&address=" .
@@ -372,25 +375,84 @@ enquiry_time) VALUES(" . SITE_ID . ", '{$userId}', '{$escaped_ip}', '{$escaped_c
                 exit();
             }
             header("Location: {$targetUrl}", TRUE, 303);
+            exit();
         } else {
+            $isWebForm = !empty($form_uid);
+            $hasCustomRedirect = !empty($redirect_url) && trim($redirect_url) !== '';
 
-            if (!isset($redirect_url)) {
-                $redirect_url = '/dashboard/leads/view/?id=' . base64_encode($leadId);
-            }
+            if ($isWebForm) {
+                // Public Web Form: 301 Redirect ONLY if Thank You URL is defined by user
+                if ($hasCustomRedirect) {
+                    $targetUrl = trim($redirect_url);
+                    if ($isJsonRequest) {
+                        echo json_encode([
+                            'status' => 'success',
+                            'msg' => 'Enquiry submitted successfully',
+                            'leadId' => $leadId ?? 0,
+                            'redirect_url' => $targetUrl
+                        ]);
+                        exit();
+                    }
+                    header("Location: " . $targetUrl, TRUE, 301);
+                    exit();
+                }
 
-            if ($isJsonRequest) {
-                echo json_encode([
-                    'status' => 'success',
-                    'msg' => 'Enquiry submitted successfully',
-                    'leadId' => $leadId ?? 0,
-                    'redirect_url' => $redirect_url
-                ]);
+                // If user has NOT defined the Thank You URL: Show thank you message (no dashboard/login redirect)
+                if ($isJsonRequest) {
+                    echo json_encode([
+                        'status' => 'success',
+                        'msg' => 'Enquiry submitted successfully',
+                        'leadId' => $leadId ?? 0,
+                        'redirect_url' => null
+                    ]);
+                    exit();
+                }
+
+                // Direct non-AJAX browser view fallback
+                ?>
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Thank You</title>
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f8fafc; color: #1e293b; text-align: center; }
+                        .card { padding: 40px 32px; background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; max-width: 440px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.06); }
+                        .icon { width: 56px; height: 56px; margin: 0 auto 16px; background: #ecfdf5; color: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+                        h2 { font-size: 20px; font-weight: 700; margin: 0 0 8px; color: #0f172a; }
+                        p { font-size: 14.5px; margin: 0; line-height: 1.5; color: #64748b; }
+                    </style>
+                </head>
+                <body>
+                    <div class="card">
+                        <div class="icon">&#10003;</div>
+                        <h2>Request Received!</h2>
+                        <p>Thank you! We have received your inquiry and will contact you shortly.</p>
+                    </div>
+                </body>
+                </html>
+                <?php
+                exit();
+            } else {
+                // Internal / Admin Dashboard Enquiry creation
+                if (!$hasCustomRedirect) {
+                    $redirect_url = '/dashboard/leads/view/?id=' . base64_encode($leadId);
+                }
+
+                if ($isJsonRequest) {
+                    echo json_encode([
+                        'status' => 'success',
+                        'msg' => 'Enquiry submitted successfully',
+                        'leadId' => $leadId ?? 0,
+                        'redirect_url' => $redirect_url
+                    ]);
+                    exit();
+                }
+
+                header("Location: " . $redirect_url, TRUE, 303);
                 exit();
             }
-
-            header("Location: " . $redirect_url, TRUE, 303);
-            // echo 'We are redirecting you to <a href="' . htmlspecialchars($redirect_url) . '">' . htmlspecialchars($redirect_url) . '</a>...';
-            // header("Refresh: 3; URL=" . $redirect_url);
         }
     } else {
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' || (!empty($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) || (isset($_REQUEST['format']) && $_REQUEST['format'] === 'json')) {

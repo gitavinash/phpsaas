@@ -123,6 +123,11 @@ INNER JOIN (
 SET e.enquiry_last_contacted_at = n.last_note_time
 WHERE e.enquiry_last_contacted_at IS NULL";
 mysqli_query($connection, $updateContactedSql);
-echo "Seeded initial last_contacted_at timestamps.\n";
+// 5. Ensure Transporter Vehicles Schema & App Configurations
+if (file_exists(dirname(__DIR__) . '/vehicles/schema.php')) {
+    require_once dirname(__DIR__) . '/vehicles/schema.php';
+    ensureTransporterVehiclesSchema($connection, $tblPrefix, 1);
+    echo "Checked & ensured transporter vehicles and configurations schema.\n";
+}
 
 echo "=== Schema Migration Completed Successfully ===\n";

@@ -45,7 +45,8 @@ $leadViewOpts = [
     'show_call_button' => true,
     'show_whatsapp_button' => true,
     'show_send_itinerary' => true,
-    'show_send_quotation' => true
+    'show_send_quotation' => true,
+    'show_send_photos' => true
 ];
 $leadViewSiteId = defined('SITE_ID') && (int)SITE_ID > 0 ? (int)SITE_ID : (isset($_SESSION['site_id']) ? (int)$_SESSION['site_id'] : 0);
 if ($leadViewSiteId <= 0 && isset($_COOKIE['user_site_id'])) {
@@ -56,7 +57,7 @@ if ($leadViewSiteId <= 0) {
 }
 $leadViewTbl = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 if ($leadViewSiteId > 0 && isset($connection)) {
-    $lvRes = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM {$leadViewTbl}site_configuration WHERE site_configuration_site_id = {$leadViewSiteId} AND site_configuration_status = 1 AND site_configuration_key IN ('company_nature', 'lead_view_show_payment_link', 'lead_view_show_record_payment', 'lead_view_show_convert_sale', 'lead_view_show_call_button', 'lead_view_show_whatsapp_button', 'lead_view_show_send_itinerary', 'lead_view_show_send_quotation')");
+    $lvRes = mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM {$leadViewTbl}site_configuration WHERE site_configuration_site_id = {$leadViewSiteId} AND site_configuration_status = 1 AND site_configuration_key IN ('company_nature', 'lead_view_show_payment_link', 'lead_view_show_record_payment', 'lead_view_show_convert_sale', 'lead_view_show_call_button', 'lead_view_show_whatsapp_button', 'lead_view_show_send_itinerary', 'lead_view_show_send_quotation', 'lead_view_show_send_photos')");
     if ($lvRes && mysqli_num_rows($lvRes) > 0) {
         while ($lvRow = mysqli_fetch_assoc($lvRes)) {
             $k = $lvRow['site_configuration_key'];
@@ -69,6 +70,7 @@ if ($leadViewSiteId > 0 && isset($connection)) {
             if ($k === 'lead_view_show_whatsapp_button') $leadViewOpts['show_whatsapp_button'] = ($v !== '0');
             if ($k === 'lead_view_show_send_itinerary') $leadViewOpts['show_send_itinerary'] = ($v !== '0');
             if ($k === 'lead_view_show_send_quotation') $leadViewOpts['show_send_quotation'] = ($v !== '0');
+            if ($k === 'lead_view_show_send_photos') $leadViewOpts['show_send_photos'] = ($v !== '0');
         }
     }
 }
@@ -1547,11 +1549,15 @@ $isCallingAgentUser = in_array($currentUserRole, ['agent', 'calling_agent', 'crm
         </div>
         <div class="tq-modal-footer">
             <div class="tq-footer-summary">
-                <span>Total Quote:</span>
-                <strong><span class="tq-currency-symbol">₹</span> <span id="tqFooterTotalDisplay">0.00</span></strong>
+                <div class="tq-footer-summary-icon">
+                    <i class="fi fi-rr-receipt"></i>
+                </div>
+                <div class="tq-footer-summary-info">
+                    <span class="tq-footer-summary-label">Total Estimated Quote</span>
+                    <strong class="tq-footer-summary-value"><span class="tq-currency-symbol">₹</span> <span id="tqFooterTotalDisplay">0.00</span></strong>
+                </div>
             </div>
-            <div class="v3-itin-delivery-channels" id="wrapTqDeliveryChannels">
-                <span class="v3-channels-label"><i class="fi fi-rr-paper-plane"></i> Send:</span>
+            <div class="v3-itin-delivery-channels tq-delivery-channels-bar" id="wrapTqDeliveryChannels">
                 <label class="v3-channel-check-item is-email-checked" id="itemTqSendEmail" for="toggleTqSendEmail" title="Send quotation to customer email">
                     <input type="checkbox" id="toggleTqSendEmail" name="tq_send_email" value="1" class="v3-channel-checkbox" checked>
                     <span class="v3-custom-check-box"><i class="fi fi-rr-check"></i></span>
@@ -1567,8 +1573,8 @@ $isCallingAgentUser = in_array($currentUserRole, ['agent', 'calling_agent', 'crm
                 </label>
             </div>
             <div class="tq-footer-actions">
-                <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger" id="tqBtnCancelQuote">Cancel</button>
-                <button type="button" class="btn-add-pkg-v3" id="tqBtnSubmitQuote">
+                <button type="button" class="btn-v3-action btn-outline tq-btn-cancel v3-modal-close-trigger" id="tqBtnCancelQuote">Cancel</button>
+                <button type="button" class="btn-add-pkg-v3 tq-btn-submit" id="tqBtnSubmitQuote">
                     <i class="fi fi-rr-eye"></i> Preview &amp; Generate Quotation
                 </button>
             </div>
@@ -1596,8 +1602,7 @@ $isCallingAgentUser = in_array($currentUserRole, ['agent', 'calling_agent', 'crm
                 <button type="button" class="btn-v3-action btn-outline" id="tqBtnPreviewBack" title="Edit inputs in quote builder">
                     <i class="fi fi-rr-edit"></i> Edit Details
                 </button>
-                <div class="v3-itin-delivery-channels v3-preview-channels" id="wrapTqPreviewDeliveryChannels">
-                    <span class="v3-channels-label"><i class="fi fi-rr-paper-plane"></i> Send:</span>
+                <div class="v3-itin-delivery-channels v3-preview-channels tq-delivery-channels-bar" id="wrapTqPreviewDeliveryChannels">
                     <label class="v3-channel-check-item is-email-checked" id="itemTqSendEmailPreview" for="toggleTqSendEmailPreview" title="Send quotation to customer email">
                         <input type="checkbox" id="toggleTqSendEmailPreview" name="tq_send_email_preview" value="1" class="v3-channel-checkbox" checked>
                         <span class="v3-custom-check-box"><i class="fi fi-rr-check"></i></span>
@@ -1684,6 +1689,128 @@ $isCallingAgentUser = in_array($currentUserRole, ['agent', 'calling_agent', 'crm
                     <i class="fi fi-brands-whatsapp"></i> <span>Send on WhatsApp</span>
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Send Vehicle Photos & Profile -->
+<div class="v3-modal-overlay" id="modalSendVehiclePhotos">
+    <div class="v3-modal-dialog v3-modal-dialog-lg vp-modal-dialog">
+        <div class="v3-modal-header">
+            <div class="v3-modal-header-left">
+                <div class="v3-modal-header-icon-box vp-header-icon-box">
+                    <i class="fi fi-rr-camera"></i>
+                </div>
+                <div class="v3-modal-title-wrap">
+                    <h4 class="v3-modal-title">Send Vehicle Photos &amp; Profile</h4>
+                    <span class="v3-modal-subtitle">Select vehicle fleet profiles to send photos and specifications to customer</span>
+                </div>
+            </div>
+            <button type="button" class="v3-modal-close-btn v3-modal-close-trigger" title="Close"><i class="fi fi-rr-cross"></i></button>
+        </div>
+        <div class="v3-modal-body vp-modal-body">
+            <!-- Filters & Selection toolbar -->
+            <div class="vp-filter-controls">
+                <div class="vp-dropdown-row">
+                    <div class="vp-dropdown-col">
+                        <label for="vpCategorySelect" class="vp-field-label">
+                            <i class="fi fi-rr-apps"></i> Vehicle Category
+                        </label>
+                        <select id="vpCategorySelect" class="vp-filter-select" data-placeholder="All Categories">
+                            <option value="all">All Categories</option>
+                        </select>
+                    </div>
+                    <div class="vp-dropdown-col">
+                        <label for="vpModelSelect" class="vp-field-label">
+                            <i class="fi fi-rr-car-alt"></i> Vehicle Name / Model
+                        </label>
+                        <select id="vpModelSelect" class="vp-filter-select" data-placeholder="All Vehicle Models">
+                            <option value="all">All Vehicle Models</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="vp-search-filter-bar">
+                    <div class="vp-search-box">
+                        <i class="fi fi-rr-search"></i>
+                        <input type="text" id="vpVehicleSearch" placeholder="Filter by vehicle keyword, fuel, or features..." autocomplete="off">
+                    </div>
+                    <div class="vp-count-badge" id="vpSelectedSummary">
+                        <span id="vpSelectedCount">0</span> selected
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicle Cards Grid -->
+            <div class="vp-vehicles-container">
+                <div class="vp-loader v3-hidden" id="vpVehiclesLoader">
+                    <div class="vp-spinner-box">
+                        <div class="vp-spinner-ring"></div>
+                        <div class="vp-spinner-inner">
+                            <i class="fi fi-rr-car-alt"></i>
+                        </div>
+                    </div>
+                    <span class="vp-loader-text">Loading vehicle fleet...</span>
+                </div>
+                <div class="vp-vehicles-grid" id="vpVehicleGrid">
+                    <!-- Dynamic vehicle cards rendered via lead-view.js -->
+                </div>
+                <div class="vp-empty-state v3-hidden" id="vpEmptyState">
+                    <div class="vp-empty-icon-wrap">
+                        <i class="fi fi-rr-car-alt"></i>
+                    </div>
+                    <p class="vp-empty-title">No vehicles found</p>
+                    <span class="vp-empty-desc">No vehicles found matching the selected filters.</span>
+                </div>
+            </div>
+
+            <!-- Delivery Channels -->
+            <div class="vp-delivery-section">
+                <div class="vp-section-header">
+                    <span class="vp-section-title">Dispatch Channels</span>
+                    <span class="vp-section-subtitle">Select where to dispatch the vehicle profile</span>
+                </div>
+                <div class="vp-channel-grid">
+                    <label class="vp-channel-card" id="itemVpSendWhatsApp">
+                        <input type="checkbox" id="toggleVpSendWhatsApp" checked>
+                        <div class="vp-channel-content">
+                            <div class="vp-channel-icon wa-icon">
+                                <i class="fi fi-brands-whatsapp"></i>
+                            </div>
+                            <div class="vp-channel-info">
+                                <span class="vp-channel-label">Send via WhatsApp</span>
+                                <span class="vp-channel-dest" id="vpDestWhatsApp">—</span>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="vp-channel-card" id="itemVpSendEmail">
+                        <input type="checkbox" id="toggleVpSendEmail" checked>
+                        <div class="vp-channel-content">
+                            <div class="vp-channel-icon email-icon">
+                                <i class="fi fi-rr-envelope"></i>
+                            </div>
+                            <div class="vp-channel-info">
+                                <span class="vp-channel-label">Send via Email</span>
+                                <span class="vp-channel-dest" id="vpDestEmail">—</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+                <div class="vp-wa-device-status" id="vpWaDeviceStatus"></div>
+            </div>
+
+            <!-- Optional Custom Message -->
+            <div class="vp-note-section">
+                <label for="vpCustomMessage" class="vp-note-label">Message / Note to Client (Optional)</label>
+                <textarea id="vpCustomMessage" class="vp-note-textarea" rows="2" placeholder="e.g. As discussed, please find the photos and specifications of our vehicles for your upcoming journey."></textarea>
+            </div>
+        </div>
+        <div class="v3-modal-footer vp-modal-footer">
+            <button type="button" class="btn-v3-action btn-outline v3-modal-close-trigger">Cancel</button>
+            <button type="button" class="btn-add-pkg-v3 vp-btn-send" id="btnSubmitSendVehiclePhotos">
+                <i class="fi fi-rr-paper-plane"></i> <span>Send Vehicle Photos</span>
+            </button>
         </div>
     </div>
 </div>

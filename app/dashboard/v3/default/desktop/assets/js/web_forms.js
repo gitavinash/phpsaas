@@ -174,7 +174,7 @@
                         '</td>',
                         '<td>',
                             '<div style="display:flex;align-items:center;gap:6px;">',
-                                '<span class="wf-slug-badge" title="' + form.public_url + '">/form/' + self.escapeHtml(form.form_slug || form.form_uid) + '</span>',
+                                '<span class="wf-slug-badge" title="' + form.public_url + '">/form/' + self.escapeHtml(form.form_slug || form.form_uid) + '/</span>',
                                 '<button type="button" class="wf-btn-action btn-copy-url" data-url="' + form.public_url + '" title="Copy Public URL">',
                                     '<i class="fi fi-rr-copy"></i>',
                                 '</button>',
@@ -373,7 +373,7 @@
 
             $icon.empty().removeClass("is-available is-taken").addClass("is-loading");
             $fb.addClass("is-visible is-loading").removeClass("is-available is-taken")
-               .html('<i class="fi fi-rr-spinner"></i> Checking availability for <strong>/form/' + self.escapeHtml(slug) + '</strong>...');
+               .html('<i class="fi fi-rr-spinner"></i> Checking availability for <strong>/form/' + self.escapeHtml(slug) + '/</strong>...');
 
             self.slugCheckXhr = $.ajax({
                 url: self.apiEndpoint,
@@ -392,11 +392,11 @@
                         if (res.available) {
                             $icon.addClass("is-available").html('<i class="fi fi-rr-check"></i>');
                             $fb.addClass("is-available").html(
-                                '<i class="fi fi-rr-check"></i> <strong>/form/' + self.escapeHtml(res.slug) + '</strong> is available!'
+                                '<i class="fi fi-rr-check"></i> <strong>/form/' + self.escapeHtml(res.slug) + '/</strong> is available!'
                             );
                         } else {
                             $icon.addClass("is-taken").html('<i class="fi fi-rr-cross"></i>');
-                            var html = '<i class="fi fi-rr-cross-circle"></i> ' + (res.msg || ('/form/' + self.escapeHtml(res.slug) + ' is already taken.'));
+                            var html = '<i class="fi fi-rr-cross-circle"></i> ' + (res.msg || ('/form/' + self.escapeHtml(res.slug) + '/ is already taken.'));
                             if (res.suggestion) {
                                 html += ' &bull; Try: <button type="button" class="wf-slug-suggestion-btn" data-slug="' + self.escapeHtml(res.suggestion) + '" title="Click to use this slug">' + self.escapeHtml(res.suggestion) + '</button>';
                             }

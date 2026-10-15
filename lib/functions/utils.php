@@ -256,7 +256,7 @@ function longToShortUrl($connection, $longUrl)
     }
 
     $baseUrl = getLinkShortenerBaseUrl($connection);
-    return $baseUrl . '/' . base64_encode((string)$shortId);
+    return $baseUrl . '/' . base64_encode((string)$shortId) . '/';
 }
 
 function shortToLongUrl($connection, $shortUrl)

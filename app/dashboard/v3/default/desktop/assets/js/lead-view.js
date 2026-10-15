@@ -1956,7 +1956,8 @@
         show_call_button: isOptOn(rawOpts.show_call_button),
         show_whatsapp_button: isOptOn(rawOpts.show_whatsapp_button),
         show_send_itinerary: isOptOn(rawOpts.show_send_itinerary),
-        show_send_quotation: isOptOn(rawOpts.show_send_quotation)
+        show_send_quotation: isOptOn(rawOpts.show_send_quotation),
+        show_send_photos: isOptOn(rawOpts.show_send_photos)
       };
 
       document.title =
@@ -2877,13 +2878,26 @@
                     ? `
                   ${
                     self.isTransporter
-                      ? (self.leadViewOptions.show_send_quotation
-                          ? `
+                      ? `
+                        ${
+                          self.leadViewOptions.show_send_quotation
+                            ? `
                     <button type="button" class="btn-v3-action btn-outline" id="btnHeroSendQuotation" data-tooltip="Create & Send Quotation">
                       <i class="fi fi-rr-document"></i> <span>Send Quotation</span>
                     </button>
                     `
-                          : "")
+                            : ""
+                        }
+                        ${
+                          self.leadViewOptions.show_send_photos
+                            ? `
+                    <button type="button" class="btn-v3-action btn-outline" id="btnHeroSendVehiclePhotos" data-tooltip="Select & Send Vehicle Photos">
+                      <i class="fi fi-rr-camera"></i> <span>Send Vehicle Photos</span>
+                    </button>
+                    `
+                            : ""
+                        }
+                      `
                       : (self.leadViewOptions.show_send_itinerary
                           ? `
                     <button type="button" class="btn-v3-action btn-outline" id="btnHeroSendItinerary" data-tooltip="Search, Customize & Send Itinerary">
@@ -3195,7 +3209,9 @@
                           ? `
                         ${
                           self.isTransporter
-                            ? (self.leadViewOptions.show_send_quotation
+                            ? `
+                            ${
+                              self.leadViewOptions.show_send_quotation
                                 ? `
                             <button type="button" class="v3-fa-row-action action-itinerary" id="btnSideSendQuotation" data-tooltip="Build & send quotation">
                               <div class="v3-fa-row-left">
@@ -3208,7 +3224,25 @@
                               ${hasItinerarySent ? '<span class="v3-fa-row-badge badge-sky"><i class="fi fi-rr-check"></i> Sent</span>' : '<i class="fi fi-rr-angle-right v3-fa-row-arrow"></i>'}
                             </button>
                             `
-                                : "")
+                                : ""
+                            }
+                            ${
+                              self.leadViewOptions.show_send_photos
+                                ? `
+                            <button type="button" class="v3-fa-row-action action-vehicle-photos" id="btnSideSendVehiclePhotos" data-tooltip="Select & send vehicle photos">
+                              <div class="v3-fa-row-left">
+                                <span class="v3-fa-row-icon icon-amber"><i class="fi fi-rr-camera"></i></span>
+                                <div class="v3-fa-row-text">
+                                  <span class="v3-fa-row-title">Send Vehicle Photos</span>
+                                  <span class="v3-fa-row-sub">Share vehicle photos &amp; profile with client</span>
+                                </div>
+                              </div>
+                              <i class="fi fi-rr-angle-right v3-fa-row-arrow"></i>
+                            </button>
+                            `
+                                : ""
+                            }
+                            `
                             : (self.leadViewOptions.show_send_itinerary
                                 ? `
                             <button type="button" class="v3-fa-row-action action-itinerary" id="btnSideSendItinerary" data-tooltip="${hasItinerarySent ? "Review, customize or revise itinerary" : "Create & send tour itinerary"}">
@@ -5481,6 +5515,387 @@
           }
         },
       );
+
+      // 7.6 Send Vehicle Photos Trigger & Logic
+      self.masterVehiclesList = [];
+      self.selectedVehicleIds = new Set();
+      self.vpSearchTimer = null;
+      self.activeVpVehiclesXhr = null;
+
+      self.fetchVehiclesFromApi = function (params, callback) {
+        const $grid = $("#vpVehicleGrid");
+        const $loader = $("#vpVehiclesLoader");
+        const $empty = $("#vpEmptyState");
+
+        if (self.activeVpVehiclesXhr && typeof self.activeVpVehiclesXhr.abort === "function") {
+          self.activeVpVehiclesXhr.abort();
+        }
+
+        $loader.removeClass("v3-hidden");
+        $empty.addClass("v3-hidden");
+        $grid.addClass("v3-hidden");
+
+        const queryParams = Object.assign({}, params || {});
+        if (queryParams.category === "all") delete queryParams.category;
+        if (queryParams.vehicle_id === "all") delete queryParams.vehicle_id;
+        if (!queryParams.search) delete queryParams.search;
+
+        self.activeVpVehiclesXhr = $.ajax({
+          url: "/api/v3/vehicles/list/",
+          method: "GET",
+          data: queryParams,
+          dataType: "json",
+          success: function (res) {
+            self.activeVpVehiclesXhr = null;
+            $loader.addClass("v3-hidden");
+            const vehicles = (res && (res.vehicles || (res.data && res.data.vehicles) || res.data)) || [];
+            if (typeof callback === "function") {
+              callback(vehicles, res);
+            }
+          },
+          error: function (xhr, status) {
+            if (status === "abort") return;
+            self.activeVpVehiclesXhr = null;
+            $loader.addClass("v3-hidden");
+            $empty.removeClass("v3-hidden");
+            $empty.find(".vp-empty-title").text("Failed to load vehicle fleet");
+            $empty.find(".vp-empty-desc").text("Please check your connection and try again.");
+          }
+        });
+      };
+
+      self.openVehiclePhotosModal = function () {
+        const lead = self.leadData || {};
+        const email = String(lead.email || "").trim();
+        const mobile = String(lead.mobile || lead.phone || "").trim();
+        const waDevice = lead.whatsapp_device || null;
+        const isWaAvailable = !!(waDevice && waDevice.available);
+
+        self.selectedVehicleIds.clear();
+        $("#vpSelectedCount").text("0");
+        $("#vpCustomMessage").val("");
+        $("#vpVehicleSearch").val("");
+
+        if ($("#vpCategorySelect").hasClass("select2-hidden-accessible")) {
+          $("#vpCategorySelect").val("all").trigger("change.select2");
+        } else {
+          $("#vpCategorySelect").val("all");
+        }
+        if ($("#vpModelSelect").hasClass("select2-hidden-accessible")) {
+          $("#vpModelSelect").val("all").trigger("change.select2");
+        } else {
+          $("#vpModelSelect").val("all");
+        }
+
+        const hasPhone = !!(mobile && mobile.replace(/\D/g, "").length >= 7);
+        const canSendWa = hasPhone && isWaAvailable;
+        const $waToggle = $("#toggleVpSendWhatsApp");
+        const $waCard = $("#itemVpSendWhatsApp");
+        $waToggle.prop("disabled", !canSendWa);
+
+        let waStatusHtml = "";
+        if (!hasPhone) {
+          $waToggle.prop("checked", false);
+          $waCard.addClass("is-disabled").removeClass("is-active");
+          $("#vpDestWhatsApp").text("No mobile number on file");
+        } else if (!isWaAvailable) {
+          $waToggle.prop("checked", false);
+          $waCard.addClass("is-disabled").removeClass("is-active");
+          $("#vpDestWhatsApp").text(`${mobile} (WhatsApp device offline)`);
+          waStatusHtml = '<span class="vp-device-badge offline"><i class="fi fi-rr-cross-circle"></i> WhatsApp Device Offline</span>';
+        } else {
+          $waToggle.prop("checked", true);
+          $waCard.removeClass("is-disabled").addClass("is-active");
+          $("#vpDestWhatsApp").text(mobile);
+          const devNum = waDevice.phone_number ? ("+" + String(waDevice.phone_number).replace(/^\+/, "")) : "";
+          const devLabel = waDevice.is_assigned ? `Assigned (${devNum})` : `Default (${devNum})`;
+          waStatusHtml = `<span class="vp-device-badge online"><i class="fi fi-rr-check-circle"></i> Active Device: ${devLabel}</span>`;
+        }
+        $("#vpWaDeviceStatus").html(waStatusHtml);
+
+        const hasEmail = !!(email && email.includes("@"));
+        const $emailToggle = $("#toggleVpSendEmail");
+        const $emailCard = $("#itemVpSendEmail");
+        $emailToggle.prop("disabled", !hasEmail);
+        if (!hasEmail) {
+          $emailToggle.prop("checked", false);
+          $emailCard.addClass("is-disabled").removeClass("is-active");
+          $("#vpDestEmail").text("No email address on file");
+        } else {
+          $emailToggle.prop("checked", true);
+          $emailCard.removeClass("is-disabled").addClass("is-active");
+          $("#vpDestEmail").text(email);
+        }
+
+        $("#modalSendVehiclePhotos").addClass("is-active");
+        self.loadInitialVehicleFleet();
+      };
+
+      self.loadInitialVehicleFleet = function () {
+        self.fetchVehiclesFromApi({}, function (vehicles, res) {
+          self.masterVehiclesList = vehicles || [];
+          self.initVehiclePhotosSelect2(self.masterVehiclesList, res && res.categories);
+          self.renderVehicleCards(self.masterVehiclesList);
+        });
+      };
+
+      self.initVehiclePhotosSelect2 = function (vehicles, apiCategories) {
+        const $catSelect = $("#vpCategorySelect");
+        const $modal = $("#modalSendVehiclePhotos");
+
+        // 1. Build Category Options from API
+        const catMap = new Map();
+        if (apiCategories && typeof apiCategories === "object") {
+          Object.keys(apiCategories).forEach(function (k) {
+            catMap.set(k.toLowerCase(), apiCategories[k]);
+          });
+        }
+        (vehicles || []).forEach(function (v) {
+          const key = (v.type || "other").toLowerCase();
+          const label = v.type_label || (key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "));
+          if (!catMap.has(key)) {
+            catMap.set(key, label);
+          }
+        });
+
+        let catOptions = `<option value="all">All Categories (${vehicles.length})</option>`;
+        catMap.forEach(function (label, key) {
+          const count = vehicles.filter(function (v) { return (v.type || "other").toLowerCase() === key; }).length;
+          if (count > 0) {
+            catOptions += `<option value="${key}">${escapeHtml(label)} (${count})</option>`;
+          }
+        });
+
+        if ($catSelect.hasClass("select2-hidden-accessible")) {
+          $catSelect.html(catOptions).val("all").trigger("change.select2");
+        } else {
+          $catSelect.html(catOptions).val("all");
+          if (typeof $.fn.select2 !== "undefined") {
+            $catSelect.select2({
+              dropdownParent: $modal,
+              width: "100%",
+              minimumResultsForSearch: Infinity
+            });
+          }
+        }
+
+        // 2. Populate Model Dropdown based on Category
+        self.populateModelSelect2(vehicles, "all");
+
+        // 3. Category Change Handler -> Filters via Vehicle API
+        $(document).off("change.vpCategory", "#vpCategorySelect").on("change.vpCategory", "#vpCategorySelect", function () {
+          const cat = $(this).val() || "all";
+          const search = ($("#vpVehicleSearch").val() || "").trim();
+
+          self.fetchVehiclesFromApi({ category: cat, search: search }, function (filteredVehicles) {
+            self.populateModelSelect2(filteredVehicles, cat);
+            self.renderVehicleCards(filteredVehicles);
+          });
+        });
+
+        // 4. Model Change Handler -> Filters via Vehicle API
+        $(document).off("change.vpModel", "#vpModelSelect").on("change.vpModel", "#vpModelSelect", function () {
+          const modelVal = $(this).val() || "all";
+          const cat = ($("#vpCategorySelect").val() || "all");
+          const search = ($("#vpVehicleSearch").val() || "").trim();
+
+          if (modelVal !== "all") {
+            const vId = parseInt(modelVal, 10);
+            if (vId > 0) {
+              self.selectedVehicleIds.add(vId);
+              $("#vpSelectedCount").text(self.selectedVehicleIds.size);
+            }
+            self.fetchVehiclesFromApi({ vehicle_id: modelVal, category: cat }, function (filteredVehicles) {
+              self.renderVehicleCards(filteredVehicles);
+            });
+          } else {
+            self.fetchVehiclesFromApi({ category: cat, search: search }, function (filteredVehicles) {
+              self.renderVehicleCards(filteredVehicles);
+            });
+          }
+        });
+      };
+
+      self.populateModelSelect2 = function (vehicles, category, selectedId) {
+        const $modelSelect = $("#vpModelSelect");
+        const $modal = $("#modalSendVehiclePhotos");
+
+        let modelOptions = `<option value="all">All Vehicles in ${category === "all" ? "Fleet" : "Category"} (${vehicles.length})</option>`;
+        (vehicles || []).forEach(function (v) {
+          const specInfo = [v.type_label, v.seating ? `${v.seating} Seater` : ""].filter(Boolean).join(" · ");
+          const isSelected = selectedId && String(selectedId) === String(v.id);
+          modelOptions += `<option value="${v.id}" ${isSelected ? "selected" : ""}>${escapeHtml(v.title)} (${escapeHtml(specInfo)})</option>`;
+        });
+
+        if ($modelSelect.hasClass("select2-hidden-accessible")) {
+          $modelSelect.html(modelOptions).val(selectedId || "all").trigger("change.select2");
+        } else {
+          $modelSelect.html(modelOptions).val(selectedId || "all");
+          if (typeof $.fn.select2 !== "undefined") {
+            $modelSelect.select2({
+              dropdownParent: $modal,
+              width: "100%"
+            });
+          }
+        }
+      };
+
+      self.renderVehicleCards = function (vehicles) {
+        const $grid = $("#vpVehicleGrid");
+        const $empty = $("#vpEmptyState");
+        $grid.empty();
+
+        if (!vehicles || vehicles.length === 0) {
+          $grid.addClass("v3-hidden");
+          $empty.removeClass("v3-hidden");
+          return;
+        }
+
+        $empty.addClass("v3-hidden");
+        $grid.removeClass("v3-hidden");
+
+        let html = "";
+        vehicles.forEach(function (v) {
+          const isSelected = self.selectedVehicleIds.has(v.id);
+          const thumb = v.thumbnail || "/app/dashboard/v3/default/desktop/assets/images/default-vehicle.png";
+          const totalPhotos = (v.thumbnail ? 1 : 0) + (v.gallery_count || 0);
+          const seating = v.seating ? `${v.seating} Seats` : "";
+          const luggage = v.luggage ? `${v.luggage} Bags` : "";
+          const specs = [v.type_label, seating, luggage].filter(Boolean).join(" · ");
+
+          html += `
+            <div class="vp-vehicle-card ${isSelected ? "is-selected" : ""}" data-vehicle-id="${v.id}">
+              <div class="vp-card-select-check">
+                <i class="fi fi-rr-check"></i>
+              </div>
+              <div class="vp-card-thumb-wrap">
+                <img src="${thumb}" alt="${escapeHtml(v.title)}" class="vp-card-thumb" onerror="this.src='/app/dashboard/v3/default/desktop/assets/images/default-vehicle.png'">
+                <span class="vp-photo-count-badge">
+                  <i class="fi fi-rr-camera"></i> ${totalPhotos} ${totalPhotos === 1 ? "Photo" : "Photos"}
+                </span>
+              </div>
+              <div class="vp-card-info">
+                <h6 class="vp-card-title">${escapeHtml(v.title)}</h6>
+                <div class="vp-card-specs">${escapeHtml(specs)}</div>
+              </div>
+            </div>
+          `;
+        });
+
+        $grid.html(html);
+      };
+
+      $(document).on("click", "#btnHeroSendVehiclePhotos, #btnSideSendVehiclePhotos", function () {
+        self.openVehiclePhotosModal();
+      });
+
+      $(document).on("input", "#vpVehicleSearch", function () {
+        clearTimeout(self.vpSearchTimer);
+        const search = ($(this).val() || "").trim();
+        const cat = ($("#vpCategorySelect").val() || "all");
+
+        self.vpSearchTimer = setTimeout(function () {
+          self.fetchVehiclesFromApi({ category: cat, search: search }, function (filteredVehicles) {
+            self.populateModelSelect2(filteredVehicles, cat);
+            self.renderVehicleCards(filteredVehicles);
+          });
+        }, 300);
+      });
+
+      $(document).on("click", ".vp-vehicle-card", function () {
+        const vId = parseInt($(this).data("vehicle-id"), 10);
+        if (!vId) return;
+
+        if (self.selectedVehicleIds.has(vId)) {
+          self.selectedVehicleIds.delete(vId);
+          $(this).removeClass("is-selected");
+        } else {
+          self.selectedVehicleIds.add(vId);
+          $(this).addClass("is-selected");
+        }
+
+        $("#vpSelectedCount").text(self.selectedVehicleIds.size);
+      });
+
+      $(document).on("change", "#toggleVpSendWhatsApp", function () {
+        $("#itemVpSendWhatsApp").toggleClass("is-active", $(this).is(":checked"));
+      });
+
+      $(document).on("change", "#toggleVpSendEmail", function () {
+        $("#itemVpSendEmail").toggleClass("is-active", $(this).is(":checked"));
+      });
+
+      $(document).on("click", "#btnSubmitSendVehiclePhotos", function () {
+        const $btn = $(this);
+        if ($btn.prop("disabled")) return;
+
+        const vehicleIds = Array.from(self.selectedVehicleIds);
+        if (vehicleIds.length === 0) {
+          self.notify("Please select at least one vehicle to send.", "warning");
+          return;
+        }
+
+        const sendWhatsApp = $("#toggleVpSendWhatsApp").is(":checked") ? 1 : 0;
+        const sendEmail = $("#toggleVpSendEmail").is(":checked") ? 1 : 0;
+
+        if (!sendWhatsApp && !sendEmail) {
+          self.notify("Please choose at least one channel (WhatsApp or Email).", "warning");
+          return;
+        }
+
+        const lead = self.leadData || {};
+        let leadId = (lead && (lead.id || (lead.lead && lead.lead.id))) || self.leadId || (self.getLeadId ? self.getLeadId() : "");
+        if (typeof leadId === "string" && !/^\d+$/.test(leadId.trim())) {
+          try {
+            const dec = atob(leadId.trim());
+            if (/^\d+$/.test(dec.trim())) {
+              leadId = parseInt(dec.trim(), 10);
+            }
+          } catch (e) {}
+        }
+        if (typeof leadId === "string" && /^\d+$/.test(leadId.trim())) {
+          leadId = parseInt(leadId.trim(), 10);
+        }
+
+        const customMessage = ($("#vpCustomMessage").val() || "").trim();
+
+        $btn.prop("disabled", true).addClass("is-loading").find("span").text("Sending...");
+
+        $.ajax({
+          url: "/api/v3/leads/send-vehicle-photos/",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            lead_id: leadId,
+            id: leadId,
+            vehicle_ids: vehicleIds,
+            send_whatsapp: sendWhatsApp,
+            send_email: sendEmail,
+            custom_message: customMessage
+          }),
+          dataType: "json",
+          success: function (res) {
+            $btn.prop("disabled", false).removeClass("is-loading").find("span").text("Send Vehicle Photos");
+
+            if (res && (res.status === 200 || res.status === "success")) {
+              self.notify(res.message || "Vehicle photos sent successfully!", "success");
+              $("#modalSendVehiclePhotos").removeClass("is-active");
+              self.loadLeadDetails();
+            } else {
+              self.notify((res && res.message) || "Failed to send vehicle photos.", "error");
+            }
+          },
+          error: function (xhr) {
+            $btn.prop("disabled", false).removeClass("is-loading").find("span").text("Send Vehicle Photos");
+            let errText = "Network error while sending vehicle photos.";
+            try {
+              const parsed = JSON.parse(xhr.responseText);
+              if (parsed && parsed.message) errText = parsed.message;
+            } catch (e) {}
+            self.notify(errText, "error");
+          }
+        });
+      });
 
       // 8. Full Screen Itinerary Modal Trigger & Logic
       $(document).on(

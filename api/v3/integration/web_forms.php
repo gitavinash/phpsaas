@@ -402,16 +402,16 @@ if ($action === 'check_slug') {
             'available'  => false,
             'slug'       => $slug,
             'suggestion' => $candidate,
-            'preview_url' => "{$scheme}://{$currentHost}/form/{$slug}",
-            'msg'        => "URL slug '/form/{$slug}' is already taken."
+            'preview_url' => "{$scheme}://{$currentHost}/form/{$slug}/",
+            'msg'        => "URL slug '/form/{$slug}/' is already taken."
         ]);
     } else {
         echo json_encode([
             'status'     => 'success',
             'available'  => true,
             'slug'       => $slug,
-            'preview_url' => "{$scheme}://{$currentHost}/form/{$slug}",
-            'msg'        => "URL slug '/form/{$slug}' is available!"
+            'preview_url' => "{$scheme}://{$currentHost}/form/{$slug}/",
+            'msg'        => "URL slug '/form/{$slug}/' is available!"
         ]);
     }
     exit;
@@ -457,7 +457,7 @@ if ($method === 'GET') {
             $currentHost = $_SERVER['HTTP_HOST'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : 'localhost');
             $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
             $displaySlug = !empty($form['form_slug']) ? $form['form_slug'] : $form['form_uid'];
-            $form['public_url'] = "{$scheme}://{$currentHost}/form/{$displaySlug}";
+            $form['public_url'] = "{$scheme}://{$currentHost}/form/{$displaySlug}/";
             $form['iframe_snippet'] = '<iframe src="' . $form['public_url'] . '" width="100%" height="560" frameborder="0" style="border:none;overflow:hidden;max-width:100%;border-radius:12px;" loading="lazy"></iframe>';
             $form['primary_admin_email'] = getPrimaryAdminAlertEmail($connection, $siteId);
 
@@ -499,7 +499,7 @@ if ($method === 'GET') {
             }
 
             $displaySlug = !empty($row['form_slug']) ? $row['form_slug'] : $row['form_uid'];
-            $publicUrl = "{$scheme}://{$currentHost}/form/{$displaySlug}";
+            $publicUrl = "{$scheme}://{$currentHost}/form/{$displaySlug}/";
             $iframeSnippet = '<iframe src="' . $publicUrl . '" width="100%" height="560" frameborder="0" style="border:none;overflow:hidden;max-width:100%;border-radius:12px;" loading="lazy"></iframe>';
 
             $forms[] = [

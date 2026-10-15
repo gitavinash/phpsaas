@@ -42,6 +42,11 @@ if (!defined('SITE_ID')) {
     define('SITE_ID', $siteId);
 }
 
+if (file_exists(dirname(__DIR__) . '/vehicles/schema.php')) {
+    require_once dirname(__DIR__) . '/vehicles/schema.php';
+    ensureTransporterVehiclesSchema($connection, $tblPrefix, $siteId);
+}
+
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 // Supported company natures and titles
@@ -80,6 +85,7 @@ $managedKeys = [
     'lead_view_show_whatsapp_button',
     'lead_view_show_send_itinerary',
     'lead_view_show_send_quotation',
+    'lead_view_show_send_photos',
     'aside_menu_show_packages',
     'aside_menu_show_vendors',
     'aside_menu_show_cms'
@@ -124,6 +130,7 @@ if ($method === 'GET') {
     $data['lead_view_show_whatsapp_button'] = '1';
     $data['lead_view_show_send_itinerary'] = '1';
     $data['lead_view_show_send_quotation'] = '1';
+    $data['lead_view_show_send_photos']   = '1';
 
     if ($res && mysqli_num_rows($res) > 0) {
         while ($row = mysqli_fetch_assoc($res)) {
@@ -269,6 +276,7 @@ if ($method === 'POST' || $method === 'PUT') {
     $leadViewWhatsappButton = (!empty($data['lead_view_show_whatsapp_button']) && $data['lead_view_show_whatsapp_button'] !== '0') ? '1' : '0';
     $leadViewSendItinerary  = (!empty($data['lead_view_show_send_itinerary']) && $data['lead_view_show_send_itinerary'] !== '0') ? '1' : '0';
     $leadViewSendQuotation  = (!empty($data['lead_view_show_send_quotation']) && $data['lead_view_show_send_quotation'] !== '0') ? '1' : '0';
+    $leadViewSendPhotos     = (!empty($data['lead_view_show_send_photos']) && $data['lead_view_show_send_photos'] !== '0') ? '1' : '0';
 
     // Aside Navigation Menu Group Toggles
     $asideMenuShowPackages  = (!empty($data['aside_menu_show_packages']) && $data['aside_menu_show_packages'] !== '0') ? '1' : '0';
@@ -300,6 +308,7 @@ if ($method === 'POST' || $method === 'PUT') {
         'lead_view_show_whatsapp_button'=> $leadViewWhatsappButton,
         'lead_view_show_send_itinerary'=> $leadViewSendItinerary,
         'lead_view_show_send_quotation'=> $leadViewSendQuotation,
+        'lead_view_show_send_photos'   => $leadViewSendPhotos,
         'aside_menu_show_packages'     => $asideMenuShowPackages,
         'aside_menu_show_vendors'      => $asideMenuShowVendors,
         'aside_menu_show_cms'          => $asideMenuShowCms

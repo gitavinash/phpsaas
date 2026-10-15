@@ -1528,7 +1528,7 @@
             self.isPackageSix = isPkgSix;
 
             if (isPkgSix) {
-              $("#cfgLeadViewPaymentLink, #cfgLeadViewRecordPayment, #cfgLeadViewSendItinerary, #cfgLeadViewSendQuotation")
+              $("#cfgLeadViewPaymentLink, #cfgLeadViewRecordPayment, #cfgLeadViewSendItinerary, #cfgLeadViewSendQuotation, #cfgLeadViewSendPhotos")
                 .prop("disabled", true)
                 .prop("checked", false)
                 .closest(".v3-feature-toggle-row")
@@ -1538,6 +1538,7 @@
               $("#cfgLeadViewRecordPayment").prop("checked", isOptEnabled(d.lead_view_show_record_payment));
               $("#cfgLeadViewSendItinerary").prop("checked", isOptEnabled(d.lead_view_show_send_itinerary));
               $("#cfgLeadViewSendQuotation").prop("checked", isOptEnabled(d.lead_view_show_send_quotation));
+              $("#cfgLeadViewSendPhotos").prop("checked", isOptEnabled(d.lead_view_show_send_photos));
             }
 
             $("#cfgLeadViewConvertSale").prop("checked", isOptEnabled(d.lead_view_show_convert_sale));
@@ -1654,10 +1655,12 @@
       const isTransporter = (nature === "transporter");
       if (isTransporter) {
         $("#rowLeadViewSendQuotation").removeClass("is-hidden");
+        $("#rowLeadViewSendPhotos").removeClass("is-hidden");
         $("#rowLeadViewSendItinerary").addClass("is-hidden");
       } else {
         $("#rowLeadViewSendItinerary").removeClass("is-hidden");
         $("#rowLeadViewSendQuotation").addClass("is-hidden");
+        $("#rowLeadViewSendPhotos").addClass("is-hidden");
       }
 
       // Fast Tile Badges
@@ -1666,6 +1669,7 @@
       const showRecPay = !isPkg6 && $("#cfgLeadViewRecordPayment").is(":checked");
       const showItinerary = !isTransporter && !isPkg6 && $("#cfgLeadViewSendItinerary").is(":checked");
       const showQuotation = isTransporter && !isPkg6 && $("#cfgLeadViewSendQuotation").is(":checked");
+      const showPhotos = isTransporter && !isPkg6 && $("#cfgLeadViewSendPhotos").is(":checked");
       const showConvSale = $("#cfgLeadViewConvertSale").is(":checked");
       const showCall = $("#cfgLeadViewCallButton").is(":checked");
       const showWa = $("#cfgLeadViewWhatsappButton").is(":checked");
@@ -1674,6 +1678,7 @@
       $("#tagPrevWhatsappButton").toggleClass("tag-active", showWa).toggleClass("is-hidden", !showWa);
       $("#tagPrevItinerary").toggleClass("tag-active", showItinerary).toggleClass("is-hidden", !showItinerary);
       $("#tagPrevQuotation").toggleClass("tag-active", showQuotation).toggleClass("is-hidden", !showQuotation);
+      $("#tagPrevVehiclePhotos").toggleClass("tag-active", showPhotos).toggleClass("is-hidden", !showPhotos);
       $("#tagPrevPaymentLink").toggleClass("tag-active", showPayLink).toggleClass("is-hidden", !showPayLink);
       $("#tagPrevRecordPayment").toggleClass("tag-active", showRecPay).toggleClass("is-hidden", !showRecPay);
       $("#tagPrevConvertSale").toggleClass("tag-active", showConvSale).toggleClass("is-hidden", !showConvSale);
@@ -1723,6 +1728,7 @@
         transporter_driver_allowance: $("#cfgTransporterDriverAllowance").val(),
         lead_view_show_send_itinerary: $("#cfgLeadViewSendItinerary").is(":checked") ? "1" : "0",
         lead_view_show_send_quotation: $("#cfgLeadViewSendQuotation").is(":checked") ? "1" : "0",
+        lead_view_show_send_photos: $("#cfgLeadViewSendPhotos").is(":checked") ? "1" : "0",
         lead_view_show_payment_link: $("#cfgLeadViewPaymentLink").is(":checked") ? "1" : "0",
         lead_view_show_record_payment: $("#cfgLeadViewRecordPayment").is(":checked") ? "1" : "0",
         lead_view_show_convert_sale: $("#cfgLeadViewConvertSale").is(":checked") ? "1" : "0",

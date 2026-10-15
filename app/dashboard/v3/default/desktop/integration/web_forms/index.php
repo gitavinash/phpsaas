@@ -184,7 +184,7 @@
                                     <div class="wf-form-row">
                                         <div class="wf-label-with-hint">
                                             <label for="formSlugInput" class="wf-builder-label">Custom URL Slug (Optional)</label>
-                                            <span class="wf-sub-label">Public link: <code>/form/{slug}</code></span>
+                                            <span class="wf-sub-label">Public link: <code>/form/{slug}/</code></span>
                                         </div>
                                         <div class="wf-slug-input-wrap">
                                             <span class="wf-slug-prefix">/form/</span>

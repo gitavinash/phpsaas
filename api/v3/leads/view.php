@@ -513,6 +513,19 @@ foreach ($rawTimelineRows as $tRow) {
                 $icon = 'fi fi-rr-paper-plane';
                 $itemTitle = 'Itinerary Sent';
                 break;
+            case 'vehicle_photos':
+                $icon = 'fi fi-rr-camera';
+                $itemTitle = 'Vehicle Photos Sent';
+                $decoded = json_decode($noteVal, true);
+                if (is_array($decoded)) {
+                    $vehNames = !empty($decoded['vehicles']) ? implode(', ', (array)$decoded['vehicles']) : 'fleet';
+                    $chan = !empty($decoded['channels']) ? implode(' & ', (array)$decoded['channels']) : 'customer';
+                    $itemDesc = "Shared vehicle photos for {$vehNames} via {$chan}.";
+                    if (!empty($decoded['custom_note'])) {
+                        $itemDesc .= " Note: \"{$decoded['custom_note']}\"";
+                    }
+                }
+                break;
             default:
                 $icon = 'fi fi-rr-comment-alt';
                 $itemTitle = 'Note';
@@ -1068,6 +1081,7 @@ if ($effectiveSiteId > 0 && isset($connection)) {
         'lead_view_show_whatsapp_button',
         'lead_view_show_send_itinerary',
         'lead_view_show_send_quotation',
+        'lead_view_show_send_photos',
         'company_nature',
         'currency_symbol',
         'currency_default',
@@ -1119,6 +1133,7 @@ $response['data']['lead_view_options'] = [
     'show_whatsapp_button' => isset($siteConfigs['lead_view_show_whatsapp_button']) ? ($siteConfigs['lead_view_show_whatsapp_button'] !== '0') : (defined('LEAD_VIEW_SHOW_WHATSAPP_BUTTON') ? (LEAD_VIEW_SHOW_WHATSAPP_BUTTON !== '0') : true),
     'show_send_itinerary'  => isset($siteConfigs['lead_view_show_send_itinerary']) ? ($siteConfigs['lead_view_show_send_itinerary'] !== '0') : (defined('LEAD_VIEW_SHOW_SEND_ITINERARY') ? (LEAD_VIEW_SHOW_SEND_ITINERARY !== '0') : true),
     'show_send_quotation'  => isset($siteConfigs['lead_view_show_send_quotation']) ? ($siteConfigs['lead_view_show_send_quotation'] !== '0') : (defined('LEAD_VIEW_SHOW_SEND_QUOTATION') ? (LEAD_VIEW_SHOW_SEND_QUOTATION !== '0') : true),
+    'show_send_photos'     => isset($siteConfigs['lead_view_show_send_photos']) ? ($siteConfigs['lead_view_show_send_photos'] !== '0') : (defined('LEAD_VIEW_SHOW_SEND_PHOTOS') ? (LEAD_VIEW_SHOW_SEND_PHOTOS !== '0') : true),
 ];
 
 echo json_encode($response);
