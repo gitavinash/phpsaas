@@ -2380,6 +2380,30 @@ button .wa-spin,
   font-size: 11px;
 }
 
+/* WhatsApp Date Divider Pill */
+.wa-date-divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 12px 0 6px;
+  position: relative;
+  z-index: 2;
+  user-select: none;
+  pointer-events: none;
+}
+
+.wa-date-divider-pill {
+  display: inline-block;
+  padding: 5px 12px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #54656f;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 7.5px;
+  box-shadow: 0 1px 1.5px rgba(11, 20, 26, 0.12);
+  letter-spacing: 0.2px;
+}
+
 /* Composer Area (Fixed on bottom of chat box) */
 .wa-composer-area {
   flex-shrink: 0;

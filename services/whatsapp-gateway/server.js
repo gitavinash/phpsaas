@@ -84,6 +84,23 @@ function getFormattedTimestamp(date = new Date()) {
   return `${year}-${month}-${day} ${hours}:${mins}:${secs}`;
 }
 
+function extractTimestamp(ts) {
+  if (!ts) return Math.floor(Date.now() / 1000);
+  if (typeof ts === "number") return ts;
+  if (typeof ts === "string") {
+    const n = Number(ts);
+    if (!isNaN(n)) return n;
+    const parsed = Date.parse(ts);
+    if (!isNaN(parsed)) return Math.floor(parsed / 1000);
+  }
+  if (typeof ts === "object") {
+    if (typeof ts.low === "number") return ts.low;
+    if (typeof ts.seconds === "number") return ts.seconds;
+    if (typeof ts.toNumber === "function") return ts.toNumber();
+  }
+  return Math.floor(Date.now() / 1000);
+}
+
 const origConsoleLog = console.log;
 const origConsoleWarn = console.warn;
 const origConsoleError = console.error;
@@ -1184,7 +1201,7 @@ class WhatsAppSession {
         if (!normalized || isJidBroadcast(normalized) || isJidGroup(normalized) || isJidStatusBroadcast(normalized) || isJidNewsletter(normalized)) continue;
 
         const body = getMessageText(m.message);
-        const ts = Number(m.messageTimestamp) || Math.floor(Date.now() / 1000);
+        const ts = extractTimestamp(m.messageTimestamp);
         const existing = this.chatStore.get(normalized) || { id: normalized };
         if (!existing.conversationTimestamp || ts >= (existing.conversationTimestamp || 0)) {
           existing.conversationTimestamp = ts;
@@ -1243,7 +1260,7 @@ class WhatsAppSession {
           const fromMe = !!(realMsg.key?.fromMe !== undefined ? realMsg.key?.fromMe : mItem.from_me);
           const rawMsg = realMsg.message || realMsg;
           const text = mItem.text || getMessageText(rawMsg);
-          const ts = Number(realMsg.messageTimestamp || mItem.timestamp) || Math.floor(Date.now() / 1000);
+          const ts = extractTimestamp(realMsg.messageTimestamp || mItem.timestamp);
 
           let mediaUrl = mItem.media_url || mItem.media || "";
           let mediaType = mItem.type || (mediaUrl ? "image" : "text");
@@ -1275,7 +1292,7 @@ class WhatsAppSession {
           text: lastMsg,
           media_url: "",
           type: fallbackType,
-          timestamp: Number(c.conversationTimestamp) || Math.floor(Date.now() / 1000),
+          timestamp: extractTimestamp(c.conversationTimestamp),
         });
       }
 
@@ -1285,9 +1302,7 @@ class WhatsAppSession {
       const contact = this.contactStore.get(jid) || {};
       const pushname = c.pushName || contact.notify || contact.verifiedName || "";
       const name = c.name || contact.name || "";
-      let ts = c.conversationTimestamp;
-      if (typeof ts === "object" && ts !== null) ts = ts.low || ts.seconds || 0;
-      ts = Number(ts) || Math.floor(Date.now() / 1000);
+      const ts = extractTimestamp(c.conversationTimestamp);
       const avatar = c.avatar || (this.avatarCache.get(jid)?.url) || "";
 
       batchPayload.push({
@@ -1717,7 +1732,7 @@ class WhatsAppSession {
 
           const pushName = msg.pushName || this.getContactName(jid) || "";
           const isFromMe = !!msg.key.fromMe;
-          const ts = Number(msg.messageTimestamp) || Math.floor(Date.now() / 1000);
+          const ts = extractTimestamp(msg.messageTimestamp);
 
           let previewText = body;
           if (mediaInfo) {

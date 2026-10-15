@@ -231,29 +231,50 @@ if ($method === 'GET') {
         ];
     }
 
-    // Fetch messages strictly for this chat conversation
-    $sql = "SELECT * FROM " . TABLE_PREFIX . "whatsapp_message 
-            WHERE message_site_id = {$siteId} AND message_chat_id = {$chatId} 
-            ORDER BY message_created_at ASC, message_id ASC 
-            LIMIT 300";
+    // Fetch latest messages chronologically (oldest at top, newest at bottom)
+    $sql = "SELECT * FROM (
+                SELECT * FROM " . TABLE_PREFIX . "whatsapp_message 
+                WHERE message_site_id = {$siteId} AND message_chat_id = {$chatId} 
+                ORDER BY message_created_at DESC, message_id DESC 
+                LIMIT 300
+            ) sub 
+            ORDER BY message_created_at ASC, message_id ASC";
 
     $res = mysqli_query($connection, $sql);
     $messages = [];
 
     if ($res) {
+        $todayDt = new DateTime('now', new DateTimeZone($siteTimezone));
+        $todayStr = $todayDt->format('Y-m-d');
+        $yesterdayDt = (clone $todayDt)->modify('-1 day');
+        $yesterdayStr = $yesterdayDt->format('Y-m-d');
+
         while ($row = mysqli_fetch_assoc($res)) {
             $timeDisplay = '';
             $dateDisplay = '';
+            $dateLabel = '';
             if (!empty($row['message_created_at'])) {
                 try {
                     $dt = new DateTime($row['message_created_at'], new DateTimeZone('UTC'));
                     $dt->setTimezone(new DateTimeZone($siteTimezone));
                     $timeDisplay = $dt->format('h:i A');
                     $dateDisplay = $dt->format('M d, Y');
+                    $msgDateStr = $dt->format('Y-m-d');
+
+                    if ($msgDateStr === $todayStr) {
+                        $dateLabel = 'Today';
+                    } elseif ($msgDateStr === $yesterdayStr) {
+                        $dateLabel = 'Yesterday';
+                    } elseif ($dt->format('Y') === $todayDt->format('Y')) {
+                        $dateLabel = $dt->format('d M');
+                    } else {
+                        $dateLabel = $dt->format('d M Y');
+                    }
                 } catch (Exception $e) {
                     $ts = strtotime($row['message_created_at']);
                     $timeDisplay = date('h:i A', $ts);
                     $dateDisplay = date('M d, Y', $ts);
+                    $dateLabel = date('d M Y', $ts);
                 }
             }
             $messages[] = [
@@ -268,7 +289,8 @@ if ($method === 'GET') {
                 'status'     => $row['message_status'],
                 'created_at' => $row['message_created_at'],
                 'time'       => $timeDisplay,
-                'date'       => $dateDisplay
+                'date'       => $dateDisplay,
+                'date_label' => $dateLabel
             ];
         }
     }

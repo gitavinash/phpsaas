@@ -727,10 +727,13 @@ if ($method === 'GET') {
                 $dt = new DateTime($row['chat_last_message_time'], new DateTimeZone('UTC'));
                 $dt->setTimezone(new DateTimeZone($siteTimezone));
                 $nowTz = new DateTime('now', new DateTimeZone($siteTimezone));
+                $yesterdayTz = (clone $nowTz)->modify('-1 day');
                 if ($dt->format('Y-m-d') === $nowTz->format('Y-m-d')) {
                     $formattedTime = $dt->format('h:i A');
+                } elseif ($dt->format('Y-m-d') === $yesterdayTz->format('Y-m-d')) {
+                    $formattedTime = 'Yesterday';
                 } elseif ($dt->format('Y') === $nowTz->format('Y')) {
-                    $formattedTime = $dt->format('M d');
+                    $formattedTime = $dt->format('d M');
                 } else {
                     $formattedTime = $dt->format('d/m/Y');
                 }

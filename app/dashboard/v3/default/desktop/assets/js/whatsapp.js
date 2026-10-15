@@ -964,7 +964,14 @@
           }
 
           let html = "";
+          let lastDateLabel = "";
           res.messages.forEach(function (msg) {
+            const dateLabel = msg.date_label || msg.date || "";
+            if (dateLabel && dateLabel !== lastDateLabel) {
+              lastDateLabel = dateLabel;
+              html += `<div class="wa-date-divider"><span class="wa-date-divider-pill">${self.escapeHtml(dateLabel)}</span></div>`;
+            }
+
             const isOut = msg.direction === "outgoing";
             let contentHtml = "";
             if (msg.media_url) {
@@ -1018,6 +1025,12 @@
             setTimeout(function () {
               if ($stream.length) $stream.scrollTop($stream[0].scrollHeight);
             }, 60);
+            setTimeout(function () {
+              if ($stream.length) $stream.scrollTop($stream[0].scrollHeight);
+            }, 250);
+            $stream.find("img.wa-msg-img").one("load", function () {
+              if ($stream.length) $stream.scrollTop($stream[0].scrollHeight);
+            });
           } else {
             const isScrolledUp = ($stream[0].scrollHeight - $stream.scrollTop()) > ($stream[0].clientHeight + 120);
             if (isScrolledUp) {
