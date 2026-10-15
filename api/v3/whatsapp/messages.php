@@ -80,9 +80,62 @@ if ($method === 'GET') {
     if ($action === 'retry_media') {
         $msgWaId = trim($_GET['msg_id'] ?? ($_POST['msg_id'] ?? ''));
         if (!empty($msgWaId)) {
+            $escWaId = mysqli_real_escape_string($connection, $msgWaId);
+
+            // 1. Check if DB already has media_url for this message
+            $chkDb = mysqli_query($connection, "SELECT message_id, message_media_url, message_type FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}' AND message_media_url != '' LIMIT 1");
+            if ($chkDb && mysqli_num_rows($chkDb) > 0) {
+                $dbRow = mysqli_fetch_assoc($chkDb);
+                echo json_encode([
+                    'status'    => 'success',
+                    'media_url' => $dbRow['message_media_url'],
+                    'type'      => $dbRow['message_type']
+                ]);
+                exit;
+            }
+
+            // 2. Check if file is already on local disk
+            $upDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/upload/whatsapp';
+            foreach (['jpg', 'jpeg', 'png', 'webp', 'pdf', 'mp4', 'ogg'] as $chkExt) {
+                $chkFile = $upDir . '/wa_' . $msgWaId . '.' . $chkExt;
+                if (file_exists($chkFile) && filesize($chkFile) > 0) {
+                    $foundUrl = '/upload/whatsapp/wa_' . $msgWaId . '.' . $chkExt;
+                    $foundType = in_array($chkExt, ['jpg', 'jpeg', 'png', 'webp']) ? 'image' : ($chkExt === 'pdf' ? 'document' : 'media');
+                    $escU = mysqli_real_escape_string($connection, $foundUrl);
+                    $escT = mysqli_real_escape_string($connection, $foundType);
+                    mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escU}', message_type = '{$escT}' WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}'");
+                    echo json_encode([
+                        'status'    => 'success',
+                        'media_url' => $foundUrl,
+                        'type'      => $foundType
+                    ]);
+                    exit;
+                }
+            }
+
+            // 3. Request WhatsApp gateway to fetch media from device
             $gwUrl = "http://127.0.0.1:3001/retry-media?msg_id=" . urlencode($msgWaId);
-            $ctx = stream_context_create(['http' => ['timeout' => 8]]);
+            $ctx = stream_context_create(['http' => ['timeout' => 12]]);
             $gwRes = @file_get_contents($gwUrl, false, $ctx);
+            if ($gwRes) {
+                $gwJson = json_decode($gwRes, true);
+                if (isset($gwJson['results']) && is_array($gwJson['results'])) {
+                    foreach ($gwJson['results'] as $r) {
+                        if (!empty($r['url']) && ($r['msgId'] ?? '') === $msgWaId) {
+                            $escU = mysqli_real_escape_string($connection, $r['url']);
+                            $escT = mysqli_real_escape_string($connection, $r['type'] ?? 'image');
+                            mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escU}', message_type = '{$escT}' WHERE message_site_id = {$siteId} AND message_wa_id = '{$escWaId}'");
+                            echo json_encode([
+                                'status'    => 'success',
+                                'media_url' => $r['url'],
+                                'type'      => $r['type'] ?? 'image'
+                            ]);
+                            exit;
+                        }
+                    }
+                }
+            }
+
             echo $gwRes ?: json_encode(['status' => 'pending']);
             exit;
         }
@@ -277,15 +330,34 @@ if ($method === 'GET') {
                     $dateLabel = date('d M Y', $ts);
                 }
             }
+            $mediaUrl = $row['message_media_url'] ?? '';
+            $mType = $row['message_type'];
+            if (empty($mediaUrl) && !empty($row['message_wa_id'])) {
+                $upDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/upload/whatsapp';
+                foreach (['jpg', 'jpeg', 'png', 'webp', 'pdf', 'mp4', 'ogg'] as $chkExt) {
+                    $chkFile = $upDir . '/wa_' . $row['message_wa_id'] . '.' . $chkExt;
+                    if (file_exists($chkFile) && filesize($chkFile) > 0) {
+                        $mediaUrl = '/upload/whatsapp/wa_' . $row['message_wa_id'] . '.' . $chkExt;
+                        if ($mType === 'text') {
+                            $mType = in_array($chkExt, ['jpg', 'jpeg', 'png', 'webp']) ? 'image' : ($chkExt === 'pdf' ? 'document' : 'media');
+                        }
+                        $escU = mysqli_real_escape_string($connection, $mediaUrl);
+                        $escT = mysqli_real_escape_string($connection, $mType);
+                        @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_media_url = '{$escU}', message_type = '{$escT}' WHERE message_id = " . (int)$row['message_id']);
+                        break;
+                    }
+                }
+            }
+
             $messages[] = [
                 'id'         => (int)$row['message_id'],
                 'wa_id'      => $row['message_wa_id'] ?? '',
                 'direction'  => $row['message_direction'],
                 'sender'     => $row['message_sender'],
                 'receiver'   => $row['message_receiver'],
-                'type'       => $row['message_type'],
+                'type'       => $mType,
                 'text'       => $row['message_text'] ?? '',
-                'media_url'  => $row['message_media_url'] ?? '',
+                'media_url'  => $mediaUrl,
                 'status'     => $row['message_status'],
                 'created_at' => $row['message_created_at'],
                 'time'       => $timeDisplay,

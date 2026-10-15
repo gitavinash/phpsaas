@@ -2773,6 +2773,27 @@ app.all("/retry-media", async (req, res) => {
         }
       }
     }
+
+    if (results.length === 0 && requestedMsgId && s.messageStore.has(requestedMsgId)) {
+      const storedMsg = s.messageStore.get(requestedMsgId);
+      const syntheticMsg = { key: { id: requestedMsgId }, message: storedMsg };
+      try {
+        console.log(`[WhatsApp Gateway:${s.sessionId}] Retrying media download from messageStore for ${requestedMsgId}...`);
+        const dl = await downloadAndSaveMedia(syntheticMsg, s.sessionId, s.sock);
+        if (dl && dl.url) {
+          results.push({ msgId: requestedMsgId, url: dl.url, type: dl.type });
+          s.notify({
+            event: "media_downloaded",
+            msg_id: requestedMsgId,
+            media_url: dl.url,
+            type: dl.type,
+            session_id: s.sessionId
+          });
+        }
+      } catch (err) {
+        results.push({ msgId: requestedMsgId, error: err.message });
+      }
+    }
   }
 
   res.json({ status: "success", count: results.length, results });

@@ -250,9 +250,8 @@ if (($payload['event'] ?? '') === 'batch_sync') {
         $escPush = mysqli_real_escape_string($connection, $cPushName);
         $lastMsg = mysqli_real_escape_string($connection, $c['last_message'] ?? '');
         $unread = (int)($c['unread_count'] ?? 0);
-        $cTime = !empty($c['timestamp']) 
-            ? gmdate('Y-m-d H:i:s', is_numeric($c['timestamp']) ? (int)$c['timestamp'] : strtotime($c['timestamp'])) 
-            : gmdate('Y-m-d H:i:s');
+        $cTs = !empty($c['timestamp']) ? (is_numeric($c['timestamp']) ? (int)$c['timestamp'] : strtotime((string)$c['timestamp'])) : false;
+        $cTime = ($cTs && $cTs > 0) ? gmdate('Y-m-d H:i:s', $cTs) : gmdate('Y-m-d H:i:s');
 
         // Match with CRM lead ONLY if one already exists - NEVER create a new lead during sync
         $phoneDigits = preg_replace('/[^0-9]/', '', $cPhone);
@@ -280,7 +279,7 @@ if (($payload['event'] ?? '') === 'batch_sync') {
                                           chat_avatar = IF('{$cAvatar}' != '', '{$cAvatar}', chat_avatar),
                                           chat_unread_count = {$unread},
                                           chat_last_message = IF('{$lastMsg}' != '', '{$lastMsg}', chat_last_message),
-                                          chat_last_message_time = IF('{$lastMsg}' != '', IF(chat_last_message_time IS NULL OR chat_last_message_time = '' OR '{$cTime}' >= chat_last_message_time, '{$cTime}', chat_last_message_time), chat_last_message_time),
+                                          chat_last_message_time = IF('{$lastMsg}' != '', IF(chat_last_message_time IS NULL OR '{$cTime}' >= chat_last_message_time, '{$cTime}', chat_last_message_time), chat_last_message_time),
                                           chat_device_phone = IF('{$escDevPhone}' != '' AND '{$escDevPhone}' != 'CRM', '{$escDevPhone}', chat_device_phone),
                                           chat_lead_id = IF({$leadVal} IS NOT NULL, {$leadVal}, chat_lead_id)
                                       WHERE chat_id = {$chatId} AND chat_site_id = {$siteId}");
@@ -328,9 +327,8 @@ if (($payload['event'] ?? '') === 'batch_sync') {
                 $mDir = $mFromMe ? 'outgoing' : 'incoming';
                 $mSender = $mFromMe ? $devicePhone : $escPhone;
                 $mReceiver = $mFromMe ? $escPhone : $devicePhone;
-                $mItemTime = !empty($mItem['timestamp']) 
-                    ? (is_numeric($mItem['timestamp']) ? gmdate('Y-m-d H:i:s', (int)$mItem['timestamp']) : gmdate('Y-m-d H:i:s', strtotime($mItem['timestamp']))) 
-                    : $cTime;
+                $mTs = !empty($mItem['timestamp']) ? (is_numeric($mItem['timestamp']) ? (int)$mItem['timestamp'] : strtotime((string)$mItem['timestamp'])) : false;
+                $mItemTime = ($mTs && $mTs > 0) ? gmdate('Y-m-d H:i:s', $mTs) : $cTime;
 
                 $mExists = false;
                 if (!empty($mWaId)) {
@@ -667,7 +665,7 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
                                       chat_pushname = IF('{$escPush}' != '', '{$escPush}', chat_pushname),
                                       chat_avatar = IF('{$escAvatar}' != '', '{$escAvatar}', chat_avatar),
                                       chat_last_message = '{$escLastPreview}',
-                                      chat_last_message_time = IF(chat_last_message_time IS NULL OR chat_last_message_time = '' OR '{$msgCreatedAtUtc}' >= chat_last_message_time, '{$msgCreatedAtUtc}', chat_last_message_time),
+                                      chat_last_message_time = IF(chat_last_message_time IS NULL OR '{$msgCreatedAtUtc}' >= chat_last_message_time, '{$msgCreatedAtUtc}', chat_last_message_time),
                                       chat_device_phone = IF('{$escDevPhone}' != '' AND '{$escDevPhone}' != 'CRM', '{$escDevPhone}', IF(chat_device_phone = 'CRM', '', chat_device_phone)),
                                       chat_lead_id = IF({$leadVal} IS NOT NULL, {$leadVal}, chat_lead_id)
                                   WHERE chat_id = {$chatId} AND chat_site_id = {$siteId}");
@@ -679,7 +677,7 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
                        ON DUPLICATE KEY UPDATE 
                            chat_unread_count = chat_unread_count + {$unreadInc},
                            chat_last_message = VALUES(chat_last_message),
-                           chat_last_message_time = IF(chat_last_message_time IS NULL OR chat_last_message_time = '' OR '{$msgCreatedAtUtc}' >= chat_last_message_time, '{$msgCreatedAtUtc}', chat_last_message_time),
+                           chat_last_message_time = IF(chat_last_message_time IS NULL OR '{$msgCreatedAtUtc}' >= chat_last_message_time, '{$msgCreatedAtUtc}', chat_last_message_time),
                            chat_device_phone = IF(VALUES(chat_device_phone) != '' AND VALUES(chat_device_phone) != 'CRM', VALUES(chat_device_phone), chat_device_phone),
                            chat_id = LAST_INSERT_ID(chat_id)";
         mysqli_query($connection, $insChatSql);

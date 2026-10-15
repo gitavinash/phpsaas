@@ -26,6 +26,8 @@
     availableDevices: [],
     availableAgents: [],
     isAdmin: false,
+    isCallingAgent: false,
+    userRole: "",
     pollTimer: null,
     isDeviceLinked: false,
     eventsBound: false,
@@ -40,6 +42,23 @@
       if (!$app.length) {
         this.stopPolling();
         return;
+      }
+
+      const isAdminAttr = $app.data("is-admin");
+      const isCallingAgentAttr = $app.data("is-calling-agent");
+      const userRoleAttr = $app.data("user-role");
+
+      if (typeof isAdminAttr !== "undefined") {
+        this.isAdmin = String(isAdminAttr) === "1" || isAdminAttr === true;
+      }
+      if (typeof isCallingAgentAttr !== "undefined") {
+        this.isCallingAgent = String(isCallingAgentAttr) === "1" || isCallingAgentAttr === true;
+      }
+      if (typeof userRoleAttr !== "undefined") {
+        this.userRole = String(userRoleAttr).toLowerCase();
+        if (["agent", "calling_agent", "crm_calling_agent", "crm calling agent", "sales_executive"].includes(this.userRole)) {
+          this.isCallingAgent = true;
+        }
       }
 
       this.stopPolling();
@@ -59,6 +78,7 @@
 
       this.bindEvents();
       this.checkConnectionStatus();
+      this.initNotificationPermission();
       this.loadThreads();
       this.startPolling();
     },
@@ -68,6 +88,20 @@
       if (this.eventsBound) return;
       this.eventsBound = true;
       const self = this;
+
+      // Browser Push Notification enable button
+      $(document).on("click", "#btnEnableNotifications", function () {
+        self.requestNotificationPermission(true);
+      });
+
+      // User gesture trigger for notification permission prompt
+      const triggerPermOnGesture = function () {
+        if ("Notification" in window && Notification.permission === "default") {
+          self.requestNotificationPermission(false);
+        }
+        document.removeEventListener("click", triggerPermOnGesture);
+      };
+      document.addEventListener("click", triggerPermOnGesture, { once: true });
 
       // Tab visibility listener: resume immediately when user returns to tab
       document.addEventListener("visibilitychange", function () {
@@ -277,21 +311,80 @@
         }
       });
 
-      // Click to retry loading photo for historical/pending media
-      $(document).on("click", ".wa-media-photo-card[data-retry-wa-id]", function () {
+      // Capture phase listeners for non-bubbling image load/error events
+      document.addEventListener("load", function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains("wa-msg-img")) {
+          const img = e.target;
+          img.classList.add("is-ready");
+          const loader = img.parentElement ? img.parentElement.querySelector(".wa-img-skeleton-loader") : null;
+          if (loader) {
+            loader.remove();
+          }
+        }
+      }, true);
+
+      document.addEventListener("error", function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains("wa-msg-img")) {
+          const img = e.target;
+          const box = img.closest(".wa-msg-img-box");
+          if (box) {
+            const bubble = box.closest(".wa-msg-bubble");
+            const waId = bubble ? (bubble.getAttribute("data-wa-id") || "") : "";
+            box.innerHTML = `
+              <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
+                <i class="fi fi-rr-refresh"></i>
+                <span>Failed to load photo · Click to retry</span>
+              </div>
+            `;
+          }
+        }
+      }, true);
+
+      // Click to retry loading image
+      $(document).on("click", ".wa-img-error-fallback[data-retry-wa-id], .wa-media-photo-card[data-retry-wa-id]", function () {
+        const $el = $(this);
+        const waId = $el.attr("data-retry-wa-id");
+        if (!waId) return;
+        const $box = $el.closest(".wa-msg-img-box");
+        if ($box.length) {
+          $box.removeClass("is-fetching").addClass("wa-auto-fetch-media");
+          $box.html(`
+            <div class="wa-img-skeleton-loader">
+              <i class="fi fi-rr-spinner wa-spin"></i>
+              <span>Retrying photo...</span>
+            </div>
+          `);
+          self.autoFetchPendingImages();
+        } else {
+          $el.addClass("is-loading");
+          $.ajax({
+            url: "/api/v3/whatsapp/messages/?action=retry_media&msg_id=" + encodeURIComponent(waId),
+            type: "GET",
+            timeout: 12000,
+            complete: function () {
+              setTimeout(function () {
+                self.loadMessages(self.activeChatId, false);
+              }, 1000);
+            }
+          });
+        }
+      });
+
+      // Click to load pending document attachment
+      $(document).on("click", ".wa-media-doc-card-pending[data-retry-wa-id]", function () {
         const $card = $(this);
         const waId = $card.attr("data-retry-wa-id");
         if (!waId || $card.hasClass("is-loading")) return;
         $card.addClass("is-loading");
-        $card.find(".wa-media-photo-desc").text("Downloading photo...");
+        $card.find(".wa-doc-meta-row span:first").text("Downloading attachment...");
         $.ajax({
-          url: self.config.messagesApi + "?action=retry_media&msg_id=" + encodeURIComponent(waId),
+          url: "/api/v3/whatsapp/messages/?action=retry_media&msg_id=" + encodeURIComponent(waId),
           type: "GET",
-          timeout: 10000,
+          timeout: 12000,
           complete: function () {
             setTimeout(function () {
               self.loadMessages(self.activeChatId, false);
-            }, 1200);
+            }, 1000);
           }
         });
       });
@@ -416,9 +509,15 @@
       const $workspace = $("#waChatWorkspace");
 
       const devices = self.availableDevices || [];
-      if (!devices.length) {
+      const isCallingAgent = !self.isAdmin || self.isCallingAgent || (self.userRole && ["agent", "calling_agent", "crm_calling_agent", "crm calling agent", "sales_executive"].includes(self.userRole));
+
+      // If single device is linked and user type is CRM calling agent (or non-admin), do NOT show the linked device sidebar
+      if (!devices.length || (devices.length <= 1 && isCallingAgent) || (devices.length <= 1 && !self.isAdmin)) {
         if ($rail.length) $rail.addClass("d-none").hide();
         if ($workspace.length) $workspace.removeClass("has-devices-rail");
+        if (devices.length === 1 && (!self.selectedDeviceId || self.selectedDeviceId === "all")) {
+          self.selectedDeviceId = devices[0].device_id;
+        }
         return;
       }
 
@@ -654,6 +753,14 @@
         dataType: "json",
         success: function (res) {
           self.isAdmin = !!(res && res.is_admin);
+          if (res && typeof res.is_calling_agent !== "undefined") {
+            self.isCallingAgent = !!res.is_calling_agent;
+          } else if (!self.isAdmin) {
+            self.isCallingAgent = true;
+          }
+          if (res && res.user_role) {
+            self.userRole = String(res.user_role).toLowerCase();
+          }
           self.availableDevices = (res && Array.isArray(res.devices)) ? res.devices : [];
           self.availableAgents = (res && Array.isArray(res.agents)) ? res.agents : [];
 
@@ -696,6 +803,7 @@
           let latestSenderName = "";
           let latestChatId = null;
           let latestPhone = "";
+          let latestAvatar = "";
 
           let html = "";
           res.chats.forEach(function (chat) {
@@ -710,12 +818,13 @@
               const isPhoneMatch = chatDigits && activeDigits && chatDigits === activeDigits;
               const isActive = self.activeChatId && (String(chat.chat_id) === String(self.activeChatId) || isPhoneMatch);
 
-              if (!isActive) {
+              if (!isActive || document.hidden) {
                 newIncomingDetected = true;
                 latestMsgText = chat.last_message;
                 latestSenderName = chat.name || chat.phone;
                 latestChatId = chat.chat_id;
                 latestPhone = chat.phone;
+                latestAvatar = chat.avatar || "";
               } else {
                 // Instantly refresh current chat stream and scroll to bottom
                 self.loadMessages(self.activeChatId, true);
@@ -797,7 +906,7 @@
 
           if (newIncomingDetected && self.hasInitialLoaded) {
             self.playNotificationSound();
-            self.showIncomingAlert(latestSenderName, latestMsgText, latestChatId, latestPhone);
+            self.showIncomingAlert(latestSenderName, latestMsgText, latestChatId, latestPhone, latestAvatar);
           }
           self.hasInitialLoaded = true;
 
@@ -976,21 +1085,68 @@
             let contentHtml = "";
             if (msg.media_url) {
               if (msg.type === "image" || msg.media_url.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i)) {
-                contentHtml += `<div class="wa-msg-media"><img src="${self.escapeHtml(msg.media_url)}" class="wa-msg-img" alt="Photo" loading="lazy" /></div>`;
+                contentHtml += `
+                  <div class="wa-msg-media">
+                    <div class="wa-msg-img-box">
+                      <div class="wa-img-skeleton-loader">
+                        <i class="fi fi-rr-spinner wa-spin"></i>
+                        <span>Loading photo...</span>
+                      </div>
+                      <img src="${self.escapeHtml(msg.media_url)}" class="wa-msg-img" alt="Photo" loading="lazy" />
+                    </div>
+                  </div>`;
               } else {
-                contentHtml += `<div class="wa-msg-media"><a href="${self.escapeHtml(msg.media_url)}" class="wa-msg-doc-link" target="_blank" rel="noopener noreferrer"><i class="fi fi-rr-document"></i> View Attachment</a></div>`;
+                const docInfo = self.getDocInfo(msg.media_url, msg.text);
+                contentHtml += `
+                  <div class="wa-msg-media">
+                    <div class="wa-msg-doc-card ${docInfo.theme}">
+                      <a href="${self.escapeHtml(msg.media_url)}" target="_blank" rel="noopener noreferrer" class="wa-doc-main-link" download="${self.escapeHtml(docInfo.filename)}">
+                        <div class="wa-doc-icon-box">
+                          <i class="fi ${docInfo.icon}"></i>
+                          <span class="wa-doc-pill-ext">${self.escapeHtml(docInfo.ext)}</span>
+                        </div>
+                        <div class="wa-doc-details">
+                          <div class="wa-doc-name" title="${self.escapeHtml(docInfo.filename)}">${self.escapeHtml(docInfo.filename)}</div>
+                          <div class="wa-doc-meta-row">
+                            <span>${self.escapeHtml(docInfo.label)}</span>
+                            <span class="wa-doc-action-btn" title="Download"><i class="fi fi-rr-download"></i></span>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>`;
               }
-              if (msg.text && msg.text !== "[Image]" && msg.text !== "[Photo]" && msg.text !== "[Media]") {
+              if (msg.text && msg.text !== "[Image]" && msg.text !== "[Photo]" && msg.text !== "[Media]" && msg.text !== "[Attachment]" && msg.text !== "[Document]") {
                 contentHtml += `<div class="wa-msg-text">${self.formatMessageText(msg.text)}</div>`;
               }
             } else {
               if (msg.text === "[Image]" || msg.text === "[Photo]" || msg.type === "image") {
                 contentHtml += `
-                  <div class="wa-media-photo-card" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}" title="Click to retry loading photo">
-                    <div class="wa-media-photo-icon"><i class="fi fi-rr-picture"></i></div>
-                    <div class="wa-media-photo-meta">
-                      <span class="wa-media-photo-title">Photo</span>
-                      <span class="wa-media-photo-desc">Click to load photo</span>
+                  <div class="wa-msg-media">
+                    <div class="wa-msg-img-box wa-auto-fetch-media" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+                      <div class="wa-img-skeleton-loader">
+                        <i class="fi fi-rr-spinner wa-spin"></i>
+                        <span>Loading photo...</span>
+                      </div>
+                    </div>
+                  </div>`;
+              } else if (msg.type === "document" || msg.text === "[Attachment]" || msg.text === "[Document]") {
+                contentHtml += `
+                  <div class="wa-msg-media">
+                    <div class="wa-msg-doc-card wa-doc-theme-default wa-media-doc-card-pending" data-retry-wa-id="${self.escapeHtml(msg.wa_id || '')}">
+                      <div class="wa-doc-main-link">
+                        <div class="wa-doc-icon-box">
+                          <i class="fi fi-rr-file-download"></i>
+                          <span class="wa-doc-pill-ext">DOC</span>
+                        </div>
+                        <div class="wa-doc-details">
+                          <div class="wa-doc-name">Attachment</div>
+                          <div class="wa-doc-meta-row">
+                            <span>Click to load document</span>
+                            <span class="wa-doc-action-btn"><i class="fi fi-rr-download"></i></span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>`;
               } else if (msg.text) {
@@ -1012,6 +1168,7 @@
           });
 
           if (self.lastStreamHtml === html && $stream.children(".wa-msg-bubble").length > 0) {
+            self.autoFetchPendingImages();
             if (scrollToBottom) {
               $stream.scrollTop($stream[0].scrollHeight);
             }
@@ -1019,6 +1176,17 @@
           }
           self.lastStreamHtml = html;
           $stream.html(html);
+
+          // Check if any loaded images are already cached in browser
+          $stream.find("img.wa-msg-img").each(function () {
+            if (this.complete && this.naturalWidth > 0) {
+              $(this).addClass("is-ready");
+              $(this).siblings(".wa-img-skeleton-loader").remove();
+            }
+          });
+
+          // Automatically trigger background download for pending images
+          self.autoFetchPendingImages();
 
           if (scrollToBottom) {
             $stream.scrollTop($stream[0].scrollHeight);
@@ -1046,6 +1214,195 @@
             callback();
           }
         }
+      });
+    },
+
+    getDocInfo: function (url, fallbackText) {
+      const cleanUrl = (url || "").split("?")[0];
+      let rawFilename = cleanUrl.split("/").pop() || "";
+      if (rawFilename.length > 45) {
+        rawFilename = rawFilename.substring(0, 42) + "...";
+      }
+
+      const extMatch = cleanUrl.match(/\.([a-z0-9]+)$/i);
+      const ext = extMatch ? extMatch[1].toLowerCase() : "";
+
+      let docName = (fallbackText && fallbackText !== "[Attachment]" && fallbackText !== "[Document]" && fallbackText !== "[Media]")
+        ? fallbackText
+        : (rawFilename || "Document");
+
+      let icon = "fi-rr-document";
+      let theme = "wa-doc-theme-default";
+      let label = (ext ? ext.toUpperCase() : "FILE") + " Document";
+      let extPill = ext ? ext.toUpperCase().substring(0, 4) : "DOC";
+
+      switch (ext) {
+        case "pdf":
+          icon = "fi-rr-file-pdf";
+          theme = "wa-doc-theme-pdf";
+          label = "PDF Document";
+          extPill = "PDF";
+          break;
+        case "doc":
+        case "docx":
+        case "rtf":
+          icon = "fi-rr-file-word";
+          theme = "wa-doc-theme-word";
+          label = "Word Document";
+          extPill = "DOC";
+          break;
+        case "xls":
+        case "xlsx":
+          icon = "fi-rr-file-excel";
+          theme = "wa-doc-theme-excel";
+          label = "Excel Spreadsheet";
+          extPill = "XLS";
+          break;
+        case "csv":
+          icon = "fi-rr-file-csv";
+          theme = "wa-doc-theme-excel";
+          label = "CSV Spreadsheet";
+          extPill = "CSV";
+          break;
+        case "ppt":
+        case "pptx":
+          icon = "fi-rr-file-powerpoint";
+          theme = "wa-doc-theme-ppt";
+          label = "PowerPoint Presentation";
+          extPill = "PPT";
+          break;
+        case "zip":
+        case "rar":
+        case "7z":
+        case "tar":
+        case "gz":
+          icon = "fi-rr-file-zipper";
+          theme = "wa-doc-theme-zip";
+          label = "Compressed Archive";
+          extPill = ext.toUpperCase();
+          break;
+        case "mp3":
+        case "wav":
+        case "ogg":
+        case "m4a":
+        case "aac":
+        case "opus":
+          icon = "fi-rr-file-audio";
+          theme = "wa-doc-theme-audio";
+          label = "Audio File";
+          extPill = "AUDIO";
+          break;
+        case "mp4":
+        case "mkv":
+        case "mov":
+        case "webm":
+        case "avi":
+          icon = "fi-rr-file-video";
+          theme = "wa-doc-theme-video";
+          label = "Video File";
+          extPill = "VIDEO";
+          break;
+        case "txt":
+        case "log":
+          icon = "fi-rr-file-alt";
+          theme = "wa-doc-theme-default";
+          label = "Text File";
+          extPill = "TXT";
+          break;
+        case "json":
+        case "xml":
+        case "html":
+        case "js":
+        case "css":
+        case "sql":
+          icon = "fi-rr-file-code";
+          theme = "wa-doc-theme-default";
+          label = "Source Code";
+          extPill = ext.toUpperCase();
+          break;
+      }
+
+      return {
+        filename: docName,
+        icon: icon,
+        theme: theme,
+        label: label,
+        ext: extPill
+      };
+    },
+
+    autoFetchPendingImages: function () {
+      const self = this;
+      const $pending = $("#waMessagesStream").find(".wa-auto-fetch-media[data-retry-wa-id]:not(.is-fetching)");
+      if (!$pending.length) return;
+
+      $pending.each(function () {
+        const $box = $(this);
+        const waId = $box.attr("data-retry-wa-id");
+        if (!waId) return;
+
+        $box.addClass("is-fetching");
+        $.ajax({
+          url: "/api/v3/whatsapp/messages/?action=retry_media&msg_id=" + encodeURIComponent(waId),
+          type: "GET",
+          timeout: 12000,
+          dataType: "json",
+          success: function (res) {
+            if (res && res.status === "success" && res.media_url) {
+              $box.removeClass("wa-auto-fetch-media is-fetching");
+              if (res.type === "image" || res.media_url.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i)) {
+                $box.html(`
+                  <div class="wa-img-skeleton-loader">
+                    <i class="fi fi-rr-spinner wa-spin"></i>
+                    <span>Loading photo...</span>
+                  </div>
+                  <img src="${self.escapeHtml(res.media_url)}" class="wa-msg-img" alt="Photo" loading="lazy" />
+                `);
+                const img = $box.find("img.wa-msg-img")[0];
+                if (img && img.complete && img.naturalWidth > 0) {
+                  img.classList.add("is-ready");
+                  $box.find(".wa-img-skeleton-loader").remove();
+                }
+              } else {
+                const docInfo = self.getDocInfo(res.media_url, "");
+                $box.replaceWith(`
+                  <div class="wa-msg-doc-card ${docInfo.theme}">
+                    <a href="${self.escapeHtml(res.media_url)}" target="_blank" rel="noopener noreferrer" class="wa-doc-main-link" download="${self.escapeHtml(docInfo.filename)}">
+                      <div class="wa-doc-icon-box">
+                        <i class="fi ${docInfo.icon}"></i>
+                        <span class="wa-doc-pill-ext">${self.escapeHtml(docInfo.ext)}</span>
+                      </div>
+                      <div class="wa-doc-details">
+                        <div class="wa-doc-name" title="${self.escapeHtml(docInfo.filename)}">${self.escapeHtml(docInfo.filename)}</div>
+                        <div class="wa-doc-meta-row">
+                          <span>${self.escapeHtml(docInfo.label)}</span>
+                          <span class="wa-doc-action-btn" title="Download"><i class="fi fi-rr-download"></i></span>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                `);
+              }
+            } else {
+              $box.removeClass("is-fetching");
+              $box.html(`
+                <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
+                  <i class="fi fi-rr-picture"></i>
+                  <span>Photo unavailable · Click to retry</span>
+                </div>
+              `);
+            }
+          },
+          error: function () {
+            $box.removeClass("is-fetching");
+            $box.html(`
+              <div class="wa-img-error-fallback" data-retry-wa-id="${self.escapeHtml(waId)}">
+                <i class="fi fi-rr-refresh"></i>
+                <span>Failed to load photo · Click to retry</span>
+              </div>
+            `);
+          }
+        });
       });
     },
 
@@ -1212,22 +1569,17 @@
           return;
         }
 
-        // If browser tab is in background, pause polling
-        if (document.hidden) {
-          self.pollTimer = setTimeout(runPollCycle, 5000);
-          return;
-        }
+        const isHidden = document.hidden;
+        const pollDelay = isHidden ? 6000 : (self.activeChatId ? 3000 : 7000);
 
-        const pollDelay = self.activeChatId ? 3000 : 7000;
-
-        // Poll messages silently without resetting scroll if user is viewing history
-        if (self.activeChatId && !self.isLoadingMessages) {
+        // When tab is visible and chat is active, poll messages silently
+        if (!isHidden && self.activeChatId && !self.isLoadingMessages) {
           const $stream = $("#waMessagesStream");
           const isAtBottom = $stream.length ? ($stream[0].scrollHeight - $stream.scrollTop() <= $stream.outerHeight() + 80) : true;
           self.loadMessages(self.activeChatId, isAtBottom);
         }
 
-        // Poll threads, schedule next poll strictly AFTER current request completes
+        // Always poll threads (even when tab is hidden) so incoming messages trigger browser push notifications
         if (!self.isLoadingThreads) {
           self.loadThreads(function () {
             if ($("#whatsappCrmApp").length) {
@@ -1316,28 +1668,121 @@
       } catch (e) {}
     },
 
-    showIncomingAlert: function (sender, text, chatId, phone) {
+    showIncomingAlert: function (sender, text, chatId, phone, avatar) {
       const self = this;
       $(".wa-incoming-alert-toast").remove();
-      const $alert = $(`
-        <div class="wa-incoming-alert-toast" role="alert">
-          <span class="wa-incoming-alert-icon"><i class="fi fi-rr-comment-alt-check"></i></span>
-          <div>
-            <div class="wa-incoming-alert-title">${self.escapeHtml(sender || "New WhatsApp Message")}</div>
-            <div class="wa-incoming-alert-msg">${self.escapeHtml(text || "New message received")}</div>
-          </div>
-        </div>
-      `);
-      $("body").append($alert);
-      $alert.on("click", function () {
-        if (chatId) {
-          self.selectChat(chatId, phone);
+
+      let previewText = text || "New message received";
+      if (previewText === "[Image]" || previewText === "[Photo]") {
+        previewText = "📷 Photo";
+      } else if (previewText === "[Media]") {
+        previewText = "📎 Media";
+      }
+
+      const notifTitle = sender || phone || "WhatsApp Message";
+      const notifIcon = avatar || "/app/dashboard/v3/default/desktop/assets/images/integration/whatsapp.svg";
+
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          try {
+            const notif = new Notification(notifTitle, {
+              body: previewText,
+              icon: notifIcon,
+              badge: notifIcon,
+              tag: "wa-chat-" + (chatId || "incoming"),
+              renotify: true
+            });
+
+            notif.onclick = function (e) {
+              e.preventDefault();
+              window.focus();
+              if (chatId) {
+                self.selectChat(chatId, phone);
+              }
+              try { notif.close(); } catch (err) {}
+            };
+          } catch (e) {
+            console.warn("Browser Notification error:", e);
+          }
+        } else if (Notification.permission === "default") {
+          self.requestNotificationPermission(false, function (permission) {
+            if (permission === "granted") {
+              try {
+                const notif = new Notification(notifTitle, {
+                  body: previewText,
+                  icon: notifIcon,
+                  badge: notifIcon,
+                  tag: "wa-chat-" + (chatId || "incoming"),
+                  renotify: true
+                });
+                notif.onclick = function (e) {
+                  e.preventDefault();
+                  window.focus();
+                  if (chatId) {
+                    self.selectChat(chatId, phone);
+                  }
+                  try { notif.close(); } catch (err) {}
+                };
+              } catch (err) {}
+            }
+          });
         }
-        $alert.fadeOut(200, function () { $(this).remove(); });
-      });
-      setTimeout(function () {
-        $alert.fadeOut(400, function () { $(this).remove(); });
-      }, 7000);
+      }
+    },
+
+    initNotificationPermission: function () {
+      this.updateNotificationButtonState();
+    },
+
+    requestNotificationPermission: function (fromUserClick, callback) {
+      const self = this;
+      if (!("Notification" in window)) {
+        if (typeof callback === "function") callback("unsupported");
+        return;
+      }
+
+      if (Notification.permission === "default") {
+        try {
+          Notification.requestPermission().then(function (permission) {
+            self.updateNotificationButtonState();
+            if (permission === "granted" && fromUserClick) {
+              try {
+                const welcomeNotif = new Notification("WhatsApp Notifications Enabled", {
+                  body: "You will now receive desktop notifications for incoming messages.",
+                  icon: "/app/dashboard/v3/default/desktop/assets/images/integration/whatsapp.svg"
+                });
+                welcomeNotif.onclick = function () {
+                  window.focus();
+                  try { welcomeNotif.close(); } catch (e) {}
+                };
+              } catch (err) {}
+            }
+            if (typeof callback === "function") callback(permission);
+          }).catch(function () {
+            if (typeof callback === "function") callback(Notification.permission);
+          });
+        } catch (e) {
+          Notification.requestPermission(function (permission) {
+            self.updateNotificationButtonState();
+            if (typeof callback === "function") callback(permission);
+          });
+        }
+      } else {
+        self.updateNotificationButtonState();
+        if (typeof callback === "function") callback(Notification.permission);
+      }
+    },
+
+    updateNotificationButtonState: function () {
+      if (!("Notification" in window)) {
+        $("#btnEnableNotifications").addClass("d-none");
+        return;
+      }
+      if (Notification.permission === "default") {
+        $("#btnEnableNotifications").removeClass("d-none");
+      } else {
+        $("#btnEnableNotifications").addClass("d-none");
+      }
     },
 
     formatFileSize: function (bytes) {

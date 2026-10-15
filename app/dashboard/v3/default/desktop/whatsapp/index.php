@@ -1,4 +1,9 @@
-<div class="package-page-wrapper whatsapp-inbox-wrapper" id="whatsappCrmApp">
+<?php
+$userRole = strtolower(isset($site_access_type) ? (string)$site_access_type : (defined('USER_TYPE') ? (string)USER_TYPE : ''));
+$isAdmin = (isset($site_access_type) && ($site_access_type === 'administrator' || $site_access_type === 'admin')) || in_array($userRole, ['administrator', 'admin', 'superadmin', 'operator', 'owner'], true);
+$isCallingAgent = in_array($userRole, ['agent', 'calling_agent', 'crm_calling_agent', 'crm calling agent', 'sales_executive'], true) || (isset($site_access_type) && $site_access_type !== 'administrator');
+?>
+<div class="package-page-wrapper whatsapp-inbox-wrapper" id="whatsappCrmApp" data-is-admin="<?php echo $isAdmin ? '1' : '0'; ?>" data-user-role="<?php echo htmlspecialchars($userRole, ENT_QUOTES); ?>" data-is-calling-agent="<?php echo $isCallingAgent ? '1' : '0'; ?>">
     <!-- Top Bar -->
     <div class="package-header-bar wa-chat-header-bar">
         <div class="package-header-left">
@@ -17,6 +22,9 @@
                 <span class="wa-pulse-dot"></span>
                 <span id="waHeaderStatusText">Checking connection...</span>
             </span>
+            <button type="button" class="btn-v3-action wa-header-btn-secondary d-none" id="btnEnableNotifications" data-tooltip="Enable Browser Push Notifications">
+                <i class="fi fi-rr-bell"></i> <span>Enable Notifications</span>
+            </button>
             <button type="button" class="btn-v3-action wa-header-btn-secondary" id="btnSyncChatsInbox" data-tooltip="Sync All Chats from WhatsApp">
                 <i class="fi fi-rr-refresh"></i> <span>Sync</span>
             </button>

@@ -94,6 +94,7 @@ if ($method === 'GET') {
             }
         }
     }
+    $isCallingAgent = in_array($userRole, ['agent', 'calling_agent', 'crm_calling_agent', 'crm calling agent', 'sales_executive']) || !$isAdmin;
 
     if ($action === 'resolve_lid') {
         $lid = preg_replace('/[^0-9]/', '', $_GET['lid'] ?? ($_POST['lid'] ?? ''));
@@ -816,6 +817,8 @@ if ($method === 'GET') {
         'is_device_linked' => $isDeviceLinked,
         'linked_phone'     => $linkedPhone,
         'is_admin'         => $isAdmin,
+        'is_calling_agent' => $isCallingAgent,
+        'user_role'        => $userRole,
         'current_user_id'  => $currentUserId,
         'devices'          => $devicesList,
         'agents'           => $agentsList,
