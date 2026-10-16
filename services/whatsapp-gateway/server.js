@@ -2517,7 +2517,9 @@ app.post("/send-message", async (req, res) => {
       let localPath = null;
 
       if (typeof media === "string") {
-        if (media.startsWith("/upload/")) {
+        if (fs.existsSync(media) && fs.statSync(media).isFile()) {
+          localPath = media;
+        } else if (media.startsWith("/upload/")) {
           localPath = path.resolve(__dirname, "../../" + media.replace(/^\//, ""));
         } else if (media.includes("/upload/")) {
           const rel = media.substring(media.indexOf("/upload/"));
@@ -2576,12 +2578,7 @@ app.post("/send-message", async (req, res) => {
             caption: message || ""
           };
         } else if (isDoc && !isPdfUrl) {
-          // If media is a web URL (e.g. /download-itinerary/ or /itinerary/) rather than a binary PDF,
-          // deliver cleanly as a formatted text message with the link rather than failing media upload
-          const fullText = (message && !message.includes(media))
-            ? (message + "\n\n📄 *Quotation PDF Link:*\n" + media)
-            : (message || media);
-          sendContent = { text: fullText };
+          sendContent = { text: message || "" };
         } else {
           sendContent = {
             image: { url: media },

@@ -287,11 +287,16 @@ switch ($urlStructure[0]) {
 		require_once 'sitemap.php';
 		break;
 
-	/** For Public Itinerary / Proposal view and PDF download */
+	/** For Public Itinerary / Proposal & Transporter Quotation view and PDF download */
 
 	case 'itinerary':
 	case 'view-itinerary':
 	case 'download-itinerary':
+	case 'quote':
+	case 'view-quote':
+	case 'download-quote':
+	case 'view-quotation':
+	case 'quotation':
 		require_once 'itinerary.php';
 		break;
 

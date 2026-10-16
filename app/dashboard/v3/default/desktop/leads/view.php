@@ -1330,6 +1330,10 @@ $isCallingAgentUser = in_array($currentUserRole, ['agent', 'calling_agent', 'crm
                         <label for="tqTravelDuration" class="tq-form-label">Travel Duration (Days)</label>
                         <input type="number" id="tqTravelDuration" class="tq-form-control" min="1" step="1" value="1" placeholder="1">
                     </div>
+                    <div class="tq-form-group">
+                        <label for="tqPassengers" class="tq-form-label">No. of Persons (Pax)</label>
+                        <input type="text" id="tqPassengers" class="tq-form-control" placeholder="e.g. 4 Persons / Pax">
+                    </div>
                 </div>
             </div>
 

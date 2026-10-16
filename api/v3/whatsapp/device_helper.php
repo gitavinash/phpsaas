@@ -680,3 +680,70 @@ function sendWhatsAppDisconnectionEmail($connection, $siteId, $sessionId, $phone
     return false;
 }
 
+/**
+ * Headless Chrome / Chromium PDF Generator Helper
+ * Renders an internal/public web page into a pixel-perfect, multi-page PDF on disk.
+ *
+ * @param string $targetUrl The URL to render (e.g. http://localhost/view-itinerary/MTc1MQ==/)
+ * @param string $outputPdfPath Absolute disk path where PDF should be saved
+ * @return bool True if PDF was created successfully with valid size
+ */
+if (!function_exists('generateHeadlessPdf')) {
+    function generateHeadlessPdf(string $targetUrl, string $outputPdfPath): bool {
+        $candidates = [
+            '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+            '/Applications/Chromium.app/Contents/MacOS/Chromium',
+            '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
+            '/usr/bin/google-chrome',
+            '/usr/bin/google-chrome-stable',
+            '/usr/bin/chromium',
+            '/usr/bin/chromium-browser',
+            '/snap/bin/chromium',
+            '/usr/local/bin/chrome',
+            '/usr/local/bin/chromium'
+        ];
+        $chromeBin = null;
+        foreach ($candidates as $cand) {
+            if (file_exists($cand) && is_executable($cand)) {
+                $chromeBin = $cand;
+                break;
+            }
+        }
+        if (!$chromeBin) {
+            $which = trim((string)@shell_exec('which google-chrome 2>/dev/null || which chromium 2>/dev/null || which chromium-browser 2>/dev/null'));
+            if (!empty($which) && file_exists($which) && is_executable($which)) {
+                $chromeBin = $which;
+            }
+        }
+        if (!$chromeBin) {
+            return false;
+        }
+
+        $outDir = dirname($outputPdfPath);
+        if (!is_dir($outDir)) {
+            @mkdir($outDir, 0777, true);
+        }
+        if (file_exists($outputPdfPath) && filesize($outputPdfPath) <= 500) {
+            @unlink($outputPdfPath);
+        }
+
+        $cmd = escapeshellarg($chromeBin)
+            . " --headless --disable-gpu --no-sandbox --disable-dev-shm-usage --ignore-certificate-errors --no-pdf-header-footer --print-to-pdf="
+            . escapeshellarg($outputPdfPath) . " "
+            . escapeshellarg($targetUrl) . " 2>&1";
+
+        @exec($cmd, $output, $returnCode);
+
+        if (file_exists($outputPdfPath) && filesize($outputPdfPath) > 500) {
+            $fp = @fopen($outputPdfPath, 'rb');
+            $head = $fp ? fread($fp, 5) : '';
+            if ($fp) fclose($fp);
+            if (strpos($head, '%PDF') === 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+

@@ -15,8 +15,8 @@ if (!isset($connection)) {
     }
 }
 
-$tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : '';
-$siteId    = defined('SITE_ID')      ? (int) SITE_ID : 0;
+$tblPrefix = defined('TABLE_PREFIX') && !empty(TABLE_PREFIX) ? TABLE_PREFIX : (defined('DB_CUSTOM_PREFIX') ? DB_CUSTOM_PREFIX : 'isw_');
+$siteId    = defined('SITE_ID') ? (int) SITE_ID : (int)($_SESSION['site_id'] ?? 0);
 
 // Fetch company profile / contact / banking / policy configurations if DB is connected
 $company_social_media = [];
@@ -218,13 +218,64 @@ if ($quotationId > 0) {
         LEFT JOIN {$tblPrefix}enquiry e
             ON e.enquiry_id = q.quotation_ref_id
         WHERE q.quotation_id = {$quotationId}
-          AND q.quotation_site_id = {$siteId}
+          " . ($siteId > 0 ? "AND (q.quotation_site_id = {$siteId} OR q.quotation_site_id = 0)" : "") . "
         LIMIT 1
     ";
 
     $res = mysqli_query($connection, $query);
     if ($res && mysqli_num_rows($res) > 0) {
         $quotationData = mysqli_fetch_assoc($res);
+        if ($siteId <= 0 && !empty($quotationData['quotation_site_id'])) {
+            $siteId = (int)$quotationData['quotation_site_id'];
+        }
+    }
+
+    // If quotation is a Transporter fleet quotation, render using the Transporter Quotation format
+    if (!empty($quotationData) && strtolower((string)($quotationData['quotation_type'] ?? '')) === 'transporter') {
+        if (!defined('TRANSPORTER_QUOTATION_HELPERS_ONLY')) {
+            define('TRANSPORTER_QUOTATION_HELPERS_ONLY', true);
+        }
+        $transporterHelperPath = $docRoot . '/api/v3/transporters/quotation.php';
+        if (file_exists($transporterHelperPath)) {
+            require_once $transporterHelperPath;
+        }
+
+        $desc = json_decode($quotationData['quotation_description'] ?? '{}', true) ?: [];
+        $companyMeta = function_exists('getTransporterCompanyMeta')
+            ? getTransporterCompanyMeta($connection, $siteId, $tblPrefix)
+            : [];
+
+        $selectedTemplate = !empty($requestedTemplate) ? strtolower($requestedTemplate) : ($desc['template'] ?? 'mit');
+        $renderedHtml = function_exists('buildTransporterProposalHtml')
+            ? buildTransporterProposalHtml((int)$quotationData['quotation_id'], $desc, $companyMeta, $selectedTemplate)
+            : '';
+
+        if (!empty($hideActions) || !empty($isPreview)) {
+            $renderedHtml = preg_replace('/<div\s+class=["\']v3-pdf-actions-bar["\'].*?<\/div>/is', '', $renderedHtml);
+        }
+
+        if ($format === 'json') {
+            header("Content-type: application/json; charset=utf-8");
+            $encodedId = base64_encode((string)$quotationId);
+            $vehTitle = $desc['vehicle']['vehicle_title'] ?? 'Fleet Proposal';
+            echo json_encode([
+                'status'       => 'success',
+                'quotation_id' => (int)$quotationData['quotation_id'],
+                'encoded_id'   => $encodedId,
+                'type'         => 'transporter',
+                'template'     => $selectedTemplate,
+                'title'        => "Transporter Quotation #{$quotationId} - {$vehTitle}",
+                'html'         => $renderedHtml,
+                'view_url'     => (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/quote/{$encodedId}/",
+                'pdf_url'      => (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/quote/{$encodedId}/?download=true",
+                'download_url' => (defined('SITE_DOMAIN') ? 'https://' . SITE_DOMAIN : '') . "/download-quote/{$encodedId}/"
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            exit;
+        } else {
+            header("Content-type: text/html; charset=utf-8");
+            echo $renderedHtml;
+            exit;
+        }
     }
 
     // Fetch salesperson (assigned enquiry_agent / quotation_sent_by / session user / site consultant)

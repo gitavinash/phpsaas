@@ -466,6 +466,21 @@
             var duration = travel.duration_days || 1;
             $("#tqTravelDuration").val(duration);
 
+            var pax = travel.passengers || travel.persons || travel.pax || "";
+            if (!pax && lead.travel_details) {
+                var td = lead.travel_details;
+                var paxParts = [];
+                if (td.adults) paxParts.push(td.adults + (td.adults > 1 ? " Adults" : " Adult"));
+                if (td.children) paxParts.push(td.children + (td.children > 1 ? " Children" : " Child"));
+                if (paxParts.length > 0) {
+                    pax = paxParts.join(", ");
+                }
+            }
+            if (!pax && details.travel && (details.travel.passengers || details.travel.persons)) {
+                pax = details.travel.passengers || details.travel.persons;
+            }
+            $("#tqPassengers").val(pax || "");
+
             // Pre-fill Billing
             var quoteVal = (lead.quotation && lead.quotation.price) ? parseFloat(lead.quotation.price) : 0;
             var details = (lead.quotation && (lead.quotation.details || lead.quotation.content || lead.quotation.parsed_content)) ? (lead.quotation.details || lead.quotation.content || lead.quotation.parsed_content) : {};
@@ -888,6 +903,7 @@
             var dropLocation = $.trim($("#tqDropLocation").val());
             var travelDate = $.trim($("#tqTravelDate").val());
             var travelDuration = $.trim($("#tqTravelDuration").val()) || "1";
+            var passengers = $.trim($("#tqPassengers").val());
 
             var vehicleId = $("#tqVehicleModel").val();
             var $selectedVehicle = $("#tqVehicleModel option:selected");
@@ -978,7 +994,8 @@
                     pickup_location: pickupLocation,
                     drop_location: dropLocation,
                     travel_date: travelDate,
-                    duration_days: travelDuration
+                    duration_days: travelDuration,
+                    passengers: passengers
                 },
                 vehicle: {
                     vehicle_id: vehicleId,

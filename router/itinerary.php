@@ -28,7 +28,7 @@ if (!empty($urlStructure[1])) {
 
 // Determine if download is requested
 $isDownload = false;
-if (isset($urlStructure[0]) && $urlStructure[0] === 'download-itinerary') {
+if (isset($urlStructure[0]) && in_array($urlStructure[0], ['download-itinerary', 'download-quote'])) {
     $isDownload = true;
 }
 if (isset($_GET['download'])) {

@@ -623,6 +623,29 @@ if (mysqli_query($connection, $insertQuery)) {
                 $cName = !empty($customerName) ? trim((string)$customerName) : 'Valued Customer';
                 $curSym = defined('DEFAULT_CURRENCY_SYMBOL') ? DEFAULT_CURRENCY_SYMBOL : '₹';
 
+                $dest = !empty($content['destination']) ? trim((string)$content['destination']) : (!empty($content['city']) ? trim((string)$content['city']) : '');
+                $travelDateRaw = !empty($content['travel_date']) ? trim((string)$content['travel_date']) : '';
+                $adults = !empty($content['adults']) ? (int)$content['adults'] : 0;
+                $children = !empty($content['children']) ? (int)$content['children'] : 0;
+                if ($refId > 0 && (empty($dest) || empty($travelDateRaw) || ($adults === 0 && $children === 0))) {
+                    $profRes = mysqli_query($connection, "SELECT destination, date_of_travel, number_of_adults, number_of_childrens FROM {$tblPrefix}enquiry_profile WHERE enquiry_profile_ref_id = {$refId} LIMIT 1");
+                    if ($profRes && mysqli_num_rows($profRes) > 0) {
+                        $pRow = mysqli_fetch_assoc($profRes);
+                        if (empty($dest) && !empty($pRow['destination'])) {
+                            $dest = trim((string)$pRow['destination']);
+                        }
+                        if (empty($travelDateRaw) && !empty($pRow['date_of_travel'])) {
+                            $travelDateRaw = trim((string)$pRow['date_of_travel']);
+                        }
+                        if ($adults === 0 && !empty($pRow['number_of_adults'])) {
+                            $adults = (int)$pRow['number_of_adults'];
+                        }
+                        if ($children === 0 && !empty($pRow['number_of_childrens'])) {
+                            $children = (int)$pRow['number_of_childrens'];
+                        }
+                    }
+                }
+
                 $waLines = [];
                 $waLines[] = "🌟 *Tour Proposal & Itinerary*";
                 $waLines[] = "";
@@ -631,24 +654,93 @@ if (mysqli_query($connection, $insertQuery)) {
                 $waLines[] = "Greetings from *{$siteTitle}*!";
                 $waLines[] = "We are pleased to share your customized tour proposal for *{$tourName}*.";
                 $waLines[] = "";
-                if (!empty($tourDuration)) {
+                if (!empty($dest)) {
+                    $waLines[] = "📍 *Destination:* {$dest}";
+                }
+                if (!empty($travelDateRaw)) {
+                    $fmtTravelDate = date('d M, Y', strtotime($travelDateRaw));
+                    $waLines[] = "📅 *Travel Date:* {$fmtTravelDate}" . (!empty($tourDuration) ? " ({$tourDuration})" : "");
+                } elseif (!empty($tourDuration)) {
                     $waLines[] = "📅 *Duration:* {$tourDuration}";
                 }
-                if (!empty($itineraryPrice)) {
-                    $waLines[] = "💰 *Total Price:* {$curSym}" . number_format((float)$itineraryPrice, 2);
+                $paxArr = [];
+                if ($adults > 0) $paxArr[] = $adults . ' Adult' . ($adults > 1 ? 's' : '');
+                if ($children > 0) $paxArr[] = $children . ' Child' . ($children > 1 ? 'ren' : '');
+                if (!empty($paxArr)) {
+                    $waLines[] = "👥 *No. of Persons:* " . implode(', ', $paxArr);
                 }
-                $waLines[] = "";
-                $waLines[] = "🌐 *View Interactive Itinerary:*";
-                $waLines[] = $viewUrl;
-                $waLines[] = "";
-                $waLines[] = "📄 *Download PDF:*";
-                $waLines[] = $pdfUrl;
+                if (!empty($itineraryPrice)) {
+                    $waLines[] = "💰 *Total Package Price:* {$curSym}" . number_format((float)$itineraryPrice, 2);
+                }
                 $waLines[] = "";
                 $waLines[] = "Feel free to reply directly here for any modifications or questions. Have a wonderful journey!";
                 $waLines[] = "";
                 $waLines[] = "—";
                 $waLines[] = "_Powered by Aleya.in_";
                 $waText = implode("\n", $waLines);
+                if (!empty($data['whatsapp_text'])) {
+                    $customWa = trim((string)$data['whatsapp_text']);
+                    $customWa = preg_replace('/(?:📄|🌐)?\s*\*(?:Download|View)[^*]*\*\s*\n\S+/u', '', $customWa);
+                    $customWa = preg_replace('/https?:\/\/\S+/i', '', $customWa);
+                    $customWa = preg_replace('/www\.\S+/i', '', $customWa);
+                    $customWa = trim(preg_replace("/\n{3,}/", "\n\n", $customWa));
+                    if (!empty($customWa)) {
+                        $waText = $customWa;
+                    }
+                }
+
+                // Resolve or generate physical PDF document for WhatsApp attachment
+                $uploadDir = $docRoot . '/upload/itineraries';
+                if (!is_dir($uploadDir)) {
+                    @mkdir($uploadDir, 0777, true);
+                }
+                $itinHash = substr(md5('isw_itin_' . $quotationId), 0, 8);
+                $pdfFileName = 'itinerary_' . $quotationId . '_' . $itinHash . '.pdf';
+                $pdfDiskPath = $uploadDir . '/' . $pdfFileName;
+                $pdfRelUrl   = '/upload/itineraries/' . $pdfFileName;
+
+                $hasValidPdf = false;
+                if (file_exists($pdfDiskPath) && filesize($pdfDiskPath) > 500) {
+                    $fp = @fopen($pdfDiskPath, 'rb');
+                    $head = $fp ? fread($fp, 5) : '';
+                    if ($fp) fclose($fp);
+                    if (strpos($head, '%PDF') === 0) {
+                        $hasValidPdf = true;
+                    }
+                }
+
+                if (!$hasValidPdf) {
+                    $existingPdfs = glob($uploadDir . '/itinerary_' . $quotationId . '_*.pdf');
+                    if (!empty($existingPdfs)) {
+                        $cand = end($existingPdfs);
+                        if (file_exists($cand) && filesize($cand) > 500) {
+                            $pdfDiskPath = $cand;
+                            $pdfRelUrl = '/upload/itineraries/' . basename($cand);
+                            $hasValidPdf = true;
+                        }
+                    }
+                }
+
+                if (!$hasValidPdf && function_exists('generateHeadlessPdf')) {
+                    $genHost = $_SERVER['HTTP_HOST'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : 'localhost');
+                    $genUrl = $protocol . $genHost . "/view-itinerary/{$encodedId}/";
+                    generateHeadlessPdf($genUrl, $pdfDiskPath);
+                    if (!file_exists($pdfDiskPath) || filesize($pdfDiskPath) <= 500) {
+                        generateHeadlessPdf("http://localhost/view-itinerary/{$encodedId}/", $pdfDiskPath);
+                    }
+                    if (file_exists($pdfDiskPath) && filesize($pdfDiskPath) > 500) {
+                        $hasValidPdf = true;
+                        $pdfRelUrl = '/upload/itineraries/' . $pdfFileName;
+                    }
+                }
+
+                $safeDocTitle = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $tourName);
+                $safeDocTitle = trim(preg_replace('/_+/', '_', $safeDocTitle), '_');
+                if (empty($safeDocTitle)) $safeDocTitle = 'Tour_Proposal';
+                $docAttachmentName = "{$safeDocTitle}_Itinerary.pdf";
+
+                $waMsgType = $hasValidPdf ? 'document' : 'text';
+                $waMediaUrl = $hasValidPdf ? $pdfRelUrl : '';
 
                 $waRes = sendWhatsAppDirectMessage(
                     $connection,
@@ -658,7 +750,9 @@ if (mysqli_query($connection, $insertQuery)) {
                     $waText,
                     [
                         'lead_id'   => $refId,
-                        'type'      => 'text'
+                        'type'      => $waMsgType,
+                        'media_url' => $waMediaUrl,
+                        'file_name' => $docAttachmentName
                     ]
                 );
 

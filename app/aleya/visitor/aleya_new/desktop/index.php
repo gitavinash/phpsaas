@@ -269,23 +269,22 @@ $pageScripts = [
                     </div>
                 </a>
 
-                <!-- Custom Enterprise / Other -->
-                <div class="industry-card industry-card-other">
+                <!-- All Other Industries -->
+                <a href="/industries/other-industries/" class="industry-card industry-card-other" aria-label="Commercial Sales CRM for All Other Industries">
                     <div>
-                        <div class="industry-card-icon"><i class="fas fa-puzzle-piece"></i></div>
-                        <div class="industry-card-tag">Service & Trade Businesses</div>
-                        <h3 class="industry-card-title">Custom Service Operations</h3>
+                        <div class="industry-card-icon"><i class="fas fa-briefcase"></i></div>
+                        <div class="industry-card-tag">All Other Industries</div>
+                        <h3 class="industry-card-title">Commercial Sales CRM</h3>
                         <p class="industry-card-desc">
-                            Have unique operational flows? Aleya’s modular CRM architecture accommodates bespoke pipelines, custom fields, and automated WhatsApp communication.
+                            Pure sales and finance velocity: Lead capture, product catalog, proforma quotations, payment requests, and WhatsApp Web sync with zero ops bloat.
                         </p>
                     </div>
                     <div class="industry-card-footer">
-                        <a href="/contact-us/" class="flex-between-full">
-                            <span>Discuss Custom Workflow</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
+                        <span class="industry-card-action">
+                            Explore Commercial CRM <i class="fas fa-arrow-right"></i>
+                        </span>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
@@ -445,35 +444,75 @@ $pageScripts = [
                 </p>
             </div>
 
-            <div class="showcase-tabs">
-                <button class="showcase-tab-btn active" data-target="showcaseOverview">
-                    <i class="fas fa-chart-pie"></i> Executive Overview
-                </button>
-                <button class="showcase-tab-btn" data-target="showcaseLeads">
-                    <i class="fas fa-users"></i> Lead Pipeline & WhatsApp
-                </button>
-                <button class="showcase-tab-btn" data-target="showcaseItineraries">
-                    <i class="fas fa-map-marked-alt"></i> Tour Itinerary Engine
-                </button>
-                <button class="showcase-tab-btn" data-target="showcaseFleet">
-                    <i class="fas fa-truck"></i> Fleet Logistics & Transporters
-                </button>
+            <div class="showcase-tabs-container">
+                <div class="showcase-tabs">
+                    <button class="showcase-tab-btn active" data-target="showcaseOverview">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Executive Overview</span>
+                        <span class="tab-chip">Analytics</span>
+                    </button>
+                    <button class="showcase-tab-btn" data-target="showcaseLeads">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>Lead Pipeline & WhatsApp</span>
+                        <span class="tab-chip">CRM</span>
+                    </button>
+                    <button class="showcase-tab-btn" data-target="showcaseItineraries">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Tour Itinerary Engine</span>
+                        <span class="tab-chip">CPQ</span>
+                    </button>
+                    <button class="showcase-tab-btn" data-target="showcaseFleet">
+                        <i class="fas fa-truck"></i>
+                        <span>Fleet Logistics & Transporters</span>
+                        <span class="tab-chip">Fleet Ops</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Tab 1: Executive Overview -->
             <div class="showcase-panel active" id="showcaseOverview">
                 <div class="hero-mac-frame">
                     <div class="hero-mac-bar">
-                        <div class="mac-dot mac-dot-red"></div>
-                        <div class="mac-dot mac-dot-yellow"></div>
-                        <div class="mac-dot mac-dot-green"></div>
-                        <div class="mac-url">
-                            <i class="fas fa-lock text-emerald icon-xs"></i>
-                            <span>https://app.aleya.in/dashboard/overview/</span>
+                        <div class="mac-bar-left">
+                            <div class="mac-dots">
+                                <div class="mac-dot mac-dot-red"></div>
+                                <div class="mac-dot mac-dot-yellow"></div>
+                                <div class="mac-dot mac-dot-green"></div>
+                            </div>
+                            <div class="mac-url">
+                                <i class="fas fa-lock text-emerald icon-xs"></i>
+                                <span>https://app.aleya.in/dashboard/overview/</span>
+                            </div>
+                        </div>
+                        <div class="mac-status-badge">
+                            <span class="status-pulse-dot"></span> Verified Live System
                         </div>
                     </div>
                     <div class="hero-mac-content">
                         <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/actual_dashboard_overview.png" alt="Executive CRM & Business Overview" width="1440" height="900" loading="lazy" />
+                    </div>
+                    <div class="showcase-feature-strip">
+                        <div class="feature-strip-item">
+                            <i class="fas fa-chart-line text-teal"></i>
+                            <div>
+                                <strong>Unified Revenue KPIs</strong>
+                                <span>Live margin & order volume rollups across teams</span>
+                            </div>
+                        </div>
+                        <div class="feature-strip-item">
+                            <i class="fas fa-users-cog text-teal"></i>
+                            <div>
+                                <strong>Sales Velocity Tracking</strong>
+                                <span>Real-time executive pipeline and conversion monitoring</span>
+                            </div>
+                        </div>
+                        <div class="feature-strip-item">
+                            <i class="fas fa-shield-alt text-teal"></i>
+                            <div>
+                                <strong>Role-Based Access</strong>
+                                <span>Strict admin, manager, and sales rep data permissions</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -482,16 +521,46 @@ $pageScripts = [
             <div class="showcase-panel" id="showcaseLeads">
                 <div class="hero-mac-frame">
                     <div class="hero-mac-bar">
-                        <div class="mac-dot mac-dot-red"></div>
-                        <div class="mac-dot mac-dot-yellow"></div>
-                        <div class="mac-dot mac-dot-green"></div>
-                        <div class="mac-url">
-                            <i class="fas fa-lock text-emerald icon-xs"></i>
-                            <span>https://app.aleya.in/dashboard/leads/</span>
+                        <div class="mac-bar-left">
+                            <div class="mac-dots">
+                                <div class="mac-dot mac-dot-red"></div>
+                                <div class="mac-dot mac-dot-yellow"></div>
+                                <div class="mac-dot mac-dot-green"></div>
+                            </div>
+                            <div class="mac-url">
+                                <i class="fas fa-lock text-emerald icon-xs"></i>
+                                <span>https://app.aleya.in/dashboard/leads/</span>
+                            </div>
+                        </div>
+                        <div class="mac-status-badge">
+                            <span class="status-pulse-dot"></span> WhatsApp API Connected
                         </div>
                     </div>
                     <div class="hero-mac-content">
                         <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/actual_dashboard_leads.png" alt="Leads Pipeline & WhatsApp Conversion Board" width="1440" height="900" loading="lazy" />
+                    </div>
+                    <div class="showcase-feature-strip">
+                        <div class="feature-strip-item">
+                            <i class="fas fa-bolt text-lime"></i>
+                            <div>
+                                <strong>Zero-Lag Lead Ingestion</strong>
+                                <span>Instant webhook capture from Meta Ads & Google Forms</span>
+                            </div>
+                        </div>
+                        <div class="feature-strip-item">
+                            <i class="fab fa-whatsapp text-success"></i>
+                            <div>
+                                <strong>1-Click WhatsApp Dispatch</strong>
+                                <span>Send custom quotations & payment links with read receipts</span>
+                            </div>
+                        </div>
+                        <div class="feature-strip-item">
+                            <i class="fas fa-columns text-teal"></i>
+                            <div>
+                                <strong>Visual Kanban Pipeline</strong>
+                                <span>Drag-and-drop lead stage progression with automated follow-ups</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -500,16 +569,46 @@ $pageScripts = [
             <div class="showcase-panel" id="showcaseItineraries">
                 <div class="hero-mac-frame">
                     <div class="hero-mac-bar">
-                        <div class="mac-dot mac-dot-red"></div>
-                        <div class="mac-dot mac-dot-yellow"></div>
-                        <div class="mac-dot mac-dot-green"></div>
-                        <div class="mac-url">
-                            <i class="fas fa-lock text-emerald icon-xs"></i>
-                            <span>https://app.aleya.in/dashboard/packages/</span>
+                        <div class="mac-bar-left">
+                            <div class="mac-dots">
+                                <div class="mac-dot mac-dot-red"></div>
+                                <div class="mac-dot mac-dot-yellow"></div>
+                                <div class="mac-dot mac-dot-green"></div>
+                            </div>
+                            <div class="mac-url">
+                                <i class="fas fa-lock text-emerald icon-xs"></i>
+                                <span>https://app.aleya.in/dashboard/packages/</span>
+                            </div>
+                        </div>
+                        <div class="mac-status-badge">
+                            <span class="status-pulse-dot"></span> PDF Engine Active
                         </div>
                     </div>
                     <div class="hero-mac-content">
                         <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/actual_dashboard_packages.png" alt="Day-Wise Itinerary Builder & Vouchers" width="1440" height="900" loading="lazy" />
+                    </div>
+                    <div class="showcase-feature-strip">
+                        <div class="feature-strip-item">
+                            <i class="fas fa-magic text-teal"></i>
+                            <div>
+                                <strong>3-Minute Day-Wise Builder</strong>
+                                <span>Pre-loaded hotel, flight, and sightseeing package templates</span>
+                            </div>
+                        </div>
+                        <div class="feature-strip-item">
+                            <i class="fas fa-file-pdf text-teal"></i>
+                            <div>
+                                <strong>Branded Client PDF Quotes</strong>
+                                <span>White-labeled proposals with QR payment & hotel vouchers</span>
+                            </div>
+                        </div>
+                        <div class="feature-strip-item">
+                            <i class="fas fa-calculator text-teal"></i>
+                            <div>
+                                <strong>Margin & Cost Protection</strong>
+                                <span>Real-time calculation of vendor rates, markup, and net profit</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -518,16 +617,46 @@ $pageScripts = [
             <div class="showcase-panel" id="showcaseFleet">
                 <div class="hero-mac-frame">
                     <div class="hero-mac-bar">
-                        <div class="mac-dot mac-dot-red"></div>
-                        <div class="mac-dot mac-dot-yellow"></div>
-                        <div class="mac-dot mac-dot-green"></div>
-                        <div class="mac-url">
-                            <i class="fas fa-lock text-emerald icon-xs"></i>
-                            <span>https://app.aleya.in/dashboard/transporters/</span>
+                        <div class="mac-bar-left">
+                            <div class="mac-dots">
+                                <div class="mac-dot mac-dot-red"></div>
+                                <div class="mac-dot mac-dot-yellow"></div>
+                                <div class="mac-dot mac-dot-green"></div>
+                            </div>
+                            <div class="mac-url">
+                                <i class="fas fa-lock text-emerald icon-xs"></i>
+                                <span>https://app.aleya.in/dashboard/transporters/</span>
+                            </div>
+                        </div>
+                        <div class="mac-status-badge">
+                            <span class="status-pulse-dot"></span> Fleet Telematics Ready
                         </div>
                     </div>
                     <div class="hero-mac-content">
                         <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/actual_dashboard_transporters.png" alt="Vehicle Roster, Duty Slips & Trip Costing" width="1440" height="900" loading="lazy" />
+                    </div>
+                    <div class="showcase-feature-strip">
+                        <div class="feature-strip-item">
+                            <i class="fas fa-car-side text-teal"></i>
+                            <div>
+                                <strong>Live Vehicle Rostering</strong>
+                                <span>Conflict-free driver dispatch and vehicle utilization tracking</span>
+                            </div>
+                        </div>
+                        <div class="feature-strip-item">
+                            <i class="fas fa-receipt text-teal"></i>
+                            <div>
+                                <strong>Digital Duty Slips</strong>
+                                <span>Paperless guest signature, toll logs, and trip clearance</span>
+                            </div>
+                        </div>
+                        <div class="feature-strip-item">
+                            <i class="fas fa-gas-pump text-teal"></i>
+                            <div>
+                                <strong>Mileage & Fuel Auditing</strong>
+                                <span>Garage-to-garage kilometer verification and expense reconciliation</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -549,35 +678,71 @@ $pageScripts = [
 
             <div class="rhythm-grid">
                 <div class="rhythm-card">
-                    <span class="rhythm-step-num">01</span>
-                    <h3>Inquiry Arrives Instantly</h3>
-                    <p>
-                        Prospect submits a Meta ad, Google ad form, or website inquiry. The lead lands in your Aleya pipeline in 0 seconds.
-                    </p>
+                    <div class="rhythm-card-header">
+                        <span class="rhythm-step-badge">STEP 01</span>
+                        <div class="rhythm-icon"><i class="fas fa-bolt"></i></div>
+                    </div>
+                    <div class="rhythm-card-body">
+                        <h3>Inquiry Arrives Instantly</h3>
+                        <p>
+                            Prospect submits a Meta ad, Google ad form, or website inquiry. The lead lands in your Aleya pipeline in 0 seconds.
+                        </p>
+                    </div>
+                    <div class="rhythm-meta">
+                        <span class="rhythm-meta-label">SPEED</span>
+                        <span class="rhythm-meta-val"><i class="fas fa-bolt text-teal"></i> 0-Sec Sync</span>
+                    </div>
                 </div>
 
                 <div class="rhythm-card">
-                    <span class="rhythm-step-num">02</span>
-                    <h3>Smart Routing & Alert</h3>
-                    <p>
-                        Assigned sales executive receives an immediate WhatsApp notification with lead budget, travel dates, and contact details.
-                    </p>
+                    <div class="rhythm-card-header">
+                        <span class="rhythm-step-badge">STEP 02</span>
+                        <div class="rhythm-icon"><i class="fab fa-whatsapp"></i></div>
+                    </div>
+                    <div class="rhythm-card-body">
+                        <h3>Smart Routing & Alert</h3>
+                        <p>
+                            Assigned sales executive receives an immediate WhatsApp notification with lead budget, travel dates, and contact details.
+                        </p>
+                    </div>
+                    <div class="rhythm-meta">
+                        <span class="rhythm-meta-label">CHANNEL</span>
+                        <span class="rhythm-meta-val"><i class="fab fa-whatsapp text-success"></i> WhatsApp Alert</span>
+                    </div>
                 </div>
 
                 <div class="rhythm-card">
-                    <span class="rhythm-step-num">03</span>
-                    <h3>Create Itinerary or Quote</h3>
-                    <p>
-                        Select pre-loaded package templates or vehicle rosters to share a branded PDF quote with payment links in under 3 minutes.
-                    </p>
+                    <div class="rhythm-card-header">
+                        <span class="rhythm-step-badge">STEP 03</span>
+                        <div class="rhythm-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                    </div>
+                    <div class="rhythm-card-body">
+                        <h3>Create Itinerary or Quote</h3>
+                        <p>
+                            Select pre-loaded package templates or vehicle rosters to share a branded PDF quote with payment links in under 3 minutes.
+                        </p>
+                    </div>
+                    <div class="rhythm-meta">
+                        <span class="rhythm-meta-label">TIME</span>
+                        <span class="rhythm-meta-val"><i class="fas fa-clock text-teal"></i> &lt; 3 Minutes</span>
+                    </div>
                 </div>
 
                 <div class="rhythm-card">
-                    <span class="rhythm-step-num">04</span>
-                    <h3>Confirm Booking & Vouchers</h3>
-                    <p>
-                        Customer transfers deposit. System automatically generates hotel vouchers, digital duty slips, and receipt confirmations.
-                    </p>
+                    <div class="rhythm-card-header">
+                        <span class="rhythm-step-badge">STEP 04</span>
+                        <div class="rhythm-icon"><i class="fas fa-calendar-check"></i></div>
+                    </div>
+                    <div class="rhythm-card-body">
+                        <h3>Confirm Booking & Vouchers</h3>
+                        <p>
+                            Customer transfers deposit. System automatically generates hotel vouchers, digital duty slips, and receipt confirmations.
+                        </p>
+                    </div>
+                    <div class="rhythm-meta">
+                        <span class="rhythm-meta-label">OUTPUT</span>
+                        <span class="rhythm-meta-val"><i class="fas fa-check-circle text-teal"></i> Auto Vouchers</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -597,13 +762,13 @@ $pageScripts = [
 
                 <!-- Billing Frequency Toggle -->
                 <div class="pricing-toggle-wrap mt-6">
-                    <span class="pricing-toggle-label active" id="labelYearly">Annual Billing</span>
-                    <label class="toggle-switch">
+                    <span class="pricing-toggle-label" id="labelMonthly">Monthly Billing</span>
+                    <label class="toggle-switch" for="pricingBillingToggle" aria-label="Toggle annual or monthly billing">
                         <input type="checkbox" id="pricingBillingToggle" checked />
                         <span class="toggle-slider"></span>
                     </label>
-                    <span class="pricing-toggle-label" id="labelMonthly">Monthly Billing</span>
-                    <span class="pricing-discount-badge">Save 25% Annually</span>
+                    <span class="pricing-toggle-label active" id="labelYearly">Annual Billing</span>
+                    <span class="pricing-discount-badge">Save up to 20% Annually</span>
                 </div>
             </div>
 
@@ -618,12 +783,12 @@ $pageScripts = [
 
                         <div class="price-row">
                             <span class="price-currency">₹</span>
-                            <span class="price-number price-amount-dynamic" data-yearly="1,499" data-monthly="1,874">1,499</span>
+                            <span class="price-number price-amount-dynamic" data-yearly="1,499" data-monthly="1,799">1,499</span>
                             <span class="price-period price-period-dynamic">/mo (billed annually)</span>
                             <span class="price-gst-tag">+ 18% GST</span>
                         </div>
                         <p class="billing-note-dynamic fs-sm text-muted mb-4">
-                            Billed annually + 18% GST
+                            Billed annually + 18% GST • <span class="badge-waived">₹0 Setup Fee</span>
                         </p>
 
                         <ul class="pricing-features-list">
@@ -659,7 +824,7 @@ $pageScripts = [
                             <span class="price-gst-tag">+ 18% GST</span>
                         </div>
                         <p class="billing-note-dynamic fs-sm text-muted mb-4">
-                            Billed annually + 18% GST
+                            Billed annually + 18% GST • <span class="badge-waived">₹0 Setup Fee</span>
                         </p>
 
                         <ul class="pricing-features-list">

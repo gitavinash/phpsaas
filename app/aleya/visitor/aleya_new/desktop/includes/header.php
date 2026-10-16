@@ -18,6 +18,7 @@ $currentUrl = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
                     Industries <i class="fas fa-chevron-down icon-sm"></i>
                 </a>
                 <div class="dropdown-menu" role="menu">
+                    <div class="dropdown-header">Tailored Industry Workflows</div>
                     <a href="/industries/travel-agencies/" class="dropdown-link" role="menuitem">
                         <div class="dropdown-icon"><i class="fas fa-plane-departure"></i></div>
                         <div>
@@ -51,6 +52,13 @@ $currentUrl = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
                         <div>
                             <span class="dropdown-link-title">SPA Management</span>
                             <span class="dropdown-link-desc">Therapist roster, room slots, packages & zero-no-shows</span>
+                        </div>
+                    </a>
+                    <a href="/industries/other-industries/" class="dropdown-link" role="menuitem">
+                        <div class="dropdown-icon"><i class="fas fa-briefcase"></i></div>
+                        <div>
+                            <span class="dropdown-link-title">All Other Industries</span>
+                            <span class="dropdown-link-desc">Lead CRM, product catalog, quotes & payment requests</span>
                         </div>
                     </a>
                 </div>
@@ -98,6 +106,7 @@ $currentUrl = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
             <a href="/industries/transporters/" class="nav-link"><i class="fas fa-truck-moving text-brand"></i> Transporters & Fleet</a>
             <a href="/industries/dms/" class="nav-link"><i class="fas fa-warehouse text-brand"></i> DMS (Distribution)</a>
             <a href="/industries/spa-management/" class="nav-link"><i class="fas fa-spa text-brand"></i> Spa Management</a>
+            <a href="/industries/other-industries/" class="nav-link"><i class="fas fa-briefcase text-brand"></i> All Other Industries</a>
         </div>
 
         <div class="mobile-nav-heading mt-4">Core Pages</div>

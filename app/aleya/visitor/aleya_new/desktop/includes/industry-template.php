@@ -80,7 +80,8 @@ function render_industry_landing_page(array $ind): void {
     ];
 
     $pageScripts = [
-        '/app/aleya/visitor/aleya_new/desktop/assets/js/industry.js'
+        '/app/aleya/visitor/aleya_new/desktop/assets/js/industry.js',
+        '/app/aleya/visitor/aleya_new/desktop/assets/js/pricing.js'
     ];
     ?>
     <!DOCTYPE html>
@@ -127,12 +128,19 @@ function render_industry_landing_page(array $ind): void {
                 <div class="industry-hero-visual">
                     <div class="hero-mac-frame">
                         <div class="hero-mac-bar">
-                            <div class="mac-dot mac-dot-red"></div>
-                            <div class="mac-dot mac-dot-yellow"></div>
-                            <div class="mac-dot mac-dot-green"></div>
-                            <div class="mac-url">
-                                <i class="fas fa-lock text-emerald icon-xs"></i>
-                                <span>https://app.aleya.in/dashboard/<?php echo htmlspecialchars($ind['slug'], ENT_QUOTES, 'UTF-8'); ?>/</span>
+                            <div class="mac-bar-left">
+                                <div class="mac-dots">
+                                    <div class="mac-dot mac-dot-red"></div>
+                                    <div class="mac-dot mac-dot-yellow"></div>
+                                    <div class="mac-dot mac-dot-green"></div>
+                                </div>
+                                <div class="mac-url">
+                                    <i class="fas fa-lock text-emerald icon-xs"></i>
+                                    <span>https://app.aleya.in/dashboard/<?php echo htmlspecialchars($ind['slug'], ENT_QUOTES, 'UTF-8'); ?>/</span>
+                                </div>
+                            </div>
+                            <div class="mac-status-badge">
+                                <span class="status-pulse-dot"></span> Live System
                             </div>
                         </div>
                         <div class="hero-mac-content">
@@ -377,6 +385,17 @@ function render_industry_landing_page(array $ind): void {
                     <span class="section-kicker">Transparent Pricing</span>
                     <h2 class="section-title">Recommended Plan for <?php echo htmlspecialchars($ind['badge'], ENT_QUOTES, 'UTF-8'); ?></h2>
                     <p class="section-subtitle">No hidden implementation fees. Standard usage limits and full capability disclosures.</p>
+
+                    <!-- Billing Frequency Selection Toggle -->
+                    <div class="pricing-toggle-wrap">
+                        <span class="pricing-toggle-label" id="labelMonthly">Monthly Billing</span>
+                        <label class="toggle-switch" for="pricingBillingToggle" aria-label="Toggle annual or monthly billing">
+                            <input type="checkbox" id="pricingBillingToggle" checked />
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="pricing-toggle-label active" id="labelYearly">Annual Billing</span>
+                        <span class="pricing-discount-badge">Save up to 20% Annually</span>
+                    </div>
                 </div>
 
                 <div class="pricing-card-preview pricing-card-featured max-w-card">
@@ -389,12 +408,16 @@ function render_industry_landing_page(array $ind): void {
 
                         <div class="price-row">
                             <span class="price-currency">₹</span>
-                            <span class="price-number"><?php echo htmlspecialchars($ind['recommended_plan']['price_monthly_billed_annually'], ENT_QUOTES, 'UTF-8'); ?></span>
-                            <span class="price-period">/month (billed annually)</span>
+                            <span class="price-number price-amount-dynamic" 
+                                  data-yearly="<?php echo htmlspecialchars($ind['recommended_plan']['price_monthly_billed_annually'], ENT_QUOTES, 'UTF-8'); ?>" 
+                                  data-monthly="<?php echo htmlspecialchars($ind['recommended_plan']['price_monthly'], ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php echo htmlspecialchars($ind['recommended_plan']['price_monthly_billed_annually'], ENT_QUOTES, 'UTF-8'); ?>
+                            </span>
+                            <span class="price-period price-period-dynamic">/mo (billed annually)</span>
                             <span class="price-gst-tag">+ 18% GST</span>
                         </div>
-                        <p class="fs-sm text-muted mb-4">
-                            Or ₹<?php echo htmlspecialchars($ind['recommended_plan']['price_monthly'], ENT_QUOTES, 'UTF-8'); ?>/mo when billed monthly.
+                        <p class="billing-note-dynamic fs-sm text-muted mb-4">
+                            Billed annually + 18% GST • <span class="badge-waived">₹0 Setup Fee</span>
                         </p>
 
                         <ul class="pricing-features-list">
@@ -405,7 +428,7 @@ function render_industry_landing_page(array $ind): void {
                     </div>
 
                     <div class="mt-6 d-flex flex-column gap-3">
-                        <a href="/checkout/?plan=<?php echo $ind['recommended_plan']['name'] === 'ERP Complete' ? 'erp' : 'crm'; ?>" class="btn btn-primary btn-block btn-lg">
+                        <a href="/checkout/?plan=<?php echo $ind['recommended_plan']['name'] === 'ERP Complete' ? 'erp' : 'crm'; ?>&cycle=yearly" class="btn btn-primary btn-block btn-lg pricing-buy-btn">
                             Get Started Now <i class="fas fa-arrow-right"></i>
                         </a>
                         <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-block">

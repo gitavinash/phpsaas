@@ -252,7 +252,7 @@ function get_all_industries(): array {
             'recommended_plan' => [
                 'name' => 'CRM Starter',
                 'price_monthly_billed_annually' => '1,499',
-                'price_monthly' => '1,874',
+                'price_monthly' => '1,799',
                 'users' => 'Up to 10 users included',
                 'key_points' => [
                     'Multi-channel inquiry capture & lead manager',
@@ -381,7 +381,7 @@ function get_all_industries(): array {
             'recommended_plan' => [
                 'name' => 'CRM Starter / Fleet Edition',
                 'price_monthly_billed_annually' => '1,499',
-                'price_monthly' => '1,874',
+                'price_monthly' => '1,799',
                 'users' => 'Up to 10 users included',
                 'key_points' => [
                     'Vehicle roster & driver assignment registry',
@@ -639,7 +639,7 @@ function get_all_industries(): array {
             'recommended_plan' => [
                 'name' => 'CRM Starter / Spa Edition',
                 'price_monthly_billed_annually' => '1,499',
-                'price_monthly' => '1,874',
+                'price_monthly' => '1,799',
                 'users' => 'Up to 10 users included',
                 'key_points' => [
                     'Multi-channel appointment calendar',
@@ -662,6 +662,141 @@ function get_all_industries(): array {
                 [
                     'q' => 'Can we track multi-session packages like 5 Massages for ₹12,000?',
                     'a' => 'Yes. Aleya includes dedicated membership tracking where each visit automatically deducts 1 credit and notifies the client of their remaining balance.'
+                ]
+            ]
+        ],
+        'other-industries' => [
+            'slug' => 'other-industries',
+            'canonical_slug' => 'other-industries',
+            'meta_title' => 'Aleya for All Other Industries — Lead CRM, Product Catalog, Proforma Quotes & Payment Requests',
+            'meta_desc' => 'Streamline sales operations for B2B and service businesses. Inbound lead capture, product catalog, proforma quotation builder, payment requests, and optional WhatsApp Web sync.',
+            'badge' => 'General Businesses & Service Providers',
+            'h1' => 'Streamline Inbound Leads, Proforma Quotes & Payment Requests.',
+            'hero_desc' => 'Built specifically for businesses that want a fast, focused commercial sales engine without bloated operational complexity. Capture inbound leads, manage your service catalog, issue GST-compliant proforma quotations, and collect advance payments with optional team WhatsApp Web integration.',
+            'hero_cta_primary' => 'Start Free Commercial CRM Trial',
+            'hero_cta_secondary' => 'View Commercial Plans',
+            'hero_mockup' => '/app/aleya/visitor/aleya_new/desktop/assets/images/actual_dashboard_leads.png',
+            'metrics' => [
+                ['value' => '0s', 'label' => 'Inbound Lead Sync'],
+                ['value' => '2 mins', 'label' => 'Proforma Quote Creation'],
+                ['value' => '100%', 'label' => 'Advance Deposit Tracking']
+            ],
+            'problems' => [
+                [
+                    'badge' => 'Pipeline Leakage',
+                    'title' => 'Inbound Leads Lost Across Staff Personal Inboxes',
+                    'desc' => 'Leads from Facebook, Instagram, Google Ads, and website contact forms arrive across scattered personal phones without a central pipeline or auto-assignment.',
+                    'consequence' => '35%+ of inquiries go cold before a sales rep even dials the customer.'
+                ],
+                [
+                    'badge' => 'Quotation Delays',
+                    'title' => 'Slow & Inconsistent Quotes Built in Excel or Word',
+                    'desc' => 'Sales reps spend 30 to 45 minutes manually typing product descriptions, prices, discounts, and GST rates for every individual proforma proposal.',
+                    'consequence' => 'Frustrated prospects buy from faster competitors, and calculation mistakes erode margins.'
+                ],
+                [
+                    'badge' => 'Cash Flow Friction',
+                    'title' => 'Chasing Advance Payments with WhatsApp Screenshots',
+                    'desc' => 'Collecting advance deposits relies on manual bank transfers, messy payment screenshots over chat, and endless back-and-forth reconciliations.',
+                    'consequence' => 'Orders get delayed, receipts are forgotten, and accounting visibility remains blurry.'
+                ]
+            ],
+            'mappings' => [
+                [
+                    'problem' => 'Inbound ad leads and web inquiries slip through cracks across team phones.',
+                    'capability' => 'Centralized Multi-Channel Pipeline & Auto-Assignment',
+                    'benefit' => 'Meta webhooks, Google Ads, and web inquiries sync in 0 seconds with instant salesperson alerts.'
+                ],
+                [
+                    'problem' => 'Manual quotations in Excel take 30+ minutes with frequent pricing mistakes.',
+                    'capability' => '2-Minute Proforma Quotation Builder with GST Rules',
+                    'benefit' => 'Pick items from your product catalog, apply tax rules automatically, and generate branded PDFs ready to share.'
+                ],
+                [
+                    'problem' => 'Disorganized payment collection and manual screenshot verification.',
+                    'capability' => 'Integrated Payment Requests & Transaction Ledger',
+                    'benefit' => 'Send digital payment requests with dynamic UPI QR codes and track advance deposits directly on the deal.'
+                ]
+            ],
+            'features' => [
+                [
+                    'icon' => 'fa-funnel-dollar',
+                    'title' => 'Inbound Lead Management & Pipeline',
+                    'desc' => 'Capture leads from Meta ads, Google forms, and website inquiries into a visual pipeline. Auto-assign reps, schedule follow-ups, and track status transitions from Inquiry to Won.'
+                ],
+                [
+                    'icon' => 'fa-boxes',
+                    'title' => 'Product & Service Catalog Management',
+                    'desc' => 'Standardize your offerings with SKU codes, unit types, descriptions, and pre-set GST brackets (0%, 5%, 12%, 18%, 28%). Ensure sales reps quote accurate, authorized prices every time.'
+                ],
+                [
+                    'icon' => 'fa-file-invoice-dollar',
+                    'title' => 'Proforma Quotation Builder',
+                    'desc' => 'Generate professional, GST-compliant proforma quotations in under 2 minutes. Add line items from your catalog, include payment terms, bank details, and export crisp branded PDFs.'
+                ],
+                [
+                    'icon' => 'fa-hand-holding-usd',
+                    'title' => 'Payment Requests & Deposit Tracking',
+                    'desc' => 'Dispatch instant payment request links and dynamic UPI QR codes. Track partial advance payments, record balance due, and issue automated payment receipts.'
+                ],
+                [
+                    'icon' => 'fa-comments',
+                    'title' => 'WhatsApp Web Team Sync (Optional Add-on)',
+                    'desc' => 'Equip your sales team with WhatsApp Web directly inside Aleya. Send 1-click quotation links, dispatch payment requests, and log conversations. Paid add-on: ₹500/user/mo (min. 5 users).'
+                ]
+            ],
+            'calc_defaults' => [
+                'team_size' => 5,
+                'admin_hours' => 14,
+                'hourly_cost' => 350,
+                'software_cost' => 2500,
+                'plan_cost' => 1499
+            ],
+            'matrix' => [
+                ['dimension' => 'Lead Ingestion & Assignment', 'before' => 'Inquiries scattered across personal phones with delayed replies', 'after' => '0-second sync from Meta & Web with automatic sales rep assignment'],
+                ['dimension' => 'Quotation & Proposals', 'before' => 'Manual Word or Excel proforma templates taking 30-45 minutes', 'after' => 'Standardized 2-minute proforma quote builder with instant PDF generation'],
+                ['dimension' => 'Product & Pricing Control', 'before' => 'Reps quote arbitrary rates, outdated prices, or incorrect GST', 'after' => 'Centralized product & service catalog with locked pricing rules'],
+                ['dimension' => 'Payment Collections', 'before' => 'Chasing WhatsApp payment screenshots and manual passbook checks', 'after' => 'Trackable payment request links, dynamic UPI QR, and instant receipts'],
+                ['dimension' => 'WhatsApp Team Collaboration', 'before' => 'Client chats locked inside individual sales rep private devices', 'after' => 'Integrated WhatsApp Web add-on with lead timeline synchronizations']
+            ],
+            'workflow' => [
+                ['time' => '09:15 AM', 'title' => 'Review Inbound Pipeline', 'desc' => 'Check new inbound leads captured overnight from Meta webhooks and website forms; verify rep assignments.'],
+                ['time' => '10:45 AM', 'title' => 'Client Discovery & Requirement Logging', 'desc' => 'Sales rep connects with prospect, logs discovery notes, and selects appropriate packages from product catalog.'],
+                ['time' => '11:30 AM', 'title' => 'Proforma Quotation Dispatched', 'desc' => 'Generate a branded proforma quote with itemized GST breakdown and payment terms in 2 minutes; share via WhatsApp.'],
+                ['time' => '03:15 PM', 'title' => 'Payment Request & Advance Confirmation', 'desc' => 'Client approves quotation and pays 50% advance deposit via payment request link; accounts ledger updates in real-time.'],
+                ['time' => '05:00 PM', 'title' => 'Automated Receipt & Order Handover', 'desc' => 'Digital payment confirmation receipt is delivered to client WhatsApp; lead transitions automatically to Won / Closed.']
+            ],
+            'recommended_plan' => [
+                'name' => 'Commercial Sales & CRM Starter',
+                'price_monthly_billed_annually' => '1,499',
+                'price_monthly' => '1,799',
+                'users' => 'Up to 10 users included',
+                'key_points' => [
+                    'Multi-source inbound lead capture & visual pipeline',
+                    'Product & service catalog with GST / SAC rules',
+                    '2-minute proforma quotation builder with branded PDF',
+                    'Payment request links & advance deposit tracking',
+                    'Real-time collections ledger & verified receipts',
+                    'Optional Add-on: WhatsApp Web sync (+₹500/user/mo, min. 5 users)',
+                    'Zero ops clutter: No unwanted tour, fleet, or salon modules'
+                ]
+            ],
+            'faqs' => [
+                [
+                    'q' => 'Does this plan include industry-specific operations like itineraries, driver logs, or salon rooms?',
+                    'a' => 'No. This edition is purposefully designed for general businesses, agencies, distributors, and service companies who only require a focused commercial sales engine — Lead CRM, Product Catalog, Proforma Quotations, and Payment Collections — without paying for or dealing with vertical operational tools.'
+                ],
+                [
+                    'q' => 'How does the WhatsApp Web integration work and what is the pricing?',
+                    'a' => 'WhatsApp Web is a premium team add-on priced at ₹500 per user/month, with a minimum requirement of 5 users (₹2,500/month). It lets your sales reps manage WhatsApp Web directly inside Aleya, dispatch 1-click quotation links, send payment requests, and keep complete conversation history logged against customer profiles.'
+                ],
+                [
+                    'q' => 'Can I customize my proforma quotations with our business logo, GSTIN, and bank details?',
+                    'a' => 'Yes. You can upload your business logo, specify your GSTIN, address, bank account details, and UPI QR code. Proforma quotations are exported as crisp, print-ready branded PDFs ready to be shared with prospects via WhatsApp or email.'
+                ],
+                [
+                    'q' => 'Can we collect partial advance deposits against quotations?',
+                    'a' => 'Yes. You can set custom advance payment amounts or percentages (e.g. 50% advance, 50% on completion). Clients pay via integrated payment request links or dynamic UPI QR codes, and your transaction ledger automatically logs the payment and updates the balance due.'
                 ]
             ]
         ]

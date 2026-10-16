@@ -64,13 +64,13 @@ $pageScripts = [
 
             <!-- Billing Frequency Toggle -->
             <div class="pricing-toggle-wrap mt-8">
-                <span class="pricing-toggle-label active" id="labelYearly">Annual Billing</span>
-                <label class="toggle-switch">
+                <span class="pricing-toggle-label" id="labelMonthly">Monthly Billing</span>
+                <label class="toggle-switch" for="pricingBillingToggle" aria-label="Toggle annual or monthly billing">
                     <input type="checkbox" id="pricingBillingToggle" checked />
                     <span class="toggle-slider"></span>
                 </label>
-                <span class="pricing-toggle-label" id="labelMonthly">Monthly Billing</span>
-                <span class="pricing-discount-badge">Save 25% Annually</span>
+                <span class="pricing-toggle-label active" id="labelYearly">Annual Billing</span>
+                <span class="pricing-discount-badge">Save up to 20% Annually</span>
             </div>
         </div>
     </section>
@@ -89,12 +89,12 @@ $pageScripts = [
 
                         <div class="price-row">
                             <span class="price-currency">₹</span>
-                            <span class="price-number price-amount-dynamic" data-yearly="1,499" data-monthly="1,874">1,499</span>
+                            <span class="price-number price-amount-dynamic" data-yearly="1,499" data-monthly="1,799">1,499</span>
                             <span class="price-period price-period-dynamic">/mo (billed annually)</span>
                             <span class="price-gst-tag">+ 18% GST</span>
                         </div>
                         <p class="billing-note-dynamic fs-sm text-muted mb-4">
-                            Billed annually + 18% GST
+                            Billed annually + 18% GST • <span class="badge-waived">₹0 Setup Fee</span>
                         </p>
 
                         <ul class="pricing-features-list">
@@ -131,7 +131,7 @@ $pageScripts = [
                             <span class="price-gst-tag">+ 18% GST</span>
                         </div>
                         <p class="billing-note-dynamic fs-sm text-muted mb-4">
-                            Billed annually + 18% GST
+                            Billed annually + 18% GST • <span class="badge-waived">₹0 Setup Fee</span>
                         </p>
 
                         <ul class="pricing-features-list">
@@ -296,6 +296,11 @@ $pageScripts = [
                                 <td class="text-center">Email & WhatsApp Helpdesk</td>
                                 <td class="text-center">Priority Phone, WhatsApp & Dedicated Onboarding</td>
                             </tr>
+                            <tr>
+                                <td>One-Time Setup & Onboarding Fee</td>
+                                <td class="text-center"><strong>₹0 on Annual</strong> (₹5,000 on Monthly)</td>
+                                <td class="text-center"><strong>₹0 on Annual</strong> (₹5,000 on Monthly)</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -314,6 +319,16 @@ $pageScripts = [
             <div class="accordion">
                 <div class="accordion-item active">
                     <button class="accordion-header" aria-expanded="true">
+                        <span>Is there a one-time onboarding or setup fee?</span>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <p>On monthly billing plans, a one-time setup and database provisioning fee of ₹5,000 (+ 18% GST) applies. When you choose an Annual subscription, the ₹5,000 setup fee is 100% waived.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">
                         <span>Are taxes included in the displayed pricing?</span>
                         <i class="fas fa-chevron-down accordion-icon"></i>
                     </button>

@@ -1,858 +1,1114 @@
-<?php
-/**
- * Aleya SaaS — Complete Redesigned Homepage
- * High-Contrast Neo-Brutalist B2B Conversion Architecture
- */
-
-require_once __DIR__ . '/includes/seo.php';
-
-$seoConfig = [
-    'title' => 'Aleya — Business Management, CRM, ERP & Operational Workflows Platform',
-    'description' => 'Run your business with more clarity. Aleya centralizes inquiries, automated WhatsApp follow-ups, quotations, itineraries, and backend operations for service industries.',
-    'canonical' => 'https://aleya.in/',
-    'keywords' => 'business CRM, travel ERP, transporter management, DMS distribution, spa management software, WhatsApp CRM, lead management',
-    'stylesheets' => [
-        '/app/aleya/visitor/aleya_new/desktop/assets/css/homepage.css',
-        '/app/aleya/visitor/aleya_new/desktop/assets/css/industry.css'
-    ],
-    'schema' => [
-        '@context' => 'https://schema.org',
-        '@graph' => [
-            [
-                '@type' => 'Organization',
-                'name' => 'Aleya',
-                'url' => 'https://aleya.in',
-                'logo' => 'https://aleya.in/app/aleya/visitor/aleya_new/desktop/assets/images/aleya_logo.png',
-                'parentOrganization' => [
-                    '@type' => 'Organization',
-                    'name' => 'Blumox Technologies',
-                    'url' => 'https://blumox.com'
-                ],
-                'contactPoint' => [
-                    '@type' => 'ContactPoint',
-                    'telephone' => '+91-9990026008',
-                    'contactType' => 'customer support',
-                    'email' => 'support@aleya.in',
-                    'areaServed' => 'IN'
-                ]
-            ],
-            [
-                '@type' => 'SoftwareApplication',
-                'name' => 'Aleya Business Platform',
-                'applicationCategory' => 'BusinessApplication',
-                'operatingSystem' => 'Web',
-                'description' => 'SaaS business management, CRM & operations platform for travel, transport, distribution, and service enterprises.',
-                'url' => 'https://aleya.in',
-                'offers' => [
-                    [
-                        '@type' => 'Offer',
-                        'name' => 'CRM Starter',
-                        'price' => '1499',
-                        'priceCurrency' => 'INR'
-                    ],
-                    [
-                        '@type' => 'Offer',
-                        'name' => 'ERP Complete',
-                        'price' => '3999',
-                        'priceCurrency' => 'INR'
-                    ]
-                ]
-            ]
-        ]
-    ]
-];
-
-$pageScripts = [
-    '/app/aleya/visitor/aleya_new/desktop/assets/js/industry.js',
-    '/app/aleya/visitor/aleya_new/desktop/assets/js/pricing.js'
-];
-?>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <?php render_seo_meta($seoConfig); ?>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="<?php echo USER_IMAGES ?>aleya_favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="<?php echo USER_IMAGES ?>aleya_favicon.png" type="image/x-icon" />
+    <!-- Primary Meta Tags -->
+    <title>Aleya — The Future of Travel Business Management</title>
+    <meta name="title" content="Aleya — The Future of Travel Business Management" />
+    <meta name="description"
+        content="Stop juggling spreadsheets. Aleya automates your entire travel agency — from lead capture to booking confirmation. Join 100+ agencies already growing with us." />
+    <meta name="keywords"
+        content="travel CRM, travel ERP, travel agency software, booking management, lead automation" />
+    <link rel="canonical" href="https://aleya.in/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://aleya.in/" />
+    <meta property="og:title" content="Aleya — The Future of Travel Business Management" />
+    <meta property="og:description"
+        content="Stop juggling spreadsheets. Aleya automates your entire travel agency — from lead capture to booking confirmation." />
+    <meta property="og:image" content="https://aleya.in/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Aleya — The Future of Travel Business Management" />
+    <meta name="twitter:description" content="Stop juggling spreadsheets. Aleya automates your entire travel agency." />
+    <meta name="twitter:image" content="https://aleya.in/og-image.jpg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>styles.css" />
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Aleya",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "description": "Travel CRM & ERP Software for travel agencies",
+            "url": "https://aleya.in",
+            "offers": [{
+                    "@type": "Offer",
+                    "name": "CRM Starter",
+                    "price": "1499",
+                    "priceCurrency": "INR"
+                },
+                {
+                    "@type": "Offer",
+                    "name": "ERP Complete",
+                    "price": "3999",
+                    "priceCurrency": "INR"
+                }
+            ],
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.9",
+                "reviewCount": "127"
+            }
+        }
+    </script>
 </head>
+
 <body>
-<?php require __DIR__ . '/includes/header.php'; ?>
+    <!-- Cursor Glow Effect -->
+    <div class="cursor-glow" id="cursorGlow"></div>
 
-<main id="mainContent">
-    <!-- =================================================================
-         SECTION 2: HERO
-         ================================================================= -->
-    <section class="hero-section" id="hero">
-        <div class="hero-grid-bg"></div>
-        <div class="container hero-content">
-            <div class="hero-pill">
-                <span class="hero-pill-dot"></span>
-                <span>The Unified SaaS Operations Platform</span>
-            </div>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <img src="<?php echo USER_IMAGES ?>aleya_logo.png" alt="Aleya" class="logo" />
+            </a>
 
-            <h1 class="hero-title">
-                Run Your Business With More Clarity.<br />
-                <span class="hero-title-highlight">Grow With Less Complexity.</span>
-            </h1>
+            <div class="nav-menu" id="navMenu">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#workflow" class="nav-link">How It Works</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+                <a href="#testimonials" class="nav-link">Reviews</a>
 
-            <p class="hero-subtitle">
-                Aleya centralizes multi-channel inquiries, customer follow-ups, quotations, booking vouchers, and backend operations into one reliable system. Eliminate dropped leads and scattered spreadsheets.
-            </p>
-
-            <div class="hero-actions">
-                <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" data-track="demo">
-                    <i class="far fa-calendar-check"></i> Book a Personalized Demo
-                </a>
-                <a href="#industries" class="btn btn-secondary btn-lg">
-                    Explore Industry Solutions <i class="fas fa-arrow-down"></i>
-                </a>
-                <a href="/pricing/" class="btn btn-outline btn-lg">
-                    View Pricing
-                </a>
-            </div>
-
-            <div class="hero-trust-row">
-                <div class="trust-item">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Zero Data Leakage Guarantee</span>
-                </div>
-                <div class="trust-item">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Instant WhatsApp Gateway Included</span>
-                </div>
-                <div class="trust-item">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Setup in 1 Business Day</span>
+                <div class="nav-actions">
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn ghost">
+                        Book Demo
+                    </a>
+                    <a href="/onboarding/" class="nav-btn primary">
+                        Buy Now
+                        <span class="btn-arrow">→</span>
+                    </a>
                 </div>
             </div>
 
-            <!-- Dashboard Preview Frame -->
-            <div class="hero-visual-wrapper">
-                <div class="hero-mac-frame">
-                    <div class="hero-mac-bar">
-                        <div class="mac-dot mac-dot-red"></div>
-                        <div class="mac-dot mac-dot-yellow"></div>
-                        <div class="mac-dot mac-dot-green"></div>
-                        <div class="mac-url">
-                            <i class="fas fa-lock text-emerald icon-xs"></i>
-                            <span>https://app.aleya.in/dashboard/overview/</span>
+            <div class="nav-actions">
+                <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="nav-btn ghost">
+                    Book Demo
+                </a>
+                <a href="/onboarding/" class="nav-btn primary">
+                    Buy Now
+                    <span class="btn-arrow">→</span>
+                </a>
+            </div>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section - Immersive Full Screen -->
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
+            <div class="grid-lines"></div>
+        </div>
+
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="pulse"></span>
+                    Now with AI-Powered Lead Scoring
+                </div>
+
+                <h1 class="hero-title">
+                    <span class="line">Your Business,</span>
+                    <span class="line highlight">On Autopilot.</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Aleya captures leads from Facebook, Instagram & Google — then
+                    automates follow-ups, tracks conversions, and grows your business.
+                    You focus on what matters.
+                </p>
+
+                <div class="hero-cta">
+                    <a href="/onboarding/" class="cta-primary magnetic">
+                        <span>Buy Now</span>
+                        <div class="cta-glow"></div>
+                    </a>
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="cta-secondary">
+                        <span class="play-icon">📅</span>
+                        Book Demo
+                    </a>
+                </div>
+
+                <div class="hero-proof">
+                    <div class="proof-avatars">
+                        <div class="avatar">PK</div>
+                        <div class="avatar">RS</div>
+                        <div class="avatar">AS</div>
+                        <div class="avatar">+</div>
+                    </div>
+                    <span>Join <strong>100+</strong> businesses already using Aleya</span>
+                </div>
+            </div>
+
+            <!-- Floating Dashboard Preview -->
+            <div class="hero-dashboard">
+                <div class="dashboard-window">
+                    <div class="window-bar">
+                        <div class="dots"><span></span><span></span><span></span></div>
+                        <span class="url">app.aleya.in/dashboard</span>
+                    </div>
+                    <div class="window-content">
+                        <!-- Animated Dashboard UI -->
+                        <div class="dash-sidebar">
+                            <div class="sidebar-item active">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="sidebar-item"><i class="fas fa-users"></i></div>
+                            <div class="sidebar-item"><i class="fas fa-calendar"></i></div>
+                            <div class="sidebar-item"><i class="fas fa-chart-bar"></i></div>
+                        </div>
+                        <div class="dash-main">
+                            <div class="dash-header">
+                                <div class="greeting">Good morning, Rajesh 👋</div>
+                                <div class="date">Feb 9, 2026</div>
+                            </div>
+                            <div class="dash-stats">
+                                <div class="stat-card">
+                                    <span class="stat-label">New Leads</span>
+                                    <span class="stat-value">24</span>
+                                    <span class="stat-trend up">↑ 12%</span>
+                                </div>
+                                <div class="stat-card highlight">
+                                    <span class="stat-label">Pending Follow-ups</span>
+                                    <span class="stat-value">8</span>
+                                    <span class="stat-trend">Due today</span>
+                                </div>
+                                <div class="stat-card">
+                                    <span class="stat-label">Revenue</span>
+                                    <span class="stat-value">₹4.2L</span>
+                                    <span class="stat-trend up">↑ 23%</span>
+                                </div>
+                            </div>
+                            <div class="dash-chart">
+                                <div class="chart-bars">
+                                    <div class="bar" style="--h: 40%"></div>
+                                    <div class="bar" style="--h: 65%"></div>
+                                    <div class="bar" style="--h: 45%"></div>
+                                    <div class="bar" style="--h: 80%"></div>
+                                    <div class="bar active" style="--h: 95%"></div>
+                                    <div class="bar" style="--h: 70%"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="hero-mac-content">
-                        <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/actual_dashboard_overview.png" alt="Aleya Executive SaaS CRM & Operations Dashboard" width="1440" height="900" loading="eager" />
+                </div>
+
+                <!-- Floating Notification Cards -->
+                <div class="float-card card-1">
+                    <div class="card-icon"><i class="fab fa-facebook"></i></div>
+                    <div class="card-text">
+                        <strong>New Lead from Facebook</strong>
+                        <span>Honeymoon Package - Maldives</span>
+                    </div>
+                </div>
+
+                <div class="float-card card-2">
+                    <div class="card-icon green"><i class="fas fa-check"></i></div>
+                    <div class="card-text">
+                        <strong>Booking Confirmed!</strong>
+                        <span>₹85,000 payment received</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>Scroll to explore</span>
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logo Marquee -->
+    <section class="marquee-section">
+        <div class="marquee">
+            <div class="marquee-content">
+                <span class="marquee-item">✦ Trusted by 100+ agencies</span>
+                <span class="marquee-item">✦ 10,000+ leads managed</span>
+                <span class="marquee-item">✦ ₹ 1 Cr+ bookings processed</span>
+                <span class="marquee-item">✦ 4.9★ average rating</span>
+                <span class="marquee-item">✦ Trusted by 100+ agencies</span>
+                <span class="marquee-item">✦ 10,000+ leads managed</span>
+                <span class="marquee-item">✦ ₹ 1 Cr+ bookings processed</span>
+                <span class="marquee-item">✦ 4.9★ average rating</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem → Solution Section -->
+    <section class="problem-section" id="problem">
+        <div class="container">
+            <div class="problem-grid">
+                <div class="problem-text">
+                    <span class="section-tag">The Problem</span>
+                    <h2>You're losing leads while juggling spreadsheets.</h2>
+                    <ul class="problem-list">
+                        <li>
+                            <span class="strike">Leads sitting in Excel for days</span>
+                            <span class="fix">→ Auto-captured instantly</span>
+                        </li>
+                        <li>
+                            <span class="strike">Manual follow-up reminders</span>
+                            <span class="fix">→ Smart automated nudges</span>
+                        </li>
+                        <li>
+                            <span class="strike">Scattered booking data</span>
+                            <span class="fix">→ One unified dashboard</span>
+                        </li>
+                        <li>
+                            <span class="strike">Chasing payments manually</span>
+                            <span class="fix">→ Integrated payment links</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="problem-visual">
+                    <div class="chaos-stack">
+                        <div class="chaos-item spreadsheet">
+                            <i class="fas fa-table"></i>
+                            <span>leads_may_2026.xlsx</span>
+                        </div>
+                        <div class="chaos-item whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>99+ unread messages</span>
+                        </div>
+                        <div class="chaos-item notes">
+                            <i class="fas fa-sticky-note"></i>
+                            <span>Call Sharma ji tomorrow</span>
+                        </div>
+                    </div>
+                    <div class="arrow-transform">
+                        <svg viewBox="0 0 100 40">
+                            <path d="M10 20 H85 M75 10 L90 20 L75 30" stroke="currentColor" stroke-width="3"
+                                fill="none" />
+                        </svg>
+                    </div>
+                    <div class="solution-preview">
+                        <div class="mini-dash">
+                            <div class="mini-header">Aleya Dashboard</div>
+                            <div class="mini-content">
+                                <div class="mini-stat">24 Leads</div>
+                                <div class="mini-stat green">8 Hot</div>
+                                <div class="mini-stat">₹4.2L</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- =================================================================
-         SECTION 10 (PART A): TRUSTED BY INDUSTRY CLIENTS
-         ================================================================= -->
-    <section class="client-proof-section">
+    <!-- Features - Horizontal Scroll Cards -->
+    <section class="features-section" id="features">
         <div class="container">
-            <div class="client-proof-label">Trusted By Fast-Growing Service & Operations Leaders Across India</div>
-            <div class="client-logos-grid">
-                <div class="client-logo-item">
-                    <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/featured_clients/musafir_india_trip.png" alt="Musafir India Trip" />
+            <div class="section-header">
+                <span class="section-tag">Features</span>
+                <h2>
+                    Everything you need.<br /><span class="gradient-text">Nothing you don't.</span>
+                </h2>
+            </div>
+        </div>
+
+        <div class="features-scroll">
+            <div class="features-track">
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon multi">
+                        <i class="fab fa-facebook"></i>
+                        <i class="fab fa-instagram"></i>
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <h3>Multi-Channel Lead Capture</h3>
+                    <p>
+                        Leads from Facebook, Instagram, and Google Ads flow directly into
+                        Aleya. Zero manual entry.
+                    </p>
+                    <div class="feature-tag">Automation</div>
                 </div>
-                <div class="client-logo-item">
-                    <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/featured_clients/la_skinnovita.png" alt="La Skinnovita Clinic & Spa" />
+
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon single">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI Lead Scoring</h3>
+                    <p>
+                        Our AI ranks leads by conversion probability. Know exactly who to
+                        call first.
+                    </p>
+                    <div class="feature-tag">AI-Powered</div>
                 </div>
-                <div class="client-logo-item">
-                    <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/featured_clients/sanjay_jai_marble.png" alt="Sanjay Jai Marble" />
+
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon single">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Smart Follow-up Reminders</h3>
+                    <p>
+                        Never miss a follow-up. Get notified at the right time via
+                        WhatsApp or email.
+                    </p>
+                    <div class="feature-tag">Productivity</div>
                 </div>
-                <div class="client-logo-item">
-                    <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/featured_clients/stoneval.png" alt="Stoneval Surfaces" />
+
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon single">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3>Itinerary Builder</h3>
+                    <p>
+                        Create stunning, branded itineraries in minutes. Share via link or
+                        PDF.
+                    </p>
+                    <div class="feature-tag">Design</div>
                 </div>
-                <div class="client-logo-item">
-                    <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/featured_clients/phyworld.png" alt="Phyworld Healthcare" />
+
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon single">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Integrated Payments</h3>
+                    <p>
+                        Collect payments via UPI, cards, or bank transfer. Auto-generate
+                        invoices.
+                    </p>
+                    <div class="feature-tag">Finance</div>
                 </div>
-                <div class="client-logo-item">
-                    <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/featured_clients/skin_qure.png" alt="Skin Qure Clinic" />
+
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon single">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Voucher Management</h3>
+                    <p>
+                        Generate and send booking vouchers automatically after payment
+                        confirmation.
+                    </p>
+                    <div class="feature-tag">Automation</div>
                 </div>
-                <div class="client-logo-item">
-                    <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/featured_clients/and_blooms.png" alt="And Blooms Wellness" />
+
+                <!-- Duplicated cards for infinite scroll -->
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon multi">
+                        <i class="fab fa-facebook"></i>
+                        <i class="fab fa-instagram"></i>
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <h3>Multi-Channel Lead Capture</h3>
+                    <p>
+                        Leads from Facebook, Instagram, and Google Ads flow directly into
+                        Aleya. Zero manual entry.
+                    </p>
+                    <div class="feature-tag">Automation</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon single">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI Lead Scoring</h3>
+                    <p>
+                        Our AI ranks leads by conversion probability. Know exactly who to
+                        call first.
+                    </p>
+                    <div class="feature-tag">AI-Powered</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon single">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Smart Follow-up Reminders</h3>
+                    <p>
+                        Never miss a follow-up. Get notified at the right time via
+                        WhatsApp or email.
+                    </p>
+                    <div class="feature-tag">Productivity</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon single">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3>Itinerary Builder</h3>
+                    <p>
+                        Create stunning, branded itineraries in minutes. Share via link or
+                        PDF.
+                    </p>
+                    <div class="feature-tag">Design</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon single">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Integrated Payments</h3>
+                    <p>
+                        Collect payments via UPI, cards, or bank transfer. Auto-generate
+                        invoices.
+                    </p>
+                    <div class="feature-tag">Finance</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="card-glow"></div>
+                    <div class="feature-icon single">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Voucher Management</h3>
+                    <p>
+                        Generate and send booking vouchers automatically after payment
+                        confirmation.
+                    </p>
+                    <div class="feature-tag">Automation</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- =================================================================
-         SECTION 3: INDUSTRY SELECTOR GRID
-         ================================================================= -->
-    <section class="section" id="industries">
+    <!-- Workflow Section - Vertical Timeline -->
+    <section class="workflow-section" id="workflow">
         <div class="container">
             <div class="section-header center">
-                <span class="section-kicker">Tailored Solutions</span>
-                <h2 class="section-title">Engineered For Your Specific Industry Workflows</h2>
-                <p class="section-subtitle">
-                    Select your business segment below to discover how Aleya eliminates specific operational bottlenecks and replaces manual spreadsheets.
+                <span class="section-tag">How It Works</span>
+                <h2>
+                    From lead to booking<br /><span class="gradient-text">in 4 simple steps</span>
+                </h2>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-number">01</div>
+                    <div class="timeline-content">
+                        <h3>Lead Arrives</h3>
+                        <p>
+                            Someone fills your Facebook or Google ad form. Aleya captures it
+                            instantly and adds to your pipeline.
+                        </p>
+                    </div>
+                    <div class="timeline-visual">
+                        <div class="visual-box">
+                            <i class="fab fa-facebook"></i>
+                            <span class="arrow">→</span>
+                            <div class="aleya-icon">
+                                <img src="<?php echo USER_IMAGES ?>aleya-icon.png" alt="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-number">02</div>
+                    <div class="timeline-content">
+                        <h3>You Follow Up</h3>
+                        <p>
+                            Get a WhatsApp notification. One-click to call. Aleya shows you
+                            the full context.
+                        </p>
+                    </div>
+                    <div class="timeline-visual">
+                        <div class="visual-box">
+                            <i class="fab fa-whatsapp"></i>
+                            <span class="notification">🔔 New Hot Lead!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-number">03</div>
+                    <div class="timeline-content">
+                        <h3>Create & Quote</h3>
+                        <p>
+                            Build a beautiful itinerary, generate a quote, and share a
+                            payment link — all in under 5 minutes.
+                        </p>
+                    </div>
+                    <div class="timeline-visual">
+                        <div class="visual-box itinerary">
+                            <div class="itin-header">Maldives Package</div>
+                            <div class="itin-price">₹1,25,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-number">04</div>
+                    <div class="timeline-content">
+                        <h3>Confirm & Celebrate</h3>
+                        <p>
+                            Payment received. Vouchers sent. Customer happy. You just closed
+                            another deal. 🎉
+                        </p>
+                    </div>
+                    <div class="timeline-visual">
+                        <div class="visual-box celebration">
+                            <span>✓</span>
+                            <span class="confetti">🎊</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section - Modern Cards -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-tag">Pricing</span>
+                <h2>Simple, transparent pricing.</h2>
+                <p class="section-desc">
+                    Choose the plan that fits your business. Scale as you grow.
                 </p>
             </div>
 
-            <div class="industry-grid">
-                <!-- Travel Agencies -->
-                <a href="/industries/travel-agencies/" class="industry-card">
-                    <div>
-                        <div class="industry-card-icon"><i class="fas fa-plane-departure"></i></div>
-                        <div class="industry-card-tag">Tour Operators & DMCs</div>
-                        <h3 class="industry-card-title">Travel Agencies</h3>
-                        <p class="industry-card-desc">
-                            Automate Meta & Google ad lead capture, build day-wise custom itineraries in under 3 minutes, issue supplier vouchers, and track DMC payables.
-                        </p>
-                    </div>
-                    <div class="industry-card-footer">
-                        <span>Explore Travel Agency Platform</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </a>
-
-                <!-- Travel Agents -->
-                <a href="/industries/travel-agents/" class="industry-card">
-                    <div>
-                        <div class="industry-card-icon"><i class="fas fa-user-tie"></i></div>
-                        <div class="industry-card-tag">Independent Consultants</div>
-                        <h3 class="industry-card-title">Travel Agents</h3>
-                        <p class="industry-card-desc">
-                            A fast, lightweight, and affordable travel CRM for solo agents and small teams. Keep client inquiries organized, share fast quotes, and never drop a lead.
-                        </p>
-                    </div>
-                    <div class="industry-card-footer">
-                        <span>Explore Travel Agent CRM</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </a>
-
-                <!-- Transporters -->
-                <a href="/industries/transporters/" class="industry-card">
-                    <div>
-                        <div class="industry-card-icon"><i class="fas fa-truck-moving"></i></div>
-                        <div class="industry-card-tag">Fleet Operators & Cabs</div>
-                        <h3 class="industry-card-title">Transporters</h3>
-                        <p class="industry-card-desc">
-                            Manage vehicle rosters, driver allocations, and trip costing. Send verified vehicle photo quotes via WhatsApp and issue digital duty slips in seconds.
-                        </p>
-                    </div>
-                    <div class="industry-card-footer">
-                        <span>Explore Transporter Logistics</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </a>
-
-                <!-- DMS -->
-                <a href="/industries/dms/" class="industry-card">
-                    <div>
-                        <div class="industry-card-icon"><i class="fas fa-warehouse"></i></div>
-                        <div class="industry-card-tag">Wholesale & Manufacturers</div>
-                        <h3 class="industry-card-title">DMS (Distribution)</h3>
-                        <p class="industry-card-desc">
-                            Centralize dealer reorders, monitor multi-warehouse inventory levels, approve purchase orders, track returns, and automate ledger collection statements.
-                        </p>
-                    </div>
-                    <div class="industry-card-footer">
-                        <span>Explore DMS Distribution</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </a>
-
-                <!-- Spa Management -->
-                <a href="/industries/spa-management/" class="industry-card">
-                    <div>
-                        <div class="industry-card-icon"><i class="fas fa-spa"></i></div>
-                        <div class="industry-card-tag">Salons & Wellness Centers</div>
-                        <h3 class="industry-card-title">SPA Management</h3>
-                        <p class="industry-card-desc">
-                            Coordinate appointment bookings, therapist schedules, and therapy rooms. Cut no-shows by 85% with automated WhatsApp reminders and track prepaid memberships.
-                        </p>
-                    </div>
-                    <div class="industry-card-footer">
-                        <span>Explore Spa Management</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </a>
-
-                <!-- Custom Enterprise / Other -->
-                <div class="industry-card industry-card-other">
-                    <div>
-                        <div class="industry-card-icon"><i class="fas fa-puzzle-piece"></i></div>
-                        <div class="industry-card-tag">Service & Trade Businesses</div>
-                        <h3 class="industry-card-title">Custom Service Operations</h3>
-                        <p class="industry-card-desc">
-                            Have unique operational flows? Aleya’s modular CRM architecture accommodates bespoke pipelines, custom fields, and automated WhatsApp communication.
-                        </p>
-                    </div>
-                    <div class="industry-card-footer">
-                        <a href="/contact-us/" class="flex-between-full">
-                            <span>Discuss Custom Workflow</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- =================================================================
-         SECTION 4: BUSINESS CHALLENGES (BEFORE VS AFTER)
-         ================================================================= -->
-    <section class="section section-muted" id="challenges">
-        <div class="container">
-            <div class="section-header center">
-                <span class="section-kicker">The Cost of Friction</span>
-                <h2 class="section-title">Why Growing Businesses Leave Spreadsheets Behind</h2>
-                <p class="section-subtitle">
-                    Operating on scattered tools and manual messaging drains valuable team hours and directly hurts your bottom line.
-                </p>
+            <div class="pricing-toggle">
+                <span class="toggle-label" data-period="monthly">Monthly</span>
+                <label class="toggle">
+                    <input type="checkbox" id="pricingToggle" checked />
+                    <span class="slider"></span>
+                </label>
+                <span class="toggle-label active" data-period="yearly">
+                    Yearly
+                    <span class="save-tag">Save 25% on yearly plan</span>
+                </span>
             </div>
 
-            <div class="challenges-grid">
-                <!-- Fragmented Workflow -->
-                <div class="challenge-column challenge-column-before">
-                    <span class="challenge-badge-negative">The Fragmented Old Way</span>
-                    <h3 class="pain-card-header">Scattered Apps & Silent Revenue Leaks</h3>
-                    <p class="pain-card-sub">When operations rely on personal phones, spreadsheets, and manual memory:</p>
-
-                    <div class="challenge-list">
-                        <div class="challenge-list-item">
-                            <i class="fas fa-times-circle"></i>
-                            <span>Meta and Google ad leads wait hours on spreadsheets before receiving a callback.</span>
-                        </div>
-                        <div class="challenge-list-item">
-                            <i class="fas fa-times-circle"></i>
-                            <span>Staff spend 2-3 hours manually typing Word quotations or WhatsApp messages.</span>
-                        </div>
-                        <div class="challenge-list-item">
-                            <i class="fas fa-times-circle"></i>
-                            <span>Bookings, supplier vouchers, or duty slips are verified over frantic phone calls.</span>
-                        </div>
-                        <div class="challenge-list-item">
-                            <i class="fas fa-times-circle"></i>
-                            <span>Managers have zero visibility into daily team activities or pipeline conversion rates.</span>
-                        </div>
-                        <div class="challenge-list-item">
-                            <i class="fas fa-times-circle"></i>
-                            <span>Customer balances and advance deposits go uncollected due to missing reminders.</span>
-                        </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="card-header">
+                        <h3>CRM Starter</h3>
+                        <p>For businesses of any industry getting organized</p>
                     </div>
-                </div>
-
-                <!-- Aleya Workflow -->
-                <div class="challenge-column challenge-column-after">
-                    <span class="challenge-badge-positive">The Aleya Operations Engine</span>
-                    <h3 class="gain-card-header">Centralized Control & 0% Lead Leakage</h3>
-                    <p class="gain-card-sub">When your entire team operates inside Aleya's unified architecture:</p>
-
-                    <div class="challenge-list">
-                        <div class="challenge-list-item">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Leads sync in 0 seconds with instant WhatsApp context and sales rep auto-assignment.</span>
-                        </div>
-                        <div class="challenge-list-item">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Branded day-wise itineraries, vehicle photo galleries, or quotes dispatched in 3 mins.</span>
-                        </div>
-                        <div class="challenge-list-item">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Vouchers, digital duty slips, and room allocations generate automatically upon payment.</span>
-                        </div>
-                        <div class="challenge-list-item">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Live executive dashboards show response speeds, conversion stages, and gross profit.</span>
-                        </div>
-                        <div class="challenge-list-item">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Automated UPI collection links and balance recovery reminders sent to client WhatsApp.</span>
-                        </div>
+                    <div class="card-price">
+                        <span class="currency">₹</span>
+                        <span class="amount" data-yearly="1499" data-monthly="1874">1499</span>
+                        <span class="period" data-monthly="/mo" data-yearly="/mo">/mo</span>
+                        <span class="gst-label">+ 18% GST</span>
                     </div>
+                    <p class="billing-note" data-yearly="billed annually" data-monthly="billed monthly">billed annually
+                    </p>
+                    <ul class="card-features">
+                        <li>
+                            <i class="fas fa-check"></i> Lead capture from FB & Google
+                        </li>
+                        <li><i class="fas fa-check"></i> Smart follow-up reminders</li>
+                        <li><i class="fas fa-check"></i> Performance dashboard</li>
+                        <li><i class="fas fa-check"></i> Up to 10 users included</li>
+                        <li><i class="fas fa-check"></i> Email support</li>
+                        <li class="extra-users">
+                            <i class="fas fa-info-circle"></i> +₹149/user after 10 users
+                        </li>
+                    </ul>
+                    <a href="/onboarding/?plan=crm"
+                        class="card-btn outline">Buy CRM Starter</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="featured-badge">For Travel Agencies</div>
+                    <div class="card-header">
+                        <h3>ERP Complete</h3>
+                        <p>Full-stack travel agency automation</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="currency">₹</span>
+                        <span class="amount" data-yearly="3999" data-monthly="4999">3999</span>
+                        <span class="period" data-monthly="/mo" data-yearly="/mo">/mo</span>
+                        <span class="gst-label">+ 18% GST</span>
+                    </div>
+                    <p class="billing-note" data-yearly="billed annually" data-monthly="billed monthly">billed annually
+                    </p>
+                    <ul class="card-features">
+                        <li><i class="fas fa-check"></i> Everything in CRM Starter</li>
+                        <li><i class="fas fa-check"></i> AI lead scoring</li>
+                        <li><i class="fas fa-check"></i> Itinerary builder</li>
+                        <li><i class="fas fa-check"></i> Invoicing & payments</li>
+                        <li><i class="fas fa-check"></i> Voucher automation</li>
+                        <li><i class="fas fa-check"></i> Supplier management</li>
+                        <li><i class="fas fa-check"></i> Up to 10 users included</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li class="extra-users">
+                            <i class="fas fa-info-circle"></i> +₹349/user after 10 users
+                        </li>
+                    </ul>
+                    <a href="/onboarding/?plan=erp"
+                        class="card-btn primary">Buy ERP Complete</a>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- =================================================================
-         SECTION 5: HOW ALEYA HELPS (CORE FEATURE PILLARS)
-         ================================================================= -->
-    <section class="section" id="features">
-        <div class="container">
-            <div class="section-header center">
-                <span class="section-kicker">Core Capabilities</span>
-                <h2 class="section-title">Designed For Practical B2B Excellence</h2>
-                <p class="section-subtitle">
-                    Six foundational modules engineered to standardize your operational rhythm and accelerate business conversion.
-                </p>
-            </div>
-
-            <div class="capability-grid">
-                <div class="capability-card">
-                    <div class="capability-icon"><i class="fas fa-satellite-dish"></i></div>
-                    <h3>Multi-Channel Lead Ingestion</h3>
-                    <p>
-                        Instant, zero-latency sync from Facebook Lead Ads, Instagram DMs, Google Ads, website forms, and walk-ins into a unified pipeline.
-                    </p>
-                </div>
-
-                <div class="capability-card">
-                    <div class="capability-icon"><i class="fas fa-funnel-dollar"></i></div>
-                    <h3>Smart Pipeline Qualification</h3>
-                    <p>
-                        Organize prospects by qualification stage, destination interest, budget range, and follow-up urgency. Prevent leads from going cold.
-                    </p>
-                </div>
-
-                <div class="capability-card">
-                    <div class="capability-icon"><i class="fab fa-whatsapp"></i></div>
-                    <h3>Native WhatsApp CRM</h3>
-                    <p>
-                        Send quotations, booking confirmations, itinerary PDFs, and balance payment reminders directly to client WhatsApp without leaving your dashboard.
-                    </p>
-                </div>
-
-                <div class="capability-card">
-                    <div class="capability-icon"><i class="fas fa-cogs"></i></div>
-                    <h3>Industry Tailored Operations</h3>
-                    <p>
-                        Specific workflows for travel itineraries, vehicle photo dispatches, multi-warehouse dealer orders, and spa room/therapist scheduling.
-                    </p>
-                </div>
-
-                <div class="capability-card">
-                    <div class="capability-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-                    <h3>GST Invoicing & Fast UPI Links</h3>
-                    <p>
-                        Generate GST-compliant invoices with HSN/SAC codes, capture advance deposits via dynamic UPI QR codes, and issue instant digital receipts.
-                    </p>
-                </div>
-
-                <div class="capability-card">
-                    <div class="capability-icon"><i class="fas fa-chart-line"></i></div>
-                    <h3>Live Performance Reports</h3>
-                    <p>
-                        Real-time executive oversight into staff response latency, quotation close rates, active proposal values, and net booking profitability.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- =================================================================
-         SECTION 6: PRODUCT EXPERIENCE (TABBED INTERFACE SHOWCASE)
-         ================================================================= -->
-    <section class="section section-dark" id="showcase">
-        <div class="container">
-            <div class="section-header center">
-                <span class="section-kicker">Realistic Experience</span>
-                <h2 class="section-title">Explore the Actual Aleya Platform Interface</h2>
-                <p class="section-subtitle">
-                    Switch between operational views to preview how Aleya streamlines real daily tasks across sales, itineraries, and logistics.
-                </p>
-            </div>
-
-            <div class="showcase-tabs">
-                <button class="showcase-tab-btn active" data-target="showcaseOverview">
-                    <i class="fas fa-chart-pie"></i> Executive Overview
+            <!-- Feature Comparison Toggle -->
+            <div class="comparison-toggle-wrapper">
+                <button class="comparison-toggle" id="comparisonToggle">
+                    <span>Compare all features</span>
+                    <i class="fas fa-chevron-down"></i>
                 </button>
-                <button class="showcase-tab-btn" data-target="showcaseLeads">
-                    <i class="fas fa-users"></i> Lead Pipeline & WhatsApp
-                </button>
-                <button class="showcase-tab-btn" data-target="showcaseItineraries">
-                    <i class="fas fa-map-marked-alt"></i> Tour Itinerary Engine
-                </button>
-                <button class="showcase-tab-btn" data-target="showcaseFleet">
-                    <i class="fas fa-truck"></i> Fleet Logistics & Transporters
-                </button>
             </div>
 
-            <!-- Tab 1: Executive Overview -->
-            <div class="showcase-panel active" id="showcaseOverview">
-                <div class="hero-mac-frame">
-                    <div class="hero-mac-bar">
-                        <div class="mac-dot mac-dot-red"></div>
-                        <div class="mac-dot mac-dot-yellow"></div>
-                        <div class="mac-dot mac-dot-green"></div>
-                        <div class="mac-url">
-                            <i class="fas fa-lock text-emerald icon-xs"></i>
-                            <span>https://app.aleya.in/dashboard/overview/</span>
-                        </div>
-                    </div>
-                    <div class="hero-mac-content">
-                        <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/actual_dashboard_overview.png" alt="Executive CRM & Business Overview" width="1440" height="900" loading="lazy" />
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 2: Leads Pipeline -->
-            <div class="showcase-panel" id="showcaseLeads">
-                <div class="hero-mac-frame">
-                    <div class="hero-mac-bar">
-                        <div class="mac-dot mac-dot-red"></div>
-                        <div class="mac-dot mac-dot-yellow"></div>
-                        <div class="mac-dot mac-dot-green"></div>
-                        <div class="mac-url">
-                            <i class="fas fa-lock text-emerald icon-xs"></i>
-                            <span>https://app.aleya.in/dashboard/leads/</span>
-                        </div>
-                    </div>
-                    <div class="hero-mac-content">
-                        <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/actual_dashboard_leads.png" alt="Leads Pipeline & WhatsApp Conversion Board" width="1440" height="900" loading="lazy" />
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 3: Tour Itinerary Engine -->
-            <div class="showcase-panel" id="showcaseItineraries">
-                <div class="hero-mac-frame">
-                    <div class="hero-mac-bar">
-                        <div class="mac-dot mac-dot-red"></div>
-                        <div class="mac-dot mac-dot-yellow"></div>
-                        <div class="mac-dot mac-dot-green"></div>
-                        <div class="mac-url">
-                            <i class="fas fa-lock text-emerald icon-xs"></i>
-                            <span>https://app.aleya.in/dashboard/packages/</span>
-                        </div>
-                    </div>
-                    <div class="hero-mac-content">
-                        <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/actual_dashboard_packages.png" alt="Day-Wise Itinerary Builder & Vouchers" width="1440" height="900" loading="lazy" />
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 4: Fleet Logistics -->
-            <div class="showcase-panel" id="showcaseFleet">
-                <div class="hero-mac-frame">
-                    <div class="hero-mac-bar">
-                        <div class="mac-dot mac-dot-red"></div>
-                        <div class="mac-dot mac-dot-yellow"></div>
-                        <div class="mac-dot mac-dot-green"></div>
-                        <div class="mac-url">
-                            <i class="fas fa-lock text-emerald icon-xs"></i>
-                            <span>https://app.aleya.in/dashboard/transporters/</span>
-                        </div>
-                    </div>
-                    <div class="hero-mac-content">
-                        <img src="/app/aleya/visitor/aleya_new/desktop/assets/images/actual_dashboard_transporters.png" alt="Vehicle Roster, Duty Slips & Trip Costing" width="1440" height="900" loading="lazy" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- =================================================================
-         SECTION 8: HOW IT WORKS (4-STEP OPERATING RHYTHM)
-         ================================================================= -->
-    <section class="section" id="workflow">
-        <div class="container">
-            <div class="section-header center">
-                <span class="section-kicker">Operating Rhythm</span>
-                <h2 class="section-title">From Inbound Lead to Verified Booking</h2>
-                <p class="section-subtitle">
-                    A disciplined, 4-step workflow that keeps your sales reps fast, your operational data accurate, and your customers delighted.
-                </p>
-            </div>
-
-            <div class="rhythm-grid">
-                <div class="rhythm-card">
-                    <span class="rhythm-step-num">01</span>
-                    <h3>Inquiry Arrives Instantly</h3>
-                    <p>
-                        Prospect submits a Meta ad, Google ad form, or website inquiry. The lead lands in your Aleya pipeline in 0 seconds.
-                    </p>
-                </div>
-
-                <div class="rhythm-card">
-                    <span class="rhythm-step-num">02</span>
-                    <h3>Smart Routing & Alert</h3>
-                    <p>
-                        Assigned sales executive receives an immediate WhatsApp notification with lead budget, travel dates, and contact details.
-                    </p>
-                </div>
-
-                <div class="rhythm-card">
-                    <span class="rhythm-step-num">03</span>
-                    <h3>Create Itinerary or Quote</h3>
-                    <p>
-                        Select pre-loaded package templates or vehicle rosters to share a branded PDF quote with payment links in under 3 minutes.
-                    </p>
-                </div>
-
-                <div class="rhythm-card">
-                    <span class="rhythm-step-num">04</span>
-                    <h3>Confirm Booking & Vouchers</h3>
-                    <p>
-                        Customer transfers deposit. System automatically generates hotel vouchers, digital duty slips, and receipt confirmations.
-                    </p>
-                </div>
+            <!-- Feature Comparison Table -->
+            <div class="comparison-table-wrapper" id="comparisonTable">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Features</th>
+                            <th>CRM Starter</th>
+                            <th>ERP Complete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="category-row">
+                            <td colspan="3">Lead Management</td>
+                        </tr>
+                        <tr>
+                            <td>Lead capture from FB & Google</td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>AI Lead Scoring</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Follow-up reminders</td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>WhatsApp integration</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr class="category-row">
+                            <td colspan="3">Travel Business Tools</td>
+                        </tr>
+                        <tr>
+                            <td>Itinerary Builder</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Invoicing & Payments</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Voucher Automation</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Supplier Management</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr class="category-row">
+                            <td colspan="3">Team & Support</td>
+                        </tr>
+                        <tr>
+                            <td>Users Included</td>
+                            <td>Up to 10</td>
+                            <td>Up to 10</td>
+                        </tr>
+                        <tr>
+                            <td>Additional User Cost</td>
+                            <td>₹99/user/mo</td>
+                            <td>₹249/user/mo</td>
+                        </tr>
+                        <tr>
+                            <td>Performance Dashboard</td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Support</td>
+                            <td>Email</td>
+                            <td>Priority</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
 
-    <!-- =================================================================
-         SECTION 9: PRICING PREVIEW
-         ================================================================= -->
-    <section class="section section-muted" id="pricing">
+    <!-- Testimonials - Stacked Cards -->
+    <section class="testimonials-section" id="testimonials">
         <div class="container">
             <div class="section-header center">
-                <span class="section-kicker">Transparent Plans</span>
-                <h2 class="section-title">Straightforward, Predictable Pricing</h2>
-                <p class="section-subtitle">
-                    Choose the plan that fits your business scale. No hidden onboarding fees or surprise charges.
-                </p>
-
-                <!-- Billing Frequency Toggle -->
-                <div class="pricing-toggle-wrap mt-6">
-                    <span class="pricing-toggle-label active" id="labelYearly">Annual Billing</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="pricingBillingToggle" checked />
-                        <span class="toggle-slider"></span>
-                    </label>
-                    <span class="pricing-toggle-label" id="labelMonthly">Monthly Billing</span>
-                    <span class="pricing-discount-badge">Save 25% Annually</span>
-                </div>
-            </div>
-
-            <div class="pricing-grid-preview">
-                <!-- CRM Starter Plan -->
-                <div class="pricing-card-preview">
-                    <div>
-                        <div class="card-header">
-                            <h3 class="fs-2xl text-dark">CRM Starter</h3>
-                            <p class="fs-sm text-muted">For service businesses focused on lead capture & sales follow-ups.</p>
-                        </div>
-
-                        <div class="price-row">
-                            <span class="price-currency">₹</span>
-                            <span class="price-number price-amount-dynamic" data-yearly="1,499" data-monthly="1,874">1,499</span>
-                            <span class="price-period price-period-dynamic">/mo (billed annually)</span>
-                            <span class="price-gst-tag">+ 18% GST</span>
-                        </div>
-                        <p class="billing-note-dynamic fs-sm text-muted mb-4">
-                            Billed annually + 18% GST
-                        </p>
-
-                        <ul class="pricing-features-list">
-                            <li><i class="fas fa-check"></i> Meta & Google Ads automated lead capture</li>
-                            <li><i class="fas fa-check"></i> Structured visual sales qualification pipeline</li>
-                            <li><i class="fas fa-check"></i> WhatsApp customer communication & reminders</li>
-                            <li><i class="fas fa-check"></i> Up to 10 users included (+₹149/user after 10)</li>
-                            <li><i class="fas fa-check"></i> Quotation sharing & customer profile history</li>
-                            <li><i class="fas fa-check"></i> Fast email & chat support</li>
-                        </ul>
-                    </div>
-
-                    <div class="mt-6">
-                        <a href="/checkout/?plan=crm&cycle=yearly" class="btn btn-secondary btn-block pricing-buy-btn">
-                            Get CRM Starter <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- ERP Complete Plan -->
-                <div class="pricing-card-preview pricing-card-featured">
-                    <span class="featured-pill">Most Popular for Agencies</span>
-                    <div>
-                        <div class="card-header">
-                            <h3 class="fs-2xl text-dark">ERP Complete</h3>
-                            <p class="fs-sm text-muted">Full-stack automation for travel, transporters & operations teams.</p>
-                        </div>
-
-                        <div class="price-row">
-                            <span class="price-currency">₹</span>
-                            <span class="price-number price-amount-dynamic" data-yearly="3,999" data-monthly="4,999">3,999</span>
-                            <span class="price-period price-period-dynamic">/mo (billed annually)</span>
-                            <span class="price-gst-tag">+ 18% GST</span>
-                        </div>
-                        <p class="billing-note-dynamic fs-sm text-muted mb-4">
-                            Billed annually + 18% GST
-                        </p>
-
-                        <ul class="pricing-features-list">
-                            <li><i class="fas fa-check"></i> Everything in CRM Starter</li>
-                            <li><i class="fas fa-check"></i> Day-wise visual tour itinerary builder</li>
-                            <li><i class="fas fa-check"></i> 1-click hotel, cab & activity voucher automation</li>
-                            <li><i class="fas fa-check"></i> DMC & supplier payable ledger</li>
-                            <li><i class="fas fa-check"></i> Vehicle photo quotes & digital duty slips</li>
-                            <li><i class="fas fa-check"></i> Multi-warehouse inventory & dealer orders</li>
-                            <li><i class="fas fa-check"></i> Up to 10 users included (+₹349/user after 10)</li>
-                            <li><i class="fas fa-check"></i> Dedicated priority customer success manager</li>
-                        </ul>
-                    </div>
-
-                    <div class="mt-6">
-                        <a href="/checkout/?plan=erp&cycle=yearly" class="btn btn-primary btn-block pricing-buy-btn">
-                            Get ERP Complete <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center mt-8">
-                <a href="/pricing/" class="btn btn-outline">
-                    Compare All Features & Limits <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- =================================================================
-         SECTION 10 (PART B): CUSTOMER TESTIMONIALS
-         ================================================================= -->
-    <section class="section" id="testimonials">
-        <div class="container">
-            <div class="section-header center">
-                <span class="section-kicker">Verified Feedback</span>
-                <h2 class="section-title">Loved by Business Operators</h2>
-                <p class="section-subtitle">Real experiences from teams managing active daily customer inquiries and bookings with Aleya.</p>
+                <span class="section-tag">Reviews</span>
+                <h2>
+                    Businesses love us.<br /><span class="gradient-text">Like, really love us.</span>
+                </h2>
             </div>
 
             <div class="testimonials-grid">
                 <div class="testimonial-card">
-                    <div>
-                        <div class="testimonial-stars">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="testimonial-text">
-                            "Before Aleya, our agents were spending half their afternoon formatting itineraries in Canva. Now they customize itineraries and share quotes on WhatsApp in 3 minutes. It completely changed our conversion rate."
-                        </p>
-                    </div>
+                    <div class="quote-icon">"</div>
+                    <p>
+                        Aleya literally changed my life. I used to spend 3 hours daily on
+                        lead management. Now it's 20 minutes. I can actually focus on
+                        growing the business.
+                    </p>
                     <div class="testimonial-author">
-                        <div class="author-avatar">MT</div>
+                        <div class="author-avatar">RK</div>
                         <div class="author-info">
-                            <h4>Rakesh Verma</h4>
-                            <span>Director, Musafir India Trip</span>
+                            <strong>Rajesh Kumar</strong>
+                            <span>Delhi</span>
                         </div>
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
                     </div>
                 </div>
 
                 <div class="testimonial-card">
-                    <div>
-                        <div class="testimonial-stars">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="testimonial-text">
-                            "Automated WhatsApp reminders reduced our spa appointment no-shows from over 18% down to almost nothing. The room and therapist roster prevents double bookings on busy weekends."
-                        </p>
-                    </div>
+                    <div class="quote-icon">"</div>
+                    <p>
+                        The Facebook integration is magic. Leads appear in my dashboard
+                        seconds after they submit. My competitors are still copying from
+                        Excel 😂
+                    </p>
                     <div class="testimonial-author">
-                        <div class="author-avatar">LS</div>
+                        <div class="author-avatar">PS</div>
                         <div class="author-info">
-                            <h4>Dr. Preeti Sen</h4>
-                            <span>Operations Head, La Skinnovita</span>
+                            <strong>Priya Sharma</strong>
+                            <span>Mumbai</span>
                         </div>
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
                     </div>
                 </div>
 
                 <div class="testimonial-card">
-                    <div>
-                        <div class="testimonial-stars">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="testimonial-text">
-                            "Sending genuine vehicle photos directly from Aleya into WhatsApp closes taxi rentals twice as fast. Drivers get duty slips on their phones and we have clear profit records per trip."
-                        </p>
-                    </div>
+                    <div class="quote-icon">"</div>
+                    <p>
+                        We went from 15 bookings/month to 40+ within 3 months of using
+                        Aleya. The ROI is insane. Best ₹2,499 I spend every month.
+                    </p>
                     <div class="testimonial-author">
-                        <div class="author-avatar">SJ</div>
+                        <div class="author-avatar">AM</div>
                         <div class="author-info">
-                            <h4>Gurpreet Singh</h4>
-                            <span>Fleet Manager, Golden Triangle Transports</span>
+                            <strong>Amit Mehta</strong>
+                            <span>Bangalore</span>
                         </div>
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- =================================================================
-         SECTION 11: HOMEPAGE FAQS
-         ================================================================= -->
-    <section class="section section-muted" id="faq">
-        <div class="container container-narrow">
-            <div class="section-header center">
-                <span class="section-kicker">Got Questions?</span>
-                <h2 class="section-title">Frequently Asked Questions</h2>
-                <p class="section-subtitle">Everything you need to know about getting started, team accounts, and implementation.</p>
-            </div>
-
-            <div class="accordion">
-                <div class="accordion-item active">
-                    <button class="accordion-header" aria-expanded="true">
-                        <span>How does Aleya capture leads from Facebook and Google Ads?</span>
-                        <i class="fas fa-chevron-down accordion-icon"></i>
-                    </button>
-                    <div class="accordion-content">
-                        <p>
-                            Aleya connects directly via official webhook integrations with Meta Lead Ads and Google Ads. As soon as a user submits an ad form, the inquiry is created in your workspace in zero seconds with full lead parameters, trigger alerts, and auto-assignment.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <button class="accordion-header" aria-expanded="false">
-                        <span>Is there a long-term contract or setup fee?</span>
-                        <i class="fas fa-chevron-down accordion-icon"></i>
-                    </button>
-                    <div class="accordion-content">
-                        <p>
-                            No. You can subscribe on a flexible monthly basis or choose an annual subscription to save 25%. There are zero mandatory setup fees, hidden implementation charges, or termination penalties.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <button class="accordion-header" aria-expanded="false">
-                        <span>How many team members can use the platform?</span>
-                        <i class="fas fa-chevron-down accordion-icon"></i>
-                    </button>
-                    <div class="accordion-content">
-                        <p>
-                            Both CRM Starter and ERP Complete include up to 10 users out of the box. Additional users can be added at any time for ₹149/user/month (CRM) or ₹349/user/month (ERP).
-                        </p>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <button class="accordion-header" aria-expanded="false">
-                        <span>How long does onboarding and workspace setup take?</span>
-                        <i class="fas fa-chevron-down accordion-icon"></i>
-                    </button>
-                    <div class="accordion-content">
-                        <p>
-                            Your workspace subdomain (e.g. youragency.aleya.in) is provisioned immediately upon order. Most businesses configure their master packages, lead sources, and team members within 1 business day with guidance from our support team.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <button class="accordion-header" aria-expanded="false">
-                        <span>Can we import our existing customer contacts from Excel?</span>
-                        <i class="fas fa-chevron-down accordion-icon"></i>
-                    </button>
-                    <div class="accordion-content">
-                        <p>
-                            Yes. Aleya provides straightforward CSV and Excel import utilities to bring your existing customer database, destination packages, or vendor registries into your new workspace.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- =================================================================
-         SECTION 12: FINAL CONVERSION BANNER
-         ================================================================= -->
-    <section class="section pt-0">
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
         <div class="container">
-            <div class="cta-banner">
-                <h2>Ready to Move Your Business to Autopilot?</h2>
-                <p>Join hundreds of forward-thinking operators who save hours every week, eliminate missed leads, and deliver professional customer experiences with Aleya.</p>
-                <div class="cta-banner-actions">
-                    <a href="/checkout/" class="btn btn-secondary btn-lg">
-                        Get Started Today <i class="fas fa-arrow-right"></i>
+            <div class="faq-grid">
+                <div class="faq-header">
+                    <span class="section-tag">FAQ</span>
+                    <h2>Questions?<br />We've got answers.</h2>
+                    <p>
+                        Can't find what you're looking for?
+                        <a href="#contact">Chat with us</a>
+                    </p>
+                </div>
+
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-q">
+                            <span>Do you offer a free trial?</span>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-a">
+                            <p>
+                                We offer a free demo instead of a trial. Book a personalized
+                                demo and our team will walk you through every feature tailored
+                                to your business needs.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-q">
+                            <span>What's the difference between CRM and ERP plans?</span>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-a">
+                            <p>
+                                CRM Starter is perfect for any business looking to capture and
+                                manage leads. ERP Complete is designed specifically for travel
+                                agencies, adding itinerary builder, invoicing, voucher
+                                automation, and supplier management.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-q">
+                            <span>How many users can I add?</span>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-a">
+                            <p>
+                                Both plans include up to 10 users. Need more? Add additional
+                                users at ₹99/user/month for CRM or ₹249/user/month for ERP.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-q">
+                            <span>How does Facebook lead capture work?</span>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-a">
+                            <p>
+                                We connect to your Facebook Lead Ads via official API. When
+                                someone submits a form, the lead appears in Aleya within
+                                seconds.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-q">
+                            <span>Can I import my existing leads?</span>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-a">
+                            <p>
+                                Absolutely. Upload a CSV file and we'll map all your existing
+                                leads into Aleya. Takes 2 minutes.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-q">
+                            <span>What payment methods do you accept?</span>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-a">
+                            <p>
+                                We accept UPI, VISA, Mastercard, and AMEX for both one-time
+                                and recurring payments. Annual plans also accept bank
+                                transfers.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-q">
+                            <span>How long does onboarding take?</span>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-a">
+                            <p>
+                                Most businesses are up and running within 24 hours. Our team
+                                helps you import data, connect your ad accounts, and train
+                                your staff.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-q">
+                            <span>Can I cancel anytime?</span>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-a">
+                            <p>
+                                Yes, you can cancel your subscription at any time. Your data
+                                remains accessible for 30 days after cancellation.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-q">
+                            <span>Is there a mobile app?</span>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-a">
+                            <p>
+                                Aleya is fully responsive and works great on mobile browsers.
+                                A dedicated mobile app is coming soon.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-q">
+                            <span>Is my data secure?</span>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="faq-a">
+                            <p>
+                                100%. We use bank-grade encryption, regular backups, and
+                                comply with data protection standards. Your data is yours.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="cta-section" id="start">
+        <div class="cta-bg">
+            <div class="gradient-orb orb-4"></div>
+            <div class="gradient-orb orb-5"></div>
+        </div>
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to put your business on autopilot?</h2>
+                <p>
+                    Join 100+ businesses who've already made the switch. Book a free
+                    demo to see how Aleya can transform your workflow.
+                </p>
+
+                <div class="cta-actions">
+                    <a href="/onboarding/" class="cta-primary cta-large">
+                        Buy Now
+                        <span class="btn-arrow">→</span>
                     </a>
-                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" rel="noopener noreferrer" class="btn btn-dark btn-lg" data-track="demo">
-                        <i class="far fa-calendar-check"></i> Book a 1-on-1 Product Demo
+                    <a href="https://calendar.app.google/wKtLAUxZmsnph5PM6" target="_blank" class="cta-secondary">
+                        <span class="play-icon">📅</span>
+                        Book Demo
                     </a>
                 </div>
             </div>
         </div>
     </section>
-</main>
 
-<?php require __DIR__ . '/includes/footer.php'; ?>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.php" class="footer-logo">
+                        <img src="<?php echo USER_IMAGES ?>aleya_logo.png" alt="Aleya" class="logo" />
+                    </a>
+                    <p>
+                        The modern way to grow your business. From lead to conversion, all
+                        in one place.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/aleyaerp" target="_blank"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/aleyaerp" target="_blank"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/aleyaerp/" target="_blank"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="https://x.com/aleyaerp" target="_blank"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="#features">Features</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#workflow">How It Works</a>
+                    <a href="#testimonials">Reviews</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="/about-us/">About Us</a>
+                    <a href="/contact-us/">Contact</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="/privacy-policy/" target="_blank">Privacy Policy</a>
+                    <a href="/terms-and-conditions/" target="_blank">Terms of Use</a>
+                    <a href="/refund-policy/" target="_blank">Refund Policy</a>
+                </div>
+
+                <div class="footer-contact">
+                    <h4>Get in Touch</h4>
+                    <a href="tel:+919990026008"><i class="fas fa-phone"></i> +91-9990026008</a>
+                    <a href="mailto:support@aleya.in"><i class="fas fa-envelope"></i> support@aleya.in</a>
+                    <a href="https://maps.app.goo.gl/JoFYSsRLWAwjAg5q8"><i class="fas fa-map-marker-alt"></i> Kirti
+                        Nagar, New Delhi</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>
+                    © 2026 Aleya — A product of
+                    <a href="https://blumox.com/products/" title="Products by Blumox">Blumox Technologies</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/919990026008?text=Hi,%20I'm%20interested%20in%20Aleya" class="whatsapp-float"
+        target="_blank">
+        <i class="fab fa-whatsapp"></i>
+        <span>Chat with us</span>
+    </a>
+
+    <!-- Cookie Banner -->
+    <div class="cookie-banner" id="cookieBanner">
+        <p>
+            We use cookies to improve your experience.
+            <a href="/privacy-policy/">Learn more</a>
+        </p>
+        <button onclick="acceptCookies()">Got it</button>
+    </div>
+
+    <script src="<?php echo USER_JS ?>script.js"></script>
+</body>
+
+</html>

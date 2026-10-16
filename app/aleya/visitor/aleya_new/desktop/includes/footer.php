@@ -40,6 +40,7 @@ $pageScripts = $pageScripts ?? [];
                     <a href="/industries/transporters/">Transporters & Fleet</a>
                     <a href="/industries/dms/">DMS (Distribution)</a>
                     <a href="/industries/spa-management/">SPA Management</a>
+                    <a href="/industries/other-industries/">All Other Industries</a>
                 </div>
             </div>
 

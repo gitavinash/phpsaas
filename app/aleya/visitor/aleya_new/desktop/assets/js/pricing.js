@@ -24,7 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     billingNotes.forEach(function (el) {
-      el.textContent = isYearly ? 'Billed annually + 18% GST' : 'Billed monthly + 18% GST';
+      el.innerHTML = isYearly 
+        ? 'Billed annually + 18% GST • <span class="badge-waived">₹0 Setup Fee</span>' 
+        : 'Billed monthly + 18% GST • <span class="badge-setup-fee">+ ₹5,000 Setup Fee</span>';
     });
 
     // Update query params on Buy buttons
@@ -55,6 +57,30 @@ document.addEventListener('DOMContentLoaded', function () {
     pricingToggle.addEventListener('change', function () {
       updatePricing(pricingToggle.checked);
     });
+
+    const labelMonthly = document.getElementById('labelMonthly');
+    const labelYearly = document.getElementById('labelYearly');
+
+    if (labelMonthly) {
+      labelMonthly.addEventListener('click', function () {
+        if (pricingToggle.checked) {
+          pricingToggle.checked = false;
+          updatePricing(false);
+        }
+      });
+    }
+
+    if (labelYearly) {
+      labelYearly.addEventListener('click', function () {
+        if (!pricingToggle.checked) {
+          pricingToggle.checked = true;
+          updatePricing(true);
+        }
+      });
+    }
+
+    // Run initial sync on DOM load
+    updatePricing(pricingToggle.checked);
   }
 
   // Comparison toggle button

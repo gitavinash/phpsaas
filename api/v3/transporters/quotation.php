@@ -22,11 +22,18 @@ if (!isset($connection)) {
     }
 }
 
-if (!defined('LOGIN_CHECK')) {
-    define('LOGIN_CHECK', $docRoot . '/lib/modules/isLogin.php');
-}
-if (file_exists(LOGIN_CHECK)) {
-    require_once LOGIN_CHECK;
+if (!defined('TRANSPORTER_QUOTATION_HELPERS_ONLY') || !TRANSPORTER_QUOTATION_HELPERS_ONLY) {
+    $action = $_GET['action'] ?? ($_POST['action'] ?? '');
+    $hasPublicId = isset($_GET['id']) || isset($_GET['quotation_id']) || isset($_GET['encoded_id']);
+    $isPublicView = ($method === 'GET' && $hasPublicId && empty($action));
+    if (!$isPublicView) {
+        if (!defined('LOGIN_CHECK')) {
+            define('LOGIN_CHECK', $docRoot . '/lib/modules/isLogin.php');
+        }
+        if (file_exists(LOGIN_CHECK)) {
+            require_once LOGIN_CHECK;
+        }
+    }
 }
 
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
@@ -174,10 +181,17 @@ function getTransporterCompanyMeta($connection, $siteId, $tblPrefix) {
     return $meta;
 }
 
-function buildTransporterProposalHtml($quoteId, $details, $company) {
+function buildTransporterProposalHtml($quoteId, $details, $company, $selectedTemplate = '') {
     // Modular Template Hook: Render using V3 Quote Template if available
     $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : (defined('ROOT') ? ROOT : realpath(__DIR__ . '/../../../'));
-    $templateFile = $docRoot . '/app/dashboard/v3/default/desktop/templates/quote/mit/index.php';
+    $templateName = !empty($selectedTemplate) ? strtolower(trim($selectedTemplate)) : (!empty($details['template']) ? strtolower(trim($details['template'])) : 'mit');
+    $templateFile = $docRoot . '/app/dashboard/v3/default/desktop/templates/quote/' . $templateName . '/index.php';
+    if (!file_exists($templateFile)) {
+        $templateFile = dirname(__DIR__, 3) . '/dashboard/v3/default/desktop/templates/quote/' . $templateName . '/index.php';
+    }
+    if (!file_exists($templateFile)) {
+        $templateFile = $docRoot . '/app/dashboard/v3/default/desktop/templates/quote/mit/index.php';
+    }
     if (!file_exists($templateFile)) {
         $templateFile = dirname(__DIR__, 3) . '/dashboard/v3/default/desktop/templates/quote/mit/index.php';
     }
@@ -1149,6 +1163,10 @@ function buildTransporterProposalHtml($quoteId, $details, $company) {
 HTML;
 }
 
+if (defined('TRANSPORTER_QUOTATION_HELPERS_ONLY') && TRANSPORTER_QUOTATION_HELPERS_ONLY) {
+    return;
+}
+
 // -----------------------------------------------------------------------------
 // GET: Retrieve Transporter Quotation
 // -----------------------------------------------------------------------------
@@ -1199,8 +1217,8 @@ if ($method === 'GET') {
 
     $row = mysqli_fetch_assoc($res);
     $desc = json_decode($row['quotation_description'] ?? '{}', true) ?: [];
-    $companyMeta = getTransporterCompanyMeta($connection, $siteId, $tblPrefix);
-    $renderedHtml = buildTransporterProposalHtml((int)$row['quotation_id'], $desc, $companyMeta);
+    $requestedTemplate = trim((string)($_GET['template'] ?? ($desc['template'] ?? 'mit')));
+    $renderedHtml = buildTransporterProposalHtml((int)$row['quotation_id'], $desc, $companyMeta, $requestedTemplate);
 
     if (isset($_GET['format']) && ($_GET['format'] === 'html' || $_GET['format'] === 'pdf')) {
         header('Content-Type: text/html; charset=utf-8');
@@ -1314,12 +1332,32 @@ if ($method === 'POST') {
         $customerMobile = trim((string)($quotePayload['customer']['mobile'] ?? ''));
         $customerEmail  = trim((string)($quotePayload['customer']['email'] ?? ''));
         $vehicleTitle   = trim((string)($quotePayload['vehicle']['vehicle_title'] ?? 'Vehicle'));
+        $vehicleSeating = trim((string)($quotePayload['vehicle']['vehicle_seating'] ?? ''));
         $destination    = trim((string)($quotePayload['travel']['destination'] ?? ''));
         $pickupLocation = trim((string)($quotePayload['travel']['pickup_location'] ?? ''));
+        $dropLocation   = trim((string)($quotePayload['travel']['drop_location'] ?? ''));
         $travelDate     = trim((string)($quotePayload['travel']['travel_date'] ?? ''));
         $travelDuration = trim((string)($quotePayload['travel']['duration_days'] ?? '1'));
+        $passengers     = trim((string)($quotePayload['travel']['passengers'] ?? ($quotePayload['passengers'] ?? ($quotePayload['travel']['persons'] ?? ($quotePayload['travel']['pax'] ?? '')))));
         $totalCost      = (float)($quotePayload['billing']['total_cost'] ?? $qRow['quotation_price']);
         $currencySymbol = trim((string)($quotePayload['billing']['currency_symbol'] ?? '₹'));
+
+        if (empty($passengers) && $leadId > 0) {
+            $profRes = mysqli_query($connection, "SELECT number_of_adults, number_of_childrens FROM {$tblPrefix}enquiry_profile WHERE enquiry_profile_ref_id = {$leadId} LIMIT 1");
+            if ($profRes && mysqli_num_rows($profRes) > 0) {
+                $pRow = mysqli_fetch_assoc($profRes);
+                $paxArr = [];
+                if (!empty($pRow['number_of_adults'])) {
+                    $paxArr[] = (int)$pRow['number_of_adults'] . ' Adult' . ((int)$pRow['number_of_adults'] > 1 ? 's' : '');
+                }
+                if (!empty($pRow['number_of_childrens'])) {
+                    $paxArr[] = (int)$pRow['number_of_childrens'] . ' Child' . ((int)$pRow['number_of_childrens'] > 1 ? 'ren' : '');
+                }
+                if (!empty($paxArr)) {
+                    $passengers = implode(', ', $paxArr);
+                }
+            }
+        }
 
         $companyMeta = getTransporterCompanyMeta($connection, $siteId, $tblPrefix);
         $compName = $companyMeta['name'] ?? 'Aleya Fleet Logistics';
@@ -1331,6 +1369,9 @@ if ($method === 'POST') {
             || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
             || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
         $protocol = $isHttps ? 'https://' : 'http://';
+
+        // Ensure WhatsApp device helper is loaded early
+        require_once dirname(__DIR__) . '/whatsapp/device_helper.php';
 
         // Check if there is an actual physical PDF file on disk
         $localPdfRel = '';
@@ -1351,11 +1392,46 @@ if ($method === 'POST') {
             }
         }
 
+        $uploadDir = $docRoot . '/upload/quotations';
+        if (!is_dir($uploadDir)) {
+            @mkdir($uploadDir, 0777, true);
+        }
+        $quoteHash = substr(md5('isw_quote_' . $quoteId), 0, 8);
+        $fileName = 'quotation_' . $quoteId . '_' . $quoteHash . '.pdf';
+        $diskFile = $uploadDir . '/' . $fileName;
+
+        // If client provided a saved PDF file that exists on disk, check it
+        $needsGeneration = true;
+        if ($isPhysicalPdf && !empty($localPdfRel)) {
+            $checkPath = $docRoot . '/' . ltrim($localPdfRel, '/');
+            if (file_exists($checkPath) && filesize($checkPath) > 1000) {
+                $needsGeneration = false;
+            }
+        }
+
+        // Generate the PDF directly using the selected transporter quotation format
+        if ($needsGeneration && function_exists('generateHeadlessPdf')) {
+            $selectedFormat = $quotePayload['template'] ?? ($data['template'] ?? ($_POST['template'] ?? ($_GET['template'] ?? 'mit')));
+            $proposalHtml = buildTransporterProposalHtml($quoteId, $quotePayload, $companyMeta, $selectedFormat);
+            $cleanProposalHtml = preg_replace('/<div\s+class=["\']v3-pdf-actions-bar["\'].*?<\/div>/is', '', $proposalHtml);
+
+            $tmpHtmlFile = $uploadDir . '/tmp_quote_' . $quoteId . '_' . $quoteHash . '.html';
+            file_put_contents($tmpHtmlFile, $cleanProposalHtml);
+
+            generateHeadlessPdf('file://' . $tmpHtmlFile, $diskFile);
+            @unlink($tmpHtmlFile);
+
+            if (file_exists($diskFile) && filesize($diskFile) > 500) {
+                $isPhysicalPdf = true;
+                $localPdfRel = '/upload/quotations/' . $fileName;
+            }
+        }
+
         $fullPdfUrl = $pdfUrl;
-        if (empty($fullPdfUrl) && !empty($host)) {
-            $fullPdfUrl = $protocol . $host . "/download-itinerary/{$encodedId}/";
-        } elseif (!empty($localPdfRel) && !empty($host)) {
+        if (!empty($localPdfRel) && !empty($host)) {
             $fullPdfUrl = $protocol . $host . $localPdfRel;
+        } elseif (empty($fullPdfUrl) && !empty($host)) {
+            $fullPdfUrl = $protocol . $host . "/quote/{$encodedId}/?download=true";
         }
 
         $whatsappSent = false;
@@ -1436,23 +1512,41 @@ if ($method === 'POST') {
             if (!empty($cleanPhone)) {
                 require_once dirname(__DIR__) . '/whatsapp/device_helper.php';
 
-                // Format WhatsApp text with Powered by Aleya.in footer
+                // Format WhatsApp text with Powered by Aleya.in footer (pure caption without download links)
                 $waText = !empty($data['whatsapp_text']) ? trim($data['whatsapp_text']) : '';
                 if (empty($waText)) {
                     $waLines = [];
                     $waLines[] = "🚗 *{$compName}*";
                     $waLines[] = "📋 *TRIP ESTIMATE & FLEET QUOTATION* (#{$quoteDisplayId})";
                     $waLines[] = "━━━━━━━━━━━━━━━━━━━━━━";
-                    if (!empty($customerName)) $waLines[] = "👤 *Customer:* " . $customerName;
-                    if (!empty($destination)) $waLines[] = "📍 *Route:* " . (!empty($pickupLocation) ? $pickupLocation . " ➔ " : "") . $destination;
-                    if (!empty($travelDate)) $waLines[] = "📅 *Travel Date:* " . $travelDate . " ({$travelDuration} Days)";
-                    if (!empty($vehicleTitle)) $waLines[] = "🚘 *Fleet:* " . $vehicleTitle;
+                    if (!empty($customerName)) {
+                        $waLines[] = "👤 *Customer:* " . $customerName;
+                    }
+                    if (!empty($destination)) {
+                        $waLines[] = "📍 *Destination:* " . $destination;
+                        $routeStr = (!empty($pickupLocation) ? $pickupLocation . " ➔ " : "") . $destination . (!empty($dropLocation) && $dropLocation !== $destination ? " ➔ " . $dropLocation : "");
+                        if ($routeStr !== $destination) {
+                            $waLines[] = "🗺️ *Route:* " . $routeStr;
+                        }
+                    }
+                    if (!empty($travelDate)) {
+                        $formattedDate = date('d M, Y', strtotime($travelDate));
+                        $durationLabel = (!empty($travelDuration) ? " ({$travelDuration} " . ($travelDuration == '1' ? 'Day' : 'Days') . ")" : "");
+                        $waLines[] = "📅 *Travel Date:* " . $formattedDate . $durationLabel;
+                    }
+                    if (!empty($passengers)) {
+                        $waLines[] = "👥 *No. of Persons:* " . $passengers . (is_numeric($passengers) ? " Pax" : "");
+                    } elseif (!empty($vehicleSeating)) {
+                        $waLines[] = "👥 *Seating Capacity:* " . $vehicleSeating . " Seater";
+                    }
+                    if (!empty($vehicleTitle)) {
+                        $waLines[] = "🚘 *Fleet:* " . $vehicleTitle . (!empty($vehicleSeating) ? " (" . $vehicleSeating . " Seater AC)" : "");
+                    }
                     $waLines[] = "";
                     $waLines[] = "💵 *Total Cost:* {$currencySymbol} " . number_format($totalCost, 2);
-                    if (!empty($fullPdfUrl)) {
-                        $waLines[] = "";
-                        $waLines[] = "📄 *Download Quotation PDF:*";
-                        $waLines[] = $fullPdfUrl;
+                    $advanceAmount = (float)($quotePayload['billing']['advance_amount'] ?? 0);
+                    if ($advanceAmount > 0) {
+                        $waLines[] = "💳 *Advance to Book:* {$currencySymbol} " . number_format($advanceAmount, 2);
                     }
                     $waLines[] = "";
                     $waLines[] = "Thank you for choosing {$compName}! Please reply with 'CONFIRM' to reserve your vehicle.";
@@ -1460,6 +1554,12 @@ if ($method === 'POST') {
                     $waLines[] = "—";
                     $waLines[] = "_Powered by Aleya.in_";
                     $waText = implode("\n", $waLines);
+                } else {
+                    // Strictly strip any links / download text from whatsapp text
+                    $waText = preg_replace('/(?:📄|🌐)?\s*\*(?:Download|View)[^*]*\*\s*\n\S+/u', '', $waText);
+                    $waText = preg_replace('/https?:\/\/\S+/i', '', $waText);
+                    $waText = preg_replace('/www\.\S+/i', '', $waText);
+                    $waText = trim(preg_replace("/\n{3,}/", "\n\n", $waText));
                 }
 
                 $waMsgType = $isPhysicalPdf ? 'document' : 'text';
@@ -1571,6 +1671,24 @@ if ($method === 'POST') {
         $travelDate = date('Y-m-d');
     }
     $travelDuration = trim((string)($travel['duration_days'] ?? ($travel['travel_duration'] ?? '1')));
+    $passengers     = trim((string)($travel['passengers'] ?? ($travel['persons'] ?? ($travel['pax'] ?? ($travel['adults'] ?? '')))));
+
+    if (empty($passengers) && $leadId > 0) {
+        $profRes = mysqli_query($connection, "SELECT number_of_adults, number_of_childrens FROM {$tblPrefix}enquiry_profile WHERE enquiry_profile_ref_id = {$leadId} LIMIT 1");
+        if ($profRes && mysqli_num_rows($profRes) > 0) {
+            $pRow = mysqli_fetch_assoc($profRes);
+            $paxArr = [];
+            if (!empty($pRow['number_of_adults'])) {
+                $paxArr[] = (int)$pRow['number_of_adults'] . ' Adult' . ((int)$pRow['number_of_adults'] > 1 ? 's' : '');
+            }
+            if (!empty($pRow['number_of_childrens'])) {
+                $paxArr[] = (int)$pRow['number_of_childrens'] . ' Child' . ((int)$pRow['number_of_childrens'] > 1 ? 'ren' : '');
+            }
+            if (!empty($paxArr)) {
+                $passengers = implode(', ', $paxArr);
+            }
+        }
+    }
 
     $vehicleId      = (int)($vehicle['vehicle_id'] ?? ($vehicle['model_id'] ?? 0));
     $vehicleType    = trim((string)($vehicle['vehicle_type'] ?? ''));
@@ -1616,12 +1734,17 @@ if ($method === 'POST') {
     $driverAllowance = strtolower(trim((string)($terms['driver_allowance'] ?? 'yes'))) === 'no' ? 'no' : 'yes';
     $customRules     = is_array($terms['custom_rules'] ?? null) ? $terms['custom_rules'] : [];
 
+    $selectedTemplate = trim((string)($input['template'] ?? ($input['format'] ?? 'mit')));
+    if (empty($selectedTemplate)) $selectedTemplate = 'mit';
+
     // Construct Complete Proposal Payload
     $quotePayload = [
         'type'        => 'transporter_quotation',
+        'template'    => $selectedTemplate,
         'title'       => 'Fleet Quotation - ' . (!empty($vehicleTitle) ? $vehicleTitle : 'Vehicle'),
         'destination' => $destination,
         'duration'    => $travelDuration . ($travelDuration == '1' ? ' Day' : ' Days'),
+        'passengers'  => $passengers,
         'customer'    => [
             'name'    => $customerName,
             'mobile'  => $customerMobile,
@@ -1634,6 +1757,7 @@ if ($method === 'POST') {
             'drop_location'   => $dropLocation,
             'travel_date'     => $travelDate,
             'duration_days'   => $travelDuration,
+            'passengers'      => $passengers,
         ],
         'vehicle' => [
             'vehicle_id'      => $vehicleId,
@@ -1740,10 +1864,21 @@ if ($method === 'POST') {
         $waLines[] = "👤 *Customer:* " . $customerName;
     }
     if (!empty($destination)) {
-        $waLines[] = "📍 *Route:* " . (!empty($pickupLocation) ? $pickupLocation . " ➔ " : "") . $destination . (!empty($dropLocation) ? " ➔ " . $dropLocation : "");
+        $waLines[] = "📍 *Destination:* " . $destination;
+        $routeStr = (!empty($pickupLocation) ? $pickupLocation . " ➔ " : "") . $destination . (!empty($dropLocation) && $dropLocation !== $destination ? " ➔ " . $dropLocation : "");
+        if ($routeStr !== $destination) {
+            $waLines[] = "🗺️ *Route:* " . $routeStr;
+        }
     }
     if (!empty($travelDate)) {
-        $waLines[] = "📅 *Travel Date:* " . $travelDate . (!empty($travelDuration) ? " ({$travelDuration} Days)" : "");
+        $formattedDate = date('d M, Y', strtotime($travelDate));
+        $durationLabel = (!empty($travelDuration) ? " ({$travelDuration} " . ($travelDuration == '1' ? 'Day' : 'Days') . ")" : "");
+        $waLines[] = "📅 *Travel Date:* " . $formattedDate . $durationLabel;
+    }
+    if (!empty($passengers)) {
+        $waLines[] = "👥 *No. of Persons:* " . $passengers . (is_numeric($passengers) ? " Pax" : "");
+    } elseif (!empty($vehicleSeating)) {
+        $waLines[] = "👥 *Seating Capacity:* " . $vehicleSeating . " Seater";
     }
     if (!empty($vehicleTitle)) {
         $waLines[] = "🚘 *Fleet:* " . $vehicleTitle . (!empty($vehicleSeating) ? " (" . $vehicleSeating . " Seater AC)" : "");
@@ -1791,7 +1926,7 @@ if ($method === 'POST') {
     $whatsappText = implode("\n", $waLines);
 
     $companyMeta = getTransporterCompanyMeta($connection, $siteId, $tblPrefix);
-    $renderedHtml = buildTransporterProposalHtml($quotationId, $quotePayload, $companyMeta);
+    $renderedHtml = buildTransporterProposalHtml($quotationId, $quotePayload, $companyMeta, $selectedTemplate);
 
     echo json_encode([
         'status'          => 'success',

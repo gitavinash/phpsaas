@@ -213,8 +213,31 @@ if (!empty($upiId)) {
 }
 
 // WhatsApp Share URL
+$passengersVal = htmlspecialchars($tripData['passengers'] ?? ($quotePayload['passengers'] ?? ($tripData['persons'] ?? ($tripData['pax'] ?? ''))));
 $cleanWhatsappDigits = preg_replace('/[^\d]/', '', (string)$custMobile);
-$waShareText = "Hello {$custName}, please review your quotation {$quoteDisplayId} for {$vehTitle} ({$pickup} to {$dest}): Total {$sym} {$totalCost}. Advance: {$sym} {$advAmount}. Valid until {$validDate}.\n\n—\n_Powered by Aleya.in_";
+$waDateFmt = !empty($tDate) ? date('d M, Y', strtotime($tDate)) : $tDate;
+$waRouteStr = (!empty($pickup) ? $pickup . ' ➔ ' : '') . $dest . (!empty($drop) && $drop !== $dest ? ' ➔ ' . $drop : '');
+$paxDisplay = !empty($passengersVal) ? $passengersVal . (is_numeric($passengersVal) ? ' Pax' : '') : (!empty($vehSeating) ? $vehSeating . ' Seater' : '');
+
+$waLines = [];
+$waLines[] = "🚗 *{$compName}*";
+$waLines[] = "📋 *TRIP ESTIMATE & FLEET QUOTATION* (#{$quoteDisplayId})";
+$waLines[] = "━━━━━━━━━━━━━━━━━━━━━━";
+if (!empty($custName)) $waLines[] = "👤 *Customer:* {$custName}";
+if (!empty($dest)) $waLines[] = "📍 *Destination:* {$dest}";
+if (!empty($waRouteStr) && $waRouteStr !== $dest) $waLines[] = "🗺️ *Route:* {$waRouteStr}";
+if (!empty($waDateFmt)) $waLines[] = "📅 *Travel Date:* {$waDateFmt} ({$duration} " . ($duration == 1 ? "Day" : "Days") . ")";
+if (!empty($paxDisplay)) $waLines[] = "👥 *No. of Persons:* {$paxDisplay}";
+if (!empty($vehTitle)) $waLines[] = "🚘 *Fleet:* {$vehTitle}" . (!empty($vehSeating) ? " ({$vehSeating} Seater AC)" : "");
+$waLines[] = "";
+$waLines[] = "💵 *Total Cost:* {$sym} {$totalCost}";
+$waLines[] = "💳 *Advance to Book:* {$sym} {$advAmount}";
+$waLines[] = "";
+$waLines[] = "Thank you for choosing {$compName}! Please reply with 'CONFIRM' to reserve your vehicle.";
+$waLines[] = "";
+$waLines[] = "—";
+$waLines[] = "_Powered by Aleya.in_";
+$waShareText = implode("\n", $waLines);
 $waShareUrl = !empty($cleanWhatsappDigits) ? "https://wa.me/{$cleanWhatsappDigits}?text=" . rawurlencode($waShareText) : "https://wa.me/?text=" . rawurlencode($waShareText);
 ?>
 <!DOCTYPE html>
@@ -341,6 +364,17 @@ $waShareUrl = !empty($cleanWhatsappDigits) ? "https://wa.me/{$cleanWhatsappDigit
                             <span class="lbl">Travel Date:</span>
                             <span class="val"><?php echo $tDate; ?> (<?php echo $duration; ?> Day(s))</span>
                         </div>
+                        <?php if (!empty($passengersVal)): ?>
+                        <div class="indian-data-row">
+                            <span class="lbl">No. of Persons:</span>
+                            <span class="val"><?php echo $passengersVal; ?><?php echo is_numeric($passengersVal) ? ' Pax' : ''; ?></span>
+                        </div>
+                        <?php elseif (!empty($vehSeating)): ?>
+                        <div class="indian-data-row">
+                            <span class="lbl">Seating Capacity:</span>
+                            <span class="val"><?php echo $vehSeating; ?> Seater</span>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

@@ -30,6 +30,8 @@ if ($slug === 'spa' || $slug === 'spa-wellness') {
     $slug = 'travel-agents';
 } elseif ($slug === 'transport' || $slug === 'fleet') {
     $slug = 'transporters';
+} elseif ($slug === 'other' || $slug === 'other-industries' || $slug === 'services' || $slug === 'general' || $slug === 'all-industries') {
+    $slug = 'other-industries';
 }
 
 if (!isset($industries[$slug])) {

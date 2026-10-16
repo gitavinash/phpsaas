@@ -8,13 +8,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const PRICING = {
     crm: {
-      name: 'CRM Starter',
+      name: 'CRM Commercial Suite',
+      desc: 'Lead pipeline, WhatsApp automation, quotation builder & payment ledger',
       yearlyMonthlyRate: 1499,
-      monthlyRate: 1874,
+      monthlyRate: 1799,
       extraUserRate: 149
     },
     erp: {
-      name: 'ERP Complete',
+      name: 'ERP Complete Suite',
+      desc: 'Full operations, itineraries, vouchers, fleet management & billing',
       yearlyMonthlyRate: 3999,
       monthlyRate: 4999,
       extraUserRate: 349
@@ -73,23 +75,79 @@ document.addEventListener('DOMContentLoaded', function () {
     const extraUsers = Math.max(0, userCount - 10);
     const extraUsersSubtotal = extraUsers * planInfo.extraUserRate * months;
 
-    const netTaxableAmount = baseSubtotal + extraUsersSubtotal;
+    const setupFee = isYearly ? 0 : 5000;
+
+    const netTaxableAmount = baseSubtotal + extraUsersSubtotal + setupFee;
     const gstAmount = Math.round(netTaxableAmount * 0.18);
     const grandTotal = netTaxableAmount + gstAmount;
 
+    const summaryPlanRate = document.getElementById('summaryPlanRate');
+    const summaryPlanDesc = document.getElementById('summaryPlanDesc');
+    const summaryCycleBadge = document.getElementById('summaryCycleBadge');
+    const summaryBaseSubtext = document.getElementById('summaryBaseSubtext');
+    const summaryExtraUsersSubtext = document.getElementById('summaryExtraUsersSubtext');
+    const summarySavingsBanner = document.getElementById('summarySavingsBanner');
+    const summarySavingsText = document.getElementById('summarySavingsText');
+
     if (summaryPlanName) summaryPlanName.textContent = planInfo.name;
+    if (summaryPlanRate) summaryPlanRate.textContent = Math.round(baseMonthlyRate).toLocaleString('en-IN');
+    if (summaryPlanDesc) summaryPlanDesc.textContent = planInfo.desc || '';
     if (summaryCycle) summaryCycle.textContent = isYearly ? 'Annual (12 Months)' : 'Monthly';
+
+    if (summaryCycleBadge) {
+      if (isYearly) {
+        summaryCycleBadge.className = 'summary-plan-badge';
+        summaryCycleBadge.textContent = 'Annual • Save 20%';
+      } else {
+        summaryCycleBadge.className = 'summary-plan-badge badge-monthly';
+        summaryCycleBadge.textContent = 'Monthly Plan';
+      }
+    }
+
     if (summaryBasePrice) summaryBasePrice.textContent = formatCurrency(baseSubtotal);
+    if (summaryBaseSubtext) {
+      summaryBaseSubtext.textContent = isYearly 
+        ? `${formatCurrency(baseMonthlyRate)}/mo × 12 months` 
+        : `${formatCurrency(baseMonthlyRate)}/mo (1 month)`;
+    }
+
     if (summaryExtraUsers) {
-      summaryExtraUsers.textContent = extraUsers > 0 ? formatCurrency(extraUsersSubtotal) + ` (${extraUsers} extra)` : 'Included (10 Users)';
+      summaryExtraUsers.innerHTML = extraUsers > 0 
+        ? `${formatCurrency(extraUsersSubtotal)} <span class="badge-setup-fee">+${extraUsers} seat${extraUsers > 1 ? 's' : ''}</span>` 
+        : '<span class="badge-waived">10 Included</span>';
+    }
+    if (summaryExtraUsersSubtext) {
+      summaryExtraUsersSubtext.textContent = extraUsers > 0
+        ? `10 included + ${extraUsers} extra seat(s) at ${formatCurrency(planInfo.extraUserRate)}/mo`
+        : '10 users included out of the box';
+    }
+
+    const summarySetupFee = document.getElementById('summarySetupFee');
+    if (summarySetupFee) {
+      summarySetupFee.innerHTML = isYearly 
+        ? '<span class="badge-waived">₹0 (Waived on Annual)</span>' 
+        : formatCurrency(setupFee);
     }
     if (summaryGst) summaryGst.textContent = formatCurrency(gstAmount);
     if (summaryTotal) summaryTotal.textContent = formatCurrency(grandTotal);
+
+    // Calculate annual savings
+    const annualSavingsValue = (planInfo.monthlyRate - planInfo.yearlyMonthlyRate) * 12;
+    if (summarySavingsBanner && summarySavingsText) {
+      if (isYearly) {
+        summarySavingsBanner.className = 'summary-savings-banner is-annual';
+        summarySavingsText.innerHTML = `<strong>Annual Discount Active:</strong> Saving ${formatCurrency(annualSavingsValue)}/yr on subscription + <strong>₹0 Setup Fee</strong> (Save ₹5,000)!`;
+      } else {
+        summarySavingsBanner.className = 'summary-savings-banner is-monthly';
+        summarySavingsText.innerHTML = `<strong>Pro Tip:</strong> Switch to Annual to waive the <strong>₹5,000 setup fee</strong> & save ${formatCurrency(annualSavingsValue)}/yr!`;
+      }
+    }
 
     return {
       plan: selectedPlanKey,
       cycle: selectedCycle,
       users: userCount,
+      setupFee: setupFee,
       taxable: netTaxableAmount,
       gst: gstAmount,
       total: grandTotal
@@ -99,6 +157,35 @@ document.addEventListener('DOMContentLoaded', function () {
   if (planSelector) planSelector.addEventListener('change', calculateTotals);
   cycleRadios.forEach(function (radio) { radio.addEventListener('change', calculateTotals); });
   if (userCountInput) userCountInput.addEventListener('input', calculateTotals);
+
+  // Allow clicking on savings banner when monthly to quickly switch to annual
+  const summarySavingsBanner = document.getElementById('summarySavingsBanner');
+  if (summarySavingsBanner) {
+    summarySavingsBanner.addEventListener('click', function () {
+      let isMonthlyActive = false;
+      cycleRadios.forEach(function (radio) {
+        if (radio.checked && radio.value === 'monthly') isMonthlyActive = true;
+      });
+      if (isMonthlyActive) {
+        cycleRadios.forEach(function (radio) {
+          if (radio.value === 'yearly') radio.checked = true;
+        });
+        calculateTotals();
+      }
+    });
+  }
+
+  // Summary Submit Button (Sticky Card CTA)
+  const summarySubmitBtn = document.getElementById('summarySubmitBtn');
+  if (summarySubmitBtn && form) {
+    summarySubmitBtn.addEventListener('click', function () {
+      if (typeof form.requestSubmit === 'function') {
+        form.requestSubmit();
+      } else {
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }
+    });
+  }
 
   // Subdomain Live Checker
   let domainCheckTimer = null;
@@ -152,6 +239,10 @@ document.addEventListener('DOMContentLoaded', function () {
       if (checkoutSubmitBtn) {
         checkoutSubmitBtn.disabled = true;
         checkoutSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Initializing order...';
+      }
+      if (summarySubmitBtn) {
+        summarySubmitBtn.disabled = true;
+        summarySubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Initializing order...';
       }
 
       // Track begin checkout event
