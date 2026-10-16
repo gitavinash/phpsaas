@@ -4802,6 +4802,34 @@ $(document).ready(function (e) {
       }
     }
 
+    // 6c. WhatsApp Chat Automation Plugin Module
+    const $waAuto = $("#whatsappAutomationApp");
+    if ($waAuto.length > 0) {
+      if (window.ISW_WhatsAppAutomation && typeof window.ISW_WhatsAppAutomation.init === "function") {
+        window.ISW_WhatsAppAutomation.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "whatsapp_automation.js?v=" + Date.now(), function () {
+          if (window.ISW_WhatsAppAutomation && typeof window.ISW_WhatsAppAutomation.init === "function") {
+            window.ISW_WhatsAppAutomation.init();
+          }
+        });
+      }
+    }
+
+    // 6d. Lead Flow & Distribution Automation Plugin Module
+    const $leadAuto = $("#leadAutomationApp");
+    if ($leadAuto.length > 0) {
+      if (window.ISW_LeadAutomation && typeof window.ISW_LeadAutomation.init === "function") {
+        window.ISW_LeadAutomation.init();
+      } else {
+        ensureScriptLoaded(ADMIN_JS + "lead_automation.js?v=" + Date.now(), function () {
+          if (window.ISW_LeadAutomation && typeof window.ISW_LeadAutomation.init === "function") {
+            window.ISW_LeadAutomation.init();
+          }
+        });
+      }
+    }
+
     // 7. Digital Marketing Dashboard Module
     const $mktDashboard = $("#digitalMarketingDashboardApp");
     if ($mktDashboard.length > 0) {
@@ -5081,8 +5109,82 @@ $(document).ready(function (e) {
       currentActiveSideMenu = null;
     }
 
-    window.addEventListener("scroll", closeAllSideMenus, { passive: true });
-    document.addEventListener("scroll", closeAllSideMenus, {
+    function positionSideMenu(hoveredLi, sideMenu) {
+      if (!hoveredLi || !sideMenu) return;
+      const rect = hoveredLi.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+      // If parent item has scrolled completely out of visible viewport, hide
+      if (rect.bottom < 0 || rect.top > viewportHeight) {
+        sideMenu.style.display = "none";
+        if (currentActiveSideMenu === sideMenu) currentActiveSideMenu = null;
+        return;
+      }
+
+      sideMenu.style.position = "fixed";
+      sideMenu.style.display = "block";
+      sideMenu.style.zIndex = "99999";
+      sideMenu.style.left = rect.right - 2 + "px";
+
+      sideMenu.style.maxHeight = Math.max(160, viewportHeight - 20) + "px";
+
+      const menuHeight = sideMenu.offsetHeight;
+      let top = rect.top;
+
+      // If menu extends past visible area below, flip upside to align with bottom of item
+      if (top + menuHeight > viewportHeight - 10) {
+        top = rect.bottom - menuHeight;
+        if (top < 10) {
+          top = 10;
+        }
+      }
+
+      sideMenu.style.top = top + "px";
+      currentActiveSideMenu = sideMenu;
+    }
+
+    function handleSideMenuScroll(e) {
+      // 1. If scrolling inside the flyout sub-menu itself (e.g. plugin list or submenu items), NEVER close it!
+      if (e && e.target) {
+        if (typeof e.target.closest === "function" && e.target.closest(".side-menu")) {
+          return;
+        }
+        if (e.target.classList && e.target.classList.contains("side-menu")) {
+          return;
+        }
+      }
+
+      // 2. If user is currently hovering the active menu, keep it open
+      if (currentActiveSideMenu) {
+        try {
+          if (currentActiveSideMenu.matches(":hover")) {
+            return;
+          }
+        } catch (err) {}
+
+        const parentLi = currentActiveSideMenu.closest("nav.side-nav ul li");
+        if (parentLi) {
+          try {
+            if (parentLi.matches(":hover")) {
+              positionSideMenu(parentLi, currentActiveSideMenu);
+              return;
+            }
+          } catch (err) {}
+
+          // If scrolling within nav.side-nav, smoothly reposition the active menu with its item
+          if (e && e.target && (e.target === parentLi || (typeof e.target.closest === "function" && e.target.closest("nav.side-nav")))) {
+            positionSideMenu(parentLi, currentActiveSideMenu);
+            return;
+          }
+        }
+      }
+
+      // 3. Otherwise, if user scrolls the main content window while not interacting with the sidebar, close submenus
+      closeAllSideMenus();
+    }
+
+    window.addEventListener("scroll", handleSideMenuScroll, { passive: true });
+    document.addEventListener("scroll", handleSideMenuScroll, {
       passive: true,
       capture: true,
     });
@@ -5101,29 +5203,7 @@ $(document).ready(function (e) {
           if (currentActiveSideMenu && currentActiveSideMenu !== sideMenu) {
             currentActiveSideMenu.style.display = "none";
           }
-          const rect = hoveredLi.getBoundingClientRect();
-          sideMenu.style.position = "fixed";
-          sideMenu.style.display = "block";
-          sideMenu.style.zIndex = "99999";
-          sideMenu.style.left = rect.right - 2 + "px";
-
-          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-          sideMenu.style.maxHeight = Math.max(160, viewportHeight - 20) + "px";
-          sideMenu.style.overflowY = "auto";
-
-          const menuHeight = sideMenu.offsetHeight;
-          let top = rect.top;
-
-          // If menu extends past visible area below, flip upside to align with bottom of item
-          if (top + menuHeight > viewportHeight - 10) {
-            top = rect.bottom - menuHeight;
-            if (top < 10) {
-              top = 10;
-            }
-          }
-
-          sideMenu.style.top = top + "px";
-          currentActiveSideMenu = sideMenu;
+          positionSideMenu(hoveredLi, sideMenu);
         } else {
           // Hovering an item without a sub-menu (e.g. Dashboard, Domestic packages)
           closeAllSideMenus();
@@ -5153,6 +5233,138 @@ $(document).ready(function (e) {
           .forEach(function (el) {
             el.classList.remove("menu-open");
           });
+      }
+    });
+
+    // ==========================================================================
+    // ASIDE PLUGINS APP DRAWER (Tabs & Instant Search Filter)
+    // ==========================================================================
+    document.addEventListener("click", function (e) {
+      const tabBtn = e.target.closest(".aside-plugin-tab-btn");
+      if (tabBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const targetTab = tabBtn.getAttribute("data-tab");
+        document.querySelectorAll(".aside-plugin-tab-btn").forEach(function (btn) {
+          btn.classList.remove("is-active");
+        });
+        tabBtn.classList.add("is-active");
+
+        const activePanel = document.getElementById("asidePluginsActivePanel");
+        const availPanel = document.getElementById("asidePluginsAvailablePanel");
+        if (targetTab === "active") {
+          if (activePanel) {
+            activePanel.classList.add("is-active");
+            activePanel.classList.remove("is-hidden");
+          }
+          if (availPanel) {
+            availPanel.classList.remove("is-active");
+            availPanel.classList.add("is-hidden");
+          }
+        } else {
+          if (availPanel) {
+            availPanel.classList.add("is-active");
+            availPanel.classList.remove("is-hidden");
+          }
+          if (activePanel) {
+            activePanel.classList.remove("is-active");
+            activePanel.classList.add("is-hidden");
+          }
+        }
+
+        const searchInput = document.getElementById("asidePluginSearchInput");
+        if (searchInput && searchInput.value.trim().length > 0) {
+          searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+        return;
+      }
+
+      const clearBtn = e.target.closest("#asidePluginSearchClear");
+      if (clearBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const searchInput = document.getElementById("asidePluginSearchInput");
+        if (searchInput) {
+          searchInput.value = "";
+          searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+          searchInput.focus();
+        }
+        return;
+      }
+
+      if (e.target.closest(".aside-plugin-search-box")) {
+        e.stopPropagation();
+      }
+    });
+
+    document.addEventListener("input", function (e) {
+      if (e.target && e.target.id === "asidePluginSearchInput") {
+        const query = e.target.value.trim().toLowerCase();
+        const clearBtn = document.getElementById("asidePluginSearchClear");
+        if (clearBtn) {
+          if (query.length > 0) {
+            clearBtn.classList.remove("is-hidden");
+          } else {
+            clearBtn.classList.add("is-hidden");
+          }
+        }
+
+        // Filter active panel items
+        const activePanel = document.getElementById("asidePluginsActivePanel");
+        let visibleActive = 0;
+        if (activePanel) {
+          activePanel.querySelectorAll(".aside-plugin-item").forEach(function (item) {
+            if (!item.classList.contains("plugin-item-disabled") && !item.classList.contains("is-hidden")) {
+              const name = (item.getAttribute("data-plugin-name") || item.textContent).toLowerCase();
+              if (!query || name.includes(query)) {
+                item.classList.remove("is-filtered-out");
+                visibleActive++;
+              } else {
+                item.classList.add("is-filtered-out");
+              }
+            }
+          });
+          const emptyActive = document.getElementById("asideActiveEmptyState");
+          if (emptyActive) {
+            if (visibleActive === 0) {
+              emptyActive.classList.remove("is-hidden");
+            } else {
+              emptyActive.classList.add("is-hidden");
+            }
+          }
+        }
+
+        // Filter available panel items
+        const availPanel = document.getElementById("asidePluginsAvailablePanel");
+        let visibleAvail = 0;
+        if (availPanel) {
+          availPanel.querySelectorAll(".aside-plugin-item").forEach(function (item) {
+            if (!item.classList.contains("is-hidden")) {
+              const name = (item.getAttribute("data-plugin-name") || item.textContent).toLowerCase();
+              if (!query || name.includes(query)) {
+                item.classList.remove("is-filtered-out");
+                visibleAvail++;
+              } else {
+                item.classList.add("is-filtered-out");
+              }
+            }
+          });
+          const emptyAvail = document.getElementById("asideAvailableEmptyState");
+          if (emptyAvail) {
+            if (visibleAvail === 0) {
+              emptyAvail.classList.remove("is-hidden");
+            } else {
+              emptyAvail.classList.add("is-hidden");
+            }
+          }
+        }
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && e.target && e.target.id === "asidePluginSearchInput") {
+        e.target.value = "";
+        e.target.dispatchEvent(new Event("input", { bubbles: true }));
       }
     });
   });

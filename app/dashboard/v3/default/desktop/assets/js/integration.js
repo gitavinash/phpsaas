@@ -89,12 +89,25 @@
       const $asideItems = $('[data-aside-plugin="' + slug + '"]');
       const $asideAvailable = $('[data-aside-plugin="' + slug + '_available"]');
       if (isActive) {
-        $asideItems.show().removeClass("plugin-item-disabled").addClass("plugin-item-active");
+        $asideItems.removeClass("plugin-item-disabled is-hidden").addClass("plugin-item-active").show();
         $asideItems.find(".aside-plugin-status-pill").removeClass("is-idle").addClass("is-active").text("Active");
-        $asideAvailable.hide();
+        $asideAvailable.addClass("is-hidden").hide();
       } else {
-        $asideItems.hide().removeClass("plugin-item-active").addClass("plugin-item-disabled");
-        $asideAvailable.show();
+        $asideItems.removeClass("plugin-item-active").addClass("plugin-item-disabled is-hidden").hide();
+        $asideAvailable.removeClass("is-hidden").show();
+      }
+
+      // Live update counts
+      const activeCount = $("#asidePluginsActivePanel .aside-plugin-item.plugin-item-active:not(.is-hidden)").length;
+      const availCount = $("#asidePluginsAvailablePanel .aside-plugin-item:not(.is-hidden)").length;
+      if ($("#asideActivePluginBadge").length) {
+        $("#asideActivePluginBadge").text(activeCount + " Active");
+      }
+      if ($("#asideTabActiveCount").length) {
+        $("#asideTabActiveCount").text(activeCount);
+      }
+      if ($("#asideTabAvailableCount").length) {
+        $("#asideTabAvailableCount").text(availCount);
       }
     },
 

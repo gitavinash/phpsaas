@@ -1,0 +1,1313 @@
+/**
+ * V3 WhatsApp Chat Automation Plugin Stylesheet
+ * Path: /app/dashboard/v3/default/desktop/assets/css/whatsapp_automation.css
+ * Theme: V3 Nova High-Density Executive Design System
+ */
+
+/* ==========================================================================
+   1. Brand Icon & Header Bar
+   ========================================================================== */
+#whatsappAutomationApp .package-header-icon.brand-whatsapp-bot {
+    background: #ecfdf5 !important;
+    color: #059669 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+    font-size: 22px !important;
+    flex-shrink: 0 !important;
+}
+
+#whatsappAutomationApp .package-header-icon.brand-whatsapp-bot i {
+    color: #059669 !important;
+    font-size: 22px !important;
+}
+
+/* Master Plugin Switch in Header */
+.wa-plugin-toggle-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    height: 36px;
+    box-sizing: border-box;
+}
+
+.wa-plugin-toggle-box .v3-toggle-switch {
+    margin: 0;
+}
+
+/* Primary Action Buttons (V3 Ocean Blue Gradient with Soft Glow) */
+#whatsappAutomationApp .btn-v3-primary,
+#waWorkflowModal .btn-v3-primary,
+#waWorkflowsEmpty .btn-v3-primary,
+#btnCreateWaWorkflow,
+#btnSaveWaWorkflow,
+#btnEmptyCreateWf,
+.btn-use-wa-template {
+    background: #0284c7 !important;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35) !important;
+    transition: all 0.18s ease !important;
+}
+
+#whatsappAutomationApp .btn-v3-primary:hover,
+#waWorkflowModal .btn-v3-primary:hover,
+#waWorkflowsEmpty .btn-v3-primary:hover,
+#btnCreateWaWorkflow:hover,
+#btnSaveWaWorkflow:hover,
+#btnEmptyCreateWf:hover,
+.btn-use-wa-template:hover {
+    background: #0369a1 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.45) !important;
+}
+
+#whatsappAutomationApp .btn-v3-primary *,
+#waWorkflowModal .btn-v3-primary *,
+#waWorkflowsEmpty .btn-v3-primary *,
+#btnCreateWaWorkflow *,
+#btnSaveWaWorkflow *,
+#btnEmptyCreateWf *,
+.btn-use-wa-template * {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+/* Outline / Secondary Action Buttons */
+#whatsappAutomationApp .btn-v3-action:not(.btn-v3-primary),
+#waWorkflowModal .btn-v3-action:not(.btn-v3-primary) {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #334155 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+}
+
+#whatsappAutomationApp .btn-v3-action:not(.btn-v3-primary):hover,
+#waWorkflowModal .btn-v3-action:not(.btn-v3-primary):hover {
+    background: #f8fafc !important;
+    border-color: #94a3b8 !important;
+    color: #0f172a !important;
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   2. KPI Statistics Grid & Cards
+   ========================================================================== */
+#whatsappAutomationApp .wf-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+    #whatsappAutomationApp .wf-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    #whatsappAutomationApp .wf-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+#whatsappAutomationApp .wf-kpi-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+#whatsappAutomationApp .wf-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px -2px rgba(15, 23, 42, 0.06);
+    border-color: #cbd5e1;
+}
+
+#whatsappAutomationApp .wf-kpi-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+#whatsappAutomationApp .wf-kpi-icon.emerald { background: #ecfdf5; color: #059669; }
+#whatsappAutomationApp .wf-kpi-icon.indigo  { background: #eef2ff; color: #4f46e5; }
+#whatsappAutomationApp .wf-kpi-icon.amber   { background: #fffbeb; color: #d97706; }
+#whatsappAutomationApp .wf-kpi-icon.purple  { background: #faf5ff; color: #7e22ce; }
+
+#whatsappAutomationApp .wf-kpi-info {
+    display: flex;
+    flex-direction: column;
+}
+
+#whatsappAutomationApp .wf-kpi-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+#whatsappAutomationApp .wf-kpi-label {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+/* ==========================================================================
+   3. Category Navigation Pill Tabs (V3 Theme)
+   ========================================================================== */
+#whatsappAutomationApp .integration-toolbar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+#whatsappAutomationApp .integration-category-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#whatsappAutomationApp .integration-toolbar-right {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#whatsappAutomationApp .wa-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+#whatsappAutomationApp .wa-tab-btn:hover {
+    background: #f8fafc;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+#whatsappAutomationApp .wa-tab-btn.active {
+    background: #10b981 !important;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.45) !important;
+    transform: translateY(-1px);
+}
+
+#whatsappAutomationApp .wa-tab-btn.active * {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+/* ==========================================================================
+   4. Tab Content Card
+   ========================================================================== */
+.wa-tab-content-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.wa-section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.wa-section-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Tab Pane Initial State */
+.wa-tab-pane {
+    display: none;
+}
+
+.wa-tab-pane.active {
+    display: block;
+}
+
+#waTab_workflows {
+    display: block;
+}
+
+/* Loading & Empty States */
+#waWorkflowsLoading {
+    font-size: 13.5px;
+    color: #64748b;
+    padding: 32px 0;
+}
+
+#waWorkflowsEmpty {
+    display: none;
+    padding: 48px 20px;
+    text-align: center;
+}
+
+.wa-empty-icon {
+    font-size: 44px;
+    color: #94a3b8;
+    margin-bottom: 12px;
+}
+
+.wa-empty-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.wa-empty-desc {
+    font-size: 13px;
+    color: #64748b;
+    max-width: 460px;
+    margin: 0 auto 20px auto;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   5. Workflows Table & Badges
+   ========================================================================== */
+.wa-workflows-table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.wa-workflows-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.wa-workflows-table thead tr th {
+    background: #f8fafc;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.wa-workflows-table thead tr th:first-child {
+    border-top-left-radius: 11px;
+}
+
+.wa-workflows-table thead tr th:last-child {
+    border-top-right-radius: 11px;
+}
+
+.wa-workflows-table tbody tr td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #1e293b;
+    font-size: 13px;
+    vertical-align: middle;
+    transition: background 0.12s ease;
+}
+
+.wa-workflows-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.wa-workflows-table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 11px;
+}
+
+.wa-workflows-table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 11px;
+}
+
+.wa-workflows-table tr:hover td {
+    background: #f8fafc;
+}
+
+/* Status & Keyword Pills */
+.wa-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.wa-pill.active    { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.wa-pill.inactive  { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+.wa-pill.keyword   { background: #eef2ff; color: #3730a3; border: 1px solid #e0e7ff; }
+.wa-pill.fallback  { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+
+.wa-keyword-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 280px;
+}
+
+.wa-keyword-tag {
+    background: #f8fafc;
+    color: #334155;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 500;
+    border: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+/* Action Buttons in Table */
+.wa-action-btn-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.wa-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #475569;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    outline: none !important;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.wa-action-btn:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #0284c7;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.wa-action-btn.is-danger:hover {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+.wa-workflow-name-cell {
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 2px;
+    font-size: 13.5px;
+}
+
+.wa-workflow-desc-cell {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.wa-reply-preview-cell {
+    font-size: 12.5px;
+    color: #334155;
+    font-style: italic;
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wa-bold-count {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.wa-text-xs-muted {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* ==========================================================================
+   6. 1-Click Bot Templates Grid
+   ========================================================================== */
+.wa-templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 18px;
+}
+
+.wa-template-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.wa-template-card:hover {
+    transform: translateY(-2px);
+    border-color: #cbd5e1;
+    box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.08);
+}
+
+.wa-template-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.wa-template-badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: #ecfdf5;
+    color: #059669;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.wa-template-setup-lbl {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.wa-template-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+    line-height: 1.3;
+}
+
+.wa-template-desc {
+    font-size: 12.5px;
+    color: #64748b;
+    margin: 0 0 12px 0;
+    line-height: 1.45;
+}
+
+.wa-template-trigger-box {
+    font-size: 11.5px;
+    color: #334155;
+    background: #f8fafc;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    line-height: 1.4;
+}
+
+.btn-use-wa-template {
+    width: 100%;
+    justify-content: center;
+}
+
+/* ==========================================================================
+   7. Real-Time Interactive Chat Simulator
+   ========================================================================== */
+.wa-sim-prompt-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.wa-sim-chip {
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.wa-sim-chip:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+.wa-simulator-box {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 24px;
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+    .wa-simulator-box {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Authentic Smartphone Frame */
+.wa-phone-mockup {
+    background: #0f172a;
+    border-radius: 36px;
+    padding: 12px;
+    box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.25);
+    border: 4px solid #334155;
+    display: flex;
+    flex-direction: column;
+    height: 590px;
+    box-sizing: border-box;
+}
+
+.wa-phone-header {
+    background: #075e54;
+    color: #ffffff;
+    padding: 12px 16px;
+    border-radius: 24px 24px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wa-phone-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #25d366;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.wa-sim-header-name {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: #ffffff;
+}
+
+.wa-sim-header-status {
+    font-size: 11px;
+    opacity: 0.85;
+    color: #d1fae5;
+}
+
+.wa-phone-chat-body {
+    flex: 1;
+    background: #efeae2;
+    background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+    background-size: 16px 16px;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+/* Chat Speech Bubbles */
+.wa-chat-bubble {
+    max-width: 82%;
+    padding: 9px 13px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.45;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    word-break: break-word;
+    white-space: pre-wrap;
+    position: relative;
+}
+
+.wa-chat-bubble.incoming {
+    background: #ffffff;
+    color: #111827;
+    align-self: flex-start;
+    border-top-left-radius: 2px;
+}
+
+.wa-chat-bubble.bot-reply {
+    background: #dcf8c6;
+    color: #111827;
+    align-self: flex-end;
+    border-top-right-radius: 2px;
+}
+
+.wa-typing-indicator {
+    font-style: italic;
+    color: #64748b;
+}
+
+.wa-no-match-bubble {
+    color: #64748b;
+    font-style: italic;
+}
+
+.wa-phone-input-bar {
+    background: #f0f2f5;
+    padding: 10px 12px;
+    border-radius: 0 0 24px 24px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.wa-phone-input {
+    flex: 1;
+    border: 1px solid #d1d5db;
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 13px;
+    outline: none;
+    background: #ffffff;
+}
+
+.wa-phone-input:focus {
+    border-color: #075e54;
+}
+
+.wa-phone-send-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #075e54;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+    flex-shrink: 0;
+}
+
+.wa-phone-send-btn:hover {
+    background: #128c7e;
+}
+
+.wa-phone-send-btn i {
+    color: #ffffff !important;
+}
+
+/* Simulation Trace Panel */
+.wa-sim-trace-panel {
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 22px;
+    background: #f8fafc;
+}
+
+.wa-sim-trace-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wa-sim-side-desc {
+    font-size: 12.5px;
+    color: #64748b;
+    margin-bottom: 16px;
+    line-height: 1.45;
+}
+
+.wa-sim-empty-state {
+    color: #94a3b8;
+    font-size: 13px;
+    font-style: italic;
+    padding: 24px 0;
+    text-align: center;
+}
+
+.wa-sim-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.wa-step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #059669;
+    color: #ffffff;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.wa-sim-trace-title-text {
+    font-weight: 700;
+    font-size: 13px;
+    color: #0f172a;
+}
+
+.wa-sim-trace-desc-text {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+/* ==========================================================================
+   8. Execution Logs Audit Trail
+   ========================================================================== */
+.wa-section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.wa-cell-meta {
+    font-size: 12px;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.wa-cell-phone {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.wa-table-empty-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.wa-table-empty-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.wa-table-empty-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.wa-table-empty-desc {
+    font-size: 12.5px;
+    color: #64748b;
+    max-width: 440px;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.wa-table-empty-cell {
+    text-align: center;
+    padding: 32px;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* ==========================================================================
+   9. Workflow Builder Modal & Form Styling
+   ========================================================================== */
+.wa-modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.wa-modal-backdrop.is-open {
+    display: flex !important;
+}
+
+.wa-modal-card {
+    background: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 680px;
+    max-height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+    animation: waModalSlideIn 0.2s ease-out;
+}
+
+#waWorkflowForm {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1 1 auto;
+    margin: 0;
+}
+
+@keyframes waModalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.wa-modal-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.wa-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.wa-modal-body::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+
+.wa-modal-body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.wa-modal-footer {
+    padding: 14px 24px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    flex-shrink: 0;
+}
+
+/* Form Controls Inside Plugin (V3 Unified Form System) */
+#waWorkflowModal .v3-form-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px 18px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 680px) {
+    #waWorkflowModal .v3-form-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+#waWorkflowModal .v3-form-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 0 !important;
+}
+
+#waWorkflowModal .v3-form-group.span-2 {
+    grid-column: 1 / -1 !important;
+}
+
+#waWorkflowModal .v3-form-label {
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    color: #334155 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
+}
+
+#waWorkflowModal .v3-form-label .required {
+    color: #ef4444 !important;
+    font-weight: 700 !important;
+}
+
+.wa-msg-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 6px !important;
+}
+
+.wa-token-group {
+    display: flex !important;
+    gap: 6px !important;
+}
+
+.wa-fallback-check {
+    padding: 10px 14px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin: 0 !important;
+}
+
+.wa-fallback-check .form-check-input {
+    margin-top: 0 !important;
+}
+
+#whatsappAutomationApp .form-label,
+#waWorkflowModal .form-label,
+.wa-form-label {
+    font-weight: 600;
+    font-size: 12.5px;
+    color: #334155;
+    margin-bottom: 5px;
+    display: block;
+}
+
+#whatsappAutomationApp .form-control,
+#whatsappAutomationApp .form-select,
+#waWorkflowModal .form-control,
+#waWorkflowModal .form-select,
+.wa-modal-card .form-control,
+.wa-modal-card .form-select {
+    height: 38px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0f172a;
+    padding: 6px 12px;
+    width: 100%;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.15s ease;
+}
+
+#whatsappAutomationApp .form-control-sm,
+#whatsappAutomationApp .form-select-sm,
+#waWorkflowModal .form-control-sm,
+#waWorkflowModal .form-select-sm,
+.wa-modal-card .form-control-sm,
+.wa-modal-card .form-select-sm {
+    height: 36px;
+    font-size: 13px;
+    padding: 5px 10px;
+}
+
+#whatsappAutomationApp .form-control::placeholder,
+#waWorkflowModal .form-control::placeholder,
+.wa-modal-card .form-control::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+#whatsappAutomationApp textarea.form-control,
+#waWorkflowModal textarea.form-control,
+.wa-modal-card textarea.form-control {
+    height: auto;
+    min-height: 80px;
+    padding: 8px 12px;
+    line-height: 1.45;
+}
+
+#whatsappAutomationApp .form-control:hover,
+#whatsappAutomationApp .form-select:hover,
+#waWorkflowModal .form-control:hover,
+#waWorkflowModal .form-select:hover,
+.wa-modal-card .form-control:hover,
+.wa-modal-card .form-select:hover {
+    border-color: #94a3b8;
+}
+
+#whatsappAutomationApp .form-control:focus,
+#whatsappAutomationApp .form-select:focus,
+#waWorkflowModal .form-control:focus,
+#waWorkflowModal .form-select:focus,
+.wa-modal-card .form-control:focus,
+.wa-modal-card .form-select:focus {
+    background: #ffffff;
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+#whatsappAutomationApp .form-control:disabled,
+#whatsappAutomationApp .form-select:disabled,
+#waWorkflowModal .form-control:disabled,
+#waWorkflowModal .form-select:disabled,
+.wa-modal-card .form-control:disabled,
+.wa-modal-card .form-select:disabled {
+    background-color: #f1f5f9;
+    border-color: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.wa-form-hint {
+    font-size: 11.5px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.wa-token-btn {
+    font-size: 10.5px;
+    padding: 2px 7px !important;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #059669;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.wa-token-btn:hover {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.wa-checkbox-label {
+    font-size: 13px;
+    color: #334155;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   10. Select2 Theme Integration (V3 Theme)
+   ========================================================================== */
+#whatsappAutomationApp .select2-container,
+#waWorkflowModal .select2-container,
+.wa-modal-card .select2-container {
+    width: 100% !important;
+    display: block;
+}
+
+#whatsappAutomationApp .select2-container--default .select2-selection--single,
+#waWorkflowModal .select2-container--default .select2-selection--single,
+.wa-modal-card .select2-container--default .select2-selection--single {
+    height: 38px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    background-color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: all 0.15s ease !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+}
+
+#whatsappAutomationApp .select2-container--default:hover .select2-selection--single,
+#waWorkflowModal .select2-container--default:hover .select2-selection--single,
+.wa-modal-card .select2-container--default:hover .select2-selection--single {
+    border-color: #94a3b8 !important;
+}
+
+#whatsappAutomationApp .select2-container--default.select2-container--open .select2-selection--single,
+#whatsappAutomationApp .select2-container--default.select2-container--focus .select2-selection--single,
+#waWorkflowModal .select2-container--default.select2-container--open .select2-selection--single,
+#waWorkflowModal .select2-container--default.select2-container--focus .select2-selection--single,
+.wa-modal-card .select2-container--default.select2-container--open .select2-selection--single,
+.wa-modal-card .select2-container--default.select2-container--focus .select2-selection--single {
+    border-color: #0284c7 !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12) !important;
+}
+
+#whatsappAutomationApp .select2-container--default .select2-selection--single .select2-selection__rendered,
+#waWorkflowModal .select2-container--default .select2-selection--single .select2-selection__rendered,
+.wa-modal-card .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 35px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #0f172a !important;
+    padding-left: 12px !important;
+    padding-right: 30px !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+#whatsappAutomationApp .select2-container--default .select2-selection--single .select2-selection__placeholder,
+#waWorkflowModal .select2-container--default .select2-selection--single .select2-selection__placeholder,
+.wa-modal-card .select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #94a3b8 !important;
+}
+
+#whatsappAutomationApp .select2-container--default .select2-selection--single .select2-selection__arrow,
+#waWorkflowModal .select2-container--default .select2-selection--single .select2-selection__arrow,
+.wa-modal-card .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px !important;
+    right: 8px !important;
+    top: 0 !important;
+    width: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+#whatsappAutomationApp .select2-container--default .select2-selection--single .select2-selection__arrow b,
+#waWorkflowModal .select2-container--default .select2-selection--single .select2-selection__arrow b,
+.wa-modal-card .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #64748b transparent transparent transparent !important;
+    border-width: 5px 4px 0 4px !important;
+    margin-left: -4px !important;
+    margin-top: -2px !important;
+    transition: transform 0.2s ease !important;
+}
+
+#whatsappAutomationApp .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b,
+#waWorkflowModal .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b,
+.wa-modal-card .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #0284c7 transparent !important;
+    border-width: 0 4px 5px 4px !important;
+}
+
+#whatsappAutomationApp .select2-container--default.select2-container--disabled .select2-selection--single,
+#waWorkflowModal .select2-container--default.select2-container--disabled .select2-selection--single,
+.wa-modal-card .select2-container--default.select2-container--disabled .select2-selection--single {
+    background-color: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed !important;
+    opacity: 0.75 !important;
+}
+
+/* High z-index Select2 Dropdown Menu for Modals & Views */
+.select2-dropdown {
+    z-index: 100005 !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+    background-color: #ffffff !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.select2-dropdown .select2-search--dropdown {
+    padding: 8px 10px !important;
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.select2-dropdown .select2-search--dropdown .select2-search__field {
+    height: 32px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    padding: 4px 10px !important;
+    font-size: 12.5px !important;
+    outline: none !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+}
+
+.select2-dropdown .select2-search--dropdown .select2-search__field:focus {
+    border-color: #0284c7 !important;
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15) !important;
+}
+
+.select2-dropdown .select2-results__options {
+    max-height: 220px !important;
+    padding: 4px 0 !important;
+}
+
+.select2-dropdown .select2-results__option {
+    padding: 7px 12px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #1e293b !important;
+    transition: background-color 0.1s ease !important;
+}
+
+.select2-dropdown .select2-results__option--highlighted[aria-selected] {
+    background-color: #0284c7 !important;
+    color: #ffffff !important;
+}
+
+.select2-dropdown .select2-results__option[aria-selected="true"] {
+    background-color: #f0f9ff !important;
+    color: #0369a1 !important;
+    font-weight: 600 !important;
+}

@@ -10,7 +10,7 @@
     <div class="package-header-bar">
         <div class="package-header-left">
             <div class="package-header-icon brand-web-forms wf-kpi-icon indigo">
-                <i class="fi fi-rr-browser"></i>
+                <img src="/app/dashboard/v3/default/desktop/assets/images/integration/web_forms.svg" alt="Web Forms">
             </div>
             <div class="package-header-titles">
                 <h2>Web Forms</h2>

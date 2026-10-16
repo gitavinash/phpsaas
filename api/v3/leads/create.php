@@ -258,6 +258,24 @@ if (!empty($requirements)) {
 
 if ($leadCreated && $profileCreated) {
     mysqli_query($connection, "COMMIT");
+
+    // Trigger Lead Distribution Automation Engine
+    try {
+        $wfHelperPath = dirname(__DIR__) . '/integration/workflow_helper.php';
+        if (file_exists($wfHelperPath)) {
+            require_once $wfHelperPath;
+            if (function_exists('distributeLeadViaAutomation')) {
+                @distributeLeadViaAutomation($connection, $siteId, $leadId, [
+                    'source'      => $source,
+                    'destination' => $subject,
+                    'name'        => trim($firstName . ' ' . $lastName)
+                ]);
+            }
+        }
+    } catch (Throwable $distEx) {
+        error_log("Lead Distribution Automation error: " . $distEx->getMessage());
+    }
+
     echo json_encode([
         'status'  => 200,
         'code'    => 'success',

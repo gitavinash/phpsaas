@@ -308,16 +308,37 @@ if ($site_access_type == 'administrator' || $site_access_type == 'digital_market
     $isUpiActive   = (!defined('ENABLE_UPI') || ENABLE_UPI == '1' || ENABLE_UPI === 1);
     $isWhActive    = (!defined('ENABLE_WEBHOOKS') || ENABLE_WEBHOOKS == '1' || ENABLE_WEBHOOKS === 1);
 
+    $isLeadAutoActive = (!defined('ENABLE_LEAD_AUTOMATION') || ENABLE_LEAD_AUTOMATION == '1' || ENABLE_LEAD_AUTOMATION === 1);
+    $isWaAutoActive   = (defined('ENABLE_WHATSAPP_AUTOMATION') && (ENABLE_WHATSAPP_AUTOMATION == '1' || ENABLE_WHATSAPP_AUTOMATION === 1));
+
     $activePluginCount = 0;
     if ($isFbActive) $activePluginCount++;
     if ($isGAdsActive) $activePluginCount++;
     if ($isWfActive) $activePluginCount++;
+    if ($isLeadAutoActive) $activePluginCount++;
+    if ($isWaAutoActive) $activePluginCount++;
     if ($isWaApiActive) $activePluginCount++;
     if ($isSmtpActive) $activePluginCount++;
     if ($isWhActive) $activePluginCount++;
     if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') {
         if (!empty($activeAsidePg)) $activePluginCount++;
         if ($isUpiActive) $activePluginCount++;
+    }
+
+    $availablePluginCount = 0;
+    if (!$isFbActive) $availablePluginCount++;
+    if (!$isGAdsActive) $availablePluginCount++;
+    if (!$isWfActive) $availablePluginCount++;
+    if (!$isLeadAutoActive) $availablePluginCount++;
+    if (!$isWaAutoActive) $availablePluginCount++;
+    if (!$isWaApiActive) $availablePluginCount++;
+    if (!$isSmtpActive) $availablePluginCount++;
+    if (!$isWhActive) $availablePluginCount++;
+    if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') {
+        if ($activeAsidePg !== 'razorpay') $availablePluginCount++;
+        if ($activeAsidePg !== 'phonepe') $availablePluginCount++;
+        if ($activeAsidePg !== 'cashfree') $availablePluginCount++;
+        if (!$isUpiActive) $availablePluginCount++;
     }
 ?>
     <!-- 7. PLUGINS & INTEGRATIONS -->
@@ -326,44 +347,284 @@ if ($site_access_type == 'administrator' || $site_access_type == 'digital_market
     </li>
 
     <li class="aside-item-plugins<?php echo (strpos($currentUrl, '/integration/') !== false && strpos($currentUrl, '/integration/whatsapp_web') === false ? ' active' : ''); ?>">
-        <a href="/dashboard/integration/"><i class="fi fi-rr-plug-connection"></i> <span class="aside-menu-text">Plugins &amp; Integrations</span> <span class="aside-badge-plugin-count"><?php echo $activePluginCount; ?> Active</span></a>
+        <a href="/dashboard/integration/" class="aside-plugins-main-link">
+            <i class="fi fi-rr-plug-connection"></i> 
+            <span class="aside-menu-text">Plugins &amp; Integrations</span> 
+            <span class="aside-badge-plugin-count" id="asideActivePluginBadge"><?php echo $activePluginCount; ?> Active</span>
+        </a>
         <div class="side-menu aside-menu-plugins">
-            <ul>
-                <li><a href="/dashboard/integration/"><i class="fi fi-rr-apps-sort"></i> <strong>All Plugins Directory</strong></a></li>
+            <!-- Header with Quick Directory Shortcut -->
+            <div class="aside-plugin-drawer-header">
+                <div class="aside-plugin-drawer-title">
+                    <i class="fi fi-rr-apps-sort"></i>
+                    <span>Plugin Center</span>
+                </div>
+                <a href="/dashboard/integration/" class="aside-plugin-directory-btn" title="Open Full Plugins Directory">
+                    Directory <i class="fi fi-rr-arrow-up-right-from-square"></i>
+                </a>
+            </div>
 
-                <li class="aside-submenu-group-title"><span>Connected &amp; Active</span></li>
-                <li data-aside-plugin="facebook" class="<?php echo ($isFbActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isFbActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/facebook/"><i class="fi fi-rr-bullseye-arrow"></i> Facebook Ads <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                <li data-aside-plugin="google_ads" class="<?php echo ($isGAdsActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isGAdsActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/google_ads/"><i class="fi fi-rr-search-alt"></i> Google Ads <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                <li data-aside-plugin="web_forms" class="<?php echo ($isWfActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isWfActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/web_forms/"><i class="fi fi-rr-browser"></i> Web Forms <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                <li data-aside-plugin="whatsapp" class="<?php echo ($isWaApiActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isWaApiActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/whatsapp/"><i class="fi fi-rr-comment-alt-middle"></i> WhatsApp API <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                <li data-aside-plugin="smtp" class="<?php echo ($isSmtpActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isSmtpActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/smtp/"><i class="fi fi-rr-envelope"></i> SMTP Email <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                <?php if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') { ?>
-                    <li data-aside-plugin="razorpay" class="<?php echo ($activeAsidePg === 'razorpay' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'razorpay' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/razorpay/"><i class="fi fi-rr-credit-card"></i> Razorpay <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                    <li data-aside-plugin="instamojo" class="<?php echo ($activeAsidePg === 'instamojo' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'instamojo' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/instamojo/"><i class="fi fi-rr-credit-card"></i> Instamojo <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                    <li data-aside-plugin="sabpaisa" class="<?php echo ($activeAsidePg === 'sabpaisa' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'sabpaisa' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/sabpaisa/"><i class="fi fi-rr-credit-card"></i> SabPaisa <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                    <li data-aside-plugin="phonepe" class="<?php echo ($activeAsidePg === 'phonepe' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'phonepe' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/phonepe/"><i class="fi fi-rr-credit-card"></i> PhonePe <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                    <li data-aside-plugin="worldline" class="<?php echo ($activeAsidePg === 'worldline' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'worldline' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/worldline/"><i class="fi fi-rr-credit-card"></i> Worldline <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                    <li data-aside-plugin="payu" class="<?php echo ($activeAsidePg === 'payu' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'payu' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/payu/"><i class="fi fi-rr-credit-card"></i> PayU <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                    <li data-aside-plugin="phi_commerce" class="<?php echo ($activeAsidePg === 'phi_commerce' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'phi_commerce' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/phi_commerce/"><i class="fi fi-rr-credit-card"></i> Phi Commerce <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                    <li data-aside-plugin="cashfree" class="<?php echo ($activeAsidePg === 'cashfree' ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($activeAsidePg === 'cashfree' ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/cashfree/"><i class="fi fi-rr-credit-card"></i> Cashfree <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                    <li data-aside-plugin="upi" class="<?php echo ($isUpiActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isUpiActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/upi/"><i class="fi fi-rr-qr-scan"></i> UPI &amp; QR <span class="aside-plugin-status-pill is-active">Active</span></a></li>
-                <?php } ?>
-                <li data-aside-plugin="webhooks" class="<?php echo ($isWhActive ? 'plugin-item-active' : 'plugin-item-disabled'); ?>" <?php echo ($isWhActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/webhooks/"><i class="fi fi-rr-code-compare"></i> Webhooks <span class="aside-plugin-status-pill is-active">Active</span></a></li>
+            <!-- Instant Live Search Bar -->
+            <div class="aside-plugin-search-box">
+                <i class="fi fi-rr-search"></i>
+                <input type="text" id="asidePluginSearchInput" class="aside-plugin-search-input" placeholder="Find plugin or setting..." autocomplete="off">
+                <button type="button" id="asidePluginSearchClear" class="aside-plugin-search-clear is-hidden" aria-label="Clear Search"><i class="fi fi-rr-cross-small"></i></button>
+            </div>
 
-                <li class="aside-submenu-group-title"><span>Available Addons</span></li>
-                <li data-aside-plugin="facebook_available" <?php echo (!$isFbActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/facebook/"><i class="fi fi-rr-bullseye-arrow"></i> Facebook Ads <span class="aside-plugin-status-pill is-idle">Setup</span></a></li>
-                <li data-aside-plugin="google_ads_available" <?php echo (!$isGAdsActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/google_ads/"><i class="fi fi-rr-search-alt"></i> Google Ads <span class="aside-plugin-status-pill is-idle">Setup</span></a></li>
-                <li data-aside-plugin="web_forms_available" <?php echo (!$isWfActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/web_forms/"><i class="fi fi-rr-browser"></i> Web Forms <span class="aside-plugin-status-pill is-idle">Setup</span></a></li>
-                <li data-aside-plugin="whatsapp_available" <?php echo (!$isWaApiActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/whatsapp/"><i class="fi fi-rr-comment-alt-middle"></i> WhatsApp API <span class="aside-plugin-status-pill is-idle">Setup</span></a></li>
-                <li data-aside-plugin="smtp_available" <?php echo (!$isSmtpActive ? '' : 'style="display:none;"'); ?>><a href="/dashboard/integration/smtp/"><i class="fi fi-rr-envelope"></i> SMTP Email <span class="aside-plugin-status-pill is-idle">Setup</span></a></li>
-                <?php if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') { ?>
-                    <?php if ($activeAsidePg !== 'razorpay') { ?><li data-aside-plugin="razorpay_available"><a href="/dashboard/integration/razorpay/"><i class="fi fi-rr-credit-card"></i> Razorpay <span class="aside-plugin-status-pill is-idle">Setup</span></a></li><?php } ?>
-                    <?php if ($activeAsidePg !== 'phonepe') { ?><li data-aside-plugin="phonepe_available"><a href="/dashboard/integration/phonepe/"><i class="fi fi-rr-credit-card"></i> PhonePe <span class="aside-plugin-status-pill is-idle">Setup</span></a></li><?php } ?>
-                    <?php if ($activeAsidePg !== 'cashfree') { ?><li data-aside-plugin="cashfree_available"><a href="/dashboard/integration/cashfree/"><i class="fi fi-rr-credit-card"></i> Cashfree <span class="aside-plugin-status-pill is-idle">Setup</span></a></li><?php } ?>
-                    <?php if (!$isUpiActive) { ?><li data-aside-plugin="upi_available"><a href="/dashboard/integration/upi/"><i class="fi fi-rr-qr-scan"></i> UPI &amp; QR <span class="aside-plugin-status-pill is-idle">Setup</span></a></li><?php } ?>
-                <?php } ?>
-                <?php if (!$isWhActive) { ?><li data-aside-plugin="webhooks_available"><a href="/dashboard/integration/webhooks/"><i class="fi fi-rr-code-compare"></i> Webhooks <span class="aside-plugin-status-pill is-idle">Setup</span></a></li><?php } ?>
-            </ul>
+            <!-- Segmented Filter Switch (Active Settings vs Available Addons) -->
+            <div class="aside-plugin-tabs">
+                <button type="button" class="aside-plugin-tab-btn is-active" data-tab="active">
+                    <span>Active</span>
+                    <span class="aside-tab-count aside-tab-count-active" id="asideTabActiveCount"><?php echo $activePluginCount; ?></span>
+                </button>
+                <button type="button" class="aside-plugin-tab-btn" data-tab="available">
+                    <span>Addons</span>
+                    <span class="aside-tab-count aside-tab-count-idle" id="asideTabAvailableCount"><?php echo $availablePluginCount; ?></span>
+                </button>
+            </div>
+
+            <!-- Panel 1: Connected & Active Plugins (Direct Settings Access) -->
+            <div class="aside-plugin-panel is-active" id="asidePluginsActivePanel">
+                <div class="aside-plugin-list-scroll">
+                    <ul class="aside-plugin-items-list">
+                        <li data-aside-plugin="google_ads" class="aside-plugin-item <?php echo ($isGAdsActive ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="google ads adwords sem search marketing">
+                            <a href="/dashboard/integration/google_ads/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-google"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/google_ads.svg" alt="Google Ads"></span>
+                                <span class="aside-plugin-name">Google Ads</span>
+                                <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="facebook" class="aside-plugin-item <?php echo ($isFbActive ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="facebook lead ads meta instagram advertising">
+                            <a href="/dashboard/integration/facebook/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-facebook"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/facebook.svg" alt="Facebook"></span>
+                                <span class="aside-plugin-name">Facebook Ads</span>
+                                <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="web_forms" class="aside-plugin-item <?php echo ($isWfActive ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="web forms lead capture landing page builder embed">
+                            <a href="/dashboard/integration/web_forms/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-web-forms"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/web_forms.svg" alt="Web Forms"></span>
+                                <span class="aside-plugin-name">Web Forms</span>
+                                <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="lead_automation" class="aside-plugin-item <?php echo ($isLeadAutoActive ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="lead flow automation distribution routing rules triggers">
+                            <a href="/dashboard/integration/lead_automation/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-lead-workflow"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/lead_automation.svg" alt="Lead Flow Automation"></span>
+                                <span class="aside-plugin-name">Lead Flow Automation</span>
+                                <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="whatsapp_automation" class="aside-plugin-item <?php echo ($isWaAutoActive ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="whatsapp automation bot instant reply sequence">
+                            <a href="/dashboard/integration/whatsapp_automation/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-whatsapp"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/whatsapp.svg" alt="WhatsApp Automation"></span>
+                                <span class="aside-plugin-name">WhatsApp Automation</span>
+                                <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="whatsapp" class="aside-plugin-item <?php echo ($isWaApiActive ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="whatsapp api business meta official cloud">
+                            <a href="/dashboard/integration/whatsapp/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-whatsapp"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/whatsapp.svg" alt="WhatsApp"></span>
+                                <span class="aside-plugin-name">WhatsApp API</span>
+                                <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="smtp" class="aside-plugin-item <?php echo ($isSmtpActive ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="smtp email mail server notifications transactional">
+                            <a href="/dashboard/integration/smtp/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-smtp"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/smtp.svg" alt="SMTP Email"></span>
+                                <span class="aside-plugin-name">SMTP Email</span>
+                                <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                            </a>
+                        </li>
+                        <?php if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') { ?>
+                            <li data-aside-plugin="razorpay" class="aside-plugin-item <?php echo ($activeAsidePg === 'razorpay' ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="razorpay payment gateway online payments">
+                                <a href="/dashboard/integration/razorpay/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-razorpay"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/razorpay.svg" alt="Razorpay"></span>
+                                    <span class="aside-plugin-name">Razorpay</span>
+                                    <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="phonepe" class="aside-plugin-item <?php echo ($activeAsidePg === 'phonepe' ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="phonepe payment gateway upi qr">
+                                <a href="/dashboard/integration/phonepe/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-phonepe"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/phonepe.svg" alt="PhonePe"></span>
+                                    <span class="aside-plugin-name">PhonePe</span>
+                                    <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="cashfree" class="aside-plugin-item <?php echo ($activeAsidePg === 'cashfree' ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="cashfree payment gateway auto collection">
+                                <a href="/dashboard/integration/cashfree/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-cashfree"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/cashfree.svg" alt="Cashfree" class="brand-logo-wide"></span>
+                                    <span class="aside-plugin-name">Cashfree</span>
+                                    <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="payu" class="aside-plugin-item <?php echo ($activeAsidePg === 'payu' ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="payu payment gateway">
+                                <a href="/dashboard/integration/payu/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-payu"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/payu.svg" alt="PayU" class="brand-logo-wide"></span>
+                                    <span class="aside-plugin-name">PayU</span>
+                                    <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="instamojo" class="aside-plugin-item <?php echo ($activeAsidePg === 'instamojo' ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="instamojo payment gateway">
+                                <a href="/dashboard/integration/instamojo/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-instamojo"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/instamojo.png" alt="Instamojo" class="brand-logo-wide"></span>
+                                    <span class="aside-plugin-name">Instamojo</span>
+                                    <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="sabpaisa" class="aside-plugin-item <?php echo ($activeAsidePg === 'sabpaisa' ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="sabpaisa payment gateway">
+                                <a href="/dashboard/integration/sabpaisa/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-sabpaisa"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/sabpaisa.png" alt="SabPaisa" class="brand-logo-wide"></span>
+                                    <span class="aside-plugin-name">SabPaisa</span>
+                                    <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="worldline" class="aside-plugin-item <?php echo ($activeAsidePg === 'worldline' ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="worldline payment gateway">
+                                <a href="/dashboard/integration/worldline/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-worldline"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/worldline.svg" alt="Worldline" class="brand-logo-wide"></span>
+                                    <span class="aside-plugin-name">Worldline</span>
+                                    <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="phi_commerce" class="aside-plugin-item <?php echo ($activeAsidePg === 'phi_commerce' ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="phi commerce payment gateway">
+                                <a href="/dashboard/integration/phi_commerce/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-phicommerce"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/phicommerce.png" alt="Phi Commerce" class="brand-logo-wide"></span>
+                                    <span class="aside-plugin-name">Phi Commerce</span>
+                                    <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="upi" class="aside-plugin-item <?php echo ($isUpiActive ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="upi qr static dynamic scan code payment">
+                                <a href="/dashboard/integration/upi/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-upi"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/upi.svg" alt="UPI"></span>
+                                    <span class="aside-plugin-name">UPI &amp; QR</span>
+                                    <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                                </a>
+                            </li>
+                        <?php } ?>
+                        <li data-aside-plugin="webhooks" class="aside-plugin-item <?php echo ($isWhActive ? 'plugin-item-active' : 'plugin-item-disabled is-hidden'); ?>" data-plugin-name="webhooks developer rest api callbacks events">
+                            <a href="/dashboard/integration/webhooks/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-webhooks"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/webhooks.svg" alt="Webhooks"></span>
+                                <span class="aside-plugin-name">Webhooks</span>
+                                <span class="aside-plugin-setting-pill" title="Configure Settings"><i class="fi fi-rr-settings"></i></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="aside-plugin-empty-state is-hidden" id="asideActiveEmptyState">
+                        <i class="fi fi-rr-search"></i>
+                        <span>No matching active plugin found</span>
+                    </div>
+                </div>
+                <div class="aside-plugin-drawer-footer">
+                    <a href="/dashboard/integration/" class="aside-plugin-explore-link">
+                        <span><i class="fi fi-rr-apps"></i> All Plugins Directory</span>
+                        <i class="fi fi-rr-angle-small-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel 2: Available Addons / Deactivated Plugins -->
+            <div class="aside-plugin-panel" id="asidePluginsAvailablePanel">
+                <div class="aside-plugin-list-scroll">
+                    <ul class="aside-plugin-items-list">
+                        <li data-aside-plugin="google_ads_available" class="aside-plugin-item <?php echo (!$isGAdsActive ? '' : 'is-hidden'); ?>" data-plugin-name="google ads adwords sem search marketing">
+                            <a href="/dashboard/integration/google_ads/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-google"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/google_ads.svg" alt="Google Ads"></span>
+                                <span class="aside-plugin-name">Google Ads</span>
+                                <span class="aside-plugin-status-pill is-idle">Setup</span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="facebook_available" class="aside-plugin-item <?php echo (!$isFbActive ? '' : 'is-hidden'); ?>" data-plugin-name="facebook lead ads meta instagram advertising">
+                            <a href="/dashboard/integration/facebook/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-facebook"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/facebook.svg" alt="Facebook"></span>
+                                <span class="aside-plugin-name">Facebook Ads</span>
+                                <span class="aside-plugin-status-pill is-idle">Setup</span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="web_forms_available" class="aside-plugin-item <?php echo (!$isWfActive ? '' : 'is-hidden'); ?>" data-plugin-name="web forms lead capture landing page builder embed">
+                            <a href="/dashboard/integration/web_forms/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-web-forms"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/web_forms.svg" alt="Web Forms"></span>
+                                <span class="aside-plugin-name">Web Forms</span>
+                                <span class="aside-plugin-status-pill is-idle">Setup</span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="lead_automation_available" class="aside-plugin-item <?php echo (!$isLeadAutoActive ? '' : 'is-hidden'); ?>" data-plugin-name="lead flow automation distribution routing rules triggers">
+                            <a href="/dashboard/integration/lead_automation/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-lead-workflow"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/lead_automation.svg" alt="Lead Flow Automation"></span>
+                                <span class="aside-plugin-name">Lead Flow Automation</span>
+                                <span class="aside-plugin-status-pill is-idle">Setup</span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="whatsapp_automation_available" class="aside-plugin-item <?php echo (!$isWaAutoActive ? '' : 'is-hidden'); ?>" data-plugin-name="whatsapp automation bot instant reply sequence">
+                            <a href="/dashboard/integration/whatsapp_automation/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-whatsapp"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/whatsapp.svg" alt="WhatsApp Automation"></span>
+                                <span class="aside-plugin-name">WhatsApp Automation</span>
+                                <span class="aside-plugin-status-pill is-idle">Setup</span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="whatsapp_available" class="aside-plugin-item <?php echo (!$isWaApiActive ? '' : 'is-hidden'); ?>" data-plugin-name="whatsapp api business meta official cloud">
+                            <a href="/dashboard/integration/whatsapp/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-whatsapp"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/whatsapp.svg" alt="WhatsApp"></span>
+                                <span class="aside-plugin-name">WhatsApp API</span>
+                                <span class="aside-plugin-status-pill is-idle">Setup</span>
+                            </a>
+                        </li>
+                        <li data-aside-plugin="smtp_available" class="aside-plugin-item <?php echo (!$isSmtpActive ? '' : 'is-hidden'); ?>" data-plugin-name="smtp email mail server notifications transactional">
+                            <a href="/dashboard/integration/smtp/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-smtp"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/smtp.svg" alt="SMTP Email"></span>
+                                <span class="aside-plugin-name">SMTP Email</span>
+                                <span class="aside-plugin-status-pill is-idle">Setup</span>
+                            </a>
+                        </li>
+                        <?php if (!$isDigitalMarketingPackage && $site_access_type !== 'digital_marketing') { ?>
+                            <li data-aside-plugin="razorpay_available" class="aside-plugin-item <?php echo ($activeAsidePg !== 'razorpay' ? '' : 'is-hidden'); ?>" data-plugin-name="razorpay payment gateway online payments">
+                                <a href="/dashboard/integration/razorpay/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-razorpay"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/razorpay.svg" alt="Razorpay"></span>
+                                    <span class="aside-plugin-name">Razorpay</span>
+                                    <span class="aside-plugin-status-pill is-idle">Setup</span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="phonepe_available" class="aside-plugin-item <?php echo ($activeAsidePg !== 'phonepe' ? '' : 'is-hidden'); ?>" data-plugin-name="phonepe payment gateway upi qr">
+                                <a href="/dashboard/integration/phonepe/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-phonepe"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/phonepe.svg" alt="PhonePe"></span>
+                                    <span class="aside-plugin-name">PhonePe</span>
+                                    <span class="aside-plugin-status-pill is-idle">Setup</span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="cashfree_available" class="aside-plugin-item <?php echo ($activeAsidePg !== 'cashfree' ? '' : 'is-hidden'); ?>" data-plugin-name="cashfree payment gateway auto collection">
+                                <a href="/dashboard/integration/cashfree/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-cashfree"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/cashfree.svg" alt="Cashfree" class="brand-logo-wide"></span>
+                                    <span class="aside-plugin-name">Cashfree</span>
+                                    <span class="aside-plugin-status-pill is-idle">Setup</span>
+                                </a>
+                            </li>
+                            <li data-aside-plugin="upi_available" class="aside-plugin-item <?php echo (!$isUpiActive ? '' : 'is-hidden'); ?>" data-plugin-name="upi qr static dynamic scan code payment">
+                                <a href="/dashboard/integration/upi/" class="aside-plugin-link">
+                                    <span class="aside-plugin-icon-wrap brand-upi"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/upi.svg" alt="UPI"></span>
+                                    <span class="aside-plugin-name">UPI &amp; QR</span>
+                                    <span class="aside-plugin-status-pill is-idle">Setup</span>
+                                </a>
+                            </li>
+                        <?php } ?>
+                        <li data-aside-plugin="webhooks_available" class="aside-plugin-item <?php echo (!$isWhActive ? '' : 'is-hidden'); ?>" data-plugin-name="webhooks developer rest api callbacks events">
+                            <a href="/dashboard/integration/webhooks/" class="aside-plugin-link">
+                                <span class="aside-plugin-icon-wrap brand-webhooks"><img src="/app/dashboard/v3/default/desktop/assets/images/integration/webhooks.svg" alt="Webhooks"></span>
+                                <span class="aside-plugin-name">Webhooks</span>
+                                <span class="aside-plugin-status-pill is-idle">Setup</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="aside-plugin-empty-state is-hidden" id="asideAvailableEmptyState">
+                        <i class="fi fi-rr-check-circle"></i>
+                        <span>All plugins are active and connected</span>
+                    </div>
+                </div>
+                <div class="aside-plugin-drawer-footer">
+                    <a href="/dashboard/integration/" class="aside-plugin-explore-link">
+                        <span><i class="fi fi-rr-apps-add"></i> Browse Addon Marketplace</span>
+                        <i class="fi fi-rr-angle-small-right"></i>
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="bottom-menu">
             <ul>

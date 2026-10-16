@@ -626,6 +626,16 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
                     $leadId = (int)mysqli_insert_id($connection);
                     @mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry_profile (enquiry_profile_ref_id, enquiry_profile_agent, status) VALUES ({$leadId}, 0, '1')");
                     @mysqli_query($connection, "INSERT INTO " . TABLE_PREFIX . "enquiry_notes (enquiry_notes_ref_id, enquiry_notes_user_id, enquiry_notes_meta_type, enquiry_notes_meta_value) VALUES ({$leadId}, 0, 'Generate', 'Lead auto-created from incoming WhatsApp message')");
+                    // Trigger Lead Distribution Automation
+                    try {
+                        $wfHelperPath = dirname(__DIR__) . '/integration/workflow_helper.php';
+                        if (file_exists($wfHelperPath)) {
+                            require_once $wfHelperPath;
+                            if (function_exists('distributeLeadViaAutomation')) {
+                                @distributeLeadViaAutomation($connection, $siteId, $leadId, ['source' => 'WhatsApp']);
+                            }
+                        }
+                    } catch (Throwable $wfLeadEx) {}
                 }
             } catch (Throwable $leadErr) {}
         }
@@ -708,6 +718,22 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     mysqli_query($connection, $msgSql);
     $messageId = (int)mysqli_insert_id($connection);
 
+    // Trigger WhatsApp Chat Automation Engine if incoming real-time message
+    $chatAutoRes = null;
+    if ($direction === 'incoming' && !$isSyncOrHistorical && !empty($text)) {
+        try {
+            $wfHelperPath = dirname(__DIR__) . '/integration/workflow_helper.php';
+            if (file_exists($wfHelperPath)) {
+                require_once $wfHelperPath;
+                if (function_exists('executeWhatsAppChatWorkflows')) {
+                    $chatAutoRes = executeWhatsAppChatWorkflows($connection, $siteId, $chatId, $messageId, $text, $cleanPhone, $payload);
+                }
+            }
+        } catch (Throwable $wfEx) {
+            error_log("WhatsApp Chat Automation error: " . $wfEx->getMessage());
+        }
+    }
+
     echo json_encode([
         'status'         => 'success',
         'msg'            => 'WhatsApp message synced to CRM.',
@@ -715,7 +741,8 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
         'message_id'     => $messageId,
         'direction'      => $direction,
         'lead_id'        => $leadId,
-        'resolved_phone' => !empty($resolvedRealPhone) ? $resolvedRealPhone : null
+        'resolved_phone' => !empty($resolvedRealPhone) ? $resolvedRealPhone : null,
+        'automation'     => $chatAutoRes
     ]);
     exit;
 } catch (Throwable $e) {

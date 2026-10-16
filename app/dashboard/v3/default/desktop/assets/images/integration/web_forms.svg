@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36" height="36">
+  <defs>
+    <linearGradient id="wfGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#4F46E5"/>
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="12" fill="url(#wfGrad)"/>
+  <rect x="9" y="10" width="30" height="28" rx="5" fill="#FFFFFF" fill-opacity="0.16" stroke="#FFFFFF" stroke-width="2"/>
+  <line x1="9" y1="18" x2="39" y2="18" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.6"/>
+  <circle cx="14" cy="14" r="1.5" fill="#FFFFFF"/>
+  <circle cx="18.5" cy="14" r="1.5" fill="#FFFFFF"/>
+  <circle cx="23" cy="14" r="1.5" fill="#FFFFFF"/>
+  <rect x="14" y="22" width="14" height="2.5" rx="1.25" fill="#FFFFFF"/>
+  <rect x="14" y="27" width="20" height="2.5" rx="1.25" fill="#FFFFFF" fill-opacity="0.85"/>
+  <rect x="14" y="32" width="11" height="3" rx="1.5" fill="#38BDF8"/>
+</svg>
