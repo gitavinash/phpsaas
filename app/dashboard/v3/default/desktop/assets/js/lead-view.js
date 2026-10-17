@@ -7041,8 +7041,11 @@
             vehicle: primaryVehicle,
             outstation_vehicle: primaryVehicle,
             adults_count: adults,
+            adults: adults,
             children_count: children,
+            children: children,
             infants_count: infants,
+            infants: infants,
             template: templateToUse,
             adult_per_person: resolvedAdultPrice || 0,
             child_per_person: childPrice || 0,
@@ -7096,6 +7099,13 @@
               (xhr.responseJSON.msg || xhr.responseJSON.message)
             ) {
               errorMsg = xhr.responseJSON.msg || xhr.responseJSON.message;
+            } else if (xhr && xhr.responseText && xhr.responseText.trim().startsWith("{")) {
+              try {
+                const parsed = JSON.parse(xhr.responseText);
+                errorMsg = parsed.msg || parsed.message || errorMsg;
+              } catch (e) {}
+            } else if (xhr && xhr.status) {
+              errorMsg = `Server error (${xhr.status}): Failed to send itinerary. Please try again.`;
             }
             self.notify(errorMsg, "error");
           },

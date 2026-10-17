@@ -7,14 +7,18 @@
   'use strict';
 
   window.ISW_LeadAutomation = {
-    apiUrl: '/api/v3/integration/lead_automation.php',
+    apiUrl: '/api/v3/integration/lead_automation/',
     workflows: [],
     agents: [],
     currentWorkflowId: 0,
+    initialized: false,
 
     init: function () {
       if (!$('#leadAutomationApp').length) return;
-      this.bindEvents();
+      if (!this.initialized) {
+        this.bindEvents();
+        this.initialized = true;
+      }
       this.initSelect2Dropdowns('#leadAutomationApp');
       this.loadData();
     },
@@ -116,24 +120,32 @@
         }
       });
 
-      // Agent Pool Item Click
-      $(document).on('click', '.lead-agent-pool-item', function (e) {
-        if ($(e.target).closest('.v3-toggle-switch').length || $(e.target).is('input[type="checkbox"]')) {
-          return;
-        }
-        const $chk = $(this).find('.lead-agent-chk');
-        $chk.prop('checked', !$chk.is(':checked')).trigger('change');
-      });
+      // Agent Pool Item Click (Click anywhere on card to enable/disable agent and update toggle)
+      $(document)
+        .off('click', '.lead-agent-pool-item')
+        .on('click', '.lead-agent-pool-item', function (e) {
+          // If the click is inside the toggle switch, let native label/checkbox handle it
+          if ($(e.target).closest('.v3-toggle-switch').length) {
+            return;
+          }
+          e.preventDefault();
+          const $chk = $(this).find('.lead-agent-chk');
+          const willBeChecked = !$chk.prop('checked');
+          $chk.prop('checked', willBeChecked).trigger('change');
+        });
 
-      $(document).on('change', '.lead-agent-chk', function () {
-        const $item = $(this).closest('.lead-agent-pool-item');
-        if ($(this).is(':checked')) {
-          $item.addClass('selected');
-        } else {
-          $item.removeClass('selected');
-        }
-        self.updateSelectedAgentCount();
-      });
+      $(document)
+        .off('change', '.lead-agent-chk')
+        .on('change', '.lead-agent-chk', function () {
+          const isChecked = $(this).is(':checked');
+          const $item = $(this).closest('.lead-agent-pool-item');
+          if (isChecked) {
+            $item.addClass('selected');
+          } else {
+            $item.removeClass('selected');
+          }
+          self.updateSelectedAgentCount();
+        });
 
       // Select All / Deselect All Toggle
       $(document).on('click', '#btnToggleAllLeadAgents', function (e) {

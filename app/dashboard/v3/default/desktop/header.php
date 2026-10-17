@@ -98,45 +98,20 @@ if (isset($daterange)) {
     $currentUrl = defined('ADMIN_BASE_URL') ? ADMIN_BASE_URL : (defined('ACTIVE_URL') ? ACTIVE_URL : '');
     $isDashboardActive = ($currentUrl === '/dashboard/' || $currentUrl === '/dashboard' || $currentUrl === '' || $currentUrl === '/');
     $userRole = strtolower(isset($site_access_type) ? $site_access_type : (defined('USER_TYPE') ? USER_TYPE : ''));
-    $isAgentAleya = (strtolower(SITE_APP) === 'aleya' && $userRole === 'agent');
     ?>
 </head>
 
-<body class="<?php echo $isAgentAleya ? 'v3-agent-layout' : ''; ?>">
+<body>
     <div id="spa-loader-bar"></div>
     <header>
-        <?php if ($isAgentAleya) { ?>
-            <div class="v3-agent-header-left">
-                <a href="/dashboard/" class="v3-agent-header-logo">
-                    <img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>">
-                </a>
-                <nav class="v3-agent-top-nav">
-                    <a href="/dashboard/" class="v3-top-nav-item <?php echo ($isDashboardActive ? 'active' : ''); ?>">
-                        <i class="fi fi-rr-apps"></i> <span>Dashboard</span>
-                    </a>
-                    <a href="/dashboard/leads/list/" class="v3-top-nav-item <?php echo (strpos($currentUrl, '/leads/list') !== false && !isset($_GET['leadStatus']) ? 'active' : ''); ?>">
-                        <i class="fi fi-rr-chart-network"></i> <span>Leads</span>
-                    </a>
-                    <a href="/dashboard/leads/add/" class="v3-top-nav-item <?php echo (strpos($currentUrl, '/leads/add') !== false ? 'active' : ''); ?>">
-                        <i class="fi fi-rr-add"></i> <span>Add Lead</span>
-                    </a>
-                    <a href="/dashboard/leads/list/?leadStatus=3" class="v3-top-nav-item <?php echo (isset($_GET['leadStatus']) && $_GET['leadStatus'] == '3' ? 'active' : ''); ?>">
-                        <i class="fi fi-rr-comment"></i> <span>Follow-ups</span>
-                    </a>
-                    <a href="/dashboard/leads/list/?leadStatus=1" class="v3-top-nav-item <?php echo (isset($_GET['leadStatus']) && $_GET['leadStatus'] == '1' ? 'active' : ''); ?>">
-                        <i class="fi fi-rr-check"></i> <span>Confirmed</span>
-                    </a>
-                    <a href="/dashboard/whatsapp/" class="v3-top-nav-item <?php echo (strpos($currentUrl, '/whatsapp') !== false ? 'active' : ''); ?>">
-                        <i class="fi fi-rr-comment-alt-middle"></i> <span>WhatsApp Inbox</span>
-                    </a>
-                </nav>
-            </div>
-        <?php } ?>
+        <div class="v3-minimized-brand-logo">
+            <a href="/dashboard/" title="<?php echo !empty($app_title) ? $app_title : 'Aleya'; ?>">
+                <img src="<?php echo !empty($app_image) ? $app_image : (defined('SITE_APP_IMAGE') ? SITE_APP_IMAGE : '/app/cms/visitor/blumox/desktop/assets/images/logo.svg'); ?>" alt="<?php echo !empty($app_title) ? $app_title : 'Aleya'; ?>">
+            </a>
+        </div>
 
         <div class="right-side">
-            <?php if (!$isAgentAleya) { ?>
-                <div class="mobileLogo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt=""></a></div>
-            <?php } ?>
+            <div class="mobileLogo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt=""></a></div>
             <ul>
                 <li>
                     <a>Welcome, <strong><?php echo PROFILE_DISPLAY_NAME ?></strong>
@@ -160,36 +135,34 @@ if (isset($daterange)) {
         </div>
     </header>
 
-    <?php if (!$isAgentAleya) { ?>
-        <aside id="sidebar">
-            <div class="logo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>"></a>
-            </div>
-            <nav class="side-nav">
-                <ul>
+    <aside id="sidebar">
+        <div class="logo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>"></a>
+        </div>
+        <nav class="side-nav">
+            <ul>
 
-                    <?php
-                    $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
+                <?php
+                $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
 
-                    if (file_exists($appAsideFile)) {
-                        require_once $appAsideFile;
-                    } else {
-                        require_once $appDashboardDirectory . 'aside/default.php';
-                    }
+                if (file_exists($appAsideFile)) {
+                    require_once $appAsideFile;
+                } else {
+                    require_once $appDashboardDirectory . 'aside/default.php';
+                }
 
-                    $waAsideSectionFile = $appDashboardDirectory . 'aside/whatsapp_section.php';
-                    if (file_exists($waAsideSectionFile) && !defined('ISW_WA_ASIDE_LOADED')) {
-                        require_once $waAsideSectionFile;
-                    }
-                    ?>
+                $waAsideSectionFile = $appDashboardDirectory . 'aside/whatsapp_section.php';
+                if (file_exists($waAsideSectionFile) && !defined('ISW_WA_ASIDE_LOADED')) {
+                    require_once $waAsideSectionFile;
+                }
+                ?>
 
-                    <li class="appVersion">
-                        <p>App version 3.0</p>
-                    </li>
-                </ul>
-            </nav>
+                <li class="appVersion">
+                    <p>App version 3.0</p>
+                </li>
+            </ul>
+        </nav>
 
-        </aside>
-    <?php } ?>
+    </aside>
 
     <?php
 

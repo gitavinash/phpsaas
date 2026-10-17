@@ -155,6 +155,209 @@ function seedDefaultLeadDistributionRule($connection, $siteId)
 }
 
 /**
+ * Seed pre-defined WhatsApp workflows (e.g. Collect Requirement & Send Itinerary, Default Concierge)
+ * if no workflows exist yet for this site.
+ */
+function seedDefaultWhatsAppWorkflows($connection, $siteId)
+{
+    if (!$connection || $siteId <= 0) {
+        return;
+    }
+    $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+
+    $chk = mysqli_query($connection, "SELECT workflow_id FROM `{$prefix}whatsapp_workflow` WHERE workflow_site_id = {$siteId} LIMIT 1");
+    if ($chk && mysqli_num_rows($chk) > 0) {
+        return;
+    }
+
+    // 1. Pre-defined: Collect Requirement and Send Itinerary Bot (with Buttons & If/Else Logic)
+    $reqWfNodes = [
+        [
+            'id' => 'n_trigger',
+            'type' => 'trigger',
+            'category' => 'trigger',
+            'title' => 'Incoming Keyword: "itinerary / package / trip"',
+            'trigger_type' => 'keyword',
+            'keywords' => 'itinerary, package, tour, trip, plan, holiday, quote',
+            'match_type' => 'contains',
+            'is_default' => 0
+        ],
+        [
+            'id' => 'n_step_1',
+            'type' => 'action',
+            'category' => 'action',
+            'action_type' => 'reply_text',
+            'title' => 'Namaste & Welcome from Travel Specialist',
+            'message_text' => "Namaste {name}! 🌍✈️ Welcome to {company}.\n\nI am your dedicated Holiday Specialist. We specialize in curating customized luxury vacations with handpicked 4★/5★ resorts, private sightseeing transfers, and 24/7 on-trip concierge."
+        ],
+        [
+            'id' => 'n_step_2',
+            'type' => 'action',
+            'category' => 'action',
+            'action_type' => 'collect_input',
+            'title' => 'Choose Preferred Holiday Destination',
+            'field_key' => 'destination',
+            'input_mode' => 'buttons',
+            'message_text' => "Which dream holiday destination are you looking to explore next?",
+            'options' => [
+                '🏔️ Manali & Himachal',
+                '🏖️ Kerala & Munnar',
+                '🏙️ Dubai Luxury',
+                '⛺ Ladakh Adventure'
+            ]
+        ],
+        [
+            'id' => 'n_step_3',
+            'type' => 'action',
+            'category' => 'action',
+            'action_type' => 'send_itinerary',
+            'title' => 'Instant Default Destination Itinerary PDF',
+            'package_id' => 3,
+            'itinerary_title' => '5 Night / 6 Days Manali & Himachal Bestselling Tour Package',
+            'itinerary_url' => 'https://isw-app.test/assets/itineraries/manali-himachal-package.pdf',
+            'brochure_url' => 'https://isw-app.test/assets/itineraries/manali-himachal-package.pdf',
+            'message_text' => "While our destination desk tailors your personalized quotation, here is our bestselling verified itinerary brochure for your selected destination! 📄✨\n\nIncludes day-by-day sightseeing highlights, verified mountain resort options, and private cab transfers: [Download Itinerary Brochure]"
+        ],
+        [
+            'id' => 'n_step_4',
+            'type' => 'action',
+            'category' => 'action',
+            'action_type' => 'collect_input',
+            'title' => 'Collect Number of Travelers & Group Size',
+            'field_key' => 'pax',
+            'input_mode' => 'buttons',
+            'message_text' => "Wonderful! How many travelers will be accompanying you on this journey?",
+            'options' => [
+                '💑 Couple (2 Adults)',
+                '👨‍👩‍👧 Family (3-4 Pax)',
+                '👥 Group Tour (5-10 Pax)',
+                '🏢 Corporate Group (10+ Pax)'
+            ]
+        ],
+        [
+            'id' => 'n_step_5',
+            'type' => 'condition',
+            'category' => 'logic',
+            'action_type' => 'condition_branch',
+            'title' => 'Smart Route by Group Preference (If / Else)',
+            'condition_target' => 'last_button',
+            'condition_operator' => 'contains',
+            'condition_value' => 'Couple',
+            'if_action_type' => 'send_itinerary',
+            'if_package_id' => 3,
+            'if_itinerary_title' => '5 Night / 6 Days Manali Romantic Holiday Package',
+            'if_label' => 'Dispatch Romantic Couple Mountain Resort Itinerary PDF',
+            'if_message' => "Perfect for couples! 🏔️❤️ Here is your tailored Romantic Itinerary with luxury mountain view jacuzzi cottage, candlelight dinner, snow valley cab, and private airport pickup included: 📄 [Download Couple Itinerary PDF]",
+            'else_action_type' => 'send_itinerary',
+            'else_package_id' => 16,
+            'else_itinerary_title' => 'Curated Family & Group Holiday Package',
+            'else_label' => 'Dispatch Family / Group Curated Holiday Package PDF',
+            'else_message' => "Great choice! 👨‍👩‍👧‍👦 Here is our curated Family & Group Itinerary with interconnected resort suites, private tempo traveler, and all entry tickets included: 📄 [Download Family / Group Itinerary PDF]"
+        ],
+        [
+            'id' => 'n_step_6',
+            'type' => 'action',
+            'category' => 'action',
+            'action_type' => 'delay',
+            'title' => 'Realistic Sales Agent Typing Cadence',
+            'delay_seconds' => 3
+        ],
+        [
+            'id' => 'n_step_7',
+            'type' => 'action',
+            'category' => 'action',
+            'action_type' => 'send_itinerary',
+            'title' => 'Dispatch Final Tailored Tour Itinerary & Inclusions',
+            'package_id' => 3,
+            'itinerary_title' => 'Final Custom Tour Itinerary & Quotation Summary',
+            'itinerary_url' => 'https://isw-app.test/assets/itineraries/custom-tour-quotation.pdf',
+            'brochure_url' => 'https://isw-app.test/assets/itineraries/custom-tour-quotation.pdf',
+            'message_text' => "Here is your complete Tailored Holiday Quotation, {name}! 🌟\n\n✅ 5 Nights accommodation in 4★/5★ verified resorts\n✅ Daily buffet breakfast & chef dinners\n✅ Dedicated private AC sedan for all airport transfers & local sightseeing\n✅ 24/7 dedicated travel concierge on WhatsApp"
+        ],
+        [
+            'id' => 'n_step_8',
+            'type' => 'action',
+            'category' => 'action',
+            'action_type' => 'payment_link',
+            'title' => 'Token Advance Booking Deposit Link (₹5,000)',
+            'amount' => 5000,
+            'currency' => 'INR',
+            'message_text' => "To lock in early-bird hotel rates and confirm driver allotment, you can secure your reservation with a refundable token booking advance of ₹5,000:\n\n💳 Instant Secure Payment Link: https://isw-app.test/pay/token-advance-deposit\n\n(Supports Google Pay, PhonePe, Paytm, UPI, Cards, and Net Banking)"
+        ],
+        [
+            'id' => 'n_step_9',
+            'type' => 'action',
+            'category' => 'action',
+            'action_type' => 'interactive_menu',
+            'title' => 'Customer Confirmation & Next Steps Buttons',
+            'message_text' => "How would you like to proceed with your booking, {name}?",
+            'options' => [
+                '💳 Pay ₹5,000 Token Advance',
+                '✏️ Customise Hotels / Dates',
+                '📞 Speak with Travel Consultant'
+            ]
+        ],
+        [
+            'id' => 'n_step_10',
+            'type' => 'action',
+            'category' => 'action',
+            'action_type' => 'tag_lead',
+            'title' => 'Update CRM Stage to Proposal Sent & Tag Lead',
+            'lead_stage' => 'Proposal / Itinerary Sent',
+            'tags' => 'travel_agent_bot, itinerary_sent, token_advance_pending, high_intent'
+        ]
+    ];
+
+    $reqNodesJson = mysqli_real_escape_string($connection, json_encode($reqWfNodes));
+    $reqSql = "INSERT INTO `{$prefix}whatsapp_workflow` (
+        workflow_site_id, workflow_name, workflow_description, workflow_trigger_type,
+        workflow_keywords, workflow_match_type, workflow_nodes_json, workflow_is_default,
+        workflow_status, workflow_created_at
+    ) VALUES (
+        {$siteId}, 'Travel Agency Auto-Sales & Itinerary Bot',
+        'Real-world travel sales flow: collects requirements, sends default destination itinerary, personalizes proposal, and requests advance token deposit.',
+        'keyword', 'trip, tour, package, travel, holiday, plan, itinerary, book, quote, inquiry, vacations, manali, kerala, dubai, ladakh, himachal, munnar, couple, family, group, advance, token, pay, booking', 'contains',
+        '{$reqNodesJson}', 0, 1, NOW()
+    )";
+    @mysqli_query($connection, $reqSql);
+
+    // 2. Pre-defined: Default Fallback Concierge
+    $defaultWfNodes = [
+        [
+            'id' => 'n_trigger',
+            'type' => 'trigger',
+            'category' => 'trigger',
+            'title' => 'Any Unmatched Incoming Message',
+            'trigger_type' => 'default_fallback',
+            'keywords' => '',
+            'match_type' => 'contains',
+            'is_default' => 1
+        ],
+        [
+            'id' => 'n_action_1',
+            'type' => 'action',
+            'category' => 'action',
+            'action_type' => 'reply_text',
+            'title' => 'Instant Helpful Acknowledgment',
+            'message_text' => "Hello {name}! 🌟 Thank you for messaging {company}. We have received your inquiry and our trip specialist will reach out to you shortly.\n\nType *itinerary* to get instant travel plans or *agent* to speak with our desk."
+        ]
+    ];
+
+    $defNodesJson = mysqli_real_escape_string($connection, json_encode($defaultWfNodes));
+    $defSql = "INSERT INTO `{$prefix}whatsapp_workflow` (
+        workflow_site_id, workflow_name, workflow_description, workflow_trigger_type,
+        workflow_keywords, workflow_match_type, workflow_nodes_json, workflow_is_default,
+        workflow_status, workflow_created_at
+    ) VALUES (
+        {$siteId}, 'Default 24/7 Smart Concierge',
+        'Answers any unrecognized incoming chat immediately and alerts available travel executives.',
+        'default_fallback', '', 'contains',
+        '{$defNodesJson}', 1, 1, NOW()
+    )";
+    @mysqli_query($connection, $defSql);
+}
+
+/**
  * Replace placeholders like {name}, {phone}, {company}, {destination} with contextual data.
  */
 function replaceWorkflowTokens($template, array $data = [])

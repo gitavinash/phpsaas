@@ -625,24 +625,28 @@ if (mysqli_query($connection, $insertQuery)) {
 
                 $dest = !empty($content['destination']) ? trim((string)$content['destination']) : (!empty($content['city']) ? trim((string)$content['city']) : '');
                 $travelDateRaw = !empty($content['travel_date']) ? trim((string)$content['travel_date']) : '';
-                $adults = !empty($content['adults']) ? (int)$content['adults'] : 0;
-                $children = !empty($content['children']) ? (int)$content['children'] : 0;
+                $adults = !empty($content['adults_count']) ? (int)$content['adults_count'] : (!empty($content['adults']) ? (int)$content['adults'] : 0);
+                $children = !empty($content['children_count']) ? (int)$content['children_count'] : (!empty($content['children']) ? (int)$content['children'] : 0);
                 if ($refId > 0 && (empty($dest) || empty($travelDateRaw) || ($adults === 0 && $children === 0))) {
-                    $profRes = mysqli_query($connection, "SELECT destination, date_of_travel, number_of_adults, number_of_childrens FROM {$tblPrefix}enquiry_profile WHERE enquiry_profile_ref_id = {$refId} LIMIT 1");
-                    if ($profRes && mysqli_num_rows($profRes) > 0) {
-                        $pRow = mysqli_fetch_assoc($profRes);
-                        if (empty($dest) && !empty($pRow['destination'])) {
-                            $dest = trim((string)$pRow['destination']);
+                    try {
+                        $profRes = mysqli_query($connection, "SELECT date_of_travel, number_of_adults, number_of_childrens FROM {$tblPrefix}enquiry_profile WHERE enquiry_profile_ref_id = {$refId} LIMIT 1");
+                        if ($profRes && mysqli_num_rows($profRes) > 0) {
+                            $pRow = mysqli_fetch_assoc($profRes);
+                            if (empty($travelDateRaw) && !empty($pRow['date_of_travel'])) {
+                                $travelDateRaw = trim((string)$pRow['date_of_travel']);
+                            }
+                            if ($adults === 0 && !empty($pRow['number_of_adults'])) {
+                                $adults = (int)$pRow['number_of_adults'];
+                            }
+                            if ($children === 0 && !empty($pRow['number_of_childrens'])) {
+                                $children = (int)$pRow['number_of_childrens'];
+                            }
                         }
-                        if (empty($travelDateRaw) && !empty($pRow['date_of_travel'])) {
-                            $travelDateRaw = trim((string)$pRow['date_of_travel']);
-                        }
-                        if ($adults === 0 && !empty($pRow['number_of_adults'])) {
-                            $adults = (int)$pRow['number_of_adults'];
-                        }
-                        if ($children === 0 && !empty($pRow['number_of_childrens'])) {
-                            $children = (int)$pRow['number_of_childrens'];
-                        }
+                    } catch (\Throwable $e) {
+                        // Safe fallback if enquiry_profile query fails
+                    }
+                    if (empty($dest) && !empty($customerData['enquiry_subject'])) {
+                        $dest = trim((string)$customerData['enquiry_subject']);
                     }
                 }
 
@@ -722,15 +726,21 @@ if (mysqli_query($connection, $insertQuery)) {
                 }
 
                 if (!$hasValidPdf && function_exists('generateHeadlessPdf')) {
-                    $genHost = $_SERVER['HTTP_HOST'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : 'localhost');
-                    $genUrl = $protocol . $genHost . "/view-itinerary/{$encodedId}/";
-                    generateHeadlessPdf($genUrl, $pdfDiskPath);
-                    if (!file_exists($pdfDiskPath) || filesize($pdfDiskPath) <= 500) {
-                        generateHeadlessPdf("http://localhost/view-itinerary/{$encodedId}/", $pdfDiskPath);
-                    }
-                    if (file_exists($pdfDiskPath) && filesize($pdfDiskPath) > 500) {
-                        $hasValidPdf = true;
-                        $pdfRelUrl = '/upload/itineraries/' . $pdfFileName;
+                    try {
+                        $genHost = $_SERVER['HTTP_HOST'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : 'localhost');
+                        $genUrl = $protocol . $genHost . "/view-itinerary/{$encodedId}/";
+                        generateHeadlessPdf($genUrl, $pdfDiskPath);
+                        if (!file_exists($pdfDiskPath) || filesize($pdfDiskPath) <= 500) {
+                            if ($genHost !== 'localhost' && $genHost !== '127.0.0.1') {
+                                generateHeadlessPdf("http://localhost/view-itinerary/{$encodedId}/", $pdfDiskPath);
+                            }
+                        }
+                        if (file_exists($pdfDiskPath) && filesize($pdfDiskPath) > 500) {
+                            $hasValidPdf = true;
+                            $pdfRelUrl = '/upload/itineraries/' . $pdfFileName;
+                        }
+                    } catch (\Throwable $e) {
+                        // Headless PDF fallback handled gracefully
                     }
                 }
 
