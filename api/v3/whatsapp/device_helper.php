@@ -313,7 +313,7 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
         SET chat_last_message = '{$escPreview}', 
             chat_last_message_time = '{$now}',
             chat_updated_at = '{$now}',
-            chat_device_phone = IF(chat_device_phone IS NULL OR chat_device_phone = '' OR chat_device_phone = 'CRM', '{$escSender}', chat_device_phone)
+            chat_device_phone = '{$escSender}'
         WHERE chat_id = {$chatId} AND chat_site_id = {$siteId}");
 
     // 6. Forward payload to WhatsApp Gateway daemon
@@ -728,7 +728,7 @@ if (!function_exists('generateHeadlessPdf')) {
         }
 
         $cmd = escapeshellarg($chromeBin)
-            . " --headless --disable-gpu --no-sandbox --disable-dev-shm-usage --ignore-certificate-errors --no-pdf-header-footer --print-to-pdf="
+            . " --headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage --ignore-certificate-errors --no-pdf-header-footer --virtual-time-budget=5000 --run-all-compositor-stages-before-draw --print-to-pdf="
             . escapeshellarg($outputPdfPath) . " "
             . escapeshellarg($targetUrl) . " 2>&1";
 

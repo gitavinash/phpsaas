@@ -2241,6 +2241,351 @@
       self.renderPropertyInspector();
     },
 
+    loadQuickRecipe: function (recipeKey) {
+      const self = this;
+      const recipes = {
+        welcome_bot: {
+          name: 'Welcome & Tour Packages Bot',
+          description: 'Greets incoming travelers on WhatsApp and presents interactive tour destination buttons.',
+          nodes: [
+            {
+              type: 'trigger',
+              title: 'Incoming Greeting Trigger',
+              trigger_type: 'keyword',
+              keywords: 'hi, hello, hey, start, holiday, packages'
+            },
+            {
+              type: 'action',
+              action_type: 'reply_text',
+              title: 'Warm Welcome Message',
+              message_text: 'Hello {name}! 👋 Welcome to our Travel Concierge. We are thrilled to help you craft an unforgettable vacation experience.'
+            },
+            {
+              type: 'action',
+              action_type: 'delay',
+              title: 'Typing Pause',
+              delay_seconds: 2
+            },
+            {
+              type: 'action',
+              action_type: 'interactive_menu',
+              title: 'Destination Quick Choices',
+              message_text: 'Which destination are you dreaming of exploring next?',
+              options: ['🏖️ Goa Beach Getaway', '🏔️ Kashmir Paradise Tour', '🏰 Royal Rajasthan Trip', '📞 Talk to Travel Agent']
+            }
+          ]
+        },
+        lead_collector: {
+          name: 'Collect Travel Dates & Requirements',
+          description: 'Asks traveler for destination dates and passenger count, then updates CRM pipeline.',
+          nodes: [
+            {
+              type: 'trigger',
+              title: 'Quote & Enquiry Trigger',
+              trigger_type: 'keyword',
+              keywords: 'quote, enquiry, plan trip, price, dates'
+            },
+            {
+              type: 'action',
+              action_type: 'reply_text',
+              title: 'Enquiry Acknowledgement',
+              message_text: 'Great to hear from you! Let us quickly get a few details so our tour experts can tailor the best package for you.'
+            },
+            {
+              type: 'action',
+              action_type: 'collect_input',
+              title: 'Ask Travel Dates & Pax',
+              field_key: 'travel_dates',
+              message_text: 'What are your planned travel dates and how many adults & children are travelling?'
+            },
+            {
+              type: 'action',
+              action_type: 'tag_lead',
+              title: 'Tag High Intent Lead',
+              lead_stage: 'Enquiry Received',
+              tags: 'Custom Tour, High Intent, WhatsApp Lead'
+            }
+          ]
+        },
+        itinerary_bot: {
+          name: 'Automatic Itinerary & Brochure Delivery',
+          description: 'Instantly sends day-by-day vacation itinerary brochure in PDF format on WhatsApp.',
+          nodes: [
+            {
+              type: 'trigger',
+              title: 'Itinerary Request Trigger',
+              trigger_type: 'keyword',
+              keywords: 'itinerary, brochure, pdf, schedule, day plan, tour plan'
+            },
+            {
+              type: 'action',
+              action_type: 'delay',
+              title: 'Natural Preparation Pause',
+              delay_seconds: 3
+            },
+            {
+              type: 'action',
+              action_type: 'send_itinerary',
+              title: 'Deliver Tour Brochure PDF',
+              message_text: 'Here is our comprehensive day-by-day itinerary brochure with 4-star hotels, transfers, and private sightseeing included: 📄✨',
+              itinerary_title: '7-Day Exotic Golden Triangle & Kashmir Tour.pdf',
+              itinerary_url: 'https://example.com/brochures/golden-triangle-kashmir.pdf'
+            },
+            {
+              type: 'action',
+              action_type: 'handoff_agent',
+              title: 'Assign Tour Specialist',
+              department: 'Luxury Travel Sales'
+            }
+          ]
+        },
+        deposit_bot: {
+          name: 'Booking Deposit Payment Link',
+          description: 'Sends instant secure checkout link for advance trip deposit on WhatsApp.',
+          nodes: [
+            {
+              type: 'trigger',
+              title: 'Booking & Payment Trigger',
+              trigger_type: 'keyword',
+              keywords: 'book, pay, deposit, advance, confirm booking, checkout'
+            },
+            {
+              type: 'action',
+              action_type: 'reply_text',
+              title: 'Booking Confirmation Message',
+              message_text: 'Your vacation dates and hotel rooms have been tentatively held! Please complete your advance deposit to confirm the booking.'
+            },
+            {
+              type: 'action',
+              action_type: 'payment_link',
+              title: 'Advance Deposit Checkout',
+              message_text: 'Click the button below to pay securely via Credit Card, Netbanking, or UPI:',
+              currency: 'USD',
+              amount: '250'
+            }
+          ]
+        }
+      };
+
+      const recipe = recipes[recipeKey];
+      if (!recipe) return;
+
+      $('#waWfNameInput').val(recipe.name);
+      $('#waWfDescInput').val(recipe.description);
+      self.currentNodes = JSON.parse(JSON.stringify(recipe.nodes));
+      self.selectedNodeIndex = 0;
+      self.renderFlowCanvas();
+      self.renderPropertyInspector();
+
+      $('#waFlowCanvasScroll').scrollTop(0);
+
+      if (typeof self.showToast === 'function') {
+        self.showToast('success', 'Loaded recipe: ' + recipe.name);
+      }
+    },
+
+    buildNodeCardBodyHtml: function (node, isTrigger, index) {
+      const self = this;
+      if (!node) return '';
+
+      if (isTrigger) {
+        const isDef = !!node.is_default || node.trigger_type === 'default_fallback';
+        if (isDef) {
+          return `
+            <div class="wa-step-trigger-preview is-fallback">
+              <div class="wa-step-trigger-desc">
+                <i class="fi fi-rr-refresh"></i> <strong>Default Fallback:</strong> Triggers whenever a customer message does not match any other active automated workflow.
+              </div>
+            </div>
+          `;
+        }
+        const kws = (node.keywords || 'hi, hello').split(',').map(k => k.trim()).filter(Boolean);
+        const pills = kws.map(k => `<span class="wa-keyword-tag"><i class="fi fi-rr-search"></i> ${escapeHtml(k)}</span>`).join(' ');
+        return `
+          <div class="wa-step-trigger-preview">
+            <div class="wa-step-trigger-desc">
+              <i class="fi fi-rr-bolt"></i> <strong>Inbound Trigger:</strong> Starts automatically when customer sends any of these keywords:
+            </div>
+            <div class="wa-step-keyword-pills">
+              ${pills || '<span class="text-muted fst-italic">No keywords defined</span>'}
+            </div>
+          </div>
+        `;
+      }
+
+      if (node.action_type === 'delay') {
+        const secs = parseInt(node.delay_seconds || 3, 10);
+        return `
+          <div class="wa-step-delay-preview">
+            <div class="wa-delay-dots-anim">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="wa-delay-text">
+              <strong>Wait ${secs} seconds:</strong> Displays natural "typing..." indicator before sending next message.
+            </div>
+          </div>
+        `;
+      }
+
+      if (node.action_type === 'interactive_menu') {
+        const rawText = node.message_text || 'Please select an option:';
+        let highlighted = escapeHtml(rawText)
+          .replace(/\{name\}/g, '<span class="wa-node-var-tag">{name}</span>')
+          .replace(/\{company\}/g, '<span class="wa-node-var-tag">{company}</span>')
+          .replace(/\{phone\}/g, '<span class="wa-node-var-tag">{phone}</span>');
+        const options = Array.isArray(node.options) ? node.options : [];
+        const optHtml = options.map(o => `<div class="wa-step-chat-btn"><i class="fi fi-rr-mouse"></i> ${escapeHtml(o)}</div>`).join('');
+        return `
+          <div class="wa-step-chat-preview">
+            <div class="wa-chat-bubble-preview">
+              ${highlighted}
+              <div class="wa-chat-bubble-meta">
+                <span>Just now</span>
+                <span class="wa-chat-ticks"><i class="fi fi-rr-check-double"></i></span>
+              </div>
+            </div>
+            <div class="wa-chat-quick-buttons">
+              ${optHtml || '<div class="text-muted small fst-italic text-center py-1">No button options defined</div>'}
+            </div>
+          </div>
+        `;
+      }
+
+      if (node.action_type === 'handoff_agent') {
+        const dept = escapeHtml(node.department || 'Sales');
+        return `
+          <div class="wa-step-handoff-preview">
+            <div class="wa-handoff-avatar"><i class="fi fi-rr-user-headset"></i></div>
+            <div>
+              <div class="wa-handoff-title"><strong>Transferring to ${dept} Team</strong></div>
+              <div class="wa-handoff-sub">Customer is assigned to an active desk agent and an alert is dispatched.</div>
+            </div>
+          </div>
+        `;
+      }
+
+      if (node.action_type === 'collect_input') {
+        const fKey = escapeHtml(node.field_key || 'requirement');
+        const rawText = node.message_text || 'Please enter your requirement:';
+        let highlighted = escapeHtml(rawText)
+          .replace(/\{name\}/g, '<span class="wa-node-var-tag">{name}</span>')
+          .replace(/\{company\}/g, '<span class="wa-node-var-tag">{company}</span>')
+          .replace(/\{phone\}/g, '<span class="wa-node-var-tag">{phone}</span>');
+        const options = Array.isArray(node.options) ? node.options : [];
+        let optHtml = '';
+        if (options.length) {
+          optHtml = '<div class="wa-chat-quick-buttons">' +
+            options.map(o => `<div class="wa-step-chat-btn"><i class="fi fi-rr-mouse"></i> ${escapeHtml(o)}</div>`).join('') +
+            '</div>';
+        }
+        return `
+          <div class="wa-step-chat-preview">
+            <div class="wa-chat-bubble-preview">
+              ${highlighted}
+              <div class="wa-chat-bubble-meta">
+                <span>Just now</span>
+                <span class="wa-chat-ticks"><i class="fi fi-rr-check-double"></i></span>
+              </div>
+            </div>
+            ${optHtml}
+            <div class="wa-step-tag-preview mt-2">
+              <div class="small text-muted"><i class="fi fi-rr-disk"></i> Stores customer response into Lead Field: <strong>${fKey}</strong></div>
+            </div>
+          </div>
+        `;
+      }
+
+      if (node.action_type === 'condition_branch') {
+        return self.renderConditionBranchCardHtml(node);
+      }
+
+      if (node.action_type === 'send_itinerary') {
+        const rawText = node.message_text || 'Here is your customized travel itinerary and brochure:';
+        let highlighted = escapeHtml(rawText)
+          .replace(/\{name\}/g, '<span class="wa-node-var-tag">{name}</span>')
+          .replace(/\{company\}/g, '<span class="wa-node-var-tag">{company}</span>')
+          .replace(/\{phone\}/g, '<span class="wa-node-var-tag">{phone}</span>');
+        const itinTitle = escapeHtml(node.itinerary_title || 'Custom Holiday Itinerary.pdf');
+        const itinUrl = escapeHtml(node.itinerary_url || 'https://holiday.app/itinerary-pdf');
+        return `
+          <div class="wa-step-chat-preview">
+            <div class="wa-chat-bubble-preview">
+              ${highlighted}
+              <div class="wa-chat-bubble-meta">
+                <span>Just now</span>
+                <span class="wa-chat-ticks"><i class="fi fi-rr-check-double"></i></span>
+              </div>
+            </div>
+            <div class="wa-step-itinerary-preview">
+              <div class="wa-itinerary-pdf-badge"><i class="fi fi-rr-file-pdf"></i></div>
+              <div>
+                <div class="wa-itinerary-pdf-title">${itinTitle}</div>
+                <div class="wa-itinerary-pdf-sub"><i class="fi fi-rr-link"></i> ${itinUrl} &bull; Click to open</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      if (node.action_type === 'payment_link') {
+        const rawText = node.message_text || 'Please complete your advance deposit payment to confirm your booking:';
+        let highlighted = escapeHtml(rawText)
+          .replace(/\{name\}/g, '<span class="wa-node-var-tag">{name}</span>')
+          .replace(/\{company\}/g, '<span class="wa-node-var-tag">{company}</span>')
+          .replace(/\{phone\}/g, '<span class="wa-node-var-tag">{phone}</span>');
+        const amt = escapeHtml(node.amount || '500');
+        const curr = escapeHtml(node.currency || 'USD');
+        return `
+          <div class="wa-step-chat-preview">
+            <div class="wa-chat-bubble-preview">
+              ${highlighted}
+              <div class="wa-chat-bubble-meta">
+                <span>Just now</span>
+                <span class="wa-chat-ticks"><i class="fi fi-rr-check-double"></i></span>
+              </div>
+            </div>
+            <div class="wa-step-payment-preview">
+              <div class="wa-payment-icon"><i class="fi fi-rr-credit-card"></i></div>
+              <div class="wa-payment-info">
+                <strong>Secure Payment: ${curr} ${amt}</strong>
+                <span>Instant WhatsApp payment gateway link with automated receipt</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      if (node.action_type === 'tag_lead') {
+        const stage = escapeHtml(node.lead_stage || 'Active Prospect');
+        const tags = (node.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+        const tagPills = tags.map(t => `<span class="wa-keyword-tag"><i class="fi fi-rr-tag"></i> ${escapeHtml(t)}</span>`).join(' ');
+        return `
+          <div class="wa-step-tag-preview">
+            <div class="wa-tag-row"><strong>CRM Lead Stage:</strong> <span class="wa-keyword-tag">${stage}</span></div>
+            ${tagPills ? `<div class="d-flex flex-wrap gap-1 mt-1">${tagPills}</div>` : ''}
+          </div>
+        `;
+      }
+
+      // Default: reply_text
+      const rawText = node.message_text || 'Hello! Thank you for contacting us. How may we assist you today?';
+      let highlighted = escapeHtml(rawText)
+        .replace(/\{name\}/g, '<span class="wa-node-var-tag">{name}</span>')
+        .replace(/\{company\}/g, '<span class="wa-node-var-tag">{company}</span>')
+        .replace(/\{phone\}/g, '<span class="wa-node-var-tag">{phone}</span>');
+      return `
+        <div class="wa-step-chat-preview">
+          <div class="wa-chat-bubble-preview">
+            ${highlighted}
+            <div class="wa-chat-bubble-meta">
+              <span>Just now</span>
+              <span class="wa-chat-ticks"><i class="fi fi-rr-check-double"></i></span>
+            </div>
+          </div>
+        </div>
+      `;
+    },
+
     renderFlowCanvas: function () {
       const self = this;
       const $container = $('#waFlowNodesContainer');
@@ -2248,16 +2593,13 @@
 
       if (!self.currentNodes || !self.currentNodes.length) {
         $container.append(`
-          <div class="wa-make-empty-canvas">
-            <div class="wa-make-add-module-bubble wa-insert-step-btn" data-insert-index="0" title="Click to add Starting Point">
-              <div class="wa-make-add-bubble-circle is-pulsing">
-                <i class="fi fi-rr-plus"></i>
-              </div>
-              <div class="wa-make-add-bubble-label">
-                <strong>Add Starting Point</strong>
-                <div>Choose an inbound trigger or keyword match</div>
-              </div>
-            </div>
+          <div class="wa-flow-empty-box wa-insert-step-btn" data-insert-index="0">
+            <div class="wa-flow-empty-icon"><i class="fi fi-rr-bolt"></i></div>
+            <h4>Start Your Automation Pipeline</h4>
+            <p>Every workflow begins with a starting trigger when a customer contacts you on WhatsApp.</p>
+            <button type="button" class="btn-v3-action btn-v3-primary">
+              <i class="fi fi-rr-plus"></i> Add Starting Trigger
+            </button>
           </div>
         `);
         return;
@@ -2271,203 +2613,139 @@
         let iconClass = 'blue';
         let iconHtml = '<i class="fi fi-rr-comment-alt"></i>';
         const stepNumPadded = String(i + 1).padStart(2, '0');
-        let stepCategory = `${stepNumPadded} &bull; MESSAGE`;
+        let stepKicker = `STEP ${stepNumPadded} &bull; WHATSAPP MESSAGE`;
+        let stepHint = 'Automated WhatsApp speech bubble reply';
 
         if (isTrigger) {
+          const isDef = !!node.is_default || node.trigger_type === 'default_fallback';
           cardTypeClass = 'is-trigger';
           iconClass = 'emerald';
           iconHtml = '<i class="fi fi-rr-bolt"></i>';
-          stepCategory = `STARTING POINT`;
+          stepKicker = 'STEP 01 &bull; STARTING TRIGGER';
+          stepHint = isDef ? 'Triggers when no other workflow matches' : 'Triggers on customer keyword match';
         } else if (node.action_type === 'delay') {
           cardTypeClass = 'is-delay';
           iconClass = 'amber';
           iconHtml = '<i class="fi fi-rr-hourglass"></i>';
-          stepCategory = `${stepNumPadded} &bull; DELAY`;
+          stepKicker = `STEP ${stepNumPadded} &bull; TYPING DELAY`;
+          stepHint = 'Simulates realistic human typing on WhatsApp';
         } else if (node.action_type === 'interactive_menu') {
           cardTypeClass = 'is-menu';
           iconClass = 'indigo';
           iconHtml = '<i class="fi fi-rr-list-check"></i>';
-          stepCategory = `${stepNumPadded} &bull; QUICK CHOICES`;
+          stepKicker = `STEP ${stepNumPadded} &bull; QUICK CHOICES`;
+          stepHint = 'Interactive button pills for fast mobile selection';
         } else if (node.action_type === 'handoff_agent') {
           cardTypeClass = 'is-handoff';
           iconClass = 'purple';
           iconHtml = '<i class="fi fi-rr-user-headset"></i>';
-          stepCategory = `${stepNumPadded} &bull; AGENT HANDOFF`;
+          stepKicker = `STEP ${stepNumPadded} &bull; AGENT HANDOFF`;
+          stepHint = 'Routes conversation to live team inbox';
         } else if (node.action_type === 'collect_input') {
           cardTypeClass = 'is-collect';
           iconClass = 'teal';
           iconHtml = '<i class="fi fi-rr-edit"></i>';
-          stepCategory = `${stepNumPadded} &bull; COLLECT`;
+          stepKicker = `STEP ${stepNumPadded} &bull; COLLECT INFORMATION`;
+          stepHint = 'Saves customer answers directly into CRM';
         } else if (node.action_type === 'condition_branch') {
           cardTypeClass = 'is-condition';
           iconClass = 'cyan';
           iconHtml = '<i class="fi fi-rr-code-branch"></i>';
-          stepCategory = `${stepNumPadded} &bull; LOGIC`;
+          stepKicker = `STEP ${stepNumPadded} &bull; CONDITIONAL LOGIC`;
+          stepHint = 'Branches conversation flow based on rules';
         } else if (node.action_type === 'send_itinerary') {
           cardTypeClass = 'is-itinerary';
           iconClass = 'rose';
           iconHtml = '<i class="fi fi-rr-document-signed"></i>';
-          stepCategory = `${stepNumPadded} &bull; ITINERARY`;
+          stepKicker = `STEP ${stepNumPadded} &bull; TOUR ITINERARY PDF`;
+          stepHint = 'Delivers vacation brochure directly to WhatsApp';
         } else if (node.action_type === 'payment_link') {
           cardTypeClass = 'is-payment';
-          iconClass = 'cyan';
+          iconClass = 'green';
           iconHtml = '<i class="fi fi-rr-credit-card"></i>';
-          stepCategory = `${stepNumPadded} &bull; PAYMENT`;
+          stepKicker = `STEP ${stepNumPadded} &bull; PAYMENT LINK`;
+          stepHint = 'Sends secure online advance deposit checkout';
         } else if (node.action_type === 'tag_lead') {
           cardTypeClass = 'is-tag';
           iconClass = 'orange';
           iconHtml = '<i class="fi fi-rr-tag"></i>';
-          stepCategory = `${stepNumPadded} &bull; CRM TAG`;
+          stepKicker = `STEP ${stepNumPadded} &bull; CRM LEAD STAGE`;
+          stepHint = 'Updates pipeline status in CRM system';
         }
 
-        // Node Preview Body HTML
-        let bodyHtml = '';
-        if (isTrigger) {
-          const isDef = !!node.is_default || node.trigger_type === 'default_fallback';
-          if (isDef) {
-            bodyHtml = `
-              <div class="wa-node-meta-row">
-                <span class="wa-pill fallback"><i class="fi fi-rr-refresh"></i> Default Fallback</span>
-              </div>
-            `;
-          } else {
-            const kws = (node.keywords || 'hi, hello').split(',').map(k => k.trim()).filter(Boolean);
-            const pills = kws.slice(0, 3).map(k => `<span class="wa-keyword-tag">${escapeHtml(k)}</span>`).join(' ');
-            bodyHtml = `
-              <div class="d-flex flex-wrap gap-1 justify-content-center">${pills || '<span class="text-muted fst-italic">No keywords</span>'}</div>
-            `;
-          }
-        } else if (node.action_type === 'delay') {
-          bodyHtml = `
-            <div class="wa-node-meta-row justify-content-center">
-              <span class="wa-pill active"><i class="fi fi-rr-hourglass"></i> ${parseInt(node.delay_seconds || 3, 10)}s Delay</span>
-            </div>
-          `;
-        } else if (node.action_type === 'interactive_menu') {
-          const options = Array.isArray(node.options) ? node.options : [];
-          const optHtml = options.slice(0, 3).map(o => `<span class="wa-keyword-tag">${escapeHtml(o)}</span>`).join(' ');
-          bodyHtml = `
-            <div class="d-flex flex-wrap gap-1 justify-content-center">${optHtml || '<span class="text-muted small">No buttons</span>'}</div>
-          `;
-        } else if (node.action_type === 'handoff_agent') {
-          bodyHtml = `
-            <div class="wa-node-meta-row justify-content-center">
-              <span class="wa-pill active"><i class="fi fi-rr-user-headset"></i> ${escapeHtml(node.department || 'Sales')}</span>
-            </div>
-          `;
-        } else if (node.action_type === 'collect_input') {
-          const fKey = escapeHtml(node.field_key || 'requirement');
-          bodyHtml = `
-            <div class="wa-node-meta-row justify-content-center">
-              <span class="wa-pill active"><i class="fi fi-rr-disk"></i> Field: ${fKey}</span>
-            </div>
-          `;
-        } else if (node.action_type === 'condition_branch') {
-          bodyHtml = self.renderConditionBranchCardHtml(node);
-        } else if (node.action_type === 'send_itinerary') {
-          const itinTitle = escapeHtml(node.itinerary_title || 'Custom Tour Package');
-          bodyHtml = `
-            <div class="wa-node-meta-row justify-content-center">
-              <span class="wa-pill active"><i class="fi fi-rr-file-pdf"></i> ${itinTitle}</span>
-            </div>
-          `;
-        } else if (node.action_type === 'payment_link') {
-          const amt = escapeHtml(node.amount || '500');
-          const curr = escapeHtml(node.currency || 'USD');
-          bodyHtml = `
-            <div class="wa-node-meta-row justify-content-center">
-              <span class="wa-pill active"><i class="fi fi-rr-dollar"></i> ${curr} ${amt}</span>
-            </div>
-          `;
-        } else if (node.action_type === 'tag_lead') {
-          const stage = escapeHtml(node.lead_stage || 'Active Prospect');
-          bodyHtml = `
-            <div class="wa-node-meta-row justify-content-center">
-              <span class="wa-pill active"><i class="fi fi-rr-flag"></i> ${stage}</span>
-            </div>
-          `;
-        } else {
-          // Default: reply_text
-          const rawText = node.message_text || '';
-          let highlighted = escapeHtml(rawText)
-            .replace(/\{name\}/g, '<span class="wa-node-var-tag">{name}</span>')
-            .replace(/\{company\}/g, '<span class="wa-node-var-tag">{company}</span>')
-            .replace(/\{phone\}/g, '<span class="wa-node-var-tag">{phone}</span>');
-          bodyHtml = `<div class="wa-node-preview-bubble is-wa-bubble">${highlighted || '<span class="text-muted fst-italic">Empty reply text...</span>'}</div>`;
-        }
+        const bodyHtml = self.buildNodeCardBodyHtml(node, isTrigger, i);
 
         const actionsHtml = isTrigger ? `
-          <button type="button" class="wa-node-action-btn btn-node-inspect" data-index="${i}" title="Inspect Trigger Settings">
+          <button type="button" class="wa-step-action-btn btn-node-inspect" data-index="${i}" title="Configure trigger keywords">
             <i class="fi fi-rr-settings-sliders"></i>
           </button>
         ` : `
-          <button type="button" class="wa-node-action-btn btn-node-dup" data-index="${i}" title="Duplicate this module">
+          <button type="button" class="wa-step-action-btn btn-node-dup" data-index="${i}" title="Duplicate this step">
             <i class="fi fi-rr-copy-alt"></i>
           </button>
-          <button type="button" class="wa-node-action-btn is-danger btn-node-delete" data-index="${i}" title="Delete this module">
+          <button type="button" class="wa-step-action-btn is-danger btn-node-delete" data-index="${i}" title="Delete this step">
             <i class="fi fi-rr-trash"></i>
           </button>
         `;
 
-        const nodeTitle = escapeHtml(node.title || (isTrigger ? 'Incoming Trigger' : 'Step ' + (i + 1)));
+        const nodeTitle = escapeHtml(node.title || (isTrigger ? 'Starting Trigger' : 'Step ' + (i + 1)));
 
         const cardHtml = `
-          <div class="wa-flow-node-card wa-make-module ${cardTypeClass} ${isSelected ? 'is-selected' : ''}" data-index="${i}" draggable="${isTrigger ? 'false' : 'true'}">
-            <div class="wa-make-module-actions">
-              ${actionsHtml}
-            </div>
-            <div class="wa-make-bubble-wrap">
-              <div class="wa-make-bubble ${cardTypeClass}">
-                <span class="wa-make-step-badge">${i + 1}</span>
-                ${isTrigger ? '<span class="wa-make-trigger-badge" title="Starting Trigger"><i class="fi fi-rr-bolt"></i></span>' : ''}
-                <div class="wa-make-bubble-icon ${iconClass}">
+          <div class="wa-flow-node-card wa-flow-step-card ${cardTypeClass} ${isSelected ? 'is-selected' : ''}" data-index="${i}" draggable="${isTrigger ? 'false' : 'true'}">
+            <div class="wa-step-card-header">
+              <div class="wa-step-badge-group">
+                <div class="wa-step-icon-bubble ${iconClass}">
                   ${iconHtml}
                 </div>
+                <div class="wa-step-header-titles">
+                  <span class="wa-step-kicker ${iconClass}">${stepKicker}</span>
+                  <h4 class="wa-step-title" id="nodeCardTitle_${i}">${nodeTitle}</h4>
+                </div>
+              </div>
+              <div class="wa-step-header-actions">
+                ${actionsHtml}
               </div>
             </div>
-            <div class="wa-make-module-info">
-              <div class="wa-make-module-title" id="nodeCardTitle_${i}">${nodeTitle}</div>
-              <span class="wa-make-module-tag">${stepCategory}</span>
-              <div class="wa-make-module-preview" id="nodeCardBody_${i}">
-                ${bodyHtml}
-              </div>
+            <div class="wa-step-card-body" id="nodeCardBody_${i}">
+              ${bodyHtml}
+            </div>
+            <div class="wa-step-card-footer">
+              <span class="wa-step-hint-text"><i class="fi fi-rr-info"></i> ${stepHint}</span>
+              <span class="wa-step-click-inspect">Edit Step <i class="fi fi-rr-arrow-right"></i></span>
             </div>
           </div>
         `;
 
         $container.append(cardHtml);
 
-        // Pipe Connector after module
+        // Vertical Connector after step
         if (i < self.currentNodes.length - 1) {
           $container.append(`
-            <div class="wa-make-pipe-connector">
-              <div class="wa-make-pipe-line"></div>
-              <button type="button" class="wa-make-plus-btn wa-insert-step-btn" data-insert-index="${i + 1}" title="Insert module here">
-                <i class="fi fi-rr-plus"></i>
+            <div class="wa-flow-v-connector">
+              <div class="wa-flow-v-line"></div>
+              <button type="button" class="wa-flow-add-step-btn wa-insert-step-btn" data-insert-index="${i + 1}" title="Insert automated step here">
+                <i class="fi fi-rr-plus"></i> Add Next Step
               </button>
-              <div class="wa-make-pipe-line"></div>
+              <div class="wa-flow-v-line"></div>
             </div>
           `);
         } else {
           $container.append(`
-            <div class="wa-make-pipe-connector is-terminal-pipe">
-              <div class="wa-make-pipe-line"></div>
+            <div class="wa-flow-v-connector is-terminal">
+              <div class="wa-flow-v-line"></div>
+              <div class="wa-flow-terminal-add-card wa-insert-step-btn" data-insert-index="${self.currentNodes.length}" title="Click to add another automated step">
+                <div class="wa-terminal-add-circle">
+                  <i class="fi fi-rr-plus"></i>
+                </div>
+                <div class="wa-terminal-add-info">
+                  <strong>Add Next Automated Step</strong>
+                  <span>Reply message, quick choices, brochure, delay, or human agent</span>
+                </div>
+              </div>
             </div>
           `);
         }
       });
-
-      // Terminal Make.com "Add module" dashed circle
-      $container.append(`
-        <div class="wa-make-add-module-wrap">
-          <div class="wa-make-add-module-bubble wa-insert-step-btn" data-insert-index="${self.currentNodes.length}" title="Add another module">
-            <div class="wa-make-add-bubble-circle">
-              <i class="fi fi-rr-plus"></i>
-            </div>
-            <span class="wa-make-add-bubble-label">Add module</span>
-          </div>
-        </div>
-      `);
     },
 
     updateNodeCardPreview: function (index) {
@@ -2478,110 +2756,10 @@
       const isTrigger = index === 0 || node.type === 'trigger';
 
       // Update title text
-      $(`#nodeCardTitle_${index}`).text(node.title || (isTrigger ? 'Incoming Trigger' : 'Step ' + (index + 1)));
+      $(`#nodeCardTitle_${index}`).text(node.title || (isTrigger ? 'Starting Trigger' : 'Step ' + (index + 1)));
 
-      // Update body content
-      let bodyHtml = '';
-      if (isTrigger) {
-        const isDef = !!node.is_default || node.trigger_type === 'default_fallback';
-        if (isDef) {
-          bodyHtml = `
-            <div class="wa-node-meta-row">
-              <span class="wa-pill fallback"><i class="fi fi-rr-refresh"></i> Default Fallback Bot</span>
-              <span class="text-muted">Triggers on any unmatched incoming message</span>
-            </div>
-          `;
-        } else {
-          const kws = (node.keywords || 'hi, hello').split(',').map(k => k.trim()).filter(Boolean);
-          const pills = kws.map(k => `<span class="wa-keyword-tag">${escapeHtml(k)}</span>`).join(' ');
-          bodyHtml = `
-            <div class="mb-1 text-muted small"><strong>Triggers when message matches:</strong></div>
-            <div class="d-flex flex-wrap gap-1">${pills || '<span class="text-muted fst-italic">No keywords defined</span>'}</div>
-          `;
-        }
-      } else if (node.action_type === 'delay') {
-        bodyHtml = `
-          <div class="wa-node-meta-row">
-            <span class="wa-pill active"><i class="fi fi-rr-hourglass"></i> ${parseInt(node.delay_seconds || 3, 10)}s Pause</span>
-            <span>Displays WhatsApp typing indicator before sending next reply</span>
-          </div>
-        `;
-      } else if (node.action_type === 'interactive_menu') {
-        const options = Array.isArray(node.options) ? node.options : [];
-        const optHtml = options.map(o => `<span class="wa-keyword-tag">${escapeHtml(o)}</span>`).join(' ');
-        bodyHtml = `
-          <div class="wa-node-preview-bubble mb-2">${escapeHtml(node.message_text || 'Please select an option:')}</div>
-          <div class="d-flex flex-wrap gap-1">${optHtml}</div>
-        `;
-      } else if (node.action_type === 'handoff_agent') {
-        bodyHtml = `
-          <div class="wa-node-meta-row">
-            <span class="wa-pill active"><i class="fi fi-rr-user-headset"></i> Routing to ${escapeHtml(node.department || 'Sales')} Team</span>
-            <span>Internal alert sent to human operator inbox</span>
-          </div>
-        `;
-      } else if (node.action_type === 'collect_input') {
-        const fKey = escapeHtml(node.field_key || 'requirement');
-        const hasButtons = Array.isArray(node.options) && node.options.length > 0;
-        let buttonsHtml = '';
-        if (hasButtons) {
-          buttonsHtml = '<div class="d-flex flex-wrap gap-1 mt-2">' +
-            node.options.map(opt => `<span class="wa-btn-option-pill"><i class="fi fi-rr-mouse"></i> ${escapeHtml(opt)}</span>`).join('') +
-            '</div>';
-        }
-        bodyHtml = `
-          <div class="wa-node-meta-row mb-1">
-            <span class="wa-pill active"><i class="fi fi-rr-disk"></i> Saves to Field: ${fKey}</span>
-            ${hasButtons ? '<span class="wa-pill active"><i class="fi fi-rr-cursor"></i> Button Choices</span>' : '<span class="text-muted small">Customer types text</span>'}
-          </div>
-          <div class="wa-node-preview-bubble is-wa-bubble">${escapeHtml(node.message_text || 'Prompting customer for details...')}</div>
-          ${buttonsHtml}
-        `;
-      } else if (node.action_type === 'condition_branch') {
-        bodyHtml = self.renderConditionBranchCardHtml(node);
-      } else if (node.action_type === 'send_itinerary') {
-        const itinTitle = escapeHtml(node.itinerary_title || 'Custom Tour Package Itinerary');
-        const itinUrl = escapeHtml(node.itinerary_url || '#');
-        bodyHtml = `
-          <div class="wa-node-preview-bubble mb-2">${escapeHtml(node.message_text || 'Sending package details...')}</div>
-          <div class="wa-itinerary-preview-card">
-            <div class="wa-itinerary-preview-icon"><i class="fi fi-rr-file-pdf"></i></div>
-            <div class="wa-itinerary-preview-info">
-              <div class="wa-itinerary-preview-title">${itinTitle}</div>
-              <div class="wa-itinerary-preview-meta text-muted small"><i class="fi fi-rr-link"></i> ${itinUrl}</div>
-            </div>
-          </div>
-        `;
-      } else if (node.action_type === 'payment_link') {
-        const amt = escapeHtml(node.amount || '500');
-        const curr = escapeHtml(node.currency || 'USD');
-        bodyHtml = `
-          <div class="wa-node-preview-bubble mb-2">${escapeHtml(node.message_text || 'Sending secure payment link...')}</div>
-          <div class="wa-node-meta-row">
-            <span class="wa-pill active"><i class="fi fi-rr-dollar"></i> Amount: ${curr} ${amt}</span>
-            <span>Generates secure deposit link</span>
-          </div>
-        `;
-      } else if (node.action_type === 'tag_lead') {
-        const stage = escapeHtml(node.lead_stage || 'Active Prospect');
-        const tags = (node.tags || '').split(',').map(t => t.trim()).filter(Boolean);
-        const tagPills = tags.map(t => `<span class="wa-keyword-tag">${escapeHtml(t)}</span>`).join(' ');
-        bodyHtml = `
-          <div class="wa-node-meta-row mb-1">
-            <span class="wa-pill active"><i class="fi fi-rr-flag"></i> Stage: ${stage}</span>
-          </div>
-          <div class="d-flex flex-wrap gap-1">${tagPills || '<span class="text-muted fst-italic">No tags</span>'}</div>
-        `;
-      } else {
-        const rawText = node.message_text || '';
-        let highlighted = escapeHtml(rawText)
-          .replace(/\{name\}/g, '<span class="wa-node-var-tag">{name}</span>')
-          .replace(/\{company\}/g, '<span class="wa-node-var-tag">{company}</span>')
-          .replace(/\{phone\}/g, '<span class="wa-node-var-tag">{phone}</span>');
-        bodyHtml = `<div class="wa-node-preview-bubble is-wa-bubble">${highlighted || '<span class="text-muted fst-italic">Empty reply text...</span>'}</div>`;
-      }
-
-      $(`#nodeCardBody_${index}`).html(bodyHtml);
+      // Update body content using unified generator
+      $(`#nodeCardBody_${index}`).html(self.buildNodeCardBodyHtml(node, isTrigger, index));
     },
 
     renderPropertyInspector: function () {

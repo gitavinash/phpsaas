@@ -278,7 +278,7 @@ if (($payload['event'] ?? '') === 'batch_sync') {
                                           chat_pushname = IF('{$escPush}' != '', '{$escPush}', chat_pushname),
                                           chat_avatar = IF('{$cAvatar}' != '', '{$cAvatar}', chat_avatar),
                                           chat_unread_count = {$unread},
-                                          chat_last_message = IF('{$lastMsg}' != '', '{$lastMsg}', chat_last_message),
+                                          chat_last_message = IF('{$lastMsg}' != '', IF(chat_last_message_time IS NULL OR '{$cTime}' >= chat_last_message_time, '{$lastMsg}', chat_last_message), chat_last_message),
                                           chat_last_message_time = IF('{$lastMsg}' != '', IF(chat_last_message_time IS NULL OR '{$cTime}' >= chat_last_message_time, '{$cTime}', chat_last_message_time), chat_last_message_time),
                                           chat_device_phone = IF('{$escDevPhone}' != '' AND '{$escDevPhone}' != 'CRM', '{$escDevPhone}', chat_device_phone),
                                           chat_lead_id = IF({$leadVal} IS NOT NULL, {$leadVal}, chat_lead_id)

@@ -488,7 +488,7 @@ if ($method === 'GET') {
             SET c.chat_last_message = IF(latest.message_text != '', latest.message_text, c.chat_last_message),
                 c.chat_last_message_time = latest.message_created_at
             WHERE c.chat_site_id = {$siteId}
-              AND (c.chat_last_message_time IS NULL OR c.chat_last_message_time < latest.message_created_at OR c.chat_last_message IS NULL OR c.chat_last_message = '')");
+              AND (c.chat_last_message_time IS NULL OR c.chat_last_message_time <= latest.message_created_at OR c.chat_last_message IS NULL OR c.chat_last_message = '' OR (latest.message_text != '' AND c.chat_last_message != latest.message_text))");
     }
 
     $whereClauses = ["c.chat_site_id = {$siteId}"];
