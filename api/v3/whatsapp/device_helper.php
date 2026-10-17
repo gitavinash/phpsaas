@@ -691,17 +691,29 @@ function sendWhatsAppDisconnectionEmail($connection, $siteId, $sessionId, $phone
 if (!function_exists('generateHeadlessPdf')) {
     function generateHeadlessPdf(string $targetUrl, string $outputPdfPath): bool {
         $candidates = [
-            '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-            '/Applications/Chromium.app/Contents/MacOS/Chromium',
-            '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
+            // Standard Linux server binary paths
             '/usr/bin/google-chrome',
             '/usr/bin/google-chrome-stable',
+            '/usr/bin/google-chrome-beta',
             '/usr/bin/chromium',
             '/usr/bin/chromium-browser',
             '/snap/bin/chromium',
+            '/snap/bin/google-chrome',
             '/usr/local/bin/chrome',
-            '/usr/local/bin/chromium'
+            '/usr/local/bin/chromium',
+            '/opt/google/chrome/google-chrome',
+            '/opt/google/chrome/chrome',
+            '/opt/chromium/chromium',
+            '/usr/lib/chromium/chromium',
+            '/usr/lib/chromium-browser/chromium-browser',
+            '/home/linuxbrew/.linuxbrew/bin/chromium',
+            '/home/linuxbrew/.linuxbrew/bin/google-chrome',
+            // macOS paths
+            '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+            '/Applications/Chromium.app/Contents/MacOS/Chromium',
+            '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser'
         ];
+
         $chromeBin = null;
         foreach ($candidates as $cand) {
             if (file_exists($cand) && is_executable($cand)) {
@@ -710,13 +722,10 @@ if (!function_exists('generateHeadlessPdf')) {
             }
         }
         if (!$chromeBin) {
-            $which = trim((string)@shell_exec('which google-chrome 2>/dev/null || which chromium 2>/dev/null || which chromium-browser 2>/dev/null'));
+            $which = trim((string)@shell_exec('PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/snap/bin:/opt/google/chrome:/opt/chromium" which google-chrome google-chrome-stable chromium chromium-browser chrome 2>/dev/null | head -n 1'));
             if (!empty($which) && file_exists($which) && is_executable($which)) {
                 $chromeBin = $which;
             }
-        }
-        if (!$chromeBin) {
-            return false;
         }
 
         $outDir = dirname($outputPdfPath);
@@ -727,13 +736,61 @@ if (!function_exists('generateHeadlessPdf')) {
             @unlink($outputPdfPath);
         }
 
-        $cmd = escapeshellarg($chromeBin)
-            . " --headless=new --disable-gpu --no-sandbox --disable-dev-shm-usage --ignore-certificate-errors --no-pdf-header-footer --virtual-time-budget=5000 --run-all-compositor-stages-before-draw --print-to-pdf="
-            . escapeshellarg($outputPdfPath) . " "
-            . escapeshellarg($targetUrl) . " 2>&1";
+        // Dedicated writable user-data-dir (Mandatory for Linux www-data / nginx web servers without writable HOME)
+        $userTmpDir = sys_get_temp_dir() . '/chrome_prof_' . substr(md5($outputPdfPath), 0, 8);
+        if (!is_dir($userTmpDir)) {
+            @mkdir($userTmpDir, 0777, true);
+        }
 
-        @exec($cmd, $output, $returnCode);
+        $commonFlags = "--disable-gpu --no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage "
+            . "--disable-software-rasterizer "
+            . "--ignore-certificate-errors --no-pdf-header-footer "
+            . "--run-all-compositor-stages-before-draw --allow-file-access-from-files --enable-local-file-access "
+            . "--disable-extensions --disable-default-apps --no-first-run "
+            . "--user-data-dir=" . escapeshellarg($userTmpDir) . " "
+            . "--crash-dumps-dir=" . escapeshellarg(sys_get_temp_dir());
 
+        if ($chromeBin) {
+            // Attempt 1: Modern headless (--headless=new)
+            $cmd = escapeshellarg($chromeBin) . " --headless=new " . $commonFlags . " --print-to-pdf=" . escapeshellarg($outputPdfPath) . " " . escapeshellarg($targetUrl) . " 2>&1";
+            @exec($cmd, $output, $returnCode);
+
+            // Attempt 2: Classic headless (--headless) for older Chromium distributions on Linux
+            if (!file_exists($outputPdfPath) || filesize($outputPdfPath) <= 500) {
+                $output = [];
+                $cmdLegacy = escapeshellarg($chromeBin) . " --headless " . $commonFlags . " --print-to-pdf=" . escapeshellarg($outputPdfPath) . " " . escapeshellarg($targetUrl) . " 2>&1";
+                @exec($cmdLegacy, $output, $returnCode);
+            }
+        }
+
+        // Clean up temporary chrome profile directory
+        if (is_dir($userTmpDir)) {
+            @exec('rm -rf ' . escapeshellarg($userTmpDir));
+        }
+
+        // Attempt 3: wkhtmltopdf fallback if Chrome is missing or failed to produce PDF
+        if (!file_exists($outputPdfPath) || filesize($outputPdfPath) <= 500) {
+            $wkCandidates = ['/usr/bin/wkhtmltopdf', '/usr/local/bin/wkhtmltopdf', '/snap/bin/wkhtmltopdf'];
+            $wkBin = null;
+            foreach ($wkCandidates as $cand) {
+                if (file_exists($cand) && is_executable($cand)) {
+                    $wkBin = $cand;
+                    break;
+                }
+            }
+            if (!$wkBin) {
+                $wkWhich = trim((string)@shell_exec('PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/snap/bin" which wkhtmltopdf 2>/dev/null | head -n 1'));
+                if (!empty($wkWhich) && file_exists($wkWhich) && is_executable($wkWhich)) {
+                    $wkBin = $wkWhich;
+                }
+            }
+            if ($wkBin) {
+                $wkCmd = escapeshellarg($wkBin) . " --enable-local-file-access --page-size A4 --margin-top 0 --margin-bottom 0 --margin-left 0 --margin-right 0 " . escapeshellarg($targetUrl) . " " . escapeshellarg($outputPdfPath) . " 2>&1";
+                @exec($wkCmd, $wkOutput, $wkCode);
+            }
+        }
+
+        // Validate final PDF binary output
         if (file_exists($outputPdfPath) && filesize($outputPdfPath) > 500) {
             $fp = @fopen($outputPdfPath, 'rb');
             $head = $fp ? fread($fp, 5) : '';
@@ -743,6 +800,7 @@ if (!function_exists('generateHeadlessPdf')) {
             }
         }
 
+        error_log("[ISW V3 generateHeadlessPdf] Failed to render PDF for URL: {$targetUrl} to {$outputPdfPath}");
         return false;
     }
 }

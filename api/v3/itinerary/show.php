@@ -254,6 +254,10 @@ if ($quotationId > 0) {
             $renderedHtml = preg_replace('/<div\s+class=["\']v3-pdf-actions-bar["\'].*?<\/div>/is', '', $renderedHtml);
         }
 
+        if (defined('ITINERARY_SHOW_RENDER_ONLY') && ITINERARY_SHOW_RENDER_ONLY) {
+            return $renderedHtml;
+        }
+
         if ($format === 'json') {
             header("Content-type: application/json; charset=utf-8");
             $encodedId = base64_encode((string)$quotationId);
@@ -712,6 +716,10 @@ $renderedHtml = ob_get_clean();
 
 if (!empty($hideActions) || !empty($isPreview)) {
     $renderedHtml = preg_replace('/<div\s+class=["\']v3-pdf-actions-bar["\'].*?<\/div>/is', '', $renderedHtml);
+}
+
+if (defined('ITINERARY_SHOW_RENDER_ONLY') && ITINERARY_SHOW_RENDER_ONLY) {
+    return $renderedHtml;
 }
 
 // Deliver output according to requested format

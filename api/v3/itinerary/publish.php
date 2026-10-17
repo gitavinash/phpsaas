@@ -727,20 +727,62 @@ if (mysqli_query($connection, $insertQuery)) {
 
                 if (!$hasValidPdf && function_exists('generateHeadlessPdf')) {
                     try {
-                        $genHost = $_SERVER['HTTP_HOST'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : 'localhost');
-                        $genUrl = $protocol . $genHost . "/view-itinerary/{$encodedId}/";
-                        generateHeadlessPdf($genUrl, $pdfDiskPath);
-                        if (!file_exists($pdfDiskPath) || filesize($pdfDiskPath) <= 500) {
-                            if ($genHost !== 'localhost' && $genHost !== '127.0.0.1') {
-                                generateHeadlessPdf("http://localhost/view-itinerary/{$encodedId}/", $pdfDiskPath);
+                        // 1. Direct Local HTML Render (Bypasses Cloudflare, NAT loopbacks, and domain SSL issues on production)
+                        $renderedProposalHtml = '';
+                        if (!defined('ITINERARY_SHOW_RENDER_ONLY')) {
+                            define('ITINERARY_SHOW_RENDER_ONLY', true);
+                        }
+                        $prevId = $_GET['id'] ?? null;
+                        $prevFormat = $_GET['format'] ?? null;
+                        $prevHideActions = $_GET['hide_actions'] ?? null;
+
+                        $_GET['id'] = $quotationId;
+                        $_GET['format'] = 'html';
+                        $_GET['hide_actions'] = '1';
+
+                        $showPath = $docRoot . '/api/v3/itinerary/show.php';
+                        if (file_exists($showPath)) {
+                            ob_start();
+                            $incRes = include $showPath;
+                            $captured = ob_get_clean();
+                            if (is_string($incRes) && !empty($incRes)) {
+                                $renderedProposalHtml = $incRes;
+                            } elseif (!empty($captured)) {
+                                $renderedProposalHtml = $captured;
                             }
                         }
+
+                        // Restore $_GET state
+                        if ($prevId !== null) $_GET['id'] = $prevId; else unset($_GET['id']);
+                        if ($prevFormat !== null) $_GET['format'] = $prevFormat; else unset($_GET['format']);
+                        if ($prevHideActions !== null) $_GET['hide_actions'] = $prevHideActions; else unset($_GET['hide_actions']);
+
+                        if (!empty($renderedProposalHtml)) {
+                            $tmpHtmlFile = $uploadDir . '/tmp_itin_' . $quotationId . '_' . $itinHash . '.html';
+                            file_put_contents($tmpHtmlFile, $renderedProposalHtml);
+
+                            generateHeadlessPdf('file://' . $tmpHtmlFile, $pdfDiskPath);
+                            @unlink($tmpHtmlFile);
+                        }
+
+                        // 2. Loopback HTTP Fallback if local file render didn't yield a valid PDF
+                        if (!file_exists($pdfDiskPath) || filesize($pdfDiskPath) <= 500) {
+                            $genHost = $_SERVER['HTTP_HOST'] ?? (defined('SITE_DOMAIN') ? SITE_DOMAIN : 'localhost');
+                            $genUrl = $protocol . $genHost . "/view-itinerary/{$encodedId}/";
+                            generateHeadlessPdf($genUrl, $pdfDiskPath);
+                            if (!file_exists($pdfDiskPath) || filesize($pdfDiskPath) <= 500) {
+                                if ($genHost !== 'localhost' && $genHost !== '127.0.0.1') {
+                                    generateHeadlessPdf("http://localhost/view-itinerary/{$encodedId}/", $pdfDiskPath);
+                                }
+                            }
+                        }
+
                         if (file_exists($pdfDiskPath) && filesize($pdfDiskPath) > 500) {
                             $hasValidPdf = true;
                             $pdfRelUrl = '/upload/itineraries/' . $pdfFileName;
                         }
                     } catch (\Throwable $e) {
-                        // Headless PDF fallback handled gracefully
+                        error_log("[ISW V3 Itinerary PDF] Generation exception: " . $e->getMessage());
                     }
                 }
 
