@@ -2464,15 +2464,15 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             if (loader) loader.style.display = 'none';
         }
 
-        async function downloadItineraryPDF() {
+        async function downloadItineraryPDF(shouldSave = true) {
             const btn = document.getElementById('btnDownloadPDF');
-            if (btn) {
+            if (btn && shouldSave !== false) {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="ri-loader-4-line"></i> Generating...';
             }
 
             try {
-                showPageLoader('Rendering Modern Itinerary Deck...');
+                if (shouldSave !== false) showPageLoader('Rendering Modern Itinerary Deck...');
                 paginatePolicyPages();
                 updatePageNumbers();
 
@@ -2491,7 +2491,7 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
                 const pageHeight = pdf.internal.pageSize.getHeight();
 
                 for (let i = 0; i < pages.length; i++) {
-                    showPageLoader(`Rendering page ${i + 1} of ${pages.length}...`);
+                    if (shouldSave !== false) showPageLoader(`Rendering page ${i + 1} of ${pages.length}...`);
 
                     const canvas = await html2canvas(pages[i], {
                         scale: 2,
@@ -2514,18 +2514,22 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
                     }
                 }
 
-                showPageLoader('Finalizing PDF Download...');
-                <?php 
-                $safePdfTitle = preg_replace('/_+/', '_', preg_replace('/[^a-zA-Z0-9_-]/', '_', str_replace('&', 'and', cleanItineraryUnicode($pkgTitle))));
-                $safePdfTitle = trim($safePdfTitle, '_');
-                if (empty($safePdfTitle)) $safePdfTitle = 'Modern_Tour_Package';
-                ?>
-                pdf.save("<?php echo $safePdfTitle; ?>_Deck.pdf");
-                await new Promise(res => setTimeout(res, 400));
-                return true;
+                if (shouldSave !== false) {
+                    showPageLoader('Finalizing PDF Download...');
+                    <?php 
+                    $safePdfTitle = preg_replace('/_+/', '_', preg_replace('/[^a-zA-Z0-9_-]/', '_', str_replace('&', 'and', cleanItineraryUnicode($pkgTitle))));
+                    $safePdfTitle = trim($safePdfTitle, '_');
+                    if (empty($safePdfTitle)) $safePdfTitle = 'Modern_Tour_Package';
+                    ?>
+                    pdf.save("<?php echo $safePdfTitle; ?>_Deck.pdf");
+                }
+                const pdfDataUri = pdf.output('datauristring');
+                await new Promise(res => setTimeout(res, 300));
+                return pdfDataUri;
             } catch (err) {
                 console.error("PDF export error:", err);
-                window.print();
+                if (shouldSave !== false) window.print();
+                throw err;
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -2534,6 +2538,7 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
                 hidePageLoader();
             }
         }
+        window.downloadItineraryPDF = downloadItineraryPDF;
 
         const btnDl = document.getElementById('btnDownloadPDF');
         if (btnDl) {

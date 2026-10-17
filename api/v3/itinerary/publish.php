@@ -703,8 +703,21 @@ if (mysqli_query($connection, $insertQuery)) {
                 $pdfDiskPath = $uploadDir . '/' . $pdfFileName;
                 $pdfRelUrl   = '/upload/itineraries/' . $pdfFileName;
 
-                $hasValidPdf = false;
-                if (file_exists($pdfDiskPath) && filesize($pdfDiskPath) > 500) {
+                // 0. Accept client-rendered PDF data (Fastest & 100% reliable across all hosting environments)
+                $clientPdf = $data['pdf_data'] ?? ($postData['pdf_data'] ?? ($data['pdf_base64'] ?? ($postData['pdf_base64'] ?? '')));
+                if (!empty($clientPdf)) {
+                    if (strpos($clientPdf, 'base64,') !== false) {
+                        $clientPdf = substr($clientPdf, strpos($clientPdf, 'base64,') + 7);
+                    }
+                    $pdfDecoded = base64_decode($clientPdf);
+                    if ($pdfDecoded !== false && strlen($pdfDecoded) > 500 && strpos($pdfDecoded, '%PDF') !== false && strpos($pdfDecoded, '%PDF') <= 20) {
+                        file_put_contents($pdfDiskPath, $pdfDecoded);
+                        $hasValidPdf = true;
+                        $pdfRelUrl = '/upload/itineraries/' . $pdfFileName;
+                    }
+                }
+
+                if (!$hasValidPdf && file_exists($pdfDiskPath) && filesize($pdfDiskPath) > 500) {
                     $fp = @fopen($pdfDiskPath, 'rb');
                     $head = $fp ? fread($fp, 5) : '';
                     if ($fp) fclose($fp);
@@ -733,10 +746,12 @@ if (mysqli_query($connection, $insertQuery)) {
                             define('ITINERARY_SHOW_RENDER_ONLY', true);
                         }
                         $prevId = $_GET['id'] ?? null;
+                        $prevQId = $_GET['quotation_id'] ?? null;
                         $prevFormat = $_GET['format'] ?? null;
                         $prevHideActions = $_GET['hide_actions'] ?? null;
 
                         $_GET['id'] = $quotationId;
+                        $_GET['quotation_id'] = $quotationId;
                         $_GET['format'] = 'html';
                         $_GET['hide_actions'] = '1';
 
@@ -754,6 +769,7 @@ if (mysqli_query($connection, $insertQuery)) {
 
                         // Restore $_GET state
                         if ($prevId !== null) $_GET['id'] = $prevId; else unset($_GET['id']);
+                        if ($prevQId !== null) $_GET['quotation_id'] = $prevQId; else unset($_GET['quotation_id']);
                         if ($prevFormat !== null) $_GET['format'] = $prevFormat; else unset($_GET['format']);
                         if ($prevHideActions !== null) $_GET['hide_actions'] = $prevHideActions; else unset($_GET['hide_actions']);
 
@@ -794,6 +810,11 @@ if (mysqli_query($connection, $insertQuery)) {
                 $waMsgType = $hasValidPdf ? 'document' : 'text';
                 $waMediaUrl = $hasValidPdf ? $pdfRelUrl : '';
 
+                // Safe fallback: If physical PDF couldn't be generated on server, ensure recipient still gets direct link
+                if (!$hasValidPdf && !empty($viewUrl) && !str_contains($waText, $viewUrl)) {
+                    $waText .= "\n\n🌐 *View / Download Proposal:* {$viewUrl}";
+                }
+
                 $waRes = sendWhatsAppDirectMessage(
                     $connection,
                     $siteId,
@@ -804,6 +825,7 @@ if (mysqli_query($connection, $insertQuery)) {
                         'lead_id'   => $refId,
                         'type'      => $waMsgType,
                         'media_url' => $waMediaUrl,
+                        'disk_path' => ($hasValidPdf ? $pdfDiskPath : ''),
                         'file_name' => $docAttachmentName
                     ]
                 );

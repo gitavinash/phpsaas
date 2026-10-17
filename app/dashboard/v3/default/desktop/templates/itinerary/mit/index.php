@@ -3787,16 +3787,16 @@ if (!empty($cleanOverview)) {
         setTimeout(hidePageLoader, 2500);
 
         // 3. Client-side PDF Exporter Function (High-Fidelity Page-by-Page)
-        async function downloadItineraryPDF() {
+        async function downloadItineraryPDF(shouldSave = true) {
             const btn = document.getElementById('btnDownloadPDF');
-            if (btn) {
+            if (btn && shouldSave !== false) {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Generating PDF...';
             }
 
             const loader = document.getElementById('itinerary-page-loader');
             const msg = document.getElementById('loaderStatusMsg');
-            if (loader) {
+            if (loader && shouldSave !== false) {
                 loader.style.display = 'flex';
                 loader.style.visibility = 'visible';
                 loader.style.opacity = '1';
@@ -3821,7 +3821,7 @@ if (!empty($cleanOverview)) {
                 const pageHeight = pdf.internal.pageSize.getHeight();
 
                 for (let i = 0; i < pages.length; i++) {
-                    if (msg) msg.textContent = `Rendering page ${i + 1} of ${pages.length}...`;
+                    if (msg && shouldSave !== false) msg.textContent = `Rendering page ${i + 1} of ${pages.length}...`;
 
                     const canvas = await html2canvas(pages[i], {
                         scale: 2,
@@ -3845,17 +3845,20 @@ if (!empty($cleanOverview)) {
                     }
                 }
 
-                if (msg) msg.textContent = 'Saving PDF file...';
+                if (msg && shouldSave !== false) msg.textContent = 'Saving PDF file...';
                 <?php 
                 $safePdfTitle = preg_replace('/_+/', '_', preg_replace('/[^a-zA-Z0-9_-]/', '_', str_replace('&', 'and', cleanItineraryUnicode($pkgTitle))));
                 $safePdfTitle = trim($safePdfTitle, '_');
                 if (empty($safePdfTitle)) $safePdfTitle = 'Tour_Package';
                 ?>
                 const fileName = '<?php echo $safePdfTitle; ?>_Itinerary.pdf';
-                pdf.save(fileName);
+                if (shouldSave !== false) {
+                    pdf.save(fileName);
+                }
 
-                await new Promise(resolve => setTimeout(resolve, 400));
-                return true;
+                const pdfDataUri = pdf.output('datauristring');
+                await new Promise(resolve => setTimeout(resolve, 300));
+                return pdfDataUri;
             } catch (err) {
                 console.error('PDF export error:', err);
                 if (msg) msg.textContent = 'PDF generation encountered an error.';

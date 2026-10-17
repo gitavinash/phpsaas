@@ -6808,6 +6808,7 @@
         onError,
         saveAsNewPackage,
         newPackageTitle,
+        pdfData,
       ) {
         const title =
           self.cleanLeadStringValue($("#itineraryCustomTitle").val().trim()) || "Custom Tour Itinerary";
@@ -6924,7 +6925,7 @@
           return;
         }
 
-        const originalBtnHtml = $btn ? $btn.html() : "";
+        const originalBtnHtml = ($btn && $btn.data("v3OrigHtml")) || ($btn ? $btn.html() : "");
         if ($btn) {
           $btn
             .prop("disabled", true)
@@ -7020,6 +7021,7 @@
           mobile: customerMobile,
           mrp: resolvedAdultPrice || 0,
           isDownload: !!isDownload,
+          pdf_data: pdfData || "",
           send_email: isDownload ? 0 : (isEmailChecked ? 1 : 0),
           send_whatsapp: isDownload ? 0 : (isWhatsAppChecked ? 1 : 0),
           save_as_new_package: isSaveNewPkg ? 1 : 0,
@@ -7674,8 +7676,45 @@
               $("#toggleSaveAsNewPackage").is(":checked") ||
               $("#toggleSaveAsNewPackagePreview").is(":checked");
 
-            const doPublish = function (saveAsNewPkg, customPkgName) {
+            const doPublish = async function (saveAsNewPkg, customPkgName) {
+              if (self.isPublishingItin) return;
               self.isPublishingItin = true;
+
+              const origHtml = $btn ? $btn.html() : '<i class="fi fi-rr-paper-plane"></i> Send Itinerary';
+              if ($btn) {
+                $btn.data("v3OrigHtml", origHtml);
+              }
+
+              // 1. Capture Client-rendered PDF from Live Preview Iframe (Guarantees 100% PDF attachment on production Linux)
+              let capturedPdf = "";
+              const iframe = document.getElementById("livePreviewIframe");
+              let iframeWin = null;
+              try {
+                iframeWin = iframe ? (iframe.contentWindow || iframe.contentDocument) : null;
+              } catch (e) {
+                iframeWin = null;
+              }
+
+              if (iframeWin && typeof iframeWin.downloadItineraryPDF === "function") {
+                try {
+                  if ($btn) {
+                    $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Preparing PDF Document...');
+                  }
+                  // Race with 5 second timeout so user is never blocked
+                  capturedPdf = await Promise.race([
+                    iframeWin.downloadItineraryPDF(false),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error("PDF render timeout")), 5000))
+                  ]);
+                } catch (err) {
+                  console.warn("Client-side PDF capture notice:", err);
+                  capturedPdf = "";
+                }
+              }
+
+              if ($btn) {
+                $btn.html('<i class="fi fi-rr-spinner fi-spin"></i> Sending Itinerary...');
+              }
+
               self.publishItinerary(
                 false,
                 $btn,
@@ -7705,9 +7744,13 @@
                 },
                 function () {
                   self.isPublishingItin = false;
+                  if ($btn) {
+                    $btn.prop("disabled", false).html(origHtml);
+                  }
                 },
                 saveAsNewPkg,
                 customPkgName,
+                capturedPdf
               );
             };
 

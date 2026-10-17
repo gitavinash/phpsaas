@@ -2322,15 +2322,15 @@ if (!function_exists('toRomanNumerals')) {
             if (loader) loader.style.display = 'none';
         }
 
-        async function downloadItineraryPDF() {
+        async function downloadItineraryPDF(shouldSave = true) {
             const btn = document.getElementById('btnDownloadPDF');
-            if (btn) {
+            if (btn && shouldSave !== false) {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="ri-loader-4-line"></i> Preparing Dossier...';
             }
 
             try {
-                showPageLoader('Rendering Royal Expedition Dossier...');
+                if (shouldSave !== false) showPageLoader('Rendering Royal Expedition Dossier...');
                 paginatePolicyPages();
                 updatePageNumbers();
 
@@ -2351,7 +2351,7 @@ if (!function_exists('toRomanNumerals')) {
                 const pageHeight = pdf.internal.pageSize.getHeight();
 
                 for (let i = 0; i < pages.length; i++) {
-                    showPageLoader(`Rendering page ${i + 1} of ${pages.length}...`);
+                    if (shouldSave !== false) showPageLoader(`Rendering page ${i + 1} of ${pages.length}...`);
 
                     const canvas = await html2canvas(pages[i], {
                         scale: 2,
@@ -2374,18 +2374,22 @@ if (!function_exists('toRomanNumerals')) {
                     }
                 }
 
-                showPageLoader('Finalizing PDF Download...');
-                <?php
-                $safePdfTitle = preg_replace('/_+/', '_', preg_replace('/[^a-zA-Z0-9_-]/', '_', str_replace('&', 'and', cleanItineraryUnicode($pkgTitle))));
-                $safePdfTitle = trim($safePdfTitle, '_');
-                if (empty($safePdfTitle)) $safePdfTitle = 'Royal_Expedition';
-                ?>
-                pdf.save("<?php echo $safePdfTitle; ?>_Dossier.pdf");
-                await new Promise(res => setTimeout(res, 400));
-                return true;
+                if (shouldSave !== false) {
+                    showPageLoader('Finalizing PDF Download...');
+                    <?php
+                    $safePdfTitle = preg_replace('/_+/', '_', preg_replace('/[^a-zA-Z0-9_-]/', '_', str_replace('&', 'and', cleanItineraryUnicode($pkgTitle))));
+                    $safePdfTitle = trim($safePdfTitle, '_');
+                    if (empty($safePdfTitle)) $safePdfTitle = 'Royal_Expedition';
+                    ?>
+                    pdf.save("<?php echo $safePdfTitle; ?>_Dossier.pdf");
+                }
+                const pdfDataUri = pdf.output('datauristring');
+                await new Promise(res => setTimeout(res, 300));
+                return pdfDataUri;
             } catch (err) {
                 console.error("PDF export error:", err);
-                window.print();
+                if (shouldSave !== false) window.print();
+                throw err;
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -2394,6 +2398,7 @@ if (!function_exists('toRomanNumerals')) {
                 hidePageLoader();
             }
         }
+        window.downloadItineraryPDF = downloadItineraryPDF;
 
         const btnDl = document.getElementById('btnDownloadPDF');
         if (btnDl) {

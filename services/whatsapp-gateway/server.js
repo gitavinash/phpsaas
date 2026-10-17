@@ -2516,7 +2516,10 @@ app.post("/send-message", async (req, res) => {
       let mediaMime = "image/jpeg";
       let localPath = null;
 
-      if (typeof media === "string") {
+      const candDiskPath = req.body?.disk_path || req.body?.file_path || "";
+      if (candDiskPath && typeof candDiskPath === "string" && fs.existsSync(candDiskPath) && fs.statSync(candDiskPath).isFile()) {
+        localPath = candDiskPath;
+      } else if (typeof media === "string") {
         if (fs.existsSync(media) && fs.statSync(media).isFile()) {
           localPath = media;
         } else if (media.startsWith("/upload/")) {

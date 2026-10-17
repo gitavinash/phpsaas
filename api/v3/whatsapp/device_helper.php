@@ -241,7 +241,19 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
     }
 
     $targetSessionId = $device['device_session_id'];
-    $senderPhone = !empty($device['device_phone']) ? $device['device_phone'] : 'CRM';
+    $senderPhone = !empty($device['device_phone']) ? $device['device_phone'] : '';
+    if (empty($senderPhone) || $senderPhone === 'CRM') {
+        $devPCheck = mysqli_query($connection, "SELECT device_phone FROM {$prefix}whatsapp_device 
+            WHERE device_site_id = {$siteId} AND device_phone IS NOT NULL AND device_phone != '' 
+            ORDER BY (device_status = 'connected') DESC, device_id DESC LIMIT 1");
+        if ($devPCheck && mysqli_num_rows($devPCheck) > 0) {
+            $dpRow = mysqli_fetch_assoc($devPCheck);
+            $senderPhone = $dpRow['device_phone'];
+        }
+    }
+    if (empty($senderPhone)) {
+        $senderPhone = 'CRM';
+    }
 
     // 2. Clean and format recipient phone
     $rDigits = preg_replace('/[^0-9]/', '', (string)$recipientPhone);
@@ -265,8 +277,13 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
     $chatId = isset($options['chat_id']) ? (int)$options['chat_id'] : 0;
 
     if ($chatId <= 0) {
-        $chatQ = mysqli_query($connection, "SELECT chat_id FROM {$prefix}whatsapp_chat 
-            WHERE chat_site_id = {$siteId} AND chat_phone = '{$escRecipientPhone}' LIMIT 1");
+        $last10 = substr($rDigits, -10);
+        $leadSqlCond = $leadId > 0 ? " OR chat_lead_id = {$leadId}" : "";
+        $chatQ = mysqli_query($connection, "SELECT chat_id, chat_device_phone, chat_lead_id FROM {$prefix}whatsapp_chat 
+            WHERE chat_site_id = {$siteId} 
+              AND (chat_phone = '{$escRecipientPhone}' OR chat_phone = '{$rDigits}' OR chat_phone LIKE '%{$last10}'{$leadSqlCond}) 
+            ORDER BY (chat_phone = '{$escRecipientPhone}') DESC, (chat_phone LIKE '%{$last10}') DESC, chat_id DESC 
+            LIMIT 1");
         if ($chatQ && mysqli_num_rows($chatQ) > 0) {
             $cRow = mysqli_fetch_assoc($chatQ);
             $chatId = (int)$cRow['chat_id'];
@@ -280,15 +297,19 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
         }
     }
 
-    // Associate lead if not already linked
-    if ($leadId > 0 && $chatId > 0) {
+    // Associate lead and heal chat_device_phone if needed
+    if ($chatId > 0) {
+        $escSenderPhone = mysqli_real_escape_string($connection, $senderPhone);
+        $leadUpdateSql = $leadId > 0 ? "chat_lead_id = IF(chat_lead_id IS NULL OR chat_lead_id = 0, {$leadId}, chat_lead_id)," : "";
         mysqli_query($connection, "UPDATE {$prefix}whatsapp_chat 
-            SET chat_lead_id = {$leadId} 
-            WHERE chat_id = {$chatId} AND (chat_lead_id IS NULL OR chat_lead_id = 0)");
+            SET {$leadUpdateSql}
+                chat_device_phone = IF(chat_device_phone IS NULL OR chat_device_phone = '' OR chat_device_phone = 'CRM', '{$escSenderPhone}', chat_device_phone) 
+            WHERE chat_id = {$chatId}");
     }
 
     $type = trim($options['type'] ?? 'text');
     $mediaUrl = trim($options['media_url'] ?? ($options['media'] ?? ''));
+    $diskPath = trim($options['disk_path'] ?? ($options['file_path'] ?? ''));
     $fileName = trim($options['file_name'] ?? ($options['fileName'] ?? 'Document.pdf'));
     $now = date('Y-m-d H:i:s');
     $waMsgId = 'crm_out_' . uniqid('', true);
@@ -341,6 +362,8 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
         'to'          => $cleanRecipientPhone,
         'message'     => $messageText,
         'media'       => ($type === 'text' ? '' : $mediaUrl),
+        'disk_path'   => $diskPath,
+        'file_path'   => $diskPath,
         'type'        => $type,
         'file_name'   => $fileName,
         'fileName'    => $fileName,

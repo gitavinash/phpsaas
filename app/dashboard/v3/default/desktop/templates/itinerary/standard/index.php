@@ -3009,16 +3009,16 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
         }
         setTimeout(hidePageLoader, 2500);
 
-        async function downloadItineraryPDF() {
+        async function downloadItineraryPDF(shouldSave = true) {
             const btn = document.getElementById('btnDownloadPDF');
-            if (btn) {
+            if (btn && shouldSave !== false) {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Preparing PDF...';
             }
 
             const loader = document.getElementById('itinerary-page-loader');
             const msg = document.getElementById('loaderStatusMsg');
-            if (loader) {
+            if (loader && shouldSave !== false) {
                 loader.style.display = 'flex';
                 loader.style.visibility = 'visible';
                 loader.style.opacity = '1';
@@ -3043,7 +3043,7 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
                 const pageHeight = pdf.internal.pageSize.getHeight();
 
                 for (let i = 0; i < pages.length; i++) {
-                    if (msg) msg.textContent = `Rendering page ${i + 1} of ${pages.length}...`;
+                    if (msg && shouldSave !== false) msg.textContent = `Rendering page ${i + 1} of ${pages.length}...`;
 
                     const canvas = await html2canvas(pages[i], {
                         scale: 2,
@@ -3067,19 +3067,22 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
                     }
                 }
 
-                if (msg) msg.textContent = 'Saving PDF file...';
-                <?php
-                $safePdfTitle = preg_replace('/_+/', '_', preg_replace('/[^a-zA-Z0-9_-]/', '_', str_replace('&', 'and', cleanItineraryUnicode($pkgTitle))));
-                $safePdfTitle = trim($safePdfTitle, '_');
-                if (empty($safePdfTitle)) $safePdfTitle = 'Tour_Package';
-                ?>
-                pdf.save("<?php echo $safePdfTitle; ?>_Proposal.pdf");
-                await new Promise(resolve => setTimeout(resolve, 400));
-                return true;
+                if (shouldSave !== false) {
+                    if (msg) msg.textContent = 'Saving PDF file...';
+                    <?php
+                    $safePdfTitle = preg_replace('/_+/', '_', preg_replace('/[^a-zA-Z0-9_-]/', '_', str_replace('&', 'and', cleanItineraryUnicode($pkgTitle))));
+                    $safePdfTitle = trim($safePdfTitle, '_');
+                    if (empty($safePdfTitle)) $safePdfTitle = 'Tour_Package';
+                    ?>
+                    pdf.save("<?php echo $safePdfTitle; ?>_Proposal.pdf");
+                }
+                const pdfDataUri = pdf.output('datauristring');
+                await new Promise(resolve => setTimeout(resolve, 300));
+                return pdfDataUri;
             } catch (err) {
                 console.error('PDF export error:', err);
-                if (msg) msg.textContent = 'PDF generation encountered an error.';
-                window.print();
+                if (msg && shouldSave !== false) msg.textContent = 'PDF generation encountered an error.';
+                if (shouldSave !== false) window.print();
                 throw err;
             } finally {
                 if (btn) {

@@ -4937,7 +4937,44 @@ $(document).ready(function (e) {
 
     function updateActiveSidebar(targetUrl) {
       try {
-        const path = new URL(targetUrl, window.location.origin).pathname;
+        const parsedTarget = new URL(targetUrl, window.location.origin);
+        const path = parsedTarget.pathname;
+        const search = parsedTarget.search;
+
+        // 1. Update Sales Agent Top-Nav if present
+        const topNav = document.querySelector(".v3-agent-top-nav");
+        if (topNav) {
+          topNav.querySelectorAll(".v3-top-nav-item").forEach((el) => el.classList.remove("active"));
+          let matchedTopItem = null;
+          const topLinks = topNav.querySelectorAll(".v3-top-nav-item");
+
+          topLinks.forEach((link) => {
+            const hrefAttr = link.getAttribute("href");
+            if (!hrefAttr) return;
+            const linkParsed = new URL(hrefAttr, window.location.origin);
+            if (linkParsed.search) {
+              if (path === linkParsed.pathname && search === linkParsed.search) {
+                matchedTopItem = link;
+              }
+            } else if (!matchedTopItem) {
+              if (
+                path === linkParsed.pathname ||
+                (path.startsWith(linkParsed.pathname) && linkParsed.pathname !== "/dashboard/")
+              ) {
+                matchedTopItem = link;
+              }
+            }
+          });
+
+          if (matchedTopItem) {
+            matchedTopItem.classList.add("active");
+          } else if (path === "/dashboard/" || path === "/dashboard") {
+            const homeLink = topNav.querySelector('.v3-top-nav-item[href="/dashboard/"]');
+            if (homeLink) homeLink.classList.add("active");
+          }
+        }
+
+        // 2. Update Standard Sidebar if present
         const sidebar = document.querySelector(sidebarSelector);
         if (!sidebar) return;
 

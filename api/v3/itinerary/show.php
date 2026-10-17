@@ -139,7 +139,11 @@ if (!is_array($postData) || empty($postData)) {
     $postData = !empty($_POST) ? $_POST : $_GET;
 }
 
-$rawId = $postData['id'] ?? ($postData['quotation_id'] ?? ($postData['quotationId'] ?? ($_GET['id'] ?? ($_GET['quotation_id'] ?? 0))));
+if (defined('ITINERARY_SHOW_RENDER_ONLY') && ITINERARY_SHOW_RENDER_ONLY) {
+    $rawId = $_GET['id'] ?? ($_GET['quotation_id'] ?? ($postData['quotation_id'] ?? ($postData['quotationId'] ?? 0)));
+} else {
+    $rawId = $postData['id'] ?? ($postData['quotation_id'] ?? ($postData['quotationId'] ?? ($_GET['id'] ?? ($_GET['quotation_id'] ?? 0))));
+}
 $quotationId = 0;
 if (is_numeric($rawId) && (int)$rawId > 0) {
     $quotationId = (int)$rawId;
