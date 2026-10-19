@@ -747,6 +747,55 @@ if ($method === 'GET') {
         }
     }
 
+    // Find unlinked chats that may exist in tbl_enquiry by phone number
+    $unlinkedPhones = [];
+    foreach ($chatRows as $row) {
+        if (empty($row['chat_lead_id']) && !empty($row['chat_phone'])) {
+            $cDigits = preg_replace('/[^0-9]/', '', $row['chat_phone']);
+            if (strlen($cDigits) >= 8) {
+                $unlinkedPhones[] = substr($cDigits, -10);
+            }
+        }
+    }
+
+    $phoneLeadMap = [];
+    if (!empty($unlinkedPhones)) {
+        $uniq10 = array_unique($unlinkedPhones);
+        $likeConds = [];
+        foreach ($uniq10 as $p10) {
+            $escP = mysqli_real_escape_string($connection, $p10);
+            $likeConds[] = "enquiry_mobile LIKE '%{$escP}'";
+        }
+        $leadFindQ = mysqli_query($connection, "SELECT enquiry_id, enquiry_mobile,
+            TRIM(CONCAT(COALESCE(enquiry_first_name, ''), ' ', COALESCE(enquiry_last_name, ''))) as enquiry_name,
+            enquiry_subject as enquiry_destination, enquiry_status, enquiry_agent
+            FROM " . TABLE_PREFIX . "enquiry 
+            WHERE enquiry_site_id = {$siteId} AND (" . implode(' OR ', $likeConds) . ")
+            ORDER BY enquiry_id DESC");
+        if ($leadFindQ) {
+            while ($lr = mysqli_fetch_assoc($leadFindQ)) {
+                $lDigits = preg_replace('/[^0-9]/', '', $lr['enquiry_mobile'] ?? '');
+                if (strlen($lDigits) >= 8) {
+                    $key10 = substr($lDigits, -10);
+                    if (!isset($phoneLeadMap[$key10])) {
+                        $phoneLeadMap[$key10] = $lr;
+                    }
+                }
+            }
+        }
+    }
+
+    // Blacklist device/system names so they never display as customer contact names
+    $blacklistNames = ['blumox technologies', 'blumox', 'whatsapp line', 'crm', 'unassigned'];
+    if (!empty($deviceMap)) {
+        foreach ($deviceMap as $dm) {
+            if (!empty($dm['name'])) {
+                $blacklistNames[] = strtolower(trim($dm['name']));
+            }
+        }
+    }
+    $blacklistNames = array_unique($blacklistNames);
+
     // Find default line phone for fallback
     $defaultLinePhone = '';
     $defDevQ = mysqli_query($connection, "SELECT device_phone FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} AND (device_is_default = 1 OR device_status = 'connected') ORDER BY device_is_default DESC, device_id ASC LIMIT 1");
@@ -779,35 +828,52 @@ if ($method === 'GET') {
             }
         }
 
+        $phone = trim($row['chat_phone'] ?? '');
+        $phoneDigits = preg_replace('/[^0-9]/', '', $phone);
+        $last10 = substr($phoneDigits, -10);
+
+        // Check if phone matches an existing CRM lead
+        if (empty($row['chat_lead_id']) && isset($phoneLeadMap[$last10])) {
+            $mLead = $phoneLeadMap[$last10];
+            $row['chat_lead_id'] = (int)$mLead['enquiry_id'];
+            $row['enquiry_id'] = (int)$mLead['enquiry_id'];
+            $row['enquiry_name'] = $mLead['enquiry_name'];
+            $row['enquiry_destination'] = $mLead['enquiry_destination'];
+            $row['enquiry_status'] = $mLead['enquiry_status'];
+            $row['enquiry_agent'] = $mLead['enquiry_agent'];
+            @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat SET chat_lead_id = {$row['chat_lead_id']} WHERE chat_id = {$row['chat_id']} AND chat_site_id = {$siteId}");
+        }
+
         $leadName = trim($row['enquiry_name'] ?? '');
         $chatName = trim($row['chat_name'] ?? '');
-        $pushName = trim($row['chat_pushname'] ?? '');
-        $phone    = trim($row['chat_phone'] ?? '');
 
-        // If leadName or chatName is a placeholder like "WhatsApp (+919102527221)" or starts with "WhatsApp (", ignore it
+        // Ignore placeholder lead names like "WhatsApp (+919102527221)"
         if (preg_match('/^WhatsApp\s*\(/i', $leadName)) {
             $leadName = '';
         }
-        if (preg_match('/^WhatsApp\s*\(/i', $chatName)) {
+
+        // Validate saved contact name (must not be phone number, placeholder, or device/business name)
+        if (preg_match('/^WhatsApp\s*\(/i', $chatName) || str_starts_with($chatName, '+') || in_array(strtolower($chatName), $blacklistNames, true)) {
             $chatName = '';
         }
+        if (!empty($chatName)) {
+            $cleanNameDigits = preg_replace('/[^0-9]/', '', $chatName);
+            if ($cleanNameDigits === $phoneDigits && strlen($phoneDigits) >= 7) {
+                $chatName = '';
+            }
+        }
 
-        $isLidPhone = (strlen(preg_replace('/[^0-9]/', '', $phone)) >= 14 || str_contains($phone, '@lid'));
-        
-        // Priority for name:
-        // 1. CRM Lead Name
-        // 2. Saved contact name (if not phone and not placeholder)
-        // 3. WhatsApp Profile pushname
-        // 4. Fallback to phone number
+        // User Priority Rules:
+        // 1. If number exists in leads and has lead name -> use Lead Name (Priority)
+        // 2. If saved in contacts with a valid contact name -> use Contact Name
+        // 3. If name is missing from contact -> just show the contact number
         $displayName = '';
         if (!empty($leadName)) {
             $displayName = $leadName;
-        } elseif (!empty($chatName) && $chatName !== $phone && !str_starts_with($chatName, '+') && !$isLidPhone) {
+        } elseif (!empty($chatName)) {
             $displayName = $chatName;
-        } elseif (!empty($pushName)) {
-            $displayName = $pushName;
         } else {
-            $displayName = $isLidPhone ? 'WhatsApp Contact' : $phone;
+            $displayName = $phone;
         }
 
         $cDev = trim($row['chat_device_phone'] ?? '');
@@ -826,7 +892,7 @@ if ($method === 'GET') {
             'phone'             => $phone,
             'name'              => $displayName,
             'raw_name'          => $chatName,
-            'pushname'          => $pushName,
+            'pushname'          => !empty($row['chat_pushname']) ? $row['chat_pushname'] : '',
             'avatar'            => !empty($row['chat_avatar']) ? $row['chat_avatar'] : '',
             'last_message'      => $row['chat_last_message'] ?? '',
             'last_message_time' => $row['chat_last_message_time'] ?? '',

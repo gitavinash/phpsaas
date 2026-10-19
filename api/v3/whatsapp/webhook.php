@@ -648,8 +648,12 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     if (preg_match('/^WhatsApp\s*\(/i', $name)) {
         $name = '';
     }
-    $escName  = mysqli_real_escape_string($connection, !empty($name) && $name !== $cleanPhone ? $name : '');
     $pushName = trim($payload['pushname'] ?? ($payload['pushName'] ?? ($payload['name'] ?? '')));
+    if ($direction === 'outgoing' || stripos($pushName, 'blumox') !== false) {
+        $pushName = '';
+    }
+    $escName  = mysqli_real_escape_string($connection, !empty($name) && $name !== $cleanPhone && stripos($name, 'blumox') === false ? $name : '');
+    $pushName = trim($pushName);
     $escPush  = mysqli_real_escape_string($connection, $pushName);
     $escDevPhone = mysqli_real_escape_string($connection, $connectedDevicePhone);
     $leadVal  = $leadId ? $leadId : "NULL";

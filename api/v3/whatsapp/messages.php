@@ -277,6 +277,50 @@ if ($method === 'GET') {
                                          GROUP BY c.chat_id LIMIT 1");
     $chat = $chatQ ? mysqli_fetch_assoc($chatQ) : null;
     if ($chat) {
+        $chatPhone = trim($chat['chat_phone'] ?? '');
+        $cDigits = preg_replace('/[^0-9]/', '', $chatPhone);
+        $last10 = substr($cDigits, -10);
+
+        // If not linked to a lead, check if phone number exists in tbl_enquiry
+        if (empty($chat['chat_lead_id']) && strlen($last10) >= 8) {
+            $esc10 = mysqli_real_escape_string($connection, $last10);
+            $lFindQ = mysqli_query($connection, "SELECT enquiry_id, TRIM(CONCAT(COALESCE(enquiry_first_name, ''), ' ', COALESCE(enquiry_last_name, ''))) as enquiry_name, enquiry_subject as enquiry_destination, enquiry_status FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND enquiry_mobile LIKE '%{$esc10}' ORDER BY enquiry_id DESC LIMIT 1");
+            if ($lFindQ && mysqli_num_rows($lFindQ) > 0) {
+                $lRow = mysqli_fetch_assoc($lFindQ);
+                $chat['chat_lead_id'] = (int)$lRow['enquiry_id'];
+                $chat['enquiry_id'] = (int)$lRow['enquiry_id'];
+                $chat['enquiry_name'] = $lRow['enquiry_name'];
+                $chat['enquiry_destination'] = $lRow['enquiry_destination'];
+                $chat['enquiry_status'] = $lRow['enquiry_status'];
+                @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat SET chat_lead_id = {$chat['chat_lead_id']} WHERE chat_id = {$chatId} AND chat_site_id = {$siteId}");
+            }
+        }
+
+        $leadName = trim($chat['enquiry_name'] ?? '');
+        $rawName = trim($chat['chat_name'] ?? '');
+
+        if (preg_match('/^WhatsApp\s*\(/i', $leadName)) {
+            $leadName = '';
+        }
+        if (preg_match('/^WhatsApp\s*\(/i', $rawName) || str_starts_with($rawName, '+') || stripos($rawName, 'blumox') !== false) {
+            $rawName = '';
+        }
+        if (!empty($rawName)) {
+            $cleanN = preg_replace('/[^0-9]/', '', $rawName);
+            if ($cleanN === $cDigits && strlen($cDigits) >= 7) {
+                $rawName = '';
+            }
+        }
+
+        // Priority: 1. Lead Name, 2. Contact Name, 3. Contact Phone Number
+        if (!empty($leadName)) {
+            $chat['display_name'] = $leadName;
+        } elseif (!empty($rawName)) {
+            $chat['display_name'] = $rawName;
+        } else {
+            $chat['display_name'] = $chatPhone;
+        }
+
         $chat['device'] = [
             'phone'      => !empty($chat['chat_device_phone']) ? $chat['chat_device_phone'] : (!empty($chat['device_phone']) ? $chat['device_phone'] : ''),
             'name'       => !empty($chat['device_name']) ? $chat['device_name'] : 'WhatsApp Line',

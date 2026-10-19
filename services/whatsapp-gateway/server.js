@@ -1207,7 +1207,7 @@ class WhatsAppSession {
           existing.conversationTimestamp = ts;
           if (body) existing.lastMessageText = body;
         }
-        if (m.pushName && !existing.pushName) {
+        if (!m.key?.fromMe && m.pushName && !existing.pushName) {
           existing.pushName = m.pushName;
         }
         if (!existing.messages) existing.messages = [];
@@ -1730,8 +1730,8 @@ class WhatsAppSession {
             }
           } catch (e) {}
 
-          const pushName = msg.pushName || this.getContactName(jid) || "";
           const isFromMe = !!msg.key.fromMe;
+          const pushName = isFromMe ? "" : (msg.pushName || this.getContactName(jid) || "");
           const ts = extractTimestamp(msg.messageTimestamp);
 
           let previewText = body;
@@ -1743,7 +1743,7 @@ class WhatsAppSession {
           existing.conversationTimestamp = ts;
           existing.lastMessageText = previewText;
           if (avatarUrl && !existing.avatar) existing.avatar = avatarUrl;
-          if (pushName && !existing.pushName) existing.pushName = pushName;
+          if (!isFromMe && pushName && !existing.pushName) existing.pushName = pushName;
           if (!isFromMe) {
             existing.unreadCount = (existing.unreadCount || 0) + 1;
           }
@@ -1769,7 +1769,7 @@ class WhatsAppSession {
             phone: contactPhone,
             from: isFromMe ? (this.connectedUser?.phone || "") : contactPhone,
             to: isFromMe ? contactPhone : (this.connectedUser?.phone || ""),
-            name: isFromMe ? (this.connectedUser?.name || "") : (pushName || ""),
+            name: isFromMe ? (this.getContactName(jid) || "") : (pushName || ""),
             pushname: pushName,
             avatar: avatarUrl || "",
             text: mediaInfo ? (mediaInfo.caption || "") : body,

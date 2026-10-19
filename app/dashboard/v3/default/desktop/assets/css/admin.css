@@ -13571,12 +13571,19 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
   border: 1px solid #e2e8f0 !important;
 }
 
-/* Contact Bar (WhatsApp, Call, Follow-Up) */
+/* Contact Bar (WhatsApp, Call, Follow-Up) - Dynamic Auto Columns */
 .v3-fa-contact-bar {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 6px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  gap: 8px !important;
   margin-bottom: 12px !important;
+  width: 100% !important;
+}
+
+.v3-fa-contact-bar > .v3-fa-contact-btn {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
 }
 
 .v3-fa-contact-btn {

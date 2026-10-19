@@ -847,16 +847,16 @@
             if (isActive && String(self.activeChatId) !== String(chat.chat_id)) {
               self.activeChatId = chat.chat_id;
             }
-            const initials = self.getInitials(chat.name);
-            const avatarContent = chat.avatar
-              ? `<img src="${self.escapeHtml(chat.avatar)}" alt="" class="wa-avatar-img" />`
-              : (initials || '<i class="fi fi-rr-user"></i>');
-
             const displayName = chat.name || chat.phone;
             const phone = chat.phone || "";
             const cleanPhoneDigits = self.cleanDigits(phone);
             const cleanNameDigits = self.cleanDigits(displayName);
-            const hasDistinctName = displayName && phone && cleanNameDigits !== cleanPhoneDigits && !displayName.startsWith("+");
+            const hasDistinctName = displayName && phone && cleanNameDigits !== cleanPhoneDigits && !displayName.startsWith("+") && !displayName.toLowerCase().includes("blumox");
+
+            const initials = hasDistinctName ? self.getInitials(displayName) : "";
+            const avatarContent = chat.avatar
+              ? `<img src="${self.escapeHtml(chat.avatar)}" alt="" class="wa-avatar-img" />`
+              : (initials || '<i class="fi fi-rr-user"></i>');
 
             const devInfo = chat.device || {};
             const devPhone = devInfo.phone || "";
@@ -1000,15 +1000,17 @@
           if (chat) {
             const phone = (chat.chat_phone || "").trim();
             let rawName = (chat.chat_name || "").trim();
-            if (rawName.startsWith("WhatsApp (")) {
+            if (rawName.startsWith("WhatsApp (") || rawName.toLowerCase().includes("blumox")) {
               rawName = "";
             }
-            const pushName = (chat.chat_pushname || "").trim();
             const leadName = (chat.enquiry_name || "").trim();
-            const displayName = leadName || rawName || pushName || "";
+            const cleanLeadName = (leadName.startsWith("WhatsApp (") || leadName.toLowerCase().includes("blumox")) ? "" : leadName;
+            
+            // Priority: 1. Lead Name, 2. Contact Name, 3. Contact Phone Number
+            const displayName = chat.display_name || cleanLeadName || rawName || phone;
             const cleanPhoneDigits = self.cleanDigits(phone);
             const cleanNameDigits = self.cleanDigits(displayName);
-            const isNameReal = displayName && cleanNameDigits !== cleanPhoneDigits && !displayName.startsWith("+");
+            const isNameReal = displayName && cleanNameDigits !== cleanPhoneDigits && !displayName.startsWith("+") && !displayName.toLowerCase().includes("blumox");
 
             if (isNameReal) {
               $("#waActiveName").text(displayName);
