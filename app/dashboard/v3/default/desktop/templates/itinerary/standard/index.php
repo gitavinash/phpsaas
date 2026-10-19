@@ -2477,12 +2477,12 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
 
                         <?php if (defined('COMPANY_WHATSAPP_NUMBER') && !empty(COMPANY_WHATSAPP_NUMBER)): ?>
                             <div class="contact-item">
-                                <i class="ri-whatsapp-fill" style="color: #16a34a;"></i>
+                                <i class="ri-whatsapp-line" style="color: #16a34a;"></i>
                                 <span><strong>WhatsApp:</strong> <?php echo htmlspecialchars(COMPANY_WHATSAPP_NUMBER); ?></span>
                             </div>
                         <?php elseif (!empty($siteWhatsapp)): ?>
                             <div class="contact-item">
-                                <i class="ri-whatsapp-fill" style="color: #16a34a;"></i>
+                                <i class="ri-whatsapp-line" style="color: #16a34a;"></i>
                                 <span><strong>WhatsApp:</strong> <?php echo htmlspecialchars($siteWhatsapp); ?></span>
                             </div>
                         <?php endif; ?>

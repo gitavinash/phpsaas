@@ -558,7 +558,10 @@ nav.side-nav i.fi-rr-picture { color: #a855f7 !important; } /* Violet - Hero Sli
 nav.side-nav i.fi-rr-interrogation { color: #eab308 !important; } /* Golden Amber - FAQs */
 nav.side-nav i.fi-rr-chart-histogram { color: #ec4899 !important; } /* Rose Pink - Performance Reports */
 nav.side-nav i.fi-rr-plug-connection { color: #8b5cf6 !important; } /* Neon Violet - Plugins & Integrations */
-nav.side-nav i.fi-rr-comment-alt-middle { color: #22c55e !important; } /* WhatsApp Green - Live Chat Inbox */
+nav.side-nav i.ri-whatsapp-fill,
+nav.side-nav i.ri-whatsapp-line,
+nav.side-nav i.fi-brands-whatsapp,
+nav.side-nav i.fi-rr-comment-alt-middle { color: #25D366 !important; font-size: 17px !important; } /* WhatsApp Green - Live Chat Inbox */
 nav.side-nav i.fi-rr-qr-scan { color: #059669 !important; } /* Dark Teal - WhatsApp Device / QR */
 nav.side-nav i.fi-rr-users-alt { color: #0284c7 !important; } /* Azure Blue - Team & Users */
 nav.side-nav i.fi-rr-shop { color: #6366f1 !important; } /* Indigo - Companies & Branches */

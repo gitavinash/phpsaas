@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Universal WhatsApp Web CRM Aside Menu Section
  * Path: /app/dashboard/v3/default/desktop/dashboard/app/aside/whatsapp_section.php
@@ -23,7 +24,7 @@ $isWaDevicePage = (strpos($currentAsideUrl, '/integration/whatsapp_web') !== fal
 </li>
 
 <li data-aside-plugin="whatsapp_web" class="<?php echo ($isWaInboxPage ? 'active' : '') . $waVisibilityClass; ?>">
-    <a href="/dashboard/whatsapp/"><i class="fi fi-rr-comment-alt-middle"></i> WhatsApp Inbox</a>
+    <a href="/dashboard/whatsapp/"><i class="ri-whatsapp-line"></i> WhatsApp Inbox</a>
     <div class="side-menu">
         <ul>
             <li><a href="/dashboard/whatsapp/"><i class="fi fi-rr-inbox-in"></i> All Conversations</a></li>
@@ -65,13 +66,13 @@ $isWaDevicePage = (strpos($currentAsideUrl, '/integration/whatsapp_web') !== fal
     <div class="side-menu">
         <ul>
             <li><a href="/dashboard/integration/whatsapp_web/"><i class="fi fi-rr-mobile-notch"></i> Pair Device (QR)</a></li>
-            <li><a href="/dashboard/whatsapp/"><i class="fi fi-rr-comment-alt-middle"></i> Live Chat Inbox</a></li>
+            <li><a href="/dashboard/whatsapp/"><i class="ri-whatsapp-line"></i> Live Chat Inbox</a></li>
         </ul>
     </div>
     <div class="bottom-menu">
         <ul>
             <li><a href="/dashboard/integration/whatsapp_web/"><i class="fi fi-rr-mobile-notch"></i> Pair Device (QR)</a></li>
-            <li><a href="/dashboard/whatsapp/"><i class="fi fi-rr-comment-alt-middle"></i> Live Chat Inbox</a></li>
+            <li><a href="/dashboard/whatsapp/"><i class="ri-whatsapp-line"></i> Live Chat Inbox</a></li>
         </ul>
     </div>
 </li>

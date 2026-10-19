@@ -127,10 +127,10 @@ if (!function_exists('parseBulletList')) {
         } else {
             $rawStr = (string)$input;
             $hasLineBreaks = (
-                str_contains($rawStr, '<br') || 
-                str_contains($rawStr, '</li') || 
-                str_contains($rawStr, '</p') || 
-                str_contains($rawStr, "\n") || 
+                str_contains($rawStr, '<br') ||
+                str_contains($rawStr, '</li') ||
+                str_contains($rawStr, '</p') ||
+                str_contains($rawStr, "\n") ||
                 str_contains($rawStr, "\r")
             );
 
@@ -359,7 +359,7 @@ $rawCancellationPolicy = ($cancellation_policy ?? ($tour_package_cancellation_po
 $rawTermsConditions    = ($terms_and_conditions ?? ($tour_package_terms_and_conditions ?? ''));
 
 // Helper: Format hotel category
-$formatCategoryName = function($rawCategory, $stars = '') {
+$formatCategoryName = function ($rawCategory, $stars = '') {
     $cat = trim((string)$rawCategory);
     if (empty($cat) && !empty($stars)) {
         $cat = $stars;
@@ -392,7 +392,7 @@ $formatCategoryName = function($rawCategory, $stars = '') {
 };
 
 // Helper: Format meal plan
-$formatMealPlanName = function($rawMeal) {
+$formatMealPlanName = function ($rawMeal) {
     $m = strtoupper(trim((string)$rawMeal));
     if (empty($m)) return '';
     $mealMap = [
@@ -405,7 +405,7 @@ $formatMealPlanName = function($rawMeal) {
 };
 
 // Helper: Category default thumbnail
-$getCategoryThumbnail = function($categoryName, $stayName = '') {
+$getCategoryThumbnail = function ($categoryName, $stayName = '') {
     $combined = strtolower($categoryName . ' ' . $stayName);
     if (str_contains($combined, 'houseboat')) {
         return 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&auto=format&fit=crop&q=80';
@@ -426,20 +426,21 @@ $getCategoryThumbnail = function($categoryName, $stayName = '') {
 };
 
 // Helper: Transit or trip end detection
-$isTransitOrTripEnd = function($dayTitle, $dayOverview = '', $stayCity = '') {
+$isTransitOrTripEnd = function ($dayTitle, $dayOverview = '', $stayCity = '') {
     $combined = strtolower(trim((string)$dayTitle . ' ' . (string)$dayOverview . ' ' . (string)$stayCity));
-    if (str_contains($combined, 'transit') || 
-        str_contains($combined, 'overnight journey') || 
-        str_contains($combined, 'overnight travel') || 
-        str_contains($combined, 'night journey') || 
-        str_contains($combined, 'no hotel') || 
-        str_contains($combined, 'no stay') || 
-        str_contains($combined, 'trip end') || 
-        str_contains($combined, 'tour end') || 
-        str_contains($combined, 'departure') || 
-        str_contains($combined, 'drop') || 
-        str_contains($combined, 'return') || 
-        str_contains($combined, 'fly back') || 
+    if (
+        str_contains($combined, 'transit') ||
+        str_contains($combined, 'overnight journey') ||
+        str_contains($combined, 'overnight travel') ||
+        str_contains($combined, 'night journey') ||
+        str_contains($combined, 'no hotel') ||
+        str_contains($combined, 'no stay') ||
+        str_contains($combined, 'trip end') ||
+        str_contains($combined, 'tour end') ||
+        str_contains($combined, 'departure') ||
+        str_contains($combined, 'drop') ||
+        str_contains($combined, 'return') ||
+        str_contains($combined, 'fly back') ||
         str_contains($combined, 'back home')
     ) {
         return true;
@@ -2115,10 +2116,12 @@ if (!empty($cleanOverview)) {
                 left: -40%;
                 width: 30%;
             }
+
             50% {
                 left: 30%;
                 width: 50%;
             }
+
             100% {
                 left: 100%;
                 width: 30%;
@@ -2137,6 +2140,7 @@ if (!empty($cleanOverview)) {
             .itinerary-loader-overlay {
                 display: none !important;
             }
+
             @page {
                 size: A4 portrait;
                 margin: 0;
@@ -2345,27 +2349,27 @@ if (!empty($cleanOverview)) {
         $propertyLookupCache = [];
 
         // Check if day represents transit / journey / trip conclusion
-        $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
+        $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
             $combined = strtolower(trim((string)$title . ' ' . (string)$overview));
             $cityStr = strtolower(trim((string)($d['city'] ?? ($d['stay_city'] ?? ''))));
             $stayStr = strtolower(trim((string)($d['stay'] ?? ($d['hotel'] ?? ''))));
 
             if ($stayStr !== '' && (
-                str_contains($stayStr, 'no stay') || 
-                str_contains($stayStr, 'no hotel') || 
-                str_contains($stayStr, 'overnight journey') || 
-                str_contains($stayStr, 'tour end') || 
-                str_contains($stayStr, 'trip end') || 
+                str_contains($stayStr, 'no stay') ||
+                str_contains($stayStr, 'no hotel') ||
+                str_contains($stayStr, 'overnight journey') ||
+                str_contains($stayStr, 'tour end') ||
+                str_contains($stayStr, 'trip end') ||
                 str_contains($stayStr, 'conclude')
             )) {
                 return true;
             }
 
             if ($cityStr !== '' && (
-                str_contains($cityStr, 'transit') || 
-                str_contains($cityStr, 'overnight') || 
-                str_contains($cityStr, 'no stay') || 
-                str_contains($cityStr, 'tour end') || 
+                str_contains($cityStr, 'transit') ||
+                str_contains($cityStr, 'overnight') ||
+                str_contains($cityStr, 'no stay') ||
+                str_contains($cityStr, 'tour end') ||
                 str_contains($cityStr, 'trip end')
             )) {
                 return true;
@@ -2408,11 +2412,11 @@ if (!empty($cleanOverview)) {
             // If last day and mentions departure / drop / return
             if ($idx === $total) {
                 if (
-                    str_contains($combined, 'departure') || 
-                    str_contains($combined, 'depart') || 
-                    str_contains($combined, 'drop') || 
-                    str_contains($combined, 'return') || 
-                    str_contains($combined, 'fly back') || 
+                    str_contains($combined, 'departure') ||
+                    str_contains($combined, 'depart') ||
+                    str_contains($combined, 'drop') ||
+                    str_contains($combined, 'return') ||
+                    str_contains($combined, 'fly back') ||
                     str_contains($combined, 'back home') ||
                     str_contains($combined, 'delhi')
                 ) {
@@ -2424,7 +2428,7 @@ if (!empty($cleanOverview)) {
         };
 
         // Format hotel category
-        $formatCategoryName = function($rawCategory, $stars = '') {
+        $formatCategoryName = function ($rawCategory, $stars = '') {
             $cat = trim((string)$rawCategory);
             if (empty($cat) && !empty($stars)) {
                 $cat = $stars;
@@ -2456,7 +2460,7 @@ if (!empty($cleanOverview)) {
         };
 
         // Format meal plan
-        $formatMealPlanName = function($rawMeal) {
+        $formatMealPlanName = function ($rawMeal) {
             $m = strtoupper(trim((string)$rawMeal));
             if (empty($m)) return '';
             $mealMap = [
@@ -2469,7 +2473,7 @@ if (!empty($cleanOverview)) {
         };
 
         // Category default thumbnail
-        $getCategoryThumbnail = function($categoryName, $stayName = '') {
+        $getCategoryThumbnail = function ($categoryName, $stayName = '') {
             $combined = strtolower($categoryName . ' ' . $stayName);
             if (str_contains($combined, 'houseboat')) {
                 return 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&auto=format&fit=crop&q=80';
@@ -2550,9 +2554,9 @@ if (!empty($cleanOverview)) {
 
             // Check if stay is explicitly in transit or no hotel
             $isTransitStay = (
-                str_contains($stayCityLower, 'transit') || 
-                str_contains($stayCityLower, 'overnight') || 
-                str_contains($stayCityLower, 'no stay') || 
+                str_contains($stayCityLower, 'transit') ||
+                str_contains($stayCityLower, 'overnight') ||
+                str_contains($stayCityLower, 'no stay') ||
                 str_contains($stayCityLower, 'no hotel') ||
                 str_contains($stayCityLower, 'trip end') ||
                 str_contains($stayCityLower, 'tour end') ||
@@ -2925,10 +2929,10 @@ if (!empty($cleanOverview)) {
                     </div>
 
                     <!-- 6. Direct Bank Remittance & Dynamic UPI QR Section (Hidden if both empty) -->
-                    <?php 
+                    <?php
                     $hasAnyBank = !empty($companyBankAcNumber) || !empty($companyBankName) || !empty($companyBankDetails);
                     $hasAnyUpi  = !empty($companyUpiId);
-                    if ($hasAnyBank || $hasAnyUpi): 
+                    if ($hasAnyBank || $hasAnyUpi):
                         $bankUpiClass = ($hasAnyBank && $hasAnyUpi) ? '' : 'single-col';
                     ?>
                         <div class="bank-upi-section <?php echo $bankUpiClass; ?>">
@@ -3295,63 +3299,63 @@ if (!empty($cleanOverview)) {
                 $spWords    = preg_split('/\s+/', trim($spName));
                 $spInitials = strtoupper(mb_substr($spWords[0], 0, 1) . (count($spWords) > 1 ? mb_substr(end($spWords), 0, 1) : ''));
                 ?>
-                    <!-- Salesperson / Dedicated Specialist Card -->
-                    <div class="sp-card">
-                        <div class="sp-card-top">
-                            <div class="sp-avatar-col">
-                                <?php if (!empty($spImage)): ?>
-                                    <img src="<?php echo htmlspecialchars($spImage); ?>" alt="<?php echo htmlspecialchars($spName); ?>" class="sp-avatar">
-                                <?php else: ?>
-                                    <div class="sp-avatar-initials"><?php echo htmlspecialchars($spInitials); ?></div>
-                                <?php endif; ?>
-                            </div>
-                            <div class="sp-identity-col">
-                                <div class="sp-badge">
-                                    <i class="ri-user-star-fill"></i> Your Dedicated Travel Specialist
-                                </div>
-                                <div class="sp-name"><?php echo htmlspecialchars($spName); ?></div>
-                                <div class="sp-desig"><?php echo htmlspecialchars($spDesig); ?> &bull; Direct Tour Coordinator</div>
-                            </div>
+                <!-- Salesperson / Dedicated Specialist Card -->
+                <div class="sp-card">
+                    <div class="sp-card-top">
+                        <div class="sp-avatar-col">
+                            <?php if (!empty($spImage)): ?>
+                                <img src="<?php echo htmlspecialchars($spImage); ?>" alt="<?php echo htmlspecialchars($spName); ?>" class="sp-avatar">
+                            <?php else: ?>
+                                <div class="sp-avatar-initials"><?php echo htmlspecialchars($spInitials); ?></div>
+                            <?php endif; ?>
                         </div>
-
-                        <div class="sp-contacts-large-grid">
-                            <?php if (!empty($spMobile)): ?>
-                                <a href="tel:<?php echo htmlspecialchars($cleanSpMobileDigits); ?>" class="sp-contact-box" title="Call <?php echo htmlspecialchars($spName); ?>">
-                                    <div class="sp-icon-circle sp-phone-circle">
-                                        <i class="ri-phone-fill"></i>
-                                    </div>
-                                    <div class="sp-contact-details">
-                                        <span class="sp-field-label">Direct Calling</span>
-                                        <span class="sp-field-value"><?php echo htmlspecialchars($spMobile); ?></span>
-                                    </div>
-                                </a>
-
-                                <?php if (!empty($cleanSpWhatsappDigits)): ?>
-                                    <a href="https://wa.me/<?php echo htmlspecialchars($cleanSpWhatsappDigits); ?>?text=<?php echo rawurlencode("Hello " . $spName . ", I have a query regarding itinerary " . $cleanQuoteRef); ?>" target="_blank" rel="noopener" class="sp-contact-box" title="Chat on WhatsApp">
-                                        <div class="sp-icon-circle sp-wa-circle">
-                                            <i class="ri-whatsapp-fill"></i>
-                                        </div>
-                                        <div class="sp-contact-details">
-                                            <span class="sp-field-label">WhatsApp Number</span>
-                                            <span class="sp-field-value"><?php echo htmlspecialchars($spWhatsappDisplay); ?></span>
-                                        </div>
-                                    </a>
-                                <?php endif; ?>
-                            <?php endif; ?>
-
-                            <?php if (!empty($spEmail)): ?>
-                                <a href="mailto:<?php echo htmlspecialchars($spEmail); ?>" class="sp-contact-box sp-contact-box-full" title="Email <?php echo htmlspecialchars($spName); ?>">
-                                    <div class="sp-icon-circle sp-email-circle">
-                                        <i class="ri-mail-fill"></i>
-                                    </div>
-                                    <div class="sp-contact-details">
-                                        <span class="sp-field-label">Email Address</span>
-                                        <span class="sp-field-value"><?php echo htmlspecialchars($spEmail); ?></span>
-                                    </div>
-                                </a>
-                            <?php endif; ?>
+                        <div class="sp-identity-col">
+                            <div class="sp-badge">
+                                <i class="ri-user-star-fill"></i> Your Dedicated Travel Specialist
+                            </div>
+                            <div class="sp-name"><?php echo htmlspecialchars($spName); ?></div>
+                            <div class="sp-desig"><?php echo htmlspecialchars($spDesig); ?> &bull; Direct Tour Coordinator</div>
                         </div>
                     </div>
+
+                    <div class="sp-contacts-large-grid">
+                        <?php if (!empty($spMobile)): ?>
+                            <a href="tel:<?php echo htmlspecialchars($cleanSpMobileDigits); ?>" class="sp-contact-box" title="Call <?php echo htmlspecialchars($spName); ?>">
+                                <div class="sp-icon-circle sp-phone-circle">
+                                    <i class="ri-phone-fill"></i>
+                                </div>
+                                <div class="sp-contact-details">
+                                    <span class="sp-field-label">Direct Calling</span>
+                                    <span class="sp-field-value"><?php echo htmlspecialchars($spMobile); ?></span>
+                                </div>
+                            </a>
+
+                            <?php if (!empty($cleanSpWhatsappDigits)): ?>
+                                <a href="https://wa.me/<?php echo htmlspecialchars($cleanSpWhatsappDigits); ?>?text=<?php echo rawurlencode("Hello " . $spName . ", I have a query regarding itinerary " . $cleanQuoteRef); ?>" target="_blank" rel="noopener" class="sp-contact-box" title="Chat on WhatsApp">
+                                    <div class="sp-icon-circle sp-wa-circle">
+                                        <i class="ri-whatsapp-line"></i>
+                                    </div>
+                                    <div class="sp-contact-details">
+                                        <span class="sp-field-label">WhatsApp Number</span>
+                                        <span class="sp-field-value"><?php echo htmlspecialchars($spWhatsappDisplay); ?></span>
+                                    </div>
+                                </a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                        <?php if (!empty($spEmail)): ?>
+                            <a href="mailto:<?php echo htmlspecialchars($spEmail); ?>" class="sp-contact-box sp-contact-box-full" title="Email <?php echo htmlspecialchars($spName); ?>">
+                                <div class="sp-icon-circle sp-email-circle">
+                                    <i class="ri-mail-fill"></i>
+                                </div>
+                                <div class="sp-contact-details">
+                                    <span class="sp-field-label">Email Address</span>
+                                    <span class="sp-field-value"><?php echo htmlspecialchars($spEmail); ?></span>
+                                </div>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
 
             </div>
         </section>
@@ -3751,7 +3755,9 @@ if (!empty($cleanOverview)) {
                 if (img.complete && img.naturalWidth === 0) {
                     handleImgError();
                 } else {
-                    img.addEventListener('error', handleImgError, { once: true });
+                    img.addEventListener('error', handleImgError, {
+                        once: true
+                    });
                 }
             });
 
@@ -3812,7 +3818,9 @@ if (!empty($cleanOverview)) {
                     throw new Error("No itinerary pages found to export.");
                 }
 
-                const jspdfModule = window.jspdf || (typeof jsPDF !== 'undefined' ? { jsPDF } : null);
+                const jspdfModule = window.jspdf || (typeof jsPDF !== 'undefined' ? {
+                    jsPDF
+                } : null);
                 if (!jspdfModule || !jspdfModule.jsPDF) {
                     throw new Error("jsPDF library is not loaded.");
                 }
@@ -3846,7 +3854,7 @@ if (!empty($cleanOverview)) {
                 }
 
                 if (msg && shouldSave !== false) msg.textContent = 'Saving PDF file...';
-                <?php 
+                <?php
                 $safePdfTitle = preg_replace('/_+/', '_', preg_replace('/[^a-zA-Z0-9_-]/', '_', str_replace('&', 'and', cleanItineraryUnicode($pkgTitle))));
                 $safePdfTitle = trim($safePdfTitle, '_');
                 if (empty($safePdfTitle)) $safePdfTitle = 'Tour_Package';

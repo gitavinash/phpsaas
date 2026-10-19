@@ -128,7 +128,7 @@ if (isset($daterange)) {
                         <i class="fi fi-rr-check"></i> <span>Confirmed</span>
                     </a>
                     <a href="/dashboard/whatsapp/" class="v3-top-nav-item v3-nav-whatsapp <?php echo (strpos($currentUrl, '/whatsapp') !== false ? 'active' : ''); ?>" id="v3AgentNavWhatsapp" data-tooltip="Live WhatsApp CRM Chat">
-                        <i class="ri-whatsapp-fill"></i> <span>WhatsApp Inbox</span>
+                        <i class="ri-whatsapp-line"></i> <span>WhatsApp Inbox</span>
                     </a>
                 </nav>
             </div>
@@ -162,34 +162,34 @@ if (isset($daterange)) {
     </header>
 
     <?php if (!$isAgent) { ?>
-    <aside id="sidebar">
-        <div class="logo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>"></a>
-        </div>
-        <nav class="side-nav">
-            <ul>
+        <aside id="sidebar">
+            <div class="logo"><a href="/dashboard/"><img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>"></a>
+            </div>
+            <nav class="side-nav">
+                <ul>
 
-                <?php
-                $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
+                    <?php
+                    $appAsideFile = $appDashboardDirectory . 'aside/' . strtolower(SITE_APP) . '.php';
 
-                if (file_exists($appAsideFile)) {
-                    require_once $appAsideFile;
-                } else {
-                    require_once $appDashboardDirectory . 'aside/default.php';
-                }
+                    if (file_exists($appAsideFile)) {
+                        require_once $appAsideFile;
+                    } else {
+                        require_once $appDashboardDirectory . 'aside/default.php';
+                    }
 
-                $waAsideSectionFile = $appDashboardDirectory . 'aside/whatsapp_section.php';
-                if (file_exists($waAsideSectionFile) && !defined('ISW_WA_ASIDE_LOADED')) {
-                    require_once $waAsideSectionFile;
-                }
-                ?>
+                    $waAsideSectionFile = $appDashboardDirectory . 'aside/whatsapp_section.php';
+                    if (file_exists($waAsideSectionFile) && !defined('ISW_WA_ASIDE_LOADED')) {
+                        require_once $waAsideSectionFile;
+                    }
+                    ?>
 
-                <li class="appVersion">
-                    <p>App version 3.0</p>
-                </li>
-            </ul>
-        </nav>
+                    <li class="appVersion">
+                        <p>App version 3.0</p>
+                    </li>
+                </ul>
+            </nav>
 
-    </aside>
+        </aside>
     <?php } ?>
 
     <?php
