@@ -156,7 +156,7 @@ if ($pageRow) {
         <div class="v3-table-card">
             <div class="v3-table-card-header">
                 <div class="v3-table-card-header-left">
-                    <i class="fi fi-rr-form" style="color: #1877f2; font-size: 18px;"></i>
+                    <i class="fi fi-rr-form v3-form-card-icon color-blue"></i>
                     <h3>Subscribed Lead Generation Forms</h3>
                     <span class="v3-badge v3-badge-blue"><?php echo $formsCount; ?> Active</span>
                 </div>
@@ -175,7 +175,7 @@ if ($pageRow) {
                             <th>Form ID</th>
                             <th>Webhook Integration</th>
                             <th>Status</th>
-                            <th style="text-align: right;">Action</th>
+                            <th class="text-end">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -205,7 +205,7 @@ if ($pageRow) {
                                         <span class="status-pulse-dot"></span> Active
                                     </span>
                                 </td>
-                                <td style="text-align: right;">
+                                <td class="text-end">
                                     <a href="/dashboard/integration/facebook/form-leads/?id=<?php echo urlencode($form['fb_forms_id']); ?>" class="v3-btn-table-action" title="View Form Leads">
                                         <i class="fi fi-rr-users"></i> View Form Leads
                                     </a>

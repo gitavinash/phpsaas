@@ -24,7 +24,7 @@ $encodedId = base64_encode((string)$packageId);
                         <i class="fi fi-rr-moon pkg-duration-moon"></i> 0N / <i class="fi fi-rr-sun pkg-duration-sun"></i> 1D
                     </span>
                     <span class="pkg-duration-badge" id="pkgMetaLocation">
-                        <i class="fi fi-rr-marker" style="color: #0284c7;"></i> International
+                        <i class="fi fi-rr-marker pkg-duration-marker"></i> International
                     </span>
                 </div>
             </div>

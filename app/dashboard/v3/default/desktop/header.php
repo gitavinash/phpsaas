@@ -50,6 +50,7 @@ if (isset($daterange)) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-brands/css/uicons-brands.css'>
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>sweetalert/sweetalert.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>ui/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>daterangepicker/daterangepicker.css">
@@ -68,8 +69,7 @@ if (isset($daterange)) {
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>web_forms.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>transporter-quote.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>transporter-fleet.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>whatsapp_automation.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>lead_automation.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>whatsapp_templates.css?v=<?php echo time(); ?>">
     <?php
     if (SITE_VERSION == 'mobile') {
         echo "<link rel='stylesheet' type='text/css' href='" . ADMIN_STYLESHEET . "admin_mobile.css'>";
@@ -112,31 +112,25 @@ if (isset($daterange)) {
                     <img src="<?php echo $app_image ?>" alt="<?php echo $app_title ?>">
                 </a>
                 <nav class="v3-agent-top-nav">
-                    <a href="/dashboard/" class="v3-top-nav-item <?php echo ($isDashboardActive ? 'active' : ''); ?>">
+                    <a href="/dashboard/" class="v3-top-nav-item v3-nav-dashboard <?php echo ($isDashboardActive ? 'active' : ''); ?>" data-tooltip="Dashboard Overview">
                         <i class="fi fi-rr-apps"></i> <span>Dashboard</span>
                     </a>
-                    <a href="/dashboard/leads/list/" class="v3-top-nav-item <?php echo (strpos($currentUrl, '/leads/list') !== false && !isset($_GET['leadStatus']) ? 'active' : ''); ?>">
+                    <a href="/dashboard/leads/list/" class="v3-top-nav-item v3-nav-leads <?php echo (strpos($currentUrl, '/leads/list') !== false && !isset($_GET['leadStatus']) ? 'active' : ''); ?>" data-tooltip="All Leads Pipeline">
                         <i class="fi fi-rr-chart-network"></i> <span>Leads</span>
                     </a>
-                    <a href="/dashboard/leads/add/" class="v3-top-nav-item <?php echo (strpos($currentUrl, '/leads/add') !== false ? 'active' : ''); ?>">
+                    <a href="/dashboard/leads/add/" class="v3-top-nav-item v3-nav-add-lead <?php echo (strpos($currentUrl, '/leads/add') !== false ? 'active' : ''); ?>" data-tooltip="Create New Lead">
                         <i class="fi fi-rr-add"></i> <span>Add Lead</span>
                     </a>
-                    <a href="/dashboard/leads/list/?leadStatus=3" class="v3-top-nav-item <?php echo (isset($_GET['leadStatus']) && $_GET['leadStatus'] == '3' ? 'active' : ''); ?>">
+                    <a href="/dashboard/leads/list/?leadStatus=3" class="v3-top-nav-item v3-nav-followups <?php echo (isset($_GET['leadStatus']) && $_GET['leadStatus'] == '3' ? 'active' : ''); ?>" data-tooltip="Scheduled Follow-ups">
                         <i class="fi fi-rr-comment"></i> <span>Follow-ups</span>
                     </a>
-                    <a href="/dashboard/leads/list/?leadStatus=1" class="v3-top-nav-item <?php echo (isset($_GET['leadStatus']) && $_GET['leadStatus'] == '1' ? 'active' : ''); ?>">
+                    <a href="/dashboard/leads/list/?leadStatus=1" class="v3-top-nav-item v3-nav-confirmed <?php echo (isset($_GET['leadStatus']) && $_GET['leadStatus'] == '1' ? 'active' : ''); ?>" data-tooltip="Confirmed Deals">
                         <i class="fi fi-rr-check"></i> <span>Confirmed</span>
                     </a>
-                    <a href="/dashboard/whatsapp/" class="v3-top-nav-item <?php echo (strpos($currentUrl, '/whatsapp') !== false ? 'active' : ''); ?>">
-                        <i class="fi fi-rr-comment-alt-middle"></i> <span>WhatsApp Inbox</span>
+                    <a href="/dashboard/whatsapp/" class="v3-top-nav-item v3-nav-whatsapp <?php echo (strpos($currentUrl, '/whatsapp') !== false ? 'active' : ''); ?>" id="v3AgentNavWhatsapp" data-tooltip="Live WhatsApp CRM Chat">
+                        <i class="ri-whatsapp-fill"></i> <span>WhatsApp Inbox</span>
                     </a>
                 </nav>
-            </div>
-        <?php } else { ?>
-            <div class="v3-minimized-brand-logo">
-                <a href="/dashboard/" title="<?php echo !empty($app_title) ? $app_title : 'Aleya'; ?>">
-                    <img src="<?php echo !empty($app_image) ? $app_image : (defined('SITE_APP_IMAGE') ? SITE_APP_IMAGE : '/app/cms/visitor/blumox/desktop/assets/images/logo.svg'); ?>" alt="<?php echo !empty($app_title) ? $app_title : 'Aleya'; ?>">
-                </a>
             </div>
         <?php } ?>
 

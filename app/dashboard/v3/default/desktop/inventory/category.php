@@ -12,7 +12,7 @@
 <div class="main-box">
     <section>
         <div class="list-box">
-            <table class="showInventoryTableList display nowrap" style="width:100%;">
+            <table class="showInventoryTableList display nowrap w-100">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -177,7 +177,7 @@ if ($__rs = mysqli_query(
 ?>
 
 <!-- Category Modal (Add + Edit) -->
-<div class="popUp categoryBox" id="categoryModal" aria-hidden="true" style="display:none;">
+<div class="popUp categoryBox" id="categoryModal" aria-hidden="true">
     <div class="<?php echo ((SITE_VERSION == 'mobile') ? 'fullScreenPopUpBox' : 'smallPopUpBox') ?>">
         <div class="widget box-7">
             <div class="contentArea">
@@ -194,7 +194,7 @@ if ($__rs = mysqli_query(
                             </div>
 
                             <div class="form-group">
-                                <select class="selectJS form-control" id="catParentSelect" name="category_parent_id">
+                                <select class="selectJS2 form-control" id="catParentSelect" name="category_parent_id">
                                     <?php echo $parentOptions; ?>
                                 </select>
                                 <label class="form-lable" for="catParentSelect">Parent category</label>

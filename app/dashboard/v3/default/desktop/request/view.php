@@ -56,8 +56,7 @@ if ($checkEnquiry = mysqli_query($connection, $requestQuery)) {
                                 alt="" srcset="">
                         </div>
                         <div class="info">
-                            <h2 class="heading"
-                                <?php echo (($request_status == 4 || $request_status == 5) ? "style='color:#f44336'" : "") ?>>
+                            <h2 class="heading <?php echo (($request_status == 4 || $request_status == 5) ? 'text-red' : '') ?>">
                                 <?php echo $customerFullName = ucwords($profile_display_name . (($request_status == 4) ? ' ( Closed ) ' : (($request_status == 5) ? '( Duplicate )' : ''))) ?>
                             </h2>
                             <p>

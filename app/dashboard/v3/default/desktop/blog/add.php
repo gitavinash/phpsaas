@@ -22,13 +22,13 @@
                             <label class="form-lable" id="Label">Permalink<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <div class="editor" id="editor0" style="min-height: 500px"></div>
-                            <textarea name="description" id="editor-0" style="display:none"></textarea>
+                            <div class="editor editor-min-500" id="editor0"></div>
+                            <textarea name="description" id="editor-0"></textarea>
                             <label class="form-lable" id="Label">Description<sup>*</sup></label>
                         </div>
                         <div class="form-group">
                             <p>Category</p>
-                            <select name="category" id="category" class="selectJS">
+                            <select name="category" id="category" class="selectJS2">
                                 <option value="0">Select Category</option>
                                 <?php
                                 if ($categoryList = mysqli_query($connection, "SELECT category_id, category_title, link_url FROM " . TABLE_PREFIX . "category, " . TABLE_PREFIX . "link WHERE category_site_id='" . APP_SITE_ID . "' AND link_type='category' AND link_relation_id=category_id AND link_status=200 AND category_status=1 AND category_type='post' AND link_site_id=" . SITE_ID)) {
@@ -48,7 +48,7 @@
                                 <span class="defaultText">Drag & Drop files here or click to upload</span>
                             </div>
                             <input type="file" id="fileInput" name="featureImage[]" data-limit="1"
-                                accept=".jpg, .jpeg, .png" style="display: none;" />
+                                accept=".jpg, .jpeg, .png" />
                         </div>
 
                         <div class="form-group-box">

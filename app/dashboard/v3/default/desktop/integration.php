@@ -23,9 +23,7 @@ if (defined('PG_NAME') && !empty(PG_NAME)) {
 $isFbActive       = (!defined('ENABLE_FACEBOOK_LEAD_ADS') || ENABLE_FACEBOOK_LEAD_ADS == '1');
 $isGAdsActive     = (defined('ENABLE_GOOGLE_ADS') && ENABLE_GOOGLE_ADS == '1');
 $isWfActive       = (!defined('ENABLE_WEB_FORMS') || ENABLE_WEB_FORMS == '1');
-$isLeadAutoActive = (!defined('ENABLE_LEAD_AUTOMATION') || ENABLE_LEAD_AUTOMATION == '1');
 $isWaActive       = (defined('ENABLE_WHATSAPP_WEB_API') && ENABLE_WHATSAPP_WEB_API == '1');
-$isWaAutoActive   = (defined('ENABLE_WHATSAPP_AUTOMATION') && ENABLE_WHATSAPP_AUTOMATION == '1');
 $isSmtpActive     = (!defined('ENABLE_SMTP_EMAIL') || ENABLE_SMTP_EMAIL == '1');
 $isWhActive       = (!defined('ENABLE_WEBHOOKS') || ENABLE_WEBHOOKS == '1');
 $isUpiActive      = (!defined('ENABLE_UPI') || ENABLE_UPI == '1');
@@ -185,80 +183,6 @@ $isUpiActive      = (!defined('ENABLE_UPI') || ENABLE_UPI == '1');
                 <div class="integration-card-actions">
                     <a href="/dashboard/integration/web_forms/" class="<?php echo ($isWfActive ? 'btn-integration-primary' : 'btn-integration-outline'); ?>">
                         <span>Configure</span> <i class="fi fi-rr-arrow-small-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3b. Lead Flow Automation -->
-        <div class="integration-card <?php echo ($isLeadAutoActive ? 'is-active-card' : 'is-disabled'); ?>" data-category="leadgen" data-slug="lead_automation">
-            <div class="integration-card-header">
-                <div class="integration-brand-logo brand-lead-workflow">
-                    <img src="/app/dashboard/v3/default/desktop/assets/images/integration/lead_automation.svg" alt="Lead Flow Automation">
-                </div>
-                <div class="integration-header-text">
-                    <h3 class="integration-title">Lead Flow Automation</h3>
-                    <span class="integration-card-pill">Round-Robin &amp; Routing</span>
-                </div>
-                <div class="integration-header-toggle">
-                    <label class="v3-toggle-switch" title="Toggle Lead Flow Automation">
-                        <input type="checkbox" class="integration-active-toggle" data-slug="lead_automation" data-key="enable_lead_automation" <?php echo ($isLeadAutoActive ? 'checked' : '') ?>>
-                        <span class="v3-toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="integration-card-body">
-                <p class="integration-desc">Automate how incoming inquiries are distributed among sales agents with visual Round-Robin pipelines, rule filters, and auto-tasks.</p>
-                <div class="integration-feature-chips">
-                    <span class="feature-chip"><i class="fi fi-rr-check"></i> Round-Robin Rotation</span>
-                    <span class="feature-chip"><i class="fi fi-rr-check"></i> Automated Tasks</span>
-                </div>
-            </div>
-            <div class="integration-card-footer">
-                <div class="integration-status-pill <?php echo ($isLeadAutoActive ? 'is-active' : 'is-idle'); ?>">
-                    <span class="status-pulse-dot"></span>
-                    <span class="status-text"><?php echo ($isLeadAutoActive ? 'Active' : 'Disabled'); ?></span>
-                </div>
-                <div class="integration-card-actions">
-                    <a href="/dashboard/integration/lead_automation/" class="<?php echo ($isLeadAutoActive ? 'btn-integration-primary' : 'btn-integration-outline'); ?>">
-                        <span>Configure Rules</span> <i class="fi fi-rr-arrow-small-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. WhatsApp Chat Automation -->
-        <div class="integration-card <?php echo ($isWaAutoActive ? 'is-active-card' : 'is-disabled'); ?>" data-category="messaging" data-slug="whatsapp_automation">
-            <div class="integration-card-header">
-                <div class="integration-brand-logo brand-whatsapp">
-                    <img src="/app/dashboard/v3/default/desktop/assets/images/integration/whatsapp.svg" alt="WhatsApp Automation">
-                </div>
-                <div class="integration-header-text">
-                    <h3 class="integration-title">WhatsApp Chat Automation</h3>
-                    <span class="integration-card-pill">Chatbot &amp; Auto-Reply</span>
-                </div>
-                <div class="integration-header-toggle">
-                    <label class="v3-toggle-switch" title="Toggle WhatsApp Chat Automation">
-                        <input type="checkbox" class="integration-active-toggle" data-slug="whatsapp_automation" data-key="enable_whatsapp_automation" <?php echo ($isWaAutoActive ? 'checked' : '') ?>>
-                        <span class="v3-toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="integration-card-body">
-                <p class="integration-desc">Design conversational flows, keyword triggers, instant auto-replies, interactive service menus, and human agent routing.</p>
-                <div class="integration-feature-chips">
-                    <span class="feature-chip"><i class="fi fi-rr-check"></i> Keyword Triggers</span>
-                    <span class="feature-chip"><i class="fi fi-rr-check"></i> Live Simulator</span>
-                </div>
-            </div>
-            <div class="integration-card-footer">
-                <div class="integration-status-pill <?php echo ($isWaAutoActive ? 'is-active' : 'is-idle'); ?>">
-                    <span class="status-pulse-dot"></span>
-                    <span class="status-text"><?php echo ($isWaAutoActive ? 'Active' : 'Setup Required'); ?></span>
-                </div>
-                <div class="integration-card-actions">
-                    <a href="/dashboard/integration/whatsapp_automation/" class="<?php echo ($isWaAutoActive ? 'btn-integration-primary' : 'btn-integration-outline'); ?>">
-                        <span>Configure Bot</span> <i class="fi fi-rr-arrow-small-right"></i>
                     </a>
                 </div>
             </div>

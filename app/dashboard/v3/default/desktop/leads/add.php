@@ -80,7 +80,7 @@ if (isset($connection) && $connection) {
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+            <div class="package-header-icon sky">
                 <i class="fi fi-rr-user-add"></i>
             </div>
             <div class="package-header-titles">
@@ -227,7 +227,7 @@ if (isset($connection) && $connection) {
                                 </select>
 
                                 <!-- Interactive Selected Package Preview Badge -->
-                                <div id="leadSelectedPkgCard" class="v3-selected-pkg-card" style="display: none;">
+                                <div id="leadSelectedPkgCard" class="v3-selected-pkg-card is-hidden">
                                     <div class="v3-pkg-card-left">
                                         <div class="v3-pkg-card-icon" id="cardPkgIcon">
                                             <i class="fi fi-rr-sparkles"></i>

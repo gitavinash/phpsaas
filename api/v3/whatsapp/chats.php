@@ -96,6 +96,41 @@ if ($method === 'GET') {
     }
     $isCallingAgent = in_array($userRole, ['agent', 'calling_agent', 'crm_calling_agent', 'crm calling agent', 'sales_executive']) || !$isAdmin;
 
+    // Action: Check if sales agent has an assigned WhatsApp device
+    if ($action === 'check_assigned' || $action === 'has_device') {
+        $hasAssigned = false;
+        $deviceInfo = null;
+
+        if ($isAdmin) {
+            $chkDevQ = mysqli_query($connection, "SELECT device_id, device_phone, device_name, device_status, device_session_id 
+                                                  FROM " . TABLE_PREFIX . "whatsapp_device 
+                                                  WHERE device_site_id = {$siteId} 
+                                                  LIMIT 1");
+            if ($chkDevQ && mysqli_num_rows($chkDevQ) > 0) {
+                $hasAssigned = true;
+                $deviceInfo = mysqli_fetch_assoc($chkDevQ);
+            }
+        } elseif ($currentUserId > 0) {
+            $devQ = mysqli_query($connection, "SELECT device_id, device_phone, device_name, device_status, device_session_id 
+                                                FROM " . TABLE_PREFIX . "whatsapp_device 
+                                                WHERE device_site_id = {$siteId} 
+                                                  AND device_assigned_user_id = {$currentUserId} 
+                                                LIMIT 1");
+            if ($devQ && mysqli_num_rows($devQ) > 0) {
+                $hasAssigned = true;
+                $deviceInfo = mysqli_fetch_assoc($devQ);
+            }
+        }
+
+        echo json_encode([
+            'status'              => 'success',
+            'is_admin'            => $isAdmin,
+            'has_assigned_device' => $hasAssigned,
+            'device'              => $deviceInfo
+        ]);
+        exit;
+    }
+
     if ($action === 'resolve_lid') {
         $lid = preg_replace('/[^0-9]/', '', $_GET['lid'] ?? ($_POST['lid'] ?? ''));
         $pushName = trim($_GET['pushname'] ?? ($_POST['pushname'] ?? ''));

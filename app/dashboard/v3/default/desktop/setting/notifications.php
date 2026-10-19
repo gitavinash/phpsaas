@@ -9,14 +9,12 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);">
-                <i class="fi fi-rr-bell-ring" style="color: #ffffff;"></i>
+            <div class="package-header-icon purple">
+                <i class="fi fi-rr-bell-ring"></i>
             </div>
             <div class="package-header-titles">
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <h2 style="margin: 0;">Alert &amp; Notification Center</h2>
-                </div>
-                <p style="margin-top: 4px;">Choose the exact email inboxes, WhatsApp numbers, SMS, and browser push channels where you receive real-time business alerts.</p>
+                <h2>Alert &amp; Notification Center</h2>
+                <p>Choose the exact email inboxes, WhatsApp numbers, SMS, and browser push channels where you receive real-time business alerts.</p>
             </div>
         </div>
         <div class="package-header-actions">
@@ -41,7 +39,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                             <h3>Email Alert Inboxes</h3>
                             <p>Configure dedicated recipient email addresses for admin alerts, leads, and billing notices.</p>
                         </div>
-                        <div style="margin-left: auto;">
+                        <div class="v3-card-header-action">
                             <label class="v3-toggle-switch" title="Toggle Email Channel">
                                 <input type="checkbox" id="notifyEmailEnabled" name="notification_email_notification" value="1" checked>
                                 <span class="v3-toggle-slider"></span>
@@ -100,7 +98,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                             <h3>WhatsApp Alert Channel</h3>
                             <p>Receive instant WhatsApp notifications with rich itinerary links and transaction summaries.</p>
                         </div>
-                        <div style="margin-left: auto;">
+                        <div class="v3-card-header-action">
                             <label class="v3-toggle-switch" title="Toggle WhatsApp Channel">
                                 <input type="checkbox" id="notifyWhatsappEnabled" name="notification_enable_whatsapp_business_api" value="1" checked>
                                 <span class="v3-toggle-slider emerald"></span>
@@ -150,7 +148,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                             <h3>SMS Text Notification Channel</h3>
                             <p>Direct cellular SMS alerts for urgent inquiries, booking verification codes, and fallback notifications.</p>
                         </div>
-                        <div style="margin-left: auto;">
+                        <div class="v3-card-header-action">
                             <label class="v3-toggle-switch" title="Toggle SMS Channel">
                                 <input type="checkbox" id="notifySmsEnabled" name="notification_sms_enable" value="1">
                                 <span class="v3-toggle-slider"></span>
@@ -186,7 +184,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                     </div>
 
                     <div class="v3-card-body">
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div class="v3-event-list">
                             <!-- Push Notifications -->
                             <div class="v3-event-card">
                                 <div class="v3-event-card-left">
@@ -198,8 +196,8 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                         <p>Desktop and mobile browser alerts even when the CRM dashboard tab is in the background.</p>
                                     </div>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <button type="button" id="btnTestPush" class="btn-v3-action" style="padding: 6px 12px; font-size: 11.5px;" title="Test Browser Notification">
+                                <div class="v3-event-card-actions">
+                                    <button type="button" id="btnTestPush" class="btn-v3-action btn-v3-sm" title="Test Browser Notification">
                                         <i class="fi fi-rr-paper-plane"></i> <span>Test</span>
                                     </button>
                                     <label class="v3-toggle-switch" title="Toggle Web Push">
@@ -220,8 +218,8 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                         <p>Play instant audio chime and display badge count in top navigation when new leads arrive.</p>
                                     </div>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <button type="button" id="btnTestAudio" class="btn-v3-action" style="padding: 6px 12px; font-size: 11.5px;" title="Play Chime Sound">
+                                <div class="v3-event-card-actions">
+                                    <button type="button" id="btnTestAudio" class="btn-v3-action btn-v3-sm" title="Play Chime Sound">
                                         <i class="fi fi-rr-volume"></i> <span>Play Sound</span>
                                     </button>
                                     <label class="v3-toggle-switch" title="Toggle In-App Audio">
@@ -247,7 +245,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                     </div>
 
                     <div class="v3-card-body">
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div class="v3-event-list">
                             <!-- Event 1 -->
                             <div class="v3-event-card">
                                 <div class="v3-event-card-left">
@@ -319,33 +317,33 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
             <div class="preview-card-sticky">
                 <!-- Channel Status Overview Card -->
                 <div class="v3-matrix-card">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Channel Delivery Matrix</span>
-                        <span class="v3-status-badge status-active" style="font-size: 11px;"><span class="status-pulse-dot"></span> Multi-Channel</span>
+                    <div class="v3-live-preview-header">
+                        <span class="v3-live-preview-label">Channel Delivery Matrix</span>
+                        <span class="v3-status-badge status-active badge-sm"><span class="status-pulse-dot"></span> Multi-Channel</span>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; gap: 10px; font-size: 12.5px;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f8fafc;">
-                            <span style="display: flex; align-items: center; gap: 8px; color: #334155;"><i class="fi fi-rr-envelope" style="color: #4f46e5;"></i> Email Inboxes</span>
-                            <span id="badgeStatusEmail" class="v3-status-badge status-active" style="font-size: 10px;">Active</span>
+                    <div class="v3-matrix-channels-list">
+                        <div class="v3-matrix-channel-row">
+                            <span class="v3-matrix-channel-name"><i class="fi fi-rr-envelope color-indigo"></i> Email Inboxes</span>
+                            <span id="badgeStatusEmail" class="v3-status-badge status-active badge-xs">Active</span>
                         </div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f8fafc;">
-                            <span style="display: flex; align-items: center; gap: 8px; color: #334155;"><span class="v3-wa-icon-svg" style="width: 14px; height: 14px; color: #10b981;"><svg viewBox="0 0 24 24">
+                        <div class="v3-matrix-channel-row">
+                            <span class="v3-matrix-channel-name"><span class="v3-wa-icon-svg wa-icon-sm"><svg viewBox="0 0 24 24">
                                         <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
                                     </svg></span> WhatsApp Alerts</span>
-                            <span id="badgeStatusWhatsapp" class="v3-status-badge status-active" style="font-size: 10px;">Active</span>
+                            <span id="badgeStatusWhatsapp" class="v3-status-badge status-active badge-xs">Active</span>
                         </div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f8fafc;">
-                            <span style="display: flex; align-items: center; gap: 8px; color: #334155;"><i class="fi fi-rr-mobile" style="color: #0284c7;"></i> SMS Cellular</span>
-                            <span id="badgeStatusSms" class="v3-status-badge status-inactive" style="font-size: 10px;">Disabled</span>
+                        <div class="v3-matrix-channel-row">
+                            <span class="v3-matrix-channel-name"><i class="fi fi-rr-mobile color-sky"></i> SMS Cellular</span>
+                            <span id="badgeStatusSms" class="v3-status-badge status-inactive badge-xs">Disabled</span>
                         </div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f8fafc;">
-                            <span style="display: flex; align-items: center; gap: 8px; color: #334155;"><i class="fi fi-rr-computer" style="color: #ea580c;"></i> Web Push</span>
-                            <span id="badgeStatusPush" class="v3-status-badge status-active" style="font-size: 10px;">Active</span>
+                        <div class="v3-matrix-channel-row">
+                            <span class="v3-matrix-channel-name"><i class="fi fi-rr-computer color-amber"></i> Web Push</span>
+                            <span id="badgeStatusPush" class="v3-status-badge status-active badge-xs">Active</span>
                         </div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0;">
-                            <span style="display: flex; align-items: center; gap: 8px; color: #334155;"><i class="fi fi-rr-bell-ring" style="color: #7c3aed;"></i> Dashboard In-App</span>
-                            <span id="badgeStatusInApp" class="v3-status-badge status-active" style="font-size: 10px;">Active</span>
+                        <div class="v3-matrix-channel-row no-border">
+                            <span class="v3-matrix-channel-name"><i class="fi fi-rr-bell-ring color-purple"></i> Dashboard In-App</span>
+                            <span id="badgeStatusInApp" class="v3-status-badge status-active badge-xs">Active</span>
                         </div>
                     </div>
 
@@ -355,13 +353,13 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                 </div>
 
                 <!-- Live Alert Routing Card -->
-                <div class="v3-live-preview-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); margin-bottom: 16px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Active Alert Routing</span>
-                        <span class="v3-status-badge status-active" style="font-size: 11px;"><span class="status-pulse-dot"></span> Live</span>
+                <div class="v3-live-preview-card">
+                    <div class="v3-live-preview-header">
+                        <span class="v3-live-preview-label">Active Alert Routing</span>
+                        <span class="v3-status-badge status-active badge-sm"><span class="status-pulse-dot"></span> Live</span>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="v3-routing-list">
                         <!-- Route 1 -->
                         <div class="v3-routing-box">
                             <div class="v3-routing-box-title sky">

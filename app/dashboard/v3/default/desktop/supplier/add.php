@@ -28,7 +28,7 @@
                         </div>
                         <div class="form-group" id="stateDropDown">
                             <p>State<sup>*</sup></p>
-                            <select class="selectJS form-control" name="state" id="state">
+                            <select class="selectJS2 form-control" name="state" id="state">
                                 <option value="select">Select state</option>
                                 <?php
 
@@ -43,9 +43,9 @@
                                 ?>
                             </select>
                         </div>
-                        <div class="form-group" id="cityBox" style="display: none">
+                        <div class="form-group" id="cityBox">
                             <p>City<sup>*</sup></p>
-                            <select class="selectJS form-control" name="city" id="city">
+                            <select class="selectJS2 form-control" name="city" id="city">
                             </select>
                         </div>
                         <div class="form-group">
@@ -78,7 +78,7 @@
                         </div>
                         <div class="form-group">
                             <p>Company type</p>
-                            <select class="selectJS form-control" name="supplierType" id="supplierType">
+                            <select class="selectJS2 form-control" name="supplierType" id="supplierType">
                                 <option value="select">Select registration type</option>
                                 <option value="private">Private Limited Supplier</option>
                                 <option value="public">Public Limited Supplier</option>

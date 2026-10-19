@@ -28,7 +28,7 @@ if ($isDigitalMarketing) {
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+            <div class="package-header-icon sky">
                 <i class="fi fi-rr-user-time"></i>
             </div>
             <div class="package-header-titles">
@@ -139,7 +139,7 @@ if ($isDigitalMarketing) {
             <div class="filter-dropdowns-wrap">
                 <!-- Status Filter (Select2) -->
                 <div class="leads-select-holder">
-                    <select id="filterLeadStatus" class="leads-filter-select">
+                    <select id="filterLeadStatus" class="leads-filter-select selectJS2">
                         <option value="all" <?php echo ($initialLeadStatus === 'all' ? 'selected' : ''); ?>>All Statuses</option>
                         <optgroup label="Sales Pipeline Stages">
                             <?php if (!$isCallingAgent): ?>
@@ -176,7 +176,7 @@ if ($isDigitalMarketing) {
 
                 <!-- Customer Interest Filter -->
                 <div class="leads-select-holder">
-                    <select id="filterLeadInterest" class="leads-filter-select">
+                    <select id="filterLeadInterest" class="leads-filter-select selectJS2">
                         <option value="all" selected>All Interests</option>
                         <option value="Hot" data-icon="fi-rr-flame">Hot</option>
                         <option value="Warm" data-icon="fi-rr-sparkles">Warm</option>
@@ -188,7 +188,7 @@ if ($isDigitalMarketing) {
 
                 <!-- Response & Follow-up Operational Filter -->
                 <div class="leads-select-holder">
-                    <select id="filterLeadResponse" class="leads-filter-select">
+                    <select id="filterLeadResponse" class="leads-filter-select selectJS2">
                         <option value="all" selected>All Response States</option>
                         <optgroup label="Customer Response">
                             <option value="responded" data-icon="fi-rr-check-circle">Responded</option>
@@ -208,7 +208,7 @@ if ($isDigitalMarketing) {
                 <?php if ($isAdmin): ?>
                 <!-- Assigned Agent Filter (Select2 - Admin Only) -->
                 <div class="leads-select-holder">
-                    <select id="filterLeadAgent" class="leads-filter-select">
+                    <select id="filterLeadAgent" class="leads-filter-select selectJS2">
                         <option value="all" data-icon="fi-rr-users" <?php echo ($initialAgentId === 'all' ? 'selected' : ''); ?>>All Assignees</option>
                         <option value="0" data-icon="fi-rr-user-slash" <?php echo ($initialAgentId === '0' ? 'selected' : ''); ?>>Unassigned Only</option>
                         <?php if ($initialAgentId !== 'all' && $initialAgentId !== '0' && $initialAgentId !== ''): ?>
@@ -219,7 +219,7 @@ if ($isDigitalMarketing) {
 
                 <!-- Source Filter (Select2 - Admin Only) -->
                 <div class="leads-select-holder">
-                    <select id="filterLeadSource" class="leads-filter-select">
+                    <select id="filterLeadSource" class="leads-filter-select selectJS2">
                         <option value="all" selected>All Sources</option>
                         <option value="website" data-icon="fi-rr-globe">Website</option>
                         <option value="direct" data-icon="fi-rr-user">Direct</option>
@@ -248,7 +248,7 @@ if ($isDigitalMarketing) {
             </div>
             <div class="bulk-toolbar-right">
                 <div class="leads-bulk-select-holder">
-                    <select id="bulkActionSelect" class="leads-filter-select">
+                    <select id="bulkActionSelect" class="leads-filter-select selectJS2">
                         <option value="">Choose bulk action...</option>
                         <option value="convert_to_sales" data-icon="fi-rr-check-circle">Convert to Confirmed Sales</option>
                         <option value="mark_duplicate" data-icon="fi-rr-copy">Mark as Duplicate</option>
@@ -296,7 +296,7 @@ if ($isDigitalMarketing) {
             <div class="pagination-info-wrap">
                 <div class="pagination-size-select-wrap">
                     <label for="leadsPerPage">Show:</label>
-                    <select id="leadsPerPage" class="pagination-size-select leads-per-page-select">
+                    <select id="leadsPerPage" class="pagination-size-select leads-per-page-select selectJS2">
                         <option value="10" selected>10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>

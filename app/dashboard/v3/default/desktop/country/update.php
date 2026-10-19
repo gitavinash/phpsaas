@@ -45,7 +45,7 @@ window.location.href = '/dashboard/country/list/';
                             <img src="<?php echo IMG_LIBRARY ?>storyset/hosting.png" alt="Add new Hosting tld">
                         </div>
                         <div class="form-group">
-                            <span style="display: none;" id="oldGallery"><?php echo $visa_country_image ?></span>
+                            <span class="is-v3-hidden" id="oldGallery"><?php echo $visa_country_image ?></span>
                             <p><strong>Country feature image</strong></p>
                             <div id="dropZone">
                                 <span class="defaultText">Drag & Drop files here or click to upload</span>
@@ -135,7 +135,7 @@ window.location.href = '/dashboard/country/list/';
                         <div class="box-1">
                             <div class="form-group">
                                 <p>Country type</p>
-                                <select class="selectJS" id="countryType" name="countryType">
+                                <select class="selectJS2 form-control" id="countryType" name="countryType">
                                     <option value="">Select Country type</option>
                                     <option value="schengen"
                                         <?php echo (($visa_country_type == 'schengen') ? 'selected' : '') ?>>Schengen

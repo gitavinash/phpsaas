@@ -66,7 +66,7 @@ $encodedCompanyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-apps-sort input-icon"></i>
-                                    <select id="companyType" name="companyType" class="v3-form-control">
+                                    <select id="companyType" name="companyType" class="v3-form-control selectJS2">
                                         <option value="private">Private Limited Company</option>
                                         <option value="public">Public Limited Company</option>
                                         <option value="partnerships">Partnership Firm</option>
@@ -206,7 +206,7 @@ $encodedCompanyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-check-circle input-icon"></i>
-                                    <select id="companyStatus" name="status" class="v3-form-control">
+                                    <select id="companyStatus" name="status" class="v3-form-control selectJS2">
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>
@@ -250,7 +250,7 @@ $encodedCompanyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-map input-icon"></i>
-                                    <select id="companyState" name="state" class="v3-form-control" required>
+                                    <select id="companyState" name="state" class="v3-form-control selectJS2" required>
                                         <option value="">Loading states...</option>
                                     </select>
                                 </div>
@@ -264,7 +264,7 @@ $encodedCompanyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-city input-icon"></i>
-                                    <select id="companyCity" name="city" class="v3-form-control" required>
+                                    <select id="companyCity" name="city" class="v3-form-control selectJS2" required>
                                         <option value="">Select State first</option>
                                     </select>
                                 </div>
@@ -305,7 +305,7 @@ $encodedCompanyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                                 <p><strong>Drag &amp; drop company logo here</strong> or <a href="javascript:void(0)" id="btnBrowseLogo">browse files</a></p>
                                 <span>Supported formats: PNG, JPG, WEBP, SVG (Max 5MB)</span>
                             </div>
-                            <div class="logo-preview-box" id="logoPreviewWrap" style="display: none;">
+                            <div class="logo-preview-box is-hidden" id="logoPreviewWrap">
                                 <img src="" alt="Company Logo Preview" id="logoPreviewImg" />
                                 <div class="logo-preview-meta">
                                     <p><strong>Company Logo</strong></p>
@@ -314,7 +314,7 @@ $encodedCompanyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                                     </button>
                                 </div>
                             </div>
-                            <input type="file" id="companyLogoInput" name="featureImage" accept="image/png, image/jpeg, image/webp, image/svg+xml" style="display: none;">
+                            <input type="file" id="companyLogoInput" name="featureImage" accept="image/png, image/jpeg, image/webp, image/svg+xml" class="is-hidden">
                         </div>
                     </div>
                 </div>
@@ -341,7 +341,7 @@ $encodedCompanyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                         <div class="company-preview-avatar-row">
                             <div class="company-preview-avatar">
                                 <span id="previewCompanyInitial">CO</span>
-                                <img src="" alt="Logo" id="previewCompanyLogo" style="display: none;" />
+                                <img src="" alt="Logo" id="previewCompanyLogo" class="is-hidden" />
                             </div>
                             <span class="company-type-pill company-badge-hq" id="previewCompanyType">Private Limited Company</span>
                         </div>
@@ -349,8 +349,8 @@ $encodedCompanyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                         <div class="company-preview-title-box">
                             <h3 id="previewCompanyName">Company Legal Name</h3>
                             <div class="company-tax-row mt-1">
-                                <span class="company-tax-pill" id="previewGstPill" style="display: none;"></span>
-                                <span class="company-tax-pill" id="previewPanPill" style="display: none;"></span>
+                                <span class="company-tax-pill is-hidden" id="previewGstPill"></span>
+                                <span class="company-tax-pill is-hidden" id="previewPanPill"></span>
                             </div>
                         </div>
 
@@ -372,10 +372,10 @@ $encodedCompanyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                 </div>
 
                 <!-- Compliance & Verification Tip -->
-                <div class="v3-tips-box" style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px; display: flex; gap: 10px; font-size: 12px; color: #166534; line-height: 1.4;">
-                    <i class="fi fi-rr-shield-check" style="font-size: 18px; color: #16a34a; flex-shrink: 0; margin-top: 1px;"></i>
+                <div class="v3-tips-box v3-tips-box-emerald">
+                    <i class="fi fi-rr-shield-check v3-tips-icon-emerald"></i>
                     <div>
-                        <strong style="display: block; margin-bottom: 2px; color: #14532d;">GST &amp; Legal Verification</strong>
+                        <strong class="v3-tips-title-emerald">GST &amp; Legal Verification</strong>
                         Tax details (GSTIN and PAN) will appear on generated invoices, vouchers, and customer quotations.
                     </div>
                 </div>

@@ -9,8 +9,8 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);">
-                <i class="fi fi-rr-phone-call" style="color: #ffffff;"></i>
+            <div class="package-header-icon emerald">
+                <i class="fi fi-rr-phone-call"></i>
             </div>
             <div class="package-header-titles">
                 <h2>Public Contact &amp; Business Profile</h2>
@@ -253,48 +253,48 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- Public Contact Card -->
-                <div class="v3-live-preview-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Live Contact Preview</span>
-                        <span class="v3-status-badge status-active" style="font-size: 11px;"><span class="status-pulse-dot"></span> Public</span>
+                <div class="v3-live-preview-card">
+                    <div class="v3-live-preview-header">
+                        <span class="v3-live-preview-label">Live Contact Preview</span>
+                        <span class="v3-status-badge status-active"><span class="status-pulse-dot"></span> Public</span>
                     </div>
 
-                    <div style="margin-bottom: 14px;">
-                        <h3 id="previewContactCompany" style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 4px 0;">Company Name</h3>
-                        <p id="previewContactIntro" style="font-size: 12.5px; color: #64748b; margin: 0; line-height: 1.4;">
+                    <div class="v3-preview-company-info">
+                        <h3 id="previewContactCompany" class="v3-live-preview-name">Company Name</h3>
+                        <p id="previewContactIntro" class="v3-live-preview-domain">
                             Company description and tagline will appear here...
                         </p>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; gap: 10px; background: #f8fafc; border-radius: 10px; padding: 14px; border: 1px solid #edf2f7; font-size: 12.5px;">
-                        <div style="display: flex; align-items: center; gap: 10px; color: #334155; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <i class="fi fi-rr-globe" style="color: #6366f1; font-size: 13px; width: 16px;"></i>
-                            <span id="previewContactDomain" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis;">No website domain</span>
+                    <div class="v3-contact-preview-list">
+                        <div class="v3-contact-preview-item">
+                            <i class="fi fi-rr-globe brand-domain"></i>
+                            <span id="previewContactDomain">No website domain</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 10px; color: #334155;">
-                            <i class="fi fi-rr-phone-call" style="color: #0284c7; font-size: 13px; width: 16px;"></i>
-                            <span id="previewContactMobile" style="font-weight: 600;">+91 &mdash;</span>
+                        <div class="v3-contact-preview-item">
+                            <i class="fi fi-rr-phone-call brand-phone"></i>
+                            <span id="previewContactMobile">+91 &mdash;</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 10px; color: #334155;">
-                            <i class="fi fi-rr-comment-alt" style="color: #10b981; font-size: 13px; width: 16px;"></i>
-                            <span id="previewContactWhatsapp" style="font-weight: 600;">+91 &mdash;</span>
+                        <div class="v3-contact-preview-item">
+                            <i class="fi fi-rr-comment-alt brand-wa"></i>
+                            <span id="previewContactWhatsapp">+91 &mdash;</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 10px; color: #334155; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <i class="fi fi-rr-envelope" style="color: #6366f1; font-size: 13px; width: 16px;"></i>
-                            <span id="previewContactEmail" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis;">No email</span>
+                        <div class="v3-contact-preview-item">
+                            <i class="fi fi-rr-envelope brand-email"></i>
+                            <span id="previewContactEmail">No email</span>
                         </div>
-                        <div style="display: flex; align-items: flex-start; gap: 10px; color: #334155; line-height: 1.35;">
-                            <i class="fi fi-rr-marker" style="color: #ea580c; font-size: 13px; width: 16px; margin-top: 2px;"></i>
-                            <span id="previewContactAddress" style="font-size: 12px; color: #475569;">No registered address</span>
+                        <div class="v3-contact-preview-item align-start">
+                            <i class="fi fi-rr-marker brand-map"></i>
+                            <span id="previewContactAddress">No registered address</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Info Tips Box -->
-                <div class="v3-tips-box">
+                <div class="v3-tips-box emerald">
                     <div class="tips-icon"><i class="fi fi-rr-shield-check"></i></div>
                     <div class="tips-content">
-                        <strong style="color: #166534; display: block; margin-bottom: 2px;">Customer Trust &amp; Conversion</strong>
+                        <strong>Customer Trust &amp; Conversion</strong>
                         Clear contact channels, WhatsApp support, and verified physical addresses significantly increase customer quote conversions.
                     </div>
                 </div>

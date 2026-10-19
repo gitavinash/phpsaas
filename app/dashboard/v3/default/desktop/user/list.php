@@ -62,7 +62,7 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <input type="text" id="userSearchInput" class="filter-search-input" placeholder="Search by name, email, mobile, or role..." autocomplete="off">
-                <button type="button" id="clearUserSearchBtn" class="clear-search-btn" title="Clear search" style="display: none;">✕</button>
+                <button type="button" id="clearUserSearchBtn" class="clear-search-btn" title="Clear search">✕</button>
             </div>
 
             <div class="filter-dropdowns-wrap">
@@ -84,7 +84,7 @@
                 </select>
 
                 <!-- Reset Filters Button -->
-                <button type="button" id="btnResetUserFilters" class="btn-v3-action" style="padding: 7px 12px; font-size: 12px;" data-tooltip="Reset all filters">
+                <button type="button" id="btnResetUserFilters" class="btn-v3-action btn-filter-reset" data-tooltip="Reset all filters">
                     <i class="fi fi-rr-refresh"></i> Reset
                 </button>
             </div>
@@ -114,7 +114,7 @@
         </div>
 
         <!-- Pagination & Rows Per Page Bar -->
-        <div class="package-pagination-bar" id="userPaginationBar" style="display: none;">
+        <div class="package-pagination-bar" id="userPaginationBar">
             <div class="pagination-info-wrap">
                 <div class="pagination-size-select-wrap">
                     <label for="userPerPage">Rows per page:</label>

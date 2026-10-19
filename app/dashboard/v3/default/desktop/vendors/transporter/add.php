@@ -255,7 +255,7 @@
                 </div>
 
                 <div class="v3-progress-bar-wrap">
-                    <div class="v3-progress-bar-fill" id="formProgressBar" style="width: 0%;"></div>
+                    <div class="v3-progress-bar-fill w-0" id="formProgressBar"></div>
                 </div>
 
                 <!-- Preview Card Layout -->
@@ -303,7 +303,7 @@
                     </div>
 
                     <!-- Live Notes Preview -->
-                    <div class="live-notes-preview" id="previewNotesBox" style="display: none;">
+                    <div class="live-notes-preview" id="previewNotesBox">
                         <p id="previewNotesText"></p>
                     </div>
                 </div>

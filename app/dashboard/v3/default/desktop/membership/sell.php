@@ -2,7 +2,7 @@
 <div class="main-box">
     <section>
         <form action="#" id="addNewMembershipForm" method="POST" enctype="multipart/form-data">
-            <section class="form" style="padding-top:25px">
+            <section class="form">
                 <div class="step-open-box step_1_box">
                     <?php
 
@@ -20,7 +20,7 @@
                     ?>
 
                     <div class="form-group">
-                        <select class="selectJS form-control" name="warehouseId" id="warehouseId">
+                        <select class="selectJS2 form-control" name="warehouseId" id="warehouseId">
                             <option value="select">Select branch</option>
                             <?php
 
@@ -55,7 +55,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-lable">Room type<sup>*</sup></label>
-                        <select class="selectJS" style="float: left; width:100%" name="package" id="package">
+                        <select class="selectJS2 form-control" name="package" id="package">
                             <option value="">Select room type</option>
                             <?php
 
@@ -70,9 +70,8 @@
                             ?>
                         </select>
                     </div>
-                    <div class="form-group" style="margin-bottom:20px;">
-                        <select class="selectJS form-control" id="paymentMode" name="paymentMode" required
-                            style="width:100%;height:44px;border:1px solid #dfe3e8;border-radius:8px;padding:0 10px;font-size:16px;background:#fff;">
+                    <div class="form-group">
+                        <select class="selectJS2 form-control" id="paymentMode" name="paymentMode" required>
                             <option value="">Select mode</option>
                             <option value="cash" selected>Cash</option>
                             <option value="upi">UPI</option>

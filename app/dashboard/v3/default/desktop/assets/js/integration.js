@@ -694,6 +694,7 @@
             $select.prop("disabled", false);
             if (res && res.status === "success") {
               self.showToast(res.msg || "Device assigned successfully.", "success");
+              window.dispatchEvent(new CustomEvent("v3:whatsapp-device-changed"));
               loadHubState();
             } else {
               self.showToast(res.msg || "Failed to assign device.", "error");
@@ -1041,6 +1042,7 @@
           success: function (res) {
             $btn.prop("disabled", false).removeClass("loading");
             self.showToast(res.msg || "Device disconnected.", "info");
+            window.dispatchEvent(new CustomEvent("v3:whatsapp-device-changed"));
             loadHubState();
           },
           error: function (xhr) {

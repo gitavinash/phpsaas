@@ -48,7 +48,7 @@ window.location.href = '/dashboard/sales_request/list/';
                         <p><strong>Name</strong><?php echo $sales_name ?></p>
                         <p><strong>Mobile</strong><?php echo $sales_mobile ?></p>
                         <p><strong>Email</strong><?php echo $sales_email ?></p>
-                        <p><strong style="width: 100px; height: 50px">Address</strong><?php echo $sales_address ?>
+                        <p><strong class="userinfo-label-fixed">Address</strong><?php echo $sales_address ?>
                         </p>
                     </div>
                 </div>
@@ -61,7 +61,7 @@ window.location.href = '/dashboard/sales_request/list/';
                         <p><strong>Name</strong><?php echo $profile_display_name ?></p>
                         <p><strong>Mobile</strong><?php echo $profile_mobile ?></p>
                         <p><strong>GST Number</strong><?php echo $warehouse_gst ?></p>
-                        <p><strong style="width: 100px; height: 50px">Warehouse
+                        <p><strong class="userinfo-label-fixed">Warehouse
                             </strong><?php echo ucwords($warehouse_title) . ', ' . $address_area . ', ' . $city_name . ', ' . $state_name ?>
                         </p>
                     </div>

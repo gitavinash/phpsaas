@@ -199,7 +199,7 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
     <?php } elseif (!empty($fetchError)) { ?>
         <div class="fb-sync-banner">
             <div class="fb-sync-banner-left">
-                <i class="fi fi-rr-exclamation" style="color: #dc2626;"></i>
+                <i class="fi fi-rr-exclamation color-rose"></i>
                 <div>
                     <h4>Facebook Graph API Response</h4>
                     <p><?php echo htmlspecialchars($fetchError); ?></p>
@@ -233,7 +233,7 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                 </div>
                 <div class="v3-kpi-info">
                     <span class="v3-kpi-label">Latest Lead</span>
-                    <span class="v3-kpi-val" style="font-size: 14.5px;"><?php echo htmlspecialchars($latestLeadTime); ?></span>
+                    <span class="v3-kpi-val v3-kpi-val-time"><?php echo htmlspecialchars($latestLeadTime); ?></span>
                     <span class="v3-kpi-sub">Most recent submission</span>
                 </div>
             </div>
@@ -245,7 +245,7 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                 </div>
                 <div class="v3-kpi-info">
                     <span class="v3-kpi-label">Campaign First Lead</span>
-                    <span class="v3-kpi-val" style="font-size: 14.5px;"><?php echo htmlspecialchars($firstLeadTime); ?></span>
+                    <span class="v3-kpi-val v3-kpi-val-time"><?php echo htmlspecialchars($firstLeadTime); ?></span>
                     <span class="v3-kpi-sub">Campaign inception</span>
                 </div>
             </div>
@@ -268,14 +268,14 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
             <div class="v3-table-card">
                 <div class="v3-table-card-header">
                     <div class="v3-table-card-header-left">
-                        <i class="fi fi-rr-form" style="color: #1877f2; font-size: 18px;"></i>
+                        <i class="fi fi-rr-form v3-form-card-icon color-blue"></i>
                         <h3>Captured Form Inquiries</h3>
                         <span class="v3-badge v3-badge-blue"><?php echo $totalLeadsCount; ?> Total</span>
                     </div>
                     <div>
-                        <div class="integration-search-box" style="margin: 0;">
+                        <div class="integration-search-box m-0">
                             <i class="fi fi-rr-search"></i>
-                            <input type="text" id="leadSearchInput" placeholder="<?php echo ((isset($site_access_type) && $site_access_type === 'digital_marketing') ? 'Search leads by name, id...' : 'Search leads by name, phone, email...'); ?>" class="integration-search-input" style="padding: 6px 12px 6px 34px; font-size: 12.5px; min-width: 250px;">
+                            <input type="text" id="leadSearchInput" placeholder="<?php echo ((isset($site_access_type) && $site_access_type === 'digital_marketing') ? 'Search leads by name, id...' : 'Search leads by name, phone, email...'); ?>" class="integration-search-input v3-search-input-compact">
                         </div>
                     </div>
                 </div>
@@ -289,7 +289,7 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                 <th>Contact Details</th>
                                 <th>Form Responses</th>
                                 <th>Lead ID</th>
-                                <th style="text-align: right;">Action</th>
+                                <th class="text-end">Action</th>
                             </tr>
                         </thead>
                         <tbody id="fbLeadsTableBody">
@@ -405,7 +405,7 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
                                     <td>
                                         <span class="v3-code-pill"><?php echo htmlspecialchars($leadIdVal); ?></span>
                                     </td>
-                                    <td style="text-align: right;">
+                                    <td class="text-end">
                                         <button type="button" class="v3-btn-table-action btn-view-lead-modal" data-lead="<?php echo $jsonEncodedLead; ?>" title="Open Full Lead Profile">
                                             <i class="fi fi-rr-eye"></i> View Details
                                         </button>
@@ -438,16 +438,16 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
     <?php } ?>
 
     <!-- Full Lead Details Modal -->
-    <div class="v3-modal-overlay" id="fbLeadDetailsModalOverlay" style="display: none;">
+    <div class="v3-modal-overlay" id="fbLeadDetailsModalOverlay">
         <div class="fb-lead-modal-dialog">
             <div class="fb-lead-modal-header">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div class="integration-brand-logo brand-facebook" style="width: 40px; height: 40px; border-radius: 8px;">
-                        <img src="/app/dashboard/v3/default/desktop/assets/images/integration/facebook.svg" alt="Facebook" style="width: 22px; height: 22px;">
+                <div class="v3-modal-header-brand">
+                    <div class="integration-brand-logo brand-facebook v3-modal-brand-badge">
+                        <img src="/app/dashboard/v3/default/desktop/assets/images/integration/facebook.svg" alt="Facebook" class="v3-modal-brand-icon">
                     </div>
                     <div>
-                        <h3 id="fbModalLeadName" style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Lead Details</h3>
-                        <span style="font-size: 11.5px; color: #64748b;">Facebook Lead Ad Submission</span>
+                        <h3 id="fbModalLeadName" class="v3-modal-lead-title">Lead Details</h3>
+                        <span class="v3-modal-sub">Facebook Lead Ad Submission</span>
                     </div>
                 </div>
                 <button type="button" class="v3-modal-close-btn" id="fbModalCloseBtn" aria-label="Close modal">
@@ -458,32 +458,32 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
             <div class="fb-lead-modal-body">
                 <!-- Meta Info Header Card -->
                 <div class="fb-modal-contact-card">
-                    <div style="flex: 1;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.04em;">Lead ID</span>
+                    <div class="v3-flex-1">
+                        <div class="v3-modal-meta-row mb-6">
+                            <span class="v3-modal-meta-label">Lead ID</span>
                             <span class="v3-code-pill" id="fbModalLeadId">#</span>
                         </div>
-                        <div style="display: flex; align-items: center; justify-content: space-between;">
-                            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.04em;">Captured Time</span>
-                            <span style="font-size: 12.5px; font-weight: 600; color: #334155;" id="fbModalCreatedTime">—</span>
+                        <div class="v3-modal-meta-row">
+                            <span class="v3-modal-meta-label">Captured Time</span>
+                            <span class="v3-modal-meta-val" id="fbModalCreatedTime">—</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Contact Details -->
                 <div>
-                    <h5 style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748b; margin: 0 0 8px 0; letter-spacing: 0.04em;">Contact Details</h5>
-                    <div id="fbModalContactInfo" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px;"></div>
+                    <h5 class="v3-modal-section-title">Contact Details</h5>
+                    <div id="fbModalContactInfo" class="v3-modal-contact-card"></div>
                 </div>
 
                 <!-- Question Answers List -->
                 <div>
-                    <h5 style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748b; margin: 0 0 8px 0; letter-spacing: 0.04em;">Form Answers &amp; Questions</h5>
+                    <h5 class="v3-modal-section-title">Form Answers &amp; Questions</h5>
                     <div id="fbModalQAList" class="fb-modal-qa-list"></div>
                 </div>
             </div>
 
-            <div class="v3-modal-footer" style="padding: 14px 22px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: flex-end; gap: 10px; background: #f8fafc;">
+            <div class="v3-modal-footer v3-modal-footer-standard">
                 <button type="button" class="v3-btn-secondary btn-modal-dismiss">
                     Close
                 </button>
@@ -496,3 +496,4 @@ $phoneRate = ($totalLeadsCount > 0) ? round(($hasPhoneCount / $totalLeadsCount) 
         </div>
     </div>
 </div>
+

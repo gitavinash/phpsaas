@@ -2,8 +2,8 @@
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);">
-                <i class="fi fi-rr-user-add" style="color: #ffffff;"></i>
+            <div class="package-header-icon indigo">
+                <i class="fi fi-rr-user-add"></i>
             </div>
             <div class="package-header-titles">
                 <h2>Add Team Member</h2>
@@ -104,7 +104,7 @@
                             <!-- Custom Password -->
                             <div class="v3-form-group span-2">
                                 <label for="userPassword" class="v3-form-label">
-                                    Account Password <span class="opt" style="font-weight: normal; color: #94a3b8;">(Optional &mdash; defaults to mobile number if empty)</span>
+                                    Account Password <span class="opt v3-label-opt">(Optional &mdash; defaults to mobile number if empty)</span>
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-key input-icon"></i>
@@ -137,7 +137,7 @@
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-shield-check input-icon"></i>
-                                    <select id="userRole" name="userRole" class="v3-form-select" required>
+                                    <select id="userRole" name="userRole" class="v3-form-select selectJS2" required>
                                         <option value="">Select Role</option>
                                         <option value="administrator">Administrator (Full Access)</option>
                                         <option value="agent" selected>Sales Agent</option>
@@ -152,7 +152,7 @@
                             <!-- Bio / Title Note -->
                             <div class="v3-form-group">
                                 <label for="userBio" class="v3-form-label">
-                                    Designation / Note <span class="opt" style="font-weight: normal; color: #94a3b8;">(Optional)</span>
+                                    Designation / Note <span class="opt v3-label-opt">(Optional)</span>
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-id-badge input-icon"></i>
@@ -182,39 +182,39 @@
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- Member Live Preview Card -->
-                <div class="v3-live-preview-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Live Member Preview</span>
-                        <span class="v3-status-badge status-active" style="font-size: 11px;"><span class="status-pulse-dot"></span> Active</span>
+                <div class="v3-user-preview-card">
+                    <div class="v3-user-preview-header">
+                        <span class="v3-user-preview-title">Live Member Preview</span>
+                        <span class="v3-status-badge status-active badge-xs"><span class="status-pulse-dot"></span> Active</span>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 16px;">
-                        <div class="transport-avatar-badge" id="previewUserAvatar" style="width: 64px; height: 64px; font-size: 22px; font-weight: 700; border-radius: 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);">
+                    <div class="v3-user-preview-hero">
+                        <div class="transport-avatar-badge v3-user-preview-avatar" id="previewUserAvatar">
                             U
                         </div>
-                        <h3 id="previewUserName" style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 4px 0;">New Member</h3>
-                        <span id="previewUserRole" class="badge-service-state badge-role-agent" style="font-size: 11.5px; margin-top: 2px;">
+                        <h3 id="previewUserName" class="v3-user-preview-name">New Member</h3>
+                        <span id="previewUserRole" class="badge-service-state badge-role-agent v3-user-preview-role">
                             <i class="fi fi-rr-headset"></i> Sales Agent
                         </span>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; gap: 8px; background: #f8fafc; border-radius: 10px; padding: 12px; border: 1px solid #edf2f7; font-size: 12.5px;">
-                        <div style="display: flex; align-items: center; gap: 8px; color: #334155;">
-                            <i class="fi fi-rr-phone-call" style="color: #10b981; font-size: 12px; width: 14px;"></i>
-                            <span id="previewUserMobile" style="font-weight: 500;">+91 &mdash;</span>
+                    <div class="v3-user-preview-details">
+                        <div class="v3-user-preview-row">
+                            <i class="fi fi-rr-phone-call icon-phone-emerald"></i>
+                            <span id="previewUserMobile" class="v3-user-preview-val">+91 &mdash;</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 8px; color: #334155; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <i class="fi fi-rr-envelope" style="color: #6366f1; font-size: 12px; width: 14px;"></i>
-                            <span id="previewUserEmail" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis;">No email provided</span>
+                        <div class="v3-user-preview-row">
+                            <i class="fi fi-rr-envelope icon-mail-indigo"></i>
+                            <span id="previewUserEmail" class="v3-user-preview-val">No email provided</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Security & Access Tips Card -->
-                <div class="v3-tips-box">
+                <div class="v3-tips-box emerald">
                     <div class="tips-icon"><i class="fi fi-rr-shield-check"></i></div>
                     <div class="tips-content">
-                        <strong style="color: #166534; display: block; margin-bottom: 2px;">Access &amp; Security Policy</strong>
+                        <strong>Access &amp; Security Policy</strong>
                         Credentials activate immediately. Administrators receive full workspace permissions; sales agents see assigned leads.
                     </div>
                 </div>

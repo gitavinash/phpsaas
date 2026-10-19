@@ -1,8 +1,8 @@
 <div class="package-page-wrapper property-import-wrapper" id="propertyImportApp">
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);">
-                <i class="fi fi-rr-cloud-upload" style="color: #ffffff;"></i>
+            <div class="package-header-icon teal">
+                <i class="fi fi-rr-cloud-upload"></i>
             </div>
             <div class="package-header-titles">
                 <h2>Import Properties</h2>
@@ -32,18 +32,18 @@
                                 <span class="defaultText"><i class="fi fi-rr-cloud-upload upload-icon"></i><strong>Drop your CSV file here</strong><small>or click to browse from your computer</small><em>CSV files only</em></span>
                             </label>
                             <input type="file" id="fileInput" name="propertyFile" data-limit="1" accept=".csv"
-                                style="display: none;" />
+                                class="d-none" />
                             <div class="property-selected-file" id="propertySelectedFile" aria-live="polite"><i class="fi fi-rr-document"></i><span id="propertySelectedFileName">No file selected</span><button type="button" id="clearPropertyFile" title="Remove selected file">&times;</button></div>
                         </div>
 
                         <!-- Loader -->
-                        <div id="loader" class="property-import-loader" style="display:none;">
+                        <div id="loader" class="property-import-loader is-hidden">
                             <div class="table-loading-spinner"></div>
                             <div><strong>Importing properties</strong><span>Please keep this page open while the CSV is processed.</span></div>
                         </div>
 
                         <!-- Status Summary -->
-                        <div id="csvResult" class="import-summary" style="display:none;">
+                        <div id="csvResult" class="import-summary is-hidden">
                             <div class="summary-header">
                                 <h3 class="summary-title">Import Summary</h3>
                                 <span class="summary-time" id="summaryTime"></span>

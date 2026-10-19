@@ -41,13 +41,12 @@ if ($checkSupplier = mysqli_query($connection, "SELECT *, GROUP_CONCAT(tag_title
                             <label class="form-lable" id="Label">Title<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <div class="editor" id="editor0" style="min-height: 500px"></div>
-                            <textarea name="description" id="editor-0"
-                                style="display:none"><?php echo $post_description; ?></textarea>
+                            <div class="editor editor-min-500" id="editor0"></div>
+                            <textarea name="description" id="editor-0"><?php echo $post_description; ?></textarea>
                             <label class="form-lable" id="Label">Description<sup>*</sup></label>
                         </div>
                         <div class="form-group">
-                            <span style="display: none;" id="oldGallery"><?php echo $post_image ?></span>
+                            <span id="oldGallery"><?php echo $post_image ?></span>
                             <p><strong>Feature image</strong></p>
                             <div id="dropZone">
                                 <span class="defaultText">Drag & Drop files here or click to upload</span>

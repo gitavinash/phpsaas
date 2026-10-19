@@ -25,14 +25,14 @@ $encodedId = base64_encode((string)$packageId);
                     <span class="pkg-duration-badge" id="pkgMetaDuration">
                         <i class="fi fi-rr-moon pkg-duration-moon"></i> 0N / <i class="fi fi-rr-sun pkg-duration-sun"></i> 1D
                     </span>
-                    <span class="pkg-duration-badge" id="pkgMetaLocation" style="background: #f8fafc; border-color: #cbd5e1;">
-                        <i class="fi fi-rr-marker" style="color: #0284c7;"></i> Domestic
+                    <span class="pkg-duration-badge pkg-location-badge" id="pkgMetaLocation">
+                        <i class="fi fi-rr-marker pkg-duration-marker"></i> Domestic
                     </span>
                 </div>
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="#" target="_blank" class="btn-v3-action" id="btnViewLivePackage" style="display: none;" data-tooltip="View Live Package" title="View Live Package">
+            <a href="#" target="_blank" class="btn-v3-action" id="btnViewLivePackage" data-tooltip="View Live Package" title="View Live Package">
                 <i class="fi fi-rr-eye"></i> View Package
             </a>
             <a href="/dashboard/packages/domestic/list/" class="btn-v3-action" data-tooltip="Back to Domestic Packages List" title="Back to Domestic Packages List">
@@ -45,7 +45,7 @@ $encodedId = base64_encode((string)$packageId);
     </div>
 
     <!-- Main Content Box -->
-    <div class="box-1" style="margin-top: 16px;">
+    <div class="box-1 mt-16">
         <div class="widget box-1 no-padding">
             <div class="main-box">
                 <section class="dashboard-gallery-container">
@@ -66,14 +66,14 @@ $encodedId = base64_encode((string)$packageId);
                         </div>
                         <div class="transport-config-grid">
                             <div class="transport-field-card">
-                                <label for="selectOutstationVehicle"><i class="fi fi-rr-road" style="color: #6366f1;"></i> Outstation Transfer Vehicle:</label>
-                                <select id="selectOutstationVehicle" class="selectJS form-control">
+                                <label for="selectOutstationVehicle"><i class="fi fi-rr-road text-indigo"></i> Outstation Transfer Vehicle:</label>
+                                <select id="selectOutstationVehicle" class="selectJS2 form-control">
                                     <option value="">-- Select Outstation Vehicle --</option>
                                 </select>
                             </div>
                             <div class="transport-field-card">
-                                <label for="selectLocalVehicle"><i class="fi fi-rr-marker" style="color: #0284c7;"></i> Local Sightseeing Vehicle:</label>
-                                <select id="selectLocalVehicle" class="selectJS form-control">
+                                <label for="selectLocalVehicle"><i class="fi fi-rr-marker pkg-duration-marker"></i> Local Sightseeing Vehicle:</label>
+                                <select id="selectLocalVehicle" class="selectJS2 form-control">
                                     <option value="">-- Select Local Sightseeing Vehicle --</option>
                                 </select>
                             </div>
@@ -81,7 +81,7 @@ $encodedId = base64_encode((string)$packageId);
                     </div>
 
                     <!-- Sub Header Controls & Filters -->
-                    <div class="gallery-sub-header" style="margin-top: 18px;">
+                    <div class="gallery-sub-header mt-18">
                         <div class="gallery-sub-header-top">
                             <div class="gallery-stats-pills">
                                 <div class="theme-stat-pill is-blue">
@@ -125,9 +125,9 @@ $encodedId = base64_encode((string)$packageId);
 
                     <!-- Transporters Cards Grid Layout -->
                     <div class="dash-hotel-grid" id="transportGrid">
-                        <div class="hotel-loading-state" style="grid-column: 1 / -1; padding: 48px; text-align: center; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0;">
-                            <div class="v3-spinner" style="width: 36px; height: 36px; border: 3px solid #e2e8f0; border-top-color: #4f46e5; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 14px;"></div>
-                            <p style="color: #64748b; font-size: 14px; font-weight: 500; margin: 0;">Loading transporters & vehicles...</p>
+                        <div class="hotel-loading-state">
+                            <div class="v3-spinner"></div>
+                            <p>Loading transporters & vehicles...</p>
                         </div>
                     </div>
 

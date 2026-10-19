@@ -166,19 +166,15 @@
           if (!state.id) return state.text;
           const $elem = $(state.element);
           const icon = $elem.data("icon") || $elem.attr("data-icon");
+          const $wrap = $('<span class="select2-opt-wrap"></span>');
           if (icon) {
-            const $wrap = $(
-              '<span class="select2-opt-wrap"><i class="fi ' +
-                icon +
-                ' select2-opt-icon"></i> </span>'
-            );
-            const $txt = $('<span class="select2-opt-text"></span>').text(
-              state.text
-            );
-            $wrap.append($txt);
-            return $wrap;
+            $wrap.append('<i class="fi ' + icon + ' select2-opt-icon"></i>');
           }
-          return state.text;
+          const $txt = $('<span class="select2-opt-text"></span>').text(
+            state.text
+          );
+          $wrap.append($txt);
+          return $wrap;
         };
 
         const formatSelectSelection = function (state) {
@@ -202,6 +198,7 @@
 
         const baseConfig = {
           dropdownAutoWidth: true,
+          dropdownCssClass: "leads-filter-dropdown",
           templateResult: formatSelectOption,
           templateSelection: formatSelectSelection,
         };
@@ -211,7 +208,7 @@
           .off("select2:open.leadsFilters")
           .on(
             "select2:open.leadsFilters",
-            "#filterLeadStatus, #filterLeadInterest, #filterLeadResponse, #filterLeadAgent, #filterLeadSource, #bulkActionSelect",
+            "#filterLeadStatus, #filterLeadInterest, #filterLeadResponse, #filterLeadAgent, #filterLeadSource, #bulkActionSelect, .selectJS2",
             function () {
               $(".select2-dropdown").addClass("leads-filter-dropdown");
             }
@@ -219,7 +216,7 @@
 
         // Destroy existing select2 safely to avoid duplicate wrappers
         $(
-          "#filterLeadStatus, #filterLeadInterest, #filterLeadResponse, #filterLeadAgent, #filterLeadSource, #bulkActionSelect, #leadsPerPage"
+          "#filterLeadStatus, #filterLeadInterest, #filterLeadResponse, #filterLeadAgent, #filterLeadSource, #bulkActionSelect, #leadsPerPage, .selectJS2"
         ).each(function () {
           if ($(this).hasClass("select2-hidden-accessible")) {
             try {

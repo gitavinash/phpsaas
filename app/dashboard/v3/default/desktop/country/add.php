@@ -18,7 +18,7 @@
                                 <span class="defaultText">Drag & Drop files here or click to upload</span>
                             </div>
                             <input type="file" id="fileInput" name="featureImage[]" data-limit="1"
-                                accept=".jpg, .jpeg, .png" style="display: none;" />
+                                accept=".jpg, .jpeg, .png" class="is-v3-hidden" />
                         </div>
                         <div class="form-group">
                             <input id="name" name="name" type="text" required />
@@ -105,7 +105,7 @@
                         <div class="box-1">
                             <div class="form-group">
                                 <p>Country type</p>
-                                <select class="selectJS" id="countryType" name="countryType">
+                                <select class="selectJS2 form-control" id="countryType" name="countryType">
                                     <option value="">Select Country type</option>
                                     <option value="schengen">Schengen Area</option>
                                     <option value="ca4">CA-4 (Central America Four)</option>
@@ -121,7 +121,7 @@
                             <div class="form-group">
                                 <a href="#" class="btn popUpBtn" id="addNewCountry"><i class="fi-rr-check"></i> <span
                                         id="btnText">Add country</span>
-                                    <span id="loadingSpinner" style="display:none;"> <i
+                                    <span id="loadingSpinner" class="is-v3-hidden"> <i
                                             class="fi-rr-spinner fi-spin"></i> </span></a>
                             </div>
                         </div>

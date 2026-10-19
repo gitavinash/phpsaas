@@ -2,7 +2,7 @@
 <div class="main-box">
     <section>
         <form action="#" id="addNewInventoryForm" method="POST" enctype="multipart/form-data">
-            <section class="form" style="padding-top:25px">
+            <section class="form">
                 <div class="step-open-box step_1_box">
                     <div class="form-group">
                         <input id="mobile" name="mobile" value="1" type="number" required />

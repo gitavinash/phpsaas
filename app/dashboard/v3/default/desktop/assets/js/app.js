@@ -382,10 +382,18 @@ function initSelect2Components() {
     initializeSelect2HereMapsWithCompleteAddress(".addressAutoComplete");
   }
 
-  if ($(".selectJS").length) {
-    $(".selectJS").each(function () {
+  if ($(".selectJS, .selectJS2, .selectjs2").length) {
+    $(".selectJS, .selectJS2, .selectjs2").each(function () {
       if (!$(this).hasClass("select2-hidden-accessible")) {
-        $(this).select2();
+        const placeholder =
+          $(this).attr("placeholder") ||
+          $(this).data("placeholder") ||
+          "Select options";
+        $(this).select2({
+          placeholder: placeholder,
+          width: $(this).data("width") || "100%",
+          dropdownAutoWidth: true,
+        });
       }
     });
   }
@@ -3166,37 +3174,34 @@ $(document).ready(function (e) {
   //   .val(dateRangeValue);
 
   // Select js 2
-
-  if ($(".selectJS").length) {
-    $(".selectJS").select2({
-      placeholder: "Select options",
-    });
+  if (typeof initSelect2Components === "function") {
+    initSelect2Components();
   }
 
   // Main Box tabs
-
-  if ($(".steps-tab").length) {
-    $(".step-box").click(function (e) {
-      e.preventDefault();
-      currentElementID = $(this).attr("id");
-      $(".step-box").removeClass("active");
-      showCurrentBox = currentElementID + "_box";
-      showCurrentLable = currentElementID;
-      // console.log(`showCurrentBox: `, showCurrentBox);
-      // console.log(`showCurrentLable: `, showCurrentLable);
-      $(".step-open-box").hide();
-      $("#" + showCurrentLable).addClass("active");
-      $("." + showCurrentBox).show();
+  $(document).on("click", ".step-box", function (e) {
+    e.preventDefault();
+    const currentElementID = $(this).attr("id");
+    if (!currentElementID) return;
+    $(".step-box").removeClass("active");
+    const showCurrentBox = currentElementID + "_box";
+    const showCurrentLabel = currentElementID;
+    $(".step-open-box").hide();
+    $("#" + showCurrentLabel).addClass("active");
+    $("." + showCurrentBox).show();
+    if (typeof initSelect2Components === "function") {
+      initSelect2Components();
+    }
+    if (typeof hidePageLoader === "function") {
       hidePageLoader();
-    });
-  }
+    }
+  });
 
   // Material CSS like input
-
-  $(".form-control").change(function () {
-    currentClickID = $(this).attr("id");
-    currentValue = $(this).val();
-    if (currentValue != "") {
+  $(document).on("change", ".form-control", function () {
+    const currentClickID = $(this).attr("id");
+    const currentValue = $(this).val();
+    if (currentClickID && currentValue != "") {
       $("#" + currentClickID + "Label").addClass("labelHeading");
     }
   });
@@ -3210,31 +3215,42 @@ $(document).ready(function (e) {
   }
 
   // Lead details page
-
-  $(".detailsBtn").click(function (e) {
+  $(document).on("click", ".detailsBtn", function (e) {
     e.preventDefault();
     handleButtonClick(this);
   });
 
-  $("#noteBtn").click(function (e) {
-    document.querySelector(".notesBox").style.display = "flex";
-    $(".notesBox").show();
-    hidePageLoader();
+  $(document).on("click", "#noteBtn", function (e) {
     e.preventDefault();
+    const $box = $(".notesBox");
+    if ($box.length) {
+      $box.css("display", "flex").show();
+    }
+    if (typeof hidePageLoader === "function") {
+      hidePageLoader();
+    }
   });
 
-  $("#paymentBtn").click(function (e) {
-    document.querySelector(".paymentLinkBox").style.display = "flex";
-    $(".paymentLinkBox").show();
-    hidePageLoader();
+  $(document).on("click", "#paymentBtn", function (e) {
     e.preventDefault();
+    const $box = $(".paymentLinkBox");
+    if ($box.length) {
+      $box.css("display", "flex").show();
+    }
+    if (typeof hidePageLoader === "function") {
+      hidePageLoader();
+    }
   });
 
-  $("#updatePaymentBtn").click(function (e) {
-    document.querySelector(".updatePaymentBox").style.display = "flex";
-    $(".updatePaymentBox").show();
-    hidePageLoader();
+  $(document).on("click", "#updatePaymentBtn", function (e) {
     e.preventDefault();
+    const $box = $(".updatePaymentBox");
+    if ($box.length) {
+      $box.css("display", "flex").show();
+    }
+    if (typeof hidePageLoader === "function") {
+      hidePageLoader();
+    }
   });
 
   $("#convertToSale").click(function (e) {
@@ -4802,34 +4818,6 @@ $(document).ready(function (e) {
       }
     }
 
-    // 6c. WhatsApp Chat Automation Plugin Module
-    const $waAuto = $("#whatsappAutomationApp");
-    if ($waAuto.length > 0) {
-      if (window.ISW_WhatsAppAutomation && typeof window.ISW_WhatsAppAutomation.init === "function") {
-        window.ISW_WhatsAppAutomation.init();
-      } else {
-        ensureScriptLoaded(ADMIN_JS + "whatsapp_automation.js?v=" + Date.now(), function () {
-          if (window.ISW_WhatsAppAutomation && typeof window.ISW_WhatsAppAutomation.init === "function") {
-            window.ISW_WhatsAppAutomation.init();
-          }
-        });
-      }
-    }
-
-    // 6d. Lead Flow & Distribution Automation Plugin Module
-    const $leadAuto = $("#leadAutomationApp");
-    if ($leadAuto.length > 0) {
-      if (window.ISW_LeadAutomation && typeof window.ISW_LeadAutomation.init === "function") {
-        window.ISW_LeadAutomation.init();
-      } else {
-        ensureScriptLoaded(ADMIN_JS + "lead_automation.js?v=" + Date.now(), function () {
-          if (window.ISW_LeadAutomation && typeof window.ISW_LeadAutomation.init === "function") {
-            window.ISW_LeadAutomation.init();
-          }
-        });
-      }
-    }
-
     // 7. Digital Marketing Dashboard Module
     const $mktDashboard = $("#digitalMarketingDashboardApp");
     if ($mktDashboard.length > 0) {
@@ -5136,8 +5124,10 @@ $(document).ready(function (e) {
 
     // Dynamic Right-side Flyout Submenus Positioning & Auto-close Handler
     let currentActiveSideMenu = null;
+    let closeSideMenuTimer = null;
 
     function closeAllSideMenus() {
+      cancelCloseSideMenus();
       document
         .querySelectorAll("nav.side-nav .side-menu")
         .forEach(function (menu) {
@@ -5146,8 +5136,23 @@ $(document).ready(function (e) {
       currentActiveSideMenu = null;
     }
 
+    function scheduleCloseSideMenus(delay = 180) {
+      if (closeSideMenuTimer) clearTimeout(closeSideMenuTimer);
+      closeSideMenuTimer = setTimeout(function () {
+        closeAllSideMenus();
+      }, delay);
+    }
+
+    function cancelCloseSideMenus() {
+      if (closeSideMenuTimer) {
+        clearTimeout(closeSideMenuTimer);
+        closeSideMenuTimer = null;
+      }
+    }
+
     function positionSideMenu(hoveredLi, sideMenu) {
       if (!hoveredLi || !sideMenu) return;
+      cancelCloseSideMenus();
       const rect = hoveredLi.getBoundingClientRect();
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
@@ -5229,12 +5234,14 @@ $(document).ready(function (e) {
     document.addEventListener("mouseover", function (e) {
       const hoveredSideMenu = e.target.closest(".side-menu");
       if (hoveredSideMenu) {
-        // Pointer is inside the open flyout submenu, keep it visible
+        // Pointer is inside the open flyout submenu, cancel any pending close
+        cancelCloseSideMenus();
         return;
       }
 
       const hoveredLi = e.target.closest("nav.side-nav ul li");
       if (hoveredLi) {
+        cancelCloseSideMenus();
         const sideMenu = hoveredLi.querySelector(".side-menu");
         if (sideMenu) {
           if (currentActiveSideMenu && currentActiveSideMenu !== sideMenu) {
@@ -5243,16 +5250,16 @@ $(document).ready(function (e) {
           positionSideMenu(hoveredLi, sideMenu);
         } else {
           // Hovering an item without a sub-menu (e.g. Dashboard, Domestic packages)
-          closeAllSideMenus();
+          scheduleCloseSideMenus(100);
         }
       } else {
-        // Pointer left the sidebar entirely
-        closeAllSideMenus();
+        // Pointer left the sidebar entirely, use graceful close debounce
+        scheduleCloseSideMenus(160);
       }
     });
 
     document.addEventListener("mouseleave", function () {
-      closeAllSideMenus();
+      scheduleCloseSideMenus(120);
     });
 
     // Profile Dropdown Click & Toggle Handler
@@ -5274,48 +5281,9 @@ $(document).ready(function (e) {
     });
 
     // ==========================================================================
-    // ASIDE PLUGINS APP DRAWER (Tabs & Instant Search Filter)
+    // ASIDE ACTIVE PLUGINS SEARCH & FILTER
     // ==========================================================================
     document.addEventListener("click", function (e) {
-      const tabBtn = e.target.closest(".aside-plugin-tab-btn");
-      if (tabBtn) {
-        e.preventDefault();
-        e.stopPropagation();
-        const targetTab = tabBtn.getAttribute("data-tab");
-        document.querySelectorAll(".aside-plugin-tab-btn").forEach(function (btn) {
-          btn.classList.remove("is-active");
-        });
-        tabBtn.classList.add("is-active");
-
-        const activePanel = document.getElementById("asidePluginsActivePanel");
-        const availPanel = document.getElementById("asidePluginsAvailablePanel");
-        if (targetTab === "active") {
-          if (activePanel) {
-            activePanel.classList.add("is-active");
-            activePanel.classList.remove("is-hidden");
-          }
-          if (availPanel) {
-            availPanel.classList.remove("is-active");
-            availPanel.classList.add("is-hidden");
-          }
-        } else {
-          if (availPanel) {
-            availPanel.classList.add("is-active");
-            availPanel.classList.remove("is-hidden");
-          }
-          if (activePanel) {
-            activePanel.classList.remove("is-active");
-            activePanel.classList.add("is-hidden");
-          }
-        }
-
-        const searchInput = document.getElementById("asidePluginSearchInput");
-        if (searchInput && searchInput.value.trim().length > 0) {
-          searchInput.dispatchEvent(new Event("input", { bubbles: true }));
-        }
-        return;
-      }
-
       const clearBtn = e.target.closest("#asidePluginSearchClear");
       if (clearBtn) {
         e.preventDefault();
@@ -5367,31 +5335,6 @@ $(document).ready(function (e) {
               emptyActive.classList.remove("is-hidden");
             } else {
               emptyActive.classList.add("is-hidden");
-            }
-          }
-        }
-
-        // Filter available panel items
-        const availPanel = document.getElementById("asidePluginsAvailablePanel");
-        let visibleAvail = 0;
-        if (availPanel) {
-          availPanel.querySelectorAll(".aside-plugin-item").forEach(function (item) {
-            if (!item.classList.contains("is-hidden")) {
-              const name = (item.getAttribute("data-plugin-name") || item.textContent).toLowerCase();
-              if (!query || name.includes(query)) {
-                item.classList.remove("is-filtered-out");
-                visibleAvail++;
-              } else {
-                item.classList.add("is-filtered-out");
-              }
-            }
-          });
-          const emptyAvail = document.getElementById("asideAvailableEmptyState");
-          if (emptyAvail) {
-            if (visibleAvail === 0) {
-              emptyAvail.classList.remove("is-hidden");
-            } else {
-              emptyAvail.classList.add("is-hidden");
             }
           }
         }
@@ -6007,5 +5950,93 @@ $(document).ready(function (e) {
     var customNotice = $(this).attr("data-modal-notice") || "To purchase more licenses or add more devices/team members, please contact Aleya directly.";
     window.showContactAleyaModal(customTitle, customNotice);
   });
+
+  // Global delegation for go-back buttons
+  $(document).on("click", '[data-action="go-back"], #btn404GoBack', function (e) {
+    e.preventDefault();
+    window.history.back();
+  });
+
+  // Global delegation for reload buttons
+  $(document).on("click", '[data-action="reload-page"]', function (e) {
+    e.preventDefault();
+    window.location.reload();
+  });
+
+  // Global delegation for floating filter modal
+  $(document).on("click", "#openFilterModal, .btn-floating-filter", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $("#filterModal, .floating-filter-modal").fadeIn(150);
+  });
+
+  $(document).on("click", "#closeFilterModal, .btn-close-filter-modal", function (e) {
+    e.preventDefault();
+    $("#filterModal, .floating-filter-modal").fadeOut(150);
+  });
+
+  $(document).on("click", function (e) {
+    var $modal = $("#filterModal, .floating-filter-modal");
+    var $btn = $("#openFilterModal, .btn-floating-filter");
+    if ($modal.is(":visible") && !$modal.is(e.target) && !$modal.has(e.target).length && !$btn.is(e.target) && !$btn.has(e.target).length) {
+      $modal.fadeOut(150);
+    }
+  });
+
+  $(document).on("submit", "#filterForm, .floating-filter-form", function () {
+    $("#loadingOverlay, .loading-overlay").addClass("is-active").css("display", "flex");
+  });
+
+  // --- Check Sales Agent WhatsApp Assigned Device Access ---
+  function checkAgentWhatsAppDeviceAccess() {
+    var $waTopNav = $("#v3AgentNavWhatsapp");
+    var $waMobileNav = $("#v3MobileNavWhatsapp");
+    if (!$waTopNav.length && !$waMobileNav.length) return;
+
+    // Fast sessionStorage check for zero-flicker render
+    var cached = sessionStorage.getItem("v3_wa_agent_assigned");
+    if (cached === "1") {
+      $waTopNav.addClass("is-visible");
+      $waMobileNav.addClass("is-visible");
+    } else if (cached === "0") {
+      $waTopNav.removeClass("is-visible");
+      $waMobileNav.removeClass("is-visible");
+    }
+
+    // Verify asynchronously via API
+    $.ajax({
+      url: "/api/v3/whatsapp/chats/?action=check_assigned",
+      type: "GET",
+      dataType: "json",
+      success: function (res) {
+        if (res && res.status === "success") {
+          if (res.has_assigned_device) {
+            $waTopNav.addClass("is-visible");
+            $waMobileNav.addClass("is-visible");
+            sessionStorage.setItem("v3_wa_agent_assigned", "1");
+          } else {
+            $waTopNav.removeClass("is-visible");
+            $waMobileNav.removeClass("is-visible");
+            sessionStorage.setItem("v3_wa_agent_assigned", "0");
+          }
+        }
+      },
+      error: function () {
+        // Preserve cached state if error
+      }
+    });
+  }
+
+  // Run on initial page load
+  checkAgentWhatsAppDeviceAccess();
+
+  // Run on SPA navigation
+  window.addEventListener("spa:page-loaded", checkAgentWhatsAppDeviceAccess);
+  window.addEventListener("v3:whatsapp-device-changed", function () {
+    sessionStorage.removeItem("v3_wa_agent_assigned");
+    checkAgentWhatsAppDeviceAccess();
+  });
 })();
+
+
 

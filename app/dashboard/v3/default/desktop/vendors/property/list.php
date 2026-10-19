@@ -1,7 +1,7 @@
 <div class="package-page-wrapper property-list-wrapper" id="propertiesListApp">
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);"><i class="fi fi-rr-building" style="color: #ffffff;"></i></div>
+            <div class="package-header-icon teal"><i class="fi fi-rr-building"></i></div>
             <div class="package-header-titles">
                 <h2>Properties Directory</h2>
                 <p>Manage property details, contacts, rooms, and publishing status.</p>
@@ -41,8 +41,8 @@
     </div>
     <div class="package-table-card">
         <div class="package-filter-toolbar">
-            <div class="filter-search-box"><i class="fi fi-rr-search search-svg-icon"></i><input type="search" id="propertySearchInput" class="filter-search-input" placeholder="Search by name, city, email, or mobile..." autocomplete="off"><button type="button" id="clearPropertySearchBtn" class="clear-search-btn" title="Clear search" style="display:none">&times;</button></div>
-            <div class="filter-dropdowns-wrap"><select id="filterPropertyType" class="filter-select selectJS" data-placeholder="All Property Types">
+            <div class="filter-search-box"><i class="fi fi-rr-search search-svg-icon"></i><input type="search" id="propertySearchInput" class="filter-search-input" placeholder="Search by name, city, email, or mobile..." autocomplete="off"><button type="button" id="clearPropertySearchBtn" class="clear-search-btn is-hidden" title="Clear search">&times;</button></div>
+            <div class="filter-dropdowns-wrap"><select id="filterPropertyType" class="filter-select selectJS2" data-placeholder="All Property Types">
                     <option value="">All Property Types</option>
                     <option value="apartments">Apartments</option>
                     <option value="capsule_hotel">Capsule hotel</option>
@@ -61,11 +61,11 @@
                     <option value="tent">Tent</option>
                     <option value="farm_stay">Farm stay</option>
                     <option value="resorts">Resorts</option>
-                </select><select id="filterPropertyLocation" class="filter-select" data-placeholder="All Locations">
+                </select><select id="filterPropertyLocation" class="filter-select selectJS2" data-placeholder="All Locations">
                     <option value="">All Locations</option>
-                </select><select id="filterPropertyRoomType" class="filter-select" data-placeholder="All Room Types">
+                </select><select id="filterPropertyRoomType" class="filter-select selectJS2" data-placeholder="All Room Types">
                     <option value="">All Room Types</option>
-                </select><select id="filterPropertyStatus" class="filter-select selectJS" data-placeholder="All Status">
+                </select><select id="filterPropertyStatus" class="filter-select selectJS2" data-placeholder="All Status">
                     <option value="">All Status</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -96,7 +96,7 @@
             <div class="pagination-info-wrap">
                 <div class="pagination-size-select-wrap">
                     <label for="propertiesPerPage">Show</label>
-                    <select id="propertiesPerPage" class="pagination-size-select">
+                    <select id="propertiesPerPage" class="pagination-size-select selectJS2">
                         <option value="25">25</option>
                         <option value="50" selected>50</option>
                         <option value="100">100</option>

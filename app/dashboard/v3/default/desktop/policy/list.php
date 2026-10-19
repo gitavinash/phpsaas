@@ -9,7 +9,7 @@
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon policy-header-badge" style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);">
+            <div class="package-header-icon indigo">
                 <i class="fi fi-rr-shield-check"></i>
             </div>
             <div class="package-header-titles">
@@ -66,19 +66,19 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <input type="text" id="policySearchInput" class="filter-search-input" placeholder="Search by policy title, url slug, or content..." autocomplete="off">
-                <button type="button" id="clearPolicySearchBtn" class="clear-search-btn" title="Clear search" style="display: none;">✕</button>
+                <button type="button" id="clearPolicySearchBtn" class="clear-search-btn is-hidden" title="Clear search">✕</button>
             </div>
 
             <div class="filter-dropdowns-wrap">
                 <!-- Status Filter -->
-                <select id="filterPolicyStatus" class="filter-select">
+                <select id="filterPolicyStatus" class="filter-select selectJS2">
                     <option value="" selected>All Statuses</option>
                     <option value="1">Active</option>
                     <option value="0">Draft / Inactive</option>
                 </select>
 
                 <!-- Reset Filters Button -->
-                <button type="button" id="btnResetPolicyFilters" class="btn-v3-action" style="padding: 7px 12px; font-size: 12px;" data-tooltip="Reset all filters">
+                <button type="button" id="btnResetPolicyFilters" class="btn-v3-action btn-v3-sm" data-tooltip="Reset all filters">
                     <i class="fi fi-rr-refresh"></i> <span>Reset</span>
                 </button>
             </div>
@@ -108,11 +108,11 @@
         </div>
 
         <!-- Table Footer / Pagination -->
-        <div class="package-pagination-bar" id="policyPaginationBar" style="display: none;">
+        <div class="package-pagination-bar is-hidden" id="policyPaginationBar">
             <div class="pagination-info-wrap">
                 <div class="pagination-size-select-wrap">
                     <label for="policyPerPage">Show:</label>
-                    <select id="policyPerPage" class="pagination-size-select">
+                    <select id="policyPerPage" class="pagination-size-select selectJS2">
                         <option value="10">10</option>
                         <option value="25" selected>25</option>
                         <option value="50">50</option>

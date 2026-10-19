@@ -9,11 +9,11 @@ $userRole = strtolower(trim(isset($site_access_type) ? $site_access_type : (defi
 $canManageAccounts = in_array($userRole, ['administrator', 'accountant', 'operations', 'manager']);
 
 if (!$canManageAccounts) {
-    echo '<div class="v3-unauthorized-box" style="padding: 40px; text-align: center;">
-            <i class="fi fi-rr-lock" style="font-size: 48px; color: #ef4444;"></i>
-            <h3 style="margin-top: 16px;">Access Restricted</h3>
-            <p style="color: #64748b;">You do not have administrative or accounting permissions to view this transaction.</p>
-            <a href="/dashboard/accounts/" class="btn-v3-action btn-blue" style="margin-top: 12px; display: inline-block;">Return to Accounts</a>
+    echo '<div class="v3-unauthorized-box">
+            <i class="fi fi-rr-lock"></i>
+            <h3>Access Restricted</h3>
+            <p>You do not have administrative or accounting permissions to view this transaction.</p>
+            <a href="/dashboard/accounts/" class="btn-v3-action btn-blue mt-2 d-inline-block">Return to Accounts</a>
           </div>';
     return;
 }
@@ -44,26 +44,26 @@ if (empty($rawTxId) && isset($urlStructure) && is_array($urlStructure)) {
             <a href="/dashboard/accounts/" class="btn-v3-action btn-outline">
                 <i class="fi fi-rr-arrow-left"></i> All Transactions
             </a>
-            <a href="#" target="_blank" class="btn-v3-action btn-lead-crm-highlight" id="dtlOpenLeadBtn" style="display:none;">
+            <a href="#" target="_blank" class="btn-v3-action btn-lead-crm-highlight d-none" id="dtlOpenLeadBtn">
                 <i class="fi fi-rr-arrow-up-right-from-square"></i> Open Lead CRM
             </a>
-            <span id="dtlApprovalActionWrap" style="display:inline-flex; gap: 8px;"></span>
+            <span id="dtlApprovalActionWrap" class="d-inline-flex gap-2"></span>
         </div>
     </div>
 
     <!-- Loading Skeleton Placeholder -->
-    <div id="accDetailLoadingWrap" style="margin-top: 18px;">
+    <div id="accDetailLoadingWrap" class="mt-3">
         <div class="acc-detail-grid">
             <div class="acc-detail-col-left">
                 <div class="acc-card-box">
-                    <div class="v3-skeleton-line h-22 w-40" style="margin-bottom: 12px;"></div>
-                    <div class="v3-skeleton-line h-16 w-80" style="margin-bottom: 8px;"></div>
+                    <div class="v3-skeleton-line h-22 w-40 mb-2"></div>
+                    <div class="v3-skeleton-line h-16 w-80 mb-2"></div>
                     <div class="v3-skeleton-line h-16 w-60"></div>
                 </div>
             </div>
             <div class="acc-detail-col-right">
                 <div class="acc-card-box">
-                    <div class="v3-skeleton-line h-22 w-50" style="margin-bottom: 12px;"></div>
+                    <div class="v3-skeleton-line h-22 w-50 mb-2"></div>
                     <div class="v3-skeleton-line h-16 w-70"></div>
                 </div>
             </div>
@@ -71,7 +71,7 @@ if (empty($rawTxId) && isset($urlStructure) && is_array($urlStructure)) {
     </div>
 
     <!-- Dynamic Content Container -->
-    <div id="accDetailContentWrap" style="display:none; margin-top: 18px;">
+    <div id="accDetailContentWrap" class="d-none mt-3">
         <div class="acc-detail-grid">
             
             <!-- Left Column: Transaction Breakdown & Receipt Proof -->
@@ -109,13 +109,13 @@ if (empty($rawTxId) && isset($urlStructure) && is_array($urlStructure)) {
                             <span class="meta-label"><i class="fi fi-rr-user"></i> Recorded By</span>
                             <span class="meta-val" id="dtlRecordedBy">-</span>
                         </div>
-                        <div class="meta-item full-width" id="dtlVerifiedByRow" style="display:none;">
-                            <span class="meta-label" style="color: #047857;"><i class="fi fi-rr-badge-check"></i> Verified Audit</span>
-                            <span class="meta-val" id="dtlVerifiedBy" style="color: #065f46;">-</span>
+                        <div class="meta-item full-width d-none" id="dtlVerifiedByRow">
+                            <span class="meta-label meta-label-verified"><i class="fi fi-rr-badge-check"></i> Verified Audit</span>
+                            <span class="meta-val meta-val-verified" id="dtlVerifiedBy">-</span>
                         </div>
-                        <div class="meta-item full-width" id="dtlRejectionRow" style="display:none;">
-                            <span class="meta-label" style="color: #dc2626;"><i class="fi fi-rr-cross-circle"></i> Rejection Details</span>
-                            <p class="meta-val" id="dtlRejectionReason" style="color: #991b1b; margin: 0;">-</p>
+                        <div class="meta-item full-width d-none" id="dtlRejectionRow">
+                            <span class="meta-label meta-label-rejected"><i class="fi fi-rr-cross-circle"></i> Rejection Details</span>
+                            <p class="meta-val meta-val-rejected" id="dtlRejectionReason">-</p>
                         </div>
                         <div class="meta-item full-width">
                             <span class="meta-label"><i class="fi fi-rr-comment-alt"></i> Remarks / Description</span>
@@ -130,7 +130,7 @@ if (empty($rawTxId) && isset($urlStructure) && is_array($urlStructure)) {
                         <div class="acc-card-title">
                             <i class="fi fi-rr-picture"></i> Receipt &amp; Proof of Payment
                         </div>
-                        <a href="#" target="_blank" class="btn-v3-action btn-outline btn-xs" id="dtlDownloadReceiptBtn" download style="display:none;">
+                        <a href="#" target="_blank" class="btn-v3-action btn-outline btn-xs d-none" id="dtlDownloadReceiptBtn" download>
                             <i class="fi fi-rr-download"></i> Download
                         </a>
                     </div>
@@ -162,8 +162,8 @@ if (empty($rawTxId) && isset($urlStructure) && is_array($urlStructure)) {
                             <div class="customer-contacts">
                                 <span class="contact-item">
                                     <i class="fi fi-rr-phone-call"></i> <span id="dtlCustomerPhone">-</span>
-                                    <a href="#" id="dtlCustWaLink" target="_blank" class="btn-quick-wa" title="WhatsApp Customer" style="display:none;"><svg viewBox="0 0 24 24" width="13" height="13" fill="#ffffff"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
-                                    <a href="#" id="dtlCustCallLink" class="btn-quick-call" title="Call Customer" style="display:none;"><i class="fi fi-rr-phone-call"></i></a>
+                                    <a href="#" id="dtlCustWaLink" target="_blank" class="btn-quick-wa d-none" title="WhatsApp Customer"><svg viewBox="0 0 24 24" width="13" height="13" fill="#ffffff"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
+                                    <a href="#" id="dtlCustCallLink" class="btn-quick-call d-none" title="Call Customer"><i class="fi fi-rr-phone-call"></i></a>
                                 </span>
                                 <span class="contact-item"><i class="fi fi-rr-envelope"></i> <span id="dtlCustomerEmail">-</span></span>
                             </div>
@@ -213,7 +213,7 @@ if (empty($rawTxId) && isset($urlStructure) && is_array($urlStructure)) {
                                     <span class="acc-fin-icon" id="dtlBalanceIcon"><i class="fi fi-rr-clock"></i></span>
                                     <span class="acc-fin-label" id="dtlBalanceLabel">Balance Due</span>
                                 </div>
-                                <span class="acc-fin-status-tag" id="dtlBalanceTag" style="display:none;"></span>
+                                <span class="acc-fin-status-tag d-none" id="dtlBalanceTag"></span>
                             </div>
                             <div class="acc-fin-card-body">
                                 <h3 class="acc-fin-amount" id="dtlPendingBalance">₹ 0.00</h3>
@@ -238,7 +238,7 @@ if (empty($rawTxId) && isset($urlStructure) && is_array($urlStructure)) {
                                     <th>Amount</th>
                                     <th>Method</th>
                                     <th>Status</th>
-                                    <th style="text-align: right;">Action</th>
+                                    <th class="text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="dtlHistoryTableBody">
@@ -256,10 +256,10 @@ if (empty($rawTxId) && isset($urlStructure) && is_array($urlStructure)) {
 
 <!-- Rejection Modal -->
 <div class="v3-modal-overlay" id="modalDtlRejectPayment">
-    <div class="v3-modal-dialog" style="max-width: 480px;">
+    <div class="v3-modal-dialog v3-modal-dialog-sm">
         <div class="v3-modal-header">
             <div class="v3-modal-header-left">
-                <div class="v3-modal-header-icon-box" style="background: #fee2e2; color: #dc2626;">
+                <div class="v3-modal-header-icon-box icon-danger">
                     <i class="fi fi-rr-cross-circle"></i>
                 </div>
                 <div class="v3-modal-title-wrap">
@@ -270,7 +270,7 @@ if (empty($rawTxId) && isset($urlStructure) && is_array($urlStructure)) {
             <button type="button" class="v3-modal-close-btn v3-modal-close-trigger"><i class="fi fi-rr-cross"></i></button>
         </div>
         <div class="v3-modal-body">
-            <p style="color: #475569; font-size: 13.5px; line-height: 1.5; margin: 0 0 12px 0;">
+            <p class="v3-modal-prompt-text">
                 Are you sure you want to reject this transaction? It will not be counted towards the customer's paid total.
             </p>
             <div class="v3-form-group">

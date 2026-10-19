@@ -18,7 +18,7 @@ if ($showForm == true) { ?>
 <div class="main-box">
     <section>
         <form action="#" id="updateMembershipForm" method="POST" enctype="multipart/form-data">
-            <section class="form" style="padding-top:25px">
+            <section class="form pt-25">
                 <div class="step-open-box step_1_box">
                     <?php
 
@@ -36,7 +36,7 @@ if ($showForm == true) { ?>
                         ?>
 
                     <div class="form-group">
-                        <select class="selectJS form-control" name="warehouseId" id="warehouseId">
+                        <select class="selectJS2 form-control" name="warehouseId" id="warehouseId">
                             <option value="select">Select branch</option>
                             <?php
 
@@ -71,7 +71,7 @@ if ($showForm == true) { ?>
                     </div>
                     <div class="form-group">
                         <label class="form-lable">Room type<sup>*</sup></label>
-                        <select class="selectJS" style="float: left; width:100%" name="package" id="package">
+                        <select class="selectJS2 form-control" name="package" id="package">
                             <option value="">Select room type</option>
                             <?php
 

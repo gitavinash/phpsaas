@@ -34,7 +34,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="#" target="_blank" class="btn-v3-action btn-view-live" id="btnViewLiveHotel" style="display: none;" title="View Live on Website">
+            <a href="#" target="_blank" class="btn-v3-action btn-view-live" id="btnViewLiveHotel" title="View Live on Website">
                 <i class="fi fi-rr-eye"></i> View Live
             </a>
             <a href="/dashboard/vendors/property/list/" class="btn-v3-action" data-tooltip="Back to Properties Directory">
@@ -52,7 +52,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
     </div>
 
     <!-- ── Full-Width Layout ──────────────────────────────────────── -->
-    <div class="prop-form-full-layout d-none" id="propertyEditLayout" style="display:none;">
+    <div class="prop-form-full-layout d-none" id="propertyEditLayout">
 
         <!-- ── Left: Form Cards ───────────────────────────────── -->
         <div class="v3-form-main-col">
@@ -264,7 +264,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
 
                             <!-- Website Publishing Option Card -->
                             <div class="v3-card-section" id="cardWebsitePublish">
-                                <div class="v3-card-body" style="padding: 16px 20px;">
+                                <div class="v3-card-body p-16-20">
                                     <label class="v3-publish-checkbox-label" for="chkPublishToWebsite">
                                         <div class="v3-publish-checkbox-left">
                                             <div class="v3-publish-icon-box">
@@ -425,7 +425,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                                             <div class="prop-gallery-grid" id="propExistingGalleryGrid">
                                                 <!-- Rendered dynamically via JS -->
                                             </div>
-                                            <div class="prop-gallery-empty-state" id="propGalleryEmptyState" style="display:none;">
+                                            <div class="prop-gallery-empty-state" id="propGalleryEmptyState">
                                                 <i class="fi fi-rr-picture"></i>
                                                 <span>No hotel photos uploaded yet.</span>
                                             </div>
@@ -453,7 +453,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                                             <span class="v3-field-hint">You can select and upload multiple images at once. New uploads will be added when you save.</span>
 
                                             <!-- Staged New Photos Preview Grid -->
-                                            <div class="prop-gallery-grid" id="propStagedGalleryGrid" style="margin-top: 12px; display: none;"></div>
+                                            <div class="prop-gallery-grid mt-12" id="propStagedGalleryGrid"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -483,26 +483,26 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                             <div class="prop-amenities-wrapper">
                                 <!-- Toolbar (All in same row) -->
                                 <div class="prop-amenities-toolbar">
-                                    <div class="v3-input-icon-wrap" style="flex: 1; min-width: 180px;">
+                                    <div class="v3-input-icon-wrap prop-amenity-search-wrap">
                                         <i class="fi fi-rr-search input-icon"></i>
-                                        <input type="text" id="propAmenitySearch" class="v3-form-input" placeholder="Search facilities & amenities..." style="padding-left: 42px !important;">
+                                        <input type="text" id="propAmenitySearch" class="v3-form-input pl-42" placeholder="Search facilities & amenities...">
                                     </div>
-                                    <div class="v3-input-icon-wrap" style="width: 220px; flex-shrink: 0;">
+                                    <div class="v3-input-icon-wrap w-220-shrink0">
                                         <i class="fi fi-rr-apps input-icon"></i>
-                                        <select id="propAmenityCatSelect" class="v3-form-select selectjs2" style="width: 100%;">
+                                        <select id="propAmenityCatSelect" class="v3-form-select selectjs2 w-100">
                                             <option value="all">All Categories</option>
                                         </select>
                                     </div>
-                                    <div class="prop-amenities-counter" style="flex-shrink: 0;">
+                                    <div class="prop-amenities-counter flex-shrink-0">
                                         <span id="propAmenitySelectedCount">0</span> Selected
                                     </div>
                                 </div>
 
                                 <!-- Dynamic Amenities Category Blocks Container -->
                                 <div id="propAmenitiesCategoriesContainer">
-                                    <div style="text-align: center; padding: 30px; color: #94a3b8;">
-                                        <i class="fi fi-rr-spinner spinner" style="font-size: 24px;"></i>
-                                        <p style="margin-top: 8px;">Loading master amenities...</p>
+                                    <div class="v3-loading-state-box">
+                                        <i class="fi fi-rr-spinner spinner font-24"></i>
+                                        <p class="mt-8">Loading master amenities...</p>
                                     </div>
                                 </div>
                             </div>
@@ -530,7 +530,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                                     <h3>Configured Rooms &amp; Rates</h3>
                                     <span class="prop-tab-badge" id="propRoomsHeaderBadge">0 Price Slabs</span>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="flex-align-gap-10">
                                     <button type="button" class="v3-btn-secondary" id="btnOpenRoomGalleryModal" title="Manage master photos for each room type">
                                         <i class="fi fi-rr-picture"></i> Manage Room Galleries
                                     </button>
@@ -542,9 +542,9 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
 
                             <!-- Rooms List Container -->
                             <div class="prop-rooms-list" id="propRoomsListContainer">
-                                <div style="text-align: center; padding: 30px; color: #94a3b8;">
-                                    <i class="fi fi-rr-spinner spinner" style="font-size: 24px;"></i>
-                                    <p style="margin-top: 8px;">Loading hotel rooms...</p>
+                                <div class="v3-loading-state-box">
+                                    <i class="fi fi-rr-spinner spinner font-24"></i>
+                                    <p class="mt-8">Loading hotel rooms...</p>
                                 </div>
                             </div>
                         </div>
@@ -572,7 +572,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
      MODAL: Add / Edit Room Pricing Slab (Pure Business Rates)
 ══════════════════════════════════════════════════════════════ -->
 <div class="prop-room-modal-backdrop" id="propRoomModal">
-    <div class="prop-room-modal" style="max-width: 740px;">
+    <div class="prop-room-modal max-w-740">
         <div class="prop-room-modal-head">
             <h3 id="roomModalTitle">Add Room Pricing Slab</h3>
             <button type="button" class="prop-room-modal-close" id="btnCloseRoomModal">
@@ -586,8 +586,8 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
             <div class="prop-room-modal-body">
 
                 <!-- Info Notice about Master Gallery -->
-                <div style="background:#f0fdfa; border:1px solid #99f6e4; border-radius:10px; padding:10px 14px; font-size:12.5px; color:#0f766e; display:flex; align-items:center; gap:8px;">
-                    <i class="fi fi-rr-picture" style="font-size:16px; color:#0d9488; flex-shrink:0;"></i>
+                <div class="prop-room-hint-teal">
+                    <i class="fi fi-rr-picture icon-teal-16"></i>
                     <span>Photo galleries are managed centrally per room category in <strong>Manage Room Galleries</strong>.</span>
                 </div>
 
@@ -596,7 +596,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                     <label class="v3-form-label">Room Type / Category <span class="required">*</span></label>
                     <div class="v3-input-icon-wrap">
                         <i class="fi fi-rr-bed input-icon"></i>
-                        <select id="roomModalType" name="room_type" class="v3-form-select selectjs2" required style="width: 100%;">
+                        <select id="roomModalType" name="room_type" class="v3-form-select selectjs2 w-100" required>
                             <option value="">— Select Room Type from Master Library —</option>
                         </select>
                     </div>
@@ -612,26 +612,26 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                         </div>
                     </div>
                     <div class="prop-season-inputs-grid">
-                        <div class="v3-form-group" style="margin-bottom: 0;">
+                        <div class="v3-form-group mb-0">
                             <label class="v3-form-label">Season / Rate Title</label>
                             <div class="v3-input-icon-wrap">
                                 <i class="fi fi-rr-label input-icon"></i>
                                 <input type="text" id="roomSeasonName" name="season_name" class="v3-form-input" placeholder="e.g. Peak Season / Summer / Regular">
                             </div>
                         </div>
-                        <div class="v3-form-group" style="margin-bottom: 0;">
+                        <div class="v3-form-group mb-0">
                             <label class="v3-form-label">Valid From Date</label>
                             <div class="v3-input-icon-wrap prop-dm-picker-input-wrap">
                                 <i class="fi fi-rr-calendar input-icon"></i>
-                                <input type="text" id="roomPriceFromDisplay" class="v3-form-input prop-dm-picker-input" data-target="#roomPriceFrom" placeholder="Select Day &amp; Month" readonly style="padding-left: 42px !important; cursor: pointer !important;">
+                                <input type="text" id="roomPriceFromDisplay" class="v3-form-input prop-dm-picker-input pl-42-pointer" data-target="#roomPriceFrom" placeholder="Select Day &amp; Month" readonly>
                                 <input type="hidden" id="roomPriceFrom" name="price_from">
                             </div>
                         </div>
-                        <div class="v3-form-group" style="margin-bottom: 0;">
+                        <div class="v3-form-group mb-0">
                             <label class="v3-form-label">Valid To Date</label>
                             <div class="v3-input-icon-wrap prop-dm-picker-input-wrap">
                                 <i class="fi fi-rr-calendar input-icon"></i>
-                                <input type="text" id="roomPriceToDisplay" class="v3-form-input prop-dm-picker-input" data-target="#roomPriceTo" placeholder="Select Day &amp; Month" readonly style="padding-left: 42px !important; cursor: pointer !important;">
+                                <input type="text" id="roomPriceToDisplay" class="v3-form-input prop-dm-picker-input pl-42-pointer" data-target="#roomPriceTo" placeholder="Select Day &amp; Month" readonly>
                                 <input type="hidden" id="roomPriceTo" name="price_to">
                             </div>
                         </div>
@@ -640,7 +640,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
 
                 <!-- Meal Plan Rates Matrix -->
                 <div>
-                    <label class="v3-form-label" style="margin-bottom: 8px;">Meal Plan Tariffs &amp; Pricing (₹)</label>
+                    <label class="v3-form-label mb-8">Meal Plan Tariffs &amp; Pricing (₹)</label>
                     <div class="prop-meal-plans-matrix">
 
                         <!-- EP -->
@@ -731,7 +731,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                 </div>
 
                 <!-- About Room / Notes -->
-                <div class="v3-form-group" style="margin-bottom: 0;">
+                <div class="v3-form-group mb-0">
                     <label class="v3-form-label">Special Notes / Description</label>
                     <div class="v3-input-icon-wrap textarea-wrap">
                         <i class="fi fi-rr-document input-icon"></i>
@@ -753,12 +753,12 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
 <!-- ══════════════════════════════════════════════════════════════
      MODAL: Room Types Master Photo Gallery
 ══════════════════════════════════════════════════════════════ -->
-<div class="prop-room-modal-backdrop" id="propRoomGalleryModal" style="display:none;">
-    <div class="prop-room-modal" style="max-width: 680px;">
+<div class="prop-room-modal-backdrop" id="propRoomGalleryModal">
+    <div class="prop-room-modal max-w-680">
         <div class="prop-room-modal-head">
             <div>
-                <h3><i class="fi fi-rr-picture" style="color: #0d9488; margin-right: 6px;"></i> Room Type Master Gallery</h3>
-                <p style="margin: 2px 0 0 0; font-size: 12px; color: #64748b;">Manage cover photo and photo galleries per room category.</p>
+                <h3><i class="fi fi-rr-picture mr-6-teal"></i> Room Type Master Gallery</h3>
+                <p class="prop-modal-subheading">Manage cover photo and photo galleries per room category.</p>
             </div>
             <button type="button" class="prop-room-modal-close" id="btnCloseRoomGalleryModal">
                 <i class="fi fi-rr-cross"></i>
@@ -771,7 +771,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                     <label class="v3-form-label">Select Room Category <span class="required">*</span></label>
                     <div class="v3-input-icon-wrap">
                         <i class="fi fi-rr-bed input-icon"></i>
-                        <select id="roomGalleryTypeSelect" name="room_type" class="v3-form-select selectjs2" style="width: 100%;" required>
+                        <select id="roomGalleryTypeSelect" name="room_type" class="v3-form-select selectjs2 w-100" required>
                             <!-- Dynamically populated -->
                         </select>
                     </div>
@@ -780,13 +780,13 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                 <!-- Cover Image -->
                 <div class="v3-form-group">
                     <label class="v3-form-label">Cover / Featured Photo</label>
-                    <div class="prop-thumb-preview-wrap" id="masterCoverPreviewWrap" style="display: none;">
-                        <img src="" alt="Room Cover" id="masterCoverImgPreview" class="prop-thumb-img" style="width: 64px; height: 64px; border-radius: 8px; object-fit: cover;">
-                        <div class="prop-thumb-meta" style="flex: 1;">
-                            <span class="prop-thumb-title" id="masterCoverName" style="font-size: 13px; font-weight: 600;">cover.jpg</span>
-                            <div class="prop-thumb-actions" style="margin-top: 6px; display: flex; gap: 8px;">
-                                <button type="button" class="v3-btn-secondary" id="btnChangeMasterCover" style="font-size: 11.5px; padding: 4px 10px;"><i class="fi fi-rr-refresh"></i> Change</button>
-                                <button type="button" class="v3-btn-secondary danger" id="btnRemoveMasterCover" style="font-size: 11.5px; padding: 4px 10px; color:#ef4444; border-color:#fecaca;"><i class="fi fi-rr-trash"></i> Remove</button>
+                    <div class="prop-thumb-preview-wrap" id="masterCoverPreviewWrap">
+                        <img src="" alt="Room Cover" id="masterCoverImgPreview" class="prop-thumb-img prop-thumb-img-64">
+                        <div class="prop-thumb-meta flex-1">
+                            <span class="prop-thumb-title font-13-semi" id="masterCoverName">cover.jpg</span>
+                            <div class="prop-thumb-actions prop-thumb-actions-bar">
+                                <button type="button" class="v3-btn-secondary btn-v3-sm-pad" id="btnChangeMasterCover"><i class="fi fi-rr-refresh"></i> Change</button>
+                                <button type="button" class="v3-btn-secondary danger btn-v3-sm-danger" id="btnRemoveMasterCover"><i class="fi fi-rr-trash"></i> Remove</button>
                             </div>
                         </div>
                     </div>
@@ -804,7 +804,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                 </div>
 
                 <!-- Photo Gallery -->
-                <div class="v3-form-group" style="margin-bottom: 0;">
+                <div class="v3-form-group mb-0">
                     <label class="v3-form-label">Room Photo Gallery (Upload Multiple)</label>
                     <div class="prop-file-upload-zone" id="masterGalleryDropzone">
                         <input type="file" id="masterGalleryFileInput" name="gallery_files[]" class="prop-file-input-hidden" accept="image/*" multiple>
@@ -818,7 +818,7 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
                         </div>
                     </div>
                     <!-- Master Gallery Grid Preview -->
-                    <div class="prop-gallery-grid" id="masterGalleryGrid" style="margin-top: 10px; display: none;"></div>
+                    <div class="prop-gallery-grid mt-10" id="masterGalleryGrid"></div>
                 </div>
             </div>
             <div class="prop-room-modal-foot">
@@ -834,21 +834,21 @@ $encodedId = $id > 0 ? base64_encode((string)$id) : (string)$rawId;
 <!-- ══════════════════════════════════════════════════════════════
      Month-Day Calendar Popover (Recurring - No Year)
 ══════════════════════════════════════════════════════════════ -->
-<div class="prop-daymonth-popover" id="propDayMonthPopover" style="display: none;">
+<div class="prop-daymonth-popover" id="propDayMonthPopover">
     <div class="prop-dm-head">
         <button type="button" class="prop-dm-nav-btn" id="btnPropDmPrevMonth" title="Previous Month">
             <i class="fi fi-rr-angle-small-left"></i>
         </button>
         <div class="prop-dm-month-title" id="btnPropDmToggleMonth" title="Click to pick month">
             <span id="propDmMonthLabel">April</span>
-            <i class="fi fi-rr-angle-small-down" style="font-size: 11px; margin-left: 3px;"></i>
+            <i class="fi fi-rr-angle-small-down prop-dm-month-arrow"></i>
         </div>
         <button type="button" class="prop-dm-nav-btn" id="btnPropDmNextMonth" title="Next Month">
             <i class="fi fi-rr-angle-small-right"></i>
         </button>
     </div>
     <!-- Months Quick Selector (hidden by default) -->
-    <div class="prop-dm-months-grid" id="propDmMonthsGrid" style="display: none;"></div>
+    <div class="prop-dm-months-grid" id="propDmMonthsGrid"></div>
     <!-- Calendar Day Grid View -->
     <div class="prop-dm-calendar-view" id="propDmCalendarView">
         <div class="prop-dm-weekdays">

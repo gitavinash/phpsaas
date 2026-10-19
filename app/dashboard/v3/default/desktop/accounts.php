@@ -9,11 +9,11 @@ $userRole = strtolower(trim(isset($site_access_type) ? $site_access_type : (defi
 $canManageAccounts = in_array($userRole, ['administrator', 'accountant', 'operations', 'manager']);
 
 if (!$canManageAccounts) {
-    echo '<div class="v3-unauthorized-box" style="padding: 40px; text-align: center;">
-            <i class="fi fi-rr-lock" style="font-size: 48px; color: #ef4444;"></i>
-            <h3 style="margin-top: 16px;">Access Restricted</h3>
-            <p style="color: #64748b;">You do not have administrative or accounting permissions to access the Accounts Ledger.</p>
-            <a href="/dashboard/" class="btn-v3-action btn-blue" style="margin-top: 12px; display: inline-block;">Return to Dashboard</a>
+    echo '<div class="v3-unauthorized-box p-40 text-center">
+            <i class="fi fi-rr-lock font-48 text-red"></i>
+            <h3 class="mt-16">Access Restricted</h3>
+            <p class="text-muted">You do not have administrative or accounting permissions to access the Accounts Ledger.</p>
+            <a href="/dashboard/" class="btn-v3-action btn-blue mt-12 d-inline-block">Return to Dashboard</a>
           </div>';
     return;
 }
@@ -23,8 +23,8 @@ if (!$canManageAccounts) {
     <!-- 1. Header Bar -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);">
-                <i class="fi fi-rr-wallet" style="color: #ffffff;"></i>
+            <div class="package-header-icon emerald">
+                <i class="fi fi-rr-wallet"></i>
             </div>
             <div class="package-header-titles">
                 <h2>Accounts &amp; Transactions Ledger</h2>
@@ -36,7 +36,7 @@ if (!$canManageAccounts) {
             <!-- Quick Status Filter Pills in Header -->
             <div class="report-preset-btn-group" id="headerStatusGroup">
                 <button type="button" class="btn-date-preset active" data-status="all">All</button>
-                <button type="button" class="btn-date-preset" data-status="pending">Pending <span class="badge-count-amber" id="hdrPendingBadge" style="display:none;">0</span></button>
+                <button type="button" class="btn-date-preset" data-status="pending">Pending <span class="badge-count-amber" id="hdrPendingBadge">0</span></button>
                 <button type="button" class="btn-date-preset" data-status="verified">Verified</button>
             </div>
 
@@ -91,7 +91,7 @@ if (!$canManageAccounts) {
             <div class="filter-field-wrap search-wrap">
                 <i class="fi fi-rr-search filter-icon"></i>
                 <input type="text" id="accFilterSearch" class="v3-form-input" placeholder="Search customer, mobile, ref UTR, amount...">
-                <button type="button" class="btn-clear-search" id="btnClearAccSearch" style="display:none;"><i class="fi fi-rr-cross-small"></i></button>
+                <button type="button" class="btn-clear-search" id="btnClearAccSearch"><i class="fi fi-rr-cross-small"></i></button>
             </div>
 
             <!-- Date Range Filter -->
@@ -106,14 +106,14 @@ if (!$canManageAccounts) {
 
             <!-- Agent Filter -->
             <div class="filter-field-wrap">
-                <select id="accFilterAgent" class="v3-form-input">
+                <select id="accFilterAgent" class="v3-form-input selectJS2">
                     <option value="">All Team Members</option>
                 </select>
             </div>
 
             <!-- Status Filter -->
             <div class="filter-field-wrap">
-                <select id="accFilterStatus" class="v3-form-input">
+                <select id="accFilterStatus" class="v3-form-input selectJS2">
                     <option value="all">All Statuses</option>
                     <option value="pending">Pending Verification</option>
                     <option value="verified">Verified</option>
@@ -123,7 +123,7 @@ if (!$canManageAccounts) {
 
             <!-- Payment Method Filter -->
             <div class="filter-field-wrap">
-                <select id="accFilterMethod" class="v3-form-input">
+                <select id="accFilterMethod" class="v3-form-input selectJS2">
                     <option value="">All Methods</option>
                     <option value="upi">UPI / QR</option>
                     <option value="bank">Bank Transfer / NEFT</option>
@@ -143,7 +143,7 @@ if (!$canManageAccounts) {
     </div>
 
     <!-- 4. Transactions Data Table Container -->
-    <div class="v3-payments-container-card" style="margin-top: 16px;">
+    <div class="v3-payments-container-card mt-16">
         <div class="v3-table-responsive-wrapper">
             <table class="v3-payments-table" id="accountsTransactionsTable">
                 <thead>
@@ -153,33 +153,33 @@ if (!$canManageAccounts) {
                         <th>Amount &amp; Method</th>
                         <th>Recorded By</th>
                         <th>Status</th>
-                        <th style="text-align: right;">Action</th>
+                        <th class="text-end">Action</th>
                     </tr>
                 </thead>
                 <tbody id="accountsTableBody">
                     <?php for ($sk = 0; $sk < 5; $sk++) { ?>
                         <tr class="v3-skeleton-row">
                             <td>
-                                <div class="v3-skeleton-line w-70" style="margin-bottom: 5px;"></div>
+                                <div class="v3-skeleton-line w-70 mb-5"></div>
                                 <div class="v3-skeleton-line h-10 w-40"></div>
                             </td>
                             <td>
-                                <div class="v3-skeleton-line w-80" style="margin-bottom: 5px;"></div>
+                                <div class="v3-skeleton-line w-80 mb-5"></div>
                                 <div class="v3-skeleton-line h-10 w-50"></div>
                             </td>
                             <td>
-                                <div class="v3-skeleton-line h-16 w-60" style="margin-bottom: 5px;"></div>
-                                <div class="v3-skeleton-pill w-80" style="width: 65px;"></div>
+                                <div class="v3-skeleton-line h-16 w-60 mb-1"></div>
+                                <div class="v3-skeleton-pill w-65px"></div>
                             </td>
                             <td>
-                                <div class="v3-skeleton-line w-70" style="margin-bottom: 5px;"></div>
+                                <div class="v3-skeleton-line w-70 mb-1"></div>
                                 <div class="v3-skeleton-line h-10 w-40"></div>
                             </td>
                             <td>
-                                <div class="v3-skeleton-pill w-80" style="width: 80px;"></div>
+                                <div class="v3-skeleton-pill w-80px"></div>
                             </td>
-                            <td style="text-align: right;">
-                                <div class="v3-skeleton-btn w-50" style="width: 90px; margin-left: auto;"></div>
+                            <td class="text-end">
+                                <div class="v3-skeleton-btn w-90px ml-auto"></div>
                             </td>
                         </tr>
                     <?php } ?>
@@ -188,7 +188,7 @@ if (!$canManageAccounts) {
         </div>
 
         <!-- Pagination Controls -->
-        <div class="v3-accounts-pagination-bar" id="accountsPaginationBar" style="display:none;">
+        <div class="v3-accounts-pagination-bar d-none" id="accountsPaginationBar">
             <div class="pagination-info" id="accountsPaginationInfo">Showing 0 of 0 transactions</div>
             <div class="pagination-actions">
                 <button type="button" class="btn-v3-action btn-outline btn-sm" id="btnAccPrevPage"><i class="fi fi-rr-angle-left"></i> Previous</button>
@@ -218,14 +218,14 @@ if (!$canManageAccounts) {
             <div class="v3-form-group">
                 <label class="v3-form-label">Lead / Customer ID <span class="req">*</span></label>
                 <input type="number" id="accPayLeadId" class="v3-form-input" placeholder="e.g. 1042" required>
-                <small style="color: #64748b; font-size: 11.5px; margin-top: 4px; display: block;">Enter the Lead ID to attach this payment to.</small>
+                <small class="v3-form-help-text">Enter the Lead ID to attach this payment to.</small>
             </div>
             <div class="v3-form-group">
                 <label class="v3-form-label">Amount Received (₹) <span class="req">*</span></label>
                 <input type="number" id="accPayAmount" class="v3-form-input" placeholder="0.00" step="0.01" required>
             </div>
             <div class="v3-form-row">
-                <div class="v3-form-group" style="flex: 1;">
+                <div class="v3-form-group flex-1">
                     <label class="v3-form-label">Payment Method</label>
                     <select id="accPayMethod" class="v3-form-input">
                         <option value="UPI / QR">UPI / QR Code</option>
@@ -236,7 +236,7 @@ if (!$canManageAccounts) {
                         <option value="Payment Gateway">Online Gateway</option>
                     </select>
                 </div>
-                <div class="v3-form-group" style="flex: 1;">
+                <div class="v3-form-group flex-1">
                     <label class="v3-form-label">Payment Date</label>
                     <input type="date" id="accPayDate" class="v3-form-input" value="<?php echo date('Y-m-d'); ?>">
                 </div>
@@ -248,7 +248,7 @@ if (!$canManageAccounts) {
             <div class="v3-form-group">
                 <label class="v3-form-label">Payment Receipt / Screenshot (Optional)</label>
                 <div class="v3-upload-zone" id="accPayUploadZone">
-                    <input type="file" id="accPayFile" accept="image/*,.pdf" style="display:none;">
+                    <input type="file" id="accPayFile" accept="image/*,.pdf" class="d-none">
                     <div class="v3-upload-placeholder" id="accPayFilePlaceholder">
                         <i class="fi fi-rr-cloud-upload"></i>
                         <h4>Upload Receipt Proof</h4>
@@ -349,10 +349,10 @@ if (!$canManageAccounts) {
 
 <!-- Modal 3: Reject Payment Confirmation -->
 <div class="v3-modal-overlay" id="modalAccountsRejectPayment">
-    <div class="v3-modal-dialog" style="max-width: 480px;">
+    <div class="v3-modal-dialog v3-modal-dialog-sm">
         <div class="v3-modal-header">
             <div class="v3-modal-header-left">
-                <div class="v3-modal-header-icon-box" style="background: #fee2e2; color: #dc2626;">
+                <div class="v3-modal-header-icon-box icon-danger">
                     <i class="fi fi-rr-cross-circle"></i>
                 </div>
                 <div class="v3-modal-title-wrap">
@@ -364,7 +364,7 @@ if (!$canManageAccounts) {
         </div>
         <div class="v3-modal-body">
             <input type="hidden" id="accRejectNoteId" value="0">
-            <p style="color: #475569; font-size: 13.5px; line-height: 1.5; margin: 0 0 12px 0;">
+            <p class="v3-modal-prompt-text">
                 Are you sure you want to reject this payment record? This transaction will not be credited towards the lead.
             </p>
             <div class="v3-form-group">

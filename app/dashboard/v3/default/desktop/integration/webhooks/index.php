@@ -2,7 +2,7 @@
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon brand-webhooks" style="background: #ede9fe; color: #7c3aed; font-size: 24px; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 12px;">
+            <div class="package-header-icon brand-webhooks">
                 <i class="fi fi-rr-code-compare"></i>
             </div>
             <div class="package-header-titles">
@@ -32,7 +32,7 @@
                             <h3>Event Endpoint Destinations</h3>
                             <p>Enter the HTTPS destination URLs for each event trigger.</p>
                         </div>
-                        <div style="margin-left: auto;">
+                        <div class="ms-auto">
                             <label class="v3-toggle-switch" title="Toggle Webhooks Integration">
                                 <input type="checkbox" id="whActiveToggle" name="enable_webhooks" value="1" checked>
                                 <span class="v3-toggle-slider violet"></span>
@@ -94,19 +94,19 @@
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- Secret Box -->
-                <div class="v3-card-section" style="padding: 20px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Security Signature</span>
-                        <span class="v3-status-badge status-active" style="font-size: 10px;">HMAC-SHA256</span>
+                <div class="v3-card-section v3-card-p20">
+                    <div class="v3-sidebar-header-row">
+                        <span class="v3-sidebar-header-badge">Security Signature</span>
+                        <span class="v3-status-badge status-active status-sm">HMAC-SHA256</span>
                     </div>
-                    <p style="font-size: 12.5px; color: #64748b; margin: 0 0 12px 0; line-height: 1.45;">
+                    <p class="v3-sidebar-desc">
                         Every outgoing request includes an <code>X-Aleya-Signature</code> header signed with this secret key:
                     </p>
                     
-                    <label class="v3-form-label" style="font-size: 12px; margin-bottom: 4px;">Signing Secret</label>
-                    <input type="text" id="whSecretKey" name="webhook_secret_key" class="v3-form-input" readonly style="background: #f1f5f9; font-family: monospace; font-size: 12px; margin-bottom: 12px;">
+                    <label class="v3-form-label v3-label-sm">Signing Secret</label>
+                    <input type="text" id="whSecretKey" name="webhook_secret_key" class="v3-form-input v3-mono-input mb-12" readonly>
 
-                    <div style="font-size: 11.5px; color: #64748b; line-height: 1.5;">
+                    <div class="v3-sidebar-note">
                         Requests timeout after <strong>5 seconds</strong>. If your endpoint returns a non-2xx status, we retry 3 times with exponential backoff.
                     </div>
                 </div>

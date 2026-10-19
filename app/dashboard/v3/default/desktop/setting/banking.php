@@ -9,12 +9,12 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
-                <i class="fi fi-rr-bank" style="color: #ffffff;"></i>
+            <div class="package-header-icon sky">
+                <i class="fi fi-rr-bank"></i>
             </div>
             <div class="package-header-titles">
-                <h2 style="margin: 0;">Bank Accounts &amp; UPI Details</h2>
-                <p style="margin-top: 4px;">Configure official bank accounts and UPI payment addresses displayed on customer invoices, vouchers, and payment receipts.</p>
+                <h2>Bank Accounts &amp; UPI Details</h2>
+                <p>Configure official bank accounts and UPI payment addresses displayed on customer invoices, vouchers, and payment receipts.</p>
             </div>
         </div>
         <div class="package-header-actions">
@@ -86,7 +86,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-key input-icon"></i>
-                                    <input type="text" id="bankIfsc" name="bank_ifsc" class="v3-form-input" placeholder="e.g. HDFC0001234" maxlength="11" style="text-transform: uppercase;" required>
+                                    <input type="text" id="bankIfsc" name="bank_ifsc" class="v3-form-input text-uppercase" placeholder="e.g. HDFC0001234" maxlength="11" required>
                                 </div>
                                 <span class="v3-field-error" id="errBankIfsc"></span>
                             </div>
@@ -160,49 +160,49 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- Virtual Bank Remittance Preview Card -->
-                <div class="v3-live-preview-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border-radius: 16px; padding: 22px; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25); margin-bottom: 18px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <div class="v3-bank-debit-card">
+                    <div class="v3-bank-card-top">
                         <div>
-                            <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8;">Official Remittance Account</span>
-                            <h4 id="previewBankName" style="margin: 2px 0 0 0; font-size: 16px; font-weight: 700; color: #ffffff;">Bank Name</h4>
+                            <span class="v3-bank-card-top-label">Official Remittance Account</span>
+                            <h4 id="previewBankName" class="v3-bank-card-name">Bank Name</h4>
                         </div>
-                        <i class="fi fi-rr-credit-card" style="font-size: 24px; color: #38bdf8;"></i>
+                        <i class="fi fi-rr-credit-card v3-bank-card-icon"></i>
                     </div>
 
-                    <div style="margin-bottom: 16px;">
-                        <span style="font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Account Number</span>
-                        <div id="previewBankAcNumber" style="font-family: monospace; font-size: 17px; font-weight: 700; letter-spacing: 0.12em; color: #f8fafc; margin-top: 2px;">
+                    <div class="v3-bank-card-middle">
+                        <span class="v3-bank-card-middle-label">Account Number</span>
+                        <div id="previewBankAcNumber" class="v3-bank-card-number">
                             &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;
                         </div>
                     </div>
 
-                    <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 12px; font-size: 12px;">
+                    <div class="v3-bank-card-bottom">
                         <div>
-                            <span style="font-size: 9.5px; color: #94a3b8; text-transform: uppercase;">Beneficiary</span>
-                            <div id="previewBankAcName" style="font-weight: 600; color: #f1f5f9;">Company Name</div>
+                            <span class="v3-bank-card-bottom-label">Beneficiary</span>
+                            <div id="previewBankAcName" class="v3-bank-card-beneficiary">Company Name</div>
                         </div>
-                        <div style="text-align: right;">
-                            <span style="font-size: 9.5px; color: #94a3b8; text-transform: uppercase;">IFSC Code</span>
-                            <div id="previewBankIfsc" style="font-weight: 700; font-family: monospace; color: #38bdf8;">IFSC0000000</div>
+                        <div class="text-end">
+                            <span class="v3-bank-card-bottom-label">IFSC Code</span>
+                            <div id="previewBankIfsc" class="v3-bank-card-ifsc">IFSC0000000</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Live UPI QR Card -->
-                <div class="v3-live-preview-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); text-align: center;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Instant UPI QR</span>
-                        <span class="v3-status-badge status-active" style="font-size: 10px;">Ready</span>
+                <div class="v3-live-preview-card v3-upi-qr-card">
+                    <div class="v3-live-preview-header">
+                        <span class="v3-live-preview-label">Instant UPI QR</span>
+                        <span class="v3-status-badge status-active badge-xs">Ready</span>
                     </div>
 
-                    <div style="background: #f8fafc; border-radius: 12px; padding: 14px; display: inline-block; margin-bottom: 10px; border: 1px solid #e2e8f0;">
-                        <img id="previewUpiQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&amp;data=upi://pay?pa=company@upi" alt="UPI QR" style="width: 130px; height: 130px; display: block; border-radius: 6px;">
+                    <div class="v3-upi-qr-frame">
+                        <img id="previewUpiQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&amp;data=upi://pay?pa=company@upi" alt="UPI QR" class="v3-upi-qr-img">
                     </div>
 
-                    <div style="font-size: 13px; font-weight: 700; color: #0f172a; word-break: break-all;" id="previewUpiVpa">
+                    <div class="v3-upi-vpa-text" id="previewUpiVpa">
                         company@upi
                     </div>
-                    <p style="font-size: 11.5px; color: #64748b; margin: 4px 0 0 0;">Scan with GPay, PhonePe, Paytm, or BHIM</p>
+                    <p class="v3-upi-help-text">Scan with GPay, PhonePe, Paytm, or BHIM</p>
                 </div>
             </div>
         </div>

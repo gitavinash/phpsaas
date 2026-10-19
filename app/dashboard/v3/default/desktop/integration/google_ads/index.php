@@ -2,7 +2,7 @@
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon brand-google" style="background: #fff8e1; color: #f59e0b; font-size: 24px; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 12px;">
+            <div class="package-header-icon brand-google">
                 <svg viewBox="0 0 24 24" width="26" height="26">
                     <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
                     <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
@@ -37,7 +37,7 @@
                             <h3>Google Ads Campaign Tracking</h3>
                             <p>Configure your 10-digit Google Ads account identifier and conversion tags.</p>
                         </div>
-                        <div style="margin-left: auto;">
+                        <div class="ms-auto">
                             <label class="v3-toggle-switch" title="Toggle Google Ads Integration">
                                 <input type="checkbox" id="gadActiveToggle" name="enable_google_ads" value="1">
                                 <span class="v3-toggle-slider"></span>
@@ -99,22 +99,22 @@
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- Webhook Details Box -->
-                <div class="v3-card-section" style="padding: 20px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Lead Form Webhook</span>
-                        <span class="v3-status-badge status-active" style="font-size: 10px;">Webhook Active</span>
+                <div class="v3-card-section v3-card-p20">
+                    <div class="v3-sidebar-header-row">
+                        <span class="v3-sidebar-header-badge">Lead Form Webhook</span>
+                        <span class="v3-status-badge status-active status-sm">Webhook Active</span>
                     </div>
-                    <p style="font-size: 12.5px; color: #64748b; margin: 0 0 12px 0; line-height: 1.45;">
+                    <p class="v3-sidebar-desc">
                         Copy these into your Google Ads Lead Form Asset &gt; <strong>Export leads with a webhook</strong>:
                     </p>
                     
-                    <label class="v3-form-label" style="font-size: 12px; margin-bottom: 4px;">Webhook URL</label>
-                    <div class="v3-code-snippet-box" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; font-family: monospace; font-size: 11.5px; color: #334155; word-break: break-all; margin-bottom: 12px;">
+                    <label class="v3-form-label v3-label-sm">Webhook URL</label>
+                    <div class="v3-code-snippet-box mb-12">
                         https://app.aleya.in/webhook/google_ads/
                     </div>
 
-                    <label class="v3-form-label" style="font-size: 12px; margin-bottom: 4px;">Key / Secret</label>
-                    <input type="text" id="gadWebhookKey" class="v3-form-input" readonly value="gad_secret_key" style="background: #f1f5f9; font-family: monospace; font-size: 12px;">
+                    <label class="v3-form-label v3-label-sm">Key / Secret</label>
+                    <input type="text" id="gadWebhookKey" class="v3-form-input v3-mono-input" readonly value="gad_secret_key">
                 </div>
             </div>
         </div>

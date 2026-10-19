@@ -25,14 +25,14 @@ $encodedId = base64_encode((string)$packageId);
                     <span class="pkg-duration-badge" id="pkgMetaDuration">
                         <i class="fi fi-rr-moon pkg-duration-moon"></i> 0N / <i class="fi fi-rr-sun pkg-duration-sun"></i> 1D
                     </span>
-                    <span class="pkg-duration-badge" id="pkgMetaLocation" style="background: #f8fafc; border-color: #cbd5e1;">
-                        <i class="fi fi-rr-marker" style="color: #0284c7;"></i> Domestic
+                    <span class="pkg-duration-badge pkg-location-badge" id="pkgMetaLocation">
+                        <i class="fi fi-rr-marker pkg-duration-marker"></i> Domestic
                     </span>
                 </div>
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="#" target="_blank" class="btn-v3-action" id="btnViewLivePackage" style="display: none;" data-tooltip="View Live Package" title="View Live Package">
+            <a href="#" target="_blank" class="btn-v3-action" id="btnViewLivePackage" data-tooltip="View Live Package" title="View Live Package">
                 <i class="fi fi-rr-eye"></i> View Package
             </a>
             <a href="/dashboard/packages/domestic/list/" class="btn-v3-action" data-tooltip="Back to Domestic Packages List" title="Back to Domestic Packages List">
@@ -45,7 +45,7 @@ $encodedId = base64_encode((string)$packageId);
     </div>
 
     <!-- Main Content Box -->
-    <div class="box-1" style="margin-top: 16px;">
+    <div class="box-1 mt-16">
         <div class="widget box-1 no-padding">
             <div class="main-box">
                 <section class="dashboard-gallery-container">
@@ -57,7 +57,7 @@ $encodedId = base64_encode((string)$packageId);
                                 <div class="theme-stat-pill is-blue">
                                     <i class="fi fi-rr-building"></i> <span><b id="statTotalHotels">0</b> Nearby Hotels</span>
                                 </div>
-                                <div class="theme-stat-pill is-purple" id="statMentionedCitiesWrap" style="display: none;">
+                                <div class="theme-stat-pill is-purple" id="statMentionedCitiesWrap">
                                     <i class="fi fi-rr-marker"></i> <span><b id="statMentionedCitiesCount">0</b> Mentioned Cities</span>
                                 </div>
                                 <div class="theme-stat-pill is-green">
@@ -82,7 +82,7 @@ $encodedId = base64_encode((string)$packageId);
                         </div>
 
                         <!-- Mentioned Cities Filter Chips Bar -->
-                        <div class="city-filter-bar" id="cityFilterBar" style="display: none;">
+                        <div class="city-filter-bar" id="cityFilterBar">
                             <!-- Injected dynamically via V3PackageHotelList -->
                         </div>
                     </div>

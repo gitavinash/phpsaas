@@ -79,10 +79,10 @@ $typeDropDown = '<option value="">Select amenities type</option>
             <div class="filter-search-box">
                 <i class="fi fi-rr-search search-svg-icon"></i>
                 <input type="search" id="amenitySearchInput" class="filter-search-input" placeholder="Search amenities..." autocomplete="off">
-                <button type="button" id="clearAmenitySearchBtn" class="clear-search-btn" title="Clear search" style="display: none;">&times;</button>
+                <button type="button" id="clearAmenitySearchBtn" class="clear-search-btn" title="Clear search">&times;</button>
             </div>
             <div class="filter-dropdowns-wrap">
-                <select id="amenityCategoryFilter" class="filter-select selectJS" data-placeholder="All Categories">
+                <select id="amenityCategoryFilter" class="filter-select selectJS2" data-placeholder="All Categories">
                     <option value="">All Categories</option>
                 </select>
                 <button type="button" id="btnResetAmenityFilters" class="btn-v3-action" data-tooltip="Reset all filters"><i class="fi fi-rr-refresh"></i> Reset</button>
@@ -95,7 +95,7 @@ $typeDropDown = '<option value="">Select amenities type</option>
         </div>
     </div>
 
-    <div class="popUp amenitiesBox" style="display: none;">
+    <div class="popUp amenitiesBox">
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">
@@ -150,7 +150,7 @@ $typeDropDown = '<option value="">Select amenities type</option>
         </div>
     </div>
 
-    <div class="popUp editAmenitiesBox" style="display: none;">
+    <div class="popUp editAmenitiesBox">
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">

@@ -14,7 +14,7 @@
                         </div>
                         <div class="form-group">
                             <p>VISA country<sup>*</sup></p>
-                            <select class="selectJS form-control" name="country" id="country">
+                            <select class="selectJS2 form-control" name="country" id="country">
                                 <option value="">Select country</option>
                                 <?php
 
@@ -42,7 +42,7 @@
                         </div>
                         <div class="form-group">
                             <p>VISA type<sup>*</sup></p>
-                            <select class="selectJS form-control" name="visaType" id="visaType">
+                            <select class="selectJS2 form-control" name="visaType" id="visaType">
                                 <option value="">Select type</option>
                                 <option value='tourist' selected>Tourist</option>
                                 <option value='business'>Business</option>
@@ -61,7 +61,7 @@
                         </div>
                         <div class="form-group">
                             <p>Entry type<sup>*</sup></p>
-                            <select class="selectJS form-control" name="entryType" id="entryType">
+                            <select class="selectJS2 form-control" name="entryType" id="entryType">
                                 <option value="">Select type</option>
                                 <option value="single">Single</option>
                                 <option value="multiple">Multiple</option>
@@ -116,13 +116,13 @@
                                 <span class="defaultText">Drag & Drop files here or click to upload</span>
                             </div>
                             <input type="file" id="fileInput" name="featureImage[]" data-limit="1"
-                                accept=".jpg, .jpeg, .png" style="display: none;" />
+                                accept=".jpg, .jpeg, .png" />
                         </div>
                         <div class="box-1">
                             <div class="form-group">
                                 <a href="#" class="btn popUpBtn" id="addNewPackage"><i class="fi-rr-check"></i> <span
                                         id="btnText">Add package</span>
-                                    <span id="loadingSpinner" style="display:none;"> <i
+                                    <span id="loadingSpinner"> <i
                                             class="fi-rr-spinner fi-spin"></i> </span></a>
                             </div>
                         </div>

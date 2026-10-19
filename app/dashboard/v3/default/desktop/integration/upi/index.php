@@ -2,7 +2,7 @@
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon brand-upi" style="background: #e0f2fe; color: #0284c7; font-size: 24px; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 12px;">
+            <div class="package-header-icon brand-upi">
                 <i class="fi fi-rr-qr-scan"></i>
             </div>
             <div class="package-header-titles">
@@ -32,7 +32,7 @@
                             <h3>Merchant UPI VPA Identification</h3>
                             <p>Configure your verified business UPI Virtual Payment Address.</p>
                         </div>
-                        <div style="margin-left: auto;">
+                        <div class="ms-auto">
                             <label class="v3-toggle-switch" title="Toggle UPI Integration">
                                 <input type="checkbox" id="upiActiveToggle" name="enable_upi" value="1" checked>
                                 <span class="v3-toggle-slider"></span>
@@ -94,15 +94,15 @@
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- QR Card -->
-                <div class="v3-card-section" style="padding: 22px; text-align: center;">
-                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8; display: block; margin-bottom: 12px;">Live Invoice QR Preview</span>
+                <div class="v3-card-section v3-card-center-p22">
+                    <span class="v3-qr-title">Live Invoice QR Preview</span>
 
-                    <div style="background: #ffffff; border: 2px dashed #e2e8f0; border-radius: 12px; padding: 14px; display: inline-block; margin-bottom: 12px;">
-                        <img id="previewUpiQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi%3A%2F%2Fpay%3Fpa%3Dcompany%40upi" alt="UPI QR" style="width: 140px; height: 140px; display: block;">
+                    <div class="v3-qr-dashed-box">
+                        <img id="previewUpiQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi%3A%2F%2Fpay%3Fpa%3Dcompany%40upi" alt="UPI QR" class="v3-qr-preview-img">
                     </div>
 
-                    <div id="previewUpiVpaText" style="font-size: 13.5px; font-weight: 700; color: #0f172a; font-family: monospace;">company@upi</div>
-                    <p style="font-size: 11.5px; color: #64748b; margin: 4px 0 0 0;">Zero gateway fees &bull; Instant direct bank settlement</p>
+                    <div id="previewUpiVpaText" class="v3-qr-vpa-text">company@upi</div>
+                    <p class="v3-qr-subtext">Zero gateway fees &bull; Instant direct bank settlement</p>
                 </div>
             </div>
         </div>

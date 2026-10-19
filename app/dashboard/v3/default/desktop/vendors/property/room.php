@@ -48,7 +48,7 @@
 
     <div class="package-table-card room-types-directory-card">
         <div class="package-filter-toolbar">
-            <div class="filter-search-box"><i class="fi fi-rr-search search-svg-icon"></i><input type="search" id="roomTypeSearchInput" class="filter-search-input" placeholder="Search room types..." autocomplete="off"><button type="button" id="clearRoomTypeSearchBtn" class="clear-search-btn" title="Clear search" style="display:none">&times;</button></div>
+            <div class="filter-search-box"><i class="fi fi-rr-search search-svg-icon"></i><input type="search" id="roomTypeSearchInput" class="filter-search-input" placeholder="Search room types..." autocomplete="off"><button type="button" id="clearRoomTypeSearchBtn" class="clear-search-btn" title="Clear search">&times;</button></div>
             <button type="button" id="btnResetRoomTypeFilters" class="btn-v3-action" data-tooltip="Reset search"><i class="fi fi-rr-refresh"></i> Reset</button>
         </div>
         <div id="roomTypesGrid" class="room-types-v3-grid">
@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <div class="popUp roomTypeBox" style="display: none;">
+    <div class="popUp roomTypeBox">
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">
@@ -96,7 +96,7 @@
         </div>
     </div>
 
-    <div class="popUp editRoomTypeBox" style="display: none;">
+    <div class="popUp editRoomTypeBox">
         <div class="smallPopUpBox">
             <div class="widget box-7">
                 <div class="contentArea">

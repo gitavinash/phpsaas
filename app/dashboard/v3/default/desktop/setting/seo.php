@@ -9,12 +9,12 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);">
-                <i class="fi fi-rr-search-alt" style="color: #ffffff;"></i>
+            <div class="package-header-icon blue">
+                <i class="fi fi-rr-search-alt"></i>
             </div>
             <div class="package-header-titles">
-                <h2 style="margin: 0;">SEO Metadata &amp; Search Indexing</h2>
-                <p style="margin-top: 4px;">Define global search snippets, keywords, and search engine crawler instructions for your public website.</p>
+                <h2>SEO Metadata &amp; Search Indexing</h2>
+                <p>Define global search snippets, keywords, and search engine crawler instructions for your public website.</p>
             </div>
         </div>
         <div class="package-header-actions">
@@ -57,7 +57,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                             <!-- Meta Description -->
                             <div class="v3-form-group span-2">
                                 <label for="siteMetaDesc" class="v3-form-label">
-                                    Meta Description <span class="opt" style="font-weight: normal; color: #94a3b8;">(Search Snippet)</span>
+                                    Meta Description <span class="opt v3-label-opt">(Search Snippet)</span>
                                 </label>
                                 <div class="v3-input-icon-wrap textarea-wrap">
                                     <i class="fi fi-rr-document input-icon"></i>
@@ -69,7 +69,7 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                             <!-- Meta Keywords -->
                             <div class="v3-form-group span-2">
                                 <label for="siteMetaKw" class="v3-form-label">
-                                    Meta Keywords <span class="opt" style="font-weight: normal; color: #94a3b8;">(Comma-separated)</span>
+                                    Meta Keywords <span class="opt v3-label-opt">(Comma-separated)</span>
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-tags input-icon"></i>
@@ -82,14 +82,14 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
                                 <label class="v3-form-label">
                                     Search Engine Indexing Visibility
                                 </label>
-                                <div style="display: flex; gap: 14px; margin-top: 4px; flex-wrap: wrap;">
-                                    <label style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 13px; font-weight: 500; color: #334155; transition: all 0.15s ease;">
+                                <div class="v3-radio-group-wrap">
+                                    <label class="v3-radio-option-card">
                                         <input type="radio" name="site_index" id="indexYes" value="index, follow" checked>
-                                        <span><strong style="color: #10b981;">Allow Indexing</strong> (index, follow &mdash; Recommended for Live Sites)</span>
+                                        <span><strong class="color-emerald">Allow Indexing</strong> (index, follow &mdash; Recommended for Live Sites)</span>
                                     </label>
-                                    <label style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 13px; font-weight: 500; color: #334155; transition: all 0.15s ease;">
+                                    <label class="v3-radio-option-card">
                                         <input type="radio" name="site_index" id="indexNo" value="noindex, nofollow">
-                                        <span><strong style="color: #ef4444;">Prevent Indexing</strong> (noindex, nofollow &mdash; Staging / Private)</span>
+                                        <span><strong class="color-rose">Prevent Indexing</strong> (noindex, nofollow &mdash; Staging / Private)</span>
                                     </label>
                                 </div>
                             </div>
@@ -113,34 +113,33 @@ if (!in_array($currentUserType, ['administrator', 'operator'])) {
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- Search Result Preview Card -->
-                <div class="v3-live-preview-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Google Search Preview</span>
-                        <span class="v3-status-badge status-active" style="font-size: 10px;">Desktop SERP</span>
+                <div class="v3-serp-preview-card">
+                    <div class="v3-serp-preview-header">
+                        <i class="fi fi-rr-search-alt"></i>
+                        <span>Google Search Preview</span>
+                        <span class="v3-status-badge status-active badge-xs ms-auto">Desktop SERP</span>
                     </div>
 
-                    <div style="font-family: Arial, sans-serif;">
-                        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #202124; margin-bottom: 4px;">
-                            <div style="width: 18px; height: 18px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 10px;">
-                                <i class="fi fi-rr-globe" style="color: #4f46e5;"></i>
-                            </div>
-                            <span id="previewSeoDomain" style="color: #202124;">yourdomain.com</span>
+                    <div class="v3-serp-preview-body">
+                        <div class="v3-serp-breadcrumb">
+                            <span id="previewSeoDomain">yourdomain.com</span>
+                            <span class="v3-serp-breadcrumb-sep">&rsaquo;</span>
                         </div>
-                        <div id="previewSeoTitle" style="font-size: 16px; color: #1a0dab; font-weight: 500; line-height: 1.3; margin-bottom: 4px; cursor: pointer;">
+                        <div id="previewSeoTitle" class="v3-serp-title">
                             Best Holiday Packages &amp; Tour Itineraries
                         </div>
-                        <div id="previewSeoDesc" style="font-size: 12.5px; color: #4d5156; line-height: 1.45;">
+                        <p id="previewSeoDesc" class="v3-serp-snippet">
                             Explore top rated customized holiday tour packages, luxury hotel stays, guided itineraries, and unforgettable travel experiences.
-                        </div>
+                        </p>
                     </div>
                 </div>
 
                 <!-- SEO Best Practices Checklist -->
-                <div class="v3-card-section" style="padding: 16px;">
-                    <h4 style="font-size: 12.5px; font-weight: 700; color: #334155; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.04em;">
+                <div class="v3-card-section v3-checklist-card">
+                    <h4 class="v3-checklist-title">
                         SEO Best Practices
                     </h4>
-                    <ul style="margin: 0; padding-left: 18px; font-size: 12px; color: #64748b; line-height: 1.6;">
+                    <ul class="v3-checklist-list">
                         <li>Keep titles under <strong>60 characters</strong> for full visibility on search engines.</li>
                         <li>Descriptions should be actionable and between <strong>140–160 characters</strong>.</li>
                         <li>Ensure <strong>Allow Indexing</strong> is active when your website is live to the public.</li>

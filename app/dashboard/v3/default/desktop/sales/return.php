@@ -66,12 +66,12 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                 </div>
                                 <div class="form-group">
                                     <!-- <input type="button" cla¯ss="btn btn-green step-box" id="salesStep_2" value="N new sale"> -->
-                                    <a class="btn btn-green" style="float: right;" id="returnInventory">Next, select
+                                    <a class="btn btn-green right" id="returnInventory">Next, select
                                         inventory<i class="fi fi-rr-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>
-                        <div class="step-open-box salesStep_2_box" style="display: none;">
+                        <div class="step-open-box salesStep_2_box">
                             <div class="box-1">
                                 <div class="form-header">
                                     <h1>Select inventory for return</h1>
@@ -100,14 +100,14 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                                     </div>
                                 </div>
                                 <div class="box-5">
-                                    <a class="btn btn-green" style="float: right;" id="confirmReturnInventory">Next,
+                                    <a class="btn btn-green right" id="confirmReturnInventory">Next,
                                         Confirm return
                                         <i class="fi fi-rr-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>
             </div>
-            <div class="step-open-box salesStep_3_box" style="display: none;">
+            <div class="step-open-box salesStep_3_box">
                 <div class="box-1">
                     <div class="form-header">
                         <h1>Confirmation</h1>
@@ -127,7 +127,7 @@ if ($checkSalesRequest = mysqli_query($connection, "SELECT * FROM {$tableNamePre
                             </div>
                         </div>
                         <div class="box-5">
-                            <a class="btn btn-green step-box" style="float: right;" id="submitReturn"><i
+                            <a class="btn btn-green step-box right" id="submitReturn"><i
                                     class="fi fi-rr-check"></i> Submit
                                 request</a>
                         </div>

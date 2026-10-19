@@ -550,13 +550,46 @@ $(document).ready(function () {
       },
       error: function (xhr) {
         $("#addExpense").show();
-        var errorMsg = "An error occurred while saving expense.";
         if (xhr.responseJSON && xhr.responseJSON.msg) {
           errorMsg = xhr.responseJSON.msg;
         }
         popUpMessage("center", errorMsg, "error");
       },
     });
+  });
+
+  // Expenses Photo preview
+  $(document).on("change", "#photo", function (e) {
+    var preview = document.getElementById("photoPreview");
+    if (!preview) return;
+    preview.innerHTML = "";
+    var file = e.target.files && e.target.files[0];
+    if (file) {
+      var img = document.createElement("img");
+      img.className = "expense-photo-preview";
+      img.src = URL.createObjectURL(file);
+      preview.appendChild(img);
+    }
+  });
+
+  // Expenses Date logic: show time if not today, disable future dates
+  $(document).on("change", "#date", function () {
+    var dateInput = this;
+    var timeGroup = document.getElementById("timeGroup");
+    var timeInput = document.getElementById("time");
+    if (!timeGroup || !timeInput) return;
+    var today = new Date().toISOString().slice(0, 10);
+    if (dateInput.value && dateInput.value !== today) {
+      timeGroup.style.display = "block";
+      timeInput.setAttribute("required", "required");
+      var now = new Date();
+      var hh = String(now.getHours()).padStart(2, "0");
+      var mm = String(now.getMinutes()).padStart(2, "0");
+      timeInput.value = hh + ":" + mm;
+    } else {
+      timeGroup.style.display = "none";
+      timeInput.removeAttribute("required");
+    }
   });
 
   function showStep(stepNum) {

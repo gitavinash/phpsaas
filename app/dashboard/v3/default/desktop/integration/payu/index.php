@@ -32,7 +32,7 @@
                             <h3>PayU Merchant Credentials</h3>
                             <p>Enter your Merchant Key and Merchant Salt from PayU Merchant Dashboard.</p>
                         </div>
-                        <div style="margin-left: auto;">
+                        <div class="ms-auto">
                             <label class="v3-toggle-switch" title="Toggle PayU Integration">
                                 <input type="checkbox" id="payuActiveToggle" name="enable_payu" value="1" checked>
                                 <span class="v3-toggle-slider"></span>
@@ -45,14 +45,14 @@
                             <!-- Mode Selection -->
                             <div class="v3-form-group span-2">
                                 <label class="v3-form-label">Environment Mode</label>
-                                <div style="display: flex; gap: 14px; margin-top: 4px;">
-                                    <label style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 13px; font-weight: 500; color: #334155;">
+                                <div class="v3-env-mode-wrap">
+                                    <label class="v3-env-radio-card">
                                         <input type="radio" name="payu_mode" id="payuModeLive" value="live" checked>
-                                        <span><strong style="color: #10b981;">Live Production</strong> (secure.payu.in)</span>
+                                        <span><strong class="color-emerald">Live Production</strong> (secure.payu.in)</span>
                                     </label>
-                                    <label style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 13px; font-weight: 500; color: #334155;">
+                                    <label class="v3-env-radio-card">
                                         <input type="radio" name="payu_mode" id="payuModeTest" value="test">
-                                        <span><strong style="color: #ea580c;">Test Sandbox</strong> (test.payu.in)</span>
+                                        <span><strong class="color-orange">Test Sandbox</strong> (test.payu.in)</span>
                                     </label>
                                 </div>
                             </div>
@@ -97,21 +97,21 @@
         <!-- Right: Webhook Documentation -->
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
-                <div class="v3-card-section" style="padding: 20px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Webhook &amp; Sururl</span>
-                        <span class="v3-status-badge status-active" style="font-size: 10px;">Automated</span>
+                <div class="v3-card-section v3-card-p20">
+                    <div class="v3-sidebar-header-row">
+                        <span class="v3-sidebar-header-badge">Webhook &amp; Sururl</span>
+                        <span class="v3-status-badge status-active status-sm">Automated</span>
                     </div>
-                    <p style="font-size: 12.5px; color: #64748b; margin: 0 0 12px 0; line-height: 1.45;">
+                    <p class="v3-sidebar-desc">
                         Configure success &amp; failure return URLs in PayU Webhook panel:
                     </p>
                     
-                    <div class="v3-code-snippet-box" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; font-family: monospace; font-size: 11.5px; color: #334155; word-break: break-all; margin-bottom: 12px;">
+                    <div class="v3-code-snippet-box mb-12">
                         https://app.aleya.in/webhook/payu/
                     </div>
 
-                    <h5 style="font-size: 12px; font-weight: 700; color: #334155; margin: 0 0 6px 0;">Platform Advantages:</h5>
-                    <ul style="margin: 0; padding-left: 18px; font-size: 12px; color: #64748b; line-height: 1.6;">
+                    <h5 class="v3-events-title">Platform Advantages:</h5>
+                    <ul class="v3-events-list">
                         <li>Highest transaction conversion rates</li>
                         <li>Saved cards &amp; native OTP assistance</li>
                         <li>PayLater and EMI payment options</li>

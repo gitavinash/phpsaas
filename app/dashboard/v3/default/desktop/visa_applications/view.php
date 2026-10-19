@@ -38,8 +38,7 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                                 alt="" srcset="">
                         </div>
                         <div class="info">
-                            <h2 class="heading"
-                                <?php echo (($visa_application_status == 4 || $visa_application_status == 5) ? "style='color:#f44336'" : "") ?>>
+                            <h2 class="heading <?php echo (($visa_application_status == 4 || $visa_application_status == 5) ? 'text-red' : '') ?>">
                                 <?php echo $customerFullName = ucwords($first_name . ' ' . $last_name . (($visa_application_status == 4) ? ' ( Closed ) ' : (($visa_application_status == 5) ? '( Duplicate )' : ''))) ?>
                             </h2>
                             <p>
@@ -75,7 +74,7 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                         <?php
 
                         if ($visa_application_status != 5) { ?>
-                        <a id="leadEditBtn" class="btn right-btn highlight" style="margin-top:20px"><i
+                        <a id="leadEditBtn" class="btn right-btn highlight mt-20"><i
                                 class="fi-rr-edit"></i> Edit
                             Application</a>
                         <?php
@@ -175,7 +174,7 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                                         echo "
                                                 </li>";
                                         if ($site_access_type == 'administrator' || $site_access_type == 'receiption') {
-                                            echo "<a href='#' style='float:left; margin-right: 75%;' data-type='leads/follow_up' data-id='{$visa_application_notes_id}' title='Delete follow up' data-title='Delete follow up' class='btn dataTableBtn btn-red deleteButton' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete follow up</a>";
+                                            echo "<a href='#' data-type='leads/follow_up' data-id='{$visa_application_notes_id}' title='Delete follow up' data-title='Delete follow up' class='btn dataTableBtn btn-red deleteButton btn-delete-followup' data-reload='true' data-redirect='false'><i class='fi fi-rr-trash'></i> Delete follow up</a>";
                                         }
                                     }
                                     echo "</ol>";
@@ -188,7 +187,7 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                         </div>
                     </div>
                 </div>
-                <div class="widget openBtnBox no-padding box-1" id="additionalPassengerBox" style="display: none;">
+                <div class="widget openBtnBox no-padding box-1 is-v3-hidden" id="additionalPassengerBox">
                     <div class="leadInfo">
                         <table>
                             <?php
@@ -214,7 +213,7 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                         </table>
                     </div>
                 </div>
-                <div class="widget openBtnBox no-padding box-1" id="documentBox" style="display: none;">
+                <div class="widget openBtnBox no-padding box-1 is-v3-hidden" id="documentBox">
                     <div class="leadInfo">
                         <table>
                             <?php
@@ -236,8 +235,8 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                                                     echo "<tr>
                                 <td class='box-3'><strong>{$key_name}</strong></td>
                                 <td class='box-7'>
-                                   <a href='{$fileUrl}' target='_blank' style='color:#007bff;text-decoration:underline;'>
-    Click here to view <i class='fi-rr-external-link-square' style='font-size:13px;margin-left:4px;'></i>
+                                   <a href='{$fileUrl}' target='_blank' class='v3-link-primary'>
+    Click here to view <i class='fi-rr-external-link-square font-13 ml-4'></i>
 </a>
                                 </td>
                               </tr>";
@@ -490,7 +489,7 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="box-1" id="minPaymentLinkBox" style="display:none">
+                                        <div class="box-1 is-v3-hidden" id="minPaymentLinkBox">
                                             <div class="form-group">
                                                 <input type="number" onwheel="this.blur()" id="paymentValue"
                                                     name="paymentLink" />
@@ -644,7 +643,7 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
             <div class="widget box-8">
                 <div class="contentArea">
                     <div id="itinerarySeachBox">
-                        <h4 class="heading" style="margin-bottom: 2rem">Search Itinenary</h4>
+                        <h4 class="heading mb-20">Search Itinerary</h4>
                         <div class="box-1">
                             <div class="box-5">
                                 <h4>Select destination<sup>*</sup></h4>
@@ -653,7 +652,7 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                             </div>
                             <div class="box-5">
                                 <h4>Travel Style</h4>
-                                <select class="selectJS form-control" name="travelStyle" id="itineraryStyle">
+                                <select class="selectJS2 form-control" name="travelStyle" id="itineraryStyle">
                                     <option value="select">Select travel style</option>
                                     <option value="adventure">Adventure Travel</option>
                                     <option value="cultural">Cultural Travel</option>
@@ -674,20 +673,18 @@ if ($checkVisaApplication = mysqli_query($connection, $visa_applicationQuery)) {
                                 </select>
                             </div>
                             <div class="box-1">
-                                <a href="#" class="btn" id="fetchItinerary"
-                                    style="float: right; padding:0.5rem 2rem; margin-top:10px">Find</a>
+                                <a href="#" class="btn btn-action-find" id="fetchItinerary">Find</a>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group" id="itineraryListBox" style="display: none;">
-                        <h4 class="heading" style="margin-bottom: 2rem">Select Itinenary<sup>*</sup></h4>
-                        <select class="selectJS form-control" id="itineraryList"></select>
+                    <div class="form-group is-v3-hidden" id="itineraryListBox">
+                        <h4 class="heading mb-20">Select Itinerary<sup>*</sup></h4>
+                        <select class="selectJS2 form-control" id="itineraryList"></select>
                         <div class="box-1">
-                            <a href="#" class="btn" id="showItinerary"
-                                style="float: left; padding:0.5rem 2rem; margin-top:10px">Show Itinerary</a>
+                            <a href="#" class="btn btn-action-show" id="showItinerary">Show Itinerary</a>
                         </div>
                     </div>
-                    <div class="form-group" id="editorBox" style="display: none;">
+                    <div class="form-group is-v3-hidden" id="editorBox">
                         <textarea name="itinerary" id="itineraryEditorBox"></textarea>
                     </div>
                 </div>

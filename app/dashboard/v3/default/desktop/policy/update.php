@@ -11,7 +11,7 @@ $encodedPolicyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
     <!-- Header Section -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon policy-header-badge" style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);">
+            <div class="package-header-icon indigo">
                 <i class="fi fi-rr-document-signed"></i>
             </div>
             <div class="package-header-titles">
@@ -79,7 +79,7 @@ $encodedPolicyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-check-circle input-icon"></i>
-                                    <select id="policyStatus" name="status" class="v3-form-control">
+                                    <select id="policyStatus" name="status" class="v3-form-control selectJS2">
                                         <option value="1">Active &amp; Published</option>
                                         <option value="0">Draft / Inactive</option>
                                     </select>
@@ -108,7 +108,7 @@ $encodedPolicyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                                 Policy Content <span class="required">*</span>
                             </label>
                             <textarea id="policyDescription" name="description" class="v3-form-textarea" rows="12" placeholder="Enter complete policy clauses, cancellation timelines, refund rules, and terms of service..." required></textarea>
-                            <div class="textarea-footer-meta" style="display: flex; justify-content: space-between; font-size: 12px; color: #64748b; margin-top: 6px;">
+                            <div class="v3-textarea-footer-meta">
                                 <span id="policyCharCount">0 characters</span>
                                 <span id="policyWordCount">0 words</span>
                             </div>
@@ -136,8 +136,8 @@ $encodedPolicyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                                 <p><strong>Drag &amp; drop policy banner image here</strong> or <a href="javascript:void(0)" id="btnBrowsePolicyBanner">browse files</a></p>
                                 <span>Supported formats: PNG, JPG, WEBP, GIF (Max 5MB)</span>
                             </div>
-                            <div class="logo-preview-box" id="policyPreviewWrap" style="display: none;">
-                                <img src="" alt="Policy Banner Preview" id="policyPreviewImg" style="max-height: 140px; border-radius: 8px;" />
+                            <div class="logo-preview-box is-hidden" id="policyPreviewWrap">
+                                <img src="" alt="Policy Banner Preview" id="policyPreviewImg" class="v3-preview-banner-img" />
                                 <div class="logo-preview-meta">
                                     <p><strong>Policy Banner</strong></p>
                                     <button type="button" class="btn-v3-outline-sm mt-1" id="btnRemovePolicyBanner">
@@ -145,7 +145,7 @@ $encodedPolicyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                                     </button>
                                 </div>
                             </div>
-                            <input type="file" id="policyBannerInput" name="featureImage" accept="image/png, image/jpeg, image/webp, image/gif" style="display: none;">
+                            <input type="file" id="policyBannerInput" name="featureImage" accept="image/png, image/jpeg, image/webp, image/gif" class="d-none">
                         </div>
                     </div>
                 </div>
@@ -171,11 +171,11 @@ $encodedPolicyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                         <div class="v3-form-grid">
                             <!-- Meta Title -->
                             <div class="v3-form-group col-span-2 span-2">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div class="v3-label-row">
                                     <label for="policyMetaTitle" class="v3-form-label">
                                         SEO Meta Title
                                     </label>
-                                    <span id="metaTitleCharCount" style="font-size: 11.5px; color: #64748b;">0 / 60 chars</span>
+                                    <span id="metaTitleCharCount" class="v3-field-char-count">0 / 60 chars</span>
                                 </div>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-heading input-icon"></i>
@@ -185,11 +185,11 @@ $encodedPolicyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
 
                             <!-- Meta Description -->
                             <div class="v3-form-group col-span-2 span-2">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div class="v3-label-row">
                                     <label for="policyMetaDescription" class="v3-form-label">
                                         SEO Meta Description
                                     </label>
-                                    <span id="metaDescCharCount" style="font-size: 11.5px; color: #64748b;">0 / 160 chars</span>
+                                    <span id="metaDescCharCount" class="v3-field-char-count">0 / 160 chars</span>
                                 </div>
                                 <div class="v3-input-icon-wrap textarea-icon-wrap">
                                     <i class="fi fi-rr-text input-icon"></i>
@@ -229,10 +229,10 @@ $encodedPolicyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
             <div class="preview-card-sticky">
                 <!-- Live Policy Card Preview -->
                 <div class="company-live-preview-card">
-                    <div class="company-preview-banner" style="background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);"></div>
+                    <div class="company-preview-banner indigo"></div>
                     <div class="company-preview-content">
                         <div class="company-preview-avatar-row">
-                            <div class="company-preview-avatar" style="background: #eef2ff; color: #4338ca;">
+                            <div class="company-preview-avatar indigo">
                                 <i class="fi fi-rr-document-signed"></i>
                             </div>
                             <span class="company-type-pill company-badge-hq" id="previewPolicyStatusBadge">Active &amp; Published</span>
@@ -259,24 +259,24 @@ $encodedPolicyId = htmlspecialchars($_GET['id'] ?? ($id ?? ''));
                 </div>
 
                 <!-- Live Google Search Snippet Preview -->
-                <div class="company-live-preview-card" style="padding: 16px;">
-                    <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 8px; display: flex; align-items: center; gap: 5px;">
+                <div class="v3-serp-preview-card">
+                    <div class="v3-serp-preview-header">
                         <i class="fi fi-rr-globe"></i> Google Search Snippet Preview
                     </div>
-                    <div style="font-size: 12px; color: #202124; line-height: 1.3;">
-                        <div style="color: #202124; font-size: 12px; display: flex; align-items: center; gap: 4px;" id="serpBreadcrumb">
-                            <span>https://example.com</span> <span style="color: #5f6368;">›</span> <span id="serpSlugPreview">policy</span>
+                    <div class="v3-serp-preview-body">
+                        <div class="v3-serp-breadcrumb" id="serpBreadcrumb">
+                            <span>https://example.com</span> <span class="v3-serp-breadcrumb-sep">›</span> <span id="serpSlugPreview">policy</span>
                         </div>
-                        <h4 id="serpTitlePreview" style="color: #1a0dab; font-size: 15px; font-weight: 500; margin: 3px 0 4px 0; line-height: 1.3; cursor: pointer;">Policy Title | Legal Terms</h4>
-                        <p id="serpSnippetPreview" style="color: #4d5156; font-size: 12.5px; margin: 0; line-height: 1.4;">Policy summary and clauses will appear here in Google search engine result snippets...</p>
+                        <h4 id="serpTitlePreview" class="v3-serp-title">Policy Title | Legal Terms</h4>
+                        <p id="serpSnippetPreview" class="v3-serp-snippet">Policy summary and clauses will appear here in Google search engine result snippets...</p>
                     </div>
                 </div>
 
                 <!-- Compliance Tip Box -->
-                <div class="v3-tips-box" style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 14px; display: flex; gap: 10px; font-size: 12px; color: #1e40af; line-height: 1.4;">
-                    <i class="fi fi-rr-shield-check" style="font-size: 18px; color: #3b82f6; flex-shrink: 0; margin-top: 1px;"></i>
-                    <div>
-                        <strong style="display: block; margin-bottom: 2px; color: #1e3a8a;">Live URL Synchronization</strong>
+                <div class="v3-tips-box blue">
+                    <div class="tips-icon"><i class="fi fi-rr-shield-check"></i></div>
+                    <div class="tips-content">
+                        <strong>Live URL Synchronization</strong>
                         Updating the URL slug will change the public link path on the live website. Ensure any links pointing to the old URL are updated accordingly.
                     </div>
                 </div>

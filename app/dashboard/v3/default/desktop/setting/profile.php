@@ -2,8 +2,8 @@
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);">
-                <i class="fi fi-rr-portrait" style="color: #ffffff;"></i>
+            <div class="package-header-icon indigo">
+                <i class="fi fi-rr-portrait"></i>
             </div>
             <div class="package-header-titles">
                 <h2>Account &amp; Personal Profile</h2>
@@ -53,11 +53,11 @@
                                     <label for="profileImageInput" class="v3-btn-photo-upload">
                                         <i class="fi fi-rr-upload"></i> <span>Upload Photo</span>
                                     </label>
-                                    <input type="file" id="profileImageInput" name="profile_image" accept="image/png, image/jpeg, image/webp" style="display: none;">
+                                    <input type="file" id="profileImageInput" name="profile_image" accept="image/png, image/jpeg, image/webp" class="d-none">
                                     <button type="button" id="btnRemoveProfileImage" class="v3-btn-photo-remove is-v3-hidden">
                                         <i class="fi fi-rr-trash"></i> <span>Remove</span>
                                     </button>
-                                    <span id="profileImageFileName" style="font-size: 12px; color: #64748b; font-weight: 500;"></span>
+                                    <span id="profileImageFileName" class="v3-profile-file-name"></span>
                                 </div>
                             </div>
                         </div>
@@ -228,31 +228,31 @@
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- Live Profile Preview Card -->
-                <div class="v3-live-preview-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Profile Preview</span>
-                        <span class="v3-status-badge status-active" style="font-size: 11px;"><span class="status-pulse-dot"></span> Active</span>
+                <div class="v3-live-preview-card">
+                    <div class="v3-live-preview-header">
+                        <span class="v3-live-preview-label">Profile Preview</span>
+                        <span class="v3-status-badge status-active"><span class="status-pulse-dot"></span> Active</span>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 16px;">
-                        <div class="v3-avatar-frame" style="width: 72px; height: 72px; margin-bottom: 12px;">
+                    <div class="v3-profile-preview-center">
+                        <div class="v3-avatar-frame v3-profile-preview-avatar-frame">
                             <img id="previewProfileImg" class="v3-avatar-img is-v3-hidden" src="" alt="Profile">
-                            <div id="previewProfileAvatar" class="v3-avatar-initials" style="font-size: 24px;">U</div>
+                            <div id="previewProfileAvatar" class="v3-avatar-initials v3-profile-preview-initials">U</div>
                         </div>
-                        <h3 id="previewProfileName" style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 4px 0;">Loading...</h3>
-                        <span id="previewProfileRole" class="badge-service-state badge-role-admin" style="font-size: 11.5px; margin-top: 2px;">
+                        <h3 id="previewProfileName" class="v3-profile-preview-name">Loading...</h3>
+                        <span id="previewProfileRole" class="badge-service-state badge-role-admin v3-profile-preview-role">
                             <i class="fi fi-rr-shield-check"></i> Administrator
                         </span>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; gap: 8px; background: #f8fafc; border-radius: 10px; padding: 12px; border: 1px solid #edf2f7; font-size: 12.5px;">
-                        <div style="display: flex; align-items: center; gap: 8px; color: #334155;">
-                            <i class="fi fi-rr-phone-call" style="color: #10b981; font-size: 12px; width: 14px;"></i>
-                            <span id="previewProfileMobile" style="font-weight: 500;">+91 &mdash;</span>
+                    <div class="v3-profile-preview-list">
+                        <div class="v3-profile-preview-item">
+                            <i class="fi fi-rr-phone-call brand-phone"></i>
+                            <span id="previewProfileMobile">+91 &mdash;</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 8px; color: #334155; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <i class="fi fi-rr-envelope" style="color: #6366f1; font-size: 12px; width: 14px;"></i>
-                            <span id="previewProfileEmail" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis;">No email</span>
+                        <div class="v3-profile-preview-item">
+                            <i class="fi fi-rr-envelope brand-email"></i>
+                            <span id="previewProfileEmail">No email</span>
                         </div>
                     </div>
                 </div>
@@ -261,7 +261,7 @@
                 <div class="v3-tips-box">
                     <div class="tips-icon"><i class="fi fi-rr-shield-check"></i></div>
                     <div class="tips-content">
-                        <strong style="color: #166534; display: block; margin-bottom: 2px;">Account Security</strong>
+                        <strong class="v3-tips-title-emerald">Account Security</strong>
                         Your profile name is displayed on all customer itinerary quotes and team chat notifications. Keep your contact numbers up to date.
                     </div>
                 </div>

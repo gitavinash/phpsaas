@@ -1301,3 +1301,7 @@ select.form-control.input-with-label option {
     text-align: left;
   }
 }
+
+#paneOtpStepVerify {
+  display: none;
+}

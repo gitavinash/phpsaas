@@ -168,46 +168,7 @@ if ($method === 'GET') {
                 'Mandatory Full Name & Mobile + customizable travel fields'
             ]
         ],
-        [
-            'id'            => 'lead_automation',
-            'slug'          => 'lead_automation',
-            'title'         => 'Lead Flow Automation',
-            'category'      => 'leadgen',
-            'category_name' => 'Lead Generation & Ads',
-            'description'   => 'Automate how incoming leads are distributed among sales agents with visual Round-Robin pipelines, rule filters, and auto-tasks.',
-            'icon'          => 'lead_workflow',
-            'config_url'    => '/dashboard/integration/lead_automation/',
-            'toggle_key'    => 'enable_lead_automation',
-            'is_active'     => ($configMap['enable_lead_automation'] ?? '1') === '1',
-            'status_label'  => ($configMap['enable_lead_automation'] ?? '1') === '1' ? 'Active' : 'Disabled',
-            'is_connected'  => true,
-            'features'      => [
-                'Equitable Round-Robin lead rotation among active agents',
-                'Source, destination, and campaign routing filters',
-                'Automated follow-up tasks & instant WhatsApp greeting'
-            ]
-        ],
         // Messaging
-
-        [
-            'id'            => 'whatsapp_automation',
-            'slug'          => 'whatsapp_automation',
-            'title'         => 'WhatsApp Chat Automation',
-            'category'      => 'messaging',
-            'category_name' => 'Messaging & Chat',
-            'description'   => 'Design complete conversational flows, keyword triggers, instant auto-replies, interactive service menus, and human agent routing.',
-            'icon'          => 'whatsapp_bot',
-            'config_url'    => '/dashboard/integration/whatsapp_automation/',
-            'toggle_key'    => 'enable_whatsapp_automation',
-            'is_active'     => ($configMap['enable_whatsapp_automation'] ?? '0') === '1',
-            'status_label'  => ($configMap['enable_whatsapp_automation'] ?? '0') === '1' ? 'Active' : 'Ready to Setup',
-            'is_connected'  => ($configMap['enable_whatsapp_automation'] ?? '0') === '1',
-            'features'      => [
-                'Visual drag-and-drop conversational workflow designer',
-                'Keyword triggers, number menus, and FAQ auto-replies',
-                'Built-in real-time interactive chat testing simulator'
-            ]
-        ],
 
         [
             'id'            => 'whatsapp_web',
@@ -471,8 +432,6 @@ if ($method === 'POST' || $method === 'PUT') {
         $slugMap = array_merge([
             'facebook'            => 'enable_facebook_lead_ads',
             'whatsapp_web'        => 'enable_whatsapp_web_api',
-            'whatsapp_automation' => 'enable_whatsapp_automation',
-            'lead_automation'     => 'enable_lead_automation',
             'google_ads'          => 'enable_google_ads',
             'web_forms'           => 'enable_web_forms',
             'smtp'                => 'enable_smtp_email',

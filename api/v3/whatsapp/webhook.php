@@ -718,22 +718,6 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     mysqli_query($connection, $msgSql);
     $messageId = (int)mysqli_insert_id($connection);
 
-    // Trigger WhatsApp Chat Automation Engine if incoming real-time message
-    $chatAutoRes = null;
-    if ($direction === 'incoming' && !$isSyncOrHistorical && !empty($text)) {
-        try {
-            $wfHelperPath = dirname(__DIR__) . '/integration/workflow_helper.php';
-            if (file_exists($wfHelperPath)) {
-                require_once $wfHelperPath;
-                if (function_exists('executeWhatsAppChatWorkflows')) {
-                    $chatAutoRes = executeWhatsAppChatWorkflows($connection, $siteId, $chatId, $messageId, $text, $cleanPhone, $payload);
-                }
-            }
-        } catch (Throwable $wfEx) {
-            error_log("WhatsApp Chat Automation error: " . $wfEx->getMessage());
-        }
-    }
-
     echo json_encode([
         'status'         => 'success',
         'msg'            => 'WhatsApp message synced to CRM.',

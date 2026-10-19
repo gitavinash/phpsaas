@@ -160,8 +160,8 @@
                     <a href="leads/add/" class="more-item more-leads">
                         <i class="fi fi-rr-add"></i><span>Add new lead</span>
                     </a>
-                    <a href="/dashboard/whatsapp/" class="more-item more-whatsapp">
-                        <i class="fi fi-rr-comment-alt-middle"></i><span>WhatsApp Inbox</span>
+                    <a href="/dashboard/whatsapp/" class="more-item more-whatsapp" id="v3MobileNavWhatsapp">
+                        <i class="ri-whatsapp-fill"></i><span>WhatsApp Inbox</span>
                     </a>
                 </div>
             </div>

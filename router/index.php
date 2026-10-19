@@ -201,6 +201,11 @@ switch ($urlStructure[0]) {
 		require_once 'admin.php';
 		break;
 
+	case 'whatsapp':
+		$extraWa = !empty($urlStructure[1]) ? implode('/', array_slice($urlStructure, 1)) . '/' : '';
+		header("Location: /dashboard/whatsapp/" . $extraWa, true, 301);
+		exit();
+
 	case 'oauth':
 		require_once 'oauth.php';
 		break;

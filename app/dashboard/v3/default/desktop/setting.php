@@ -6,8 +6,8 @@ $isFullSettingAccess = in_array($currentUserType, ['administrator', 'operator'])
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);">
-                <i class="fi fi-rr-settings" style="color: #ffffff;"></i>
+            <div class="package-header-icon indigo">
+                <i class="fi fi-rr-settings"></i>
             </div>
             <div class="package-header-titles">
                 <h2><?php echo $isFullSettingAccess ? 'Workspace &amp; Account Settings' : 'Account &amp; Profile Settings'; ?></h2>
@@ -22,17 +22,17 @@ $isFullSettingAccess = in_array($currentUserType, ['administrator', 'operator'])
     </div>
 
     <!-- Modern Settings Cards Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 16px;">
+    <div class="v3-settings-cards-grid">
         <?php if ($isFullSettingAccess) { ?>
         <!-- Card 1: Configuration -->
-        <a href="/dashboard/setting/configuration/" style="text-decoration: none; color: inherit; display: block;">
-            <div class="v3-card-section" style="padding: 24px; display: flex; align-items: flex-start; gap: 16px; height: 100%; transition: all 0.2s ease;">
-                <div class="v3-card-header-icon indigo" style="width: 48px; height: 48px; min-width: 48px; font-size: 22px; border-radius: 12px;">
+        <a href="/dashboard/setting/configuration/" class="v3-setting-card-link">
+            <div class="v3-card-section v3-setting-card-item">
+                <div class="v3-card-header-icon indigo v3-setting-card-icon">
                     <i class="fi fi-rr-settings-sliders"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">Website Configuration</h3>
-                    <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.45;">
+                    <h3 class="v3-setting-card-title">Website Configuration</h3>
+                    <p class="v3-setting-card-desc">
                         Configure website name, logo, favicon, domain, accent theme color, and portal branding.
                     </p>
                 </div>
@@ -40,14 +40,14 @@ $isFullSettingAccess = in_array($currentUserType, ['administrator', 'operator'])
         </a>
 
         <!-- Card 2: Public Contact & Business Details -->
-        <a href="/dashboard/setting/contact/" style="text-decoration: none; color: inherit; display: block;">
-            <div class="v3-card-section" style="padding: 24px; display: flex; align-items: flex-start; gap: 16px; height: 100%; transition: all 0.2s ease;">
-                <div class="v3-card-header-icon emerald" style="width: 48px; height: 48px; min-width: 48px; font-size: 22px; border-radius: 12px;">
+        <a href="/dashboard/setting/contact/" class="v3-setting-card-link">
+            <div class="v3-card-section v3-setting-card-item">
+                <div class="v3-card-header-icon emerald v3-setting-card-icon">
                     <i class="fi fi-rr-phone-call"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">Public Contact Information</h3>
-                    <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.45;">
+                    <h3 class="v3-setting-card-title">Public Contact Information</h3>
+                    <p class="v3-setting-card-desc">
                         Manage customer helpline numbers, official WhatsApp, support email, registered office address, and social links.
                     </p>
                 </div>
@@ -55,34 +55,34 @@ $isFullSettingAccess = in_array($currentUserType, ['administrator', 'operator'])
         </a>
 
         <!-- Card 3: Alert & Notification Receiving (Powered by Notify360) -->
-        <a href="/dashboard/setting/notifications/" style="text-decoration: none; color: inherit; display: block;">
-            <div class="v3-card-section" style="padding: 24px; display: flex; align-items: flex-start; gap: 16px; height: 100%; transition: all 0.2s ease; position: relative; overflow: hidden;">
-                <div class="v3-card-header-icon violet" style="width: 48px; height: 48px; min-width: 48px; font-size: 22px; border-radius: 12px; background: #ede9fe; color: #7c3aed;">
+        <a href="/dashboard/setting/notifications/" class="v3-setting-card-link">
+            <div class="v3-card-section v3-setting-card-item v3-setting-notify-card">
+                <div class="v3-card-header-icon purple v3-setting-card-icon">
                     <i class="fi fi-rr-bell-ring"></i>
                 </div>
-                <div style="flex: 1;">
-                    <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">Alert &amp; Notifications</h3>
-                    <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.45;">
+                <div class="v3-setting-card-content">
+                    <h3 class="v3-setting-card-title">Alert &amp; Notifications</h3>
+                    <p class="v3-setting-card-desc">
                         Set recipient emails, WhatsApp numbers, SMS, and browser push to receive instant inquiry and payment alerts.
                     </p>
                 </div>
                 <!-- Bottom Right Powered By Watermark -->
-                <div style="position: absolute; right: 16px; bottom: 10px; display: flex; align-items: center; gap: 4px; opacity: 0.5; pointer-events: none;">
-                    <span style="font-size: 8.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em;">Powered by</span>
-                    <img src="/app/dashboard/v3/default/desktop/assets/images/notify360.png" alt="Notify360" style="height: 14px; width: auto; object-fit: contain;">
+                <div class="v3-setting-watermark">
+                    <span class="v3-watermark-text">Powered by</span>
+                    <img src="/app/dashboard/v3/default/desktop/assets/images/notify360.png" alt="Notify360" class="v3-watermark-img">
                 </div>
             </div>
         </a>
 
         <!-- Card 4: Bank Accounts & UPI Details -->
-        <a href="/dashboard/setting/banking/" style="text-decoration: none; color: inherit; display: block;">
-            <div class="v3-card-section" style="padding: 24px; display: flex; align-items: flex-start; gap: 16px; height: 100%; transition: all 0.2s ease;">
-                <div class="v3-card-header-icon blue" style="width: 48px; height: 48px; min-width: 48px; font-size: 22px; border-radius: 12px; background: #e0f2fe; color: #0284c7;">
+        <a href="/dashboard/setting/banking/" class="v3-setting-card-link">
+            <div class="v3-card-section v3-setting-card-item">
+                <div class="v3-card-header-icon blue v3-setting-card-icon">
                     <i class="fi fi-rr-bank"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">Bank Accounts &amp; UPI</h3>
-                    <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.45;">
+                    <h3 class="v3-setting-card-title">Bank Accounts &amp; UPI</h3>
+                    <p class="v3-setting-card-desc">
                         Configure official bank accounts, IFSC codes, and UPI payment addresses displayed on customer invoices and vouchers.
                     </p>
                 </div>
@@ -90,14 +90,14 @@ $isFullSettingAccess = in_array($currentUserType, ['administrator', 'operator'])
         </a>
 
         <!-- Card 5: SEO Metadata & Search Indexing -->
-        <a href="/dashboard/setting/seo/" style="text-decoration: none; color: inherit; display: block;">
-            <div class="v3-card-section" style="padding: 24px; display: flex; align-items: flex-start; gap: 16px; height: 100%; transition: all 0.2s ease;">
-                <div class="v3-card-header-icon sky" style="width: 48px; height: 48px; min-width: 48px; font-size: 22px; border-radius: 12px; background: #e0f2fe; color: #0369a1;">
+        <a href="/dashboard/setting/seo/" class="v3-setting-card-link">
+            <div class="v3-card-section v3-setting-card-item">
+                <div class="v3-card-header-icon sky v3-setting-card-icon">
                     <i class="fi fi-rr-search-alt"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">SEO &amp; Search Indexing</h3>
-                    <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.45;">
+                    <h3 class="v3-setting-card-title">SEO &amp; Search Indexing</h3>
+                    <p class="v3-setting-card-desc">
                         Define global search snippets, keywords, and search engine crawler instructions for your public website.
                     </p>
                 </div>
@@ -120,15 +120,15 @@ $isFullSettingAccess = in_array($currentUserType, ['administrator', 'operator'])
         </a>
         <?php } ?>
 
-        <!-- Card 6: Personal Profile (Visible to all users) -->
-        <a href="/dashboard/setting/profile/" style="text-decoration: none; color: inherit; display: block;">
-            <div class="v3-card-section" style="padding: 24px; display: flex; align-items: flex-start; gap: 16px; height: 100%; transition: all 0.2s ease;">
-                <div class="v3-card-header-icon purple" style="width: 48px; height: 48px; min-width: 48px; font-size: 22px; border-radius: 12px;">
+        <!-- Card 7: Personal Profile (Visible to all users) -->
+        <a href="/dashboard/setting/profile/" class="v3-setting-card-link">
+            <div class="v3-card-section v3-setting-card-item">
+                <div class="v3-card-header-icon purple v3-setting-card-icon">
                     <i class="fi fi-rr-portrait"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;">Personal Profile</h3>
-                    <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.45;">
+                    <h3 class="v3-setting-card-title">Personal Profile</h3>
+                    <p class="v3-setting-card-desc">
                         Update your profile photo, display name, personal phone numbers, notification email, and account credentials.
                     </p>
                 </div>

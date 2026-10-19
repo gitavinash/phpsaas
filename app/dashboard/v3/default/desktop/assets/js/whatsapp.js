@@ -452,12 +452,12 @@
 
       // Modal: Start New Chat (delegated)
       $(document).on("click", "#btnOpenNewChatModal, #btnEmptyStartChat, #btnSidebarNewChat", function () {
-        $("#waNewChatModal").addClass("is-active").attr("aria-hidden", "false");
+        $("#waNewChatModal").removeClass("is-hidden").addClass("is-active").attr("aria-hidden", "false");
         $("#newChatPhone").focus();
       });
 
       $(document).on("click", "#btnCloseNewChatModal, #btnCancelNewChat", function () {
-        $("#waNewChatModal").removeClass("is-active").attr("aria-hidden", "true");
+        $("#waNewChatModal").addClass("is-hidden").removeClass("is-active").attr("aria-hidden", "true");
         $("#waNewChatForm")[0].reset();
       });
 
@@ -465,7 +465,7 @@
       $(document).on("keydown", function (e) {
         if (e.key === "Escape") {
           if ($("#waNewChatModal").hasClass("is-active")) {
-            $("#waNewChatModal").removeClass("is-active").attr("aria-hidden", "true");
+            $("#waNewChatModal").addClass("is-hidden").removeClass("is-active").attr("aria-hidden", "true");
             $("#waNewChatForm")[0].reset();
           }
           if (!$("#waImageLightboxModal").hasClass("d-none")) {
@@ -477,7 +477,7 @@
 
       $(document).on("click", "#waNewChatModal", function (e) {
         if (e.target === this) {
-          $("#waNewChatModal").removeClass("is-active").attr("aria-hidden", "true");
+          $("#waNewChatModal").addClass("is-hidden").removeClass("is-active").attr("aria-hidden", "true");
           $("#waNewChatForm")[0].reset();
         }
       });
@@ -509,15 +509,21 @@
       const $workspace = $("#waChatWorkspace");
 
       const devices = self.availableDevices || [];
-      const isCallingAgent = !self.isAdmin || self.isCallingAgent || (self.userRole && ["agent", "calling_agent", "crm_calling_agent", "crm calling agent", "sales_executive"].includes(self.userRole));
+      const connectedDevices = devices.filter(function (d) { return d.status === "connected"; });
 
-      // If single device is linked and user type is CRM calling agent (or non-admin), do NOT show the linked device sidebar
-      if (!devices.length || (devices.length <= 1 && isCallingAgent) || (devices.length <= 1 && !self.isAdmin)) {
+      // If single device is connected (or total devices <= 1), do NOT show the line section
+      if (devices.length <= 1 || connectedDevices.length <= 1) {
         if ($rail.length) $rail.addClass("d-none").hide();
         if ($workspace.length) $workspace.removeClass("has-devices-rail");
-        if (devices.length === 1 && (!self.selectedDeviceId || self.selectedDeviceId === "all")) {
-          self.selectedDeviceId = devices[0].device_id;
+        const activeDev = connectedDevices.length === 1 ? connectedDevices[0] : (devices.length === 1 ? devices[0] : null);
+        if (activeDev && (!self.selectedDeviceId || self.selectedDeviceId === "all")) {
+          self.selectedDeviceId = activeDev.device_id;
         }
+
+        // Hide line selection in New Chat modal as well since there is only one line
+        const $modalGroup = $("#waNewChatDeviceGroup");
+        if ($modalGroup.length) $modalGroup.addClass("d-none").hide();
+
         return;
       }
 
@@ -525,7 +531,7 @@
       if ($workspace.length) $workspace.addClass("has-devices-rail");
       if ($count.length) $count.text(devices.length);
 
-      const connectedCount = devices.filter(function (d) { return d.status === "connected"; }).length;
+      const connectedCount = connectedDevices.length;
       const isAllSelected = !self.selectedDeviceId || self.selectedDeviceId === "all";
 
       let html = "";
@@ -590,11 +596,11 @@
         $list.html(html).data("last-html", html);
       }
 
-      // Populate New Chat Modal device options (Admin only when multiple devices exist)
+      // Populate New Chat Modal device options (Admin only when multiple devices exist and multiple connected)
       const $modalSelect = $("#newChatDeviceSelect");
       const $modalGroup = $("#waNewChatDeviceGroup");
       if ($modalSelect.length) {
-        if (self.isAdmin && devices.length > 1) {
+        if (self.isAdmin && devices.length > 1 && connectedDevices.length > 1) {
           $modalGroup.removeClass("d-none").show();
           let mOpts = "";
           devices.forEach(function (d) {
@@ -638,7 +644,7 @@
       const devices = this.availableDevices || [];
       const connectedCount = devices.filter(function (d) { return d.status === "connected"; }).length;
 
-      if (this.isAdmin) {
+      if (this.isAdmin && devices.length > 1 && connectedCount > 1) {
         if (!this.selectedDeviceId || this.selectedDeviceId === "all") {
           $text.text(connectedCount > 0 ? `All Lines (${connectedCount} Connected)` : "All Lines Active");
         } else {
@@ -651,7 +657,7 @@
           }
         }
       } else {
-        const curDev = devices[0];
+        const curDev = (connectedCount === 1) ? devices.find(function (d) { return d.status === "connected"; }) : devices[0];
         if (curDev && curDev.phone) {
           $text.text(`${curDev.phone} (Online)`);
         } else {
@@ -1524,7 +1530,7 @@
               success: function (sendRes) {
                 $btn.prop("disabled", false).html('<i class="fi fi-rr-paper-plane"></i> Send &amp; Open Chat');
                 if (sendRes && sendRes.status === "success") {
-                  $("#waNewChatModal").removeClass("is-active").attr("aria-hidden", "true");
+                  $("#waNewChatModal").addClass("is-hidden").removeClass("is-active").attr("aria-hidden", "true");
                   $("#waNewChatForm")[0].reset();
                   self.loadThreads();
                   self.selectChat(chatId, targetPhone);
@@ -1862,7 +1868,7 @@
         }, 350);
       } else {
         // No conversation exists yet: automatically open New Chat modal prefilled with this lead!
-        $("#waNewChatModal").addClass("is-active").attr("aria-hidden", "false");
+        $("#waNewChatModal").removeClass("is-hidden").addClass("is-active").attr("aria-hidden", "false");
         let formattedPhone = targetPhone.trim();
         let onlyDigits = formattedPhone.replace(/[^0-9]/g, "");
         if (onlyDigits.length === 10) formattedPhone = "+91" + onlyDigits;

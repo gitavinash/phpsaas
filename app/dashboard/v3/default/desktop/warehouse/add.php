@@ -66,7 +66,7 @@
                         </div>
                         <div class="form-group" id="stateDropDown">
                             <p>State<sup>*</sup></p>
-                            <select class="selectJS form-control" name="state" id="state">
+                            <select class="selectJS2 form-control" name="state" id="state">
                                 <option value="select">Select state</option>
                                 <?php
 
@@ -81,9 +81,9 @@
                                 ?>
                             </select>
                         </div>
-                        <div class="form-group" id="cityBox" style="display: none">
+                        <div class="form-group is-v3-hidden" id="cityBox">
                             <p>City<sup>*</sup></p>
-                            <select class="selectJS form-control" name="city" id="city">
+                            <select class="selectJS2 form-control" name="city" id="city">
                             </select>
                         </div>
                         <div class="form-group">

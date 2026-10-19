@@ -501,9 +501,9 @@ if (empty($availableTemplates)) {
     </div>
 
     <!-- Step 2 View: Smart AI Itinerary Preview & Customization (SPA In-Page) -->
-    <div class="v3-step-view" id="step2ItineraryContainer" style="display: none;">
+    <div class="v3-step-view is-hidden" id="step2ItineraryContainer">
         <!-- Loading State Indicator -->
-        <div class="v3-ai-loading-container" id="itineraryLoadingState" style="display: none;">
+        <div class="v3-ai-loading-container is-hidden" id="itineraryLoadingState">
             <div class="v3-ai-loading-card">
                 <div class="v3-ai-spinner-wrap">
                     <div class="v3-ai-spinner"></div>
@@ -523,7 +523,7 @@ if (empty($availableTemplates)) {
         </div>
 
         <!-- Error State Indicator -->
-        <div class="v3-ai-error-container" id="itineraryErrorState" style="display: none;">
+        <div class="v3-ai-error-container is-hidden" id="itineraryErrorState">
             <div class="v3-ai-error-card">
                 <div class="v3-ai-error-icon">
                     <i class="fi fi-rr-triangle-warning"></i>
@@ -542,7 +542,7 @@ if (empty($availableTemplates)) {
         </div>
 
         <!-- Itinerary Preview & Publish Form -->
-        <div class="v3-itinerary-preview-wrap" id="itineraryPreviewContent" style="display: none;">
+        <div class="v3-itinerary-preview-wrap is-hidden" id="itineraryPreviewContent">
             <!-- Hero Summary Bar -->
             <div class="v3-preview-hero-card">
                 <div class="v3-preview-hero-left">
@@ -641,7 +641,7 @@ if (empty($availableTemplates)) {
                             <div class="v3-inc-exc-grid">
                                 <div class="v3-form-group">
                                     <label class="v3-form-label" for="itineraryInclusionField">
-                                        <i class="fi fi-rr-check-circle" style="color: #10b981;"></i> Inclusions <sup class="required">*</sup>
+                                        <i class="fi fi-rr-check-circle color-emerald"></i> Inclusions <sup class="required">*</sup>
                                     </label>
                                     <textarea class="v3-form-control v3-form-textarea" name="inclusion" id="itineraryInclusionField" rows="6" required placeholder="List of inclusions..."></textarea>
                                     <span class="v3-field-hint">e.g. Hotel stays, daily breakfast, private cab transfers, toll tax, driver allowances.</span>
@@ -649,7 +649,7 @@ if (empty($availableTemplates)) {
 
                                 <div class="v3-form-group">
                                     <label class="v3-form-label" for="itineraryExclusionField">
-                                        <i class="fi fi-rr-cross-circle" style="color: #ef4444;"></i> Exclusions <sup class="required">*</sup>
+                                        <i class="fi fi-rr-cross-circle color-rose"></i> Exclusions <sup class="required">*</sup>
                                     </label>
                                     <textarea class="v3-form-control v3-form-textarea" name="exclusion" id="itineraryExclusionField" rows="6" required placeholder="List of exclusions..."></textarea>
                                     <span class="v3-field-hint">e.g. Airfare, monument entries, personal expenses, camera fees, travel insurance.</span>

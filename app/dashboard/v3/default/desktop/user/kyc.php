@@ -8,8 +8,8 @@ if (empty($encodedId) && !empty($_GET['user_id'])) {
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);">
-                <i class="fi fi-rr-assessment" style="color: #ffffff;"></i>
+            <div class="package-header-icon emerald">
+                <i class="fi fi-rr-assessment"></i>
             </div>
             <div class="package-header-titles">
                 <h2>User KYC &amp; Compliance Verification</h2>
@@ -47,7 +47,7 @@ if (empty($encodedId) && !empty($_GET['user_id'])) {
 
                     <div class="v3-card-body">
                         <!-- Status Alert Box -->
-                        <div class="kyc-status-alert-box" id="kycStatusBox" style="margin-bottom: 18px;">
+                        <div class="kyc-status-alert-box v3-kyc-alert-mb" id="kycStatusBox">
                             <div class="kyc-alert-icon" id="kycStatusIcon"><i class="fi fi-rr-info"></i></div>
                             <div class="kyc-alert-body">
                                 <h4 id="kycStatusTitle">Checking KYC Status...</h4>
@@ -56,7 +56,7 @@ if (empty($encodedId) && !empty($_GET['user_id'])) {
                         </div>
 
                         <!-- Action Buttons Row -->
-                        <div class="kyc-actions-row" style="margin-bottom: 16px;">
+                        <div class="kyc-actions-row v3-kyc-actions-mb">
                             <button type="button" class="kyc-email-btn" id="btnSendKycEmail">
                                 <i class="fi fi-rr-envelope"></i> <span id="btnEmailText">Send Email Reminder</span>
                             </button>
@@ -66,16 +66,16 @@ if (empty($encodedId) && !empty($_GET['user_id'])) {
                         </div>
 
                         <!-- Verification Link Box -->
-                        <div class="v3-form-group" style="margin-top: 14px;">
+                        <div class="v3-form-group v3-kyc-group-mt">
                             <label class="v3-form-label">
                                 Direct KYC Verification URL
                             </label>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <div class="v3-input-icon-wrap" style="flex: 1;">
+                            <div class="v3-flex-gap-8">
+                                <div class="v3-input-icon-wrap v3-flex-1">
                                     <i class="fi fi-rr-link-alt input-icon"></i>
                                     <input type="text" id="kycPublicUrlInput" class="v3-form-input" readonly placeholder="Generating KYC URL...">
                                 </div>
-                                <button type="button" id="btnCopyKycUrl" class="v3-btn-secondary" style="height: 38px; padding: 0 16px; white-space: nowrap;">
+                                <button type="button" id="btnCopyKycUrl" class="v3-btn-secondary v3-btn-copy-url">
                                     <i class="fi fi-rr-copy"></i> Copy Link
                                 </button>
                             </div>
@@ -110,13 +110,13 @@ if (empty($encodedId) && !empty($_GET['user_id'])) {
 
                             <div class="v3-form-group">
                                 <label for="kycAadharFile" class="v3-form-label">
-                                    Aadhaar Document File <span class="opt" style="font-weight: normal; color: #94a3b8;">(PDF, JPG, PNG)</span>
+                                    Aadhaar Document File <span class="opt v3-label-opt">(PDF, JPG, PNG)</span>
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-cloud-upload input-icon"></i>
                                     <input type="file" id="kycAadharFile" name="aadhar_file" class="v3-form-input" accept=".pdf,.jpg,.jpeg,.png">
                                 </div>
-                                <div id="aadharFilePreview" style="margin-top: 6px; display: none;"></div>
+                                <div id="aadharFilePreview" class="v3-preview-file-mt is-hidden"></div>
                             </div>
 
                             <!-- PAN Card Section -->
@@ -126,19 +126,19 @@ if (empty($encodedId) && !empty($_GET['user_id'])) {
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-credit-card input-icon"></i>
-                                    <input type="text" id="kycPanNumber" name="pan_number" class="v3-form-input" placeholder="e.g. ABCDE1234F" maxlength="10" style="text-transform: uppercase;">
+                                    <input type="text" id="kycPanNumber" name="pan_number" class="v3-form-input text-uppercase" placeholder="e.g. ABCDE1234F" maxlength="10">
                                 </div>
                             </div>
 
                             <div class="v3-form-group">
                                 <label for="kycPanFile" class="v3-form-label">
-                                    PAN Card File <span class="opt" style="font-weight: normal; color: #94a3b8;">(PDF, JPG, PNG)</span>
+                                    PAN Card File <span class="opt v3-label-opt">(PDF, JPG, PNG)</span>
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-cloud-upload input-icon"></i>
                                     <input type="file" id="kycPanFile" name="pan_file" class="v3-form-input" accept=".pdf,.jpg,.jpeg,.png">
                                 </div>
-                                <div id="panFilePreview" style="margin-top: 6px; display: none;"></div>
+                                <div id="panFilePreview" class="v3-preview-file-mt is-hidden"></div>
                             </div>
 
                             <!-- GST / Business Registration Section -->
@@ -148,19 +148,19 @@ if (empty($encodedId) && !empty($_GET['user_id'])) {
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-building input-icon"></i>
-                                    <input type="text" id="kycGstNumber" name="gst_number" class="v3-form-input" placeholder="15-digit GSTIN number" maxlength="15" style="text-transform: uppercase;">
+                                    <input type="text" id="kycGstNumber" name="gst_number" class="v3-form-input text-uppercase" placeholder="15-digit GSTIN number" maxlength="15">
                                 </div>
                             </div>
 
                             <div class="v3-form-group">
                                 <label for="kycGstFile" class="v3-form-label">
-                                    GST Certificate File <span class="opt" style="font-weight: normal; color: #94a3b8;">(PDF, JPG, PNG)</span>
+                                    GST Certificate File <span class="opt v3-label-opt">(PDF, JPG, PNG)</span>
                                 </label>
                                 <div class="v3-input-icon-wrap">
                                     <i class="fi fi-rr-cloud-upload input-icon"></i>
                                     <input type="file" id="kycGstFile" name="gst_file" class="v3-form-input" accept=".pdf,.jpg,.jpeg,.png">
                                 </div>
-                                <div id="gstFilePreview" style="margin-top: 6px; display: none;"></div>
+                                <div id="gstFilePreview" class="v3-preview-file-mt is-hidden"></div>
                             </div>
                         </div>
                     </div>
@@ -198,12 +198,12 @@ if (empty($encodedId) && !empty($_GET['user_id'])) {
                             <!-- Remarks -->
                             <div class="v3-form-group">
                                 <label for="kycRemarks" class="v3-form-label">
-                                    Compliance Notes / Remarks <span class="opt" style="font-weight: normal; color: #94a3b8;">(Optional)</span>
+                                    Compliance Notes / Remarks <span class="opt v3-label-opt">(Optional)</span>
                                 </label>
                                 <div class="v3-input-icon-wrap">
-                                    <i class="fi fi-rr-comment-alt input-icon"></i>
-                                    <input type="text" id="kycRemarks" name="remarks" class="v3-form-input" placeholder="e.g. Identity verified on Govt portal">
-                                </div>
+                                     <i class="fi fi-rr-comment-alt input-icon"></i>
+                                     <input type="text" id="kycRemarks" name="remarks" class="v3-form-input" placeholder="e.g. Identity verified on Govt portal">
+                                 </div>
                             </div>
                         </div>
                     </div>
@@ -225,39 +225,39 @@ if (empty($encodedId) && !empty($_GET['user_id'])) {
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- Member Live Preview Card -->
-                <div class="v3-live-preview-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Member Profile</span>
-                        <span id="kycSidebarBadge" class="v3-status-badge status-warning" style="font-size: 11px;">Pending</span>
+                <div class="v3-user-preview-card">
+                    <div class="v3-user-preview-header">
+                        <span class="v3-user-preview-title">Member Profile</span>
+                        <span id="kycSidebarBadge" class="v3-status-badge status-warning badge-xs">Pending</span>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 16px;">
-                        <div class="transport-avatar-badge" id="kycUserAvatar" style="width: 64px; height: 64px; font-size: 22px; font-weight: 700; border-radius: 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);">
+                    <div class="v3-user-preview-hero">
+                        <div class="transport-avatar-badge v3-user-preview-avatar" id="kycUserAvatar">
                             U
                         </div>
-                        <h3 id="kycUserName" style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 4px 0;">Loading Member...</h3>
-                        <span id="kycUserRole" class="badge-service-state badge-role-agent" style="font-size: 11.5px; margin-top: 2px;">
+                        <h3 id="kycUserName" class="v3-user-preview-name">Loading Member...</h3>
+                        <span id="kycUserRole" class="badge-service-state badge-role-agent v3-user-preview-role">
                             <i class="fi fi-rr-headset"></i> Sales Agent
                         </span>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; gap: 8px; background: #f8fafc; border-radius: 10px; padding: 12px; border: 1px solid #edf2f7; font-size: 12.5px;">
-                        <div style="display: flex; align-items: center; gap: 8px; color: #334155;">
-                            <i class="fi fi-rr-phone-call" style="color: #10b981; font-size: 12px; width: 14px;"></i>
-                            <span id="kycUserMobile" style="font-weight: 500;">+91 &mdash;</span>
+                    <div class="v3-user-preview-details">
+                        <div class="v3-user-preview-row">
+                            <i class="fi fi-rr-phone-call icon-phone-emerald"></i>
+                            <span id="kycUserMobile" class="v3-user-preview-val">+91 &mdash;</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 8px; color: #334155; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <i class="fi fi-rr-envelope" style="color: #6366f1; font-size: 12px; width: 14px;"></i>
-                            <span id="kycUserEmail" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis;">-</span>
+                        <div class="v3-user-preview-row">
+                            <i class="fi fi-rr-envelope icon-mail-indigo"></i>
+                            <span id="kycUserEmail" class="v3-user-preview-val">-</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- KYC Verification Guidelines Box -->
-                <div class="v3-tips-box">
+                <div class="v3-tips-box emerald">
                     <div class="tips-icon"><i class="fi fi-rr-info"></i></div>
                     <div class="tips-content">
-                        <strong style="color: #166534; display: block; margin-bottom: 2px;">Document Guidelines</strong>
+                        <strong>Document Guidelines</strong>
                         Ensure uploaded files are clear, legible, and match government databases. Accepted formats: PDF, JPG, PNG (Max 10MB per file).
                     </div>
                 </div>

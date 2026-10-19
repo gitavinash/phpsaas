@@ -2,7 +2,7 @@
 <div class="main-box">
     <section>
         <form action="#" id="addExpenseForm" method="POST" enctype="multipart/form-data">
-            <section class="form" style="padding-top:25px">
+            <section class="form pt-25">
                 <div class="step-open-box step_1_box">
                     <?php
 
@@ -20,7 +20,7 @@
                     ?>
 
                     <div class="form-group">
-                        <select class="selectJS form-control" name="warehouseId" id="warehouseId">
+                        <select class="selectJS2 form-control" name="warehouseId" id="warehouseId">
                             <option value="select">Select branch</option>
                             <?php
 
@@ -65,13 +65,13 @@
                         <input id="date" name="date" type="date" value="<?php echo date('Y-m-d'); ?>" required
                             max="<?php echo date('Y-m-d'); ?>" />
                     </div>
-                    <div class="form-group" id="timeGroup" style="display:none;">
+                    <div class="form-group" id="timeGroup">
                         <label class="form-lable">Time <sup>*</sup></label>
                         <input id="time" name="time" type="time" value="<?php echo date('H:i'); ?>" />
                     </div>
                     <div class="form-group">
                         <label class="form-lable">Payment Mode <sup>*</sup></label>
-                        <select id="payment_mode" name="payment_mode" class="form-control" required>
+                        <select id="payment_mode" name="payment_mode" class="selectJS2 form-control" required>
                             <option value="">Select payment mode</option>
                             <option value="cash" selected>Cash</option>
                             <option value="upi">UPI</option>
@@ -81,52 +81,14 @@
                     <div class="form-group">
                         <label class="form-lable">Upload Photo (optional)</label>
                         <input type="file" id="photo" name="photo" accept="image/*" />
-                        <div id="photoPreview" style="margin-top:10px;"></div>
+                        <div id="photoPreview" class="mt-10"></div>
                     </div>
                     <div class="form-group">
                         <input type="button" class="btn btn-green" id="addExpense" value="Add new expense" />
                     </div>
-                    <div id="expenseMsg" style="margin-top:10px;font-size:14px;"></div>
+                    <div id="expenseMsg" class="mt-10 font-14"></div>
                 </div>
             </section>
         </form>
     </section>
 </div>
-<script>
-// Photo preview
-document.getElementById('photo').addEventListener('change', function(e) {
-    const preview = document.getElementById('photoPreview');
-    preview.innerHTML = '';
-    const file = e.target.files[0];
-    if (file) {
-        const img = document.createElement('img');
-        img.style.maxWidth = '180px';
-        img.style.maxHeight = '180px';
-        img.style.border = '1px solid #ccc';
-        img.style.borderRadius = '8px';
-        img.src = URL.createObjectURL(file);
-        preview.appendChild(img);
-    }
-});
-
-// Date logic: show time if not today, disable future dates
-const dateInput = document.getElementById('date');
-const timeGroup = document.getElementById('timeGroup');
-const timeInput = document.getElementById('time');
-const today = new Date().toISOString().slice(0, 10);
-dateInput.setAttribute('max', today);
-dateInput.addEventListener('change', function() {
-    if (dateInput.value && dateInput.value !== today) {
-        timeGroup.style.display = '';
-        timeInput.setAttribute('required', 'required');
-        // Set default time to current time when shown
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
-        timeInput.value = hh + ':' + mm;
-    } else {
-        timeGroup.style.display = 'none';
-        timeInput.removeAttribute('required');
-    }
-});
-</script>

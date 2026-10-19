@@ -20,19 +20,19 @@ $encodedId = base64_encode($id);
             </div>
             <div class="package-header-titles">
                 <h2 id="pkgHeaderTitle">Tour Package</h2>
-                <div class="pkg-meta-row" style="margin-top: 4px;">
+                <div class="pkg-meta-row mt-1">
                     <span class="pkg-theme-pill pkg-theme-standard" id="pkgMetaTheme">Standard</span>
                     <span class="pkg-duration-badge" id="pkgMetaDuration">
-                        <i class="fi-rr-moon" style="color: #6366f1;"></i> 0N / <i class="fi-rr-sun" style="color: #f59e0b;"></i> 1D
+                        <i class="fi-rr-moon text-indigo"></i> 0N / <i class="fi-rr-sun text-amber"></i> 1D
                     </span>
-                    <span class="pkg-duration-badge" id="pkgMetaLocation" style="background: #f8fafc; border-color: #cbd5e1;">
-                        <i class="fi-rr-marker" style="color: #0284c7;"></i> Domestic
+                    <span class="pkg-duration-badge" id="pkgMetaLocation">
+                        <i class="fi-rr-marker text-sky"></i> Domestic
                     </span>
                 </div>
             </div>
         </div>
         <div class="package-header-actions">
-            <a href="#" target="_blank" class="btn-v3-action" id="btnViewLivePackage" style="display: none;" data-tooltip="View Live Package" title="View Live Package">
+            <a href="#" target="_blank" class="btn-v3-action d-none" id="btnViewLivePackage" data-tooltip="View Live Package" title="View Live Package">
                 <i class="fi fi-rr-eye"></i> View Package
             </a>
             <a href="/dashboard/packages/domestic/list/" class="btn-v3-action" data-tooltip="Back to Domestic Packages List" title="Back to Domestic Packages List">
@@ -102,7 +102,7 @@ $encodedId = base64_encode($id);
     </div>
 
     <!-- Bulk Delete Toolbar -->
-    <div class="gallery-bulk-bar" id="galleryBulkBar" style="display: none;">
+    <div class="gallery-bulk-bar d-none" id="galleryBulkBar">
         <div class="bulk-bar-info">
             <label class="gallery-select-all-label">
                 <input type="checkbox" id="chkSelectAllGallery">
@@ -121,7 +121,7 @@ $encodedId = base64_encode($id);
     </div>
 
     <!-- Pexels Stock Suggestions Panel -->
-    <div class="pexels-suggestion-panel" id="pexelsSuggestionPanel" style="display: none;">
+    <div class="pexels-suggestion-panel d-none" id="pexelsSuggestionPanel">
         <div class="pexels-suggestion-header">
             <div>
                 <h3><i class="fi fi-rr-magic-wand"></i> Recommended Stock Photos</h3>
@@ -138,7 +138,7 @@ $encodedId = base64_encode($id);
 
         <!-- Quick Filters for Image Suggestions -->
         <div class="pexels-quick-filters">
-            <span style="font-size: 12px; font-weight: 700; color: #0369a1;">Categories:</span>
+            <span class="pexels-quick-filters-title">Categories:</span>
             <button type="button" class="pexels-tag-btn active" data-tag="">All Day Suggestions</button>
             <button type="button" class="pexels-tag-btn" data-tag="landmarks">Landmarks & Sightseeing</button>
             <button type="button" class="pexels-tag-btn" data-tag="nature landscape">Nature & Mountains</button>
@@ -157,8 +157,8 @@ $encodedId = base64_encode($id);
         </div>
 
         <!-- Infinite Load More Button Container -->
-        <div style="text-align: center; margin-top: 20px;" id="pexelsLoadMoreWrap">
-            <button type="button" class="btn-pexels-action" id="btnLoadMorePexels" style="display: none; background: #0284c7; font-size: 13px; font-weight: 700; padding: 10px 24px; border-radius: 20px;" data-tooltip="Load additional stock photos">
+        <div class="pexels-load-more-wrap" id="pexelsLoadMoreWrap">
+            <button type="button" class="btn-pexels-action d-none btn-pexels-load-more" id="btnLoadMorePexels" data-tooltip="Load additional stock photos">
                 <i class="fi fi-rr-refresh"></i> Load More Stock Photos
             </button>
         </div>
@@ -166,22 +166,22 @@ $encodedId = base64_encode($id);
 
     <!-- Gallery Cards Grid -->
     <div class="dashboard-gallery-grid" id="galleryGrid">
-        <div class="pexels-loading-state" style="grid-column: 1 / -1; padding: 40px; text-align: center; color: #6366f1;">
-            <i class="fi fi-rr-spinner spinner" style="font-size: 24px;"></i>
-            <p style="margin-top: 8px; font-weight: 600;">Loading gallery photos...</p>
+        <div class="pexels-loading-state gallery-loading-state">
+            <i class="fi fi-rr-spinner spinner"></i>
+            <p>Loading gallery photos...</p>
         </div>
     </div>
 
     <!-- Upload Gallery Modal -->
     <div class="popUp galleryBox">
-        <div class="smallPopUpBox" style="max-width: 600px;">
-            <div class="widget box-7" style="border: none; padding: 0;">
+        <div class="smallPopUpBox v3-modal-dialog-md">
+            <div class="widget box-7 border-0 p-0">
                 <div class="contentArea">
                     <form method="POST" id="addGalleryForm" enctype="multipart/form-data">
                         <section class="form">
                             <div class="step-open-box step_1_box">
-                                <div class="form-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
-                                    <h4 class="heading" style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+                                <div class="form-header gallery-modal-header">
+                                    <h4 class="heading gallery-modal-title">
                                         <i class="fi fi-rr-cloud-upload"></i> Upload Gallery Photos
                                     </h4>
                                 </div>
@@ -193,15 +193,15 @@ $encodedId = base64_encode($id);
                                             <span class="upload-hint">Supports JPG, JPEG, PNG</span>
                                         </div>
                                     </div>
-                                    <input type="file" id="fileInput" name="gallery[]" accept=".jpg, .jpeg, .png" multiple style="display: none;" />
+                                    <input type="file" id="fileInput" name="gallery[]" accept=".jpg, .jpeg, .png" multiple class="d-none" />
                                 </div>
                             </div>
                         </section>
                     </form>
                 </div>
             </div>
-            <div class="widget box-3" style="border: none; padding-top: 14px;">
-                <div class="actionArea" style="display: flex; gap: 8px; justify-content: flex-end;">
+            <div class="widget box-3 border-0 pt-2">
+                <div class="actionArea d-flex gap-2 justify-content-end">
                     <button type="button" class="btn-gallery-action upload" id="btnSubmitGalleryUpload">
                         <i class="fi fi-rr-check"></i> Upload Now
                     </button>

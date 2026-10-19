@@ -101,7 +101,7 @@ if (empty($availableTemplates)) {
                 </div>
             </div>
             <div class="package-header-actions">
-                <a href="#" target="_blank" class="btn-gallery-action btn-view-live" id="btnViewLivePackage" title="View Live Package" style="display: none;">
+                <a href="#" target="_blank" class="btn-gallery-action btn-view-live" id="btnViewLivePackage" title="View Live Package">
                     <i class="fi fi-rr-eye"></i> View Live
                 </a>
                 <a href="/dashboard/packages/domestic/gallery/?id=<?php echo $encodedId; ?>" class="btn-gallery-action btn-manage-gallery" id="btnManageGallery" title="Manage Gallery Photos">
@@ -311,7 +311,7 @@ if (empty($availableTemplates)) {
 
                 <!-- Website Publishing Option Card -->
                 <div class="v3-edit-card" id="cardWebsitePublish">
-                    <div class="v3-edit-card-body" style="padding: 16px 20px;">
+                    <div class="v3-edit-card-body p-16-20">
                         <label class="v3-publish-checkbox-label" for="chkPublishToWebsite">
                             <div class="v3-publish-checkbox-left">
                                 <div class="v3-publish-icon-box">

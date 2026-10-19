@@ -18,7 +18,7 @@ $isCallingAgent = ($userRole === 'agent' || $userRole === 'calling_agent' || $us
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+            <div class="package-header-icon sky">
                 <i class="fi fi-rr-apps"></i>
             </div>
             <div class="package-header-titles">

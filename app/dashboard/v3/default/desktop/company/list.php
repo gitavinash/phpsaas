@@ -66,12 +66,12 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <input type="text" id="companySearchInput" class="filter-search-input" placeholder="Search by name, city, GST, email, or code..." autocomplete="off">
-                <button type="button" id="clearCompanySearchBtn" class="clear-search-btn" title="Clear search" style="display: none;">✕</button>
+                <button type="button" id="clearCompanySearchBtn" class="clear-search-btn" title="Clear search">✕</button>
             </div>
 
             <div class="filter-dropdowns-wrap">
                 <!-- Type Filter -->
-                <select id="filterCompanyType" class="filter-select">
+                <select id="filterCompanyType" class="filter-select selectJS2">
                     <option value="">All Entity Types</option>
                     <option value="private">Private Limited</option>
                     <option value="public">Public Limited</option>
@@ -84,14 +84,14 @@
                 </select>
 
                 <!-- Status Filter -->
-                <select id="filterCompanyStatus" class="filter-select">
+                <select id="filterCompanyStatus" class="filter-select selectJS2">
                     <option value="" selected>All Statuses</option>
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                 </select>
 
                 <!-- Reset Filters Button -->
-                <button type="button" id="btnResetCompanyFilters" class="btn-v3-action" style="padding: 7px 12px; font-size: 12px;" data-tooltip="Reset all filters">
+                <button type="button" id="btnResetCompanyFilters" class="btn-v3-action btn-filter-reset" data-tooltip="Reset all filters">
                     <i class="fi fi-rr-refresh"></i> <span>Reset</span>
                 </button>
             </div>
@@ -122,11 +122,11 @@
         </div>
 
         <!-- Table Footer / Pagination -->
-        <div class="package-pagination-bar" id="companyPaginationBar" style="display: none;">
+        <div class="package-pagination-bar" id="companyPaginationBar">
             <div class="pagination-info-wrap">
                 <div class="pagination-size-select-wrap">
                     <label for="companyPerPage">Show:</label>
-                    <select id="companyPerPage" class="pagination-size-select">
+                    <select id="companyPerPage" class="pagination-size-select selectJS2">
                         <option value="10">10</option>
                         <option value="25" selected>25</option>
                         <option value="50">50</option>

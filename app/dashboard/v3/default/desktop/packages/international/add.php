@@ -41,7 +41,7 @@ if (empty($availableTemplates)) {
     <!-- V3 Header Section -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff;">
+            <div class="package-header-icon sky">
                 <i class="fi fi-rr-globe"></i>
             </div>
             <div class="package-header-titles">
@@ -448,8 +448,8 @@ if ($cRes) {
                 <div class="v3-preview-sticky-card">
                     <div class="v3-card-section v3-preview-card">
                         <div class="v3-preview-top-bar">
-                            <div class="v3-preview-badge" style="background: rgba(14, 165, 233, 0.15); color: #0284c7;">
-                                <span class="pulse-dot" style="background: #0284c7;"></span> Live Preview
+                            <div class="v3-preview-badge sky">
+                                <span class="pulse-dot sky"></span> Live Preview
                             </div>
                             <span class="v3-preview-type">International Itinerary</span>
                         </div>
@@ -506,7 +506,7 @@ if ($cRes) {
 
                             <!-- AI Notice Box -->
                             <div class="v3-ai-notice-box">
-                                <div class="v3-ai-icon" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff;">
+                                <div class="v3-ai-icon sky">
                                     <i class="fi fi-rr-sparkles"></i>
                                 </div>
                                 <div class="v3-ai-text">
@@ -529,9 +529,9 @@ if ($cRes) {
     </div>
 
     <!-- Step 2 View: Smart AI Itinerary Preview & Customization (SPA In-Page) -->
-    <div class="v3-step-view" id="step2ItineraryContainer" style="display: none;">
+    <div class="v3-step-view is-hidden" id="step2ItineraryContainer">
         <!-- Loading State Indicator -->
-        <div class="v3-ai-loading-container" id="itineraryLoadingState" style="display: none;">
+        <div class="v3-ai-loading-container is-hidden" id="itineraryLoadingState">
             <div class="v3-ai-loading-card">
                 <div class="v3-ai-spinner-wrap">
                     <div class="v3-ai-spinner"></div>
@@ -551,7 +551,7 @@ if ($cRes) {
         </div>
 
         <!-- Error State Indicator -->
-        <div class="v3-ai-error-container" id="itineraryErrorState" style="display: none;">
+        <div class="v3-ai-error-container is-hidden" id="itineraryErrorState">
             <div class="v3-ai-error-card">
                 <div class="v3-ai-error-icon">
                     <i class="fi fi-rr-triangle-warning"></i>
@@ -570,7 +570,7 @@ if ($cRes) {
         </div>
 
         <!-- Itinerary Preview & Publish Form -->
-        <div class="v3-itinerary-preview-wrap" id="itineraryPreviewContent" style="display: none;">
+        <div class="v3-itinerary-preview-wrap is-hidden" id="itineraryPreviewContent">
             <!-- Hero Summary Bar -->
             <div class="v3-preview-hero-card">
                 <div class="v3-preview-hero-left">
@@ -669,7 +669,7 @@ if ($cRes) {
                             <div class="v3-inc-exc-grid">
                                 <div class="v3-form-group">
                                     <label class="v3-form-label" for="itineraryInclusionField">
-                                        <i class="fi fi-rr-check-circle" style="color: #10b981;"></i> Inclusions <sup class="required">*</sup>
+                                        <i class="fi fi-rr-check-circle color-emerald"></i> Inclusions <sup class="required">*</sup>
                                     </label>
                                     <textarea class="v3-form-control v3-form-textarea" name="inclusion" id="itineraryInclusionField" rows="6" required placeholder="List of inclusions..."></textarea>
                                     <span class="v3-field-hint">e.g. Flight tickets, 4-star hotel stays, daily breakfast, visa assistance, private airport transfers.</span>
@@ -677,7 +677,7 @@ if ($cRes) {
 
                                 <div class="v3-form-group">
                                     <label class="v3-form-label" for="itineraryExclusionField">
-                                        <i class="fi fi-rr-cross-circle" style="color: #ef4444;"></i> Exclusions <sup class="required">*</sup>
+                                        <i class="fi fi-rr-cross-circle color-rose"></i> Exclusions <sup class="required">*</sup>
                                     </label>
                                     <textarea class="v3-form-control v3-form-textarea" name="exclusion" id="itineraryExclusionField" rows="6" required placeholder="List of exclusions..."></textarea>
                                     <span class="v3-field-hint">e.g. Visa fee, personal expenses, monument entry tickets, travel insurance, city tax.</span>

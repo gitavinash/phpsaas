@@ -225,7 +225,7 @@ $activeShowcase = $appShowcaseData[$appKey] ?? $appShowcaseData['aleya'];
                         </div>
 
                         <!-- Step B: Verify 6-Digit OTP Code -->
-                        <div id="paneOtpStepVerify" class="otp-pane" style="display: none;">
+                        <div id="paneOtpStepVerify" class="otp-pane">
                             <div class="otp-sent-info">
                                 <div class="otp-sent-meta">
                                     <span class="otp-sent-label">Code sent to</span>

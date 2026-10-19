@@ -210,7 +210,7 @@
                                     </div>
                                 </div>
 
-                                <div style="margin-top: 16px; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+                                <div class="v3-publish-section-divider">
                                     <label class="v3-publish-checkbox-label" for="chkPublishToWebsite">
                                         <div class="v3-publish-checkbox-left">
                                             <div class="v3-publish-icon-box">
@@ -379,7 +379,7 @@
                                         <span class="v3-field-hint">You can select and upload multiple images at once.</span>
 
                                         <!-- Staged New Photos Preview Grid -->
-                                        <div class="prop-gallery-grid" id="propStagedGalleryGrid" style="margin-top: 12px; display: none;"></div>
+                                        <div class="prop-gallery-grid mt-12" id="propStagedGalleryGrid"></div>
                                     </div>
                                 </div>
                             </div>

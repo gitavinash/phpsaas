@@ -2,8 +2,8 @@
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon" style="background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);">
-                <i class="fi fi-rr-truck-side" style="color: #ffffff;"></i>
+            <div class="package-header-icon indigo">
+                <i class="fi fi-rr-truck-side"></i>
             </div>
             <div class="package-header-titles">
                 <h2>Transporters Directory</h2>
@@ -62,24 +62,24 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <input type="text" id="transporterSearchInput" class="filter-search-input" placeholder="Search by name, city, phone, email or state...">
-                <button type="button" id="clearTransporterSearchBtn" class="clear-search-btn" title="Clear search" style="display: none;">✕</button>
+                <button type="button" id="clearTransporterSearchBtn" class="clear-search-btn is-hidden" title="Clear search">✕</button>
             </div>
 
             <div class="filter-dropdowns-wrap">
                 <!-- Status Filter -->
-                <select id="filterTransporterStatus" class="filter-select">
+                <select id="filterTransporterStatus" class="filter-select selectJS2">
                     <option value="">All Status</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
                 </select>
 
                 <!-- State / City Filter -->
-                <select id="filterTransporterState" class="filter-select">
+                <select id="filterTransporterState" class="filter-select selectJS2">
                     <option value="">All Service States / Cities</option>
                 </select>
 
                 <!-- Reset Filters Button -->
-                <button type="button" id="btnResetTransporterFilters" class="btn-v3-action" style="padding: 7px 12px; font-size: 12px;" data-tooltip="Reset all filters">
+                <button type="button" id="btnResetTransporterFilters" class="btn-v3-action btn-v3-sm" data-tooltip="Reset all filters">
                     <i class="fi fi-rr-refresh"></i> Reset
                 </button>
             </div>
@@ -110,11 +110,11 @@
         </div>
 
         <!-- Pagination & Rows Per Page Bar -->
-        <div class="package-pagination-bar" id="transporterPaginationBar" style="display: none;">
+        <div class="package-pagination-bar is-hidden" id="transporterPaginationBar">
             <div class="pagination-info-wrap">
                 <div class="pagination-size-select-wrap">
                     <label for="transporterPerPage">Rows per page:</label>
-                    <select id="transporterPerPage" class="pagination-size-select">
+                    <select id="transporterPerPage" class="pagination-size-select selectJS2">
                         <option value="10">10</option>
                         <option value="25" selected>25</option>
                         <option value="50">50</option>

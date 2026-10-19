@@ -2,7 +2,7 @@
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">
-            <div class="package-header-icon brand-razorpay" style="background: #e0f2fe; color: #0284c7; font-size: 24px; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 12px;">
+            <div class="package-header-icon brand-razorpay">
                 <i class="fi fi-rr-credit-card"></i>
             </div>
             <div class="package-header-titles">
@@ -32,7 +32,7 @@
                             <h3>Razorpay API Keys</h3>
                             <p>Enter your Key ID and Key Secret from Razorpay Dashboard &gt; API Keys.</p>
                         </div>
-                        <div style="margin-left: auto;">
+                        <div class="ms-auto">
                             <label class="v3-toggle-switch" title="Toggle Razorpay Integration">
                                 <input type="checkbox" id="rzpActiveToggle" name="enable_razorpay" value="1" checked>
                                 <span class="v3-toggle-slider"></span>
@@ -45,14 +45,14 @@
                             <!-- Mode Selection -->
                             <div class="v3-form-group span-2">
                                 <label class="v3-form-label">Environment Mode</label>
-                                <div style="display: flex; gap: 14px; margin-top: 4px;">
-                                    <label style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 13px; font-weight: 500; color: #334155;">
+                                <div class="v3-env-mode-wrap">
+                                    <label class="v3-env-radio-card">
                                         <input type="radio" name="razorpay_mode" id="rzpModeLive" value="live" checked>
-                                        <span><strong style="color: #10b981;">Live Production</strong> (Real customer payments)</span>
+                                        <span><strong class="color-emerald">Live Production</strong> (Real customer payments)</span>
                                     </label>
-                                    <label style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; font-size: 13px; font-weight: 500; color: #334155;">
+                                    <label class="v3-env-radio-card">
                                         <input type="radio" name="razorpay_mode" id="rzpModeTest" value="test">
-                                        <span><strong style="color: #ea580c;">Test Sandbox</strong> (rzp_test_...)</span>
+                                        <span><strong class="color-orange">Test Sandbox</strong> (rzp_test_...)</span>
                                     </label>
                                 </div>
                             </div>
@@ -106,11 +106,11 @@
                     </div>
 
                     <div class="v3-card-body">
-                        <label style="display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 10px; background: #ffffff; cursor: pointer;">
-                            <input type="checkbox" id="rzpAutoReceipt" name="razorpay_auto_receipt" value="1" checked style="margin-top: 3px;">
+                        <label class="v3-checkbox-card">
+                            <input type="checkbox" id="rzpAutoReceipt" name="razorpay_auto_receipt" value="1" checked class="v3-checkbox-control">
                             <div>
-                                <strong style="color: #0f172a; font-size: 13.5px; display: block;">Instant Booking Confirmation &amp; GST Receipt</strong>
-                                <span style="color: #64748b; font-size: 12.5px;">Automatically mark booking payment status as 'Paid' and email the customer a stamped tax invoice upon webhook confirmation.</span>
+                                <strong class="v3-checkbox-title">Instant Booking Confirmation &amp; GST Receipt</strong>
+                                <span class="v3-checkbox-desc">Automatically mark booking payment status as 'Paid' and email the customer a stamped tax invoice upon webhook confirmation.</span>
                             </div>
                         </label>
                     </div>
@@ -132,21 +132,21 @@
         <div class="v3-form-sidebar-col">
             <div class="preview-card-sticky">
                 <!-- Webhook Details Box -->
-                <div class="v3-card-section" style="padding: 20px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8;">Webhook Listener</span>
-                        <span class="v3-status-badge status-active" style="font-size: 10px;">Automated</span>
+                <div class="v3-card-section v3-card-p20">
+                    <div class="v3-sidebar-header-row">
+                        <span class="v3-sidebar-header-badge">Webhook Listener</span>
+                        <span class="v3-status-badge status-active status-sm">Automated</span>
                     </div>
-                    <p style="font-size: 12.5px; color: #64748b; margin: 0 0 12px 0; line-height: 1.45;">
+                    <p class="v3-sidebar-desc">
                         Configure this Webhook URL inside Razorpay Dashboard &gt; Webhooks &gt; Add New Webhook:
                     </p>
                     
-                    <div class="v3-code-snippet-box" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; font-family: monospace; font-size: 11.5px; color: #334155; word-break: break-all; margin-bottom: 12px;">
+                    <div class="v3-code-snippet-box mb-12">
                         https://app.aleya.in/webhook/razorpay/
                     </div>
 
-                    <h5 style="font-size: 12px; font-weight: 700; color: #334155; margin: 0 0 6px 0;">Active Events to Subscribe:</h5>
-                    <ul style="margin: 0; padding-left: 18px; font-size: 12px; color: #64748b; line-height: 1.6;">
+                    <h5 class="v3-events-title">Active Events to Subscribe:</h5>
+                    <ul class="v3-events-list">
                         <li><code>payment.captured</code></li>
                         <li><code>payment.failed</code></li>
                         <li><code>payment_link.paid</code></li>
