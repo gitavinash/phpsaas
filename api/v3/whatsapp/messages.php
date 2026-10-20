@@ -346,7 +346,14 @@ if ($method === 'GET') {
         $yesterdayDt = (clone $todayDt)->modify('-1 day');
         $yesterdayStr = $yesterdayDt->format('Y-m-d');
 
+        $rawRows = [];
         while ($row = mysqli_fetch_assoc($res)) {
+            $rawRows[] = $row;
+        }
+
+        $rowCount = count($rawRows);
+        for ($i = 0; $i < $rowCount; $i++) {
+            $row = $rawRows[$i];
             $timeDisplay = '';
             $dateDisplay = '';
             $dateLabel = '';
@@ -375,7 +382,7 @@ if ($method === 'GET') {
                 }
             }
             $mediaUrl = $row['message_media_url'] ?? '';
-            $mType = $row['message_type'];
+            $mType = strtolower(trim($row['message_type'] ?? 'text'));
             if (empty($mediaUrl) && !empty($row['message_wa_id'])) {
                 $upDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/upload/whatsapp';
                 foreach (['jpg', 'jpeg', 'png', 'webp', 'pdf', 'mp4', 'ogg'] as $chkExt) {
@@ -393,20 +400,118 @@ if ($method === 'GET') {
                 }
             }
 
+            // Parse Contact and Location payload
+            $mText = trim((string)($row['message_text'] ?? ''));
+            $contactData = null;
+            $locationData = null;
+
+            // 1. JSON-encoded structured payload
+            if (str_starts_with($mText, '{') && str_ends_with($mText, '}')) {
+                $json = json_decode($mText, true);
+                if (is_array($json) && isset($json['type'])) {
+                    if ($json['type'] === 'contact') {
+                        $contactData = [
+                            'name'  => trim($json['name'] ?? ''),
+                            'phone' => trim($json['phone'] ?? ''),
+                            'vcard' => $json['vcard'] ?? ''
+                        ];
+                        $mType = 'contact';
+                    } elseif ($json['type'] === 'contacts') {
+                        $contactData = [
+                            'name'     => trim($json['name'] ?? 'Contacts'),
+                            'phone'    => '',
+                            'contacts' => $json['contacts'] ?? []
+                        ];
+                        $mType = 'contact';
+                    } elseif ($json['type'] === 'location' || $json['type'] === 'live_location') {
+                        $lat = (float)($json['latitude'] ?? 0);
+                        $lng = (float)($json['longitude'] ?? 0);
+                        $lName = trim($json['name'] ?? '');
+                        $lAddr = trim($json['address'] ?? '');
+                        $lUrl = !empty($json['url']) ? $json['url'] : ($lat && $lng ? "https://www.google.com/maps/search/?api=1&query={$lat},{$lng}" : "");
+                        $locationData = [
+                            'name'      => $lName ?: ($lAddr ?: 'Shared Location'),
+                            'address'   => $lAddr,
+                            'latitude'  => $lat,
+                            'longitude' => $lng,
+                            'url'       => $lUrl,
+                            'media_url' => $mediaUrl
+                        ];
+                        $mType = 'location';
+                    }
+                }
+            }
+
+            // 2. Legacy Contact message: [Contact: Display Name]
+            if (!$contactData && preg_match('/^\[Contact:\s*(.*?)\]$/i', $mText, $cMatch)) {
+                $cName = trim($cMatch[1]);
+                $cPhone = '';
+                $digitsOnly = preg_replace('/[^0-9]/', '', $cName);
+                if (strlen($digitsOnly) >= 10 && strlen($digitsOnly) <= 13) {
+                    $cPhone = '+' . $digitsOnly;
+                } else {
+                    // Check if adjacent message is a raw phone number
+                    if ($i + 1 < $rowCount) {
+                        $nextText = trim((string)($rawRows[$i + 1]['message_text'] ?? ''));
+                        $nextDigits = preg_replace('/[^0-9]/', '', $nextText);
+                        if (strlen($nextDigits) >= 10 && strlen($nextDigits) <= 13 && strlen($nextText) <= 20) {
+                            $cPhone = (str_starts_with($nextText, '+') ? '+' : '+91') . (str_starts_with($nextDigits, '91') && strlen($nextDigits) == 12 ? substr($nextDigits, 2) : $nextDigits);
+                        }
+                    }
+                }
+
+                $contactData = [
+                    'name'  => $cName ?: 'Contact',
+                    'phone' => $cPhone,
+                    'vcard' => ''
+                ];
+                $mType = 'contact';
+            }
+
+            // 3. Legacy Contacts message: [Contacts: X contacts]
+            if (!$contactData && preg_match('/^\[Contacts:\s*(.*?)\]$/i', $mText, $cMatch)) {
+                $contactData = [
+                    'name'     => trim($cMatch[1]) ?: 'Contacts',
+                    'phone'    => '',
+                    'contacts' => []
+                ];
+                $mType = 'contact';
+            }
+
+            // 4. Legacy Location message: [Location: Place/Address] or [Location: ] or [Live Location]
+            if (!$locationData && (preg_match('/^\[Location:\s*(.*?)\]$/i', $mText, $lMatch) || preg_match('/^\[Live Location\]$/i', $mText))) {
+                $locStr = isset($lMatch[1]) ? trim($lMatch[1]) : '';
+                $locUrl = '';
+                if (!empty($locStr)) {
+                    $locUrl = "https://www.google.com/maps/search/?api=1&query=" . urlencode($locStr);
+                }
+                $locationData = [
+                    'name'      => $locStr ?: 'Shared Location',
+                    'address'   => $locStr,
+                    'latitude'  => 0,
+                    'longitude' => 0,
+                    'url'       => $locUrl,
+                    'media_url' => $mediaUrl
+                ];
+                $mType = 'location';
+            }
+
             $messages[] = [
-                'id'         => (int)$row['message_id'],
-                'wa_id'      => $row['message_wa_id'] ?? '',
-                'direction'  => $row['message_direction'],
-                'sender'     => $row['message_sender'],
-                'receiver'   => $row['message_receiver'],
-                'type'       => $mType,
-                'text'       => $row['message_text'] ?? '',
-                'media_url'  => $mediaUrl,
-                'status'     => $row['message_status'],
-                'created_at' => $row['message_created_at'],
-                'time'       => $timeDisplay,
-                'date'       => $dateDisplay,
-                'date_label' => $dateLabel
+                'id'            => (int)$row['message_id'],
+                'wa_id'         => $row['message_wa_id'] ?? '',
+                'direction'     => $row['message_direction'],
+                'sender'        => $row['message_sender'],
+                'receiver'      => $row['message_receiver'],
+                'type'          => $mType,
+                'text'          => $row['message_text'] ?? '',
+                'media_url'     => $mediaUrl,
+                'contact_data'  => $contactData,
+                'location_data' => $locationData,
+                'status'        => $row['message_status'],
+                'created_at'    => $row['message_created_at'],
+                'time'          => $timeDisplay,
+                'date'          => $dateDisplay,
+                'date_label'    => $dateLabel
             ];
         }
     }

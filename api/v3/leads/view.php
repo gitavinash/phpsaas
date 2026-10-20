@@ -513,6 +513,18 @@ foreach ($rawTimelineRows as $tRow) {
                 $icon = 'fi fi-rr-paper-plane';
                 $itemTitle = 'Itinerary Sent';
                 break;
+            case 'payment_link':
+                $icon = 'fi fi-rr-link';
+                $itemTitle = 'Payment Link Sent';
+                $finalType = 'payment_link';
+                $category = 'Payment Request';
+                $pLinkData = json_decode($noteVal, true) ?: [];
+                $amt = (float)($pLinkData['amount'] ?? 0);
+                $itemDesc = "Generated payment link for ₹ " . number_format($amt, 2);
+                if (!empty($pLinkData['notes'])) {
+                    $itemDesc .= " (" . $pLinkData['notes'] . ")";
+                }
+                break;
             case 'vehicle_photos':
                 $icon = 'fi fi-rr-camera';
                 $itemTitle = 'Vehicle Photos Sent';
@@ -567,20 +579,232 @@ foreach ($rawTimelineRows as $tRow) {
     }
 
     $timeline[] = [
-        'id'            => (int)$tRow['enquiry_notes_id'],
-        'type'          => $finalType,
-        'title'         => $itemTitle,
-        'category'      => $category,
-        'followup_time' => $followupTimeFormatted,
-        'description'   => $itemDesc,
-        'payment_data'  => $paymentDetails,
-        'quotation'     => $quoteInfo,
-        'user_name'     => $updatedBy,
-        'time'          => $updatedAt ? date('d M Y, h:i A', strtotime($updatedAt)) : '',
-        'time_relative' => $timeAgo,
-        'icon'          => $icon,
+        'id'                => (int)$tRow['enquiry_notes_id'],
+        'type'              => $finalType,
+        'title'             => $itemTitle,
+        'category'          => $category,
+        'followup_time'     => $followupTimeFormatted,
+        'description'       => $itemDesc,
+        'payment_data'      => $paymentDetails,
+        'quotation'         => $quoteInfo,
+        'payment_link_data' => ($finalType === 'payment_link') ? ($pLinkData ?? null) : null,
+        'whatsapp_data'     => null,
+        'user_name'         => $updatedBy,
+        'time'              => $updatedAt ? date('d M Y, h:i A', strtotime($updatedAt)) : '',
+        'time_relative'     => $timeAgo,
+        'icon'              => $icon,
+        'timestamp'         => !empty($updatedAt) ? strtotime($updatedAt) : 0,
     ];
 }
+
+// 2b. Fetch WhatsApp Messages for this lead to merge chronologically in the timeline stream
+$chatMeta = null;
+$chatCleanPhone = preg_replace('/[^0-9]/', '', (string)($lead['enquiry_mobile'] ?? ''));
+$chatLast10 = strlen($chatCleanPhone) >= 10 ? substr($chatCleanPhone, -10) : $chatCleanPhone;
+$chatConds = ["c.chat_lead_id = {$leadId}"];
+if (!empty($chatCleanPhone)) {
+    $waPhoneVariants = "'" . mysqli_real_escape_string($connection, $chatCleanPhone) . "'";
+    if (strlen($chatCleanPhone) === 10) {
+        $waPhoneVariants .= ",'91" . mysqli_real_escape_string($connection, $chatCleanPhone) . "'";
+    }
+    $chatConds[] = "c.chat_phone IN ({$waPhoneVariants})";
+    if (strlen($chatLast10) >= 8) {
+        $escLast10 = mysqli_real_escape_string($connection, $chatLast10);
+        $chatConds[] = "RIGHT(REPLACE(REPLACE(c.chat_phone, '+', ''), ' ', ''), 10) = '{$escLast10}'";
+    }
+}
+$chatWhere = implode(' OR ', $chatConds);
+
+$waChatTblChk = @mysqli_query($connection, "SHOW TABLES LIKE '{$tblPrefix}whatsapp_chat'");
+if ($waChatTblChk && mysqli_num_rows($waChatTblChk) > 0) {
+    $chatIds = [];
+    $siteFilterWa = ($siteId > 0) ? " AND (c.chat_site_id = {$siteId} OR c.chat_site_id = 0)" : "";
+    $chatRes = @mysqli_query($connection, "SELECT c.chat_id, c.chat_phone, c.chat_name, c.chat_pushname, c.chat_avatar, c.chat_lead_id FROM {$tblPrefix}whatsapp_chat c WHERE ({$chatWhere}){$siteFilterWa}");
+    if ($chatRes) {
+        while ($cRow = mysqli_fetch_assoc($chatRes)) {
+            $chatIds[] = (int)$cRow['chat_id'];
+            if (!$chatMeta) {
+                $chatMeta = $cRow;
+            }
+            if (empty($cRow['chat_lead_id'])) {
+                @mysqli_query($connection, "UPDATE {$tblPrefix}whatsapp_chat SET chat_lead_id = {$leadId} WHERE chat_id = " . (int)$cRow['chat_id']);
+            }
+        }
+    }
+
+    if (!empty($chatIds)) {
+        $cIdsEsc = implode(',', array_unique($chatIds));
+        $waMsgsQuery = "SELECT 
+            m.message_id,
+            m.message_chat_id,
+            m.message_wa_id,
+            m.message_direction,
+            m.message_sender,
+            m.message_receiver,
+            m.message_type,
+            m.message_text,
+            m.message_media_url,
+            m.message_status,
+            m.message_created_at
+        FROM {$tblPrefix}whatsapp_message m
+        WHERE m.message_chat_id IN ({$cIdsEsc})
+        ORDER BY m.message_created_at DESC
+        LIMIT 250";
+
+        if ($wmRes = @mysqli_query($connection, $waMsgsQuery)) {
+            $customerDisplayName = !empty($chatMeta['chat_pushname']) ? trim($chatMeta['chat_pushname']) : (!empty($lead['enquiry_first_name']) ? trim($lead['enquiry_first_name'] . ' ' . ($lead['enquiry_last_name'] ?? '')) : 'Customer');
+            $upDir = (defined('ROOT') ? ROOT : dirname(__DIR__, 3)) . '/upload/whatsapp';
+
+            while ($wmRow = mysqli_fetch_assoc($wmRes)) {
+                $mCreatedAt = $wmRow['message_created_at'] ?? '';
+                $mTs = !empty($mCreatedAt) ? strtotime($mCreatedAt) : 0;
+
+                // Time ago
+                $mTimeAgo = '';
+                if ($mTs) {
+                    $diff = time() - $mTs;
+                    if ($diff < 60) $mTimeAgo = 'Just now';
+                    elseif ($diff < 3600) $mTimeAgo = floor($diff / 60) . 'm ago';
+                    elseif ($diff < 86400) $mTimeAgo = floor($diff / 3600) . 'h ago';
+                    elseif ($diff < 172800) $mTimeAgo = 'Yesterday';
+                    else $mTimeAgo = date('d M Y, h:i A', $mTs);
+                }
+
+                $mediaUrl = $wmRow['message_media_url'] ?? '';
+                $mType = strtolower(trim($wmRow['message_type'] ?? 'text'));
+                if (empty($mediaUrl) && !empty($wmRow['message_wa_id'])) {
+                    foreach (['jpg', 'jpeg', 'png', 'webp', 'pdf', 'mp4', 'ogg'] as $chkExt) {
+                        $chkFile = $upDir . '/wa_' . $wmRow['message_wa_id'] . '.' . $chkExt;
+                        if (file_exists($chkFile) && filesize($chkFile) > 0) {
+                            $mediaUrl = '/upload/whatsapp/wa_' . $wmRow['message_wa_id'] . '.' . $chkExt;
+                            if ($mType === 'text') {
+                                $mType = in_array($chkExt, ['jpg', 'jpeg', 'png', 'webp']) ? 'image' : ($chkExt === 'pdf' ? 'document' : 'media');
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                $isIncoming = ($wmRow['message_direction'] === 'incoming');
+                $senderName = $isIncoming ? $customerDisplayName : 'Agent / System';
+                $waItemTitle = 'WhatsApp';
+                $waCategory = $isIncoming ? 'Inbound' : 'Outbound';
+
+                $wmText = trim((string)($wmRow['message_text'] ?? ''));
+                $contactData = null;
+                $locationData = null;
+
+                // 1. JSON-encoded structured payload
+                if (str_starts_with($wmText, '{') && str_ends_with($wmText, '}')) {
+                    $json = json_decode($wmText, true);
+                    if (is_array($json) && isset($json['type'])) {
+                        if ($json['type'] === 'contact') {
+                            $contactData = [
+                                'name'  => trim($json['name'] ?? ''),
+                                'phone' => trim($json['phone'] ?? ''),
+                                'vcard' => $json['vcard'] ?? ''
+                            ];
+                            $mType = 'contact';
+                        } elseif ($json['type'] === 'contacts') {
+                            $contactData = [
+                                'name'     => trim($json['name'] ?? 'Contacts'),
+                                'phone'    => '',
+                                'contacts' => $json['contacts'] ?? []
+                            ];
+                            $mType = 'contact';
+                        } elseif ($json['type'] === 'location' || $json['type'] === 'live_location') {
+                            $lat = (float)($json['latitude'] ?? 0);
+                            $lng = (float)($json['longitude'] ?? 0);
+                            $lName = trim($json['name'] ?? '');
+                            $lAddr = trim($json['address'] ?? '');
+                            $lUrl = !empty($json['url']) ? $json['url'] : ($lat && $lng ? "https://www.google.com/maps/search/?api=1&query={$lat},{$lng}" : "");
+                            $locationData = [
+                                'name'      => $lName ?: ($lAddr ?: 'Shared Location'),
+                                'address'   => $lAddr,
+                                'latitude'  => $lat,
+                                'longitude' => $lng,
+                                'url'       => $lUrl,
+                                'media_url' => $mediaUrl
+                            ];
+                            $mType = 'location';
+                        }
+                    }
+                }
+
+                // 2. Legacy Contact message: [Contact: Display Name]
+                if (!$contactData && preg_match('/^\[Contact:\s*(.*?)\]$/i', $wmText, $cMatch)) {
+                    $cName = trim($cMatch[1]);
+                    $cPhone = '';
+                    $digitsOnly = preg_replace('/[^0-9]/', '', $cName);
+                    if (strlen($digitsOnly) >= 10 && strlen($digitsOnly) <= 13) {
+                        $cPhone = '+' . $digitsOnly;
+                    }
+                    $contactData = [
+                        'name'  => $cName ?: 'Contact',
+                        'phone' => $cPhone,
+                        'vcard' => ''
+                    ];
+                    $mType = 'contact';
+                }
+
+                // 3. Legacy Location message: [Location: Place/Address] or [Location: ] or [Live Location]
+                if (!$locationData && (preg_match('/^\[Location:\s*(.*?)\]$/i', $wmText, $lMatch) || preg_match('/^\[Live Location\]$/i', $wmText))) {
+                    $locStr = isset($lMatch[1]) ? trim($lMatch[1]) : '';
+                    $locUrl = '';
+                    if (!empty($locStr)) {
+                        $locUrl = "https://www.google.com/maps/search/?api=1&query=" . urlencode($locStr);
+                    }
+                    $locationData = [
+                        'name'      => $locStr ?: 'Shared Location',
+                        'address'   => $locStr,
+                        'latitude'  => 0,
+                        'longitude' => 0,
+                        'url'       => $locUrl,
+                        'media_url' => $mediaUrl
+                    ];
+                    $mType = 'location';
+                }
+
+                $timeline[] = [
+                    'id'                => 'wa_' . (int)$wmRow['message_id'],
+                    'type'              => 'whatsapp',
+                    'title'             => $waItemTitle,
+                    'category'          => $waCategory,
+                    'followup_time'     => '',
+                    'description'       => $wmRow['message_text'] ?? '',
+                    'payment_data'      => null,
+                    'quotation'         => null,
+                    'payment_link_data' => null,
+                    'whatsapp_data'     => [
+                        'message_id'    => (int)$wmRow['message_id'],
+                        'chat_id'       => (int)$wmRow['message_chat_id'],
+                        'wa_id'         => $wmRow['message_wa_id'] ?? '',
+                        'direction'     => $wmRow['message_direction'],
+                        'type'          => $mType,
+                        'text'          => $wmRow['message_text'] ?? '',
+                        'media_url'     => $mediaUrl,
+                        'contact_data'  => $contactData,
+                        'location_data' => $locationData,
+                        'status'        => $wmRow['message_status'],
+                        'sender'        => $wmRow['message_sender'],
+                        'receiver'      => $wmRow['message_receiver'],
+                        'created_at'    => $mCreatedAt,
+                    ],
+                    'user_name'         => $senderName,
+                    'time'              => $mCreatedAt ? date('d M Y, h:i A', $mTs) : '',
+                    'time_relative'     => $mTimeAgo,
+                    'icon'              => 'fi fi-brands-whatsapp',
+                    'timestamp'         => $mTs,
+                ];
+            }
+        }
+    }
+}
+
+// Sort combined timeline stream chronologically (newest first)
+usort($timeline, function($a, $b) {
+    return ($b['timestamp'] ?? 0) <=> ($a['timestamp'] ?? 0);
+});
 
 // 3. Fetch Active Quotation if available
 $quotation = [
@@ -1054,6 +1278,7 @@ $response = [
         'agents' => $agents,
         'access_type' => $accessType,
         'is_calling_agent' => in_array(strtolower(trim($accessType)), ['agent', 'calling_agent', 'crm_calling_agent', 'crm calling agent', 'sales_executive']),
+        'whatsapp_chat' => $chatMeta,
         'current_user_id' => (int)$currentUserId,
         'site_package_id' => defined('SITE_PACKAGE_ID') ? (int)SITE_PACKAGE_ID : (isset($site_package_id) ? (int)$site_package_id : 7),
     ]

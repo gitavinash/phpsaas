@@ -399,7 +399,119 @@ function getMessageText(message) {
   return "";
 }
 
-// Helper to extract and save media attachments (images, audio, video, documents, stickers)
+// Helper to extract structured contact data from WhatsApp messages
+function extractContactData(message) {
+  if (!message) return null;
+  let current = message;
+  let depth = 0;
+  while (depth < 5) {
+    if (current.deviceSentMessage?.message) current = current.deviceSentMessage.message;
+    else if (current.viewOnceMessage?.message) current = current.viewOnceMessage.message;
+    else if (current.viewOnceMessageV2?.message) current = current.viewOnceMessageV2.message;
+    else if (current.ephemeralMessage?.message) current = current.ephemeralMessage.message;
+    else if (current.documentWithCaptionMessage?.message) current = current.documentWithCaptionMessage.message;
+    else if (current.editedMessage?.message) current = current.editedMessage.message;
+    else break;
+    depth++;
+  }
+  if (!current) return null;
+
+  const parsePhoneFromVcard = (vcard) => {
+    if (!vcard) return "";
+    const waidMatch = vcard.match(/waid=(\d+)/i);
+    if (waidMatch) return "+" + waidMatch[1];
+    const telMatch = vcard.match(/TEL[^:]*:([+\d\s()-]+)/i);
+    if (telMatch) {
+      let p = telMatch[1].replace(/[\s()-]/g, "");
+      if (p && !p.startsWith("+")) p = "+" + p;
+      return p;
+    }
+    return "";
+  };
+
+  if (current.contactMessage) {
+    const cm = current.contactMessage;
+    const name = cm.displayName || "";
+    const vcard = cm.vcard || "";
+    const phone = parsePhoneFromVcard(vcard);
+    return {
+      type: "contact",
+      name: name,
+      phone: phone,
+      vcard: vcard
+    };
+  }
+
+  if (current.contactsArrayMessage && Array.isArray(current.contactsArrayMessage.contacts)) {
+    const list = current.contactsArrayMessage.contacts.map((c) => ({
+      name: c.displayName || "",
+      phone: parsePhoneFromVcard(c.vcard || ""),
+      vcard: c.vcard || ""
+    }));
+    return {
+      type: "contacts",
+      name: current.contactsArrayMessage.displayName || `${list.length} Contacts`,
+      contacts: list
+    };
+  }
+
+  return null;
+}
+
+// Helper to extract structured location data from WhatsApp messages
+function extractLocationData(message) {
+  if (!message) return null;
+  let current = message;
+  let depth = 0;
+  while (depth < 5) {
+    if (current.deviceSentMessage?.message) current = current.deviceSentMessage.message;
+    else if (current.viewOnceMessage?.message) current = current.viewOnceMessage.message;
+    else if (current.viewOnceMessageV2?.message) current = current.viewOnceMessageV2.message;
+    else if (current.ephemeralMessage?.message) current = current.ephemeralMessage.message;
+    else if (current.documentWithCaptionMessage?.message) current = current.documentWithCaptionMessage.message;
+    else if (current.editedMessage?.message) current = current.editedMessage.message;
+    else break;
+    depth++;
+  }
+  if (!current) return null;
+
+  if (current.locationMessage) {
+    const lm = current.locationMessage;
+    const lat = lm.degreesLatitude || 0;
+    const lng = lm.degreesLongitude || 0;
+    const name = lm.name || "";
+    const address = lm.address || "";
+    const url = lm.url || (lat && lng ? `https://maps.google.com/?q=${lat},${lng}` : "");
+    return {
+      type: "location",
+      latitude: lat,
+      longitude: lng,
+      name: name,
+      address: address,
+      url: url
+    };
+  }
+
+  if (current.liveLocationMessage) {
+    const llm = current.liveLocationMessage;
+    const lat = llm.degreesLatitude || 0;
+    const lng = llm.degreesLongitude || 0;
+    const caption = llm.caption || "Live Location";
+    const url = lat && lng ? `https://maps.google.com/?q=${lat},${lng}` : "";
+    return {
+      type: "live_location",
+      latitude: lat,
+      longitude: lng,
+      name: caption,
+      address: "",
+      url: url
+    };
+  }
+
+  return null;
+}
+
+// Helper to extract and save media attachments (images, audio, video, documents, stickers, location thumbnails)
 async function downloadAndSaveMedia(msg, sessionId, sock = null, allowPhoneRetry = true) {
   if (!msg) return null;
   const realMsg = (msg.message && msg.message.key) ? msg.message : msg;
@@ -443,6 +555,10 @@ async function downloadAndSaveMedia(msg, sessionId, sock = null, allowPhoneRetry
     mediaType = "sticker";
     mediaObj = m.stickerMessage;
     ext = "webp";
+  } else if (m.locationMessage?.jpegThumbnail || m.liveLocationMessage?.jpegThumbnail) {
+    mediaType = "location";
+    mediaObj = m.locationMessage || m.liveLocationMessage;
+    ext = "jpg";
   }
 
   if (!mediaType || !mediaObj) return null;
@@ -459,6 +575,22 @@ async function downloadAndSaveMedia(msg, sessionId, sock = null, allowPhoneRetry
   const fileName = `${baseName}.${ext}`;
   const filePath = path.join(uploadDir, fileName);
   const getMediaUrl = (file) => (UPLOAD_DIR_IS_CRM ? `/upload/whatsapp/${file}` : `http://127.0.0.1:${PORT}/media/${file}`);
+
+  // Location thumbnail buffer direct save (no need to decrypt via Baileys)
+  if (mediaType === "location" && mediaObj.jpegThumbnail) {
+    try {
+      const rawThumb = mediaObj.jpegThumbnail;
+      const buf = Buffer.isBuffer(rawThumb) ? rawThumb : (typeof rawThumb === "string" ? Buffer.from(rawThumb, "base64") : null);
+      if (buf && buf.length > 0) {
+        fs.writeFileSync(filePath, buf);
+        return {
+          type: "location",
+          url: getMediaUrl(fileName),
+          caption: mediaObj.name || mediaObj.address || ""
+        };
+      }
+    } catch (locErr) {}
+  }
 
   // 0. Cache check: If file already exists and has valid size, return immediately
   try {
@@ -1709,6 +1841,9 @@ class WhatsAppSession {
           }
 
           const body = getMessageText(msg.message);
+          const contactData = extractContactData(msg.message);
+          const locationData = extractLocationData(msg.message);
+
           let mediaInfo = null;
           try {
             mediaInfo = await downloadAndSaveMedia(msg, this.sessionId, this.sock);
@@ -1716,7 +1851,7 @@ class WhatsAppSession {
             console.warn(`[WhatsApp Gateway:${this.sessionId}] Error extracting media:`, mErr?.message || mErr);
           }
 
-          if (!body && !mediaInfo) {
+          if (!body && !mediaInfo && !contactData && !locationData) {
             continue;
           }
 
@@ -1734,8 +1869,19 @@ class WhatsAppSession {
           const pushName = isFromMe ? "" : (msg.pushName || this.getContactName(jid) || "");
           const ts = extractTimestamp(msg.messageTimestamp);
 
+          let finalType = mediaInfo ? mediaInfo.type : "text";
+          let payloadText = mediaInfo ? (mediaInfo.caption || "") : body;
           let previewText = body;
-          if (mediaInfo) {
+
+          if (contactData) {
+            finalType = "contact";
+            payloadText = JSON.stringify(contactData);
+            previewText = `👤 Contact: ${contactData.name || "Contact"}`;
+          } else if (locationData) {
+            finalType = "location";
+            payloadText = JSON.stringify(locationData);
+            previewText = `📍 Location: ${locationData.name || locationData.address || "Shared Location"}`;
+          } else if (mediaInfo) {
             previewText = mediaInfo.caption ? mediaInfo.caption : "📷 Photo";
           }
 
@@ -1757,8 +1903,8 @@ class WhatsAppSession {
             sessionId: this.sessionId,
             contactPhone: contactPhone,
             contactName: isFromMe ? "" : pushName,
-            messageText: mediaInfo ? (mediaInfo.caption || "[Media attachment]") : body,
-            mediaType: mediaInfo ? mediaInfo.type : "",
+            messageText: previewText || payloadText,
+            mediaType: finalType,
             msgId: msg.key?.id || "N/A",
             status: "Forwarding to CRM Webhook...",
           });
@@ -1772,9 +1918,9 @@ class WhatsAppSession {
             name: isFromMe ? (this.getContactName(jid) || "") : (pushName || ""),
             pushname: pushName,
             avatar: avatarUrl || "",
-            text: mediaInfo ? (mediaInfo.caption || "") : body,
+            text: payloadText,
             media: mediaInfo ? mediaInfo.url : "",
-            type: mediaInfo ? mediaInfo.type : "text",
+            type: finalType,
             msg_id: msg.key.id,
             timestamp: ts,
             lid: rawJid.includes("@lid") ? rawJid : (altJid && altJid.includes("@lid") ? altJid : null),
@@ -2511,7 +2657,7 @@ app.post("/send-message", async (req, res) => {
     let sendContent;
     if (type === "text") {
       sendContent = { text: message || "" };
-    } else if (media) {
+    } else if (media || req.body?.disk_path || req.body?.file_path) {
       let mediaBuffer = null;
       let mediaMime = "image/jpeg";
       let localPath = null;
@@ -2553,7 +2699,7 @@ app.post("/send-message", async (req, res) => {
         }
       }
 
-      const isDoc = (type === "document") || (mediaMime === "application/pdf") || (typeof media === "string" && (media.toLowerCase().includes(".pdf") || media.startsWith("data:application/pdf")));
+      const isDoc = (type === "document") || (mediaMime === "application/pdf") || (typeof media === "string" && (media.toLowerCase().includes(".pdf") || media.startsWith("data:application/pdf"))) || (localPath && localPath.toLowerCase().endsWith(".pdf"));
       const docFileName = req.body?.file_name || req.body?.fileName || req.query?.file_name || "Quotation.pdf";
 
       if (mediaBuffer) {

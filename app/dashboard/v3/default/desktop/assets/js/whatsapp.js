@@ -389,6 +389,77 @@
         });
       });
 
+      // Contact card Message / Chat button
+      $(document).on("click", ".btn-wa-contact-chat", function (e) {
+        e.preventDefault();
+        const phone = $(this).attr("data-contact-phone") || "";
+        const name = $(this).attr("data-contact-name") || "";
+
+        if (!phone) {
+          $("#btnSidebarNewChat").trigger("click");
+          if (name) {
+            $("#newChatName").val(name);
+          }
+          return;
+        }
+
+        const cleanPhone = phone.replace(/[^0-9+]/g, "");
+        const rawDigits = phone.replace(/[^0-9]/g, "");
+        const last10 = rawDigits.slice(-10);
+
+        // Check if thread already exists in the sidebar
+        let $foundThread = null;
+        $(".wa-thread-item").each(function () {
+          const tPhone = ($(this).data("phone") || "").toString().replace(/[^0-9]/g, "");
+          if (tPhone && (tPhone.includes(rawDigits) || tPhone.endsWith(last10) || rawDigits.endsWith(tPhone.slice(-10)))) {
+            $foundThread = $(this);
+            return false;
+          }
+        });
+
+        if ($foundThread && $foundThread.length) {
+          $foundThread.trigger("click");
+        } else {
+          // Open New Chat modal prefilled with this contact
+          $("#newChatPhone").val(cleanPhone);
+          $("#newChatName").val(name);
+          $("#waNewChatModal").removeClass("is-hidden").attr("aria-hidden", "false");
+          setTimeout(() => $("#newChatMessage").focus(), 150);
+        }
+      });
+
+      // Contact card Copy phone button
+      $(document).on("click", ".btn-wa-contact-copy", function (e) {
+        e.preventDefault();
+        const phone = $(this).attr("data-contact-phone") || "";
+        if (!phone) return;
+        const $btn = $(this);
+
+        const onCopied = function () {
+          const origHtml = $btn.html();
+          $btn.html('<i class="fi fi-rr-check" style="color:#22C55E;"></i>');
+          setTimeout(() => $btn.html(origHtml), 1500);
+        };
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(phone).then(onCopied).catch(function () {
+            const $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val(phone).select();
+            document.execCommand("copy");
+            $temp.remove();
+            onCopied();
+          });
+        } else {
+          const $temp = $("<input>");
+          $("body").append($temp);
+          $temp.val(phone).select();
+          document.execCommand("copy");
+          $temp.remove();
+          onCopied();
+        }
+      });
+
       // Refresh active chat (delegated)
       $(document).on("click", "#btnRefreshActiveChat", function () {
         if (!self.activeChatId) return;
@@ -1091,7 +1162,15 @@
 
             const isOut = msg.direction === "outgoing";
             let contentHtml = "";
-            if (msg.media_url) {
+            const trimmedText = (msg.text || "").trim();
+            const isContact = msg.type === "contact" || !!msg.contact_data || /^\[Contacts?:\s*.*?\]$/i.test(trimmedText);
+            const isLocation = msg.type === "location" || msg.type === "live_location" || !!msg.location_data || (/^\[Location:\s*.*?\]$/i.test(trimmedText) || /^\[Live Location\]$/i.test(trimmedText));
+
+            if (isContact) {
+              contentHtml = self.renderContactCard(msg);
+            } else if (isLocation) {
+              contentHtml = self.renderLocationCard(msg);
+            } else if (msg.media_url) {
               if (msg.type === "image" || msg.media_url.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i)) {
                 contentHtml += `
                   <div class="wa-msg-media">
@@ -1337,6 +1416,152 @@
         label: label,
         ext: extPill
       };
+    },
+
+    renderContactCard: function (msg) {
+      let cData = msg.contact_data || null;
+      if (!cData && msg.text) {
+        const trimmed = (msg.text || "").trim();
+        if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+          try {
+            const parsed = JSON.parse(trimmed);
+            if (parsed.type === "contact" || parsed.type === "contacts") {
+              cData = parsed;
+            }
+          } catch (e) {}
+        }
+        if (!cData) {
+          const match = trimmed.match(/^\[Contact:\s*(.*?)\]$/i);
+          if (match) {
+            const name = match[1].trim();
+            let phone = "";
+            const digits = name.replace(/[^0-9]/g, "");
+            if (digits.length >= 10 && digits.length <= 13) {
+              phone = "+" + digits;
+            }
+            cData = { name: name || "Contact", phone: phone, vcard: "" };
+          }
+        }
+      }
+
+      if (!cData) {
+        cData = { name: "WhatsApp Contact", phone: "", vcard: "" };
+      }
+
+      const name = cData.name || "Contact";
+      const phone = cData.phone || "";
+      const displayPhone = phone ? phone : "WhatsApp Contact";
+      const hasPhone = !!phone;
+
+      return `
+        <div class="wa-msg-contact-card">
+          <div class="wa-contact-header">
+            <div class="wa-contact-avatar-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+              </svg>
+            </div>
+            <div class="wa-contact-details">
+              <div class="wa-contact-name" title="${this.escapeHtml(name)}">${this.escapeHtml(name)}</div>
+              <div class="wa-contact-phone" title="${this.escapeHtml(displayPhone)}">${this.escapeHtml(displayPhone)}</div>
+            </div>
+          </div>
+          <div class="wa-contact-actions-bar">
+            <button type="button" class="btn-wa-contact-chat" data-contact-phone="${this.escapeHtml(phone)}" data-contact-name="${this.escapeHtml(name)}">
+              <i class="fi fi-rr-comment-alt-middle"></i>
+              <span>Message</span>
+            </button>
+            ${hasPhone ? `
+              <a href="tel:${this.escapeHtml(phone)}" class="btn-wa-contact-sub" title="Call ${this.escapeHtml(phone)}">
+                <i class="fi fi-rr-phone-call"></i>
+              </a>
+              <button type="button" class="btn-wa-contact-sub btn-wa-contact-copy" data-contact-phone="${this.escapeHtml(phone)}" title="Copy Phone Number">
+                <i class="fi fi-rr-copy"></i>
+              </button>
+            ` : ""}
+          </div>
+        </div>
+      `;
+    },
+
+    renderLocationCard: function (msg) {
+      let lData = msg.location_data || null;
+      if (!lData && msg.text) {
+        const trimmed = (msg.text || "").trim();
+        if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+          try {
+            const parsed = JSON.parse(trimmed);
+            if (parsed.type === "location" || parsed.type === "live_location") {
+              lData = parsed;
+            }
+          } catch (e) {}
+        }
+        if (!lData) {
+          const match = trimmed.match(/^\[Location:\s*(.*?)\]$/i);
+          const liveMatch = trimmed.match(/^\[Live Location\]$/i);
+          if (match || liveMatch) {
+            const locStr = match ? match[1].trim() : "Live Location";
+            lData = {
+              name: locStr || "Shared Location",
+              address: locStr,
+              latitude: 0,
+              longitude: 0,
+              url: locStr ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(locStr) : ""
+            };
+          }
+        }
+      }
+
+      if (!lData) {
+        lData = { name: "Shared Location", address: "", latitude: 0, longitude: 0, url: "" };
+      }
+
+      const name = lData.name || (lData.address ? lData.address : "Shared Location");
+      const address = lData.address || (lData.latitude && lData.longitude ? `${Number(lData.latitude).toFixed(5)}, ${Number(lData.longitude).toFixed(5)}` : "");
+      let mapUrl = lData.url || "";
+      if (!mapUrl) {
+        if (lData.latitude && lData.longitude) {
+          mapUrl = `https://www.google.com/maps/search/?api=1&query=${lData.latitude},${lData.longitude}`;
+        } else if (name && name !== "Shared Location") {
+          mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
+        } else if (address) {
+          mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+        } else {
+          mapUrl = "https://maps.google.com";
+        }
+      }
+
+      const mediaUrl = msg.media_url || lData.media_url || "";
+      const hasPreviewImg = !!mediaUrl && !mediaUrl.endsWith(".pdf");
+
+      return `
+        <div class="wa-msg-location-card">
+          <a href="${this.escapeHtml(mapUrl)}" target="_blank" rel="noopener noreferrer" class="wa-location-preview-box" title="Open in Google Maps">
+            ${hasPreviewImg ? `
+              <img src="${this.escapeHtml(mediaUrl)}" class="wa-location-map-img" alt="Map Location" loading="lazy" />
+            ` : `
+              <div class="wa-location-vector-bg"></div>
+              <div class="wa-location-pin-wrap">
+                <div class="wa-location-pin-icon">
+                  <i class="fi fi-rr-marker"></i>
+                </div>
+                <div class="wa-location-pin-shadow"></div>
+              </div>
+            `}
+          </a>
+          <div class="wa-location-details">
+            <div class="wa-location-title" title="${this.escapeHtml(name)}">${this.escapeHtml(name)}</div>
+            ${address && address !== name ? `<div class="wa-location-address" title="${this.escapeHtml(address)}">${this.escapeHtml(address)}</div>` : ""}
+          </div>
+          <div class="wa-location-actions-bar">
+            <a href="${this.escapeHtml(mapUrl)}" target="_blank" rel="noopener noreferrer" class="btn-wa-location-open">
+              <i class="fi fi-rr-map-marker"></i>
+              <span>Open in Google Maps</span>
+              <i class="fi fi-rr-arrow-up-right-from-square btn-wa-location-ext-icon"></i>
+            </a>
+          </div>
+        </div>
+      `;
     },
 
     autoFetchPendingImages: function () {

@@ -361,7 +361,7 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
         'webhook_url' => $dynamicWebhookUrl,
         'to'          => $cleanRecipientPhone,
         'message'     => $messageText,
-        'media'       => ($type === 'text' ? '' : $mediaUrl),
+        'media'       => ($type === 'text' ? '' : (!empty($mediaUrl) ? $mediaUrl : $diskPath)),
         'disk_path'   => $diskPath,
         'file_path'   => $diskPath,
         'type'        => $type,

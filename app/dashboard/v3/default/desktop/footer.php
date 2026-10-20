@@ -5,13 +5,7 @@
 				if (SITE_VERSION != 'mobile') { ?>
 					<footer>
 						<div class="credit">
-							<p><a href="<?php echo CREDIT_URL ?>" title="Developed by <?php echo CREDIT ?>" target="_blank">Powered by
-									<a href='https://aleya.in?utm_source=<?php echo strtolower(str_replace(' ', '_', SITE_NAME)) ?>'
-										target="_blank"><?php echo ucwords(str_replace('_', ' ', SITE_APP_NAME)) ?><sup
-											class="trademark">TM</sup></a> | Made
-									with <i class="fi-rr-heart"></i> in
-									India by <a href="https://blumox.com?utm_source=aleya&utm_medium=dashboard"><strong>Blumox
-											Technologies</strong></a></p>
+							<p><a href="<?php echo (defined('CREDIT_URL') && CREDIT_URL != '') ? CREDIT_URL : 'http://www.blumox.com/' ?>" title="Developed by <?php echo defined('CREDIT') ? CREDIT : 'Blumox Technologies' ?>" target="_blank">Powered by</a> <a href='https://aleya.in/?utm_source=<?php echo strtolower(str_replace(' ', '_', defined('SITE_NAME') ? SITE_NAME : 'gracious_world')) ?>' target="_blank"><?php echo ucwords(str_replace('_', ' ', defined('SITE_APP_NAME') ? SITE_APP_NAME : 'Aleya')) ?><sup class="trademark">TM</sup></a> | Made with <i class="fi-rr-heart"></i> in India by <a href="https://blumox.com/?utm_source=aleya&utm_medium=dashboard" target="_blank"><strong>Blumox Technologies</strong></a></p>
 						</div>
 					</footer>
 				<?php
@@ -141,6 +135,7 @@
 				<script src="<?php echo ADMIN_JS ?>marketing-dashboard.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>web_forms.js?v=<?php echo time(); ?>"></script>
 				<script src="<?php echo ADMIN_JS ?>whatsapp_templates.js?v=<?php echo time(); ?>"></script>
+				<script src="<?php echo ADMIN_JS ?>workflows.js?v=<?php echo time(); ?>"></script>
 				<?php
 				$appJSPath = ADMIN_PATH . 'assets/js/' . SITE_APP . '.js';
 				$appJSScript = ADMIN_JS . SITE_APP . '.js';

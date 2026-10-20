@@ -93,8 +93,22 @@ function loadExternalJS(filePath) {
     Object.assign(wrappedSwal, originalSwal);
 
     // Polyfill .fire() so all code using Swal.fire({...}).then(...) works
-    wrappedSwal.fire = function (opts) {
-      return wrappedSwal.call(window, opts);
+    wrappedSwal.fire = function (opts, cb) {
+      if (typeof Promise !== "undefined") {
+        return new Promise(function (resolve) {
+          var res = wrappedSwal.call(window, opts, function (isConfirm) {
+            if (typeof cb === "function") cb(isConfirm);
+            resolve(isConfirm);
+          });
+          if (res && typeof res.then === "function") {
+            res.then(function (result) {
+              if (typeof cb === "function") cb(result);
+              resolve(result);
+            });
+          }
+        });
+      }
+      return wrappedSwal.apply(window, arguments);
     };
 
     window.swal = wrappedSwal;
@@ -4867,6 +4881,23 @@ $(document).ready(function (e) {
       typeof window.V3WhatsApp.stopPolling === "function"
     ) {
       window.V3WhatsApp.stopPolling();
+    }
+
+    // 9. Automation Workflows Studio Module
+    const $workflows = $("#workflowsPluginApp, .workflows-page-wrapper");
+    if ($workflows.length > 0) {
+      if (typeof window.initWorkflowsApp === "function") {
+        window.initWorkflowsApp();
+      } else {
+        ensureScriptLoaded(
+          ADMIN_JS + "workflows.js?v=" + Date.now(),
+          function () {
+            if (typeof window.initWorkflowsApp === "function") {
+              window.initWorkflowsApp();
+            }
+          },
+        );
+      }
     }
   };
 

@@ -317,8 +317,20 @@ if (($payload['event'] ?? '') === 'batch_sync') {
                 }
                 if (empty($mText) && empty($mMedia)) continue;
 
+                $mType = trim($mItem['type'] ?? '');
+                if (empty($mType)) {
+                    if (!empty($mMedia)) {
+                        $mType = 'image';
+                    } elseif (preg_match('/^\[Contact:\s*(.*?)\]$/i', $mText)) {
+                        $mType = 'contact';
+                    } elseif (preg_match('/^\[Location:\s*(.*?)\]$/i', $mText)) {
+                        $mType = 'location';
+                    } else {
+                        $mType = 'text';
+                    }
+                }
+
                 $escMText = mysqli_real_escape_string($connection, $mText);
-                $mType = trim($mItem['type'] ?? (!empty($mMedia) ? 'image' : 'text'));
                 $escMMedia = mysqli_real_escape_string($connection, $mMedia);
                 $escMType = mysqli_real_escape_string($connection, $mType);
 
@@ -662,7 +674,18 @@ if (!empty($connectedDevicePhone) && !empty($payload['session_id'])) {
     if (!empty($media) && trim($text) === '[Image]') {
         $text = '';
     }
-    $lastPreviewMsg = !empty($text) ? $text : (!empty($media) ? '📷 Photo' : ($type === 'image' ? '📷 Photo' : '[Message]'));
+
+    if ($type === 'contact') {
+        $cObj = json_decode($text, true);
+        $cName = !empty($cObj['name']) ? $cObj['name'] : 'Contact';
+        $lastPreviewMsg = '👤 Contact: ' . $cName;
+    } elseif ($type === 'location' || $type === 'live_location') {
+        $lObj = json_decode($text, true);
+        $lName = !empty($lObj['name']) ? $lObj['name'] : (!empty($lObj['address']) ? $lObj['address'] : 'Shared Location');
+        $lastPreviewMsg = '📍 Location: ' . $lName;
+    } else {
+        $lastPreviewMsg = !empty($text) ? $text : (!empty($media) ? '📷 Photo' : ($type === 'image' ? '📷 Photo' : '[Message]'));
+    }
     $escLastPreview = mysqli_real_escape_string($connection, $lastPreviewMsg);
 
     $chatQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone = '{$escPhone}' OR chat_phone LIKE '%{$last10}') LIMIT 1");

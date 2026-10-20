@@ -704,16 +704,22 @@ if (mysqli_query($connection, $insertQuery)) {
                 $pdfRelUrl   = '/upload/itineraries/' . $pdfFileName;
 
                 // 0. Accept client-rendered PDF data (Fastest & 100% reliable across all hosting environments)
-                $clientPdf = $data['pdf_data'] ?? ($postData['pdf_data'] ?? ($data['pdf_base64'] ?? ($postData['pdf_base64'] ?? '')));
-                if (!empty($clientPdf)) {
+                $clientPdf = $data['pdf_data'] ?? ($postData['pdf_data'] ?? ($data['pdf_base64'] ?? ($postData['pdf_base64'] ?? ($_POST['pdf_data'] ?? ''))));
+                if (!empty($clientPdf) && is_string($clientPdf)) {
                     if (strpos($clientPdf, 'base64,') !== false) {
                         $clientPdf = substr($clientPdf, strpos($clientPdf, 'base64,') + 7);
                     }
-                    $pdfDecoded = base64_decode($clientPdf);
-                    if ($pdfDecoded !== false && strlen($pdfDecoded) > 500 && strpos($pdfDecoded, '%PDF') !== false && strpos($pdfDecoded, '%PDF') <= 20) {
-                        file_put_contents($pdfDiskPath, $pdfDecoded);
-                        $hasValidPdf = true;
-                        $pdfRelUrl = '/upload/itineraries/' . $pdfFileName;
+                    $cleanB64 = str_replace([' ', "\r", "\n", "\t"], ['+', '', '', ''], trim($clientPdf));
+                    $pdfDecoded = base64_decode($cleanB64);
+                    if ($pdfDecoded !== false && strlen($pdfDecoded) > 200 && strpos($pdfDecoded, '%PDF') !== false && strpos($pdfDecoded, '%PDF') <= 50) {
+                        @file_put_contents($pdfDiskPath, $pdfDecoded);
+                        if (file_exists($pdfDiskPath) && filesize($pdfDiskPath) > 200) {
+                            $hasValidPdf = true;
+                            $pdfRelUrl = '/upload/itineraries/' . $pdfFileName;
+                            error_log("[ISW V3 Itinerary PDF] Client PDF accepted. Size: " . strlen($pdfDecoded) . " bytes -> Saved to " . $pdfDiskPath);
+                        }
+                    } else {
+                        error_log("[ISW V3 Itinerary PDF] Client PDF payload present but decode/validation failed. Decoded length: " . ($pdfDecoded !== false ? strlen($pdfDecoded) : 0));
                     }
                 }
 

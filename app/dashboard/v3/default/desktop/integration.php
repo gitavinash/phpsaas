@@ -299,6 +299,45 @@ $isUpiActive      = (!defined('ENABLE_UPI') || ENABLE_UPI == '1');
             </div>
         </div>
 
+        <!-- 6. Automation Workflows (Make.com-style Visual Flowcharts) -->
+        <div class="integration-card is-active-card" data-category="developer" data-slug="workflows">
+            <div class="integration-card-header">
+                <div class="integration-brand-logo brand-workflows">
+                    <i class="fi fi-rr-workflow"></i>
+                </div>
+                <div class="integration-header-text">
+                    <h3 class="integration-title">Automation Workflows</h3>
+                    <span class="integration-card-pill">Visual Flowchart Builder</span>
+                </div>
+                <div class="integration-header-toggle">
+                    <label class="v3-toggle-switch" title="Toggle Automation Workflows">
+                        <input type="checkbox" class="integration-active-toggle" data-slug="workflows" data-key="enable_workflows" checked>
+                        <span class="v3-toggle-slider violet"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="integration-card-body">
+                <p class="integration-desc">Build visual drag-and-drop automation pipelines like Make.com: connect multi-channel triggers, lead routing, smart WhatsApp concierges, and instant quotes.</p>
+                <div class="integration-feature-chips">
+                    <span class="feature-chip"><i class="fi fi-rr-check"></i> Make.com Visual Canvas</span>
+                    <span class="feature-chip"><i class="fi fi-rr-check"></i> Drag &amp; Drop Modules</span>
+                    <span class="feature-chip"><i class="fi fi-rr-check"></i> 1-Click Templates</span>
+                </div>
+            </div>
+            <div class="integration-card-footer">
+                <div class="integration-status-pill is-active">
+                    <span class="status-pulse-dot"></span>
+                    <span class="status-text">Active</span>
+                </div>
+                <div class="integration-card-actions">
+                    <a href="/dashboard/integration/workflows/" class="btn-integration-primary">
+                        <span>Open Studio</span> <i class="fi fi-rr-arrow-small-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
         <?php if ($site_access_type !== 'digital_marketing') { ?>
             <!-- 6. Razorpay Payment Gateway -->
             <div class="integration-card <?php echo ($activePg === 'razorpay' ? 'is-active-card' : 'is-disabled'); ?>" data-category="payments" data-slug="razorpay">

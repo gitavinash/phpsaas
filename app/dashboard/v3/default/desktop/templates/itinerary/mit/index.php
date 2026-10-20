@@ -3810,8 +3810,8 @@ if (!empty($cleanOverview)) {
             }
 
             try {
-                // Allow styles, fonts, and wave SVGs to finish painting
-                await new Promise(resolve => setTimeout(resolve, 350));
+                // Allow styles, fonts, and SVGs to finish layout
+                await new Promise(resolve => setTimeout(resolve, shouldSave === false ? 60 : 250));
 
                 const pages = document.querySelectorAll(".page");
                 if (!pages || pages.length === 0) {
@@ -3827,50 +3827,67 @@ if (!empty($cleanOverview)) {
                 const pdf = new jspdfModule.jsPDF('p', 'pt', 'a4');
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
+                const isBgRender = (shouldSave === false);
 
                 for (let i = 0; i < pages.length; i++) {
-                    if (msg && shouldSave !== false) msg.textContent = `Rendering page ${i + 1} of ${pages.length}...`;
+                    if (msg && !isBgRender) msg.textContent = `Rendering page ${i + 1} of ${pages.length}...`;
+                    if (typeof onProgress === 'function') {
+                        try { onProgress(i + 1, pages.length); } catch (pe) {}
+                    }
 
                     const canvas = await html2canvas(pages[i], {
-                        scale: 2,
+                        scale: isBgRender ? 1.25 : 1.6,
                         useCORS: true,
                         allowTaint: false,
                         backgroundColor: '#ffffff',
                         logging: false,
-                        imageTimeout: 10000,
+                        imageTimeout: 8000,
                         windowWidth: pages[i].scrollWidth || 794,
-                        windowHeight: pages[i].scrollHeight || 1123
+                        windowHeight: pages[i].scrollHeight || 1123,
+                        onclone: function (clonedDoc) {
+                            const imgs = clonedDoc.querySelectorAll('img');
+                            imgs.forEach(function (img) {
+                                img.crossOrigin = 'anonymous';
+                                img.loading = 'eager';
+                            });
+                        }
                     });
 
-                    const imgData = canvas.toDataURL('image/jpeg', 0.96);
-                    const imgProps = pdf.getImageProperties(imgData);
-                    const pdfImgHeight = (imgProps.height * pageWidth) / imgProps.width;
+                    let imgData = null;
+                    try {
+                        imgData = canvas.toDataURL('image/jpeg', isBgRender ? 0.80 : 0.92);
+                    } catch (canvasErr) {
+                        console.warn('Canvas export warning on page ' + (i + 1), canvasErr);
+                        try { imgData = canvas.toDataURL('image/png'); } catch (ce2) { imgData = null; }
+                    }
 
-                    pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, Math.min(pageHeight, pdfImgHeight));
+                    if (imgData) {
+                        const imgProps = pdf.getImageProperties(imgData);
+                        const pdfImgHeight = (imgProps.height * pageWidth) / imgProps.width;
+                        pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, Math.min(pageHeight, pdfImgHeight));
+                    }
 
                     if (i < pages.length - 1) {
                         pdf.addPage();
                     }
                 }
 
-                if (msg && shouldSave !== false) msg.textContent = 'Saving PDF file...';
+                if (msg && !isBgRender) msg.textContent = 'Saving PDF file...';
                 <?php
                 $safePdfTitle = preg_replace('/_+/', '_', preg_replace('/[^a-zA-Z0-9_-]/', '_', str_replace('&', 'and', cleanItineraryUnicode($pkgTitle))));
                 $safePdfTitle = trim($safePdfTitle, '_');
                 if (empty($safePdfTitle)) $safePdfTitle = 'Tour_Package';
                 ?>
                 const fileName = '<?php echo $safePdfTitle; ?>_Itinerary.pdf';
-                if (shouldSave !== false) {
+                if (!isBgRender) {
                     pdf.save(fileName);
                 }
 
                 const pdfDataUri = pdf.output('datauristring');
-                await new Promise(resolve => setTimeout(resolve, 300));
                 return pdfDataUri;
             } catch (err) {
                 console.error('PDF export error:', err);
-                if (msg) msg.textContent = 'PDF generation encountered an error.';
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                if (msg && shouldSave !== false) msg.textContent = 'PDF generation encountered an error.';
                 throw err;
             } finally {
                 if (btn) {

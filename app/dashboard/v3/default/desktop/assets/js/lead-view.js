@@ -1978,18 +1978,65 @@
         agentOptions += `<option value="${ag.id}" ${isSel}>${ag.name} (${ag.role})</option>`;
       });
 
-      // 2. Build Timeline Stream
+      // 2. Build Timeline Stream & Filter Navigation
       let timelineHtml = "";
-      if (lead.timeline && lead.timeline.length > 0) {
-        timelineHtml = '<div class="v3-timeline-stream">';
-        lead.timeline.forEach((t) => {
-          const desc = String(t.description || "").toLowerCase();
-          if (
-            desc.includes("lead status updated to itinerary") ||
-            (desc.includes("itinerary / quotation sent") && desc.includes("lead status"))
-          ) {
-            return;
-          }
+      const rawTimelineItems = (lead.timeline || []).filter((t) => {
+        const desc = String(t.description || "").toLowerCase();
+        if (
+          desc.includes("lead status updated to itinerary") ||
+          (desc.includes("itinerary / quotation sent") && desc.includes("lead status"))
+        ) {
+          return false;
+        }
+        return true;
+      });
+
+      const tlCounts = {
+        all: rawTimelineItems.length,
+        whatsapp: rawTimelineItems.filter((t) => (t.type || "").toLowerCase() === "whatsapp").length,
+        note: rawTimelineItems.filter((t) => (t.type || "").toLowerCase() === "note").length,
+        followup: rawTimelineItems.filter((t) => (t.type || "").toLowerCase() === "followup").length,
+        itinerary: rawTimelineItems.filter((t) => (t.type || "").toLowerCase() === "itinerary").length,
+        payment_link: rawTimelineItems.filter((t) => (t.type || "").toLowerCase() === "payment_link").length,
+        payment: rawTimelineItems.filter((t) => (t.type || "").toLowerCase() === "payment").length,
+      };
+
+      let filterBarHtml = "";
+      if (rawTimelineItems.length > 0) {
+        filterBarHtml = `
+          <div class="v3-timeline-filter-bar" id="timelineFilterBar">
+            <button type="button" class="v3-tl-filter-btn active" data-filter="all">
+              <i class="fi fi-rr-apps"></i> All <span class="v3-tl-count">${tlCounts.all}</span>
+            </button>
+            <button type="button" class="v3-tl-filter-btn" data-filter="whatsapp">
+              <i class="fi fi-brands-whatsapp"></i> WhatsApp <span class="v3-tl-count">${tlCounts.whatsapp}</span>
+            </button>
+            <button type="button" class="v3-tl-filter-btn" data-filter="note">
+              <i class="fi fi-rr-comment-alt"></i> Notes <span class="v3-tl-count">${tlCounts.note}</span>
+            </button>
+            <button type="button" class="v3-tl-filter-btn" data-filter="followup">
+              <i class="fi fi-rr-alarm-clock"></i> Follow ups <span class="v3-tl-count">${tlCounts.followup}</span>
+            </button>
+            <button type="button" class="v3-tl-filter-btn" data-filter="itinerary">
+              <i class="fi fi-rr-route"></i> Itinerary <span class="v3-tl-count">${tlCounts.itinerary}</span>
+            </button>
+            <button type="button" class="v3-tl-filter-btn" data-filter="payment_link">
+              <i class="fi fi-rr-link"></i> Payment Link <span class="v3-tl-count">${tlCounts.payment_link}</span>
+            </button>
+            ${
+              tlCounts.payment > 0
+                ? `
+            <button type="button" class="v3-tl-filter-btn" data-filter="payment">
+              <i class="fi fi-rr-money-check"></i> Payments <span class="v3-tl-count">${tlCounts.payment}</span>
+            </button>
+            `
+                : ""
+            }
+          </div>
+        `.trim();
+
+        timelineHtml = filterBarHtml + '<div class="v3-timeline-stream">';
+        rawTimelineItems.forEach((t) => {
           const type = (t.type || "note").toLowerCase();
           let extraContent = "";
           let cardExtraClass = `v3-timeline-card-${type}`;
@@ -2044,6 +2091,257 @@
                 ${ref ? `<div class="v3-tl-pay-ref">Reference / Transaction ID: <strong>${ref}</strong></div>` : ""}
               </div>
             `;
+          } else if (type === "payment_link") {
+            const pl = t.payment_link_data || {};
+            const amt = parseFloat(pl.amount || 0);
+            const linkUrl = pl.payment_link || pl.full_url || "";
+            const plNotes = pl.notes || "";
+            const waCleanPhone = String(lead.wa_mobile || lead.mobile || "").replace(/[^0-9]/g, "");
+
+            categoryHtml = `<span class="v3-timeline-category-pill pill-payment-link"><i class="fi fi-rr-link"></i> Payment Link</span>`;
+            cardExtraClass = "v3-timeline-card-payment-link";
+
+            let waShareLink = "";
+            if (waCleanPhone && linkUrl) {
+              const waMsg = `Hello ${lead.first_name || lead.name || "Customer"}, please find your payment link: ${linkUrl} for ₹ ${amt > 0 ? amt.toLocaleString("en-IN") : ""}.`;
+              waShareLink = `https://wa.me/${waCleanPhone}?text=${encodeURIComponent(waMsg)}`;
+            }
+
+            extraContent = `
+              <div class="v3-timeline-payment-link-card">
+                <div class="v3-tl-pl-top">
+                  <div class="v3-tl-pl-left">
+                    <span class="v3-tl-pl-icon"><i class="fi fi-rr-link"></i></span>
+                    <div>
+                      <div class="v3-tl-pl-label">Payment Link</div>
+                      <div class="v3-tl-pl-amount">₹ ${amt > 0 ? amt.toLocaleString("en-IN", { minimumFractionDigits: 2 }) : "0.00"}</div>
+                    </div>
+                  </div>
+                  <span class="v3-tl-pl-badge"><i class="fi fi-rr-credit-card"></i> Pay Request</span>
+                </div>
+                ${plNotes ? `<div class="v3-tl-pl-notes"><i class="fi fi-rr-quote-right"></i> ${escapeHtml(plNotes)}</div>` : ""}
+                <div class="v3-tl-pl-actions">
+                  ${
+                    linkUrl
+                      ? `
+                    <button type="button" class="v3-tl-pl-btn outline btn-copy-payment-link" data-url="${linkUrl}" title="Copy payment link to clipboard">
+                      <i class="fi fi-rr-copy"></i> Copy Link
+                    </button>
+                    <a href="${linkUrl}" target="_blank" class="v3-tl-pl-btn primary" title="Open payment checkout page">
+                      <i class="fi fi-rr-arrow-up-right-from-square"></i> Open Link
+                    </a>
+                  `
+                      : ""
+                  }
+                  ${
+                    waShareLink
+                      ? `
+                    <a href="${waShareLink}" target="_blank" class="v3-tl-pl-btn wa" title="Share payment link over WhatsApp">
+                      <i class="fi fi-brands-whatsapp"></i> Share on WhatsApp
+                    </a>
+                  `
+                      : ""
+                  }
+                </div>
+              </div>
+            `.trim();
+          } else if (type === "whatsapp") {
+            const wa = t.whatsapp_data || {};
+            const isIncoming = wa.direction === "incoming";
+            const waStatus = (wa.status || "sent").toLowerCase();
+            const mediaUrl = wa.media_url || "";
+            const mType = (wa.type || "text").toLowerCase();
+            const waCleanPhone = String(lead.wa_mobile || lead.mobile || "").replace(/[^0-9]/g, "");
+
+            let statusTickHtml = "";
+            if (!isIncoming) {
+              if (waStatus === "read") {
+                statusTickHtml = '<span class="v3-wa-status-tick read" title="Read by customer"><i class="fi fi-rr-check-double"></i></span>';
+              } else if (waStatus === "delivered") {
+                statusTickHtml = '<span class="v3-wa-status-tick delivered" title="Delivered"><i class="fi fi-rr-check-double"></i></span>';
+              } else if (waStatus === "failed") {
+                statusTickHtml = '<span class="v3-wa-status-tick failed" title="Delivery failed"><i class="fi fi-rr-cross-circle"></i></span>';
+              } else {
+                statusTickHtml = '<span class="v3-wa-status-tick sent" title="Sent"><i class="fi fi-rr-check"></i></span>';
+              }
+            }
+
+            let mediaHtml = "";
+            if (mediaUrl) {
+              if (mType === "image" || /\.(jpg|jpeg|png|webp|gif)$/i.test(mediaUrl)) {
+                mediaHtml = `
+                  <div class="v3-wa-media-box">
+                    <a href="${mediaUrl}" target="_blank" class="v3-wa-img-preview" title="View full image">
+                      <img src="${mediaUrl}" alt="WhatsApp Image" class="v3-wa-img-thumb" loading="lazy">
+                    </a>
+                  </div>
+                `;
+              } else if (mType === "document" || /\.pdf$/i.test(mediaUrl)) {
+                const fileName = mediaUrl.split("/").pop() || "Document.pdf";
+                mediaHtml = `
+                  <div class="v3-wa-media-box">
+                    <a href="${mediaUrl}" target="_blank" class="v3-wa-doc-box" title="View Document">
+                      <div class="v3-wa-doc-icon"><i class="fi fi-rr-document-signed"></i></div>
+                      <div class="v3-wa-doc-details">
+                        <span class="v3-wa-doc-title">${escapeHtml(fileName)}</span>
+                        <span class="v3-wa-doc-type">PDF Document • Click to open</span>
+                      </div>
+                      <div class="v3-wa-doc-action"><i class="fi fi-rr-download"></i></div>
+                    </a>
+                  </div>
+                `;
+              } else if (mType === "audio" || /\.(ogg|mp3|wav|m4a)$/i.test(mediaUrl)) {
+                mediaHtml = `
+                  <div class="v3-wa-media-box">
+                    <audio controls class="v3-wa-audio-player" src="${mediaUrl}"></audio>
+                  </div>
+                `;
+              } else if (mType === "video" || /\.(mp4|webm)$/i.test(mediaUrl)) {
+                mediaHtml = `
+                  <div class="v3-wa-media-box">
+                    <video controls class="v3-wa-video-player" src="${mediaUrl}"></video>
+                  </div>
+                `;
+              }
+            }
+
+            categoryHtml = `
+              <span class="v3-timeline-category-pill pill-whatsapp ${isIncoming ? "inbound" : "outbound"}">
+                <i class="fi fi-brands-whatsapp"></i> ${isIncoming ? "Inbound" : "Outbound"}
+              </span>
+            `;
+            cardExtraClass = "v3-timeline-card-whatsapp";
+
+            const waChatUrl = waCleanPhone
+              ? `/dashboard/whatsapp/?phone=${waCleanPhone}&name=${encodeURIComponent(lead.first_name || lead.name || "")}&lead_id=${self.leadId || ""}&new_chat=1`
+              : "#";
+
+            const senderLabel = isIncoming
+              ? escapeHtml(t.user_name || "Customer")
+              : "You (Agent)";
+
+            const isEmojiOnlyText = (function (txt) {
+              if (!txt) return false;
+              const s = String(txt).trim();
+              if (!s) return false;
+              try {
+                return /^(\p{Extended_Pictographic}|\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200D|\uFE0F|\s){1,10}$/u.test(s);
+              } catch (e) {
+                return false;
+              }
+            })(t.description);
+
+            let cardContentHtml = "";
+            const isContact = wa.type === "contact" || !!wa.contact_data || (t.description && /^\[Contacts?:\s*.*?\]$/i.test(t.description.trim()));
+            const isLocation = wa.type === "location" || wa.type === "live_location" || !!wa.location_data || (t.description && (/^\[Location:\s*.*?\]$/i.test(t.description.trim()) || /^\[Live Location\]$/i.test(t.description.trim())));
+
+            if (isContact) {
+              const c = wa.contact_data || (function () {
+                const m = (t.description || "").match(/^\[Contact:\s*(.*?)\]$/i);
+                return { name: m ? m[1].trim() : "Contact", phone: "" };
+              })();
+              const cName = c.name || "Contact";
+              const cPhone = c.phone || "";
+              const cChatUrl = cPhone ? `/dashboard/whatsapp/?phone=${cPhone.replace(/[^0-9]/g, "")}&name=${encodeURIComponent(cName)}&new_chat=1` : waChatUrl;
+              cardContentHtml = `
+                <div class="wa-msg-contact-card">
+                  <div class="wa-contact-header">
+                    <div class="wa-contact-avatar-box">
+                      <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+                    </div>
+                    <div class="wa-contact-details">
+                      <div class="wa-contact-name" title="${escapeHtml(cName)}">${escapeHtml(cName)}</div>
+                      <div class="wa-contact-phone">${escapeHtml(cPhone || "WhatsApp Contact")}</div>
+                    </div>
+                  </div>
+                  <div class="wa-contact-actions-bar">
+                    <a href="${cChatUrl}" target="_blank" class="btn-wa-contact-chat">
+                      <i class="fi fi-rr-comment-alt-middle"></i> <span>Message</span>
+                    </a>
+                    ${cPhone ? `<a href="tel:${escapeHtml(cPhone)}" class="btn-wa-contact-sub" title="Call"><i class="fi fi-rr-phone-call"></i></a>` : ""}
+                  </div>
+                </div>
+              `;
+            } else if (isLocation) {
+              const loc = wa.location_data || (function () {
+                const m = (t.description || "").match(/^\[Location:\s*(.*?)\]$/i);
+                const s = m ? m[1].trim() : "";
+                return { name: s || "Shared Location", address: s, url: s ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(s) : "https://maps.google.com" };
+              })();
+              const lName = loc.name || "Shared Location";
+              const lAddr = loc.address || "";
+              const lUrl = loc.url || (lAddr ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lAddr)}` : "https://maps.google.com");
+              const hasImg = !!mediaUrl && !mediaUrl.endsWith(".pdf");
+              cardContentHtml = `
+                <div class="wa-msg-location-card">
+                  <a href="${escapeHtml(lUrl)}" target="_blank" rel="noopener noreferrer" class="wa-location-preview-box" title="Open in Google Maps">
+                    ${hasImg ? `<img src="${escapeHtml(mediaUrl)}" class="wa-location-map-img" alt="Map">` : `
+                      <div class="wa-location-vector-bg"></div>
+                      <div class="wa-location-pin-wrap">
+                        <div class="wa-location-pin-icon"><i class="fi fi-rr-marker"></i></div>
+                        <div class="wa-location-pin-shadow"></div>
+                      </div>
+                    `}
+                  </a>
+                  <div class="wa-location-details">
+                    <div class="wa-location-title">${escapeHtml(lName)}</div>
+                    ${lAddr && lAddr !== lName ? `<div class="wa-location-address">${escapeHtml(lAddr)}</div>` : ""}
+                  </div>
+                  <div class="wa-location-actions-bar">
+                    <a href="${escapeHtml(lUrl)}" target="_blank" rel="noopener noreferrer" class="btn-wa-location-open">
+                      <i class="fi fi-rr-map-marker"></i> <span>Open in Google Maps</span>
+                      <i class="fi fi-rr-arrow-up-right-from-square btn-wa-location-ext-icon"></i>
+                    </a>
+                  </div>
+                </div>
+              `;
+            }
+
+            extraContent = `
+              <div class="v3-timeline-wa-card ${isIncoming ? "is-inbound" : "is-outbound"}">
+                <div class="v3-wa-card-header">
+                  <div class="v3-wa-header-left">
+                    <i class="fi fi-brands-whatsapp v3-wa-header-icon"></i>
+                    <span class="v3-wa-sender-name">${senderLabel}</span>
+                    ${waCleanPhone ? `<span class="v3-wa-phone-tag">+${waCleanPhone}</span>` : ""}
+                  </div>
+                  <div class="v3-wa-header-right">
+                    <span class="v3-wa-direction-badge ${isIncoming ? "inbound" : "outbound"}">
+                      <i class="fi ${isIncoming ? "fi-rr-arrow-down-left" : "fi-rr-arrow-up-right"}"></i>
+                      ${isIncoming ? "Received" : "Sent"}
+                    </span>
+                  </div>
+                </div>
+                <div class="v3-wa-msg-body">
+                  ${
+                    cardContentHtml
+                      ? cardContentHtml
+                      : (t.description
+                        ? `<div class="v3-wa-msg-text ${isEmojiOnlyText ? "is-emoji-only" : ""}">${escapeHtml(t.description)}</div>`
+                        : "")
+                  }
+                  ${!cardContentHtml ? mediaHtml : ""}
+                </div>
+                <div class="v3-wa-card-footer">
+                  <div class="v3-wa-footer-time">
+                    <i class="fi fi-rr-clock"></i>
+                    <span>${t.time || t.time_relative}</span>
+                  </div>
+                  <div class="v3-wa-footer-actions">
+                    ${statusTickHtml}
+                    ${
+                      waChatUrl !== "#"
+                        ? `
+                      <a href="${waChatUrl}" target="_blank" class="v3-wa-reply-btn" title="Open WhatsApp chat">
+                        <i class="fi fi-brands-whatsapp"></i> Reply
+                      </a>
+                    `
+                        : ""
+                    }
+                  </div>
+                </div>
+              </div>
+            `.trim();
           } else if (t.type === "itinerary") {
             const q = t.quotation || {};
             const encId =
@@ -2173,7 +2471,7 @@
           }
 
           timelineHtml += `
-            <div class="v3-timeline-row type-${type}">
+            <div class="v3-timeline-row type-${type}" data-timeline-type="${type}">
               <div class="v3-timeline-bullet"><i class="${t.icon || "fi fi-rr-comment"}"></i></div>
               <div class="v3-timeline-row-meta">
                 <span class="v3-timeline-tag">${t.title}</span>
@@ -3094,14 +3392,30 @@
                   <div class="v3-note-composer-card">
                     <div class="v3-composer-type-nav">
                       <button type="button" class="v3-composer-type-btn active" data-type="note">
-                        <i class="fi fi-rr-comment-alt"></i> Add Note
+                        <i class="fi fi-rr-comment-alt"></i> Notes
                       </button>
-                      <button type="button" class="v3-composer-action-btn" id="btnComposerLogInteraction" title="Log phone call, WhatsApp chat, or meeting">
+                      <span class="v3-composer-nav-divider"></span>
+                      <button type="button" class="v3-composer-action-btn action-followup" id="btnComposerScheduleFollowUp" title="Schedule callback or next task">
+                        <i class="fi fi-rr-alarm-clock"></i> Follow ups
+                      </button>
+                      <button type="button" class="v3-composer-action-btn action-interaction" id="btnComposerLogInteraction" title="Log phone call, WhatsApp chat, or meeting">
                         <i class="fi fi-rr-headset"></i> Log Interaction
                       </button>
-                      <button type="button" class="v3-composer-action-btn" id="btnComposerScheduleFollowUp" title="Schedule callback or next task">
-                        <i class="fi fi-rr-alarm-clock"></i> Schedule Follow-Up
+                      <button type="button" class="v3-composer-action-btn action-itinerary" id="btnComposerSendItinerary" title="Create or send tour itinerary proposal">
+                        <i class="fi fi-rr-route"></i> Itinerary
                       </button>
+                      <button type="button" class="v3-composer-action-btn action-payment-link" id="btnComposerPaymentLink" title="Generate and send payment link">
+                        <i class="fi fi-rr-link"></i> Payment Link
+                      </button>
+                      ${
+                        lead.wa_mobile || lead.mobile
+                          ? `
+                      <button type="button" class="v3-composer-action-btn action-whatsapp" id="btnComposerWhatsAppChat" title="Open WhatsApp chat history & messaging">
+                        <i class="fi fi-brands-whatsapp"></i> WhatsApp
+                      </button>
+                      `
+                          : ""
+                      }
                     </div>
 
                     <textarea id="composerNoteInput" class="v3-composer-input" placeholder="Type an internal note, customer observation, or team remark..."></textarea>
@@ -7695,15 +8009,35 @@
                 iframeWin = null;
               }
 
+              // If iframe is still initializing scripts, wait briefly up to 2.5 seconds
+              if (iframe && (!iframeWin || typeof iframeWin.downloadItineraryPDF !== "function")) {
+                if ($btn) {
+                  $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Preparing Template...');
+                }
+                for (let w = 0; w < 12; w++) {
+                  await new Promise(r => setTimeout(r, 200));
+                  try {
+                    iframeWin = iframe.contentWindow || iframe.contentDocument;
+                    if (iframeWin && typeof iframeWin.downloadItineraryPDF === "function") break;
+                  } catch (e) {}
+                }
+              }
+
               if (iframeWin && typeof iframeWin.downloadItineraryPDF === "function") {
                 try {
                   if ($btn) {
-                    $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Preparing PDF Document...');
+                    $btn.prop("disabled", true).html('<i class="fi fi-rr-spinner fi-spin"></i> Attaching PDF Document...');
                   }
-                  // Race with 5 second timeout so user is never blocked
+                  // Render with live progress update and 30-second safety timeout
                   capturedPdf = await Promise.race([
-                    iframeWin.downloadItineraryPDF(false),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error("PDF render timeout")), 5000))
+                    iframeWin.downloadItineraryPDF(false, function (current, total) {
+                      if ($btn) {
+                        $btn.html(`<i class="fi fi-rr-spinner fi-spin"></i> Attaching PDF (${current}/${total})...`);
+                      }
+                    }),
+                    new Promise((_, reject) =>
+                      setTimeout(() => reject(new Error("PDF render timeout")), 30000)
+                    )
                   ]);
                 } catch (err) {
                   console.warn("Client-side PDF capture notice:", err);
@@ -8533,6 +8867,143 @@
           urlInput.select();
           document.execCommand("copy");
           showCopiedState();
+        }
+      });
+
+      // Copy Payment Link from Timeline Card
+      $(document).on("click", ".btn-copy-payment-link", function () {
+        const urlVal = $(this).data("url");
+        if (!urlVal) return;
+        const $btn = $(this);
+
+        function showCopiedState() {
+          $btn.html('<i class="fi fi-rr-check"></i> <span>Copied!</span>');
+          setTimeout(function () {
+            $btn.html('<i class="fi fi-rr-copy"></i> <span>Copy Link</span>');
+          }, 2500);
+          self.notify("Payment link copied to clipboard!", "success");
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(urlVal).then(function () {
+            showCopiedState();
+          }).catch(function () {
+            const $t = $("<input>").val(urlVal).appendTo("body").select();
+            document.execCommand("copy");
+            $t.remove();
+            showCopiedState();
+          });
+        } else {
+          const $t = $("<input>").val(urlVal).appendTo("body").select();
+          document.execCommand("copy");
+          $t.remove();
+          showCopiedState();
+        }
+      });
+
+      // Timeline Filter Bar Handler
+      $(document).on("click", ".v3-tl-filter-btn", function (e) {
+        e.preventDefault();
+        const filter = String($(this).data("filter") || $(this).attr("data-filter") || "").toLowerCase().trim();
+        $(".v3-tl-filter-btn").removeClass("active");
+        $(this).addClass("active");
+
+        const $stream = $(".v3-timeline-stream");
+        const $rows = $stream.find(".v3-timeline-row");
+        $(".v3-timeline-empty-filter").remove();
+
+        if (filter === "all") {
+          $rows.removeClass("is-hidden").show();
+        } else {
+          let matchCount = 0;
+          $rows.each(function () {
+            const rowType = String($(this).attr("data-timeline-type") || $(this).data("timeline-type") || "").toLowerCase().trim();
+            let matches = false;
+            if (filter === "whatsapp" && rowType === "whatsapp") matches = true;
+            else if (filter === "note" && (rowType === "note" || rowType === "update" || rowType === "assign")) matches = true;
+            else if (filter === "followup" && rowType === "followup") matches = true;
+            else if (filter === "itinerary" && rowType === "itinerary") matches = true;
+            else if (filter === "payment_link" && (rowType === "payment_link" || rowType === "payment-link")) matches = true;
+            else if (filter === "payment" && rowType === "payment") matches = true;
+
+            if (matches) {
+              $(this).removeClass("is-hidden").show();
+              matchCount++;
+            } else {
+              $(this).addClass("is-hidden").hide();
+            }
+          });
+
+          if (matchCount === 0) {
+            let emptyIcon = "fi-rr-info";
+            let emptyTitle = "No records found";
+            let emptyMsg = "No entries for this filter.";
+            let emptyCtaHtml = "";
+
+            if (filter === "whatsapp") {
+              emptyIcon = "fi-brands-whatsapp";
+              emptyTitle = "No WhatsApp Chats Logged";
+              emptyMsg = "No WhatsApp messages have been logged with this customer yet.";
+              const leadObj = (self.leadData && self.leadData.lead) || self.leadData || {};
+              const cleanPhone = String(leadObj.wa_mobile || leadObj.mobile || "").replace(/[^0-9]/g, "");
+              if (cleanPhone) {
+                const leadName = leadObj.first_name || leadObj.name || "";
+                emptyCtaHtml = `<a href="/dashboard/whatsapp/?phone=${cleanPhone}&name=${encodeURIComponent(leadName)}&lead_id=${self.leadId || ""}&new_chat=1" class="btn-v3-action btn-green btn-sm"><i class="fi fi-brands-whatsapp"></i> Start WhatsApp Chat</a>`;
+              }
+            } else if (filter === "payment_link") {
+              emptyIcon = "fi-rr-link";
+              emptyTitle = "No Payment Links Generated";
+              emptyMsg = "No dynamic payment links have been generated for this lead.";
+              emptyCtaHtml = `<button type="button" class="btn-v3-action btn-purple btn-sm" id="btnComposerPaymentLink"><i class="fi fi-rr-link"></i> Generate Payment Link</button>`;
+            } else if (filter === "itinerary") {
+              emptyIcon = "fi fi-rr-route";
+              emptyTitle = "No Itineraries Sent";
+              emptyMsg = "No itinerary proposals have been shared with this lead yet.";
+              emptyCtaHtml = `<button type="button" class="btn-v3-action btn-outline btn-sm" id="btnComposerSendItinerary"><i class="fi fi-rr-route"></i> Create Itinerary</button>`;
+            } else if (filter === "followup") {
+              emptyIcon = "fi fi-rr-alarm-clock";
+              emptyTitle = "No Follow-Ups Scheduled";
+              emptyMsg = "No follow-up calls or reminders have been logged yet.";
+              emptyCtaHtml = `<button type="button" class="btn-v3-action btn-outline btn-sm" id="btnComposerScheduleFollowUp"><i class="fi fi-rr-alarm-clock"></i> Schedule Follow-Up</button>`;
+            } else if (filter === "note") {
+              emptyIcon = "fi fi-rr-comment-alt";
+              emptyTitle = "No Notes Logged";
+              emptyMsg = "No internal notes recorded. Use the composer above to log customer remarks.";
+            }
+
+            const emptyHtml = `
+              <div class="v3-timeline-empty-filter">
+                <i class="fi ${emptyIcon}"></i>
+                <h5>${emptyTitle}</h5>
+                <p>${emptyMsg}</p>
+                ${emptyCtaHtml ? `<div class="v3-tl-empty-cta">${emptyCtaHtml}</div>` : ""}
+              </div>
+            `;
+            $(".v3-timeline-stream").append(emptyHtml);
+          }
+        }
+      });
+
+      // Composer Quick Action Shortcuts
+      $(document).on("click", "#btnComposerSendItinerary", function () {
+        $("#btnHeroSendItinerary").trigger("click");
+      });
+
+      $(document).on("click", "#btnComposerPaymentLink", function () {
+        $("#btnHeroSendPaymentLink").trigger("click");
+      });
+
+      $(document).on("click", "#btnComposerWhatsAppChat", function () {
+        const leadObj = (self.leadData && self.leadData.lead) || self.leadData || {};
+        const cleanPhone = String(leadObj.wa_mobile || leadObj.mobile || "").replace(/[^0-9]/g, "");
+        const leadName = leadObj.first_name || leadObj.name || "";
+        if (cleanPhone) {
+          window.open(
+            `/dashboard/whatsapp/?phone=${cleanPhone}&name=${encodeURIComponent(leadName)}&lead_id=${self.leadId || ""}&new_chat=1`,
+            "_blank",
+          );
+        } else {
+          self.notify("Customer mobile number not found for WhatsApp.", "warning");
         }
       });
 
