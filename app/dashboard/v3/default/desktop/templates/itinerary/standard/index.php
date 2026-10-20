@@ -3009,7 +3009,7 @@ $checkTransitOrTripEnd = function ($d, $idx, $total, $title, $overview) {
         }
         setTimeout(hidePageLoader, 2500);
 
-        async function downloadItineraryPDF(shouldSave = true) {
+        async function downloadItineraryPDF(shouldSave = true, onProgress = null) {
             const btn = document.getElementById('btnDownloadPDF');
             if (btn && shouldSave !== false) {
                 btn.disabled = true;

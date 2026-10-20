@@ -2470,7 +2470,7 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             if (loader) loader.style.display = 'none';
         }
 
-        async function downloadItineraryPDF(shouldSave = true) {
+        async function downloadItineraryPDF(shouldSave = true, onProgress = null) {
             const btn = document.getElementById('btnDownloadPDF');
             if (btn && shouldSave !== false) {
                 btn.disabled = true;

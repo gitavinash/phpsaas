@@ -3792,7 +3792,7 @@ if (!empty($cleanOverview)) {
         setTimeout(hidePageLoader, 2500);
 
         // 3. Client-side PDF Exporter Function (High-Fidelity Page-by-Page)
-        async function downloadItineraryPDF(shouldSave = true) {
+        async function downloadItineraryPDF(shouldSave = true, onProgress = null) {
             const btn = document.getElementById('btnDownloadPDF');
             if (btn && shouldSave !== false) {
                 btn.disabled = true;

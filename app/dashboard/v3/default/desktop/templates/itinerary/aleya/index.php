@@ -2328,7 +2328,7 @@ if (!function_exists('toRomanNumerals')) {
             if (loader) loader.style.display = 'none';
         }
 
-        async function downloadItineraryPDF(shouldSave = true) {
+        async function downloadItineraryPDF(shouldSave = true, onProgress = null) {
             const btn = document.getElementById('btnDownloadPDF');
             if (btn && shouldSave !== false) {
                 btn.disabled = true;

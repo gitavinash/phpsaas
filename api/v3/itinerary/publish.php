@@ -840,11 +840,15 @@ if (mysqli_query($connection, $insertQuery)) {
                     $whatsappSent = true;
                     $whatsappError = null;
                 } else {
-                    $whatsappError = $waRes['msg'] ?? 'WhatsApp device error.';
+                    // Fallback to legacy BhashSMS only if site has NO WhatsApp Web devices configured
+                    $hasAnyWaWebDev = false;
+                    $devChkQ = mysqli_query($connection, "SELECT device_id FROM " . TABLE_PREFIX . "whatsapp_device WHERE device_site_id = {$siteId} LIMIT 1");
+                    if ($devChkQ && mysqli_num_rows($devChkQ) > 0) {
+                        $hasAnyWaWebDev = true;
+                    }
 
-                    // Fallback attempt to legacy template if configured
                     $whatsappTemplateFile = '';
-                    if (defined('WHATSAPP_TEMPLATE_USER') && file_exists(WHATSAPP_TEMPLATE_USER . 'send-itinerary.php')) {
+                    if (!$hasAnyWaWebDev && defined('WHATSAPP_TEMPLATE_USER') && file_exists(WHATSAPP_TEMPLATE_USER . 'send-itinerary.php')) {
                         $whatsappTemplateFile = WHATSAPP_TEMPLATE_USER . 'send-itinerary.php';
                     } elseif (defined('WHATSAPP_TEMPLATE')) {
                         $siteApp = defined('SITE_APP') ? SITE_APP : 'aleya';

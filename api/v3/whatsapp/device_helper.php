@@ -6,6 +6,8 @@
  * and direct WhatsApp outbound messaging across Itinerary, Quotation, and Chat features.
  */
 
+date_default_timezone_set('Asia/Kolkata');
+
 if (!defined('TABLE_PREFIX')) {
     define('TABLE_PREFIX', 'isw_');
 }
@@ -379,8 +381,8 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $gwPayload);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 45);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Content-Length: ' . strlen($gwPayload)
@@ -395,7 +397,7 @@ function sendWhatsAppDirectMessage($connection, $siteId, $senderUserId, $recipie
                 'method'        => 'POST',
                 'header'        => "Content-Type: application/json\r\n",
                 'content'       => $gwPayload,
-                'timeout'       => 10,
+                'timeout'       => 45,
                 'ignore_errors' => true
             ]
         ];

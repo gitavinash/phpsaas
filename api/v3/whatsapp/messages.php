@@ -359,8 +359,7 @@ if ($method === 'GET') {
             $dateLabel = '';
             if (!empty($row['message_created_at'])) {
                 try {
-                    $dt = new DateTime($row['message_created_at'], new DateTimeZone('UTC'));
-                    $dt->setTimezone(new DateTimeZone($siteTimezone));
+                    $dt = new DateTime($row['message_created_at'], new DateTimeZone($siteTimezone));
                     $timeDisplay = $dt->format('h:i A');
                     $dateDisplay = $dt->format('M d, Y');
                     $msgDateStr = $dt->format('Y-m-d');
@@ -646,7 +645,7 @@ if ($method === 'POST') {
     $escSender = mysqli_real_escape_string($connection, $senderPhone);
     $escReceiver = mysqli_real_escape_string($connection, $recipientPhone);
     $escType = mysqli_real_escape_string($connection, $type);
-    $now = gmdate('Y-m-d H:i:s');
+    $now = date('Y-m-d H:i:s');
 
     // Insert outgoing message
     $msgSql = "INSERT INTO " . TABLE_PREFIX . "whatsapp_message 

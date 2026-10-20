@@ -1378,7 +1378,7 @@ class WhatsAppSession {
       if (!phone) continue;
 
       const pDigits = phone.replace(/[^0-9]/g, "");
-      if (pDigits.length >= 13) continue;
+      if (pDigits.length < 7 || pDigits.length > 13 || isLidNumber(phone) || isLidNumber(jid)) continue;
       if (ownDigits && (pDigits === ownDigits || pDigits.endsWith(ownDigits) || ownDigits.endsWith(pDigits))) {
         continue;
       }
@@ -1535,7 +1535,7 @@ class WhatsAppSession {
         browser: ["Aleya CRM", "Chrome", "120.0.0"],
         enableAutoSessionRecreation: true,
         enableRecentMessageCache: true,
-        syncFullHistory: false,
+        syncFullHistory: true,
         connectTimeoutMs: 60000,
         keepAliveIntervalMs: 25000,
         emitOwnEvents: true,
@@ -1699,10 +1699,18 @@ class WhatsAppSession {
 
             this.isConnecting = false;
 
+            if (this.sock) {
+              try {
+                this.sock.ev.removeAllListeners();
+              } catch (e) {}
+            }
+
             // Gentle Exponential Backoff:
-            // Attempt 1: 5s, Attempt 2: 10s, Attempt 3: 15s, Attempt 4: 30s, Attempt 5+: 60s
+            // For DNS / internet failure, use at least 30s backoff to avoid thrashing
             let delay = 5000;
-            if (this.reconnectAttempts === 2) delay = 10000;
+            if (errMsg.includes("ENOTFOUND") || errMsg.includes("EAI_AGAIN") || errMsg.includes("ETIMEDOUT")) {
+              delay = 30000;
+            } else if (this.reconnectAttempts === 2) delay = 10000;
             else if (this.reconnectAttempts === 3) delay = 15000;
             else if (this.reconnectAttempts === 4) delay = 30000;
             else if (this.reconnectAttempts >= 5) delay = 60000;
@@ -2702,13 +2710,20 @@ app.post("/send-message", async (req, res) => {
       const isDoc = (type === "document") || (mediaMime === "application/pdf") || (typeof media === "string" && (media.toLowerCase().includes(".pdf") || media.startsWith("data:application/pdf"))) || (localPath && localPath.toLowerCase().endsWith(".pdf"));
       const docFileName = req.body?.file_name || req.body?.fileName || req.query?.file_name || "Quotation.pdf";
 
+      let docCaption = message || "";
+      let docFollowUp = "";
+      if (isDoc && docCaption.length > 950) {
+        docFollowUp = docCaption;
+        docCaption = docCaption.substring(0, 900) + "...";
+      }
+
       if (mediaBuffer) {
         if (isDoc) {
           sendContent = {
             document: mediaBuffer,
             mimetype: "application/pdf",
             fileName: docFileName,
-            caption: message || ""
+            caption: docCaption
           };
         } else {
           sendContent = {
@@ -2724,7 +2739,7 @@ app.post("/send-message", async (req, res) => {
             document: { url: media },
             mimetype: "application/pdf",
             fileName: docFileName,
-            caption: message || ""
+            caption: docCaption
           };
         } else if (isDoc && !isPdfUrl) {
           sendContent = { text: message || "" };
@@ -2742,6 +2757,12 @@ app.post("/send-message", async (req, res) => {
     }
 
     const sent = await s.sock.sendMessage(targetJid, sendContent);
+
+    if (docFollowUp) {
+      try {
+        await s.sock.sendMessage(targetJid, { text: docFollowUp });
+      } catch (fErr) {}
+    }
 
     if (sent?.key?.remoteJid && sent.key.remoteJid.includes("@lid")) {
       const normLid = jidNormalizedUser(sent.key.remoteJid);

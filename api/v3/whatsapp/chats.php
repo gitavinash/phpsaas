@@ -133,58 +133,11 @@ if ($method === 'GET') {
 
     if ($action === 'resolve_lid') {
         $lid = preg_replace('/[^0-9]/', '', $_GET['lid'] ?? ($_POST['lid'] ?? ''));
-        $pushName = trim($_GET['pushname'] ?? ($_POST['pushname'] ?? ''));
-        $escPush = mysqli_real_escape_string($connection, $pushName);
         $resolvedPhone = '';
 
-        // 1. Check known test LID
+        // Known test LID
         if ($lid === '187810329956513' || str_contains($lid, '187810329956513')) {
             $resolvedPhone = '+919990026008';
-        }
-
-        // 2. Search existing chats for matching pushname or name with real phone number
-        if (empty($resolvedPhone) && !empty($pushName)) {
-            $cQ = mysqli_query($connection, "SELECT chat_phone FROM " . TABLE_PREFIX . "whatsapp_chat 
-                                             WHERE chat_site_id = {$siteId} 
-                                               AND CHAR_LENGTH(REPLACE(chat_phone, '+', '')) <= 13 
-                                               AND chat_phone NOT LIKE '%@lid' 
-                                               AND (chat_name LIKE '%{$escPush}%' OR chat_pushname LIKE '%{$escPush}%') 
-                                             ORDER BY chat_last_message_time DESC LIMIT 1");
-            if ($cQ && mysqli_num_rows($cQ) > 0) {
-                $resolvedPhone = mysqli_fetch_assoc($cQ)['chat_phone'];
-            }
-        }
-
-        // 3. Search tbl_enquiry for lead matching pushname
-        if (empty($resolvedPhone) && !empty($pushName)) {
-            $lq = mysqli_query($connection, "SELECT enquiry_mobile FROM " . TABLE_PREFIX . "enquiry 
-                                             WHERE enquiry_site_id = {$siteId} 
-                                               AND (TRIM(CONCAT(COALESCE(enquiry_first_name, ''), ' ', COALESCE(enquiry_last_name, ''))) LIKE '%{$escPush}%' OR enquiry_first_name LIKE '%{$escPush}%') 
-                                               AND enquiry_mobile IS NOT NULL AND enquiry_mobile != '' 
-                                             ORDER BY enquiry_id DESC LIMIT 1");
-            if ($lq && mysqli_num_rows($lq) > 0) {
-                $mob = preg_replace('/[^0-9]/', '', mysqli_fetch_assoc($lq)['enquiry_mobile']);
-                if (strlen($mob) === 10) $mob = '91' . $mob;
-                if (strlen($mob) >= 8 && strlen($mob) <= 13) {
-                    $resolvedPhone = '+' . $mob;
-                }
-            }
-        }
-
-        // 4. Search recent outgoing chats in last 4 hours
-        if (empty($resolvedPhone)) {
-            $outQ = mysqli_query($connection, "SELECT c.chat_phone 
-                                               FROM " . TABLE_PREFIX . "whatsapp_chat c 
-                                               JOIN " . TABLE_PREFIX . "whatsapp_message m ON m.message_chat_id = c.chat_id 
-                                               WHERE c.chat_site_id = {$siteId} 
-                                                 AND m.message_direction = 'outgoing' 
-                                                 AND CHAR_LENGTH(REPLACE(c.chat_phone, '+', '')) <= 13 
-                                                 AND c.chat_phone NOT LIKE '%@lid' 
-                                                 AND m.message_created_at >= DATE_SUB(NOW(), INTERVAL 4 HOUR) 
-                                               ORDER BY m.message_created_at DESC LIMIT 1");
-            if ($outQ && mysqli_num_rows($outQ) > 0) {
-                $resolvedPhone = mysqli_fetch_assoc($outQ)['chat_phone'];
-            }
         }
 
         if (!empty($resolvedPhone)) {
@@ -430,65 +383,13 @@ if ($method === 'GET') {
               AND (chat_lead_id IS NULL OR chat_lead_id = 0)
               AND chat_id NOT IN (SELECT DISTINCT message_chat_id FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_site_id = {$siteId})");
 
-        // Auto-heal: Reconcile rogue LID chats (e.g. +187810329956513) into their real contact chat
-        $rogueQ = mysqli_query($connection, "SELECT chat_id, chat_phone, chat_name, chat_pushname, chat_lead_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (chat_phone LIKE '%187810329956513%' OR CHAR_LENGTH(REPLACE(chat_phone, '+', '')) >= 14)");
-        if ($rogueQ && mysqli_num_rows($rogueQ) > 0) {
-            while ($rRow = mysqli_fetch_assoc($rogueQ)) {
-                $rChatId = (int)$rRow['chat_id'];
-                $rLeadId = (int)$rRow['chat_lead_id'];
-                $rPush = trim($rRow['chat_pushname'] ?? ($rRow['chat_name'] ?? ''));
-                $escRPush = mysqli_real_escape_string($connection, $rPush);
-
-                $targetChatId = 0;
-                if (str_contains($rRow['chat_phone'], '187810329956513') || stripos($rPush, 'avinash') !== false) {
-                    $targetQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_id != {$rChatId} AND (chat_phone LIKE '%9990026008' OR chat_name LIKE '%avinash%') ORDER BY chat_id ASC LIMIT 1");
-                    if ($targetQ && mysqli_num_rows($targetQ) > 0) {
-                        $targetChatId = (int)mysqli_fetch_assoc($targetQ)['chat_id'];
-                    }
-                }
-                if ($targetChatId === 0 && !empty($escRPush)) {
-                    $targetQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_id != {$rChatId} AND CHAR_LENGTH(REPLACE(chat_phone, '+', '')) <= 13 AND chat_phone NOT LIKE '%@lid' AND (chat_name LIKE '%{$escRPush}%' OR chat_pushname LIKE '%{$escRPush}%') ORDER BY chat_id ASC LIMIT 1");
-                    if ($targetQ && mysqli_num_rows($targetQ) > 0) {
-                        $targetChatId = (int)mysqli_fetch_assoc($targetQ)['chat_id'];
-                    }
-                }
-                if ($targetChatId === 0 && !empty($escRPush)) {
-                    // Check if lead exists for this push name
-                    $lMatchQ = mysqli_query($connection, "SELECT enquiry_mobile FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_site_id = {$siteId} AND (TRIM(CONCAT(COALESCE(enquiry_first_name, ''), ' ', COALESCE(enquiry_last_name, ''))) LIKE '%{$escRPush}%' OR enquiry_first_name LIKE '%{$escRPush}%') AND enquiry_mobile IS NOT NULL AND enquiry_mobile != '' ORDER BY enquiry_id DESC LIMIT 1");
-                    if ($lMatchQ && mysqli_num_rows($lMatchQ) > 0) {
-                        $leadMob = preg_replace('/[^0-9]/', '', mysqli_fetch_assoc($lMatchQ)['enquiry_mobile']);
-                        if (strlen($leadMob) >= 8) {
-                            $last10Lead = substr($leadMob, -10);
-                            $targetQ = mysqli_query($connection, "SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND chat_id != {$rChatId} AND chat_phone LIKE '%{$last10Lead}' LIMIT 1");
-                            if ($targetQ && mysqli_num_rows($targetQ) > 0) {
-                                $targetChatId = (int)mysqli_fetch_assoc($targetQ)['chat_id'];
-                            } else {
-                                // Convert the rogue chat's phone to the real phone number
-                                $fullRealPhone = '+' . (strlen($leadMob) == 10 ? '91' . $leadMob : $leadMob);
-                                mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat SET chat_phone = '{$fullRealPhone}' WHERE chat_id = {$rChatId}");
-                            }
-                        }
-                    }
-                }
-
-                if ($targetChatId > 0 && $rChatId !== $targetChatId) {
-                    mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_message SET message_chat_id = {$targetChatId} WHERE message_chat_id = {$rChatId}");
-                    $latestMsgQ = mysqli_query($connection, "SELECT message_text, message_created_at FROM " . TABLE_PREFIX . "whatsapp_message WHERE message_chat_id = {$targetChatId} ORDER BY message_created_at DESC, message_id DESC LIMIT 1");
-                    if ($latestMsgQ && mysqli_num_rows($latestMsgQ) > 0) {
-                        $lMsg = mysqli_fetch_assoc($latestMsgQ);
-                        $escLastMsg = mysqli_real_escape_string($connection, $lMsg['message_text']);
-                        $escLastTime = mysqli_real_escape_string($connection, $lMsg['message_created_at']);
-                        mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat SET chat_last_message = '{$escLastMsg}', chat_last_message_time = '{$escLastTime}', chat_unread_count = chat_unread_count + 1 WHERE chat_id = {$targetChatId}");
-                    }
-                    if ($rLeadId > 0) {
-                        mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "enquiry WHERE enquiry_id = {$rLeadId} AND enquiry_subject = 'WhatsApp Inquiry' AND (enquiry_mobile LIKE '%187810329956513%' OR enquiry_first_name LIKE '%187810329956513%')");
-                        @mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "enquiry_profile WHERE enquiry_profile_ref_id = {$rLeadId}");
-                        @mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "enquiry_notes WHERE enquiry_notes_ref_id = {$rLeadId}");
-                    }
-                    mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_id = {$rChatId}");
-                }
-            }
-        }
+        // Auto-heal: Purge unmapped rogue LID ghost chats (14+ digits or containing lid/@) to prevent fake contacts
+        @mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_message 
+            WHERE message_site_id = {$siteId} 
+              AND message_chat_id IN (SELECT chat_id FROM " . TABLE_PREFIX . "whatsapp_chat WHERE chat_site_id = {$siteId} AND (CHAR_LENGTH(REPLACE(chat_phone, '+', '')) >= 14 OR chat_phone LIKE '%lid%' OR chat_phone LIKE '%@%'))");
+        @mysqli_query($connection, "DELETE FROM " . TABLE_PREFIX . "whatsapp_chat 
+            WHERE chat_site_id = {$siteId} 
+              AND (CHAR_LENGTH(REPLACE(chat_phone, '+', '')) >= 14 OR chat_phone LIKE '%lid%' OR chat_phone LIKE '%@%')");
 
         // Auto-heal: Populate chat_device_phone from messages for existing chats where missing or set to CRM
         @mysqli_query($connection, "UPDATE " . TABLE_PREFIX . "whatsapp_chat c
@@ -600,8 +501,10 @@ if ($method === 'GET') {
         $whereClauses[] = "c.chat_phone NOT IN (" . implode(',', array_unique($devPhones)) . ")";
     }
 
-    // Exclude unmapped ghost LID numbers from chat list only if they have no messages
-    $whereClauses[] = "(CHAR_LENGTH(REPLACE(c.chat_phone, '+', '')) <= 13 OR (c.chat_last_message IS NOT NULL AND c.chat_last_message != ''))";
+    // Strictly show only valid phone number chats (7 to 13 digits, E.164 without @ or lid)
+    $whereClauses[] = "CHAR_LENGTH(REPLACE(c.chat_phone, '+', '')) BETWEEN 7 AND 13";
+    $whereClauses[] = "c.chat_phone NOT LIKE '%@%'";
+    $whereClauses[] = "c.chat_phone NOT LIKE '%lid%'";
     $whereClauses[] = "((c.chat_last_message IS NOT NULL AND c.chat_last_message != '') OR (c.chat_lead_id IS NOT NULL AND c.chat_lead_id > 0))";
 
     if (!empty($q)) {
@@ -809,8 +712,7 @@ if ($method === 'GET') {
         $formattedTime = '';
         if (!empty($row['chat_last_message_time'])) {
             try {
-                $dt = new DateTime($row['chat_last_message_time'], new DateTimeZone('UTC'));
-                $dt->setTimezone(new DateTimeZone($siteTimezone));
+                $dt = new DateTime($row['chat_last_message_time'], new DateTimeZone($siteTimezone));
                 $nowTz = new DateTime('now', new DateTimeZone($siteTimezone));
                 $yesterdayTz = (clone $nowTz)->modify('-1 day');
                 if ($dt->format('Y-m-d') === $nowTz->format('Y-m-d')) {
@@ -832,8 +734,8 @@ if ($method === 'GET') {
         $phoneDigits = preg_replace('/[^0-9]/', '', $phone);
         $last10 = substr($phoneDigits, -10);
 
-        // Check if phone matches an existing CRM lead
-        if (empty($row['chat_lead_id']) && isset($phoneLeadMap[$last10])) {
+        // Check if phone matches an existing CRM lead (strictly for genuine 10-13 digit phones)
+        if (strlen($phoneDigits) >= 10 && strlen($phoneDigits) <= 13 && empty($row['chat_lead_id']) && isset($phoneLeadMap[$last10])) {
             $mLead = $phoneLeadMap[$last10];
             $row['chat_lead_id'] = (int)$mLead['enquiry_id'];
             $row['enquiry_id'] = (int)$mLead['enquiry_id'];
