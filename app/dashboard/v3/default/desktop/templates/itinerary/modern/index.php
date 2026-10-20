@@ -209,13 +209,13 @@ $adultSubtotal  = $adultPriceVal * $adultCount;
 $childSubtotal  = $childPriceVal * $childCount;
 $infantSubtotal = $infantPriceVal * $infantCount;
 
-$advance30Percent = round($totalPriceVal * 0.30, 2);
-$balance70Percent = $totalPriceVal - $advance30Percent;
-
 $gstPercentVal  = defined('GST_PERCENTAGE') ? (float)GST_PERCENTAGE : 5.0;
-$basePriceVal   = $totalPriceVal > 0 ? round($totalPriceVal / (1 + ($gstPercentVal / 100)), 2) : 0;
-$gstAmountVal   = $totalPriceVal - $basePriceVal;
-$finalPriceVal   = $totalPriceVal + $gstAmountVal;
+$basePriceVal   = $totalPriceVal;
+$gstAmountVal   = $totalPriceVal > 0 ? round($totalPriceVal * ($gstPercentVal / 100), 2) : 0.0;
+$finalPriceVal  = $totalPriceVal + $gstAmountVal;
+
+$advance30Percent = round($finalPriceVal * 0.30, 2);
+$balance70Percent = $finalPriceVal - $advance30Percent;
 
 // Clean quote reference
 $rawQuoteRef = $quoteId ?? ($quotationId ?? ($tour_package_id ?? rand(1000, 9999)));
@@ -230,7 +230,7 @@ if (!empty($payment_link)) {
     $encodedQuoteId = base64_encode((string)$quotationId);
     $payNowUrl = (defined('SITE_URL') ? rtrim(SITE_URL, '/') : '') . "/payment/{$encodedQuoteId}/";
 } elseif (!empty($cleanWhatsappDigits)) {
-    $payNowUrl = "https://wa.me/" . $cleanWhatsappDigits . "?text=" . rawurlencode("Hello " . $siteName . ", I would like to make payment for Quotation " . $cleanQuoteRef . " - Amount: INR " . number_format($totalPriceVal, 2));
+    $payNowUrl = "https://wa.me/" . $cleanWhatsappDigits . "?text=" . rawurlencode("Hello " . $siteName . ", I would like to make payment for Quotation " . $cleanQuoteRef . " - Amount: INR " . number_format($finalPriceVal > 0 ? $finalPriceVal : $totalPriceVal, 2));
 } else {
     $payNowUrl = "tel:" . preg_replace('/[^\d\+]/', '', (string)$sitePhone);
 }
@@ -282,7 +282,7 @@ $hasUpiDetails        = !empty($companyUpiId);
 
 // Dynamic UPI QR Code URL Generation
 $upiPayeeName = !empty($companyBankAcName) ? $companyBankAcName : $siteName;
-$upiPayAmt    = ($advance30Percent > 0) ? $advance30Percent : $totalPriceVal;
+$upiPayAmt    = ($advance30Percent > 0) ? $advance30Percent : ($finalPriceVal > 0 ? $finalPriceVal : $totalPriceVal);
 $upiQrUrl     = '';
 if ($hasUpiDetails) {
     $upiPayload = "upi://pay?pa=" . rawurlencode($companyUpiId) . "&pn=" . rawurlencode($upiPayeeName) . "&am=" . number_format($upiPayAmt, 2, '.', '') . "&cu=INR&tn=" . rawurlencode("Quote " . $cleanQuoteRef);
@@ -1935,7 +1935,7 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
             <div class="modern-price-hero-card">
                 <div class="modern-price-hero-left">
                     <div class="price-tagline">Total Package Price</div>
-                    <div class="big-price">₹<?php echo number_format($totalPriceVal, 2); ?></div>
+                    <div class="big-price">₹<?php echo number_format($finalPriceVal > 0 ? $finalPriceVal : $totalPriceVal, 2); ?></div>
                     <div class="price-meta"><?php echo htmlspecialchars($paxSummaryText); ?> · Taxes Included · Quote Valid Until <?php echo $validUntilDate; ?></div>
                 </div>
                 <div class="modern-price-hero-right">
@@ -1982,9 +1982,15 @@ $checkTransitOrTripEnd = function($d, $idx, $total, $title, $overview) {
                             <td class="num-col">₹<?php echo number_format($infantSubtotal, 2); ?></td>
                         </tr>
                         <?php endif; ?>
+                        <?php if ($gstAmountVal > 0): ?>
+                        <tr>
+                            <td colspan="3"><strong>Applicable GST</strong> (<?php echo $gstPercentVal; ?>%)</td>
+                            <td class="num-col">+ ₹<?php echo number_format($gstAmountVal, 2); ?></td>
+                        </tr>
+                        <?php endif; ?>
                         <tr class="total-row">
-                            <td colspan="3">Net Total Package Cost (Inclusive of all services)</td>
-                            <td class="num-col">₹<?php echo number_format($totalPriceVal, 2); ?></td>
+                            <td colspan="3">Net Total Package Cost (Inclusive of all services &amp; GST)</td>
+                            <td class="num-col">₹<?php echo number_format($finalPriceVal > 0 ? $finalPriceVal : $totalPriceVal, 2); ?></td>
                         </tr>
                     </tbody>
                 </table>

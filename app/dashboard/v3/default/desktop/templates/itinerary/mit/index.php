@@ -258,14 +258,13 @@ $adultSubtotal  = $adultPriceVal * $adultCount;
 $childSubtotal  = $childPriceVal * $childCount;
 $infantSubtotal = $infantPriceVal * $infantCount;
 
-$advance30Percent = round($totalPriceVal * 0.30, 2);
-$balance70Percent = $totalPriceVal - $advance30Percent;
-
 $gstPercentVal  = defined('GST_PERCENTAGE') ? (float)GST_PERCENTAGE : 5.0;
-$basePriceVal   = $totalPriceVal > 0 ? round($totalPriceVal / (1 + ($gstPercentVal / 100)), 2) : 0;
-$gstAmountVal   = $totalPriceVal - $basePriceVal;
+$basePriceVal   = $totalPriceVal;
+$gstAmountVal   = $totalPriceVal > 0 ? round($totalPriceVal * ($gstPercentVal / 100), 2) : 0.0;
+$finalPriceVal  = $totalPriceVal + $gstAmountVal;
 
-$finalPriceVal   = $totalPriceVal + $gstAmountVal;
+$advance30Percent = round($finalPriceVal * 0.30, 2);
+$balance70Percent = $finalPriceVal - $advance30Percent;
 
 // Clean quote reference
 $rawQuoteRef = $quoteId ?? ($quotationId ?? ($tour_package_id ?? rand(1000, 9999)));
@@ -280,13 +279,13 @@ if (!empty($payment_link)) {
     $encodedQuoteId = base64_encode((string)$quotationId);
     $payNowUrl = (defined('SITE_URL') ? rtrim(SITE_URL, '/') : '') . "/payment/{$encodedQuoteId}/";
 } elseif (!empty($cleanWhatsappDigits)) {
-    $payNowUrl = "https://wa.me/" . $cleanWhatsappDigits . "?text=" . rawurlencode("Hello " . $siteName . ", I would like to make payment for Quotation " . $cleanQuoteRef . " (" . ($tour_package_title ?? 'Tour Package') . ") - Amount: INR " . number_format($totalPriceVal, 2));
+    $payNowUrl = "https://wa.me/" . $cleanWhatsappDigits . "?text=" . rawurlencode("Hello " . $siteName . ", I would like to make payment for Quotation " . $cleanQuoteRef . " (" . ($tour_package_title ?? 'Tour Package') . ") - Amount: INR " . number_format($finalPriceVal > 0 ? $finalPriceVal : $totalPriceVal, 2));
 } else {
     $payNowUrl = "tel:" . preg_replace('/[^\d\+]/', '', (string)$sitePhone);
 }
 
 $waPayUrl = !empty($cleanWhatsappDigits)
-    ? "https://wa.me/" . $cleanWhatsappDigits . "?text=" . rawurlencode("Hello " . $siteName . ", I am confirming quotation " . $cleanQuoteRef . " (" . ($tour_package_title ?? 'Tour Package') . "). Please share payment link / QR code for INR " . number_format($totalPriceVal, 2))
+    ? "https://wa.me/" . $cleanWhatsappDigits . "?text=" . rawurlencode("Hello " . $siteName . ", I am confirming quotation " . $cleanQuoteRef . " (" . ($tour_package_title ?? 'Tour Package') . "). Please share payment link / QR code for INR " . number_format($finalPriceVal > 0 ? $finalPriceVal : $totalPriceVal, 2))
     : '';
 
 // Package Variables
@@ -320,7 +319,7 @@ $hasBankDetails       = $hasRealBankDetails;
 
 // Dynamic UPI QR Code URL Generation - ONLY when company UPI ID is configured
 $upiPayeeName = !empty($companyBankAcName) ? $companyBankAcName : $siteName;
-$upiPayAmt    = ($advance30Percent > 0) ? $advance30Percent : $totalPriceVal;
+$upiPayAmt    = ($advance30Percent > 0) ? $advance30Percent : ($finalPriceVal > 0 ? $finalPriceVal : $totalPriceVal);
 $upiQrUrl     = '';
 if ($hasUpiDetails) {
     $upiPayload = "upi://pay?pa=" . rawurlencode($companyUpiId) . "&pn=" . rawurlencode($upiPayeeName) . "&am=" . number_format($upiPayAmt, 2, '.', '') . "&cu=INR&tn=" . rawurlencode("Quote " . $cleanQuoteRef);

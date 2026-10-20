@@ -492,10 +492,12 @@ if (!empty($quotationData)) {
     $payment_link = $parsedDescription['payment_url'] ?? ($parsedDescription['payment_link'] ?? ($parsedDescription['pay_url'] ?? ''));
 
     $gstPercent = defined('GST_PERCENTAGE') ? (float)GST_PERCENTAGE : 5.0;
-    $basePrice = $price > 0 ? round($price / (1 + ($gstPercent / 100)), 2) : 0;
+    $basePrice = $price;
+    $gstAmountVal = $price > 0 ? round($price * ($gstPercent / 100), 2) : 0.0;
+    $finalPrice = $price + $gstAmountVal;
     $quotationPriceWithOutGST = number_format($basePrice, 2);
-    $gstAmount = number_format($price - $basePrice, 2);
-    $quotationPriceWithGST = number_format($price, 2);
+    $gstAmount = number_format($gstAmountVal, 2);
+    $quotationPriceWithGST = number_format($finalPrice, 2);
     $total_discount = number_format((float)($quotationData['quotation_discount'] ?? 0), 2);
 
     $passangerInfo = 'Custom Quotation';
@@ -588,10 +590,12 @@ if (!empty($quotationData)) {
     $payment_link = $postData['payment_url'] ?? ($postData['payment_link'] ?? ($postData['pay_url'] ?? ($postData['paymentUrl'] ?? '')));
 
     $gstPercent = defined('GST_PERCENTAGE') ? (float)GST_PERCENTAGE : 5.0;
-    $basePrice = $price > 0 ? round($price / (1 + ($gstPercent / 100)), 2) : 0;
+    $basePrice = $price;
+    $gstAmountVal = $price > 0 ? round($price * ($gstPercent / 100), 2) : 0.0;
+    $finalPrice = $price + $gstAmountVal;
     $quotationPriceWithOutGST = number_format($basePrice, 2);
-    $gstAmount = number_format($price - $basePrice, 2);
-    $quotationPriceWithGST = number_format($price, 2);
+    $gstAmount = number_format($gstAmountVal, 2);
+    $quotationPriceWithGST = number_format($finalPrice, 2);
     $total_discount = '0.00';
     $passangerInfo = !empty($postData['clientName']) ? $postData['clientName'] : 'Valued Traveler';
 
