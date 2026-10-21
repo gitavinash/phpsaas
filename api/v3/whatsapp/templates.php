@@ -202,8 +202,7 @@ function getDefaultTemplatesList()
             'name' => 'Warm Welcome & Trip Inquiry Acknowledgment',
             'code' => 'lead_welcome_default',
             'category' => 'lead_welcome',
-            'action' => 'lead_welcome',
-            'content' => "Namaste {customer_name}! 🙏 Welcome to *{company_name}*.\n\nThank you for choosing us for your upcoming *{destination}* getaway! 🌴✨\n\nI am *{agent_name}*, your dedicated Holiday Specialist. We are carefully curating a tailor-made travel proposal designed around your preferences, style, and dates.\n\n📋 *What we're assembling for you:*\n• Handpicked boutique & luxury accommodations\n• Private sanitized vehicle & verified driver-guide\n• Scenic highlights, hidden gems & authentic local meals\n• 24/7 dedicated on-tour concierge support\n\n💡 *Help us personalize:*\nIf you have preferred travel dates (*{dates}*), specific hotel tier preferences, or a targeted budget in mind, simply reply directly to this message! ✈️\n\nWarm regards,\n*{agent_name}*\nHoliday Specialist | *{company_name}*",
+            'content' => "Namaste {customer_name}! Welcome to *{company_name}*.\n\nThank you for choosing us for your upcoming *{destination}* getaway!\n\nI am *{agent_name}*, your dedicated Holiday Specialist. We are carefully curating a tailor-made travel proposal designed around your preferences, style, and dates.\n\n*What we are assembling for you:*\n• Handpicked boutique & luxury accommodations\n• Private sanitized vehicle & verified driver-guide\n• Scenic highlights, hidden gems & authentic local meals\n• 24/7 dedicated on-tour concierge support\n\n*Help us personalize:*\nIf you have preferred travel dates (*{dates}*), specific hotel tier preferences, or a targeted budget in mind, simply reply directly to this message!\n\nWarm regards,\n*{agent_name}*\nHoliday Specialist | *{company_name}*",
             'is_default' => 1,
             'is_active' => 1
         ],
@@ -266,7 +265,7 @@ function getDefaultTemplatesList()
             'code' => 'manual_quick_reply_default',
             'category' => 'manual_quick_reply',
             'action' => 'manual_quick_reply',
-            'content' => "Hello {customer_name}! 👋 Welcome to *{company_name}*.\n\nI am *{agent_name}*, your dedicated Travel Specialist. I would be thrilled to help you design a customized itinerary, share hotel options, or check rates for *{destination}*.\n\nHow can I assist you today? Feel free to share your travel dates, group size, or preferred holiday style! ✈️",
+            'content' => "Hello {customer_name}! Welcome to *{company_name}*.\n\nI am *{agent_name}*, your dedicated Travel Specialist. I would be thrilled to help you design a customized itinerary, share hotel options, or check rates for *{destination}*.\n\nHow can I assist you today? Feel free to share your travel dates, group size, or preferred holiday style.",
             'is_default' => 1,
             'is_active' => 1
         ]

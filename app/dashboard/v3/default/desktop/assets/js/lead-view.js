@@ -1965,7 +1965,7 @@
       const currentUserName = $("#leadViewApp").data("user-name") || "Our Team";
       const siteName = $("#leadViewApp").data("site-name") || "Our Team";
       const dest = (leadObj && (leadObj.destination || (leadObj.travel_details && leadObj.travel_details.destination))) || "your upcoming travel plans";
-      const introMsg = `Hello ${leadName || "there"}! 👋 Welcome to *${siteName}*.\n\nI am *${currentUserName}*, your dedicated Travel Specialist. I am reaching out regarding your trip inquiry for *${dest}*.\n\nHow can I assist you today? Feel free to share your travel dates, group size, or preferred holiday style! ✈️`;
+      const introMsg = `Hello ${leadName || "there"}! Welcome to *${siteName}*.\n\nI am *${currentUserName}*, your dedicated Travel Specialist. I am reaching out regarding your trip inquiry for *${dest}*.\n\nHow can I assist you today? Feel free to share your travel dates, group size, or preferred holiday style.`;
 
       const waMeUrl = cleanDigits ? `https://wa.me/${cleanDigits}?text=${encodeURIComponent(introMsg)}` : "#";
 

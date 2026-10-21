@@ -2224,7 +2224,7 @@
           const siteName = (res && res.site_name) || $("#leadViewApp").data("site-name") || $("#leadsListApp").data("site-name") || $("#kanbanApp").data("site-name") || "Our Team";
           let introMsg = (res && res.intro_message) || "";
           if (!introMsg) {
-            introMsg = `Hello ${name || "there"}! 👋 Welcome to *${siteName}*.\n\nI am *${currentUserName}*, your dedicated Travel Specialist.\n\nHow can I assist you today? ✈️`;
+            introMsg = `Hello ${name || "there"}! Welcome to *${siteName}*.\n\nI am *${currentUserName}*, your dedicated Travel Specialist.\n\nHow can I assist you today?`;
           }
           window.open("https://wa.me/" + onlyDigits + "?text=" + encodeURIComponent(introMsg), "_blank");
           return;

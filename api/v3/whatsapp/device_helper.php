@@ -967,9 +967,9 @@ if (!function_exists('resolveWhatsAppLeadAction')) {
 
         if (empty($introTpl)) {
             if ($companyNature === 'transporter') {
-                $introTpl = "Hello {customer_name}! 👋 Welcome to *{company_name}*.\n\nI am *{agent_name}*. I am reaching out regarding your vehicle rental and travel requirement for *{destination}*.\n\nHow can I assist you today? Please feel free to share your travel dates, route, or preferred vehicle! 🚗";
+                $introTpl = "Hello {customer_name}! Welcome to *{company_name}*.\n\nI am *{agent_name}*. I am reaching out regarding your vehicle rental and travel requirement for *{destination}*.\n\nHow can I assist you today? Please feel free to share your travel dates, route, or preferred vehicle.";
             } else {
-                $introTpl = "Hello {customer_name}! 👋 Welcome to *{company_name}*.\n\nI am *{agent_name}*, your dedicated Travel Specialist. I am reaching out regarding your trip inquiry for *{destination}*.\n\nHow can I assist you today? Feel free to share your travel dates, group size, or preferred holiday style! ✈️";
+                $introTpl = "Hello {customer_name}! Welcome to *{company_name}*.\n\nI am *{agent_name}*, your dedicated Travel Specialist. I am reaching out regarding your trip inquiry for *{destination}*.\n\nHow can I assist you today? Feel free to share your travel dates, group size, or preferred holiday style.";
             }
         }
 
@@ -987,6 +987,10 @@ if (!function_exists('resolveWhatsAppLeadAction')) {
             '{lead_id}'       => (string)$leadId,
         ];
         $introMessage = str_replace(array_keys($replacements), array_values($replacements), $introTpl);
+        // Ensure no emojis are included in greeting message
+        $introMessage = preg_replace('/[\x{1F600}-\x{1F64F}\x{1F300}-\x{1F5FF}\x{1F680}-\x{1F6FF}\x{1F700}-\x{1F77F}\x{1F780}-\x{1F7FF}\x{1F800}-\x{1F8FF}\x{1F900}-\x{1F9FF}\x{1FA00}-\x{1FA6F}\x{1FA70}-\x{1FAFF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}\x{2300}-\x{23FF}\x{2B50}\x{200D}\x{FE0F}]/u', '', $introMessage);
+        $introMessage = preg_replace('/[ \t]{2,}/', ' ', $introMessage);
+        $introMessage = trim($introMessage);
 
         $waMeUrl = !empty($cleanWaDigits) ? ('https://wa.me/' . $cleanWaDigits . '?text=' . rawurlencode($introMessage)) : '';
         $crmChatUrl = '';
