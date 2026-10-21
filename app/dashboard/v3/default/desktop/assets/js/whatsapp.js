@@ -2140,30 +2140,42 @@
     cacheTime: 0,
     CACHE_TTL: 10000, // 10 seconds cache
 
-    checkStatus: function (callback, force) {
+    checkStatus: function (callback, force, queryParams) {
       const now = Date.now();
-      if (!force && this.cachedStatus !== null && (now - this.cacheTime < this.CACHE_TTL)) {
+      const hasSpecificParams = !!(queryParams && (queryParams.phone || queryParams.lead_id));
+      if (!force && !hasSpecificParams && this.cachedStatus !== null && (now - this.cacheTime < this.CACHE_TTL)) {
         if (typeof callback === "function") {
           callback(this.cachedStatus.isConnected, this.cachedStatus.res);
         }
         return;
       }
       const self = this;
+      let url = "/api/v3/integration/whatsapp_web/?action=check_status";
+      if (queryParams) {
+        if (queryParams.phone) url += "&phone=" + encodeURIComponent(queryParams.phone);
+        if (queryParams.name) url += "&name=" + encodeURIComponent(queryParams.name);
+        if (queryParams.lead_id) url += "&lead_id=" + encodeURIComponent(queryParams.lead_id);
+        if (queryParams.destination) url += "&destination=" + encodeURIComponent(queryParams.destination);
+      }
       $.ajax({
-        url: "/api/v3/integration/whatsapp_web/?action=check_status",
+        url: url,
         method: "GET",
         dataType: "json",
         success: function (res) {
           const isConnected = res && res.status === "success" && (res.connection_status === "connected" || res.is_device_linked === true);
-          self.cachedStatus = { isConnected: isConnected, res: res };
-          self.cacheTime = Date.now();
+          if (!hasSpecificParams) {
+            self.cachedStatus = { isConnected: isConnected, res: res };
+            self.cacheTime = Date.now();
+          }
           if (typeof callback === "function") {
             callback(isConnected, res);
           }
         },
         error: function () {
-          self.cachedStatus = { isConnected: false, res: null };
-          self.cacheTime = Date.now();
+          if (!hasSpecificParams) {
+            self.cachedStatus = { isConnected: false, res: null };
+            self.cacheTime = Date.now();
+          }
           if (typeof callback === "function") {
             callback(false, null);
           }
@@ -2178,6 +2190,7 @@
       const name = (opts.name || "").trim();
       const leadId = opts.leadId || "";
       const chatId = opts.chatId || "";
+      const destination = opts.destination || "";
       const $btn = opts.$btn || null;
 
       if (!phone) {
@@ -2196,14 +2209,23 @@
 
         const isAdmin = !!(res && (res.is_admin === true || res.user_role === "administrator" || res.user_role === "admin"));
         const hasAssigned = !!(res && res.has_assigned_device);
+        const canUseCrm = isAdmin || hasAssigned;
+        const isWame = res && typeof res.is_wame !== "undefined" ? !!res.is_wame : !canUseCrm;
 
         // If WhatsApp is NOT assigned to agent and agent is not Admin: open direct wa.me link with predefined intro message
-        if (!isAdmin && !hasAssigned) {
+        if (isWame || !canUseCrm) {
+          if (res && res.wa_me_url) {
+            window.open(res.wa_me_url, "_blank");
+            return;
+          }
           let onlyDigits = phone.replace(/[^0-9]/g, "");
           if (onlyDigits.length === 10) onlyDigits = "91" + onlyDigits;
-          const currentUserName = $("#leadViewApp").data("user-name") || "Our Team";
-          const siteName = $("#leadViewApp").data("site-name") || "Our Team";
-          const introMsg = `Hello ${name || "there"}! 👋 Welcome to *${siteName}*.\n\nI am *${currentUserName}*, your dedicated Travel Specialist.\n\nHow can I assist you today? ✈️`;
+          const currentUserName = (res && res.user_name) || $("#leadViewApp").data("user-name") || $("#leadsListApp").data("user-name") || $("#kanbanApp").data("user-name") || "Our Team";
+          const siteName = (res && res.site_name) || $("#leadViewApp").data("site-name") || $("#leadsListApp").data("site-name") || $("#kanbanApp").data("site-name") || "Our Team";
+          let introMsg = (res && res.intro_message) || "";
+          if (!introMsg) {
+            introMsg = `Hello ${name || "there"}! 👋 Welcome to *${siteName}*.\n\nI am *${currentUserName}*, your dedicated Travel Specialist.\n\nHow can I assist you today? ✈️`;
+          }
           window.open("https://wa.me/" + onlyDigits + "?text=" + encodeURIComponent(introMsg), "_blank");
           return;
         }
@@ -2211,8 +2233,13 @@
         if (isConnected) {
           // Open connected device chat inbox: open existing chat if available, else new chat
           let targetUrl = "";
-          if (chatId) {
-            targetUrl = "/dashboard/whatsapp/?phone=" + encodeURIComponent(phone) + "&chat_id=" + encodeURIComponent(chatId);
+          const resolvedChatId = chatId || (res && res.existing_chat_id) || "";
+          if (resolvedChatId) {
+            targetUrl = "/dashboard/whatsapp/?phone=" + encodeURIComponent(phone) + "&chat_id=" + encodeURIComponent(resolvedChatId);
+          } else if (res && res.has_existing_chat && res.existing_chat_id) {
+            targetUrl = "/dashboard/whatsapp/?phone=" + encodeURIComponent(phone) + "&chat_id=" + encodeURIComponent(res.existing_chat_id);
+          } else if (res && res.crm_chat_url) {
+            targetUrl = res.crm_chat_url;
           } else {
             targetUrl = "/dashboard/whatsapp/?phone=" + encodeURIComponent(phone) +
               (name ? "&name=" + encodeURIComponent(name) : "") +
@@ -2224,6 +2251,11 @@
           // Device is not connected: show popup
           self.showConnectPrompt(phone, name);
         }
+      }, false, {
+        phone: phone,
+        name: name,
+        lead_id: leadId,
+        destination: destination
       });
     },
 
@@ -2327,9 +2359,13 @@
     let name = $btn.data("name") || $btn.attr("data-name") || "";
     let leadId = $btn.data("lead-id") || $btn.attr("data-lead-id") || "";
     let chatId = $btn.data("chat-id") || $btn.attr("data-chat-id") || "";
+    let destination = $btn.data("destination") || $btn.attr("data-destination") || "";
 
     if (name && typeof name === "string" && name.includes("%")) {
       try { name = decodeURIComponent(name); } catch (_) {}
+    }
+    if (destination && typeof destination === "string" && destination.includes("%")) {
+      try { destination = decodeURIComponent(destination); } catch (_) {}
     }
 
     if (!phone) {
@@ -2344,6 +2380,7 @@
       name: name,
       leadId: leadId,
       chatId: chatId,
+      destination: destination,
       $btn: $btn
     });
   });

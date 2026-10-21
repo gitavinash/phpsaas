@@ -1,8 +1,20 @@
 <?php
 $userRole       = strtolower(isset($site_access_type) ? $site_access_type : (defined('USER_TYPE') ? USER_TYPE : ''));
 $isCallingAgent = ($userRole === 'agent' || $userRole === 'calling_agent' || $userRole === 'sales_executive');
+
+$loggedInUsername = '';
+if (!empty($_COOKIE['user_name'])) {
+    $loggedInUsername = trim((string)base64_decode($_COOKIE['user_name']));
+}
+if (empty($loggedInUsername) && !empty($_SESSION['user_name'])) {
+    $loggedInUsername = trim((string)$_SESSION['user_name']);
+}
+if (empty($loggedInUsername) && !empty($_SESSION['user_username'])) {
+    $loggedInUsername = trim((string)$_SESSION['user_username']);
+}
+$siteName = defined('SITE_NAME') ? SITE_NAME : 'Our Team';
 ?>
-<div class="kanban-widget-wrapper<?php echo $isCallingAgent ? ' kanban-calling-agent' : ''; ?>" id="kanbanWidgetWrapper">
+<div class="kanban-widget-wrapper<?php echo $isCallingAgent ? ' kanban-calling-agent' : ''; ?>" id="kanbanWidgetWrapper" data-user-role="<?php echo htmlspecialchars($userRole, ENT_QUOTES); ?>" data-user-name="<?php echo htmlspecialchars($loggedInUsername ?: 'Our Team', ENT_QUOTES); ?>" data-site-name="<?php echo htmlspecialchars($siteName, ENT_QUOTES); ?>">
     <div class="kanban-header-bar">
         <div class="kanban-header-title">
             <i class="fi fi-rr-apps"></i>
@@ -111,3 +123,4 @@ $isCallingAgent = ($userRole === 'agent' || $userRole === 'calling_agent' || $us
         </div>
     </div>
 </div>
+<?php require_once dirname(__DIR__, 2) . '/templates/whatsapp/device_connect_modal.php'; ?>

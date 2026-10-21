@@ -830,3 +830,189 @@ if (!function_exists('generateHeadlessPdf')) {
     }
 }
 
+if (!function_exists('resolveWhatsAppLeadAction')) {
+    /**
+     * Resolves the WhatsApp action data for a contact/lead according to user role and device assignment:
+     * - If user is NOT admin and does NOT have an assigned WhatsApp device:
+     *   -> returns wa.me URL with predefined personalized intro message (is_wame = true)
+     * - If user IS admin OR HAS an assigned WhatsApp device:
+     *   -> if an existing chat conversation exists, returns /dashboard/whatsapp/?phone={phone}&chat_id={chat_id}
+     *   -> else returns /dashboard/whatsapp/?phone={phone}&name={name}&lead_id={lead_id}&new_chat=1
+     *
+     * @param mysqli $connection
+     * @param int $siteId
+     * @param int $userId
+     * @param string $userRole
+     * @param string $leadPhone
+     * @param string $customerName
+     * @param int|string $leadId
+     * @param string $destination
+     * @param int|null $existingChatId
+     * @return array
+     */
+    function resolveWhatsAppLeadAction($connection, $siteId, $userId, $userRole, $leadPhone, $customerName = '', $leadId = 0, $destination = '', $existingChatId = null) {
+        $siteId = (int)$siteId;
+        $userId = (int)$userId;
+        $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
+
+        $normRole = strtolower(trim((string)$userRole));
+        $isAdmin = in_array($normRole, ['administrator', 'admin', 'superadmin', 'super_admin', 'owner'], true);
+
+        // Check if user is admin in site_access if not already confirmed
+        if (!$isAdmin && $userId > 0 && $siteId > 0 && $connection) {
+            $saQ = @mysqli_query($connection, "SELECT site_access_type FROM {$prefix}site_access WHERE site_access_site_id = {$siteId} AND site_access_user_id = {$userId} AND site_access_status = 1 LIMIT 1");
+            if ($saQ && mysqli_num_rows($saQ) > 0) {
+                $saR = mysqli_fetch_assoc($saQ);
+                if (in_array(strtolower($saR['site_access_type'] ?? ''), ['administrator', 'admin', 'owner', 'superadmin', 'super_admin'], true)) {
+                    $isAdmin = true;
+                }
+            }
+        }
+
+        // Check user device assignment
+        $hasAssignedDevice = false;
+        $userAssignedDevice = null;
+        if ($userId > 0 && $siteId > 0 && $connection) {
+            $uadQ = @mysqli_query($connection, "SELECT device_id, device_phone, device_name, device_status FROM {$prefix}whatsapp_device WHERE device_site_id = {$siteId} AND device_assigned_user_id = {$userId} LIMIT 1");
+            if ($uadQ && mysqli_num_rows($uadQ) > 0) {
+                $userAssignedDevice = mysqli_fetch_assoc($uadQ);
+                $hasAssignedDevice = true;
+            }
+        }
+
+        $canUseCrmWhatsapp = ($isAdmin || $hasAssignedDevice);
+
+        // Format clean phone for WhatsApp
+        $cleanWaDigits = preg_replace('/[^0-9]/', '', (string)$leadPhone);
+        if (strlen($cleanWaDigits) === 10) {
+            $cleanWaDigits = '91' . $cleanWaDigits;
+        }
+
+        // Check existing chat if not provided
+        $hasExistingChat = false;
+        $resolvedChatId = 0;
+        if ($existingChatId !== null) {
+            $resolvedChatId = (int)$existingChatId;
+            $hasExistingChat = ($resolvedChatId > 0);
+        } elseif (!empty($cleanWaDigits) && $siteId > 0 && $connection) {
+            $chatLast10 = strlen($cleanWaDigits) >= 10 ? substr($cleanWaDigits, -10) : $cleanWaDigits;
+            $chatConds = [];
+            if ($leadId > 0) {
+                $chatConds[] = "chat_lead_id = " . (int)$leadId;
+            }
+            $chatConds[] = "chat_phone = '{$cleanWaDigits}'";
+            $chatConds[] = "chat_phone = '+{$cleanWaDigits}'";
+            if (strlen($chatLast10) >= 8) {
+                $esc10 = mysqli_real_escape_string($connection, $chatLast10);
+                $chatConds[] = "RIGHT(REPLACE(REPLACE(chat_phone, '+', ''), ' ', ''), 10) = '{$esc10}'";
+            }
+            $chatWhere = implode(' OR ', $chatConds);
+            $cQ = @mysqli_query($connection, "SELECT chat_id FROM {$prefix}whatsapp_chat WHERE (chat_site_id = {$siteId} OR chat_site_id = 0) AND ({$chatWhere}) LIMIT 1");
+            if ($cQ && $cRow = mysqli_fetch_assoc($cQ)) {
+                $resolvedChatId = (int)$cRow['chat_id'];
+                $hasExistingChat = true;
+            }
+        }
+
+        // Current user name
+        static $cachedUserNames = [];
+        $currentUserName = 'Our Team';
+        if ($userId > 0 && isset($cachedUserNames[$userId])) {
+            $currentUserName = $cachedUserNames[$userId];
+        } elseif ($userId > 0 && $connection) {
+            $uQ = @mysqli_query($connection, "SELECT p.profile_display_name, p.profile_first_name, p.profile_last_name, u.user_username FROM {$prefix}user u LEFT JOIN {$prefix}profile p ON p.profile_user_id = u.user_id WHERE u.user_id = {$userId} LIMIT 1");
+            if ($uQ && $uRow = mysqli_fetch_assoc($uQ)) {
+                $currentUserName = !empty($uRow['profile_display_name']) ? trim($uRow['profile_display_name']) : (!empty($uRow['profile_first_name']) ? trim($uRow['profile_first_name'] . ' ' . ($uRow['profile_last_name'] ?? '')) : trim($uRow['user_username'] ?? 'Our Team'));
+            }
+            $cachedUserNames[$userId] = $currentUserName;
+        }
+
+        // Site configs
+        static $cachedSiteConfigs = [];
+        if (!isset($cachedSiteConfigs[$siteId]) && $siteId > 0 && $connection) {
+            $cfgs = [];
+            $scQ = @mysqli_query($connection, "SELECT site_configuration_key, site_configuration_value FROM {$prefix}site_configuration WHERE site_configuration_site_id = {$siteId} AND site_configuration_status = 1");
+            if ($scQ) {
+                while ($cr = mysqli_fetch_assoc($scQ)) {
+                    $cfgs[$cr['site_configuration_key']] = $cr['site_configuration_value'];
+                }
+            }
+            $cachedSiteConfigs[$siteId] = $cfgs;
+        }
+        $siteCfgs = $cachedSiteConfigs[$siteId] ?? [];
+
+        $companyNature = !empty($siteCfgs['company_nature']) ? strtolower($siteCfgs['company_nature']) : (defined('COMPANY_NATURE') ? strtolower(COMPANY_NATURE) : 'travel_agency');
+        $effectiveCompanyName = defined('SITE_NAME') ? SITE_NAME : '';
+        if (empty($effectiveCompanyName) && !empty($siteCfgs['company_name'])) {
+            $effectiveCompanyName = trim($siteCfgs['company_name']);
+        }
+        if (empty($effectiveCompanyName)) {
+            $effectiveCompanyName = 'Our Team';
+        }
+
+        // Retrieve or construct predefined intro message
+        $introTpl = null;
+        if (!empty($siteCfgs['whatsapp_intro_message'])) {
+            $introTpl = trim($siteCfgs['whatsapp_intro_message']);
+        } elseif (!empty($siteCfgs['company_whatsapp_intro_message'])) {
+            $introTpl = trim($siteCfgs['company_whatsapp_intro_message']);
+        } else {
+            static $cachedTpls = [];
+            if (!isset($cachedTpls[$siteId]) && $connection) {
+                $tplQ = @mysqli_query($connection, "SELECT template_content FROM {$prefix}whatsapp_template WHERE template_site_id IN ({$siteId}, 0) AND template_category IN ('manual_quick_reply', 'lead_welcome') AND template_status = 1 ORDER BY (template_site_id = {$siteId}) DESC, template_id ASC LIMIT 1");
+                $cachedTpls[$siteId] = ($tplQ && $tplRow = mysqli_fetch_assoc($tplQ)) ? trim($tplRow['template_content']) : '';
+            }
+            $introTpl = $cachedTpls[$siteId] ?? '';
+        }
+
+        if (empty($introTpl)) {
+            if ($companyNature === 'transporter') {
+                $introTpl = "Hello {customer_name}! 👋 Welcome to *{company_name}*.\n\nI am *{agent_name}*. I am reaching out regarding your vehicle rental and travel requirement for *{destination}*.\n\nHow can I assist you today? Please feel free to share your travel dates, route, or preferred vehicle! 🚗";
+            } else {
+                $introTpl = "Hello {customer_name}! 👋 Welcome to *{company_name}*.\n\nI am *{agent_name}*, your dedicated Travel Specialist. I am reaching out regarding your trip inquiry for *{destination}*.\n\nHow can I assist you today? Feel free to share your travel dates, group size, or preferred holiday style! ✈️";
+            }
+        }
+
+        $customerFirstName = trim(explode(' ', trim((string)$customerName))[0] ?? '');
+        $customerSalutation = !empty($customerFirstName) ? $customerFirstName : (!empty($customerName) ? trim((string)$customerName) : 'there');
+        $destPlaceholder = !empty($destination) ? trim((string)$destination) : 'your upcoming trip';
+
+        $replacements = [
+            '{customer_name}' => $customerSalutation,
+            '{name}'          => $customerSalutation,
+            '{company_name}'  => $effectiveCompanyName,
+            '{company}'       => $effectiveCompanyName,
+            '{agent_name}'    => $currentUserName,
+            '{destination}'   => $destPlaceholder,
+            '{lead_id}'       => (string)$leadId,
+        ];
+        $introMessage = str_replace(array_keys($replacements), array_values($replacements), $introTpl);
+
+        $waMeUrl = !empty($cleanWaDigits) ? ('https://wa.me/' . $cleanWaDigits . '?text=' . rawurlencode($introMessage)) : '';
+        $crmChatUrl = '';
+        if (!empty($cleanWaDigits)) {
+            if ($hasExistingChat) {
+                $crmChatUrl = '/dashboard/whatsapp/?phone=' . $cleanWaDigits . '&chat_id=' . $resolvedChatId;
+            } else {
+                $crmChatUrl = '/dashboard/whatsapp/?phone=' . $cleanWaDigits . (!empty($customerName) ? '&name=' . rawurlencode(trim((string)$customerName)) : '') . ($leadId ? '&lead_id=' . rawurlencode((string)$leadId) : '') . '&new_chat=1';
+            }
+        }
+
+        return [
+            'can_use_crm_whatsapp' => $canUseCrmWhatsapp,
+            'is_assigned'          => $hasAssignedDevice,
+            'is_admin'             => $isAdmin,
+            'has_existing_chat'    => $hasExistingChat,
+            'existing_chat_id'     => $resolvedChatId,
+            'intro_message'        => $introMessage,
+            'wa_me_url'            => $waMeUrl,
+            'crm_chat_url'         => $crmChatUrl,
+            'target_url'           => $canUseCrmWhatsapp ? $crmChatUrl : $waMeUrl,
+            'is_wame'              => !$canUseCrmWhatsapp,
+            'user_name'            => $currentUserName,
+            'site_name'            => $effectiveCompanyName,
+            'company_nature'       => $companyNature,
+        ];
+    }
+}
+

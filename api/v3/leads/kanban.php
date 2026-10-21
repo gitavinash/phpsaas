@@ -125,6 +125,78 @@ function cleanLeadSource($src)
 }
 
 require_once __DIR__ . '/status-config.php';
+require_once dirname(__DIR__) . '/whatsapp/device_helper.php';
+
+$attachWaActions = function(&$items) use ($connection, $siteId, $userId, $accessType, $tblPrefix) {
+    if (empty($items)) return;
+    $leadIds = array_filter(array_column($items, 'id'));
+    $leadPhones = [];
+    foreach ($items as $it) {
+        $cleanP = preg_replace('/[^0-9]/', '', (string)($it['mobile'] ?? ''));
+        if (!empty($cleanP)) {
+            $leadPhones[] = (strlen($cleanP) === 10) ? ('91' . $cleanP) : $cleanP;
+        }
+    }
+    $leadPhones = array_unique(array_filter($leadPhones));
+    $chatMap = [];
+    $conds = [];
+    if (!empty($leadIds)) {
+        $conds[] = "chat_lead_id IN (" . implode(',', array_map('intval', $leadIds)) . ")";
+    }
+    if (!empty($leadPhones)) {
+        $escPhones = array_map(function($p) use ($connection) {
+            return "'" . mysqli_real_escape_string($connection, $p) . "'";
+        }, $leadPhones);
+        $conds[] = "chat_phone IN (" . implode(',', $escPhones) . ")";
+        $plusPhones = array_map(function($p) use ($connection) {
+            return "'+' . '" . mysqli_real_escape_string($connection, $p) . "'";
+        }, $leadPhones);
+        $conds[] = "chat_phone IN (" . implode(',', $plusPhones) . ")";
+    }
+    if (!empty($conds)) {
+        $cQ = @mysqli_query($connection, "SELECT chat_id, chat_phone, chat_lead_id FROM {$tblPrefix}whatsapp_chat WHERE (chat_site_id = {$siteId} OR chat_site_id = 0) AND (" . implode(' OR ', $conds) . ")");
+        if ($cQ) {
+            while ($cRow = mysqli_fetch_assoc($cQ)) {
+                $cId = (int)$cRow['chat_id'];
+                if (!empty($cRow['chat_lead_id'])) {
+                    $chatMap['lead_' . (int)$cRow['chat_lead_id']] = $cId;
+                }
+                $cleanP = preg_replace('/[^0-9]/', '', (string)$cRow['chat_phone']);
+                if (!empty($cleanP)) {
+                    $chatMap['phone_' . $cleanP] = $cId;
+                    if (strlen($cleanP) === 10) {
+                        $chatMap['phone_91' . $cleanP] = $cId;
+                    } elseif (strlen($cleanP) === 12 && str_starts_with($cleanP, '91')) {
+                        $chatMap['phone_' . substr($cleanP, 2)] = $cId;
+                    }
+                }
+            }
+        }
+    }
+
+    foreach ($items as &$ld) {
+        $existingChatId = 0;
+        $mClean = preg_replace('/[^0-9]/', '', (string)($ld['mobile'] ?? ''));
+        $waP = (strlen($mClean) === 10) ? ('91' . $mClean) : $mClean;
+        if (!empty($ld['id']) && isset($chatMap['lead_' . (int)$ld['id']])) {
+            $existingChatId = $chatMap['lead_' . (int)$ld['id']];
+        } elseif (!empty($waP) && isset($chatMap['phone_' . $waP])) {
+            $existingChatId = $chatMap['phone_' . $waP];
+        }
+        $ld['whatsapp_action'] = resolveWhatsAppLeadAction(
+            $connection,
+            $siteId,
+            $userId,
+            $accessType,
+            $waP,
+            $ld['first_name'] ?: $ld['name'],
+            $ld['id'],
+            $ld['subject'] ?? '',
+            $existingChatId
+        );
+    }
+    unset($ld);
+};
 
 // Case 1: Fetching single column status (e.g. Load More pagination)
 if (isset($_GET['status']) && $_GET['status'] !== '') {
@@ -197,6 +269,8 @@ if (isset($_GET['status']) && $_GET['status'] !== '') {
             ];
         }
     }
+
+    $attachWaActions($leads);
 
     echo json_encode([
         'status' => 200,
@@ -312,6 +386,18 @@ if (isset($connection) && $connection && ($cRes = mysqli_query($connection, $cou
         if (isset($statusCounts[$stKey])) {
             $statusCounts[$stKey] = $cnt;
         }
+    }
+}
+
+$attachWaActions($flatLeads);
+$grouped = [];
+foreach ($allowedStatuses as $st) {
+    $grouped[(string)$st] = [];
+}
+foreach ($flatLeads as $fItem) {
+    $gKey = (string)$fItem['status'];
+    if (isset($grouped[$gKey])) {
+        $grouped[$gKey][] = $fItem;
     }
 }
 

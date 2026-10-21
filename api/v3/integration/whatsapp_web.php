@@ -771,6 +771,12 @@ if ($action === 'check_status' || $action === 'status') {
     $configs = getWaWebConfigs($connection, $siteId, $configKeys);
     $sessionId = trim($_GET['session_id'] ?? $_POST['session_id'] ?? '');
 
+    $reqPhone = trim((string)($_GET['phone'] ?? $_POST['phone'] ?? ''));
+    $reqName = trim((string)($_GET['name'] ?? $_POST['name'] ?? ''));
+    $reqLeadId = trim((string)($_GET['lead_id'] ?? $_POST['lead_id'] ?? ''));
+    $reqDest = trim((string)($_GET['destination'] ?? $_POST['destination'] ?? ''));
+    $waAction = resolveWhatsAppLeadAction($connection, $siteId, $currentUserId, $site_access_type ?? '', $reqPhone, $reqName, $reqLeadId, $reqDest);
+
     // Case 1: General connection check (no specific session_id requested by client)
     if (empty($sessionId)) {
         $targetDev = null;
@@ -780,7 +786,7 @@ if ($action === 'check_status' || $action === 'status') {
                 $targetDev = mysqli_fetch_assoc($uadQ);
             } else {
                 // Non-admin has NO assigned WhatsApp device: Strictly return disconnected with notice
-                echo json_encode([
+                echo json_encode(array_merge([
                     'status'              => 'success',
                     'session_id'          => '',
                     'connection_status'   => 'disconnected',
@@ -792,7 +798,7 @@ if ($action === 'check_status' || $action === 'status') {
                     'has_assigned_device' => false,
                     'is_admin'            => false,
                     'msg'                 => 'No WhatsApp device has been assigned to your user account. Please contact an administrator to assign a device to your profile.'
-                ]);
+                ], $waAction));
                 exit;
             }
         } else {
@@ -810,7 +816,7 @@ if ($action === 'check_status' || $action === 'status') {
 
         if (!$targetDev) {
             // This site has NO device linked! Return disconnected. NEVER insert or adopt anything!
-            echo json_encode([
+            echo json_encode(array_merge([
                 'status'              => 'success',
                 'session_id'          => '',
                 'connection_status'   => 'disconnected',
@@ -819,8 +825,9 @@ if ($action === 'check_status' || $action === 'status') {
                 'pushname'            => '',
                 'last_sync'           => '',
                 'can_link_device'     => $canLink,
-                'has_assigned_device' => false
-            ]);
+                'has_assigned_device' => $hasAssignedDevice,
+                'is_admin'            => $isAdmin
+            ], $waAction));
             exit;
         }
 
@@ -843,7 +850,7 @@ if ($action === 'check_status' || $action === 'status') {
                                       WHERE device_id = {$targetDev['device_id']} AND device_site_id = {$siteId}");
         }
 
-        echo json_encode([
+        echo json_encode(array_merge([
             'status'              => 'success',
             'session_id'          => $sessionId,
             'connection_status'   => $statusStr,
@@ -852,8 +859,9 @@ if ($action === 'check_status' || $action === 'status') {
             'pushname'            => $targetDev['device_name'] ?: 'WhatsApp Web',
             'last_sync'           => $targetDev['device_last_sync'] ?: $now,
             'can_link_device'     => $canLink,
-            'has_assigned_device' => true
-        ]);
+            'has_assigned_device' => $hasAssignedDevice,
+            'is_admin'            => $isAdmin
+        ], $waAction));
         exit;
     }
 

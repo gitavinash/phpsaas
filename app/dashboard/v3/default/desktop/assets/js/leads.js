@@ -1084,8 +1084,24 @@
 
         const waLeadName = encodeURIComponent(lead.first_name || lead.name || "");
         const waLeadPhone = lead.wa_mobile ? lead.wa_mobile.replace(/[^0-9]/g, "") : "";
+        const waAct = lead.whatsapp_action || null;
+        let waTargetUrl = "";
+        let isWame = false;
+        let waTitle = "Chat on WhatsApp";
+        let chatId = "";
+        if (waAct && waAct.target_url) {
+          waTargetUrl = waAct.target_url;
+          isWame = !!waAct.is_wame;
+          chatId = waAct.existing_chat_id || "";
+          waTitle = isWame
+            ? "Chat on WhatsApp (wa.me direct intro message)"
+            : (waAct.has_existing_chat ? "Open Existing WhatsApp Chat" : "Start New WhatsApp Chat");
+        } else {
+          waTargetUrl = `/dashboard/whatsapp/?phone=${waLeadPhone}&name=${waLeadName}&lead_id=${lead.id || ''}&new_chat=1`;
+        }
+        const waTargetAttr = isWame ? 'target="_blank" rel="noopener noreferrer"' : '';
         const waIconBtn = lead.wa_mobile
-          ? `<a href="/dashboard/whatsapp/?phone=${waLeadPhone}&name=${waLeadName}&lead_id=${lead.id || ''}&new_chat=1" class="lead-wa-btn-vibrant" title="Chat on WhatsApp" data-phone="${lead.wa_mobile}" data-name="${waLeadName}" data-lead-id="${lead.id || ''}">${waSvg}</a>`
+          ? `<a href="${waTargetUrl}" ${waTargetAttr} class="lead-wa-btn-vibrant" title="${waTitle}" data-is-wame="${isWame ? '1' : '0'}" data-phone="${lead.wa_mobile}" data-name="${waLeadName}" data-lead-id="${lead.id || ''}" data-chat-id="${chatId}" data-destination="${encodeURIComponent(lead.subject || '')}">${waSvg}</a>`
           : "";
 
 

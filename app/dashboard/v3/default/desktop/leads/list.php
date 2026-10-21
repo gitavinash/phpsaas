@@ -23,8 +23,20 @@ if ($isDigitalMarketing) {
     header("Location: /dashboard/integration/facebook/");
     exit;
 }
+
+$loggedInUsername = '';
+if (!empty($_COOKIE['user_name'])) {
+    $loggedInUsername = trim((string)base64_decode($_COOKIE['user_name']));
+}
+if (empty($loggedInUsername) && !empty($_SESSION['user_name'])) {
+    $loggedInUsername = trim((string)$_SESSION['user_name']);
+}
+if (empty($loggedInUsername) && !empty($_SESSION['user_username'])) {
+    $loggedInUsername = trim((string)$_SESSION['user_username']);
+}
+$siteName = defined('SITE_NAME') ? SITE_NAME : 'Our Team';
 ?>
-<div class="package-page-wrapper leads-page-wrapper<?php echo $isDigitalMarketing ? ' leads-digital-marketing-view' : ''; ?>" id="leadsListApp" data-user-role="<?php echo htmlspecialchars($site_access_type ?? '', ENT_QUOTES); ?>" data-initial-status="<?php echo htmlspecialchars($initialLeadStatus, ENT_QUOTES); ?>" data-initial-agent="<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?>">
+<div class="package-page-wrapper leads-page-wrapper<?php echo $isDigitalMarketing ? ' leads-digital-marketing-view' : ''; ?>" id="leadsListApp" data-user-role="<?php echo htmlspecialchars($site_access_type ?? '', ENT_QUOTES); ?>" data-initial-status="<?php echo htmlspecialchars($initialLeadStatus, ENT_QUOTES); ?>" data-initial-agent="<?php echo htmlspecialchars($initialAgentId, ENT_QUOTES); ?>" data-user-name="<?php echo htmlspecialchars($loggedInUsername ?: 'Our Team', ENT_QUOTES); ?>" data-site-name="<?php echo htmlspecialchars($siteName, ENT_QUOTES); ?>">
     <!-- Header Banner -->
     <div class="package-header-bar">
         <div class="package-header-left">

@@ -506,6 +506,69 @@ if (isset($connection) && ($res = mysqli_query($connection, $leadsQuery))) {
     }
 }
 
+// 3b. Resolve WhatsApp Lead Actions (wa.me vs CRM WhatsApp) for this page
+require_once dirname(__DIR__) . '/whatsapp/device_helper.php';
+if (!empty($leadsList)) {
+    $leadIds = array_column($leadsList, 'id');
+    $leadPhones = array_filter(array_column($leadsList, 'wa_mobile'));
+    $chatMap = [];
+    $conds = [];
+    if (!empty($leadIds)) {
+        $conds[] = "chat_lead_id IN (" . implode(',', array_map('intval', $leadIds)) . ")";
+    }
+    if (!empty($leadPhones)) {
+        $escPhones = array_map(function($p) use ($connection) {
+            return "'" . mysqli_real_escape_string($connection, $p) . "'";
+        }, $leadPhones);
+        $conds[] = "chat_phone IN (" . implode(',', $escPhones) . ")";
+        $plusPhones = array_map(function($p) use ($connection) {
+            return "'+' . '" . mysqli_real_escape_string($connection, $p) . "'";
+        }, $leadPhones);
+        $conds[] = "chat_phone IN (" . implode(',', $plusPhones) . ")";
+    }
+    if (!empty($conds)) {
+        $cQ = @mysqli_query($connection, "SELECT chat_id, chat_phone, chat_lead_id FROM {$tblPrefix}whatsapp_chat WHERE (chat_site_id = {$siteId} OR chat_site_id = 0) AND (" . implode(' OR ', $conds) . ")");
+        if ($cQ) {
+            while ($cRow = mysqli_fetch_assoc($cQ)) {
+                $cId = (int)$cRow['chat_id'];
+                if (!empty($cRow['chat_lead_id'])) {
+                    $chatMap['lead_' . (int)$cRow['chat_lead_id']] = $cId;
+                }
+                $cleanP = preg_replace('/[^0-9]/', '', (string)$cRow['chat_phone']);
+                if (!empty($cleanP)) {
+                    $chatMap['phone_' . $cleanP] = $cId;
+                    if (strlen($cleanP) === 10) {
+                        $chatMap['phone_91' . $cleanP] = $cId;
+                    } elseif (strlen($cleanP) === 12 && str_starts_with($cleanP, '91')) {
+                        $chatMap['phone_' . substr($cleanP, 2)] = $cId;
+                    }
+                }
+            }
+        }
+    }
+
+    foreach ($leadsList as &$ld) {
+        $existingChatId = 0;
+        if (!empty($ld['id']) && isset($chatMap['lead_' . (int)$ld['id']])) {
+            $existingChatId = $chatMap['lead_' . (int)$ld['id']];
+        } elseif (!empty($ld['wa_mobile']) && isset($chatMap['phone_' . $ld['wa_mobile']])) {
+            $existingChatId = $chatMap['phone_' . $ld['wa_mobile']];
+        }
+        $ld['whatsapp_action'] = resolveWhatsAppLeadAction(
+            $connection,
+            $siteId,
+            $userId,
+            $accessType,
+            $ld['wa_mobile'] ?: $ld['mobile'],
+            $ld['first_name'] ?: $ld['name'],
+            $ld['id'],
+            $ld['subject'] ?? '',
+            $existingChatId
+        );
+    }
+    unset($ld);
+}
+
 // 4. Fetch Active Agents List for Assignment Dropdowns
 $agentsList = [];
 $agentsSql = "SELECT u.user_id, u.user_email, p.profile_display_name, s.site_access_type
