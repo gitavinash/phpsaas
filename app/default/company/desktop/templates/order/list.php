@@ -154,8 +154,8 @@ if (!empty($startDate) && !empty($endDate)) {
     }
 
     .modern-order-list select#changeStatus {
-        width: 140px !important;
-        min-width: 110px !important;
+        width: 160px !important;
+        min-width: 120px !important;
         flex: 0 0 auto !important;
     }
 
@@ -414,6 +414,9 @@ if (!empty($startDate) && !empty($endDate)) {
                         <option value="6" <?php echo (($statusParam == '6') ? 'selected' : '') ?>>Delivered</option>
                         <option value="7" <?php echo (($statusParam == '7') ? 'selected' : '') ?>>Cancelled</option>
                         <option value="8" <?php echo (($statusParam == '8') ? 'selected' : '') ?>>Returned</option>
+                        <option value="9" <?php echo (($statusParam == '9') ? 'selected' : '') ?>>Rescheduled</option>
+                        <option value="10" <?php echo (($statusParam == '10') ? 'selected' : '') ?>>Not in Service Area</option>
+                        <option value="11" <?php echo (($statusParam == '11') ? 'selected' : '') ?>>Delivery Failed</option>
                     </select>
                     <input type="text" class="form-control date-range-input" name="daterange" id="changeDateRange" value="<?php echo htmlspecialchars($dateRangeDisplay); ?>" placeholder="Select Delivery Date" autocomplete="off" title="Filter by Delivery Date">
                     <select class="form-control" name="sort" id="changeSort" title="Sort by Delivery Date">
@@ -456,53 +459,31 @@ if (!empty($startDate) && !empty($endDate)) {
 
                             extract($data);
 
-                            $statusClass = 'status-pending';
-                            switch ($order_status) {
+                            $statusMap = array(
+                                '0'  => array('label' => 'Pending',                  'class' => 'status-pending'),
+                                '1'  => array('label' => 'Order Accepted by Vendor',  'class' => 'status-confirm'),
+                                '2'  => array('label' => 'Assigned to Vendor',        'class' => 'status-confirm'),
+                                '3'  => array('label' => 'Processing',               'class' => 'status-waiting'),
+                                '4'  => array('label' => 'Shipped',                  'class' => 'status-waiting'),
+                                '5'  => array('label' => 'Out for Delivery',         'class' => 'status-waiting'),
+                                '6'  => array('label' => 'Delivered',                'class' => 'status-delivered'),
+                                '7'  => array('label' => 'Cancelled',                'class' => 'status-cancel'),
+                                '8'  => array('label' => 'Returned',                 'class' => 'status-rto'),
+                                '9'  => array('label' => 'Rescheduled',              'class' => 'status-waiting'),
+                                '10' => array('label' => 'Not in Service Area',       'class' => 'status-cancel'),
+                                '11' => array('label' => 'Delivery Failed',          'class' => 'status-cancel'),
+                            );
 
-                                case 0:
-                                    $order_status = 'Pending';
-                                    $statusClass = 'status-pending';
-                                    break;
-
-                                case 1:
-                                    $order_status = 'Order Accepted';
-                                    $statusClass = 'status-confirm';
-                                    break;
-
-                                case 2:
-                                    $order_status = 'Assigned to Vendor';
-                                    $statusClass = 'status-confirm';
-                                    break;
-
-                                case 3:
-                                    $order_status = 'Processing';
-                                    $statusClass = 'status-waiting';
-                                    break;
-
-                                case 4:
-                                    $order_status = 'Shipped';
-                                    $statusClass = 'status-waiting';
-                                    break;
-
-                                case 5:
-                                    $order_status = 'Out for Delivery';
-                                    $statusClass = 'status-waiting';
-                                    break;
-
-                                case 6:
-                                    $order_status = 'Delivered';
-                                    $statusClass = 'status-delivered';
-                                    break;
-
-                                case 7:
-                                    $order_status = 'Cancelled';
-                                    $statusClass = 'status-cancel';
-                                    break;
-
-                                case 8:
-                                    $order_status = 'Returned';
-                                    $statusClass = 'status-rto';
-                                    break;
+                            $statusKey = trim((string)$order_status);
+                            if (isset($statusMap[$statusKey])) {
+                                $order_status = $statusMap[$statusKey]['label'];
+                                $statusClass  = $statusMap[$statusKey]['class'];
+                            } elseif (is_numeric($statusKey)) {
+                                $order_status = 'Status ' . $statusKey;
+                                $statusClass  = 'status-pending';
+                            } else {
+                                $order_status = ucwords(str_replace(array('_', '-'), ' ', $statusKey));
+                                $statusClass  = 'status-pending';
                             }
 
                             $effectiveDate = !empty($effective_delivery_date) ? $effective_delivery_date : (!empty($order_generate) ? date('Y-m-d', strtotime($order_generate)) : '');
