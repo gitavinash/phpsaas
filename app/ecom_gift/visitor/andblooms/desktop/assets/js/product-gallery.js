@@ -13,6 +13,7 @@
   function initProductGallery() {
     var mainContainer = document.getElementById('productMainContainer');
     var mainImg = document.getElementById('mainProductImage');
+    var ambientBg = document.getElementById('productAmbientBg');
     var zoomLens = document.getElementById('zoomLens');
     var zoomFlyout = document.getElementById('zoomFlyout');
     var zoomFlyoutImg = document.getElementById('zoomFlyoutImg');
@@ -67,6 +68,11 @@
       }
     });
 
+    // Initialize ambient background image
+    if (ambientBg && mainImg) {
+      ambientBg.style.backgroundImage = 'url("' + (mainImg.getAttribute('src') || '') + '")';
+    }
+
     function setActiveImage(index) {
       if (index < 0) index = totalImages - 1;
       if (index >= totalImages) index = 0;
@@ -77,6 +83,11 @@
 
       // Update main image
       mainImg.setAttribute('src', newSrc);
+
+      // Update ambient background glow
+      if (ambientBg) {
+        ambientBg.style.backgroundImage = 'url("' + newSrc + '")';
+      }
 
       // Update flyout image
       if (zoomFlyoutImg) {
@@ -114,6 +125,10 @@
     // Desktop Hover: Amazon Lens & Clean Flyout Zoom Window
     // -------------------------------------------------------------
     var isHovering = false;
+    var displayedW = 0;
+    var displayedH = 0;
+    var offsetX = 0;
+    var offsetY = 0;
 
     function handleMouseEnter(e) {
       if (window.innerWidth < 768) return; // Touch only on mobile
@@ -127,14 +142,35 @@
         zoomFlyout.classList.remove('hidden');
         zoomFlyout.classList.add('is-active');
 
-        // Lock flyout dimensions to match main image container precisely
+        // Lock flyout window dimensions to match main container precisely
         zoomFlyout.style.width = rect.width + 'px';
         zoomFlyout.style.height = rect.height + 'px';
 
+        // Maintain exact aspect ratio without compressing or squishing
+        var imgNaturalW = mainImg.naturalWidth || rect.width;
+        var imgNaturalH = mainImg.naturalHeight || rect.height;
+        var imgRatio = imgNaturalW / imgNaturalH;
+        var containerRatio = rect.width / rect.height;
+
+        if (imgRatio > containerRatio) {
+          // Image is wider than square container (landscape)
+          displayedH = rect.height;
+          displayedW = rect.height * imgRatio;
+          offsetX = (displayedW - rect.width) / 2;
+          offsetY = 0;
+        } else {
+          // Image is taller than or equal to square container (portrait or square)
+          displayedW = rect.width;
+          displayedH = rect.width / imgRatio;
+          offsetX = 0;
+          offsetY = (displayedH - rect.height) / 2;
+        }
+
         if (zoomFlyoutImg) {
           zoomFlyoutImg.setAttribute('src', currentSrc);
-          zoomFlyoutImg.style.width = (rect.width * MAGNIFICATION) + 'px';
-          zoomFlyoutImg.style.height = (rect.height * MAGNIFICATION) + 'px';
+          // Strictly lock aspect ratio to match original image
+          zoomFlyoutImg.style.width = (displayedW * MAGNIFICATION) + 'px';
+          zoomFlyoutImg.style.height = (displayedH * MAGNIFICATION) + 'px';
         }
         updateLensPosition(e);
       }
@@ -156,7 +192,7 @@
       var lensX = x - lensW / 2;
       var lensY = y - lensH / 2;
 
-      // Constrain lens within image bounds
+      // Constrain lens within image container bounds
       var maxLensX = rect.width - lensW;
       var maxLensY = rect.height - lensH;
 
@@ -168,10 +204,12 @@
       zoomLens.style.left = lensX + 'px';
       zoomLens.style.top = lensY + 'px';
 
-      // Move flyout image directly for 100% pixel-perfect clarity
+      // Move flyout image precisely aligned with lens and offset
       if (zoomFlyoutImg) {
-        zoomFlyoutImg.style.left = (-lensX * MAGNIFICATION) + 'px';
-        zoomFlyoutImg.style.top = (-lensY * MAGNIFICATION) + 'px';
+        var relX = (lensX + offsetX) * MAGNIFICATION;
+        var relY = (lensY + offsetY) * MAGNIFICATION;
+        zoomFlyoutImg.style.left = (-relX) + 'px';
+        zoomFlyoutImg.style.top = (-relY) + 'px';
       }
     }
 

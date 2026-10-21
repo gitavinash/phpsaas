@@ -173,9 +173,12 @@ require_once 'header.php';
                 <!-- Main Image Area with Zoom Flyout Anchor -->
                 <div class="product-main-view relative mb-3">
                     <!-- Main Product Image Container (Fixed square aspect ratio, never increases height on hover) -->
-                    <div class="product-image-container relative rounded-xl overflow-hidden bg-white aspect-square border border-gray-100 shadow-sm cursor-crosshair group select-none" id="productMainContainer">
+                    <div class="product-image-container relative rounded-xl overflow-hidden bg-gray-50 aspect-square border border-gray-100 shadow-sm cursor-crosshair group select-none" id="productMainContainer">
+                        <!-- Dynamic Ambient Color Glow Background -->
+                        <div id="productAmbientBg" class="product-ambient-bg"></div>
+
                         <img src="<?php echo $product_image ?>" id="mainProductImage"
-                            alt="<?php echo ucwords($product_title) ?>" class="w-full h-full object-cover object-center select-none pointer-events-none">
+                            alt="<?php echo ucwords($product_title) ?>" class="w-full h-full object-cover object-center select-none pointer-events-none relative z-10">
 
                         <!-- Amazon Zoom Lens -->
                         <div id="zoomLens" class="zoom-lens hidden"></div>

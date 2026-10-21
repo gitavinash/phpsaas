@@ -562,7 +562,24 @@ input:focus {
   user-select: none;
 }
 
+/* Ambient Dynamic Background Effect (Color-matched glow, eliminates blank/empty space) */
+.product-ambient-bg {
+  position: absolute;
+  inset: -20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(28px) saturate(1.4) brightness(0.96);
+  transform: scale(1.12);
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
 .product-image-container img#mainProductImage {
+  position: relative;
+  z-index: 2;
   display: block;
   width: 100%;
   height: 100%;
