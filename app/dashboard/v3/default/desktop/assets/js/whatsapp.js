@@ -67,6 +67,10 @@
       try {
         const urlParams = new URLSearchParams(window.location.search);
         const qPhone = urlParams.get("phone");
+        const qChatId = urlParams.get("chat_id");
+        if (qChatId) {
+          this.pendingChatId = qChatId;
+        }
         if (qPhone) {
           this.pendingLeadPhone = qPhone;
           this.pendingLeadName = urlParams.get("name") || "";
@@ -2062,15 +2066,17 @@
     },
 
     handlePendingLeadChat: function (chats) {
-      if (!this.pendingLeadPhone) return;
+      if (!this.pendingLeadPhone && !this.pendingChatId) return;
       const self = this;
       const targetPhone = this.pendingLeadPhone;
+      const targetChatId = this.pendingChatId;
       const targetName = this.pendingLeadName || "";
       const targetLeadId = this.pendingLeadId || "";
-      const targetDigits = this.cleanDigits(targetPhone);
+      const targetDigits = targetPhone ? this.cleanDigits(targetPhone) : "";
 
       // Reset pending state
       this.pendingLeadPhone = null;
+      this.pendingChatId = null;
       this.pendingLeadName = null;
       this.pendingLeadId = null;
 
@@ -2079,12 +2085,19 @@
         window.history.replaceState({}, document.title, window.location.pathname);
       }
 
-      // Check if thread exists
+      // Check if thread exists by chat_id or phone
       let matchedChat = null;
-      if (Array.isArray(chats) && targetDigits) {
-        matchedChat = chats.find(function (c) {
-          return self.cleanDigits(c.phone) === targetDigits;
-        });
+      if (Array.isArray(chats)) {
+        if (targetChatId) {
+          matchedChat = chats.find(function (c) {
+            return String(c.chat_id) === String(targetChatId);
+          });
+        }
+        if (!matchedChat && targetDigits) {
+          matchedChat = chats.find(function (c) {
+            return self.cleanDigits(c.phone) === targetDigits;
+          });
+        }
       }
 
       if (matchedChat) {
@@ -2093,10 +2106,16 @@
         setTimeout(function () {
           $("#waMessageInput").focus();
         }, 350);
+      } else if (targetChatId) {
+        // Direct selection by ID
+        self.selectChat(targetChatId, targetPhone || "");
+        setTimeout(function () {
+          $("#waMessageInput").focus();
+        }, 350);
       } else {
         // No conversation exists yet: automatically open New Chat modal prefilled with this lead!
         $("#waNewChatModal").removeClass("is-hidden").addClass("is-active").attr("aria-hidden", "false");
-        let formattedPhone = targetPhone.trim();
+        let formattedPhone = (targetPhone || "").trim();
         let onlyDigits = formattedPhone.replace(/[^0-9]/g, "");
         if (onlyDigits.length === 10) formattedPhone = "+91" + onlyDigits;
         else if (!formattedPhone.startsWith("+")) formattedPhone = "+" + onlyDigits;
@@ -2158,6 +2177,7 @@
       const phone = (opts.phone || "").trim();
       const name = (opts.name || "").trim();
       const leadId = opts.leadId || "";
+      const chatId = opts.chatId || "";
       const $btn = opts.$btn || null;
 
       if (!phone) {
@@ -2174,12 +2194,31 @@
           $btn.removeClass("is-checking-wa");
         }
 
+        const isAdmin = !!(res && (res.is_admin === true || res.user_role === "administrator" || res.user_role === "admin"));
+        const hasAssigned = !!(res && res.has_assigned_device);
+
+        // If WhatsApp is NOT assigned to agent and agent is not Admin: open direct wa.me link with predefined intro message
+        if (!isAdmin && !hasAssigned) {
+          let onlyDigits = phone.replace(/[^0-9]/g, "");
+          if (onlyDigits.length === 10) onlyDigits = "91" + onlyDigits;
+          const currentUserName = $("#leadViewApp").data("user-name") || "Our Team";
+          const siteName = $("#leadViewApp").data("site-name") || "Our Team";
+          const introMsg = `Hello ${name || "there"}! 👋 Welcome to *${siteName}*.\n\nI am *${currentUserName}*, your dedicated Travel Specialist.\n\nHow can I assist you today? ✈️`;
+          window.open("https://wa.me/" + onlyDigits + "?text=" + encodeURIComponent(introMsg), "_blank");
+          return;
+        }
+
         if (isConnected) {
-          // Open connected device chat inbox and start chat
-          const targetUrl = "/dashboard/whatsapp/?phone=" + encodeURIComponent(phone) +
-            (name ? "&name=" + encodeURIComponent(name) : "") +
-            (leadId ? "&lead_id=" + encodeURIComponent(leadId) : "") +
-            "&new_chat=1";
+          // Open connected device chat inbox: open existing chat if available, else new chat
+          let targetUrl = "";
+          if (chatId) {
+            targetUrl = "/dashboard/whatsapp/?phone=" + encodeURIComponent(phone) + "&chat_id=" + encodeURIComponent(chatId);
+          } else {
+            targetUrl = "/dashboard/whatsapp/?phone=" + encodeURIComponent(phone) +
+              (name ? "&name=" + encodeURIComponent(name) : "") +
+              (leadId ? "&lead_id=" + encodeURIComponent(leadId) : "") +
+              "&new_chat=1";
+          }
           self.navigateTo(targetUrl);
         } else {
           // Device is not connected: show popup
@@ -2275,18 +2314,25 @@
 
   // Delegated click listener for WhatsApp chat buttons across all V3 pages
   $(document).on("click", ".lead-wa-btn-vibrant, .v3-btn-contact-action.wa, .btn-fast-tile.tile-wa, .kanban-cta-btn.cta-whatsapp, [data-action='whatsapp-chat']", function (e) {
-    e.preventDefault();
     const $btn = $(this);
+    const href = $btn.attr("href") || "";
+
+    // If marked as wa.me link or starts with https://wa.me, let the browser handle standard link opening
+    if ($btn.data("is-wame") === "1" || $btn.data("is-wame") === 1 || href.startsWith("https://wa.me") || href.startsWith("http://wa.me")) {
+      return;
+    }
+
+    e.preventDefault();
     let phone = $btn.data("phone") || $btn.attr("data-phone") || "";
     let name = $btn.data("name") || $btn.attr("data-name") || "";
     let leadId = $btn.data("lead-id") || $btn.attr("data-lead-id") || "";
+    let chatId = $btn.data("chat-id") || $btn.attr("data-chat-id") || "";
 
     if (name && typeof name === "string" && name.includes("%")) {
       try { name = decodeURIComponent(name); } catch (_) {}
     }
 
     if (!phone) {
-      const href = $btn.attr("href") || "";
       const match = href.match(/wa\.me\/([0-9+]+)/) || href.match(/phone=([0-9+]+)/);
       if (match && match[1]) {
         phone = match[1];
@@ -2297,6 +2343,7 @@
       phone: phone,
       name: name,
       leadId: leadId,
+      chatId: chatId,
       $btn: $btn
     });
   });

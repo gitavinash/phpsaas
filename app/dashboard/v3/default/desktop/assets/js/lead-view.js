@@ -1918,6 +1918,72 @@
       `;
     },
 
+    getWhatsAppActionData: function (leadObj) {
+      const self = this;
+      const leadData = self.leadData || {};
+      const serverAction = leadData.whatsapp_action || null;
+
+      if (serverAction && serverAction.target_url) {
+        return {
+          target_url: serverAction.target_url,
+          is_wame: !!serverAction.is_wame,
+          can_use_crm_whatsapp: !!serverAction.can_use_crm_whatsapp,
+          has_existing_chat: !!serverAction.has_existing_chat,
+          existing_chat_id: serverAction.existing_chat_id || 0,
+          wa_me_url: serverAction.wa_me_url || "",
+          crm_chat_url: serverAction.crm_chat_url || "",
+          intro_message: serverAction.intro_message || "",
+          tooltip: serverAction.is_wame
+            ? "Chat on WhatsApp (wa.me intro message)"
+            : (serverAction.has_existing_chat ? "Open WhatsApp Conversation" : "Start New WhatsApp Chat")
+        };
+      }
+
+      leadObj = leadObj || (leadData.lead || leadData);
+      const userRole = String($("#leadViewApp").data("user-role") || leadData.access_type || "").toLowerCase().trim();
+      const isAdmin = ["administrator", "admin", "superadmin", "super_admin"].includes(userRole);
+      const waDevice = leadData.whatsapp_device || {};
+      const isAssigned = !!waDevice.is_assigned;
+      const canUseCrm = isAdmin || isAssigned;
+
+      const phone = String((leadObj && (leadObj.wa_mobile || leadObj.mobile)) || "").trim();
+      let cleanDigits = phone.replace(/[^0-9]/g, "");
+      if (cleanDigits.length === 10) cleanDigits = "91" + cleanDigits;
+
+      const leadName = (leadObj && (leadObj.first_name || leadObj.name)) || "";
+      const leadId = self.leadId || "";
+      const existingChat = leadData.whatsapp_chat || null;
+      const hasExistingChat = !!(existingChat && existingChat.chat_id);
+      const chatId = hasExistingChat ? existingChat.chat_id : 0;
+
+      const crmChatUrl = cleanDigits
+        ? (hasExistingChat
+            ? `/dashboard/whatsapp/?phone=${cleanDigits}&chat_id=${chatId}`
+            : `/dashboard/whatsapp/?phone=${cleanDigits}&name=${encodeURIComponent(leadName)}&lead_id=${encodeURIComponent(leadId)}&new_chat=1`)
+        : "#";
+
+      const currentUserName = $("#leadViewApp").data("user-name") || "Our Team";
+      const siteName = $("#leadViewApp").data("site-name") || "Our Team";
+      const dest = (leadObj && (leadObj.destination || (leadObj.travel_details && leadObj.travel_details.destination))) || "your upcoming travel plans";
+      const introMsg = `Hello ${leadName || "there"}! 👋 Welcome to *${siteName}*.\n\nI am *${currentUserName}*, your dedicated Travel Specialist. I am reaching out regarding your trip inquiry for *${dest}*.\n\nHow can I assist you today? Feel free to share your travel dates, group size, or preferred holiday style! ✈️`;
+
+      const waMeUrl = cleanDigits ? `https://wa.me/${cleanDigits}?text=${encodeURIComponent(introMsg)}` : "#";
+
+      return {
+        target_url: canUseCrm ? crmChatUrl : waMeUrl,
+        is_wame: !canUseCrm,
+        can_use_crm_whatsapp: canUseCrm,
+        has_existing_chat: hasExistingChat,
+        existing_chat_id: chatId,
+        wa_me_url: waMeUrl,
+        crm_chat_url: crmChatUrl,
+        intro_message: introMsg,
+        tooltip: !canUseCrm
+          ? "Chat on WhatsApp (wa.me intro message)"
+          : (hasExistingChat ? "Open WhatsApp Conversation" : "Start New WhatsApp Chat")
+      };
+    },
+
     renderView: function (lead) {
       const self = this;
       const $container = $("#leadViewMainContainer");
@@ -2212,9 +2278,8 @@
             `;
             cardExtraClass = "v3-timeline-card-whatsapp";
 
-            const waChatUrl = waCleanPhone
-              ? `/dashboard/whatsapp/?phone=${waCleanPhone}&name=${encodeURIComponent(lead.first_name || lead.name || "")}&lead_id=${self.leadId || ""}&new_chat=1`
-              : "#";
+            const waAct = self.getWhatsAppActionData(lead);
+            const waChatUrl = waAct.can_use_crm_whatsapp ? waAct.crm_chat_url : (waCleanPhone ? waAct.wa_me_url : "#");
 
             const senderLabel = isIncoming
               ? escapeHtml(t.user_name || "Customer")
@@ -3152,11 +3217,15 @@
               </button>
               ${
                 lead.wa_mobile && self.leadViewOptions.show_whatsapp_button
-                  ? `
-                <a href="/dashboard/whatsapp/?phone=${lead.wa_mobile.replace(/[^0-9]/g, '')}&name=${encodeURIComponent(lead.first_name || lead.name || '')}&lead_id=${self.leadId || ''}&new_chat=1" class="v3-btn-contact-action wa" data-tooltip="Chat on WhatsApp" data-phone="${lead.wa_mobile}" data-name="${encodeURIComponent(lead.first_name || lead.name || '')}" data-lead-id="${self.leadId || ''}">
-                  ${WA_SVG} <span>WhatsApp</span>
-                </a>
-              `
+                  ? (() => {
+                      const waAct = self.getWhatsAppActionData(lead);
+                      const targetAttr = waAct.is_wame ? 'target="_blank" rel="noopener noreferrer"' : '';
+                      return `
+                        <a href="${waAct.target_url}" ${targetAttr} class="v3-btn-contact-action wa" data-tooltip="${waAct.tooltip}" data-phone="${lead.wa_mobile}" data-name="${encodeURIComponent(lead.first_name || lead.name || '')}" data-lead-id="${self.leadId || ''}" data-chat-id="${waAct.existing_chat_id || ''}" data-is-wame="${waAct.is_wame ? '1' : '0'}">
+                          ${WA_SVG} <span>WhatsApp</span>
+                        </a>
+                      `;
+                    })()
                   : ""
               }
               ${
@@ -3488,12 +3557,16 @@
                   <div class="v3-fa-contact-bar">
                     ${
                       lead.wa_mobile && self.leadViewOptions.show_whatsapp_button
-                        ? `
-                      <a href="/dashboard/whatsapp/?phone=${lead.wa_mobile.replace(/[^0-9]/g, '')}&name=${encodeURIComponent(lead.first_name || lead.name || '')}&lead_id=${self.leadId || ''}&new_chat=1" class="v3-fa-contact-btn btn-wa" data-tooltip="Open WhatsApp Chat">
-                        ${WA_SVG}
-                        <span>WhatsApp</span>
-                      </a>
-                    `
+                        ? (() => {
+                            const waAct = self.getWhatsAppActionData(lead);
+                            const targetAttr = waAct.is_wame ? 'target="_blank" rel="noopener noreferrer"' : '';
+                            return `
+                              <a href="${waAct.target_url}" ${targetAttr} class="v3-fa-contact-btn btn-wa" data-tooltip="${waAct.tooltip}" data-phone="${lead.wa_mobile}" data-name="${encodeURIComponent(lead.first_name || lead.name || '')}" data-lead-id="${self.leadId || ''}" data-chat-id="${waAct.existing_chat_id || ''}" data-is-wame="${waAct.is_wame ? '1' : '0'}">
+                                ${WA_SVG}
+                                <span>WhatsApp</span>
+                              </a>
+                            `;
+                          })()
                         : ""
                     }
 
@@ -8946,10 +9019,10 @@
               emptyMsg = "No WhatsApp messages have been logged with this customer yet.";
               const leadObj = (self.leadData && self.leadData.lead) || self.leadData || {};
               const cleanPhone = String(leadObj.wa_mobile || leadObj.mobile || "").replace(/[^0-9]/g, "");
-              if (cleanPhone) {
-                const leadName = leadObj.first_name || leadObj.name || "";
-                emptyCtaHtml = `<a href="/dashboard/whatsapp/?phone=${cleanPhone}&name=${encodeURIComponent(leadName)}&lead_id=${self.leadId || ""}&new_chat=1" class="btn-v3-action btn-green btn-sm"><i class="fi fi-brands-whatsapp"></i> Start WhatsApp Chat</a>`;
-              }
+              const waAct = self.getWhatsAppActionData(leadObj);
+              const targetAttr = waAct.is_wame ? 'target="_blank" rel="noopener noreferrer"' : '';
+              const btnLabel = waAct.is_wame ? "Chat on WhatsApp" : (waAct.has_existing_chat ? "Open WhatsApp Chat" : "Start WhatsApp Chat");
+              emptyCtaHtml = `<a href="${waAct.target_url}" ${targetAttr} class="btn-v3-action btn-green btn-sm" data-phone="${cleanPhone}" data-chat-id="${waAct.existing_chat_id || ''}" data-is-wame="${waAct.is_wame ? '1' : '0'}"><i class="fi fi-brands-whatsapp"></i> ${btnLabel}</a>`;
             } else if (filter === "payment_link") {
               emptyIcon = "fi-rr-link";
               emptyTitle = "No Payment Links Generated";
@@ -8996,12 +9069,13 @@
       $(document).on("click", "#btnComposerWhatsAppChat", function () {
         const leadObj = (self.leadData && self.leadData.lead) || self.leadData || {};
         const cleanPhone = String(leadObj.wa_mobile || leadObj.mobile || "").replace(/[^0-9]/g, "");
-        const leadName = leadObj.first_name || leadObj.name || "";
         if (cleanPhone) {
-          window.open(
-            `/dashboard/whatsapp/?phone=${cleanPhone}&name=${encodeURIComponent(leadName)}&lead_id=${self.leadId || ""}&new_chat=1`,
-            "_blank",
-          );
+          const waAct = self.getWhatsAppActionData(leadObj);
+          if (waAct.is_wame) {
+            window.open(waAct.wa_me_url, "_blank");
+          } else {
+            window.open(waAct.crm_chat_url, "_blank");
+          }
         } else {
           self.notify("Customer mobile number not found for WhatsApp.", "warning");
         }
