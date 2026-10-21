@@ -449,3 +449,674 @@
     margin-left: 6px;
     letter-spacing: 0.04em;
 }
+
+/* =========================================================================
+   V3 Settings: Migration (Import Default Data) Page & Card Styling
+   ========================================================================= */
+
+/* Main Form Container Section Gap */
+#settingMigrationApp .v3-form-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+}
+
+/* Card Header Actions */
+#settingMigrationApp .v3-card-header-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-shrink: 0 !important;
+}
+
+.btn-v3-header-action {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    height: 32px !important;
+    padding: 0 14px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    transition: all 0.18s ease !important;
+    line-height: 1 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.btn-v3-header-action span {
+    white-space: nowrap !important;
+}
+
+.btn-v3-header-action i {
+    font-size: 12px !important;
+}
+
+.btn-v3-header-action.primary {
+    background: #eef2ff !important;
+    border: 1px solid #c7d2fe !important;
+    color: #4338ca !important;
+}
+
+.btn-v3-header-action.primary:hover {
+    background: #4f46e5 !important;
+    border-color: #4f46e5 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25) !important;
+}
+
+.btn-v3-header-action.secondary {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #64748b !important;
+}
+
+.btn-v3-header-action.secondary:hover {
+    background: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+/* Section 1: Migration Overview Stats Grid */
+.migration-overview-body {
+    container-type: inline-size !important;
+}
+
+.migration-overview-grid {
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 14px !important;
+}
+
+.migration-overview-grid > .migration-stat-card:nth-child(1),
+.migration-overview-grid > .migration-stat-card:nth-child(2),
+.migration-overview-grid > .migration-stat-card:nth-child(3) {
+    grid-column: span 2 !important;
+}
+
+.migration-overview-grid > .migration-stat-card:nth-child(4),
+.migration-overview-grid > .migration-stat-card:nth-child(5) {
+    grid-column: span 3 !important;
+}
+
+/* Large Screens (≥ 1560px) or wide viewport */
+@media (min-width: 1560px) {
+    .migration-overview-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    }
+    .migration-overview-grid > .migration-stat-card {
+        grid-column: span 1 !important;
+    }
+}
+
+/* Tablets / Medium Mobile (≤ 768px) */
+@media (max-width: 768px) {
+    .migration-overview-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+    .migration-overview-grid > .migration-stat-card {
+        grid-column: span 1 !important;
+    }
+    .migration-overview-grid > .migration-stat-card:nth-child(5) {
+        grid-column: span 2 !important;
+    }
+}
+
+/* Small Phones (≤ 480px) */
+@media (max-width: 480px) {
+    .migration-overview-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+    .migration-overview-grid > .migration-stat-card {
+        grid-column: span 1 !important;
+    }
+}
+
+/* Container-Aware Overrides (Adapts directly to container width regardless of sidebar state) */
+@container (min-width: 1020px) {
+    .migration-overview-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    }
+    .migration-overview-grid > .migration-stat-card {
+        grid-column: span 1 !important;
+    }
+}
+
+@container (min-width: 600px) and (max-width: 1019px) {
+    .migration-overview-grid {
+        grid-template-columns: repeat(6, 1fr) !important;
+    }
+    .migration-overview-grid > .migration-stat-card:nth-child(1),
+    .migration-overview-grid > .migration-stat-card:nth-child(2),
+    .migration-overview-grid > .migration-stat-card:nth-child(3) {
+        grid-column: span 2 !important;
+    }
+    .migration-overview-grid > .migration-stat-card:nth-child(4),
+    .migration-overview-grid > .migration-stat-card:nth-child(5) {
+        grid-column: span 3 !important;
+    }
+}
+
+@container (min-width: 380px) and (max-width: 599px) {
+    .migration-overview-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+    .migration-overview-grid > .migration-stat-card {
+        grid-column: span 1 !important;
+    }
+    .migration-overview-grid > .migration-stat-card:nth-child(5) {
+        grid-column: span 2 !important;
+    }
+}
+
+@container (max-width: 379px) {
+    .migration-overview-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+    .migration-overview-grid > .migration-stat-card {
+        grid-column: span 1 !important;
+    }
+}
+
+.migration-stat-card {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 15px 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    min-height: 136px !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03) !important;
+    position: relative !important;
+}
+
+.migration-stat-card:hover {
+    border-color: #cbd5e1 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 18px -4px rgba(15, 23, 42, 0.08) !important;
+}
+
+.migration-stat-top {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+}
+
+.migration-stat-icon-mini {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    border-radius: 9px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 15px !important;
+    transition: all 0.2s ease !important;
+}
+
+.migration-stat-icon-mini.indigo { background: #eef2ff !important; color: #4f46e5 !important; border: 1px solid #e0e7ff !important; }
+.migration-stat-icon-mini.teal   { background: #ecfdf5 !important; color: #059669 !important; border: 1px solid #d1fae5 !important; }
+.migration-stat-icon-mini.purple { background: #f5f3ff !important; color: #7c3aed !important; border: 1px solid #ede9fe !important; }
+.migration-stat-icon-mini.amber  { background: #fffbeb !important; color: #d97706 !important; border: 1px solid #fef3c7 !important; }
+.migration-stat-icon-mini.rose   { background: #fff1f2 !important; color: #e11d48 !important; border: 1px solid #ffe4e6 !important; }
+
+.migration-stat-status-chip {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 3px 8px !important;
+    border-radius: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    background: #ecfdf5 !important;
+    color: #059669 !important;
+    border: 1px solid #d1fae5 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+}
+
+.migration-stat-status-chip i {
+    font-size: 10px !important;
+}
+
+.migration-stat-main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+}
+
+.migration-stat-label {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.migration-stat-metric-row {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
+    min-width: 0 !important;
+}
+
+.migration-stat-installed {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    flex-shrink: 0 !important;
+}
+
+.migration-stat-installed-sub {
+    font-size: 11.5px !important;
+    font-weight: 500 !important;
+    color: #94a3b8 !important;
+    white-space: nowrap !important;
+}
+
+.migration-stat-footer {
+    padding-top: 10px !important;
+    border-top: 1px solid #f1f5f9 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+}
+
+.migration-stat-footer-text {
+    font-size: 12px !important;
+    color: #475569 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    line-height: 1.3 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.migration-stat-footer-text i {
+    font-size: 12px !important;
+    color: #94a3b8 !important;
+    flex-shrink: 0 !important;
+}
+
+.migration-stat-total {
+    font-weight: 700 !important;
+    color: #334155 !important;
+}
+
+/* Section 2: Datasets Grid & Option Cards */
+.v3-dataset-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)) !important;
+    gap: 16px !important;
+}
+
+.v3-dataset-card {
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    padding: 16px 18px !important;
+    background: #ffffff !important;
+    cursor: pointer !important;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
+    position: relative !important;
+    user-select: none !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03) !important;
+}
+
+.v3-dataset-card:hover {
+    border-color: #cbd5e1 !important;
+    background: #ffffff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.08) !important;
+}
+
+.v3-dataset-card.is-selected {
+    border-color: #4f46e5 !important;
+    background: #ffffff !important;
+    box-shadow: 0 0 0 1px #4f46e5, 0 6px 20px -4px rgba(79, 70, 229, 0.12) !important;
+}
+
+.v3-dataset-icon {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    transition: all 0.2s ease !important;
+    flex-shrink: 0 !important;
+}
+
+.v3-dataset-icon.indigo { background: #eef2ff !important; color: #4f46e5 !important; border: 1px solid #e0e7ff !important; }
+.v3-dataset-icon.teal   { background: #ecfdf5 !important; color: #059669 !important; border: 1px solid #d1fae5 !important; }
+.v3-dataset-icon.purple { background: #f5f3ff !important; color: #7c3aed !important; border: 1px solid #ede9fe !important; }
+.v3-dataset-icon.amber  { background: #fffbeb !important; color: #d97706 !important; border: 1px solid #fef3c7 !important; }
+.v3-dataset-icon.rose   { background: #fff1f2 !important; color: #e11d48 !important; border: 1px solid #ffe4e6 !important; }
+
+.v3-dataset-card.is-selected .v3-dataset-icon.indigo {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25) !important;
+}
+.v3-dataset-card.is-selected .v3-dataset-icon.teal {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25) !important;
+}
+.v3-dataset-card.is-selected .v3-dataset-icon.purple {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 10px rgba(124, 58, 237, 0.25) !important;
+}
+.v3-dataset-card.is-selected .v3-dataset-icon.amber {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 10px rgba(217, 119, 6, 0.25) !important;
+}
+.v3-dataset-card.is-selected .v3-dataset-icon.rose {
+    background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 10px rgba(225, 29, 72, 0.25) !important;
+}
+
+.v3-dataset-body {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.v3-dataset-title-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    margin-bottom: 6px !important;
+}
+
+.v3-dataset-title-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    min-width: 0 !important;
+}
+
+.v3-dataset-title {
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
+}
+
+.v3-dataset-badge {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 2.5px 8px !important;
+    border-radius: 20px !important;
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border: 1px solid #e2e8f0 !important;
+    letter-spacing: 0.01em !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+}
+
+.v3-dataset-card.is-selected .v3-dataset-badge {
+    background: #eef2ff !important;
+    color: #4338ca !important;
+    border-color: #c7d2fe !important;
+}
+
+.v3-dataset-desc {
+    font-size: 12.5px !important;
+    color: #64748b !important;
+    margin: 0 !important;
+    line-height: 1.5 !important;
+}
+
+/* Dataset Card Switch Specific */
+.v3-dataset-card .v3-switch-label {
+    width: 40px !important;
+    height: 22px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    flex: 0 0 40px !important;
+    margin: 0 0 0 auto !important;
+}
+
+.v3-dataset-card .v3-switch-slider {
+    width: 40px !important;
+    height: 22px !important;
+    border-radius: 22px !important;
+    background-color: #cbd5e1 !important;
+    transition: 0.25s !important;
+}
+
+.v3-dataset-card .v3-switch-slider:before {
+    height: 16px !important;
+    width: 16px !important;
+    left: 3px !important;
+    bottom: 3px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+    transition: 0.25s !important;
+}
+
+.v3-dataset-card .v3-switch-label input:checked + .v3-switch-slider,
+#settingMigrationApp .v3-switch-label input:checked + .v3-switch-slider {
+    background-color: #4f46e5 !important;
+}
+
+.v3-dataset-card .v3-switch-label input:checked + .v3-switch-slider:before {
+    transform: translateX(18px) !important;
+}
+
+/* Section 3: Feature Toggle in Migration Preferences */
+#settingMigrationApp .v3-feature-toggle-icon {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 10px !important;
+    background: #eef2ff !important;
+    color: #4f46e5 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+}
+
+/* Section 4: Progress Card */
+.migration-progress-card {
+    background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%) !important;
+    border-radius: 14px !important;
+    padding: 22px 24px !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 25px -5px rgba(30, 27, 75, 0.4) !important;
+    display: none;
+}
+
+.migration-progress-card.active {
+    display: block !important;
+}
+
+.migration-progress-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 12px !important;
+}
+
+.migration-progress-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+}
+
+.migration-progress-title i {
+    font-size: 18px !important;
+    color: #818cf8 !important;
+}
+
+.migration-progress-pct {
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    color: #a5b4fc !important;
+}
+
+.migration-progress-bar-wrap {
+    width: 100% !important;
+    height: 10px !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    position: relative !important;
+    margin-bottom: 10px !important;
+}
+
+.migration-progress-bar-fill {
+    width: 0% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, #6366f1 0%, #38bdf8 100%) !important;
+    border-radius: 999px !important;
+    transition: width 0.3s ease !important;
+}
+
+.migration-progress-status-msg {
+    font-size: 13px !important;
+    color: #cbd5e1 !important;
+    margin: 0 !important;
+}
+
+/* Section 5: Result Summary Banner */
+.migration-result-banner {
+    background: #ecfdf5 !important;
+    border: 1px solid #a7f3d0 !important;
+    border-radius: 12px !important;
+    padding: 16px 20px !important;
+    display: none;
+}
+
+.migration-result-banner.active {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+}
+
+.migration-result-icon {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    background: #10b981 !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+}
+
+.migration-result-content h4 {
+    margin: 0 0 4px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #065f46 !important;
+}
+
+.migration-result-content p {
+    margin: 0 !important;
+    font-size: 13px !important;
+    color: #047857 !important;
+    line-height: 1.45 !important;
+}
+
+.migration-result-badges {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin-top: 10px !important;
+}
+
+.migration-result-chip {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    background: #ffffff !important;
+    border: 1px solid #6ee7b7 !important;
+    color: #065f46 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    padding: 3px 10px !important;
+    border-radius: 20px !important;
+}
+
+/* Sidebar Quick Nav Links */
+.migration-sidebar-nav-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 12px 0 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+.migration-sidebar-nav-item a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 10px 14px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    color: #334155 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    transition: all 0.15s ease !important;
+}
+
+.migration-sidebar-nav-item a:hover {
+    background: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+    color: #4f46e5 !important;
+    transform: translateX(2px) !important;
+}
+
+.migration-sidebar-nav-item a i {
+    font-size: 14px !important;
+    color: #64748b !important;
+}
+
+

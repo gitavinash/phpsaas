@@ -71,6 +71,7 @@ if (isset($daterange)) {
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>transporter-fleet.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>whatsapp_templates.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>workflows.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" type="text/css" href="<?php echo ADMIN_STYLESHEET ?>master-data.css?v=<?php echo time(); ?>">
     <?php
     if (SITE_VERSION == 'mobile') {
         echo "<link rel='stylesheet' type='text/css' href='" . ADMIN_STYLESHEET . "admin_mobile.css'>";

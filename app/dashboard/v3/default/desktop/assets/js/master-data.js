@@ -145,7 +145,7 @@
     fetchCatalog: function () {
       const self = this;
       $.ajax({
-        url: "/api/v3/master/catalog.php",
+        url: "/api/v3/master/catalog/",
         type: "GET",
         dataType: "json",
         success: function (res) {
@@ -229,7 +229,7 @@
       $("#btnExecuteMasterText").text("Copying Master Data...");
 
       $.ajax({
-        url: "/api/v3/master/copy.php",
+        url: "/api/v3/master/copy/",
         type: "POST",
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify({

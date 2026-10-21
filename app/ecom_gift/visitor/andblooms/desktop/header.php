@@ -83,7 +83,7 @@ function render_andblooms_mobile_menu_tree(array $items, int $depth = 0): void
     <link rel="stylesheet" type="text/css" href="<?php echo PLUGIN_LIBRARY ?>select2/css/select2.min.css">
     <!-- Social Proof Plugin -->
     <link rel="stylesheet" href="<?php echo PLUGIN_LIBRARY ?>social_proof/social_proof.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css">
+    <link rel="stylesheet" href="<?php echo USER_STYLESHEET ?>style.min.css?v=<?php echo time(); ?>">
     <?php require_once DEFAULT_META; ?>
     <meta name="google-site-verification" content="HT7OlsigSJmSLCG9PCz7JmCbyRGmzUeJapljsV4KRIg" />
 

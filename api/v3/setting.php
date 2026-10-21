@@ -20,6 +20,8 @@ if (strpos($requestUri, '/setting/profile') !== false) {
     require_once __DIR__ . '/setting/seo.php';
 } elseif (strpos($requestUri, '/setting/app') !== false) {
     require_once __DIR__ . '/setting/app.php';
+} elseif (strpos($requestUri, '/setting/migration') !== false) {
+    require_once __DIR__ . '/master/index.php';
 } else {
     require_once __DIR__ . '/setting/configuration.php';
 }

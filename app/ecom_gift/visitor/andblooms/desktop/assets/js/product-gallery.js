@@ -1,0 +1,532 @@
+/**
+ * Amazon.in-Style Product Image Gallery & Zoom
+ * Supports:
+ * - Desktop hover lens with high-magnification flyout zoom window
+ * - Tablet/mobile fallback with smooth inner zoom
+ * - Mobile touch swipe gestures (left/right to switch images)
+ * - Thumbnail hover & click switching with active indicator
+ * - Fullscreen interactive lightbox modal with zoom (+/-), pan, double-tap zoom, and thumbnail bar
+ */
+(function () {
+  'use strict';
+
+  function initProductGallery() {
+    var mainContainer = document.getElementById('productMainContainer');
+    var mainImg = document.getElementById('mainProductImage');
+    var zoomLens = document.getElementById('zoomLens');
+    var zoomFlyout = document.getElementById('zoomFlyout');
+    var zoomFlyoutImg = document.getElementById('zoomFlyoutImg');
+    var counterBadge = document.getElementById('galleryCounter');
+    var prevBtn = document.getElementById('galleryPrevBtn');
+    var nextBtn = document.getElementById('galleryNextBtn');
+    var thumbnailsStrip = document.getElementById('thumbnailsStrip');
+
+    // Lightbox elements
+    var lightbox = document.getElementById('productLightboxModal');
+    var lightboxImg = document.getElementById('lightboxImage');
+    var lightboxCounter = document.getElementById('lightboxCounter');
+    var lightboxCloseBtn = document.getElementById('lightboxCloseBtn');
+    var lightboxPrevBtn = document.getElementById('lightboxPrevBtn');
+    var lightboxNextBtn = document.getElementById('lightboxNextBtn');
+    var lightboxZoomIn = document.getElementById('lightboxZoomIn');
+    var lightboxZoomOut = document.getElementById('lightboxZoomOut');
+    var lightboxZoomReset = document.getElementById('lightboxZoomReset');
+    var lightboxViewport = document.getElementById('lightboxViewport');
+    var lightboxThumbnailsStrip = document.getElementById('lightboxThumbnailsStrip');
+
+    if (!mainContainer || !mainImg) return;
+
+    // Collect gallery images
+    var galleryImages = window.PRODUCT_GALLERY_IMAGES || [];
+    if (!galleryImages.length) {
+      var thumbElements = document.querySelectorAll('.thumbnail-item');
+      if (thumbElements.length) {
+        thumbElements.forEach(function (el) {
+          galleryImages.push({
+            path: el.getAttribute('data-src') || el.querySelector('img')?.getAttribute('src'),
+            title: el.getAttribute('data-title') || mainImg.getAttribute('alt') || 'Product Image'
+          });
+        });
+      } else {
+        galleryImages.push({
+          path: mainImg.getAttribute('src'),
+          title: mainImg.getAttribute('alt') || 'Product Image'
+        });
+      }
+    }
+
+    var currentIndex = 0;
+    var totalImages = galleryImages.length;
+    var MAGNIFICATION = 2.5;
+
+    // Preload all gallery images in background
+    galleryImages.forEach(function (item) {
+      if (item && item.path) {
+        var pre = new Image();
+        pre.src = item.path;
+      }
+    });
+
+    function setActiveImage(index) {
+      if (index < 0) index = totalImages - 1;
+      if (index >= totalImages) index = 0;
+      currentIndex = index;
+
+      var currentItem = galleryImages[currentIndex];
+      var newSrc = currentItem ? currentItem.path : mainImg.getAttribute('src');
+
+      // Update main image
+      mainImg.setAttribute('src', newSrc);
+
+      // Update flyout image
+      if (zoomFlyoutImg) {
+        zoomFlyoutImg.setAttribute('src', newSrc);
+      }
+
+      // Update counter badge
+      if (counterBadge) {
+        counterBadge.textContent = (currentIndex + 1) + ' / ' + totalImages;
+      }
+
+      // Update thumbnails styling
+      var thumbItems = document.querySelectorAll('.thumbnail-item');
+      thumbItems.forEach(function (thumb, idx) {
+        if (idx === currentIndex) {
+          thumb.classList.remove('border-gray-200', 'hover:border-gray-300');
+          thumb.classList.add('border-primary', 'ring-2', 'ring-primary/40');
+          // Scroll active thumbnail into view
+          if (thumb.scrollIntoView) {
+            thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+        } else {
+          thumb.classList.remove('border-primary', 'ring-2', 'ring-primary/40');
+          thumb.classList.add('border-gray-200', 'hover:border-gray-300');
+        }
+      });
+
+      // Update lightbox if open
+      if (lightbox && !lightbox.classList.contains('hidden')) {
+        updateLightboxImage();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // Desktop Hover: Amazon Lens & Clean Flyout Zoom Window
+    // -------------------------------------------------------------
+    var isHovering = false;
+
+    function handleMouseEnter(e) {
+      if (window.innerWidth < 768) return; // Touch only on mobile
+      isHovering = true;
+
+      var currentSrc = galleryImages[currentIndex] ? galleryImages[currentIndex].path : mainImg.getAttribute('src');
+
+      if (zoomFlyout && zoomLens) {
+        var rect = mainContainer.getBoundingClientRect();
+        zoomLens.classList.remove('hidden');
+        zoomFlyout.classList.remove('hidden');
+        zoomFlyout.classList.add('is-active');
+
+        // Lock flyout dimensions to match main image container precisely
+        zoomFlyout.style.width = rect.width + 'px';
+        zoomFlyout.style.height = rect.height + 'px';
+
+        if (zoomFlyoutImg) {
+          zoomFlyoutImg.setAttribute('src', currentSrc);
+          zoomFlyoutImg.style.width = (rect.width * MAGNIFICATION) + 'px';
+          zoomFlyoutImg.style.height = (rect.height * MAGNIFICATION) + 'px';
+        }
+        updateLensPosition(e);
+      }
+    }
+
+    function updateLensPosition(e) {
+      if (!zoomLens || !zoomFlyout) return;
+
+      var rect = mainContainer.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+
+      var lensW = rect.width / MAGNIFICATION;
+      var lensH = rect.height / MAGNIFICATION;
+
+      zoomLens.style.width = lensW + 'px';
+      zoomLens.style.height = lensH + 'px';
+
+      var lensX = x - lensW / 2;
+      var lensY = y - lensH / 2;
+
+      // Constrain lens within image bounds
+      var maxLensX = rect.width - lensW;
+      var maxLensY = rect.height - lensH;
+
+      if (lensX < 0) lensX = 0;
+      if (lensY < 0) lensY = 0;
+      if (lensX > maxLensX) lensX = maxLensX;
+      if (lensY > maxLensY) lensY = maxLensY;
+
+      zoomLens.style.left = lensX + 'px';
+      zoomLens.style.top = lensY + 'px';
+
+      // Move flyout image directly for 100% pixel-perfect clarity
+      if (zoomFlyoutImg) {
+        zoomFlyoutImg.style.left = (-lensX * MAGNIFICATION) + 'px';
+        zoomFlyoutImg.style.top = (-lensY * MAGNIFICATION) + 'px';
+      }
+    }
+
+    function handleMouseMove(e) {
+      if (!isHovering) return;
+      if (window.innerWidth >= 768) {
+        updateLensPosition(e);
+      }
+    }
+
+    function handleMouseLeave() {
+      isHovering = false;
+      if (zoomLens) zoomLens.classList.add('hidden');
+      if (zoomFlyout) {
+        zoomFlyout.classList.remove('is-active');
+        zoomFlyout.classList.add('hidden');
+      }
+    }
+
+    mainContainer.addEventListener('mouseenter', handleMouseEnter);
+    mainContainer.addEventListener('mousemove', handleMouseMove);
+    mainContainer.addEventListener('mouseleave', handleMouseLeave);
+
+    if (zoomFlyout) {
+      zoomFlyout.addEventListener('click', function () {
+        openLightbox();
+      });
+    }
+
+    // -------------------------------------------------------------
+    // Thumbnails: Hover & Click
+    // -------------------------------------------------------------
+    var thumbElements = document.querySelectorAll('.thumbnail-item');
+    var thumbHoverTimeout = null;
+
+    thumbElements.forEach(function (thumb, index) {
+      // Hover switches preview immediately (Amazon behavior)
+      thumb.addEventListener('mouseenter', function () {
+        if (window.innerWidth >= 768) {
+          clearTimeout(thumbHoverTimeout);
+          thumbHoverTimeout = setTimeout(function () {
+            setActiveImage(index);
+          }, 40);
+        }
+      });
+
+      // Click locks selection
+      thumb.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        setActiveImage(index);
+      });
+    });
+
+    // Prev / Next buttons on main image
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setActiveImage(currentIndex - 1);
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setActiveImage(currentIndex + 1);
+      });
+    }
+
+    // -------------------------------------------------------------
+    // Mobile Touch Swipe Gesture on Main Image
+    // -------------------------------------------------------------
+    var touchStartX = 0;
+    var touchStartY = 0;
+    var touchStartTime = 0;
+    var isSwiping = false;
+
+    mainContainer.addEventListener('touchstart', function (e) {
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+        isSwiping = true;
+      }
+    }, { passive: true });
+
+    mainContainer.addEventListener('touchmove', function (e) {
+      // Allow default vertical scroll if vertical motion is dominant
+    }, { passive: true });
+
+    mainContainer.addEventListener('touchend', function (e) {
+      if (!isSwiping || e.changedTouches.length !== 1) return;
+      isSwiping = false;
+
+      var touchEndX = e.changedTouches[0].clientX;
+      var touchEndY = e.changedTouches[0].clientY;
+      var deltaX = touchEndX - touchStartX;
+      var deltaY = touchEndY - touchStartY;
+      var duration = Date.now() - touchStartTime;
+
+      // Check horizontal swipe
+      if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) && duration < 600) {
+        if (deltaX < 0) {
+          // Swipe left -> Next
+          setActiveImage(currentIndex + 1);
+        } else {
+          // Swipe right -> Prev
+          setActiveImage(currentIndex - 1);
+        }
+      } else if (Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10 && duration < 300) {
+        // Clean tap -> open Fullscreen Lightbox
+        openLightbox();
+      }
+    });
+
+    // Desktop click on main image -> open Lightbox
+    mainContainer.addEventListener('click', function (e) {
+      // Ignore click if it came from navigation buttons
+      if (e.target.closest('.gallery-nav-btn')) return;
+      openLightbox();
+    });
+
+    // -------------------------------------------------------------
+    // Amazon Fullscreen Lightbox Modal
+    // -------------------------------------------------------------
+    var lbZoom = 1;
+    var lbPanX = 0;
+    var lbPanY = 0;
+    var isDragging = false;
+    var dragStartX = 0;
+    var dragStartY = 0;
+
+    function openLightbox() {
+      if (!lightbox) return;
+      handleMouseLeave(); // dismiss any hover zoom
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      resetLightboxZoom();
+      updateLightboxImage();
+    }
+
+    function closeLightbox() {
+      if (!lightbox) return;
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = '';
+      resetLightboxZoom();
+    }
+
+    function resetLightboxZoom() {
+      lbZoom = 1;
+      lbPanX = 0;
+      lbPanY = 0;
+      applyLightboxTransform();
+    }
+
+    function setLightboxZoom(newZoom) {
+      lbZoom = Math.max(1, Math.min(4, newZoom));
+      if (lbZoom === 1) {
+        lbPanX = 0;
+        lbPanY = 0;
+      }
+      applyLightboxTransform();
+    }
+
+    function applyLightboxTransform() {
+      if (!lightboxImg) return;
+      lightboxImg.style.transform = 'translate(' + lbPanX + 'px, ' + lbPanY + 'px) scale(' + lbZoom + ')';
+      if (lightboxViewport) {
+        lightboxViewport.style.cursor = lbZoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in';
+      }
+    }
+
+    function updateLightboxImage() {
+      if (!lightboxImg) return;
+      var currentItem = galleryImages[currentIndex];
+      var newSrc = currentItem ? currentItem.path : mainImg.getAttribute('src');
+
+      lightboxImg.setAttribute('src', newSrc);
+
+      if (lightboxCounter) {
+        lightboxCounter.textContent = (currentIndex + 1) + ' of ' + totalImages;
+      }
+
+      // Update modal thumbnails
+      if (lightboxThumbnailsStrip) {
+        var thumbs = lightboxThumbnailsStrip.querySelectorAll('.lightbox-thumb-item');
+        thumbs.forEach(function (thumb, idx) {
+          if (idx === currentIndex) {
+            thumb.classList.remove('border-white/20', 'opacity-60');
+            thumb.classList.add('border-primary', 'ring-2', 'ring-primary', 'opacity-100');
+            if (thumb.scrollIntoView) {
+              thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+          } else {
+            thumb.classList.remove('border-primary', 'ring-2', 'ring-primary', 'opacity-100');
+            thumb.classList.add('border-white/20', 'opacity-60');
+          }
+        });
+      }
+    }
+
+    if (lightboxCloseBtn) {
+      lightboxCloseBtn.addEventListener('click', closeLightbox);
+    }
+
+    if (lightboxPrevBtn) {
+      lightboxPrevBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        resetLightboxZoom();
+        setActiveImage(currentIndex - 1);
+      });
+    }
+
+    if (lightboxNextBtn) {
+      lightboxNextBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        resetLightboxZoom();
+        setActiveImage(currentIndex + 1);
+      });
+    }
+
+    if (lightboxZoomIn) {
+      lightboxZoomIn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setLightboxZoom(lbZoom + 0.5);
+      });
+    }
+
+    if (lightboxZoomOut) {
+      lightboxZoomOut.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setLightboxZoom(lbZoom - 0.5);
+      });
+    }
+
+    if (lightboxZoomReset) {
+      lightboxZoomReset.addEventListener('click', function (e) {
+        e.stopPropagation();
+        resetLightboxZoom();
+      });
+    }
+
+    // Modal thumbnails click
+    if (lightboxThumbnailsStrip) {
+      lightboxThumbnailsStrip.addEventListener('click', function (e) {
+        var thumb = e.target.closest('.lightbox-thumb-item');
+        if (thumb) {
+          var idx = parseInt(thumb.getAttribute('data-index'), 10);
+          if (!isNaN(idx)) {
+            resetLightboxZoom();
+            setActiveImage(idx);
+          }
+        }
+      });
+    }
+
+    // Double-click/double-tap to zoom inside Lightbox
+    var lastTap = 0;
+    if (lightboxViewport) {
+      lightboxViewport.addEventListener('dblclick', function (e) {
+        e.preventDefault();
+        setLightboxZoom(lbZoom > 1 ? 1 : 2.5);
+      });
+
+      // Drag to pan when zoomed
+      lightboxViewport.addEventListener('mousedown', function (e) {
+        if (lbZoom <= 1) return;
+        isDragging = true;
+        dragStartX = e.clientX - lbPanX;
+        dragStartY = e.clientY - lbPanY;
+        applyLightboxTransform();
+      });
+
+      window.addEventListener('mousemove', function (e) {
+        if (!isDragging) return;
+        lbPanX = e.clientX - dragStartX;
+        lbPanY = e.clientY - dragStartY;
+        applyLightboxTransform();
+      });
+
+      window.addEventListener('mouseup', function () {
+        if (isDragging) {
+          isDragging = false;
+          applyLightboxTransform();
+        }
+      });
+
+      // Mobile Touch Drag when zoomed & Double-tap
+      lightboxViewport.addEventListener('touchstart', function (e) {
+        var now = Date.now();
+        if (now - lastTap < 300) {
+          // Double tap
+          e.preventDefault();
+          setLightboxZoom(lbZoom > 1 ? 1 : 2.5);
+        } else if (e.touches.length === 1 && lbZoom > 1) {
+          isDragging = true;
+          dragStartX = e.touches[0].clientX - lbPanX;
+          dragStartY = e.touches[0].clientY - lbPanY;
+        }
+        lastTap = now;
+      }, { passive: false });
+
+      lightboxViewport.addEventListener('touchmove', function (e) {
+        if (!isDragging || e.touches.length !== 1 || lbZoom <= 1) return;
+        e.preventDefault();
+        lbPanX = e.touches[0].clientX - dragStartX;
+        lbPanY = e.touches[0].clientY - dragStartY;
+        applyLightboxTransform();
+      }, { passive: false });
+
+      lightboxViewport.addEventListener('touchend', function () {
+        isDragging = false;
+      });
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', function (e) {
+      if (!lightbox || lightbox.classList.contains('hidden')) return;
+
+      if (e.key === 'Escape') {
+        closeLightbox();
+      } else if (e.key === 'ArrowLeft') {
+        resetLightboxZoom();
+        setActiveImage(currentIndex - 1);
+      } else if (e.key === 'ArrowRight') {
+        resetLightboxZoom();
+        setActiveImage(currentIndex + 1);
+      } else if (e.key === '+' || e.key === '=') {
+        setLightboxZoom(lbZoom + 0.5);
+      } else if (e.key === '-') {
+        setLightboxZoom(lbZoom - 0.5);
+      }
+    });
+
+    // Close when clicking backdrop (outside image and controls)
+    if (lightbox) {
+      lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox || e.target.id === 'lightboxStage' || e.target.id === 'lightboxViewport') {
+          if (lbZoom <= 1) {
+            closeLightbox();
+          }
+        }
+      });
+    }
+
+    // Set initial active state
+    setActiveImage(0);
+  }
+
+  // Auto-init on DOMContentLoaded or immediate if ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProductGallery);
+  } else {
+    initProductGallery();
+  }
+})();

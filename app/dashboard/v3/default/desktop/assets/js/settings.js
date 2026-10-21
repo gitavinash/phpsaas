@@ -38,6 +38,9 @@
       if ($("#settingAppConfigApp").length > 0) {
         this.initAppConfig();
       }
+      if ($("#settingMigrationApp").length > 0) {
+        this.initMigration();
+      }
     },
 
     // ------------------------------------------------------------------------
@@ -1772,6 +1775,262 @@
           self.isSubmitting = false;
           $btn.prop("disabled", false).html(origHtml);
           self.showAlert("error", "Network error while saving app configuration.");
+        }
+      });
+    },
+
+    // ------------------------------------------------------------------------
+    // DEFAULT DATA MIGRATION
+    // ------------------------------------------------------------------------
+    initMigration: function () {
+      const self = this;
+      self.bindMigrationEvents();
+      self.loadMigrationCatalog();
+    },
+
+    loadMigrationCatalog: function () {
+      const self = this;
+      $.ajax({
+        url: "/api/v3/master/catalog/",
+        type: "GET",
+        dataType: "json",
+        success: function (res) {
+          if (res && res.status === "success") {
+            const master = res.master_counts || {};
+            const site = res.site_counts || {};
+
+            // Update stats cards
+            if (site.tour_packages !== undefined) $("#statInstalledPackages").text(site.tour_packages);
+            if (master.tour_packages !== undefined) {
+              $("#statTotalPackages").text(master.tour_packages + " Master");
+              $("#badgeCountPackages").text(master.tour_packages + " Packages");
+            }
+
+            if (site.destinations !== undefined) $("#statInstalledDestinations").text(site.destinations);
+            if (master.destinations !== undefined) {
+              $("#statTotalDestinations").text(master.destinations + " Master");
+              $("#badgeCountDestinations").text(master.destinations + " Hubs");
+            }
+
+            if (site.vehicles !== undefined) $("#statInstalledVehicles").text(site.vehicles);
+            if (master.vehicles !== undefined) {
+              $("#statTotalVehicles").text(master.vehicles + " Master");
+              $("#badgeCountVehicles").text(master.vehicles + " Models");
+            }
+
+            if (site.hotels !== undefined) $("#statInstalledHotels").text(site.hotels);
+            if (master.hotels !== undefined) {
+              $("#statTotalHotels").text(master.hotels + " Master");
+              $("#badgeCountHotels").text(master.hotels + " Hotels");
+            }
+
+            if (site.transporters !== undefined) $("#statInstalledTransporters").text(site.transporters);
+            if (master.transporters !== undefined) {
+              $("#statTotalTransporters").text(master.transporters + " Master");
+              $("#badgeCountTransporters").text(master.transporters + " Operator");
+            }
+          }
+        },
+        error: function (xhr) {
+          console.error("Failed to load master catalog:", xhr);
+        }
+      });
+    },
+
+    bindMigrationEvents: function () {
+      const self = this;
+
+      // Dataset card click toggles selection
+      $(document).off("click", ".v3-dataset-card").on("click", ".v3-dataset-card", function (e) {
+        if ($(e.target).is("input[type='checkbox']") || $(e.target).closest(".v3-switch-label").length) return;
+        const $chk = $(this).find(".master-dataset-checkbox");
+        $chk.prop("checked", !$chk.is(":checked")).trigger("change");
+      });
+
+      // Dataset checkbox change updates card is-selected class
+      $(document).off("change", ".master-dataset-checkbox").on("change", ".master-dataset-checkbox", function () {
+        const $card = $(this).closest(".v3-dataset-card");
+        if ($(this).is(":checked")) {
+          $card.addClass("is-selected");
+        } else {
+          $card.removeClass("is-selected");
+        }
+      });
+
+      // Quick links: Select All / Deselect All
+      $(document).off("click", "#btnSelectAllDatasets").on("click", "#btnSelectAllDatasets", function (e) {
+        e.preventDefault();
+        $(".master-dataset-checkbox").prop("checked", true).trigger("change");
+      });
+
+      $(document).off("click", "#btnDeselectAllDatasets").on("click", "#btnDeselectAllDatasets", function (e) {
+        e.preventDefault();
+        $(".master-dataset-checkbox").prop("checked", false).trigger("change");
+      });
+
+      // Start Migration Button
+      $(document).off("click", "#btnStartMigration").on("click", "#btnStartMigration", function (e) {
+        e.preventDefault();
+        if (self.isSubmitting) return;
+
+        const selectedTypes = [];
+        $(".master-dataset-checkbox:checked").each(function () {
+          selectedTypes.push($(this).val());
+        });
+
+        if (selectedTypes.length === 0) {
+          self.showAlert("warning", "Please select at least one master dataset to import.");
+          return;
+        }
+
+        const destination = "";
+        const skipExisting = $("#chkSkipExisting").is(":checked") ? 1 : 0;
+
+        const swalFn = window.swal || window.Swal;
+        const confirmMsg = "Are you sure you want to import the selected default master datasets into your workspace?";
+
+        const proceedImport = function () {
+          self.executeMigration(selectedTypes, destination, skipExisting);
+        };
+
+        if (swalFn) {
+          if (typeof swalFn.fire === "function") {
+            swalFn.fire({
+              title: "Import Default Data?",
+              text: confirmMsg,
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#4f46e5",
+              cancelButtonColor: "#94a3b8",
+              confirmButtonText: "Yes, start import",
+              cancelButtonText: "Cancel"
+            }).then(function (result) {
+              if (result && (result.isConfirmed || result.value)) {
+                proceedImport();
+              }
+            });
+          } else {
+            swalFn({
+              title: "Import Default Data?",
+              text: confirmMsg,
+              type: "info",
+              showCancelButton: true,
+              confirmButtonColor: "#4f46e5",
+              cancelButtonColor: "#94a3b8",
+              confirmButtonText: "Yes, start import",
+              cancelButtonText: "Cancel"
+            }, function (isConfirm) {
+              if (isConfirm) {
+                proceedImport();
+              }
+            });
+          }
+        } else {
+          if (window.confirm(confirmMsg)) {
+            proceedImport();
+          }
+        }
+      });
+    },
+
+    executeMigration: function (types, destination, skipExisting) {
+      const self = this;
+      self.isSubmitting = true;
+
+      const $btn = $("#btnStartMigration");
+      const $btnText = $("#btnStartMigrationText");
+      const origText = $btnText.text();
+
+      $btn.prop("disabled", true);
+      $btnText.text("Importing Datasets...");
+      $btn.find("i").attr("class", "fi fi-rr-spinner fi-spin");
+
+      const $progressCard = $("#migrationProgressCard");
+      const $progressBar = $("#migrationProgressBar");
+      const $progressPct = $("#migrationProgressPct");
+      const $progressMsg = $("#migrationProgressMsg");
+      const $resultBanner = $("#migrationResultBanner");
+
+      $resultBanner.removeClass("active").hide();
+      $progressCard.addClass("active").slideDown(200);
+      $progressBar.css("width", "25%");
+      $progressPct.text("25%");
+      $progressMsg.text("Verifying schema and preparing workspace records...");
+
+      // Animated progress indicator during AJAX execution
+      let progressVal = 25;
+      const progressTimer = setInterval(function () {
+        if (progressVal < 85) {
+          progressVal += 15;
+          $progressBar.css("width", progressVal + "%");
+          $progressPct.text(progressVal + "%");
+          if (progressVal === 40) $progressMsg.text("Copying master tour packages and pricing tiers...");
+          if (progressVal === 55) $progressMsg.text("Cloning classified hotels, rooms, and destinations...");
+          if (progressVal === 70) $progressMsg.text("Configuring transporters and fleet vehicles...");
+        }
+      }, 400);
+
+      $.ajax({
+        url: "/api/v3/master/copy/",
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify({
+          data_types: types,
+          destination: destination,
+          skip_existing: skipExisting
+        }),
+        contentType: "application/json; charset=utf-8",
+        success: function (res) {
+          clearInterval(progressTimer);
+          self.isSubmitting = false;
+          $btn.prop("disabled", false);
+          $btnText.text(origText);
+          $btn.find("i").attr("class", "fi fi-rr-cloud-download");
+
+          if (res && res.status === "success") {
+            $progressBar.css("width", "100%");
+            $progressPct.text("100%");
+            $progressMsg.text("Migration complete!");
+
+            setTimeout(function () {
+              $progressCard.slideUp(250);
+            }, 800);
+
+            // Display Result Banner
+            const summary = res.summary || {};
+            const badgeHtml = [
+              '<span class="migration-result-chip"><i class="fi fi-rr-plane-alt"></i> ' + (summary.packages_copied || 0) + ' Packages</span>',
+              '<span class="migration-result-chip"><i class="fi fi-rr-map-marker"></i> ' + (summary.destinations_copied || 0) + ' Destinations</span>',
+              '<span class="migration-result-chip"><i class="fi fi-rr-car-alt"></i> ' + (summary.vehicles_copied || 0) + ' Vehicles</span>',
+              '<span class="migration-result-chip"><i class="fi fi-rr-building"></i> ' + (summary.hotels_copied || 0) + ' Hotels</span>',
+              '<span class="migration-result-chip"><i class="fi fi-rr-shipping-fast"></i> ' + (summary.transporters_copied || 0) + ' Transporters</span>'
+            ].join("");
+
+            $("#migrationResultBadges").html(badgeHtml);
+            $resultBanner.addClass("active").slideDown(250);
+
+            self.showAlert("success", res.msg || "Default data imported successfully into your dashboard!");
+            self.loadMigrationCatalog();
+          } else {
+            $progressCard.slideUp(200);
+            self.showAlert("error", (res && res.msg) ? res.msg : "Failed to import default master data.");
+          }
+        },
+        error: function (xhr) {
+          clearInterval(progressTimer);
+          self.isSubmitting = false;
+          $btn.prop("disabled", false);
+          $btnText.text(origText);
+          $btn.find("i").attr("class", "fi fi-rr-cloud-download");
+          $progressCard.slideUp(200);
+
+          let errorMsg = "Network error while importing master data.";
+          try {
+            const errRes = JSON.parse(xhr.responseText);
+            if (errRes && errRes.msg) errorMsg = errRes.msg;
+          } catch (e) {}
+
+          self.showAlert("error", errorMsg);
         }
       });
     },

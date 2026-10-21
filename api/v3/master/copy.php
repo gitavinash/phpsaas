@@ -2,7 +2,7 @@
 
 /**
  * V3 Master Data Copy / Clone API
- * Path: /api/v3/master/copy.php
+ * Path: /api/v3/master/copy/
  * Clones master tour packages, destinations, vehicles, hotels, and transporters into the client workspace.
  */
 
@@ -28,6 +28,27 @@ if (!($connection instanceof mysqli)) {
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['status' => 'error', 'msg' => 'Method not allowed. Use POST.']);
+    exit;
+}
+
+if (!defined('LOGIN_CHECK')) {
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
+    if (file_exists($docRoot . '/lib/modules/isLogin.php')) {
+        define('LOGIN_CHECK', $docRoot . '/lib/modules/isLogin.php');
+    } elseif (file_exists($docRoot . '/lib/session/index.php')) {
+        define('LOGIN_CHECK', $docRoot . '/lib/session/index.php');
+    }
+}
+if (defined('LOGIN_CHECK') && file_exists(LOGIN_CHECK)) {
+    @require_once LOGIN_CHECK;
+}
+
+$userRole = strtolower(trim(isset($site_access_type) ? (string)$site_access_type : (defined('USER_TYPE') ? (string)USER_TYPE : '')));
+$isAdmin = (isset($site_access_type) && in_array($site_access_type, ['administrator', 'admin'], true)) || in_array($userRole, ['administrator', 'admin', 'superadmin'], true);
+
+if (php_sapi_name() !== 'cli' && !$isAdmin) {
+    http_response_code(403);
+    echo json_encode(['status' => 'error', 'msg' => 'Access denied. Administrator privileges required.']);
     exit;
 }
 
@@ -166,19 +187,19 @@ if (isset($selectedTypes['hotels'])) {
             $gall  = mysqli_real_escape_string($connection, $mH['property_gallery'] ?? '');
             $title = mysqli_real_escape_string($connection, $mH['property_title'] ?? '');
             $email = mysqli_real_escape_string($connection, $mH['property_email'] ?? '');
-            $mobile= mysqli_real_escape_string($connection, $mH['property_mobile'] ?? '');
+            $mobile = mysqli_real_escape_string($connection, $mH['property_mobile'] ?? '');
             $desc  = mysqli_real_escape_string($connection, $mH['property_description'] ?? '');
             $addr  = mysqli_real_escape_string($connection, $mH['property_address'] ?? '');
             $city  = mysqli_real_escape_string($connection, $mH['property_city'] ?? '');
             $state = mysqli_real_escape_string($connection, $mH['property_state'] ?? '');
             $country = mysqli_real_escape_string($connection, $mH['property_country'] ?? '');
             $pin   = mysqli_real_escape_string($connection, $mH['property_pincode'] ?? '');
-            $mapUrl= mysqli_real_escape_string($connection, $mH['property_map_url'] ?? '');
+            $mapUrl = mysqli_real_escape_string($connection, $mH['property_map_url'] ?? '');
             $mrp   = (int)($mH['property_starting_mrp'] ?? 0);
             $price = (int)($mH['property_starting_price'] ?? 0);
             $rooms = (int)($mH['property_total_rooms'] ?? 0);
             $type  = mysqli_real_escape_string($connection, $mH['property_type'] ?? '3_star_hotel');
-            $sEmail= mysqli_real_escape_string($connection, $mH['property_support_email'] ?? '');
+            $sEmail = mysqli_real_escape_string($connection, $mH['property_support_email'] ?? '');
             $sMob  = mysqli_real_escape_string($connection, $mH['property_support_mobile'] ?? '');
 
             $inPropSql = "
@@ -313,8 +334,8 @@ if (isset($selectedTypes['tour_package'])) {
             $state = mysqli_real_escape_string($connection, $pkg['tour_package_state'] ?? '');
             $cntry = mysqli_real_escape_string($connection, $pkg['tour_package_country'] ?? '');
             $type  = mysqli_real_escape_string($connection, $pkg['tour_package_type'] ?? 'domestic');
-            $outVeh= mysqli_real_escape_string($connection, $pkg['tour_package_outstation_vehicle'] ?? '');
-            $locVeh= mysqli_real_escape_string($connection, $pkg['tour_package_localsightseen_vehicle'] ?? '');
+            $outVeh = mysqli_real_escape_string($connection, $pkg['tour_package_outstation_vehicle'] ?? '');
+            $locVeh = mysqli_real_escape_string($connection, $pkg['tour_package_localsightseen_vehicle'] ?? '');
 
             $inPkgSql = "
                 INSERT INTO `{$tblPrefix}tour_package` (
@@ -429,12 +450,12 @@ if (isset($selectedTypes['transporter'])) {
             $thumb = mysqli_real_escape_string($connection, $mt['transporter_thumbnail'] ?? '');
             $title = mysqli_real_escape_string($connection, $mt['transporter_title'] ?? '');
             $email = mysqli_real_escape_string($connection, $mt['transporter_email'] ?? '');
-            $mobile= mysqli_real_escape_string($connection, $mt['transporter_mobile'] ?? '');
+            $mobile = mysqli_real_escape_string($connection, $mt['transporter_mobile'] ?? '');
             $desc  = mysqli_real_escape_string($connection, $mt['transporter_description'] ?? '');
             $addr  = mysqli_real_escape_string($connection, $mt['transporter_address'] ?? '');
             $city  = mysqli_real_escape_string($connection, $mt['transporter_city'] ?? '');
             $pin   = mysqli_real_escape_string($connection, $mt['transporter_pincode'] ?? '');
-            $sState= mysqli_real_escape_string($connection, $mt['transporter_service_state'] ?? '');
+            $sState = mysqli_real_escape_string($connection, $mt['transporter_service_state'] ?? '');
 
             $inTransSql = "
                 INSERT INTO `{$tblPrefix}transporter` (
@@ -524,7 +545,7 @@ if (isset($selectedTypes['vehicles'])) {
                 $lug   = (int)($mv['vehicle_luggage'] ?? 0);
                 $fuel  = mysqli_real_escape_string($connection, $mv['vehicle_fuel_type'] ?? '');
                 $rTax  = (float)($mv['vehicle_per_km_rate_with_tax'] ?? 0);
-                $rNoTax= (float)($mv['vehicle_per_km_rate_without_tax'] ?? 0);
+                $rNoTax = (float)($mv['vehicle_per_km_rate_without_tax'] ?? 0);
 
                 mysqli_query($connection, "
                     INSERT INTO `{$tblPrefix}vehicles` (

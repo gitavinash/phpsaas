@@ -25,6 +25,27 @@ if (!($connection instanceof mysqli)) {
     exit;
 }
 
+if (!defined('LOGIN_CHECK')) {
+    $docRoot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : dirname(__DIR__, 3);
+    if (file_exists($docRoot . '/lib/modules/isLogin.php')) {
+        define('LOGIN_CHECK', $docRoot . '/lib/modules/isLogin.php');
+    } elseif (file_exists($docRoot . '/lib/session/index.php')) {
+        define('LOGIN_CHECK', $docRoot . '/lib/session/index.php');
+    }
+}
+if (defined('LOGIN_CHECK') && file_exists(LOGIN_CHECK)) {
+    @require_once LOGIN_CHECK;
+}
+
+$userRole = strtolower(trim(isset($site_access_type) ? (string)$site_access_type : (defined('USER_TYPE') ? (string)USER_TYPE : '')));
+$isAdmin = (isset($site_access_type) && in_array($site_access_type, ['administrator', 'admin'], true)) || in_array($userRole, ['administrator', 'admin', 'superadmin'], true);
+
+if (php_sapi_name() !== 'cli' && !$isAdmin) {
+    http_response_code(403);
+    echo json_encode(['status' => 'error', 'msg' => 'Access denied. Administrator privileges required.']);
+    exit;
+}
+
 $tblPrefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'isw_';
 $siteId    = defined('SITE_ID') ? (int)SITE_ID : (int)($_SESSION['site_id'] ?? 0);
 $userId    = defined('USER_ID') ? (int)USER_ID : (int)($_SESSION['user_id'] ?? 0);

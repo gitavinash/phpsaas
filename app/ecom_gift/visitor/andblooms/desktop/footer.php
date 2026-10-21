@@ -284,35 +284,13 @@ if (ACTIVE_URL == '/checkout/') {
             $icon.css('transform', isRotated ? '' : 'rotate(180deg)');
         });
 
-        // 6. Product Zoom and Thumbnail Switcher
-        $('.thumbnail img').on('click', function() {
-            const newSrc = $(this).attr('src');
-            $('#mainProductImage').attr('src', newSrc);
-            $('#zoomOverlay').css('background-image', 'url(' + newSrc + ')');
-
-            $('.thumbnail img').parent().removeClass('border-primary');
-            $(this).parent().addClass('border-primary');
-        });
-
-        $('#zoomOverlay').css('background-image', 'url(' + $('#mainProductImage').attr('src') + ')');
-
-        $('.product-image-container').on('mouseenter', function() {
-            $('#zoomOverlay').addClass('active');
-        }).on('mouseleave', function() {
-            $('#zoomOverlay').removeClass('active');
-        }).on('mousemove', function(e) {
-            const $this = $(this);
-            const offset = $this.offset();
-            const x = e.pageX - offset.left;
-            const y = e.pageY - offset.top;
-            const width = $this.width();
-            const height = $this.height();
-
-            const xPercent = (x / width) * 100;
-            const yPercent = (y / height) * 100;
-
-            $('#zoomOverlay').css('background-position', xPercent + '% ' + yPercent + '%');
-        });
+        // 6. Product Zoom and Thumbnail Switcher Fallback
+        if (!document.getElementById('productMainContainer')) {
+            $('.thumbnail img').on('click', function() {
+                const newSrc = $(this).attr('src');
+                $('#mainProductImage').attr('src', newSrc);
+            });
+        }
 
         // 7. Urgency Timer for Same-Day Delivery
         function updateUrgencyTimer() {

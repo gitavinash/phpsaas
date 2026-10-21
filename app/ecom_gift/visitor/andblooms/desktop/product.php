@@ -154,35 +154,75 @@ require_once 'header.php';
     <div class="flex flex-col md:flex-row gap-8 mb-16">
         <!-- Product Images -->
         <div class="md:w-1/2 product-media-sticky">
-            <div class="product-image-container mb-4 rounded-lg overflow-hidden bg-gray-100">
-                <div class="w-full aspect-square flex items-center justify-center">
-                    <img src="<?php echo $product_image ?>" id="mainProductImage"
-                        alt="<?php echo ucwords($product_title) ?>" class="w-full h-full object-contain">
-                </div>
-            </div>
-            <div class="grid thumbnail grid-cols-5 gap-2">
-                <?php
-                $thumbnails = array();
+            <?php
+            $thumbnails = array();
 
-                if ($product_gallery != '') {
-                    $galleryImages = json_decode($product_gallery, true);
-                    if (!empty($galleryImages)) {
-                        $thumbnails[] = array('path' => $product_image, 'title' => $product_title);
-                        foreach ($galleryImages as $gallery) {
-                            $thumbnails[] = array('path' => $gallery['path'], 'title' => $product_title);
-                        }
-                    }
-                } else {
+            if ($product_gallery != '') {
+                $galleryImages = json_decode($product_gallery, true);
+                if (!empty($galleryImages)) {
                     $thumbnails[] = array('path' => $product_image, 'title' => $product_title);
+                    foreach ($galleryImages as $gallery) {
+                        $thumbnails[] = array('path' => $gallery['path'], 'title' => $product_title);
+                    }
                 }
+            } else {
+                $thumbnails[] = array('path' => $product_image, 'title' => $product_title);
+            }
+            ?>
+            <div class="product-gallery-wrapper">
+                <!-- Main Image Area with Zoom Flyout Anchor -->
+                <div class="product-main-view relative mb-3">
+                    <!-- Main Product Image Container (Fixed square aspect ratio, never increases height on hover) -->
+                    <div class="product-image-container relative rounded-xl overflow-hidden bg-white aspect-square border border-gray-100 shadow-sm cursor-crosshair group select-none" id="productMainContainer">
+                        <img src="<?php echo $product_image ?>" id="mainProductImage"
+                            alt="<?php echo ucwords($product_title) ?>" class="w-full h-full object-cover object-center select-none pointer-events-none">
 
-                foreach ($thumbnails as $index => $thumb) {
-                    $isActive = $index === 0 ? 'border-primary ring-2 ring-primary' : 'border-gray-200 hover:border-gray-300';
-                    echo "<div class='aspect-square rounded-md overflow-hidden cursor-pointer border-2 {$isActive} transition-all duration-200 bg-gray-50' data-src='{$thumb['path']}'>";
-                    echo "<img src='{$thumb['path']}' alt='{$thumb['title']} Thumbnail " . ($index + 1) . "' class='w-full h-full object-contain p-1'>";
-                    echo "</div>";
-                }
-                ?>
+                        <!-- Amazon Zoom Lens -->
+                        <div id="zoomLens" class="zoom-lens hidden"></div>
+
+                        <!-- Visual Zoom Hint Badges -->
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-700 text-xs px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1.5 pointer-events-none transition-opacity duration-200 group-hover:opacity-0">
+                            <i class="ri-zoom-in-line text-primary text-sm"></i>
+                            <span class="hidden md:inline font-medium">Roll over image to zoom in</span>
+                            <span class="md:hidden font-medium">Double tap to zoom image</span>
+                        </div>
+
+                        <!-- Mobile Counter Badge -->
+                        <span id="galleryCounter" class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full font-medium z-10 pointer-events-none md:hidden">
+                            1 / <?php echo count($thumbnails); ?>
+                        </span>
+
+                        <?php if (count($thumbnails) > 1) { ?>
+                        <!-- Quick Navigation Arrows on Main Image -->
+                        <button type="button" id="galleryPrevBtn" class="gallery-nav-btn prev absolute left-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/95 shadow-md text-gray-700 hover:text-primary hover:bg-white flex items-center justify-center transition-all z-10 opacity-90 md:opacity-0 md:group-hover:opacity-100 focus:outline-none" aria-label="Previous image">
+                            <i class="ri-arrow-left-s-line text-xl"></i>
+                        </button>
+                        <button type="button" id="galleryNextBtn" class="gallery-nav-btn next absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/95 shadow-md text-gray-700 hover:text-primary hover:bg-white flex items-center justify-center transition-all z-10 opacity-90 md:opacity-0 md:group-hover:opacity-100 focus:outline-none" aria-label="Next image">
+                            <i class="ri-arrow-right-s-line text-xl"></i>
+                        </button>
+                        <?php } ?>
+                    </div>
+
+                    <!-- Amazon Zoom Flyout Window (Desktop) - Anchored strictly to product-main-view so height matches main image -->
+                    <div id="zoomFlyout" class="zoom-flyout hidden">
+                        <img src="<?php echo $product_image ?>" id="zoomFlyoutImg" alt="<?php echo ucwords($product_title) ?> Zoom" class="zoom-flyout-img">
+                        <div class="zoom-flyout-badge"><i class="ri-zoom-in-line text-primary"></i> Click image for expanded view</div>
+                    </div>
+                </div>
+
+                <?php if (count($thumbnails) > 1) { ?>
+                <!-- Thumbnails Strip (Always visible directly below main product image) -->
+                <div class="thumbnails-container flex md:grid md:grid-cols-5 gap-2.5 overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-none" id="thumbnailsStrip">
+                    <?php
+                    foreach ($thumbnails as $index => $thumb) {
+                        $isActive = $index === 0 ? 'border-primary ring-2 ring-primary/40' : 'border-gray-200 hover:border-gray-300';
+                        echo "<div class='thumbnail-item flex-shrink-0 w-16 h-16 md:w-auto md:h-auto aspect-square rounded-lg overflow-hidden cursor-pointer border-2 {$isActive} transition-all duration-200 bg-white' data-index='{$index}' data-src='{$thumb['path']}' data-title='" . htmlspecialchars($thumb['title'], ENT_QUOTES, 'UTF-8') . "'>";
+                        echo "<img src='{$thumb['path']}' alt='" . htmlspecialchars($thumb['title'], ENT_QUOTES, 'UTF-8') . " Thumbnail " . ($index + 1) . "' class='w-full h-full object-cover select-none pointer-events-none'>";
+                        echo "</div>";
+                    }
+                    ?>
+                </div>
+                <?php } ?>
             </div>
         </div>
         <!-- Product Details -->
@@ -819,6 +859,78 @@ WHERE p.product_status = 1
         }
     });
 </script>
+
+<!-- Amazon-Style Product Fullscreen Lightbox Modal -->
+<div id="productLightboxModal" class="lightbox-modal fixed inset-0 z-[100] hidden bg-black/95 backdrop-blur-md flex-col select-none" role="dialog" aria-modal="true" aria-label="Product Image Gallery">
+    <!-- Top Bar -->
+    <div class="flex items-center justify-between px-3 sm:px-6 py-2.5 sm:py-3 bg-black/80 backdrop-blur-md border-b border-white/10 z-30 shrink-0">
+        <!-- Title & Counter -->
+        <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 mr-2">
+            <span class="text-xs sm:text-sm font-medium text-white truncate max-w-[130px] sm:max-w-md"><?php echo htmlspecialchars(ucwords($product_title), ENT_QUOTES, 'UTF-8'); ?></span>
+            <span class="text-white/30 hidden sm:inline">|</span>
+            <span id="lightboxCounter" class="text-xs sm:text-sm text-gray-300 font-mono bg-white/10 px-2 py-0.5 rounded whitespace-nowrap shrink-0">1 of <?php echo count($thumbnails); ?></span>
+        </div>
+
+        <!-- Hint badge on mobile and desktop -->
+        <div class="flex items-center gap-1.5 text-[11px] sm:text-xs text-amber-200/95 bg-amber-500/15 px-2.5 sm:px-3 py-1 rounded-full border border-amber-400/25 mr-1 sm:mr-2 whitespace-nowrap shrink-0">
+            <i class="ri-fingerprint-line text-primary text-xs sm:text-sm"></i>
+            <span>Double tap to zoom image</span>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+            <button type="button" id="lightboxZoomOut" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white flex items-center justify-center transition focus:outline-none" title="Zoom Out (-)">
+                <i class="ri-zoom-out-line text-base sm:text-lg"></i>
+            </button>
+            <button type="button" id="lightboxZoomIn" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white flex items-center justify-center transition focus:outline-none" title="Zoom In (+)">
+                <i class="ri-zoom-in-line text-base sm:text-lg"></i>
+            </button>
+            <button type="button" id="lightboxZoomReset" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white flex items-center justify-center transition focus:outline-none" title="Reset Zoom">
+                <i class="ri-refresh-line text-base sm:text-lg"></i>
+            </button>
+            <button type="button" id="lightboxCloseBtn" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 hover:bg-red-600/90 active:bg-red-700 text-white flex items-center justify-center transition focus:outline-none ml-1 sm:ml-2" title="Close (Esc)">
+                <i class="ri-close-line text-xl sm:text-2xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Lightbox Stage -->
+    <div class="flex-1 relative overflow-hidden flex items-center justify-center p-2 sm:p-6" id="lightboxStage">
+        <!-- Prev Button -->
+        <button type="button" id="lightboxPrevBtn" class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-black/60 hover:bg-black/90 border border-white/20 text-white flex items-center justify-center transition z-20 focus:outline-none" aria-label="Previous image">
+            <i class="ri-arrow-left-s-line text-2xl sm:text-3xl"></i>
+        </button>
+
+        <!-- Zoomable Image Viewport -->
+        <div class="w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing overflow-hidden" id="lightboxViewport">
+            <img src="<?php echo $product_image ?>" id="lightboxImage" alt="<?php echo htmlspecialchars(ucwords($product_title), ENT_QUOTES, 'UTF-8'); ?>" class="max-w-full max-h-full object-contain select-none transition-transform duration-150">
+        </div>
+
+        <!-- Next Button -->
+        <button type="button" id="lightboxNextBtn" class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-black/60 hover:bg-black/90 border border-white/20 text-white flex items-center justify-center transition z-20 focus:outline-none" aria-label="Next image">
+            <i class="ri-arrow-right-s-line text-2xl sm:text-3xl"></i>
+        </button>
+    </div>
+
+    <?php if (count($thumbnails) > 1) { ?>
+    <!-- Bottom Thumbnail Strip -->
+    <div class="px-4 py-3 bg-black/60 border-t border-white/10 overflow-x-auto flex items-center justify-center gap-2.5 z-20 scrollbar-none" id="lightboxThumbnailsStrip">
+        <?php
+        foreach ($thumbnails as $index => $thumb) {
+            $isActive = $index === 0 ? 'border-primary ring-2 ring-primary' : 'border-white/20 opacity-60 hover:opacity-100';
+            echo "<div class='lightbox-thumb-item w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 rounded-lg overflow-hidden cursor-pointer border-2 {$isActive} transition-all duration-200 bg-white/5' data-index='{$index}' data-src='{$thumb['path']}'>";
+            echo "<img src='{$thumb['path']}' alt='Thumbnail " . ($index + 1) . "' class='w-full h-full object-cover select-none pointer-events-none'>";
+            echo "</div>";
+        }
+        ?>
+    </div>
+    <?php } ?>
+</div>
+
+<script>
+    window.PRODUCT_GALLERY_IMAGES = <?php echo json_encode($thumbnails, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+</script>
+<script src="<?php echo USER_JS ?>product-gallery.min.js?v=<?php echo time(); ?>"></script>
 <?php
 
 require_once 'footer.php';

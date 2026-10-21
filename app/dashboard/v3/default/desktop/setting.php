@@ -1,6 +1,7 @@
 <?php
 $currentUserType = strtolower(defined('USER_TYPE') ? USER_TYPE : '');
 $isFullSettingAccess = in_array($currentUserType, ['administrator', 'operator']);
+$isAdmin = (isset($site_access_type) && in_array($site_access_type, ['administrator', 'admin'], true)) || in_array($currentUserType, ['administrator', 'admin', 'superadmin'], true);
 ?>
 <div class="package-page-wrapper setting-page-wrapper">
     <!-- Header Banner -->
@@ -114,6 +115,23 @@ $isFullSettingAccess = in_array($currentUserType, ['administrator', 'operator'])
                     <h3 class="v3-setting-card-title">App &amp; Business Configuration</h3>
                     <p class="v3-setting-card-desc">
                         Manage business nature (Travel Agency, Transporter), quotation workflows, proposal modes, and operational features.
+                    </p>
+                </div>
+            </div>
+        </a>
+        <?php } ?>
+
+        <?php if ($isAdmin) { ?>
+        <!-- Card: Default Data Migration (Admin Only) -->
+        <a href="/dashboard/setting/migration/" class="v3-setting-card-link">
+            <div class="v3-card-section v3-setting-card-item">
+                <div class="v3-card-header-icon indigo v3-setting-card-icon">
+                    <i class="fi fi-rr-cloud-download"></i>
+                </div>
+                <div>
+                    <h3 class="v3-setting-card-title">Default Data Migration</h3>
+                    <p class="v3-setting-card-desc">
+                        Import default master tour packages, destinations, verified hotels &amp; rooms, transporter profiles, and fleet vehicles into your workspace.
                     </p>
                 </div>
             </div>
